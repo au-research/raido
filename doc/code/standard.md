@@ -94,6 +94,7 @@ Examples of places to use ASCII:
 * directory / file names
 * git rpos
 * docker image / container names
+* AWS resource names
 * anywhere else where there's no schema/metadata where UTF-8 would logically
   be specified
 
