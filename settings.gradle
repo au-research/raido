@@ -1,0 +1,13 @@
+rootProject.name = "raido-v2"
+
+dependencyResolutionManagement{
+  versionCatalogs{
+    libs{
+      version('jooq', '3.17.2')
+      library('jooq', 'org.jooq', 'jooq').versionRef('jooq')
+      library('pgjdbc', 'org.postgresql:postgresql:42.3.6')
+    }
+  }
+}
+
+//include ":v1-ddb-migration"

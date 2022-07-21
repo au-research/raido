@@ -1,0 +1,25 @@
+plugins {
+  id 'com.palantir.git-version' version '0.15.0'
+  id 'base'
+}
+
+version = gitVersion(prefix:'version@')
+
+ext {
+}
+
+repositories {
+}
+
+configurations {
+}
+
+dependencies {
+}
+
+clean {
+}
+
+
+
+
