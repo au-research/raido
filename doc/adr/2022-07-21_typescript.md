@@ -13,6 +13,8 @@ Use statically typed Typescript code where possible.
 
 # Context
 
+## STO opinion
+
 This decision was already made before I joined the project.
 
 But I agree with it strongly - I prefer static typing over dynamic typing.
