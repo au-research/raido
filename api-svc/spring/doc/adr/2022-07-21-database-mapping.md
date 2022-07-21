@@ -30,6 +30,8 @@ Raido is designed to work on Postgres, using PG-specific features.
   * Hibernate/JPA are "lowest common denominator" approaches
 * jOOQ favours performance by default
   * much less risk of people writing N+1 
+  * reduced object-mapping overhead, mapping straight to flat arrays is a 
+  first-class feature of jOOQ
 
 
 # Context
@@ -43,21 +45,19 @@ The obvious choices are:
 * QueryDSL
 
 
-
 # Consequences
 
 * people have to learn SQL
   * They always did, regardless of mapping tech chosen
   * "I don't want to learn SQL" is not an acceptable position on Raido.
-
-
-# Links
-
-* https://qr.ae/pvkz0n
-  * STO: Only other article I could find to back me up on spring-boot.
-    * This opinion is so rare, it *must* be good!  :|
-  * Don't need links to tell you how great spring-boot is - just search, 
-  they're all over the internet. Right next to the NoSQL articles.  :P
+* writing joins out explicitly is tedious/annoying
+  * "always was" - if we were using HB/JPA, lazy loading would be disabled 
+    * "stringly typed" HB/JPA querying causes havoc with eager loading 
+    specifications when refactoring
+  * there is some newer support for convenience lookups in jOOQ
+    * but it increases probability of folks creating N+1 query problems :(
+    * we'll probably disable it anyway (I assume can just switch off code 
+    generation of that feature, like pojos and stuff.)
 
 
 
