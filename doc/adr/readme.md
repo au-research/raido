@@ -18,3 +18,4 @@ After decision is final, change the decision by adding a new ADR, with a new
 date. Can be a different name if you want, just add links to the files.
 
 See [2022-07-21_example-adr.md](./2022-07-21_example-adr.md)
+
