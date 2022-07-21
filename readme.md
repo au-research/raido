@@ -3,7 +3,7 @@
 Important architecural decisions are recorded in [/doc/adr](./doc/adr).
 
 Different sub-projects have their own ADR log, in their local /doc/adr
-directories (i.e. db, app, api, etc.)
+directories (i.e. db, app, [api](/api-svc/spring/doc/adr), etc.)
 
 
 # Development pre-requisites
