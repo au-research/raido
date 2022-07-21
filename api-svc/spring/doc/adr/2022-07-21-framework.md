@@ -49,6 +49,8 @@ Not popular, small ecosystem, questionable future, etc:
 * integrating new techs needs more work than just letting spring-boot 
   auto-configure
 * even spring itself is still quite complicated and has stuff we don't need
-  * e.g. legacy java/spring as a html server (old MVC stuff, etc.) 
+  * e.g. legacy java/spring as a html server (old MVC stuff, etc.)
+  * this is where more modern, API-focused frameworks would be better, i.e
+    Quarkus, Micronaut
 
 
