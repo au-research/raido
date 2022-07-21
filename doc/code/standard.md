@@ -1,5 +1,5 @@
 
-# Standards
+# Coding standards
 
 > Just do it.
 
