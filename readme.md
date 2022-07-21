@@ -6,7 +6,7 @@ Different sub-projects have their own ADR log, in their local /doc/adr
 directories (i.e. db, app, api, etc.)
 
 
-# Devlopment pre-requisites
+# Development pre-requisites
 
 Generally:
 * [JDK 17](./doc/adr/2022-07-21_jdk-platform.md)
