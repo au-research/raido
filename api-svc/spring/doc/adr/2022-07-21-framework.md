@@ -29,6 +29,16 @@ behaviour or enable whole features just from adding a jar to the class path).
 Spring-boot also increases the security surface area of the project - especially 
 when you consider auto-configuration.
 
+Spring-boot adds to startup time of the process
+
+Anecdotal experience:
+* Smallish medium sized project, > 100K lines of code
+* intentionally didn't use Hibernate or other tech that does lots of startup 
+  code generation
+* removing spring-boot, using just spring, startup time went
+  * from 6-ish seconds to 4-ish seconds on a devloper machine
+  * 12-ish seconds to 10-ish seconds on a t3.micro 
+
 
 # Context
 
@@ -52,5 +62,16 @@ Not popular, small ecosystem, questionable future, etc:
   * e.g. legacy java/spring as a html server (old MVC stuff, etc.)
   * this is where more modern, API-focused frameworks would be better, i.e
     Quarkus, Micronaut
+
+
+# Links
+
+* https://qr.ae/pvkz0n
+  * STO: Only other article I could find to back me up on spring-boot.
+    * This opinion is so rare, it *must* be good!  :|
+  * Don't need links to tell you how great spring-boot is - just search, 
+  they're all over the internet. Right next to the NoSQL articles.  :P
+
+
 
 
