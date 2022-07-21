@@ -1,0 +1,172 @@
+plugins{
+  /* i think flyway brings its own PG driver, that's why we don't need to
+   add a PG driver to the buildscript classpath */
+  id "org.flywaydb.flyway" version "8.5.13"
+  id "groovy"
+  id 'nu.studer.jooq' version '7.1.1'
+}
+
+ext{
+  raidV1PgUrl = "jdbc:postgresql://localhost:7432/raid-v1"
+  raidV1PgUser = 'postgres'
+  raidV1PgPassword = ""
+  raidV1PgSchema = "raid_v1_import"
+
+  jooqGeneratedSrcDir = 'src/main/generated'
+
+  /* prod machines will always be set to UTC, but developer machines are set 
+  to whatever they want. */
+  defaultSysProps = [
+    'user.timezone': 'UTC',
+    'file.encoding': 'UTF-8',
+  ]
+
+  // the config loading config :/
+  homeDir = System.properties['user.home']
+  configPath = System.getProperty("RAIDV1_DDB_MIGRATION_CONFIG_PATH",
+    "${homeDir}/.config/raido-v2/v1-ddb-migration.gradle")
+}
+
+/* after ext{} block so that stuff is the default, and so the config
+   can refer to those default values */
+if( file(configPath).exists() ){
+  println "loading config from: ${configPath}"
+  /* never done config this way before, not entirely sure it's a good idea,
+  probably a Bad Plan to a full turing-complete language for config */
+  apply from: configPath
+}
+// must be done after config from file to pick up credentials and overrides
+ext.defaultSysProps += project.extensions.extraProperties.properties.
+  findAll{ it.key.startsWith("raidV1Pg") }
+
+flyway{
+  url = raidV1PgUrl
+  user = raidV1PgUser
+  password = raidV1PgPassword
+  schemas = [raidV1PgSchema]
+}
+
+repositories{
+  mavenCentral()
+}
+
+dependencies{
+  // don't really care, whever version Gradle is using will do
+  implementation localGroovy()
+
+  // look in settings.gradle for version catalog specs 
+  implementation libs.jooq
+
+  runtimeOnly libs.pgjdbc
+  jooqGenerator libs.pgjdbc
+
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+sourceSets{
+  main.java{
+    srcDirs += [jooqGeneratedSrcDir]
+  }
+  test.resources{
+    /* This is so each test's resources are right next to the source.
+    It also makes the src/test/resources directory redundant - might as well
+    have properties, xml, etc. files under here. 
+    There's no point in separating resource from code in the context of testing 
+    (and little point for prod code in the general case, IMO). */
+    srcDirs "src/test/groovy"
+  }
+}
+
+testing{
+  suites{
+    /* "dev" code/sql, etc. is "scratch" stuff that is committed, but is not 
+       production code, not real tests. Just WIP/temporary stuff, where the 
+       usual standards don't apply (but still - no credentials!) */
+    dev(JvmTestSuite){
+      testType = TestSuiteType.INTEGRATION_TEST
+      dependencies{
+        implementation project
+
+        // doesn't work: No signature of method: build_999.testing() is applicable for argument types
+        // implementation localGroovy()
+
+        // copy/pasted from dependencies block - yuck :( 
+        implementation 'org.codehaus.groovy:groovy-all:3.0.9'
+        implementation libs.jooq
+        runtimeOnly libs.pgjdbc
+      }
+    }
+  }
+}
+tasks.dev.description = "don't run this, it's just a Gradle default"
+
+dev{
+  useJUnitPlatform()
+  systemProperties defaultSysProps
+}
+
+test{
+  useJUnitPlatform()
+  systemProperties defaultSysProps
+}
+
+task checkS3Files(type: JavaExec){
+  group = "run"
+  description = "Run CheckS3Files, outputs `error.json` files in PWD"
+  classpath = sourceSets.main.runtimeClasspath
+  setMainClass "raid.ddb_migration.CheckS3Files"
+  systemProperties defaultSysProps
+}
+
+task importS3Files(type: JavaExec){
+  group = "run"
+  description = "Run ImportS3Files - update table, write `error.json` in PWD"
+  classpath = sourceSets.main.runtimeClasspath
+  setMainClass "raid.ddb_migration.ImportS3Files"
+  systemProperties defaultSysProps
+}
+
+task cleanJooqGeneratedSrc(type: Delete){
+  group = "jooq"
+  delete jooqGeneratedSrcDir
+}
+
+jooq{
+  version = libs.versions.jooq.get()
+  configurations{
+    main{  // name of the jOOQ configuration
+      generateSchemaSourceOnCompilation = false
+
+      generationTool{
+        jdbc{
+          driver = 'org.postgresql.Driver'
+          url = raidV1PgUrl
+          user = raidV1PgUser
+          password = raidV1PgPassword
+        }
+        generator{
+          name = 'org.jooq.codegen.DefaultGenerator'
+          database{
+            name = 'org.jooq.meta.postgres.PostgresDatabase'
+            inputSchema = raidV1PgSchema
+            // excludes += "flyway_schema_history"
+          }
+          generate{
+            deprecated = false
+            records = true
+            immutablePojos = false
+            fluentSetters = true
+            globalTableReferences = false
+          }
+          target{
+            // gets blown away by the clean task each it's run
+            directory = jooqGeneratedSrcDir
+            packageName = 'db.migration.jooq'
+          }
+        }
+      }
+    }
+  }
+}
+tasks.generateJooq.dependsOn cleanJooqGeneratedSrc

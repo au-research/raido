@@ -10,4 +10,4 @@ dependencyResolutionManagement{
   }
 }
 
-//include ":v1-ddb-migration"
+include ":api-svc:v1-ddb-migration"
