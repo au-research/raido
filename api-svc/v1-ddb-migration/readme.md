@@ -21,8 +21,6 @@ DB migrations are in
 On a Windows 10 machine with Docker Desktop, the postgres 
 ## Tasks
 
-TODO:STO WIP, not ready to run yet, only does RaidTable
-
 * checkS3Files
   * run through files checking for bad data, output errors to file 
 * importS3Files
