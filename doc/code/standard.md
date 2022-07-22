@@ -3,7 +3,9 @@
 
 > Just do it.
 
-If a tool/library can't support these standards - that's a stronger argument for discarding the tool than it is for making an exception.
+If a tool/library can't support these standards - that's a stronger argument 
+for discarding the tool than it is for making an exception.
+
 
 ## No credentials in source repositories
 
@@ -58,8 +60,30 @@ all should be utf-8.
 Yes - Windows, Java and browsers are usually UTF-16 internally.  Use UTF-8
 everywhere there is a choice.
 
-IMPROVE:STO: pretty sure postgres TEXT/VARCHAR are utf-8, better check and be
-explicit here.
+This includes source, markdown and other resources.  
+Emojis are a crucuial documentation tool 🤠
+
+
+#### Postgres
+The actualy encoding of `TEXT`/`VARCHAR` values depends on the encoding config
+of the DB.
+
+Raido database has these config values:
+* `server_encoding=UTF8` 
+* `client_encoding=UTF8` 
+* `lc_collate=en_US.utf8`
+
+Remember that UTF8 is variable width - postgres text operations work in terms
+of characters not bytes.
+```sql
+select length('A') -- length = 1
+union
+select length('🏃‍♂️') -- length = 2
+union
+select length('❤️') -- length = 4
+union
+select length('👩‍❤️‍💋‍👩') -- length = 8
+```
 
 
 ### ASCII for non-content (URLs, filenames)
@@ -92,11 +116,19 @@ Examples of places to use ASCII:
 * URL paths / endpoint names
 * table names and column names
 * directory / file names
-* git rpos
+* git repositories
 * docker image / container names
 * AWS resource names
 * anywhere else where there's no schema/metadata where UTF-8 would logically
   be specified
+
+By design, the first 128 characters of Unicode (when encoded as UTF-8), are 
+exactly binary-compatible with US-ASCII. That means you can safely store ASCII 
+in a UTF-8 field with without concern.  Though if some other process stores
+non-ascii in a UTF-8 field and you try to read it into an ASCII context,
+you will either get a conversion error or a `?` character for each non-ASCII
+character (Unicode standard behaviour for converting
+un-representable characters).
 
 
 ### UTC everywhere

@@ -195,3 +195,21 @@ select count(*)
 from raid r join association_index ai on r.handle = ai.handle
 where r.owner = 'RDM@UQ'
 ;
+
+show server_encoding
+;
+
+show client_encoding 
+;
+
+show lc_collate
+;
+
+select length('A')
+union
+select length('🏃‍♂️')
+union
+select length('❤️')
+union
+select length('👩‍❤️‍💋‍👩') 
+;
