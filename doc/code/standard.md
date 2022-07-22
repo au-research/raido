@@ -61,7 +61,7 @@ Yes - Windows, Java and browsers are usually UTF-16 internally.  Use UTF-8
 everywhere there is a choice.
 
 This includes source, markdown and other resources.  
-Emojis are a crucuial documentation tool 🤠
+Emojis are a crucuial documentation tool 🤠 ❤️‍🔥
 
 
 #### Postgres
