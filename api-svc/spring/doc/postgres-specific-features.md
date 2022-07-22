@@ -9,7 +9,7 @@ Makes a good starting point for "how much work to port Raido to a different DB".
 * UUID for primary keys
 
 
-# Future PF features to use
+# Future PG features to use
 
 * skip lock for queuing
   * cheap and easy to implement
