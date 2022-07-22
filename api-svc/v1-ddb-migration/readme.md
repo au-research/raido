@@ -1,4 +1,12 @@
 
+Project loads files from local filesystem into the `raid-v1-schema` in a PG 
+database.
+
+The files are expected to be exported from DDB then downloaded to S3.
+
+Uses Groovy because this isn't prod code and I was dealing with jdon blobs,
+so groovy was convenient because of prior experience.
+
 
 ## Setup and config
 
