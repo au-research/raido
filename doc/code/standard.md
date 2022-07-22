@@ -122,13 +122,14 @@ Examples of places to use ASCII:
 * anywhere else where there's no schema/metadata where UTF-8 would logically
   be specified
 
-By design, the first 128 characters of Unicode (when encoded as UTF-8), are 
+By design, the first 128 characters of Unicode (when encoded as UTF-8) are 
 exactly binary-compatible with US-ASCII. That means you can safely store ASCII 
 in a UTF-8 field with without concern.  Though if some other process stores
-non-ascii in a UTF-8 field and you try to read it into an ASCII context,
-you will either get a conversion error or a `?` character for each non-ASCII
-character (Unicode standard behaviour for converting
-un-representable characters).
+non-ASCII in a UTF-8 field and you try to read it into an ASCII context,
+you will either get a conversion error or an ASCII `?` as a 
+[replacement character](https://www.fileformat.info/info/unicode/char/fffd/index.htm) 
+for each non-ASCII character (Unicode standard behaviour for converting
+unrepresentable characters).
 
 
 ### UTC everywhere
