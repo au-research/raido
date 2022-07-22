@@ -200,16 +200,16 @@ Most repos should have a .gitattributes file with `text=lf`.
   * example: depending on the tool/config used, lambda code built on different
     platforms ends up with different hash codes causing unnecessary deployments
 
-If you do need cr/lf endings, say you want a CSV file that looks nice in
-Windows notepad. Push that all the way into the last possible layer where you
-detect the client platform automatically and apply the line endings at the last
-moment.
+If you do need cr/lf endings, say you want to implement a user function for 
+downloading a CSV file that looks nice in Windows notepad. Push that code all 
+the way into the last possible layer where you detect the client platform 
+automatically and apply the line endings at the last moment.
 
 Failing that, make a optional parameter, defaulting to unix line endings,
 then still try and push the decision up onto the client were you can change
 the default based on the platform. But then you'll probably end up needing
 a UI control anyway so that Windows users can generate files with Unix line
-endings, because reasons.  Seriously, you can't win - all you can do is
-have a sensible default so people can predict what your system will probably
-do, most of the time.
+endings, because reasons. Seriously, you can't win. All you can do is
+have a sensible default so both developers and users can predict what your 
+system will probably do, most of the time.
 
