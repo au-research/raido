@@ -213,3 +213,15 @@ select length('❤️')
 union
 select length('👩‍❤️‍💋‍👩') 
 ;
+
+-- observed example of what JOOQ Record.merge() issues 
+insert into raid_v1_import.metadata (name, type, grid, isni, admin_email,
+                                     tech_email, s3_export)
+values (?, ?, ?, ?, ?, ?, cast(? as jsonb))
+on conflict (name) do update set name = excluded.name, type = excluded.type,
+  grid                                = excluded.grid, isni = excluded.isni,
+  admin_email                         = excluded.admin_email,
+  tech_email                          = excluded.tech_email,
+  s3_export                           = excluded.s3_export
+returning raid_v1_import.metadata.name
+;

@@ -4,7 +4,7 @@ import org.jooq.Configuration
 import org.jooq.DSLContext
 import org.jooq.SQLDialect
 import org.jooq.TransactionalRunnable
-import org.jooq.conf.RenderQuotedNames
+import org.jooq.conf.Settings
 import org.jooq.impl.DSL
 import org.jooq.impl.DefaultConnectionProvider
 
@@ -27,10 +27,12 @@ class JooqExec {
   }
   
   static DSLContext createDsl(Connection conn){
+    Settings settings = new Settings().
+      withRenderQuotedNames(EXPLICIT_DEFAULT_UNQUOTED).
+      withExecuteLogging(true)
     // will use the DefaultConnectionProvider
-    DSLContext db = DSL.using(conn, SQLDialect.POSTGRES);
-    db.configuration().settings().
-      setRenderQuotedNames(EXPLICIT_DEFAULT_UNQUOTED)
+    DSLContext db = DSL.using(conn, SQLDialect.POSTGRES, settings)
+      
     return db
   }
   
