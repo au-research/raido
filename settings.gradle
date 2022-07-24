@@ -1,13 +1,50 @@
 rootProject.name = "raido-v2"
 
+include ":api-svc:v1-ddb-migration"
+include ":api-svc:spring"
+
 dependencyResolutionManagement{
   versionCatalogs{
     libs{
       version('jooq', '3.17.2')
+      version('spring6', '6.0.0-M5')
+      version('jetty11', '11.0.9')
+      version('logback', '1.3.0-alpha16')
+
+      plugin('flyway', 'org.flywaydb.flyway').version('8.5.13')      
+      plugin('jooq', 'nu.studer.jooq').version('7.1.1')      
+      
       library('jooq', 'org.jooq', 'jooq').versionRef('jooq')
       library('pgjdbc', 'org.postgresql:postgresql:42.3.6')
+
+      // core spring/web - pkg: org.springframework
+      library('spring-webmvc', 'org.springframework', 'spring-webmvc').versionRef('spring6')
+      // core spring/web security - pkg: import org.sf.security
+      library('spring-security-core', 'org.springframework.security', 'spring-security-core').versionRef('spring6')
+      // pkg: org.sf.security.web
+      library('spring-security-web', 'org.springframework.security', 'spring-security-web').versionRef('spring6')
+      // for configuring through code - pkg: org.sf.security.config
+      library('spring-security-config', 'org.springframework.security', 'spring-security-config').versionRef('spring6')
+      bundle('spring6', [
+        'spring-webmvc', 
+        'spring-security-core', 
+        'spring-security-web', 
+        'spring-security-config',
+      ])
+      
+      // embedded Jetty server - pkg: org.eclipse.jetty.server
+      library('jetty-server', 'org.eclipse.jetty','jetty-server').versionRef('jetty11')
+      // Jetty support for Servlet API - pkg: org.eclipse.jetty.servlet
+      library('jetty-servlets', 'org.eclipse.jetty','jetty-servlets').versionRef('jetty11')
+      // new lib I had to import or couldnt' find ServletContextHandler
+      library('jetty-servlet', 'org.eclipse.jetty','jetty-servlet').versionRef('jetty11')
+      bundle('jetty11', ['jetty-server', 'jetty-servlets', 'jetty-servlet'])
+
+      library('logback-core', 'ch.qos.logback','logback-core').versionRef('logback')
+      library('logback-classic', 'ch.qos.logback','logback-classic').versionRef('logback')
+      bundle('logback-runtime', ['logback-core', 'logback-classic'])
+
     }
   }
 }
 
-include ":api-svc:v1-ddb-migration"

@@ -1,0 +1,13 @@
+
+## Running `Api.main()`
+
+If you want to start the app from your IDE, remember to specify JVM options:
+
+`-Duser.timezone=UTC -Dfile.encoding=UTF-8 -Duser.language= -Duser.country= -Duser.variant=`
+
+The properties when running via main method, either from IDE or gradle (as 
+opposed to integration or functional test) are loaded from 
+`~/.config/raido-v2/api-svc-env.properties`, see
+[ApiConfig](/src/main/java/raido/spring/config/ApiConfig.java).
+
+

@@ -1,0 +1,71 @@
+plugins{
+  id 'java'
+  id 'nu.studer.jooq' version '7.1.1'
+}
+
+ext{
+  apiSvcPgUrl = "jdbc:postgresql://localhost:7432/raido"
+  apiSvcPgUser = 'postgres'
+  apiSvcPgPassword = ""
+  apiSvcPgSchema = "api-svc"
+
+  jooqGeneratedSrcDir = 'src/main/generated'
+
+  /* prod machines will always be set to UTC, but developer machines are set 
+  to whatever they want. */
+  defaultSysProps = [
+    'user.timezone': 'UTC',
+    'file.encoding': 'UTF-8',
+  ]
+
+  // the config loading config :/
+  homeDir = System.properties['user.home']
+  configPath = System.getProperty("RAIDOV2_APISVC_CONFIG_PATH",
+    "${homeDir}/.config/raido-v2/api-svc.gradle")
+}
+
+/* after ext{} block so that stuff is the default, and so the config
+   can refer to those default values */
+if( file(configPath).exists() ){
+  println "loading config from: ${configPath}"
+  /* never done config this way before, not entirely sure it's a good idea,
+  probably a Bad Plan to a full turing-complete language for config */
+  apply from: configPath
+}
+// must be done after config from file to pick up credentials and overrides
+ext.defaultSysProps += project.extensions.extraProperties.properties.
+  findAll{ it.key.startsWith("apiSvcPg") }
+
+repositories{
+  mavenCentral()
+  
+  // needed for resolving spring-6 milestone builds
+  maven { url "https://repo.spring.io/libs-milestone" }
+}
+
+/* don't use groovy for prod code: dynamic typing, slow startup and poor 
+   historical upgrade compatibility */
+dependencies{
+
+  // look in settings.gradle for version catalog specs 
+  implementation libs.bundles.jetty11
+  implementation libs.bundles.spring6  
+  implementation libs.jooq
+
+  // postgres DB driver
+  runtimeOnly libs.pgjdbc
+  jooqGenerator libs.pgjdbc
+
+  // use the standard jar instead of binding unnecessarily to Jetty
+  // pkg: jakarta.servlet - used to be javax.servlet  
+  compileOnly 'jakarta.platform:jakarta.jakartaee-web-api:9.1.0'
+  
+  /* use SLf4J API to log against - pkg: org.slf4j
+     using 2.0.0 for Raido code because that's what jetty uses
+     NOTE:STO: this might not be right since we're Jetty 11/Servlet 5 */
+  implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
+
+  // use logback as the backing log implementation for slf4j
+  runtimeOnly libs.bundles.logback.runtime
+
+}

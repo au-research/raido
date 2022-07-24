@@ -1,13 +1,15 @@
 plugins{
   /* i think flyway brings its own PG driver, that's why we don't need to
    add a PG driver to the buildscript classpath */
-  id "org.flywaydb.flyway" version "8.5.13"
   id "groovy"
-  id 'nu.studer.jooq' version '7.1.1'
+  alias(libs.plugins.flyway)
+  alias(libs.plugins.jooq)
 }
 
 ext{
-  raidV1PgUrl = "jdbc:postgresql://localhost:7432/raid-v1"
+  // raidV1PgUrl = "jdbc:postgresql://localhost:7432/raid-v1"
+  // using the api-svc DB, but write to our own schema
+  raidV1PgUrl = "jdbc:postgresql://localhost:7432/raido"
   raidV1PgUser = 'postgres'
   raidV1PgPassword = ""
   raidV1PgSchema = "raid_v1_import"
