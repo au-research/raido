@@ -10,6 +10,16 @@ so groovy was convenient because of prior experience.
 
 ## Setup and config
 
+### S3 Export files
+
+The export file locations are currently hardcoded in 
+[Main.groovy](./src/main/groovy/raid/ddb_migration/Main.groovy)
+
+For how to do an export to get those files, look in 
+[ddb-s3-export.md](./doc/ddb-s3-export.md)
+
+### Local DB to import into
+
 Launch local PG container to migrate to.
 ```
 docker rm ddb-v1-schema; docker run --name ddb-v1-schema -p 7432:5432 -d -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD= -e POSTGRES_DB=raid-v1  postgres
