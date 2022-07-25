@@ -11,13 +11,16 @@ ext{
 
   jooqGeneratedSrcDir = 'src/main/generated'
 
-  /* prod machines will always be set to UTC, but developer machines are set 
-  to whatever they want. */
   defaultSysProps = [
+    /* prod machines will always be set to UTC, but developer machines are set 
+    to whatever they want - so this forces it for gradle stuff. */
     'user.timezone': 'UTC',
+    // platform specific, so force it
     'file.encoding': 'UTF-8',
+    // for consistency, rather than any specific reason 
+    "user.language":"", "user.country":"", "user.variant":"",
   ]
-
+  
   // the config loading config :/
   homeDir = System.properties['user.home']
   configPath = System.getProperty("RAIDOV2_APISVC_CONFIG_PATH",
@@ -52,18 +55,21 @@ dependencies{
   implementation libs.bundles.spring6  
   implementation libs.jooq
 
-  // postgres DB driver
-  runtimeOnly libs.pgjdbc
-  jooqGenerator libs.pgjdbc
-
   // use the standard jar instead of binding unnecessarily to Jetty
   // pkg: jakarta.servlet - used to be javax.servlet  
   compileOnly 'jakarta.platform:jakarta.jakartaee-web-api:9.1.0'
-  
+
   /* use SLf4J API to log against - pkg: org.slf4j
      using 2.0.0 for Raido code because that's what jetty uses
      NOTE:STO: this might not be right since we're Jetty 11/Servlet 5 */
   implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
+
+  // postgres DB driver
+  runtimeOnly libs.pgjdbc
+  jooqGenerator libs.pgjdbc
+
+  // support for JSON serialization for Spring endpoints
+  runtimeOnly 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
 
   // use logback as the backing log implementation for slf4j
   runtimeOnly libs.bundles.logback.runtime
