@@ -40,7 +40,7 @@ public class RedactingExceptionResolver extends AbstractHandlerExceptionResolver
     Exception ex
   ) {
     ErrorJson errorJson = new ErrorJson();
-    errorJson.timeStamp = DateUtil.formatUtcDateTime(LocalDateTime.now());
+    errorJson.timeStamp = DateUtil.formatUtcShortDateTime(LocalDateTime.now());
     HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
     errorJson.message = "internal error, see server logs for details";
     

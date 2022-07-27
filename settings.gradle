@@ -44,6 +44,10 @@ dependencyResolutionManagement{
       library('logback-classic', 'ch.qos.logback','logback-classic').versionRef('logback')
       bundle('logback-runtime', ['logback-core', 'logback-classic'])
 
+      library('spring-test', 'org.springframework', 'spring-test').versionRef('spring6')
+      library('spring-security-test', 'org.springframework.security', 'spring-security-test').versionRef('spring6')
+      bundle('spring6-test', [ 'spring-test', 'spring-security-test'])
+      
     }
   }
 }

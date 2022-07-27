@@ -8,21 +8,33 @@ import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import raido.util.Log;
 
+import java.util.function.Supplier;
+
 import static raido.util.Log.to;
 
 public class BearerSecurityContextRepository implements SecurityContextRepository {
   private final static Log log = to(BearerSecurityContextRepository.class);
 
+  @SuppressWarnings("deprecation")
   @Override
   public SecurityContext loadContext(HttpRequestResponseHolder requestResponseHolder) {
-    SecurityContext context = SecurityContextHolder.createEmptyContext();
-    String token = tokenFromRequest(requestResponseHolder.getRequest());
+    throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public Supplier<SecurityContext> loadContext(HttpServletRequest request) {
+    return ()->{
+      SecurityContext context = SecurityContextHolder.createEmptyContext();
+      String token = tokenFromRequest(request);
+      log.with("token", token).info();
 //    Authentication authentication = PreAuthenticatedAuthenticationJsonWebToken.usingToken(token);
 //    if (authentication != null) {
 //      context.setAuthentication(authentication);
 //      logger.debug("Found bearer token in request. Saving it in SecurityContext");
 //    }
-    return context;
+      return context;
+      
+    };
   }
 
   @Override
@@ -35,6 +47,7 @@ public class BearerSecurityContextRepository implements SecurityContextRepositor
 
   @Override
   public boolean containsContext(HttpServletRequest request) {
+    log.info("containsContext");
     return tokenFromRequest(request) != null;
   }
 

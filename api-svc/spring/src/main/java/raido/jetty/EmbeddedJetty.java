@@ -2,9 +2,11 @@ package raido.jetty;
 
 import jakarta.servlet.ServletContainerInitializer;
 import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.ForwardedRequestCustomizer;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.handler.ErrorHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import raido.util.Log;
@@ -32,11 +34,22 @@ public class EmbeddedJetty {
 
     // don't return the server version header - "because security"
     connectionFactory.getHttpConfiguration().setSendServerVersion(false);
+
+    /* Support "x-forwarded" headers used by AWS ALB. 
+    Got this from https://www.javatips.net/api/org.eclipse.jetty.server.forwardedrequestcustomizer
+    */
+    connectionFactory.getHttpConfiguration().
+      addCustomizer(new ForwardedRequestCustomizer());
+    
     ServerConnector connector = new ServerConnector(server, connectionFactory);
     connector.setPort(port);
 
-    server.setConnectors(new Connector[]{connector});
+    // avoid info leakage "servlet" name tells caller we're using java
+    var errorHandler = new ErrorHandler();
+    errorHandler.setShowServlet(false);
+    connector.getServer().setErrorHandler(errorHandler);
     
+    server.setConnectors(new Connector[]{connector});
     return connector;
   }
 
