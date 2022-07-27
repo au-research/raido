@@ -2,20 +2,28 @@ package raido.spring.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
+import raido.spring.security.jwt.Raid1PreAuthenticatedJsonWebToken;
 import raido.util.Log;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 
+import static raido.spring.config.RaidV1SecurityConfig.RAID_V1_API;
 import static raido.util.Log.to;
 
+/*
+Instead of one SCR that knows all types, could try mutliple SecurityConfigs
+https://github.com/spring-projects/spring-security/issues/5593
+ */
 public class BearerSecurityContextRepository implements SecurityContextRepository {
   private final static Log log = to(BearerSecurityContextRepository.class);
 
-  @SuppressWarnings("deprecation")
+  @SuppressWarnings("deprecation")  // not sure how to implement without this 
   @Override
   public SecurityContext loadContext(HttpRequestResponseHolder requestResponseHolder) {
     throw new UnsupportedOperationException();
@@ -25,13 +33,31 @@ public class BearerSecurityContextRepository implements SecurityContextRepositor
   public Supplier<SecurityContext> loadContext(HttpServletRequest request) {
     return ()->{
       SecurityContext context = SecurityContextHolder.createEmptyContext();
-      String token = tokenFromRequest(request);
-      log.with("token", token).info();
-//    Authentication authentication = PreAuthenticatedAuthenticationJsonWebToken.usingToken(token);
-//    if (authentication != null) {
-//      context.setAuthentication(authentication);
-//      logger.debug("Found bearer token in request. Saving it in SecurityContext");
-//    }
+      var token = authTokenFromRequest(request);
+      if( token.isEmpty() ){
+        return context;
+      }
+      
+      if( request.getServletPath().startsWith(RAID_V1_API) ){
+        log.with("path", request.getServletPath()).with("token", token).info(
+          "RaidV1SCR yes");
+
+        Authentication authentication = 
+          Raid1PreAuthenticatedJsonWebToken.usingToken(token.get());
+        if (authentication != null) {
+          context.setAuthentication(authentication);
+        }
+        else {
+          log.warn("v1 path with token, pre-auth JWT returned null");
+        }
+        
+      }
+      else {
+        log.with("path", request.getServletPath()).with("token", token).info(
+          "RaidV1SCR no");
+        throw new UnsupportedOperationException(
+          "can only do /v1 endpoints ATM");
+      }
       return context;
       
     };
@@ -47,23 +73,23 @@ public class BearerSecurityContextRepository implements SecurityContextRepositor
 
   @Override
   public boolean containsContext(HttpServletRequest request) {
-    log.info("containsContext");
-    return tokenFromRequest(request) != null;
+    return authTokenFromRequest(request).isPresent();
   }
 
-  private String tokenFromRequest(HttpServletRequest request) {
+  
+  private Optional<String> authTokenFromRequest(HttpServletRequest request) {
     final String value = request.getHeader("Authorization");
 
     if (value == null || !value.toLowerCase().startsWith("bearer")) {
-      return null;
+      return Optional.empty();
     }
 
     String[] parts = value.split(" ");
 
     if (parts.length < 2) {
-      return null;
+      return Optional.empty();
     }
 
-    return parts[1].trim();
+    return Optional.of(parts[1].trim());
   }
 }

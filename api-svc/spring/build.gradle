@@ -64,6 +64,8 @@ dependencies{
      NOTE:STO: this might not be right since we're Jetty 11/Servlet 5 */
   implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
 
+  implementation 'com.auth0:java-jwt:4.0.0'
+  
   // postgres DB driver
   runtimeOnly libs.pgjdbc
   jooqGenerator libs.pgjdbc
