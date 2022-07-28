@@ -59,9 +59,14 @@ they're "do not release without fixing"
   * better implementation to reduce garbage
   * needs better documentation
 
-#### `NOTE:`
-* an alternative implementation exists
+#### Other
+For other notes, just use a normal comment (i.e 1 leading asterisk instead 
+of 2).
+
+* acknowledging an alternative implementation exists 
+  * explain why the current implementation was chosen
 * something could be better, but it's not a big deal
+  * explain why it's not a big deal 
 
 
 ## Favour fail-fast config
