@@ -1,10 +1,8 @@
-package raido.spring.security.jwt;
+package raido.spring.security.raidv1;
 
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,10 +11,15 @@ import raido.util.Log;
 import java.util.Collection;
 import java.util.Collections;
 
+import static raido.util.ExceptionUtil.createIae;
 import static raido.util.Log.to;
 
-public class Raid1PreAuthenticatedJsonWebToken 
-implements Authentication, JwtAuthentication {
+/**
+ Final is intended to avoid sub-classing - there should be no need for a 
+ subclass of a pre-auth token.
+ */
+public final class Raid1PreAuthenticatedJsonWebToken 
+implements Authentication {
 
   private static final Log log = 
     to(Raid1PreAuthenticatedJsonWebToken.class);
@@ -32,6 +35,10 @@ implements Authentication, JwtAuthentication {
     return Collections.emptyList();
   }
 
+  public DecodedJWT getToken() {
+    return token;
+  }
+
   @Override
   public Object getCredentials() {
     return token.getToken();
@@ -39,7 +46,7 @@ implements Authentication, JwtAuthentication {
 
   @Override
   public Object getDetails() {
-    return token;
+    return null;
   }
 
   @Override
@@ -53,8 +60,12 @@ implements Authentication, JwtAuthentication {
   }
 
   @Override
-  public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-
+  public void setAuthenticated(boolean isAuthenticated) 
+  throws IllegalArgumentException {
+    // implementation conforms to interface spec
+    if( isAuthenticated ){
+      throw createIae("cannot set a pre-auth as authenticated");
+    }
   }
 
   @Override
@@ -67,30 +78,16 @@ implements Authentication, JwtAuthentication {
       log.debug("No token was provided to build PreAuth token");
       return null;
     }
+    
     try {
+      // doest not verify the token signature, just decodes it
       DecodedJWT jwt = JWT.decode(token);
       return new Raid1PreAuthenticatedJsonWebToken(jwt);
     } catch (JWTDecodeException e) {
-      /* explicitly log stack because excpetion resolver won't see it */
+      /* log the stack because exceeption resolver won't see it */
       log.info("Failed to decode token as jwt", e);
       return null;
     }
   }
 
-  @Override
-  public String getToken() {
-    return token.getToken();
-  }
-
-  @Override
-  public String getKeyId() {
-    return token.getKeyId();
-  }
-
-  @Override
-  public Authentication verify(JWTVerifier verifier) 
-  throws JWTVerificationException {
-    log.info("verifying");
-    return new AuthenticationJsonWebToken(token.getToken(), verifier);
-  }
 }

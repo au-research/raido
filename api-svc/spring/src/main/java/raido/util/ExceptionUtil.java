@@ -25,7 +25,8 @@ public class ExceptionUtil {
    */
   public static RuntimeException createRuntimeException(
     String format,
-    Object... args) {
+    Object... args
+  ) {
     return new RuntimeException(String.format(format, args));
   }
 
@@ -36,9 +37,24 @@ public class ExceptionUtil {
    */
   public static IllegalArgumentException createIllegalArgException(
     String format,
-    Object... args) {
+    Object... args
+  ) {
     return new IllegalArgumentException(String.format(format, args));
   }
+
+  /**
+   Creates a new IllegalArgumentException.
+
+   @param format {@link String#format(String, Object...)} - ("%s")
+   */
+  public static IllegalArgumentException createIae(
+    String format,
+    Object... args
+  ) {
+    return createIllegalArgException(format, args);
+  }
+  
+  
 
   /**
    Wraps the given Throwable in a new RuntimeException

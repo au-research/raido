@@ -20,11 +20,11 @@ For how to do an export to get those files, look in
 
 ### Local DB to import into
 
-Launch local PG container to migrate to.
-```
-docker rm ddb-v1-schema; docker run --name ddb-v1-schema -p 7432:5432 -d -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD= -e POSTGRES_DB=raid-v1  postgres
-```
-This won't actually run, because no password.
+Currently, we  import into the "raido DB" that the api-svc runs in, so that it
+can read it - see [api-svc](../spring/readme.md)
+
+Given the standard raido DB setup, you still need to set the password from
+the import side as below.
 
 Give the above command a password then edit 
 `~/.config/raido-v2/v1-ddb-migration.gradle`:

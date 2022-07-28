@@ -225,3 +225,6 @@ on conflict (name) do update set name = excluded.name, type = excluded.type,
   s3_export                           = excluded.s3_export
 returning raid_v1_import.metadata.name
 ;
+
+select current_setting('timezone')
+;

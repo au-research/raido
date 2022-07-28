@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
@@ -93,6 +94,13 @@ public class ApiConfig {
     return new RedactingExceptionResolver(redactErrorDetails);
   }
 
+  /** Without this, @Value annotation don't resolve ${} placeholders */
+  @Bean
+  public static PropertySourcesPlaceholderConfigurer
+  propertySourcesPlaceholderConfigurer() {
+    return new PropertySourcesPlaceholderConfigurer();
+  }
+  
 }
 
 

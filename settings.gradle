@@ -25,11 +25,17 @@ dependencyResolutionManagement{
       library('spring-security-web', 'org.springframework.security', 'spring-security-web').versionRef('spring6')
       // for configuring through code - pkg: org.sf.security.config
       library('spring-security-config', 'org.springframework.security', 'spring-security-config').versionRef('spring6')
+      // for @Transactional annotation
+      library('spring-tx', 'org.springframework', 'spring-tx').versionRef('spring6')
+      library('spring-jdbc', 'org.springframework', 'spring-jdbc').versionRef('spring6')
+      
       bundle('spring6', [
         'spring-webmvc', 
         'spring-security-core', 
         'spring-security-web', 
         'spring-security-config',
+        'spring-tx',
+        'spring-jdbc',
       ])
       
       // embedded Jetty server - pkg: org.eclipse.jetty.server

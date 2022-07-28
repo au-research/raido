@@ -26,5 +26,6 @@
 
   <logger name="org.springframework" level="info"/>
   <logger name="org.eclipse.jetty" level="info"/>
+  <logger name="com.zaxxer.hikari" level="info"/>
 
 </configuration>

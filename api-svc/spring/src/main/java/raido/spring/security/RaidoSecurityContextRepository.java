@@ -7,7 +7,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
-import raido.spring.security.jwt.Raid1PreAuthenticatedJsonWebToken;
+import raido.spring.security.raidv1.Raid1PreAuthenticatedJsonWebToken;
 import raido.util.Log;
 
 import java.util.Optional;
@@ -16,12 +16,18 @@ import java.util.function.Supplier;
 import static raido.spring.config.RaidV1SecurityConfig.RAID_V1_API;
 import static raido.util.Log.to;
 
-/*
-Instead of one SCR that knows all types, could try mutliple SecurityConfigs
-https://github.com/spring-projects/spring-security/issues/5593
+/**
+ Understands all different kinds of security context:
+ - raidv1 (from token table)
+ - raidV2 authz token
+ - other basic or pre-shared, etc.
+ <p>
+ Instead of one SCR that knows all types, could try mutliple SecurityConfigs,
+ but it looks like a bit of a hassle to implment:
+ https://github.com/spring-projects/spring-security/issues/5593
  */
-public class BearerSecurityContextRepository implements SecurityContextRepository {
-  private final static Log log = to(BearerSecurityContextRepository.class);
+public class RaidoSecurityContextRepository implements SecurityContextRepository {
+  private final static Log log = to(RaidoSecurityContextRepository.class);
 
   @SuppressWarnings("deprecation")  // not sure how to implement without this 
   @Override
@@ -37,20 +43,20 @@ public class BearerSecurityContextRepository implements SecurityContextRepositor
       if( token.isEmpty() ){
         return context;
       }
-      
+
       if( request.getServletPath().startsWith(RAID_V1_API) ){
         log.with("path", request.getServletPath()).with("token", token).info(
           "RaidV1SCR yes");
 
-        Authentication authentication = 
+        Authentication authentication =
           Raid1PreAuthenticatedJsonWebToken.usingToken(token.get());
-        if (authentication != null) {
+        if( authentication != null ){
           context.setAuthentication(authentication);
         }
         else {
           log.warn("v1 path with token, pre-auth JWT returned null");
         }
-        
+
       }
       else {
         log.with("path", request.getServletPath()).with("token", token).info(
@@ -59,14 +65,14 @@ public class BearerSecurityContextRepository implements SecurityContextRepositor
           "can only do /v1 endpoints ATM");
       }
       return context;
-      
+
     };
   }
 
   @Override
   public void saveContext(
-    SecurityContext context, 
-    HttpServletRequest request, 
+    SecurityContext context,
+    HttpServletRequest request,
     HttpServletResponse response
   ) {
   }
@@ -76,17 +82,17 @@ public class BearerSecurityContextRepository implements SecurityContextRepositor
     return authTokenFromRequest(request).isPresent();
   }
 
-  
+
   private Optional<String> authTokenFromRequest(HttpServletRequest request) {
     final String value = request.getHeader("Authorization");
 
-    if (value == null || !value.toLowerCase().startsWith("bearer")) {
+    if( value == null || !value.toLowerCase().startsWith("bearer") ){
       return Optional.empty();
     }
 
     String[] parts = value.split(" ");
 
-    if (parts.length < 2) {
+    if( parts.length < 2 ){
       return Optional.empty();
     }
 
