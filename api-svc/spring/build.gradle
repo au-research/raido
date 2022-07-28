@@ -94,13 +94,35 @@ dependencies{
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
-  testImplementation "org.assertj:assertj-core:3.23.1"
-  
+  testImplementation libs.assertj
+ 
 }
 
 compileJava {
   options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
+
+testing{
+  suites{
+    funcTest(JvmTestSuite){
+      testType = TestSuiteType.FUNCTIONAL_TEST
+      dependencies{
+        implementation project
+
+        // for booting a custom test server
+        implementation libs.bundles.jetty11
+
+        // for having our own spring context in functTest
+        implementation libs.bundles.spring6
+        implementation libs.bundles.spring6.test
+        
+        implementation libs.assertj
+
+      }
+    }
+  }
+}
+tasks.funcTest.description = "don't run this, it's just a Gradle default"
 
 sourceSets{
   main.java{
@@ -114,12 +136,24 @@ sourceSets{
     (and little point for prod code in the general case, IMO). */
     srcDirs "src/test/java"
   }
+  funcTest.resources{
+    srcDirs "src/funcTest/java"
+  }
 }
+
+// compile funcTest classes - but don't run by default (needs DDB migration)
+tasks.build.dependsOn funcTestClasses
 
 test{
   useJUnitPlatform()
   systemProperties defaultSysProps
 }
+
+funcTest{
+  useJUnitPlatform()
+  systemProperties defaultSysProps
+}
+
 
 flyway{
   url = apiSvcPgUrl

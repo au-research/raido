@@ -16,6 +16,8 @@ dependencyResolutionManagement{
       
       library('jooq', 'org.jooq', 'jooq').versionRef('jooq')
       library('pgjdbc', 'org.postgresql:postgresql:42.3.6')
+      library('assertj', 'org.assertj:assertj-core:3.23.1')
+
 
       // core spring/web - pkg: org.springframework
       library('spring-webmvc', 'org.springframework', 'spring-webmvc').versionRef('spring6')

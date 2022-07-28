@@ -47,3 +47,7 @@ DatasourceConfig.password=<dbpassword>
 RaidV1Auth.jwtSecret=<JWT secret>
 ```
 
+
+### Running functional tests
+
+See [funcTest/readme.md](./src/funcTest/readme.md)
