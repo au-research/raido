@@ -25,3 +25,10 @@ Without building infrastructure to cache JVM / Spring startup - this is about
 as quick as Spring can be booted.
 
 `Server Started Server@72a7c7e0{STARTING}[11.0.9,sto=0] @1261ms`
+
+### Commit 53dfbd3f
+
+RaidV1 auth implementation on the `/v1/raid/ping` endpoint.
+
+`Server Started Server@1700915{STARTING}[11.0.9,sto=0] @2053ms`
+
