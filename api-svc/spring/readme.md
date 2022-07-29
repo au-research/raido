@@ -18,7 +18,7 @@ This is used by the `:api-svc:v1-ddb-migration` project to migrate DynamoDB
 into, and the api-svc itself to run off of.
 
 ```
-docker rm --force raido-db; docker run --rm --name raido-db -p 7432:5432 -d -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD= -e POSTGRES_DB=raido  postgres
+docker rm --force raido-db; docker run --name raido-db -p 7432:5432 -d --restart unless-stopped -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD= -e POSTGRES_DB=raido postgres
 
 ```
 This won't actually run, because no password.
