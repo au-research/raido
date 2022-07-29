@@ -11,22 +11,19 @@ import static raido.util.Log.to;
 @Component
 public class ApidsProps {
   private static final Log log = to(ApidsProps.class);
-  
+
   @Value("${Apids.secret:}")
   public String secret;
   
-  @Value("${Apids.appId:}")
+  @Value("${Apids.appId:57158ed6a84b87b23b23cbf3016d59786fb2de5a}")
   public String appId;
   
-  @Value("${Apids.serviceUrl:}")
+  @Value("${Apids.serviceUrl:https://demo.ands.org.au:8443/pids/mint?type=URL&value=https://www.raid.org.au/}")
   public String serviceUrl;
-  
-  @Value("${Apids.raidDomain:}")
-  public String raidDomain;
   
   @PostConstruct
   public void guardValues(){
-    Guard.allHaveValue("must set prop values", 
-      secret, appId, serviceUrl, raidDomain);
+    Guard.allHaveValue("must set ApidsProps values", 
+      secret, appId, serviceUrl);
   }
 }

@@ -8,6 +8,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 import org.springframework.web.client.RestTemplate;
@@ -19,7 +23,11 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import raido.util.Log;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.util.Collections.emptySet;
+import static java.util.Collections.singletonList;
 import static raido.util.Log.to;
 
 @Configuration
@@ -103,10 +111,25 @@ public class ApiConfig {
   }
 
   @Bean
-  public RestTemplate restTemplate(){
-    return new RestTemplate();
+  public static RestTemplate restTemplate(){
+    List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
+    MappingJackson2XmlHttpMessageConverter xmlConverter =
+      new MappingJackson2XmlHttpMessageConverter();
+    MappingJackson2HttpMessageConverter jsonConverter =
+      new MappingJackson2HttpMessageConverter();
+
+    xmlConverter.setSupportedMediaTypes(
+      singletonList(MediaType.APPLICATION_XML) );
+    messageConverters.add(xmlConverter);
+    jsonConverter.setSupportedMediaTypes(
+      singletonList(MediaType.APPLICATION_JSON) );
+    messageConverters.add(jsonConverter);
+
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.setMessageConverters(messageConverters);
+
+    return restTemplate;
   }
-  
 }
 
 

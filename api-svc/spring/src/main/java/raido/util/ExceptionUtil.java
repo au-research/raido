@@ -64,7 +64,8 @@ public class ExceptionUtil {
   public static RuntimeException wrapException(
     Throwable t,
     String format,
-    Object... args) {
+    Object... args
+  ) {
     return new RuntimeException(String.format(format, args), t);
   }
 

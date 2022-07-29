@@ -1,6 +1,10 @@
 package raido.util;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import raido.spring.config.ApiConfig;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -13,6 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
+import static raido.util.ExceptionUtil.wrapException;
 
 
 public final class ObjectUtil {
@@ -130,5 +135,29 @@ public final class ObjectUtil {
     }
 
     return true;
+  }
+
+  /**
+   Thread safe - but consider: https://stackoverflow.com/a/36162525/924597
+   
+   Mitigated by the fact that if we're calling toString() on an object, we're
+   already likely on a slow path (exception handling or some debug loggging).
+   Generally, we only use this for debugging and occasional logging (where 
+   we want to avoid logging too much in general - and the "structured logging" 
+   logic could also get fancy with this too, as long as we use `with()`). 
+   This is just for usage in the context of `toString()` - wire serialisation 
+   for these objects is handled by Spring, see {@link ApiConfig#restTemplate()}.
+   */
+  private static ObjectMapper jsonToStringMapper = new ObjectMapper().
+    // so it can do LocalDateTime, etc.
+    findAndRegisterModules();
+
+  public static String jsonToString(Object value) {
+    try {
+      return jsonToStringMapper.writeValueAsString(value);
+    }
+    catch( JsonProcessingException e ){
+      throw wrapException(e, "could not generate toString()");
+    }
   }
 }

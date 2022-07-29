@@ -84,7 +84,12 @@ dependencies{
 
   // support for JSON serialization for Spring endpoints
   runtimeOnly 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
+  // support for XML serialization for APIDS endpoints (probably others later)
+  implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.13.3'
 
+  // so that MappingJackson2XmlHttpMessageConverter can parse to LocalDateTime 
+  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3"
+  
   // use logback as the backing log implementation for slf4j
   runtimeOnly libs.bundles.logback.runtime
 
@@ -94,6 +99,9 @@ dependencies{
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 
   testImplementation libs.assertj
+
+  // because MockRestServiceServer couldn't find class org.hamcrest.Matcher
+  testImplementation 'org.hamcrest:hamcrest:2.2'
  
 }
 
