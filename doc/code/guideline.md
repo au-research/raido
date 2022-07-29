@@ -70,6 +70,7 @@ of 2).
 
 
 ## Favour fail-fast config
+
 Fail at start instead of later.
 
 Means there's less smoke testing to do on a release, because if 
@@ -79,6 +80,11 @@ the node is functional (which people always shortcut or skip entirely).
 
 Also, the code isn't doing pointless validation on every invocation that only 
 needs to be done once.
+
+
+## Configure for development by default
+
+See [api-svc/.../config/environment/readme.md](/api-svc/spring/src/main/java/raido/spring/config/environment/readme.md)
 
 
 ## MTTS > MTBF

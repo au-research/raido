@@ -66,7 +66,7 @@ dependencies{
      NOTE:STO: this might not be right since we're Jetty 11/Servlet 5 */
   implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
 
-  // pkg: com.auth0.jwt
+  // for working with JWTs - most popular library
   implementation 'com.auth0:java-jwt:4.0.0'
 
   // connection pool
@@ -75,10 +75,9 @@ dependencies{
   // for PostConstruct/PreDestroy - pkg: jakarta.annotation (used to be javax)
   implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
 
-
   // logging DB statements
   implementation 'p6spy:p6spy:3.8.0'
-  
+
   // postgres DB driver
   runtimeOnly libs.pgjdbc
   jooqGenerator libs.pgjdbc

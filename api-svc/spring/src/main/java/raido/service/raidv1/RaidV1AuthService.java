@@ -7,8 +7,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import db.migration.jooq.raid_v1_import.tables.records.TokenRecord;
 import org.jooq.DSLContext;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import raido.spring.config.environment.RaidV1AuthProps;
 import raido.spring.security.ApiSvcAuthenticationException;
 import raido.spring.security.raidv1.Raid1PostAuthenicationJsonWebToken;
 import raido.spring.security.raidv1.Raid1PreAuthenticatedJsonWebToken;
@@ -26,24 +26,21 @@ import static raido.util.Log.to;
 public class RaidV1AuthService {
   private static final Log log = to(RaidV1AuthService.class);
   
-  @Value("${RaidV1Auth.jwtSecret}")
-  private String jwtSecret;
-  
-  @Value("${RaidV1Auth.issuer:https://www.raid.org.au}")
-  private String issuer;
 
   private DSLContext db;
-
-  public RaidV1AuthService(DSLContext db) {
+  private RaidV1AuthProps props;
+  
+  public RaidV1AuthService(DSLContext db, RaidV1AuthProps props) {
     this.db = db;
+    this.props = props;
   }
 
   public DecodedJWT verify(String token) {
-    Guard.hasValue(jwtSecret);
+    Guard.hasValue(props.jwtSecret);
 
-    Algorithm algorithm = Algorithm.HMAC256(jwtSecret);
+    Algorithm algorithm = Algorithm.HMAC256(props.jwtSecret);
     JWTVerifier verifier = JWT.require(algorithm).
-      withIssuer(issuer).
+      withIssuer(props.issuer).
       build(); //Reusable verifier instance
 
     DecodedJWT jwt = null;

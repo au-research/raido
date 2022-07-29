@@ -10,6 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
@@ -99,6 +100,11 @@ public class ApiConfig {
   public static PropertySourcesPlaceholderConfigurer
   propertySourcesPlaceholderConfigurer() {
     return new PropertySourcesPlaceholderConfigurer();
+  }
+
+  @Bean
+  public RestTemplate restTemplate(){
+    return new RestTemplate();
   }
   
 }

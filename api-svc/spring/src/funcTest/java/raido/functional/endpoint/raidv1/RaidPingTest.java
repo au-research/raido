@@ -28,6 +28,13 @@ public class RaidPingTest extends FunctionalTestCase {
     ).isEqualTo("UP");
   }
 
+  @Test
+  public void mint() {
+    assertThat(
+      post(props.raidoArdcLiveToken, "/v1/raid/minttest", "", Result.class).status
+    ).isEqualTo("UP");
+  }
+
   // IMPROVE:STO use proper API model, when it happens  
   static final class Result {
     public String status;
