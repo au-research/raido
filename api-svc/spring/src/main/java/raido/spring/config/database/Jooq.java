@@ -38,6 +38,8 @@ public class Jooq {
     config.set(new Settings().
       withRenderSchema(true).
       withRenderNameCase(AS_IS).
+      // Raido uses p6spy for SQL and transaction stuff - not just JOOQ stuff
+      withExecuteLogging(false).
       withRenderQuotedNames(EXPLICIT_DEFAULT_UNQUOTED));
     config.set(new DefaultExecuteListenerProvider(
       new JooqExceptionTranslator()));
