@@ -1,6 +1,7 @@
 rootProject.name = "raido-v2"
 
 include ":api-svc:v1-ddb-migration"
+include ":api-svc:idl-openapi"
 include ":api-svc:spring"
 
 dependencyResolutionManagement{

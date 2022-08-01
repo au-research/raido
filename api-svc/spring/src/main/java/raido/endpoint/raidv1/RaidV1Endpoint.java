@@ -38,4 +38,12 @@ public class RaidV1Endpoint {
     return Map.of("status","UP");
   }
 
+  @PostMapping("/raid/mint")
+  public Map<String, String> raidMint(){
+    // do not hold TX open across this, it takes SECONDS 
+    ApidsMintResponse handle = apidsSvc.mintApidsHandle();
+    handle = apidsSvc.mintApidsHandle();
+    return Map.of("status","UP");
+  }
+
 }

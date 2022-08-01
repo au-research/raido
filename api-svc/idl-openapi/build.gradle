@@ -1,0 +1,35 @@
+plugins {
+  id "org.openapi.generator" version "6.0.1"
+}
+
+task clean(type: Delete){
+  delete project.buildDir
+}
+
+openApiGenerate {
+  generatorName = "spring"
+  inputSpec = file("src/raid-v1-1-0.yaml").path
+  
+  validateSpec =  false
+  generateApiDocumentation = false
+  generateApiTests = false
+  generateModelDocumentation = false
+  generateModelTests = false
+
+  // setting globas seems to mean it only generates what you specify
+  globalProperties = [
+    // setting this to blank seems to mean that it generates all models
+    models: "",
+  ]
+
+  configOptions = [
+    dateLibrary: "java8",
+    documentationProvider: "none",
+  ]  
+}
+tasks.openApiGenerate.dependsOn clean
+
+openApiValidate {
+  inputSpec = file("src/raid-v1-1-0.yaml").path
+  recommend = true
+}

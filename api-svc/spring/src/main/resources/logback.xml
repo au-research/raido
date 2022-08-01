@@ -48,6 +48,8 @@ and suppressing various startup logs.
   Generally only useful in local dev, don't want it on in deployments because
   it will flood the logging. -->
   <logger name="p6spy" level="debug"/>
+  <logger name="p6spy.tx" level="debug"/>
+  <logger name="p6spy.cxnTest" level="debug"/>
   <logger name="p6spy.cxnTest" level="debug"/>
 
   
