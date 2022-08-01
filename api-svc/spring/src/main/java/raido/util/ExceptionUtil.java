@@ -79,7 +79,8 @@ public class ExceptionUtil {
     Log log,
     Throwable t,
     String format,
-    Object... args) {
+    Object... args
+  ) {
     log.error(format, args);
     log.errorEx("exception", t);
   }

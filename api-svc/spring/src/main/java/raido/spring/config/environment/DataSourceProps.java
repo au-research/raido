@@ -180,19 +180,19 @@ public class DataSourceProps
       log.info("DB driverClassName not specified");
     }
 
-    log.debug("DB connectionTimeout: %s", connectionTimeout);
+    log.info("DB connectionTimeout: %s", connectionTimeout);
     hikariConfig.put("connectionTimeout", connectionTimeout);
 
-    log.debug("DB maximumPoolSize: %s", maximumPoolSize);
+    log.info("DB maximumPoolSize: %s", maximumPoolSize);
     hikariConfig.put("maximumPoolSize", maximumPoolSize);
 
-    log.debug("DB minimumIdle: %s", minimumIdle);
+    log.info("DB minimumIdle: %s", minimumIdle);
     hikariConfig.put("minimumIdle", minimumIdle);
 
-    log.debug("DB idleTimeout: %s", idleTimeout);
+    log.info("DB idleTimeout: %s", idleTimeout);
     hikariConfig.put("idleTimeout", idleTimeout);
 
-    log.debug("DB leakDetectionThreshold: %s", leakDetectionThreshold);
+    log.info("DB leakDetectionThreshold: %s", leakDetectionThreshold);
     hikariConfig.put("leakDetectionThreshold", leakDetectionThreshold);
 
     hikariConfig.put("autoCommit", "false");

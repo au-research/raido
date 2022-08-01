@@ -1,3 +1,6 @@
+<!-- this file is currently setup for local development, thus the time format
+and suppressing various startup logs. 
+-->
 <configuration>
   <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>
 
@@ -21,11 +24,25 @@
     <appender-ref ref="UNMASKED_CONSOLE"/>
   </root>
 
-
   <logger name="raido" level="debug"/>
+  
+  <!-- debug logs request/response data, usually don't want it -->
+  <logger name="raido.service.apids.ApidsService" level="info"/>
+  
+  <!-- These log at info because we want them enabled by default in most 
+  deploy environments.  When personal dev logging is implemented - move these 
+  overrides there. -->
+  <logger name="raido.util.JvmUtil" level="warn"/>
+  <logger name="raido.spring.config.environment.DataSourceProps" level="warn"/>
 
+  <!-- Almost never want to see any of these logs, either dev or deployed --> 
   <logger name="org.springframework" level="info"/>
   <logger name="org.eclipse.jetty" level="info"/>
   <logger name="com.zaxxer.hikari" level="info"/>
+  
+  <!-- don't currently use http-client -->
+  <logger name="org.apache.http" level="info"/>
+  <logger name="httpclient.wire" level="info"/>
+  
 
 </configuration>

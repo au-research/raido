@@ -138,6 +138,8 @@ public class Log {
   }
 
   public void info(String msg) {
+    /* don't need "if is enabled" shortcut because  we're not doing any work 
+    here and the logging implementation already has a shortcut. */
     log.info(msg);
   }
 

@@ -33,10 +33,10 @@ public class ApidsTest {
       andRespond( 
         withStatus(OK).
         contentType(APPLICATION_XML).
-        body(ApidsMintResponse.exampleResponse) );
+        body(ApidsMintResponse.successExample) );
 
     var svc = new ApidsService(props, restTemplate);
-    var response = svc.createAndsHandle();
+    var response = svc.mintApidsHandle();
 
     // hardcoded in the exampleResponse
     assertThat(response.identifier.handle).isEqualTo("10378.1/1687706");

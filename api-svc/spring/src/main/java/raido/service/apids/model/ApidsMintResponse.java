@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 public class ApidsMintResponse {
   // sourced by observation from https://demo.ands.org.au
-  public static final String exampleResponse = """
+  public static final String successExample = """
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <response type="success">
       <identifier handle="10378.1/1687706">
@@ -16,7 +16,14 @@ public class ApidsMintResponse {
       <timestamp>2022-07-29T03:14:05Z</timestamp>
       <message type="user">Successfully authenticated and created handle</message>
     </response>""".trim();
-
+  
+  // reproduce by setting Apids.appId to incorrect value - yes, status is 200
+  public static final String errorExample = """
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <response type="failure">
+    <timestamp>2022-07-29T06:28:33Z</timestamp>
+    <message type="user">Authentication Failed</message>
+    </response""".trim();
 
   public String type;
   public Identifier identifier;
@@ -43,5 +50,5 @@ public class ApidsMintResponse {
     public String type;
     @JacksonXmlText public String value;
   }
-  
+
 }
