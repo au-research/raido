@@ -76,7 +76,7 @@ dependencies{
   implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
 
   // logging DB statements
-  implementation 'p6spy:p6spy:3.8.0'
+  implementation 'p6spy:p6spy:3.9.1'
 
   // postgres DB driver
   runtimeOnly libs.pgjdbc

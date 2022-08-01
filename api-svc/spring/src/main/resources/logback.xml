@@ -43,6 +43,13 @@ and suppressing various startup logs.
   <!-- don't currently use http-client -->
   <logger name="org.apache.http" level="info"/>
   <logger name="httpclient.wire" level="info"/>
-  
 
+  <!-- from our custom P6SpyLogger, configured in spy.props. 
+  Generally only useful in local dev, don't want it on in deployments because
+  it will flood the logging. -->
+  <logger name="p6spy" level="debug"/>
+  <logger name="p6spy.cxnTest" level="debug"/>
+
+  
+  
 </configuration>

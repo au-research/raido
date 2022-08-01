@@ -32,6 +32,7 @@ public class RaidV1Endpoint {
 
   @PostMapping("/raid/minttest")
   public Map<String, String> raidMintTest(){
+    // do not hold TX open across this, it takes SECONDS 
     ApidsMintResponse handle = apidsSvc.mintApidsHandle();
     handle = apidsSvc.mintApidsHandle();
     return Map.of("status","UP");
