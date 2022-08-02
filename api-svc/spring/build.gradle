@@ -239,4 +239,6 @@ task generateIdlRaidV1Src(type:Copy){
   from idRaidV1Project.generateDir
   destinationDir idlGeneratedSrcDir
 }
+/* not sure we want to commit this stuff if we're re-generating all the time.
+IDL is differnt from JOOQ stuff, we don't need a DB to generate code.  */
 tasks.compileJava.dependsOn generateIdlRaidV1Src
