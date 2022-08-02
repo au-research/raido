@@ -45,9 +45,6 @@ public class RaidoSecurityContextRepository implements SecurityContextRepository
       }
 
       if( request.getServletPath().startsWith(RAID_V1_API) ){
-        log.with("path", request.getServletPath()).with("token", token).info(
-          "RaidV1SCR yes");
-
         Authentication authentication =
           Raid1PreAuthenticatedJsonWebToken.usingToken(token.get());
         if( authentication != null ){
@@ -56,7 +53,6 @@ public class RaidoSecurityContextRepository implements SecurityContextRepository
         else {
           log.warn("v1 path with token, pre-auth JWT returned null");
         }
-
       }
       else {
         log.with("path", request.getServletPath()).with("token", token).info(
