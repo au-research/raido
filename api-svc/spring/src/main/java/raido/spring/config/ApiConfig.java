@@ -20,6 +20,8 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import raido.spring.LoggingFilter;
+import raido.spring.RedactingExceptionResolver;
 import raido.util.Log;
 
 
@@ -56,6 +58,8 @@ config files. IMPROVE: use XDG_CONFIG_HOME env variable */
   value = "file:///${user.home}/.config/raido-v2/api-svc-env.properties",
   ignoreResourceNotFound = true)
 public class ApiConfig {
+  public static final String DISPATCHER_NAME = "raido_dispatcher";
+  
   private static final Log log = to(ApiConfig.class);
 
   public static AnnotationConfigWebApplicationContext initServletContext(
@@ -81,10 +85,13 @@ public class ApiConfig {
     // Make sure NoHandlerFound is handled by custom HandlerEexceptionResolver
     servlet.setThrowExceptionIfNoHandlerFound(true);
     ServletRegistration.Dynamic dispatcher = 
-      ctx.addServlet("raido_dispatcher", servlet);
+      ctx.addServlet(DISPATCHER_NAME, servlet);
     dispatcher.setLoadOnStartup(1);
     dispatcher.addMapping("/");
 
+    ctx.addFilter("requestLoggingFilter", LoggingFilter.class)
+      .addMappingForServletNames(null, false, DISPATCHER_NAME);    
+    
     /* Dunno why, but Spring doesn't find WebApplicationInitializer 
     interfaces automatically, so we have to call onStartup() directly. */
     new AbstractSecurityWebApplicationInitializer(){}.onStartup(ctx);
