@@ -1,19 +1,15 @@
 package raid.ddb_migration
 
-import db.migration.jooq.tables.ImportHistory
-import groovy.json.JsonSlurper
-import org.jooq.JSONB
 
-import java.time.LocalDateTime
+import groovy.json.JsonSlurper
+
 import java.util.zip.GZIPInputStream
 
-import static db.migration.jooq.tables.ImportHistory.IMPORT_HISTORY
 import static raid.ddb_migration.DdbS3ExportFile.parseStream
 import static raid.ddb_migration.DdbS3ExportFile.writeErrors
 import static raid.ddb_migration.DdbS3ItemTable.guardS3ExportRaidTableItem
 import static raid.ddb_migration.ExportFile.*
 import static raid.ddb_migration.MigrateRaidTableItems.recordMigration
-import static raid.ddb_migration.Util.prettyJson
 import static raid.ddb_migration.Util.printExecTime
 
 class ExportFile {

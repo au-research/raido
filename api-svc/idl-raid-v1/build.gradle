@@ -1,0 +1,48 @@
+plugins {
+  id "org.openapi.generator" version "6.0.1"
+}
+
+ext {
+  raidV1SpecFile = file("src/raid-v1-1-0.yaml")
+  generateDir = file("$buildDir/generated")
+}
+
+task clean(type: Delete){
+  delete project.buildDir
+}
+
+openApiGenerate {
+  generatorName = "spring"
+  inputSpec = raidV1SpecFile.path
+  outputDir = generateDir.path
+  
+  validateSpec =  false
+  generateApiDocumentation = false
+  generateApiTests = false
+  generateModelDocumentation = false
+  generateModelTests = false
+
+  modelPackage = "raido.idl.raidv1.model"
+  
+  // setting globals seems to mean it only generates what you specify
+  globalProperties = [
+    // setting this to blank seems to mean that it generates all models
+    models: "",
+  ]
+
+  configOptions = [
+    sourceFolder: "",
+    useOptional: "true",
+    useSpringBoot3: "true",
+    dateLibrary: "java8",
+    documentationProvider: "none",
+    disallowAdditionalPropertiesIfNotPresent: "false",
+    openApiNullable: "false",
+  ]  
+}
+tasks.openApiGenerate.dependsOn clean
+
+openApiValidate {
+  inputSpec = raidV1SpecFile.path
+  recommend = true
+}

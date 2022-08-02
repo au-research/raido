@@ -7,12 +7,17 @@ plugins{
 evaluationDependsOn(':api-svc:v1-ddb-migration')
 
 ext{
+  idRaidV1Project = project(":api-svc:idl-raid-v1")
+  
   apiSvcPgUrl = "jdbc:postgresql://localhost:7432/raido"
   apiSvcPgUser = 'postgres'
   apiSvcPgPassword = ""
   apiSvcPgSchema = "api-svc"
 
-  jooqGeneratedSrcDir = 'src/main/generated'
+  jooqGeneratedSrcDir = 'src/main/generated-jooq'
+  jooqGeneratedPkg = 'raido.db.jooq'
+
+  idlGeneratedSrcDir = file('src/main/generated-idl')
 
   defaultSysProps = [
     /* prod machines will always be set to UTC, but developer machines are set 
@@ -133,7 +138,7 @@ tasks.funcTest.description = "don't run this, it's just a Gradle default"
 
 sourceSets{
   main.java{
-    srcDirs += [jooqGeneratedSrcDir]
+    srcDirs += [jooqGeneratedSrcDir, idlGeneratedSrcDir]
   }
   test.resources{
     /* This is so each test's resources are right next to the source.
@@ -213,7 +218,7 @@ jooq{
           target{
             // gets blown away by the clean task each it's run
             directory = jooqGeneratedSrcDir
-            packageName = 'db.migration.jooq'
+            packageName = jooqGeneratedPkg
           }
         }
       }
@@ -222,3 +227,16 @@ jooq{
 }
 tasks.generateJooq.dependsOn cleanJooqGeneratedSrc
 
+task cleanIdlRaidV1Src(type: Delete){
+  group = "idl"
+  delete idlGeneratedSrcDir
+}
+
+task generateIdlRaidV1Src(type:Copy){
+  group = "idl"
+  description = "clean idl then use :api-svc:idl-raid-v1:openApiGenerate"
+  dependsOn cleanIdlRaidV1Src, idRaidV1Project.tasks.openApiGenerate
+  from idRaidV1Project.generateDir
+  destinationDir idlGeneratedSrcDir
+}
+tasks.compileJava.dependsOn generateIdlRaidV1Src

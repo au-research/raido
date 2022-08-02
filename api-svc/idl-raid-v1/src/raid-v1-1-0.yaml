@@ -1,0 +1,303 @@
+# NOTE: Replace <<region>>, <<account>> and <<api_url>> fields
+---
+swagger: "2.0"
+host: localhost:8080
+basePath: /v1
+info:
+  title: RAID API
+  version: "1.1.0"
+  description: "The Data LifeCycle Framework (DLCF – www.dlc.edu.au ) has been initiated by five primary  organisations; Australian Access Federation (AAF), Australia’s Academic and Research Network (AARNet), Australian National Data Service (ANDS), National eResearch Collaboration Tools and Resources (NeCTAR) and Research Data Services (RDS).\n\n The DLCF is a nationwide effort to connect research resources and activities such that researchers can make the best use of existing national, state-based, local, and commercial eResearch tools. It aims to provide a simple path to reliable provenance, more effective collaboration across organisations and assist researchers to position themselves to address the growing potential of increasingly open data.\n\n The DLCF will connect critical elements and points in time of the data journey from grant approval through to project finalisation, results publication and archiving. It will leverage existing eResearch investment to provide a flexible and dynamic national framework supporting research.\n\n The Resource and Activity Persistent identifier(RAiD) is the first of the enabling technologies required for the DLCF. This specification document is for the development of the RAiD service and supporting features. Learn more about the RAiD project by visiting the website (https://www.raid.org.au/)."
+schemes:
+- https
+paths:
+  /raid:
+    post:
+      summary: "Generate a raid with a unique URL handle"
+      consumes:
+      - "application/json"
+      produces:
+      - application/json
+      parameters:
+      - in: "body"
+        required: false
+        name: "body"
+        description: "Minting path and other optional parameters that are stored in the RAiD. 'meta' can take any valid JSON object with a 'name' and 'description inside recommended."
+        schema:
+          $ref: "#/definitions/RaidCreateModel"
+      responses:
+        200:
+          description: 200 response
+          schema:
+            $ref: "#/definitions/RaidModel"
+          headers:
+            Access-Control-Allow-Origin:
+              type: "string"
+
+definitions:
+  RaidModel:
+    type: "object"
+    properties:
+      owner:
+        type: "string"
+        description: "Provider that created the RAiD handle"
+        example: "TechConnect"
+      startDate:
+        type: "string"
+        description: "RAiD start datetime (yyyy-MM-dd hh:mm:ss), which will default to the current datetime if none is supplied"
+        example: "2017-09-20 12:00:00"
+      endDate:
+        type: "string"
+        description: "(optional) RAiD end Datetime (yyyy-MM-dd hh:mm:ss)"
+        example: "2018-12-20 00:00:00"
+      creationDate:
+        type: "string"
+        description: "RAiD created datetime (yyyy-MM-dd hh:mm:ss)"
+        example: "2017-09-20 12:00:00"
+      handle:
+        type: "string"
+        description: "Unique minted ANDS handle"
+        example: "10378.1/1590349"
+      contentPath:
+        type: "string"
+        description: "URL path minted with ANDS"
+        example: "https://google.com"
+      contentIndex:
+        type: "string"
+        description: "Index of URL path ANDS handle"
+        example: "1"
+      providers:
+        type: "array"
+        description: "(optional) Providers associated to the RAiD"
+        items:
+          type: "object"
+          properties:
+            startDate:
+              type: "string"
+              description: "Datetime the provider associated with the RAiD  (yyyy-MM-dd hh:mm:ss)"
+              example: "2017-09-20 12:00:00"
+            endDate:
+              type: "string"
+              description: "(optional) Datetime the provider dissociated with the RAiD  (yyyy-MM-dd hh:mm:ss)"
+              example: "2018-12-20 00:00:00"
+            name:
+              type: "string"
+              description: "Name of provider"
+              example: "TechConnect"
+      institutions:
+        type: "array"
+        description: "(optional) Providers associated to the RAiD"
+        items:
+          type: "object"
+          properties:
+            startDate:
+              type: "string"
+              description: "Datetime the provider associated with the RAiD  (yyyy-MM-dd hh:mm:ss)"
+              example: "2017-09-20 12:00:00"
+            endDate:
+              type: "string"
+              description: "(optional) Datetime the provider dissociated with the RAiD  (yyyy-MM-dd hh:mm:ss)"
+              example: "2018-12-20 00:00:00"
+            name:
+              type: "string"
+              description: "Name of Institution"
+              example: "TechConnect"
+      meta:
+        type: "object"
+        description: "(optional) Object that acts as a document for optional metadata KeyValues"
+        properties:
+          name:
+            type: "string"
+            description: "A name alias for the RAiD"
+          description:
+            type: "string"
+            description: "A short description of the RAiD"
+#  ProviderRaidsModel:
+#    type: "object"
+#    properties:
+#      count:
+#        type: "string"
+#        description: "Number of items returned"
+#        example: "10"
+#      items:
+#        type: "array"
+#        description: "(optional) Providers associated to the RAiD"
+#        items:
+#          $ref: "#/definitions/AssociatedEntityModel"
+#      scannedCount:
+#        type: "string"
+#        description: "Total number of items that were scanned in the query"
+#        example: "10"
+  RaidCreateModel:
+    type: "object"
+#    additionalProperties: {}
+#    additionalProperties: true
+    properties:
+      contentPath:
+        type: "string"
+        description: "URL path minted with ANDS"
+        example: "https://google.com"
+      startDate:
+        type: "string"
+        description: "RAiD start datetime (yyyy-MM-dd hh:mm:ss), which will default to the current datetime if none is supplied"
+        example: "2017-09-20 12:00:00"
+      meta:
+        type: "object"
+#        additionalProperties: {}
+        description: "(optional) Object that acts as a document for optional metadata KeyValues"
+        properties:
+          name:
+            type: "string"
+            description: "A name alias for the RAiD"
+          description:
+            type: "string"
+            description: "A short description of the RAiD"
+  UpdateRaidModel:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+        description: "A name alias for the RAiD that is stored in the metadata"
+      description:
+        type: "string"
+        description: "A short description of the RAiD that is stored in the metadata"
+      contentPath:
+        type: "string"
+        description: "URL path minted with ANDS"
+        example: "https://google.com"
+#  AssociatedEntityModel:
+#    type: "object"
+#    properties:
+#      startDate:
+#        type: "string"
+#        description: "Datetime the provider associated with the RAiD  (yyyy-MM-dd hh:mm:ss)"
+#        example: "2017-09-20 12:00:00"
+#      endDate:
+#        type: "string"
+#        description: "(optional) Datetime the provider dissociated with the RAiD  (yyyy-MM-dd hh:mm:ss)"
+#        example: "2018-12-20 00:00:00"
+#      name:
+#        type: "string"
+#        description: "Name of entity"
+#        example: "TechConnect"
+#  CreateAssociationModel:
+#    type: "object"
+#    properties:
+#      startDate:
+#        type: "string"
+#        description: "Datetime the provider associated with the RAiD  (yyyy-MM-dd hh:mm:ss)"
+#        example: "2017-09-20 12:00:00"
+#      name:
+#        type: "string"
+#        description: "Name of the entity"
+#        example: "TechConnect"
+#  EndEntityAssociationModel:
+#    type: "object"
+#    properties:
+#      endDate:
+#        type: "string"
+#        description: "Datetime the provider dissociated with the RAiD  (yyyy-MM-dd hh:mm:ss)"
+#        example: "2018-12-20 00:00:00"
+#      name:
+#        type: "string"
+#        description: "Name of the entity"
+#        example: "TechConnect"
+#  OwnerAssociationModel:
+#    type: "object"
+#    properties:
+#      name:
+#        type: "string"
+#        description: "Name of the entity"
+#        example: "TechConnect"
+#  InstitutionRaidsModel:
+#    type: "object"
+#    properties:
+#      count:
+#        type: "string"
+#        description: "Number of items returned"
+#        example: "10"
+#      items:
+#        type: "array"
+#        description: "(optional) Institutions associated to the RAiD"
+#        items:
+#          $ref: "#/definitions/AssociatedEntityModel"
+#      scannedCount:
+#        type: "string"
+#        description: "Total number of items that were scanned in the query"
+#        example: "10"
+#  RaidPublicModel:
+#    type: "object"
+#    properties:
+#      creationDate:
+#        type: "string"
+#        description: "RAiD created datetime (yyyy-MM-dd hh:mm:ss)"
+#        example: "2017-09-20 12:00:00"
+#      handle:
+#        type: "string"
+#        description: "Unique minted ANDS handle"
+#        example: "10378.1/1590349"
+#      contentPath:
+#        type: "string"
+#        description: "URL path minted with ANDS"
+#        example: "https://google.com"
+#  RaidsModel:
+#    type: "object"
+#    properties:
+#      count:
+#        type: "string"
+#        description: "Number of items returned"
+#        example: "10"
+#      items:
+#        type: "array"
+#        description: "(optional) Providers associated to the RAiD"
+#        items:
+#          $ref: "#/definitions/AssociationModel"
+#      scannedCount:
+#        type: "string"
+#        description: "Total number of items that were scanned in the query"
+#        example: "10"
+#  AssociationModel:
+#    type: "object"
+#    properties:
+#      raidName:
+#        type: "string"
+#        description: "Name/Alias of the RAiD"
+#      handle:
+#        type: "string"
+#        description: "Unique minted ANDS handle"
+#        example: "10378.1/1590349"
+#      startDate:
+#        type: "string"
+#        description: "Datetime the entity associated with the RAiD  (yyyy-MM-dd hh:mm:ss)"
+#        example: "2017-09-20 12:00:00"
+#      endDate:
+#        type: "string"
+#        description: "(optional) Datetime the entity dissociated with the RAiD  (yyyy-MM-dd hh:mm:ss)"
+#        example: "2018-12-20 00:00:00"
+#  EntitiesModel:
+#    type: "object"
+#    properties:
+#      count:
+#        type: "string"
+#        description: "Number of items returned"
+#        example: "10"
+#      items:
+#        type: "array"
+#        items:
+#          type: "object"
+#          properties:
+#            name:
+#              type: "string"
+#              description: "Provider that created the RAiD handle"
+#              example: "University of Queensland"
+#            grid:
+#              type: "string"
+#              description: "GRID (Global Research Identifier Database) of the Institution"
+#              example: "grid.1003.2"
+#            isni:
+#              type: "string"
+#              description: "International Standard Name Identifier (ISO 27729)"
+#              example: "0000 0000 9320 7537"
+#      scannedCount:
+#        type: "string"
+#        description: "Total number of items that were scanned in the query"
+#        example: "10"

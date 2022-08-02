@@ -5,9 +5,9 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import db.migration.jooq.raid_v1_import.tables.records.TokenRecord;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Component;
+import raido.db.jooq.raid_v1_import.tables.records.TokenRecord;
 import raido.spring.config.environment.RaidV1AuthProps;
 import raido.spring.security.ApiSvcAuthenticationException;
 import raido.spring.security.raidv1.Raid1PostAuthenicationJsonWebToken;
@@ -17,9 +17,9 @@ import raido.util.Log;
 
 import java.util.Optional;
 
-import static db.migration.jooq.raid_v1_import.tables.Token.TOKEN;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static raido.db.jooq.raid_v1_import.tables.Token.TOKEN;
 import static raido.util.Log.to;
 
 @Component
