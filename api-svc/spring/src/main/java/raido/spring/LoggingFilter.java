@@ -16,8 +16,8 @@ import java.io.UnsupportedEncodingException;
 import static raido.util.Log.to;
 
 /**
- IMPROVE: add the ability to filter by requestPath and/or principal (probably 
- wnat this to be at the "API" level at least, but maybe could even be useful
+ IMPROVE: add the ability to enable by requestPath and/or principal (probably 
+ want this to be at the "API" level at least, but maybe could even be useful
  to toggle for an individual user.
  */
 public class LoggingFilter extends OncePerRequestFilter {
