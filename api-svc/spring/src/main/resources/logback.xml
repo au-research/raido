@@ -28,6 +28,9 @@ and suppressing various startup logs.
   
   <!-- debug logs request/response data, usually don't want it -->
   <logger name="raido.service.apids.ApidsService" level="info"/>
+
+  <!-- debug logs endpoint rqeust payload, usually don't want it -->
+  <logger name="raido.spring" level="info"/>
   
   <!-- These log at info because we want them enabled by default in most 
   deploy environments.  When personal dev logging is implemented - move these 
