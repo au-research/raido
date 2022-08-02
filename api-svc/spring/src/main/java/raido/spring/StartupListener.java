@@ -1,4 +1,4 @@
-package raido.spring.config;
+package raido.spring;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
