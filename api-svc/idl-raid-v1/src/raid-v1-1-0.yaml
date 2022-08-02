@@ -29,9 +29,6 @@ paths:
           description: 200 response
           schema:
             $ref: "#/definitions/RaidModel"
-          headers:
-            Access-Control-Allow-Origin:
-              type: "string"
 
 definitions:
   RaidModel:

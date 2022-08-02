@@ -9,13 +9,17 @@ import java.util.TimeZone;
 
 public class DateUtil {
   public static ZoneId UTC_ZONE_ID = ZoneId.of("UTC");
-  public static final String SHORT_DATETIME_FORMAT = "yyyy-MM-dd HH:mm";
-  
+  public static final String ISO_MINUTES_FORMAT = "yyyy-MM-dd HH:mm";
+  public static final String ISO_SECONDS_FORMAT = "yyyy-MM-dd HH:mm:ss";
+  public static final DateTimeFormatter ISO_DATE_TIME = 
+    DateTimeFormatter.ISO_DATE_TIME;
   public static TimeZone utcTimezone() {
     return TimeZone.getTimeZone("UTC");
   }
 
-
+  public static String formatIsoDateTime(LocalDateTime d){
+    return ISO_DATE_TIME.format(d);
+  }
 
   public static String formatUtcDateTime(
     String format,
@@ -33,11 +37,19 @@ public class DateUtil {
     String format,
     LocalDateTime d
   ) {
+    return formatDateTime(format, UTC_ZONE_ID, d);
+  }
+
+  public static String formatDateTime(
+    String format,
+    ZoneId zone,
+    LocalDateTime d
+  ) {
     Guard.notNull(d);
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
-    return formatter.format(d.atZone(UTC_ZONE_ID).
-      withZoneSameInstant(UTC_ZONE_ID));
+    return formatter.format(d.atZone(zone).
+      withZoneSameInstant(zone));
   }
 
   static LocalDateTime parseDateTime(
@@ -76,8 +88,8 @@ public class DateUtil {
     return zdt.withZoneSameInstant(UTC_ZONE_ID).toLocalDateTime();
   }
 
-  public static String formatUtcShortDateTime(LocalDateTime d){
-    return formatUtcDateTime(SHORT_DATETIME_FORMAT, d);
+  public static String formatUtcIsoSeconds(LocalDateTime d){
+    return formatUtcDateTime(ISO_SECONDS_FORMAT, d);
   }
 
 

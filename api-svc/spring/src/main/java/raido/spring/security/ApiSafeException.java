@@ -1,6 +1,7 @@
 package raido.spring.security;
 
 
+import org.eclipse.jetty.http.HttpStatus;
 import raido.util.ExceptionUtil;
 import raido.util.Log;
 
@@ -29,10 +30,15 @@ import static raido.util.Log.to;
 public class ApiSafeException extends RuntimeException {
   private static Log log = to(ApiSafeException.class);
 
-  private boolean retryable;
-
+  protected int status = HttpStatus.INTERNAL_SERVER_ERROR_500;
+  
   public ApiSafeException(String message){
     super(message);
+  }
+
+  protected ApiSafeException(String message, int status){
+    super(message);
+    this.status = status;
   }
 
   public static void mapLoggedRootCauseMessage(
@@ -84,4 +90,7 @@ public class ApiSafeException extends RuntimeException {
     return new ApiSafeException(String.format(format, args));
   }
 
+  public int getStatus() {
+    return status;
+  }
 }

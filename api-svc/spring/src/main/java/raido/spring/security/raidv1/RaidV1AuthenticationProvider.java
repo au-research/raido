@@ -20,7 +20,6 @@ public class RaidV1AuthenticationProvider implements AuthenticationProvider {
   @Override
   public Authentication authenticate(Authentication authentication) 
   throws AuthenticationException {
-    log.info("authenticate");
 
     if( isRaid1PreAuth(authentication.getClass()) ){
       return raidSvc.authenticate(

@@ -3,15 +3,18 @@ package raido.spring;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpStatus;
+import org.eclipse.jetty.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
+import raido.spring.security.ApiClientException;
 import raido.spring.security.ApiSafeException;
 import raido.util.DateUtil;
 import raido.util.Log;
+import raido.util.Nullable;
 
 import java.time.LocalDateTime;
 
@@ -40,18 +43,15 @@ public class RedactingExceptionResolver extends AbstractHandlerExceptionResolver
     Exception ex
   ) {
     ErrorJson errorJson = new ErrorJson();
-    errorJson.timeStamp = DateUtil.formatUtcShortDateTime(LocalDateTime.now());
-    HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-    errorJson.message = "internal error, see server logs for details";
+    errorJson.timeStamp = DateUtil.formatIsoDateTime(LocalDateTime.now());
     
     try {
 
-      httpStatus = mapStatus(ex);
-      errorJson.status = httpStatus.value();
+      errorJson.status = mapStatus(ex);
       
-      if( !redactErrorDetails ){
-        errorJson.message = mapMessage(ex);
-      }
+      errorJson.message = mapMessage(ex, redactErrorDetails);
+      
+      errorJson.detail = mapDetail(ex);
 
       logError(ex);
       
@@ -62,7 +62,7 @@ public class RedactingExceptionResolver extends AbstractHandlerExceptionResolver
 
     ModelAndView mav = new ModelAndView(
       new MappingJackson2JsonView(), "error", errorJson);
-    mav.setStatus(httpStatus);
+    mav.setStatus(HttpStatusCode.valueOf(errorJson.status));
     return mav;
   }
 
@@ -91,7 +91,7 @@ public class RedactingExceptionResolver extends AbstractHandlerExceptionResolver
     log.error("unhandled error", ex);
   }
 
-  private String mapMessage(Exception ex) {
+  private String mapMessage(Exception ex, boolean redactErrorDetails) {
     if(ex instanceof ApiSafeException safe){
       // The entire point of an ApiSafeException is that it's message should 
       // be safe to send to the client.
@@ -104,6 +104,10 @@ public class RedactingExceptionResolver extends AbstractHandlerExceptionResolver
     ){
       return nested.getRootCause().getMessage();
     }
+
+    if( redactErrorDetails ){
+      return "internal error, see server logs for details";
+    }
     
     // Logged as warn to avoid being accidentally filtered. 
     log.warn("DEVELOPMENT MODE - error details are exposed to clients");
@@ -111,9 +115,13 @@ public class RedactingExceptionResolver extends AbstractHandlerExceptionResolver
       ex.getCause().getMessage();
   }
 
-  private HttpStatus mapStatus(Exception ex) {
+  private int mapStatus(Exception ex) {
+    if( ex instanceof ApiSafeException ){
+      return ((ApiSafeException) ex).getStatus();
+    }
+    
     if( ex instanceof BadCredentialsException ){
-      return HttpStatus.UNAUTHORIZED;
+      return HttpStatus.UNAUTHORIZED_401;
     }
     
 //    if( ex instanceof NotAuthorizedExcepton ){
@@ -121,16 +129,26 @@ public class RedactingExceptionResolver extends AbstractHandlerExceptionResolver
 //    }
 
     if( ex instanceof NoHandlerFoundException ){
-      return HttpStatus.NOT_FOUND;
+      return HttpStatus.NOT_FOUND_404;
     }
     
-    return HttpStatus.INTERNAL_SERVER_ERROR;
+    return HttpStatus.INTERNAL_SERVER_ERROR_500;
   }
 
+  @Nullable
+  private Object mapDetail(Exception ex){
+    if( ex instanceof ApiClientException ){
+      return ((ApiClientException) ex).getProblems();
+    }
+    
+    return null;
+  }
+  
   public static class ErrorJson {
     public Integer status;
     public String message;
     public String timeStamp;
+    public Object detail;
   }
 
 }
