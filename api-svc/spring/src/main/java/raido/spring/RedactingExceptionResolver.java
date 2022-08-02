@@ -1,4 +1,4 @@
-package raido.spring.config;
+package raido.spring;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -83,8 +83,8 @@ public class RedactingExceptionResolver extends AbstractHandlerExceptionResolver
     
     if(ex instanceof NoHandlerFoundException noHandlerEx){
       // info() level is intentional, don't clutter the logs with warnings
-      log.msg("no mapping found").with("method", noHandlerEx.getHttpMethod()).
-        with("url", noHandlerEx.getRequestURL()).info();
+      log.with("method", noHandlerEx.getHttpMethod()).
+        with("url", noHandlerEx.getRequestURL()).info("no mapping found");
       return;
     }
     
