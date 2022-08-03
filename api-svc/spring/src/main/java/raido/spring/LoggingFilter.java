@@ -19,6 +19,8 @@ import static raido.util.Log.to;
  IMPROVE: add the ability to enable by requestPath and/or principal (probably 
  want this to be at the "API" level at least, but maybe could even be useful
  to toggle for an individual user.
+ IMPROVE: add header logging
+ IMPROVE: add url param logging
  */
 public class LoggingFilter extends OncePerRequestFilter {
 
