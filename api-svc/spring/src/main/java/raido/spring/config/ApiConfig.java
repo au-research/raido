@@ -33,7 +33,6 @@ import static raido.util.Log.to;
 
 @Configuration
 @EnableWebMvc
-@EnableTransactionManagement
 @ComponentScan(basePackages = {
   "raido.spring.config", "raido.service", "raido.endpoint" })
 /* This is NOT for you to put an `env.properties` file with credentials in the 
