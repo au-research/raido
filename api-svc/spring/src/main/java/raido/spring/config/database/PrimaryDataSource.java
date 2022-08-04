@@ -24,9 +24,13 @@ import static raido.util.Log.to;
 @Component
 /* Without this @Transactional wasn't working right; 
 things were in an autocommit type of state where stuff like 
-Hibp TXs that should have been one big TX were having rollback 
+multi-statement stuff that should have been one big TX were having rollback 
 statements issued (cause that's how autocommit works for read-only 
-transactions, it does a rollback instead of commit.*/
+transactions, it does a rollback instead of commit. 
+Note that if your API endpoint's transaction seems to be being rolled back 
+for no reason - it may be because you've used the Jakarta @Transactional
+annotation instead of the Spring one.
+*/
 @EnableTransactionManagement
 /**
  "Primary" in that there are pipe-dreams about having a "read-only" 
