@@ -7,6 +7,7 @@ import org.springframework.web.client.RestTemplate;
 import raido.service.apids.model.ApidsMintResponse;
 import raido.service.apids.model.RawXml;
 import raido.spring.config.environment.ApidsProps;
+import raido.util.Guard;
 import raido.util.Log;
 import raido.util.RestUtil;
 
@@ -45,7 +46,19 @@ public class ApidsService {
       e ->rest.exchange(
         props.serviceUrl, POST, entity, ApidsMintResponse.class) );
 
+    guardApidsResponse(responseBody);
+    
     return responseBody;
+  }
+  
+  private void guardApidsResponse(ApidsMintResponse response){
+    Guard.notNull(response);
+    Guard.notNull(response.identifier);
+    Guard.hasValue(response.identifier.handle);
+    Guard.notNull(response.identifier.property);
+    Guard.areEqual(response.identifier.property.index, 1);
+    Guard.areEqual(response.identifier.property.type, "URL");
+    Guard.hasValue(response.identifier.property.value);
   }
 
   private RawXml buildBasicAuthorizedMintBody() {

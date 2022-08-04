@@ -1,14 +1,16 @@
 package raido.spring.security;
 
 
-import org.eclipse.jetty.http.HttpStatus;
 import raido.util.ExceptionUtil;
 import raido.util.Log;
 
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
+import static java.util.Collections.emptyList;
+import static org.eclipse.jetty.http.HttpStatus.INTERNAL_SERVER_ERROR_500;
 import static raido.util.ExceptionUtil.logError;
 import static raido.util.Log.to;
 
@@ -30,15 +32,36 @@ import static raido.util.Log.to;
 public class ApiSafeException extends RuntimeException {
   private static Log log = to(ApiSafeException.class);
 
-  protected int status = HttpStatus.INTERNAL_SERVER_ERROR_500;
+  private int httpStatus;
   
+  private boolean logStack;
+
+  /** Remember  this is explicitly intended to be returned to the client,
+   even exceptions are being redacted.
+   Do not put sensitivie info in here.
+   It's intended for validation errors, etc..
+   */
+  private List<String> detail;
+
   public ApiSafeException(String message){
-    super(message);
+    this(message, INTERNAL_SERVER_ERROR_500, emptyList(), false);
   }
 
-  protected ApiSafeException(String message, int status){
+  public ApiSafeException(String message, List<String> detail){
+    this(message, INTERNAL_SERVER_ERROR_500, detail, false);
+  }
+
+  public ApiSafeException(String message, int httpStatus){
+    this(message, httpStatus, emptyList(), false);
+  }
+
+  protected ApiSafeException(
+    String message, int httpStatus, List<String> detail, boolean logStack
+  ){
     super(message);
-    this.status = status;
+    this.httpStatus = httpStatus;
+    this.detail = detail;
+    this.logStack = logStack;
   }
 
   public static void mapLoggedRootCauseMessage(
@@ -60,7 +83,7 @@ public class ApiSafeException extends RuntimeException {
 
   /**
    * The root cause of e will be passed to the predicate, if it matches, then 
-   * the exception generaate by the supplier will be thrown.
+   * the exception generate by the supplier will be thrown.
    */
   public static void mapRootCause(
     Exception e, 
@@ -90,7 +113,15 @@ public class ApiSafeException extends RuntimeException {
     return new ApiSafeException(String.format(format, args));
   }
 
-  public int getStatus() {
-    return status;
+  public int getHttpStatus() {
+    return httpStatus;
+  }
+
+  public List<String> getDetail() {
+    return detail;
+  }
+
+  public boolean isLogStack() {
+    return logStack;
   }
 }

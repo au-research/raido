@@ -25,7 +25,7 @@ public class ApiSvc extends SchemaImpl {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The reference instance of <code>api-svc</code>
+     * The reference instance of <code>api_svc</code>
      */
     public static final ApiSvc API_SVC = new ApiSvc();
 
@@ -33,7 +33,7 @@ public class ApiSvc extends SchemaImpl {
      * No further instances allowed
      */
     private ApiSvc() {
-        super("api-svc", null);
+        super("api_svc", null);
     }
 
 

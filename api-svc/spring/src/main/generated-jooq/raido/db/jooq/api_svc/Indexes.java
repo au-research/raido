@@ -13,7 +13,7 @@ import raido.db.jooq.api_svc.tables.FlywaySchemaHistory;
 
 
 /**
- * A class modelling indexes of tables in api-svc.
+ * A class modelling indexes of tables in api_svc.
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Indexes {

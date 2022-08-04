@@ -40,7 +40,7 @@ public class P6SpyLogger extends Slf4JLogger {
   private Logger cxnTest;
 
  	public P6SpyLogger() {
-    LoggerFactory.getLogger(SPY_LOGGER_PREFIX).info("init");
+    LoggerFactory.getLogger(SPY_LOGGER_PREFIX).debug("init");
  	  txLog = LoggerFactory.getLogger(TX_LOGGER);
  	  cxnTest = LoggerFactory.getLogger(CXN_LOGGER);
  	}

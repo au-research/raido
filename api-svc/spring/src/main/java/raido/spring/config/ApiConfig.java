@@ -12,18 +12,17 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import raido.spring.LoggingFilter;
 import raido.spring.RedactingExceptionResolver;
+import raido.spring.RequestLoggingFilter;
 import raido.util.Log;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,7 @@ import static raido.util.Log.to;
 
 @Configuration
 @EnableWebMvc
-@EnableWebSecurity
+@EnableTransactionManagement
 @ComponentScan(basePackages = {
   "raido.spring.config", "raido.service", "raido.endpoint" })
 /* This is NOT for you to put an `env.properties` file with credentials in the 
@@ -89,15 +88,16 @@ public class ApiConfig {
     dispatcher.setLoadOnStartup(1);
     dispatcher.addMapping("/");
 
-    ctx.addFilter("requestLoggingFilter", LoggingFilter.class)
-      .addMappingForServletNames(null, false, DISPATCHER_NAME);    
+    RequestLoggingFilter.add(ctx, DISPATCHER_NAME);    
     
     /* Dunno why, but Spring doesn't find WebApplicationInitializer 
-    interfaces automatically, so we have to call onStartup() directly. */
+    interfaces automatically, so we have to call onStartup() directly. 
+    */
     new AbstractSecurityWebApplicationInitializer(){}.onStartup(ctx);
     
     return rootContext;
   }
+
 
   /**
    This replaces the default resolver, I was having trouble with ordering and

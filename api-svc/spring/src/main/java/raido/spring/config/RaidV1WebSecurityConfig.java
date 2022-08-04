@@ -14,16 +14,19 @@ import static raido.util.Log.to;
 
 // https://github.com/spring-projects/spring-security-samples/blob/655cf77ea4fed8dcd910b1151c126991bf5527d5/servlet/java-configuration/hello-security-explicit/src/main/java/example/SecurityConfiguration.java
 @EnableWebSecurity
-public class RaidV1SecurityConfig {
-  private static final Log log = to(RaidV1SecurityConfig.class);
+public class RaidV1WebSecurityConfig {
+  private static final Log log = to(RaidV1WebSecurityConfig.class);
 
   public static final String RAID_V1_API = "/v1";
   public static final String PUBLIC = "/public";
 
-  
-  @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http, RaidV1AuthService raidSvc) throws Exception {
 
+  @Bean
+  public SecurityFilterChain securityFilterChain(
+    HttpSecurity http, 
+    RaidV1AuthService raidSvc
+  ) throws Exception {
+    log.info("securityFilterChain()");
     http.
       authenticationProvider(
         new RaidV1AuthenticationProvider(raidSvc)).

@@ -6,24 +6,23 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
-import org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
-import raido.spring.security.ApiClientException;
 import raido.spring.security.ApiSafeException;
-import raido.util.DateUtil;
 import raido.util.Log;
 import raido.util.Nullable;
 
 import java.time.LocalDateTime;
 
+import static raido.util.DateUtil.formatIsoDateTime;
 import static raido.util.Log.to;
 
 /** In prod, this should be configured that the resolver will make
  sure we don't send any exception details to callers of the API (to avoid
  accidentall leakage of information). */
-public class RedactingExceptionResolver extends AbstractHandlerExceptionResolver {
+public class RedactingExceptionResolver implements HandlerExceptionResolver {
   private static final Log log = to(RedactingExceptionResolver.class);
 
   private final boolean redactErrorDetails;
@@ -34,16 +33,15 @@ public class RedactingExceptionResolver extends AbstractHandlerExceptionResolver
     this.redactErrorDetails = redactErrorDetails;
   }
 
-  @SuppressWarnings("NullableProblems")
   @Override
-  protected ModelAndView doResolveException(
+  public ModelAndView resolveException(
     HttpServletRequest request,
     HttpServletResponse response,
     Object handler,
     Exception ex
   ) {
     ErrorJson errorJson = new ErrorJson();
-    errorJson.timeStamp = DateUtil.formatIsoDateTime(LocalDateTime.now());
+    errorJson.timeStamp = formatIsoDateTime(LocalDateTime.now());
     
     try {
 
@@ -77,7 +75,7 @@ public class RedactingExceptionResolver extends AbstractHandlerExceptionResolver
     if( ex instanceof BadCredentialsException 
 //      || ex instanceof NotAuthorizedExcepton
     ){
-      // don't log stacks for thse
+      // don't log stacks for these
       return;
     }
     
@@ -88,6 +86,16 @@ public class RedactingExceptionResolver extends AbstractHandlerExceptionResolver
       return;
     }
     
+    if( ex instanceof ApiSafeException apiSafeEx ){
+      log.with("detail", apiSafeEx.getDetail()).
+        error(apiSafeEx.getMessage());
+      if( apiSafeEx.isLogStack() ){
+        log.errorEx(apiSafeEx.getMessage(), ex);
+      }
+      
+      return;
+    }
+
     log.error("unhandled error", ex);
   }
 
@@ -117,7 +125,7 @@ public class RedactingExceptionResolver extends AbstractHandlerExceptionResolver
 
   private int mapStatus(Exception ex) {
     if( ex instanceof ApiSafeException ){
-      return ((ApiSafeException) ex).getStatus();
+      return ((ApiSafeException) ex).getHttpStatus();
     }
     
     if( ex instanceof BadCredentialsException ){
@@ -137,13 +145,13 @@ public class RedactingExceptionResolver extends AbstractHandlerExceptionResolver
 
   @Nullable
   private Object mapDetail(Exception ex){
-    if( ex instanceof ApiClientException ){
-      return ((ApiClientException) ex).getProblems();
+    if( ex instanceof ApiSafeException ){
+      return ((ApiSafeException) ex).getDetail();
     }
     
     return null;
   }
-  
+
   public static class ErrorJson {
     public Integer status;
     public String message;

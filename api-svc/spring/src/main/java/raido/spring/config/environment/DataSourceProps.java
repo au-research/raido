@@ -161,7 +161,7 @@ public class DataSourceProps
 
     String configUrl = url;
     if( hasValue(schema) ){
-      log.info("adding currentSchema driver parameter");
+      log.debug("adding currentSchema driver parameter");
       configUrl = appendCurrentSchema(configUrl);
     }
     log.info("DB url: %s", configUrl);
@@ -266,5 +266,5 @@ public class DataSourceProps
       return Optional.ofNullable(defaultDriver);
     }
   }
-
+  
 }

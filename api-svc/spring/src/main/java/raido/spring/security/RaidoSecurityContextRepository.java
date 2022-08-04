@@ -13,7 +13,7 @@ import raido.util.Log;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static raido.spring.config.RaidV1SecurityConfig.RAID_V1_API;
+import static raido.spring.config.RaidV1WebSecurityConfig.RAID_V1_API;
 import static raido.util.Log.to;
 
 /**

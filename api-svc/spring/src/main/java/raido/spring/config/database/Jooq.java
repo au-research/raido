@@ -23,7 +23,7 @@ public class Jooq {
 
   @Bean
   public DSLContext dsl(@Autowired ConnectionProvider connectionProvider) {
-    log.info("configure dsl()");
+    log.with("connectionProvider", connectionProvider).debug("configure dsl()");
     return new DefaultDSLContext(createJooqConfig(connectionProvider));
   }
 

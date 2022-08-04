@@ -37,7 +37,7 @@ public class TestTable extends TableImpl<TestTableRecord> {
     private static final long serialVersionUID = 1L;
 
     /**
-     * The reference instance of <code>api-svc.test_table</code>
+     * The reference instance of <code>api_svc.test_table</code>
      */
     public static final TestTable TEST_TABLE = new TestTable();
 
@@ -50,7 +50,7 @@ public class TestTable extends TableImpl<TestTableRecord> {
     }
 
     /**
-     * The column <code>api-svc.test_table.handle</code>.
+     * The column <code>api_svc.test_table.handle</code>.
      */
     public final TableField<TestTableRecord, String> HANDLE = createField(DSL.name("handle"), SQLDataType.CLOB.nullable(false), this, "");
 
@@ -63,21 +63,21 @@ public class TestTable extends TableImpl<TestTableRecord> {
     }
 
     /**
-     * Create an aliased <code>api-svc.test_table</code> table reference
+     * Create an aliased <code>api_svc.test_table</code> table reference
      */
     public TestTable(String alias) {
         this(DSL.name(alias), TEST_TABLE);
     }
 
     /**
-     * Create an aliased <code>api-svc.test_table</code> table reference
+     * Create an aliased <code>api_svc.test_table</code> table reference
      */
     public TestTable(Name alias) {
         this(alias, TEST_TABLE);
     }
 
     /**
-     * Create a <code>api-svc.test_table</code> table reference
+     * Create a <code>api_svc.test_table</code> table reference
      */
     public TestTable() {
         this(DSL.name("test_table"), null);

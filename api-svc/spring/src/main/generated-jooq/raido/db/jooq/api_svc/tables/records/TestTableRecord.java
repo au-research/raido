@@ -21,7 +21,7 @@ public class TestTableRecord extends UpdatableRecordImpl<TestTableRecord> implem
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>api-svc.test_table.handle</code>.
+     * Setter for <code>api_svc.test_table.handle</code>.
      */
     public TestTableRecord setHandle(String value) {
         set(0, value);
@@ -29,7 +29,7 @@ public class TestTableRecord extends UpdatableRecordImpl<TestTableRecord> implem
     }
 
     /**
-     * Getter for <code>api-svc.test_table.handle</code>.
+     * Getter for <code>api_svc.test_table.handle</code>.
      */
     public String getHandle() {
         return (String) get(0);

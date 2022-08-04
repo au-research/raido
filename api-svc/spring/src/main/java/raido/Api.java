@@ -1,5 +1,6 @@
 package raido;
 
+import org.slf4j.bridge.SLF4JBridgeHandler;
 import raido.jetty.EmbeddedJetty;
 import raido.spring.config.ApiConfig;
 import raido.util.Log;
@@ -12,6 +13,12 @@ public class Api {
   
   private static final Log log = to(Api.class);
 
+  static {
+    /* https://stackoverflow.com/a/43242620/924597 
+    Originally introduced for getting the pgjdbc driver stuff. */
+    SLF4JBridgeHandler.install();
+  }
+  
   public static void main(String... args) throws Exception {
     normaliseJvmDefaults();
     

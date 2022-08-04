@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-import static raido.spring.config.RaidV1SecurityConfig.PUBLIC;
+import static raido.spring.config.RaidV1WebSecurityConfig.PUBLIC;
 
 @RequestMapping(PUBLIC)
 @RestController

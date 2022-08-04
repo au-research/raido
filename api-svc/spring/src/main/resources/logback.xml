@@ -2,6 +2,11 @@
 and suppressing various startup logs. 
 -->
 <configuration>
+  <!-- https://www.slf4j.org/api/org/slf4j/bridge/SLF4JBridgeHandler.html -->
+<!--  <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>-->
+  <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+    <resetJUL>true</resetJUL>
+  </contextListener>  
   <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>
 
   <appender name="UNMASKED_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -24,13 +29,16 @@ and suppressing various startup logs.
     <appender-ref ref="UNMASKED_CONSOLE"/>
   </root>
 
+  <!-- debug is generally be disabled for deployment environments.
+  In dev, we have it on then explicitly switch it off for most noisy stuff
+  that we don't need usually want to see during development. -->
   <logger name="raido" level="debug"/>
   
   <!-- debug logs request/response data, usually don't want it -->
   <logger name="raido.service.apids.ApidsService" level="info"/>
 
-  <!-- debug logs endpoint rqeust payload, usually don't want it -->
-  <logger name="raido.spring" level="info"/>
+  <!-- debug logs endpoint reqeust payload, usually don't want it -->
+  <logger name="raido.spring.RequestLoggingFilter" level="info"/>
   
   <!-- These log at info because we want them enabled by default in most 
   deploy environments.  When personal dev logging is implemented - move these 
@@ -53,8 +61,20 @@ and suppressing various startup logs.
   <logger name="p6spy" level="debug"/>
   <logger name="p6spy.tx" level="debug"/>
   <logger name="p6spy.cxnTest" level="debug"/>
-  <logger name="p6spy.cxnTest" level="debug"/>
 
+
+  <!-- JUL logging config enabled by SLF4JBridgeHandler -->
+  <!-- start JUL stuff -->
+
+  <!-- pgjdbc logging - crazy verbose, prefer p6spy logging -->
+  <logger name="org.postgresql" level="info"/>
+  <!-- JDK stuff - logging of TLS/certificate stuff, etc. -->
+  <logger name="jdk" level="info"/>
+  <!-- dangerous
+  sun.net.www.protocol.http.HttpURLConnection logs auth headers -->
+  <logger name="sun" level="info"/>
+
+  <!-- end JUL stuff -->
   
   
 </configuration>

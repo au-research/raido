@@ -29,9 +29,9 @@ public class RaidPingTest extends FunctionalTestCase {
   }
 
   @Test
-  public void mint() {
+  public void shouldCallApidsMint() {
     assertThat(
-      post(props.raidoArdcLiveToken, "/v1/raid/minttest", "", Result.class).status
+      post(props.raidoArdcLiveToken, "/v1/raid/apidstest", "", Result.class).status
     ).isEqualTo("UP");
   }
 

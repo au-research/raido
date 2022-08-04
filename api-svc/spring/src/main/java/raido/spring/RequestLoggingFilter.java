@@ -1,6 +1,8 @@
 package raido.spring;
 
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterRegistration;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,6 +14,7 @@ import raido.util.ObjectUtil;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Optional;
 
 import static raido.util.Log.to;
 
@@ -22,18 +25,38 @@ import static raido.util.Log.to;
  IMPROVE: add header logging
  IMPROVE: add url param logging
  */
-public class LoggingFilter extends OncePerRequestFilter {
+public class RequestLoggingFilter extends OncePerRequestFilter {
 
-  /** if this is not enabled for info, then the filter just delegates on to the
-   rest of the filter chain, no other logging (payload debugging, timing, etc.) 
-   is attempted. */
-  private static final Log log = to(LoggingFilter.class);
+  
+  /** if this is not enabled for info, then the filter will not be added to 
+   the filter chain at all.
+   @see #add(ServletContext, String) 
+   */
+  private static final Log log = to(RequestLoggingFilter.class);
 
   /** if this is set to debug, then the body of the request will be logged */
-  private static final Log bodyLog = to(LoggingFilter.class, "body");
+  private static final Log bodyLog = to(RequestLoggingFilter.class, "body");
 
   private int getMaxPayloadLength = 1024;
 
+  public static Optional<FilterRegistration.Dynamic> add(
+    ServletContext ctx, 
+    String dispatcherName
+  ) {
+    if( !log.isInfoEnabled() ){
+      // do we want a warning or something here?
+      return Optional.empty();
+    }
+
+    String filterName = RequestLoggingFilter.class.getSimpleName();
+    FilterRegistration.Dynamic filterReg = ctx.addFilter(
+      filterName, RequestLoggingFilter.class);
+    filterReg.addMappingForServletNames(null, false, dispatcherName);
+    log.with("filter", filterName).
+      info("registered");
+    return Optional.of(filterReg);
+  }
+  
   /** Adapted from AbstractRequestLoggingFilter. */
   @Override
   protected void doFilterInternal(
@@ -41,11 +64,6 @@ public class LoggingFilter extends OncePerRequestFilter {
     HttpServletResponse response,
     FilterChain filterChain
   ) throws ServletException, IOException {
-    boolean shouldLog = shouldLog(request);
-    if( !shouldLog ){
-      filterChain.doFilter(request, response);
-      return;
-    }
 
     boolean isFirstRequest = !isAsyncDispatch(request);
     HttpServletRequest requestToUse = request;
@@ -65,7 +83,6 @@ public class LoggingFilter extends OncePerRequestFilter {
       long time = (System.nanoTime() - beforeReq) / 1_000_000;
       log.with("requestId", requestId).
         with("timeMs", time).
-        
         with("status", response.getStatus()).
         info("endpoint invoked");
 
@@ -96,10 +113,6 @@ public class LoggingFilter extends OncePerRequestFilter {
     return new ServletRequestId(
       req.getMethod(), req.getRequestURI(),
       req.getRemoteAddr(), req.getRemoteUser());
-  }
-
-  protected boolean shouldLog(HttpServletRequest request) {
-    return log.isInfoEnabled();
   }
 
   protected String getMessagePayload(HttpServletRequest request) {

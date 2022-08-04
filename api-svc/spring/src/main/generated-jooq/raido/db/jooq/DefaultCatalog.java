@@ -29,7 +29,7 @@ public class DefaultCatalog extends CatalogImpl {
     public static final DefaultCatalog DEFAULT_CATALOG = new DefaultCatalog();
 
     /**
-     * The schema <code>api-svc</code>.
+     * The schema <code>api_svc</code>.
      */
     public final ApiSvc API_SVC = ApiSvc.API_SVC;
 

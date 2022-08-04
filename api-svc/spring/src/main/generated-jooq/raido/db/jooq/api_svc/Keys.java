@@ -17,7 +17,7 @@ import raido.db.jooq.api_svc.tables.records.TestTableRecord;
 
 /**
  * A class modelling foreign key relationships and constraints of tables in
- * api-svc.
+ * api_svc.
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Keys {

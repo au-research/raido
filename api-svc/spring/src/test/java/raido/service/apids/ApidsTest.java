@@ -22,6 +22,8 @@ public class ApidsTest {
   @Test
   public void shouldParseMintResponse() throws Exception {
     var props = new ApidsProps();
+    props.appId = "";
+    props.secret = "";
     props.serviceUrl = "testserver";
 
     RestTemplate restTemplate = ApiConfig.restTemplate();
