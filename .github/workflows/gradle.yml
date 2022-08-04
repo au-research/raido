@@ -21,3 +21,12 @@ jobs:
       - name: Execute Gradle build
         run: ./gradlew build            
 
+      # https://github.com/marketplace/actions/test-reporter
+      - name: Reporting
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Junit Tests
+          path: '**/build/test-results/*.xml'
+          reporter: java-junit
+          fail-on-error: true
