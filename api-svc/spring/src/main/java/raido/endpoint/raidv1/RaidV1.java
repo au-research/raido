@@ -1,20 +1,26 @@
 package raido.endpoint.raidv1;
 
+import jakarta.validation.Valid;
 import org.jooq.DSLContext;
 import org.jooq.JSONB;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import raido.db.jooq.raid_v1_import.tables.records.RaidRecord;
 import raido.idl.raidv1.model.RaidCreateModel;
+import raido.idl.raidv1.model.RaidCreateModelMeta;
 import raido.idl.raidv1.model.RaidModel;
 import raido.idl.raidv1.model.RaidModelMeta;
+import raido.idl.raidv1.model.RaidPublicModel;
 import raido.service.apids.ApidsService;
 import raido.service.apids.model.ApidsMintResponse;
+import raido.spring.config.RaidV1WebSecurityConfig;
 import raido.spring.security.ApiSafeException;
 import raido.spring.security.raidv1.Raid1PostAuthenicationJsonWebToken;
 import raido.util.Log;
@@ -23,22 +29,30 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
+import static java.util.List.of;
+import static org.eclipse.jetty.http.HttpStatus.BAD_REQUEST_400;
+import static org.eclipse.jetty.http.HttpStatus.NOT_FOUND_404;
 import static raido.db.jooq.raid_v1_import.tables.Raid.RAID;
-import static raido.endpoint.message.ApiMessage.RAID_V1_MINT_DATA_ERROR;
+import static raido.endpoint.message.RaidApiV1Message.DEMO_NOT_SUPPPORTED;
+import static raido.endpoint.message.RaidApiV1Message.HANDLE_NOT_FOUND;
+import static raido.endpoint.message.RaidApiV1Message.MINT_DATA_ERROR;
 import static raido.spring.config.RaidV1WebSecurityConfig.RAID_V1_API;
 import static raido.util.DateUtil.formatDynamoDateTime;
 import static raido.util.DateUtil.parseDynamoDateTime;
 import static raido.util.Log.to;
+import static raido.util.ObjectUtil.isTrue;
 import static raido.util.StringUtil.hasValue;
 import static raido.util.StringUtil.isBlank;
 
 @RequestMapping(RAID_V1_API)
 @RestController
 public class RaidV1 {
+  public static final String HANDLE_URL_PREFIX = "/handle";
   private static final Log log = to(RaidV1.class);
-  
+
   private ApidsService apidsSvc;
   private DSLContext db;
   private JdbcTemplate jdbcTemplate;
@@ -60,10 +74,45 @@ public class RaidV1 {
     // do not hold TX open across this, it takes SECONDS 
     ApidsMintResponse handle = apidsSvc.mintApidsHandle();
     handle = apidsSvc.mintApidsHandle();
+    handle = apidsSvc.mintApidsHandle();
+    handle = apidsSvc.mintApidsHandle();
+    handle = apidsSvc.mintApidsHandle();
+    handle = apidsSvc.mintApidsHandle();
     return Map.of("status","UP");
   }
 
-  @PostMapping("/raid/mint")
+  /** Watch out - handles have slashes in them, by definition 😢
+   Currently, API clients encode the handle slash as `%2f` - but that triggers 
+   the default Spring HttpStrictFirewall.
+   We've disabled that in {@link RaidV1WebSecurityConfig}, which is a risk. 
+   V2 API should always pass handles as params instead of in the path?
+
+   @see RaidV1WebSecurityConfig#allowUrlEncodedSlashHttpFirewall
+   */
+  @GetMapping(HANDLE_URL_PREFIX + "/{raidId}")
+  public RaidPublicModel getRaid(
+    @PathVariable("raidId") String raidId,
+    @RequestParam(value = "demo", required = false) Optional<Boolean> demo
+  ){
+    guardDemoEnv(demo);
+    
+    RaidPublicModel result = db.select().
+      from(RAID).
+      where(RAID.HANDLE.eq(raidId)).
+      fetchOneInto(RaidPublicModel.class);
+    if( result == null ){
+      throw new ApiSafeException(HANDLE_NOT_FOUND, NOT_FOUND_404, of(raidId));
+    }
+    return result;
+  }
+  
+  public void guardDemoEnv(Optional<Boolean> demo){
+    if( isTrue(demo) ){
+      throw new ApiSafeException(DEMO_NOT_SUPPPORTED, BAD_REQUEST_400);
+    }
+  }
+  
+  @PostMapping("/raid")
   @Transactional
   public RaidModel raidMint(
     Raid1PostAuthenicationJsonWebToken identity,
@@ -121,7 +170,7 @@ public class RaidV1 {
     }
 
     if( create.getMeta() == null ){
-      create.setMeta(new RaidModelMeta());
+      create.setMeta(new RaidCreateModelMeta());
     }
 
     if( isBlank(create.getMeta().getName()) ){
@@ -139,7 +188,7 @@ public class RaidV1 {
       problems.add("no contentPath provided");
     }
     if( !problems.isEmpty() ){
-      throw new ApiSafeException(RAID_V1_MINT_DATA_ERROR, problems);
+      throw new ApiSafeException(MINT_DATA_ERROR, problems);
     }
   } 
   

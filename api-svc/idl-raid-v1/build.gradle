@@ -21,23 +21,31 @@ openApiGenerate {
   generateApiTests = false
   generateModelDocumentation = false
   generateModelTests = false
-
+    
   modelPackage = "raido.idl.raidv1.model"
+  apiPackage = "raido.idl.raidv1.api"
   
   // setting globals seems to mean it only generates what you specify
   globalProperties = [
     // setting this to blank seems to mean that it generates all models
     models: "",
+    apis: "",
   ]
 
   configOptions = [
     sourceFolder: "",
     useOptional: "true",
-    useSpringBoot3: "true",
     dateLibrary: "java8",
     documentationProvider: "none",
     disallowAdditionalPropertiesIfNotPresent: "false",
     openApiNullable: "false",
+
+    /* not sure exactly, but it does cause not to genertae javax @Valid 
+    annotations */
+    useSpringBoot3: "true",
+    
+    skipDefaultInterface: "true",
+    
   ]  
 }
 tasks.openApiGenerate.dependsOn clean

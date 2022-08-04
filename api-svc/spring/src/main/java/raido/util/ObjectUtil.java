@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -159,5 +160,16 @@ public final class ObjectUtil {
     catch( JsonProcessingException e ){
       throw wrapException(e, "could not generate toString()");
     }
+  }
+  
+  public static boolean isTrue(@Nullable Optional<Boolean> value){
+    if( value == null ){
+      return false;
+    }
+    if( value.isEmpty() ){
+      return false;
+    }
+    
+    return value.get();
   }
 }

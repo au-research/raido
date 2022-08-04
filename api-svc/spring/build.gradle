@@ -238,9 +238,17 @@ task generateIdlRaidV1Src(type:Copy){
   group = "idl"
   description = "clean idl then use :api-svc:idl-raid-v1:openApiGenerate"
   dependsOn cleanIdlRaidV1Src, idRaidV1Project.tasks.openApiGenerate
-  from idRaidV1Project.generateDir
+  from( idRaidV1Project.generateDir){
+    /* excluding these for the moment because dunno how to make them use 
+    the identity param (i.e. want openapi to generate a `identity` param of
+    type PostAuthenicationJsonWebToken, so we can't implement the generated
+    Api.java interface classes.  This is subjective though, some pople don't 
+    want the identity param anyway (prefer to bind in to spring or something 
+    I guess).  */
+    exclude "raido/idl/raidv1/api/**"
+  }
   destinationDir idlGeneratedSrcDir
 }
-/* not sure we want to commit this stuff if we're re-generating all the time.
-IDL is differnt from JOOQ stuff, we don't need a DB to generate code.  */
+/* Its ok to included generation as part of the build process, IDL is different 
+from JOOQ stuff because we don't need a DB to generate the code. */
 tasks.compileJava.dependsOn generateIdlRaidV1Src

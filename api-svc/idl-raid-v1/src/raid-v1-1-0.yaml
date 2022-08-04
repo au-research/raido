@@ -29,6 +29,27 @@ paths:
           description: 200 response
           schema:
             $ref: "#/definitions/RaidModel"
+  /handle/{raidId}:
+    get:
+      summary: "Return the public information for RAiD"
+      produces:
+        - application/json
+      parameters:
+        - name: raidId
+          in: path
+          required: true
+          type: string
+          description: "RAiD handle created by minting service. Example: 10378.1/1590366"
+        - name: "demo"
+          in: "query"
+          required: false
+          description: "(Default False) Do not include attached RAiD providers unless value is set to false"
+          type: "boolean"
+      responses:
+        200:
+          description: "200 response"
+          schema:
+            $ref: "#/definitions/RaidPublicModel"
 
 definitions:
   RaidModel:
@@ -126,8 +147,6 @@ definitions:
 #        example: "10"
   RaidCreateModel:
     type: "object"
-#    additionalProperties: {}
-#    additionalProperties: true
     properties:
       contentPath:
         type: "string"
@@ -139,8 +158,6 @@ definitions:
         example: "2017-09-20 12:00:00"
       meta:
         type: "object"
-#        additionalProperties: {}
-        description: "(optional) Object that acts as a document for optional metadata KeyValues"
         properties:
           name:
             type: "string"
@@ -221,21 +238,21 @@ definitions:
 #        type: "string"
 #        description: "Total number of items that were scanned in the query"
 #        example: "10"
-#  RaidPublicModel:
-#    type: "object"
-#    properties:
-#      creationDate:
-#        type: "string"
-#        description: "RAiD created datetime (yyyy-MM-dd hh:mm:ss)"
-#        example: "2017-09-20 12:00:00"
-#      handle:
-#        type: "string"
-#        description: "Unique minted ANDS handle"
-#        example: "10378.1/1590349"
-#      contentPath:
-#        type: "string"
-#        description: "URL path minted with ANDS"
-#        example: "https://google.com"
+  RaidPublicModel:
+    type: "object"
+    properties:
+      creationDate:
+        type: "string"
+        description: "RAiD created datetime (yyyy-MM-dd hh:mm:ss)"
+        example: "2017-09-20 12:00:00"
+      handle:
+        type: "string"
+        description: "Unique minted ANDS handle"
+        example: "10378.1/1590349"
+      contentPath:
+        type: "string"
+        description: "URL path minted with ANDS"
+        example: "https://google.com"
 #  RaidsModel:
 #    type: "object"
 #    properties:

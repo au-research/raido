@@ -73,15 +73,16 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
         request, getMaxPayloadLength);
     }
 
-    var requestId = createRequestId(requestToUse);
-
     long beforeReq = System.nanoTime();
     try {
       filterChain.doFilter(requestToUse, response);
     }
     finally {
       long time = (System.nanoTime() - beforeReq) / 1_000_000;
-      log.with("requestId", requestId).
+      log.with("method", request.getMethod()).
+        with("uri", request.getRequestURI()).
+        with("user", request.getRemoteUser()).
+        with("params", request.getParameterMap()).
         with("timeMs", time).
         with("status", response.getStatus()).
         info("endpoint invoked");
@@ -90,7 +91,7 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
         /* I wanted to put this before the filter invocation, but it has to 
         go after - the request underlying the CachingWrapper has to be read 
         before we can read the content here. */
-        bodyLog.with("requestId", requestId).
+        bodyLog.with("uri", request.getRequestURI()).
           with("requestPayload", getMessagePayload(requestToUse)).
           debug();
       }
