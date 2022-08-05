@@ -1,3 +1,5 @@
+import raido.TimingListener
+
 plugins {
   id 'com.palantir.git-version' version '0.15.0'
   id 'base'
@@ -20,6 +22,7 @@ dependencies {
 clean {
 }
 
+gradle.addListener new TimingListener()
 
 
 
