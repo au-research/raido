@@ -27,6 +27,6 @@ jobs:
         if: always()
         with:
           name: Junit Tests
-          path: '**/build/test-results/*.xml'
+          path: '**/build/test-results/**/*.xml'
           reporter: java-junit
           fail-on-error: true
