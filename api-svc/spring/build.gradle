@@ -1,3 +1,4 @@
+// bump for CI
 plugins{
   id 'java'
   alias(libs.plugins.flyway)
