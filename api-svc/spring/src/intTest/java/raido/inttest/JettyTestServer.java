@@ -1,4 +1,4 @@
-package raido.functional;
+package raido.inttest;
 
 import org.eclipse.jetty.server.ServerConnector;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -52,7 +52,7 @@ implements BeforeAllCallback,
   }
 
   public void initTurnip() throws Exception {
-    to(FunctionalTestCase.class).info("initTurnip()");
+    to(IntegrationTestCase.class).info("initTurnip()");
     normaliseJvmDefaults();
 
     jetty = new EmbeddedJetty();

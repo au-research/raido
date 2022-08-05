@@ -1,13 +1,13 @@
-package raido.functional.endpoint.raidv1;
+package raido.inttest.endpoint.raidv1;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.HttpClientErrorException;
-import raido.functional.FunctionalTestCase;
+import raido.inttest.IntegrationTestCase;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-public class RaidPingTest extends FunctionalTestCase {
+public class RaidPingTest extends IntegrationTestCase {
   
   public static final String FORBIDDEN_MESSAGE = """
     403 Forbidden: "{<EOL>"message":"Access Denied",<EOL>"url":"/v1/raid/ping",<EOL>"status":"403"<EOL>}"

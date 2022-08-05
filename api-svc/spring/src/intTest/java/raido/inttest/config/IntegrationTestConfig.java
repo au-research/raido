@@ -1,4 +1,4 @@
-package raido.functional.config;
+package raido.inttest.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -8,14 +8,14 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @ComponentScan(basePackages = {
-  "raido.functional.config", "raido.functional.spring"})
-@PropertySource(name = "functest_working_dir_environment",
-  value = "./functest.properties",
+  "raido.inttest.config", "raido.inttest.spring"})
+@PropertySource(name = "inttest_working_dir_environment",
+  value = "./inttest.properties",
   ignoreResourceNotFound = true)
-@PropertySource(name = "functest_user_config_environment",
-  value = "file:///${user.home}/.config/raido-v2/api-svc-functest.properties",
+@PropertySource(name = "inttest_user_config_environment",
+  value = "file:///${user.home}/.config/raido-v2/api-svc-inttest.properties",
   ignoreResourceNotFound = true)
-public class FunctionalTestConfig {
+public class IntegrationTestConfig {
   
   @Bean
   public RestTemplate restTemplate(){

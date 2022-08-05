@@ -1,4 +1,4 @@
-package raido.functional;
+package raido.inttest;
 
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -8,19 +8,19 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.RestTemplate;
-import raido.functional.config.FuncTestProps;
-import raido.functional.config.FunctionalTestConfig;
+import raido.inttest.config.IntTestProps;
+import raido.inttest.config.IntegrationTestConfig;
 import raido.apisvc.util.Log;
 
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.RestUtil.createEntityWithBearer;
 
-@SpringJUnitConfig(FunctionalTestConfig.class)
-public abstract class FunctionalTestCase {
-  private static final Log log = to(FunctionalTestCase.class);
+@SpringJUnitConfig(IntegrationTestConfig.class)
+public abstract class IntegrationTestCase {
+  private static final Log log = to(IntegrationTestCase.class);
   
   @Autowired protected RestTemplate rest;
-  @Autowired protected FuncTestProps props;
+  @Autowired protected IntTestProps props;
 
 
   @RegisterExtension

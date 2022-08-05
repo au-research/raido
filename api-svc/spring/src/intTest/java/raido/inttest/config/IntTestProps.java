@@ -1,10 +1,10 @@
-package raido.functional.config;
+package raido.inttest.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FuncTestProps {
+public class IntTestProps {
   @Value("${raidoArdcLiveToken:}")
   public String raidoArdcLiveToken;
 

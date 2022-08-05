@@ -119,7 +119,7 @@ compileJava {
 
 testing{
   suites{
-    funcTest(JvmTestSuite){
+    intTest(JvmTestSuite){
       testType = TestSuiteType.FUNCTIONAL_TEST
       dependencies{
         implementation project
@@ -127,7 +127,7 @@ testing{
         // for booting a custom test server
         implementation libs.bundles.jetty11
 
-        // for having our own spring context in functTest
+        // for having our own spring context in intTest
         implementation libs.bundles.spring6
         implementation libs.bundles.spring6.test
         
@@ -137,7 +137,7 @@ testing{
     }
   }
 }
-tasks.funcTest.description = "don't run this, it's just a Gradle default"
+tasks.intTest.description = "don't run this, it's just a Gradle default"
 
 sourceSets{
   main.java{
@@ -151,20 +151,20 @@ sourceSets{
     (and little point for prod code in the general case, IMO). */
     srcDirs "src/test/java"
   }
-  funcTest.resources{
-    srcDirs "src/funcTest/java"
+  intTest.resources{
+    srcDirs "src/intTest/java"
   }
 }
 
-// compile funcTest classes - but don't run by default (needs DDB migration)
-tasks.build.dependsOn funcTestClasses
+// compile intTest classes - but don't run by default (needs DDB migration)
+tasks.build.dependsOn intTestClasses
 
 test{
   useJUnitPlatform()
   systemProperties defaultSysProps
 }
 
-funcTest{
+intTest{
   useJUnitPlatform()
   systemProperties defaultSysProps
 }
