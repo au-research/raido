@@ -2,7 +2,7 @@ name: CI
 on: 
   push:
     paths-ignore:
-      - '!*.md'
+      - '!**/*.md'
 jobs:
   build:
     runs-on: ubuntu-latest
