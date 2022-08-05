@@ -9,6 +9,12 @@ Important architecural decisions are recorded in [/doc/adr](./doc/adr).
 Different sub-projects have their own ADR log, in their local /doc/adr
 directories (i.e. db, app, [api](/api-svc/spring/doc/adr), etc.)
 
+# CI
+
+Using a Github action at the moment to run unit tests.
+
+* [gradle.yml](.github/workflows/gradle.yml)
+* https://github.com/au-research/raido-v2/actions
 
 # Development pre-requisites
 
