@@ -35,5 +35,11 @@ an the logs themselves are expensive to log, store and query).
   * really early rejections don't make it to the other infrastructure
     * e.g. StrictFirewall failures
 * [SLF4JBridgeHandler.install()](../src/main/java/raido/Api.java)
-  * project also uses the SLF4J-JUL bridge to capture logs from pgjdbc 
-    (detailed db driver logging) and JDK stuff (encryption, some networking)
+  * project also uses the SLF4J to capture standard JDK logging from 
+    `java.util.logging`  
+  * logs from pgjdbc - detailed db driver logging
+  * jdk / java / sun stuff - encryption, networking, etc.
+  * the JUL logging can be configured using the standard log file 
+    [logback.xml](../src/main/resources/logback.xml), or the usual override 
+    mechanisms. 
+
