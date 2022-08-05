@@ -35,16 +35,16 @@ and suppressing various startup logs.
   <logger name="raido" level="debug"/>
   
   <!-- debug logs request/response data, usually don't want it -->
-  <logger name="raido.service.apids.ApidsService" level="info"/>
+  <logger name="raido.apisvc.service.apids.ApidsService" level="info"/>
 
   <!-- debug logs endpoint reqeust payload, usually don't want it -->
-  <logger name="raido.spring.RequestLoggingFilter" level="info"/>
+  <logger name="raido.apisvc.spring.RequestLoggingFilter" level="info"/>
   
   <!-- These log at info because we want them enabled by default in most 
   deploy environments.  When personal dev logging is implemented - move these 
   overrides there. -->
-  <logger name="raido.util.JvmUtil" level="warn"/>
-  <logger name="raido.spring.config.environment.DataSourceProps" level="warn"/>
+  <logger name="raido.apisvc.util.JvmUtil" level="warn"/>
+  <logger name="raido.apisvc.spring.config.environment.DataSourceProps" level="warn"/>
 
   <!-- Almost never want to see any of these logs, either dev or deployed --> 
   <logger name="org.springframework" level="info"/>

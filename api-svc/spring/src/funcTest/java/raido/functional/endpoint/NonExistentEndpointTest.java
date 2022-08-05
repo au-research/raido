@@ -3,12 +3,12 @@ package raido.functional.endpoint;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.HttpClientErrorException;
 import raido.functional.FunctionalTestCase;
-import raido.util.Log;
-import raido.util.test.BddUtil;
+import raido.apisvc.util.Log;
+import raido.apisvc.util.test.BddUtil;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static raido.util.Log.to;
+import static raido.apisvc.util.Log.to;
 
 public class NonExistentEndpointTest extends FunctionalTestCase {
   private static final Log log = to(NonExistentEndpointTest.class);

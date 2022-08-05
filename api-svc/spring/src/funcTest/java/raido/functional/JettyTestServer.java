@@ -8,19 +8,19 @@ import org.springframework.core.env.MutablePropertySources;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import raido.Api;
-import raido.jetty.EmbeddedJetty;
-import raido.spring.config.ApiConfig;
-import raido.util.Log;
+import raido.apisvc.Api;
+import raido.apisvc.jetty.EmbeddedJetty;
+import raido.apisvc.spring.config.ApiConfig;
+import raido.apisvc.util.Log;
 
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
-import static raido.util.ExceptionUtil.createRuntimeException;
-import static raido.util.JvmUtil.normaliseJvmDefaults;
-import static raido.util.Log.to;
-import static raido.util.NetUtil.isLocalhostPortAvailable;
+import static raido.apisvc.util.ExceptionUtil.createRuntimeException;
+import static raido.apisvc.util.JvmUtil.normaliseJvmDefaults;
+import static raido.apisvc.util.Log.to;
+import static raido.apisvc.util.NetUtil.isLocalhostPortAvailable;
 
 public class JettyTestServer 
 implements BeforeAllCallback, 

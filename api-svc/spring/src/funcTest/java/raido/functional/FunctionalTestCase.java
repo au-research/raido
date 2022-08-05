@@ -10,10 +10,10 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.RestTemplate;
 import raido.functional.config.FuncTestProps;
 import raido.functional.config.FunctionalTestConfig;
-import raido.util.Log;
+import raido.apisvc.util.Log;
 
-import static raido.util.Log.to;
-import static raido.util.RestUtil.createEntityWithBearer;
+import static raido.apisvc.util.Log.to;
+import static raido.apisvc.util.RestUtil.createEntityWithBearer;
 
 @SpringJUnitConfig(FunctionalTestConfig.class)
 public abstract class FunctionalTestCase {
