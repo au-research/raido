@@ -10,6 +10,15 @@ expected to be turned on in most deployment enviornments where it would cause
 issues (too much noise in the logs so that they are hard to make sense of, 
 an the logs themselves are expensive to log, store and query).
 
+Raido code uses a simple wrapper around the SLF4J class to enable simple
+structured logging that is suitable for our purposes - 
+[Log.java](../src/main/java/raido/util/Log.java).
+
+The current logging infrastructure target is AWS CLoudwatch, so it's best to 
+keep logs on a single line. Cloudwatch doesn't have the fancier pattern 
+matching and multi-line support of things like Splunk. 
+
+
 ### Special logging features
 * [P6SpyLogger](../src/main/java/raido/util/logger/P6SpyLogger.java)
   * for logging SQL, transactions, etc.
