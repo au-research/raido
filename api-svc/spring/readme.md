@@ -51,3 +51,5 @@ RaidV1Auth.jwtSecret=<JWT secret>
 ### Running functional tests
 
 See [funcTest/readme.md](./src/funcTest/readme.md)
+
+Should maybe reconsidered - rename to "intTest".
