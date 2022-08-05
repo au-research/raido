@@ -16,6 +16,9 @@ Using a Github action at the moment to run unit tests.
 * [gradle.yml](.github/workflows/gradle.yml)
 * https://github.com/au-research/raido-v2/actions
 
+Changes to `*.md` files are not built. 
+
+
 # Development pre-requisites
 
 Generally:
