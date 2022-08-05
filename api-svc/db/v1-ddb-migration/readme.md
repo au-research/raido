@@ -1,8 +1,9 @@
 
-Project loads files from local filesystem into the `raid-v1-schema` in a PG 
-database.
+Project loads files from local filesystem into the `raid_v1_import` schema in 
+a PG database, see [db/readme.md](../../db/readme.md)
 
-The files are expected to be exported from DDB then downloaded to S3.
+The files are expected to be exported from DDB to S3, then downloaded to your
+local machine.
 
 Uses Groovy because this isn't prod code and I was dealing with jdon blobs,
 so groovy was convenient because of prior experience.
@@ -20,23 +21,12 @@ For how to do an export to get those files, look in
 
 ### Local DB to import into
 
-Currently, we  import into the "raido DB" that the api-svc runs in, so that it
-can read it - see [api-svc](../spring/readme.md)
-
-Given the standard raido DB setup, you still need to set the password from
-the import side as below.
-
-Give the above command a password then edit 
-`~/.config/raido-v2/v1-ddb-migration.gradle`:
-```groovy
-  raidV1PgPassword="xxx"
-```
+Make sure DB already exists, as per [db/readme.md](../../db/readme.md)
 
 DB migrations are in 
 [src/main/resources/db/migration](./src/main/resources/db/migration)
  - the versions start with `V2` because `V1` is the flyway `baseline` version.
 
-On a Windows 10 machine with Docker Desktop, the postgres 
 ## Tasks
 
 * checkS3Files
@@ -45,31 +35,6 @@ On a Windows 10 machine with Docker Desktop, the postgres
   * import all data into tables
   * the "import" is a "merge" operation, so it's re-runnable - it'll just 
   overwrite rows (where row is identified by the Handle primary key)
-
-
-## Local development
-
-Windows devs usually use docker desktop for running containers.
-
-
-### IDE usage 
-
-If you're using your IDE to run Gradle tasks, the build script set stuff
-up for you (timezone, file-encoding, DB url, etc.)
-
-Though you still need to configure credentials like DB password.
-
-
-#### Generic JVM stuff (TimeZone/FileEncoding, etc.)
-
-Remember to set your IDE up to force UTC, UTF-8 - see the gradle build for 
-any other default system properties.
-
-#### Database stuff
-
-Need to configure sysProps like url, user, password.
-
-Again, build script does it for you (`raidV1Pg` props). 
 
 
 ## Git history

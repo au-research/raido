@@ -10,31 +10,15 @@ opposed to integration or functional test) are loaded from
 `~/.config/raido-v2/api-svc-env.properties`, see
 [ApiConfig](/src/main/java/raido/spring/config/ApiConfig.java).
 
+
 ## Running a local DB
 
-Launch local PG container.
+See [db/readme.md](../db/readme.md)
 
-This is used by the `:api-svc:v1-ddb-migration` project to migrate DynamoDB 
-into, and the api-svc itself to run off of.
-
-```
-docker rm --force raido-db; docker run --name raido-db -p 7432:5432 -d --restart unless-stopped -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD= -e POSTGRES_DB=raido postgres
-
-```
-This won't actually run, because no password.
-* `raid-db` is the container name
-* `raido` is the database name
 
 ## Configuration
 
-Once you've got a DB
-
-### `~/.config/raido-v2/api-svc.gradle`
-* The build needs to know the DB to use for flyway/jooq stuff for the 
-  `api-schema`
-```groovy
-  apiSvcPgPassword="<dbpassword>"
-```
+Once you've got a DB, the the `api-svc` needs to configured.
 
 `~/.config/raido-v2/api-svc-env.properties`
 ```properties
