@@ -109,6 +109,7 @@ testing{
       testType = TestSuiteType.FUNCTIONAL_TEST
       dependencies{
         implementation project
+        implementation project(':api-svc:db:raido')
 
         // for booting a custom test server
         implementation libs.bundles.jetty11
@@ -119,6 +120,11 @@ testing{
         
         implementation libs.assertj
 
+        implementation libs.jooq
+
+        // for PostConstruct/PreDestroy - pkg: jakarta.annotation (used to be javax)
+        implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
+        
       }
     }
   }

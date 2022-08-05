@@ -27,7 +27,7 @@ public class Jooq {
     return new DefaultDSLContext(createJooqConfig(connectionProvider));
   }
 
-  private DefaultConfiguration createJooqConfig(
+  public static DefaultConfiguration createJooqConfig(
     ConnectionProvider connectionProvider
   ) {
     DefaultConfiguration config = new DefaultConfiguration();

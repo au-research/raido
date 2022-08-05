@@ -5,8 +5,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class IntTestProps {
-  @Value("${raidoArdcLiveToken:}")
-  public String raidoArdcLiveToken;
 
   /**
    This is the location of the turnip API server to test against

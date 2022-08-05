@@ -3,10 +3,12 @@ package raido.apisvc.service.raidv1;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Component;
+import raido.apisvc.util.ExceptionUtil;
 import raido.db.jooq.raid_v1_import.tables.records.TokenRecord;
 import raido.apisvc.spring.config.environment.RaidV1AuthProps;
 import raido.apisvc.spring.security.ApiSvcAuthenticationException;
@@ -74,5 +76,20 @@ public class RaidV1AuthService {
     }
     
     return of(new Raid1PostAuthenicationJsonWebToken(jwt.getSubject()));
+  }
+  
+  public String sign(String subject){
+    try {
+      Algorithm algorithm = Algorithm.HMAC256(props.jwtSecret);
+      String token = JWT.create()
+        .withSubject(subject)
+        .withIssuer(props.issuer)
+        .sign(algorithm);
+
+      return token;
+    } catch ( JWTCreationException ex){
+      throw ExceptionUtil.wrapException(ex, "while signing");
+    }
+    
   }
 }

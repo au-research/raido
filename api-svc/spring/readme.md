@@ -20,6 +20,9 @@ container and creating the schemata.
 ## Configuration
 
 Once you've got a DB, the the `api-svc` needs to configured.
+Local dev uses a separate file like this because this is how the serivce is run 
+ - there's no Gradle files or build involved when running the service in 
+   a real deployment environment. 
 
 `~/.config/raido-v2/api-svc-env.properties`
 ```properties

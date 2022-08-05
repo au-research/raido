@@ -52,13 +52,14 @@ OS-level protections (permissions, etc.)
 During standard development cycle, uses hardcoded default XDG location for 
 config files. IMPROVE: use XDG_CONFIG_HOME env variable */
 @PropertySource(name = "user_config_environment",
-  value = "file:///${user.home}/.config/raido-v2/api-svc-env.properties",
-  ignoreResourceNotFound = true)
+  value = ApiConfig.ENV_PROPERTIES, ignoreResourceNotFound = true)
 public class ApiConfig {
   public static final String DISPATCHER_NAME = "raido_dispatcher";
-  
-  private static final Log log = to(ApiConfig.class);
+  public static final String ENV_PROPERTIES = "file:///${user.home}/" +
+    ".config/raido-v2/api-svc-env.properties";
 
+  private static final Log log = to(ApiConfig.class);
+  
   public static AnnotationConfigWebApplicationContext initServletContext(
     ServletContext ctx
   ) {

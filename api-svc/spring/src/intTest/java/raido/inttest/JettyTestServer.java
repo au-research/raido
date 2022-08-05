@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.env.MutablePropertySources;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
@@ -32,7 +33,8 @@ implements BeforeAllCallback,
 
   private static ServerConnector serverConnector;
   private static EmbeddedJetty jetty;
-  
+  private static AnnotationConfigWebApplicationContext rootContext;
+
   private Map<RequestMappingInfo, HandlerMethod> turnipApiHandlerMethods;
 
 
@@ -40,7 +42,7 @@ implements BeforeAllCallback,
   public void beforeAll(ExtensionContext context) throws Exception {
     if( !started ){
       started = true;
-      initTurnip();
+      initTestRaido();
       context.getRoot().getStore(GLOBAL).
         put(this.getClass().getName(), this);
     }
@@ -51,8 +53,8 @@ implements BeforeAllCallback,
     shutdownTurnip();
   }
 
-  public void initTurnip() throws Exception {
-    to(IntegrationTestCase.class).info("initTurnip()");
+  public void initTestRaido() throws Exception {
+    to(IntegrationTestCase.class).info("initTestRaido()");
     normaliseJvmDefaults();
 
     jetty = new EmbeddedJetty();
@@ -71,7 +73,7 @@ implements BeforeAllCallback,
     serverConnector = jetty.configureHttpConnector(Api.PORT);
     jetty.addServletContainerInitializer((sci, ctx) ->
     {
-      var rootContext = ApiConfig.initServletContext(ctx);
+      rootContext = ApiConfig.initServletContext(ctx);
       MutablePropertySources propertySources =
         rootContext.getEnvironment().getPropertySources();
 
@@ -102,4 +104,10 @@ implements BeforeAllCallback,
   public EmbeddedJetty getJetty() {
     return jetty;
   }
+
+  /** this is the "prod" api-svc Spring context, not the inttest context */
+  public AnnotationConfigWebApplicationContext getRootContext() {
+    return rootContext;
+  }
+  
 }

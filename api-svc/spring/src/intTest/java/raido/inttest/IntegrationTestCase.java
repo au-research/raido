@@ -1,5 +1,7 @@
 package raido.inttest;
 
+import org.jooq.DSLContext;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import raido.inttest.config.IntTestProps;
 import raido.inttest.config.IntegrationTestConfig;
 import raido.apisvc.util.Log;
+import raido.inttest.service.auth.TestAuthTokenService;
 
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.RestUtil.createEntityWithBearer;
@@ -18,15 +21,32 @@ import static raido.apisvc.util.RestUtil.createEntityWithBearer;
 @SpringJUnitConfig(IntegrationTestConfig.class)
 public abstract class IntegrationTestCase {
   private static final Log log = to(IntegrationTestCase.class);
-  
+
   @Autowired protected RestTemplate rest;
   @Autowired protected IntTestProps props;
+  @Autowired protected DSLContext db;
+  @Autowired protected TestAuthTokenService authTokenSvc;
 
-
+  protected String testToken;
+  
   @RegisterExtension
   protected static JettyTestServer jettyTestServer =
-    new JettyTestServer();  
-  
+    new JettyTestServer();
+
+  /**
+   IMPROVE: do this in a beforeAll, so the time isn't counted as
+   part of the first tests execution time.  But need to figure out how to
+   obtain the test's spring context in a static context.
+   */
+  @BeforeEach
+  public void setupTestToken(){
+    if( testToken != null ){
+      return;
+    }
+    
+    testToken = authTokenSvc.initTestToken();
+  }
+
   public <T> T get(String authnToken, String url, Class<T> resultType){
     HttpEntity<T> entity = createEntityWithBearer(authnToken);
 
