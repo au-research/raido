@@ -22,7 +22,7 @@ class TestRaidTableMigration {
   void parseTimestamp(){
     println "TZ: " + ZoneId.systemDefault().toString()
     def ldt = parseDate(
-      ddbS3ExportTimestampFormat, sydneyZone, "2021-11-29 17:01:07")
+      ddbS3ExportTimestampFormat, Util.sydneyZone, "2021-11-29 17:01:07")
     println "ldt: " + ldt
     println "ldt.d: " + ldt.toDate()
     assert ldt.toString() == "2021-11-29T06:01:07"

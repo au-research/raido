@@ -17,13 +17,17 @@ import static org.jooq.conf.RenderQuotedNames.EXPLICIT_DEFAULT_UNQUOTED
 import static raid.ddb_migration.Util.printExecTime
 
 class JooqExec {
-  // these have to match the ext props from the gradle script to work
-  String url = System.properties['raidV1PgUrl']
-  String user = System.properties['raidV1PgUser']
-  String password = System.properties['raidV1PgPassword']
+  /* the build script feeds these in to the JVM system properties, they're 
+    acutally sourced from the :api-svc:db:shared project.
+    The default values in the shared project should work if you're following
+    the readme instructions - but as per instructions, the password must be 
+    set in ~/.config/raido-v2/api-svc-db.gradle
+    */
+  String url = System.properties['apiSvcPgUrl']
+  String user = System.properties['apiSvcPgUser']
+  String password = System.properties['apiSvcPgPassword']
 
   JooqExec() {
-//    println "db url:" + System.properties['raidV1PgUrl']
   }
   
   static DSLContext createDsl(Connection conn){

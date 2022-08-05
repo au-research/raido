@@ -1,23 +1,10 @@
-// bump for CI
 plugins{
   id 'java'
-  alias(libs.plugins.flyway)
-  alias(libs.plugins.jooq)
 }
-
-evaluationDependsOn(':api-svc:v1-ddb-migration')
 
 ext{
   idRaidV1Project = project(":api-svc:idl-raid-v1")
   
-  apiSvcPgUrl = "jdbc:postgresql://localhost:7432/raido"
-  apiSvcPgUser = 'postgres'
-  apiSvcPgPassword = ""
-  apiSvcPgSchema = "api_svc"
-
-  jooqGeneratedSrcDir = 'src/main/generated-jooq'
-  jooqGeneratedPkg = 'raido.db.jooq'
-
   idlGeneratedSrcDir = file('src/main/generated-idl')
 
   defaultSysProps = [
@@ -44,9 +31,6 @@ if( file(configPath).exists() ){
   probably a Bad Plan to a full turing-complete language for config */
   apply from: configPath
 }
-// must be done after config from file to pick up credentials and overrides
-ext.defaultSysProps += project.extensions.extraProperties.properties.
-  findAll{ it.key.startsWith("apiSvcPg") }
 
 repositories{
   mavenCentral()
@@ -58,10 +42,13 @@ repositories{
 /* don't use groovy for prod code: dynamic typing, slow startup and poor 
    historical upgrade compatibility */
 dependencies{
+  implementation project(':api-svc:db:raido')
+  
   // look in settings.gradle for version catalog specs 
   implementation libs.bundles.jetty11
-  implementation libs.bundles.spring6  
+  implementation libs.bundles.spring6
   implementation libs.jooq
+
 
   // use the standard jar instead of binding unnecessarily to Jetty
   // pkg: jakarta.servlet - used to be javax.servlet  
@@ -88,7 +75,6 @@ dependencies{
 
   // postgres DB driver
   runtimeOnly libs.pgjdbc
-  jooqGenerator libs.pgjdbc
 
   // support for JSON serialization for Spring endpoints
   runtimeOnly 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
@@ -141,7 +127,7 @@ tasks.intTest.description = "don't run this, it's just a Gradle default"
 
 sourceSets{
   main.java{
-    srcDirs += [jooqGeneratedSrcDir, idlGeneratedSrcDir]
+    srcDirs += [idlGeneratedSrcDir]
   }
   test.resources{
     /* This is so each test's resources are right next to the source.
@@ -168,67 +154,6 @@ intTest{
   useJUnitPlatform()
   systemProperties defaultSysProps
 }
-
-
-flyway{
-  url = apiSvcPgUrl
-  user = apiSvcPgUser
-  password = apiSvcPgPassword
-  schemas = [apiSvcPgSchema]
-}
-
-task cleanJooqGeneratedSrc(type: Delete){
-  group = "jooq"
-  delete jooqGeneratedSrcDir
-}
-
-jooq{
-  version = libs.versions.jooq.get()
-  configurations{
-    main{  // name of the jOOQ configuration
-      generateSchemaSourceOnCompilation = false
-
-      generationTool{
-        jdbc{
-          driver = 'org.postgresql.Driver'
-          url = apiSvcPgUrl
-          user = apiSvcPgUser
-          password = apiSvcPgPassword
-        }
-        generator{
-          name = 'org.jooq.codegen.DefaultGenerator'
-          database{
-            name = 'org.jooq.meta.postgres.PostgresDatabase'
-            schemata{
-              schema{
-                inputSchema = apiSvcPgSchema
-              }
-              schema{
-                // weird error about "project"
-//                inputSchema = project(":api-svc:v1-ddb-migration").ext.raidV1PgSchema
-                inputSchema = 'raid_v1_import'
-              }
-            }
-          }
-          
-          generate{
-            deprecated = false
-            records = true
-            immutablePojos = false
-            fluentSetters = true
-            globalTableReferences = false
-          }
-          target{
-            // gets blown away by the clean task each it's run
-            directory = jooqGeneratedSrcDir
-            packageName = jooqGeneratedPkg
-          }
-        }
-      }
-    }
-  }
-}
-tasks.generateJooq.dependsOn cleanJooqGeneratedSrc
 
 task cleanIdlRaidV1Src(type: Delete){
   group = "idl"

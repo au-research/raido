@@ -1,17 +1,15 @@
 plugins{
-  /* i think flyway brings its own PG driver, that's why we don't need to
-   add a PG driver to the buildscript classpath */
   id "groovy"
   alias(libs.plugins.flyway)
   alias(libs.plugins.jooq)
 }
 
+// to make sure it's properties are loaded before this project
+evaluationDependsOn(':api-svc:db:shared')
+
 ext{
-  // raidV1PgUrl = "jdbc:postgresql://localhost:7432/raid-v1"
-  // using the api-svc DB, but write to our own schema
-  raidV1PgUrl = "jdbc:postgresql://localhost:7432/raido"
-  raidV1PgUser = 'postgres'
-  raidV1PgPassword = ""
+  sharedProject = project(":api-svc:db:shared")
+  
   raidV1PgSchema = "raid_v1_import"
 
   jooqGeneratedSrcDir = 'src/main/generated'
@@ -21,30 +19,17 @@ ext{
   defaultSysProps = [
     'user.timezone': 'UTC',
     'file.encoding': 'UTF-8',
+    raidV1PgSchema: raidV1PgSchema,
   ]
-
-  // the config loading config :/
-  homeDir = System.properties['user.home']
-  configPath = System.getProperty("RAIDV1_DDB_MIGRATION_CONFIG_PATH",
-    "${homeDir}/.config/raido-v2/v1-ddb-migration.gradle")
 }
 
-/* after ext{} block so that stuff is the default, and so the config
-   can refer to those default values */
-if( file(configPath).exists() ){
-  println "loading config from: ${configPath}"
-  /* never done config this way before, not entirely sure it's a good idea,
-  probably a Bad Plan to a full turing-complete language for config */
-  apply from: configPath
-}
-// must be done after config from file to pick up credentials and overrides
-ext.defaultSysProps += project.extensions.extraProperties.properties.
-  findAll{ it.key.startsWith("raidV1Pg") }
+ext.defaultSysProps += sharedProject.properties.
+  findAll{ it.key.startsWith("apiSvcPg") }
 
 flyway{
-  url = raidV1PgUrl
-  user = raidV1PgUser
-  password = raidV1PgPassword
+  url = sharedProject.apiSvcPgUrl
+  user = sharedProject.apiSvcPgUser
+  password = sharedProject.apiSvcPgPassword
   schemas = [raidV1PgSchema]
 }
 
@@ -148,16 +133,15 @@ jooq{
       generationTool{
         jdbc{
           driver = 'org.postgresql.Driver'
-          url = raidV1PgUrl
-          user = raidV1PgUser
-          password = raidV1PgPassword
+          url = sharedProject.apiSvcPgUrl
+          user = sharedProject.apiSvcPgUser
+          password = sharedProject.apiSvcPgPassword
         }
         generator{
           name = 'org.jooq.codegen.DefaultGenerator'
           database{
             name = 'org.jooq.meta.postgres.PostgresDatabase'
             inputSchema = raidV1PgSchema
-            // excludes += "flyway_schema_history"
           }
           generate{
             deprecated = false

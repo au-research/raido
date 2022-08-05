@@ -1,0 +1,24 @@
+ext{
+  apiSvcPgUrl = "jdbc:postgresql://localhost:7432/raido"
+  apiSvcPgUser = 'postgres'
+  apiSvcPgPassword = ""
+  apiSvcPgSchema = "api_svc"
+
+  jooqGeneratedSrcDir = 'src/main/generated-jooq'
+  jooqGeneratedPkg = 'raido.db.jooq'
+
+  // the config loading config :/
+  homeDir = System.properties['user.home']
+  configPath = System.getProperty("RAIDOV2_APISVC_DB_CONFIG_PATH",
+    "${homeDir}/.config/raido-v2/api-svc-db.gradle")
+}
+
+/* after ext{} block so that stuff is the default, and so the config
+   can refer to those default values */
+if( file(configPath).exists() ){
+  println "loading config from: ${configPath}"
+  /* never done config this way before, not entirely sure it's a good idea,
+  probably a Bad Plan to a full turing-complete language for config */
+  apply from: configPath
+}
+

@@ -1,0 +1,130 @@
+plugins{
+  id 'java'
+  alias(libs.plugins.flyway)
+  alias(libs.plugins.jooq)
+}
+
+// to make sure it's properties are loaded before this project
+evaluationDependsOn(':api-svc:db:shared')
+
+ext{
+
+  sharedProject = project(":api-svc:db:shared")
+  raidV1Project = project(":api-svc:db:v1-ddb-migration")
+
+  jooqGeneratedSrcDir = 'src/main/generated-jooq'
+  jooqGeneratedPkg = 'raido.db.jooq'
+
+//  defaultSysProps = apiSvcProject.defaultSysProps
+
+  // the config loading config :/
+  homeDir = System.properties['user.home']
+  configPath = System.getProperty("RAIDOV2_APISVC_DB_RAIDO_CONFIG_PATH",
+    "${homeDir}/.config/raido-v2/api-svc-db-raido.gradle")
+}
+
+/* after ext{} block so that stuff is the default, and so the config
+   can refer to those default values */
+if( file(configPath).exists() ){
+  println "loading config from: ${configPath}"
+  /* never done config this way before, not entirely sure it's a good idea,
+  probably a Bad Plan to a full turing-complete language for config */
+  apply from: configPath
+}
+
+repositories{
+  mavenCentral()
+}
+
+dependencies{
+  implementation libs.jooq
+  
+  // for flyway
+  runtimeOnly libs.pgjdbc
+
+  /* use SLf4J API to log against - pkg: org.slf4j
+     using 2.0.0 for Raido code because that's what jetty uses
+     NOTE:STO: this might not be right since we're Jetty 11/Servlet 5 */
+  implementation 'org.slf4j:slf4j-api:2.0.0-alpha7'
+  // allow SLF4J to capture java.util logging 
+  implementation 'org.slf4j:jul-to-slf4j:2.0.0-alpha7'
+
+  jooqGenerator libs.pgjdbc
+
+  // use logback as the backing log implementation for slf4j
+  runtimeOnly libs.bundles.logback.runtime
+}
+
+compileJava {
+  options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
+
+sourceSets{
+  main.java{
+    srcDirs += [jooqGeneratedSrcDir]
+  }
+  test.resources{
+    srcDirs "src/test/java"
+  }
+}
+
+
+flyway{
+  url = sharedProject.apiSvcPgUrl
+  user = sharedProject.apiSvcPgUser
+  password = sharedProject.apiSvcPgPassword
+  schemas = [sharedProject.apiSvcPgSchema]
+}
+
+task cleanJooqGeneratedSrc(type: Delete){
+  group = "jooq"
+  delete jooqGeneratedSrcDir
+}
+
+jooq{
+  version = libs.versions.jooq.get()
+  configurations{
+    main{  // name of the jOOQ configuration
+      generateSchemaSourceOnCompilation = false
+
+      generationTool{
+        jdbc{
+          driver = 'org.postgresql.Driver'
+          url = sharedProject.apiSvcPgUrl
+          user = sharedProject.apiSvcPgUser
+          password = sharedProject.apiSvcPgPassword
+        }
+        generator{
+          name = 'org.jooq.codegen.DefaultGenerator'
+          database{
+            name = 'org.jooq.meta.postgres.PostgresDatabase'
+            schemata{
+              schema{
+                inputSchema = sharedProject.apiSvcPgSchema
+              }
+              schema{
+                // weird error about "project"
+//                inputSchema = project(":api-svc:v1-ddb-migration").ext.raidV1PgSchema
+                inputSchema = 'raid_v1_import'
+              }
+            }
+          }
+
+          generate{
+            deprecated = false
+            records = true
+            immutablePojos = false
+            fluentSetters = true
+            globalTableReferences = false
+          }
+          target{
+            // gets blown away by the clean task each it's run
+            directory = jooqGeneratedSrcDir
+            packageName = jooqGeneratedPkg
+          }
+        }
+      }
+    }
+  }
+}
+tasks.generateJooq.dependsOn cleanJooqGeneratedSrc

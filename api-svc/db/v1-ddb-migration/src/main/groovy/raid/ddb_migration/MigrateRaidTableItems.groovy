@@ -161,12 +161,12 @@ class MigrateRaidTableItems {
 
   private static LocalDateTime parseDdbS3Timestamp(String value) {
     // known via observation
-    return parseDate(ddbS3ExportTimestampFormat, sydneyZone, value)
+    return parseDate(ddbS3ExportTimestampFormat, Util.sydneyZone, value)
   }
 
   private static LocalDateTime parseDdbS3IsoTimestamp(String value) {
     // timezone is a guess, not sure - doesn't matter anyway
-    return parseDate(ddbS3ExportIsoTimestampFormat, utcZone, value)
+    return parseDate(ddbS3ExportIsoTimestampFormat, Util.utcZone, value)
   }
 
 }
