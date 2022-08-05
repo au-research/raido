@@ -13,7 +13,8 @@ opposed to integration or functional test) are loaded from
 
 ## Running a local DB
 
-See [db/readme.md](../db/readme.md)
+See [api-svc/readme.md](../readme.md) for instructions on running a postgres 
+container and creating the schemata.
 
 
 ## Configuration
@@ -33,6 +34,8 @@ RaidV1Auth.jwtSecret=<JWT secret>
 
 
 ### Running integration tests
+
+Note, at the moment intTest depends on doing a DDB import - WIP.
 
 See [intTest/readme.md](./src/intTest/readme.md)
 
