@@ -30,6 +30,11 @@ public class NonExistentEndpointTest extends IntegrationTestCase {
       hasMessageContaining("404 Not Found");
   }
 
+  @Test
+  public void forceIntTestFailure() {
+    throw new RuntimeException("forced intTest failure");
+  }
+  
   // IMPROVE:STO use proper API model, when it happens  
   static final class Result {
     public String status;
