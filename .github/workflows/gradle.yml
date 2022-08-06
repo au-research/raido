@@ -49,6 +49,8 @@ jobs:
           RAIDO_PG_USER: postgres
           RAIDO_PG_PASSWORD: intTestPgPassword
         run: |
+          mkdir -p ~/.config/raido-v2/
+          
           cat <<EOF > ~/.config/raido-v2/api-svc-db.gradle
           apiSvcPgUrl="$RAIDO_PG_URL"
           apiSvcPgUser="$RAIDO_PG_USER"
