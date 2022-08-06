@@ -125,7 +125,7 @@ public class Log {
 
     if( args.length == 1 && args[0] instanceof Throwable ){
       if( !msg.contains("%s") ){
-        log.info(msg, (Throwable) args[0]);
+        log.debug(msg, (Throwable) args[0]);
         return;
       }
     }
