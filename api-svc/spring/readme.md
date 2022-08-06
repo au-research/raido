@@ -38,8 +38,5 @@ RaidV1Auth.jwtSecret=<JWT secret>
 
 ### Running integration tests
 
-Note, at the moment intTest depends on doing a DDB import - WIP.
-
 See [intTest/readme.md](./src/intTest/readme.md)
 
-Should maybe reconsidered - rename to "intTest".
