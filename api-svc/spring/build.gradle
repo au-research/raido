@@ -159,6 +159,7 @@ test{
 intTest{
   useJUnitPlatform()
   systemProperties defaultSysProps
+  testLogging.showStandardStreams = true  
 }
 
 task cleanIdlRaidV1Src(type: Delete){
