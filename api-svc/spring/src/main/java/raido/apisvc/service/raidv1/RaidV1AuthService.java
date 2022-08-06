@@ -13,7 +13,7 @@ import raido.db.jooq.raid_v1_import.tables.records.TokenRecord;
 import raido.apisvc.spring.config.environment.RaidV1AuthProps;
 import raido.apisvc.spring.security.ApiSvcAuthenticationException;
 import raido.apisvc.spring.security.raidv1.Raid1PostAuthenicationJsonWebToken;
-import raido.apisvc.spring.security.raidv1.Raid1PreAuthenticatedJsonWebToken;
+import raido.apisvc.spring.security.raidv1.RaidV1PreAuthenticatedJsonWebToken;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 
@@ -60,7 +60,7 @@ public class RaidV1AuthService {
   }
 
   public Optional<Raid1PostAuthenicationJsonWebToken> authenticate(
-    Raid1PreAuthenticatedJsonWebToken preAuth
+    RaidV1PreAuthenticatedJsonWebToken preAuth
   ){
     String originalToken = preAuth.getToken().getToken();
     DecodedJWT jwt = this.verify(originalToken);

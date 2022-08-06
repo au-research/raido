@@ -2,18 +2,18 @@ package raido.apisvc.spring.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
-import raido.apisvc.spring.security.raidv1.Raid1PreAuthenticatedJsonWebToken;
+import raido.apisvc.spring.security.raidv1.RaidV1PreAuthenticatedJsonWebToken;
 import raido.apisvc.util.Log;
 
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static org.springframework.security.core.context.SecurityContextHolder.createEmptyContext;
 import static raido.apisvc.spring.config.RaidV1WebSecurityConfig.RAID_V1_API;
+import static raido.apisvc.spring.security.raidv1.RaidV1PreAuthenticatedJsonWebToken.decodeRaidV1Token;
 import static raido.apisvc.util.Log.to;
 
 /**
@@ -38,31 +38,37 @@ public class RaidoSecurityContextRepository implements SecurityContextRepository
   @Override
   public Supplier<SecurityContext> loadContext(HttpServletRequest request) {
     return ()->{
-      SecurityContext context = SecurityContextHolder.createEmptyContext();
       var token = authTokenFromRequest(request);
       if( token.isEmpty() ){
-        return context;
+        return createEmptyContext();
       }
 
-      if( request.getServletPath().startsWith(RAID_V1_API) ){
-        Authentication authentication =
-          Raid1PreAuthenticatedJsonWebToken.usingToken(token.get());
-        if( authentication != null ){
-          context.setAuthentication(authentication);
+      if( isRaidV1Api(request) ){
+        var authentication = decodeRaidV1Token(token.get());
+        if( authentication == null ){
+          return createEmptyContext();
         }
-        else {
-          log.warn("v1 path with token, pre-auth JWT returned null");
-        }
+        return createRaidV1AuthContext(authentication);
       }
-      else {
-        log.with("path", request.getServletPath()).with("token", token).info(
-          "RaidV1SCR no");
-        throw new UnsupportedOperationException(
-          "can only do /v1 endpoints ATM");
-      }
-      return context;
+      
+      log.with("path", request.getServletPath()).
+        with("token", token).
+        info("RaidV1SCR no");
+      throw new UnsupportedOperationException("can only do /v1 endpoints ATM");
 
     };
+  }
+
+  private static boolean isRaidV1Api(HttpServletRequest request) {
+    return request.getServletPath().startsWith(RAID_V1_API);
+  }
+
+  private static SecurityContext createRaidV1AuthContext(
+    RaidV1PreAuthenticatedJsonWebToken authentication
+  ) {
+    var context = createEmptyContext();
+    context.setAuthentication(authentication);
+    return context;
   }
 
   @Override

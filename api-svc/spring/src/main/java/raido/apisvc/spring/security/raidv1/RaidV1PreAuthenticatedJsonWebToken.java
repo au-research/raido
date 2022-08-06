@@ -13,20 +13,22 @@ import java.util.Collections;
 
 import static raido.apisvc.util.ExceptionUtil.createIae;
 import static raido.apisvc.util.Log.to;
+import static raido.apisvc.util.StringUtil.mask;
 
 /**
  Final is intended to avoid sub-classing - there should be no need for a 
- subclass of a pre-auth token.
+ subclass of a pre-auth token.  It's not much of a defence - if attacker can
+ inject code, we've already lost - but might as well do it.
  */
-public final class Raid1PreAuthenticatedJsonWebToken 
+public final class RaidV1PreAuthenticatedJsonWebToken 
 implements Authentication {
 
   private static final Log log = 
-    to(Raid1PreAuthenticatedJsonWebToken.class);
+    to(RaidV1PreAuthenticatedJsonWebToken.class);
 
   private final DecodedJWT token;
 
-  Raid1PreAuthenticatedJsonWebToken(DecodedJWT token) {
+  RaidV1PreAuthenticatedJsonWebToken(DecodedJWT token) {
     this.token = token;
   }
 
@@ -73,19 +75,29 @@ implements Authentication {
     return token.getSubject();
   }
 
-  public static Raid1PreAuthenticatedJsonWebToken usingToken(String token) {
+  /**
+   PreAuth token is "decoded", not "verified" - i.e. the signature is not 
+   checked.
+   */
+  public static RaidV1PreAuthenticatedJsonWebToken decodeRaidV1Token(
+    String token
+  ) {
     if (token == null) {
       log.debug("No token was provided to build PreAuth token");
       return null;
     }
     
     try {
-      // doest not verify the token signature, just decodes it
       DecodedJWT jwt = JWT.decode(token);
-      return new Raid1PreAuthenticatedJsonWebToken(jwt);
+      return new RaidV1PreAuthenticatedJsonWebToken(jwt);
     } catch (JWTDecodeException e) {
-      /* log the stack because exceeption resolver won't see it */
-      log.info("Failed to decode token as jwt", e);
+      log.with("message", e.getMessage()).
+        with("token", mask(token)).
+        info("Failed to decode token as jwt");
+      /* log the stack as debug, so it'll show in dev, but won't pollute 
+      the logs in deployment because of users or attackers using bad tokens.
+      Yes, debugging a deployed problem will require a log config change. */
+      log.debug("JWT decode exception", e);
       return null;
     }
   }

@@ -23,7 +23,7 @@ public class RaidV1AuthenticationProvider implements AuthenticationProvider {
 
     if( isRaid1PreAuth(authentication.getClass()) ){
       return raidSvc.authenticate(
-        (Raid1PreAuthenticatedJsonWebToken) authentication).orElse(null);
+        (RaidV1PreAuthenticatedJsonWebToken) authentication).orElse(null);
     }
     
     
@@ -36,7 +36,7 @@ public class RaidV1AuthenticationProvider implements AuthenticationProvider {
   }
 
   private boolean isRaid1PreAuth(Class<?> authentication){
-    return authentication.equals(Raid1PreAuthenticatedJsonWebToken.class);
+    return authentication.equals(RaidV1PreAuthenticatedJsonWebToken.class);
   }
 
   @Override

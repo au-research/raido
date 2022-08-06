@@ -25,6 +25,8 @@ public final class StringUtil {
   public static final int DEFAULT_MAX_ELEMENTS_TO_STRING = 20;
 
   public static final String COMMA_SPACE = ", ";
+  public static final String MASK_SEPARATOR = "...";
+  public static final int DEFAUL_MASK_LENGTH = 10;
 
   /**
    Null is not a value.  Empty string is not a value.  Whitespace is not a
@@ -544,16 +546,28 @@ public final class StringUtil {
     return sb.toString();
   }  
   
-  /** makes a value that is safe to put in log messages, show to user, etc. */
   public static String mask(String value){
-    if( value == null ){
-      return "";
-    }
-    if( value.length() < 10 ){
-      return "..." + value.length();
-    }
-    return truncate(value, 3) + "..." + value.length();
+    return mask(value, DEFAUL_MASK_LENGTH);
   }
 
+  /** makes a value that is safe to put in log messages, show to user, etc.
+  @param maskLength the number of characters to show 
+   */
+  public static String mask(String value, int maskLength) {
+    if( value == null || value.length() == 0 ){
+      return "";
+    }
+
+    if( maskLength < MASK_SEPARATOR.length() ){
+      return MASK_SEPARATOR + value.length();
+    }
+
+    if( value.length() < maskLength ){
+      return MASK_SEPARATOR + value.length();
+    }
+    
+    return truncate(value, maskLength - MASK_SEPARATOR.length()) +
+      MASK_SEPARATOR + value.length();
+  }
 
 }
