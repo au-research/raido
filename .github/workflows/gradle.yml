@@ -1,12 +1,19 @@
 name: CI
-on: 
+on:
+  pull_request:
   push:
+    branches:
+    - main    
     paths-ignore:
       # don't need doc updates to do a rebuild, it's a waste of build minutes   
       - '**.md'
-
+    
+# 1 job for the moment - parallelisation won't buy us anything for a while,
+# wait until we get a bit more code. When we have a client-build, that might
+# make sense to be a separate job in it's own parallel runner.      
 jobs:
-  build:
+  api-svc-build:
+    name: "api-svc"
     runs-on: ubuntu-latest
 
     services:
@@ -87,6 +94,7 @@ jobs:
         uses: dorny/test-reporter@v1
         if: always()
         with:
+          ## this shows up in Github UI under "jobs" but it's not one
           name: Unit and Integrations tests
           path: '**/build/test-results/**/*.xml'
           reporter: java-junit
