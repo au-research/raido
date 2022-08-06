@@ -2,7 +2,7 @@
   <!-- https://www.slf4j.org/api/org/slf4j/bridge/SLF4JBridgeHandler.html -->
   <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
     <resetJUL>true</resetJUL>
-  </contextListener>
+  </contextListener>  
   <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>
 
   <appender name="UNMASKED_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -11,15 +11,13 @@
     </encoder>
   </appender>
 
-  <!-- Debug is usually disabled in deployment enviornments.
-  The Github CI workflow uses this config.
-  If you want to enable extra logging for running locally, add your own file 
-  like `sto.logback.xml` and use it via `-Dlogback.configurationFile=sto.logback.xml`
-  -->
+  <!-- debug is usually disabled in deployment enviornments -->
   <root level="info">
     <appender-ref ref="UNMASKED_CONSOLE"/>
   </root>
 
   <logger name="org.springframework.test.context.support" level="warn"/>
 
+  <logger name="p6spy" level="debug"/>
+  
 </configuration>

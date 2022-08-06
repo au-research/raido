@@ -4,6 +4,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -86,6 +88,10 @@ public class RestUtil {
     RestUtil.debugLogResponse(httpLog, description, response);
 
     return response.getBody();
+  }
+
+  public static String urlEncode(String value) {
+    return URLEncoder.encode(value, StandardCharsets.UTF_8);
   }
 
 }

@@ -2,7 +2,6 @@ package raido.apisvc.endpoint.raidv1;
 
 import org.jooq.DSLContext;
 import org.jooq.JSONB;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,30 +10,28 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import raido.db.jooq.raid_v1_import.tables.records.RaidRecord;
-import raido.idl.raidv1.model.RaidCreateModel;
-import raido.idl.raidv1.model.RaidCreateModelMeta;
-import raido.idl.raidv1.model.RaidModel;
-import raido.idl.raidv1.model.RaidModelMeta;
-import raido.idl.raidv1.model.RaidPublicModel;
 import raido.apisvc.service.apids.ApidsService;
 import raido.apisvc.service.apids.model.ApidsMintResponse;
 import raido.apisvc.spring.config.RaidV1WebSecurityConfig;
 import raido.apisvc.spring.security.ApiSafeException;
 import raido.apisvc.spring.security.raidv1.Raid1PostAuthenicationJsonWebToken;
 import raido.apisvc.util.Log;
+import raido.db.jooq.raid_v1_import.tables.records.RaidRecord;
+import raido.idl.raidv1.model.RaidCreateModel;
+import raido.idl.raidv1.model.RaidCreateModelMeta;
+import raido.idl.raidv1.model.RaidModel;
+import raido.idl.raidv1.model.RaidModelMeta;
+import raido.idl.raidv1.model.RaidPublicModel;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static java.util.List.of;
 import static org.eclipse.jetty.http.HttpStatus.BAD_REQUEST_400;
 import static org.eclipse.jetty.http.HttpStatus.NOT_FOUND_404;
-import static raido.db.jooq.raid_v1_import.tables.Raid.RAID;
 import static raido.apisvc.endpoint.message.RaidApiV1Message.DEMO_NOT_SUPPPORTED;
 import static raido.apisvc.endpoint.message.RaidApiV1Message.HANDLE_NOT_FOUND;
 import static raido.apisvc.endpoint.message.RaidApiV1Message.MINT_DATA_ERROR;
@@ -45,6 +42,7 @@ import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.isTrue;
 import static raido.apisvc.util.StringUtil.hasValue;
 import static raido.apisvc.util.StringUtil.isBlank;
+import static raido.db.jooq.raid_v1_import.tables.Raid.RAID;
 
 @RequestMapping(RAID_V1_API)
 @RestController
@@ -54,30 +52,10 @@ public class RaidV1 {
 
   private ApidsService apidsSvc;
   private DSLContext db;
-  private JdbcTemplate jdbcTemplate;
-  
-  public RaidV1(ApidsService apidsSvc, DSLContext db, JdbcTemplate jdbcTemplate) {
+
+  public RaidV1(ApidsService apidsSvc, DSLContext db) {
     this.apidsSvc = apidsSvc;
     this.db = db;
-    this.jdbcTemplate = jdbcTemplate;
-  }
-
-  /**  Just for initial testing of security */
-  @GetMapping("/raid/ping")
-  public Map<String, String> raidPing(){
-    return Map.of("status","UP");
-  }
-
-  @PostMapping("/raid/apidstest")
-  public Map<String, String> raidMintTest(){
-    // do not hold TX open across this, it takes SECONDS 
-    ApidsMintResponse handle = apidsSvc.mintApidsHandle();
-//    handle = apidsSvc.mintApidsHandle();
-//    handle = apidsSvc.mintApidsHandle();
-//    handle = apidsSvc.mintApidsHandle();
-//    handle = apidsSvc.mintApidsHandle();
-//    handle = apidsSvc.mintApidsHandle();
-    return Map.of("status","UP");
   }
 
   /** Watch out - handles have slashes in them, by definition 😢
@@ -126,12 +104,6 @@ public class RaidV1 {
 
     populateDefaultValues(create);
 
-//    jdbcTemplate.update(
-//      "INSERT INTO api_svc.test_table values (?)",
-//      "sto/test."+System.currentTimeMillis()
-//    );
-//    return new RaidModel();
-    
     /* Do not hold TX open across this, it takes SECONDS.
     Note that security stuff (i.e. to populate `identity`) happens under its
     own TX, so no need to worry about that. */

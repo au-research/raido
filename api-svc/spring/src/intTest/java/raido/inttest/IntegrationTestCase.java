@@ -27,7 +27,7 @@ public abstract class IntegrationTestCase {
   @Autowired protected DSLContext db;
   @Autowired protected TestAuthTokenService authTokenSvc;
 
-  protected String testToken;
+  protected String raidV1TestToken;
   
   @RegisterExtension
   protected static JettyTestServer jettyTestServer =
@@ -40,11 +40,11 @@ public abstract class IntegrationTestCase {
    */
   @BeforeEach
   public void setupTestToken(){
-    if( testToken != null ){
+    if( raidV1TestToken != null ){
       return;
     }
     
-    testToken = authTokenSvc.initTestToken();
+    raidV1TestToken = authTokenSvc.initTestToken();
   }
 
   public <T> T get(String authnToken, String url, Class<T> resultType){
@@ -57,8 +57,8 @@ public abstract class IntegrationTestCase {
     return epResponse.getBody();
   }
 
-  public <T> T anonGet(String url, Class<T> resultType){
-    HttpEntity<T> entity = new HttpEntity<T>(new HttpHeaders());
+  public <TResult> TResult anonGet(String url, Class<TResult> resultType){
+    HttpEntity<TResult> entity = new HttpEntity<>(new HttpHeaders());
 
     var epResponse = rest.exchange(
       raidoApiServerUrl(url),
@@ -71,8 +71,23 @@ public abstract class IntegrationTestCase {
     String authnToken, String url, 
     TRequest request, Class<TResult> resultType
   ){
-    HttpEntity<TRequest> entity = createEntityWithBearer(authnToken, request);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setBearerAuth(authnToken);
+    HttpEntity<TRequest> entity = new HttpEntity<>(request, headers);
 
+    var epResponse = rest.exchange(
+      raidoApiServerUrl(url),
+      HttpMethod.POST, entity, resultType);
+    
+    return epResponse.getBody();
+  }
+
+  public <TRequest, TResult> TResult anonPost(
+    String url, 
+    TRequest request, 
+    Class<TResult> resultType
+  ){
+    HttpEntity<TRequest> entity = new HttpEntity<>(request, new HttpHeaders());
     var epResponse = rest.exchange(
       raidoApiServerUrl(url),
       HttpMethod.POST, entity, resultType);

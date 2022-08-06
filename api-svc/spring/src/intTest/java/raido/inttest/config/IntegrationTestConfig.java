@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.DefaultUriBuilderFactory;
+import org.springframework.web.util.DefaultUriBuilderFactory.EncodingMode;
 import raido.apisvc.spring.config.ApiConfig;
 import raido.apisvc.util.Log;
 
@@ -47,7 +49,19 @@ public class IntegrationTestConfig {
   /** for talking to the api-svc over the wire */
   @Bean
   public RestTemplate restTemplate(){
-    return new RestTemplate();
+    var restTemplate = new RestTemplate();
+
+    /* this is because of the stupid "handles contain a slash" problem.
+    If I manually url encode the handle so that the slash is replaced, then
+    when RestTemplate sees the `%2F` (for slash) in the path, it will 
+    re-urlencode the percent symbol so we we end up with "%252F" in the path.
+    Probably going to have write some kind of custom handle-aware UriBuilder,
+    but this'll do for the moment. */
+    var defaultUriBuilderFactory = new DefaultUriBuilderFactory();
+    defaultUriBuilderFactory.setEncodingMode(EncodingMode.VALUES_ONLY);
+    restTemplate.setUriTemplateHandler(defaultUriBuilderFactory);
+
+    return restTemplate;
   }
 
 }
