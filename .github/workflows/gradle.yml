@@ -49,15 +49,14 @@ jobs:
           RAIDO_PG_USER: postgres
           RAIDO_PG_PASSWORD: intTestPgPassword
         run: |
-          cat <<EOF > api-svc-db.gradle
+          cat <<EOF > ~/.config/raido-v2/api-svc-db.gradle
           apiSvcPgUrl="$RAIDO_PG_URL"
           apiSvcPgUser="$RAIDO_PG_USER"
           apiSvcPgPassword="$RAIDO_PG_PASSWORD"
           EOF
 
           echo "cat api-svc-db.gradle"
-          ls -la
-          cat api-svc-db.gradle
+          cat ~/.config/raido-v2/api-svc-db.gradle
 
       - name: Create DB schemata
         run: ./gradlew flywayMigrate
