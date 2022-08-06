@@ -1,10 +1,7 @@
 # Structure
 
 * `:api-svc:db`
-  * acts as a "container" of the various DB projects, so for example if you
-    run gradle task `:api-svc:db/flywayMigrate` it actually runs the
-    `flywayMigrate` of all sub-projects (so you get both `raido` and
-    `raid_v1_import` schemas migrated at the same time)
+  * acts as a "container" project of the various DB projects
   * `:api-svc:db:shared`
     * empty project, it exists to collect stuff that needs to be shared between
       the `db` subprojects
