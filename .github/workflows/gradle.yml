@@ -62,7 +62,7 @@ jobs:
 
       - name: Create and populate api-svc-env.properties
         env:
-          APIDS_JWT_SECRET: ${{ secrets.APIDS_JWT_SECRET }}
+          APIDS_JWT_SECRET: ${{ secrets.APIDS_DEMO_JWT_SECRET }}
         run: |
           mkdir -p ~/.config/raido-v2/
 
