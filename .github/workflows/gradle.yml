@@ -2,32 +2,28 @@ name: CI
 on: 
   push:
     paths-ignore:
+      # don't need doc updates to do a rebuild, it's a waste of build minutes   
       - '**.md'
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
-# Not ready for this yet, need to have DB setup so tokens work, 
-# don't wanna do import of prod data just for this.
-# - flyway migrate - want to put raid_v1_import and api_svc schemas into single
-#   project
-# - need a way to bootstrap a token that the test can use    
-#    
-#    services:
-#      postgres:
-#        image: postgres:14
-#        env:
-#          POSTGRES_DB: postgres
-#          POSTGRES_PASSWORD: postgres
-#          POSTGRES_USER: postgres
-#        ports:
-#          - 5432:5432
-#        # Set health checks to wait until postgres has started
-#        options: >-
-#          --health-cmd pg_isready
-#          --health-interval 10s
-#          --health-timeout 5s
-#          --health-retries 5
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - uses: actions/checkout@v3
@@ -44,8 +40,11 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      - name: Gradle build
+      - name: Build and unit test
         run: ./gradlew build            
+
+      - name: Create DB schemata
+        run: ./gradlew :api-svc:db:flywayMigrate
 
       # https://github.com/marketplace/actions/test-reporter
       - name: Reporting
