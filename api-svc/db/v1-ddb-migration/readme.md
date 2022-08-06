@@ -5,7 +5,7 @@ a PG database, see [db/readme.md](../../db/readme.md)
 The files are expected to be exported from DDB to S3, then downloaded to your
 local machine.
 
-Uses Groovy because this isn't prod code and I was dealing with jdon blobs,
+Uses Groovy because this isn't prod code and I was dealing with JSON blobs,
 so groovy was convenient because of prior experience.
 
 
