@@ -15,7 +15,7 @@ jobs:
         env:
           POSTGRES_DB: raido
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: intTestPgPassword
+          POSTGRES_PASSWORD: githubActionIntTestPgPassword
         ports:
           - 5432:5432
         # Set health checks to wait until postgres has started
@@ -43,25 +43,44 @@ jobs:
       - name: Build and unit test
         run: ./gradlew build            
 
-      - name: Create and populate file
-        env:
-          RAIDO_PG_URL: jdbc:postgresql://localhost:5432/raido
-          RAIDO_PG_USER: postgres
-          RAIDO_PG_PASSWORD: intTestPgPassword
+      - name: Create and populate api-svc-db.gradle
         run: |
           mkdir -p ~/.config/raido-v2/
           
           cat <<EOF > ~/.config/raido-v2/api-svc-db.gradle
-          apiSvcPgUrl="$RAIDO_PG_URL"
-          apiSvcPgUser="$RAIDO_PG_USER"
-          apiSvcPgPassword="$RAIDO_PG_PASSWORD"
+          apiSvcPgUrl="jdbc:postgresql://localhost:5432/raido"
+          apiSvcPgUser="postgres"
+          apiSvcPgPassword="githubActionIntTestPgPassword"
           EOF
 
           echo "cat api-svc-db.gradle"
           cat ~/.config/raido-v2/api-svc-db.gradle
 
+      # requires api-svc-db.gradle to be populated
       - name: Create DB schemata
         run: ./gradlew flywayMigrate
+
+      - name: Create and populate api-svc-env.properties
+        env:
+          APIDS_JWT_SECRET: ${{ secrets.APIDS_JWT_SECRET }}
+        run: |
+          mkdir -p ~/.config/raido-v2/
+
+          cat <<EOF > ~/.config/raido-v2/api-svc-env.properties
+          DatasourceConfig.url=jdbc:p6spy:postgresql://localhost:5432/raido
+          DatasourceConfig.username=postgres
+          DatasourceConfig.password=githubActionIntTestPgPassword
+          RaidV1Auth.jwtSecret=githubActionIntTestJwtSecret
+          Apids.secret=$APIDS_JWT_SECRET
+          EOF
+
+          # commented out to protect secrets
+          echo "cat api-svc-env.properties"
+          cat ~/.config/raido-v2/api-svc-env.properties
+
+      # requires api-svc-env.properties to be populated
+      - name: Run integration tests
+        run: ./gradlew intTest
 
       # https://github.com/marketplace/actions/test-reporter
       - name: Reporting
