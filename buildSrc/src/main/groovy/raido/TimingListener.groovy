@@ -10,7 +10,10 @@ import org.gradle.api.tasks.TaskState
 
 import java.util.concurrent.TimeUnit
 
-/** Log timings per task. 
+/** Log timings per task.
+ Implemented so we can keep an eye on which tasks take a long time in the 
+ Github workflow actions.
+ 
  https://stackoverflow.com/a/42793367/924597
  */
 class TimingListener implements TaskExecutionListener, BuildListener {
