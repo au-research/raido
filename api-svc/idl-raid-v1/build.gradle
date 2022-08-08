@@ -107,7 +107,14 @@ tasks.openApiGenerate {
 
 /* not sure why I have to add removeControllerClasses here, but if it's not
 here, compileJava will fail trying to compile controllers   */
-tasks.compileJava.dependsOn removeControllerClasses, tasks.openApiGenerate
+tasks.compileJava.dependsOn removeControllerClasses
+
+/* CI build failed because even though spring depends on this project, this
+propject didn't know it had to generate before compiling.
+I think the correct approack to this is the openApiGenerate "apiFirst" config,
+but it doesn't seem to actually do that.  
+ */
+tasks.compileJava.dependsOn tasks.openApiGenerate
 
 
 openApiValidate {
