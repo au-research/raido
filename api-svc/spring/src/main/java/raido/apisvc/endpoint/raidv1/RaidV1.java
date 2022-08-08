@@ -2,21 +2,21 @@ package raido.apisvc.endpoint.raidv1;
 
 import org.jooq.DSLContext;
 import org.jooq.JSONB;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.service.apids.ApidsService;
 import raido.apisvc.service.apids.model.ApidsMintResponse;
 import raido.apisvc.spring.config.RaidV1WebSecurityConfig;
 import raido.apisvc.spring.security.ApiSafeException;
 import raido.apisvc.spring.security.raidv1.Raid1PostAuthenicationJsonWebToken;
+import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.db.jooq.raid_v1_import.tables.records.RaidRecord;
+import raido.idl.raidv1.api.RaidV1Api;
 import raido.idl.raidv1.model.RaidCreateModel;
 import raido.idl.raidv1.model.RaidCreateModelMeta;
 import raido.idl.raidv1.model.RaidModel;
@@ -32,10 +32,13 @@ import static java.util.Collections.emptyList;
 import static java.util.List.of;
 import static org.eclipse.jetty.http.HttpStatus.BAD_REQUEST_400;
 import static org.eclipse.jetty.http.HttpStatus.NOT_FOUND_404;
+import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 import static raido.apisvc.endpoint.message.RaidApiV1Message.DEMO_NOT_SUPPPORTED;
 import static raido.apisvc.endpoint.message.RaidApiV1Message.HANDLE_NOT_FOUND;
 import static raido.apisvc.endpoint.message.RaidApiV1Message.MINT_DATA_ERROR;
 import static raido.apisvc.spring.config.RaidV1WebSecurityConfig.RAID_V1_API;
+import static raido.apisvc.spring.security.ApiSafeException.apiSafe;
 import static raido.apisvc.util.DateUtil.formatDynamoDateTime;
 import static raido.apisvc.util.DateUtil.parseDynamoDateTime;
 import static raido.apisvc.util.Log.to;
@@ -44,9 +47,11 @@ import static raido.apisvc.util.StringUtil.hasValue;
 import static raido.apisvc.util.StringUtil.isBlank;
 import static raido.db.jooq.raid_v1_import.tables.Raid.RAID;
 
+// without this, requestmappings don't get picked up and we have no endpoints
+@Scope( proxyMode = ScopedProxyMode.TARGET_CLASS )
 @RequestMapping(RAID_V1_API)
 @RestController
-public class RaidV1 {
+public class RaidV1 implements RaidV1Api {
   public static final String HANDLE_URL_PREFIX = "/handle";
   private static final Log log = to(RaidV1.class);
 
@@ -58,23 +63,31 @@ public class RaidV1 {
     this.db = db;
   }
 
-  /** Watch out - handles have slashes in them, by definition 😢
-   Currently, API clients encode the handle slash as `%2f` - but that triggers 
+  /** For testing, c.f. declaring a method parameter (I can't figure out
+   how to get openapi to generate code like that).
+   */
+  public Raid1PostAuthenicationJsonWebToken getAuthentication() {
+    return  Guard.isInstance(Raid1PostAuthenicationJsonWebToken.class,
+      getContext().getAuthentication());
+  }
+  
+  /**
+   Watch out - handles have slashes in them, by definition 😢
+   Currently, API clients encode the handle slash as `%2f` - but that triggers
    the default Spring HttpStrictFirewall.
-   We've disabled that in {@link RaidV1WebSecurityConfig}, which is a risk. 
+   We've disabled that in {@link RaidV1WebSecurityConfig}, which is a risk.
    V2 API should always pass handles as params instead of in the path?
-   Or... we could catch this request with path = /v1/handle/** and parse out 
+   Or... we could catch this request with path = /v1/handle/** and parse out
    the handle ourselves?  That would allow us to fix the security risk, and
-   let users just use normal urls.  But if we want to do backwards compat. 
-   with encoded url slashes, we'll still have to have the firewall rule 
+   let users just use normal urls.  But if we want to do backwards compat.
+   with encoded url slashes, we'll still have to have the firewall rule
    disabled.
 
    @see RaidV1WebSecurityConfig#allowUrlEncodedSlashHttpFirewall
    */
-  @GetMapping(HANDLE_URL_PREFIX + "/{raidId}")
-  public RaidPublicModel getRaid(
-    @PathVariable("raidId") String raidId,
-    @RequestParam(value = "demo", required = false) Optional<Boolean> demo
+  public ResponseEntity<RaidPublicModel> handleRaidIdGet(
+    String raidId,
+    Optional<Boolean> demo
   ){
     guardDemoEnv(demo);
     
@@ -83,9 +96,9 @@ public class RaidV1 {
       where(RAID.HANDLE.eq(raidId)).
       fetchOneInto(RaidPublicModel.class);
     if( result == null ){
-      throw new ApiSafeException(HANDLE_NOT_FOUND, NOT_FOUND_404, of(raidId));
+      throw apiSafe(HANDLE_NOT_FOUND, NOT_FOUND_404, of(raidId));
     }
-    return result;
+    return ok(result);
   }
   
   public void guardDemoEnv(Optional<Boolean> demo){
@@ -94,12 +107,9 @@ public class RaidV1 {
     }
   }
   
-  @PostMapping("/raid")
   @Transactional
-  public RaidModel raidMint(
-    Raid1PostAuthenicationJsonWebToken identity,
-    @RequestBody RaidCreateModel create
-  ){
+  public ResponseEntity<RaidModel> raidPost(RaidCreateModel create){
+    var identity = getAuthentication();
     guardV1MintInput(create);
 
     populateDefaultValues(create);
@@ -122,7 +132,7 @@ public class RaidV1 {
       setS3Export(JSONB.valueOf("{}"));
     record.insert();
 
-    return new RaidModel().
+    return ok(new RaidModel().
       handle(record.getHandle()).
       owner(record.getOwner()).
       contentPath(record.getContentPath()).
@@ -133,7 +143,7 @@ public class RaidV1 {
         name(record.getName()).
         description(record.getDescription()) ).
       providers( emptyList() ).
-      institutions( emptyList() );
+      institutions( emptyList() ));
   }
 
   private void populateDefaultValues(RaidCreateModel create) {
@@ -166,6 +176,6 @@ public class RaidV1 {
     if( !problems.isEmpty() ){
       throw new ApiSafeException(MINT_DATA_ERROR, problems);
     }
-  } 
-  
+  }
+
 }

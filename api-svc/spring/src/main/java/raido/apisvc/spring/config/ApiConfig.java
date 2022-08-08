@@ -33,7 +33,11 @@ import static raido.apisvc.util.Log.to;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = {
-  "raido.apisvc.spring", "raido.apisvc.service", "raido.apisvc.endpoint"})
+  // spring bootup and config
+  "raido.apisvc.spring", 
+  // services and endpoints
+  "raido.apisvc.service", "raido.apisvc.endpoint"
+})
 /* This is NOT for you to put an `env.properties` file with credentials in the 
 source tree!
 This is a convenience to allow simple deployments to just dump the 

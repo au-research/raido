@@ -52,6 +52,7 @@ public class RaidV1MintTest extends IntegrationTestCase {
       "/v1/handle/"+encodedHandle, RaidModel.class);
     assertThat(mintResult).isNotNull();
     assertThat(getResult.getHandle()).isEqualTo(mintResult.getHandle());
+    assertThat(getResult.getOwner()).isEqualTo(authTokenSvc.testOwner);
   }
   
 }

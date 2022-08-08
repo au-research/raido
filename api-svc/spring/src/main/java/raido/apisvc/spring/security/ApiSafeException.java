@@ -61,6 +61,12 @@ public class ApiSafeException extends RuntimeException {
     this(message, httpStatus, detail, false);
   }
 
+  public static ApiSafeException apiSafe(
+    String message, int httpStatus, List<String> detail
+  ){
+    return new ApiSafeException(message, httpStatus, detail);
+  }
+
   protected ApiSafeException(
     String message, int httpStatus, List<String> detail, boolean logStack
   ){

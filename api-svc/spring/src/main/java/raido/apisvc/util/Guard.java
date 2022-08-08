@@ -231,4 +231,18 @@ public class Guard {
     return new IllegalArgumentException(message);
   }
 
+  public static <T> T isInstance(Class<T> clazz, Object instance){
+    if( instance == null ){
+      throw failedCheck("expectedinstance of %s, but was null",
+        clazz.getSimpleName() );
+    }
+    if( !clazz.isInstance(instance) ){
+      throw failedCheck("expectedinstance of %s, but was %s, - %s",
+        clazz.getSimpleName(),
+        instance.getClass().getSimpleName(), 
+        instance.toString() );
+    }
+    
+    return clazz.cast(instance);
+  }
 }

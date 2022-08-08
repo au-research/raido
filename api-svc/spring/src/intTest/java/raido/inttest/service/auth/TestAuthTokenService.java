@@ -24,7 +24,7 @@ public class TestAuthTokenService {
   @Autowired protected RaidV1AuthProps authProps;
 
 
-  private String testOwner = "raido.inttest";
+  public String testOwner = "raido.inttest";
 
   /**
    Doing this eagerly, so the execution time is not counted against

@@ -17,7 +17,10 @@
   </root>
 
   <logger name="org.springframework.test.context.support" level="warn"/>
-
+  
+  <!-- shows the mapping of endpoints to methods, -->
+  <logger name="_org.springframework.web.servlet.HandlerMapping.Mappings" level="debug"/>
+  
   <logger name="p6spy" level="debug"/>
   
 </configuration>

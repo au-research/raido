@@ -34,7 +34,6 @@ dependencyResolutionManagement{
       // for @Transactional annotation
       library('spring-tx', 'org.springframework', 'spring-tx').versionRef('spring6')
       library('spring-jdbc', 'org.springframework', 'spring-jdbc').versionRef('spring6')
-      
       bundle('spring6', [
         'spring-webmvc', 
         'spring-security-core', 

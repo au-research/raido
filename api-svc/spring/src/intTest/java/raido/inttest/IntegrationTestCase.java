@@ -10,11 +10,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.RestTemplate;
+import raido.apisvc.util.Log;
 import raido.inttest.config.IntTestProps;
 import raido.inttest.config.IntegrationTestConfig;
-import raido.apisvc.util.Log;
 import raido.inttest.service.auth.TestAuthTokenService;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.RestUtil.createEntityWithBearer;
 
@@ -73,8 +74,12 @@ public abstract class IntegrationTestCase {
   ){
     HttpHeaders headers = new HttpHeaders();
     headers.setBearerAuth(authnToken);
+    /* If not set, then when using openapi generated API interface,
+    would get errors about "Content-Type 'application/xml;charset=UTF-8' not
+    supported.  Not sure why that happend for openapi stuff. */
+    headers.setContentType(APPLICATION_JSON);
     HttpEntity<TRequest> entity = new HttpEntity<>(request, headers);
-
+  
     var epResponse = rest.exchange(
       raidoApiServerUrl(url),
       HttpMethod.POST, entity, resultType);

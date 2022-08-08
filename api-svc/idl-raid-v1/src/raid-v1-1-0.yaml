@@ -13,13 +13,15 @@ paths:
   /raid:
     post:
       summary: "Generate a raid with a unique URL handle"
+      tags:
+        - "Raid V1"
       consumes:
       - "application/json"
       produces:
       - application/json
       parameters:
       - in: "body"
-        required: false
+        required: true
         name: "body"
         description: "Minting path and other optional parameters that are stored in the RAiD. 'meta' can take any valid JSON object with a 'name' and 'description inside recommended."
         schema:
@@ -29,9 +31,13 @@ paths:
           description: 200 response
           schema:
             $ref: "#/definitions/RaidModel"
+      security:
+        - RaidV1Security: []
   /handle/{raidId}:
     get:
       summary: "Return the public information for RAiD"
+      tags:
+        - "Raid V1"
       produces:
         - application/json
       parameters:
@@ -50,6 +56,12 @@ paths:
           description: "200 response"
           schema:
             $ref: "#/definitions/RaidPublicModel"
+
+securityDefinitions:
+  RaidV1Security:
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
 
 definitions:
   RaidModel:
