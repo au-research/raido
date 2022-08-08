@@ -3,10 +3,6 @@ plugins{
 }
 
 ext{
-  idRaidV1Project = project(":api-svc:idl-raid-v1")
-  
-  idlGeneratedSrcDir = file('src/main/generated-idl')
-
   defaultSysProps = [
     /* prod machines will always be set to UTC, but developer machines are set 
     to whatever they want - so this forces it for gradle stuff. */
@@ -43,6 +39,7 @@ repositories{
    historical upgrade compatibility */
 dependencies{
   implementation project(':api-svc:db:raido')
+  implementation project(':api-svc:idl-raid-v1')
   
   // look in settings.gradle for version catalog specs 
   implementation libs.bundles.jetty11
@@ -110,6 +107,7 @@ testing{
       dependencies{
         implementation project
         implementation project(':api-svc:db:raido')
+        implementation project(':api-svc:idl-raid-v1')
 
         // for booting a custom test server
         implementation libs.bundles.jetty11
@@ -132,9 +130,6 @@ testing{
 tasks.intTest.description = "don't run this, it's just a Gradle default"
 
 sourceSets{
-  main.java{
-    srcDirs += [idlGeneratedSrcDir]
-  }
   test.resources{
     /* This is so each test's resources are right next to the source.
     It also makes the src/test/resources directory redundant - might as well
@@ -161,27 +156,3 @@ intTest{
   systemProperties defaultSysProps
   testLogging.showStandardStreams = true  
 }
-
-task cleanIdlRaidV1Src(type: Delete){
-  group = "idl"
-  delete idlGeneratedSrcDir
-}
-
-task generateIdlRaidV1Src(type:Copy){
-  group = "idl"
-  description = "clean idl then use :api-svc:idl-raid-v1:openApiGenerate"
-  dependsOn cleanIdlRaidV1Src, idRaidV1Project.tasks.openApiGenerate
-  from( idRaidV1Project.generateDir){
-    /* excluding these for the moment because dunno how to make them use 
-    the identity param (i.e. want openapi to generate a `identity` param of
-    type PostAuthenicationJsonWebToken, so we can't implement the generated
-    Api.java interface classes.  This is subjective though, some pople don't 
-    want the identity param anyway (prefer to bind in to spring or something 
-    I guess).  */
-    exclude "raido/idl/raidv1/api/**"
-  }
-  destinationDir idlGeneratedSrcDir
-}
-/* Its ok to included generation as part of the build process, IDL is different 
-from JOOQ stuff because we don't need a DB to generate the code. */
-tasks.compileJava.dependsOn generateIdlRaidV1Src

@@ -1,20 +1,48 @@
 plugins {
+  id 'java'
   id "org.openapi.generator" version "6.0.1"
 }
 
 ext {
   raidV1SpecFile = file("src/raid-v1-1-0.yaml")
-  generateDir = file("$buildDir/generated")
+  generateDirName = "src/main/generated"
 }
 
-task clean(type: Delete){
-  delete project.buildDir
+repositories{
+  mavenCentral()
+  // needed for resolving spring-6 milestone builds
+  maven { url "https://repo.spring.io/libs-milestone" }
+}
+
+dependencies{
+  implementation libs.bundles.spring6
+
+  // pkg: jakarta.servlet - used to be javax.servlet  
+  compileOnly 'jakarta.platform:jakarta.jakartaee-web-api:9.1.0'
+
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
+
+}
+
+compileJava {
+  options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
+
+sourceSets{
+  main.java{
+    srcDirs += [generateDirName]
+  }
+}
+
+task cleanGeneratedIdlRaidV1Src(type: Delete){
+  group = "build"
+  delete generateDirName
 }
 
 openApiGenerate {
   generatorName = "spring"
   inputSpec = raidV1SpecFile.path
-  outputDir = generateDir.path
+  outputDir = file(".").path
   
   validateSpec =  false
   generateApiDocumentation = false
@@ -29,11 +57,17 @@ openApiGenerate {
   globalProperties = [
     // setting this to blank seems to mean that it generates all models
     models: "",
+    /* We're not using the API classes yet, because I haven't figured out how 
+    to get openapi to generate a "principal" parameter. 
+    That means we're duplicating the path and parameter specifications in 
+    the api-svc Spring code and intTests.  I would prefer to use these, but it's
+    really the model classes where most of the work is and we are using 
+    those. */
     apis: "",
   ]
 
   configOptions = [
-    sourceFolder: "",
+    sourceFolder: generateDirName,
     useOptional: "true",
     dateLibrary: "java8",
     documentationProvider: "none",
@@ -43,12 +77,30 @@ openApiGenerate {
     /* not sure exactly, but it does cause not to genertae javax @Valid 
     annotations */
     useSpringBoot3: "true",
-    
+
+    /* Related to generating "apis". 
+    Causes API classes to not generate default implementations of the endpoint
+    methods. */
     skipDefaultInterface: "true",
     
   ]  
 }
-tasks.openApiGenerate.dependsOn clean
+
+/* We don't need these classes and they cause compile failures. 
+Can't figure out how to tell openapi to not generate them, so we cheat
+and delete them directly instead.*/
+task removeControllerClasses(type: Delete){
+  group = "build"
+  mustRunAfter "openApiGenerate"
+  delete fileTree(generateDirName){
+    include '**/*Controller.java'
+  }
+}
+
+tasks.openApiGenerate {
+  dependsOn cleanGeneratedIdlRaidV1Src
+  finalizedBy removeControllerClasses
+}
 
 openApiValidate {
   inputSpec = raidV1SpecFile.path
