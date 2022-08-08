@@ -39,6 +39,8 @@ task cleanGeneratedIdlRaidV1Src(type: Delete){
   delete generateDirName
 }
 
+tasks.clean.dependsOn cleanGeneratedIdlRaidV1Src
+
 openApiGenerate {
   generatorName = "spring"
   inputSpec = raidV1SpecFile.path
@@ -49,9 +51,10 @@ openApiGenerate {
   generateApiTests = false
   generateModelDocumentation = false
   generateModelTests = false
-    
+  
   modelPackage = "raido.idl.raidv1.model"
   apiPackage = "raido.idl.raidv1.api"
+
   
   // setting globals seems to mean it only generates what you specify
   globalProperties = [
@@ -101,6 +104,11 @@ tasks.openApiGenerate {
   dependsOn cleanGeneratedIdlRaidV1Src
   finalizedBy removeControllerClasses
 }
+
+/* not sure why I have to add removeControllerClasses here, but if it's not
+here, compileJava will fail trying to compile controllers   */
+tasks.compileJava.dependsOn removeControllerClasses, tasks.openApiGenerate
+
 
 openApiValidate {
   inputSpec = raidV1SpecFile.path
