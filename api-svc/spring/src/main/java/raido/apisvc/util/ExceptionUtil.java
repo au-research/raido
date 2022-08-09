@@ -23,11 +23,18 @@ public class ExceptionUtil {
 
    @param format {@link String#format(String, Object...)} - ("%s")
    */
-  public static RuntimeException newRuntimeException(
+  public static RuntimeException runtimeException(
     String format,
     Object... args
   ) {
     return new RuntimeException(String.format(format, args));
+  }
+  
+  public static RuntimeException re(
+    String format,
+    Object... args
+  ) {
+    return runtimeException(format, args);
   }
 
   /**
@@ -35,7 +42,7 @@ public class ExceptionUtil {
 
    @param format {@link String#format(String, Object...)} - ("%s")
    */
-  public static IllegalArgumentException newIllegalArgException(
+  public static IllegalArgumentException illegalArgException(
     String format,
     Object... args
   ) {
@@ -47,11 +54,11 @@ public class ExceptionUtil {
 
    @param format {@link String#format(String, Object...)} - ("%s")
    */
-  public static IllegalArgumentException newIae(
+  public static IllegalArgumentException iae(
     String format,
     Object... args
   ) {
-    return newIllegalArgException(format, args);
+    return illegalArgException(format, args);
   }
   
   
