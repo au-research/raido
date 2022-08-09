@@ -79,13 +79,12 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
     }
     finally {
       long time = (System.nanoTime() - beforeReq) / 1_000_000;
-      // want the method/url to short and easy to read
-      log.with("url", request.getMethod() + ":" + request.getRequestURI()).
+      log.with("url", request.getRequestURI()).
         with("user", request.getRemoteUser()).
         with("params", request.getParameterMap()).
         with("timeMs", time).
         with("status", response.getStatus()).
-        info("endpoint invoked");
+        info("endpoint " + request.getMethod());
 
       if( bodyLog.isDebugEnabled() ){
         /* I wanted to put this before the filter invocation, but it has to 
