@@ -88,13 +88,8 @@ public class RaidV1 implements RaidV1Api {
    the default Spring HttpStrictFirewall.
    We've disabled that in {@link RaidV1WebSecurityConfig}, which is a risk.
    V2 API should always pass handles as params instead of in the path?
-   Or... we could catch this request with path = /v1/handle/** and parse out
-   the handle ourselves?  That would allow us to fix the security risk, and
-   let users just use normal urls.  But if we want to do backwards compat.
-   with encoded url slashes, we'll still have to have the firewall rule
-   disabled.
-
    @see RaidV1WebSecurityConfig#allowUrlEncodedSlashHttpFirewall
+   @see #handleCatchAll(HttpServletRequest, Boolean) 
    */
   public RaidPublicModel handleRaidIdGet(
     String raidId,
