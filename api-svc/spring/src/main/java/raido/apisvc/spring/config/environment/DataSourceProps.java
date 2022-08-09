@@ -9,7 +9,7 @@ import raido.apisvc.util.Nullable;
 import java.util.Optional;
 import java.util.Properties;
 
-import static raido.apisvc.util.ExceptionUtil.createIllegalArgException;
+import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.hasValue;
 
@@ -207,8 +207,7 @@ public class DataSourceProps
 
   private String appendCurrentSchema(String configUrl) {
     if( configUrl.toLowerCase().contains("currentschema") ){
-      throw createIllegalArgException(
-        "url already contains currentSchema: %s", configUrl);
+      throw iae("url already contains currentSchema: %s", configUrl);
     }
 
     if( configUrl.contains("?") ){

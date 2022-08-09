@@ -14,6 +14,7 @@ dependencyResolutionManagement{
       version('spring6', '6.0.0-M5')
       version('jetty11', '11.0.9')
       version('logback', '1.3.0-alpha16')
+      version('feign', '11.9.1')
 
       plugin('flyway', 'org.flywaydb.flyway').version('8.5.13')      
       plugin('jooq', 'nu.studer.jooq').version('7.1.1')      
@@ -21,7 +22,6 @@ dependencyResolutionManagement{
       library('jooq', 'org.jooq', 'jooq').versionRef('jooq')
       library('pgjdbc', 'org.postgresql:postgresql:42.3.6')
       library('assertj', 'org.assertj:assertj-core:3.23.1')
-
 
       // core spring/web - pkg: org.springframework
       library('spring-webmvc', 'org.springframework', 'spring-webmvc').versionRef('spring6')
@@ -42,7 +42,16 @@ dependencyResolutionManagement{
         'spring-tx',
         'spring-jdbc',
       ])
-      
+
+      library('feign-okhttp', 'io.github.openfeign', 'feign-okhttp').versionRef('feign')
+      library('feign-jackson', 'io.github.openfeign', 'feign-jackson').versionRef('feign')
+      library('feign-slf4j', 'io.github.openfeign', 'feign-slf4j').versionRef('feign')
+      bundle('feign', [
+        'feign-okhttp',
+        'feign-jackson',
+        'feign-slf4j',
+      ])
+
       // embedded Jetty server - pkg: org.eclipse.jetty.server
       library('jetty-server', 'org.eclipse.jetty','jetty-server').versionRef('jetty11')
       // Jetty support for Servlet API - pkg: org.eclipse.jetty.servlet

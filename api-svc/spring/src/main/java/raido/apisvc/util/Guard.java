@@ -37,7 +37,7 @@ public class Guard {
     }
 
     if( !StringUtil.areEqual(left, right) ){
-      throw ExceptionUtil.createIllegalArgException(
+      throw ExceptionUtil.illegalArgException(
         "check failed, values are not equal - left=%s right=%s",
         left, right);
     }
@@ -53,7 +53,7 @@ public class Guard {
     }
 
     if( !ObjectUtil.areEqual(left, right) ){
-      throw ExceptionUtil.createIllegalArgException(
+      throw ExceptionUtil.illegalArgException(
         "check failed, values are not equal - left=%s right=%s",
         left, right);
     }
@@ -70,7 +70,7 @@ public class Guard {
     }
 
     if( !ObjectUtil.areEqual(left, right) ){
-      throw ExceptionUtil.createIllegalArgException(msg, left, right);
+      throw ExceptionUtil.illegalArgException(msg, left, right);
     }
   }
 

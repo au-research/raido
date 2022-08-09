@@ -1,5 +1,7 @@
 package raido.inttest.config;
 
+import feign.MethodMetadata;
+import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -7,7 +9,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import org.springframework.web.util.DefaultUriBuilderFactory.EncodingMode;
 import raido.apisvc.spring.config.ApiConfig;
 import raido.apisvc.util.Log;
 
@@ -46,22 +47,42 @@ public class IntegrationTestConfig {
     return new PropertySourcesPlaceholderConfigurer();
   }
 
-  /** for talking to the api-svc over the wire */
   @Bean
   public RestTemplate restTemplate(){
     var restTemplate = new RestTemplate();
 
+    /* The overridden RestTemplate with overridden encodingMode has been
+    removed as a bean and is called explictly by the tests that really need it.
+    Most of the rest of the tests should just use a fiegn client. */
+
+    return restTemplate;
+  }
+
+  public static RestTemplate restTemplateWithEncodingMode(){
+    var restTemplate = new RestTemplate();
     /* this is because of the stupid "handles contain a slash" problem.
     If I manually url encode the handle so that the slash is replaced, then
     when RestTemplate sees the `%2F` (for slash) in the path, it will 
     re-urlencode the percent symbol so we we end up with "%252F" in the path.
-    Probably going to have write some kind of custom handle-aware UriBuilder,
-    but this'll do for the moment. */
+    */
     var defaultUriBuilderFactory = new DefaultUriBuilderFactory();
-    defaultUriBuilderFactory.setEncodingMode(EncodingMode.VALUES_ONLY);
+    defaultUriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.VALUES_ONLY);
     restTemplate.setUriTemplateHandler(defaultUriBuilderFactory);
 
     return restTemplate;
   }
 
+  @Bean
+  public SpringMvcContract feignContract(){
+    return new SpringMvcContract(){
+      @Override
+      protected void processAnnotationOnClass(
+        MethodMetadata data,
+        Class<?> clz
+      ) {
+        super.processAnnotationOnClass(data, clz);
+      }
+    };
+  }
+  
 }

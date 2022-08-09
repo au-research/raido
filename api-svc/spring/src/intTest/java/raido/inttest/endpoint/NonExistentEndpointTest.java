@@ -9,6 +9,7 @@ import raido.apisvc.util.test.BddUtil;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static raido.apisvc.util.Log.to;
+import static raido.apisvc.util.RestUtil.anonGet;
 
 public class NonExistentEndpointTest extends IntegrationTestCase {
   private static final Log log = to(NonExistentEndpointTest.class);
@@ -17,12 +18,12 @@ public class NonExistentEndpointTest extends IntegrationTestCase {
   public void nonExistentEndpointShould404() {
     BddUtil.GIVEN("that an existing endpoint is callable");
     assertThat(
-      anonGet("/public/status", Result.class).status
+      anonGet(rest, raidoApiServerUrl("/public/status"), Result.class).status
     ).isEqualTo("UP");
 
     BddUtil.EXPECT("that an non-existing endpoint returns 404");
     assertThatThrownBy(()->{
-      anonGet("/public/does-not-exist", String.class);
+      anonGet(rest, raidoApiServerUrl("/public/does-not-exist"), String.class);
     }).
       isInstanceOf(HttpClientErrorException.class).
       /* should do a full text match to assert no info leakage, 

@@ -3,13 +3,18 @@ package raido.apisvc.util;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static raido.apisvc.util.ObjectUtil.*;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static raido.apisvc.util.ObjectUtil.infoLogExecutionTime;
 import static raido.apisvc.util.StringUtil.equalsIgnoreCase;
 
 public class RestUtil {
@@ -93,5 +98,56 @@ public class RestUtil {
   public static String urlEncode(String value) {
     return URLEncoder.encode(value, StandardCharsets.UTF_8);
   }
+
+  public static String urlDecode(String value) {
+    return URLDecoder.decode(value, StandardCharsets.UTF_8);
+  }
+
+  public static <T> T get(
+    RestTemplate rest, String authnToken, 
+    String url, Class<T> resultType
+  ){
+    var entity = createEntityWithBearer(authnToken);
+    var epResponse = rest.exchange(url, GET, entity, resultType);
+    return epResponse.getBody();
+  }
+
+  public static <TRequest, TResult> TResult post(
+    RestTemplate rest, String authnToken, 
+    String url, TRequest request, Class<TResult> resultType
+  ){
+    HttpHeaders headers = new HttpHeaders();
+    headers.setBearerAuth(authnToken);
+    /* If not set, then when using openapi generated API interface,
+    would get errors about "Content-Type 'application/xml;charset=UTF-8' not
+    supported.  Not sure why that happend for openapi stuff. */
+    headers.setContentType(APPLICATION_JSON);
+    var entity = new HttpEntity<>(request, headers);
+
+    var epResponse = rest.exchange(url, POST, entity, resultType);
+
+    return epResponse.getBody();
+  }
+
+  public static <TResult> TResult anonGet(
+    RestTemplate rest, String url, Class<TResult> resultType
+  ){
+    HttpEntity<TResult> entity = new HttpEntity<>(new HttpHeaders());
+    var epResponse = rest.exchange(url, GET, entity, resultType);
+    return epResponse.getBody();
+  }
+
+  public static <TRequest, TResult> TResult anonPost(
+    RestTemplate rest,
+    String url,
+    TRequest request,
+    Class<TResult> resultType
+  ){
+    HttpEntity<TRequest> entity = new HttpEntity<>(request, new HttpHeaders());
+    var epResponse = rest.exchange(url, POST, entity, resultType);
+    return epResponse.getBody();
+  }
+
+
 
 }

@@ -23,8 +23,7 @@ public class TestAuthTokenService {
   @Autowired protected DSLContext db;
   @Autowired protected RaidV1AuthProps authProps;
 
-
-  public String testOwner = "raido.inttest";
+  private String testOwner = "raido.inttest";
 
   /**
    Doing this eagerly, so the execution time is not counted against
@@ -52,4 +51,7 @@ public class TestAuthTokenService {
     return record.getToken();
   }
 
+  public String getTestOwner() {
+    return testOwner;
+  }
 }

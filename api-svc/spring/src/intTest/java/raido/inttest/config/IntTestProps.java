@@ -17,4 +17,8 @@ public class IntTestProps {
    */
   @Value("${raidoApiProtocol:http}")
   public String raidoApiProtocol;
+  
+  public String getRaidoServerUrl(){
+    return "%s://%s".formatted(raidoApiProtocol, raidoApiServer);  
+  }
 }

@@ -1,23 +1,28 @@
 package raido.inttest;
 
+import feign.Contract;
+import feign.Feign;
+import feign.Logger;
+import feign.jackson.JacksonDecoder;
+import feign.jackson.JacksonEncoder;
+import feign.okhttp.OkHttpClient;
+import feign.slf4j.Slf4jLogger;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.RestTemplate;
 import raido.apisvc.util.Log;
+import raido.idl.raidv1.api.RaidV1Api;
 import raido.inttest.config.IntTestProps;
 import raido.inttest.config.IntegrationTestConfig;
 import raido.inttest.service.auth.TestAuthTokenService;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static raido.apisvc.spring.config.RaidV1WebSecurityConfig.RAID_V1_API;
 import static raido.apisvc.util.Log.to;
-import static raido.apisvc.util.RestUtil.createEntityWithBearer;
 
 @SpringJUnitConfig(IntegrationTestConfig.class)
 public abstract class IntegrationTestCase {
@@ -27,6 +32,7 @@ public abstract class IntegrationTestCase {
   @Autowired protected IntTestProps props;
   @Autowired protected DSLContext db;
   @Autowired protected TestAuthTokenService authTokenSvc;
+  @Autowired protected Contract contract;
 
   protected String raidV1TestToken;
   
@@ -48,57 +54,25 @@ public abstract class IntegrationTestCase {
     raidV1TestToken = authTokenSvc.initTestToken();
   }
 
-  public <T> T get(String authnToken, String url, Class<T> resultType){
-    HttpEntity<T> entity = createEntityWithBearer(authnToken);
-
-    var epResponse = rest.exchange(
-      raidoApiServerUrl(url),
-      HttpMethod.GET, entity, resultType);
-    
-    return epResponse.getBody();
+  /**
+   Once we figure out how to use the token statically, would like to figure
+   out how to integrate this into Spring better.  Would like to inject
+   the client as autowired, but not sure how the interceptor would work to
+   get the auth token.
+   */
+  public RaidV1Api raidV1Client(){
+    return Feign.builder()
+      .client(new OkHttpClient())
+      .encoder(new JacksonEncoder())
+      .decoder(new JacksonDecoder())
+      .contract(contract)
+      .requestInterceptor(request->
+        request.header(AUTHORIZATION, "Bearer " + raidV1TestToken) )
+      .logger(new Slf4jLogger(RaidV1Api.class))
+      .logLevel(Logger.Level.FULL)
+      .target(RaidV1Api.class, props.getRaidoServerUrl() + RAID_V1_API);
   }
 
-  public <TResult> TResult anonGet(String url, Class<TResult> resultType){
-    HttpEntity<TResult> entity = new HttpEntity<>(new HttpHeaders());
-
-    var epResponse = rest.exchange(
-      raidoApiServerUrl(url),
-      HttpMethod.GET, entity, resultType);
-    
-    return epResponse.getBody();
-  }
-
-  public <TRequest, TResult> TResult post(
-    String authnToken, String url, 
-    TRequest request, Class<TResult> resultType
-  ){
-    HttpHeaders headers = new HttpHeaders();
-    headers.setBearerAuth(authnToken);
-    /* If not set, then when using openapi generated API interface,
-    would get errors about "Content-Type 'application/xml;charset=UTF-8' not
-    supported.  Not sure why that happend for openapi stuff. */
-    headers.setContentType(APPLICATION_JSON);
-    HttpEntity<TRequest> entity = new HttpEntity<>(request, headers);
-  
-    var epResponse = rest.exchange(
-      raidoApiServerUrl(url),
-      HttpMethod.POST, entity, resultType);
-    
-    return epResponse.getBody();
-  }
-
-  public <TRequest, TResult> TResult anonPost(
-    String url, 
-    TRequest request, 
-    Class<TResult> resultType
-  ){
-    HttpEntity<TRequest> entity = new HttpEntity<>(request, new HttpHeaders());
-    var epResponse = rest.exchange(
-      raidoApiServerUrl(url),
-      HttpMethod.POST, entity, resultType);
-    
-    return epResponse.getBody();
-  }
 
   public String raidoApiServerUrl(String url){
     //noinspection HttpUrlsUsage

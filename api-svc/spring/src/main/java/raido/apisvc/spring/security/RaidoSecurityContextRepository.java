@@ -15,6 +15,7 @@ import static org.springframework.security.core.context.SecurityContextHolder.cr
 import static raido.apisvc.spring.config.RaidV1WebSecurityConfig.RAID_V1_API;
 import static raido.apisvc.spring.security.raidv1.RaidV1PreAuthenticatedJsonWebToken.decodeRaidV1Token;
 import static raido.apisvc.util.Log.to;
+import static raido.apisvc.util.StringUtil.mask;
 
 /**
  Understands all different kinds of security context:
@@ -52,7 +53,7 @@ public class RaidoSecurityContextRepository implements SecurityContextRepository
       }
       
       log.with("path", request.getServletPath()).
-        with("token", token).
+        with("token", mask(token.get())).
         info("RaidV1SCR no");
       throw new UnsupportedOperationException("can only do /v1 endpoints ATM");
 

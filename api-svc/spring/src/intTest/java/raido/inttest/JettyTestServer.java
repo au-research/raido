@@ -18,7 +18,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
-import static raido.apisvc.util.ExceptionUtil.createRuntimeException;
+import static raido.apisvc.util.ExceptionUtil.runtimeException;
 import static raido.apisvc.util.JvmUtil.normaliseJvmDefaults;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.NetUtil.isLocalhostPortAvailable;
@@ -63,7 +63,7 @@ implements BeforeAllCallback,
     time on the same DB.  Using the same http port acts as a proxy "shared 
     resource" to detect that situation. */
     if( !isLocalhostPortAvailable(Api.PORT) ){
-      throw createRuntimeException(
+      throw runtimeException(
         "Port %s is in use," +
           " usually caused by a Raido dev server still running." +
           " Stop other process so they don't step on each others DB.",

@@ -11,7 +11,7 @@ import raido.apisvc.util.Log;
 import java.util.Collection;
 import java.util.Collections;
 
-import static raido.apisvc.util.ExceptionUtil.createIae;
+import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.mask;
 
@@ -66,7 +66,7 @@ implements Authentication {
   throws IllegalArgumentException {
     // implementation conforms to interface spec
     if( isAuthenticated ){
-      throw createIae("cannot set a pre-auth as authenticated");
+      throw iae("cannot set a pre-auth as authenticated");
     }
   }
 

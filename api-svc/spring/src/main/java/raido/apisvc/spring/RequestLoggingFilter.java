@@ -79,8 +79,8 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
     }
     finally {
       long time = (System.nanoTime() - beforeReq) / 1_000_000;
-      log.with("method", request.getMethod()).
-        with("uri", request.getRequestURI()).
+      // want the method/url to short and easy to read
+      log.with("url", request.getMethod() + ":" + request.getRequestURI()).
         with("user", request.getRemoteUser()).
         with("params", request.getParameterMap()).
         with("timeMs", time).

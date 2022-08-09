@@ -1,12 +1,14 @@
 package raido.apisvc.endpoint.raidv1;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.jooq.DSLContext;
 import org.jooq.JSONB;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.service.apids.ApidsService;
 import raido.apisvc.service.apids.model.ApidsMintResponse;
@@ -32,7 +34,6 @@ import static java.util.Collections.emptyList;
 import static java.util.List.of;
 import static org.eclipse.jetty.http.HttpStatus.BAD_REQUEST_400;
 import static org.eclipse.jetty.http.HttpStatus.NOT_FOUND_404;
-import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 import static raido.apisvc.endpoint.message.RaidApiV1Message.DEMO_NOT_SUPPPORTED;
 import static raido.apisvc.endpoint.message.RaidApiV1Message.HANDLE_NOT_FOUND;
@@ -41,18 +42,23 @@ import static raido.apisvc.spring.config.RaidV1WebSecurityConfig.RAID_V1_API;
 import static raido.apisvc.spring.security.ApiSafeException.apiSafe;
 import static raido.apisvc.util.DateUtil.formatDynamoDateTime;
 import static raido.apisvc.util.DateUtil.parseDynamoDateTime;
+import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.isTrue;
+import static raido.apisvc.util.RestUtil.urlDecode;
 import static raido.apisvc.util.StringUtil.hasValue;
 import static raido.apisvc.util.StringUtil.isBlank;
 import static raido.db.jooq.raid_v1_import.tables.Raid.RAID;
 
 // without this, requestmappings don't get picked up and we have no endpoints
-@Scope( proxyMode = ScopedProxyMode.TARGET_CLASS )
+@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 @RequestMapping(RAID_V1_API)
 @RestController
 public class RaidV1 implements RaidV1Api {
   public static final String HANDLE_URL_PREFIX = "/handle";
+  public static final String HANDLE_CATCHALL_PREFIX =
+    RAID_V1_API + HANDLE_URL_PREFIX + "/";
+  public static final String HANDLE_SEPERATOR = "/";
   private static final Log log = to(RaidV1.class);
 
   private ApidsService apidsSvc;
@@ -63,15 +69,18 @@ public class RaidV1 implements RaidV1Api {
     this.db = db;
   }
 
-  /** For testing, c.f. declaring a method parameter (I can't figure out
+  /**
+   For testing, c.f. declaring a method parameter (I can't figure out
    how to get openapi to generate code like that).
    */
   public Raid1PostAuthenicationJsonWebToken getAuthentication() {
-    return  Guard.isInstance(Raid1PostAuthenicationJsonWebToken.class,
+    return Guard.isInstance(
+      Raid1PostAuthenicationJsonWebToken.class,
       getContext().getAuthentication());
   }
-  
+
   /**
+   This method catches "encoded" handle slashes.
    Watch out - handles have slashes in them, by definition 😢
    Currently, API clients encode the handle slash as `%2f` - but that triggers
    the default Spring HttpStrictFirewall.
@@ -85,12 +94,13 @@ public class RaidV1 implements RaidV1Api {
 
    @see RaidV1WebSecurityConfig#allowUrlEncodedSlashHttpFirewall
    */
-  public ResponseEntity<RaidPublicModel> handleRaidIdGet(
+  public RaidPublicModel handleRaidIdGet(
     String raidId,
     Optional<Boolean> demo
-  ){
+  ) {
+    Guard.hasValue("raidId must have a value", raidId);
     guardDemoEnv(demo);
-    
+
     RaidPublicModel result = db.select().
       from(RAID).
       where(RAID.HANDLE.eq(raidId)).
@@ -98,17 +108,55 @@ public class RaidV1 implements RaidV1Api {
     if( result == null ){
       throw apiSafe(HANDLE_NOT_FOUND, NOT_FOUND_404, of(raidId));
     }
-    return ok(result);
+    return result;
   }
-  
-  public void guardDemoEnv(Optional<Boolean> demo){
+
+  public void guardDemoEnv(Optional<Boolean> demo) {
     if( isTrue(demo) ){
       throw new ApiSafeException(DEMO_NOT_SUPPPORTED, BAD_REQUEST_400);
     }
   }
-  
+
+  /**
+   This method catches all prefixes with path prefix `/v1/handle` and attempts
+   to parse the parameter manually, so that we can receive handles that are
+   just formatted with simple slashes.
+   The openapi spec is defined with the "{raidId}' path param because it makes
+   more sense to a caller.
+   <p>
+   IMPROVE: should write some detailed/edgecase unit tests for this
+   path parsing logic.
+   */
+  @RequestMapping(
+    method = RequestMethod.GET,
+    value = HANDLE_URL_PREFIX + "/**",
+    produces = {"application/json"}
+  )
+  public RaidPublicModel handleCatchAll(
+    HttpServletRequest req,
+    @RequestParam(value = "demo", required = false) Optional<Boolean> demo
+  ) {
+    String path = urlDecode(req.getServletPath().trim());
+    log.with("path", req.getServletPath()).
+      with("decodedPath", path).
+      with("params", req.getParameterMap()). 
+      info("handleCatchAll() called");
+
+    if( !path.startsWith(HANDLE_CATCHALL_PREFIX) ){
+      throw iae("unexpected path: %s", path);
+    }
+    
+    String handle = path.substring(HANDLE_CATCHALL_PREFIX.length());
+    if( !handle.contains(HANDLE_SEPERATOR) ){
+      throw apiSafe("handle did not contain a slash character", 
+        BAD_REQUEST_400, of(handle));
+    }
+
+    return handleRaidIdGet(handle, demo);
+  }
+
   @Transactional
-  public ResponseEntity<RaidModel> raidPost(RaidCreateModel create){
+  public RaidModel raidPost(RaidCreateModel create) {
     var identity = getAuthentication();
     guardV1MintInput(create);
 
@@ -118,7 +166,7 @@ public class RaidV1 implements RaidV1Api {
     Note that security stuff (i.e. to populate `identity`) happens under its
     own TX, so no need to worry about that. */
     ApidsMintResponse apidsHandle = apidsSvc.mintApidsHandle();
-    
+
     // everything above this point needs to be non-transactional
     RaidRecord record = db.newRecord(RAID).
       setHandle(apidsHandle.identifier.handle).
@@ -132,7 +180,7 @@ public class RaidV1 implements RaidV1Api {
       setS3Export(JSONB.valueOf("{}"));
     record.insert();
 
-    return ok(new RaidModel().
+    return new RaidModel().
       handle(record.getHandle()).
       owner(record.getOwner()).
       contentPath(record.getContentPath()).
@@ -141,9 +189,9 @@ public class RaidV1 implements RaidV1Api {
       creationDate(formatDynamoDateTime(record.getCreationDate())).
       meta(new RaidModelMeta().
         name(record.getName()).
-        description(record.getDescription()) ).
-      providers( emptyList() ).
-      institutions( emptyList() ));
+        description(record.getDescription())).
+      providers(emptyList()).
+      institutions(emptyList());
   }
 
   private void populateDefaultValues(RaidCreateModel create) {
@@ -165,10 +213,10 @@ public class RaidV1 implements RaidV1Api {
     if( isBlank(create.getMeta().getDescription()) ){
       create.getMeta().setDescription("todo:sto descriiption");
     }
-    
+
   }
 
-  public void guardV1MintInput(RaidCreateModel create){
+  public void guardV1MintInput(RaidCreateModel create) {
     List<String> problems = new ArrayList<>();
     if( !hasValue(create.getContentPath()) ){
       problems.add("no contentPath provided");

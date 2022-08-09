@@ -115,6 +115,8 @@ testing{
         // for having our own spring context in intTest
         implementation libs.bundles.spring6
         implementation libs.bundles.spring6.test
+
+        implementation libs.bundles.feign
         
         implementation libs.assertj
 
@@ -123,6 +125,7 @@ testing{
         // for PostConstruct/PreDestroy - pkg: jakarta.annotation (used to be javax)
         implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
         
+        implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:3.1.2'
       }
     }
   }
