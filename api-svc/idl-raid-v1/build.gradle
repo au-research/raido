@@ -1,11 +1,14 @@
 plugins {
   id 'java'
+  /* note: we use custom templates, so if you upgrade this, consider that the 
+  template files may have changed and you need to check and update them. */
   id "org.openapi.generator" version "6.0.1"
 }
 
 ext {
   raidV1SpecFile = file("src/raid-v1-1-0.yaml")
   generateDirName = "src/main/generated"
+  templateDirName = "src/main/resources/template"
 }
 
 repositories{
@@ -50,6 +53,7 @@ openApiGenerate {
   generateApiTests = false
   generateModelDocumentation = false
   generateModelTests = false
+  templateDir = file(templateDirName).path
   
   modelPackage = "raido.idl.raidv1.model"
   apiPackage = "raido.idl.raidv1.api"
@@ -76,9 +80,12 @@ openApiGenerate {
     Need ApiUtil for default interface implementations, but other stuff is
     SpringBoot specific - do not want. */
     supportingFiles: "ApiUtil.java",
+//    templateDir: "src/main/resources",
+
   ]
 
   configOptions = [
+//    templateDir: "template",
     /* use outputDir instead of this, so that random supporting openapi files 
     are written in `generated` (and .gitignore'd) instead of in project dir. */
     sourceFolder: "",
@@ -119,12 +126,18 @@ openApiGenerate {
 
     /* Generate LocalDateTime, etc. */
     dateLibrary: "java8",
+
+    useBeanValidation: "false",
     
     documentationProvider: "none",
     disallowAdditionalPropertiesIfNotPresent: "false",
 
     delegatePattern: "false",
   ]  
+}
+tasks.openApiGenerate{
+  // make sure task is re-run if templates are changed
+  inputs.files templateDirName
 }
 
 /* tell Gradle to generate the openapi code before compiling it (without this,
@@ -133,7 +146,6 @@ I would think the openApiGenerate "apiFirst" config should do this,
 but it didn't seem to actually do that.  
  */
 tasks.compileJava.dependsOn tasks.openApiGenerate
-
 
 
 openApiValidate {
