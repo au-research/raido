@@ -22,7 +22,7 @@ import static raido.apisvc.util.StringUtil.*;
  - correct repo: https://github.com/au-research/ANDS-PIDS-Service.
  - can set url at mint time, but can only do one property
    - if want to description at minting will need a second request
-     to "addValue", where you can just pass type and value params
+     to `addValue`, where you can just pass type and value params
  - when want to update an url, need to use `modifyValueByIndex`, which 
    takes type, value and index.
  <p/>
