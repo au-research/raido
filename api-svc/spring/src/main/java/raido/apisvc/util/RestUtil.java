@@ -56,7 +56,7 @@ public class RestUtil {
       debug(description + " request");
   }
 
-  /** Does log headers, does noT redact any values. */
+  /** Does log headers, does NOT redact any values. */
   public static void debugLogResponse(
     Log log,
     String description,

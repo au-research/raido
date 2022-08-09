@@ -48,9 +48,10 @@ paths:
           description: "RAiD handle created by minting service. Example: 10378.1/1590366"
         - name: "demo"
           in: "query"
-          required: false
+          required: true
           description: "(Default False) Do not include attached RAiD providers unless value is set to false"
           type: "boolean"
+          default: false
       responses:
         200:
           description: "200 response"

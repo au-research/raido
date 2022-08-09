@@ -172,4 +172,12 @@ public final class ObjectUtil {
     
     return value.get();
   }
+  
+  public static boolean isTrue(@Nullable Boolean value){
+    if( value == null ){
+      return false;
+    }
+    
+    return value;
+  }
 }

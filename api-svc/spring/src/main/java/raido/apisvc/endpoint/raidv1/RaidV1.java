@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.service.apids.ApidsService;
 import raido.apisvc.service.apids.model.ApidsMintResponse;
 import raido.apisvc.spring.config.RaidV1WebSecurityConfig;
-import raido.apisvc.spring.security.ApiSafeException;
 import raido.apisvc.spring.security.raidv1.Raid1PostAuthenicationJsonWebToken;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
@@ -28,7 +27,6 @@ import raido.idl.raidv1.model.RaidPublicModel;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static java.util.List.of;
@@ -50,7 +48,8 @@ import static raido.apisvc.util.StringUtil.hasValue;
 import static raido.apisvc.util.StringUtil.isBlank;
 import static raido.db.jooq.raid_v1_import.tables.Raid.RAID;
 
-// without this, requestmappings don't get picked up and we have no endpoints
+/* without the proxy mode setting, requestmappings don't get picked up and we
+ have no RaidV1 endpoints */
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 @RequestMapping(RAID_V1_API)
 @RestController
@@ -59,6 +58,9 @@ public class RaidV1 implements RaidV1Api {
   public static final String HANDLE_CATCHALL_PREFIX =
     RAID_V1_API + HANDLE_URL_PREFIX + "/";
   public static final String HANDLE_SEPERATOR = "/";
+  
+  public static final JSONB NON_EXPORTED_MARKER_VALUE = JSONB.valueOf("{}");
+  
   private static final Log log = to(RaidV1.class);
 
   private ApidsService apidsSvc;
@@ -96,7 +98,7 @@ public class RaidV1 implements RaidV1Api {
    */
   public RaidPublicModel handleRaidIdGet(
     String raidId,
-    Optional<Boolean> demo
+    Boolean demo
   ) {
     Guard.hasValue("raidId must have a value", raidId);
     guardDemoEnv(demo);
@@ -111,9 +113,9 @@ public class RaidV1 implements RaidV1Api {
     return result;
   }
 
-  public void guardDemoEnv(Optional<Boolean> demo) {
+  public void guardDemoEnv(Boolean demo) {
     if( isTrue(demo) ){
-      throw new ApiSafeException(DEMO_NOT_SUPPPORTED, BAD_REQUEST_400);
+      throw apiSafe(DEMO_NOT_SUPPPORTED, BAD_REQUEST_400);
     }
   }
 
@@ -134,7 +136,7 @@ public class RaidV1 implements RaidV1Api {
   )
   public RaidPublicModel handleCatchAll(
     HttpServletRequest req,
-    @RequestParam(value = "demo", required = false) Optional<Boolean> demo
+    @RequestParam(value = "demo", required = false) Boolean demo
   ) {
     String path = urlDecode(req.getServletPath().trim());
     log.with("path", req.getServletPath()).
@@ -156,28 +158,29 @@ public class RaidV1 implements RaidV1Api {
   }
 
   @Transactional
-  public RaidModel raidPost(RaidCreateModel create) {
+  public RaidModel raidPost(RaidCreateModel req) {
     var identity = getAuthentication();
-    guardV1MintInput(create);
+    guardV1MintInput(req);
 
-    populateDefaultValues(create);
+    populateDefaultValues(req);
 
     /* Do not hold TX open across this, it takes SECONDS.
     Note that security stuff (i.e. to populate `identity`) happens under its
     own TX, so no need to worry about that. */
-    ApidsMintResponse apidsHandle = apidsSvc.mintApidsHandle();
+    ApidsMintResponse apidsHandle = 
+      apidsSvc.mintApidsHandle(req.getContentPath());
 
     // everything above this point needs to be non-transactional
     RaidRecord record = db.newRecord(RAID).
       setHandle(apidsHandle.identifier.handle).
       setOwner(identity.getName()).
-      setContentPath(create.getContentPath()).
+      setContentPath(req.getContentPath()).
       setContentIndex(apidsHandle.identifier.property.index.toString()).
-      setName(create.getMeta().getName()).
-      setDescription(create.getMeta().getDescription()).
-      setStartDate(parseDynamoDateTime(create.getStartDate())).
+      setName(req.getMeta().getName()).
+      setDescription(req.getMeta().getDescription()).
+      setStartDate(parseDynamoDateTime(req.getStartDate())).
       setCreationDate(LocalDateTime.now()).
-      setS3Export(JSONB.valueOf("{}"));
+      setS3Export(NON_EXPORTED_MARKER_VALUE);
     record.insert();
 
     return new RaidModel().
@@ -211,7 +214,7 @@ public class RaidV1 implements RaidV1Api {
       create.getMeta().setName("todo:sto name");
     }
     if( isBlank(create.getMeta().getDescription()) ){
-      create.getMeta().setDescription("todo:sto descriiption");
+      create.getMeta().setDescription("todo:sto description");
     }
 
   }
@@ -222,7 +225,7 @@ public class RaidV1 implements RaidV1Api {
       problems.add("no contentPath provided");
     }
     if( !problems.isEmpty() ){
-      throw new ApiSafeException(MINT_DATA_ERROR, problems);
+      throw apiSafe(MINT_DATA_ERROR, BAD_REQUEST_400, problems);
     }
   }
 

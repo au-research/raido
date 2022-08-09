@@ -16,8 +16,12 @@ import static org.springframework.http.MediaType.APPLICATION_XML;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
+import static raido.apisvc.service.apids.ApidsService.formatMintParams;
 
 public class ApidsTest {
+
+  public static final String UNIT_TEST_CONTENT_PATH = 
+    "https://unitTestContentPath";
 
   @Test
   public void shouldParseMintResponse() throws Exception {
@@ -30,7 +34,9 @@ public class ApidsTest {
 
     MockRestServiceServer mockServer = 
       MockRestServiceServer.createServer(restTemplate);
-    mockServer.expect( requestTo(new URI("/testserver")) ).
+    mockServer.expect( requestTo(
+      new URI("/testserver?" + formatMintParams(UNIT_TEST_CONTENT_PATH)) 
+    )).
       andExpect( method(POST) ).
       andRespond( 
         withStatus(OK).
@@ -38,7 +44,7 @@ public class ApidsTest {
         body(ApidsMintResponse.successExample) );
 
     var svc = new ApidsService(props, restTemplate);
-    var response = svc.mintApidsHandle();
+    var response = svc.mintApidsHandle(UNIT_TEST_CONTENT_PATH);
 
     // hardcoded in the exampleResponse
     assertThat(response.identifier.handle).isEqualTo("10378.1/1687706");

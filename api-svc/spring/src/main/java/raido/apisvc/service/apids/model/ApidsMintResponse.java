@@ -11,7 +11,7 @@ public class ApidsMintResponse {
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <response type="success">
       <identifier handle="10378.1/1687706">
-        <property index="1" type="URL" value="https://www.raid.org.au/"/>
+        <property index="1" type="URL" value="https://unitTestContentPath"/>
       </identifier>
       <timestamp>2022-07-29T03:14:05Z</timestamp>
       <message type="user">Successfully authenticated and created handle</message>
@@ -49,6 +49,11 @@ public class ApidsMintResponse {
   public static class Message {
     public String type;
     @JacksonXmlText public String value;
+
+    @Override
+    public String toString() {
+      return ObjectUtil.jsonToString(this);
+    }
   }
 
 }

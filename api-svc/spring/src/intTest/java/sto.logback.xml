@@ -18,9 +18,14 @@
 
   <logger name="org.springframework.test.context.support" level="warn"/>
   
-  <!-- shows the mapping of endpoints to methods, -->
+  <!-- shows the mapping of endpoints to methods, at start time -->
   <logger name="_org.springframework.web.servlet.HandlerMapping.Mappings" level="debug"/>
   
   <logger name="p6spy" level="debug"/>
+
+  <!-- debug logs request/response data, usually don't want it -->
+  <logger name="raido.apisvc.service.apids.ApidsService" level="info"/>
+
+  <logger name="raido.apisvc.spring.RequestLoggingFilter" level="info"/>
   
 </configuration>

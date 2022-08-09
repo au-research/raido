@@ -13,11 +13,21 @@ import raido.apisvc.util.RestUtil;
 
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.MediaType.APPLICATION_XML;
+import static raido.apisvc.util.ExceptionUtil.re;
 import static raido.apisvc.util.Log.to;
+import static raido.apisvc.util.StringUtil.*;
 
 /**
- I think this is https://github.com/au-research/ANDS-PIDS-Service, not sure.
- "ANDS" was the old org name for what is now ARDC.
+ Confirmed by DevOps (Leo) on 2022-08-09:
+ - correct repo: https://github.com/au-research/ANDS-PIDS-Service.
+ - can set url at mint time, but can only do one property
+   - if want to description at minting will need a second request
+     to "addValue", where you can just pass type and value params
+ - when want to update an url, need to use `modifyValueByIndex`, which 
+   takes type, value and index.
+ <p/>
+ Consider replacing RestTemplate with feign client, to avoid silly string ops.
+ And for consistency with other services, when we have them.
  */
 @Service
 public class ApidsService {
@@ -32,7 +42,7 @@ public class ApidsService {
     this.rest = rest;
   }
 
-  public ApidsMintResponse mintApidsHandle() {
+  public ApidsMintResponse mintApidsHandle(String contentUrl) {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(APPLICATION_XML);
     headers.setBasicAuth(props.appId, props.secret);
@@ -40,25 +50,45 @@ public class ApidsService {
     var entity = new HttpEntity<>(
       buildBasicAuthorizedMintBody(), headers);
 
-    var responseBody = RestUtil.logExchange(
-      httpLog, "APIDS mint", 
-      entity, 
-      e ->rest.exchange(
-        props.serviceUrl, POST, entity, ApidsMintResponse.class) );
+    String requestUrl = props.serviceUrl + "?" + formatMintParams(contentUrl);
+    var responseBody = RestUtil.logExchange( httpLog, "APIDS mint",
+      entity,
+      e->rest.exchange(
+        requestUrl, POST, entity, ApidsMintResponse.class ));
 
-    guardApidsResponse(responseBody);
-    
+    guardApidsResponse(contentUrl, responseBody);
+
     return responseBody;
   }
   
-  private void guardApidsResponse(ApidsMintResponse response){
-    Guard.notNull(response);
+  public static String formatMintParams(String url){
+    /* lambda code was hardcoded to:
+     `type=URL&value=https://www.raid.org.au/` */
+    return "type=URL&value=%s".formatted(url);
+  }
+  
+  private void guardApidsResponse(
+    String contentUrl, 
+    ApidsMintResponse response
+  ){
+    Guard.notNull("APIDS mint response was null", response);
+  
+    if( !equalsIgnoreCase("success", response.type) ){
+      throw re("APIDS responded with minting %s: %s", 
+        response.type, response.message );
+    }
+    
     Guard.notNull(response.identifier);
     Guard.hasValue(response.identifier.handle);
     Guard.notNull(response.identifier.property);
     Guard.areEqual(response.identifier.property.index, 1);
     Guard.areEqual(response.identifier.property.type, "URL");
     Guard.hasValue(response.identifier.property.value);
+
+    if( !areEqual(contentUrl, response.identifier.property.value) ){
+      throw re("APIDS mint returned different URL, sent=%s recieved=%s",
+        contentUrl, response.identifier.property.value );
+    }
   }
 
   private RawXml buildBasicAuthorizedMintBody() {
