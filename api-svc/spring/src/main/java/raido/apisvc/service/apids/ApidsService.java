@@ -23,6 +23,7 @@ import static raido.apisvc.util.StringUtil.*;
  - can set url at mint time, but can only do one property
    - if want to description at minting will need a second request
      to `addValue`, where you can just pass type and value params
+   -https://github.com/au-research/ANDS-Registry-Core/blob/1140c19d798efa0b82704071484928639f8510ad/applications/apps/pids/models/_pids.php#L184
  - when want to update an url, need to use `modifyValueByIndex`, which 
    takes type, value and index.
  <p/>
