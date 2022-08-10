@@ -156,9 +156,8 @@ public class RaidV1 implements RaidV1Api {
   @Transactional
   public RaidModel raidPost(RaidCreateModel req) {
     var identity = getAuthentication();
-    // this will assign a meta if needed
-    populateMintDefaultValues(req, identity.getName());
     guardV1MintInput(req);
+    populateMintDefaultValues(req, identity.getName());
 
     /* Do not hold TX open across this, it takes SECONDS.
     Note that security stuff (i.e. to populate `identity`) happens under its
@@ -202,10 +201,7 @@ public class RaidV1 implements RaidV1Api {
       create.setStartDate(formatDynamoDateTime(LocalDateTime.now()));
     }
 
-    if( create.getMeta() == null ){
-      create.setMeta(new RaidCreateModelMeta());
-    }
-
+    // meta is expected to be guarded, should net get nulls here
     if( isBlank(create.getMeta().getDescription()) ){
       /* current time in sydney is dodgy.
       Doesn't even work for most of Aus, let alone Oceania and people are
@@ -220,14 +216,19 @@ public class RaidV1 implements RaidV1Api {
   public void guardV1MintInput(RaidCreateModel create) {
     List<String> problems = new ArrayList<>();
     if( !hasValue(create.getContentPath()) ){
-      problems.add("no contentPath provided");
+      problems.add("no 'contentPath' provided");
     }
 
+    if( create.getMeta() == null ){
+      problems.add("no 'meta' provided");
+      throw apiSafe(MINT_DATA_ERROR, BAD_REQUEST_400, problems);
+    }
+    
     /* the  fake name generation logic has been removed - makes no sense
     v2 UI will use v2 API and will create in one step.  
     Legacy API users are expected to be sending a name. */
     if( !hasValue(create.getMeta().getName()) ){
-      problems.add("no name provided");
+      problems.add("no 'meta.name' provided");
     }
     
     if( !problems.isEmpty() ){

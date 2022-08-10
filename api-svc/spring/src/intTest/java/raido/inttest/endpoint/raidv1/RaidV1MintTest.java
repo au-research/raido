@@ -18,8 +18,6 @@ import static raido.apisvc.util.RestUtil.anonPost;
 import static raido.apisvc.util.RestUtil.urlEncode;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
 import static raido.apisvc.util.test.BddUtil.GIVEN;
-import static raido.apisvc.util.test.BddUtil.THEN;
-import static raido.apisvc.util.test.BddUtil.WHEN;
 import static raido.inttest.config.IntegrationTestConfig.restTemplateWithEncodingMode;
 
 public class RaidV1MintTest extends IntegrationTestCase {
@@ -31,42 +29,6 @@ public class RaidV1MintTest extends IntegrationTestCase {
     return """
       403 Forbidden: "{<EOL>"message":"Access Denied",<EOL>"url":"%s",<EOL>"status":"403"<EOL>}"
       """.formatted(path).trim();
-  }
-
-
-  @Test
-  void shoudRejectAnonCalltoMint() {
-    EXPECT("minting a raid without authenticating should fail");
-    assertThatThrownBy(()->
-      anonPost(rest, raidoApiServerUrl("/v1/raid"), "{}", Object.class)
-    ).isInstanceOf(HttpClientErrorException.class).
-        /* full text match to ensure there's no info leakage */
-        hasMessage(getForbiddenMessage("/v1/raid"));
-  }
-
-  @Test
-  void mintShouldRejectMissingContentPath() {
-    EXPECT("minting a raid without a contentPath should fail");
-    assertThatThrownBy(()->
-      super.raidV1Client().raidPost(new RaidCreateModel())
-    ).isInstanceOf(BadRequest.class).
-      hasMessageContaining("no contentPath");
-  }
-  
-  @Test void getHandleWithEncodedSlashShouldSucceed(){
-    GIVEN("raid exists");
-    var raid = super.raidV1Client().raidPost(
-      createSimpleRaid("getHandleWithEncodedSlashShouldSucceed inttest"));
-
-    // dunno how to get feign to do the encoding thing - this'll do
-    var rest = restTemplateWithEncodingMode();
-    var encodedHandle = urlEncode(raid.getHandle());
-
-    EXPECT("get handle with encoded path should succeed");
-    var getResult = RestUtil.get(rest, raidV1TestToken,
-      raidoApiServerUrl("/v1/handle/" + encodedHandle), 
-      RaidModel.class);
-    assertThat(getResult.getHandle()).isEqualTo(raid.getHandle());
   }
 
   @Test void happyDayMintAndGet(){
@@ -91,6 +53,62 @@ public class RaidV1MintTest extends IntegrationTestCase {
       contentPath(INT_TEST_CONTENT_PATH);
   }
 
+  @Test void getHandleWithEncodedSlashShouldSucceed(){
+    GIVEN("raid exists");
+    var raid = super.raidV1Client().raidPost(
+      createSimpleRaid("getHandleWithEncodedSlashShouldSucceed inttest"));
+
+    // dunno how to get feign to do the encoding thing - this'll do
+    var rest = restTemplateWithEncodingMode();
+    var encodedHandle = urlEncode(raid.getHandle());
+
+    EXPECT("get handle with encoded path should succeed");
+    var getResult = RestUtil.get(rest, raidV1TestToken,
+      raidoApiServerUrl("/v1/handle/" + encodedHandle),
+      RaidModel.class);
+    assertThat(getResult.getHandle()).isEqualTo(raid.getHandle());
+  }
+
+  @Test
+  void shoudRejectAnonCalltoMint() {
+    EXPECT("minting a raid without authenticating should fail");
+    assertThatThrownBy(()->
+      anonPost(rest, raidoApiServerUrl("/v1/raid"), "{}", Object.class)
+    ).isInstanceOf(HttpClientErrorException.class).
+        /* full text match to ensure there's no info leakage */
+        hasMessage(getForbiddenMessage("/v1/raid"));
+  }
+
+  @Test
+  void mintShouldRejectMissingContentPath() {
+    EXPECT("minting a raid without a contentPath should fail");
+    assertThatThrownBy(()->
+      super.raidV1Client().raidPost(
+        createSimpleRaid("inttest").contentPath(null) )
+    ).isInstanceOf(BadRequest.class).
+      hasMessageContaining("no 'contentPath'");
+  }
+  
+  @Test
+  void mintShouldRejectMissingMeta() {
+    EXPECT("minting a raid without a meta should fail");
+    assertThatThrownBy(()->
+      super.raidV1Client().raidPost(
+        createSimpleRaid("inttest").meta(null) )
+    ).isInstanceOf(BadRequest.class).
+      hasMessageContaining("no 'meta'");
+  }
+  
+  @Test
+  void mintShouldRejectMissingName() {
+    EXPECT("minting a raid without a name should fail");
+    assertThatThrownBy(()->
+      super.raidV1Client().raidPost(
+        createSimpleRaid(null) )
+    ).isInstanceOf(BadRequest.class).
+      hasMessageContaining("no 'meta.name'");
+  }
+  
 
 }
 
