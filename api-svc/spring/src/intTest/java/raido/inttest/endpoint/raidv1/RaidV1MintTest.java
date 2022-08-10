@@ -7,6 +7,7 @@ import raido.apisvc.util.Log;
 import raido.apisvc.util.RestUtil;
 import raido.idl.raidv1.api.RaidV1Api;
 import raido.idl.raidv1.model.RaidCreateModel;
+import raido.idl.raidv1.model.RaidCreateModelMeta;
 import raido.idl.raidv1.model.RaidModel;
 import raido.inttest.IntegrationTestCase;
 
@@ -55,25 +56,22 @@ public class RaidV1MintTest extends IntegrationTestCase {
   @Test void getHandleWithEncodedSlashShouldSucceed(){
     GIVEN("raid exists");
     var raid = super.raidV1Client().raidPost(
-      new RaidCreateModel().contentPath(INT_TEST_CONTENT_PATH) );
+      createSimpleRaid("getHandleWithEncodedSlashShouldSucceed inttest"));
 
     // dunno how to get feign to do the encoding thing - this'll do
     var rest = restTemplateWithEncodingMode();
     var encodedHandle = urlEncode(raid.getHandle());
-    log.info("handle:" + raid.getHandle());
-    log.info("encoded handle:" + encodedHandle);
 
-    WHEN("get handle with encoded path");
+    EXPECT("get handle with encoded path should succeed");
     var getResult = RestUtil.get(rest, raidV1TestToken,
       raidoApiServerUrl("/v1/handle/" + encodedHandle), 
       RaidModel.class);
-    THEN("raid should be returned");
     assertThat(getResult.getHandle()).isEqualTo(raid.getHandle());
   }
 
   @Test void happyDayMintAndGet(){
     EXPECT("minting a raid with minimal content should succeed");
-    var create = new RaidCreateModel().contentPath(INT_TEST_CONTENT_PATH);
+    var create = createSimpleRaid("happyDayMintAndGet inttest");
 
     RaidV1Api raidV1 = super.raidV1Client();
     var mintResult = raidV1.raidPost(create);
@@ -85,6 +83,12 @@ public class RaidV1MintTest extends IntegrationTestCase {
     var getResult = raidV1.handleRaidIdGet(mintResult.getHandle(), false);
     assertThat(mintResult).isNotNull();
     assertThat(getResult.getHandle()).isEqualTo(mintResult.getHandle());
+  }
+
+  private static RaidCreateModel createSimpleRaid(String name) {
+    return new RaidCreateModel().
+      meta(new RaidCreateModelMeta().name(name)).
+      contentPath(INT_TEST_CONTENT_PATH);
   }
 
 

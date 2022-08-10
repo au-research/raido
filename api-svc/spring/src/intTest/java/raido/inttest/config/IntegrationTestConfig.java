@@ -74,15 +74,7 @@ public class IntegrationTestConfig {
 
   @Bean
   public SpringMvcContract feignContract(){
-    return new SpringMvcContract(){
-      @Override
-      protected void processAnnotationOnClass(
-        MethodMetadata data,
-        Class<?> clz
-      ) {
-        super.processAnnotationOnClass(data, clz);
-      }
-    };
+    return new SpringMvcContract();
   }
   
 }

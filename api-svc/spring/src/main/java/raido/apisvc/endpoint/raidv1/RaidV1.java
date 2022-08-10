@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.jooq.DSLContext;
 import org.jooq.JSONB;
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,6 +31,7 @@ import static java.util.Collections.emptyList;
 import static java.util.List.of;
 import static org.eclipse.jetty.http.HttpStatus.BAD_REQUEST_400;
 import static org.eclipse.jetty.http.HttpStatus.NOT_FOUND_404;
+import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 import static raido.apisvc.endpoint.message.RaidApiV1Message.DEMO_NOT_SUPPPORTED;
 import static raido.apisvc.endpoint.message.RaidApiV1Message.HANDLE_NOT_FOUND;
@@ -39,6 +39,7 @@ import static raido.apisvc.endpoint.message.RaidApiV1Message.MINT_DATA_ERROR;
 import static raido.apisvc.spring.config.RaidV1WebSecurityConfig.RAID_V1_API;
 import static raido.apisvc.spring.security.ApiSafeException.apiSafe;
 import static raido.apisvc.util.DateUtil.formatDynamoDateTime;
+import static raido.apisvc.util.DateUtil.formatRaidV1DateTime;
 import static raido.apisvc.util.DateUtil.parseDynamoDateTime;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
@@ -48,9 +49,9 @@ import static raido.apisvc.util.StringUtil.hasValue;
 import static raido.apisvc.util.StringUtil.isBlank;
 import static raido.db.jooq.raid_v1_import.tables.Raid.RAID;
 
-/* without the proxy mode setting, requestmappings don't get picked up and we
- have no RaidV1 endpoints */
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
+/* without the proxy mode setting, Spring doesn't see the requestmappings from 
+the interface and so won't define our RaidV1 endpoints */
+@Scope(proxyMode = TARGET_CLASS)
 @RequestMapping(RAID_V1_API)
 @RestController
 public class RaidV1 implements RaidV1Api {
@@ -119,7 +120,7 @@ public class RaidV1 implements RaidV1Api {
    to parse the parameter manually, so that we can receive handles that are
    just formatted with simple slashes.
    The openapi spec is defined with the "{raidId}' path param because it makes
-   more sense to a caller.
+   it more clear to the caller what the url is expected to look like.
    <p>
    IMPROVE: should write some detailed/edgecase unit tests for this
    path parsing logic.
@@ -155,9 +156,9 @@ public class RaidV1 implements RaidV1Api {
   @Transactional
   public RaidModel raidPost(RaidCreateModel req) {
     var identity = getAuthentication();
+    // this will assign a meta if needed
+    populateMintDefaultValues(req, identity.getName());
     guardV1MintInput(req);
-
-    populateDefaultValues(req);
 
     /* Do not hold TX open across this, it takes SECONDS.
     Note that security stuff (i.e. to populate `identity`) happens under its
@@ -192,7 +193,7 @@ public class RaidV1 implements RaidV1Api {
       institutions(emptyList());
   }
 
-  private void populateDefaultValues(RaidCreateModel create) {
+  private void populateMintDefaultValues(RaidCreateModel create, String owner) {
     if( hasValue(create.getStartDate()) ){
       // just leave it alone for the moment, maybe add to the guard method 
       // to check the format
@@ -205,11 +206,13 @@ public class RaidV1 implements RaidV1Api {
       create.setMeta(new RaidCreateModelMeta());
     }
 
-    if( isBlank(create.getMeta().getName()) ){
-      create.getMeta().setName("todo:sto name");
-    }
     if( isBlank(create.getMeta().getDescription()) ){
-      create.getMeta().setDescription("todo:sto description");
+      /* current time in sydney is dodgy.
+      Doesn't even work for most of Aus, let alone Oceania and people are
+      allowed to mint from other timezoness too! */
+      create.getMeta().setDescription(
+        "RAiD created by '%s' at '%s'".formatted(
+          owner, formatRaidV1DateTime(LocalDateTime.now()) ));
     }
 
   }
@@ -219,6 +222,14 @@ public class RaidV1 implements RaidV1Api {
     if( !hasValue(create.getContentPath()) ){
       problems.add("no contentPath provided");
     }
+
+    /* the  fake name generation logic has been removed - makes no sense
+    v2 UI will use v2 API and will create in one step.  
+    Legacy API users are expected to be sending a name. */
+    if( !hasValue(create.getMeta().getName()) ){
+      problems.add("no name provided");
+    }
+    
     if( !problems.isEmpty() ){
       throw apiSafe(MINT_DATA_ERROR, BAD_REQUEST_400, problems);
     }

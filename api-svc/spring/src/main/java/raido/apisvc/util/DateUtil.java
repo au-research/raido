@@ -98,6 +98,15 @@ public class DateUtil {
   }
 
   /**
+   Given date will be formatted to "Raid format" in Sydney timezone, as defined 
+   by observation from legacy raid's formatting of the meta.description field:
+   `RAiD created by 'University of Notre Dame Library' at '2022-03-22 16:49:14'`
+   */
+  public static String formatRaidV1DateTime(LocalDateTime d){
+    return DateUtil.formatDateTime(ISO_SECONDS_FORMAT, SYD_ZONE_ID, d);
+  }
+
+  /**
    Given date will be parsed from "DynamoDB S3 export" format, using
    Sydney as the targetZone.
    */
@@ -105,5 +114,6 @@ public class DateUtil {
     return DateUtil.parseDateTime(ISO_SECONDS_FORMAT, SYD_ZONE_ID, value);
   }
 
+  
 }
 
