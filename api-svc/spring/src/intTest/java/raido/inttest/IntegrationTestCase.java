@@ -3,6 +3,7 @@ package raido.inttest;
 import feign.Contract;
 import feign.Feign;
 import feign.Logger;
+import feign.Logger.Level;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
@@ -32,7 +33,7 @@ public abstract class IntegrationTestCase {
   @Autowired protected IntTestProps props;
   @Autowired protected DSLContext db;
   @Autowired protected TestAuthTokenService authTokenSvc;
-  @Autowired protected Contract contract;
+  @Autowired protected Contract feignContract;
 
   protected String raidV1TestToken;
   
@@ -61,18 +62,17 @@ public abstract class IntegrationTestCase {
    get the auth token.
    */
   public RaidV1Api raidV1Client(){
-    return Feign.builder()
-      .client(new OkHttpClient())
-      .encoder(new JacksonEncoder())
-      .decoder(new JacksonDecoder())
-      .contract(contract)
-      .requestInterceptor(request->
-        request.header(AUTHORIZATION, "Bearer " + raidV1TestToken) )
-      .logger(new Slf4jLogger(RaidV1Api.class))
-      .logLevel(Logger.Level.FULL)
-      .target(RaidV1Api.class, props.getRaidoServerUrl() + RAID_V1_API);
+    return Feign.builder().
+      client(new OkHttpClient()).
+      encoder(new JacksonEncoder()).
+      decoder(new JacksonDecoder()).
+      contract(feignContract).
+      requestInterceptor(request->
+        request.header(AUTHORIZATION, "Bearer " + raidV1TestToken) ).
+      logger(new Slf4jLogger(RaidV1Api.class)).
+      logLevel(Level.FULL).
+      target(RaidV1Api.class, props.getRaidoServerUrl() + RAID_V1_API);
   }
-
 
   public String raidoApiServerUrl(String url){
     //noinspection HttpUrlsUsage
