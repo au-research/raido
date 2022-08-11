@@ -17,7 +17,7 @@ Credentials shouldn't be anyway near the source code.
 They shouldn't be in a sibling directory to your source tree,
 they shouldn't even be within the same authorization scope.
 
-TODO:STO should operation security page be public?
+TODO:STO should operational security page be public?
 See "RAID - Operational security" for more info about how
 developer machines, AWS machines and credentials should be managed.
 
@@ -160,16 +160,17 @@ The Operating System timezone for all non-client machines should be configured
 to UTC +0.
 
 Software VM components (JDK, Node.js, Spring, JDBC internals, JDBC driver) -
-should be configured to UTC +0 explicitly; in code if you have to otherwise via  
-config or startup params. Note that if you set the JVM timezone
-programatically, it doesn't propagate to the JDBC driver (at least, probably
+should be configured to UTC +0 explicitly; in code if you have to otherwise 
+via config or startup params. Note that if you set the JVM timezone
+programatically, it doesn't propagate to the JDBC driver (at least - probably
 other weirdness too).
 
 Note that most docker containers run in VMs (Windows docker desktop setups)
 will have a TZ of UTC. For example, if you run a postgres container, the
-postgres instance will likely end up with UTC as the timezone.
+postgres instance will likely end up with UTC as the timezone, regardless
+of the timezone settings of your OS.
 
-It's fine to set your local AWS console, log viewer etc. to a timezone,  
+It's fine to set your local AWS console, log viewer etc. to a timezone,
 that's where TZ handling is supposed to be done - on the client, with a
 sensible local default, under the control of the user.
 
