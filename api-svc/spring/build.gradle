@@ -159,3 +159,39 @@ intTest{
   systemProperties defaultSysProps
   testLogging.showStandardStreams = true  
 }
+
+task uberJar(type: Jar) {
+  group "distribution"
+  // using `=`, IDEA error warn about archiveClassifier exceeds access rights  
+  archiveClassifier.set('uber')
+
+  // different name from standard jar and don't want version in the name
+  // Name of the jar is hardcoded in the Dockerfile 
+  archiveFileName = "raido-api-svc.jar"
+
+  //noinspection GroovyAssignabilityCheck
+  manifest{
+
+    //noinspection GroovyAssignabilityCheck
+    duplicatesStrategy "EXCLUDE"
+    attributes (
+      'Main-Class': 'raido.apisvc.Api',
+      "Implementation-Title": "Raido",
+      // archiveVersion comes from project version, so it'll use our value
+      "Implementation-Version": archiveVersion,
+    )
+  }
+
+  dependsOn configurations.runtimeClasspath
+  from sourceSets.main.output
+  from {
+    configurations.runtimeClasspath.findAll {
+      it.name.endsWith('jar') }.collect { zipTree(it)
+    }
+  }
+
+  doFirst{
+    println "generating uberJar to ${archiveFile.get()}"
+  }
+}
+tasks.build.dependsOn uberJar

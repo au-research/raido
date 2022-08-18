@@ -18,7 +18,7 @@ RUN useradd appuser
 
 ADD raido-api-svc.jar app/raido-api-svc.jar
 
-ADD scripts/api-svc-start.sh app/api-svc-start.sh
+ADD script/api-svc-start.sh app/api-svc-start.sh
 RUN chmod +x app/api-svc-start.sh
 
 USER appuser

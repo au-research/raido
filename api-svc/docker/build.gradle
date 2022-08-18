@@ -1,0 +1,118 @@
+import org.apache.tools.ant.filters.FixCrLfFilter
+
+import static raido.EcrUtil.getEcrLoginPassword
+import static raido.OsUtil.osCmd
+
+version = rootProject.version
+
+// needed to reference ext properties of the project
+evaluationDependsOn(':api-svc:spring')
+
+ext{
+  apiSvcJarPath = project(":api-svc:spring").tasks.uberJar.archivePath
+  srcDir = 'src/main/docker'
+  stagingDir = "$project.buildDir/dockerStaging"
+
+  imageName = "raido-api-svc"
+  containerName = imageName
+  /* have to parameterise these eventually when need a 2nd environment 
+  and then those params should be set by the codebuild/codepipeline. */
+  ecrHost = "954053438637.dkr.ecr.ap-southeast-2.amazonaws.com"
+  ecrRepo = "demostage-apisvcstack-apisvcecr870e734e-79dngtjzwbpy"
+
+  /* image path we build for local use, nice and short and readable. */
+  localImagePath = "$imageName:$project.version"
+  /* tag/push tasks use this path so that it can be pushed to ECR. */ 
+  ecrImagePath = "$ecrHost/$ecrRepo:DEMO"
+}
+
+task dockerStage(type: Copy) {
+  dependsOn ':api-svc:spring:build'
+  group = 'docker.build'
+  destinationDir = file(stagingDir)
+  description = "copy dockerfile, scripts, jar, etc. to $stagingDir"
+
+  doFirst {
+    println "pulling application jar from $apiSvcJarPath"
+    delete file(stagingDir)
+  }
+
+  // docker files
+  from (srcDir){
+    // avoid the chaos of windows line endings on unix
+    // shouldn't need this on raido, given the text=lf git setting
+    filter(FixCrLfFilter.class, eol: FixCrLfFilter.CrLf.newInstance("lf"))
+  }
+
+  from(apiSvcJarPath)
+}
+
+task dockerBuild(type: Exec){
+  group = 'docker.build'
+  dependsOn dockerStage
+  description = "build the docker image $containerName:[project version]"
+  
+  doFirst{
+    println "building $localImagePath ..."
+  }
+  workingDir = project.ext.stagingDir
+  commandLine osCmd('docker', 'build', '-t', localImagePath, '.')
+}
+
+task dockerTagDemo(type: Exec){
+  group = 'docker.build'
+  dependsOn dockerBuild
+  description = "tag local image so that it can be pushed to ECR as 'DEMO'"
+  
+  doFirst {
+    // add a check that makes sure we're not tagging a dirty version as a 
+    // release image
+    println "tagging $localImagePath as $ecrImagePath ..."
+  }
+  
+  workingDir = project.ext.stagingDir
+  commandLine osCmd('docker', 'tag', localImagePath, ecrImagePath)
+}
+
+/* generally devs don't want run this on their machine, should be run from 
+within AWS via a codebuild project (eventually from a pipeline).  
+If you do want to run it, must login first.
+*/
+task dockerPushDemo(type: Exec){
+  group = 'docker.build'
+  dependsOn dockerTagDemo
+  description = "push DEMO tagged image to ECR"
+
+  workingDir = project.ext.stagingDir
+  commandLine osCmd('docker', 'push', ecrImagePath)
+}
+
+/* 
+You can do the login actions by hand on your dev machine for the moment:
+aws --profile raido-demo ecr get-login-password | docker login --username AWS --password-stdin 954053438637.dkr.ecr.ap-southeast-2.amazonaws.com
+
+The local docker installation will remember the login.
+
+Don't need to do this when running within AWS on a machine with a role that
+allows access to the ECR. 
+
+I don't like taking dependencies on the `aws` command line client (outside of
+controlled environments like codebuild, containers, github, etc.)
+
+I will implment the getEcrLoginPassword() method to use the AWS Java SDK, so 
+there's no CLI dependency to run this task.
+Also, probably move this task up to the root project or somewhere, it's not
+specific to api-svc.
+*/
+task dockerEcrLogin(type: Exec) {
+  group = 'docker.build'
+  description = "do not run - doesn't work yet"
+  
+  // ish, haven't tried it yet
+  commandLine osCmd('docker', 'login',
+    "--username", "AWS",
+    "--password", getEcrLoginPassword(ecrRepo),
+    ecrHost
+  )
+}
+
