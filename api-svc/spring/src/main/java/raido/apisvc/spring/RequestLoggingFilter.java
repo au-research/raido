@@ -11,12 +11,14 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.WebUtils;
 import raido.apisvc.util.Log;
 import raido.apisvc.util.ObjectUtil;
+import raido.apisvc.util.StringUtil;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 
 import static raido.apisvc.util.Log.to;
+import static raido.apisvc.util.StringUtil.areEqual;
 
 /**
  IMPROVE: add the ability to enable by requestPath and/or principal (probably 
@@ -79,21 +81,39 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
     }
     finally {
       long time = (System.nanoTime() - beforeReq) / 1_000_000;
-      log.with("url", request.getRequestURI()).
-        with("user", request.getRemoteUser()).
-        with("params", request.getParameterMap()).
-        with("timeMs", time).
-        with("status", response.getStatus()).
-        info("endpoint " + request.getMethod());
-
-      if( bodyLog.isDebugEnabled() ){
-        /* I wanted to put this before the filter invocation, but it has to 
-        go after - the request underlying the CachingWrapper has to be read 
-        before we can read the content here. */
-        bodyLog.with("uri", request.getRequestURI()).
-          with("requestPayload", getMessagePayload(requestToUse)).
-          debug();
+      
+      boolean shouldLog = true;
+      if( areEqual(request.getRequestURI(), "/public/status") ){
+        // because used by the AWS ASG health check, too log noise  
+        shouldLog = false;
       }
+      
+      if( shouldLog ){
+        logRequest(request, response, requestToUse, time);
+      }
+    }
+  }
+
+  private void logRequest(
+    HttpServletRequest request,
+    HttpServletResponse response,
+    HttpServletRequest requestToUse,
+    long time
+  ) {
+    log.with("url", request.getRequestURI()).
+      with("user", request.getRemoteUser()).
+      with("params", request.getParameterMap()).
+      with("timeMs", time).
+      with("status", response.getStatus()).
+      info("endpoint " + request.getMethod());
+
+    if( bodyLog.isDebugEnabled() ){
+    /* I wanted to put this before the filter invocation, but it has to 
+    go after - the request underlying the CachingWrapper has to be read 
+    before we can read the content here. */
+      bodyLog.with("uri", request.getRequestURI()).
+        with("requestPayload", getMessagePayload(requestToUse)).
+        debug();
     }
   }
 
