@@ -74,6 +74,13 @@ flyway{
   user = sharedProject.apiSvcPgUser
   password = sharedProject.apiSvcPgPassword
   schemas = [sharedProject.apiSvcPgSchema]
+  failOnMissingLocations = true
+  locations = ['classpath:db/migration', sharedProject.apiSvcExtraLocation]
+}
+
+// flyway wasn't copying stuff to build/resources
+tasks.withType(org.flywaydb.gradle.task.AbstractFlywayTask) {
+  dependsOn processResources
 }
 
 task cleanJooqGeneratedSrc(type: Delete){

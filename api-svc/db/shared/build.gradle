@@ -1,9 +1,17 @@
 ext{
   apiSvcPgUrl = "jdbc:postgresql://localhost:7432/raido"
+  apiSvcPgSchema = "api_svc"
+  
+  /*  This is a different user than what the api-svc uses, this user must 
+  be able to create schemas, tables, etc. 
+  In an AWS env, this is the RDS master user; locally, probably just 'postgres' 
+  */
   apiSvcPgUser = 'postgres'
   apiSvcPgPassword = ""
-  apiSvcPgSchema = "api_svc"
 
+  // non-prod, usually want to set `classpath:db/env/demo` in the .gradle file
+  apiSvcExtraLocation = ""
+  
   jooqGeneratedSrcDir = 'src/main/generated-jooq'
   jooqGeneratedPkg = 'raido.db.jooq'
 
