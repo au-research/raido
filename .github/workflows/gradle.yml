@@ -51,6 +51,9 @@ jobs:
         run: ./gradlew build            
 
       - name: Create and populate api-svc-db.gradle
+        # running the api-svc as the admin user is not good
+        # it should run as the api_user, but I don't know how to sort out
+        # the password.
         run: |
           mkdir -p ~/.config/raido-v2/
           
