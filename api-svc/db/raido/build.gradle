@@ -1,3 +1,5 @@
+import org.flywaydb.gradle.task.AbstractFlywayTask
+
 plugins{
   id 'java'
   alias(libs.plugins.flyway)
@@ -6,6 +8,7 @@ plugins{
 
 // to make sure it's properties are loaded before this project
 evaluationDependsOn(':api-svc:db:shared')
+evaluationDependsOn(':api-svc:db:v1-ddb-migration')
 
 ext{
 
@@ -79,9 +82,15 @@ flyway{
 }
 
 // flyway wasn't copying stuff to build/resources
-tasks.withType(org.flywaydb.gradle.task.AbstractFlywayTask) {
+tasks.withType(AbstractFlywayTask) {
   dependsOn processResources
 }
+
+/* github build failed because the migrations tried to create the app_user,
+but that migration task hadn't run yet. */
+tasks.flywayMigrate.mustRunAfter(
+  raidV1Project.tasks.flywayMigrate
+)
 
 task cleanJooqGeneratedSrc(type: Delete){
   group = "jooq"
