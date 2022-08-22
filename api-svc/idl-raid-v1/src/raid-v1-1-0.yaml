@@ -142,22 +142,6 @@ definitions:
           description:
             type: "string"
             description: "A short description of the RAiD"
-#  ProviderRaidsModel:
-#    type: "object"
-#    properties:
-#      count:
-#        type: "string"
-#        description: "Number of items returned"
-#        example: "10"
-#      items:
-#        type: "array"
-#        description: "(optional) Providers associated to the RAiD"
-#        items:
-#          $ref: "#/definitions/AssociatedEntityModel"
-#      scannedCount:
-#        type: "string"
-#        description: "Total number of items that were scanned in the query"
-#        example: "10"
   RaidCreateModel:
     type: "object"
     properties:
@@ -191,66 +175,6 @@ definitions:
         type: "string"
         description: "URL path minted with ANDS"
         example: "https://google.com"
-#  AssociatedEntityModel:
-#    type: "object"
-#    properties:
-#      startDate:
-#        type: "string"
-#        description: "Datetime the provider associated with the RAiD  (yyyy-MM-dd hh:mm:ss)"
-#        example: "2017-09-20 12:00:00"
-#      endDate:
-#        type: "string"
-#        description: "(optional) Datetime the provider dissociated with the RAiD  (yyyy-MM-dd hh:mm:ss)"
-#        example: "2018-12-20 00:00:00"
-#      name:
-#        type: "string"
-#        description: "Name of entity"
-#        example: "TechConnect"
-#  CreateAssociationModel:
-#    type: "object"
-#    properties:
-#      startDate:
-#        type: "string"
-#        description: "Datetime the provider associated with the RAiD  (yyyy-MM-dd hh:mm:ss)"
-#        example: "2017-09-20 12:00:00"
-#      name:
-#        type: "string"
-#        description: "Name of the entity"
-#        example: "TechConnect"
-#  EndEntityAssociationModel:
-#    type: "object"
-#    properties:
-#      endDate:
-#        type: "string"
-#        description: "Datetime the provider dissociated with the RAiD  (yyyy-MM-dd hh:mm:ss)"
-#        example: "2018-12-20 00:00:00"
-#      name:
-#        type: "string"
-#        description: "Name of the entity"
-#        example: "TechConnect"
-#  OwnerAssociationModel:
-#    type: "object"
-#    properties:
-#      name:
-#        type: "string"
-#        description: "Name of the entity"
-#        example: "TechConnect"
-#  InstitutionRaidsModel:
-#    type: "object"
-#    properties:
-#      count:
-#        type: "string"
-#        description: "Number of items returned"
-#        example: "10"
-#      items:
-#        type: "array"
-#        description: "(optional) Institutions associated to the RAiD"
-#        items:
-#          $ref: "#/definitions/AssociatedEntityModel"
-#      scannedCount:
-#        type: "string"
-#        description: "Total number of items that were scanned in the query"
-#        example: "10"
   RaidPublicModel:
     type: "object"
     properties:
@@ -266,65 +190,3 @@ definitions:
         type: "string"
         description: "URL path minted with ANDS"
         example: "https://google.com"
-#  RaidsModel:
-#    type: "object"
-#    properties:
-#      count:
-#        type: "string"
-#        description: "Number of items returned"
-#        example: "10"
-#      items:
-#        type: "array"
-#        description: "(optional) Providers associated to the RAiD"
-#        items:
-#          $ref: "#/definitions/AssociationModel"
-#      scannedCount:
-#        type: "string"
-#        description: "Total number of items that were scanned in the query"
-#        example: "10"
-#  AssociationModel:
-#    type: "object"
-#    properties:
-#      raidName:
-#        type: "string"
-#        description: "Name/Alias of the RAiD"
-#      handle:
-#        type: "string"
-#        description: "Unique minted ANDS handle"
-#        example: "10378.1/1590349"
-#      startDate:
-#        type: "string"
-#        description: "Datetime the entity associated with the RAiD  (yyyy-MM-dd hh:mm:ss)"
-#        example: "2017-09-20 12:00:00"
-#      endDate:
-#        type: "string"
-#        description: "(optional) Datetime the entity dissociated with the RAiD  (yyyy-MM-dd hh:mm:ss)"
-#        example: "2018-12-20 00:00:00"
-#  EntitiesModel:
-#    type: "object"
-#    properties:
-#      count:
-#        type: "string"
-#        description: "Number of items returned"
-#        example: "10"
-#      items:
-#        type: "array"
-#        items:
-#          type: "object"
-#          properties:
-#            name:
-#              type: "string"
-#              description: "Provider that created the RAiD handle"
-#              example: "University of Queensland"
-#            grid:
-#              type: "string"
-#              description: "GRID (Global Research Identifier Database) of the Institution"
-#              example: "grid.1003.2"
-#            isni:
-#              type: "string"
-#              description: "International Standard Name Identifier (ISO 27729)"
-#              example: "0000 0000 9320 7537"
-#      scannedCount:
-#        type: "string"
-#        description: "Total number of items that were scanned in the query"
-#        example: "10"
