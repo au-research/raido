@@ -40,10 +40,12 @@ public class DataSourceProps
   @Value("${DatasourceConfig.username}")
   private String username;
 
-  @Value("${DatasourceConfig.password:}")
+  @Value("${DatasourceConfig.password}")
   private String password;
 
-  @Value("${DatasourceConfig.schema:raido_api_svc}")
+  /* I think this is unused in raido ATM, because we use schema specifiers 
+  driven from Jooq - but it will be needed if we need to use native SQL. */
+  @Value("${DatasourceConfig.schema:api_svc}")
   private String schema;
 
   /** Problems in this area often manifest with a symptom like:
