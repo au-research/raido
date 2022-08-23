@@ -21,7 +21,9 @@ For how to do an export to get those files, look in
 
 ### Local DB to import into
 
-Make sure DB already exists, as per [db/readme.md](../../db/readme.md)
+Make sure DB already exists, as per [db/readme.md](../../db/readme.md).
+Currently, the `importS3Files` task does the import at the user configured
+in `api-svc-db.gradle`
 
 DB migrations are in 
 [src/main/resources/db/migration](./src/main/resources/db/migration)
