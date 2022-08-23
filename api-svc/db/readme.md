@@ -30,7 +30,7 @@ then run the command to get a `raido` database.
 The DB at that point will be completely empty (no schema structure or data).
 
 
-# Configuring to use the DB for local dev
+# Configuring to use the DB for flyway migration of local DB
 
 The `:api-svc:db:shared` has these default values:
 * `apiSvcPgUrl` = jdbc:postgresql://localhost:7432/raido
@@ -41,9 +41,17 @@ These defaults will work with the `raido-db` container described above.
 You must configure the `apiSvcPgPassword` property to specify the
 same password you gave to create the database:
 
-`~/.config/raido-v2/api-svc.gradle`:
+`~/.config/raido-v2/api-svc-db.gradle`:
 ```
 apiSvcPgPassword="the password you specified"
+apiSvcExtraLocation="classpath:db/env/demo"
 ```
 
+The `apiSvcExtraLocation` can be used to load "conditional" schema files
+for a given environment.  The above will make sure your local DB has the same
+SQL executed as the `demo` environment.
+
+Note that these creds are different from what the actual api-svc uses.
+The [spring/readme.md](../spring/readme.md) discusses setting up the config
+for the api-svc.
 

@@ -29,7 +29,7 @@ a real deployment environment.
 redactErrorDetails=false
 
 DatasourceConfig.url=jdbc:postgresql://localhost:7432/raido
-DatasourceConfig.username=postgres
+DatasourceConfig.username=api_user
 DatasourceConfig.password=<dbpassword>
 
 RaidV1Auth.jwtSecret=<JWT secret>
