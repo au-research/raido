@@ -8,7 +8,7 @@ If you want to start the app from your IDE, remember to specify JVM options:
 The properties when running via main method, either from IDE or gradle (as 
 opposed to integration or functional test) are loaded from 
 `~/.config/raido-v2/api-svc-env.properties`, see
-[ApiConfig](/src/main/java/raido/spring/config/ApiConfig.java).
+[ApiConfig](/src/main/java/raido/apisvc/spring/config/ApiConfig.java).
 
 
 ## Running a local DB
