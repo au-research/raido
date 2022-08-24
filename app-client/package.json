@@ -2,9 +2,10 @@
   "name": "raido",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8080",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start-dev": "set REACT_APP_RAIDO_ENV=dev && react-scripts start",
+    "build-demo": "set REACT_APP_RAIDO_ENV=demo && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -20,6 +21,12 @@
     "react-dom": "18.2.0",
     "react-scripts": "5.0.1",
     "typescript": "4.7.4",
+    "jwt-decode": "3.1.2",
+    "@mui/material": "5.10.2",
+    "@mui/icons-material": "5.10.2",
+    "@emotion/styled": "11.10.0",
+    "@emotion/react": "11.10.0",
+    
     "web-vitals": "2.1.4"
   },
   "devDependencies": {
@@ -29,7 +36,11 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "dot-location": "off",
+      "@typescript-eslint/no-unused-vars": "off"
+    }
   },
   "browserslist": {
     "production": [
