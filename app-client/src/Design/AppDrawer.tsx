@@ -24,7 +24,7 @@ export function AppDrawer(props: {
            description={"Home"}
           icon={<HomeIcon/>}
         />
-s      </List>
+      </List>
     </div>
   );
 
