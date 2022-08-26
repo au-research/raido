@@ -83,25 +83,25 @@ function chooseEnvironmentConfig(env: string | undefined){
 const ciConfig: EnvironmentConfig = {
   environmentName: "ci",
   isProd: false,
-  aafClientId: "",
-  googleClientId: "",
-  raidoIssuer: "",
+  aafClientId: "accaabfd-a7c8-4d36-9363-ea7342e24db5",
+  googleClientId: "112489799301-m39l17uigum61l64uakb32vjhujuuk73.apps.googleusercontent.com",
+  raidoIssuer: "https://demo.raido-infra.com/idpresponse",
 };
 
 const devConfig: EnvironmentConfig = {
   environmentName: "dev",
   isProd: false,
-  aafClientId: "",
-  googleClientId: "",
-  raidoIssuer: "",
+  aafClientId: "accaabfd-a7c8-4d36-9363-ea7342e24db5",
+  googleClientId: "112489799301-m39l17uigum61l64uakb32vjhujuuk73.apps.googleusercontent.com",
+  raidoIssuer: "https://demo.raido-infra.com/idpresponse",
 };
 
 const demoConfig: EnvironmentConfig = {
   environmentName: "demo",
   isProd: false,
-  aafClientId: "",
-  googleClientId: "",
-  raidoIssuer: "",
+  aafClientId: "accaabfd-a7c8-4d36-9363-ea7342e24db5",
+  googleClientId: "112489799301-m39l17uigum61l64uakb32vjhujuuk73.apps.googleusercontent.com",
+  raidoIssuer: "https://demo.raido-infra.com/idpresponse",
 };
 
 const prodConfig: EnvironmentConfig = {
