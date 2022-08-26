@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import { RaidoLogoSvg } from "Component/Icon";
 import { RaidoTheme } from "Design/RaidoTheme";
 import { CssBaseline } from "@mui/material";
 import { ReactErrorBoundary } from "Error/ReactErrorBoundary";
@@ -9,8 +8,11 @@ import { LocationPathnameProvider } from "Util/Hook/LocationPathname";
 import { NavigationProvider } from "Design/NavigationProvider";
 import { AppNavBar } from "Design/AppNavBar";
 import { HomePage } from "Page/HomePage";
+import { AuthProvider } from "Auth/AuthProvider";
+import { isPrivacyPagePath, PrivacyPage } from "Page/PrivacyPage";
+import { isUsageTermsPagePath, UsageTermsPage } from "Page/UsageTermsPage";
 
-export function App() {
+export function App(){
   return <RaidoTheme>
     {/* force browser defaults for consistent display behaviour */}
     <CssBaseline/>
@@ -20,17 +22,28 @@ export function App() {
       <ErrorDialogProvider>
         {/* manages window.location for routing */}
         <LocationPathnameProvider>
-          <div className="App">
-            <NavigationProvider>
-              {/* NavBar across the top of screen and sliding drawer */}
-              <AppNavBar/>
+          {/* reads some important config from server */}
+          {/*<ServerInfoProvider>*/}
+          <AuthProvider unauthenticatedPaths={[
+            isPrivacyPagePath, isUsageTermsPagePath,
+          ]}>
+            <div className="App">
+              <NavigationProvider>
+                {/* NavBar across the top of screen and sliding drawer */}
+                <AppNavBar/>
 
-              {/* Navigable, authenticated pages, self-routed */}
-              <HomePage/>
+                {/* Navigable, authenticated pages, self-routed */}
+                <HomePage/>
 
-            </NavigationProvider>
-          </div>
+              </NavigationProvider>
+            </div>
+          </AuthProvider>
+          
+          {/* unauthenticated pages, self-routed */}
+          <PrivacyPage/>
+          <UsageTermsPage/>
 
+          {/*</ServerInfoProvider>*/}
         </LocationPathnameProvider>
       </ErrorDialogProvider>
     </ReactErrorBoundary>

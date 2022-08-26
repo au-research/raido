@@ -26,7 +26,9 @@
     "@mui/icons-material": "5.10.2",
     "@emotion/styled": "11.10.0",
     "@emotion/react": "11.10.0",
-    
+
+    "zod": "3.18.0",
+
     "web-vitals": "2.1.4"
   },
   "devDependencies": {

@@ -41,6 +41,9 @@ export interface EnvironmentConfig {
    */
   isProd: boolean,
 
+  aafClientId: string,
+  googleClientId: string,
+  raidoIssuer: string,
 }
 
 function initConfig(){
@@ -80,21 +83,33 @@ function chooseEnvironmentConfig(env: string | undefined){
 const ciConfig: EnvironmentConfig = {
   environmentName: "ci",
   isProd: false,
+  aafClientId: "",
+  googleClientId: "",
+  raidoIssuer: "",
 };
 
 const devConfig: EnvironmentConfig = {
   environmentName: "dev",
   isProd: false,
+  aafClientId: "",
+  googleClientId: "",
+  raidoIssuer: "",
 };
 
 const demoConfig: EnvironmentConfig = {
   environmentName: "demo",
   isProd: false,
+  aafClientId: "",
+  googleClientId: "",
+  raidoIssuer: "",
 };
 
 const prodConfig: EnvironmentConfig = {
   environmentName: "prod",
   isProd: true,
+  aafClientId: "",
+  googleClientId: "",
+  raidoIssuer: "",
 };
 
 
