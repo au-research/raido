@@ -51,9 +51,14 @@ and suppressing various startup logs.
   <logger name="org.eclipse.jetty" level="info"/>
   <logger name="com.zaxxer.hikari" level="info"/>
   
-  <!-- don't currently use http-client -->
+  
+  
+  <!-- we don't currently use http-client -->
   <logger name="org.apache.http" level="info"/>
   <logger name="httpclient.wire" level="info"/>
+  <!-- This is the spring logging for their http stuff, but it's not very
+   good, doesn't show you what actually goes across the wire. -->
+  <logger name="org.springframework.http.HttpLogging" level="info"/>
 
   <!-- from our custom P6SpyLogger, configured in spy.props. 
   Generally only useful in local dev, don't want it on in deployments because

@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
@@ -26,6 +27,7 @@ import raido.apisvc.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
 import static raido.apisvc.util.Log.to;
@@ -122,18 +124,19 @@ public class ApiConfig {
 
   @Bean
   public static RestTemplate restTemplate(){
-    List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
     MappingJackson2XmlHttpMessageConverter xmlConverter =
       new MappingJackson2XmlHttpMessageConverter();
+    xmlConverter.setSupportedMediaTypes(
+      singletonList(MediaType.APPLICATION_XML) );
+
     MappingJackson2HttpMessageConverter jsonConverter =
       new MappingJackson2HttpMessageConverter();
 
-    xmlConverter.setSupportedMediaTypes(
-      singletonList(MediaType.APPLICATION_XML) );
+    List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
+
     messageConverters.add(xmlConverter);
-    jsonConverter.setSupportedMediaTypes(
-      singletonList(MediaType.APPLICATION_JSON) );
     messageConverters.add(jsonConverter);
+    messageConverters.add( new FormHttpMessageConverter());
 
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.setMessageConverters(messageConverters);

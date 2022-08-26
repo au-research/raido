@@ -11,6 +11,7 @@ import org.springframework.security.web.firewall.HttpStatusRequestRejectedHandle
 import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.security.web.firewall.RequestRejectedHandler;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
+import raido.apisvc.endpoint.auth.AuthnEndpoint;
 import raido.apisvc.service.raidv1.RaidV1AuthService;
 import raido.apisvc.spring.security.RaidoSecurityContextRepository;
 import raido.apisvc.spring.security.raidv1.RaidV1AuthenticationProvider;
@@ -19,6 +20,7 @@ import raido.apisvc.util.Log;
 import java.io.IOException;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+import static raido.apisvc.endpoint.auth.AuthnEndpoint.IDP_URL;
 import static raido.apisvc.endpoint.raidv1.RaidV1.HANDLE_URL_PREFIX;
 import static raido.apisvc.util.Log.to;
 
@@ -48,6 +50,7 @@ public class RaidV1WebSecurityConfig {
       // order is important, more specific has to come before more general
       mvcMatchers(RAID_V1_API + HANDLE_URL_PREFIX + "/**" ).permitAll().
       mvcMatchers(RAID_V1_API + "/**").fullyAuthenticated().
+      mvcMatchers(IDP_URL).permitAll().
       mvcMatchers(PUBLIC + "/**").permitAll().
       anyRequest().denyAll().
       and().
