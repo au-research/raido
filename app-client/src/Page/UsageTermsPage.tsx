@@ -4,7 +4,7 @@ import { useLocationPathname } from "Util/Hook/LocationPathname";
 import { SmallContentMain } from "Design/LayoutMain";
 import { List, ListItemText } from "@mui/material";
 import { NewWindowLink } from "Component/ExternalLink";
-import { RaidoDescription } from "Auth/IntroContainer";
+import { HomeLink, RaidoDescription } from "Auth/IntroContainer";
 
 const log = console;
 
@@ -23,21 +23,21 @@ export function UsageTermsPage(){
   if( !isUsageTermsPagePath(pathname) ){
     return null;
   }
-  window.document.title = "Raido - Terms & conditions";  
+  window.document.title = "Raido - Terms & conditions";
   return <Content/>;
 }
 
 function Content(){
   return <SmallContentMain>
     <RaidoDescription/>
-    <List >
+    <List>
       <ListItemText>
-        Please refer to  the 
+        Please refer to the
         ARDC <NewWindowLink href={"https://ardc.edu.au/terms-conditions/"}>
-        Terms & conditions</NewWindowLink> reference page for the list of 
+        Terms & conditions</NewWindowLink> reference page for the list of
         relevant Terms and Conditions for usage of the Raido application.
       </ListItemText>
     </List>
-
+    <HomeLink/>
   </SmallContentMain>
 }

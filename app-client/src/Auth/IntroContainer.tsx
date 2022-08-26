@@ -15,7 +15,7 @@ export function IntroContainer(){
       &emsp;
       <RaidoLink href={getUsageTermsPagePath()}>Usage terms</RaidoLink>
     </Typography>
-    
+
   </SmallContentMain>
 }
 
@@ -24,5 +24,12 @@ export function RaidoDescription(){
     Raido is the Oceania region implementation of
     the <NewWindowLink href="https://www.raid.org.au/">
     RAiD</NewWindowLink> ISO standard.
-  </Typography> 
+  </Typography>
+}
+
+export function HomeLink(){
+  return <Typography paddingTop={"1em"} align={"center"}>
+    <RaidoLink href="/">Home</RaidoLink>
+  </Typography>
+
 }

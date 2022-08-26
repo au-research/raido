@@ -4,7 +4,8 @@ import { useLocationPathname } from "Util/Hook/LocationPathname";
 import { SmallContentMain } from "Design/LayoutMain";
 import { List, ListItemText, Typography } from "@mui/material";
 import { NewWindowLink, supportEmail } from "Component/ExternalLink";
-import { RaidoDescription } from "Auth/IntroContainer";
+import { HomeLink, RaidoDescription } from "Auth/IntroContainer";
+import { RaidoLink } from "Component/RaidoLink";
 
 const log = console;
 
@@ -30,7 +31,7 @@ export function PrivacyPage(){
 function Content(){
   return <SmallContentMain>
     <RaidoDescription/>
-    <List >
+    <List>
       <ListItemText>
         The Raido application fully conforms to 
         the <NewWindowLink href="https://ardc.edu.au/privacy-policy/">
@@ -42,5 +43,6 @@ function Content(){
         providers like Google, etc.) will be deleted within 7 days.
       </ListItemText>
     </List>
+    <HomeLink/>
   </SmallContentMain>
 }
