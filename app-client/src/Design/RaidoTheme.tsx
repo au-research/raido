@@ -13,7 +13,11 @@ export const Color = {
 
   // white shades
   lotion: "#FAFAFA",
-  doNotUseWhite: "#FFFFFF"
+  doNotUseWhite: "#FFFFFF",
+  
+  // colors taken from the legacy raid impl
+  raidDarkBlue: "#5594d8",
+  raidLightBlue: "#5b9bd4",
 }
 
 /** use lightColor if light mode, otherwise use darkColor */
@@ -34,6 +38,9 @@ to the DefaultTheme (declared above) - i.e. "custom theme variables"?
 const mode = createTheme({
   palette: {
     mode: 'light',
+    primary: {
+      main: Color.raidDarkBlue,
+    },
     background: {
       default: Color.lotion
     },
