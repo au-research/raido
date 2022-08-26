@@ -8,7 +8,7 @@ import { ErrorInfo, forceError } from "Error/ErrorUtil";
 import { AuthorizedSession } from "Auth/AuthProvider";
 import { authApi } from "Api/AuthApi";
 
-const accessTokenStorageKey = "zincAccessToken";
+const accessTokenStorageKey = "raidoAccessToken";
 
 function debugAuthzResponse(auth: AuthorizeUserResponse){
   if( !auth.succeeded ){

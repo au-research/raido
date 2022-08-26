@@ -2,7 +2,7 @@ import React from "react";
 import { navBrowserByAssign, serverLocationUrl } from "Util/WindowUtil";
 import { ContainerCard } from "Design/ContainerCard";
 import { PrimaryButton } from "Component/AppButton";
-import { ZincOAuthState } from "Shared/ApiTypes";
+import { RaidoOAuthState } from "Shared/ApiTypes";
 import { encodeBase64 } from "Util/Encoding";
 import { useSignInContext } from "Auth/SignInContext";
 import { HelpPopover } from "Component/HelpPopover";
@@ -20,7 +20,7 @@ export function SignInContainer(){
   const signInContext = useSignInContext();
 
   async function googleSignIn(){
-    const state: ZincOAuthState = {
+    const state: RaidoOAuthState = {
       // this redirectUril is about the lambda redirect back our client
       redirectUri: serverLocationUrl()
     }
@@ -46,7 +46,7 @@ export function SignInContainer(){
 
   async function aafSignIn(){
     // this is not an OIDC sign-in, github uses `,` to separate scopes
-    const state: ZincOAuthState = {
+    const state: RaidoOAuthState = {
       redirectUri: serverLocationUrl()
     }
     signInContext.setAction(aafAction);
@@ -92,7 +92,7 @@ export function SignInContainer(){
   </ContainerCard>
 }
 
-function formatStateValue(state: ZincOAuthState):string{
+function formatStateValue(state: RaidoOAuthState):string{
   let base64 = encodeBase64(JSON.stringify(state));
   /* the TwitterHandler was dying when the base64 encoding padded with `==`.
   The request never reached the lambda, AWS was returning a 400 error 

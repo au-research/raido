@@ -98,8 +98,8 @@ different clients (think: localhost for dev, TST and PRD environments.
 Can avoid this by using multiple authn APIs, one per environment (e.g. similar
 to what Github does where you can only have one /idpresponse callback URL 
 per client). */
-export const ZincOAuthState = zod.object({
+export const RaidoOAuthState = zod.object({
   redirectUri: zod.string(),
 });
-export type ZincOAuthState = zod.infer<typeof ZincOAuthState>;
+export type RaidoOAuthState = zod.infer<typeof RaidoOAuthState>;
 
