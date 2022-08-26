@@ -85,7 +85,7 @@ const ciConfig: EnvironmentConfig = {
   isProd: false,
   aafClientId: "accaabfd-a7c8-4d36-9363-ea7342e24db5",
   googleClientId: "112489799301-m39l17uigum61l64uakb32vjhujuuk73.apps.googleusercontent.com",
-  raidoIssuer: "https://demo.raido-infra.com/idpresponse",
+  raidoIssuer: "https://demo.raido-infra.com",
 };
 
 const devConfig: EnvironmentConfig = {
@@ -93,7 +93,7 @@ const devConfig: EnvironmentConfig = {
   isProd: false,
   aafClientId: "accaabfd-a7c8-4d36-9363-ea7342e24db5",
   googleClientId: "112489799301-m39l17uigum61l64uakb32vjhujuuk73.apps.googleusercontent.com",
-  raidoIssuer: "https://demo.raido-infra.com/idpresponse",
+  raidoIssuer: "http://localhost:8080",
 };
 
 const demoConfig: EnvironmentConfig = {
@@ -101,7 +101,7 @@ const demoConfig: EnvironmentConfig = {
   isProd: false,
   aafClientId: "accaabfd-a7c8-4d36-9363-ea7342e24db5",
   googleClientId: "112489799301-m39l17uigum61l64uakb32vjhujuuk73.apps.googleusercontent.com",
-  raidoIssuer: "https://demo.raido-infra.com/idpresponse",
+  raidoIssuer: "https://demo.raido-infra.com",
 };
 
 const prodConfig: EnvironmentConfig = {
