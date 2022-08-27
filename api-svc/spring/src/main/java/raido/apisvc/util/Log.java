@@ -193,7 +193,7 @@ public class Log {
   }
 
   public void error(String msg) {
-    log.info(msg);
+    log.error(msg);
   }
 
   /**
