@@ -42,6 +42,10 @@ function Content(){
         All data associated with your account (especially anything from ID 
         providers like Google, etc.) will be deleted within 7 days.
       </ListItemText>
+      <ListItemText>Data from Identity Providers (e.g. AAF, Google)
+        is only used to enable sign-in functionality so that users can make 
+        use of Raido having to create a new set of email/password credentials. 
+      </ListItemText>
     </List>
     <HomeLink/>
   </SmallContentMain>
