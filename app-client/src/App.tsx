@@ -27,16 +27,14 @@ export function App(){
           <AuthProvider unauthenticatedPaths={[
             isPrivacyPagePath, isUsageTermsPagePath,
           ]}>
-            <div className="App">
-              <NavigationProvider>
-                {/* NavBar across the top of screen and sliding drawer */}
-                <AppNavBar/>
+            <NavigationProvider>
+              {/* NavBar across the top of screen and sliding drawer */}
+              <AppNavBar/>
 
-                {/* Navigable, authenticated pages, self-routed */}
-                <HomePage/>
+              {/* Navigable, authenticated pages, self-routed */}
+              <HomePage/>
 
-              </NavigationProvider>
-            </div>
+            </NavigationProvider>
           </AuthProvider>
           
           {/* unauthenticated pages, self-routed */}
