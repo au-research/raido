@@ -12,6 +12,21 @@ public class AafOidcProps {
   @Value("${AafOidc.clientSecret}")
   public String clientSecret;
 
-  @Value("${AafOidc.tokenUrl:https://central.test.aaf.edu.au/providers/op/token}")
+  @Value("${AafOidc.tokenUrl:" +
+    "https://central.test.aaf.edu.au/providers/op/token}")
   public String tokenUrl;
+
+  /**
+   The issuer that JWTs should be generated with.
+   */
+  @Value("${GoogleOidc.issuer:https://central.test.aaf.edu.au}")
+  public String issuer;
+
+  /**
+   The url where the IdP publishes its JWT public keys.
+   https://auth0.com/docs/secure/tokens/json-web-tokens/json-web-key-sets
+   */
+  @Value("${GoogleOidc.jwks:https://central.test.aaf.edu.au/providers/op/jwks}")
+  public String jwks;
+
 }

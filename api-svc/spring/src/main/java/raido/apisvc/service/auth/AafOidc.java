@@ -13,8 +13,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import raido.apisvc.spring.config.environment.GoogleOidcProps;
+import raido.apisvc.spring.config.environment.AafOidcProps;
 import raido.apisvc.spring.config.environment.RaidoAuthnProps;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
@@ -30,98 +32,101 @@ import static raido.apisvc.util.StringUtil.mask;
 import static raido.apisvc.util.StringUtil.trimEqualsIgnoreCase;
 
 @Component
-public class GoogleOidc {
-  private static final Log log = to(GoogleOidc.class);
-  
-  private GoogleOidcProps google;
+public class AafOidc {
+  private static final Log log = to(AafOidc.class);
+
+  private AafOidcProps aaf;
   private RaidoAuthnProps raido;
 
   private RestTemplate rest;
 
-  public GoogleOidc(
-    GoogleOidcProps google,
+  public AafOidc(
+    AafOidcProps aaf,
     RaidoAuthnProps raido,
     RestTemplate rest
   ) {
-    this.google = google;
+    this.aaf = aaf;
     this.raido = raido;
     this.rest = rest;
   }
 
-  public boolean canHandle(String clientId){
-    return trimEqualsIgnoreCase(clientId, google.clientId);    
+  public boolean canHandle(String clientId) {
+    return trimEqualsIgnoreCase(clientId, aaf.clientId);
   }
-  
-  public DecodedJWT exchangeCodeForJwt(String idpResponseCode){
+
+  public DecodedJWT exchangeCodeForJwt(String idpResponseCode) {
     HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    var tokenRequest = new OAuthTokenRequest().
-      code(idpResponseCode).
-      client_id(google.clientId).
-      client_secret(google.clientSecret).
-      grant_type("authorization_code").
-      redirect_uri(raido.serverRedirectUri);
+    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-    HttpEntity<OAuthTokenRequest> request =
-      new HttpEntity<>(tokenRequest, headers);
+    MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+    map.add("code", idpResponseCode);
+    map.add("client_id", aaf.clientId);
+    map.add("client_secret", aaf.clientSecret);
+    map.add("grant_type", "authorization_code");
+    map.add("redirect_uri", raido.serverRedirectUri);
 
-//    log.with("bod", request.getBody()).info();
+    HttpEntity<MultiValueMap<String, String>> request =
+      new HttpEntity<>(map, headers);
+
+//      log.with("bod", request.getBody()).info();
 
     ResponseEntity<OAuthTokenResponse> response = rest.postForEntity(
-      google.tokenUrl, request, OAuthTokenResponse.class);
-
+      aaf.tokenUrl, request, OAuthTokenResponse.class);
 
     log.with("response", response).
       with("response.body", response.getBody()).
-      debug("google response");
+      debug("aaf response");
     Guard.notNull(response.getBody());
 
     DecodedJWT jwt = JWT.decode(response.getBody().id_token);
     verify(jwt);
-    
+
     return jwt;
   }
-  
-  public void verify(DecodedJWT jwt){
+
+  public void verify(DecodedJWT jwt) {
     Guard.areEqual(jwt.getAlgorithm(), "RS256");
     Guard.areEqual(jwt.getType(), "JWT");
 
     /* Probably overkill and unnecessary. If the attacker can intercept calls
-    between api-svc and google to feed us a fake JWT, then they can intercept 
+    between api-svc and AAF to feed us a fake JWT, then they can intercept 
     the JWKS url call too.
     Keep an eye out for this when load testing; if measurably visible, 
     consider getting rid of this. */
-    verifyGoogleJwksSignature(jwt);
+    verifyAafJwksSignature(jwt);
 
     Guard.hasValue(jwt.getSubject());
     Guard.hasValue("id_token must have audience", jwt.getAudience());
-    Guard.areEqual(google.clientId, jwt.getAudience().get(0));
-    Guard.areEqual(google.issuer, jwt.getIssuer());
-    
-    Guard.isTrue("id_token must not be expired", 
+    Guard.areEqual(aaf.clientId, jwt.getAudience().get(0));
+    Guard.areEqual(aaf.issuer, jwt.getIssuer());
+
+    Guard.isTrue(
+      "id_token must not be expired",
       jwt.getExpiresAtAsInstant().
         // add a bit of leeway
         plusMillis(1000).
         isAfter(Instant.now()) );
-    
-    Guard.hasValue("email claim must have value", 
+
+    Guard.hasValue(
+      "email claim must have value",
       jwt.getClaim("email").asString());
-    
-    Guard.isTrue("email_verified must be true", 
+
+    Guard.isTrue(
+      "email_verified must be true",
       jwt.getClaim("email_verified").asBoolean());
-    
+
   }
 
-  private void verifyGoogleJwksSignature(DecodedJWT jwt) {
+  private void verifyAafJwksSignature(DecodedJWT jwt) {
     JwkProvider provider = null;
     try {
       /* Must use URL because google certs aren't at the well-known location.
       Note sure if can/should make provider static.  */
-      provider = new UrlJwkProvider( new URL(google.jwks) );
+      provider = new UrlJwkProvider(new URL(aaf.jwks));
     }
     catch( MalformedURLException e ){
       throw idpException("google props.jwks is malformed %s - %s",
-        google.jwks, e.getMessage() );
+        aaf.jwks, e.getMessage());
     }
 
     Jwk jwk = null;
@@ -133,8 +138,8 @@ public class GoogleOidc {
       log.with("header", jwt.getHeader()).
         with("payload", jwt.getPayload()).
         debug("could not get jwks key");
-      throw idpException("could not get key id %s from %s - %s", 
-        jwt.getKeyId(), google.jwks, e.getMessage() );
+      throw idpException("could not get key id %s from %s - %s",
+        jwt.getKeyId(), aaf.jwks, e.getMessage());
     }
 
     Algorithm algorithm = null;
@@ -145,26 +150,15 @@ public class GoogleOidc {
       log.with("header", jwt.getHeader()).
         with("payload", jwt.getPayload()).
         debug("could not get jwks key");
-      throw idpException("could not create RSA256 public key - %s",
-        e.getMessage() );
+      throw idpException(
+        "could not create RSA256 public key - %s",
+        e.getMessage());
     }
 
     algorithm.verify(jwt);
   }
-
 }
+
 /*
  Example id_token payload:
-{
-  "iss": "https://accounts.google.com",
-  "azp": "112489799301-m39l17uigum61l64uakb32vjhujuuk73.apps.googleusercontent.com",
-  "aud": "112489799301-m39l17uigum61l64uakb32vjhujuuk73.apps.googleusercontent.com",
-  "sub": "11...092",
-  "hd": "ardc.edu.au",
-  "email": "first.last@ardc.edu.au",
-  "email_verified": true,
-  "at_hash": "6eq...vTg",
-  "iat": 1661572510,
-  "exp": 1661576110
-} 
  */
