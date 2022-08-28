@@ -11,7 +11,9 @@ export function getSocialRedirectIdToken(): string|undefined{
   }
 
   // don't leave stuff (tokens, params, etc.) in the url after a SSO redirect
-  window.location.hash = "";
+  // just doing `window.location.hash = ""` leaves the hash in the url;
+  window.history.pushState("", document.title, 
+    window.location.pathname + window.location.search);
   
   return idToken;
 }
