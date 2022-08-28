@@ -111,9 +111,7 @@ public class AafOidc {
       "email claim must have value",
       jwt.getClaim("email").asString());
 
-    Guard.isTrue(
-      "email_verified must be true",
-      jwt.getClaim("email_verified").asBoolean());
+    // AAF id_token does not contain an email_verified claim
 
   }
 

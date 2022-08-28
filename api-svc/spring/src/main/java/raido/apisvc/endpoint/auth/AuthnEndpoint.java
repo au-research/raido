@@ -80,31 +80,29 @@ public class AuthnEndpoint {
     // security:sto validate the redirect uri 
 
 
+    DecodedJWT jwt;
     if( aaf.canHandle(state.clientId) ){
-      DecodedJWT jwt = aaf.exchangeCodeForJwt(idpResponseCode);
-
-      res.sendRedirect( "%s#id_token=%s".formatted(
-        state.redirectUri, "xxx.yyy.zzz"
-      ));
-      
+      jwt = aaf.exchangeCodeForJwt(idpResponseCode);
     }
     else if( google.canHandle(state.clientId) ){
-      DecodedJWT jwt = google.exchangeCodeForJwt(idpResponseCode);
-      log.info("google succeeded");
-      res.sendRedirect( "%s#id_token=%s".formatted(
-        state.redirectUri, 
-        raidv2Auth.sign( new AuthzTokenPayload().
-          setSubject(jwt.getSubject()).
-          setClientId(state.clientId).
-          setEmail(jwt.getClaim("email").asString()).
-          setRole("none")
-        )
-      ));
+      jwt = google.exchangeCodeForJwt(idpResponseCode);
+    }
+    else {
+      // improve should be a specific authn error?
+      // and should it expose the error?
+      throw idpException("unknown clientId %s", state.clientId);
     }
 
-    // improve should be a specific authn error?
-    // and should it expose the error?
-    throw idpException("unknown clientId %s", state.clientId);
+    res.sendRedirect( "%s#id_token=%s".formatted(
+      state.redirectUri,
+      raidv2Auth.sign( new AuthzTokenPayload().
+        setSubject(jwt.getSubject()).
+        setClientId(state.clientId).
+        setEmail(jwt.getClaim("email").asString()).
+        setRole("none")
+      )
+    ));
+    
   }
 
 }
