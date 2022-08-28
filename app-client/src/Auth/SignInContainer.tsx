@@ -6,7 +6,7 @@ import { RaidoOAuthState } from "Shared/ApiTypes";
 import { encodeBase64 } from "Util/Encoding";
 import { useSignInContext } from "Auth/SignInContext";
 import { HelpPopover } from "Component/HelpPopover";
-import { aaf, google, oauthCodeGrantFlow } from "Auth/Constant";
+import { oauthCodeGrantFlow } from "Auth/Constant";
 import { Config } from "Config";
 import { Typography } from "@mui/material";
 import { Google } from "@mui/icons-material";
@@ -21,14 +21,16 @@ export function SignInContainer(){
 
   async function googleSignIn(){
     const state: RaidoOAuthState = {
-      // this redirectUril is about the lambda redirect back our client
-      redirectUri: serverLocationUrl()
+      // tells the IdP where to redirect to after user approval
+      redirectUri: serverLocationUrl(),
+      // this tells the server redirect url which IdP was used
+      clientId: Config.google.clientId,
     }
     signInContext.setAction(googleAction);
     try {
-      let loginUrl = `${google.authorize}` +
-        `?client_id=${Config.googleClientId}` +
-        `&scope=${encodeURIComponent(google.authnScope)}` +
+      let loginUrl = `${Config.google.authorizeUrl}` +
+        `?client_id=${Config.google.clientId}` +
+        `&scope=${encodeURIComponent(Config.google.authnScope)}` +
         `&response_type=${oauthCodeGrantFlow}` +
         /* if the user accepts, google will redirect the browser to this uri,
         which will use the google code to generate an id_token and redirect 
@@ -45,16 +47,16 @@ export function SignInContainer(){
 
 
   async function aafSignIn(){
-    // this is not an OIDC sign-in, github uses `,` to separate scopes
     const state: RaidoOAuthState = {
-      redirectUri: serverLocationUrl()
+      redirectUri: serverLocationUrl(),
+      clientId: Config.aaf.clientId,
     }
     signInContext.setAction(aafAction);
     
     try {
-      let loginUrl = `${aaf.authorize}` +
-        `?client_id=${Config.aafClientId}` +
-        `&scope=${encodeURIComponent(aaf.authnScope)}` +
+      let loginUrl = `${Config.aaf.authorizeUrl}` +
+        `?client_id=${Config.aaf.clientId}` +
+        `&scope=${encodeURIComponent(Config.aaf.authnScope)}` +
         `&response_type=${oauthCodeGrantFlow}` +
         `&redirect_uri=${Config.raidoIssuer}/idpresponse` +
         `&state=${formatStateValue(state)}`;

@@ -1,12 +1,14 @@
-import React, { useContext } from "react";
+import React, { ReactNode, useCallback, useContext, useEffect } from "react";
 import { LargeContentMain, SmallContentMain } from "Design/LayoutMain";
 import { SmallPageSpinner } from "Component/SmallPageSpinner";
 import { ErrorInfoComponent } from "Error/ErrorInforComponent";
-import { ErrorInfo, isErrorInfo } from "Error/ErrorUtil";
+import { ErrorInfo } from "Error/ErrorUtil";
 import { AuthzTokenPayload } from "Shared/ApiTypes";
 import {
   authorizeWithServer,
   getAuthSessionFromStorage,
+  parseAccessToken,
+  saveAccessTokenToStorage,
   signOutUser
 } from "Auth/Authz";
 import { findSignInIdToken } from "Auth/Authn";
@@ -23,6 +25,10 @@ export interface AuthState {
 export interface AuthorizedSession {
   payload: AuthzTokenPayload,
   accessTokenExpiry: Date,
+  /* security:sto this should not be saved in globally accessible memory in the 
+  current browser context.  Either use a Service Worker or closure variable to
+  protect it from malicious JS running on the page.
+  https://blog.ropnop.com/storing-tokens-in-browser/#global-variable */
   accessToken: string,
 }
 
@@ -43,7 +49,8 @@ type ProviderState =
   // in-progress states
   {current: "init"} |
   {current: "authenticating"} |
-  {current: "authorizing"} |
+  // we don't need this state at the moment, id_token is access_token
+  //{current: "authorizing"} |
   {current: "signing-out"} |
 
   // terminal states
@@ -77,6 +84,10 @@ export function AuthProvider({unauthenticatedPaths = [], children}: {
       setState({current: "signed-in", authSession});
       return;
     }
+    else {
+      /* getAuthSessiontFromStorage() returns undefined if there's nothing in
+      storage and also if anything else goes wrong (malformed token, etc.) */
+    }
 
     /* if they don't have a previous valid sign-in session and there's no 
     idToken from signing-in, then the user needs to sign-in. */
@@ -86,19 +97,52 @@ export function AuthProvider({unauthenticatedPaths = [], children}: {
       return;
     }
 
-    /* verify user deatils and exchange the Cognito idToken for our 
-    custom accessToken */
-    setState({current: "authorizing"});
+    /* For google and aaf - the api-svc redirects back to client with the 
+    id_token set to the actual access_token.  Might have to do an intermediate
+    step for Cognito. */
+
+    ///* verify user deatils and exchange the Cognito idToken for our 
+    //custom accessToken */
+    //setState({current: "authorizing"});
     const authzResult = await authorizeWithServer(idToken);
-    if( isErrorInfo(authzResult) ){
-      setState({
-        current: "error", error: authzResult
-      });
-      return;
+    //if( isErrorInfo(authzResult) ){
+    //  setState({
+    //    current: "error", error: authzResult
+    //  });
+    //  return;
+    //}
+ 
+    const parseResult = parseAccessToken(idToken);
+    if( !parseResult.succeeded ){
+      console.warn("problem parsing idToken returned from sign-in",
+        parseResult.message, parseResult.decoded);
+      setState({current: "error", error: {
+        message: parseResult.message, 
+        problem: parseResult.message, 
+      }});
+      return undefined;
     }
 
-    setState({current: "signed-in", authSession: authzResult});
-
+    /* security:sto this is highly questionable.
+     Better to just save what clientId the user logged in through last time and 
+     use that to redirect to the IDP to authenticate again.
+     Proper OAuth2 Id Providers remember that the user has previosly 
+     approved the app and will just immediately (seamless to user) 
+     redirect back to /idpresonse with a new auth code.
+     Pros of storing token in storage:
+     - faster login UX, no waiting for the redirect chain of:
+      app-client -302-> IDP -302-> api-svc -302-> app-client
+     - better DX, no IDP redirects during development - but we could make 
+      this configurable, or even come up with an even better 
+      "development only" authz token approach. */
+    saveAccessTokenToStorage(idToken);
+    
+    setState({current: "signed-in", authSession: { 
+      accessToken: idToken, 
+      accessTokenExpiry: parseResult.accessTokenExpiry,
+      payload: parseResult.payload
+    }});
+    
   }, []);
 
   const onSignOutClicked = React.useCallback(async () => {
@@ -123,9 +167,9 @@ export function AuthProvider({unauthenticatedPaths = [], children}: {
     return <SmallPageSpinner message={"Signing in"}/>
   }
 
-  if( state.current === "authorizing" ){
-    return <SmallPageSpinner message={"Authorizing"}/>
-  }
+  //if( state.current === "authorizing" ){
+  //  return <SmallPageSpinner message={"Authorizing"}/>
+  //}
 
   if( state.current === "signing-out" ){
     return <SmallPageSpinner message={"Signing out"}/>
@@ -173,9 +217,36 @@ function NotSignedInContent({onSignInSucceeded}: {
         action: signInAction,
         setAction: setSignInAction
       }}>
-        <SignInContainer/>
+        {/* Need to reset the action when page unloaded because if user hits
+         back button on hte IDP page, the browser BF-cache will restore the 
+         React state and buttons just sit there spinning/disabled. */}
+        <PageHideListener onPageHide={()=> setSignInAction(undefined)}>
+          <SignInContainer/>
+        </PageHideListener>
       </SignInContext.Provider>
     </SmallContentMain>
   </LargeContentMain>
 }
 
+function PageHideListener({onPageHide, children}:{
+  onPageHide: ()=>void,
+  children: ReactNode
+}){
+  const onPageHideCb = useCallback((ev: PageTransitionEvent) => {
+    console.log("pagehide event", ev);
+    onPageHide();
+  }, [onPageHide]);
+  
+  useEffect(() => {
+    window.addEventListener('pagehide', onPageHideCb);
+
+    return () => {
+      // cleanup
+      window.removeEventListener('pagehide', onPageHideCb);
+    }
+  }, [onPageHideCb]);  
+  
+  return <>
+    {children}
+  </>
+}

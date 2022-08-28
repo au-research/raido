@@ -14,6 +14,9 @@ import { AppDrawer } from "Design/AppDrawer";
 import { RaidoLogoSvg } from "Component/Icon";
 import { getHomePageLink } from "Page/HomePage";
 import { Color } from "Design/RaidoTheme";
+import { useAuth } from "Auth/AuthProvider";
+import { AuthzTokenPayload } from "Shared/ApiTypes";
+import { Config } from "Config";
 
 const log = console;
 
@@ -93,7 +96,7 @@ function MenuShortcutNavItem(props: {
 
 
 function AccountMenu(){
-  //const authn = useAuth();
+  const authn = useAuth();
   const[ isMenuOpen, setIsMenuOpen] = React.useState(false);
   const menuAnchorRef = React.useRef<HTMLButtonElement>(null!);
   const nav = useNavigation();
@@ -120,15 +123,21 @@ function AccountMenu(){
       onClose={()=> setIsMenuOpen(false)}
     >
       <MenuItem onClick={()=>{
-        // log.debug("authn identity and claims", identity, claim);
+         //log.debug("authn identity and claims", identity, claim);
         onClose();
       }}>
-        {/*<Typography>Email {authn.session.payload.email}</Typography>*/}
-        <Typography>Email [todo]</Typography>
+        <Typography>Email: {authn.session.payload.email}</Typography>
+      </MenuItem>
+      <MenuItem onClick={()=>{
+        onClose();
+      }}>
+        <Typography>
+          Id Provider: {providerName(authn.session.payload)}
+        </Typography>
       </MenuItem>
       <MenuItem onClick={async ()=>{
         log.debug("clicked logout");
-        //authn.signOut();
+        authn.signOut();
       }}>
         <Typography>Sign out</Typography>
       </MenuItem>
@@ -136,3 +145,15 @@ function AccountMenu(){
   </>;
 }
 
+function providerName(payload: AuthzTokenPayload): string {
+  if( payload.clientId === Config.aaf.clientId ){
+    return "AAF";
+  }
+  else if( payload.clientId === Config.google.clientId ){
+    return "Google";
+  }
+  else {
+    console.log("unknown idp clientId", payload);
+    return "Unknown";
+  }
+}

@@ -11,13 +11,15 @@ import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.WebUtils;
 import raido.apisvc.util.Log;
 import raido.apisvc.util.ObjectUtil;
-import raido.apisvc.util.StringUtil;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 
+import static raido.apisvc.endpoint.auth.AuthnEndpoint.IDP_URL;
 import static raido.apisvc.util.Log.to;
+import static raido.apisvc.util.RestUtil.sanitiseLocationUrl;
+import static raido.apisvc.util.StringUtil.*;
 import static raido.apisvc.util.StringUtil.areEqual;
 
 /**
@@ -100,13 +102,27 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
     HttpServletRequest requestToUse,
     long time
   ) {
-    log.with("url", request.getRequestURI()).
+    /* No need for an info level check, if info is disabled the filter won't 
+    have been added to the filter-chain in the first place. * */
+    
+    var logBuild = log.with("url", request.getRequestURI()).
       with("user", request.getRemoteUser()).
-      with("params", request.getParameterMap()).
       with("timeMs", time).
-      with("status", response.getStatus()).
-      info("endpoint " + request.getMethod());
+      with("status", response.getStatus());
 
+    String locationHeader = response.getHeader("Location");
+    if( locationHeader != null ){
+      logBuild = logBuild.with("location", sanitiseLocationUrl(locationHeader));
+    }
+
+    // don't log params becase they contain sensitive info
+    if( !trimEqualsIgnoreCase(request.getRequestURI(), IDP_URL) ){
+      logBuild = logBuild.with("params", request.getParameterMap());
+    }
+    
+    logBuild.info("endpoint " + request.getMethod());
+
+    
     if( bodyLog.isDebugEnabled() ){
     /* I wanted to put this before the filter invocation, but it has to 
     go after - the request underlying the CachingWrapper has to be read 

@@ -58,9 +58,6 @@ dependencies{
   // allow SLF4J to capture java.util logging 
   implementation 'org.slf4j:jul-to-slf4j:2.0.0-alpha7'
 
-  // for working with JWTs - most popular library
-  implementation 'com.auth0:java-jwt:4.0.0'
-
   // connection pool
   implementation "com.zaxxer:HikariCP:3.4.5"
 
@@ -80,6 +77,14 @@ dependencies{
 
   // so that MappingJackson2XmlHttpMessageConverter can parse to LocalDateTime 
   implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3"
+
+  /* used for:
+   - generating/verifying HS256 JWTs for RAID v1 tokens 
+   - verifying OIDC (google, aaf) RS256 JWTs 
+   - generating/verifying HS256 JWTs for raido authz token  
+   */
+  implementation 'com.auth0:java-jwt:4.0.0'
+  implementation 'com.auth0:jwks-rsa:0.21.1'
   
   // use logback as the backing log implementation for slf4j
   runtimeOnly libs.bundles.logback.runtime

@@ -1,5 +1,6 @@
 package raido.apisvc.spring.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletRegistration;
 import org.springframework.beans.factory.annotation.Value;
@@ -122,6 +123,10 @@ public class ApiConfig {
     return new PropertySourcesPlaceholderConfigurer();
   }
 
+  @Bean public ObjectMapper objectMapper(){
+    return new ObjectMapper();
+  }
+  
   @Bean
   public static RestTemplate restTemplate(){
     MappingJackson2XmlHttpMessageConverter xmlConverter =

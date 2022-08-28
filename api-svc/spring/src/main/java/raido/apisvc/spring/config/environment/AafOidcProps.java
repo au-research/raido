@@ -12,9 +12,6 @@ public class AafOidcProps {
   @Value("${AafOidc.clientSecret}")
   public String clientSecret;
 
-  @Value("${AafOidc.redirectUri:https://demo.raido-infra.com/idpresponse}")
-  public String redirectUri;
-
   @Value("${AafOidc.tokenUrl:https://central.test.aaf.edu.au/providers/op/token}")
   public String tokenUrl;
 }

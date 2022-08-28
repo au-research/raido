@@ -30,6 +30,12 @@ const log = console;
 /** Defines what the known environments are. */
 type EnvironmentName = "prod" | "demo" | "ci" | "dev";
 
+export interface AuthnConfig {
+  clientId: string,
+  authorizeUrl: string,
+  authnScope: string,
+}
+
 export interface EnvironmentConfig {
   /** identifies the environment */
   environmentName: EnvironmentName,
@@ -41,8 +47,8 @@ export interface EnvironmentConfig {
    */
   isProd: boolean,
 
-  aafClientId: string,
-  googleClientId: string,
+  aaf: AuthnConfig,
+  google:AuthnConfig,
   raidoIssuer: string,
 }
 
@@ -83,33 +89,69 @@ function chooseEnvironmentConfig(env: string | undefined){
 const ciConfig: EnvironmentConfig = {
   environmentName: "ci",
   isProd: false,
-  aafClientId: "accaabfd-a7c8-4d36-9363-ea7342e24db5",
-  googleClientId: "112489799301-m39l17uigum61l64uakb32vjhujuuk73.apps.googleusercontent.com",
   raidoIssuer: "https://demo.raido-infra.com",
+  aaf: {
+    clientId: "",
+    authorizeUrl: "",
+    authnScope: "",
+  },
+  google: {
+    clientId: "",
+    authorizeUrl: "",
+    authnScope: "",
+  }
 };
 
 const devConfig: EnvironmentConfig = {
   environmentName: "dev",
   isProd: false,
-  aafClientId: "accaabfd-a7c8-4d36-9363-ea7342e24db5",
-  googleClientId: "112489799301-m39l17uigum61l64uakb32vjhujuuk73.apps.googleusercontent.com",
   raidoIssuer: "http://localhost:8080",
+  aaf: {
+    // https://aaf.freshdesk.com/support/solutions/articles/19000096640-openid-connect-
+    clientId: "accaabfd-a7c8-4d36-9363-ea7342e24db5",
+    authorizeUrl: "https://central.test.aaf.edu.au/providers/op/authorize",
+    authnScope: "openid email profile",
+    //authnScope: "openid profile email" +
+    //  " aueduperson eduperson_orcid eduperson_assurance eduperson_affiliation" +
+    //  " eduperson_entitlement schac_home_organization",
+  },
+  google: {
+    clientId: "112489799301-m39l17uigum61l64uakb32vjhujuuk73.apps.googleusercontent.com",
+    authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
+    authnScope: "openid email profile",
+  }
 };
 
 const demoConfig: EnvironmentConfig = {
   environmentName: "demo",
   isProd: false,
-  aafClientId: "accaabfd-a7c8-4d36-9363-ea7342e24db5",
-  googleClientId: "112489799301-m39l17uigum61l64uakb32vjhujuuk73.apps.googleusercontent.com",
   raidoIssuer: "https://demo.raido-infra.com",
+  aaf: {
+    clientId: "",
+    authorizeUrl: "",
+    authnScope: "",
+  },
+  google: {
+    clientId: "",
+    authorizeUrl: "",
+    authnScope: "",
+  }
 };
 
 const prodConfig: EnvironmentConfig = {
   environmentName: "prod",
   isProd: true,
-  aafClientId: "",
-  googleClientId: "",
   raidoIssuer: "",
+  aaf: {
+    clientId: "",
+    authorizeUrl: "",
+    authnScope: "",
+  },
+  google: {
+    clientId: "",
+    authorizeUrl: "",
+    authnScope: "",
+  }
 };
 
 

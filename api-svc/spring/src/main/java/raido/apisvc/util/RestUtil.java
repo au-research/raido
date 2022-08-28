@@ -8,6 +8,7 @@ import org.springframework.web.client.RestTemplate;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.function.Function;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -77,7 +78,7 @@ public class RestUtil {
     TResult,
     TEntity extends HttpEntity<?>,
     TResultResponse extends ResponseEntity<TResult>
-  > TResult logExchange(
+    > TResult logExchange(
     Log httpLog,
     String description,
     TEntity entity,
@@ -87,7 +88,7 @@ public class RestUtil {
 
     ResponseEntity<TResult> response =
       infoLogExecutionTime(httpLog, description,
-        ()-> fun.apply(entity)
+        ()->fun.apply(entity)
       );
 
     RestUtil.debugLogResponse(httpLog, description, response);
@@ -95,27 +96,19 @@ public class RestUtil {
     return response.getBody();
   }
 
-  public static String urlEncode(String value) {
-    return URLEncoder.encode(value, StandardCharsets.UTF_8);
-  }
-
-  public static String urlDecode(String value) {
-    return URLDecoder.decode(value, StandardCharsets.UTF_8);
-  }
-
   public static <T> T get(
-    RestTemplate rest, String authnToken, 
+    RestTemplate rest, String authnToken,
     String url, Class<T> resultType
-  ){
+  ) {
     var entity = createEntityWithBearer(authnToken);
     var epResponse = rest.exchange(url, GET, entity, resultType);
     return epResponse.getBody();
   }
 
   public static <TRequest, TResult> TResult post(
-    RestTemplate rest, String authnToken, 
+    RestTemplate rest, String authnToken,
     String url, TRequest request, Class<TResult> resultType
-  ){
+  ) {
     HttpHeaders headers = new HttpHeaders();
     headers.setBearerAuth(authnToken);
     /* If not set, then when using openapi generated API interface,
@@ -131,7 +124,7 @@ public class RestUtil {
 
   public static <TResult> TResult anonGet(
     RestTemplate rest, String url, Class<TResult> resultType
-  ){
+  ) {
     HttpEntity<TResult> entity = new HttpEntity<>(new HttpHeaders());
     var epResponse = rest.exchange(url, GET, entity, resultType);
     return epResponse.getBody();
@@ -142,12 +135,36 @@ public class RestUtil {
     String url,
     TRequest request,
     Class<TResult> resultType
-  ){
+  ) {
     HttpEntity<TRequest> entity = new HttpEntity<>(request, new HttpHeaders());
     var epResponse = rest.exchange(url, POST, entity, resultType);
     return epResponse.getBody();
   }
 
 
+  public static String urlEncode(String value) {
+    return URLEncoder.encode(value, StandardCharsets.UTF_8);
+  }
 
+  public static String urlDecode(String value) {
+    return URLDecoder.decode(value, StandardCharsets.UTF_8);
+  }
+
+  public static String base64Decode(String encodedString) {
+    return new String(Base64.getDecoder().decode(encodedString));
+  }
+
+  public static String sanitiseLocationUrl(@Nullable String url) {
+    if( url == null ){
+      return null;
+    }
+    
+    if( url.contains("?") ){
+      url = url.substring(0, url.lastIndexOf('?'));
+    }
+    if( url.contains("#") ){
+      url = url.substring(0, url.lastIndexOf('#'));
+    }
+    return url;
+  }
 }

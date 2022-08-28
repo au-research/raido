@@ -35,7 +35,8 @@ implements ApplicationListener<AuthorizationFailureEvent> {
       ()-> msg.with("auth", "[not set]") 
     );
     
+    // might be authn or authz that fails, anything we return a 403 etc. from
     msg.with("config", event.getConfigAttributes()).
-      info("authorization failed");
+      info("auth failed");
   }
 }

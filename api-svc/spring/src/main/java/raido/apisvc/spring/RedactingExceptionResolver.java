@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import raido.apisvc.spring.security.ApiSafeException;
+import raido.apisvc.spring.security.IdProviderException;
 import raido.apisvc.util.Log;
 import raido.apisvc.util.Nullable;
 
@@ -21,7 +22,20 @@ import static raido.apisvc.util.Log.to;
 
 /** In prod, this should be configured that the resolver will make
  sure we don't send any exception details to callers of the API (to avoid
- accidentall leakage of information). */
+ accidentall leakage of information). 
+ 
+ IMPROVE:  Excpetion hierarchy + resolver implementation is getting messy.
+ There's no clear definition of how to use the various exceptions and what a 
+ dev should expect to happen with regards to client-facing behaviour.
+ When authn/authz implementation is finished, we need to re-visit the design
+ of this and define a formal exception handling strategy in the coding standard. 
+ Streamline the API and document so a dev can easily know what kind
+ of exception to throw  and what will happen (what code returned, what 
+ message/deatil returned if any, what message is logged at what level and if
+ stack trace is logged).
+ If we don't do this it will cause security issues, inconsistent logging and
+ accidetnal info leakage.
+ */
 public class RedactingExceptionResolver implements HandlerExceptionResolver {
   private static final Log log = to(RedactingExceptionResolver.class);
 
@@ -73,7 +87,7 @@ public class RedactingExceptionResolver implements HandlerExceptionResolver {
     }
     
     if( ex instanceof BadCredentialsException 
-//      || ex instanceof NotAuthorizedExcepton
+      || ex instanceof IdProviderException
     ){
       // don't log stacks for these
       return;
@@ -130,6 +144,10 @@ public class RedactingExceptionResolver implements HandlerExceptionResolver {
     
     if( ex instanceof BadCredentialsException ){
       return HttpStatus.UNAUTHORIZED_401;
+    }
+    
+    if( ex instanceof IdProviderException ){
+      return HttpStatus.BAD_REQUEST_400;
     }
     
 //    if( ex instanceof NotAuthorizedExcepton ){

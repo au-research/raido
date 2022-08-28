@@ -47,7 +47,7 @@ export async function authorizeWithServer(idToken: string)
     };
   }
 
-  localStorage.setItem(accessTokenStorageKey, authzResponse.accessToken);
+  saveAccessTokenToStorage(authzResponse.accessToken);
 
   return {
     accessToken: authzResponse.accessToken,
@@ -55,6 +55,10 @@ export async function authorizeWithServer(idToken: string)
     payload: parseResult.payload,
   };
 
+}
+
+export function saveAccessTokenToStorage(accessToken: string){
+  localStorage.setItem(accessTokenStorageKey, accessToken);
 }
 
 export function clearAccessTokenFromStorage(){
@@ -101,9 +105,14 @@ export function parseAccessToken(accessToken: string):{
     return {succeeded: false, message: "decoded token is not object", decoded};
   }
 
-  if( !decoded.userId || typeof(decoded.userId) !== "string" ){
+  if( !decoded.clientId || typeof(decoded.clientId) !== "string" ){
     return {succeeded: false, 
-      message: "no accessToken payload userId", decoded};
+      message: "no accessToken payload clientId", decoded};
+  }
+
+  if( !decoded.sub || typeof(decoded.sub) !== "string" ){
+    return {succeeded: false, 
+      message: "no accessToken payload sub", decoded};
   }
 
   if( !decoded.email  || typeof(decoded.email) !== "string" ){
@@ -114,10 +123,10 @@ export function parseAccessToken(accessToken: string):{
     return {succeeded: false, message: "no accessToken payload role", decoded};
   }
 
-  if( !decoded.userCreated  || typeof(decoded.userCreated) !== "string" ){
-    return {succeeded: false, 
-      message: "no accessToken payload userCreated", decoded};
-  }
+  //if( !decoded.userCreated  || typeof(decoded.userCreated) !== "string" ){
+  //  return {succeeded: false, 
+  //    message: "no accessToken payload userCreated", decoded};
+  //}
 
   if( !decoded.exp || typeof(decoded.exp) !== "number" ){
     return {succeeded: false, 
@@ -140,9 +149,9 @@ export function parseAccessToken(accessToken: string):{
     accessTokenExpiry,
     payload: {
       ...decoded,
-      /* date needs to be converted since it was decoded from a JWT, not passed
-      through our API parsing routine. */
-      userCreated: parseServerDate(decoded.userCreated)
+      ///* date needs to be converted since it was decoded from a JWT, not passed
+      //through our API parsing routine. */
+      //userCreated: parseServerDate(decoded.userCreated)
     },
   }
 }
