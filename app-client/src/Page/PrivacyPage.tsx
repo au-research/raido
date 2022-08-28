@@ -35,16 +35,19 @@ function Content(){
       <ListItemText>
         The Raido application fully conforms to 
         the <NewWindowLink href="https://ardc.edu.au/privacy-policy/">
-        privacy policy</NewWindowLink> of the ARDC.
+        privacy policy</NewWindowLink> of the Australian Research Data 
+        Commons (<NewWindowLink href="https://ardc.edu.au/">ARDC
+      </NewWindowLink>).
       </ListItemText>
       <ListItemText>You can request that your own data be deleted by submitting 
         a request to <a href={`mailto:${supportEmail}`}>{supportEmail}</a>.
-        All data associated with your account (especially anything from ID 
-        providers like Google, etc.) will be deleted within 7 days.
+        All data associated with your account (especially anything from Identity
+        Providers like Google, etc.) will be deleted within 7 days.
       </ListItemText>
       <ListItemText>Data from Identity Providers (e.g. AAF, Google)
         is only used to enable sign-in functionality so that users can make 
-        use of Raido having to create a new set of email/password credentials. 
+        use of Raido without having to create a new set of 
+        email/password credentials. 
       </ListItemText>
     </List>
     <HomeLink/>
