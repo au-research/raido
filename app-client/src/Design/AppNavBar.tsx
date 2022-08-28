@@ -22,6 +22,7 @@ const log = console;
 
 export function AppNavBar(){
   const nav = useNavigation();
+  
 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -33,12 +34,17 @@ export function AppNavBar(){
           href={getHomePageLink()}
           onClick={event=>nav.navigateTo(getHomePageLink(), event)}
           size="small"
+          // to make the nav bar not so tall
+          style={{padding: 0, maxHeight: "2em"}}
         >
-          <RaidoLogoSvg 
+          <RaidoLogoSvg
             // improve:sto should use theme color, not like this
+            //color={'theme.primary'}
             color={Color.lotion}
-            // I think the SVG is not great, need to work with it a bit to make
-            // it more UI layout friendly.
+            
+            /* to make the nav bar not so tall, along with the style at the
+            IconButton level.  I don't know why the Raido svg causes it to be
+            so tall. */
             style={{scale: '50%'}}
           />
         </IconButton>
@@ -87,7 +93,8 @@ function MenuShortcutNavItem(props: {
       color="inherit"
       href={props.href}
       onClick={event=>nav.navigateTo(props.href, event)}
-      size="large">
+      size="small" 
+    >
       {props.children}
     </IconButton>
   );
@@ -136,7 +143,7 @@ function AccountMenu(){
         </Typography>
       </MenuItem>
       <MenuItem onClick={async ()=>{
-        log.debug("clicked logout");
+        log.debug("clicked sign-out");
         authn.signOut();
       }}>
         <Typography>Sign out</Typography>
