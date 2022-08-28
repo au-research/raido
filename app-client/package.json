@@ -4,7 +4,7 @@
   "private": true,
   "proxy": "http://localhost:8080",
   "scripts": {
-    "start-dev": "set REACT_APP_RAIDO_ENV=dev && react-scripts start",
+    "start-dev":  "set REACT_APP_RAIDO_ENV=dev && react-scripts start",
     "build-demo": "set REACT_APP_RAIDO_ENV=demo && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

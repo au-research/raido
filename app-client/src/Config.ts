@@ -53,6 +53,7 @@ export interface EnvironmentConfig {
 }
 
 function initConfig(){
+  console.log("process.env.raido", process.env.REACT_APP_RAIDO_ENV);
   const newConfig = {
     ...buildConfig,
     ...chooseEnvironmentConfig(process.env.REACT_APP_RAIDO_ENV),
@@ -81,7 +82,11 @@ function chooseEnvironmentConfig(env: string | undefined){
   else if( env === 'ci' ){
     return ciConfig;
   }
+  else if( env === 'dev' ){
+    return devConfig;
+  }
   else {
+    console.log("unknown env, using dev: ", env);
     return devConfig;
   }
 }
@@ -127,14 +132,14 @@ const demoConfig: EnvironmentConfig = {
   isProd: false,
   raidoIssuer: "https://demo.raido-infra.com",
   aaf: {
-    clientId: "",
-    authorizeUrl: "",
-    authnScope: "",
+    clientId: "accaabfd-a7c8-4d36-9363-ea7342e24db5",
+    authorizeUrl: "https://central.test.aaf.edu.au/providers/op/authorize",
+    authnScope: "openid email profile",
   },
   google: {
-    clientId: "",
-    authorizeUrl: "",
-    authnScope: "",
+    clientId: "112489799301-m39l17uigum61l64uakb32vjhujuuk73.apps.googleusercontent.com",
+    authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
+    authnScope: "openid email profile",
   }
 };
 
