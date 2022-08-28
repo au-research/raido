@@ -87,7 +87,7 @@ function NoRoleContent(){
             <TextField id="reqeust-text" label="Request comments"
               multiline rows={2} variant="outlined"/>
           </FormControl>
-          <PrimaryButton type={"submit"} fullWidth>
+          <PrimaryButton disabled={!institution} type={"submit"} fullWidth>
             Submit request
           </PrimaryButton>
         </Stack>
