@@ -101,17 +101,18 @@ export function AuthProvider({unauthenticatedPaths = [], children}: {
     id_token set to the actual access_token.  Might have to do an intermediate
     step for Cognito. */
 
-    ///* verify user deatils and exchange the Cognito idToken for our 
-    //custom accessToken */
-    //setState({current: "authorizing"});
+    /* verify user deatils and exchange the Cognito idToken for our 
+    custom accessToken 
+    setState({current: "authorizing"});
     const authzResult = await authorizeWithServer(idToken);
-    //if( isErrorInfo(authzResult) ){
-    //  setState({
-    //    current: "error", error: authzResult
-    //  });
-    //  return;
-    //}
- 
+    if( isErrorInfo(authzResult) ){
+      setState({
+        current: "error", error: authzResult
+      });
+      return;
+    }
+   */
+    
     const parseResult = parseAccessToken(idToken);
     if( !parseResult.succeeded ){
       console.warn("problem parsing idToken returned from sign-in",
