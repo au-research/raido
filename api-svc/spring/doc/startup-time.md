@@ -17,6 +17,7 @@ we have AWS infrastructure setup.
 
 Time displayed by the Jetty "Server Started" message, with a few warmup starts.
 
+
 ### Commit f2653f35
 
 Just the `/public/status` endpoint, no real security, no JOOQ, etc.
@@ -24,11 +25,21 @@ Just the `/public/status` endpoint, no real security, no JOOQ, etc.
 Without building infrastructure to cache JVM / Spring startup - this is about
 as quick as Spring can be booted.
 
-`Server Started Server@72a7c7e0{STARTING}[11.0.9,sto=0] @1261ms`
+STO machine: `Server Started Server@72a7c7e0{STARTING}[11.0.9,sto=0] @1261ms`
+
 
 ### Commit 53dfbd3f
 
 RaidV1 auth implementation on the `/v1/raid/ping` endpoint.
 
-`Server Started Server@1700915{STARTING}[11.0.9,sto=0] @2053ms`
+STO machine: `Server Started Server@1700915{STARTING}[11.0.9,sto=0] @2053ms`
+
+
+### Commit 501dfe2a - 2022-08-28
+ 
+`/v1` RAID endpoints and `/idpresposne` authn endpoint
+
+STO machine: `Server Started Server@4d9e68d0{STARTING}[11.0.9,sto=0] @2276ms`
+t3.micro: `Server Started Server@19bb07ed{STARTING}[11.0.9,sto=0] @4459ms`
+
 
