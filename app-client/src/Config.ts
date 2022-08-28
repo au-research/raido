@@ -53,7 +53,6 @@ export interface EnvironmentConfig {
 }
 
 function initConfig(){
-  console.log("process.env.raido", process.env.REACT_APP_RAIDO_ENV);
   const newConfig = {
     ...buildConfig,
     ...chooseEnvironmentConfig(process.env.REACT_APP_RAIDO_ENV),
