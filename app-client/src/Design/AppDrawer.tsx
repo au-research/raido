@@ -6,6 +6,8 @@ import HomeIcon from "@mui/icons-material/Home";
 import { useNavigation } from "Design/NavigationProvider";
 import { useLocationPathname } from "Util/Hook/LocationPathname";
 import { getHomePageLink, isHomePagePath } from "Page/HomePage";
+import { getAboutPagePath, isAboutPagePath } from "Page/Unauth/AboutPage";
+import { Info } from "@mui/icons-material";
 
 
 export function AppDrawer(props: {
@@ -23,6 +25,11 @@ export function AppDrawer(props: {
           isCurrent={isHomePagePath(pathname)}
            description={"Home"}
           icon={<HomeIcon/>}
+        />
+        <ListNavButton href={getAboutPagePath()}
+          isCurrent={isAboutPagePath(pathname)}
+           description={"About"}
+          icon={<Info/>}
         />
       </List>
     </div>

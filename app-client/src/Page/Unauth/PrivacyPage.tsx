@@ -2,10 +2,9 @@ import React from "react";
 import { normalisePath } from "Util/Location";
 import { useLocationPathname } from "Util/Hook/LocationPathname";
 import { SmallContentMain } from "Design/LayoutMain";
-import { List, ListItemText, Typography } from "@mui/material";
+import { List, ListItemText } from "@mui/material";
 import { NewWindowLink, supportEmail } from "Component/ExternalLink";
 import { HomeLink, RaidoDescription } from "Auth/IntroContainer";
-import { RaidoLink } from "Component/RaidoLink";
 
 const log = console;
 

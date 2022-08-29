@@ -9,8 +9,9 @@ import { NavigationProvider } from "Design/NavigationProvider";
 import { AppNavBar } from "Design/AppNavBar";
 import { HomePage } from "Page/HomePage";
 import { AuthProvider } from "Auth/AuthProvider";
-import { isPrivacyPagePath, PrivacyPage } from "Page/PrivacyPage";
-import { isUsageTermsPagePath, UsageTermsPage } from "Page/UsageTermsPage";
+import { isPrivacyPagePath, PrivacyPage } from "Page/Unauth/PrivacyPage";
+import { isUsageTermsPagePath, UsageTermsPage } from "Page/Unauth/UsageTermsPage";
+import { AboutPage, isAboutPagePath } from "Page/Unauth/AboutPage";
 
 export function App(){
   return <RaidoTheme>
@@ -25,7 +26,7 @@ export function App(){
           {/* reads some important config from server */}
           {/*<ServerInfoProvider>*/}
           <AuthProvider unauthenticatedPaths={[
-            isPrivacyPagePath, isUsageTermsPagePath,
+            isPrivacyPagePath, isUsageTermsPagePath
           ]}>
             <NavigationProvider>
               {/* NavBar across the top of screen and sliding drawer */}
@@ -33,6 +34,7 @@ export function App(){
 
               {/* Navigable, authenticated pages, self-routed */}
               <HomePage/>
+              <AboutPage/>
 
             </NavigationProvider>
           </AuthProvider>

@@ -31,7 +31,7 @@ export function isHomePagePath(path: String): boolean{
 }
 
 export function HomePage(){
-  return <NavTransition isPath={isHomePagePath} title={"Raido - home page"}>
+  return <NavTransition isPath={isHomePagePath} title={"Raido - Home"}>
     <Content/>
   </NavTransition>
 }

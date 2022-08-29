@@ -63,7 +63,8 @@ function initConfig(){
 }
 
 const buildConfig = {
-  buildDate: process.env.REACT_APP_BUILD_DATE_MS ?? "0",
+  buildDate: process.env.REACT_APP_BUILD_DATE_MS ?? 
+    new Date().getTime().toString() ,
   gitCommit: process.env.REACT_APP_COMMIT_REF ?? "unknown commit",
 };
 

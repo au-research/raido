@@ -1,6 +1,11 @@
 // https://stackoverflow.com/a/14509447/924597
 import { forceError } from "Error/ErrorUtil";
 
+export function parseDateFromEpoch(millis: string): Date {
+  const epoch = parseInt(millis, 10);
+  return new Date(epoch);
+}
+
 /** expected to be passed to the JSON.parse() method to "fix" Dates. */
 export function dateTimeReviver(key : string, value: any) {
   let a;
