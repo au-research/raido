@@ -139,7 +139,7 @@ function AccountMenu(){
         onClose();
       }}>
         <Typography>
-          Id Provider: {providerName(authn.session.payload)}
+          ID Provider: {providerName(authn.session.payload)}
         </Typography>
       </MenuItem>
       <MenuItem onClick={async ()=>{
