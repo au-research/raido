@@ -18,45 +18,6 @@ function debugAuthzResponse(auth: AuthorizeUserResponse){
   return "succeeded - " + auth.accessToken.slice(-10); 
 }
 
-export async function authorizeWithServer(idToken: string)
-: Promise<ErrorInfo|AuthorizedSession>{
-  let authzResponse: AuthorizeUserResponse;
-  try {
-    authzResponse = await authApi.authorize(idToken);
-  }
-  catch( err ){
-    return {
-      message: forceError(err).message,
-      problem: err,
-    };
-  }
-  console.log("authzResponse", debugAuthzResponse(authzResponse));
-
-  if( !authzResponse.succeeded ){
-    return {
-      message: authzResponse.message,
-      problem: authzResponse
-    };
-  }
-
-  const parseResult = parseAccessToken(authzResponse.accessToken);
-  if( !parseResult.succeeded ){
-    return {
-      message: parseResult.message,
-      problem: parseResult.decoded
-    };
-  }
-
-  saveAccessTokenToStorage(authzResponse.accessToken);
-
-  return {
-    accessToken: authzResponse.accessToken,
-    accessTokenExpiry: parseResult.accessTokenExpiry,
-    payload: parseResult.payload,
-  };
-
-}
-
 export function saveAccessTokenToStorage(accessToken: string){
   localStorage.setItem(accessTokenStorageKey, accessToken);
 }
