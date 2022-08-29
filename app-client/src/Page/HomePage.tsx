@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { PrimaryButton } from "Component/AppButton";
 import { HelpPopover } from "Component/HelpPopover";
+import { raidoTitle } from "Component/Util";
 
 const log = console;
 
@@ -31,7 +32,7 @@ export function isHomePagePath(path: String): boolean{
 }
 
 export function HomePage(){
-  return <NavTransition isPath={isHomePagePath} title={"Raido - Home"}>
+  return <NavTransition isPath={isHomePagePath} title={raidoTitle("Home")}>
     <Content/>
   </NavTransition>
 }
@@ -45,7 +46,7 @@ function Content(){
 
   return <SmallContentMain>
     <ContainerCard title={"Home"}>
-      <TextSpan>This will be the home page of Raido.</TextSpan>
+      <TextSpan>This will be the home page of the App.</TextSpan>
     </ContainerCard>
   </SmallContentMain>
 }
@@ -68,11 +69,11 @@ function NoRoleContent(){
   };
 
   return <SmallContentMain>
-    <ContainerCard title={"Request Raido Authorisation"}
+    <ContainerCard title={"Request RAiD Authorisation"}
       action={<AuthRequestHelp/>}
     >
       <Typography paragraph>
-        You have not been authorised to use Raido.
+        You have not been authorised to use the application.
       </Typography>
       <Typography paragraph>
         Please request permission from your institution, select below.

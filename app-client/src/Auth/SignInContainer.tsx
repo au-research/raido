@@ -117,7 +117,7 @@ function DirectHelp(){
       </Typography>
       <Typography>
         Once you've signed in, you can request that an institution authorize
-        your usage of Raido.
+        your usage of the application.
       </Typography>
     </Typography>
   }/>;

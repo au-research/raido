@@ -7,3 +7,6 @@ export const AlternatingTableRow = styled(TableRow)(({theme}) => ({
   }
 }));
 
+export function raidoTitle(pageName: string){
+  return `RAiD = ${pageName}`;
+}

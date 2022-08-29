@@ -5,6 +5,7 @@ import { SmallContentMain } from "Design/LayoutMain";
 import { List, ListItemText } from "@mui/material";
 import { NewWindowLink, supportEmail } from "Component/ExternalLink";
 import { HomeLink, RaidoDescription } from "Auth/IntroContainer";
+import { raidoTitle } from "Component/Util";
 
 const log = console;
 
@@ -23,16 +24,15 @@ export function PrivacyPage(){
   if( !isPrivacyPagePath(pathname) ){
     return null;
   }
-  window.document.title = "Raido - Privacy";  
+  window.document.title = raidoTitle("Privacy");  
   return <Content/>;
 }
 
 function Content(){
   return <SmallContentMain>
-    <RaidoDescription/>
     <List>
       <ListItemText>
-        The Raido application fully conforms to 
+        The RAiD application fully conforms to 
         the <NewWindowLink href="https://ardc.edu.au/privacy-policy/">
         privacy policy</NewWindowLink> of the Australian Research Data 
         Commons (<NewWindowLink href="https://ardc.edu.au/">ARDC
