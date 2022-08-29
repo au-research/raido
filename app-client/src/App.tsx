@@ -10,8 +10,11 @@ import { AppNavBar } from "Design/AppNavBar";
 import { HomePage } from "Page/HomePage";
 import { AuthProvider } from "Auth/AuthProvider";
 import { isPrivacyPagePath, PrivacyPage } from "Page/Unauth/PrivacyPage";
-import { isUsageTermsPagePath, UsageTermsPage } from "Page/Unauth/UsageTermsPage";
-import { AboutPage, isAboutPagePath } from "Page/Unauth/AboutPage";
+import {
+  isUsageTermsPagePath,
+  UsageTermsPage
+} from "Page/Unauth/UsageTermsPage";
+import { AboutPage } from "Page/Unauth/AboutPage";
 
 export function App(){
   return <RaidoTheme>
@@ -23,11 +26,11 @@ export function App(){
       <ErrorDialogProvider>
         {/* manages window.location for routing */}
         <LocationPathnameProvider>
-          {/* reads some important config from server */}
-          {/*<ServerInfoProvider>*/}
+          {/* authentication and authorisation */}
           <AuthProvider unauthenticatedPaths={[
             isPrivacyPagePath, isUsageTermsPagePath
           ]}>
+            {/* transition animation and delegates to location infra */}
             <NavigationProvider>
               {/* NavBar across the top of screen and sliding drawer */}
               <AppNavBar/>
@@ -38,12 +41,11 @@ export function App(){
 
             </NavigationProvider>
           </AuthProvider>
-          
+
           {/* unauthenticated pages, self-routed */}
           <PrivacyPage/>
           <UsageTermsPage/>
 
-          {/*</ServerInfoProvider>*/}
         </LocationPathnameProvider>
       </ErrorDialogProvider>
     </ReactErrorBoundary>
