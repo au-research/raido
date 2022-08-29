@@ -4,6 +4,7 @@ import {OpenInNew} from "@mui/icons-material";
 export const supportEmail = "web.services@ardc.edu.au";
 
 export const muiUrl = "https://mui.com";
+export const raidoGithubUrl = "https://github.com/au-research/raido-v2"
 
 export function NewWindowLink(props: {
   href: string,

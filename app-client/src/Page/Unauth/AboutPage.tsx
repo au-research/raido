@@ -3,10 +3,11 @@ import { normalisePath } from "Util/Location";
 import { SmallContentMain } from "Design/LayoutMain";
 import { RaidoDescription } from "Auth/IntroContainer";
 import { ContainerCard } from "Design/ContainerCard";
-import { Config } from "Config";
+import { Config, unknownCommitId } from "Config";
 import { parseDateFromEpoch } from "Util/DateUtil";
 import { TextSpan } from "Component/TextSpan";
 import { NavTransition } from "Design/NavigationProvider";
+import { NewWindowLink, raidoGithubUrl } from "Component/ExternalLink";
 
 const log = console;
 
@@ -60,7 +61,7 @@ function ClientPanel(){
 
   return <ContainerCard title="App client">
     <TextSpan>
-      Commit: {Config.gitCommit}<br/>
+      Commit: <GitCommitLink commitId={Config.gitCommit}/><br/>
       Build date&nbsp;(UTC):
       <wbr/>
       <NoWrap>&nbsp;{buildDateString}</NoWrap>
@@ -79,4 +80,14 @@ function ClientPanel(){
 
 function NoWrap(props: {children: React.ReactNode}){
   return <span style={{whiteSpace: "nowrap"}}>{props.children}</span>
+}
+
+function GitCommitLink({commitId}:{commitId: string}){
+  if( !commitId || commitId === unknownCommitId ){
+    return <>Unknown commit</>
+  }
+  return <NewWindowLink href={raidoGithubUrl+"/commit/"+commitId}>
+    {commitId.substring(0, 8)}
+  </NewWindowLink>
+  
 }
