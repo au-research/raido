@@ -74,8 +74,9 @@ export function getAuthSessionFromStorage(): undefined | AuthorizedSession{
   
   const parseResult = parseAccessToken(storedAccessToken);
   if( !parseResult.succeeded ){
-    console.warn("problem parsing accessToken from storage, ignoring",
+    console.warn("problem parsing accessToken from storage, clearing token.",
       parseResult.message, parseResult.decoded);
+    clearAccessTokenFromStorage();
     return undefined;
   }
 
@@ -140,7 +141,7 @@ export function parseAccessToken(accessToken: string):{
   }
 
   if( accessTokenExpiry <= new Date() ){
-    console.warn("accessTokenExpiry", accessTokenExpiry);
+    console.debug("accessTokenExpiry", accessTokenExpiry);
     return {succeeded: false, message: "accessToken is expired", decoded};
   }
 

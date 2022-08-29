@@ -1,18 +1,19 @@
 import { NavTransition } from "Design/NavigationProvider";
-import React from "react";
+import React, { SyntheticEvent } from "react";
 import { ContainerCard } from "Design/ContainerCard";
 import { TextSpan } from "Component/TextSpan";
-import { LargeContentMain, SmallContentMain } from "Design/LayoutMain";
+import { SmallContentMain } from "Design/LayoutMain";
 import { AuthState, useAuth } from "Auth/AuthProvider";
 import { isNoneRole } from "Auth/Role";
 import {
-  FormControl, Grid,
-  InputLabel,
-  MenuItem,
-  Select, SelectChangeEvent, Stack, TextField,
+  Autocomplete,
+  FormControl,
+  Stack,
+  TextField,
   Typography
 } from "@mui/material";
 import { PrimaryButton } from "Component/AppButton";
+import { HelpPopover } from "Component/HelpPopover";
 
 const log = console;
 
@@ -49,15 +50,27 @@ function Content(){
   </SmallContentMain>
 }
 
-function NoRoleContent(){
-  const [institution, setInstitution] = React.useState('');
+interface InstData {
+  label: string,
+  id: number
+};
+const instData: InstData[] = [
+  {id: 1, label: 'Australian Research Data Commons (ARDC)'},
+  {id: 2, label: 'RDM@UQ'},
+];
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setInstitution(event.target.value as string);
+function NoRoleContent(){
+  const [institution, setInstitution] = React.useState(
+    null as InstData | null);
+
+  const handleChange = (event: SyntheticEvent, value: InstData | null) => {
+    setInstitution(value);
   };
 
   return <SmallContentMain>
-    <ContainerCard title={"Request Raido Authorisation"}>
+    <ContainerCard title={"Request Raido Authorisation"}
+      action={<AuthRequestHelp/>}
+    >
       <Typography paragraph>
         You have not been authorised to use Raido.
       </Typography>
@@ -71,20 +84,20 @@ function NoRoleContent(){
       }}>
         <Stack spacing={2}>
           <FormControl fullWidth focused>
-            <InputLabel id="inst-label">Institution</InputLabel>
-            <Select
-              labelId="inst-label"
-              id="inst-select"
+            <Autocomplete id="inst-select"
+              selectOnFocus clearOnEscape disablePortal
+              multiple={false}
+              options={instData}
               value={institution}
-              label="Institution"
               onChange={handleChange}
-            >
-              <MenuItem value={1}>Australian Research Data Commons</MenuItem>
-              <MenuItem value={2}>UQ@RDM</MenuItem>
-            </Select>
+              renderInput={(params) =>
+                <TextField {...params} required label="Institution"
+                  autoFocus={true}/>
+              }
+            />
           </FormControl>
           <FormControl fullWidth>
-            <TextField id="reqeust-text" label="Request comments"
+            <TextField id="reqeust-text" label="Comments / Information"
               multiline rows={2} variant="outlined"/>
           </FormControl>
           <PrimaryButton disabled={!institution} type={"submit"} fullWidth>
@@ -95,4 +108,22 @@ function NoRoleContent(){
     </ContainerCard>
   </SmallContentMain>
 
+}
+
+
+function AuthRequestHelp(){
+  return <HelpPopover content={
+    <Stack spacing={1}>
+      <TextSpan>
+        After you've submitted your request, you will need to contact
+        your institution administrator to let them know.
+        (This process will be automated in the future).
+      </TextSpan>
+      <TextSpan>
+        If you made a mistake when you submitted your request (wrong
+        institution or you just want change/add the comment) - re-submit
+        and your request will be updated.
+      </TextSpan>
+    </Stack>
+  }/>;
 }
