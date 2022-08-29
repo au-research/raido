@@ -4,7 +4,7 @@ import { useLocationPathname } from "Util/Hook/LocationPathname";
 import { SmallContentMain } from "Design/LayoutMain";
 import { List, ListItemText } from "@mui/material";
 import { NewWindowLink, supportEmail } from "Component/ExternalLink";
-import { HomeLink, RaidoDescription } from "Auth/IntroContainer";
+import { HomeLink } from "Auth/IntroContainer";
 import { raidoTitle } from "Component/Util";
 
 const log = console;
@@ -45,7 +45,7 @@ function Content(){
       </ListItemText>
       <ListItemText>Data from Identity Providers (e.g. AAF, Google)
         is only used to enable sign-in functionality so that users can make 
-        use of Raido without having to create a new set of 
+        use of the application without having to create a new set of 
         email/password credentials. 
       </ListItemText>
     </List>
