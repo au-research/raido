@@ -12,18 +12,18 @@ import { raidoTitle } from "Component/Util";
 
 const log = console;
 
-const pageUrl = "/about";
+const pageUrl = "/about-app";
 
-export function getAboutPagePath(): string{
+export function getAboutAppPagePath(): string{
   return pageUrl;
 }
 
-export function isAboutPagePath(path: string): boolean{
+export function isAboutAppPagePath(path: string): boolean{
   return normalisePath(path).startsWith(pageUrl);
 }
 
-export function AboutPage(){
-  return <NavTransition isPath={isAboutPagePath} title={raidoTitle("About")}>
+export function AboutAppPage(){
+  return <NavTransition isPath={isAboutAppPagePath} title={raidoTitle("About App")}>
     <Content/>
   </NavTransition>
 }

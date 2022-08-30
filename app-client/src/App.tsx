@@ -14,7 +14,8 @@ import {
   isUsageTermsPagePath,
   UsageTermsPage
 } from "Page/Unauth/UsageTermsPage";
-import { AboutPage } from "Page/Unauth/AboutPage";
+import { AboutAppPage } from "Page/AboutAppPage";
+import { AboutRaidPage, isAboutRaidPagePath } from "Page/Unauth/AboutRaidPage";
 
 export function App(){
   return <RaidoTheme>
@@ -28,7 +29,7 @@ export function App(){
         <LocationPathnameProvider>
           {/* authentication and authorisation */}
           <AuthProvider unauthenticatedPaths={[
-            isPrivacyPagePath, isUsageTermsPagePath
+            isPrivacyPagePath, isUsageTermsPagePath, isAboutRaidPagePath
           ]}>
             {/* transition animation and delegates to location infra */}
             <NavigationProvider>
@@ -37,7 +38,7 @@ export function App(){
 
               {/* Navigable, authenticated pages, self-routed */}
               <HomePage/>
-              <AboutPage/>
+              <AboutAppPage/>
 
             </NavigationProvider>
           </AuthProvider>
@@ -45,6 +46,7 @@ export function App(){
           {/* unauthenticated pages, self-routed */}
           <PrivacyPage/>
           <UsageTermsPage/>
+          <AboutRaidPage/>
 
         </LocationPathnameProvider>
       </ErrorDialogProvider>

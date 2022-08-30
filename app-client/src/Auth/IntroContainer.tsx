@@ -5,6 +5,7 @@ import { RaidoLink } from "Component/RaidoLink";
 import { NewWindowLink } from "Component/ExternalLink";
 import { getPrivacyPagePath } from "Page/Unauth/PrivacyPage";
 import { getUsageTermsPagePath } from "Page/Unauth/UsageTermsPage";
+import { getAboutRaidPagePath } from "Page/Unauth/AboutRaidPage";
 
 export function IntroContainer(){
   return <SmallContentMain center>
@@ -22,8 +23,8 @@ export function RaidoDescription(props: StackProps){
   return <Stack {...props}>
     <Typography paragraph>
       This is the Oceania region implementation of
-      the <NewWindowLink href="https://www.raid.org.au/">
-      RAiD</NewWindowLink> ISO standard.
+      the <RaidoLink href={getAboutRaidPagePath()}>
+      RAiD</RaidoLink> ISO standard.
     </Typography>
     <Typography paragraph>
       Maintained by the <NewWindowLink href="https://ardc.edu.au/">ARDC

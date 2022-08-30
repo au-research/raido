@@ -5,7 +5,6 @@ import { ErrorInfoComponent } from "Error/ErrorInforComponent";
 import { ErrorInfo } from "Error/ErrorUtil";
 import { AuthzTokenPayload } from "Shared/ApiTypes";
 import {
-  authorizeWithServer,
   getAuthSessionFromStorage,
   parseAccessToken,
   saveAccessTokenToStorage,
