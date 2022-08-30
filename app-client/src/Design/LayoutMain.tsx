@@ -1,10 +1,8 @@
 import * as React from "react";
-import {
-  Paper,
-  useMediaQuery
-} from "@mui/material";
-import {DialogTitleProps} from "@mui/material/DialogTitle";
-import {styled, Theme} from '@mui/system';
+import { CSSProperties } from "react";
+import { Paper, useMediaQuery } from "@mui/material";
+import { DialogTitleProps } from "@mui/material/DialogTitle";
+import { styled } from '@mui/system';
 
 
 export const largeContainerWidth = 1024;
@@ -16,11 +14,12 @@ export const smallContainerWidth = 600;
  * the container on large screens because "normal" content tends to be look 
  * awkward if you stretch it out really far across massive ultra-wide screens.
  * */
-export function LargeContentMain(props: {
+export function LargeContentMain({children, style}: {
   children: React.ReactNode,
-}){
-  return <LargeScreenStyledMain>
-    {props.children}
+  style?: CSSProperties,
+} ){
+  return <LargeScreenStyledMain style={style}>
+    {children}
   </LargeScreenStyledMain>
 }
 
@@ -63,45 +62,59 @@ export function FlexContentMain(props: {
   </main>
 }
 
-function mainLayoutBreakpoints(theme: Theme, width: number){
-  return {
-    [theme.breakpoints.up(width)]: {
-      width: width,
-      marginLeft: 'auto',
-      marginRight: 'auto',
-    }
-  }
-}
-
 const LargeScreenStyledMain = styled('main')(({theme}) => ({
   width: 'auto',
   marginTop: ".5em",
-  ...mainLayoutBreakpoints(theme, largeContainerWidth)
+  /* Styles for really large screens.
+  Don't want the content to just keep spreading out horizontally, it looks
+  really ugly and is difficult to use on wide/ultra-wide screens when the 
+  window is maximized.*/
+  [theme.breakpoints.up(largeContainerWidth)]: {
+    width: largeContainerWidth,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginTop: theme.spacing(1),
+  }
 }));
 
-function paperBreakpoints(theme: Theme, width: number){
-  return {
-    [theme.breakpoints.up(width)]: {
-      marginTop: theme.spacing(6),
-      marginBottom: theme.spacing(6),
-      padding: theme.spacing(3),
-    }
-  }
-}
-
+/* Default settins are "compact", not wasting space on margins - 
+ designed for mobile.
+ BUT; before you decide to fiddle with the margins etc. - consider if your page
+ should be using a "LargeContentMain" instead of a "SmallContentMain".
+ If you're here because your screen looks bad on mobile or has lots of wasted 
+ spaced because of all the margin - then the screen you're working on is 
+ probably no longer "small content" and should be promoted to "large content",
+ possibly with a screen-specific styling for maxWidth or something. */
 const SmallScreenStyledMain = styled('main')(({theme}) => ({
+  // default for mobile
   width: 'auto',
   marginTop: theme.spacing(1),
   marginLeft: theme.spacing(2),
   marginRight: theme.spacing(2),
-  ...mainLayoutBreakpoints(theme, smallContainerWidth),
+  
+  /*The defaults are designed for mobile, these are the styles that will be applied 
+  larger "desktop"/"table" screens. */
+  [theme.breakpoints.up(smallContainerWidth)]: {
+    width: smallContainerWidth,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginTop: theme.spacing(1),
+  }
 }));
 
 const SmallScreenStyledPaper = styled(Paper)(({theme}) => ({
+  // default for mobile
   marginTop: theme.spacing(3),
   marginBottom: theme.spacing(3),
   padding: theme.spacing(2),
-  ...paperBreakpoints(theme, smallContainerWidth),
+  
+  // styles for small content on deskop/table/huge screns
+  [theme.breakpoints.up(smallContainerWidth)]: {
+    marginTop: theme.spacing(6),
+    marginBottom: theme.spacing(6),
+    padding: theme.spacing(3),
+  }
+  
 }));
 
 export function useFullScreenDialog(): boolean{
