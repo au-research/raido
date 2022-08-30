@@ -5,7 +5,7 @@ import {TypographyProps} from "@mui/material/Typography";
 export function TextSpan(
   props: TypographyProps
 ){
-  return <Typography {...props} component="span">
+  return <Typography  component="span" {...props}>
     {props.children}
   </Typography>
 }
