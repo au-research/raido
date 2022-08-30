@@ -14,10 +14,11 @@ export function NewWindowLink(props: {
     target="_blank" rel="noopener noreferrer"
     style={{whiteSpace: "nowrap"}}
   >
-    {props.children}{" "}
+    {props.children}
     <OpenInNew style={{
+      scale: "60%",
       // align with text better
-      verticalAlign: "bottom"
+      verticalAlign: "text-bottom"
     }}/>
   </a>
 }
