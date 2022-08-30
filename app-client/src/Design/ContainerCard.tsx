@@ -3,13 +3,14 @@ import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import * as React from "react";
 import {cardHeaderClasses, useMediaQuery} from "@mui/material";
+import { CSSProperties } from "react";
 
 export function ContainerCard({ 
-  title, action, contentPadding = "1em", children
+  title, action, contentStyle, children
 }:{
   title: React.ReactNode,
   action?: React.ReactNode,
-  contentPadding?: string,
+  contentStyle?: CSSProperties,
   children: React.ReactNode,
 }){
   return <Card>
@@ -29,11 +30,7 @@ export function ContainerCard({
       action={action}
     />
     <CardContent
-      sx={{
-        padding: contentPadding,
-        // deal with possibility of long date / time strings on mobile
-        overflowX: "auto",
-      }}
+      style={{overflowX: "auto", padding: "1em", ...contentStyle}}
     >
       {children}
     </CardContent>
