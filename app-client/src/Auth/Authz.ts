@@ -18,16 +18,41 @@ function debugAuthzResponse(auth: AuthorizeUserResponse){
   return "succeeded - " + auth.accessToken.slice(-10); 
 }
 
+/** If user turns off cookies, they will also not be able to write to 
+ localStorage.  Just ignore errors, the app will still work. */
 export function saveAccessTokenToStorage(accessToken: string){
-  localStorage.setItem(accessTokenStorageKey, accessToken);
+  try {
+    localStorage.setItem(accessTokenStorageKey, accessToken);
+  }
+  catch( e ){
+    console.warn("could not save to local storage," +
+      " probably because cookies turned off?");
+  }
 }
 
 export function clearAccessTokenFromStorage(){
-  localStorage.removeItem(accessTokenStorageKey);
+  try {
+    localStorage.removeItem(accessTokenStorageKey);
+  }
+  catch( e ){
+    console.warn("could not clear local storage," +
+      " probably because cookies turned off?");
+  }
+}
+
+export function getAccessTokenFromStorage(): string | null {
+  try {
+    return localStorage.getItem(accessTokenStorageKey)
+  }
+  catch( e ){
+    console.warn("could not get from local storage," +
+      " probably because cookies turned off?");
+    return null;
+  }
 }
 
 export function getAuthSessionFromStorage(): undefined | AuthorizedSession{
-  const storedAccessToken = localStorage.getItem(accessTokenStorageKey);
+  const storedAccessToken = getAccessTokenFromStorage();
 
   if( !storedAccessToken ){
     return undefined;
