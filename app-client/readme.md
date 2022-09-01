@@ -10,6 +10,15 @@
   about this tech and possible alternatives
 
 
+# Gradle build
+
+The gradle build in this project is standalone, not a part of the overall
+raido-v2 gradle build.
+* because the `git-version` plugin was dying when run inside the codepipeline
+* because the source artifact just brings the code, not the `.git` dir
+* I want to change the codepipeline to use the newer codestar connection stuff
+  * or get rid of the git-version plugin
+
 
 # Build origination 
 
