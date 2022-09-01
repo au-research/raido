@@ -34,3 +34,9 @@ Generally:
   * postgres 14 
   
 
+# Building
+See the relevant local readme for building api-svc, api-svc/db and app-client.
+
+See [build-troubleshooting.md](/app-client/doc/build-troubleshooting.md) if
+having issues.
+
