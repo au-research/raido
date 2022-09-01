@@ -1,0 +1,164 @@
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+
+plugins {
+  id 'java'
+  /* note: we use custom templates, so if you upgrade this, consider that the 
+  template files may have changed and you need to check and update them.
+  Had to downgrade to 6.0.0 from 6.0.1 because:
+  https://github.com/OpenAPITools/openapi-generator-cli/issues/655
+  Note that I did not update the mustache template, still based on the 6.0.1
+  version, no idead of compatible.
+  BUT - 6.0.0 generates incorrect java code for Raido (uses javax.servlet 
+  instead of jakarta). 
+  */
+  id "org.openapi.generator" version "6.0.1"
+}
+
+ext {
+  raidV2SpecFile = file("src/raid-v2-0-0.yaml")
+  generateDirName = "src/main/generated"
+//  generateTsDirName = "src/main/generated-ts"
+  generateTsDirName = "../../app-client/src/Generated/Raidv2"
+  templateDirName = "src/main/resources/template"
+}
+
+repositories{
+  mavenCentral()
+  // needed for resolving spring-6 milestone builds
+  maven { url "https://repo.spring.io/libs-milestone" }
+}
+
+dependencies{
+  implementation libs.bundles.spring6
+
+  // pkg: jakarta.servlet - used to be javax.servlet  
+  compileOnly 'jakarta.platform:jakarta.jakartaee-web-api:9.1.0'
+
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
+
+}
+
+compileJava {
+  options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
+
+sourceSets{
+  main.java{
+    srcDirs += [generateDirName]
+  }
+}
+
+clean {
+  delete generateDirName
+  delete generateTsDirName
+}
+
+/* don't need any special clean logic for generated dir, if you change the idl
+ so that a class is no longer needed, it will be deleted during generate */
+openApiGenerate {
+  generatorName = "spring"
+  inputSpec = raidV2SpecFile.path
+  outputDir = file(generateDirName).path
+  
+  validateSpec =  true
+  generateApiDocumentation = false
+  generateApiTests = false
+  generateModelDocumentation = false
+  generateModelTests = false
+  templateDir = file(templateDirName).path
+  
+  modelPackage = "raido.idl.raidv2.model"
+  apiPackage = "raido.idl.raidv2.api"
+
+  /* Setting globals seems to mean it only generates what you specify. 
+  If no globalProps, it generates everything.*/
+  globalProperties = [
+    // blank means that it generates all models
+    models: "",
+    /* blank means all api classes will ge generated. 
+    We're not using the API classes yet, because I haven't figured out how 
+    to get openapi to generate a "principal" parameter. 
+    That means we're duplicating the path and parameter specifications in 
+    the api-svc Spring code and intTests.  I would prefer to use these, but it's
+    really the model classes where most of the work is and we are using those. 
+    Generate so we can copy/paste from them to endpoint classes 🤮  */
+    apis: "",
+    /* blank means all supporting code is generated and a bunch of readme, pom,
+    .openapi directories, ignore files, etc.
+    What supporting stuff is generated depends on what you're generating
+    (interfaceOnly, skipDefaultInterface, etc.)
+    Note that an empty org.openpitools.configuration pkg may still be generated,
+    depending on other config.
+    Need ApiUtil for default interface implementations, but other stuff is
+    SpringBoot specific - do not want. */
+    supportingFiles: "ApiUtil.java",
+
+  ]
+
+  configOptions = [
+    /* use outputDir instead of this, so that random supporting openapi files 
+    are written in `generated` (and .gitignore'd) instead of in project dir. */
+    sourceFolder: "",
+
+    /* useTags=true, means you can group api endpoints together onto a single 
+    class by setting a "tag" at the "/paths/path/method/tags" level. 
+    Endpoints with no tag end up on "DefaultApi.java".
+    useTags=false means each endpoint gets its own class, name is generated from
+    the path/method stuff.
+    Use the "operationId" field in the YAML to control the generated method
+    name. 
+    */
+    useTags: "true",
+
+    /* use newer spring annotations, including jakarta isntead of javax. for
+    servlet annotations. */
+    useSpringBoot3: "true",
+
+    /* generates a @Controller anno on the api interface */
+    useSpringController: "false",
+
+    /* Related to generating "api" classes (controlled by "apis" globalProp) 
+    Causes API classes to not generate default implementations of the endpoint
+    methods. */
+    skipDefaultInterface: "true",
+
+    /* false - generates api Controller classes and other stuff.
+    true - does not generate controller classes */
+    interfaceOnly: "true",
+
+    /* wrap params in Optional.
+    I like it but IDEA shows a warning.
+    When I tried passing an actual "false" value, Spring failed to map the 
+    optional.  I worked around it by redefining that boolean as required 
+    with a default value (not actually even sure about that).  
+    Need to figure this out, or just turn this to false and forget about using
+    optional. */
+    useOptional: "true",
+
+    /* set to false because model classes were filing because of the import of 
+    jackson.Nullable */
+    openApiNullable: "false",
+
+    /* Generate LocalDateTime, etc. */
+    dateLibrary: "java8",
+
+    useBeanValidation: "false",
+    
+    documentationProvider: "none",
+    disallowAdditionalPropertiesIfNotPresent: "false",
+
+    delegatePattern: "false",
+  ]  
+}
+tasks.openApiGenerate{
+  // make sure task is re-run if templates are changed
+  inputs.files templateDirName
+}
+
+/* tell Gradle to generate the openapi code before compiling it (without this,
+idl compile will succeed, but spring compile will fail in a full build).
+I would think the openApiGenerate "apiFirst" config should do this,
+but it didn't seem to actually do that.  
+ */
+tasks.compileJava.dependsOn tasks.openApiGenerate
+
