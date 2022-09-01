@@ -1,0 +1,87 @@
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+
+plugins {
+  id 'base'
+  /* Had to downgrade to 6.0.0 from 6.0.1 because:
+  https://github.com/OpenAPITools/openapi-generator-cli/issues/655 */
+  id "org.openapi.generator" version "6.0.0"
+}
+
+ext {
+  raidV2SpecFile = file("../api-svc/idl-raid-v2/src/raid-v2-0-0.yaml")
+  generateDirName = "src/Generated/Raidv2"
+  templateDirName = "openapi-template"
+}
+
+repositories{
+  mavenCentral()
+}
+
+clean {
+  delete generateDirName
+}
+
+//task appClientGenerate(type: GenerateTask) {
+//
+//  globalProperties = [
+//    // blank means that it generates all models
+//    models: "",
+//    apis: "",
+//    supportingFiles: "",
+//  ]
+//
+//  configOptions = [:]
+//  
+//}
+/* don't need any special clean logic for generated dir, if you change the idl
+ so that a class is no longer needed, it will be deleted during generate */
+openApiGenerate {
+  generatorName = "typescript-fetch"
+  inputSpec = raidV2SpecFile.path
+  outputDir = file(generateDirName).path
+  
+  validateSpec =  true
+  generateApiDocumentation = false
+  generateApiTests = false
+  generateModelDocumentation = false
+  generateModelTests = false
+  // not used for TS yet
+  templateDir = file(templateDirName).path
+  
+  modelPackage = "raido.idl.raidv2.model"
+  apiPackage = "raido.idl.raidv2.api"
+
+  /* Setting globals seems to mean it only generates what you specify. 
+  If no globalProps, it generates everything.*/
+  globalProperties = [
+    // blank means that it generates all models
+    models: "",
+    /* blank means all api code will ge generated. */
+    apis: "",
+    /* blank means all supporting code is generated and a bunch of readme, pom,
+    .openapi directories, ignore files, etc. */
+    supportingFiles: "",
+  ]
+
+  configOptions = [
+    /* use outputDir instead of this, so that random supporting openapi files 
+    are written in `generated` (and .gitignore'd) instead of in project dir. */
+    sourceFolder: "",
+
+    /* useTags=true, means you can group api endpoints together onto a single 
+    class by setting a "tag" at the "/paths/path/method/tags" level. 
+    Endpoints with no tag end up on "DefaultApi.java".
+    useTags=false means each endpoint gets its own class, name is generated from
+    the path/method stuff.
+    Use the "operationId" field in the YAML to control the generated method
+    name. 
+    */
+    useTags: "true",
+    
+  ]  
+}
+tasks.openApiGenerate{
+  // make sure task is re-run if templates are changed
+  inputs.files templateDirName
+}
+

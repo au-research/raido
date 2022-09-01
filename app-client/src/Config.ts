@@ -49,7 +49,12 @@ export interface EnvironmentConfig {
 
   aaf: AuthnConfig,
   google:AuthnConfig,
+  
   raidoIssuer: string,
+  /** Generally empty string, so that API calls are a relative to current host.
+  But you can use a different host if desired (but remember to configure CORS
+  headers if you want to do that. */
+  raidoApiSvc: string,
 }
 
 function initConfig(){
@@ -97,6 +102,7 @@ const ciConfig: EnvironmentConfig = {
   environmentName: "ci",
   isProd: false,
   raidoIssuer: "https://demo.raido-infra.com",
+  raidoApiSvc: "",
   aaf: {
     clientId: "",
     authorizeUrl: "",
@@ -113,6 +119,7 @@ const devConfig: EnvironmentConfig = {
   environmentName: "dev",
   isProd: false,
   raidoIssuer: "http://localhost:8080",
+  raidoApiSvc: "",
   aaf: {
     // https://aaf.freshdesk.com/support/solutions/articles/19000096640-openid-connect-
     clientId: "accaabfd-a7c8-4d36-9363-ea7342e24db5",
@@ -133,6 +140,7 @@ const demoConfig: EnvironmentConfig = {
   environmentName: "demo",
   isProd: false,
   raidoIssuer: "https://demo.raido-infra.com",
+  raidoApiSvc: "",
   aaf: {
     clientId: "accaabfd-a7c8-4d36-9363-ea7342e24db5",
     authorizeUrl: "https://central.test.aaf.edu.au/providers/op/authorize",
@@ -149,6 +157,7 @@ const prodConfig: EnvironmentConfig = {
   environmentName: "prod",
   isProd: true,
   raidoIssuer: "",
+  raidoApiSvc: "",
   aaf: {
     clientId: "",
     authorizeUrl: "",

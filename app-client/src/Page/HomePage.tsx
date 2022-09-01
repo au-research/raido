@@ -1,5 +1,5 @@
 import { NavTransition } from "Design/NavigationProvider";
-import React, { SyntheticEvent } from "react";
+import React, { SyntheticEvent, useCallback, useEffect } from "react";
 import { ContainerCard } from "Design/ContainerCard";
 import { TextSpan } from "Component/TextSpan";
 import { LargeContentMain, SmallContentMain } from "Design/LayoutMain";
@@ -15,6 +15,8 @@ import {
 import { PrimaryButton } from "Component/AppButton";
 import { HelpPopover } from "Component/HelpPopover";
 import { raidoTitle } from "Component/Util";
+import { Configuration, PublicExperimentalApi } from "Generated/Raidv2";
+import { Config } from "Config";
 
 const log = console;
 
@@ -60,6 +62,18 @@ function NoRoleContent(){
   const [institution, setInstitution] = React.useState(
     null as InstData | null);
 
+  const listInst = useCallback(async ()=>{
+    console.log("listing inst");
+    const config = new Configuration({basePath: Config.raidoApiSvc});
+    const result = await new PublicExperimentalApi(config).listInstitutions();
+    //console.log("version result", result);
+  }, []);
+  
+  useEffect(()=>{
+    //noinspection JSIgnoredPromiseFromCall
+    listInst();
+  }, [listInst]);
+  
   const handleChange = (event: SyntheticEvent, value: InstData | null) => {
     setInstitution(value);
   };

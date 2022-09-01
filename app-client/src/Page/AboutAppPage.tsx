@@ -9,6 +9,15 @@ import { TextSpan } from "Component/TextSpan";
 import { NavTransition } from "Design/NavigationProvider";
 import { NewWindowLink, raidoGithubUrl } from "Component/ExternalLink";
 import { raidoTitle } from "Component/Util";
+import {
+  Configuration,
+  PublicExperimentalApi,
+  VersionResult
+} from "Generated/Raidv2";
+import { forceError, isError } from "Error/ErrorUtil";
+import { CompactErrorPanel } from "Error/CompactErrorPanel";
+import { RefreshIconButton } from "Component/RefreshIconButton";
+import { Stack } from "@mui/material";
 
 const log = console;
 
@@ -23,15 +32,19 @@ export function isAboutAppPagePath(path: string): boolean{
 }
 
 export function AboutAppPage(){
-  return <NavTransition isPath={isAboutAppPagePath} title={raidoTitle("About App")}>
+  return <NavTransition isPath={isAboutAppPagePath}
+    title={raidoTitle("About App")}>
     <Content/>
   </NavTransition>
 }
 
 function Content(){
   return <SmallContentMain>
-    <RaidoDescription paddingBottom={"2em"}/>
-    <ClientPanel />
+    <Stack spacing={2}>
+      <RaidoDescription />
+      <ClientPanel/>
+      <ServerPanel/>
+    </Stack>
   </SmallContentMain>
 
 }
@@ -83,12 +96,56 @@ function NoWrap(props: {children: React.ReactNode}){
   return <span style={{whiteSpace: "nowrap"}}>{props.children}</span>
 }
 
-function GitCommitLink({commitId}:{commitId: string}){
+function GitCommitLink({commitId}: {commitId: string}){
   if( !commitId || commitId === unknownCommitId ){
     return <>Unknown commit</>
   }
-  return <NewWindowLink href={raidoGithubUrl+"/commit/"+commitId}>
+  return <NewWindowLink href={raidoGithubUrl + "/commit/" + commitId}>
     {commitId.substring(0, 8)}
   </NewWindowLink>
-  
+}
+
+function ServerPanel(){
+  const [serverDetails, setServerDetails] = React.useState(
+    undefined as undefined | Error | VersionResult);
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const loadApiInfo = React.useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const config = new Configuration({basePath: Config.raidoApiSvc});
+      const details = await new PublicExperimentalApi(config).version();
+      setServerDetails(details);
+    }
+    catch( e ){
+      setServerDetails(forceError(e));
+    }
+    finally {
+      setIsLoading(false);
+    }
+  }, [],);
+
+  React.useEffect(() => {
+    //noinspection JSIgnoredPromiseFromCall
+    loadApiInfo()
+  }, [loadApiInfo]);
+
+  if( isError(serverDetails) ){
+    return <CompactErrorPanel error={{
+      message: "while getting server app info",
+      problem: serverDetails
+    }}/>
+  }
+
+  return <ContainerCard title="API server"
+    action={<RefreshIconButton refreshing={isLoading} onClick={loadApiInfo}/>}
+  >
+    <TextSpan>
+      Server version: {serverDetails ? serverDetails.buildVersion : ""}<br/>
+      Commit id:{" "}
+      <GitCommitLink commitId={serverDetails?.buildCommitId || ""}/><br/>
+      Build date: {serverDetails ? serverDetails.buildDate : ""}<br/>
+      Start date: {serverDetails ? serverDetails.buildDate : ""}<br/>
+    </TextSpan>
+  </ContainerCard>;
 }

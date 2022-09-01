@@ -4,10 +4,14 @@
   "private": true,
   "proxy": "http://localhost:8080",
   "scripts": {
+    "generate-api": "../gradlew openApiGenerate",
+    "prestart": "npm run generate-api",
     "start":  "react-scripts start",
+    "prebuild": "npm run generate-api",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "end": ""
   },
   "dependencies": {
     "@testing-library/jest-dom": "5.16.5",

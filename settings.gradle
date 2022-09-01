@@ -1,12 +1,14 @@
 rootProject.name = "raido-v2"
 
 include ":api-svc:idl-raid-v1"
+include ":api-svc:idl-raid-v2"
 include ":api-svc:spring"
 include ":api-svc:docker"
 include ":api-svc:db"
 include ":api-svc:db:shared"
 include ":api-svc:db:raido"
 include ":api-svc:db:v1-ddb-migration"
+include ":app-client"
 
 dependencyResolutionManagement{
   versionCatalogs{
