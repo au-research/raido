@@ -2,7 +2,6 @@ package raido.inttest;
 
 import feign.Contract;
 import feign.Feign;
-import feign.Logger;
 import feign.Logger.Level;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
@@ -22,7 +21,7 @@ import raido.inttest.config.IntegrationTestConfig;
 import raido.inttest.service.auth.TestAuthTokenService;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static raido.apisvc.spring.config.RaidV1WebSecurityConfig.RAID_V1_API;
+import static raido.apisvc.spring.config.RaidWebSecurityConfig.RAID_V1_API;
 import static raido.apisvc.util.Log.to;
 
 @SpringJUnitConfig(IntegrationTestConfig.class)

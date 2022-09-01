@@ -11,14 +11,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.service.apids.ApidsService;
 import raido.apisvc.service.apids.model.ApidsMintResponse;
-import raido.apisvc.spring.config.RaidV1WebSecurityConfig;
+import raido.apisvc.spring.config.RaidWebSecurityConfig;
 import raido.apisvc.spring.security.raidv1.Raid1PostAuthenicationJsonWebToken;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.db.jooq.raid_v1_import.tables.records.RaidRecord;
 import raido.idl.raidv1.api.RaidV1Api;
 import raido.idl.raidv1.model.RaidCreateModel;
-import raido.idl.raidv1.model.RaidCreateModelMeta;
 import raido.idl.raidv1.model.RaidModel;
 import raido.idl.raidv1.model.RaidModelMeta;
 import raido.idl.raidv1.model.RaidPublicModel;
@@ -36,7 +35,7 @@ import static org.springframework.security.core.context.SecurityContextHolder.ge
 import static raido.apisvc.endpoint.message.RaidApiV1Message.DEMO_NOT_SUPPPORTED;
 import static raido.apisvc.endpoint.message.RaidApiV1Message.HANDLE_NOT_FOUND;
 import static raido.apisvc.endpoint.message.RaidApiV1Message.MINT_DATA_ERROR;
-import static raido.apisvc.spring.config.RaidV1WebSecurityConfig.RAID_V1_API;
+import static raido.apisvc.spring.config.RaidWebSecurityConfig.RAID_V1_API;
 import static raido.apisvc.spring.security.ApiSafeException.apiSafe;
 import static raido.apisvc.util.DateUtil.formatDynamoDateTime;
 import static raido.apisvc.util.DateUtil.formatRaidV1DateTime;
@@ -87,9 +86,9 @@ public class RaidV1 implements RaidV1Api {
    Watch out - handles have slashes in them, by definition 😢
    Currently, API clients encode the handle slash as `%2f` - but that triggers
    the default Spring HttpStrictFirewall.
-   We've disabled that in {@link RaidV1WebSecurityConfig}, which is a risk.
+   We've disabled that in {@link RaidWebSecurityConfig}, which is a risk.
    V2 API should always pass handles as params instead of in the path?
-   @see RaidV1WebSecurityConfig#allowUrlEncodedSlashHttpFirewall
+   @see RaidWebSecurityConfig#allowUrlEncodedSlashHttpFirewall
    @see #handleCatchAll(HttpServletRequest, Boolean) 
    */
   public RaidPublicModel handleRaidIdGet(

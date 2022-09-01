@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.springframework.security.core.context.SecurityContextHolder.createEmptyContext;
-import static raido.apisvc.spring.config.RaidV1WebSecurityConfig.RAID_V1_API;
+import static raido.apisvc.spring.config.RaidWebSecurityConfig.RAID_V1_API;
 import static raido.apisvc.spring.security.raidv1.RaidV1PreAuthenticatedJsonWebToken.decodeRaidV1Token;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.mask;

@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.FormHttpMessageConverter;
@@ -41,29 +42,46 @@ import static raido.apisvc.util.Log.to;
   // services and endpoints
   "raido.apisvc.service", "raido.apisvc.endpoint"
 })
-/* This is NOT for you to put an `env.properties` file with credentials in the 
-source tree!
-This is a convenience to allow simple deployments to just dump the 
-uberJar and config in a directory and run the Java command from that directly.
-It's possible to maintain multiple different configurations on the same 
-machine by putting config in separate directories and executing from those 
-directories. We use Docker to encapsulate in a real setup, but this can be
-useful sometimes to run multiple configurations on the same machine. 
-*/
-@PropertySource(name = "working_dir_environment",
-  value = "./env.properties",
-  ignoreResourceNotFound = true)
-/* This is where you should put credentials for standard development workflow,
-far away from the source tree, in a standard location that usually has better
-OS-level protections (permissions, etc.)
-During standard development cycle, uses hardcoded default XDG location for 
-config files. IMPROVE: use XDG_CONFIG_HOME env variable */
-@PropertySource(name = "user_config_environment",
-  value = ApiConfig.ENV_PROPERTIES, ignoreResourceNotFound = true)
+@PropertySources({
+  /* This is NOT for you to put an `env.properties` file with credentials in the 
+  source tree!
+  This is a convenience to allow simple deployments to just dump the 
+  uberJar and config in a directory and run the Java command from that directly.
+  It's possible to maintain multiple different configurations on the same 
+  machine by putting config in separate directories and executing from those 
+  directories. We use Docker to encapsulate in a real setup, but this can be
+  useful sometimes to run multiple configurations on the same machine. 
+  */
+  @PropertySource(name = "working_dir_environment",
+    value = "./env.properties",
+    ignoreResourceNotFound = true),
+  
+  /* This is where you should put credentials for standard development workflow,
+  far away from the source tree, in a standard location that usually has better
+  OS-level protections (permissions, etc.)
+  During standard development cycle, uses hardcoded default XDG location for 
+  config files. IMPROVE: use XDG_CONFIG_HOME env variable */
+  @PropertySource(name = "user_config_environment",
+    value = ApiConfig.ENV_PROPERTIES, ignoreResourceNotFound = true),
+  
+  /* we put secrets into a separate file so we can keep env stuff in a nice
+  visible SSM String param, and secrets can be in a SecureString or even 
+  in a proper secret in AWS SecretManager. Also, so we can easily log the
+  env properties without risking logging secret properties. */
+  @PropertySource(name = "user_config_secret",
+    value = ApiConfig.SECRET_PROPERTIES, ignoreResourceNotFound = true),
+  
+  // added to jar at build time by gradle springBoot.buildInfo config
+  @PropertySource( name = "build_info",
+    value = "classpath:META-INF/build-info.properties",
+    ignoreResourceNotFound = true)
+})
 public class ApiConfig {
   public static final String DISPATCHER_NAME = "raido_dispatcher";
   public static final String ENV_PROPERTIES = "file:///${user.home}/" +
     ".config/raido-v2/api-svc-env.properties";
+  public static final String SECRET_PROPERTIES = "file:///${user.home}/" +
+    ".config/raido-v2/api-svc-secret.properties";
 
   private static final Log log = to(ApiConfig.class);
   

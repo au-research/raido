@@ -11,7 +11,6 @@ import org.springframework.security.web.firewall.HttpStatusRequestRejectedHandle
 import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.security.web.firewall.RequestRejectedHandler;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
-import raido.apisvc.endpoint.auth.AuthnEndpoint;
 import raido.apisvc.service.raidv1.RaidV1AuthService;
 import raido.apisvc.spring.security.RaidoSecurityContextRepository;
 import raido.apisvc.spring.security.raidv1.RaidV1AuthenticationProvider;
@@ -26,10 +25,12 @@ import static raido.apisvc.util.Log.to;
 
 // https://github.com/spring-projects/spring-security-samples/blob/655cf77ea4fed8dcd910b1151c126991bf5527d5/servlet/java-configuration/hello-security-explicit/src/main/java/example/SecurityConfiguration.java
 @EnableWebSecurity
-public class RaidV1WebSecurityConfig {
-  private static final Log log = to(RaidV1WebSecurityConfig.class);
+public class RaidWebSecurityConfig {
+  private static final Log log = to(RaidWebSecurityConfig.class);
 
   public static final String RAID_V1_API = "/v1";
+  public static final String RAID_V2_API = "/v2";
+  public static final String RAID_V2_PUBLIC_API = RAID_V2_API + "/public";
   public static final String PUBLIC = "/public";
 
 
@@ -50,6 +51,7 @@ public class RaidV1WebSecurityConfig {
       // order is important, more specific has to come before more general
       mvcMatchers(RAID_V1_API + HANDLE_URL_PREFIX + "/**" ).permitAll().
       mvcMatchers(RAID_V1_API + "/**").fullyAuthenticated().
+      mvcMatchers(RAID_V2_PUBLIC_API + "/**").permitAll().
       mvcMatchers(IDP_URL).permitAll().
       mvcMatchers(PUBLIC + "/**").permitAll().
       anyRequest().denyAll().

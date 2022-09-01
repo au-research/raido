@@ -35,11 +35,14 @@ repositories{
   maven { url "https://repo.spring.io/libs-milestone" }
 }
 
+version = rootProject.version
+
 /* don't use groovy for prod code: dynamic typing, slow startup and poor 
    historical upgrade compatibility */
 dependencies{
   implementation project(':api-svc:db:raido')
   implementation project(':api-svc:idl-raid-v1')
+  implementation project(':api-svc:idl-raid-v2')
   
   // look in settings.gradle for version catalog specs 
   implementation libs.bundles.jetty11
@@ -113,6 +116,7 @@ testing{
         implementation project
         implementation project(':api-svc:db:raido')
         implementation project(':api-svc:idl-raid-v1')
+        implementation project(':api-svc:idl-raid-v2')
 
         // for booting a custom test server
         implementation libs.bundles.jetty11
@@ -164,6 +168,19 @@ intTest{
   systemProperties defaultSysProps
   testLogging.showStandardStreams = true  
 }
+
+task buildInfo(type: WriteProperties){
+  description = "Write build-info.properties file"
+  outputFile = file("${sourceSets.main.output.resourcesDir}/META-INF/build-info.properties")
+  encoding = "UTF-8"
+  comment = "This file built by Gradle task buildInfo"
+
+  property("build.version", project.version as String)
+  property("build.commitId", rootProject.versionDetails().gitHashFull as String)
+  // we don't use it for stuff, it's for people, so format it nice
+  property("build.buildDate", new Date().toString())
+}
+processResources.dependsOn buildInfo
 
 task uberJar(type: Jar) {
   group "distribution"
