@@ -53,9 +53,19 @@ Consider excluding:
 * The cache directories for Maven/Gradle
 * The directory you load your IDE from (and it's configuration/caching)
   * e.g. IDEA creates large GB sized cache files, scanning those is pointless.
-  * Also consider if your IDE is writing configuration/caching info to your 
-  home directory - you probably don't want to do that, set it up to use a local
-  directory that is included in your exlude list.
   * Do not add your home directory as a real-time scanning exclusion.
+
+Don't add your entire home directory as an exclusion.
+
+If your tooling stores stuff in your home directory and you can't/don't want
+to change that.  Add specific exclusions for things inside your home directory.
+
+Also consider if your IDE is writing configuration/caching info to your
+home directory - you probably don't want to do that, set it up to use a local
+directory somewhere else on your disk that is included in your exlude list.
+
+This means any "roaming profile" won't be saving/reading your gigabytes of 
+cache files to the network server.  Decide for yourself if that's a good thing
+or a bad thing.
 
 
