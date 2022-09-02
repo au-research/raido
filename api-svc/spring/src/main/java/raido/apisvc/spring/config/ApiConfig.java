@@ -1,6 +1,7 @@
 package raido.apisvc.spring.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletRegistration;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +23,7 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import raido.apisvc.spring.RedactingExceptionResolver;
 import raido.apisvc.spring.RequestLoggingFilter;
 import raido.apisvc.util.Log;
@@ -29,7 +31,6 @@ import raido.apisvc.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
 import static raido.apisvc.util.Log.to;
@@ -76,7 +77,7 @@ import static raido.apisvc.util.Log.to;
     value = "classpath:META-INF/build-info.properties",
     ignoreResourceNotFound = true)
 })
-public class ApiConfig {
+public class ApiConfig implements WebMvcConfigurer {
   public static final String DISPATCHER_NAME = "raido_dispatcher";
   public static final String ENV_PROPERTIES = "file:///${user.home}/" +
     ".config/raido-v2/api-svc-env.properties";
@@ -142,7 +143,8 @@ public class ApiConfig {
   }
 
   @Bean public ObjectMapper objectMapper(){
-    return new ObjectMapper();
+    return new ObjectMapper().
+      disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
   }
   
   @Bean
@@ -165,6 +167,25 @@ public class ApiConfig {
     restTemplate.setMessageConverters(messageConverters);
 
     return restTemplate;
+  }
+
+  /* Not sure if we should be using "configure" or "extend".  AFAIK, this here
+  is resetting the default converters, so this converter is the only one.
+  Does this mean our server doesn't support other content types?
+  Not sure if that's a good thing or a bad thing. */
+  @Override
+  public void configureMessageConverters(
+    List<HttpMessageConverter<?>> converters
+  ) {
+    MappingJackson2HttpMessageConverter jsonConverter =
+      new MappingJackson2HttpMessageConverter();
+    /* By default dates looked like `1662077155.409857400`. 
+    The app-client openapi generated ts that converted this to dates with code 
+    like `new Date(json['startDate']` which did not parse the date properly.
+    https://stackoverflow.com/a/67078987/924597 */
+    jsonConverter.getObjectMapper().
+      disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    converters.add(jsonConverter);
   }
 }
 
