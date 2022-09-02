@@ -19,8 +19,54 @@ raido-v2 gradle build.
 * I want to change the codepipeline to use the newer codestar connection stuff
   * or get rid of the git-version plugin
 
+  
+# Developing 
 
-# Build origination 
+## Running a local Node.js server in IDEA
+
+* Right-click the `/app-client/package.json` and do `Run 'npm install'` to get
+libraries installed
+* Right click `package.json` and do `Show npm scripts`
+  * this adds the project to the IDEA `npm tool window`, which is similar to 
+  the gradle window.  You can launch scripts declared by `package.json` by 
+  double-clicking them, etc.
+* run the `start` script
+  * this will first run the `prestart` script which will generate code 
+    that is needed to compile (OpenAPI code from the IDL)
+  * then it will launch the app, listening on url `http://localhost:7080` 
+  * the `proxy` setting in `package.json` is set to forward all requests to 
+  `http://localhost:8080`, which is where you're expected to be running the 
+  `api-svc` during local dev
+    * you could change this to `https://demo.raido-infra.com` if you don't want
+    to run the api-svc locally
+      * don't commmit that, preferrably find a way to customise it in a local 
+      file or something (and add it to this doco)
+
+
+## Debugging the app in IDEA
+
+When you want to debug client code, you don't "debug" the `start` task.  You
+leave it running as normal and run a new browser that is linked to IDEA. 
+
+https://www.jetbrains.com/help/idea/react.html#react_running_and_debugging_debug
+
+It wasn't auto-created on my machine as the doco says.
+Just add a new run config of type `Javascript Debug` and set the URL to 
+`http://localhost:7080`.
+When you "debug" that config, it will launch a new browser and any debug 
+breakpoints that are set in IDEA will stop execution and you can dbug in IDEA,
+just like a Java app.
+
+
+## Deploying to `demo` environment
+
+Log in to AWS and go the CodePipeline console.
+Look for the pipeline named `AppClient` and do a "release changes".
+
+https://ap-southeast-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/AppClient/view?region=ap-southeast-2#
+
+
+# Build origination
 
 This project was bootstrapped with:
 ```
@@ -32,5 +78,4 @@ npx create-react-app app-client --template typescript
 * added the icons, see [doc/icon.md](doc/icon.md)
 * replaced the react `src/log.svg` with raido
 * updated `App.tsx` to show Raido stuff
-
 
