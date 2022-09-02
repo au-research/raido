@@ -4,7 +4,10 @@ import { SmallContentMain } from "Design/LayoutMain";
 import { RaidoDescription } from "Auth/IntroContainer";
 import { ContainerCard } from "Design/ContainerCard";
 import { Config, unknownCommitId } from "Config";
-import { parseDateFromEpoch } from "Util/DateUtil";
+import {
+  formatLocalDateAsIsoShortDateTime,
+  parseDateFromEpoch
+} from "Util/DateUtil";
 import { TextSpan } from "Component/TextSpan";
 import { NavTransition } from "Design/NavigationProvider";
 import { NewWindowLink, raidoGithubUrl } from "Component/ExternalLink";
@@ -41,7 +44,7 @@ export function AboutAppPage(){
 function Content(){
   return <SmallContentMain>
     <Stack spacing={2}>
-      <RaidoDescription />
+      <RaidoDescription/>
       <ClientPanel/>
       <ServerPanel/>
     </Stack>
@@ -140,12 +143,17 @@ function ServerPanel(){
   return <ContainerCard title="API server"
     action={<RefreshIconButton refreshing={isLoading} onClick={loadApiInfo}/>}
   >
-    <TextSpan>
+    <TextSpan><>
       Server version: {serverDetails ? serverDetails.buildVersion : ""}<br/>
       Commit id:{" "}
       <GitCommitLink commitId={serverDetails?.buildCommitId || ""}/><br/>
       Build date: {serverDetails ? serverDetails.buildDate : ""}<br/>
-      Start date: {serverDetails ? serverDetails.buildDate : ""}<br/>
+      Start date: {
+        serverDetails ?
+          formatLocalDateAsIsoShortDateTime(serverDetails.startDate) : ""
+      }
+      <br/>
+    </>
     </TextSpan>
   </ContainerCard>;
 }
