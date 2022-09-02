@@ -19,5 +19,43 @@ enviornment is that diagnosing version issues, testing new versions,
 upgrading/downgrading when the project prequisites change etc. can be a pain.
 
 
+# Typescript compile taking a long time
+
+On a modern machine, it should only take about 5-10 seconds for running 
+`npm run start` to do the full TypeScript compile and start responding to 
+request (after that, an incremental compile should only take a second or two).
+
+If you feel like it's really slow, consider if your machine has "real time" 
+scanning enabled in its security configuration.  That means the machine is 
+doing virus/malware scanning on every file that is being loaded for the compile.
+That's likely going to slow the compile down significantly.
+Consider if this benefit is worth the protection this scanning is giving you
+(likely minimal, think about it).
+
+To diagnose, try *temporarily* disabling the real-time scanning to see if 
+it speeds up the compile. Remember to consider caching, with scanning
+enabled, do the compile twice - the first time to get everthing cached, the 
+second time to measure how long it takes.
+
+Then, *temporarily* disable the real-time scanning and do the compile again.
+Now re-enable, the real-teim scanning.
+
+If the compile is appreciably faster, consider whether you want do disable 
+real-time scanning for your compile.
+
+If you decide to do this, you want leave real-time scanning enabled, but add
+exclusions so that the software knows not to scan your build stuff.
+
+Consider excluding:
+* Node.Js and Java installed directories
+* The directory with the source code (escpecially because it contains the 
+  `node_modules` directory).
+* The cache directories for Maven/Gradle
+* The directory you load your IDE from (and it's configuration/caching)
+  * e.g. IDEA creates large GB sized cache files, scanning those is pointless.
+  * Also consider if your IDE is writing configuration/caching info to your 
+  home directory - you probably don't want to do that, set it up to use a local
+  directory that is included in your exlude list.
+  * Do not add your home directory as a real-time scanning exclusion.
 
 
