@@ -58,6 +58,16 @@ breakpoints that are set in IDEA will stop execution and you can dbug in IDEA,
 just like a Java app.
 
 
+## Debugging React components
+
+Don't forget to install the React developer extension into your browser.
+You can easily browser aroung the component hierarchy and see state easily, 
+instead of adding console debug statements.
+
+You can also use it to profile the UI code and look for poor performing code 
+and superfluous re-renders.
+
+
 ## Deploying to `demo` environment
 
 Log in to AWS and go the CodePipeline console.
