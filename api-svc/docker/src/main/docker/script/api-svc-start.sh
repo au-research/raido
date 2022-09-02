@@ -10,6 +10,7 @@ echo "starting api-svc.... "
 java $(cat $HOME/.config/raido-v2/api-svc-jvm.properties) \
   -Duser.timezone=UTC -Dfile.encoding=UTF-8 \
   -Duser.language= -Duser.country= -Duser.variant= \
+  -Dlogback.configurationFile=docker-logback.xml \
   -jar raido-api-svc.jar 
 
 # when having problems digging around in the container because the app won't 

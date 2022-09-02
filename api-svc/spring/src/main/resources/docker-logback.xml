@@ -1,0 +1,27 @@
+<!-- this is the default logging setup for Raido runnin in a docker container,
+in an AWS environment.
+The timestamp is actually even shorter than local dev, because it's not 
+all that useful in a cloudwatch environment.  The cloudwatch "timestamp" value
+is not this value, it's the value that the cloudwatch agent on the ec2 instance
+recorded.  The logback time is more accurate, but the cloudwatch timestamp
+is what you'll use to query against with cloudwatch log insights, etc.   
+-->
+<configuration>
+  <!-- https://www.slf4j.org/api/org/slf4j/bridge/SLF4JBridgeHandler.html -->
+  <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+    <resetJUL>true</resetJUL>
+  </contextListener>
+  <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>
+
+  <appender name="UNMASKED_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%date{"HHmmssSSS"} [%thread] %level %logger{0} %m%n</pattern>
+    </encoder>
+  </appender>
+
+  <!-- Debug is usually disabled in deployment enviornments. -->
+  <root level="info">
+    <appender-ref ref="UNMASKED_CONSOLE"/>
+  </root>
+
+</configuration>
