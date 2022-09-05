@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.service.auth.AafOidc;
 import raido.apisvc.service.auth.GoogleOidc;
 import raido.apisvc.service.auth.RaidV2AuthService;
-import raido.apisvc.service.auth.RaidV2AuthService.AuthzTokenPayload;
 import raido.apisvc.spring.security.ApiSafeException;
 import raido.apisvc.util.Log;
 import raido.apisvc.util.RestUtil;
 
 import java.io.IOException;
 
+import static raido.apisvc.service.auth.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
 import static raido.apisvc.spring.security.IdProviderException.idpException;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.isNullOrEmpty;
@@ -95,11 +95,12 @@ public class AuthnEndpoint {
 
     res.sendRedirect( "%s#id_token=%s".formatted(
       state.redirectUri,
-      raidv2Auth.sign( new AuthzTokenPayload().
-        setSubject(jwt.getSubject()).
-        setClientId(state.clientId).
-        setEmail(jwt.getClaim("email").asString()).
-        setRole("none")
+      raidv2Auth.sign( anAuthzTokenPayload().
+        withSubject(jwt.getSubject()).
+        withClientId(state.clientId).
+        withEmail(jwt.getClaim("email").asString()).
+        withRole("none").
+        build()
       )
     ));
     

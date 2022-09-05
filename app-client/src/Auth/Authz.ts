@@ -1,22 +1,9 @@
-import {
-  AuthorizeUserResponse,
-  AuthzTokenPayload,
-} from "Shared/ApiTypes";
+import { AuthzTokenPayload, } from "Shared/ApiTypes";
 import jwtDecode from "jwt-decode";
-import { parseJwtDate, parseServerDate } from "Util/DateUtil";
-import { ErrorInfo, forceError } from "Error/ErrorUtil";
+import { parseJwtDate } from "Util/DateUtil";
 import { AuthorizedSession } from "Auth/AuthProvider";
-import { authApi } from "Api/AuthApi";
 
 const accessTokenStorageKey = "raidoAccessToken";
-
-function debugAuthzResponse(auth: AuthorizeUserResponse){
-  if( !auth.succeeded ){
-    return "failed";
-  }
-  
-  return "succeeded - " + auth.accessToken.slice(-10); 
-}
 
 /** If user turns off cookies, they will also not be able to write to 
  localStorage.  Just ignore errors, the app will still work. */

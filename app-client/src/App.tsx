@@ -16,6 +16,7 @@ import {
 } from "Page/Unauth/UsageTermsPage";
 import { AboutAppPage } from "Page/AboutAppPage";
 import { AboutRaidPage, isAboutRaidPagePath } from "Page/Unauth/AboutRaidPage";
+import { AuthApiProvider } from "Api/AuthApi";
 
 export function App(){
   return <RaidoTheme>
@@ -31,16 +32,19 @@ export function App(){
           <AuthProvider unauthenticatedPaths={[
             isPrivacyPagePath, isUsageTermsPagePath, isAboutRaidPagePath
           ]}>
-            {/* transition animation and delegates to location infra */}
-            <NavigationProvider>
-              {/* NavBar across the top of screen and sliding drawer */}
-              <AppNavBar/>
-
-              {/* Navigable, authenticated pages, self-routed */}
-              <HomePage/>
-              <AboutAppPage/>
-
-            </NavigationProvider>
+            {/* binds authentication stuff to OpenAPI stuff */}
+            <AuthApiProvider>
+              {/* transition animation and delegates to location infra */}
+              <NavigationProvider>
+                {/* NavBar across the top of screen and sliding drawer */}
+                <AppNavBar/>
+  
+                {/* Navigable, authenticated pages, self-routed */}
+                <HomePage/>
+                <AboutAppPage/>
+  
+              </NavigationProvider>
+            </AuthApiProvider>
           </AuthProvider>
 
           {/* unauthenticated pages, self-routed */}

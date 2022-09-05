@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import raido.apisvc.spring.security.raidv1.RaidV1PreAuthenticatedJsonWebToken;
+import raido.apisvc.spring.security.raidv2.RaidV2PreAuthenticatedJsonWebToken;
 import raido.apisvc.util.Log;
 
 import java.util.Optional;
@@ -13,7 +14,9 @@ import java.util.function.Supplier;
 
 import static org.springframework.security.core.context.SecurityContextHolder.createEmptyContext;
 import static raido.apisvc.spring.config.RaidWebSecurityConfig.RAID_V1_API;
+import static raido.apisvc.spring.config.RaidWebSecurityConfig.RAID_V2_API;
 import static raido.apisvc.spring.security.raidv1.RaidV1PreAuthenticatedJsonWebToken.decodeRaidV1Token;
+import static raido.apisvc.spring.security.raidv2.RaidV2PreAuthenticatedJsonWebToken.decodeRaidV2Token;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.mask;
 
@@ -44,6 +47,14 @@ public class RaidoSecurityContextRepository implements SecurityContextRepository
         return createEmptyContext();
       }
 
+      if( isRaidV2Api(request) ){
+        var authentication = decodeRaidV2Token(token.get());
+        if( authentication == null ){
+          return createEmptyContext();
+        }
+        return createRaidV2AuthContext(authentication);
+      }
+
       if( isRaidV1Api(request) ){
         var authentication = decodeRaidV1Token(token.get());
         if( authentication == null ){
@@ -54,7 +65,7 @@ public class RaidoSecurityContextRepository implements SecurityContextRepository
       
       log.with("path", request.getServletPath()).
         with("token", mask(token.get())).
-        info("RaidV1SCR no");
+        info("SCR no match");
       throw new UnsupportedOperationException("can only do /v1 endpoints ATM");
 
     };
@@ -64,8 +75,20 @@ public class RaidoSecurityContextRepository implements SecurityContextRepository
     return request.getServletPath().startsWith(RAID_V1_API);
   }
 
+  private static boolean isRaidV2Api(HttpServletRequest request) {
+    return request.getServletPath().startsWith(RAID_V2_API);
+  }
+
   private static SecurityContext createRaidV1AuthContext(
     RaidV1PreAuthenticatedJsonWebToken authentication
+  ) {
+    var context = createEmptyContext();
+    context.setAuthentication(authentication);
+    return context;
+  }
+
+  private static SecurityContext createRaidV2AuthContext(
+    RaidV2PreAuthenticatedJsonWebToken authentication
   ) {
     var context = createEmptyContext();
     context.setAuthentication(authentication);

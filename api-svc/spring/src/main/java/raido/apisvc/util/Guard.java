@@ -1,6 +1,8 @@
 package raido.apisvc.util;
 
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -95,6 +97,12 @@ public class Guard {
     Guard.notNull(msg, v);
     Guard.isTrue(msg, !v.isEmpty());
     Guard.allHaveValue(msg, v.toArray(new String[0]));
+  }
+  
+  public static void hasValue(String msg, String... v) {
+    Guard.notNull(msg, v);
+    Guard.isTrue(msg, v.length > 0);
+    Guard.allHaveValue(msg, v);
   }
 
   /**
@@ -245,4 +253,5 @@ public class Guard {
     
     return clazz.cast(instance);
   }
+  
 }

@@ -1,71 +1,97 @@
 package raido.apisvc.service.auth;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import org.jooq.DSLContext;
 import org.springframework.stereotype.Component;
 import raido.apisvc.spring.config.environment.RaidV2AuthProps;
-import raido.apisvc.util.ExceptionUtil;
+import raido.apisvc.spring.security.ApiSvcAuthenticationException;
+import raido.apisvc.spring.security.raidv2.RaidV2PreAuthenticatedJsonWebToken;
+import raido.apisvc.util.Log;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Optional;
+
+import static java.util.Optional.of;
+import static raido.apisvc.service.auth.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
+import static raido.apisvc.util.ExceptionUtil.wrapException;
+import static raido.apisvc.util.Log.to;
+import static raido.apisvc.util.StringUtil.mask;
 
 @Component
 public class RaidV2AuthService {
+  private static final Log log = to(RaidV2AuthService.class);
+  
   private RaidV2AuthProps props;
-
+  private DSLContext db;
+  
   private Duration expiryPeriod = Duration.ofHours(9);
   
-  public RaidV2AuthService(RaidV2AuthProps props) {
+  public RaidV2AuthService(RaidV2AuthProps props, DSLContext db) {
     this.props = props;
+    this.db = db;
   }
 
   public String sign(AuthzTokenPayload payload){
     try {
-      Algorithm algorithm = Algorithm.HMAC256(props.jwtSecrets.get(0));
       String token = JWT.create().
         // remember the standard claim for subject is "sub"
-        withSubject(payload.subject).
+        withSubject(payload.getSubject()).
         withIssuer(props.issuer).
         withIssuedAt(Instant.now()).
         withExpiresAt(Instant.now().plus(expiryPeriod)).
-        withClaim("clientId", payload.clientId).
-        withClaim("email", payload.email).
-        withClaim("role", payload.role).
-        sign(algorithm);
+        withClaim("clientId", payload.getClientId()).
+        withClaim("email", payload.getEmail()).
+        withClaim("role", payload.getRole()).
+        sign(props.signingAlgo);
 
       return token;
     } catch ( JWTCreationException ex){
-      throw ExceptionUtil.wrapException(ex, "while signing");
+      throw wrapException(ex, "while signing");
     }
   }
-  
-  public static class AuthzTokenPayload {
-    public String clientId;
-    /** `sub` claim in a standard jwt */
-    public String subject;
-    public String email;
-    public String role;
 
-    public AuthzTokenPayload setClientId(String clientId) {
-      this.clientId = clientId;
-      return this;
-    }
 
-    public AuthzTokenPayload setSubject(String subject) {
-      this.subject = subject;
-      return this;
-    }
+  public Optional<AuthzTokenPayload> authenticate(
+    RaidV2PreAuthenticatedJsonWebToken preAuth
+  ){
+    String originalToken = preAuth.getToken().getToken();
+    DecodedJWT jwt = this.verify(originalToken);
 
-    public AuthzTokenPayload setEmail(String email) {
-      this.email = email;
-      return this;
-    }
-
-    public AuthzTokenPayload setRole(String role) {
-      this.role = role;
-      return this;
-    }
+    // security:sto check claims and expiry and stuff
+    
+    return of(anAuthzTokenPayload().
+      withSubject(jwt.getSubject()).
+      withEmail(jwt.getClaim("email").asString()).
+      withClientId(jwt.getClaim("clientId").asString()).
+      withRole(jwt.getClaim("role").asString()).
+      build() );
   }
-  
+
+  public DecodedJWT verify(String token) {
+    DecodedJWT jwt = null;
+    JWTVerificationException firstEx = null;
+    for( int i = 0; i < props.verifiers.length; i++ ){
+      try {
+        jwt = props.verifiers[i].verify(token);
+      }
+      catch( JWTVerificationException e ){
+        if( firstEx == null ){
+          firstEx = e;
+        }
+      }
+    }
+    if( jwt != null ){
+      return jwt;
+    }
+    log.with("firstException", firstEx == null ? "null" : firstEx.getMessage()).
+      with("token", mask(token)).
+      with("verifiers", props.verifiers.length).
+      info("jwt not verified by any of the secrets");
+    throw new ApiSvcAuthenticationException();
+  }
+
 }

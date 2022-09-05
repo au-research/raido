@@ -11,9 +11,11 @@ import org.springframework.security.web.firewall.HttpStatusRequestRejectedHandle
 import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.security.web.firewall.RequestRejectedHandler;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
+import raido.apisvc.service.auth.RaidV2AuthService;
 import raido.apisvc.service.raidv1.RaidV1AuthService;
 import raido.apisvc.spring.security.RaidoSecurityContextRepository;
 import raido.apisvc.spring.security.raidv1.RaidV1AuthenticationProvider;
+import raido.apisvc.spring.security.raidv1.RaidV2AuthenticationProvider;
 import raido.apisvc.util.Log;
 
 import java.io.IOException;
@@ -37,12 +39,15 @@ public class RaidWebSecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(
     HttpSecurity http, 
-    RaidV1AuthService raidSvc
+    RaidV1AuthService raid1Svc,
+    RaidV2AuthService raid2Svc
   ) throws Exception {
     log.info("securityFilterChain()");
     http.
       authenticationProvider(
-        new RaidV1AuthenticationProvider(raidSvc)).
+        new RaidV2AuthenticationProvider(raid2Svc)).
+      authenticationProvider(
+          new RaidV1AuthenticationProvider(raid1Svc)).
       securityContext().
       securityContextRepository(new RaidoSecurityContextRepository()).
       and().
@@ -52,6 +57,7 @@ public class RaidWebSecurityConfig {
       mvcMatchers(RAID_V1_API + HANDLE_URL_PREFIX + "/**" ).permitAll().
       mvcMatchers(RAID_V1_API + "/**").fullyAuthenticated().
       mvcMatchers(RAID_V2_PUBLIC_API + "/**").permitAll().
+      mvcMatchers(RAID_V2_API + "/**").fullyAuthenticated().
       mvcMatchers(IDP_URL).permitAll().
       mvcMatchers(PUBLIC + "/**").permitAll().
       anyRequest().denyAll().
