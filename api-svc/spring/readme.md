@@ -33,6 +33,12 @@ DatasourceConfig.username=api_user
 DatasourceConfig.password=<dbpassword>
 
 RaidV1Auth.jwtSecret=<JWT secret>
+RaidV2Auth.jwtSecrets=<authz secrets>
+AafOidc.clientSecret=<AAF client secret>
+GoogleOidc.clientSecret=<Google client secret>
+
+Apids.secret=<APIDS API secret>
+
 ```
 
 
