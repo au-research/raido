@@ -4,8 +4,11 @@
 [RAiD](https://raido.org.au) implementation.
 
 It is not yet live, though you can find the demo environment at 
-https://demo.raido-infra.com.  Note that you will not be approved to use the 
-demo enviornment without prior agreement.
+https://demo.raido-infra.com.  
+
+Note that:
+* you will not be approved to use the demo enviornment without prior agreement
+* the demo environment is under active development and is very unstable 
 
 It's called "v2" because initially it was called raid-v2 because there was a
 v1. Should've just called it "raido" - oh well.
@@ -15,8 +18,11 @@ Important architecural decisions are recorded in [/doc/adr](./doc/adr).
 Different sub-projects have their own ADR log, in their local /doc/adr
 directories (i.e. db, app, [api](/api-svc/spring/doc/adr), etc.)
 
+The overall technology stack is can found at 
+[/doc/tecnnology-stack.md](/doc/tecnnology-stack.md)
 
-# Structure
+
+# Project structure
 
 * /
   * the root project contains no production code, it's just the container that
@@ -51,8 +57,6 @@ Using a Github action at the moment to run tests.
 
 
 # Development pre-requisites
-
-Generally:
 
 * [JDK 17](./doc/adr/2022-07-21_jdk-platform.md)
 * [Node.js 16](./doc/adr/2022-07-21_nodejs-platform.md)
