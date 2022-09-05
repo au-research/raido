@@ -29,4 +29,7 @@ if( file(configPath).exists() ){
   probably a Bad Plan to a full turing-complete language for config */
   apply from: configPath
 }
+else {
+  println "no file found at: ${configPath}"
+}
 
