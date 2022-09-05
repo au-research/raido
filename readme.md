@@ -22,15 +22,15 @@ directories (i.e. db, app, [api](/api-svc/spring/doc/adr), etc.)
   * the root project contains no production code, it's just the container that
   holds all the other sub-projects
   * it does contain some build code though, 
-  see: [/buildSrc](./buildSrc/readme.md)
-* [/api-svc](/api-svc/readme.md)
-  * [/api-svc/db](/api-svc/db/readme.md)
+  see: [/buildSrc](./buildSrc)
+* [/api-svc](/api-svc)
+  * [/api-svc/db](/api-svc/db)
     * database schema definition, implemented as a series of Flyway migrations
-  * [/api-svc/spring](/api-svc/spring/readme.md) 
+  * [/api-svc/spring](/api-svc/spring) 
     * the main API server, implemented as a Spring appliation
   * [/api-svc/idl-raid-v2](./api-svc/idl-raid-v2/src/raid-v2-0-0.yaml)
     * the OpenAPI definiton of the API that the api-svc serves
-* [/app-client](/app-client/readme.md)
+* [/app-client](/app-client)
   * The Raido UI that calls uses api-svc 
 
 
