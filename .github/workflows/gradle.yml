@@ -81,7 +81,7 @@ jobs:
           DatasourceConfig.username=postgres
           DatasourceConfig.password=githubActionIntTestPgPassword
           RaidV1Auth.jwtSecret=githubActionIntTestJwtSecret
-          RaidV2Auth.jwtSecrets=[githubActionIntTestJwtSecret]
+          RaidV2Auth.jwtSecrets=githubActionIntTestJwtSecretMustBeReallyLong
 
           AafOidc.clientSecret=notTheRealSecret
           GoogleOidc.clientSecret=notTheRealSecret
