@@ -47,7 +47,7 @@ public class AuthzTokenPayload implements Authentication {
 
   @Override
   public Object getPrincipal() {
-    return subject;
+    return email;
   }
 
   @Override
