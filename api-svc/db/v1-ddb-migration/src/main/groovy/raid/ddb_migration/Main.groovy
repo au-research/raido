@@ -13,7 +13,7 @@ import static raid.ddb_migration.MigrateRaidTableItems.recordMigration
 import static raid.ddb_migration.Util.printExecTime
 
 class ExportFile {
-  static ddbDataDirPath = "../ddb-migration-data/" 
+  static ddbDataDirPath = "build/ddb-migration-data/" 
   static String raidTablePath = "raid-table"
   static String associationIndexTablePath = "association-index-table"
   static String metadataTablePath = "metadata-table"
