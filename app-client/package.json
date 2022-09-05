@@ -33,11 +33,11 @@
     "@emotion/react": "11.10.0",
 
     "@tanstack/react-query": "4.2.3",
+    "@tanstack/react-query-devtools" : "4.2.3",
 
     "web-vitals": "2.1.4"
   },
   "devDependencies": {
-    "@tanstack/react-query-devtools" : "4.2.3",
     "source-map-explorer": "2.5.2",
     "cross-env": "7.0.3"
   },
