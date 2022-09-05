@@ -13,18 +13,11 @@ import static raid.ddb_migration.MigrateRaidTableItems.recordMigration
 import static raid.ddb_migration.Util.printExecTime
 
 class ExportFile {
-  static String raidTablePath =
-    "C:\\ardc\\s3\\raid-root\\sto-raid-dev-manual\\AWSDynamoDB" +
-      "\\01658105838782-e79094f8\\data\\oul53eynru4wzoadxd7flaqj3e.ion.gz"
-  static String associationIndexTablePath =
-    "C:\\ardc\\s3\\raid-root\\sto-raid-dev-manual\\AWSDynamoDB" +
-      "\\01658105833159-e72018b8\\data\\q57kvgl5iez5jkvtkifaayqyge.ion.gz"
-  static String metadataTablePath =
-    "C:\\ardc\\s3\\raid-root\\sto-raid-dev-manual\\AWSDynamoDB" +
-      "\\01658105827587-cb141f56\\data\\anlitpx4wq2sjf5nvou2lfvdra.ion.gz"
-  static String tokenTablePath =
-    "C:\\ardc\\s3\\raid-root\\sto-raid-dev-manual\\AWSDynamoDB" +
-      "\\01658105862617-d30d7856\\data\\hmzn56rusuzbvdbcp3tyfalhw4.ion.gz"
+  static ddbDataDirPath = "../ddb-migration-data/" 
+  static String raidTablePath = "raid-table"
+  static String associationIndexTablePath = "association-index-table"
+  static String metadataTablePath = "metadata-table"
+  static String tokenTablePath = "token-table"
 
   // might have this dig up files from the export on S3 or something, one day
   static URL findImportFile(String path) {
@@ -33,24 +26,39 @@ class ExportFile {
     return file.toURI().toURL()
   }
 
-  /** Assumes gz file has only the json file inside it */
-  static ImportFile findImportStream(String path) {
-    File file = new File(path)
-    assert file.isFile() && file.canRead()
+  /* see `../doc/ddb-s3-export-format.md` file 
+  Assumes gz file has only the json file inside it 
+  */
+  static ImportFile findImportStream(String dirPath, String tableDirPath) {
+    File dir = new File(dirPath)
+    assert dir.isDirectory() && dir.canRead()
 
-    def manifest = new JsonSlurper().parseText(
-      new File(file.parentFile.parentFile, "manifest-summary.json",).text)
+    File tableDir = new File(dirPath, tableDirPath)
+    assert tableDir.isDirectory() && tableDir.canRead()
+    
+    def manifestFiles = new JsonSlurper().parseText(
+      new File(tableDir, "manifest-files.json",).text)
+    def manifestSummary = new JsonSlurper().parseText(
+      new File(tableDir, "manifest-summary.json",).text)
 
+    String dataFileKey = manifestFiles.dataFileS3Key as String
+    def dataFilePath =  
+      dataFileKey.substring(dataFileKey.lastIndexOf('/data/'))
+    
+    println "extracted `$dataFilePath` from $dataFileKey"
+    def dataFile = new File(tableDir, dataFilePath)
+    assert dataFile.exists() && dataFile.canRead()
+    
     ImportFile data = new ImportFile(
-      file: file,
-      manifestSummary: manifest as Map,
-      stream: new GZIPInputStream(new FileInputStream(file)),
+      dataFile: dataFile,
+      manifestSummary: manifestSummary as Map,
+      stream: new GZIPInputStream(new FileInputStream(dataFile)),
     )
 
-    println "format:${manifest.outputFormat}" +
-      " start:${manifest.startTime}" +
-      " export: ${manifest.exportTime}" +
-      " ${manifest.tableArn}"
+    println "format:${manifestSummary.outputFormat}" +
+      " start:${manifestSummary.startTime}" +
+      " export: ${manifestSummary.exportTime}" +
+      " ${manifestSummary.tableArn}"
 
     return data
   }
@@ -58,8 +66,9 @@ class ExportFile {
 }
 
 class ImportFile {
-  File file
+  File dataFile
   InputStream stream
+  Map manifestFiles = [:]
   Map manifestSummary = [:]
   Map runData = [:]
   DdbS3ExportLine[] errors = []
@@ -69,29 +78,34 @@ class CheckS3Files {
   static void main(String[] args) {
     // improve:sto close the input streams!
 
+    println "pwd: " + System.getProperty("user.dir")
     def raidTable = parseStream(
-      "raidTable", findImportStream(raidTablePath).stream,
+      "raidTable", 
+      findImportStream(ddbDataDirPath, raidTablePath).stream,
       DdbS3ItemTable.&guardS3ExportRaidTableItem)
     writeErrors("raidTable",
       raidTable.findAll{ it.error } as DdbS3ExportLine[])
     println ""
 
     def assocTable = parseStream(
-      "assocTable", findImportStream(associationIndexTablePath).stream,
+      "assocTable", 
+      findImportStream(ddbDataDirPath, associationIndexTablePath).stream,
       DdbS3ItemTable.&guardS3ExportAssocTableItem)
     writeErrors("assocIndexTable",
       assocTable.findAll{ it.error } as DdbS3ExportLine[])
     println ""
 
     def metadataTable = parseStream(
-      "metadataTable", findImportStream(metadataTablePath).stream,
+      "metadataTable", 
+      findImportStream(ddbDataDirPath, metadataTablePath).stream,
       DdbS3ItemTable.&guardS3ExportMetadataTableItem)
     writeErrors("metadataTable",
       metadataTable.findAll{ it.error } as DdbS3ExportLine[])
     println ""
 
     def tokenTable = parseStream(
-      "tokenTable", findImportStream(tokenTablePath).stream,
+      "tokenTable", 
+      findImportStream(ddbDataDirPath, tokenTablePath).stream,
       DdbS3ItemTable.&guardS3ExportTokenTableItem)
     writeErrors("tokenTable",
       tokenTable.findAll{ it.error } as DdbS3ExportLine[])
@@ -102,11 +116,13 @@ class CheckS3Files {
 
 class ImportS3Files {
   static void main(String[] args) {
+    println "pwd: " + System.getProperty("user.dir")
     Map<String, ImportFile> files = [
-      raid            : findImportStream(raidTablePath),
-      associationIndex: findImportStream(associationIndexTablePath),
-      metadata        : findImportStream(metadataTablePath),
-      token           : findImportStream(tokenTablePath)
+      raid            : findImportStream(ddbDataDirPath, raidTablePath),
+      associationIndex: 
+        findImportStream(ddbDataDirPath, associationIndexTablePath),
+      metadata        : findImportStream(ddbDataDirPath, metadataTablePath),
+      token           : findImportStream(ddbDataDirPath, tokenTablePath)
     ]
 
     def raidTable = parseStream(
@@ -138,7 +154,7 @@ class ImportS3Files {
     Map runDetails = files.collectEntries{ key, value ->
       [
         (key): [
-          path           : value.file.path,
+          path           : value.dataFile.path,
           manifestSummary: value.manifestSummary,
           errors         : value.errors.size(),
         ]

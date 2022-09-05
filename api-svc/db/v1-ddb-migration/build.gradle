@@ -108,6 +108,7 @@ task checkS3Files(type: JavaExec){
   description = "Run CheckS3Files, outputs `error.json` files in PWD"
   classpath = sourceSets.main.runtimeClasspath
   setMainClass "raid.ddb_migration.CheckS3Files"
+  workingDir rootProject.projectDir
   systemProperties defaultSysProps
 }
 
@@ -116,6 +117,7 @@ task importS3Files(type: JavaExec){
   description = "Run ImportS3Files - update table, write `error.json` in PWD"
   classpath = sourceSets.main.runtimeClasspath
   setMainClass "raid.ddb_migration.ImportS3Files"
+  workingDir rootProject.projectDir
   systemProperties defaultSysProps
 }
 
