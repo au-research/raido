@@ -4,15 +4,23 @@ import raido.apisvc.util.Log;
 
 import static raido.apisvc.util.Log.to;
 
-/**
+/** Does nothing but log statements in a specific format. I set my
+ console view to highlight that format so it stands out. 
+
+ I like to use the `Grep Console` IDEA plugin to highlight matching `BddUtil.*`
+ to make these lines stand out in the console log.  Makes interpreting test 
+ output very easy.
+ 
+ I find myself often writing log statements in integration/functional tests
+ to deliniate logical sections of test code.  It helps when inspecting the 
+ log output for a failed test and often helps track down other issues too -
+ e.g turn on SQL/transaction tracing and you can track the SQL issued to what 
+ the test is doing, often turns up surprising things.
+ 
  The method names are uppercase not because they're static, but to make them
  stand out in the test source.
  
  Same with uppercasing the actual message.
- 
- I like to use the `Grep Console` IDEA plugin to highlight matching `BddUtil.*`
- to make these lines stand out in the console log.  Makes interpreting test 
- output very easy.
  
  This exists in prod source because I can't figure out how to get Gradle to 
  depend on unit test classes from functional tests.
