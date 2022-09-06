@@ -140,7 +140,7 @@ function ServerPanel(){
     }}/>
   }
 
-  return <ContainerCard title="API server"
+  return <ContainerCard title="API service"
     action={<RefreshIconButton refreshing={isLoading} onClick={loadApiInfo}/>}
   >
     <TextSpan><>
