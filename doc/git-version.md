@@ -1,4 +1,10 @@
-*  current HEAD is a commit with tag `version@1.2.3`, no uncommitted changes
+Note: We intended to stop using git-version.  Making the build reliant on the
+presence of a full git installation and cloned repo is awkward for more modern
+CI/CD approaches where the source tends to be managed as an artifact separate
+from the process of cloning/retrieving the latest version.
+
+ 
+* current HEAD is a commit with tag `version@1.2.3`, no uncommitted changes
 * version = 1.2.3
 * current HEAD is two commits descended from the above commit,
   with no other tags present, no uncommitted changes
