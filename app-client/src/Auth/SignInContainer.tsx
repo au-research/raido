@@ -70,7 +70,7 @@ export function SignInContainer(){
 
 
   const disabled = !!signInContext.action;
-  return <ContainerCard title={"Sign-in"} action={<DirectHelp/>}> 
+  return <ContainerCard title={"Sign-in"} action={<OidcSignInHelp/>}> 
     <div style={{display: "grid", 
       gridTemplateColumns: "8em 8em",
       justifyContent: "center",
@@ -108,7 +108,7 @@ function formatStateValue(state: RaidoOAuthState):string{
   return encodeURIComponent(base64);
 }
 
-function DirectHelp(){
+function OidcSignInHelp(){
   return <HelpPopover content={
     <Typography>
       <Typography>
@@ -116,8 +116,9 @@ function DirectHelp(){
         organisation has an agreement.
       </Typography>
       <Typography>
-        Once you've signed in, you can request that an institution authorize
-        your usage of the application.
+        Once you've signed in and authenticated yourself, you will be able to 
+        submit a request for a specific institution to authorize your usage of 
+        the RAID app with their data.
       </Typography>
     </Typography>
   }/>;
