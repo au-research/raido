@@ -1,5 +1,11 @@
 import * as React from "react";
-import {IconButton, Popover, Typography} from "@mui/material";
+import {
+  Chip,
+  ChipProps,
+  IconButton,
+  Popover,
+  Typography
+} from "@mui/material";
 import {stopClick} from "Util/EventUtil";
 import {CSSProperties, ReactNode} from "react";
 import { Help } from "@mui/icons-material";
@@ -51,4 +57,10 @@ export function HelpPopover({content, icon}: {
       </Typography>
     </Popover>
   </>
+}
+
+export function HelpChip(props: ChipProps){
+  return <Chip variant={"outlined"} size={"small"} {...props}
+    style={{marginRight: ".5em", ...props.style}}
+  />
 }

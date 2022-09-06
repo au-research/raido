@@ -1,5 +1,5 @@
 import { NavTransition } from "Design/NavigationProvider";
-import React, { SyntheticEvent, useCallback, useEffect } from "react";
+import React, { SyntheticEvent } from "react";
 import { ContainerCard } from "Design/ContainerCard";
 import { TextSpan } from "Component/TextSpan";
 import { LargeContentMain, SmallContentMain } from "Design/LayoutMain";
@@ -13,12 +13,11 @@ import {
   Typography
 } from "@mui/material";
 import { PrimaryButton } from "Component/AppButton";
-import { HelpPopover } from "Component/HelpPopover";
+import { HelpChip, HelpPopover } from "Component/HelpPopover";
 import { raidoTitle } from "Component/Util";
 import { useAuthApi } from "Api/AuthApi";
 import { useQuery } from "@tanstack/react-query";
 import { Institution } from "Generated/Raidv2";
-import { delay } from "Util/EventUtil";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 
 const log = console;
@@ -158,6 +157,16 @@ function AuthRequestHelp(){
         institution or you just want change/add the comment) - re-submit
         and your request will be updated.
       </TextSpan>
+      <ul>
+        <li><HelpChip label={"Institution"}/> 
+          The institute you are requesting to be authorized
+          for.
+        </li>
+        <li><HelpChip label={"Comments / Information"}/> 
+          Any context you'd like to give to the person authorising the request. 
+          Contact details, reminder about a previous conversation, etc.
+        </li>
+      </ul>
     </Stack>
   }/>;
 }
