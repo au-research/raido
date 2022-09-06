@@ -1,3 +1,20 @@
+Raido uses [Flyway](https://flywaydb.org/documentation/) to manage schema 
+migrations.
+
+The migration process is run from within AWS via a `codebuild` project - we
+do not run Flyway from within api-svc server process.
+
+Remember that this codebase is publicly visible.  You must not put secrets
+or private customer information into the DB migration scripts.  
+
+Take the data migration process for the legacy V1 data as an example:
+* the scheme and migration code are committed in the 
+  `/api-svc-/db/v1-ddb-migration` project
+* the actual data is stored in a private S3 bucket 
+* the migration process is run from a `codebuild` instance, which has been 
+  granted explicit access to the migration data files
+
+
 # Structure
 
 * `:api-svc:db`
