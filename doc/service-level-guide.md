@@ -20,6 +20,12 @@ Raido can be used and what should be expected as baseline level of service.
 The Raido team aims to provide this level of service on a best-effort basis, 
 subject to funding and resource availability.
 
+The service level guide may change, if we find we can't meet this level of 
+service, we will adjust the guide to provide guidance on the service level
+we are able to achieve. New versions of the service level guide will be
+published at this location, previous versions of the document are available
+in the Git history.
+
 
 # Availablity
 
