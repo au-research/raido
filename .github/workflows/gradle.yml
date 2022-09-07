@@ -90,8 +90,9 @@ jobs:
           EOF
 
           # commented out to protect secrets
-          echo "cat api-svc-env.properties"
-          cat ~/.config/raido-v2/api-svc-env.properties
+          # Github redacts secrets that it recognises anyway, but still.
+          # echo "cat api-svc-env.properties"
+          # cat ~/.config/raido-v2/api-svc-env.properties
 
       # requires api-svc-env.properties to be populated
       - name: Run integration tests
