@@ -108,6 +108,17 @@ function GitCommitLink({commitId}: {commitId: string}){
   </NewWindowLink>
 }
 
+function ApiSpecLink({commitId}: {commitId: string|undefined}){
+  if( !commitId || commitId === unknownCommitId ){
+    return <>Unknown commit</>
+  }
+  const fileHref = raidoGithubUrl + "/blob/" + commitId + 
+    "/api-svc/idl-raid-v2/src/raid-v2-0-0.yaml";
+  return <NewWindowLink href={fileHref}>
+    raid-v2-0-0.yaml
+  </NewWindowLink>
+}
+
 function ServerPanel(){
   const [serverDetails, setServerDetails] = React.useState(
     undefined as undefined | Error | VersionResult);
@@ -147,6 +158,7 @@ function ServerPanel(){
       Server version: {serverDetails ? serverDetails.buildVersion : ""}<br/>
       Commit id:{" "}
       <GitCommitLink commitId={serverDetails?.buildCommitId || ""}/><br/>
+      OpenAPI spec: <ApiSpecLink commitId={serverDetails?.buildCommitId}/><br/>
       Build date: {serverDetails ? serverDetails.buildDate : ""}<br/>
       Start date: {
         serverDetails ?
