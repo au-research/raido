@@ -76,22 +76,24 @@ In order to ensure availability and fairness to all institutions, the API
 service has limits for various things.
 
 * 5 mint requests per second, per institutuion
-  * requests in excess of the limit may be rejected with HTTP 429 errors
+  * requests in excess of the limit may be rejected with a HTTP 429 error
 * 25 general API requests per second, per institution
-  * requests in excess of the limit may be rejected with HTTP 429 errors
+  * requests in excess of the limit may be rejected with a HTTP 429 error
 * RAID DMR is limited to 200 KB maximum size
+  * requests to mint or update records with a DMR > 200 KB may be rejected
+  with a HTTP 413 error
 
 
 # API Compatibility 
 
 ## Stable endpoints
 
-API endpoints marked "stable" are intended to be supported in the long-term.
+API endpoints marked `stable` are intended to be supported in the long-term.
 However, sometimes it is necessary to remove old API endpoints so that the
 Raido team can maintain the system effectively.
 
 Where it is deemed necessary, specific versions of an API endpoint may be
-marked "deprecated". The users of that specific endpoint version will
+marked `deprecated`. The users of that specific endpoint version will
 be notified, along with instructions on which stable endpoints to use in 
 future.
 
@@ -102,7 +104,7 @@ from the API.
 Institutions using the API are expected to make best efforts to upgrade their
 integration with the API within the deprecation period.
 
-Wher an institution cannot upgrade their integration and needs the deprecation
+Where an institution cannot upgrade their integration and needs the deprecation
 window to be extended, they are expected to communicate with the Raido support
 team as soon as possible.
 
@@ -110,7 +112,7 @@ team as soon as possible.
 ## Experimental endpoints
 
 When developing new UI and other features, new endpoint versions will be 
-added to the API without notice.  These endpoints are marked as "experimental".
+added to the API without notice.  These endpoints are marked as `experimental`.
 
 Experiment endpoints are intended to enable rapid prototyping and evolution of
 new RAID features.  Experimental features are not supported for use by 
