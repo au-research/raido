@@ -1,6 +1,6 @@
 # raido-v2
 
-"Raido" is the re-implementation of the Oceania region 
+"Raido" is the new implementation of the Oceania region 
 [RAiD](https://raido.org.au) implementation.
 
 It is not yet live, though you can find the demo environment at 
@@ -18,8 +18,11 @@ Important architecural decisions are recorded in [/doc/adr](./doc/adr).
 Different sub-projects have their own ADR log, in their local /doc/adr
 directories (i.e. db, app, [api](/api-svc/spring/doc/adr), etc.)
 
-The overall technology stack is can found at 
-[/doc/tecnnology-stack.md](/doc/tecnnology-stack.md)
+The overall technology stack is can found in the  
+[tecnnology-stack.md](/doc/tecnnology-stack.md) page.
+
+The [service-level-guide.md](/doc/service-level-guide.md) page provides guidance
+to the expected level of service provided by the Raido team.
 
 
 # Project structure
