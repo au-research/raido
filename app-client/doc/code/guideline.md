@@ -25,7 +25,7 @@ Favour static typing.
 
 ## Use absolute paths
 
-The tsconfig is set up for absolte paths, you should use them - it just looks
+The tsconfig is set up for absolute paths, you should use them - it just looks
 nice.
 
 Remember to configure your IDE for absolute paths.
@@ -38,14 +38,14 @@ tsconfig.json".
 
 e.g. `DateUtil.ts` instead of `date-util.ts`
 
-Honestly, hyphenating the name is just bizarre.
+Honestly, hyphenating the name is just weird.
 
 
 # Use init cap for directory paths
 
 This way you know when looking at an import that it's Raido specific.
 
-e.g. if the import path starts with a capital letter, it's probably ours -  
-`import {ErrorInfo} from "Error/ErrorUtil"`.
+e.g. if the import path starts with a capital letter, it's probably ours -
+ `import {ErrorInfo} from "Error/ErrorUtil"`.
 
 
