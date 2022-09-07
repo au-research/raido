@@ -10,7 +10,7 @@ Raido is just one possible implementation of the RAiD ISO standard.
 Other registration agencies may run RAiD implementations with completely
 different levels of service.
 
-The below service level statements are in the nature of "aspirations" for the  
+The below service level statements are in the nature of "aspirations" for the
 Raido system - they are not a guarantee and this document is not intended as a 
 contract.
 
