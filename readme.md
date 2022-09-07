@@ -17,7 +17,7 @@ Important architecural decisions are recorded in [/doc/adr](./doc/adr).
 Different sub-projects have their own ADR log, in their local /doc/adr
 directories (i.e. db, app, [api](/api-svc/spring/doc/adr), etc.)
 
-The overall technology stack is can found in the  
+The overall technology stack can be found in the
 [tecnnology-stack.md](/doc/tecnnology-stack.md) page.
 
 The [service-level-guide.md](/doc/service-level-guide.md) page provides guidance
