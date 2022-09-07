@@ -12,10 +12,10 @@
 ```json
 {
   "version": "2020-06-30",
-  "exportArn": "arn:aws:dynamodb:ap-southeast-2:005299621378:table/RAiD-RAiDLiveDB-1SX7NYTSOSUKX-RAiDTable-1PO1W2ASWY0OV/export/01658105838782-e79094f8",
+  "exportArn": "arn:aws:dynamodb:ap-southeast-2:999:table/RAiD-RAiDLiveDB-1SX7NYTSOSUKX-RAiDTable-1PO1W2ASWY0OV/export/01658105838782-e79094f8",
   "startTime": "2022-07-18T00:57:18.782Z",
   "endTime": "2022-07-18T01:01:56.991Z",
-  "tableArn": "arn:aws:dynamodb:ap-southeast-2:005299621378:table/RAiD-RAiDLiveDB-1SX7NYTSOSUKX-RAiDTable-1PO1W2ASWY0OV",
+  "tableArn": "arn:aws:dynamodb:ap-southeast-2:999:table/RAiD-RAiDLiveDB-1SX7NYTSOSUKX-RAiDTable-1PO1W2ASWY0OV",
   "tableId": "d02d1eb5-402c-4c2a-b6df-a6f7a533f1ce",
   "exportTime": "2022-07-17T14:00:00.000Z",
   "s3Bucket": "sto-raid-dev-manual",
