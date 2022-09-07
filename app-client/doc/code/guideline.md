@@ -6,7 +6,7 @@
 
 ## Configure for development by default
 
-See [api-svc/.../config/environment/readme.md](/api-svc/spring/src/main/java/raido/spring/config/environment/readme.md)
+See [api-svc/.../config/environment/readme.md](/api-svc/spring/src/main/java/raido/api-svc/spring/config/environment/readme.md)
 
 
 ## Not-null by default

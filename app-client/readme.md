@@ -65,7 +65,7 @@ just like a Java app.
 ## Debugging React components
 
 Don't forget to install the React developer extension into your browser.
-You can easily browser aroung the component hierarchy and see state easily, 
+You can easily browse around the component hierarchy and see state easily, 
 instead of adding console debug statements.
 
 You can also use it to profile the UI code and look for poor performing code 
@@ -75,7 +75,7 @@ and superfluous re-renders.
 ## Deploying to `demo` environment
 
 Log in to AWS and go the CodePipeline console.
-Look for the pipeline named `AppClient` and do a "release changes".
+Look for the pipeline named `AppClient` and click the "release changes" button.
 
 https://ap-southeast-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/AppClient/view?region=ap-southeast-2#
 
