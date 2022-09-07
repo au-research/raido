@@ -22,7 +22,7 @@ export function SignInContainer(){
   async function googleSignIn(){
     const state: RaidoOAuthState = {
       // tells the IdP where to redirect to after user approval
-      redirectUri: serverLocationUrl(),
+      redirectUri: window.location.href,
       // this tells the server redirect url which IdP was used
       clientId: Config.google.clientId,
     }
@@ -48,7 +48,7 @@ export function SignInContainer(){
 
   async function aafSignIn(){
     const state: RaidoOAuthState = {
-      redirectUri: serverLocationUrl(),
+      redirectUri: window.location.href,
       clientId: Config.aaf.clientId,
     }
     signInContext.setAction(aafAction);
