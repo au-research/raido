@@ -1,8 +1,8 @@
 **Note**: This page is a prototype, it is not yet agreed that these are the 
 usage terms for Raido.
 
-It is intended that we will "publish" these terms by adding a link from the new
-"about RAID" page to this page on github.
+It is intended that we will "publish" this guide by adding a link from 
+the new "about RAID" page to this page on github.
 
 ----
 
@@ -14,8 +14,8 @@ The below service level statements are in the nature of "aspirations" for the
 Raido system - they are not a guarantee and this document is not intended as a 
 contract.
 
-This page is published in order to set expectations around how Raido can be
-used and what should be expected as baseline level of service.  
+The service level guide is published in order to set expectations around how 
+Raido can be used and what should be expected as baseline level of service.  
 
 The Raido team aims to provide this level of service on a best-effort basis, 
 subject to funding and resource availability.
