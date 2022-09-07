@@ -42,7 +42,7 @@ keep the databse available the same "rolling upgrade" process as the api-svc.
 When running major database updates, there is usually some downtime - on the 
 order of 10 minutes.  Downtime like this is scheduled to happen in the 
 AWS RDS maintenance window: 
-[/doc/raido-service-level.md](/doc/raido-service-level.md) 
+[/doc/service-level-guide.md](/doc/service-level-guide.md) 
 
 
 # Running for local development
