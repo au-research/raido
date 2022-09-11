@@ -27,7 +27,7 @@ still have stuff work inside `codepipeline`
       to "unknown" values
 
 
-# api -svc
+# api-svc
 
 ## IDL projects generate java of the from `Void entpointNAme()`   
 
