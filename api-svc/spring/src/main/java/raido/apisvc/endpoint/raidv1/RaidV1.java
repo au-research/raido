@@ -72,8 +72,8 @@ public class RaidV1 implements RaidV1Api {
   }
 
   /**
-   For testing, c.f. declaring a method parameter (I can't figure out
-   how to get openapi to generate code like that).
+   For testing, c.f. declaring a method parameter of type `Principal` 
+   (I can't figure out how to get openapi to generate code like that).
    */
   public Raid1PostAuthenicationJsonWebToken getAuthentication() {
     return Guard.isInstance(
