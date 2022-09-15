@@ -9,6 +9,19 @@ import raido.apisvc.util.Log;
 
 import static raido.apisvc.util.Log.to;
 
+/**
+ IMPROVE: I don't think we need multiple types of pre-auth objects.
+ Just have one and share it for
+ - raidV1 API token
+ - raidV2 API token
+ - RaidV2 non-authz user token
+ - RaidV2 authz user token
+ 
+ And have this class be the AuthProvider that does the multi-plexing.
+ 
+ Do keep using separate post-auth objects though, it's good to have those 
+ explicitly stated requirements around what fields each type of token will have.
+ */
 public class RaidV2AuthenticationProvider implements AuthenticationProvider {
   private static final Log log = to(RaidV2AuthenticationProvider.class);
   
@@ -23,7 +36,7 @@ public class RaidV2AuthenticationProvider implements AuthenticationProvider {
   throws AuthenticationException {
 
     if( isRaid2PreAuth(authentication.getClass()) ){
-      return raidSvc.authenticate(
+      return raidSvc.authorize(
         (RaidV2PreAuthenticatedJsonWebToken) authentication).orElse(null);
     }
     

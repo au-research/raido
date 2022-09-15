@@ -1,0 +1,9 @@
+openapi: 3.0.3
+info:
+  title: shared types
+  version: 1.0.0
+paths:
+  
+components:
+  schemas:
+    SurrogateKey: { type: integer, format: int64}

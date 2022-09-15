@@ -9,6 +9,7 @@ import org.jooq.OrderField;
 import org.jooq.impl.DSL;
 import org.jooq.impl.Internal;
 
+import raido.db.jooq.api_svc.tables.AppUser;
 import raido.db.jooq.api_svc.tables.FlywaySchemaHistory;
 
 
@@ -22,5 +23,6 @@ public class Indexes {
     // INDEX definitions
     // -------------------------------------------------------------------------
 
+    public static final Index APP_USER_ID_FIELDS_ACTIVE_IDX = Internal.createIndex(DSL.name("app_user_id_fields_active_idx"), AppUser.APP_USER, new OrderField[] { AppUser.APP_USER.EMAIL, AppUser.APP_USER.CLIENT_ID, AppUser.APP_USER.SUBJECT }, true);
     public static final Index FLYWAY_SCHEMA_HISTORY_S_IDX = Internal.createIndex(DSL.name("flyway_schema_history_s_idx"), FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, new OrderField[] { FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.SUCCESS }, false);
 }

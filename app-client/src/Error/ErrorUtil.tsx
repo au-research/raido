@@ -43,3 +43,14 @@ export function forceError(e: unknown): Error{
   }
   return new Error("unknown error");
 }
+
+export function errorInfo(
+  context: string,
+  error: unknown, 
+): ErrorInfo | undefined {
+  if( !error ){
+    return undefined;
+  }
+  
+  return {message: context, problem: error};
+}

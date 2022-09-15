@@ -6,16 +6,15 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import raido.apisvc.util.Guard;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.StringJoiner;
 
-public class AuthzTokenPayload implements Authentication {
-  private Long appUserId;
+public class NonAuthzTokenPayload implements Authentication {
   private String clientId;
   /** `sub` claim in a standard jwt */
   private String subject;
   private String email;
-  private String role;
 
   private Collection<? extends GrantedAuthority> authorities;
 
@@ -23,11 +22,9 @@ public class AuthzTokenPayload implements Authentication {
   public String toString() {
     return new StringJoiner(
       ", ",
-      AuthzTokenPayload.class.getSimpleName() + "[",
+      NonAuthzTokenPayload.class.getSimpleName() + "[",
       "]")
-      .add("appUserId='" + appUserId + "'")
       .add("email='" + email + "'")
-      .add("role='" + role + "'")
       .toString();
   }
   
@@ -69,10 +66,6 @@ public class AuthzTokenPayload implements Authentication {
     return email;
   }
 
-  public Long getAppUserId() {
-    return appUserId;
-  }
-
   public String getClientId() {
     return clientId;
   }
@@ -85,64 +78,44 @@ public class AuthzTokenPayload implements Authentication {
     return email;
   }
 
-  public String getRole() {
-    return role;
-  }
-
-  public static final class AuthzTokenPayloadBuilder {
-    private Long appUserId;
+  public static final class NonAuthzTokenPayloadBuilder {
     private String clientId;
     private String subject;
     private String email;
-    private String role;
 
-    private AuthzTokenPayloadBuilder() {
+    private NonAuthzTokenPayloadBuilder() {
     }
 
-    public static AuthzTokenPayloadBuilder anAuthzTokenPayload() {
-      return new AuthzTokenPayloadBuilder();
+    public static NonAuthzTokenPayloadBuilder aNonAuthzTokenPayload() {
+      return new NonAuthzTokenPayloadBuilder();
     }
 
-    public AuthzTokenPayloadBuilder withAppUserId(Long appUserId) {
-      this.appUserId = appUserId;
-      return this;
-    }
-    
-    public AuthzTokenPayloadBuilder withClientId(String clientId) {
+    public NonAuthzTokenPayloadBuilder withClientId(String clientId) {
       this.clientId = clientId;
       return this;
     }
 
-    public AuthzTokenPayloadBuilder withSubject(String subject) {
+    public NonAuthzTokenPayloadBuilder withSubject(String subject) {
       this.subject = subject;
       return this;
     }
 
-    public AuthzTokenPayloadBuilder withEmail(String email) {
+    public NonAuthzTokenPayloadBuilder withEmail(String email) {
       this.email = email;
       return this;
     }
 
-    public AuthzTokenPayloadBuilder withRole(String role) {
-      this.role = role;
-      return this;
-    }
-
-    public AuthzTokenPayload build() {
-      Guard.notNull(appUserId);
+    public NonAuthzTokenPayload build() {
       Guard.hasValue(clientId);
       Guard.hasValue(subject);
       Guard.hasValue(email);
-      Guard.hasValue(role);
       
-      AuthzTokenPayload payload = new AuthzTokenPayload();
-      payload.appUserId = this.appUserId;
+      NonAuthzTokenPayload payload = new NonAuthzTokenPayload();
       payload.email = this.email;
       payload.clientId = this.clientId;
-      payload.role = this.role;
       payload.subject = this.subject;
       
-      payload.authorities = List.of(new SimpleGrantedAuthority(this.role));
+      payload.authorities = Collections.emptyList();
       
       return payload;
     }

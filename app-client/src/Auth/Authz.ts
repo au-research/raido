@@ -46,9 +46,9 @@ export function getAuthSessionFromStorage(): undefined | AuthorizedSession{
   }
   
   const parseResult = parseAccessToken(storedAccessToken);
-  if( !parseResult.succeeded ){
+  if( parseResult.result !== "authorized" ){
     console.warn("problem parsing accessToken from storage, clearing token.",
-      parseResult.message, parseResult.decoded);
+      parseResult);
     clearAccessTokenFromStorage();
     return undefined;
   }
@@ -61,40 +61,39 @@ export function getAuthSessionFromStorage(): undefined | AuthorizedSession{
 }
 
 export function parseAccessToken(accessToken: string):{
-  succeeded: true,
+  result: "authorized",
   accessTokenExpiry: Date,
   payload: AuthzTokenPayload,
 } | {
-  succeeded: false,
+  result: "not-authorized",
+  accessToken: string,
+} | {
+  result: "failed",
   message: string,
   decoded: string|undefined,
 }{
   const decoded: any = jwtDecode(accessToken);
 
   if( !decoded ){
-    return {succeeded: false, message: "accessToken decode issue", decoded};
+    return {result: "failed", message: "accessToken decode issue", decoded};
   }
 
   if( typeof decoded !== "object" ){
-    return {succeeded: false, message: "decoded token is not object", decoded};
+    return {result: "failed", message: "decoded token is not object", decoded};
   }
 
   if( !decoded.clientId || typeof(decoded.clientId) !== "string" ){
-    return {succeeded: false, 
+    return {result: "failed", 
       message: "no accessToken payload clientId", decoded};
   }
 
   if( !decoded.sub || typeof(decoded.sub) !== "string" ){
-    return {succeeded: false, 
+    return {result: "failed", 
       message: "no accessToken payload sub", decoded};
   }
 
   if( !decoded.email  || typeof(decoded.email) !== "string" ){
-    return {succeeded: false, message: "no accessToken payload email", decoded};
-  }
-
-  if( !decoded.role  || typeof(decoded.role) !== "string" ){
-    return {succeeded: false, message: "no accessToken payload role", decoded};
+    return {result: "failed", message: "no accessToken payload email", decoded};
   }
 
   //if( !decoded.userCreated  || typeof(decoded.userCreated) !== "string" ){
@@ -103,23 +102,32 @@ export function parseAccessToken(accessToken: string):{
   //}
 
   if( !decoded.exp || typeof(decoded.exp) !== "number" ){
-    return {succeeded: false, 
+    return {result: "failed", 
       message: "malformed accessToken payload exp", decoded};
   }
 
   const accessTokenExpiry: Date|undefined = parseJwtDate(decoded.exp);
   if( !accessTokenExpiry ){
-    return {succeeded: false, 
+    return {result: "failed", 
       message: "malformed accessToken payload exp", decoded};
   }
 
   if( accessTokenExpiry <= new Date() ){
     console.debug("accessTokenExpiry", accessTokenExpiry);
-    return {succeeded: false, message: "accessToken is expired", decoded};
+    return {result: "failed", message: "accessToken is expired", decoded};
+  }
+
+  console.log("isAuth", decoded.isAuthorizedAppUser);
+  if( !decoded.isAuthorizedAppUser  || typeof(decoded.isAuthorizedAppUser) !== "boolean" ){
+    return {result: "not-authorized", accessToken: accessToken};
+  }
+
+  if( !decoded.role  || typeof(decoded.role) !== "string" ){
+    return {result: "failed", message: "no accessToken payload role", decoded};
   }
 
   return {
-    succeeded: true,
+    result: "authorized",
     accessTokenExpiry,
     payload: {
       ...decoded,

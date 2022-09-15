@@ -1,8 +1,12 @@
 package raido.apisvc.util;
 
 
+import raido.apisvc.spring.security.ApiSvcAuthenticationException;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ForkJoinPool;
 
 import static raido.apisvc.util.StringUtil.isBlank;
 
@@ -61,6 +65,14 @@ public class ExceptionUtil {
     return illegalArgException(format, args);
   }
   
+  /** Not yet implemented */
+  public static RuntimeException notYetImplemented() {
+    return runtimeException("not yet implemented");
+  }
+  
+  public static ApiSvcAuthenticationException authFailed(){
+    return new ApiSvcAuthenticationException();
+  }
   
 
   /**
@@ -147,6 +159,5 @@ public class ExceptionUtil {
 
     return null;
   }
-
-
+  
 }

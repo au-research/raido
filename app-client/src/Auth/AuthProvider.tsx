@@ -15,6 +15,8 @@ import { IntroContainer } from "Auth/IntroContainer";
 import { SignInContainer } from "Auth/SignInContainer";
 import { useLocationPathname } from "Util/Hook/LocationPathname";
 import { SignInContext } from "Auth/SignInContext";
+import jwtDecode from "jwt-decode";
+import { NotAuthorizedContainer } from "Auth/NotAuthorizedContent";
 
 export interface AuthState {
   signOut: () => void,
@@ -48,8 +50,7 @@ type ProviderState =
   // in-progress states
   {current: "init"} |
   {current: "authenticating"} |
-  // we don't need this state at the moment, id_token is access_token
-  //{current: "authorizing"} |
+  {current: "not-authorized", accessToken: string} |
   {current: "signing-out"} |
 
   // terminal states
@@ -113,16 +114,25 @@ export function AuthProvider({unauthenticatedPaths = [], children}: {
    */
     
     const parseResult = parseAccessToken(idToken);
-    if( !parseResult.succeeded ){
+    
+    if( parseResult.result === "failed" ){
       console.warn("problem parsing idToken returned from sign-in",
         parseResult.message, parseResult.decoded);
       setState({current: "error", error: {
         message: parseResult.message, 
         problem: parseResult.message, 
       }});
-      return undefined;
+      return;
     }
 
+    if( parseResult.result === "not-authorized" ){
+      setState({
+        current: "not-authorized", 
+        accessToken: parseResult.accessToken
+      });
+      return;
+    }
+    
     /* security:sto this is highly questionable.
      Better to just save what clientId the user logged in through last time and 
      use that to redirect to the IDP to authenticate again.
@@ -187,6 +197,9 @@ export function AuthProvider({unauthenticatedPaths = [], children}: {
     />
   }
 
+  if( state.current === "not-authorized" ){
+    return <NotAuthorizedContainer accessToken={state.accessToken}/>
+  }
   // avoid unnecessary re-renders based on creating a new context value
   if( stateCache.current.signOut !== onSignOutClicked ||
     stateCache.current.session !== state.authSession 

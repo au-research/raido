@@ -6,11 +6,13 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import raido.apisvc.service.auth.RaidoClaim;
 import raido.apisvc.util.Log;
 
 import java.util.Collection;
 import java.util.Collections;
 
+import static raido.apisvc.service.auth.RaidoClaim.IS_AUTHORIZED_APP_USER;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.mask;
@@ -61,6 +63,10 @@ implements Authentication {
     return false;
   }
 
+  public boolean isAuthorizedAppUser(){
+    return token.getClaim(IS_AUTHORIZED_APP_USER.getId()).asBoolean();
+  }
+  
   @Override
   public void setAuthenticated(boolean isAuthenticated) 
   throws IllegalArgumentException {

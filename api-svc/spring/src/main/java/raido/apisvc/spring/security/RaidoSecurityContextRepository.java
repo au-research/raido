@@ -7,6 +7,7 @@ import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import raido.apisvc.spring.security.raidv1.RaidV1PreAuthenticatedJsonWebToken;
 import raido.apisvc.spring.security.raidv2.RaidV2PreAuthenticatedJsonWebToken;
+import raido.apisvc.util.ExceptionUtil;
 import raido.apisvc.util.Log;
 
 import java.util.Optional;
@@ -66,8 +67,7 @@ public class RaidoSecurityContextRepository implements SecurityContextRepository
       log.with("path", request.getServletPath()).
         with("token", mask(token.get())).
         info("SCR no match");
-      throw new UnsupportedOperationException("can only do /v1 endpoints ATM");
-
+      throw ExceptionUtil.authFailed();
     };
   }
 

@@ -47,6 +47,32 @@ export function PrimaryButton({
   </>
 }
 
+export function PrimaryActionButton({
+  isLoading, error, context, children, ...buttonProps
+}: {
+  /** context is a user targeted description of the action the button is doing,
+   used in error handling at the moment, could also be used in UI feedback for
+   the loading state and a "post-success" toast or something. */
+  context: string,
+  isLoading?: boolean,
+  error: unknown
+} & ButtonProps){
+  return <>
+    <Button {...primaryButtonProps} {...buttonProps}
+      style={{...primaryButtonProps.style, ...buttonProps.style}}
+    >
+      {children}
+      { isLoading &&
+        <LinearProgress style={{...primaryLinearStyle}}/>
+      }
+    </Button>
+    { error &&
+      <CompactErrorPanel border={"h-pad"}
+        error={{message: `error while ${context}`, problem: error}}/>
+    } 
+  </>
+}
+
 export function SecondaryButton({isLoading, error, children, ...buttonProps}:
   { isLoading?: boolean, error?: ErrorInfo } & ButtonProps
 ){

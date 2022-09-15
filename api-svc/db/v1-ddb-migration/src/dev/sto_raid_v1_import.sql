@@ -2,6 +2,10 @@ select *
 from app_user
 ;
 
+select * 
+from user_authz_request
+;
+
 -- expected default schema raid_v1_import 
 select * 
 from metadata 

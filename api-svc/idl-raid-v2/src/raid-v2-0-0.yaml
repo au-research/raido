@@ -1,6 +1,8 @@
 openapi: 3.0.3
 servers:
   - url: 'https://demo.raido-infra.com'
+  - url: 'https://test.raido-infra.com'
+  - url: 'http://localhost:8080'
 info:
   title: RAID v2 API
   version: 2.0.0
@@ -34,38 +36,109 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/versionResult'
-  /v2/experimental/institution/v1:
+                $ref: '#/components/schemas/VersionResult'
+  /v2/public/list-service-point/v1:
     get:
+      security: []
       tags:
-        - raido-experimental
-      operationId: list-institutions
-      summary: list institutions
+        - public-experimental
+      operationId: list-public-service-point
+      summary: list service point data that un-authn users can see
       responses:
         '200':
-          description: institutions
+          description: public service-point data
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/institution'
+                  $ref: '#/components/schemas/PublicServicePoint'
+  /v2/public/request-authz/v1:
+    post:
+      tags:
+        - public-experimental
+      operationId: update-request-authz
+      summary: create or update an authz request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAuthzRequest'
+      responses:
+        '200':
+          description: result of request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateAuthzResponse'
+          
+  /v2/experimental/service-point/v1:
+    get:
+      tags:
+        - raido-experimental
+      operationId: list-service-point
+      summary: list service point data that authz'd users can see
+      responses:
+        '200':
+          description: all service-point data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ServicePoint'
 
 components:
   schemas:
-    versionResult:
+    VersionResult:
       type: object
       properties:
         buildVersion: {type: string}
         buildCommitId: {type: string}
         buildDate: { type: string }
         startDate: { type: string, format: date-time }
-    institution:
+    V1Institution:
+      description: >
+        "v1" meaning "relating to V1 API", not "V1 of this object"
       type: object
       required: [id, name]
       properties:
         id: {type: string}
         name: {type: string}
+    PublicServicePoint:
+      description: data that non-authn users can see (do not leak email)
+      type: object
+      required: [id, name]
+      properties:
+        id: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        name: {type: string}
+    ServicePoint:
+      description: data that any member of service-point and operators can see
+      type: object
+      required: [id, name]
+      properties:
+        id: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        name: {type: string}
+        tech_email: {type: string}
+        admin_email: {type: string}
+        disabled: {type: boolean}
+    UpdateAuthzRequest:
+      description: authorization request
+      type: object
+      required: [servicePointId, name]
+      properties:
+        servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        comments: {type: string}
+    # would be nice to do an "any-of" type spec that generates an enum on the 
+    # TS side - not sure OAS spec and the tooling supports it yet?
+    UpdateAuthzResponse:
+      description: > 
+        'APPROVED' or 'REQUESTED'
+      type: object
+      required: [status]
+      properties:
+        status: {type: string}
   securitySchemes:
     BearerAuth:
       type: http

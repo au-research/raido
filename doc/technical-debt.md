@@ -45,13 +45,4 @@ awkwardness with `Void` may not turn out to be much of an issue.
 
 # AWS / Infra
 
-## Github Personal Access Token must be rotated
-
-The CDK pipeline uses a personal access token, created in a user's account
-(STO).
-
-If the token is not rotated before it expires (currently Aug 12 2023), we will
-not be able to deploy AWS infra updates.  And there may be other implicit 
-dependencies by then that we don't realise we have.
-
-Not sure what the alternative is.  
+AWS debt is documented in that repo, don't put it here.

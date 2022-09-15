@@ -12,8 +12,13 @@ import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
 
 import raido.db.jooq.DefaultCatalog;
+import raido.db.jooq.api_svc.tables.ApiToken;
+import raido.db.jooq.api_svc.tables.AppUser;
 import raido.db.jooq.api_svc.tables.FlywaySchemaHistory;
-import raido.db.jooq.api_svc.tables.TestTable;
+import raido.db.jooq.api_svc.tables.Raid;
+import raido.db.jooq.api_svc.tables.RaidoOperator;
+import raido.db.jooq.api_svc.tables.ServicePoint;
+import raido.db.jooq.api_svc.tables.UserAuthzRequest;
 
 
 /**
@@ -45,8 +50,13 @@ public class ApiSvc extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
+            ApiToken.API_TOKEN,
+            AppUser.APP_USER,
             FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
-            TestTable.TEST_TABLE
+            Raid.RAID,
+            RaidoOperator.RAIDO_OPERATOR,
+            ServicePoint.SERVICE_POINT,
+            UserAuthzRequest.USER_AUTHZ_REQUEST
         );
     }
 }
