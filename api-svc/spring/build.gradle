@@ -49,11 +49,6 @@ dependencies{
   implementation libs.bundles.spring6
   implementation libs.jooq
 
-
-  // use the standard jar instead of binding unnecessarily to Jetty
-  // pkg: jakarta.servlet - used to be javax.servlet  
-  compileOnly 'jakarta.platform:jakarta.jakartaee-web-api:9.1.0'
-
   /* use SLf4J API to log against - pkg: org.slf4j
      using 2.0.0 for Raido code because that's what jetty uses
      NOTE:STO: this might not be right since we're Jetty 11/Servlet 5 */
