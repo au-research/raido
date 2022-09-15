@@ -37,9 +37,58 @@ If you know you need more, or know your exactly limit, then do it.
 For large values, before worrying about factoring out to a separate table, learn
 about postgrest TOAST.  Then think about separating it out anyway :)
 
+Using `varachar` at the moment, because I couldn't see how to limit it with
+a `text` column.
 
-## Unique constraints
+There is this:
+https://dba.stackexchange.com/questions/189869/is-varcharx-as-fast-as-text-check-char-lengthx
 
-## Indexes
+But that means we lose the ability to find the column length from Java.
+Note really that big a deal.
 
 
+## Unique text constraints
+
+This was used on `service_point.name`: https://stackoverflow.com/a/65675825/924597
+I like this because:
+* retains accessible metadata about max column length 
+  * no need for extension like `citext`, which I'm not sure is usable on RDS, 
+    and then have to manage it across local dev and RDS
+  * using extensions is not disallowed, we just have to make sure it works 
+    everywhere and be sure we really want to do that.
+
+
+## DB index names
+
+Table and Index share the same namespace.
+
+I don't really mind what naming standard, I try to follow:
+* https://stackoverflow.com/a/4108266/924597
+* see also: https://www.postgresql.org/message-id/29939.999752832%40sss.pgh.pa.us
+
+```
+{tablename}_{columnname(s)}_{suffix}
+
+where the suffix is one of the following:
+
+pkey for a Primary Key constraint
+key for a Unique constraint
+excl for an Exclusion constraint
+idx for any other kind of index
+fkey for a Foreign key
+check for a Check constraint
+Standard suffix for sequences is
+
+seq for all sequences
+```
+
+Propose something if you have a strong opinion.
+
+
+## DB constraint names
+
+I believe they're unique per table.
+
+No naming standard, try to use a name that will make sense if the constraint
+gets violated.  
+Don't be afraid to add a comment.
