@@ -6,6 +6,7 @@ import static raido.apisvc.util.Log.to;
 
 /*
 Not sure what I'm doing with this yet. 
+Why is there both an "idP" excpetion and "auth failed" exception?
  */
 public class IdProviderException 
 extends RuntimeException {
