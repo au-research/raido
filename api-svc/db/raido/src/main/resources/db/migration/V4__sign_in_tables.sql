@@ -82,7 +82,7 @@ create table app_user (
 
 -- worried about multple user_request approvals and moving users around between
 -- service-points in case of user error, etc.
-create unique index concurrently app_user_id_fields_active_idx
+create unique index app_user_id_fields_active_idx
   on app_user(email, client_id, subject) 
   where disabled = false;
 
