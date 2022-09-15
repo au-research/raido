@@ -1,4 +1,58 @@
+select * 
+from app_user
+;
+
 -- expected default schema raid_v1_import 
+select * 
+from metadata 
+where name ilike '%common%'
+;
+
+select *
+from metadata
+where name ilike '%qu%' or name ilike '%uq%'
+;
+
+select *
+from metadata
+where type = 'institution'
+and name ilike '%common%'
+;
+
+select *
+from metadata
+;
+
+select count(*), type
+from metadata
+group by type
+;
+
+select name, type, grid, isni, admin_email, tech_email  
+from metadata where type = 'service'
+;
+
+select * from metadata where type = 'institution'
+;
+
+select ms.name, ms.type, ms.grid, mi.name, mi.type, mi.grid
+from metadata ms
+       join metadata mi
+on mi.grid = ms.grid
+where ms.type = 'service'
+  and mi.type = 'institution'
+  and ms.grid != ''
+;
+
+select *
+from metadata md
+where md.name not in
+      (
+        select rt.owner
+        from raid rt
+      )
+;
+
 
 select * from import_history
 ;
@@ -105,6 +159,15 @@ select count(*)
 from association_index
 ;
 
+SELECT reltuples::bigint AS estimate FROM pg_class WHERE oid = 'raid_v1_import.association_index'::regclass
+  ;
+
+
+select count(*), type
+from association_index
+group by type
+;
+
 select *
 from association_index ait
 where ait.handle not in
@@ -167,18 +230,7 @@ where handle in (
 )
 ;
 
-select * 
-from metadata
-;
 
-select * 
-from metadata md
-where md.name not in
-  (
-  select rt.owner
-  from raid rt
-  )
-;
   
 select * 
 from token
