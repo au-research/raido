@@ -26,6 +26,7 @@ Take the data migration process for the legacy V1 data as an example:
       the `~/.config/raido-v2/api-svc-db.gradle` config file
   * `:api-svc:db:raido`
     * contains the flyway and jooq stuff for the `raido` schema
+    * have a quick scan of [/doc/schema-guideline.md](./raido/doc/schema-guideline.md)
   * `:api-svc:db:v1-ddb-migration`
     * contains the flyway and jooq stuff for the `raid_v1_import` schema
 
