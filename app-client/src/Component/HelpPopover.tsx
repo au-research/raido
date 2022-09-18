@@ -9,6 +9,7 @@ import {
 import {stopClick} from "Util/EventUtil";
 import {CSSProperties, ReactNode} from "react";
 import { Help } from "@mui/icons-material";
+import { TextSpan } from "Component/TextSpan";
 
 export const helpStyle: CSSProperties = {
   padding: "1em",
@@ -51,16 +52,18 @@ export function HelpPopover({content, icon}: {
         vertical: 'top',
         horizontal: 'center',
       }}
+      PaperProps={{
+        style:{...helpStyle}
+      }}
     >
-      <Typography style={{...helpStyle}}>
-        {content}
-      </Typography>
+      {content}
     </Popover>
   </>
 }
 
 export function HelpChip(props: ChipProps){
-  return <Chip variant={"outlined"} size={"small"} {...props}
+  // span so it can be inside <p> etc.
+  return <Chip component="span" variant={"outlined"} size={"small"} {...props}
     style={{marginRight: ".5em", ...props.style}}
   />
 }
