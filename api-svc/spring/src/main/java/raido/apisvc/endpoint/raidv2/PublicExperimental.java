@@ -23,12 +23,12 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.getNonAuthzPayload;
 import static raido.apisvc.endpoint.raidv2.RaidoExperimental.RAIDO_SP_ID;
 import static raido.apisvc.util.Log.to;
-import static raido.db.jooq.api_svc.enums.AuthRequestStatus.APPROVED;
 import static raido.db.jooq.api_svc.enums.AuthRequestStatus.REQUESTED;
 import static raido.db.jooq.api_svc.tables.AppUser.APP_USER;
 import static raido.db.jooq.api_svc.tables.RaidoOperator.RAIDO_OPERATOR;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 import static raido.db.jooq.api_svc.tables.UserAuthzRequest.USER_AUTHZ_REQUEST;
+import static raido.idl.raidv2.model.UpdateAuthzResponse.StatusEnum;
 
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
@@ -114,7 +114,7 @@ public class PublicExperimental implements PublicExperimentalApi {
       /* client shouldn't need the user id, should re-fresh and re-auth to 
       id-provider, and the new token returned from /idpresponse will be good 
       to use. */
-      return new UpdateAuthzResponse().status(APPROVED.name());
+      return new UpdateAuthzResponse().status(StatusEnum.APPROVED);
     }
 
     db.insertInto(USER_AUTHZ_REQUEST).
@@ -127,7 +127,7 @@ public class PublicExperimental implements PublicExperimentalApi {
       set(USER_AUTHZ_REQUEST.SUBJECT, user.getSubject()).
       set(USER_AUTHZ_REQUEST.DESCRIPTION, req.getComments()).
       execute();
-    return new UpdateAuthzResponse().status(REQUESTED.name());
+    return new UpdateAuthzResponse().status(StatusEnum.REQUESTED);
   }
 
 }

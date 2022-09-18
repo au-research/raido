@@ -18,3 +18,10 @@ export function assertIsNumberArray(input: number[] | any)
   }
 }
 
+export function assert(input: unknown, message?: string)
+: asserts input {
+  if (input) {
+    throw new Error(message ?? 'value must be defined');
+  }  
+}
+

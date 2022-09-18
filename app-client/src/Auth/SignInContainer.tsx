@@ -110,7 +110,7 @@ function formatStateValue(state: RaidoOAuthState):string{
 
 function OidcSignInHelp(){
   return <HelpPopover content={
-    <Typography>
+    <>
       <Typography>
         You can sign in either directly with Google or via the AAF if your
         organisation has an agreement.
@@ -120,6 +120,6 @@ function OidcSignInHelp(){
         submit a request for a specific institution to authorize your usage of 
         the RAID app with their data.
       </Typography>
-    </Typography>
+    </>
   }/>;
 }

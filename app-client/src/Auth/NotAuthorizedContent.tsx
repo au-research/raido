@@ -14,6 +14,7 @@ import {
 import { LargeContentMain } from "Design/LayoutMain";
 import { ContainerCard } from "Design/ContainerCard";
 import {
+  Alert,
   Autocomplete,
   FormControl, Grid,
   Stack,
@@ -27,6 +28,7 @@ import { HelpChip, HelpPopover } from "Component/HelpPopover";
 import { TextSpan } from "Component/TextSpan";
 import jwtDecode from "jwt-decode";
 import { signOutUser } from "Auth/Authz";
+import { assert } from "Util/TypeUtil";
 
 function publicApi(accessToken: string){
   const config = new Configuration({
@@ -64,7 +66,7 @@ export function NotAuthorizedContent({accessToken}: {accessToken: string}){
 function InfoContainer({accessToken}: {accessToken: string}){
   return <ContainerCard title={"Sign out"}>
     <Typography paragraph>
-      You can use the "Sign out" button below, if you would like to sign in as 
+      Use the "Sign out" button if you would like to sign in as
       a different user.
     </Typography>
     <Grid container justifyContent={"center"}>
@@ -73,7 +75,8 @@ function InfoContainer({accessToken}: {accessToken: string}){
         window.location.reload();
       }}>
         Sign out
-      </PrimaryButton></Grid>
+      </PrimaryButton>
+    </Grid>
   </ContainerCard>
 }
 
@@ -100,6 +103,20 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
     }
   );
 
+  let requested = false;
+  if( submitRequest.isSuccess ){
+    if( submitRequest.data.status === "APPROVED" ){
+      alert("Authorisation request was auto-approved, login again to proceed");
+      window.location.reload();
+    }
+    else if( submitRequest.data.status === "REQUESTED" ){
+      requested = true;
+    }
+    else {
+      console.error("unknown request status", submitRequest.data);
+    }
+  }
+  
   return <ContainerCard title={"Request RAiD Authorisation"}
     // improve:sto shouldn't need this any more, delete after testing in  
     // demo with the signout container present. 
@@ -111,19 +128,16 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
       You have identfied yourself as: <HelpChip label={jwt.email}/>
     </Typography>
     <Typography paragraph>
-      You have not been authorised to use the application.
+      You have not yet been authorised to use the application.
     </Typography>
     <Typography paragraph>
       Please request permission from your institution, select below.
     </Typography>
 
     <form onSubmit={async (e) => {
-      console.log("onSubmit()");
       e.preventDefault();
-      if( !institution ){
-        throw new Error("form submitted without selected inst");
-      }
-      submitRequest.mutate({
+      assert(institution);
+      await submitRequest.mutate({
         updateAuthzRequest: {
           servicePointId: institution.id,
           comments,
@@ -141,6 +155,17 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
             onChange={(e) => setComments(e.target.value)}
           />
         </FormControl>
+        { requested &&
+          <Alert severity="success">
+            <Typography>
+              Your authorisation reqeust has been submitted.
+            </Typography>
+            <Typography> 
+              After your Service Point support team informs you that your 
+              request is approved you will be able to use the system.
+            </Typography>
+          </Alert>
+        }
         <PrimaryActionButton context={"submitting authorization request"}
           disabled={!institution || submitRequest.isLoading}
           type={"submit"} isLoading={submitRequest.isLoading}
