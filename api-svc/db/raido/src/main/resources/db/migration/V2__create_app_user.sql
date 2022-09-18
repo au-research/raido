@@ -1,4 +1,17 @@
 -- user and role are synonyms in PG 
+
+-- can't drop the user if it has privileges, but neither drop nor revoke support
+-- "if exists" type functionality
+do
+$$begin
+  if exists (select from pg_roles where rolname = 'api_user') then
+    execute 'drop owned by api_user';
+  end if;
+end$$;
+
+-- flyway clean does not drop the user
+drop role if exists api_user;
+
 create role api_user
   nosuperuser
   nocreatedb
