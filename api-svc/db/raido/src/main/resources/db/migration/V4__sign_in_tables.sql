@@ -26,9 +26,9 @@ drop type if exists id_provider;
 -- not needed any more
 drop table if exists test_table;
 
-create type user_role as enum ('OPERATOR', 'SP_ADMIN', 'SP_USER');
+create type user_role as enum ('OPERATOR', 'SP_ADMIN', 'SP_USER', 'API');
 create type auth_request_status as enum ('REQUESTED', 'APPROVED', 'REJECTED');
-create type id_provider as enum ('BOOTSTRAP', 'GOOGLE', 'AAF', 'COGNITO');
+create type id_provider as enum ('GOOGLE', 'AAF', 'COGNITO');
 
 create table service_point (
   id             bigint generated always as identity
@@ -139,20 +139,6 @@ comment on column user_authz_request.responding_user is
 comment on column user_authz_request.date_responded is
   'not set until approved or rejected';
 
-create table api_token (
-  id               bigint generated always as identity
-    (start with 40000000)
-    primary key                  not null,
-  expiry           timestamp without time zone default transaction_timestamp(),
-  service_point_id bigint references service_point,
-  description      varchar(1024) not null,
-  date_created     timestamp without time zone default transaction_timestamp()
-);
-
-comment on table api_token is
-  'the id is used in the token generated, as well as issued and expiry, but the
-  token itself is not stored';
-
 create table raid (
   handle           varchar(32) primary key                                     not null,
   service_point_id bigint references service_point                             not null,
@@ -176,16 +162,6 @@ values ('Australian Research Data Commons',
         'ardc',
         'matthias.liffers@ardc.edu.au',
         'joel.benn@ardc.edu.au');
-
--- insert into app_user
--- (service_point_id, email, client_id, id_provider, subject, role)
--- values ((select id from service_point where name = 'raido' limit 1),
---         'raido-bootstrap@example.com',
---         'bootstrap',
---         'BOOTSTRAP',
---         'bootstrap',
---         'OPERATOR'
---         );
 
 insert into raido_operator
 values ('shorn.tolley@ardc.edu.au');

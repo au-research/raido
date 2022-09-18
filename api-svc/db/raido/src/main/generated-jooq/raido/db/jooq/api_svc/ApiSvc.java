@@ -12,7 +12,6 @@ import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
 
 import raido.db.jooq.DefaultCatalog;
-import raido.db.jooq.api_svc.tables.ApiToken;
 import raido.db.jooq.api_svc.tables.AppUser;
 import raido.db.jooq.api_svc.tables.FlywaySchemaHistory;
 import raido.db.jooq.api_svc.tables.Raid;
@@ -50,7 +49,6 @@ public class ApiSvc extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
-            ApiToken.API_TOKEN,
             AppUser.APP_USER,
             FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
             Raid.RAID,

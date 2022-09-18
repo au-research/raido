@@ -21,7 +21,9 @@ public enum UserRole implements EnumType {
 
     SP_ADMIN("SP_ADMIN"),
 
-    SP_USER("SP_USER");
+    SP_USER("SP_USER"),
+
+    API("API");
 
     private final String literal;
 

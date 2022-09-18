@@ -10,14 +10,12 @@ import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.Internal;
 
-import raido.db.jooq.api_svc.tables.ApiToken;
 import raido.db.jooq.api_svc.tables.AppUser;
 import raido.db.jooq.api_svc.tables.FlywaySchemaHistory;
 import raido.db.jooq.api_svc.tables.Raid;
 import raido.db.jooq.api_svc.tables.RaidoOperator;
 import raido.db.jooq.api_svc.tables.ServicePoint;
 import raido.db.jooq.api_svc.tables.UserAuthzRequest;
-import raido.db.jooq.api_svc.tables.records.ApiTokenRecord;
 import raido.db.jooq.api_svc.tables.records.AppUserRecord;
 import raido.db.jooq.api_svc.tables.records.FlywaySchemaHistoryRecord;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
@@ -37,7 +35,6 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final UniqueKey<ApiTokenRecord> API_TOKEN_PKEY = Internal.createUniqueKey(ApiToken.API_TOKEN, DSL.name("api_token_pkey"), new TableField[] { ApiToken.API_TOKEN.ID }, true);
     public static final UniqueKey<AppUserRecord> APP_USER_PKEY = Internal.createUniqueKey(AppUser.APP_USER, DSL.name("app_user_pkey"), new TableField[] { AppUser.APP_USER.ID }, true);
     public static final UniqueKey<FlywaySchemaHistoryRecord> FLYWAY_SCHEMA_HISTORY_PK = Internal.createUniqueKey(FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, DSL.name("flyway_schema_history_pk"), new TableField[] { FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.INSTALLED_RANK }, true);
     public static final UniqueKey<RaidRecord> RAID_PKEY = Internal.createUniqueKey(Raid.RAID, DSL.name("raid_pkey"), new TableField[] { Raid.RAID.HANDLE }, true);
@@ -50,7 +47,6 @@ public class Keys {
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final ForeignKey<ApiTokenRecord, ServicePointRecord> API_TOKEN__API_TOKEN_SERVICE_POINT_ID_FKEY = Internal.createForeignKey(ApiToken.API_TOKEN, DSL.name("api_token_service_point_id_fkey"), new TableField[] { ApiToken.API_TOKEN.SERVICE_POINT_ID }, Keys.SERVICE_POINT_PKEY, new TableField[] { ServicePoint.SERVICE_POINT.ID }, true);
     public static final ForeignKey<AppUserRecord, ServicePointRecord> APP_USER__APP_USER_SERVICE_POINT_ID_FKEY = Internal.createForeignKey(AppUser.APP_USER, DSL.name("app_user_service_point_id_fkey"), new TableField[] { AppUser.APP_USER.SERVICE_POINT_ID }, Keys.SERVICE_POINT_PKEY, new TableField[] { ServicePoint.SERVICE_POINT.ID }, true);
     public static final ForeignKey<RaidRecord, ServicePointRecord> RAID__RAID_SERVICE_POINT_ID_FKEY = Internal.createForeignKey(Raid.RAID, DSL.name("raid_service_point_id_fkey"), new TableField[] { Raid.RAID.SERVICE_POINT_ID }, Keys.SERVICE_POINT_PKEY, new TableField[] { ServicePoint.SERVICE_POINT.ID }, true);
     public static final ForeignKey<UserAuthzRequestRecord, AppUserRecord> USER_AUTHZ_REQUEST__USER_AUTHZ_REQUEST_RESPONDING_USER_FKEY = Internal.createForeignKey(UserAuthzRequest.USER_AUTHZ_REQUEST, DSL.name("user_authz_request_responding_user_fkey"), new TableField[] { UserAuthzRequest.USER_AUTHZ_REQUEST.RESPONDING_USER }, Keys.APP_USER_PKEY, new TableField[] { AppUser.APP_USER.ID }, true);

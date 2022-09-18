@@ -89,6 +89,22 @@ paths:
                 items:
                   $ref: '#/components/schemas/ServicePoint'
 
+  /v2/experimental/admin-authz-request/v1:
+    get:
+      tags:
+        - admin-experimental
+      operationId: list-authz-request
+      summary: list authz requests for all SP
+      responses:
+        '200':
+          description: result data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuthzRequest'
+
 components:
   schemas:
     VersionResult:
@@ -130,15 +146,21 @@ components:
       properties:
         servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
         comments: {type: string}
+    AuthzRequest:
+      description: authorization request
+      type: object
+      required: [id, servicePointId, name]
+      properties:
+        id: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        comments: {type: string}
     # would be nice to do an "any-of" type spec that generates an enum on the 
     # TS side - not sure OAS spec and the tooling supports it yet?
     UpdateAuthzResponse:
-      description: > 
-        'APPROVED' or 'REQUESTED'
       type: object
       required: [status]
       properties:
-        status: {type: string}
+        status: {type: string, enum: ['APPROVED', 'REQUESTED']}
   securitySchemes:
     BearerAuth:
       type: http

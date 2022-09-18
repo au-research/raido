@@ -17,8 +17,6 @@ import raido.db.jooq.api_svc.ApiSvc;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public enum IdProvider implements EnumType {
 
-    BOOTSTRAP("BOOTSTRAP"),
-
     GOOGLE("GOOGLE"),
 
     AAF("AAF"),

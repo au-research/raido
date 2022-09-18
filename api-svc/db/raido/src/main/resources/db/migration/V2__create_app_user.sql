@@ -19,12 +19,9 @@ create role api_user
   noreplication 
   connection limit -1
   nobypassrls
-  -- this is the user that will be used to connect as, but in order to avoid
-  -- putting the password here, we set it to null and it must be set manually
-  -- the api-svc will not be able to connect until this is done.
-  -- `FATAL: password authentication failed for user "api_user"`
-  -- to change the password: `alter user api_user password 'wobble'`
-  login password null
+  -- this is the user that will be used to connect as, in order to avoid
+  -- embedding credentials in source, it is passed in as a placeholder.
+  login password '${apiSvcDbPassword}'
 ;
 
 comment on role api_user is 

@@ -79,6 +79,9 @@ flyway{
   schemas = [sharedProject.apiSvcPgSchema]
   failOnMissingLocations = true
   locations = ['classpath:db/migration', sharedProject.apiSvcExtraLocation]
+  placeholders = [
+    'apiSvcDbPassword' : sharedProject.apiSvcDbPassword,
+  ]
 }
 
 // flyway wasn't copying stuff to build/resources
