@@ -47,10 +47,6 @@ export function SignInContainer(){
 
 
   async function aafSignIn(){
-    if( window.location.host.startsWith("localhost") ){
-      // because AAF only supports one response url
-      alert("AAF sign in doesn't work from localhost");
-    }
     const state: RaidoOAuthState = {
       redirectUri: window.location.href,
       clientId: Config.aaf.clientId,
