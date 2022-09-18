@@ -15,8 +15,9 @@ import { IntroContainer } from "Auth/IntroContainer";
 import { SignInContainer } from "Auth/SignInContainer";
 import { useLocationPathname } from "Util/Hook/LocationPathname";
 import { SignInContext } from "Auth/SignInContext";
-import jwtDecode from "jwt-decode";
-import { NotAuthorizedContainer } from "Auth/NotAuthorizedContent";
+import {
+  NotAuthorizedContent
+} from "Auth/NotAuthorizedContent";
 
 export interface AuthState {
   signOut: () => void,
@@ -62,9 +63,10 @@ type ProviderState =
  * Handles both Authentication and Authorization.
  */
 export function AuthProvider({unauthenticatedPaths = [], children}: {
-  unauthenticatedPaths?: ((pathname: string) => boolean)[]
-  children: React.ReactNode,
-}){
+    unauthenticatedPaths?: ((pathname: string) => boolean)[]
+    children: React.ReactNode,
+  }
+){
   //const serverInfo = useServerInfo();
   const {pathname} = useLocationPathname();
   const [state, setState] = React.useState<ProviderState>({current: "init"});
@@ -198,7 +200,7 @@ export function AuthProvider({unauthenticatedPaths = [], children}: {
   }
 
   if( state.current === "not-authorized" ){
-    return <NotAuthorizedContainer accessToken={state.accessToken}/>
+    return <NotAuthorizedContent accessToken={state.accessToken}/>
   }
   // avoid unnecessary re-renders based on creating a new context value
   if( stateCache.current.signOut !== onSignOutClicked ||

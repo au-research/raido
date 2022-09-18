@@ -15,16 +15,18 @@ import { LargeContentMain } from "Design/LayoutMain";
 import { ContainerCard } from "Design/ContainerCard";
 import {
   Autocomplete,
-  FormControl,
+  FormControl, Grid,
   Stack,
   TextField,
   Typography
 } from "@mui/material";
-import { PrimaryActionButton } from "Component/AppButton";
+import { PrimaryActionButton, PrimaryButton } from "Component/AppButton";
 import { Config } from "Config";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import { HelpChip, HelpPopover } from "Component/HelpPopover";
 import { TextSpan } from "Component/TextSpan";
+import jwtDecode from "jwt-decode";
+import { signOutUser } from "Auth/Authz";
 
 function publicApi(accessToken: string){
   const config = new Configuration({
@@ -35,7 +37,7 @@ function publicApi(accessToken: string){
   return new PublicExperimentalApi(config);
 }
 
-export function NotAuthorizedContainer({accessToken}: {accessToken: string}){
+export function NotAuthorizedContent({accessToken}: {accessToken: string}){
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -46,17 +48,41 @@ export function NotAuthorizedContainer({accessToken}: {accessToken: string}){
       }
     }
   });
-  
+
+  /* LargeContent so margins are removed on mobile
+  maxWidth because the form looks ugly if let it spread really wide. */
   return <QueryClientProvider client={queryClient}>
-    <NotAuthorizedContent accessToken={accessToken}/>
+    <LargeContentMain style={{maxWidth: "30em"}}>
+      <Stack spacing={2}>
+        <AuthzRequestContainer accessToken={accessToken}/>
+        <InfoContainer accessToken={accessToken}/>
+      </Stack>
+    </LargeContentMain>
   </QueryClientProvider>
 }
 
-function NotAuthorizedContent({accessToken}: {accessToken: string}){
+function InfoContainer({accessToken}: {accessToken: string}){
+  return <ContainerCard title={"Sign out"}>
+    <Typography paragraph>
+      You can use the "Sign out" button below, if you would like to sign in as 
+      a different user.
+    </Typography>
+    <Grid container justifyContent={"center"}>
+      <PrimaryButton onClick={async () => {
+        await signOutUser();
+        window.location.reload();
+      }}>
+        Sign out
+      </PrimaryButton></Grid>
+  </ContainerCard>
+}
+
+function AuthzRequestContainer({accessToken}: {accessToken: string}){
   const inst = React.useState(null as InstData | null);
   const [institution] = inst;
   const [comments, setComments] = React.useState("");
   const api = publicApi(accessToken);
+  const jwt = jwtDecode(accessToken) as any;
 
   const query: RqQuery<InstData[]> = useQuery(['listInst'], async () => {
     return (await api.listPublicServicePoint()).map(i => {
@@ -74,62 +100,58 @@ function NotAuthorizedContent({accessToken}: {accessToken: string}){
     }
   );
 
-  /* LargeContent so margins are removed on mobile
-  maxWidth because the form looks ugly if let it spread really wide. */
-  return <LargeContentMain style={{maxWidth: "30em"}}>
-    <ContainerCard title={"Request RAiD Authorisation"}
-      // minHeight so the autocomplete drop box has lots of space
-      contentStyle={{minHeight: "60vh"}}
-      action={<AuthRequestHelp/>}
-    >
-      <Typography paragraph>
-        You have not been authorised to use the application.
-      </Typography>
-      <Typography paragraph>
-        Please request permission from your institution, select below.
-      </Typography>
+  return <ContainerCard title={"Request RAiD Authorisation"}
+    // improve:sto shouldn't need this any more, delete after testing in  
+    // demo with the signout container present. 
+    // minHeight so the autocomplete drop box has lots of space
+    //contentStyle={{minHeight: "60vh"}}
+    action={<AuthRequestHelp/>}
+  >
+    <Typography>
+      You have identfied yourself as: <HelpChip label={jwt.email}/>
+    </Typography>
+    <Typography paragraph>
+      You have not been authorised to use the application.
+    </Typography>
+    <Typography paragraph>
+      Please request permission from your institution, select below.
+    </Typography>
 
-      <form onSubmit={async (e) => {
-        console.log("onSubmit()");
-        e.preventDefault();
-        if( !institution ){
-          throw new Error("form submitted without selected inst");
+    <form onSubmit={async (e) => {
+      console.log("onSubmit()");
+      e.preventDefault();
+      if( !institution ){
+        throw new Error("form submitted without selected inst");
+      }
+      submitRequest.mutate({
+        updateAuthzRequest: {
+          servicePointId: institution.id,
+          comments,
         }
-        submitRequest.mutate({
-          updateAuthzRequest: {
-            servicePointId: institution.id,
-            comments,
-          }
-        });
-      }}>
-        <Stack spacing={2}>
-          <FormControl fullWidth focused>
-            <InstitutionAutocomplete state={inst} query={query} api={api}/>
-          </FormControl>
-          <FormControl fullWidth>
-            <TextField id="reqeust-text" label="Comments / Information"
-              multiline rows={4} variant="outlined"
-              value={comments}
-              onChange={(e) => setComments(e.target.value)}
-            />
-          </FormControl>
-          <PrimaryActionButton context={"submitting authorization request"}
-            disabled={!institution || submitRequest.isLoading}
-            type={"submit"} isLoading={submitRequest.isLoading}
-            /* IMPROVE: don't like this pattern, I think better to embed
-            the "message" or "context" of the error as a "context" param of
-            the button itself, then the button can mix in the context into the 
-            ErrorInfo itself if there's a problem. */
-            error={submitRequest.error}
-            fullWidth style={{marginTop: "2em"}}
-          >
-            Submit request
-          </PrimaryActionButton>
-        </Stack>
-      </form>
-    </ContainerCard>
-  </LargeContentMain>
-
+      });
+    }}>
+      <Stack spacing={2}>
+        <FormControl fullWidth focused>
+          <InstitutionAutocomplete state={inst} query={query} api={api}/>
+        </FormControl>
+        <FormControl fullWidth>
+          <TextField id="reqeust-text" label="Comments / Information"
+            multiline rows={4} variant="outlined"
+            value={comments}
+            onChange={(e) => setComments(e.target.value)}
+          />
+        </FormControl>
+        <PrimaryActionButton context={"submitting authorization request"}
+          disabled={!institution || submitRequest.isLoading}
+          type={"submit"} isLoading={submitRequest.isLoading}
+          error={submitRequest.error}
+          fullWidth style={{marginTop: "2em"}}
+        >
+          Submit request
+        </PrimaryActionButton>
+      </Stack>
+    </form>
+  </ContainerCard>
 }
 
 function InstitutionAutocomplete({state, query, api}: {
