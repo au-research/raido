@@ -117,7 +117,6 @@ export function parseAccessToken(accessToken: string):{
     return {result: "failed", message: "accessToken is expired", decoded};
   }
 
-  console.log("isAuth", decoded.isAuthorizedAppUser);
   if( !decoded.isAuthorizedAppUser  || typeof(decoded.isAuthorizedAppUser) !== "boolean" ){
     return {result: "not-authorized", accessToken: accessToken};
   }
