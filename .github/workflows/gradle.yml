@@ -33,7 +33,6 @@ jobs:
           --health-retries 5
 
     steps:
-      - name: Checkout repository
       - uses: actions/checkout@v3
       
       # Corretto is the Raido standard JDK
