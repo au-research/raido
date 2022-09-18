@@ -63,8 +63,16 @@ public class RaidWebSecurityConfig {
       anyRequest().denyAll().
       and().
       httpBasic().disable().
+      /* api-svc is stateless and does not use browser cookie storage.
+      https://www.baeldung.com/csrf-stateless-rest-api */
       csrf().disable().
-      sessionManagement().sessionCreationPolicy(STATELESS);
+      sessionManagement().sessionCreationPolicy(STATELESS).
+      and().
+      // https://www.baeldung.com/spring-prevent-xss
+      headers().xssProtection().
+      and().
+      contentSecurityPolicy("script-src 'self'")
+    ;
 
     return http.build();
   }
