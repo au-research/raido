@@ -28,7 +28,7 @@ export function App(){
       <ErrorDialogProvider>
         {/* manages window.location for routing */}
         <LocationPathnameProvider>
-          {/* authentication and authorisation */}
+          {/* authentication and authorization */}
           <AuthProvider unauthenticatedPaths={[
             isPrivacyPagePath, isUsageTermsPagePath, isAboutRaidPagePath
           ]}>
