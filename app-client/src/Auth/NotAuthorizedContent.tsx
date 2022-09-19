@@ -21,7 +21,11 @@ import {
   TextField,
   Typography
 } from "@mui/material";
-import { PrimaryActionButton, PrimaryButton } from "Component/AppButton";
+import {
+  PrimaryActionButton,
+  PrimaryButton,
+  SecondaryButton
+} from "Component/AppButton";
 import { Config } from "Config";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import { HelpChip, HelpPopover } from "Component/HelpPopover";
@@ -70,12 +74,12 @@ function InfoContainer({accessToken}: {accessToken: string}){
       a different user.
     </Typography>
     <Grid container justifyContent={"center"}>
-      <PrimaryButton onClick={async () => {
+      <SecondaryButton onClick={async () => {
         await signOutUser();
         window.location.reload();
       }}>
         Sign out
-      </PrimaryButton>
+      </SecondaryButton>
     </Grid>
   </ContainerCard>
 }
