@@ -79,7 +79,7 @@ jobs:
 
           cat <<EOF > ~/.config/raido-v2/api-svc-env.properties
           DatasourceConfig.url=jdbc:p6spy:postgresql://localhost:5432/raido
-          DatasourceConfig.username=postgres
+          DatasourceConfig.username=api_user
           DatasourceConfig.password=githubActionIntTestDbPassword
           RaidV1Auth.jwtSecret=githubActionIntTestJwtSecret
           RaidV2Auth.jwtSecrets=githubActionIntTestJwtSecretMustBeReallyLong
