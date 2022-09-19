@@ -78,7 +78,7 @@ flyway{
   password = sharedProject.apiSvcPgPassword
   schemas = [sharedProject.apiSvcPgSchema]
   failOnMissingLocations = true
-  locations = ['classpath:db/migration', sharedProject.apiSvcExtraLocation]
+  locations = ['classpath:db/migration'] + sharedProject.apiSvcExtraLocations
   placeholders = [
     'apiSvcRolePassword' : sharedProject.apiSvcRolePassword,
   ]

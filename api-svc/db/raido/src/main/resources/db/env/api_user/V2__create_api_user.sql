@@ -1,10 +1,19 @@
 -- user and role are synonyms in PG 
 
--- can't drop the user if it has privileges, but neither drop nor revoke support
--- "if exists" type functionality
+-- because I couldn't get the "drop user" funtionality workin in RDS, now 
+-- this whole script is "conditional" 
+-- https://flywaydb.org/documentation/learnmore/faq.html#db-specific-sql
+-- this script should only be run the very first time, after a DB was created
+
 do
 $$begin
+  -- can't drop the user if it has privileges, but neither drop nor revoke support
+  -- "if exists" type functionality
   if exists (select from pg_roles where rolname = 'api_user') then
+    -- In RDS, this must be run as superuser, but only `rdsadmin` is superuser
+    -- and I couldn't figure out how to execute as that user from codebuild.
+    -- the "drop user" stuff is left in to make running in local dev against
+    -- a docker container easier
     execute 'drop owned by api_user';
   end if;
 end$$;

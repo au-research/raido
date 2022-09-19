@@ -13,8 +13,9 @@ ext{
   so the flyway scripts can set the password for the api_user role. */
   apiSvcRolePassword = null
   
-  // non-prod, usually want to set `classpath:db/env/demo` in the .gradle file
-  apiSvcExtraLocation = ""
+  // non-prod, usually want to set in ~/.config/raido-v2/api-svc-db.gradle:
+  // apiSvcExtraLocations=["classpath:db/env/api_user","classpath:db/env/demo"]
+  apiSvcExtraLocations = [""]
   
   jooqGeneratedSrcDir = 'src/main/generated-jooq'
   jooqGeneratedPkg = 'raido.db.jooq'
