@@ -84,6 +84,7 @@ flyway{
     api_user script */
     'apiSvcRolePassword' : sharedProject.apiSvcRolePassword,
   ]
+  cleanDisabled = false
 }
 
 tasks.flywayMigrate.doFirst {

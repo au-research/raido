@@ -18,11 +18,11 @@ dependencyResolutionManagement{
       version('logback', '1.4.0')
       version('feign', '11.9.1')
 
-      plugin('flyway', 'org.flywaydb.flyway').version('8.5.13')      
+      plugin('flyway', 'org.flywaydb.flyway').version('9.3.0')      
       plugin('jooq', 'nu.studer.jooq').version('7.1.1')      
       
       library('jooq', 'org.jooq', 'jooq').versionRef('jooq')
-      library('pgjdbc', 'org.postgresql:postgresql:42.3.6')
+      library('pgjdbc', 'org.postgresql:postgresql:42.5.0')
       library('assertj', 'org.assertj:assertj-core:3.23.1')
 
       // core spring/web - pkg: org.springframework

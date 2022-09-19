@@ -56,8 +56,8 @@ dependencies{
   // allow SLF4J to capture java.util logging 
   implementation 'org.slf4j:jul-to-slf4j:2.0.0'
 
-  // connection pool
-  implementation "com.zaxxer:HikariCP:3.4.5"
+  // connection pool - upgraded from 3.4.5, rollback if issues with 5.0.0
+  implementation "com.zaxxer:HikariCP:5.0.0"
 
   // for PostConstruct/PreDestroy - pkg: jakarta.annotation (used to be javax)
   implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
