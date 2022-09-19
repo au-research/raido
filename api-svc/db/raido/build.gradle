@@ -85,11 +85,16 @@ flyway{
     'apiSvcRolePassword' : sharedProject.apiSvcRolePassword,
   ]
 }
-project.logger.lifecycle "flywayMigrate.locations:" + flyway.locations
 
 tasks.flywayMigrate.doFirst {
   assert sharedProject.apiSvcPgPassword : "must set the apiSvcPgPassword"
   assert sharedProject.apiSvcRolePassword : "must set the apiSvcRolePassword"
+  project.logger.lifecycle "flyway.locations:" + flyway.locations
+}
+tasks.flywayInfo.doFirst {
+  assert sharedProject.apiSvcPgPassword : "must set the apiSvcPgPassword"
+  assert sharedProject.apiSvcRolePassword : "must set the apiSvcRolePassword"
+  project.logger.lifecycle "flyway.locations:" + flyway.locations
 }
 
 // flyway wasn't copying stuff to build/resources
