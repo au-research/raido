@@ -63,13 +63,18 @@ same password you gave to create the database:
 ```
 apiSvcPgPassword="the password you specified"
 apiSvcExtraLocation="classpath:db/env/demo"
+apiSvcDbPassword="password you want for api_user"
 ```
 
-The `apiSvcExtraLocation` can be used to load "conditional" schema files
-for a given environment.  The above will make sure your local DB has the same
-SQL executed as the `demo` environment.
-
-Note that these creds are different from what the actual api-svc uses.
-The [spring/readme.md](../spring/readme.md) discusses setting up the config
-for the api-svc.
+* `apiSvcPgPassword`
+  * the password you have the Raido database when creating the docker container
+* `apiSvcExtraLocation` 
+  * can be used to load "conditional" schema files
+  for a given environment.  The above will make sure your local DB has the same
+  SQL executed as the `demo` environment.
+* `apiSvcDbPassword` 
+  * is passed to a flyway placeholder, so that the migration scripts can set
+  the password for the `api_user` role.  This password must be same as used
+  by the api-svc, the [spring/readme.md](../spring/readme.md) discusses 
+  setting up the config for the api-svc.
 
