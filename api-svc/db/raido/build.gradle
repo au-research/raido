@@ -84,6 +84,11 @@ flyway{
   ]
 }
 
+tasks.flywayMigrate.doFirst {
+  assert sharedProject.apiSvcPgPassword : "must set the apiSvcPgPassword"
+  assert sharedProject.apiSvcDbPassword : "must set the apiSvcDbPassword"
+}
+
 // flyway wasn't copying stuff to build/resources
 tasks.withType(AbstractFlywayTask) {
   dependsOn processResources
