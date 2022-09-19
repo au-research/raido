@@ -61,6 +61,7 @@ jobs:
           apiSvcPgUrl="jdbc:postgresql://localhost:5432/raido"
           apiSvcPgUser="postgres"
           apiSvcPgPassword="githubActionIntTestPgPassword"
+          apiSvcDbPassword="githubActionIntTestDbPassword"
           EOF
 
           echo "cat api-svc-db.gradle"
@@ -79,7 +80,7 @@ jobs:
           cat <<EOF > ~/.config/raido-v2/api-svc-env.properties
           DatasourceConfig.url=jdbc:p6spy:postgresql://localhost:5432/raido
           DatasourceConfig.username=postgres
-          DatasourceConfig.password=githubActionIntTestPgPassword
+          DatasourceConfig.password=githubActionIntTestDbPassword
           RaidV1Auth.jwtSecret=githubActionIntTestJwtSecret
           RaidV2Auth.jwtSecrets=githubActionIntTestJwtSecretMustBeReallyLong
 
