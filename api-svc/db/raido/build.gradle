@@ -84,7 +84,8 @@ flyway{
     api_user script */
     'apiSvcRolePassword' : sharedProject.apiSvcRolePassword,
   ]
-  cleanDisabled = false
+  /* flag to avoid accidentally running in prod */
+  cleanDisabled = sharedProject.flywayCleanDisabled
 }
 
 tasks.flywayMigrate.doFirst {

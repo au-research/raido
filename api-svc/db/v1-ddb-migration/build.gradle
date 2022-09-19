@@ -31,7 +31,8 @@ flyway{
   user = sharedProject.apiSvcPgUser
   password = sharedProject.apiSvcPgPassword
   schemas = [raidV1PgSchema]
-  cleanDisabled = false
+  /* flag to avoid accidentally running in prod */
+  cleanDisabled = sharedProject.flywayCleanDisabled
 }
 
 repositories{
