@@ -80,14 +80,16 @@ flyway{
   failOnMissingLocations = true
   locations = ['classpath:db/migration'] + sharedProject.apiSvcExtraLocations
   placeholders = [
+    /* this one is really only needed when setting locations to load the 
+    api_user script */
     'apiSvcRolePassword' : sharedProject.apiSvcRolePassword,
   ]
 }
+project.logger.lifecycle "flywayMigrate.locations:" + flyway.locations
 
 tasks.flywayMigrate.doFirst {
   assert sharedProject.apiSvcPgPassword : "must set the apiSvcPgPassword"
   assert sharedProject.apiSvcRolePassword : "must set the apiSvcRolePassword"
-  project.logger.lifecycle "flywayMigrate.locations:" + flyway.locations  
 }
 
 // flyway wasn't copying stuff to build/resources
