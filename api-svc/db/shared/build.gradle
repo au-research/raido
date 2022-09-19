@@ -11,7 +11,7 @@ ext{
   
   /* this is the password used by the api-svc, we need it at the gradle level
   so the flyway scripts can set the password for the api_user role. */
-  apiSvcDbPassword = null
+  apiSvcRolePassword = null
   
   // non-prod, usually want to set `classpath:db/env/demo` in the .gradle file
   apiSvcExtraLocation = ""

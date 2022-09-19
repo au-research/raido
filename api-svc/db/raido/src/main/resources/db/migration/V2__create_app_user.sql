@@ -21,7 +21,7 @@ create role api_user
   nobypassrls
   -- this is the user that will be used to connect as, in order to avoid
   -- embedding credentials in source, it is passed in as a placeholder.
-  login password '${apiSvcDbPassword}'
+  login password '${apiSvcRolePassword}'
 ;
 
 comment on role api_user is 
