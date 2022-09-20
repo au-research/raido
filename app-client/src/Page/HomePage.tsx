@@ -13,7 +13,7 @@ export function getHomePageLink(): string{
   return pageUrl;
 }
 
-export function isHomePagePath(path: String): boolean{
+export function isHomePagePath(path: string): boolean{
   const normalizedPath = path.toLowerCase();
   return normalizedPath.startsWith(pageUrl) ||
     // use this page as the "default" or "home" page for the app  
