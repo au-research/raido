@@ -77,4 +77,6 @@ apiSvcRolePassword="password you want for api_user"
   the password for the `api_user` role.  This password must be same as used
   by the api-svc, the [spring/readme.md](../spring/readme.md) discusses 
   setting up the config for the api-svc.
+* `flywayCleanDisabled`
+  * set this to false if you need to run the `flywayClean` task
 
