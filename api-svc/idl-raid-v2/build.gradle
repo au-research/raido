@@ -49,6 +49,7 @@ sourceSets{
 }
 
 clean {
+  // may have to stop any running api-svc server if errors about files in use 
   delete generateDirName
   delete generateTsDirName
 }
