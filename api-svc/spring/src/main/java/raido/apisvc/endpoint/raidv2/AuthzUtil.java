@@ -8,21 +8,17 @@ import static org.springframework.security.core.context.SecurityContextHolder.ge
 
 public class AuthzUtil {
 
-  /**
-   For testing, c.f. declaring a method parameter of type `Principal` 
-   (I can't figure out how to get openapi to generate code like that).
-   */
+  /** This will fail if the authentication is not a AuthzTokenPayload */
   public static AuthzTokenPayload getAuthzPayload() {
     return Guard.isInstance(
       AuthzTokenPayload.class,
       getContext().getAuthentication());
   }
 
+  /** This will fail if the authentication is not a NonAuthzTokenPayload */
   public static NonAuthzTokenPayload getNonAuthzPayload() {
     return Guard.isInstance(
       NonAuthzTokenPayload.class,
       getContext().getAuthentication());
   }
-
-
 }

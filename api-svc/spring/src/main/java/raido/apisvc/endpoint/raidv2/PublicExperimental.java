@@ -93,8 +93,8 @@ public class PublicExperimental implements PublicExperimentalApi {
     if(
       // we only promote raido SP users to operator
       req.getServicePointId() == RAIDO_SP_ID &&
-        /* this is probably temporary, helps me test easily, no real need 
-        * Google because AAF doesn't work locally. */
+        /* this is probably temporary, helps me test easily, no specific need
+        to restrict it. */
       idProvider == IdProvider.GOOGLE && 
       isRaidoOperator(email)
     ){
