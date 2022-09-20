@@ -101,7 +101,7 @@ public class PublicExperimental implements PublicExperimentalApi {
       /* this will fail if operator already exists as a user of a different SP 
       I don't want to add the complexity to deal with that right now.*/
       log.with("user", user).info("adding raido operator");
-      var userId = db.insertInto(APP_USER).
+      db.insertInto(APP_USER).
         set(APP_USER.SERVICE_POINT_ID, req.getServicePointId()).
         set(APP_USER.EMAIL, email).
         set(APP_USER.CLIENT_ID, user.getClientId()).
