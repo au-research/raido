@@ -63,14 +63,17 @@ public class RaidWebSecurityConfig {
       anyRequest().denyAll().
       and().
       httpBasic().disable().
-      /* api-svc is stateless and does not use browser cookie storage.
+      /* api-svc is stateless and the browser client does not use cookies.
       https://www.baeldung.com/csrf-stateless-rest-api */
       csrf().disable().
       sessionManagement().sessionCreationPolicy(STATELESS).
       and().
-      // https://www.baeldung.com/spring-prevent-xss
+      /* https://www.baeldung.com/spring-prevent-xss */
       headers().xssProtection().
       and().
+      /* No real point in doing this - api-svc only serves data.
+      This is only added to avoid arguments and false-positives on 
+      security scans. */
       contentSecurityPolicy("script-src 'self'")
     ;
 
