@@ -33,9 +33,6 @@ public class AuthzRequestService {
   }
 
   public List<AuthzRequest> listAllAuthzRequest() {
-    var user = AuthzUtil.getAuthzPayload();
-    Guard.areEqual(user.getRole(), OPERATOR.getLiteral());
-
     return db.
       select(asterisk()).
       from(USER_AUTHZ_REQUEST).
@@ -43,6 +40,16 @@ public class AuthzRequestService {
         leftJoin(APP_USER).onKey(USER_AUTHZ_REQUEST.RESPONDING_USER).
       orderBy(USER_AUTHZ_REQUEST.DATE_REQUESTED.desc()).
       fetch(this::mapJq2Rest);
+  }
+  
+  public AuthzRequest readAuthzRequest(Long id) {
+    return db.
+      select(asterisk()).
+      from(USER_AUTHZ_REQUEST).
+        leftJoin(SERVICE_POINT).onKey(USER_AUTHZ_REQUEST.SERVICE_POINT_ID).
+        leftJoin(APP_USER).onKey(USER_AUTHZ_REQUEST.RESPONDING_USER).
+      where(USER_AUTHZ_REQUEST.ID.eq(id)).
+      fetchSingle(this::mapJq2Rest);
   }
   
   public AuthzRequest mapJq2Rest(Record r) {

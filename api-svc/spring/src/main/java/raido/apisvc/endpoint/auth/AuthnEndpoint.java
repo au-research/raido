@@ -24,6 +24,7 @@ import java.io.IOException;
 import static raido.apisvc.service.auth.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
 import static raido.apisvc.service.auth.NonAuthzTokenPayload.NonAuthzTokenPayloadBuilder.aNonAuthzTokenPayload;
 import static raido.apisvc.spring.security.IdProviderException.idpException;
+import static raido.apisvc.util.ExceptionUtil.authFailed;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.isTrue;
 import static raido.apisvc.util.StringUtil.isNullOrEmpty;
@@ -121,21 +122,14 @@ public class AuthnEndpoint {
       log.with("appUserId", user.getId()).
         with("email", user.getEmail()).
         info("user tried to authenticate, but is disabled");
-      res.sendRedirect( "%s#id_token=%s".formatted(
-        state.redirectUri,
-        raidv2Auth.sign( aNonAuthzTokenPayload().
-          withSubject(idProviderJwt.getSubject()).
-          withClientId(state.clientId).
-          withEmail(idProviderJwt.getClaim("email").asString()).
-          build()
-        )
-      ));
+      throw authFailed();
     }
 
     res.sendRedirect("%s#id_token=%s".formatted(
       state.redirectUri,
       raidv2Auth.sign(anAuthzTokenPayload().
         withAppUserId(user.getId()).
+        withServicePointId(user.getServicePointId()).
         withSubject(idProviderJwt.getSubject()).
         withClientId(state.clientId).
         withEmail(idProviderJwt.getClaim(RaidoClaim.EMAIL.getId()).asString()).

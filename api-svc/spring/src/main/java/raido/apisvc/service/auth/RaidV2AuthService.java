@@ -25,6 +25,7 @@ import static raido.apisvc.service.auth.NonAuthzTokenPayload.NonAuthzTokenPayloa
 import static raido.apisvc.util.ExceptionUtil.authFailed;
 import static raido.apisvc.util.ExceptionUtil.wrapException;
 import static raido.apisvc.util.Log.to;
+import static raido.apisvc.util.ObjectUtil.areEqual;
 import static raido.apisvc.util.ObjectUtil.isTrue;
 import static raido.apisvc.util.StringUtil.mask;
 import static raido.db.jooq.api_svc.tables.AppUser.APP_USER;
@@ -55,6 +56,7 @@ public class RaidV2AuthService {
         withExpiresAt(Instant.now().plus(expiryPeriod)).
         withClaim(RaidoClaim.IS_AUTHORIZED_APP_USER.getId(), true).
         withClaim(RaidoClaim.APP_USER_ID.getId(), payload.getAppUserId()).
+        withClaim(RaidoClaim.SERVICE_POINT_ID.getId(), payload.getServicePointId()).
         withClaim(RaidoClaim.CLIENT_ID.getId(), payload.getClientId()).
         withClaim(RaidoClaim.EMAIL.getId(), payload.getEmail()).
         withClaim(RaidoClaim.ROLE.getId(), payload.getRole()).
@@ -114,6 +116,8 @@ public class RaidV2AuthService {
     }
 
     Long appUserId = jwt.getClaim(RaidoClaim.APP_USER_ID.getId()).asLong();
+    Long servicePointId = jwt.getClaim(
+      RaidoClaim.SERVICE_POINT_ID.getId()).asLong();
     String role = jwt.getClaim(RaidoClaim.ROLE.getId()).asString();
     Guard.notNull(appUserId);
     Guard.hasValue(role);
@@ -148,9 +152,17 @@ public class RaidV2AuthService {
         throw authFailed();
       }
     }
+    
+    if( !areEqual(servicePointId, user.getServicePointId()) ){
+      log.with("claim.servicePointId", servicePointId).
+        with("db.servicePointId", user.getServicePointId()).
+        error("service point id from DB and claim are different");
+      throw authFailed();
+    }
 
     return of(anAuthzTokenPayload().
       withAppUserId(appUserId).
+      withServicePointId(servicePointId).
       withSubject(jwt.getSubject()).
       withEmail(email).
       withClientId(clientId).

@@ -72,7 +72,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UpdateAuthzResponse'
-          
+  /v2/public/request-authz/v1/{authzRequestId}:
+    get:
+      tags:
+        - admin-experimental
+      operationId: read-request-authz
+      summary: read authz request
+      parameters:
+        - in: path
+          name: authzRequestId
+          schema:
+            $ref: 'shared.yaml#/components/schemas/SurrogateKey'
+          required: true
+          description: Numeric ID of the AuthzRequest to get        
+      responses:
+        '200':
+          description: data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthzRequest'          
   /v2/experimental/service-point/v1:
     get:
       tags:
@@ -89,6 +108,21 @@ paths:
                 items:
                   $ref: '#/components/schemas/ServicePoint'
 
+  /v2/experimental/update-authz-request-status/v1:
+    post:
+      tags:
+        - admin-experimental
+      operationId: update-authz-request-status
+      summary: udpate a request to change its status
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAuthzRequestStatus'
+      responses:
+        '200':
+          description: succeeded
   /v2/experimental/admin-authz-request/v1:
     get:
       tags:
@@ -146,11 +180,18 @@ components:
       properties:
         servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
         comments: {type: string}
+    UpdateAuthzRequestStatus:
+      description: approve/reject a reqeust
+      type: object
+      required: [authzRequestId, status]
+      properties:
+        authzRequestId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        status: {$ref: 'AuthzRequestStatus' }
     AuthzRequest:
       description: authorization request
       type: object
       required: [
-        id, status, servicePointId, servicePointName 
+        id, status, servicePointId, servicePointName, 
         email, client_id, id_provider, subject,
         dateRequested
       ]

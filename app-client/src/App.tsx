@@ -18,6 +18,7 @@ import { AboutAppPage } from "Page/AboutAppPage";
 import { AboutRaidPage, isAboutRaidPagePath } from "Page/Unauth/AboutRaidPage";
 import { AuthApiProvider } from "Api/AuthApi";
 import { AdminAuthzRequestPage } from "Page/Admin/AdminAuthzRequestPage";
+import { AuthzRespondPage } from "Page/AuthzRespondPage";
 
 export function App(){
   return <RaidoTheme>
@@ -44,6 +45,7 @@ export function App(){
                 <HomePage/>
                 <AboutAppPage/>
                 <AdminAuthzRequestPage/>
+                <AuthzRespondPage/>
   
               </NavigationProvider>
             </AuthApiProvider>

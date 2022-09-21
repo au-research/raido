@@ -11,6 +11,7 @@ import java.util.StringJoiner;
 
 public class AuthzTokenPayload implements Authentication {
   private Long appUserId;
+  private Long servicePointId;
   private String clientId;
   /** `sub` claim in a standard jwt */
   private String subject;
@@ -26,6 +27,7 @@ public class AuthzTokenPayload implements Authentication {
       AuthzTokenPayload.class.getSimpleName() + "[",
       "]")
       .add("appUserId='" + appUserId + "'")
+      .add("servicePointId='" + servicePointId + "'")
       .add("email='" + email + "'")
       .add("role='" + role + "'")
       .toString();
@@ -72,6 +74,10 @@ public class AuthzTokenPayload implements Authentication {
   public Long getAppUserId() {
     return appUserId;
   }
+  
+  public Long getServicePointId() {
+    return servicePointId;
+  }
 
   public String getClientId() {
     return clientId;
@@ -91,6 +97,7 @@ public class AuthzTokenPayload implements Authentication {
 
   public static final class AuthzTokenPayloadBuilder {
     private Long appUserId;
+    private Long servicePointId;
     private String clientId;
     private String subject;
     private String email;
@@ -105,6 +112,11 @@ public class AuthzTokenPayload implements Authentication {
 
     public AuthzTokenPayloadBuilder withAppUserId(Long appUserId) {
       this.appUserId = appUserId;
+      return this;
+    }
+    
+    public AuthzTokenPayloadBuilder withServicePointId(Long servicePointId) {
+      this.servicePointId = servicePointId;
       return this;
     }
     
@@ -130,6 +142,7 @@ public class AuthzTokenPayload implements Authentication {
 
     public AuthzTokenPayload build() {
       Guard.notNull(appUserId);
+      Guard.notNull(servicePointId);
       Guard.hasValue(clientId);
       Guard.hasValue(subject);
       Guard.hasValue(email);
@@ -137,6 +150,7 @@ public class AuthzTokenPayload implements Authentication {
       
       AuthzTokenPayload payload = new AuthzTokenPayload();
       payload.appUserId = this.appUserId;
+      payload.servicePointId = this.servicePointId;
       payload.email = this.email;
       payload.clientId = this.clientId;
       payload.role = this.role;

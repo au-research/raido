@@ -76,7 +76,6 @@ public class PublicExperimental implements PublicExperimentalApi {
       fetchInto(PublicServicePoint.class);
   }
 
-
   public boolean isRaidoOperator(String email) {
     return db.fetchExists(RAIDO_OPERATOR,
       RAIDO_OPERATOR.EMAIL.equalIgnoreCase(email)

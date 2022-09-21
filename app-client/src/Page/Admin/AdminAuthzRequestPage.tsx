@@ -19,6 +19,8 @@ import {
 } from "@mui/material";
 import { formatLocalDateAsIsoShortDateTime } from "Util/DateUtil";
 import { RefreshIconButton } from "Component/RefreshIconButton";
+import { RaidoLink } from "Component/RaidoLink";
+import { getAuthzRespondPageLink } from "Page/AuthzRespondPage";
 
 const log = console;
 
@@ -74,7 +76,6 @@ function AuthzRequestContainer(){
           <TableRow>
             <TableCell>Service point</TableCell>
             <TableCell>Email</TableCell>
-            <TableCell>ID provider</TableCell>
             <TableCell>Requested</TableCell>
             <TableCell>Status</TableCell>
           </TableRow>
@@ -82,7 +83,7 @@ function AuthzRequestContainer(){
         <TableBody>
           {query.data.map((row) => (
             <TableRow
-              key={row.servicePointId}
+              key={row.id}
               // don't render a border under last row
               sx={{'&:last-child td, &:last-child th': {border: 0}}}
             >
@@ -90,9 +91,14 @@ function AuthzRequestContainer(){
                 {row.servicePointName}
               </TableCell>
               <TableCell>{row.email}</TableCell>
-              <TableCell>{row.idProvider}</TableCell>
-              <TableCell>{formatLocalDateAsIsoShortDateTime(row.dateRequested)}</TableCell>
-              <TableCell>{row.status}</TableCell>
+              <TableCell>
+                {formatLocalDateAsIsoShortDateTime(row.dateRequested)}
+              </TableCell>
+              <TableCell>
+                <RaidoLink href={getAuthzRespondPageLink(row.id)}>
+                  {row.status}
+                </RaidoLink>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
