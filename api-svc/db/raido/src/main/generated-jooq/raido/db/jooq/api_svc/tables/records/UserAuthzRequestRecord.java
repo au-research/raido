@@ -56,17 +56,17 @@ public class UserAuthzRequestRecord extends UpdatableRecordImpl<UserAuthzRequest
     }
 
     /**
-     * Setter for <code>api_svc.user_authz_request.serice_point_id</code>.
+     * Setter for <code>api_svc.user_authz_request.service_point_id</code>.
      */
-    public UserAuthzRequestRecord setSericePointId(Long value) {
+    public UserAuthzRequestRecord setServicePointId(Long value) {
         set(2, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.user_authz_request.serice_point_id</code>.
+     * Getter for <code>api_svc.user_authz_request.service_point_id</code>.
      */
-    public Long getSericePointId() {
+    public Long getServicePointId() {
         return (Long) get(2);
     }
 
@@ -231,7 +231,7 @@ public class UserAuthzRequestRecord extends UpdatableRecordImpl<UserAuthzRequest
 
     @Override
     public Field<Long> field3() {
-        return UserAuthzRequest.USER_AUTHZ_REQUEST.SERICE_POINT_ID;
+        return UserAuthzRequest.USER_AUTHZ_REQUEST.SERVICE_POINT_ID;
     }
 
     @Override
@@ -286,7 +286,7 @@ public class UserAuthzRequestRecord extends UpdatableRecordImpl<UserAuthzRequest
 
     @Override
     public Long component3() {
-        return getSericePointId();
+        return getServicePointId();
     }
 
     @Override
@@ -341,7 +341,7 @@ public class UserAuthzRequestRecord extends UpdatableRecordImpl<UserAuthzRequest
 
     @Override
     public Long value3() {
-        return getSericePointId();
+        return getServicePointId();
     }
 
     @Override
@@ -398,7 +398,7 @@ public class UserAuthzRequestRecord extends UpdatableRecordImpl<UserAuthzRequest
 
     @Override
     public UserAuthzRequestRecord value3(Long value) {
-        setSericePointId(value);
+        setServicePointId(value);
         return this;
     }
 
@@ -480,12 +480,12 @@ public class UserAuthzRequestRecord extends UpdatableRecordImpl<UserAuthzRequest
     /**
      * Create a detached, initialised UserAuthzRequestRecord
      */
-    public UserAuthzRequestRecord(Long id, AuthRequestStatus status, Long sericePointId, String email, String clientId, IdProvider idProvider, String subject, Long respondingUser, String description, LocalDateTime dateRequested, LocalDateTime dateResponded) {
+    public UserAuthzRequestRecord(Long id, AuthRequestStatus status, Long servicePointId, String email, String clientId, IdProvider idProvider, String subject, Long respondingUser, String description, LocalDateTime dateRequested, LocalDateTime dateResponded) {
         super(UserAuthzRequest.USER_AUTHZ_REQUEST);
 
         setId(id);
         setStatus(status);
-        setSericePointId(sericePointId);
+        setServicePointId(servicePointId);
         setEmail(email);
         setClientId(clientId);
         setIdProvider(idProvider);

@@ -8,13 +8,23 @@ import { useLocationPathname } from "Util/Hook/LocationPathname";
 import { getHomePageLink, isHomePagePath } from "Page/HomePage";
 import { getAboutAppPagePath, isAboutAppPagePath } from "Page/AboutAppPage";
 import { Info } from "@mui/icons-material";
+import {
+  getAdminAuthzRequestPageLink,
+  isAdminAuthzRequestPagePath
+} from "Page/Admin/AdminAuthzRequestPage";
+import { AuthState, useAuth } from "Auth/AuthProvider";
 
+
+function isOperator(authState: AuthState){
+  return authState.session.payload.role === "OPERATOR"
+}
 
 export function AppDrawer(props: {
   anchor: 'left' |'right',
   open: boolean,
   toggleDrawer: (open:boolean)=>void,
 }){
+  const isOp = isOperator(useAuth());
   const {pathname} = useLocationPathname();
 
   const sideList = (
@@ -23,14 +33,20 @@ export function AppDrawer(props: {
       <List>
         <ListNavButton href={getHomePageLink()}
           isCurrent={isHomePagePath(pathname)}
-           description={"Home"}
+          description={"Home"}
           icon={<HomeIcon/>}
         />
         <ListNavButton href={getAboutAppPagePath()}
           isCurrent={isAboutAppPagePath(pathname)}
-           description={"About"}
+          description={"About"}
           icon={<Info/>}
         />
+        { isOp && 
+          <ListNavButton href={getAdminAuthzRequestPageLink()}
+          isCurrent={isAdminAuthzRequestPagePath(pathname)}
+          description={"Admin Authz Request"}
+          />
+        }
       </List>
     </div>
   );

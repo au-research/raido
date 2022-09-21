@@ -149,7 +149,7 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
     }}>
       <Stack spacing={2}>
         <FormControl fullWidth focused>
-          <InstitutionAutocomplete state={inst} query={query} api={api}/>
+          <InstitutionAutocomplete state={inst} query={query}/>
         </FormControl>
         <FormControl fullWidth>
           <TextField id="reqeust-text" label="Comments / Information"
@@ -182,13 +182,12 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
   </ContainerCard>
 }
 
-function InstitutionAutocomplete({state, query, api}: {
+function InstitutionAutocomplete({state, query}: {
     state: [
       institution: InstData | null,
       setInstitution: (inst: InstData | null) => void,
     ],
     query: RqQuery<InstData[]>,
-    api: PublicExperimentalApi,
   }
 ){
   const [institution, setInstitution] = state;

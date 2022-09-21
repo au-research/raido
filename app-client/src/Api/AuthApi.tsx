@@ -1,5 +1,9 @@
 import React, { useContext } from "react";
-import { Configuration, RaidoExperimentalApi } from "Generated/Raidv2";
+import {
+  AdminExperimentalApi,
+  Configuration,
+  RaidoExperimentalApi
+} from "Generated/Raidv2";
 import { Config } from "Config";
 import { useAuth } from "Auth/AuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -7,6 +11,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 export interface AuthApiState {
   raido: RaidoExperimentalApi,
+  admin: AdminExperimentalApi,
 }
 
 
@@ -42,12 +47,16 @@ export function AuthApiProvider({children}: {
     defaultOptions: {
       queries: {
         retry: false,
+        // probably do want this, it just interferes with local dev sometimes
+        // when I'm analyzing server logs
+        refetchOnWindowFocus: false,
       }
     }
   });
   
   return <AuthApiContext.Provider value={{
     raido: new RaidoExperimentalApi(config),
+    admin: new AdminExperimentalApi(config),
   }}>
     <QueryClientProvider client={queryClient}>
       {children}

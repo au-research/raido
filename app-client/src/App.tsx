@@ -17,6 +17,7 @@ import {
 import { AboutAppPage } from "Page/AboutAppPage";
 import { AboutRaidPage, isAboutRaidPagePath } from "Page/Unauth/AboutRaidPage";
 import { AuthApiProvider } from "Api/AuthApi";
+import { AdminAuthzRequestPage } from "Page/Admin/AdminAuthzRequestPage";
 
 export function App(){
   return <RaidoTheme>
@@ -42,6 +43,7 @@ export function App(){
                 {/* Navigable, authenticated pages, self-routed */}
                 <HomePage/>
                 <AboutAppPage/>
+                <AdminAuthzRequestPage/>
   
               </NavigationProvider>
             </AuthApiProvider>

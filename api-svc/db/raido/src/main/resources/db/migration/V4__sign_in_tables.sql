@@ -82,13 +82,13 @@ create table app_user (
 
 -- worried about multple user_request approvals and moving users around between
 -- service-points in case of user error, etc.
-create unique index app_user_id_fields_active_idx
-  on app_user(email, client_id, subject) 
+create unique index app_user_id_fields_active_key
+  on app_user(email, client_id, subject)
   where disabled = false;
 
-comment on index app_user_id_fields_active_idx is 
-'a user can only be attached to one service point at a time.  We could change 
-this, but would need to change sign-in to specify service-point';
+comment on index app_user_id_fields_active_key is
+  'a user can only be attached to one service point at a time.  We could change 
+  this, but would need to change sign-in to specify service-point';
 
 comment on column app_user.token_cutoff is
   'Any endpoint call with a bearer token issued after this point will be 
@@ -111,19 +111,19 @@ with an email in this table will be considered an operator';
 
 
 create table user_authz_request (
-  id              bigint generated always as identity
+  id               bigint generated always as identity
     (start with 30000000)
-    primary key                               not null,
-  status          auth_request_status         not null,
-  serice_point_id bigint not null references service_point,
-  email           varchar(256)                not null,
-  client_id       varchar(256)                not null,
-  id_provider     id_provider                 not null,
-  subject         varchar(256)                not null,
-  responding_user bigint references app_user  null,
-  description     varchar(1024)               not null,
-  date_requested  timestamp without time zone default transaction_timestamp(),
-  date_responded  timestamp without time zone null
+    primary key                                not null,
+  status           auth_request_status         not null,
+  service_point_id bigint                      not null references service_point,
+  email            varchar(256)                not null,
+  client_id        varchar(256)                not null,
+  id_provider      id_provider                 not null,
+  subject          varchar(256)                not null,
+  responding_user  bigint references app_user  null,
+  description      varchar(1024)               not null,
+  date_requested   timestamp without time zone default transaction_timestamp(),
+  date_responded   timestamp without time zone null
 );
 
 alter table user_authz_request
@@ -131,6 +131,14 @@ alter table user_authz_request
     check (email = lower(email));
 comment on column user_authz_request.email is
   'Lowercase chars only - db enforced';
+
+create unique index user_authz_request_once_active_key
+  on user_authz_request(service_point_id, client_id, subject)
+  where status = 'REQUESTED';
+comment on index user_authz_request_once_active_key is
+  'a user can only make one active request per service point';
+-- alter table user_authz_request
+--   add constraint once_active_key unique using index user_authz_request_once_active_key;
 
 
 comment on column user_authz_request.responding_user is
@@ -169,5 +177,4 @@ insert into raido_operator
 values ('matthias.liffers@ardc.edu.au');
 insert into raido_operator
 values ('shawn.ross@ardc.edu.au');
-
 

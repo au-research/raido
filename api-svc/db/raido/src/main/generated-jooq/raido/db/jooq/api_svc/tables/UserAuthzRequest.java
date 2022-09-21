@@ -14,6 +14,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Function11;
 import org.jooq.Identity;
+import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
@@ -30,6 +31,7 @@ import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
 import raido.db.jooq.api_svc.ApiSvc;
+import raido.db.jooq.api_svc.Indexes;
 import raido.db.jooq.api_svc.Keys;
 import raido.db.jooq.api_svc.enums.AuthRequestStatus;
 import raido.db.jooq.api_svc.enums.IdProvider;
@@ -68,9 +70,9 @@ public class UserAuthzRequest extends TableImpl<UserAuthzRequestRecord> {
     public final TableField<UserAuthzRequestRecord, AuthRequestStatus> STATUS = createField(DSL.name("status"), SQLDataType.VARCHAR.nullable(false).asEnumDataType(raido.db.jooq.api_svc.enums.AuthRequestStatus.class), this, "");
 
     /**
-     * The column <code>api_svc.user_authz_request.serice_point_id</code>.
+     * The column <code>api_svc.user_authz_request.service_point_id</code>.
      */
-    public final TableField<UserAuthzRequestRecord, Long> SERICE_POINT_ID = createField(DSL.name("serice_point_id"), SQLDataType.BIGINT.nullable(false), this, "");
+    public final TableField<UserAuthzRequestRecord, Long> SERVICE_POINT_ID = createField(DSL.name("service_point_id"), SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
      * The column <code>api_svc.user_authz_request.email</code>. Lowercase chars
@@ -154,6 +156,11 @@ public class UserAuthzRequest extends TableImpl<UserAuthzRequestRecord> {
     }
 
     @Override
+    public List<Index> getIndexes() {
+        return Arrays.asList(Indexes.USER_AUTHZ_REQUEST_ONCE_ACTIVE_KEY);
+    }
+
+    @Override
     public Identity<UserAuthzRequestRecord, Long> getIdentity() {
         return (Identity<UserAuthzRequestRecord, Long>) super.getIdentity();
     }
@@ -165,7 +172,7 @@ public class UserAuthzRequest extends TableImpl<UserAuthzRequestRecord> {
 
     @Override
     public List<ForeignKey<UserAuthzRequestRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.USER_AUTHZ_REQUEST__USER_AUTHZ_REQUEST_SERICE_POINT_ID_FKEY, Keys.USER_AUTHZ_REQUEST__USER_AUTHZ_REQUEST_RESPONDING_USER_FKEY);
+        return Arrays.asList(Keys.USER_AUTHZ_REQUEST__USER_AUTHZ_REQUEST_SERVICE_POINT_ID_FKEY, Keys.USER_AUTHZ_REQUEST__USER_AUTHZ_REQUEST_RESPONDING_USER_FKEY);
     }
 
     private transient ServicePoint _servicePoint;
@@ -177,7 +184,7 @@ public class UserAuthzRequest extends TableImpl<UserAuthzRequestRecord> {
      */
     public ServicePoint servicePoint() {
         if (_servicePoint == null)
-            _servicePoint = new ServicePoint(this, Keys.USER_AUTHZ_REQUEST__USER_AUTHZ_REQUEST_SERICE_POINT_ID_FKEY);
+            _servicePoint = new ServicePoint(this, Keys.USER_AUTHZ_REQUEST__USER_AUTHZ_REQUEST_SERVICE_POINT_ID_FKEY);
 
         return _servicePoint;
     }

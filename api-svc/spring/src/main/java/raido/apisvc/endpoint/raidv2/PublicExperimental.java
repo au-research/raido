@@ -11,14 +11,17 @@ import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.IdProvider;
 import raido.db.jooq.api_svc.enums.UserRole;
 import raido.idl.raidv2.api.PublicExperimentalApi;
+import raido.idl.raidv2.model.AuthzRequestStatus;
 import raido.idl.raidv2.model.PublicServicePoint;
 import raido.idl.raidv2.model.UpdateAuthzRequest;
 import raido.idl.raidv2.model.UpdateAuthzResponse;
 import raido.idl.raidv2.model.VersionResult;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.time.ZoneOffset.UTC;
+import static org.jooq.impl.DSL.inline;
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.getNonAuthzPayload;
 import static raido.apisvc.endpoint.raidv2.RaidoExperimental.RAIDO_SP_ID;
@@ -28,7 +31,7 @@ import static raido.db.jooq.api_svc.tables.AppUser.APP_USER;
 import static raido.db.jooq.api_svc.tables.RaidoOperator.RAIDO_OPERATOR;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 import static raido.db.jooq.api_svc.tables.UserAuthzRequest.USER_AUTHZ_REQUEST;
-import static raido.idl.raidv2.model.UpdateAuthzResponse.StatusEnum;
+import static raido.idl.raidv2.model.AuthzRequestStatus.APPROVED;
 
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
@@ -114,20 +117,29 @@ public class PublicExperimental implements PublicExperimentalApi {
       /* client shouldn't need the user id, should re-fresh and re-auth to 
       id-provider, and the new token returned from /idpresponse will be good 
       to use. */
-      return new UpdateAuthzResponse().status(StatusEnum.APPROVED);
+      return new UpdateAuthzResponse().status(APPROVED);
     }
 
     db.insertInto(USER_AUTHZ_REQUEST).
-      set(USER_AUTHZ_REQUEST.SERICE_POINT_ID, req.getServicePointId()).
+      set(USER_AUTHZ_REQUEST.SERVICE_POINT_ID, req.getServicePointId()).
       set(USER_AUTHZ_REQUEST.STATUS, REQUESTED).
       set(USER_AUTHZ_REQUEST.EMAIL, email).
       set(USER_AUTHZ_REQUEST.CLIENT_ID, user.getClientId()).
-      set(USER_AUTHZ_REQUEST.ID_PROVIDER,
-        idProvider).
+      set(USER_AUTHZ_REQUEST.ID_PROVIDER, idProvider).
       set(USER_AUTHZ_REQUEST.SUBJECT, user.getSubject()).
       set(USER_AUTHZ_REQUEST.DESCRIPTION, req.getComments()).
+      onConflict(
+        USER_AUTHZ_REQUEST.SERVICE_POINT_ID,
+        USER_AUTHZ_REQUEST.CLIENT_ID,
+        USER_AUTHZ_REQUEST.SUBJECT ).
+        // inline needed because: https://stackoverflow.com/a/73782610/924597
+        where( USER_AUTHZ_REQUEST.STATUS.eq(
+          inline(REQUESTED, USER_AUTHZ_REQUEST.STATUS)) ).
+      doUpdate().
+        set(USER_AUTHZ_REQUEST.DESCRIPTION, req.getComments()).
+        set(USER_AUTHZ_REQUEST.DATE_REQUESTED, LocalDateTime.now()).
       execute();
-    return new UpdateAuthzResponse().status(StatusEnum.REQUESTED);
+    return new UpdateAuthzResponse().status(AuthzRequestStatus.REQUESTED);
   }
 
 }

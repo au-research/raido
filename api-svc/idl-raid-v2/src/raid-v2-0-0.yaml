@@ -136,8 +136,8 @@ components:
       properties:
         id: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
         name: {type: string}
-        tech_email: {type: string}
-        admin_email: {type: string}
+        techEmail: {type: string}
+        adminEmail: {type: string}
         disabled: {type: boolean}
     UpdateAuthzRequest:
       description: authorization request
@@ -149,18 +149,41 @@ components:
     AuthzRequest:
       description: authorization request
       type: object
-      required: [id, servicePointId, name]
+      required: [
+        id, status, servicePointId, servicePointName 
+        email, client_id, id_provider, subject,
+        dateRequested
+      ]
       properties:
         id: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        status: {$ref: '#/components/schemas/AuthzRequestStatus' }
         servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        servicePointName: {type: string}
         comments: {type: string}
+        email: {type: string}
+        clientId: {type: string}
+        idProvider: {type: string}
+        subject: {type: string}
+        respondingUserId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        respondingUserEmail: {type: string}
+        dateRequested: { type: string, format: date-time }
+        dateResponded: { type: string, format: date-time }
     # would be nice to do an "any-of" type spec that generates an enum on the 
     # TS side - not sure OAS spec and the tooling supports it yet?
     UpdateAuthzResponse:
       type: object
       required: [status]
       properties:
-        status: {type: string, enum: ['APPROVED', 'REQUESTED']}
+        status: {$ref: '#/components/schemas/AuthzRequestStatus' }
+    AuthzRequestStatus:
+        type: string
+        enum: ['APPROVED', 'REQUESTED', 'REJECTED']
+    AppUser:
+      type: object
+      properties: 
+        id: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        email: {type: string}
+        role: {type: string}
   securitySchemes:
     BearerAuth:
       type: http

@@ -151,7 +151,7 @@ public class AppUser extends TableImpl<AppUserRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.asList(Indexes.APP_USER_ID_FIELDS_ACTIVE_IDX);
+        return Arrays.asList(Indexes.APP_USER_ID_FIELDS_ACTIVE_KEY);
     }
 
     @Override
