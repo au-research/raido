@@ -47,7 +47,7 @@ public class AdminExperimental implements AdminExperimentalApi {
     // this is the authz check, will be moved to a role annotation soon
     Guard.areEqual(user.getRole(), OPERATOR.getLiteral());
 
-    return authzReqeustSvc.listAllAuthzRequest();
+    return authzReqeustSvc.listAllRecentAuthzRequest();
   }
 
   @Override
