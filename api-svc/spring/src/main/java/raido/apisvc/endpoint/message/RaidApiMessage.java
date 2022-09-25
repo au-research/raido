@@ -6,7 +6,7 @@ package raido.apisvc.endpoint.message;
  scan previously created messages for similar terminology and phrasing.
  It's not about i18n or anything (that's why it's just a bunch of statics).
  */
-public class RaidApiV1Message {
+public class RaidApiMessage {
   public static final String MINT_DATA_ERROR = 
     "There was a problem with the input data." +
     " This endpoint exists to support legacy V1 usage for existing customers," +
