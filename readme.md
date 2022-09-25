@@ -15,7 +15,7 @@ v1. Should've just called it "raido" - oh well.
 
 Important architecural decisions are recorded in [/doc/adr](./doc/adr).
 Different sub-projects have their own ADR log, in their local /doc/adr
-directories (i.e. db, app, [api](/api-svc/spring/doc/adr), etc.)
+directories (i.e. db, app, [api](/api-svc/doc/adr), etc.)
 
 The overall technology stack can be found in the
 [tecnnology-stack.md](/doc/tecnnology-stack.md) page.
