@@ -1,5 +1,5 @@
 
-### Running funtional tests
+### Running integration tests
 
 You must have a "raido" database, as per [db/readme.md](../../../db/readme.md)
 and the api-svc must be configured as per [api-svc/readme.md](../../readme.md).
