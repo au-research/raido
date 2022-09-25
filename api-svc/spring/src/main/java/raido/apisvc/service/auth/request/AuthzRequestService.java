@@ -3,8 +3,7 @@ package raido.apisvc.service.auth.request;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.springframework.stereotype.Component;
-import raido.apisvc.endpoint.raidv2.AuthzUtil;
-import raido.apisvc.util.Guard;
+import raido.apisvc.endpoint.Constant;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.AuthRequestStatus;
 import raido.idl.raidv2.model.AuthzRequest;
@@ -17,7 +16,6 @@ import java.util.List;
 import static java.time.ZoneOffset.UTC;
 import static org.jooq.impl.DSL.asterisk;
 import static raido.apisvc.util.Log.to;
-import static raido.db.jooq.api_svc.enums.UserRole.OPERATOR;
 import static raido.db.jooq.api_svc.tables.AppUser.APP_USER;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 import static raido.db.jooq.api_svc.tables.UserAuthzRequest.USER_AUTHZ_REQUEST;
@@ -32,13 +30,14 @@ public class AuthzRequestService {
     this.db = db;
   }
 
-  public List<AuthzRequest> listAllAuthzRequest() {
+  public List<AuthzRequest> listAllRecentAuthzRequest() {
     return db.
       select(asterisk()).
       from(USER_AUTHZ_REQUEST).
         leftJoin(SERVICE_POINT).onKey(USER_AUTHZ_REQUEST.SERVICE_POINT_ID).
         leftJoin(APP_USER).onKey(USER_AUTHZ_REQUEST.RESPONDING_USER).
       orderBy(USER_AUTHZ_REQUEST.DATE_REQUESTED.desc()).
+      limit(Constant.MAX_RETURN_RECORDS).
       fetch(this::mapJq2Rest);
   }
   
