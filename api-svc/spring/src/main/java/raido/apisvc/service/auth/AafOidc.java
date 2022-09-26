@@ -54,7 +54,7 @@ public class AafOidc {
     return trimEqualsIgnoreCase(clientId, aaf.clientId);
   }
 
-  public DecodedJWT exchangeCodeForJwt(String idpResponseCode) {
+  public DecodedJWT exchangeCodeForVerifiedJwt(String idpResponseCode) {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 

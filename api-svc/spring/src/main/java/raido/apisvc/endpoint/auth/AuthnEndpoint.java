@@ -7,17 +7,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import raido.apisvc.service.auth.AafOidc;
-import raido.apisvc.service.auth.AuthzTokenPayload;
-import raido.apisvc.service.auth.GoogleOidc;
-import raido.apisvc.service.auth.NonAuthzTokenPayload;
 import raido.apisvc.service.auth.RaidV2AuthService;
 import raido.apisvc.service.auth.RaidoClaim;
+import raido.apisvc.service.auth.admin.AuthzRequestService;
 import raido.apisvc.spring.security.ApiSafeException;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.apisvc.util.RestUtil;
-import raido.db.jooq.api_svc.enums.IdProvider;
 
 import java.io.IOException;
 
@@ -37,23 +33,19 @@ public class AuthnEndpoint {
 
   private static final Log log = to(AuthnEndpoint.class);
 
-  private AafOidc aaf;
-  private GoogleOidc google;
-
   private ObjectMapper map;
   
-  private RaidV2AuthService raidv2Auth;
+  private RaidV2AuthService raidv2AuthSvc;
+  private AuthzRequestService authzRequestSvc;
 
   public AuthnEndpoint(
-    AafOidc aaf,
-    GoogleOidc google,
     ObjectMapper map,
-    RaidV2AuthService raidv2Auth
+    RaidV2AuthService raidv2AuthSvc,
+    AuthzRequestService authzRequestSvc
   ) {
-    this.aaf = aaf;
-    this.google = google;
     this.map = map;
-    this.raidv2Auth = raidv2Auth;
+    this.raidv2AuthSvc = raidv2AuthSvc;
+    this.authzRequestSvc = authzRequestSvc;
   }
 
   record AuthState(String redirectUri, String clientId) { }
@@ -87,13 +79,8 @@ public class AuthnEndpoint {
     // security:sto validate the redirect uri 
 
 
-    var idProvider = mapIdProvider(state.clientId);
-    DecodedJWT idProviderJwt;
-    switch( idProvider ){
-      case GOOGLE -> idProviderJwt = google.exchangeCodeForJwt(idpResponseCode);
-      case AAF -> idProviderJwt = aaf.exchangeCodeForJwt(idpResponseCode);
-      default -> throw idpException("unknown clientId %s", state.clientId); 
-    }
+    DecodedJWT idProviderJwt = authzRequestSvc.
+      exchangeCodeForVerfiedJwt(state.clientId, idpResponseCode);
 
     String email = idProviderJwt.getClaim("email").asString().
       toLowerCase().trim();
@@ -101,12 +88,13 @@ public class AuthnEndpoint {
     Guard.hasValue(email);
     Guard.hasValue(subject);
 
-    var userRecord = raidv2Auth.getAppUserRecord(email, subject, state.clientId); 
+    var userRecord = raidv2AuthSvc.
+      getAppUserRecord(email, subject, state.clientId); 
     if( userRecord.isEmpty() ){
       // valid: authenticated via an IdP but not authorized/approved as a user
       res.sendRedirect( "%s#id_token=%s".formatted(
         state.redirectUri,
-        raidv2Auth.sign( aNonAuthzTokenPayload().
+        raidv2AuthSvc.sign( aNonAuthzTokenPayload().
           withSubject(idProviderJwt.getSubject()).
           withClientId(state.clientId).
           withEmail(idProviderJwt.getClaim("email").asString()).
@@ -127,7 +115,7 @@ public class AuthnEndpoint {
 
     res.sendRedirect("%s#id_token=%s".formatted(
       state.redirectUri,
-      raidv2Auth.sign(anAuthzTokenPayload().
+      raidv2AuthSvc.sign(anAuthzTokenPayload().
         withAppUserId(user.getId()).
         withServicePointId(user.getServicePointId()).
         withSubject(idProviderJwt.getSubject()).
@@ -139,20 +127,6 @@ public class AuthnEndpoint {
     ));
   }
 
-
-  public IdProvider mapIdProvider(String clientId){
-    if( aaf.canHandle(clientId) ){
-      return IdProvider.AAF;
-    }
-    else if( google.canHandle(clientId) ){
-      return IdProvider.GOOGLE;
-    }
-    else {
-      // improve should be a specific authn error?
-      // and should it expose the error?
-      throw idpException("unknown clientId %s", clientId);
-    }
-  }
 
 }
 

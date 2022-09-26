@@ -5,13 +5,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.service.auth.AuthzTokenPayload;
-import raido.apisvc.service.auth.request.AuthzRequestService;
+import raido.apisvc.service.auth.admin.AuthzRequestService;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.AuthRequestStatus;
 import raido.idl.raidv2.api.AdminExperimentalApi;
 import raido.idl.raidv2.model.AuthzRequest;
 import raido.idl.raidv2.model.AuthzRequestStatus;
+import raido.idl.raidv2.model.ServicePoint;
 import raido.idl.raidv2.model.UpdateAuthzRequestStatus;
 
 import java.time.LocalDateTime;
@@ -48,6 +49,11 @@ public class AdminExperimental implements AdminExperimentalApi {
     Guard.areEqual(user.getRole(), OPERATOR.getLiteral());
 
     return authzReqeustSvc.listAllRecentAuthzRequest();
+  }
+
+  @Override
+  public List<ServicePoint> listServicePoint() {
+    return null;
   }
 
   @Override

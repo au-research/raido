@@ -95,7 +95,7 @@ paths:
   /v2/experimental/service-point/v1:
     get:
       tags:
-        - raido-experimental
+        - admin-experimental
       operationId: list-service-point
       summary: list service point data that authz'd users can see
       responses:
@@ -107,6 +107,16 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ServicePoint'
+  /v2/experimental/raido-keepme/v1:
+    get:
+      tags:
+        - raido-experimental
+      operationId: raido-keepme
+      summary: >
+        temporary endpoint to ensure the RaidoExperimental API is generated
+      responses:
+        '200':
+          description: success
 
   /v2/experimental/update-authz-request-status/v1:
     post:

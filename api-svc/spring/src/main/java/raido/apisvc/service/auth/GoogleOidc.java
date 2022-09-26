@@ -52,7 +52,7 @@ public class GoogleOidc {
     return trimEqualsIgnoreCase(clientId, google.clientId);    
   }
   
-  public DecodedJWT exchangeCodeForJwt(String idpResponseCode){
+  public DecodedJWT exchangeCodeForVerifiedJwt(String idpResponseCode){
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     var tokenRequest = new OAuthTokenRequest().

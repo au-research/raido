@@ -32,8 +32,7 @@ public class RaidoExperimental implements RaidoExperimentalApi {
   }
 
   @Override
-  public List<ServicePoint> listServicePoint() {
-    throw notYetImplemented();
+  public Void raidoKeepme() {
+    return null;
   }
-
 }
