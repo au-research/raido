@@ -32,6 +32,8 @@ Non-LTS versions are not appropriate for Raido.
 # Consequences
 
 * old libraries may not support JDK 17
+* registration agencies that want to re-use Raido code will need to  
+  support the JDK version that Raido is implemented and tested with
  
 
 # Links
