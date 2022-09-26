@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.service.auth.RaidV2AuthService;
 import raido.apisvc.service.auth.RaidoClaim;
-import raido.apisvc.service.auth.admin.AuthzRequestService;
 import raido.apisvc.spring.security.ApiSafeException;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
@@ -36,16 +35,13 @@ public class AuthnEndpoint {
   private ObjectMapper map;
   
   private RaidV2AuthService raidv2AuthSvc;
-  private AuthzRequestService authzRequestSvc;
 
   public AuthnEndpoint(
     ObjectMapper map,
-    RaidV2AuthService raidv2AuthSvc,
-    AuthzRequestService authzRequestSvc
+    RaidV2AuthService raidv2AuthSvc
   ) {
     this.map = map;
     this.raidv2AuthSvc = raidv2AuthSvc;
-    this.authzRequestSvc = authzRequestSvc;
   }
 
   record AuthState(String redirectUri, String clientId) { }
@@ -79,7 +75,7 @@ public class AuthnEndpoint {
     // security:sto validate the redirect uri 
 
 
-    DecodedJWT idProviderJwt = authzRequestSvc.
+    DecodedJWT idProviderJwt = raidv2AuthSvc.
       exchangeCodeForVerfiedJwt(state.clientId, idpResponseCode);
 
     String email = idProviderJwt.getClaim("email").asString().

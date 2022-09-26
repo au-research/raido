@@ -12,6 +12,7 @@ import raido.apisvc.spring.security.ApiSvcAuthenticationException;
 import raido.apisvc.spring.security.raidv2.RaidV2PreAuthenticatedJsonWebToken;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
+import raido.db.jooq.api_svc.enums.IdProvider;
 import raido.db.jooq.api_svc.tables.records.AppUserRecord;
 
 import java.time.Duration;
@@ -22,6 +23,7 @@ import java.util.Optional;
 import static java.util.Optional.of;
 import static raido.apisvc.service.auth.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
 import static raido.apisvc.service.auth.NonAuthzTokenPayload.NonAuthzTokenPayloadBuilder.aNonAuthzTokenPayload;
+import static raido.apisvc.spring.security.IdProviderException.idpException;
 import static raido.apisvc.util.ExceptionUtil.authFailed;
 import static raido.apisvc.util.ExceptionUtil.wrapException;
 import static raido.apisvc.util.Log.to;
@@ -38,12 +40,21 @@ public class RaidV2AuthService {
 
   private RaidV2AuthProps props;
   private DSLContext db;
+  private AafOidc aaf;
+  private GoogleOidc google;
   
   private Duration expiryPeriod = Duration.ofHours(9);
   
-  public RaidV2AuthService(RaidV2AuthProps props, DSLContext db) {
+  public RaidV2AuthService(
+    RaidV2AuthProps props, 
+    DSLContext db,
+    AafOidc aaf,
+    GoogleOidc google
+  ) {
     this.props = props;
     this.db = db;
+    this.aaf = aaf;
+    this.google = google;
   }
 
   public String sign(AuthzTokenPayload payload){
@@ -143,7 +154,9 @@ public class RaidV2AuthService {
     if( user.getTokenCutoff() != null ){
       Instant cutoff = user.getTokenCutoff().toInstant(ZoneOffset.UTC);
       if( cutoff.isBefore(issuedAt) ){
-        // SP would need to look in their user list to know user is expired
+        /* user is not disabled, but we've set a token cutoff, they will need
+         to login again.
+         SP would need to look in their user list to know user is expired. */
         log.with("appUserId", user.getId()).
           with("email", user.getEmail()).
           with("tokenCutoff", cutoff).
@@ -226,5 +239,40 @@ public class RaidV2AuthService {
     return db.fetchOptional(APP_USER, APP_USER.ID.eq(appUserId));
   }
 
+  /**
+   Retuns the verified `id_token` from the IDP by calling the OIDC /token
+   endpoint.
+   */
+  public DecodedJWT exchangeCodeForVerfiedJwt(
+    String clientId,
+    String idpResponseCode
+  ){
+    var idProvider = mapIdProvider(clientId);
+    DecodedJWT idProviderJwt;
+    switch( idProvider ){
+      case GOOGLE -> idProviderJwt =
+        google.exchangeCodeForVerifiedJwt(idpResponseCode);
+      case AAF -> idProviderJwt =
+        aaf.exchangeCodeForVerifiedJwt(idpResponseCode);
+      default -> throw idpException("unknown clientId %s", clientId);
+    }
+
+    return idProviderJwt;
+  }
+
+  public IdProvider mapIdProvider(String clientId){
+    if( aaf.canHandle(clientId) ){
+      return IdProvider.AAF;
+    }
+    else if( google.canHandle(clientId) ){
+      return IdProvider.GOOGLE;
+    }
+    else {
+      // improve should be a specific authn error?
+      // and should it expose the error?
+      throw idpException("unknown clientId %s", clientId);
+    }
+  }
+  
 
 }

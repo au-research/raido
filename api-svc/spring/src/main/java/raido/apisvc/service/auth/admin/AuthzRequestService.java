@@ -1,20 +1,22 @@
 package raido.apisvc.service.auth.admin;
 
-import com.auth0.jwt.interfaces.DecodedJWT;
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.springframework.stereotype.Component;
 import raido.apisvc.endpoint.Constant;
-import raido.apisvc.service.auth.AafOidc;
-import raido.apisvc.service.auth.GoogleOidc;
+import raido.apisvc.service.auth.AuthzTokenPayload;
 import raido.apisvc.service.auth.NonAuthzTokenPayload;
+import raido.apisvc.service.auth.RaidV2AuthService;
+import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.AuthRequestStatus;
 import raido.db.jooq.api_svc.enums.IdProvider;
 import raido.db.jooq.api_svc.enums.UserRole;
+import raido.db.jooq.api_svc.tables.records.UserAuthzRequestRecord;
 import raido.idl.raidv2.model.AuthzRequest;
 import raido.idl.raidv2.model.AuthzRequestStatus;
 import raido.idl.raidv2.model.UpdateAuthzRequest;
+import raido.idl.raidv2.model.UpdateAuthzRequestStatus;
 import raido.idl.raidv2.model.UpdateAuthzResponse;
 
 import java.time.LocalDateTime;
@@ -25,9 +27,10 @@ import static java.time.ZoneOffset.UTC;
 import static org.jooq.impl.DSL.asterisk;
 import static org.jooq.impl.DSL.inline;
 import static raido.apisvc.endpoint.raidv2.RaidoExperimental.RAIDO_SP_ID;
-import static raido.apisvc.spring.security.IdProviderException.idpException;
+import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.db.jooq.api_svc.enums.AuthRequestStatus.REQUESTED;
+import static raido.db.jooq.api_svc.enums.UserRole.SP_USER;
 import static raido.db.jooq.api_svc.tables.AppUser.APP_USER;
 import static raido.db.jooq.api_svc.tables.RaidoOperator.RAIDO_OPERATOR;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
@@ -39,14 +42,12 @@ public class AuthzRequestService {
   private static final Log log = to(AuthzRequestService.class);
 
   private DSLContext db;
-  private AafOidc aaf;
-  private GoogleOidc google;
+  private RaidV2AuthService authSvc;
 
 
-  public AuthzRequestService(DSLContext db, AafOidc aaf, GoogleOidc google) {
+  public AuthzRequestService(DSLContext db, RaidV2AuthService authSvc) {
     this.db = db;
-    this.aaf = aaf;
-    this.google = google;
+    this.authSvc = authSvc;
   }
 
   public List<AuthzRequest> listAllRecentAuthzRequest() {
@@ -108,7 +109,7 @@ public class AuthzRequestService {
   ) {
     String email = user.getEmail().toLowerCase().trim();
 
-    IdProvider idProvider = this.mapIdProvider(user.getClientId());
+    IdProvider idProvider = authSvc.mapIdProvider(user.getClientId());
     if(
       // we only promote raido SP users to operator
       req.getServicePointId() == RAIDO_SP_ID &&
@@ -158,45 +159,50 @@ public class AuthzRequestService {
     return new UpdateAuthzResponse().status(AuthzRequestStatus.REQUESTED);
   }
 
-  /**
-   Retuns the verified `id_token` from the IDP by calling the OIDC /token
-   endpoint.
-   */
-  public DecodedJWT exchangeCodeForVerfiedJwt(
-    String clientId, 
-    String idpResponseCode
-  ){
-    var idProvider = mapIdProvider(clientId);
-    DecodedJWT idProviderJwt;
-    switch( idProvider ){
-      case GOOGLE -> idProviderJwt = 
-        google.exchangeCodeForVerifiedJwt(idpResponseCode);
-      case AAF -> idProviderJwt = 
-        aaf.exchangeCodeForVerifiedJwt(idpResponseCode);
-      default -> throw idpException("unknown clientId %s", clientId);
-    }
-    
-    return idProviderJwt;
-  }
-
-  public IdProvider mapIdProvider(String clientId){
-    if( aaf.canHandle(clientId) ){
-      return IdProvider.AAF;
-    }
-    else if( google.canHandle(clientId) ){
-      return IdProvider.GOOGLE;
-    }
-    else {
-      // improve should be a specific authn error?
-      // and should it expose the error?
-      throw idpException("unknown clientId %s", clientId);
-    }
-  }
-
   public boolean isRaidoOperator(String email) {
     return db.fetchExists(RAIDO_OPERATOR,
       RAIDO_OPERATOR.EMAIL.equalIgnoreCase(email)
     );
   }
 
+  public void updateAuthzRequestStatus(
+    AuthzTokenPayload user,
+    UpdateAuthzRequestStatus req,
+    UserAuthzRequestRecord authzRecord
+  ) {
+    if( req.getStatus() == APPROVED ){
+      Guard.isTrue(authzRecord.getStatus() == REQUESTED);
+      authzRecord.setStatus(AuthRequestStatus.APPROVED);
+      authzRecord.setRespondingUser(user.getAppUserId());
+      authzRecord.setDateResponded(LocalDateTime.now());
+      authzRecord.update();
+      
+      db.insertInto(APP_USER).
+        set(APP_USER.SERVICE_POINT_ID, authzRecord.getServicePointId()).
+        set(APP_USER.EMAIL, authzRecord.getEmail()).
+        set(APP_USER.CLIENT_ID, authzRecord.getClientId()).
+        set(APP_USER.SUBJECT, authzRecord.getSubject()).
+        set(APP_USER.ID_PROVIDER, authzRecord.getIdProvider()).
+        set(APP_USER.ROLE, SP_USER).
+        onConflict(APP_USER.EMAIL, APP_USER.CLIENT_ID, APP_USER.SUBJECT).
+        where(APP_USER.DISABLED.eq(false)).
+        doUpdate().
+        set(APP_USER.SERVICE_POINT_ID, authzRecord.getServicePointId()).
+        execute();
+    }
+    else if( req.getStatus() == AuthzRequestStatus.REJECTED ){
+      authzRecord.setStatus(AuthRequestStatus.REJECTED);
+      authzRecord.setRespondingUser(user.getAppUserId());
+      authzRecord.setDateResponded(LocalDateTime.now());
+      authzRecord.update();
+    }
+    else {
+      var iae = iae("invalid status update value");
+      log.with("user", user).
+        with("request", req).
+        with("db.status", authzRecord.getStatus()).
+        error(iae.getMessage());
+      throw iae;
+    }
+  }
 }

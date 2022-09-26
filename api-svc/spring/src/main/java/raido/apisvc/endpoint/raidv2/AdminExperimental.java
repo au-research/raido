@@ -8,14 +8,11 @@ import raido.apisvc.service.auth.AuthzTokenPayload;
 import raido.apisvc.service.auth.admin.AuthzRequestService;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
-import raido.db.jooq.api_svc.enums.AuthRequestStatus;
 import raido.idl.raidv2.api.AdminExperimentalApi;
 import raido.idl.raidv2.model.AuthzRequest;
-import raido.idl.raidv2.model.AuthzRequestStatus;
 import raido.idl.raidv2.model.ServicePoint;
 import raido.idl.raidv2.model.UpdateAuthzRequestStatus;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
@@ -24,8 +21,6 @@ import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.areEqual;
 import static raido.db.jooq.api_svc.enums.UserRole.OPERATOR;
 import static raido.db.jooq.api_svc.enums.UserRole.SP_ADMIN;
-import static raido.db.jooq.api_svc.enums.UserRole.SP_USER;
-import static raido.db.jooq.api_svc.tables.AppUser.APP_USER;
 import static raido.db.jooq.api_svc.tables.UserAuthzRequest.USER_AUTHZ_REQUEST;
 
 @Scope(proxyMode = TARGET_CLASS)
@@ -75,41 +70,8 @@ public class AdminExperimental implements AdminExperimentalApi {
 
     guardAuthzRequestSecurity(user, authzRecord.getServicePointId());
 
-    if( req.getStatus() == AuthzRequestStatus.APPROVED ){
-      Guard.isTrue(authzRecord.getStatus() == AuthRequestStatus.REQUESTED);
-      authzRecord.setStatus(AuthRequestStatus.APPROVED);
-      authzRecord.setRespondingUser(user.getAppUserId());
-      authzRecord.setDateResponded(LocalDateTime.now());
-      authzRecord.update();
-      
-      db.insertInto(APP_USER).
-        set(APP_USER.SERVICE_POINT_ID, authzRecord.getServicePointId()).
-        set(APP_USER.EMAIL, authzRecord.getEmail()).
-        set(APP_USER.CLIENT_ID, authzRecord.getClientId()).
-        set(APP_USER.SUBJECT, authzRecord.getSubject()).
-        set(APP_USER.ID_PROVIDER, authzRecord.getIdProvider()).
-        set(APP_USER.ROLE, SP_USER).
-        onConflict(APP_USER.EMAIL, APP_USER.CLIENT_ID, APP_USER.SUBJECT).
-        where(APP_USER.DISABLED.eq(false)).
-        doUpdate().
-        set(APP_USER.SERVICE_POINT_ID, authzRecord.getServicePointId()).
-        execute();
-    }
-    else if( req.getStatus() == AuthzRequestStatus.REJECTED ){
-      authzRecord.setStatus(AuthRequestStatus.REJECTED);
-      authzRecord.setRespondingUser(user.getAppUserId());
-      authzRecord.setDateResponded(LocalDateTime.now());
-      authzRecord.update();
-    }
-    else {
-      var iae = iae("invalid status update value");
-      log.with("user", user).
-        with("request", req).
-        with("db.status", authzRecord.getStatus()).
-        error(iae.getMessage());
-      throw iae;
-    }
-    
+    authzReqeustSvc.updateAuthzRequestStatus(user, req, authzRecord);
+
     return null;
   }
 
