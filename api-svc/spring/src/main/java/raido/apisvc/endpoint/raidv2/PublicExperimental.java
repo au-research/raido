@@ -61,7 +61,7 @@ public class PublicExperimental implements PublicExperimentalApi {
         SERVICE_POINT.ID,
         SERVICE_POINT.NAME).
       from(SERVICE_POINT).
-      where(SERVICE_POINT.DISABLED.isFalse()).
+      where(SERVICE_POINT.ENABLED.isTrue()).
       fetchInto(PublicServicePoint.class);
   }
 

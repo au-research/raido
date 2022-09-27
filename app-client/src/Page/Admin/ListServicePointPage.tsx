@@ -7,36 +7,38 @@ import React from "react";
 import { normalisePath } from "Util/Location";
 import { RqQuery } from "Util/ReactQueryUtil";
 import { useQuery } from "@tanstack/react-query";
-import { AuthzRequest } from "Generated/Raidv2";
+import { ServicePoint } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import {
-  Table, TableBody,
+  Fab,
+  Table,
+  TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow
 } from "@mui/material";
-import { formatLocalDateAsIsoShortDateTime } from "Util/DateUtil";
 import { RefreshIconButton } from "Component/RefreshIconButton";
 import { RaidoLink } from "Component/RaidoLink";
-import { getAuthzRespondPageLink } from "Page/Admin/AuthzRespondPage";
+import { getServicePointPageLink } from "Page/Admin/ServicePointPage";
+import { Add, Visibility, VisibilityOff } from "@mui/icons-material";
 
 const log = console;
 
-const pageUrl = "/admin-authz-request";
+const pageUrl = "/list-service-point";
 
-export function getAdminAuthzRequestPageLink(): string{
+export function getListServicePointPageLink(): string{
   return pageUrl;
 }
 
-export function isAdminAuthzRequestPagePath(path: string): boolean{
+export function isListServicePointPagePath(path: string): boolean{
   return normalisePath(path).startsWith(pageUrl);
 }
 
-export function AdminAuthzRequestPage(){
-  return <NavTransition isPath={isAdminAuthzRequestPagePath}
-    title={raidoTitle("Authorisation requests")}
+export function ListServicePointPage(){
+  return <NavTransition isPath={isListServicePointPagePath}
+    title={raidoTitle("Service points")}
   >
     <Content/>
   </NavTransition>
@@ -45,14 +47,14 @@ export function AdminAuthzRequestPage(){
 
 function Content(){
   return <LargeContentMain>
-    <AuthzRequestContainer/>
+    <ServicePointListTable/>
   </LargeContentMain>
 }
 
-function AuthzRequestContainer(){
+function ServicePointListTable(){
   const api = useAuthApi();
-  const query: RqQuery<AuthzRequest[]> = useQuery(
-    ['listAuthzRequest'], async () => await api.admin.listAuthzRequest());
+  const query: RqQuery<ServicePoint[]> = useQuery(
+    ['listServicePoint'], async () => await api.admin.listServicePoint());
 
   if( query.error ){
     return <CompactErrorPanel error={query.error}/>
@@ -67,17 +69,22 @@ function AuthzRequestContainer(){
     return <TextSpan>unexpected state</TextSpan>
   }
 
-  return <ContainerCard title={"Authorisation requests"}
-    action={<RefreshIconButton refreshing={query.isLoading} onClick={()=>query.refetch()}/>}
+  return <ContainerCard title={"Service points"}
+    action={<>
+      <RefreshIconButton refreshing={query.isLoading} 
+        onClick={()=>query.refetch()} />
+      <Fab href={getServicePointPageLink(undefined)} color="primary" size="small"
+      >
+        <Add/>
+      </Fab>
+    </>}
   >
     <TableContainer>
       <Table>
         <TableHead>
           <TableRow>
             <TableCell>Service point</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Requested</TableCell>
-            <TableCell>Status</TableCell>
+            <TableCell align="center">Enabled</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -87,17 +94,16 @@ function AuthzRequestContainer(){
               // don't render a border under last row
               sx={{'&:last-child td, &:last-child th': {border: 0}}}
             >
-              <TableCell component="th" scope="row">
-                {row.servicePointName}
-              </TableCell>
-              <TableCell>{row.email}</TableCell>
-              <TableCell>
-                {formatLocalDateAsIsoShortDateTime(row.dateRequested)}
-              </TableCell>
-              <TableCell>
-                <RaidoLink href={getAuthzRespondPageLink(row.id)}>
-                  {row.status}
+              <TableCell scope="row">
+                <RaidoLink href={getServicePointPageLink(row.id)}>
+                  {row.name}
                 </RaidoLink>
+              </TableCell>
+              <TableCell align="center">
+                { row.enabled ?
+                  <Visibility color={"success"}/> : 
+                  <VisibilityOff color={"error"}/>
+                }
               </TableCell>
             </TableRow>
           ))}

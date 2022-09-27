@@ -33,10 +33,5 @@ export function navBrowserByAssign(url: string){
 
 export function navBrowserBack(){
   window.history.back();
-
-  /* If the browser can go back, execution halts and close() won't be run.
-  if there's no back (new window or something), then the browser tab will be
-  closed. */
-  window.close();
 }
 

@@ -16,12 +16,12 @@ import raido.apisvc.util.RestUtil;
 
 import java.io.IOException;
 
+import static org.eclipse.jetty.util.TypeUtil.isFalse;
 import static raido.apisvc.service.auth.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
 import static raido.apisvc.service.auth.NonAuthzTokenPayload.NonAuthzTokenPayloadBuilder.aNonAuthzTokenPayload;
 import static raido.apisvc.spring.security.IdProviderException.idpException;
 import static raido.apisvc.util.ExceptionUtil.authFailed;
 import static raido.apisvc.util.Log.to;
-import static raido.apisvc.util.ObjectUtil.isTrue;
 import static raido.apisvc.util.StringUtil.isNullOrEmpty;
 
 
@@ -101,7 +101,7 @@ public class AuthnEndpoint {
     }
 
     var user = userRecord.get();
-    if( isTrue(user.getDisabled()) ){
+    if( isFalse(user.getEnabled()) ){
       // SP would need to look in their user list to know user is disabled
       log.with("appUserId", user.getId()).
         with("email", user.getEmail()).

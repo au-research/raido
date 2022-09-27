@@ -38,7 +38,7 @@ create table service_point (
   search_content varchar(256)       null,
   admin_email    varchar(256)       not null,
   tech_email     varchar(256)       not null,
-  disabled       bool default false not null
+  enabled       bool default true not null
 );
 
 alter table service_point
@@ -74,17 +74,17 @@ create table app_user (
   subject          varchar(256)                         not null,
   id_provider      id_provider                          not null,
   role             user_role                            not null,
-  disabled         bool default false                   not null,
+  enabled         bool default true                   not null,
   token_cutoff     timestamp without time zone          null,
   date_created     timestamp without time zone
                         default transaction_timestamp() not null
 );
 
--- worried about multple user_request approvals and moving users around between
+-- worried about multiple user_request approvals and moving users around between
 -- service-points in case of user error, etc.
 create unique index app_user_id_fields_active_key
   on app_user(email, client_id, subject)
-  where disabled = false;
+  where enabled = true;
 
 comment on index app_user_id_fields_active_key is
   'a user can only be attached to one service point at a time.  We could change 
@@ -106,8 +106,7 @@ create table raido_operator (
 
 
 comment on table raido_operator is
-  'any app_user
-with an email in this table will be considered an operator';
+'any app_user with an email in this table will be considered an operator';
 
 
 create table user_authz_request (

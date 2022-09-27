@@ -21,6 +21,7 @@ import java.time.ZoneOffset;
 import java.util.Optional;
 
 import static java.util.Optional.of;
+import static org.eclipse.jetty.util.TypeUtil.isFalse;
 import static raido.apisvc.service.auth.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
 import static raido.apisvc.service.auth.NonAuthzTokenPayload.NonAuthzTokenPayloadBuilder.aNonAuthzTokenPayload;
 import static raido.apisvc.spring.security.IdProviderException.idpException;
@@ -145,9 +146,9 @@ public class RaidV2AuthService {
         return authFailed();
       });
 
-    if( isTrue(user.getDisabled()) ){
+    if( isFalse(user.getEnabled()) ){
       log.with("appUserId", appUserId).with("email", email).
-        warn("attempted token authz - disable duser");
+        warn("attempted token authz - disabled user");
       throw authFailed();
     }
 
@@ -226,7 +227,7 @@ public class RaidV2AuthService {
         APP_USER.EMAIL.eq(email).
           and(APP_USER.CLIENT_ID.eq(clientId)).
           and(APP_USER.SUBJECT.eq(subject)).
-          and(APP_USER.DISABLED.isFalse())
+          and(APP_USER.ENABLED.isTrue())
       ).fetchOptionalInto(AppUserRecord.class);
   }
 

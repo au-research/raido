@@ -13,8 +13,7 @@ import raido.db.jooq.api_svc.tables.RaidoOperator;
 
 
 /**
- * any app_user
- * with an email in this table will be considered an operator
+ * any app_user with an email in this table will be considered an operator
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RaidoOperatorRecord extends UpdatableRecordImpl<RaidoOperatorRecord> implements Record1<String> {

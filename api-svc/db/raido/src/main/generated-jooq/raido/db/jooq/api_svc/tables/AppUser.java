@@ -95,9 +95,9 @@ public class AppUser extends TableImpl<AppUserRecord> {
     public final TableField<AppUserRecord, UserRole> ROLE = createField(DSL.name("role"), SQLDataType.VARCHAR.nullable(false).asEnumDataType(raido.db.jooq.api_svc.enums.UserRole.class), this, "");
 
     /**
-     * The column <code>api_svc.app_user.disabled</code>.
+     * The column <code>api_svc.app_user.enabled</code>.
      */
-    public final TableField<AppUserRecord, Boolean> DISABLED = createField(DSL.name("disabled"), SQLDataType.BOOLEAN.nullable(false).defaultValue(DSL.field("false", SQLDataType.BOOLEAN)), this, "");
+    public final TableField<AppUserRecord, Boolean> ENABLED = createField(DSL.name("enabled"), SQLDataType.BOOLEAN.nullable(false).defaultValue(DSL.field("true", SQLDataType.BOOLEAN)), this, "");
 
     /**
      * The column <code>api_svc.app_user.token_cutoff</code>. Any endpoint call

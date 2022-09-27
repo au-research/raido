@@ -13,6 +13,10 @@ import {
   isAdminAuthzRequestPagePath
 } from "Page/Admin/AdminAuthzRequestPage";
 import { AuthState, useAuth } from "Auth/AuthProvider";
+import {
+  getListServicePointPageLink,
+  isListServicePointPagePath
+} from "Page/Admin/ListServicePointPage";
 
 
 function isOperator(authState: AuthState){
@@ -44,7 +48,13 @@ export function AppDrawer(props: {
         { isOp && 
           <ListNavButton href={getAdminAuthzRequestPageLink()}
           isCurrent={isAdminAuthzRequestPagePath(pathname)}
-          description={"Admin Authz Request"}
+          description={"Authorisation Requests"}
+          />
+        }
+        { isOp && 
+          <ListNavButton href={getListServicePointPageLink()}
+          isCurrent={isListServicePointPagePath(pathname)}
+          description={"Service points"}
           />
         }
       </List>

@@ -135,17 +135,17 @@ public class AppUserRecord extends UpdatableRecordImpl<AppUserRecord> implements
     }
 
     /**
-     * Setter for <code>api_svc.app_user.disabled</code>.
+     * Setter for <code>api_svc.app_user.enabled</code>.
      */
-    public AppUserRecord setDisabled(Boolean value) {
+    public AppUserRecord setEnabled(Boolean value) {
         set(7, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.app_user.disabled</code>.
+     * Getter for <code>api_svc.app_user.enabled</code>.
      */
-    public Boolean getDisabled() {
+    public Boolean getEnabled() {
         return (Boolean) get(7);
     }
 
@@ -243,7 +243,7 @@ public class AppUserRecord extends UpdatableRecordImpl<AppUserRecord> implements
 
     @Override
     public Field<Boolean> field8() {
-        return AppUser.APP_USER.DISABLED;
+        return AppUser.APP_USER.ENABLED;
     }
 
     @Override
@@ -293,7 +293,7 @@ public class AppUserRecord extends UpdatableRecordImpl<AppUserRecord> implements
 
     @Override
     public Boolean component8() {
-        return getDisabled();
+        return getEnabled();
     }
 
     @Override
@@ -343,7 +343,7 @@ public class AppUserRecord extends UpdatableRecordImpl<AppUserRecord> implements
 
     @Override
     public Boolean value8() {
-        return getDisabled();
+        return getEnabled();
     }
 
     @Override
@@ -400,7 +400,7 @@ public class AppUserRecord extends UpdatableRecordImpl<AppUserRecord> implements
 
     @Override
     public AppUserRecord value8(Boolean value) {
-        setDisabled(value);
+        setEnabled(value);
         return this;
     }
 
@@ -445,7 +445,7 @@ public class AppUserRecord extends UpdatableRecordImpl<AppUserRecord> implements
     /**
      * Create a detached, initialised AppUserRecord
      */
-    public AppUserRecord(Long id, Long servicePointId, String email, String clientId, String subject, IdProvider idProvider, UserRole role, Boolean disabled, LocalDateTime tokenCutoff, LocalDateTime dateCreated) {
+    public AppUserRecord(Long id, Long servicePointId, String email, String clientId, String subject, IdProvider idProvider, UserRole role, Boolean enabled, LocalDateTime tokenCutoff, LocalDateTime dateCreated) {
         super(AppUser.APP_USER);
 
         setId(id);
@@ -455,7 +455,7 @@ public class AppUserRecord extends UpdatableRecordImpl<AppUserRecord> implements
         setSubject(subject);
         setIdProvider(idProvider);
         setRole(role);
-        setDisabled(disabled);
+        setEnabled(enabled);
         setTokenCutoff(tokenCutoff);
         setDateCreated(dateCreated);
     }

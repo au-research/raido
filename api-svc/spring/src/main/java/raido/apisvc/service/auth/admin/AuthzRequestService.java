@@ -185,7 +185,7 @@ public class AuthzRequestService {
         set(APP_USER.ID_PROVIDER, authzRecord.getIdProvider()).
         set(APP_USER.ROLE, SP_USER).
         onConflict(APP_USER.EMAIL, APP_USER.CLIENT_ID, APP_USER.SUBJECT).
-        where(APP_USER.DISABLED.eq(false)).
+        where(APP_USER.ENABLED.eq(true)).
         doUpdate().
         set(APP_USER.SERVICE_POINT_ID, authzRecord.getServicePointId()).
         execute();

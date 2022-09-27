@@ -29,8 +29,7 @@ import raido.db.jooq.api_svc.tables.records.RaidoOperatorRecord;
 
 
 /**
- * any app_user
- * with an email in this table will be considered an operator
+ * any app_user with an email in this table will be considered an operator
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class RaidoOperator extends TableImpl<RaidoOperatorRecord> {
@@ -60,7 +59,7 @@ public class RaidoOperator extends TableImpl<RaidoOperatorRecord> {
     }
 
     private RaidoOperator(Name alias, Table<RaidoOperatorRecord> aliased, Field<?>[] parameters) {
-        super(alias, null, aliased, parameters, DSL.comment("any app_user\r\nwith an email in this table will be considered an operator"), TableOptions.table());
+        super(alias, null, aliased, parameters, DSL.comment("any app_user with an email in this table will be considered an operator"), TableOptions.table());
     }
 
     /**

@@ -28,6 +28,7 @@ export interface NavigationState {
   pathname: string,
   navigatingTo: string | undefined,
   navigateTo: (to: string, event?: SyntheticEvent) => void,
+  replace: (to: string, event?: SyntheticEvent) => void,
 }
 
 const NavigationContext = React.createContext({} as NavigationState );
@@ -38,7 +39,7 @@ export function NavigationProvider(props: {children: React.ReactNode}){
   const [navigatingTo, setNavigatingTo] = useState(
     undefined as string | undefined );
 
-  const navTo = React.useCallback((to: string, event?: SyntheticEvent)=> {
+  const navigateTo = React.useCallback((to: string, event?: SyntheticEvent)=> {
     event?.preventDefault();
     setNavigatingTo(to);
     setTimeout(()=>{
@@ -47,10 +48,20 @@ export function NavigationProvider(props: {children: React.ReactNode}){
     }, navTime);
   }, [location]);
 
+  const replace = React.useCallback((to: string, event?: SyntheticEvent)=> {
+    event?.preventDefault();
+    setNavigatingTo(to);
+    setTimeout(()=>{
+      location.replaceState(to);
+      setNavigatingTo(undefined);
+    }, navTime);
+  }, [location]);
+
   return <NavigationContext.Provider value={{
     pathname: location.pathname,
     navigatingTo,
-    navigateTo:navTo,
+    navigateTo:navigateTo,
+    replace
   }}>
     {props.children}
   </NavigationContext.Provider>;

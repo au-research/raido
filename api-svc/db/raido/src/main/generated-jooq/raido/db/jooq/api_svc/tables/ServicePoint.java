@@ -81,9 +81,9 @@ public class ServicePoint extends TableImpl<ServicePointRecord> {
     public final TableField<ServicePointRecord, String> TECH_EMAIL = createField(DSL.name("tech_email"), SQLDataType.VARCHAR(256).nullable(false), this, "");
 
     /**
-     * The column <code>api_svc.service_point.disabled</code>.
+     * The column <code>api_svc.service_point.enabled</code>.
      */
-    public final TableField<ServicePointRecord, Boolean> DISABLED = createField(DSL.name("disabled"), SQLDataType.BOOLEAN.nullable(false).defaultValue(DSL.field("false", SQLDataType.BOOLEAN)), this, "");
+    public final TableField<ServicePointRecord, Boolean> ENABLED = createField(DSL.name("enabled"), SQLDataType.BOOLEAN.nullable(false).defaultValue(DSL.field("true", SQLDataType.BOOLEAN)), this, "");
 
     /**
      * The column <code>api_svc.service_point.lower_name</code>.

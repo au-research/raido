@@ -4,8 +4,10 @@ import org.jooq.DSLContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
+import raido.apisvc.endpoint.Constant;
 import raido.apisvc.service.auth.AuthzTokenPayload;
 import raido.apisvc.service.auth.admin.AuthzRequestService;
+import raido.apisvc.service.auth.admin.ServicePointService;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.idl.raidv2.api.AdminExperimentalApi;
@@ -16,11 +18,15 @@ import raido.idl.raidv2.model.UpdateAuthzRequestStatus;
 import java.util.List;
 
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
+import static raido.apisvc.endpoint.raidv2.AuthzUtil.isOperatorOrAssociated;
+import static raido.apisvc.endpoint.raidv2.AuthzUtil.isOperatorOrAssociatedSpAdmin;
+import static raido.apisvc.endpoint.raidv2.AuthzUtil.isOperatorOrSpAdmin;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.areEqual;
 import static raido.db.jooq.api_svc.enums.UserRole.OPERATOR;
 import static raido.db.jooq.api_svc.enums.UserRole.SP_ADMIN;
+import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 import static raido.db.jooq.api_svc.tables.UserAuthzRequest.USER_AUTHZ_REQUEST;
 
 @Scope(proxyMode = TARGET_CLASS)
@@ -30,10 +36,16 @@ public class AdminExperimental implements AdminExperimentalApi {
   private static final Log log = to(AdminExperimental.class);
   
   private AuthzRequestService authzReqeustSvc;
+  private ServicePointService servicePointSvc;
   private DSLContext db;
 
-  public AdminExperimental(AuthzRequestService authzReqeustSvc, DSLContext db) {
+  public AdminExperimental(
+    AuthzRequestService authzReqeustSvc,
+    ServicePointService servicePointSvc,
+    DSLContext db
+  ) {
     this.authzReqeustSvc = authzReqeustSvc;
+    this.servicePointSvc = servicePointSvc;
     this.db = db;
   }
 
@@ -44,11 +56,6 @@ public class AdminExperimental implements AdminExperimentalApi {
     Guard.areEqual(user.getRole(), OPERATOR.getLiteral());
 
     return authzReqeustSvc.listAllRecentAuthzRequest();
-  }
-
-  @Override
-  public List<ServicePoint> listServicePoint() {
-    return null;
   }
 
   @Override
@@ -81,23 +88,63 @@ public class AdminExperimental implements AdminExperimentalApi {
   ) {
     if( areEqual(user.getRole(), OPERATOR.getLiteral()) ){
       // operator can update requests for any service point
+      return;
     }
-    else if( areEqual(user.getRole(), SP_ADMIN.getLiteral()) ){
-      if( !areEqual(servicePointId, user.getServicePointId()) ){
-        var iae = iae("disallowed cross-service point call");
-        log.with("user", user).with("servicePointId", servicePointId).
-          error(iae.getMessage());
-        throw iae;
+    
+    if( areEqual(user.getRole(), SP_ADMIN.getLiteral()) ){
+      if( areEqual(servicePointId, user.getServicePointId()) ){
+        // admin can update requests for their own service point
+        return;
       }
-    }
-    else {
-      var iae = iae("only operators or sp_admins can call this endpoint");
-      log.with("user", user).error(iae.getMessage());
-      // TODO:STO I think we should have specific authz failure
-      // not for the client, just for differentiating internally (i.e. logging)
+
+      // SP_ADMIN is not allowed to touch authz requests from other SP's 
+      var iae = iae("disallowed cross-service point call");
+      log.with("user", user).with("servicePointId", servicePointId).
+        error(iae.getMessage());
       throw iae;
     }
+    
+    var iae = iae("only operators or sp_admins can call this endpoint");
+    log.with("user", user).error(iae.getMessage());
+    // TODO:STO I think we should have specific authz failure
+    // not for the client, just for differentiating internally (i.e. logging)
+    throw iae;
   }
 
+
+  @Override
+  public List<ServicePoint> listServicePoint() {
+    var user = AuthzUtil.getAuthzPayload();
+    isOperatorOrSpAdmin(user);
+    
+    return db.select().from(SERVICE_POINT).
+      orderBy(SERVICE_POINT.NAME.asc()).
+      limit(Constant.MAX_RETURN_RECORDS).
+      fetchInto(ServicePoint.class);
+  }
+
+  @Override
+  public ServicePoint readServicePoint(Long servicePointId) {
+    var user = AuthzUtil.getAuthzPayload();
+    isOperatorOrAssociated(user, servicePointId);
+
+    return db.select().from(SERVICE_POINT).
+      where(SERVICE_POINT.ID.eq(servicePointId)).
+      fetchOneInto(ServicePoint.class);
+  }
+
+  @Override
+  public ServicePoint updateServicePoint(ServicePoint req) {
+    var user = AuthzUtil.getAuthzPayload();
+    isOperatorOrAssociatedSpAdmin(user, req.getId());
+    
+    Guard.notNull(req);
+    Guard.hasValue("must have a name", req.getName());
+    Guard.notNull("must have adminEmail", req.getAdminEmail());
+    Guard.notNull("must have techEmail", req.getTechEmail());
+    Guard.notNull("must have a enabled flag", req.getEnabled());
+
+    return servicePointSvc.updateServicePoint(req);
+  }
 
 }

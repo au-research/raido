@@ -99,17 +99,17 @@ public class ServicePointRecord extends UpdatableRecordImpl<ServicePointRecord> 
     }
 
     /**
-     * Setter for <code>api_svc.service_point.disabled</code>.
+     * Setter for <code>api_svc.service_point.enabled</code>.
      */
-    public ServicePointRecord setDisabled(Boolean value) {
+    public ServicePointRecord setEnabled(Boolean value) {
         set(5, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.service_point.disabled</code>.
+     * Getter for <code>api_svc.service_point.enabled</code>.
      */
-    public Boolean getDisabled() {
+    public Boolean getEnabled() {
         return (Boolean) get(5);
     }
 
@@ -178,7 +178,7 @@ public class ServicePointRecord extends UpdatableRecordImpl<ServicePointRecord> 
 
     @Override
     public Field<Boolean> field6() {
-        return ServicePoint.SERVICE_POINT.DISABLED;
+        return ServicePoint.SERVICE_POINT.ENABLED;
     }
 
     @Override
@@ -213,7 +213,7 @@ public class ServicePointRecord extends UpdatableRecordImpl<ServicePointRecord> 
 
     @Override
     public Boolean component6() {
-        return getDisabled();
+        return getEnabled();
     }
 
     @Override
@@ -248,7 +248,7 @@ public class ServicePointRecord extends UpdatableRecordImpl<ServicePointRecord> 
 
     @Override
     public Boolean value6() {
-        return getDisabled();
+        return getEnabled();
     }
 
     @Override
@@ -288,7 +288,7 @@ public class ServicePointRecord extends UpdatableRecordImpl<ServicePointRecord> 
 
     @Override
     public ServicePointRecord value6(Boolean value) {
-        setDisabled(value);
+        setEnabled(value);
         return this;
     }
 
@@ -324,7 +324,7 @@ public class ServicePointRecord extends UpdatableRecordImpl<ServicePointRecord> 
     /**
      * Create a detached, initialised ServicePointRecord
      */
-    public ServicePointRecord(Long id, String name, String searchContent, String adminEmail, String techEmail, Boolean disabled, String lowerName) {
+    public ServicePointRecord(Long id, String name, String searchContent, String adminEmail, String techEmail, Boolean enabled, String lowerName) {
         super(ServicePoint.SERVICE_POINT);
 
         setId(id);
@@ -332,7 +332,7 @@ public class ServicePointRecord extends UpdatableRecordImpl<ServicePointRecord> 
         setSearchContent(searchContent);
         setAdminEmail(adminEmail);
         setTechEmail(techEmail);
-        setDisabled(disabled);
+        setEnabled(enabled);
         setLowerName(lowerName);
     }
 }

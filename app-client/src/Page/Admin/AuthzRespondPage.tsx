@@ -115,12 +115,12 @@ function AuthzResponseContainer({authzRequestId}:{authzRequestId: number}){
           {formatLocalDateAsIsoShortDateTime(query.data.dateResponded)}
         </TextSpan>
       </>}
-      { query.data.status === "REQUESTED" &&
-        <Stack direction={"row"} spacing={2}>
-          <SecondaryButton onClick={navBrowserBack} 
-            disabled={updateRequest.isLoading}>
-            Cancel
-          </SecondaryButton>
+      <Stack direction={"row"} spacing={2}>
+        <SecondaryButton onClick={navBrowserBack}
+          disabled={updateRequest.isLoading}>
+          Back
+        </SecondaryButton>
+        { query.data.status === "REQUESTED" && <>
           <PrimaryButton color={"error"}
             disabled={updateRequest.isLoading || query.isLoading}
             isLoading={updateRequest.isLoading}
@@ -144,8 +144,8 @@ function AuthzResponseContainer({authzRequestId}:{authzRequestId: number}){
           >
             Approve
           </PrimaryActionButton>
-        </Stack>
-      }
+        </>}
+      </Stack>
     </Stack>
   </ContainerCard>
 }
