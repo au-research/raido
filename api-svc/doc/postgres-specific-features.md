@@ -5,8 +5,7 @@ Makes a good starting point for "how much work to port Raido to a different DB".
 
 # Current PG features used
 
-* Jsonb for storing original raid-v1 DDB data.
-* UUID for primary keys
+* Jsonb for storing raid metadata envelope
 
 
 # Future PG features to use
@@ -20,21 +19,20 @@ Makes a good starting point for "how much work to port Raido to a different DB".
     * real Qing solution
       * easy to implement because of already serialising Q items to DB
 * enums and arrays
-  * for ease of use on my side
+  * for ease of use of implementation 
   * tuple compactness, leading to improved performance 
     (more stuff in memory for each page)
   * downside: enums were/are a pain to evolve over time
-    * getting better and I know how to do it
+    * getting better and we know how to do it
     * worth the effort
 * jsonb
-  * for the DMR, maybe
-  * and anything else we don't want to model relationally
+  * for metadata envelope and anything else we don't want to model relationally
     * especially, auditing history over multiple schema versions
-  * I'm not currently planning on converting the schema to an entity-value model
-  * the occasional need to query into the DMR can be easily supported by 
+  * not currently planning on converting the schema to an entity-value model
+  * querying into the metadata can be easily supported by 
     postgres' json support (including proper indexing)
 * modern/advanced SQL
-  * CTEs
+  * CTEs, recursive queries
   * window functions
   * etc.
 * zero downtime schema migration
@@ -44,15 +42,12 @@ Makes a good starting point for "how much work to port Raido to a different DB".
     but we don't have to fiddle with it (RDS takes care of it for us, 
     but with downtime)
 * triggers
-  * apparently mysql trigger support is limited?
-    * even with my personal biases, that's surprising
-    * need to research this don't want to state it if not true
   * we're going to use triggers for auditing
     * in Postgres, this is very easy and fairly secure 
     (much better than application-level auditing)
   * also plan to use triggers for "deferred data migration" when necessary 
   (mid-high scale)
-  i.e. do a schema migration sometimes via multi-step release process
+  i.e. do a schema migration sometimes via multi-step release process;
   zero-downtime schema migration that's fast because we change schema but 
   leave field optionality open
   run for a while with triggers updating any values that are read or updated
