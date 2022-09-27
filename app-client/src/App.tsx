@@ -23,6 +23,7 @@ import { ListServicePointPage } from "Page/Admin/ListServicePointPage";
 import { ServicePointPage } from "Page/Admin/ServicePointPage";
 
 export function App(){
+  /* theme defines the basic color palette and styling, etc. */
   return <RaidoTheme>
     {/* force browser defaults for consistent display behaviour */}
     <CssBaseline/>
@@ -42,7 +43,7 @@ export function App(){
               <NavigationProvider>
                 {/* NavBar across the top of screen and sliding drawer */}
                 <AppNavBar/>
-  
+
                 {/* Navigable, authenticated pages, self-routed */}
                 <HomePage/>
                 <AboutAppPage/>
@@ -50,7 +51,7 @@ export function App(){
                 <AuthzRespondPage/>
                 <ListServicePointPage/>
                 <ServicePointPage/>
-  
+
               </NavigationProvider>
             </AuthApiProvider>
           </AuthProvider>
