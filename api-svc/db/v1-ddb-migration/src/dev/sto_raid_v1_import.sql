@@ -1,4 +1,8 @@
 select * 
+from service_point
+;
+
+select * 
 from app_user
 ;
 
