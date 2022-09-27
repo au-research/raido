@@ -19,14 +19,6 @@ Makes a good starting point for "how much work to port Raido to a different DB".
       * easy to implement because of already serialising Q items to DB
     * real Qing solution
       * easy to implement because of already serialising Q items to DB
-* native UUID as keys
-  * UUID v6, i think?
-  * designed for use as DB identifier, i.e. ordering characteristics, etc.
-  * high storage efficiency
-  * DB index friendly
-  * not globally bottlenecked
-  * minimal generation overhead
-  * shard friendly
 * enums and arrays
   * for ease of use on my side
   * tuple compactness, leading to improved performance 
@@ -70,4 +62,14 @@ Makes a good starting point for "how much work to port Raido to a different DB".
 
 # Past PG features used
 
-* none yet
+* native UUID as keys
+  * this was the original plan, but I decided to default to using `bigint` 
+    instead, see [schema-guideline.md](../db/raido/doc/schema-guideline.md) 
+  * UUID v6, i think?
+  * designed for use as DB identifier, i.e. ordering characteristics, etc.
+  * high storage efficiency
+  * DB index friendly
+  * not globally bottlenecked
+  * minimal generation overhead
+  * shard friendly
+
