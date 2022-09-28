@@ -46,10 +46,7 @@ export function AuthApiProvider({children}: {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        retry: false,
-        // probably do want this, it just interferes with local dev sometimes
-        // when I'm analyzing server logs
-        refetchOnWindowFocus: false,
+        ...Config.authApiQuery,
       }
     }
   });

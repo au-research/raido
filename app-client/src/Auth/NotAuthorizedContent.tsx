@@ -47,10 +47,8 @@ export function NotAuthorizedContent({accessToken}: {accessToken: string}){
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        retry: false,
-        // probably do want this, it just interferes with local dev sometimes
-        // when I'm analyzing server logs
-        refetchOnWindowFocus: false,
+        // re-use for now, might need separate set of options for this later?
+        ...Config.authApiQuery,
       }
     }
   });

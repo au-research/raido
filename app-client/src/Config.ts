@@ -1,3 +1,4 @@
+
 /** Helps manage configuration values across multiple environments.
  * <p>
  * The config values used by the app are decided when this file is run (i.e.
@@ -36,6 +37,16 @@ export interface AuthnConfig {
   authnScope: string,
 }
 
+/**
+ couldn't figure out how to use QueryObserverOptions for this, so just settled
+ on a simplified version cut down for what we actually want to set.
+ */
+export interface ReactQueryConfig {
+  retry: boolean | number,
+  refetchOnWindowFocus: boolean | 'always',
+}
+
+
 export interface EnvironmentConfig {
   /** identifies the environment */
   environmentName: EnvironmentName,
@@ -55,6 +66,8 @@ export interface EnvironmentConfig {
   But you can use a different host if desired (but remember to configure CORS
   headers if you want to do that. */
   raidoApiSvc: string,
+
+  authApiQuery?: ReactQueryConfig,
 }
 
 function initConfig(){
@@ -133,7 +146,12 @@ const devConfig: EnvironmentConfig = {
     clientId: "112489799301-m39l17uigum61l64uakb32vjhujuuk73.apps.googleusercontent.com",
     authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
     authnScope: "openid email profile",
-  }
+  },
+  // disable because kind of annoying in a development context
+  authApiQuery: {
+    retry: false,
+    refetchOnWindowFocus: false,
+  },
 };
 
 const demoConfig: EnvironmentConfig = {
@@ -150,7 +168,11 @@ const demoConfig: EnvironmentConfig = {
     clientId: "112489799301-m39l17uigum61l64uakb32vjhujuuk73.apps.googleusercontent.com",
     authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
     authnScope: "openid email profile",
-  }
+  },
+  authApiQuery: {
+    retry: 1,
+    refetchOnWindowFocus: true,
+  },
 };
 
 const prodConfig: EnvironmentConfig = {
@@ -167,7 +189,11 @@ const prodConfig: EnvironmentConfig = {
     clientId: "",
     authorizeUrl: "",
     authnScope: "",
-  }
+  },
+  authApiQuery: {
+    retry: 1,
+    refetchOnWindowFocus: true,
+  },
 };
 
 
