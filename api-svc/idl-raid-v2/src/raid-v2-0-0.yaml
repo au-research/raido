@@ -154,7 +154,7 @@ paths:
       tags:
         - admin-experimental
       operationId: update-service-point
-      summary: update a new service point, create a new one if id not set
+      summary: update a service point, create a new one if id not set
       requestBody:
         required: true
         content:
@@ -188,7 +188,67 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServicePoint'
-
+  /v2/experimental/service-point/v1/{servicePointId}/list-users:
+    get:
+      tags:
+        - admin-experimental
+      operationId: list-app-user
+      summary: list app user data for service point that authz'd users can see 
+      parameters:
+        - in: path
+          name: servicePointId
+          schema:
+            $ref: 'shared.yaml#/components/schemas/SurrogateKey'
+          required: true
+          description: Numeric ID of the ServicePoint to list users for
+      responses:
+        '200':
+          description: app-user data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppUser'
+  /v2/experimental/app-user/v1:
+    post:
+      tags:
+        - admin-experimental
+      operationId: update-app-user
+      summary: update an app-user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppUser'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppUser'
+  /v2/experimental/app-user/v1/{appUserId}:
+    get:
+      tags:
+        - admin-experimental
+      operationId: read-app-user
+      summary: read app user data that authorized users can see
+      parameters:
+        - in: path
+          name: appUserId
+          schema:
+            $ref: 'shared.yaml#/components/schemas/SurrogateKey'
+          required: true
+          description: Numeric ID of the AppUser to get
+      responses:
+        '200':
+          description: data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppUser'
 components:
   schemas:
     VersionResult:
@@ -243,7 +303,7 @@ components:
       type: object
       required: [
         id, status, servicePointId, servicePointName, 
-        email, client_id, id_provider, subject,
+        email, clientId, idProvider, subject,
         dateRequested
       ]
       properties:
@@ -272,10 +332,22 @@ components:
         enum: ['APPROVED', 'REQUESTED', 'REJECTED']
     AppUser:
       type: object
+      required: [
+        id, servicePointId, 
+        email, clientId, idProvider, subject,
+        enabled, role, dateCreated
+      ]
       properties: 
         id: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
         email: {type: string}
+        clientId: {type: string}
+        subject: {type: string}
+        idProvider: {type: string}
         role: {type: string}
+        enabled: {type: boolean}
+        tokenCutoff: { type: string, format: date-time }
+        dateCreated: { type: string, format: date-time }
   securitySchemes:
     BearerAuth:
       type: http

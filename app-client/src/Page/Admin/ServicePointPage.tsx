@@ -1,4 +1,8 @@
-import { NavTransition, useNavigation } from "Design/NavigationProvider";
+import {
+  isPagePath,
+  NavTransition,
+  useNavigation
+} from "Design/NavigationProvider";
 import { raidoTitle } from "Component/Util";
 import { LargeContentMain } from "Design/LayoutMain";
 import { ContainerCard } from "Design/ContainerCard";
@@ -44,7 +48,7 @@ export function isServicePointPagePath(path: string): boolean{
 }
 
 export function ServicePointPage(){
-  return <NavTransition isPath={isServicePointPagePath}
+  return <NavTransition isPagePath={(pathname)=>isPagePath(pathname, pageUrl)}
     title={raidoTitle("Service point")}
   >
     <Content/>

@@ -11,6 +11,7 @@ import raido.apisvc.service.auth.admin.ServicePointService;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.idl.raidv2.api.AdminExperimentalApi;
+import raido.idl.raidv2.model.AppUser;
 import raido.idl.raidv2.model.AuthzRequest;
 import raido.idl.raidv2.model.ServicePoint;
 import raido.idl.raidv2.model.UpdateAuthzRequestStatus;
@@ -22,10 +23,12 @@ import static raido.apisvc.endpoint.raidv2.AuthzUtil.isOperatorOrAssociated;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.isOperatorOrAssociatedSpAdmin;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.isOperatorOrSpAdmin;
 import static raido.apisvc.util.ExceptionUtil.iae;
+import static raido.apisvc.util.ExceptionUtil.notYetImplemented;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.areEqual;
 import static raido.db.jooq.api_svc.enums.UserRole.OPERATOR;
 import static raido.db.jooq.api_svc.enums.UserRole.SP_ADMIN;
+import static raido.db.jooq.api_svc.tables.AppUser.APP_USER;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 import static raido.db.jooq.api_svc.tables.UserAuthzRequest.USER_AUTHZ_REQUEST;
 
@@ -123,14 +126,15 @@ public class AdminExperimental implements AdminExperimentalApi {
       fetchInto(ServicePoint.class);
   }
 
+  /** IMPROVE: Currently gives a 500 error if not found, 404 might be better? */
   @Override
   public ServicePoint readServicePoint(Long servicePointId) {
     var user = AuthzUtil.getAuthzPayload();
     isOperatorOrAssociated(user, servicePointId);
-
+    
     return db.select().from(SERVICE_POINT).
       where(SERVICE_POINT.ID.eq(servicePointId)).
-      fetchOneInto(ServicePoint.class);
+      fetchSingleInto(ServicePoint.class);
   }
 
   @Override
@@ -145,6 +149,28 @@ public class AdminExperimental implements AdminExperimentalApi {
     Guard.notNull("must have a enabled flag", req.getEnabled());
 
     return servicePointSvc.updateServicePoint(req);
+  }
+
+  @Override
+  public List<AppUser> listAppUser(Long servicePointId) {
+    var user = AuthzUtil.getAuthzPayload();
+    isOperatorOrAssociatedSpAdmin(user, servicePointId);
+
+    return db.select().from(APP_USER).
+      orderBy(APP_USER.EMAIL.asc()).
+      limit(Constant.MAX_RETURN_RECORDS).
+      fetchInto(AppUser.class);
+  }
+
+
+  @Override
+  public AppUser readAppUser(Long appUserId) {
+    throw notYetImplemented();
+  }
+
+  @Override
+  public AppUser updateAppUser(AppUser appUser) {
+    throw notYetImplemented();
   }
 
 }

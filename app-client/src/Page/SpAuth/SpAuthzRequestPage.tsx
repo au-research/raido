@@ -1,4 +1,4 @@
-import { NavTransition } from "Design/NavigationProvider";
+import { isPagePath, NavTransition } from "Design/NavigationProvider";
 import { raidoTitle } from "Component/Util";
 import { LargeContentMain, SmallContentMain } from "Design/LayoutMain";
 import { ContainerCard } from "Design/ContainerCard";
@@ -19,7 +19,7 @@ export function isSpAuthzRequestPagePath(path: string): boolean{
 }
 
 export function SpAuthzRequestPage(){
-  return <NavTransition isPath={isSpAuthzRequestPagePath} 
+  return <NavTransition isPagePath={(pathname)=>isPagePath(pathname, pageUrl)}
     title={raidoTitle("Authorisation requests")}
   >
     <Content/>

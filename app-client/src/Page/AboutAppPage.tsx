@@ -9,7 +9,7 @@ import {
   parseDateFromEpoch
 } from "Util/DateUtil";
 import { TextSpan } from "Component/TextSpan";
-import { NavTransition } from "Design/NavigationProvider";
+import { isPagePath, NavTransition } from "Design/NavigationProvider";
 import { NewWindowLink, raidoGithubUrl } from "Component/ExternalLink";
 import { raidoTitle } from "Component/Util";
 import {
@@ -35,7 +35,7 @@ export function isAboutAppPagePath(path: string): boolean{
 }
 
 export function AboutAppPage(){
-  return <NavTransition isPath={isAboutAppPagePath}
+  return <NavTransition isPagePath={(pathname)=>isPagePath(pathname, pageUrl)}
     title={raidoTitle("About App")}>
     <Content/>
   </NavTransition>

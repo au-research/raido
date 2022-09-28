@@ -1,4 +1,4 @@
-import { NavTransition } from "Design/NavigationProvider";
+import { isPagePath, NavTransition } from "Design/NavigationProvider";
 import React from "react";
 import { ContainerCard } from "Design/ContainerCard";
 import { TextSpan } from "Component/TextSpan";
@@ -21,7 +21,8 @@ export function isHomePagePath(path: string): boolean{
 }
 
 export function HomePage(){
-  return <NavTransition isPath={isHomePagePath} title={raidoTitle("Home")}>
+  return <NavTransition isPagePath={(pathname)=>isPagePath(pathname, pageUrl)} 
+    title={raidoTitle("Home")}>
     <Content/>
   </NavTransition>
 }

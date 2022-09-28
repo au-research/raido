@@ -1,17 +1,21 @@
-import { isPagePath, NavTransition } from "Design/NavigationProvider";
+import {
+  isPagePath,
+  NavigationState,
+  NavPathResult,
+  NavTransition,
+  parsePageSuffixParams,
+  useNavigation
+} from "Design/NavigationProvider";
 import { raidoTitle } from "Component/Util";
 import { LargeContentMain } from "Design/LayoutMain";
 import { ContainerCard } from "Design/ContainerCard";
 import { TextSpan } from "Component/TextSpan";
 import React from "react";
-import { normalisePath } from "Util/Location";
-import { RqQuery } from "Util/ReactQueryUtil";
 import { useQuery } from "@tanstack/react-query";
-import { ServicePoint } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import {
-  Fab, IconButton,
+  Fab,
   Table,
   TableBody,
   TableCell,
@@ -22,40 +26,45 @@ import {
 import { RefreshIconButton } from "Component/RefreshIconButton";
 import { RaidoLink } from "Component/RaidoLink";
 import { getServicePointPageLink } from "Page/Admin/ServicePointPage";
-import { Add, People, Visibility, VisibilityOff } from "@mui/icons-material";
-import { getListAppUserPageLink } from "Page/Admin/ListAppUserPage";
+import { Add, Visibility, VisibilityOff } from "@mui/icons-material";
 
 const log = console;
 
-const pageUrl = "/list-service-point";
+const pageUrl = "/list-app-user";
 
-export function getListServicePointPageLink(): string{
-  return pageUrl;
+export function getListAppUserPageLink(servicePointId: number): string{
+  return `${pageUrl}/${servicePointId}`;
 }
 
-export function isListServicePointPagePath(path: string): boolean{
-  return normalisePath(path).startsWith(pageUrl);
+export function isListAppUserPagePath(pathname: string): NavPathResult{
+  return isPagePath(pathname, pageUrl);
 }
 
-export function ListServicePointPage(){
-  return <NavTransition isPagePath={(pathname)=>isPagePath(pathname, pageUrl)}
-    title={raidoTitle("Service points")}
+export function getServicePointIdFromPathname(nav: NavigationState): number {
+  return parsePageSuffixParams<number>(nav, isListAppUserPagePath, Number)
+}
+
+export function ListAppUserPage(){
+  return <NavTransition isPagePath={(pathname)=>isPagePath(pathname, pageUrl)} 
+    title={raidoTitle("Users")}
   >
     <Content/>
   </NavTransition>
 }
 
-
 function Content(){
+  const nav = useNavigation()
   return <LargeContentMain>
-    <ServicePointListTable/>
+    <AppUserListTable servicePointId={getServicePointIdFromPathname(nav)}/>
   </LargeContentMain>
 }
 
-function ServicePointListTable(){
+function AppUserListTable({servicePointId}: {
+  servicePointId: number,
+}){
   const api = useAuthApi();
-  const query: RqQuery<ServicePoint[]> = useQuery(
-    ['listServicePoint'], async () => await api.admin.listServicePoint());
+  const query = useQuery(['listAppUser'], 
+    async () => await api.admin.listAppUser({servicePointId}) );
 
   if( query.error ){
     return <CompactErrorPanel error={query.error}/>
@@ -70,11 +79,13 @@ function ServicePointListTable(){
     return <TextSpan>unexpected state</TextSpan>
   }
 
-  return <ContainerCard title={"Service points"}
+  return <ContainerCard title={"Users"}
     action={<>
       <RefreshIconButton refreshing={query.isLoading} 
         onClick={()=>query.refetch()} />
-      <Fab href={getServicePointPageLink(undefined)} color="primary" size="small"
+      <Fab href={"#"} 
+        //href={getServicePointPageLink(undefined)} 
+        color="primary" size="small"
       >
         <Add/>
       </Fab>
@@ -85,7 +96,6 @@ function ServicePointListTable(){
         <TableHead>
           <TableRow>
             <TableCell>Service point</TableCell>
-            <TableCell align="center">Users</TableCell>
             <TableCell align="center">Enabled</TableCell>
           </TableRow>
         </TableHead>
@@ -98,15 +108,8 @@ function ServicePointListTable(){
             >
               <TableCell scope="row">
                 <RaidoLink href={getServicePointPageLink(row.id)}>
-                  {row.name}
+                  {row.email}
                 </RaidoLink>
-              </TableCell>
-              <TableCell align="center">
-                {/*<IconButton color={"primary"} >*/}
-                  <RaidoLink href={getListAppUserPageLink(row.id)}>
-                    <People/>
-                  </RaidoLink>
-                {/*</IconButton>*/}
               </TableCell>
               <TableCell align="center">
                 { row.enabled ?

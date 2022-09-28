@@ -125,6 +125,10 @@ export function parseAccessToken(accessToken: string):{
     return {result: "failed", message: "no accessToken payload role", decoded};
   }
 
+  if( !decoded.servicePointId  || typeof(decoded.servicePointId) !== "number" ){
+    return {result: "failed", message: "no accessToken payload servicePointId", decoded};
+  }
+
   return {
     result: "authorized",
     accessTokenExpiry,

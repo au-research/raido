@@ -17,10 +17,18 @@ import {
   getListServicePointPageLink,
   isListServicePointPagePath
 } from "Page/Admin/ListServicePointPage";
+import {
+  getListAppUserPageLink,
+  isListAppUserPagePath
+} from "Page/Admin/ListAppUserPage";
 
 
 function isOperator(authState: AuthState){
   return authState.session.payload.role === "OPERATOR"
+}
+
+function isSpAdmin(authState: AuthState){
+  return authState.session.payload.role === "SP_ADMIN"
 }
 
 export function AppDrawer(props: {
@@ -28,7 +36,9 @@ export function AppDrawer(props: {
   open: boolean,
   toggleDrawer: (open:boolean)=>void,
 }){
-  const isOp = isOperator(useAuth());
+  const auth = useAuth();
+  const isOp = isOperator(auth);
+  const isAdmin = isSpAdmin(auth);
   const {pathname} = useLocationPathname();
 
   const sideList = (
@@ -55,6 +65,13 @@ export function AppDrawer(props: {
           <ListNavButton href={getListServicePointPageLink()}
           isCurrent={isListServicePointPagePath(pathname)}
           description={"Service points"}
+          />
+        }
+        { (isOp || isAdmin) &&
+          <ListNavButton
+            href={getListAppUserPageLink(auth.session.payload.servicePointId)}
+            isCurrent={isListAppUserPagePath(pathname).isPath}
+            description={"Users"}
           />
         }
       </List>
@@ -106,7 +123,10 @@ function ListNavButton(props: {
   </span>;
 
   return <ListItemButton href={props.href}
-    onClick={event=>nav.navigateTo(props.href, event)}
+    onClick={event=>{
+      console.log("onclick drawer", props.href);
+      nav.navigateTo(props.href, event)
+    }}
   >
     { props.icon &&
       <ListItemIcon>

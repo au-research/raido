@@ -2,6 +2,7 @@
 /** Specifies he shape of our claims in the AccessToken. */
 export interface AuthzTokenPayload {
   clientId: string,
+  servicePointId: number,
   sub: string,
   email: string,
   /* role in access token is for client's convenience, actual authz checks 

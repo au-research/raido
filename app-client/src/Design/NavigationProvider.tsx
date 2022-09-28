@@ -1,8 +1,7 @@
-import React, {SyntheticEvent, useContext, useState} from "react";
+import React, { SyntheticEvent, useContext, useState } from "react";
 import Fade from "@mui/material/Fade";
-import {
-  useLocationPathname
-} from "Util/Hook/LocationPathname";
+import { useLocationPathname } from "Util/Hook/LocationPathname";
+import { normalisePath } from "Util/Location";
 
 // value comes from eyeballing the drawer css in my browser, maybe there's
 // a better place in the MUI API to get it from (theme defaults or something?)
@@ -71,20 +70,26 @@ export function NavigationProvider(props: {children: React.ReactNode}){
  * Provides a nice "cross-fade" transition when navigating to a new page.
  */
 export function NavTransition(props: {
-  isPath: (path: string)=>boolean,
+  isPagePath: (pathname: string)=>NavPathResult,
   title: string,
   children: React.ReactNode
 }){
   const nav = useNavigation();
-  const {title, isPath} = props;
-  const isOn = isPath(nav.pathname);
+  const {title, isPagePath} = props;
+  const currentPage = isPagePath(nav.pathname);
   /* it's important to know which "direction" the navigation is going; so that
   we can transition "out of" or "away from" the "old" screen, while
   simultaneously transitioning "in" or "to" the "new" screen. */
-  let isNavToThis = nav.navigatingTo && isPath(nav.navigatingTo);
-  let isNavAway = nav.navigatingTo && !isNavToThis;
+  let isNavToThis = false;
+  let isNavAway = false;
+  if( nav.navigatingTo ){
+    isNavToThis = isPagePath(nav.navigatingTo).isPath;
+    if( !isNavToThis ){
+      isNavAway = true;
+    }
+  }
 
-  if( isOn ){
+  if( currentPage.isPath ){
     window.document.title = title;
   }
 
@@ -100,7 +105,7 @@ export function NavTransition(props: {
 
   return <Fade
     timeout={navTime}
-    in={!isNavAway && (isNavToThis || isOn)}
+    in={!isNavAway && (isNavToThis || currentPage.isPath)}
     /* Each NavTransition is intended to occupy the same position on screen;
     without this, the "from" and "to" screen will display next to each other
     instead of in the same place.  It may be necessary to set "relative"
@@ -109,9 +114,71 @@ export function NavTransition(props: {
   >
     <div>
       {/*div is necessary if using Slide transition */}
-      { (isNavToThis || isOn) &&
+      { (isNavToThis || currentPage.isPath) &&
         props.children
       }
     </div>
   </Fade>;
+}
+
+export function parsePageSuffixParams<TPageParams>(
+  nav: NavigationState,
+  isPath: (path: string)=>NavPathResult,
+  parse: (suffix:string)=>TPageParams,
+): TPageParams {
+  if( nav.navigatingTo ){
+    const parseResult = isPath(nav.navigatingTo);
+    if( parseResult.isPath ){
+      return parse(parseResult.pathSuffix);
+    }
+  }
+
+  const parseResult = isPath(nav.pathname);
+  if( parseResult.isPath ){
+    return parse(parseResult.pathSuffix)
+  }
+  else {
+    throw new Error("couldn't parse the page params from nav path");
+  }
+}
+
+export type NavPathResult = {
+  isPath: false,
+} | {
+  isPath: true,
+  pathSuffix: string,
+}
+
+export function isPagePath(
+  pathname: string, 
+  pageUrl: string,
+  debug: boolean = false,
+): NavPathResult{
+  // this removes any trailing slash
+  let normalised = normalisePath(pathname);
+  if (debug) console.log("isPagePath", normalised, pageUrl);
+  if( !normalised.startsWith(pageUrl) ){
+    if (debug) console.log("!startsWith");
+    return {isPath: false};
+  }
+
+  if( normalised.length === pageUrl.length ){
+    if (debug) console.log("exact match");
+    // path is exact match, no suffix
+    return {
+      isPath: true,
+      pathSuffix: "",
+    }
+  }
+  else if( normalised[pageUrl.length] !== '/' ){
+    if (debug) console.log("substring clash");
+    /* if startsWith() matches, but the next char is not '/', it's probably 
+    a sub-string clash, like: "/users", "/user/1234". */
+    return {isPath: false,}
+  }
+  let suffix = normalised.substring(pageUrl.length+1);
+  return {
+    isPath: true,
+    pathSuffix: suffix,
+  }
 }

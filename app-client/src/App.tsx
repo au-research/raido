@@ -21,6 +21,8 @@ import { AdminAuthzRequestPage } from "Page/Admin/AdminAuthzRequestPage";
 import { AuthzRespondPage } from "Page/Admin/AuthzRespondPage";
 import { ListServicePointPage } from "Page/Admin/ListServicePointPage";
 import { ServicePointPage } from "Page/Admin/ServicePointPage";
+import { ListAppUserPage } from "Page/Admin/ListAppUserPage";
+import { LocationSearchProvider } from "Util/Hook/LocationSearch";
 
 export function App(){
   /* theme defines the basic color palette and styling, etc. */
@@ -33,34 +35,37 @@ export function App(){
       <ErrorDialogProvider>
         {/* manages window.location for routing */}
         <LocationPathnameProvider>
-          {/* authentication and authorization */}
-          <AuthProvider unauthenticatedPaths={[
-            isPrivacyPagePath, isUsageTermsPagePath, isAboutRaidPagePath
-          ]}>
-            {/* binds authentication stuff to OpenAPI stuff */}
-            <AuthApiProvider>
-              {/* transition animation and delegates to location infra */}
-              <NavigationProvider>
-                {/* NavBar across the top of screen and sliding drawer */}
-                <AppNavBar/>
+          <LocationSearchProvider>
+            {/* authentication and authorization */}
+            <AuthProvider unauthenticatedPaths={[
+              isPrivacyPagePath, isUsageTermsPagePath, isAboutRaidPagePath
+            ]}>
+              {/* binds authentication stuff to OpenAPI stuff */}
+              <AuthApiProvider>
+                {/* transition animation and delegates to location infra */}
+                <NavigationProvider>
+                  {/* NavBar across the top of screen and sliding drawer */}
+                  <AppNavBar/>
 
-                {/* Navigable, authenticated pages, self-routed */}
-                <HomePage/>
-                <AboutAppPage/>
-                <AdminAuthzRequestPage/>
-                <AuthzRespondPage/>
-                <ListServicePointPage/>
-                <ServicePointPage/>
+                  {/* Navigable, authenticated pages, self-routed */}
+                  <HomePage/>
+                  <AboutAppPage/>
+                  <AdminAuthzRequestPage/>
+                  <AuthzRespondPage/>
+                  <ListServicePointPage/>
+                  <ServicePointPage/>
+                  <ListAppUserPage/>
 
-              </NavigationProvider>
-            </AuthApiProvider>
-          </AuthProvider>
+                </NavigationProvider>
+              </AuthApiProvider>
+            </AuthProvider>
 
-          {/* unauthenticated pages, self-routed */}
-          <PrivacyPage/>
-          <UsageTermsPage/>
-          <AboutRaidPage/>
+            {/* unauthenticated pages, self-routed */}
+            <PrivacyPage/>
+            <UsageTermsPage/>
+            <AboutRaidPage/>
 
+          </LocationSearchProvider>
         </LocationPathnameProvider>
       </ErrorDialogProvider>
     </ReactErrorBoundary>
