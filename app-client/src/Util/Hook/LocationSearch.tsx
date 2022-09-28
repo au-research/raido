@@ -19,7 +19,7 @@ const LocationSearchContext = React.createContext<
   LocationSearchState<SearchParams> | undefined
 >(undefined);
 
-export function locationSearch<T extends SearchParams>(): 
+export function useLocationSearch<T extends SearchParams>(): 
 LocationSearchState<T>{
   const context = React.useContext(LocationSearchContext);
   if (!context) {
@@ -30,6 +30,14 @@ LocationSearchState<T>{
   return context as any as LocationSearchState<T>;
 }
 
+/**
+ This thing is currently designed for use on "in-page" tracking of page state
+ against the search params (i.e. tracking changes to filter logic, where the 
+ browser stays on the "current page" and we don't do nav transitions.
+ The NavigationProvider doesn't understand this component (or search params at 
+ all), so you can't really use search params for declaring parmeters that work 
+ with page transitions. 
+ */
 export function LocationSearchProvider({children}: {
   children: React.ReactNode
 }){
