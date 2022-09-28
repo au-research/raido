@@ -35,6 +35,7 @@ export function getServicePointPageLink(servicePointId: number|undefined): strin
 }
 
 export function getServicePointIdFromLocation(): number | undefined{
+  // TODO:STO change to using path param instead of search param
   const urlParams = new URLSearchParams(window.location.search);
   let value = urlParams.get(idParamName);
   if( !value ){

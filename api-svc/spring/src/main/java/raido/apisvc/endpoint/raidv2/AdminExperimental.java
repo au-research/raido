@@ -19,9 +19,9 @@ import raido.idl.raidv2.model.UpdateAuthzRequestStatus;
 import java.util.List;
 
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
-import static raido.apisvc.endpoint.raidv2.AuthzUtil.isOperatorOrAssociated;
-import static raido.apisvc.endpoint.raidv2.AuthzUtil.isOperatorOrAssociatedSpAdmin;
-import static raido.apisvc.endpoint.raidv2.AuthzUtil.isOperatorOrSpAdmin;
+import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
+import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociatedSpAdmin;
+import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrSpAdmin;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.ExceptionUtil.notYetImplemented;
 import static raido.apisvc.util.Log.to;
@@ -118,7 +118,7 @@ public class AdminExperimental implements AdminExperimentalApi {
   @Override
   public List<ServicePoint> listServicePoint() {
     var user = AuthzUtil.getAuthzPayload();
-    isOperatorOrSpAdmin(user);
+    guardOperatorOrSpAdmin(user);
     
     return db.select().from(SERVICE_POINT).
       orderBy(SERVICE_POINT.NAME.asc()).
@@ -130,7 +130,7 @@ public class AdminExperimental implements AdminExperimentalApi {
   @Override
   public ServicePoint readServicePoint(Long servicePointId) {
     var user = AuthzUtil.getAuthzPayload();
-    isOperatorOrAssociated(user, servicePointId);
+    guardOperatorOrAssociated(user, servicePointId);
     
     return db.select().from(SERVICE_POINT).
       where(SERVICE_POINT.ID.eq(servicePointId)).
@@ -140,7 +140,7 @@ public class AdminExperimental implements AdminExperimentalApi {
   @Override
   public ServicePoint updateServicePoint(ServicePoint req) {
     var user = AuthzUtil.getAuthzPayload();
-    isOperatorOrAssociatedSpAdmin(user, req.getId());
+    guardOperatorOrAssociatedSpAdmin(user, req.getId());
     
     Guard.notNull(req);
     Guard.hasValue("must have a name", req.getName());
@@ -154,7 +154,7 @@ public class AdminExperimental implements AdminExperimentalApi {
   @Override
   public List<AppUser> listAppUser(Long servicePointId) {
     var user = AuthzUtil.getAuthzPayload();
-    isOperatorOrAssociatedSpAdmin(user, servicePointId);
+    guardOperatorOrAssociatedSpAdmin(user, servicePointId);
 
     return db.select().from(APP_USER).
       orderBy(APP_USER.EMAIL.asc()).
@@ -165,7 +165,16 @@ public class AdminExperimental implements AdminExperimentalApi {
 
   @Override
   public AppUser readAppUser(Long appUserId) {
-    throw notYetImplemented();
+    var user = AuthzUtil.getAuthzPayload();
+    guardOperatorOrSpAdmin(user);
+
+    var appUser = db.select().from(APP_USER).
+      where(APP_USER.ID.eq(appUserId)).
+      fetchSingleInto(AppUser.class);
+
+    guardOperatorOrAssociatedSpAdmin(user, appUser.getServicePointId());
+
+    return appUser;
   }
 
   @Override

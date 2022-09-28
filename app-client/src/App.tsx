@@ -23,6 +23,7 @@ import { ListServicePointPage } from "Page/Admin/ListServicePointPage";
 import { ServicePointPage } from "Page/Admin/ServicePointPage";
 import { ListAppUserPage } from "Page/Admin/ListAppUserPage";
 import { LocationSearchProvider } from "Util/Hook/LocationSearch";
+import { AppUserPage } from "Page/Admin/AppUserPage";
 
 export function App(){
   /* theme defines the basic color palette and styling, etc. */
@@ -55,6 +56,7 @@ export function App(){
                   <ListServicePointPage/>
                   <ServicePointPage/>
                   <ListAppUserPage/>
+                  <AppUserPage/>
 
                 </NavigationProvider>
               </AuthApiProvider>

@@ -25,8 +25,8 @@ import {
 } from "@mui/material";
 import { RefreshIconButton } from "Component/RefreshIconButton";
 import { RaidoLink } from "Component/RaidoLink";
-import { getServicePointPageLink } from "Page/Admin/ServicePointPage";
 import { Add, Visibility, VisibilityOff } from "@mui/icons-material";
+import { getAppUserPageLink } from "Page/Admin/AppUserPage";
 
 const log = console;
 
@@ -107,7 +107,7 @@ function AppUserListTable({servicePointId}: {
               sx={{'&:last-child td, &:last-child th': {border: 0}}}
             >
               <TableCell scope="row">
-                <RaidoLink href={getServicePointPageLink(row.id)}>
+                <RaidoLink href={getAppUserPageLink(row.id)}>
                   {row.email}
                 </RaidoLink>
               </TableCell>

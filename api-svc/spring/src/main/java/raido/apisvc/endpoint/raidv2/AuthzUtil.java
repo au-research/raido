@@ -33,7 +33,7 @@ public class AuthzUtil {
    Right now, "associated" means "directly associated", but 
    later might mean a more indirect association.
    */
-  public static void isOperatorOrAssociated(
+  public static void guardOperatorOrAssociated(
     AuthzTokenPayload user,
     Long servicePointId
   ) {
@@ -50,7 +50,7 @@ public class AuthzUtil {
     }
   }
 
-  public static void isOperatorOrAssociatedSpAdmin(
+  public static void guardOperatorOrAssociatedSpAdmin(
     AuthzTokenPayload user,
     Long servicePointId
   ) {
@@ -77,7 +77,7 @@ public class AuthzUtil {
     throw iae;
   }
 
-  public static void isOperatorOrSpAdmin(
+  public static void guardOperatorOrSpAdmin(
     AuthzTokenPayload user
   ) {
     if( areEqual(user.getRole(), OPERATOR.getLiteral()) ||
