@@ -46,7 +46,7 @@ export function AppDrawer(props: {
     <div style={{width: 250}}>
       <List>
         <ListNavButton href={getHomePageLink()}
-          isCurrent={isHomePagePath(pathname)}
+          isCurrent={isHomePagePath(pathname).isPath}
           description={"Home"}
           icon={<HomeIcon/>}
         />
