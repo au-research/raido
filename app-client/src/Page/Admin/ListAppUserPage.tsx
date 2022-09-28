@@ -95,7 +95,7 @@ function AppUserListTable({servicePointId}: {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Service point</TableCell>
+            <TableCell>Email</TableCell>
             <TableCell align="center">Enabled</TableCell>
           </TableRow>
         </TableHead>
