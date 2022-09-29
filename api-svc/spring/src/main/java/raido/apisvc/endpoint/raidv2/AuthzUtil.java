@@ -77,13 +77,17 @@ public class AuthzUtil {
     throw iae;
   }
 
+  public static boolean isOperatorOrSpAdmin(
+    AuthzTokenPayload user
+  ) {
+    return areEqual(user.getRole(), OPERATOR.getLiteral()) ||
+      areEqual(user.getRole(), SP_ADMIN.getLiteral() );
+  }
+  
   public static void guardOperatorOrSpAdmin(
     AuthzTokenPayload user
   ) {
-    if( areEqual(user.getRole(), OPERATOR.getLiteral()) ||
-      areEqual(user.getRole(), SP_ADMIN.getLiteral())
-    ){
-      // operator can update requests for any service point
+    if( isOperatorOrSpAdmin(user) ){
       return;
     }
 

@@ -104,6 +104,14 @@ public class AuthzRequestService {
     };
   }
 
+  public static AuthRequestStatus mapRest2Jq(AuthzRequestStatus status){
+    return switch( status ){
+      case APPROVED -> AuthRequestStatus.APPROVED;
+      case REQUESTED -> AuthRequestStatus.REQUESTED;
+      case REJECTED -> AuthRequestStatus.REJECTED;
+    };
+  }
+
   public UpdateAuthzResponse updateRequestAuthz(
     NonAuthzTokenPayload user, UpdateAuthzRequest req
   ) {
@@ -172,12 +180,8 @@ public class AuthzRequestService {
   ) {
     if( req.getStatus() == APPROVED ){
       Guard.isTrue(authzRecord.getStatus() == REQUESTED);
-      authzRecord.setStatus(AuthRequestStatus.APPROVED);
-      authzRecord.setRespondingUser(user.getAppUserId());
-      authzRecord.setDateResponded(LocalDateTime.now());
-      authzRecord.update();
       
-      db.insertInto(APP_USER).
+      var approvedUser = db.insertInto(APP_USER).
         set(APP_USER.SERVICE_POINT_ID, authzRecord.getServicePointId()).
         set(APP_USER.EMAIL, authzRecord.getEmail()).
         set(APP_USER.CLIENT_ID, authzRecord.getClientId()).
@@ -188,7 +192,15 @@ public class AuthzRequestService {
         where(APP_USER.ENABLED.eq(true)).
         doUpdate().
         set(APP_USER.SERVICE_POINT_ID, authzRecord.getServicePointId()).
-        execute();
+        returning(APP_USER.ID).
+        fetchSingle();
+
+      authzRecord.setStatus(AuthRequestStatus.APPROVED);
+      authzRecord.setApprovedUser(approvedUser.getId());
+      authzRecord.setRespondingUser(user.getAppUserId());
+      authzRecord.setDateResponded(LocalDateTime.now());
+      authzRecord.update();
+      
     }
     else if( req.getStatus() == AuthzRequestStatus.REJECTED ){
       authzRecord.setStatus(AuthRequestStatus.REJECTED);

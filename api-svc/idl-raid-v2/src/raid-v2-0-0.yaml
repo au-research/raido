@@ -249,6 +249,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppUser'
+  /v2/experimental/app-user-extra/v1/{appUserId}:
+    get:
+      tags:
+        - admin-experimental
+      operationId: read-app-user-extra
+      summary: read app user data and extra stuff
+      parameters:
+        - in: path
+          name: appUserId
+          schema:
+            $ref: 'shared.yaml#/components/schemas/SurrogateKey'
+          required: true
+          description: Numeric ID of the AppUser to get
+      responses:
+        '200':
+          description: data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppUserExtraV1'
 components:
   schemas:
     VersionResult:
@@ -348,6 +368,16 @@ components:
         enabled: {type: boolean}
         tokenCutoff: { type: string, format: date-time }
         dateCreated: { type: string, format: date-time }
+    AppUserExtraV1:
+      type: object
+      required: [appUser, servicePoint]
+      description: bootstrapped users have no authzRequest or approvingUser
+      properties:
+        appUser: {$ref: '#/components/schemas/AppUser' }
+        servicePoint: {$ref: '#/components/schemas/ServicePoint' }
+        authzRequestId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        approvingUser: {$ref: '#/components/schemas/AppUser' }
+        
   securitySchemes:
     BearerAuth:
       type: http

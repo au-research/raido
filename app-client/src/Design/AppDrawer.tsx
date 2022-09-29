@@ -12,7 +12,7 @@ import {
   getAdminAuthzRequestPageLink,
   isAdminAuthzRequestPagePath
 } from "Page/Admin/AdminAuthzRequestPage";
-import { AuthState, useAuth } from "Auth/AuthProvider";
+import { useAuth } from "Auth/AuthProvider";
 import {
   getListServicePointPageLink,
   isListServicePointPagePath
@@ -21,15 +21,8 @@ import {
   getListAppUserPageLink,
   isListAppUserPagePath
 } from "Page/Admin/ListAppUserPage";
+import { isOperator, isSpAdmin } from "Auth/Authz";
 
-
-function isOperator(authState: AuthState){
-  return authState.session.payload.role === "OPERATOR"
-}
-
-function isSpAdmin(authState: AuthState){
-  return authState.session.payload.role === "SP_ADMIN"
-}
 
 export function AppDrawer(props: {
   anchor: 'left' |'right',

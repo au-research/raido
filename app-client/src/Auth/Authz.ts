@@ -1,7 +1,7 @@
 import { AuthzTokenPayload, } from "Shared/ApiTypes";
 import jwtDecode from "jwt-decode";
 import { parseJwtDate } from "Util/DateUtil";
-import { AuthorizedSession } from "Auth/AuthProvider";
+import { AuthorizedSession, AuthState } from "Auth/AuthProvider";
 
 const accessTokenStorageKey = "raidoAccessToken";
 
@@ -143,6 +143,14 @@ export function parseAccessToken(accessToken: string):{
 
 export async function signOutUser(): Promise<void>{
   clearAccessTokenFromStorage();
+}
+
+export function isOperator(authState: AuthState){
+  return authState.session.payload.role === "OPERATOR"
+}
+
+export function isSpAdmin(authState: AuthState){
+  return authState.session.payload.role === "SP_ADMIN"
 }
 
 

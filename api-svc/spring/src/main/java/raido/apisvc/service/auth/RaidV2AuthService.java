@@ -154,7 +154,7 @@ public class RaidV2AuthService {
 
     if( user.getTokenCutoff() != null ){
       Instant cutoff = user.getTokenCutoff().toInstant(ZoneOffset.UTC);
-      if( cutoff.isBefore(issuedAt) ){
+      if( cutoff.isAfter(issuedAt) ){
         /* user is not disabled, but we've set a token cutoff, they will need
          to login again.
          SP would need to look in their user list to know user is expired. */
@@ -162,7 +162,7 @@ public class RaidV2AuthService {
           with("email", user.getEmail()).
           with("tokenCutoff", cutoff).
           with("issuedAt", issuedAt).
-          warn("attempted token authz - after tokenCutoff");
+          warn("attempted token authz - with token issued before tokenCutoff");
         throw authFailed();
       }
     }

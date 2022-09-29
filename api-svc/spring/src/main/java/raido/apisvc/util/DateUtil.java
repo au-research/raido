@@ -2,6 +2,7 @@ package raido.apisvc.util;
 
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -114,6 +115,16 @@ public class DateUtil {
     return DateUtil.parseDateTime(ISO_SECONDS_FORMAT, SYD_ZONE_ID, value);
   }
 
-  
+  /**
+   @return will return null if null is passed
+   */
+  public static LocalDateTime offset2Local(@Nullable OffsetDateTime d){
+    if( d == null ){
+      return null;
+    }
+    
+    return d.toLocalDateTime();
+  }
+
 }
 

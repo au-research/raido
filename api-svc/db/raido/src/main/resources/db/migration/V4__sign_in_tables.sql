@@ -33,12 +33,12 @@ create type id_provider as enum ('GOOGLE', 'AAF', 'COGNITO');
 create table service_point (
   id             bigint generated always as identity
     (start with 20000000)
-    primary key                     not null,
-  name           varchar(256)       not null,
-  search_content varchar(256)       null,
-  admin_email    varchar(256)       not null,
-  tech_email     varchar(256)       not null,
-  enabled       bool default true not null
+    primary key                    not null,
+  name           varchar(256)      not null,
+  search_content varchar(256)      null,
+  admin_email    varchar(256)      not null,
+  tech_email     varchar(256)      not null,
+  enabled        bool default true not null
 );
 
 alter table service_point
@@ -74,7 +74,7 @@ create table app_user (
   subject          varchar(256)                         not null,
   id_provider      id_provider                          not null,
   role             user_role                            not null,
-  enabled         bool default true                   not null,
+  enabled          bool default true                    not null,
   token_cutoff     timestamp without time zone          null,
   date_created     timestamp without time zone
                         default transaction_timestamp() not null
@@ -106,7 +106,7 @@ create table raido_operator (
 
 
 comment on table raido_operator is
-'any app_user with an email in this table will be considered an operator';
+  'any app_user with an email in this table will be considered an operator';
 
 
 create table user_authz_request (
@@ -120,6 +120,7 @@ create table user_authz_request (
   id_provider      id_provider                 not null,
   subject          varchar(256)                not null,
   responding_user  bigint references app_user  null,
+  approved_user    bigint references app_user  null,
   description      varchar(1024)               not null,
   date_requested   timestamp without time zone default transaction_timestamp(),
   date_responded   timestamp without time zone null
@@ -141,10 +142,14 @@ comment on index user_authz_request_once_active_key is
 
 
 comment on column user_authz_request.responding_user is
-  'not set until approved or rejected';
+  'user that approved or rejected, not set until that happens';
 
 comment on column user_authz_request.date_responded is
   'not set until approved or rejected';
+
+comment on column user_authz_request.approved_user is
+  'the user that was approved, set when request is approved and the 
+  user is created or updated';
 
 create table raid (
   handle           varchar(32) primary key                                     not null,

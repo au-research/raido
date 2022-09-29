@@ -10,8 +10,11 @@ import raido.apisvc.service.auth.admin.AuthzRequestService;
 import raido.apisvc.service.auth.admin.ServicePointService;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
+import raido.db.jooq.api_svc.enums.AuthRequestStatus;
+import raido.db.jooq.api_svc.enums.UserRole;
 import raido.idl.raidv2.api.AdminExperimentalApi;
 import raido.idl.raidv2.model.AppUser;
+import raido.idl.raidv2.model.AppUserExtraV1;
 import raido.idl.raidv2.model.AuthzRequest;
 import raido.idl.raidv2.model.ServicePoint;
 import raido.idl.raidv2.model.UpdateAuthzRequestStatus;
@@ -22,12 +25,14 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociatedSpAdmin;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrSpAdmin;
+import static raido.apisvc.endpoint.raidv2.AuthzUtil.isOperatorOrSpAdmin;
+import static raido.apisvc.util.DateUtil.offset2Local;
 import static raido.apisvc.util.ExceptionUtil.iae;
-import static raido.apisvc.util.ExceptionUtil.notYetImplemented;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.areEqual;
 import static raido.db.jooq.api_svc.enums.UserRole.OPERATOR;
 import static raido.db.jooq.api_svc.enums.UserRole.SP_ADMIN;
+import static raido.db.jooq.api_svc.enums.UserRole.SP_USER;
 import static raido.db.jooq.api_svc.tables.AppUser.APP_USER;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 import static raido.db.jooq.api_svc.tables.UserAuthzRequest.USER_AUTHZ_REQUEST;
@@ -162,24 +167,139 @@ public class AdminExperimental implements AdminExperimentalApi {
       fetchInto(AppUser.class);
   }
 
-
   @Override
   public AppUser readAppUser(Long appUserId) {
     var user = AuthzUtil.getAuthzPayload();
-    guardOperatorOrSpAdmin(user);
-
+    if( areEqual(user.getAppUserId(), appUserId) ){
+      // user is allowed to read their own record
+    }
+    else if( isOperatorOrSpAdmin(user) ){
+      /* operators or spAdmin can read info about any user in any service 
+      point, spAdmin might be looking at a user that was approved onto a 
+      different service point. */
+    }
+    else {
+      var iae = iae("user read not allowed");
+      log.with("user", user).with("appUserId", appUserId).
+        error(iae.getMessage());
+      throw iae;
+    }
+    
     var appUser = db.select().from(APP_USER).
       where(APP_USER.ID.eq(appUserId)).
       fetchSingleInto(AppUser.class);
-
-    guardOperatorOrAssociatedSpAdmin(user, appUser.getServicePointId());
 
     return appUser;
   }
 
   @Override
-  public AppUser updateAppUser(AppUser appUser) {
-    throw notYetImplemented();
+  public AppUserExtraV1 readAppUserExtra(Long appUserId) {
+    var user = AuthzUtil.getAuthzPayload();
+    guardOperatorOrSpAdmin(user);
+
+    var appUser = readAppUser(appUserId);
+    var servicePoint = readServicePoint(appUser.getServicePointId());
+    
+    var authzReqeustId = db.
+      select(USER_AUTHZ_REQUEST.ID).
+      from(USER_AUTHZ_REQUEST).
+      where( 
+        USER_AUTHZ_REQUEST.APPROVED_USER.eq(appUser.getId()).and(
+          USER_AUTHZ_REQUEST.STATUS.eq(AuthRequestStatus.APPROVED)
+        )
+      ).
+      orderBy(USER_AUTHZ_REQUEST.DATE_RESPONDED.desc()).
+      limit(1).fetchOneInto(Long.class);
+    
+    // bootstrapped user has no authzRequest, was auto-approved
+    if( authzReqeustId == null ){
+      return new AppUserExtraV1().
+        appUser(appUser).
+        servicePoint(servicePoint);
+    }
+
+    var approvingUser = db.select().from(APP_USER).
+      where(APP_USER.ID.eq(appUserId)).
+      fetchSingleInto(AppUser.class);
+
+    return new AppUserExtraV1().
+      appUser(appUser).
+      servicePoint(servicePoint).
+      authzRequestId(authzReqeustId).
+      approvingUser(approvingUser);
+    
+  }
+
+  @Override
+  public AppUser updateAppUser(AppUser req) {
+    var invokingUser = AuthzUtil.getAuthzPayload();
+
+    var targetUser = db.fetchSingle(
+      APP_USER, APP_USER.ID.eq(req.getId()) );
+    
+    // spAdmin can only edit users in their associated SP 
+    guardOperatorOrAssociatedSpAdmin(
+      invokingUser, targetUser.getServicePointId());
+
+    // the role of the person doing the action
+    UserRole invokingRole = mapRestRole2Jq(invokingUser.getRole());
+    // the current role of the user being updated from
+    UserRole currentRole = targetUser.getRole();
+    // the new role of the user being update to 
+    UserRole targetRole = mapRestRole2Jq(req.getRole());
+    
+    if( currentRole == OPERATOR && targetRole != OPERATOR ){
+      if( invokingRole != OPERATOR ){
+        var iae = iae("only an OPERATOR can demote an OPERATOR");
+        log.with("invokingUser", invokingUser).
+          with("targetUserId", req.getId()).
+          with("targetUserEmail", req.getEmail()).
+          with("targetRole", targetRole.getLiteral()).
+          with("currentRole", currentRole.getLiteral()).
+          error(iae.getMessage());
+        throw iae;
+      }
+    }
+    else if( currentRole != OPERATOR && targetRole == OPERATOR ){
+      if( invokingRole != OPERATOR ){
+        var iae = iae("only an OPERATOR can promote an OPERATOR");
+        log.with("invokingUser", invokingUser).
+          with("targetUserId", req.getId()).
+          with("targetUserEmail", req.getEmail()).
+          with("targetRole", targetRole.getLiteral()).
+          with("currentRole", currentRole.getLiteral()).
+          error(iae.getMessage());
+        throw iae;
+      }
+    }
+    
+    /* at this point, we've check that the invokingUser is OP or ADMIN, and 
+     that they're for the associated SP if ADMIN, and that only an OP is 
+     dealing with OP stuff.  
+     Should be good to just set the role. */
+    targetUser.setRole(targetRole);
+
+    targetUser.setEnabled(req.getEnabled());
+    targetUser.setTokenCutoff(offset2Local(req.getTokenCutoff()));
+
+    targetUser.update();
+   
+    return readAppUser(targetUser.getId());
+  }
+
+  private UserRole mapRestRole2Jq(String role) {
+    if( areEqual(OPERATOR.getLiteral(), role) ){
+      return OPERATOR;
+    }
+    else if( areEqual(SP_ADMIN.getLiteral(), role) ){
+      return SP_ADMIN;
+    }
+    else if( areEqual(SP_USER.getLiteral(), role) ){
+      return SP_USER;
+    }
+    else {
+      throw iae("could not map role: %s", role);
+    }
   }
 
 }

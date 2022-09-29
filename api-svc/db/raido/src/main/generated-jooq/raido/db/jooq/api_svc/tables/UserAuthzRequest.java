@@ -12,13 +12,13 @@ import java.util.function.Function;
 import org.jooq.Check;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function11;
+import org.jooq.Function12;
 import org.jooq.Identity;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row11;
+import org.jooq.Row12;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -96,10 +96,17 @@ public class UserAuthzRequest extends TableImpl<UserAuthzRequestRecord> {
     public final TableField<UserAuthzRequestRecord, String> SUBJECT = createField(DSL.name("subject"), SQLDataType.VARCHAR(256).nullable(false), this, "");
 
     /**
-     * The column <code>api_svc.user_authz_request.responding_user</code>. not
-     * set until approved or rejected
+     * The column <code>api_svc.user_authz_request.responding_user</code>. user
+     * that approved or rejected, not set until that happens
      */
-    public final TableField<UserAuthzRequestRecord, Long> RESPONDING_USER = createField(DSL.name("responding_user"), SQLDataType.BIGINT, this, "not set until approved or rejected");
+    public final TableField<UserAuthzRequestRecord, Long> RESPONDING_USER = createField(DSL.name("responding_user"), SQLDataType.BIGINT, this, "user that approved or rejected, not set until that happens");
+
+    /**
+     * The column <code>api_svc.user_authz_request.approved_user</code>. the
+     * user that was approved, set when request is approved and the 
+     *   user is created or updated
+     */
+    public final TableField<UserAuthzRequestRecord, Long> APPROVED_USER = createField(DSL.name("approved_user"), SQLDataType.BIGINT, this, "the user that was approved, set when request is approved and the \r\n  user is created or updated");
 
     /**
      * The column <code>api_svc.user_authz_request.description</code>.
@@ -172,11 +179,12 @@ public class UserAuthzRequest extends TableImpl<UserAuthzRequestRecord> {
 
     @Override
     public List<ForeignKey<UserAuthzRequestRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.USER_AUTHZ_REQUEST__USER_AUTHZ_REQUEST_SERVICE_POINT_ID_FKEY, Keys.USER_AUTHZ_REQUEST__USER_AUTHZ_REQUEST_RESPONDING_USER_FKEY);
+        return Arrays.asList(Keys.USER_AUTHZ_REQUEST__USER_AUTHZ_REQUEST_SERVICE_POINT_ID_FKEY, Keys.USER_AUTHZ_REQUEST__USER_AUTHZ_REQUEST_RESPONDING_USER_FKEY, Keys.USER_AUTHZ_REQUEST__USER_AUTHZ_REQUEST_APPROVED_USER_FKEY);
     }
 
     private transient ServicePoint _servicePoint;
-    private transient AppUser _appUser;
+    private transient AppUser _userAuthzRequestRespondingUserFkey;
+    private transient AppUser _userAuthzRequestApprovedUserFkey;
 
     /**
      * Get the implicit join path to the <code>api_svc.service_point</code>
@@ -190,13 +198,25 @@ public class UserAuthzRequest extends TableImpl<UserAuthzRequestRecord> {
     }
 
     /**
-     * Get the implicit join path to the <code>api_svc.app_user</code> table.
+     * Get the implicit join path to the <code>api_svc.app_user</code> table,
+     * via the <code>user_authz_request_responding_user_fkey</code> key.
      */
-    public AppUser appUser() {
-        if (_appUser == null)
-            _appUser = new AppUser(this, Keys.USER_AUTHZ_REQUEST__USER_AUTHZ_REQUEST_RESPONDING_USER_FKEY);
+    public AppUser userAuthzRequestRespondingUserFkey() {
+        if (_userAuthzRequestRespondingUserFkey == null)
+            _userAuthzRequestRespondingUserFkey = new AppUser(this, Keys.USER_AUTHZ_REQUEST__USER_AUTHZ_REQUEST_RESPONDING_USER_FKEY);
 
-        return _appUser;
+        return _userAuthzRequestRespondingUserFkey;
+    }
+
+    /**
+     * Get the implicit join path to the <code>api_svc.app_user</code> table,
+     * via the <code>user_authz_request_approved_user_fkey</code> key.
+     */
+    public AppUser userAuthzRequestApprovedUserFkey() {
+        if (_userAuthzRequestApprovedUserFkey == null)
+            _userAuthzRequestApprovedUserFkey = new AppUser(this, Keys.USER_AUTHZ_REQUEST__USER_AUTHZ_REQUEST_APPROVED_USER_FKEY);
+
+        return _userAuthzRequestApprovedUserFkey;
     }
 
     @Override
@@ -246,18 +266,18 @@ public class UserAuthzRequest extends TableImpl<UserAuthzRequestRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row11 type methods
+    // Row12 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row11<Long, AuthRequestStatus, Long, String, String, IdProvider, String, Long, String, LocalDateTime, LocalDateTime> fieldsRow() {
-        return (Row11) super.fieldsRow();
+    public Row12<Long, AuthRequestStatus, Long, String, String, IdProvider, String, Long, Long, String, LocalDateTime, LocalDateTime> fieldsRow() {
+        return (Row12) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function11<? super Long, ? super AuthRequestStatus, ? super Long, ? super String, ? super String, ? super IdProvider, ? super String, ? super Long, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function12<? super Long, ? super AuthRequestStatus, ? super Long, ? super String, ? super String, ? super IdProvider, ? super String, ? super Long, ? super Long, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -265,7 +285,7 @@ public class UserAuthzRequest extends TableImpl<UserAuthzRequestRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function11<? super Long, ? super AuthRequestStatus, ? super Long, ? super String, ? super String, ? super IdProvider, ? super String, ? super Long, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function12<? super Long, ? super AuthRequestStatus, ? super Long, ? super String, ? super String, ? super IdProvider, ? super String, ? super Long, ? super Long, ? super String, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }
