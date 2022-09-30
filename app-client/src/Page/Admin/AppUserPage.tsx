@@ -143,11 +143,11 @@ function AppUserContainer({appUserId}: {
         defaultValue={query.data.appUser.email}
       />
       <InfoField id="approvedBy" label="Approved by"
-        defaultValue={query.data.authzRequest?.respondingUserEmail ?? 'Auto-approved'}
+        defaultValue={query.data.authzRequest?.respondingUserEmail || 'Auto-approved'}
       />
       <InfoField id="approvedOn" label="Approved on"
         defaultValue={
-          formatLocalDateAsIsoShortDateTime(query.data.authzRequest?.dateResponded) ?? 'Auto-approved'
+          formatLocalDateAsIsoShortDateTime(query.data.authzRequest?.dateResponded) || 'Auto-approved'
         }
       />
     </div>
