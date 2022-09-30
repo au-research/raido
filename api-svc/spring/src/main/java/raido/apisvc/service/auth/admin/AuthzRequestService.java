@@ -13,7 +13,8 @@ import raido.db.jooq.api_svc.enums.AuthRequestStatus;
 import raido.db.jooq.api_svc.enums.IdProvider;
 import raido.db.jooq.api_svc.enums.UserRole;
 import raido.db.jooq.api_svc.tables.records.UserAuthzRequestRecord;
-import raido.idl.raidv2.model.AuthzRequest;
+import raido.idl.raidv2.model.AppUser;
+import raido.idl.raidv2.model.AuthzRequestExtraV1;
 import raido.idl.raidv2.model.AuthzRequestStatus;
 import raido.idl.raidv2.model.UpdateAuthzRequest;
 import raido.idl.raidv2.model.UpdateAuthzRequestStatus;
@@ -22,6 +23,7 @@ import raido.idl.raidv2.model.UpdateAuthzResponse;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static java.time.ZoneOffset.UTC;
 import static org.jooq.impl.DSL.asterisk;
@@ -50,7 +52,7 @@ public class AuthzRequestService {
     this.authSvc = authSvc;
   }
 
-  public List<AuthzRequest> listAllRecentAuthzRequest() {
+  public List<AuthzRequestExtraV1> listAllRecentAuthzRequest() {
     return db.
       select(asterisk()).
       from(USER_AUTHZ_REQUEST).
@@ -58,21 +60,41 @@ public class AuthzRequestService {
         leftJoin(APP_USER).onKey(USER_AUTHZ_REQUEST.RESPONDING_USER).
       orderBy(USER_AUTHZ_REQUEST.DATE_REQUESTED.desc()).
       limit(Constant.MAX_RETURN_RECORDS).
-      fetch(this::mapJq2Rest);
+      fetch(this::mapAuthzRequest);
   }
   
-  public AuthzRequest readAuthzRequest(Long id) {
+  public AuthzRequestExtraV1 readAuthzRequest(Long authzRequestId) {
     return db.
       select(asterisk()).
       from(USER_AUTHZ_REQUEST).
         leftJoin(SERVICE_POINT).onKey(USER_AUTHZ_REQUEST.SERVICE_POINT_ID).
         leftJoin(APP_USER).onKey(USER_AUTHZ_REQUEST.RESPONDING_USER).
-      where(USER_AUTHZ_REQUEST.ID.eq(id)).
-      fetchSingle(this::mapJq2Rest);
+      where(USER_AUTHZ_REQUEST.ID.eq(authzRequestId)).
+      fetchSingle(this::mapAuthzRequest);
   }
   
-  public AuthzRequest mapJq2Rest(Record r) {
-    return new AuthzRequest().
+  public Optional<AuthzRequestExtraV1> readAuthzRequestForUser(
+    AppUser appUser
+  ) {
+    return db.
+      select(asterisk()).
+      from(USER_AUTHZ_REQUEST).
+      leftJoin(SERVICE_POINT).onKey(USER_AUTHZ_REQUEST.SERVICE_POINT_ID).
+      leftJoin(APP_USER).onKey(USER_AUTHZ_REQUEST.RESPONDING_USER).
+      where(
+        USER_AUTHZ_REQUEST.APPROVED_USER.eq(appUser.getId()).
+          and(
+            USER_AUTHZ_REQUEST.STATUS.eq(AuthRequestStatus.APPROVED)).
+          and(
+            USER_AUTHZ_REQUEST.SERVICE_POINT_ID.eq(appUser.getServicePointId())
+          )
+      ).
+      orderBy(USER_AUTHZ_REQUEST.DATE_RESPONDED.desc()).
+      limit(1).fetchOptional(this::mapAuthzRequest);
+  }
+  
+  public AuthzRequestExtraV1 mapAuthzRequest(Record r) {
+    return new AuthzRequestExtraV1().
       id(r.get(USER_AUTHZ_REQUEST.ID)).
       status(mapJq2Rest(r.get(USER_AUTHZ_REQUEST.STATUS))).
       servicePointId(r.get(USER_AUTHZ_REQUEST.SERVICE_POINT_ID)).

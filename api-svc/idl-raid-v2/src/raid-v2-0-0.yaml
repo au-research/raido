@@ -93,7 +93,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AuthzRequest'          
+                $ref: '#/components/schemas/AuthzRequestExtraV1'
   /v2/experimental/raido-keepme/v1:
     get:
       tags:
@@ -134,7 +134,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/AuthzRequest'
+                  $ref: '#/components/schemas/AuthzRequestExtraV1'
   /v2/experimental/service-point/v1:
     get:
       tags:
@@ -318,8 +318,8 @@ components:
       properties:
         authzRequestId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
         status: {$ref: 'AuthzRequestStatus' }
-    AuthzRequest:
-      description: authorization request
+    AuthzRequestExtraV1:
+      description: authorization request with extra data
       type: object
       required: [
         id, status, servicePointId, servicePointName, 
@@ -375,8 +375,7 @@ components:
       properties:
         appUser: {$ref: '#/components/schemas/AppUser' }
         servicePoint: {$ref: '#/components/schemas/ServicePoint' }
-        authzRequestId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
-        approvingUser: {$ref: '#/components/schemas/AppUser' }
+        authzRequest: {$ref: '#/components/schemas/AuthzRequestExtraV1' }
         
   securitySchemes:
     BearerAuth:

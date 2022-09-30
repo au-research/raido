@@ -63,32 +63,29 @@ function AppUserListTable({servicePointId}: {
   servicePointId: number,
 }){
   const api = useAuthApi();
-  const query = useQuery(['listAppUser'], 
+  const usersQuery = useQuery(['listAppUser', servicePointId], 
     async () => await api.admin.listAppUser({servicePointId}) );
+  const servicePointQuery = useQuery(['readServicePoint', servicePointId], 
+    async () => await api.admin.readServicePoint({servicePointId}) );
 
-  if( query.error ){
-    return <CompactErrorPanel error={query.error}/>
+  if( usersQuery.error ){
+    return <CompactErrorPanel error={usersQuery.error}/>
   }
 
-  if( query.isLoading ){
+  if( usersQuery.isLoading ){
     return <TextSpan>loading...</TextSpan>
   }
 
-  if( !query.data ){
-    console.log("unexpected state", query);
+  if( !usersQuery.data ){
+    console.log("unexpected state", usersQuery);
     return <TextSpan>unexpected state</TextSpan>
   }
 
-  return <ContainerCard title={"Users"}
+  return <ContainerCard 
+    title={`${servicePointQuery.data?.name ?? '...'} - Users`}
     action={<>
-      <RefreshIconButton refreshing={query.isLoading} 
-        onClick={()=>query.refetch()} />
-      <Fab href={"#"} 
-        //href={getServicePointPageLink(undefined)} 
-        color="primary" size="small"
-      >
-        <Add/>
-      </Fab>
+      <RefreshIconButton refreshing={usersQuery.isLoading} 
+        onClick={()=>usersQuery.refetch()} />
     </>}
   >
     <TableContainer>
@@ -96,20 +93,24 @@ function AppUserListTable({servicePointId}: {
         <TableHead>
           <TableRow>
             <TableCell>Email</TableCell>
+            <TableCell>ID Provider</TableCell>
             <TableCell align="center">Enabled</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {query.data.map((row) => (
+          {usersQuery.data.map((row) => (
             <TableRow
               key={row.id}
               // don't render a border under last row
               sx={{'&:last-child td, &:last-child th': {border: 0}}}
             >
-              <TableCell scope="row">
+              <TableCell>
                 <RaidoLink href={getAppUserPageLink(row.id)}>
                   {row.email}
                 </RaidoLink>
+              </TableCell>
+              <TableCell>
+                {row.idProvider}
               </TableCell>
               <TableCell align="center">
                 { row.enabled ?

@@ -24,7 +24,8 @@ import {
   Select,
   SelectChangeEvent,
   Stack,
-  TextField
+  TextField,
+  TextFieldProps
 } from "@mui/material";
 import { PrimaryActionButton, SecondaryButton } from "Component/AppButton";
 import { navBrowserBack } from "Util/WindowUtil";
@@ -32,6 +33,7 @@ import { useAuth } from "Auth/AuthProvider";
 import { HelpChip, HelpPopover } from "Component/HelpPopover";
 import { West } from "@mui/icons-material";
 import { formatLocalDateAsIsoShortDateTime } from "Util/DateUtil";
+import Divider from "@mui/material/Divider";
 
 const log = console;
 
@@ -67,6 +69,23 @@ function Content(){
   </LargeContentMain>
 }
 
+function InfoField(
+  props: TextFieldProps
+){
+  return <TextField
+    size="small"
+    variant="outlined"
+    {...props}
+    InputProps={{
+      readOnly: true,
+      ...props.InputProps
+    }}
+    style={{marginTop: "1em", width: "auto", ...props.style}}
+    defaultValue={props.defaultValue ?? ''}
+  />
+
+}
+
 function AppUserContainer({appUserId}: {
   appUserId: number,
 }){
@@ -85,7 +104,7 @@ function AppUserContainer({appUserId}: {
   );
   const updateRequest = useMutation(
     async (data: UpdateAppUserRequest) => {
-      const result = await api.admin.updateAppUser(data);
+      await api.admin.updateAppUser(data);
     },
     {
       onSuccess: async () => {
@@ -111,18 +130,36 @@ function AppUserContainer({appUserId}: {
   const isWorking = query.isLoading || updateRequest.isLoading;
 
   return <ContainerCard title={"User"} action={<AppUserHelp/>}>
+    <Divider variant={"middle"} style={{}}>Info fields</Divider>
+    <div style={{
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "space-around"
+    }}>
+      <InfoField id="servicePoint" label="Service Point"
+        defaultValue={query.data.servicePoint.name}
+      />
+      <InfoField id="email" label="Email"
+        defaultValue={query.data.appUser.email}
+      />
+      <InfoField id="approvedBy" label="Approved by"
+        defaultValue={query.data.authzRequest?.respondingUserEmail ?? 'Auto-approved'}
+      />
+      <InfoField id="approvedOn" label="Approved on"
+        defaultValue={
+          formatLocalDateAsIsoShortDateTime(query.data.authzRequest?.dateResponded) ?? 'Auto-approved'
+        }
+      />
+    </div>
+    <Divider variant={"middle"} style={{marginTop: "2em", marginBottom: "1em"}}>
+      Update fields
+    </Divider>
     <form autoComplete="off" onSubmit={(e) => {
       e.preventDefault();
       updateRequest.mutate({appUser: formData});
     }}>
       <Stack spacing={2}>
-        <FormControl focused autoCorrect="off" autoCapitalize="on">
-          <TextField id="email" label="Email" variant="outlined"
-            disabled={true}
-            value={formData.email ?? ''}
-          />
-        </FormControl>
-        <FormControl>
+        <FormControl focused>
           <InputLabel id="roleLabel">Role</InputLabel>
           <Select
             labelId="roleLabel"
@@ -145,7 +182,7 @@ function AppUserContainer({appUserId}: {
               value={formatLocalDateAsIsoShortDateTime(formData.tokenCutoff)}
             />
             <West/>
-            <SecondaryButton onClick={(e)=>{
+            <SecondaryButton onClick={(e) => {
               e.preventDefault();
               setFormData({...formData, tokenCutoff: new Date()});
             }}>
@@ -205,7 +242,7 @@ function AppUserHelp(){
           Only "Operator" users can make changes to "Operator" users.
         </li>
         <li><HelpChip label={"Sign-in cutoff"}/>
-          Any sign-in sesion for that user before the cutoff time is  
+          Any sign-in sesion for that user before the cutoff time is
           considered invalid.
           The practical effect is that the
           user will need to sign in again to use the system.

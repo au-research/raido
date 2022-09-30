@@ -5,13 +5,12 @@ import { ContainerCard } from "Design/ContainerCard";
 import { TextSpan } from "Component/TextSpan";
 import React from "react";
 import { normalisePath } from "Util/Location";
-import { RqQuery } from "Util/ReactQueryUtil";
 import { useQuery } from "@tanstack/react-query";
-import { AuthzRequest } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import {
-  Table, TableBody,
+  Table,
+  TableBody,
   TableCell,
   TableContainer,
   TableHead,
@@ -51,8 +50,8 @@ function Content(){
 
 function AuthzRequestContainer(){
   const api = useAuthApi();
-  const query: RqQuery<AuthzRequest[]> = useQuery(
-    ['listAuthzRequest'], async () => await api.admin.listAuthzRequest());
+  const query = useQuery(['listAuthzRequest'], 
+    async () => await api.admin.listAuthzRequest() );
 
   if( query.error ){
     return <CompactErrorPanel error={query.error}/>

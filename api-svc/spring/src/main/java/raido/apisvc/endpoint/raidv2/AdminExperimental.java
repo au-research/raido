@@ -15,7 +15,7 @@ import raido.db.jooq.api_svc.enums.UserRole;
 import raido.idl.raidv2.api.AdminExperimentalApi;
 import raido.idl.raidv2.model.AppUser;
 import raido.idl.raidv2.model.AppUserExtraV1;
-import raido.idl.raidv2.model.AuthzRequest;
+import raido.idl.raidv2.model.AuthzRequestExtraV1;
 import raido.idl.raidv2.model.ServicePoint;
 import raido.idl.raidv2.model.UpdateAuthzRequestStatus;
 
@@ -58,7 +58,7 @@ public class AdminExperimental implements AdminExperimentalApi {
   }
 
   @Override
-  public List<AuthzRequest> listAuthzRequest() {
+  public List<AuthzRequestExtraV1> listAuthzRequest() {
     var user = AuthzUtil.getAuthzPayload();
     // this is the authz check, will be moved to a role annotation soon
     Guard.areEqual(user.getRole(), OPERATOR.getLiteral());
@@ -67,7 +67,7 @@ public class AdminExperimental implements AdminExperimentalApi {
   }
 
   @Override
-  public AuthzRequest readRequestAuthz(Long authzRequestId) {
+  public AuthzRequestExtraV1 readRequestAuthz(Long authzRequestId) {
     // have to read it before we can see if user is allowed for servicePoint 
     var authRequest = authzReqeustSvc.readAuthzRequest(authzRequestId);
     var user = AuthzUtil.getAuthzPayload();
@@ -161,7 +161,9 @@ public class AdminExperimental implements AdminExperimentalApi {
     var user = AuthzUtil.getAuthzPayload();
     guardOperatorOrAssociatedSpAdmin(user, servicePointId);
 
-    return db.select().from(APP_USER).
+    return db.select().
+      from(APP_USER).
+      where(APP_USER.SERVICE_POINT_ID.eq(servicePointId)).
       orderBy(APP_USER.EMAIL.asc()).
       limit(Constant.MAX_RETURN_RECORDS).
       fetchInto(AppUser.class);
@@ -200,33 +202,20 @@ public class AdminExperimental implements AdminExperimentalApi {
     var appUser = readAppUser(appUserId);
     var servicePoint = readServicePoint(appUser.getServicePointId());
     
-    var authzReqeustId = db.
-      select(USER_AUTHZ_REQUEST.ID).
-      from(USER_AUTHZ_REQUEST).
-      where( 
-        USER_AUTHZ_REQUEST.APPROVED_USER.eq(appUser.getId()).and(
-          USER_AUTHZ_REQUEST.STATUS.eq(AuthRequestStatus.APPROVED)
-        )
-      ).
-      orderBy(USER_AUTHZ_REQUEST.DATE_RESPONDED.desc()).
-      limit(1).fetchOneInto(Long.class);
+    var authzRequest = authzReqeustSvc.readAuthzRequestForUser(appUser);
     
     // bootstrapped user has no authzRequest, was auto-approved
-    if( authzReqeustId == null ){
+    if( authzRequest.isEmpty() ){
       return new AppUserExtraV1().
         appUser(appUser).
         servicePoint(servicePoint);
     }
 
-    var approvingUser = db.select().from(APP_USER).
-      where(APP_USER.ID.eq(appUserId)).
-      fetchSingleInto(AppUser.class);
-
+    log.with("authzRequest", authzRequest).debug("authzReqeust");
     return new AppUserExtraV1().
       appUser(appUser).
       servicePoint(servicePoint).
-      authzRequestId(authzReqeustId).
-      approvingUser(approvingUser);
+      authzRequest(authzRequest.get());
     
   }
 

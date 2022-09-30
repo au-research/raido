@@ -5,12 +5,8 @@ import { ContainerCard } from "Design/ContainerCard";
 import { TextSpan } from "Component/TextSpan";
 import React from "react";
 import { normalisePath } from "Util/Location";
-import { RqQuery } from "Util/ReactQueryUtil";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  AuthzRequest,
-  UpdateAuthzRequestStatusRequest
-} from "Generated/Raidv2";
+import { UpdateAuthzRequestStatusRequest } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import { Stack, TextField } from "@mui/material";
@@ -63,7 +59,7 @@ function AuthzResponseContainer({authzRequestId}:{authzRequestId: number}){
   const api = useAuthApi();
   const queryClient = useQueryClient();
   const queryName = 'readAuthzRequest';
-  const query: RqQuery<AuthzRequest> = useQuery(
+  const query = useQuery(
     [queryName, authzRequestId], 
     async () => {
       return await api.admin.readRequestAuthz({authzRequestId});
