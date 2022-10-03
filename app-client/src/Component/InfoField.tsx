@@ -34,7 +34,7 @@ export function InfoField(
       color: "lightslategrey",
       fontSize: ".8em",
     }}>{label}</legend>
-    <TextSpan id={id} color={"lightslategrey"}>{value}</TextSpan>
+    <TextSpan id={id} color={"lightslategrey"}>{value || ''}</TextSpan>
   </fieldset>
 }
 
