@@ -24,8 +24,7 @@ import {
   Select,
   SelectChangeEvent,
   Stack,
-  TextField,
-  TextFieldProps
+  TextField
 } from "@mui/material";
 import { PrimaryActionButton, SecondaryButton } from "Component/AppButton";
 import { navBrowserBack } from "Util/WindowUtil";
@@ -34,6 +33,7 @@ import { HelpChip, HelpPopover } from "Component/HelpPopover";
 import { West } from "@mui/icons-material";
 import { formatLocalDateAsIsoShortDateTime } from "Util/DateUtil";
 import Divider from "@mui/material/Divider";
+import { InfoFieldList, InfoField } from "Component/InfoField";
 
 const log = console;
 
@@ -67,23 +67,6 @@ function Content(){
   return <LargeContentMain>
     <AppUserContainer appUserId={appUserId}/>
   </LargeContentMain>
-}
-
-function InfoField(
-  props: TextFieldProps
-){
-  return <TextField
-    size="small"
-    variant="outlined"
-    {...props}
-    InputProps={{
-      readOnly: true,
-      ...props.InputProps
-    }}
-    style={{marginTop: "1em", width: "auto", ...props.style}}
-    defaultValue={props.defaultValue ?? ''}
-  />
-
 }
 
 function AppUserContainer({appUserId}: {
@@ -130,30 +113,26 @@ function AppUserContainer({appUserId}: {
   const isWorking = query.isLoading || updateRequest.isLoading;
 
   return <ContainerCard title={"User"} action={<AppUserHelp/>}>
-    <Divider variant={"middle"} style={{}}>Info fields</Divider>
-    <div style={{
-      display: "flex",
-      flexWrap: "wrap",
-      justifyContent: "space-around"
-    }}>
+    <InfoFieldList>
       <InfoField id="servicePoint" label="Service Point"
-        defaultValue={query.data.servicePoint.name}
+        value={query.data.servicePoint.name}
       />
       <InfoField id="email" label="Email"
-        defaultValue={query.data.appUser.email}
+        value={query.data.appUser.email}
       />
       <InfoField id="approvedBy" label="Approved by"
-        defaultValue={query.data.authzRequest?.respondingUserEmail || 'Auto-approved'}
+        value={query.data.authzRequest?.respondingUserEmail || 'Auto-approved'}
       />
       <InfoField id="approvedOn" label="Approved on"
-        defaultValue={
-          formatLocalDateAsIsoShortDateTime(query.data.authzRequest?.dateResponded) || 'Auto-approved'
+        value={
+          formatLocalDateAsIsoShortDateTime(
+            query.data.authzRequest?.dateResponded) || 'Auto-approved'
         }
       />
-    </div>
-    <Divider variant={"middle"} style={{marginTop: "2em", marginBottom: "1em"}}>
-      Update fields
-    </Divider>
+    </InfoFieldList>
+    <Divider variant={"middle"} 
+      style={{marginTop: "1em", marginBottom: "1.5em"}}
+    />
     <form autoComplete="off" onSubmit={(e) => {
       e.preventDefault();
       updateRequest.mutate({appUser: formData});
@@ -198,7 +177,7 @@ function AppUserContainer({appUserId}: {
             style={{
               /* by default, MUI lays this out as <checkbox><label>.
                Doing `labelPlacement=start`, flips that around, but ends up 
-               right-justigying the content, so `marginRight=auto` pushes it back 
+               right-justigying the content, `marginRight=auto` pushes it back 
                across to the left and `marginLeft=0` aligns nicely. */
               marginLeft: 0,
               marginRight: "auto",
