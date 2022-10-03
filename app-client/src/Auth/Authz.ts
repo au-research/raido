@@ -2,6 +2,7 @@ import { AuthzTokenPayload, } from "Shared/ApiTypes";
 import jwtDecode from "jwt-decode";
 import { parseJwtDate } from "Util/DateUtil";
 import { AuthorizedSession, AuthState } from "Auth/AuthProvider";
+import { clearLocation } from "Util/WindowUtil";
 
 const accessTokenStorageKey = "raidoAccessToken";
 
@@ -143,6 +144,11 @@ export function parseAccessToken(accessToken: string):{
 
 export async function signOutUser(): Promise<void>{
   clearAccessTokenFromStorage();
+  /* without this, after sign-in the user would be back on the page they were on 
+  before signing out.  That's not "wrong", I guess - but it was never what I 
+  wanted to do.  When I've done "sign-out" I'm trying to "reset" or swap to 
+  a different user - so keeping the location is never what I wanted. */
+  clearLocation(); 
 }
 
 export function isOperator(authState: AuthState){

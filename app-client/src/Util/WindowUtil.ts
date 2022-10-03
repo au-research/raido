@@ -8,6 +8,9 @@ export function serverLocationUrl(){
   return window.location.protocol + "//" + window.location.host
 }
 
+export function clearLocation(){
+  navBrowserByAssign(serverLocationUrl());
+}
 
 export function reloadLocation(location: string){
   window.location.href = location;
