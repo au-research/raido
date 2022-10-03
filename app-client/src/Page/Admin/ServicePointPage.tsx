@@ -1,6 +1,6 @@
 import {
-  isPagePath,
-  NavTransition,
+  isPagePath, NavigationState, NavPathResult,
+  NavTransition, parsePageSuffixParams,
   useNavigation
 } from "Design/NavigationProvider";
 import { raidoTitle } from "Component/Util";
@@ -31,21 +31,15 @@ const pageUrl = "/service-point";
 const idParamName = "servicePointId";
 
 export function getServicePointPageLink(servicePointId: number|undefined): string{
-  return `${pageUrl}?${idParamName}=${servicePointId}`;
+  return `${pageUrl}/${servicePointId}`;
 }
 
-export function getServicePointIdFromLocation(): number | undefined{
-  // TODO:STO change to using path param instead of search param
-  const urlParams = new URLSearchParams(window.location.search);
-  let value = urlParams.get(idParamName);
-  if( !value ){
-    return undefined;
-  }
-  return Number(value);
+export function isServicePointPagePath(pathname: string): NavPathResult{
+  return isPagePath(pathname, pageUrl);
 }
 
-export function isServicePointPagePath(path: string): boolean{
-  return normalisePath(path).startsWith(pageUrl);
+export function getServicePointIdFromPathname(nav: NavigationState): number{
+  return parsePageSuffixParams<number>(nav, isServicePointPagePath, Number)
 }
 
 export function ServicePointPage(){
@@ -58,9 +52,9 @@ export function ServicePointPage(){
 
 
 function Content(){
-  const [servicePointId, setServicePointId] = 
-    useState(getServicePointIdFromLocation());
   const nav = useNavigation()
+  const [servicePointId, setServicePointId] = 
+    useState(getServicePointIdFromPathname(nav));
 
   return <LargeContentMain>
     <ServicePointContainer servicePointId={servicePointId}
