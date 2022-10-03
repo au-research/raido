@@ -117,7 +117,6 @@ function ListNavButton(props: {
 
   return <ListItemButton href={props.href}
     onClick={event=>{
-      console.log("onclick drawer", props.href);
       nav.navigateTo(props.href, event)
     }}
   >
