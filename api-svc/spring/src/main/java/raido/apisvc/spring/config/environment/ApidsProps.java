@@ -18,7 +18,7 @@ public class ApidsProps {
   @Value("${Apids.appId:57158ed6a84b87b23b23cbf3016d59786fb2de5a}")
   public String appId;
   
-  @Value("${Apids.serviceUrl:https://demo.ands.org.au:8443/pids/mint}")
+  @Value("${Apids.serviceUrl:https://demo.identifiers.ardc.edu.au/pids/mint}")
   public String serviceUrl;
   
   @PostConstruct
