@@ -1,7 +1,7 @@
 # raido-v2
 
 "Raido" is the new implementation of the Oceania region 
-[RAiD](https://raido.org.au) implementation.
+[RAiD](https://raid.org.au) implementation.
 
 It is not yet live, though you can find the demo environment at 
 https://demo.raido-infra.com.  
