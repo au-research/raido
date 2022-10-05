@@ -56,6 +56,27 @@ For Schema migration.
 Developers are encouraged to understand SQL and use it to full potential, 
 with jOOQ helping us take advantage of static typing for our queries.
 
+##  jOOQ
+
+After a new schema is defined and migrated, we generate
+[jOOQ](https://www.jooq.org/) code for accessing
+the database, see [db/raido/build.gradle](../api-svc/db/raido/build.gradle).
+
+## API
+
+Currently, the API is defined as an OpenAPI 3.0 `yaml` document.
+
+We plan to use [OpenAPI 3.1](https://www.openapis.org/blog/2021/02/18/openapi-specification-3-1-released), 
+but the tooling hasn't caught up with the specification yet (seems like the 
+complexity of the change to json-schema surprised most people with how much 
+work it turned out to be).
+
+We define the API as a `yaml` file, then the Java interfaces for serving
+the API from the api-svc (Spring) are generated via the openap-generator,
+see [idl-raid-v2/build.gradle](../api-svc/idl-raid-v2/build.gradle).
+
+The client-side Typescript mappings are also generated via openapi-generator,
+see [app-client/build.gradle](../app-client/build.gradle).
 
 # Backend
 
