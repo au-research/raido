@@ -98,10 +98,6 @@ function Content(){
 }
 
 function isDifferent(formData: ApiKey, original: ApiKey){
-  console.log("isDifferent", {
-    formCutoff: formData.tokenCutoff,
-    originalCutoff: original.tokenCutoff,
-  });
   return formData.subject !== original.subject ||
     formData.role !== original.role ||
     formData.enabled !== original.enabled ||
@@ -181,7 +177,6 @@ function ApiKeyContainer({apiKeyId, servicePointId, onCreate}: {
     !isWorking && !hasChanged && !updateRequest.isLoading;
   const canSubmitUpdate = 
     !isWorking && hasChanged && isValid && !updateRequest.isLoading;
-  console.log("render", {isWorking, isValid, hasChanged, canGenerateToken, canSubmitUpdate});
   
   return <ContainerCard title={"Authorisation request"} action={<ApiKeyHelp/>}>
     <form autoComplete="off" onSubmit={(e) => {
