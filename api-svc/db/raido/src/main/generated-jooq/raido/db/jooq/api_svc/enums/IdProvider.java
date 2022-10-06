@@ -21,6 +21,8 @@ public enum IdProvider implements EnumType {
 
     AAF("AAF"),
 
+    RAIDO_API("RAIDO_API"),
+
     COGNITO("COGNITO");
 
     private final String literal;

@@ -1,3 +1,22 @@
+select true = true
+;
+
+select false = false
+;
+
+select false = true
+;
+
+select null = null
+;
+
+select false = null
+;
+
+select true = null
+;
+
+
 select * 
 from service_point
 ;

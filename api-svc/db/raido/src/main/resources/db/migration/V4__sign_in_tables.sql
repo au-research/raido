@@ -28,7 +28,7 @@ drop table if exists test_table;
 
 create type user_role as enum ('OPERATOR', 'SP_ADMIN', 'SP_USER', 'API');
 create type auth_request_status as enum ('REQUESTED', 'APPROVED', 'REJECTED');
-create type id_provider as enum ('GOOGLE', 'AAF', 'COGNITO');
+create type id_provider as enum ('GOOGLE', 'AAF', 'RAIDO_API', 'COGNITO');
 
 create table service_point (
   id             bigint generated always as identity

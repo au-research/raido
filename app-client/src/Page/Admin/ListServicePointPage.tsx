@@ -22,8 +22,15 @@ import {
 import { RefreshIconButton } from "Component/RefreshIconButton";
 import { RaidoLink } from "Component/RaidoLink";
 import { getServicePointPageLink } from "Page/Admin/ServicePointPage";
-import { Add, People, Visibility, VisibilityOff } from "@mui/icons-material";
+import {
+  Add,
+  Key,
+  People,
+  Visibility,
+  VisibilityOff
+} from "@mui/icons-material";
 import { getListAppUserPageLink } from "Page/Admin/ListAppUserPage";
+import { getListApiKeyPageLink } from "Page/Admin/ListApiKeyPage";
 
 const log = console;
 
@@ -38,7 +45,7 @@ export function isListServicePointPagePath(path: string): boolean{
 }
 
 export function ListServicePointPage(){
-  return <NavTransition isPagePath={(pathname)=>isPagePath(pathname, pageUrl)}
+  return <NavTransition isPagePath={(pathname) => isPagePath(pathname, pageUrl)}
     title={raidoTitle("Service points")}
   >
     <Content/>
@@ -72,9 +79,10 @@ function ServicePointListTable(){
 
   return <ContainerCard title={"Service points"}
     action={<>
-      <RefreshIconButton refreshing={query.isLoading} 
-        onClick={()=>query.refetch()} />
-      <Fab href={getServicePointPageLink(undefined)} color="primary" size="small"
+      <RefreshIconButton refreshing={query.isLoading}
+        onClick={() => query.refetch()}/>
+      <Fab href={getServicePointPageLink(undefined)} color="primary"
+        size="small"
       >
         <Add/>
       </Fab>
@@ -86,6 +94,7 @@ function ServicePointListTable(){
           <TableRow>
             <TableCell>Service point</TableCell>
             <TableCell align="center">Users</TableCell>
+            <TableCell align="center">API Keys</TableCell>
             <TableCell align="center">Enabled</TableCell>
           </TableRow>
         </TableHead>
@@ -102,15 +111,18 @@ function ServicePointListTable(){
                 </RaidoLink>
               </TableCell>
               <TableCell align="center">
-                {/*<IconButton color={"primary"} >*/}
-                  <RaidoLink href={getListAppUserPageLink(row.id)}>
-                    <People/>
-                  </RaidoLink>
-                {/*</IconButton>*/}
+                <RaidoLink href={getListAppUserPageLink(row.id)}>
+                  <People/>
+                </RaidoLink>
               </TableCell>
               <TableCell align="center">
-                { row.enabled ?
-                  <Visibility color={"success"}/> : 
+                <RaidoLink href={getListApiKeyPageLink(row.id)}>
+                  <Key/>
+                </RaidoLink>
+              </TableCell>
+              <TableCell align="center">
+                {row.enabled ?
+                  <Visibility color={"success"}/> :
                   <VisibilityOff color={"error"}/>
                 }
               </TableCell>

@@ -59,6 +59,9 @@ public class ApidsService {
 
     guardApidsResponse(contentUrl, responseBody);
 
+    log.with("handle", responseBody.identifier.handle).
+      info("RAID minted with APIDS handle");
+    
     return responseBody;
   }
   

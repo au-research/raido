@@ -28,8 +28,6 @@ const log = console;
 
 const pageUrl = "/service-point";
 
-const idParamName = "servicePointId";
-
 export function getServicePointPageLink(servicePointId: number|undefined): string{
   return `${pageUrl}/${servicePointId}`;
 }

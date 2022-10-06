@@ -59,7 +59,7 @@ public class AuthzRequestService {
         leftJoin(SERVICE_POINT).onKey(USER_AUTHZ_REQUEST.SERVICE_POINT_ID).
         leftJoin(APP_USER).onKey(USER_AUTHZ_REQUEST.RESPONDING_USER).
       orderBy(USER_AUTHZ_REQUEST.DATE_REQUESTED.desc()).
-      limit(Constant.MAX_RETURN_RECORDS).
+      limit(Constant.MAX_EXPERIMENTAL_RECORDS).
       fetch(this::mapAuthzRequest);
   }
   

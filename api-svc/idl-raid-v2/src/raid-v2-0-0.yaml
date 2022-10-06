@@ -188,7 +188,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServicePoint'
-  /v2/experimental/service-point/v1/{servicePointId}/list-users:
+  /v2/experimental/service-point/v1/{servicePointId}/list-app-user:
     get:
       tags:
         - admin-experimental
@@ -215,7 +215,7 @@ paths:
       tags:
         - admin-experimental
       operationId: update-app-user
-      summary: update an app-user
+      summary: update an "user" type app-user (i.e. not an api-key)
       requestBody:
         required: true
         content:
@@ -249,6 +249,69 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppUser'
+  /v2/experimental/service-point/v1/{servicePointId}/list-api-key:
+    get:
+      tags:
+        - admin-experimental
+      operationId: list-api-key
+      summary: list app user data that are for keys
+      parameters:
+        - in: path
+          name: servicePointId
+          schema:
+            $ref: 'shared.yaml#/components/schemas/SurrogateKey'
+          required: true
+          description: Numeric ID of the ServicePoint to list keys for
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApiKey'        
+  /v2/experimental/api-key/v1:
+    post:
+      tags:
+        - admin-experimental
+      operationId: update-api-key
+      summary: > 
+        update an "api-key" type app-user (i.e. not a "person type" user), 
+        create a new one if id not set 
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApiKey'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKey'
+  /v2/experimental/api-key/v1/{apiKeyId}:
+    get:
+      tags:
+        - admin-experimental
+      operationId: read-api-key
+      summary: read app user "api key" data that authorized users can see
+      parameters:
+        - in: path
+          name: apiKeyId
+          schema:
+            $ref: 'shared.yaml#/components/schemas/SurrogateKey'
+          required: true
+          description: Numeric ID of the AppUser to get
+      responses:
+        '200':
+          description: data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiKey'
   /v2/experimental/app-user-extra/v1/{appUserId}:
     get:
       tags:
@@ -362,6 +425,24 @@ components:
         servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
         email: {type: string}
         clientId: {type: string}
+        subject: {type: string}
+        idProvider: {type: string}
+        role: {type: string}
+        enabled: {type: boolean}
+        tokenCutoff: { type: string, format: date-time }
+        dateCreated: { type: string, format: date-time }
+    ApiKey:
+      type: object
+      description: >
+        It's really an "AppUser", but modelling like this makes the API clearer
+        and the client easier to write.
+      required: [
+        id, servicePointId, subject, idProvider, 
+        enabled, role, dateCreated
+      ]
+      properties: 
+        id: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
         subject: {type: string}
         idProvider: {type: string}
         role: {type: string}

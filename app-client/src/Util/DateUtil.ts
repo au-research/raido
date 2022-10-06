@@ -93,3 +93,26 @@ export function formatLocalDateAsIso(date?: Date){
     month.padStart(2, "0") + "-" + 
     day.padStart(2, "0");
 }
+
+/**
+ * return a new Date() object, if undefined will return new Date() + days
+ */
+export function addDays(d: Date | undefined, days: number): Date{
+  if( !d ){
+    const result = new Date();
+    result.setDate(result.getDate() + days);
+    return result;
+  }
+  
+  const result = new Date();
+  result.setDate(d.getDate() + days);
+  return result;
+}
+
+export function cloneDate(d?: Date): Date|undefined{
+  if( !d ){
+    return undefined;
+  }
+  
+  return new Date(d.getTime());
+}

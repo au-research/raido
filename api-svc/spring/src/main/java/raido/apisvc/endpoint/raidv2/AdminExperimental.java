@@ -5,14 +5,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.endpoint.Constant;
-import raido.apisvc.service.auth.AuthzTokenPayload;
+import raido.apisvc.service.auth.admin.AppUserService;
 import raido.apisvc.service.auth.admin.AuthzRequestService;
 import raido.apisvc.service.auth.admin.ServicePointService;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
-import raido.db.jooq.api_svc.enums.AuthRequestStatus;
-import raido.db.jooq.api_svc.enums.UserRole;
 import raido.idl.raidv2.api.AdminExperimentalApi;
+import raido.idl.raidv2.model.ApiKey;
 import raido.idl.raidv2.model.AppUser;
 import raido.idl.raidv2.model.AppUserExtraV1;
 import raido.idl.raidv2.model.AuthzRequestExtraV1;
@@ -26,13 +25,10 @@ import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociatedSpAdmin;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrSpAdmin;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.isOperatorOrSpAdmin;
-import static raido.apisvc.util.DateUtil.offset2Local;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.areEqual;
 import static raido.db.jooq.api_svc.enums.UserRole.OPERATOR;
-import static raido.db.jooq.api_svc.enums.UserRole.SP_ADMIN;
-import static raido.db.jooq.api_svc.enums.UserRole.SP_USER;
 import static raido.db.jooq.api_svc.tables.AppUser.APP_USER;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 import static raido.db.jooq.api_svc.tables.UserAuthzRequest.USER_AUTHZ_REQUEST;
@@ -45,15 +41,18 @@ public class AdminExperimental implements AdminExperimentalApi {
   
   private AuthzRequestService authzReqeustSvc;
   private ServicePointService servicePointSvc;
+  private AppUserService appUserSvc;
   private DSLContext db;
 
   public AdminExperimental(
     AuthzRequestService authzReqeustSvc,
     ServicePointService servicePointSvc,
+    AppUserService appUserSvc, 
     DSLContext db
   ) {
     this.authzReqeustSvc = authzReqeustSvc;
     this.servicePointSvc = servicePointSvc;
+    this.appUserSvc = appUserSvc;
     this.db = db;
   }
 
@@ -71,7 +70,7 @@ public class AdminExperimental implements AdminExperimentalApi {
     // have to read it before we can see if user is allowed for servicePoint 
     var authRequest = authzReqeustSvc.readAuthzRequest(authzRequestId);
     var user = AuthzUtil.getAuthzPayload();
-    guardAuthzRequestSecurity(user, authRequest.getServicePointId());
+    guardOperatorOrAssociatedSpAdmin(user, authRequest.getServicePointId());
     return authRequest;
   }
 
@@ -83,42 +82,12 @@ public class AdminExperimental implements AdminExperimentalApi {
       USER_AUTHZ_REQUEST, 
       USER_AUTHZ_REQUEST.ID.eq(req.getAuthzRequestId()) );
 
-    guardAuthzRequestSecurity(user, authzRecord.getServicePointId());
+    guardOperatorOrAssociatedSpAdmin(user, authzRecord.getServicePointId());
 
     authzReqeustSvc.updateAuthzRequestStatus(user, req, authzRecord);
 
     return null;
   }
-
-  private static void guardAuthzRequestSecurity(
-    AuthzTokenPayload user,
-    Long servicePointId
-  ) {
-    if( areEqual(user.getRole(), OPERATOR.getLiteral()) ){
-      // operator can update requests for any service point
-      return;
-    }
-    
-    if( areEqual(user.getRole(), SP_ADMIN.getLiteral()) ){
-      if( areEqual(servicePointId, user.getServicePointId()) ){
-        // admin can update requests for their own service point
-        return;
-      }
-
-      // SP_ADMIN is not allowed to touch authz requests from other SP's 
-      var iae = iae("disallowed cross-service point call");
-      log.with("user", user).with("servicePointId", servicePointId).
-        error(iae.getMessage());
-      throw iae;
-    }
-    
-    var iae = iae("only operators or sp_admins can call this endpoint");
-    log.with("user", user).error(iae.getMessage());
-    // TODO:STO I think we should have specific authz failure
-    // not for the client, just for differentiating internally (i.e. logging)
-    throw iae;
-  }
-
 
   @Override
   public List<ServicePoint> listServicePoint() {
@@ -127,7 +96,7 @@ public class AdminExperimental implements AdminExperimentalApi {
     
     return db.select().from(SERVICE_POINT).
       orderBy(SERVICE_POINT.NAME.asc()).
-      limit(Constant.MAX_RETURN_RECORDS).
+      limit(Constant.MAX_EXPERIMENTAL_RECORDS).
       fetchInto(ServicePoint.class);
   }
 
@@ -154,19 +123,6 @@ public class AdminExperimental implements AdminExperimentalApi {
     Guard.notNull("must have a enabled flag", req.getEnabled());
 
     return servicePointSvc.updateServicePoint(req);
-  }
-
-  @Override
-  public List<AppUser> listAppUser(Long servicePointId) {
-    var user = AuthzUtil.getAuthzPayload();
-    guardOperatorOrAssociatedSpAdmin(user, servicePointId);
-
-    return db.select().
-      from(APP_USER).
-      where(APP_USER.SERVICE_POINT_ID.eq(servicePointId)).
-      orderBy(APP_USER.EMAIL.asc()).
-      limit(Constant.MAX_RETURN_RECORDS).
-      fetchInto(AppUser.class);
   }
 
   @Override
@@ -220,75 +176,55 @@ public class AdminExperimental implements AdminExperimentalApi {
   }
 
   @Override
+  public List<AppUser> listAppUser(Long servicePointId) {
+    var user = AuthzUtil.getAuthzPayload();
+    guardOperatorOrAssociatedSpAdmin(user, servicePointId);
+
+    return appUserSvc.listAppUser(servicePointId);
+  }
+
+  @Override
   public AppUser updateAppUser(AppUser req) {
     var invokingUser = AuthzUtil.getAuthzPayload();
 
-    var targetUser = db.fetchSingle(
-      APP_USER, APP_USER.ID.eq(req.getId()) );
-    
+    var targetUser = db.fetchSingle(APP_USER, APP_USER.ID.eq(req.getId()) );
+
     // spAdmin can only edit users in their associated SP 
     guardOperatorOrAssociatedSpAdmin(
       invokingUser, targetUser.getServicePointId());
 
-    // the role of the person doing the action
-    UserRole invokingRole = mapRestRole2Jq(invokingUser.getRole());
-    // the current role of the user being updated from
-    UserRole currentRole = targetUser.getRole();
-    // the new role of the user being update to 
-    UserRole targetRole = mapRestRole2Jq(req.getRole());
-    
-    if( currentRole == OPERATOR && targetRole != OPERATOR ){
-      if( invokingRole != OPERATOR ){
-        var iae = iae("only an OPERATOR can demote an OPERATOR");
-        log.with("invokingUser", invokingUser).
-          with("targetUserId", req.getId()).
-          with("targetUserEmail", req.getEmail()).
-          with("targetRole", targetRole.getLiteral()).
-          with("currentRole", currentRole.getLiteral()).
-          error(iae.getMessage());
-        throw iae;
-      }
-    }
-    else if( currentRole != OPERATOR && targetRole == OPERATOR ){
-      if( invokingRole != OPERATOR ){
-        var iae = iae("only an OPERATOR can promote an OPERATOR");
-        log.with("invokingUser", invokingUser).
-          with("targetUserId", req.getId()).
-          with("targetUserEmail", req.getEmail()).
-          with("targetRole", targetRole.getLiteral()).
-          with("currentRole", currentRole.getLiteral()).
-          error(iae.getMessage());
-        throw iae;
-      }
-    }
-    
-    /* at this point, we've check that the invokingUser is OP or ADMIN, and 
-     that they're for the associated SP if ADMIN, and that only an OP is 
-     dealing with OP stuff.  
-     Should be good to just set the role. */
-    targetUser.setRole(targetRole);
+    appUserSvc.updateAppUser(req, invokingUser, targetUser);
 
-    targetUser.setEnabled(req.getEnabled());
-    targetUser.setTokenCutoff(offset2Local(req.getTokenCutoff()));
-
-    targetUser.update();
-   
     return readAppUser(targetUser.getId());
   }
 
-  private UserRole mapRestRole2Jq(String role) {
-    if( areEqual(OPERATOR.getLiteral(), role) ){
-      return OPERATOR;
-    }
-    else if( areEqual(SP_ADMIN.getLiteral(), role) ){
-      return SP_ADMIN;
-    }
-    else if( areEqual(SP_USER.getLiteral(), role) ){
-      return SP_USER;
-    }
-    else {
-      throw iae("could not map role: %s", role);
-    }
+  @Override
+  public List<ApiKey> listApiKey(Long servicePointId) {
+    var user = AuthzUtil.getAuthzPayload();
+    guardOperatorOrAssociatedSpAdmin(user, servicePointId);
+
+    return appUserSvc.listApiKey(servicePointId);
   }
 
+  @Override
+  public ApiKey updateApiKey(ApiKey req) {
+    var invokingUser = AuthzUtil.getAuthzPayload();
+    guardOperatorOrAssociatedSpAdmin(invokingUser, req.getServicePointId());
+    
+    long id = appUserSvc.updateApiKey(req, invokingUser);
+    
+    return readApiKey(id);
+  }
+
+  @Override
+  public ApiKey readApiKey(Long apiKeyId) {
+    var invokingUser = AuthzUtil.getAuthzPayload();
+    
+    var apiKey = db.select().from(APP_USER).
+      where(APP_USER.ID.eq(apiKeyId)).
+      fetchSingleInto(ApiKey.class);
+
+    guardOperatorOrAssociatedSpAdmin(invokingUser, apiKey.getServicePointId());
+    return apiKey;
+  }
 }

@@ -1,6 +1,5 @@
 import React, { ReactNode } from "react";
 import { TextSpan } from "Component/TextSpan";
-import { Color } from "Design/RaidoTheme";
 
 /**
  Initial used mui <TextField/> for this, set to non-editable.  But it had a few

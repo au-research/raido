@@ -142,6 +142,26 @@ export function parsePageSuffixParams<TPageParams>(
   }
 }
 
+export function parseOptionalPageSuffixParams<TPageParams>(
+  nav: NavigationState,
+  isPath: (path: string)=>NavPathResult,
+  parse: (suffix:string)=>TPageParams,
+): TPageParams | undefined {
+  if( nav.navigatingTo ){
+    const parseResult = isPath(nav.navigatingTo);
+    if( parseResult.isPath ){
+      return parse(parseResult.pathSuffix);
+    }
+  }
+
+  const parseResult = isPath(nav.pathname);
+  if( parseResult.isPath ){
+    return parse(parseResult.pathSuffix)
+  }
+  
+  return undefined;
+}
+
 export type NavPathResult = {
   isPath: false,
 } | {

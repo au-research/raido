@@ -24,6 +24,8 @@ import { ServicePointPage } from "Page/Admin/ServicePointPage";
 import { ListAppUserPage } from "Page/Admin/ListAppUserPage";
 import { LocationSearchProvider } from "Util/Hook/LocationSearch";
 import { AppUserPage } from "Page/Admin/AppUserPage";
+import { ListApiKeyPage } from "Page/Admin/ListApiKeyPage";
+import { ApiKeyPage } from "Page/Admin/ApiKeyPage";
 
 export function App(){
   /* theme defines the basic color palette and styling, etc. */
@@ -57,6 +59,8 @@ export function App(){
                   <ServicePointPage/>
                   <ListAppUserPage/>
                   <AppUserPage/>
+                  <ListApiKeyPage/>
+                  <ApiKeyPage/>
 
                 </NavigationProvider>
               </AuthApiProvider>
