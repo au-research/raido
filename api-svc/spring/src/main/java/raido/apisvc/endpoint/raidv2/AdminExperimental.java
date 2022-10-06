@@ -15,6 +15,8 @@ import raido.idl.raidv2.model.ApiKey;
 import raido.idl.raidv2.model.AppUser;
 import raido.idl.raidv2.model.AppUserExtraV1;
 import raido.idl.raidv2.model.AuthzRequestExtraV1;
+import raido.idl.raidv2.model.GenerateApiTokenRequest;
+import raido.idl.raidv2.model.GenerateApiTokenResponse;
 import raido.idl.raidv2.model.ServicePoint;
 import raido.idl.raidv2.model.UpdateAuthzRequestStatus;
 
@@ -226,5 +228,12 @@ public class AdminExperimental implements AdminExperimentalApi {
 
     guardOperatorOrAssociatedSpAdmin(invokingUser, apiKey.getServicePointId());
     return apiKey;
+  }
+
+  @Override
+  public GenerateApiTokenResponse generateApiToken(
+    GenerateApiTokenRequest generateApiTokenRequest
+  ) {
+    return null;
   }
 }
