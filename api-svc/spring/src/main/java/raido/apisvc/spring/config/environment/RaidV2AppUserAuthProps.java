@@ -15,15 +15,15 @@ import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.mask;
 
 @Component
-public class RaidV2AuthProps {
-  private static final Log log = to(RaidV2AuthProps.class);
+public class RaidV2AppUserAuthProps {
+  private static final Log log = to(RaidV2AppUserAuthProps.class);
   
   /** spring el uses `,` as separator, so secrets can't contain them.
    Maybe use horizontal tab or something as separator? */
-  @Value("${RaidV2Auth.jwtSecrets}")
+  @Value("${RaidV2AppUserAuth.jwtSecrets}")
   private String[] jwtSecrets;
 
-  @Value("${RaidV2Auth.issuer:https://localhost:8080}")
+  @Value("${RaidV2AppUserAuth.issuer:https://localhost:8080}")
   public String issuer;
   
   public Algorithm signingAlgo;

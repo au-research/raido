@@ -41,18 +41,18 @@ import static raido.db.jooq.api_svc.tables.UserAuthzRequest.USER_AUTHZ_REQUEST;
 public class AdminExperimental implements AdminExperimentalApi {
   private static final Log log = to(AdminExperimental.class);
   
-  private AuthzRequestService authzReqeustSvc;
+  private AuthzRequestService authzRequestSvc;
   private ServicePointService servicePointSvc;
   private AppUserService appUserSvc;
   private DSLContext db;
 
   public AdminExperimental(
-    AuthzRequestService authzReqeustSvc,
+    AuthzRequestService authzRequestSvc,
     ServicePointService servicePointSvc,
     AppUserService appUserSvc, 
     DSLContext db
   ) {
-    this.authzReqeustSvc = authzReqeustSvc;
+    this.authzRequestSvc = authzRequestSvc;
     this.servicePointSvc = servicePointSvc;
     this.appUserSvc = appUserSvc;
     this.db = db;
@@ -64,13 +64,13 @@ public class AdminExperimental implements AdminExperimentalApi {
     // this is the authz check, will be moved to a role annotation soon
     Guard.areEqual(user.getRole(), OPERATOR.getLiteral());
 
-    return authzReqeustSvc.listAllRecentAuthzRequest();
+    return authzRequestSvc.listAllRecentAuthzRequest();
   }
 
   @Override
   public AuthzRequestExtraV1 readRequestAuthz(Long authzRequestId) {
     // have to read it before we can see if user is allowed for servicePoint 
-    var authRequest = authzReqeustSvc.readAuthzRequest(authzRequestId);
+    var authRequest = authzRequestSvc.readAuthzRequest(authzRequestId);
     var user = AuthzUtil.getAuthzPayload();
     guardOperatorOrAssociatedSpAdmin(user, authRequest.getServicePointId());
     return authRequest;
@@ -86,7 +86,7 @@ public class AdminExperimental implements AdminExperimentalApi {
 
     guardOperatorOrAssociatedSpAdmin(user, authzRecord.getServicePointId());
 
-    authzReqeustSvc.updateAuthzRequestStatus(user, req, authzRecord);
+    authzRequestSvc.updateAuthzRequestStatus(user, req, authzRecord);
 
     return null;
   }
@@ -160,7 +160,7 @@ public class AdminExperimental implements AdminExperimentalApi {
     var appUser = readAppUser(appUserId);
     var servicePoint = readServicePoint(appUser.getServicePointId());
     
-    var authzRequest = authzReqeustSvc.readAuthzRequestForUser(appUser);
+    var authzRequest = authzRequestSvc.readAuthzRequestForUser(appUser);
     
     // bootstrapped user has no authzRequest, was auto-approved
     if( authzRequest.isEmpty() ){

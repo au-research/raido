@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 
-import static raido.apisvc.endpoint.auth.AuthnEndpoint.IDP_URL;
+import static raido.apisvc.endpoint.auth.AppUserAuthnEndpoint.IDP_URL;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.RestUtil.sanitiseLocationUrl;
 import static raido.apisvc.util.StringUtil.*;

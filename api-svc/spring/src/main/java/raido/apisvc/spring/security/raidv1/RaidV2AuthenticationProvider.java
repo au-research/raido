@@ -3,7 +3,7 @@ package raido.apisvc.spring.security.raidv1;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import raido.apisvc.service.auth.RaidV2AuthService;
+import raido.apisvc.service.auth.RaidV2AppUserAuthService;
 import raido.apisvc.spring.security.raidv2.RaidV2PreAuthenticatedJsonWebToken;
 import raido.apisvc.util.Log;
 
@@ -25,9 +25,9 @@ import static raido.apisvc.util.Log.to;
 public class RaidV2AuthenticationProvider implements AuthenticationProvider {
   private static final Log log = to(RaidV2AuthenticationProvider.class);
   
-  private RaidV2AuthService raidSvc;
+  private RaidV2AppUserAuthService raidSvc;
 
-  public RaidV2AuthenticationProvider(RaidV2AuthService raidSvc) {
+  public RaidV2AuthenticationProvider(RaidV2AppUserAuthService raidSvc) {
     this.raidSvc = raidSvc;
   }
 

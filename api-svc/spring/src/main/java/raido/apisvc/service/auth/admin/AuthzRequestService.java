@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import raido.apisvc.endpoint.Constant;
 import raido.apisvc.service.auth.AuthzTokenPayload;
 import raido.apisvc.service.auth.NonAuthzTokenPayload;
-import raido.apisvc.service.auth.RaidV2AuthService;
+import raido.apisvc.service.auth.RaidV2AppUserAuthService;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.AuthRequestStatus;
@@ -44,12 +44,15 @@ public class AuthzRequestService {
   private static final Log log = to(AuthzRequestService.class);
 
   private DSLContext db;
-  private RaidV2AuthService authSvc;
+  private RaidV2AppUserAuthService userAuthSvc;
 
 
-  public AuthzRequestService(DSLContext db, RaidV2AuthService authSvc) {
+  public AuthzRequestService(
+    DSLContext db, 
+    RaidV2AppUserAuthService userAuthSvc
+  ) {
     this.db = db;
-    this.authSvc = authSvc;
+    this.userAuthSvc = userAuthSvc;
   }
 
   public List<AuthzRequestExtraV1> listAllRecentAuthzRequest() {
@@ -139,7 +142,7 @@ public class AuthzRequestService {
   ) {
     String email = user.getEmail().toLowerCase().trim();
 
-    IdProvider idProvider = authSvc.mapIdProvider(user.getClientId());
+    IdProvider idProvider = userAuthSvc.mapIdProvider(user.getClientId());
     if(
       // we only promote raido SP users to operator
       req.getServicePointId() == RAIDO_SP_ID &&

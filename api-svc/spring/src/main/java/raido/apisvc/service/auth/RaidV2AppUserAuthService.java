@@ -7,7 +7,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import org.jooq.DSLContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import raido.apisvc.spring.config.environment.RaidV2AuthProps;
+import raido.apisvc.spring.config.environment.RaidV2AppUserAuthProps;
 import raido.apisvc.spring.security.ApiSvcAuthenticationException;
 import raido.apisvc.spring.security.raidv2.RaidV2PreAuthenticatedJsonWebToken;
 import raido.apisvc.util.Guard;
@@ -34,25 +34,25 @@ import static raido.apisvc.util.StringUtil.mask;
 import static raido.db.jooq.api_svc.tables.AppUser.APP_USER;
 
 @Component
-public class RaidV2AuthService {
-  private static final Log log = to(RaidV2AuthService.class);
+public class RaidV2AppUserAuthService {
+  private static final Log log = to(RaidV2AppUserAuthService.class);
 
   public static final String IS_AUTHORIZED_APP_USER = "isAuthorizedAppUser";
 
-  private RaidV2AuthProps props;
+  private RaidV2AppUserAuthProps userAuthProps;
   private DSLContext db;
   private AafOidc aaf;
   private GoogleOidc google;
   
   private Duration expiryPeriod = Duration.ofHours(9);
   
-  public RaidV2AuthService(
-    RaidV2AuthProps props, 
+  public RaidV2AppUserAuthService(
+    RaidV2AppUserAuthProps userAuthProps, 
     DSLContext db,
     AafOidc aaf,
     GoogleOidc google
   ) {
-    this.props = props;
+    this.userAuthProps = userAuthProps;
     this.db = db;
     this.aaf = aaf;
     this.google = google;
@@ -63,7 +63,7 @@ public class RaidV2AuthService {
       String token = JWT.create().
         // remember the standard claim for subject is "sub"
         withSubject(payload.getSubject()).
-        withIssuer(props.issuer).
+        withIssuer(userAuthProps.issuer).
         withIssuedAt(Instant.now()).
         withExpiresAt(Instant.now().plus(expiryPeriod)).
         withClaim(RaidoClaim.IS_AUTHORIZED_APP_USER.getId(), true).
@@ -72,7 +72,7 @@ public class RaidV2AuthService {
         withClaim(RaidoClaim.CLIENT_ID.getId(), payload.getClientId()).
         withClaim(RaidoClaim.EMAIL.getId(), payload.getEmail()).
         withClaim(RaidoClaim.ROLE.getId(), payload.getRole()).
-        sign(props.signingAlgo);
+        sign(userAuthProps.signingAlgo);
 
       return token;
     } catch ( JWTCreationException ex){
@@ -85,13 +85,13 @@ public class RaidV2AuthService {
       String token = JWT.create().
         // remember the standard claim for subject is "sub"
         withSubject(payload.getSubject()).
-        withIssuer(props.issuer).
+        withIssuer(userAuthProps.issuer).
         withIssuedAt(Instant.now()).
         withExpiresAt(Instant.now().plus(expiryPeriod)).
         withClaim(IS_AUTHORIZED_APP_USER, false).
         withClaim(RaidoClaim.CLIENT_ID.getId(), payload.getClientId()).
         withClaim(RaidoClaim.EMAIL.getId(), payload.getEmail()).
-        sign(props.signingAlgo);
+        sign(userAuthProps.signingAlgo);
 
       return token;
     } catch ( JWTCreationException ex){
@@ -187,9 +187,9 @@ public class RaidV2AuthService {
   public DecodedJWT verify(String token) {
     DecodedJWT jwt = null;
     JWTVerificationException firstEx = null;
-    for( int i = 0; i < props.verifiers.length; i++ ){
+    for( int i = 0; i < userAuthProps.verifiers.length; i++ ){
       try {
-        jwt = props.verifiers[i].verify(token);
+        jwt = userAuthProps.verifiers[i].verify(token);
       }
       catch( JWTVerificationException e ){
         if( firstEx == null ){
@@ -202,7 +202,7 @@ public class RaidV2AuthService {
     }
     log.with("firstException", firstEx == null ? "null" : firstEx.getMessage()).
       with("token", mask(token)).
-      with("verifiers", props.verifiers.length).
+      with("verifiers", userAuthProps.verifiers.length).
       info("jwt not verified by any of the secrets");
     throw new ApiSvcAuthenticationException();
   }

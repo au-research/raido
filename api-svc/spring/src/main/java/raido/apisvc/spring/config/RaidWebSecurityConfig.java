@@ -11,7 +11,7 @@ import org.springframework.security.web.firewall.HttpStatusRequestRejectedHandle
 import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.security.web.firewall.RequestRejectedHandler;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
-import raido.apisvc.service.auth.RaidV2AuthService;
+import raido.apisvc.service.auth.RaidV2AppUserAuthService;
 import raido.apisvc.service.raidv1.RaidV1AuthService;
 import raido.apisvc.spring.security.RaidoSecurityContextRepository;
 import raido.apisvc.spring.security.raidv1.RaidV1AuthenticationProvider;
@@ -21,7 +21,7 @@ import raido.apisvc.util.Log;
 import java.io.IOException;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
-import static raido.apisvc.endpoint.auth.AuthnEndpoint.IDP_URL;
+import static raido.apisvc.endpoint.auth.AppUserAuthnEndpoint.IDP_URL;
 import static raido.apisvc.endpoint.raidv1.RaidV1.HANDLE_URL_PREFIX;
 import static raido.apisvc.util.Log.to;
 
@@ -40,7 +40,7 @@ public class RaidWebSecurityConfig {
   public SecurityFilterChain securityFilterChain(
     HttpSecurity http, 
     RaidV1AuthService raid1Svc,
-    RaidV2AuthService raid2Svc
+    RaidV2AppUserAuthService raid2Svc
   ) throws Exception {
     log.info("securityFilterChain()");
     http.
