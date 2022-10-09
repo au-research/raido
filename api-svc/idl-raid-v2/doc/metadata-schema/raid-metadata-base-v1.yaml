@@ -1,0 +1,47 @@
+openapi: 3.0.3
+info:
+  title: Raid Metadata Envelope schema
+  version: 1.0.0
+paths:
+  
+components:
+  schemas:
+    BaseV1:
+      type: object
+      required: [
+        raidSchema,          
+        title                  
+      ]
+      properties:
+        raidSchema: {type: string}
+        title: {type: string}
+    BaseV2:
+      type: object
+      required: [
+        raidSchema,
+        title,
+        description,
+      ]
+      properties:
+        raidSchema: {type: string}
+        title: {type: string}
+        description: {type: string}
+    BaseV2ExtendedGeologyViaSchema:
+      allOf:     # Combines the BaseV2 with the extra stuff here
+        - $ref: '#/components/schemas/BaseV1'
+      required: [
+        geologyThing,
+      ]
+      properties:
+        geologyThing: {type: string}
+    BaseV2ExtendedGeologyViaCopy:
+      # combines BAseV2 and the extra stuff just by copy/paste
+      required: [
+        raidSchema, title, description,
+        geologyThing,
+      ]
+      properties:
+        raidSchema: {type: string}
+        title: {type: string}
+        description: {type: string}
+        geologyThing: {type: string}
