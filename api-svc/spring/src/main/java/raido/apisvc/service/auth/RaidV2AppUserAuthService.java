@@ -29,10 +29,12 @@ import static raido.apisvc.util.ExceptionUtil.authFailed;
 import static raido.apisvc.util.ExceptionUtil.wrapException;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.areEqual;
-import static raido.apisvc.util.ObjectUtil.isTrue;
 import static raido.apisvc.util.StringUtil.mask;
 import static raido.db.jooq.api_svc.tables.AppUser.APP_USER;
 
+/**
+ Handles signing and verifying JWTs for signing in (does not handle api-keys).
+ */
 @Component
 public class RaidV2AppUserAuthService {
   private static final Log log = to(RaidV2AppUserAuthService.class);
