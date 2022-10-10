@@ -83,8 +83,9 @@ jobs:
           DatasourceConfig.username=api_user
           DatasourceConfig.password=githubActionIntTestRolePassword
           RaidV1Auth.jwtSecret=githubActionIntTestJwtSecret
-          RaidV2Auth.jwtSecrets=githubActionIntTestJwtSecretMustBeReallyLong
-
+          RaidV2AppUserAuth.jwtSecrets=githubActionIntTestJwtSecretMustBeReallyLong
+          RaidV2ApiKeyAuth.jwtSecrets=githubActionIntTestJwtSecretMustBeReallyLong
+          
           AafOidc.clientSecret=notTheRealSecret
           GoogleOidc.clientSecret=notTheRealSecret
 
