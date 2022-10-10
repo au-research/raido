@@ -15,6 +15,8 @@ public enum RaidoClaim {
     this.id = id;
   }
 
+  /* IMPROVE:STO replace the various calls to `getId()` with util functions
+  that work explicitly with claim and related objects, instead of strings. */
   public String getId() {
     return id;
   }
