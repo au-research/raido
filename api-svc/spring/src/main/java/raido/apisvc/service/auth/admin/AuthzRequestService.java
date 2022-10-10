@@ -39,6 +39,11 @@ import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 import static raido.db.jooq.api_svc.tables.UserAuthzRequest.USER_AUTHZ_REQUEST;
 import static raido.idl.raidv2.model.AuthzRequestStatus.APPROVED;
 
+/**
+ "Authorization requests" - a new user creates an AuthzRequest to be allowed to
+ use the system.  When an AuthzRequest is approved by an admin, an "AppUser" is
+ created and the user can sign in and start using the system.
+ */
 @Component
 public class AuthzRequestService {
   private static final Log log = to(AuthzRequestService.class);
