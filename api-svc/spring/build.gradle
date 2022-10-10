@@ -24,7 +24,7 @@ ext{
 if( file(configPath).exists() ){
   println "loading config from: ${configPath}"
   /* never done config this way before, not entirely sure it's a good idea,
-  probably a Bad Plan to a full turing-complete language for config */
+  probably a Bad Plan to use a full turing-complete language for config */
   apply from: configPath
 }
 
