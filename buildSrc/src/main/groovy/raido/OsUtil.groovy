@@ -9,11 +9,11 @@ class OsUtil {
    */
   static Iterable<String> osCmd(String... commands) {
     def newCommands = []
-    if ( Os.isFamily(Os.FAMILY_WINDOWS)) {
+    if( Os.isFamily(Os.FAMILY_WINDOWS) ){
       newCommands = ['cmd', '/c']
     }
 
     newCommands.addAll(commands)
     return newCommands
-  }  
+  }
 }
