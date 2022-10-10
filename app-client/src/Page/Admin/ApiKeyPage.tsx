@@ -12,24 +12,31 @@ import { ContainerCard } from "Design/ContainerCard";
 import { TextSpan } from "Component/TextSpan";
 import React, { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ApiKey, UpdateApiKeyRequest } from "Generated/Raidv2";
+import {
+  ApiKey,
+  GenerateApiTokenRequest,
+  UpdateApiKeyRequest
+} from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import {
+  Alert,
   Checkbox,
   FormControl,
   FormControlLabel,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
   Stack,
-  TextField
+  TextField,
+  Typography
 } from "@mui/material";
 import { PrimaryActionButton, SecondaryButton } from "Component/AppButton";
 import { navBrowserBack } from "Util/WindowUtil";
-import { HelpPopover } from "Component/HelpPopover";
-import { West } from "@mui/icons-material";
+import { HelpChip, HelpPopover } from "Component/HelpPopover";
+import { ContentCopy, West } from "@mui/icons-material";
 import { addDays, formatLocalDateAsIsoShortDateTime } from "Util/DateUtil";
 import { RqQuery } from "Util/ReactQueryUtil";
 
@@ -148,11 +155,19 @@ function ApiKeyContainer({apiKeyId, servicePointId, onCreate}: {
       if( !apiKeyId ){
         onCreate(result.id);
       }
+      return result;
     },
     {
       onSuccess: async () => {
         await queryClient.invalidateQueries([queryName]);
       },
+    }
+  );
+  const generateRequest = useMutation(
+    async (data: GenerateApiTokenRequest) => {
+      return await api.admin.generateApiToken({
+        generateApiTokenRequest: data
+      });
     }
   );
 
@@ -170,6 +185,7 @@ function ApiKeyContainer({apiKeyId, servicePointId, onCreate}: {
     }
   }
 
+  const canEditSubmit = !apiKeyId;
   const isWorking = query.isLoading || updateRequest.isLoading;
   const isValid = !!formData.subject;
   const hasChanged = isDifferent(formData, query.data);
@@ -178,7 +194,7 @@ function ApiKeyContainer({apiKeyId, servicePointId, onCreate}: {
   const canSubmitUpdate = 
     !isWorking && hasChanged && isValid && !updateRequest.isLoading;
   
-  return <ContainerCard title={"Authorisation request"} action={<ApiKeyHelp/>}>
+  return <ContainerCard title={"API Key"} action={<ApiKeyHelp/>}>
     <form autoComplete="off" onSubmit={(e) => {
       e.preventDefault();
       updateRequest.mutate({apiKey: {...formData}});
@@ -186,7 +202,7 @@ function ApiKeyContainer({apiKeyId, servicePointId, onCreate}: {
       <Stack spacing={2}>
         <TextField id="subject" label="Subject" variant="outlined"
           focused autoCorrect="off" autoCapitalize="on"
-          disabled={isWorking}
+          disabled={isWorking || !canEditSubmit}
           value={formData.subject || ''}
           onChange={(e) => {
             setFormData({...formData, subject: e.target.value});
@@ -256,7 +272,10 @@ function ApiKeyContainer({apiKeyId, servicePointId, onCreate}: {
             disabled={!canGenerateToken}
             onClick={e=>{
               e.preventDefault();
-              alert("call server to generate token");
+              if( !apiKeyId ){
+                throw new Error("cannot call generate without an apiKeyId");
+              }
+              generateRequest.mutate({apiKeyId});
             }}
           >
             Generate token
@@ -269,6 +288,18 @@ function ApiKeyContainer({apiKeyId, servicePointId, onCreate}: {
             { apiKeyId ? "Update" : "Create" }
           </PrimaryActionButton>
         </Stack>
+        { generateRequest.data &&
+          <Alert severity="success">
+            <Typography>
+              An API Token has been generated.
+              <br/>
+              Click to copy to clipboard <IconButton onClick={()=>
+              navigator.clipboard.writeText(generateRequest.data?.apiToken!)
+            }><ContentCopy/></IconButton>
+            </Typography>
+          </Alert>
+        }
+        <CompactErrorPanel error={generateRequest.error} />
       </Stack>
     </form>
   </ContainerCard>
@@ -277,9 +308,11 @@ function ApiKeyContainer({apiKeyId, servicePointId, onCreate}: {
 function ApiKeyHelp(){
   return <HelpPopover content={
     <Stack spacing={1}>
-      <TextSpan>
-        API key help placeholder
-      </TextSpan>
+      <ul>
+        <li><HelpChip label={"Subject"}/>
+          Subject cannot be updated after the API key has been created.
+        </li>
+      </ul>
     </Stack>
   }/>;
 }

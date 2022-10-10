@@ -6,7 +6,6 @@ import raido.apisvc.service.auth.AuthzTokenPayload;
 import raido.apisvc.util.DateUtil;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
-import raido.db.jooq.api_svc.enums.IdProvider;
 import raido.db.jooq.api_svc.enums.UserRole;
 import raido.db.jooq.api_svc.tables.records.AppUserRecord;
 import raido.idl.raidv2.model.ApiKey;
@@ -20,6 +19,7 @@ import static raido.apisvc.util.DateUtil.offset2Local;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.areEqual;
+import static raido.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
 import static raido.db.jooq.api_svc.enums.UserRole.OPERATOR;
 import static raido.db.jooq.api_svc.enums.UserRole.SP_ADMIN;
 import static raido.db.jooq.api_svc.enums.UserRole.SP_USER;
@@ -44,7 +44,7 @@ public class AppUserService {
     AppUserRecord targetUser
   ) {
     Guard.isTrue("RAIDO_API values should use the api-key endpoints", 
-      !areEqual(req.getIdProvider(), IdProvider.RAIDO_API.getLiteral()) );
+      !areEqual(req.getIdProvider(), RAIDO_API.getLiteral()) );
     // the role of the person doing the action
     UserRole invokingRole = mapRestRole2Jq(invokingUser.getRole());
     // the current role of the user being updated from
@@ -112,7 +112,7 @@ public class AppUserService {
       from(APP_USER).
       where(
         APP_USER.SERVICE_POINT_ID.eq(servicePointId).
-          and( APP_USER.ID_PROVIDER.ne(IdProvider.RAIDO_API) )).
+          and( APP_USER.ID_PROVIDER.ne(RAIDO_API) )).
       orderBy(APP_USER.EMAIL.asc()).
       limit(MAX_EXPERIMENTAL_RECORDS).
       fetchInto(AppUser.class);
@@ -125,7 +125,7 @@ public class AppUserService {
       from(APP_USER).
       where(
         APP_USER.SERVICE_POINT_ID.eq(servicePointId).
-          and( APP_USER.ID_PROVIDER.eq(IdProvider.RAIDO_API) )).
+          and( APP_USER.ID_PROVIDER.eq(RAIDO_API) )).
       orderBy(APP_USER.EMAIL.asc()).
       limit(MAX_EXPERIMENTAL_RECORDS).
       fetchInto(ApiKey.class);
@@ -136,7 +136,7 @@ public class AppUserService {
     AuthzTokenPayload invokingUser
   ) {
     Guard.isTrue("API key idProvider can only be RAIDO_API", 
-      areEqual(req.getIdProvider(), IdProvider.RAIDO_API.getLiteral()) );
+      areEqual(req.getIdProvider(), RAIDO_API.getLiteral()) );
     
     var record = req.getId() == null ?
       db.newRecord(APP_USER) :
@@ -145,9 +145,11 @@ public class AppUserService {
     // can only be set at create-time
     if( req.getId() == null ){
       record.setServicePointId(req.getServicePointId());
+      // I don't think it's a good idea to allow sub or email to be updated 
+      record.setSubject(req.getSubject());
       record.setEmail(req.getSubject());
-      record.setClientId("");
-      record.setIdProvider(IdProvider.RAIDO_API);
+      record.setClientId(RAIDO_API.getLiteral());
+      record.setIdProvider(RAIDO_API);
       record.setDateCreated(LocalDateTime.now());
     }
 
@@ -162,8 +164,6 @@ public class AppUserService {
       throw iae;
     }
     
-    // allowing subject to be updated, not sure this is a great plan
-    record.setSubject(req.getSubject());
     record.setRole(targetRole);
     record.setEnabled(req.getEnabled());
     record.setTokenCutoff(DateUtil.offset2Local(req.getTokenCutoff()));
@@ -178,5 +178,16 @@ public class AppUserService {
     
     return record.getId();
   }
+
+  public AppUser readAppUser(Long appUserId) {
+    return db.select().from(APP_USER).
+      where(APP_USER.ID.eq(appUserId)).
+      fetchSingleInto(AppUser.class);
+  }
   
+  public ApiKey readApiKey(Long appUserId) {
+    return db.select().from(APP_USER).
+      where(APP_USER.ID.eq(appUserId)).
+      fetchSingleInto(ApiKey.class);
+  }
 }

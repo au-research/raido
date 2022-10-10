@@ -480,12 +480,12 @@ components:
       type: object
       required: [apiKeyId]
       properties:
-        apiKeyId: {type: string}
+        apiKeyId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
     GenerateApiTokenResponse:
       type: object
       required: [apiKeyId]
       properties:
-        apiKeyId: {type: string}
+        apiKeyId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
         apiToken: {type: string}
         
   securitySchemes:

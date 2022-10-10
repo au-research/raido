@@ -17,4 +17,12 @@ public class RaidApiMessage {
   public static final String DEMO_NOT_SUPPPORTED = 
     "Raido 'demo' environment support is temporarily unavailable." +
       " Please contact support for assistance.";
+  public static final String DISALLOWED_X_SVC_CALL = 
+    "disallowed cross-service point call";
+  public static final String ONLY_OP_OR_SP_ADMIN = 
+  "only operators or sp_admins can call this endpoint";
+  public static final String NO_APP_USER_WITH_API_KEY_ENDPOINT =
+    "cannot use app-user with api-key endpoint";  
+  public static final String CANT_GENERATE_DISABLED_KEY =
+    "cannot generate a token for a disable key";  
 }

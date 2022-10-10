@@ -6,6 +6,8 @@ import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
+import static raido.apisvc.endpoint.message.RaidApiMessage.ONLY_OP_OR_SP_ADMIN;
+import static raido.apisvc.endpoint.message.RaidApiMessage.DISALLOWED_X_SVC_CALL;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.areEqual;
@@ -43,7 +45,7 @@ public class AuthzUtil {
     }
 
     if( !areEqual(servicePointId, user.getServicePointId()) ){
-      var iae = iae("disallowed cross-service point call");
+      var iae = iae(DISALLOWED_X_SVC_CALL);
       log.with("user", user).with("servicePointId", servicePointId).
         error(iae.getMessage());
       throw iae;
@@ -66,13 +68,13 @@ public class AuthzUtil {
       }
 
       // SP_ADMIN is not allowed to do stuff to other SP's 
-      var iae = iae("disallowed cross-service point call");
+      var iae = iae(DISALLOWED_X_SVC_CALL);
       log.with("user", user).with("servicePointId", servicePointId).
         error(iae.getMessage());
       throw iae;
     }
 
-    var iae = iae("only operators or sp_admins can call this endpoint");
+    var iae = iae(ONLY_OP_OR_SP_ADMIN);
     log.with("user", user).error(iae.getMessage());
     throw iae;
   }
@@ -91,7 +93,7 @@ public class AuthzUtil {
       return;
     }
 
-    var iae = iae("only operators or sp_admins can call this endpoint");
+    var iae = iae(ONLY_OP_OR_SP_ADMIN);
     log.with("user", user).error(iae.getMessage());
     throw iae;
   }
