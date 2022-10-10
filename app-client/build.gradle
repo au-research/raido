@@ -21,18 +21,6 @@ clean {
   delete generateDirName
 }
 
-//task appClientGenerate(type: GenerateTask) {
-//
-//  globalProperties = [
-//    // blank means that it generates all models
-//    models: "",
-//    apis: "",
-//    supportingFiles: "",
-//  ]
-//
-//  configOptions = [:]
-//  
-//}
 /* don't need any special clean logic for generated dir, if you change the idl
  so that a class is no longer needed, it will be deleted during generate */
 openApiGenerate {
