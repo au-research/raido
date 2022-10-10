@@ -214,8 +214,6 @@ function AppUserContainer({appUserId}: {
 function AppUserHelp(){
   return <HelpPopover content={
     <Stack spacing={1}>
-      <TextSpan>
-      </TextSpan>
       <ul>
         <li><HelpChip label={"Role"}/>
           Only "Operator" users can make changes to "Operator" users.
