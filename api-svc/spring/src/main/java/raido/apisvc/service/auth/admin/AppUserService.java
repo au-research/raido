@@ -25,6 +25,9 @@ import static raido.db.jooq.api_svc.enums.UserRole.SP_ADMIN;
 import static raido.db.jooq.api_svc.enums.UserRole.SP_USER;
 import static raido.db.jooq.api_svc.tables.AppUser.APP_USER;
 
+/**
+ "user" records for both people "app-user" and machines "api-key".
+ */
 @Component
 public class AppUserService {
   private static final Log log = to(AppUserService.class);
