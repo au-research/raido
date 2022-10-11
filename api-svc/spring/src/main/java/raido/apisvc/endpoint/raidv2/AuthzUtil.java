@@ -6,8 +6,8 @@ import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
-import static raido.apisvc.endpoint.message.RaidApiMessage.ONLY_OP_OR_SP_ADMIN;
 import static raido.apisvc.endpoint.message.RaidApiMessage.DISALLOWED_X_SVC_CALL;
+import static raido.apisvc.endpoint.message.RaidApiMessage.ONLY_OP_OR_SP_ADMIN;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.areEqual;
@@ -76,6 +76,27 @@ public class AuthzUtil {
 
     var iae = iae(ONLY_OP_OR_SP_ADMIN);
     log.with("user", user).error(iae.getMessage());
+    throw iae;
+  }
+
+  public static void guardOperatorOrAssociatedSpUser(
+    AuthzTokenPayload user,
+    Long servicePointId
+  ) {
+    if( areEqual(user.getRole(), OPERATOR.getLiteral()) ){
+      // operator can update any service point
+      return;
+    }
+
+    if( areEqual(servicePointId, user.getServicePointId()) ){
+      // sp_user and admin can list raids for their own SP
+      return;
+    }
+
+    // not allowed to read raids from other SP's 
+    var iae = iae(DISALLOWED_X_SVC_CALL);
+    log.with("user", user).with("servicePointId", servicePointId).
+      error(iae.getMessage());
     throw iae;
   }
 

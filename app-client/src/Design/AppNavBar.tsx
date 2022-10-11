@@ -15,8 +15,7 @@ import { RaidoLogoSvg } from "Component/Icon";
 import { getHomePageLink } from "Page/HomePage";
 import { Color } from "Design/RaidoTheme";
 import { useAuth } from "Auth/AuthProvider";
-import { AuthzTokenPayload } from "Shared/ApiTypes";
-import { Config } from "Config";
+import { IdProviderDisplay } from "Component/Util";
 
 const log = console;
 
@@ -139,7 +138,7 @@ function AccountMenu(){
         onClose();
       }}>
         <Typography>
-          ID Provider: {providerName(authn.session.payload)}
+          ID Provider: <IdProviderDisplay payload={authn.session.payload}/>
         </Typography>
       </MenuItem>
       <MenuItem onClick={async ()=>{
@@ -152,15 +151,3 @@ function AccountMenu(){
   </>;
 }
 
-function providerName(payload: AuthzTokenPayload): string {
-  if( payload.clientId === Config.aaf.clientId ){
-    return "AAF";
-  }
-  else if( payload.clientId === Config.google.clientId ){
-    return "Google";
-  }
-  else {
-    console.log("unknown idp clientId", payload);
-    return "Unknown";
-  }
-}

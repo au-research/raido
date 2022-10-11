@@ -1,80 +1,10 @@
 openapi: 3.0.3
-servers:
-  - url: 'https://demo.raido-infra.com'
-  - url: 'https://test.raido-infra.com'
-  - url: 'http://localhost:8080'
 info:
-  title: RAID v2 API
-  version: 2.0.0
-  contact:
-    name: ARDC RAiD team
-    email: web.services@ardc.edu.au
-tags:
-  - name: public-experimental
-    description: The APIs are not stable, they may change at any time.  
-      Can be called without auth.
-  - name: raido-experimental
-    description: The APIs are not stable, they may change at any time.
-      These endpoints are intended to be called by the Raido UI.
-      Must be called with auth.
-security:
-  # without this, or if you override with `[]`, no header will be sent
-  # by the openapi generated code
-  - BearerAuth:
-    # Mandatory, but I don't know what the content is supposed to be?    
-    - unknown
-      
+  title: administration endpoints
+  version: 1.0.0
+
 paths:
-  /v2/public/version:
-    get:
-      security: []
-      tags:
-        - public-experimental
-      operationId: version
-      summary: get info about server
-      responses:
-        '200':
-          description: version info
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/VersionResult'
-  /v2/public/list-service-point/v1:
-    get:
-      security: []
-      tags:
-        - public-experimental
-      operationId: list-public-service-point
-      summary: list service point data that un-authn users can see
-      responses:
-        '200':
-          description: public service-point data
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/PublicServicePoint'
-  /v2/public/request-authz/v1:
-    post:
-      tags:
-        - public-experimental
-      operationId: update-request-authz
-      summary: create or update an authz request
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateAuthzRequest'
-      responses:
-        '200':
-          description: result of request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UpdateAuthzResponse'
-  /v2/public/request-authz/v1/{authzRequestId}:
+  /read-request-authz:
     get:
       tags:
         - admin-experimental
@@ -86,7 +16,7 @@ paths:
           schema:
             $ref: 'shared.yaml#/components/schemas/SurrogateKey'
           required: true
-          description: Numeric ID of the AuthzRequest to get        
+          description: Numeric ID of the AuthzRequest to get
       responses:
         '200':
           description: data
@@ -94,18 +24,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthzRequestExtraV1'
-  /v2/experimental/raido-keepme/v1:
-    get:
-      tags:
-        - raido-experimental
-      operationId: raido-keepme
-      summary: >
-        temporary endpoint to ensure the RaidoExperimental API is generated
-      responses:
-        '200':
-          description: success
-
-  /v2/experimental/update-authz-request-status/v1:
+  /update-authz-request-status:
     post:
       tags:
         - admin-experimental
@@ -120,7 +39,7 @@ paths:
       responses:
         '200':
           description: succeeded
-  /v2/experimental/admin-authz-request/v1:
+  /list-authz-request:
     get:
       tags:
         - admin-experimental
@@ -135,7 +54,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/AuthzRequestExtraV1'
-  /v2/experimental/service-point/v1:
+  /list-service-point:
     get:
       tags:
         - admin-experimental
@@ -168,7 +87,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServicePoint'
-  /v2/experimental/service-point/v1/{servicePointId}:
+  /read-service-point:
     get:
       tags:
         - admin-experimental
@@ -188,12 +107,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServicePoint'
-  /v2/experimental/service-point/v1/{servicePointId}/list-app-user:
+  /list-app-user:
     get:
       tags:
         - admin-experimental
       operationId: list-app-user
-      summary: list app user data for service point that authz'd users can see 
+      summary: list app user data for service point that authz'd users can see
       parameters:
         - in: path
           name: servicePointId
@@ -210,7 +129,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/AppUser'
-  /v2/experimental/app-user/v1:
+  /update-app-user:
     post:
       tags:
         - admin-experimental
@@ -229,7 +148,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppUser'
-  /v2/experimental/app-user/v1/{appUserId}:
+  /read-app-user:
     get:
       tags:
         - admin-experimental
@@ -248,8 +167,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AppUser'
-  /v2/experimental/service-point/v1/{servicePointId}/list-api-key:
+                $ref: '#/components/schemas/AppUser'                
+  /list-api-key:
     get:
       tags:
         - admin-experimental
@@ -270,13 +189,13 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ApiKey'        
-  /v2/experimental/api-key/v1:
+                  $ref: '#/components/schemas/ApiKey'
+  /update-api-key:
     post:
       tags:
         - admin-experimental
       operationId: update-api-key
-      summary: > 
+      summary: >
         update an "api-key" type app-user (i.e. not a "person type" user), 
         create a new one if id not set 
       requestBody:
@@ -292,7 +211,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiKey'
-  /v2/experimental/api-key/v1/{apiKeyId}:
+  /read-api-key:
     get:
       tags:
         - admin-experimental
@@ -311,8 +230,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiKey'
-  /v2/experimental/app-user-extra/v1/{appUserId}:
+                $ref: '#/components/schemas/ApiKey' 
+  /read-app-user-extra:
     get:
       tags:
         - admin-experimental
@@ -332,7 +251,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppUserExtraV1'
-  /v2/experimental/generate-api-token/v1:
+  /generate-api-token:
     post:
       tags:
         - admin-experimental
@@ -351,60 +270,50 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GenerateApiTokenResponse'
+                
 components:
   schemas:
-    VersionResult:
+    ApiKey:
       type: object
-      properties:
-        buildVersion: {type: string}
-        buildCommitId: {type: string}
-        buildDate: { type: string }
-        startDate: { type: string, format: date-time }
-    V1Institution:
       description: >
-        "v1" meaning "relating to V1 API", not "V1 of this object"
-      type: object
-      required: [id, name]
-      properties:
-        id: {type: string}
-        name: {type: string}
-    PublicServicePoint:
-      description: data that non-authn users can see (do not leak email)
-      type: object
-      required: [id, name]
+        It's really an "AppUser", but modelling like this makes the API clearer
+        and the client easier to write.
+      required: [
+        id, servicePointId, subject, idProvider,
+        enabled, role, dateCreated
+      ]
       properties:
         id: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
-        name: {type: string}
-    ServicePoint:
-      description: data that any member of service-point and operators can see
-      type: object
-      required: [id, name, adminEmail, techEmail, enabled]
-      properties:
-        id: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
-        name: {type: string}
-        searchContent: {type: string}
-        techEmail: {type: string}
-        adminEmail: {type: string}
-        enabled: {type: boolean}
-    UpdateAuthzRequest:
-      description: authorization request
-      type: object
-      required: [servicePointId, name]
-      properties:
         servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
-        comments: {type: string}
-    UpdateAuthzRequestStatus:
-      description: approve/reject a reqeust
+        subject: {type: string}
+        idProvider: {type: string}
+        role: {type: string}
+        enabled: {type: boolean}
+        tokenCutoff: { type: string, format: date-time }
+        dateCreated: { type: string, format: date-time }
+    AppUser:
       type: object
-      required: [authzRequestId, status]
+      required: [
+        id, servicePointId,
+        email, clientId, idProvider, subject,
+        enabled, role, dateCreated
+      ]
       properties:
-        authzRequestId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
-        status: {$ref: 'AuthzRequestStatus' }
+        id: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        email: {type: string}
+        clientId: {type: string}
+        subject: {type: string}
+        idProvider: {type: string}
+        role: {type: string}
+        enabled: {type: boolean}
+        tokenCutoff: { type: string, format: date-time }
+        dateCreated: { type: string, format: date-time }
     AuthzRequestExtraV1:
       description: authorization request with extra data
       type: object
       required: [
-        id, status, servicePointId, servicePointName, 
+        id, status, servicePointId, servicePointName,
         email, clientId, idProvider, subject,
         dateRequested
       ]
@@ -422,52 +331,27 @@ components:
         respondingUserEmail: {type: string}
         dateRequested: { type: string, format: date-time }
         dateResponded: { type: string, format: date-time }
-    # would be nice to do an "any-of" type spec that generates an enum on the 
-    # TS side - not sure OAS spec and the tooling supports it yet?
-    UpdateAuthzResponse:
-      type: object
-      required: [status]
-      properties:
-        status: {$ref: '#/components/schemas/AuthzRequestStatus' }
     AuthzRequestStatus:
-        type: string
-        enum: ['APPROVED', 'REQUESTED', 'REJECTED']
-    AppUser:
+      type: string
+      enum: ['APPROVED', 'REQUESTED', 'REJECTED']
+    UpdateAuthzRequestStatus:
+      description: approve/reject a reqeust
       type: object
-      required: [
-        id, servicePointId, 
-        email, clientId, idProvider, subject,
-        enabled, role, dateCreated
-      ]
-      properties: 
-        id: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
-        servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
-        email: {type: string}
-        clientId: {type: string}
-        subject: {type: string}
-        idProvider: {type: string}
-        role: {type: string}
-        enabled: {type: boolean}
-        tokenCutoff: { type: string, format: date-time }
-        dateCreated: { type: string, format: date-time }
-    ApiKey:
+      required: [authzRequestId, status]
+      properties:
+        authzRequestId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        status: {$ref: 'AuthzRequestStatus' }
+    ServicePoint:
+      description: data that any member of service-point and operators can see
       type: object
-      description: >
-        It's really an "AppUser", but modelling like this makes the API clearer
-        and the client easier to write.
-      required: [
-        id, servicePointId, subject, idProvider, 
-        enabled, role, dateCreated
-      ]
-      properties: 
+      required: [id, name, adminEmail, techEmail, enabled]
+      properties:
         id: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
-        servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
-        subject: {type: string}
-        idProvider: {type: string}
-        role: {type: string}
+        name: {type: string}
+        searchContent: {type: string}
+        techEmail: {type: string}
+        adminEmail: {type: string}
         enabled: {type: boolean}
-        tokenCutoff: { type: string, format: date-time }
-        dateCreated: { type: string, format: date-time }
     AppUserExtraV1:
       type: object
       required: [appUser, servicePoint]
@@ -487,8 +371,3 @@ components:
       properties:
         apiKeyId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
         apiToken: {type: string}
-        
-  securitySchemes:
-    BearerAuth:
-      type: http
-      scheme: bearer

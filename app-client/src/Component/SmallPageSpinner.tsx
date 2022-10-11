@@ -14,13 +14,17 @@ export function SmallPageSpinner({message}: {
   </SmallContentMain>
 }
 
+// IMO, default is a little too chunky
+const progressHeight = 2;
+
+
 export function CompactLinearProgress(props: {
   isLoading?: boolean,
   color?: "primary"|"secondary"
   style?: React.CSSProperties,
 }){
   const {isLoading} = props;
-  const style: React.CSSProperties = {...props.style, height: "2px"};
+  const style: React.CSSProperties = {...props.style, height: progressHeight};
 
   /* placeholder that stops the screen content underneath the progress bar
   from "jumping" as indicator is toggled.
@@ -33,3 +37,4 @@ export function CompactLinearProgress(props: {
   return <LinearProgress variant="indeterminate"
     color={props.color} style={style} />
 }
+

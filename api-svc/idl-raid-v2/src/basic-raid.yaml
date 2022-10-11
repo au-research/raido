@@ -1,0 +1,69 @@
+openapi: 3.0.3
+info:
+  title: raid listing and minting endpoints
+  version: 1.0.0
+paths:
+  /list-raid:          
+    post:
+      tags:
+        - raido-experimental
+      operationId: list-raid
+      summary: list raids
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RaidListRequest'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RaidListItemV1'
+  /mint-raid-v1:          
+    post:
+      tags:
+        - raido-experimental
+      operationId: mint-raid-v1
+      summary: mint a raid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MintRaidRequestV1'
+      responses:
+        '200':
+          description: data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RaidListItemV1'
+
+components:
+  schemas:
+    RaidListRequest:
+      type: object
+      required: [servicePointId]
+      properties:
+        servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+    MintRaidRequestV1:
+      type: object
+      required: [handle]
+      properties:
+        handle: {type: string}
+        name: {type: string}
+        startDate: { type: string, format: date-time }
+        metadataEnvelopeSchema: {type: string}
+        metadata: {type: object}
+    RaidListItemV1:
+      type: object
+      required: [handle]
+      properties:
+        handle: {type: string}
+        name: {type: string}
+        startDate: { type: string, format: date-time }

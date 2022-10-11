@@ -8,7 +8,7 @@ plugins {
 }
 
 ext {
-  raidV2SpecFile = file("../api-svc/idl-raid-v2/src/raid-v2-0-0.yaml")
+  raidV2SpecFile = file("../api-svc/idl-raid-v2/src/raid-openapi-3.0.yaml")
   generateDirName = "src/Generated/Raidv2"
   templateDirName = "openapi-template"
 }

@@ -21,6 +21,8 @@ public class RaidApiMessage {
     "disallowed cross-service point call";
   public static final String ONLY_OP_OR_SP_ADMIN = 
   "only operators or sp_admins can call this endpoint";
+  public static final String ONLY_OP_OR_ASSOC_USER = 
+  "must be operator or own service-point data";
   public static final String NO_APP_USER_WITH_API_KEY_ENDPOINT =
     "cannot use app-user with api-key endpoint";  
   public static final String CANT_GENERATE_DISABLED_KEY =

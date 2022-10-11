@@ -1,4 +1,4 @@
-The OpenAPI YAML file: [raid-v2-0-0.yaml](./src/raid-v2-0-0.yaml)
+The OpenAPI YAML file: [raid-openapi-3.0.yaml](./src/raid-openapi-3.0.yaml)
 
 The file is used to generate Java code for the `/api-svc/spring` project and
 TypeScript for the `acpi-client` project.

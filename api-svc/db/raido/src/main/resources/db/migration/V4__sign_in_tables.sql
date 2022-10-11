@@ -158,7 +158,7 @@ create table raid (
   content_index    integer                                                     not null,
   name             varchar(256)                                                not null,
   description      varchar(1024)                                               not null,
-  dmr              jsonb                                                       not null,
+  metadata         jsonb                                                       not null,
   start_date       timestamp without time zone default transaction_timestamp() not null,
   date_created     timestamp without time zone default transaction_timestamp() not null
 );

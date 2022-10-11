@@ -113,9 +113,9 @@ function ApiSpecLink({commitId}: {commitId: string|undefined}){
     return <>Unknown commit</>
   }
   const fileHref = raidoGithubUrl + "/blob/" + commitId + 
-    "/api-svc/idl-raid-v2/src/raid-v2-0-0.yaml";
+    "/api-svc/idl-raid-v2/src/raid-openapi-3.0.yaml";
   return <NewWindowLink href={fileHref}>
-    raid-v2-0-0.yaml
+    raid-openapi-3.0.yaml
   </NewWindowLink>
 }
 
