@@ -20,20 +20,28 @@ export function InfoField(
   {id, label, value}:{
     id: string,
     label: string,
-    value: string | undefined,
+    value: string | ReactNode | undefined,
   }
 ){
   return <fieldset style={{
-    borderRadius: ".3em", borderWidth: "1px",
+    borderRadius: ".5em", borderWidth: "1px", 
+    // default is groove, doesn't work well with a 1px border
+    borderStyle:"solid", 
     borderColor: "lightgrey",
-    margin: ".2em", // trbl
+    /* margin and padding are just about keeping the field "tight", this might
+    be my developer bias kicking in - this "tightness" might actually be 
+    hurting readability. */
+    margin: ".2em", 
     padding: "0 .35em 0 .5em", // trbl
   }}>
     <legend style={{
-      color: "lightslategrey",
+      // I just think it looks nice, no reason.
       fontSize: ".8em",
+      /* when the label is longer than the content, this makes the label be 
+      just a little bit more one the left side, which looks nicer to me. */
+      marginRight: ".5em"
     }}>{label}</legend>
-    <TextSpan id={id} color={"lightslategrey"}>{value || ''}</TextSpan>
+    <TextSpan id={id}>{value || ''}</TextSpan>
   </fieldset>
 }
 
@@ -53,25 +61,25 @@ export function InfoFieldList({children}:{children: ReactNode}){
   </div>
 }
 
-// expermental
-export function InfoFieldGrid({children}:{children: ReactNode}){
-  return <div style={{
-    display: "grid",
-    //gridAutoColumns: "minmax(0, 1fr)",
-    gridAutoColumns: "1fr",
-    gridAutoFlow: "column",
-    gap: "1em",
-  }}>
-    {children}
-  </div>
-}
-
-export function InfoFieldColumnContainer({children}:{children: ReactNode}){
-  return <div style={{
-    columnCount: "2",
-  }}>
-    {children}
-  </div>
-}
-
-
+//// expermental
+//export function InfoFieldGrid({children}:{children: ReactNode}){
+//  return <div style={{
+//    display: "grid",
+//    //gridAutoColumns: "minmax(0, 1fr)",
+//    gridAutoColumns: "1fr",
+//    gridAutoFlow: "column",
+//    gap: "1em",
+//  }}>
+//    {children}
+//  </div>
+//}
+//
+//export function InfoFieldColumnContainer({children}:{children: ReactNode}){
+//  return <div style={{
+//    columnCount: "2",
+//  }}>
+//    {children}
+//  </div>
+//}
+//
+//
