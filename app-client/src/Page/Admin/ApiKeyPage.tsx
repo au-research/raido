@@ -185,7 +185,7 @@ function ApiKeyContainer({apiKeyId, servicePointId, onCreate}: {
     }
   }
 
-  const canEditSubmit = !apiKeyId;
+  const canEditSubject = !apiKeyId;
   const isWorking = query.isLoading || updateRequest.isLoading;
   const isValid = !!formData.subject;
   const hasChanged = isDifferent(formData, query.data);
@@ -202,7 +202,7 @@ function ApiKeyContainer({apiKeyId, servicePointId, onCreate}: {
       <Stack spacing={2}>
         <TextField id="subject" label="Subject" variant="outlined"
           focused autoCorrect="off" autoCapitalize="on"
-          disabled={isWorking || !canEditSubmit}
+          disabled={isWorking || !canEditSubject}
           value={formData.subject || ''}
           onChange={(e) => {
             setFormData({...formData, subject: e.target.value});
