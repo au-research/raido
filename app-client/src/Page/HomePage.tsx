@@ -5,7 +5,7 @@ import {
 } from "Design/NavigationProvider";
 import React from "react";
 import { ContainerCard } from "Design/ContainerCard";
-import { LargeContentMain, SmallContentMain } from "Design/LayoutMain";
+import { LargeContentMain } from "Design/LayoutMain";
 import {
   DateTimeDisplay,
   IdProviderDisplay,
@@ -13,7 +13,7 @@ import {
   RoleDisplay
 } from "Component/Util";
 import {
-  LinearProgress,
+  Fab,
   Table,
   TableBody,
   TableCell,
@@ -30,11 +30,9 @@ import { RqQuery } from "Util/ReactQueryUtil";
 import { RaidListItemV1 } from "Generated/Raidv2";
 import { InfoField, InfoFieldList } from "Component/InfoField";
 import { RefreshIconButton } from "Component/RefreshIconButton";
-import {
-  CompactLinearProgress,
-  SmallPageSpinner
-} from "Component/SmallPageSpinner";
-import { delay } from "Util/EventUtil";
+import { CompactLinearProgress } from "Component/SmallPageSpinner";
+import { Add } from "@mui/icons-material";
+import { getMintRaidPageLink } from "Page/MintRaidPage";
 
 const log = console;
 
@@ -107,10 +105,13 @@ function RaidTableContainer({servicePointId}: {servicePointId: number}){
   }
 
   return <ContainerCard title={"Recently minted RAiD data"}
-    action={
+    action={<>
       <RefreshIconButton onClick={() => raidQuery.refetch()} 
         refreshing={raidQuery.isLoading || raidQuery.isRefetching} />
-    }
+      <Fab href={getMintRaidPageLink(servicePointId)} color="primary"
+        size="small"
+      ><Add/></Fab>
+    </>}
   >
     <TableContainer>
       <Table>
@@ -128,7 +129,7 @@ function RaidTableContainer({servicePointId}: {servicePointId: number}){
             </TableCell>
           </TableRow></TableBody>
         }
-        { !raidQuery.isLoading && raidQuery.data?.length == 0 &&
+        { !raidQuery.isLoading && raidQuery.data?.length === 0 &&
           <TableBody><TableRow style={{border: 0}}>
             <TableCell colSpan={10} style={{border: 0, padding: 0, textAlign: "center"}} >
               <TextSpan style={{lineHeight: "3em"}}>No RAiD data has been minted yet.</TextSpan>

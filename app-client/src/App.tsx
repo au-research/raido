@@ -26,6 +26,7 @@ import { LocationSearchProvider } from "Util/Hook/LocationSearch";
 import { AppUserPage } from "Page/Admin/AppUserPage";
 import { ListApiKeyPage } from "Page/Admin/ListApiKeyPage";
 import { ApiKeyPage } from "Page/Admin/ApiKeyPage";
+import { MintRaidPage } from "Page/MintRaidPage";
 
 export function App(){
   /* theme defines the basic color palette and styling, etc. */
@@ -61,6 +62,7 @@ export function App(){
                   <AppUserPage/>
                   <ListApiKeyPage/>
                   <ApiKeyPage/>
+                  <MintRaidPage/>
 
                 </NavigationProvider>
               </AuthApiProvider>

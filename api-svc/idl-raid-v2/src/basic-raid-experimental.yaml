@@ -66,4 +66,4 @@ components:
       properties:
         handle: {type: string}
         name: {type: string}
-        startDate: { type: string, format: date-time }
+        startDate: { type: string, format: date }

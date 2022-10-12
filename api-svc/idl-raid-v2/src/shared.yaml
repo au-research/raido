@@ -2,6 +2,9 @@ openapi: 3.0.3
 info:
   title: shared types
   version: 1.0.0
+  description: >
+    This file contains types that are broadly shared across the API.
+    It is not expected to contain any endpoints.
 paths:
   
 components:
