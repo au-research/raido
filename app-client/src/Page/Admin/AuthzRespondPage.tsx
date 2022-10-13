@@ -67,7 +67,6 @@ function AuthzResponseContainer({authzRequestId}:{authzRequestId: number}){
   );
   const updateRequest = useMutation(
     async (data: UpdateAuthzRequestStatusRequest) => {
-      console.log("update", data);
       await api.admin.updateAuthzRequestStatus(data);
     },
     {
