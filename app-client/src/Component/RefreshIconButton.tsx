@@ -27,7 +27,7 @@ export function RefreshIconButton(props:{
   return <IconButton href="#" size="large" 
     disabled={isDisabled} onClick={handleOnClick} 
   >
-    <Refresh sx={{
+    <Refresh color={"primary"} sx={{
       animation: props.refreshing ? `${spin} 2s infinite linear` : undefined
     }}/>
   </IconButton>;
