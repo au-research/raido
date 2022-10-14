@@ -66,6 +66,21 @@ I've never actually seen an actual, concrete, *practical*
 I need a concrete set of guidelines to conform to - that  can reasonably be 
 implemented in the context of our tooling (openapi-generator).
 
+## Need endpoint pagination
+
+But want to avoid usage of `limit` / `offset`.
+https://use-the-index-luke.com/blog/2013-07/pagination-done-the-postgresql-way
+
+Start with the `list-raid` endpoint.
+
+
+## APIDS service needs refactoring
+
+It's very much a "just get it working" implementation at the moment.
+
+Should probably try to use Feign or some other proper client instead of 
+the current dodgy hardcoded/handcoded XML RestTemplate implementation.
+
 
 # AWS / Infra
 
