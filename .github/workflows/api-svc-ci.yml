@@ -1,4 +1,4 @@
-name: CI
+name: api-scv-ci
 on:
   pull_request:
   push:

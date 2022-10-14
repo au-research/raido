@@ -1,6 +1,6 @@
 # This file was originally by following the wizard in the Github UI.
 # Autobuild did not work, so the build actions were changed.
-name: "CodeQL"
+name: "code-quality"
 
 on:
   push:

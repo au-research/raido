@@ -1,0 +1,32 @@
+name: app-client-ci
+on:
+  pull_request:
+  push:
+    branches:
+    - main    
+    paths-ignore:
+      # don't need doc updates to do a rebuild, it's a waste of build minutes   
+      - '**.md'
+    
+jobs:
+  app-client-build:
+    name: "app-client"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
+          
+      - name: run ci
+        run: npm ci            
+        working-directory: app-client
+        
+      - name: run build
+        run: npm run build            
+        working-directory: app-client
+        
