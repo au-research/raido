@@ -113,10 +113,11 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
   }
 
   /**
-   curl -X POST https:demo.raido-infra.com/v2/experimental/read-raid/v1 \
+   export RAID_API_TOKEN=xxx.yyy.zzz
+   curl -s -X POST https://demo.raido-infra.com/v2/experimental/read-raid/v1 \
      -H 'Content-Type: application/json' \
-     -H 'Authorization: Bearer xxx.yyy.zzz' \
-     -d '{"handle":"10378.1/1692403"}'
+     -H "Authorization: Bearer $RAID_API_TOKEN" \
+     -d '{"handle":"10378.1/1692442"}'   
    */
   @Override
   public MintRaidRequestV1 readRaidV1(ReadRaidV1Request req) {
