@@ -112,6 +112,12 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
       into(RaidListItemV1.class); 
   }
 
+  /**
+   curl -X POST https:demo.raido-infra.com/v2/experimental/read-raid/v1 \
+     -H 'Content-Type: application/json' \
+     -H 'Authorization: Bearer xxx.yyy.zzz' \
+     -d '{"handle":"10378.1/1692403"}'
+   */
   @Override
   public MintRaidRequestV1 readRaidV1(ReadRaidV1Request req) {
     var user = getAuthzPayload();

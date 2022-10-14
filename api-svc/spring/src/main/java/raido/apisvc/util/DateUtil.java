@@ -1,9 +1,11 @@
 package raido.apisvc.util;
 
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
@@ -124,6 +126,14 @@ public class DateUtil {
     }
     
     return d.toLocalDateTime();
+  }
+  
+  public static Instant local2Instant(@Nullable LocalDateTime d){
+    if( d == null ){
+      return null;
+    }
+    
+    return d.toInstant(ZoneOffset.UTC);
   }
 
 }

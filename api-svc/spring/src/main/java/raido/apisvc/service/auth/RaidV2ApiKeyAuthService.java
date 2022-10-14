@@ -140,7 +140,7 @@ public class RaidV2ApiKeyAuthService {
 
     if( user.getTokenCutoff() != null ){
       Instant cutoff = user.getTokenCutoff().toInstant(ZoneOffset.UTC);
-      if( cutoff.isAfter(issuedAt) ){
+      if( cutoff.isBefore(issuedAt) ){
         /* user is not disabled, but we've set a token cutoff, they will need
          to login again.
          SP would need to look in their user list to know user is expired. */

@@ -2,7 +2,6 @@ package raido.apisvc.service.auth.admin;
 
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Component;
-import raido.apisvc.endpoint.raidv2.AdminExperimental;
 import raido.apisvc.service.auth.AuthzTokenPayload;
 import raido.apisvc.service.auth.RaidV2ApiKeyAuthService;
 import raido.apisvc.util.DateUtil;
@@ -14,13 +13,13 @@ import raido.idl.raidv2.model.ApiKey;
 import raido.idl.raidv2.model.AppUser;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 
 import static raido.apisvc.endpoint.Constant.MAX_EXPERIMENTAL_RECORDS;
 import static raido.apisvc.endpoint.message.RaidApiMessage.CANT_GENERATE_DISABLED_KEY;
 import static raido.apisvc.endpoint.message.RaidApiMessage.NO_APP_USER_WITH_API_KEY_ENDPOINT;
 import static raido.apisvc.service.auth.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
+import static raido.apisvc.util.DateUtil.local2Instant;
 import static raido.apisvc.util.DateUtil.offset2Local;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
@@ -230,7 +229,7 @@ public class AppUserService {
         withEmail(apiKey.getEmail()).
         withRole(apiKey.getRole().getLiteral()).
         build(),
-      apiKey.getTokenCutoff().toInstant(ZoneOffset.UTC)
+      local2Instant(apiKey.getTokenCutoff())
     );
     return apiToken;
   }
