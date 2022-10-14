@@ -26,6 +26,15 @@ still have stuff work inside `codepipeline`
     * if the dev really wants, they can force it by setting the env vars
       to "unknown" values
 
+## app-client routing is a mess
+
+The NavigationProvider doesn't understand query parameters, only pathname.
+The implementation of pathname parameters is a hack - I ran into the problem,
+didn't want to get side-tracked but still wanted have routable urls with params.
+
+Look at the multiple url stuff for supporting creating and editing on 
+ApiKeyPage.
+
 
 # api-svc
 
