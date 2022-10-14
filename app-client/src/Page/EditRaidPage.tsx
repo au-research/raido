@@ -11,7 +11,7 @@ import { LargeContentMain } from "Design/LayoutMain";
 import { ContainerCard } from "Design/ContainerCard";
 import React, { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { ApiKey, MintRaidRequestV1 } from "Generated/Raidv2";
+import { ApiKey, MintRaidRequestV1, ServicePoint } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import { Stack, TextField } from "@mui/material";
@@ -21,6 +21,9 @@ import { HelpChip, HelpPopover } from "Component/HelpPopover";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
 import { RqQuery } from "Util/ReactQueryUtil";
+import { InfoField, InfoFieldList } from "Component/InfoField";
+import Divider from "@mui/material/Divider";
+import { assert } from "Util/TypeUtil";
 
 const log = console;
 
@@ -40,7 +43,7 @@ export function getRaidHandleFromPathname(nav: NavigationState): string{
 
 export function EditRaidPage(){
   return <NavTransition isPagePath={isEditRaidPagePath}
-    title={raidoTitle("Edit RAiD")}
+    title={raidoTitle("Edit")}
   >
     <Content/>
   </NavTransition>
@@ -50,7 +53,7 @@ export function EditRaidPage(){
 function Content(){
   const nav = useNavigation()
   const [handle] = useState(getRaidHandleFromPathname(nav));
-
+  window.document.title = window.document.title + " - " + handle;
   return <LargeContentMain>
     <EditRaidContainer handle={handle}/>
   </LargeContentMain>
@@ -67,15 +70,15 @@ function EditRaidContainer({handle}: {
   handle: string,
 }){
   const api = useAuthApi();
-  const queryName = 'readRaid';
+  const raidQueryName = 'readRaid';
   const [formData, setFormData] = useState({
     // id set to null signals creation is being requested  
     handle,
     name: "",
     startDate: new Date(),
   } as MintRaidRequestV1);
-  const query: RqQuery<MintRaidRequestV1> = useQuery(
-    [queryName, handle],
+  const raidQuery: RqQuery<MintRaidRequestV1> = useQuery(
+    [raidQueryName, handle],
     async () => {
       let raid = await api.basicRaid.readRaidV1({
         readRaidV1Request: { handle }
@@ -83,6 +86,16 @@ function EditRaidContainer({handle}: {
       setFormData({...raid});
       return raid;
     }
+  );
+  
+  const servicePointId = raidQuery.data?.servicePointId
+  const spQuery: RqQuery<ServicePoint> = useQuery(
+    ['readServicePoint', servicePointId],
+    async () => {
+      assert(servicePointId);
+      return await api.admin.readServicePoint({servicePointId});
+    },
+    {enabled: !!servicePointId}
   );
   
   const updateRequest = useMutation(
@@ -99,7 +112,19 @@ function EditRaidContainer({handle}: {
   const canSubmit = isNameValid;
   const isWorking = updateRequest.isLoading;
   
-  return <ContainerCard title={"Edit RAiD"} action={<EditRaidHelp/>}>
+  return <ContainerCard title={`Edit RAiD`} action={<EditRaidHelp/>}>
+    <InfoFieldList>
+      <InfoField id="handle" label="Handle"
+        value={handle}
+      />
+      <InfoField id="servicePoint" label="Service point"
+        value={spQuery.data?.name}
+      />
+    </InfoFieldList>
+    <Divider variant={"middle"}
+      style={{marginTop: "1em", marginBottom: "1.5em"}}
+    />
+
     <form autoComplete="off" onSubmit={async (e) => {
       e.preventDefault();
       await updateRequest.mutate({...formData});

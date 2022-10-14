@@ -130,6 +130,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     
     return new MintRaidRequestV1().
       handle(raid.getHandle()).
+      servicePointId(raid.getServicePointId()).
       name(raid.getName()).
       startDate(raid.getStartDate().atOffset(ZoneOffset.UTC)).
       metadataEnvelopeSchema("unknown").

@@ -22,8 +22,8 @@ public class BasicRaidExperimentalTest extends IntegrationTestCase {
   void happyDayMintListRead() {
     var raidApi = super.basicRaidExperimentalClient();
     String initialName = "int test" + IdFactory.generateUniqueId();
-    
-    
+
+
     EXPECT("minting a raid with minimal content should succeed");
     var mintResult = raidApi.mintRaidV1(new MintRaidRequestV1().
       servicePointId(RAIDO_SP_ID).
@@ -32,28 +32,29 @@ public class BasicRaidExperimentalTest extends IntegrationTestCase {
     assertThat(mintResult.getHandle()).isNotBlank();
     assertThat(mintResult.getStartDate()).isNotNull();
 
-    
+
     /* list by unique name to prevent eventual pagination issues */
     EXPECT("should be able to list the minted raid");
     var listResult = raidApi.listRaid(new RaidListRequest().
-      servicePointId(RAIDO_SP_ID).name(initialName) );
+      servicePointId(RAIDO_SP_ID).name(initialName));
     assertThat(listResult).singleElement().satisfies(i->{
       assertThat(i.getHandle()).isEqualTo(mintResult.getHandle());
       assertThat(i.getName()).isEqualTo(initialName);
       assertThat(i.getStartDate()).isEqualTo(LocalDate.now());
     });
 
-    
+
     EXPECT("should be able to read the minted raid");
     var readResult = raidApi.readRaidV1(new ReadRaidV1Request().
-      handle(mintResult.getHandle()) );
+      handle(mintResult.getHandle()));
     assertThat(readResult).isNotNull();
     assertThat(readResult.getHandle()).isEqualTo(mintResult.getHandle());
+    assertThat(readResult.getServicePointId()).isEqualTo(RAIDO_SP_ID);
     assertThat(readResult.getStartDate()).isNotNull();
 
-    
+
     EXPECT("should be able to update the minted");
-    readResult.setName(readResult.getName()+"wibble");
+    readResult.setName(readResult.getName() + " updated");
     var updateResult = raidApi.updateRaidV1(readResult);
     assertThat(updateResult).isNotNull();
     assertThat(updateResult.getHandle()).isEqualTo(mintResult.getHandle());
@@ -62,17 +63,17 @@ public class BasicRaidExperimentalTest extends IntegrationTestCase {
     assertThat(updateResult.getName()).isEqualTo(readResult.getName());
 
 
-    WHEN ("list by initial name from before update");
+    WHEN("list by initial name from before update");
     var listResult2 = raidApi.listRaid(new RaidListRequest().
-      servicePointId(RAIDO_SP_ID).name(initialName) );
+      servicePointId(RAIDO_SP_ID).name(initialName));
     THEN("should find raid with updated name");
     assertThat(listResult2).singleElement().satisfies(i->{
       assertThat(i.getHandle()).isEqualTo(mintResult.getHandle());
       assertThat(i.getName()).isEqualTo(readResult.getName());
       assertThat(i.getStartDate()).isEqualTo(LocalDate.now());
     });
-    
-    
+
+
   }
 
 }
