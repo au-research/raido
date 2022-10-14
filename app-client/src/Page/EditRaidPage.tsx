@@ -59,11 +59,9 @@ function Content(){
   </LargeContentMain>
 }
 
-function isDifferent(formData: ApiKey, original: ApiKey){
-  return formData.subject !== original.subject ||
-    formData.role !== original.role ||
-    formData.enabled !== original.enabled ||
-    formData.tokenCutoff?.getTime() !== original.tokenCutoff?.getTime();
+function isDifferent(formData: MintRaidRequestV1, original: MintRaidRequestV1){
+  return formData.name !== original.name ||
+    formData.startDate?.getDate() !== original.startDate?.getDate();
 }
 
 function EditRaidContainer({handle}: {
@@ -109,7 +107,9 @@ function EditRaidContainer({handle}: {
   );
 
   const isNameValid = !!formData.name;
-  const canSubmit = isNameValid;
+  const hasChanged = raidQuery.data ? 
+    isDifferent(formData, raidQuery.data) : false;
+  const canSubmit = isNameValid && hasChanged;
   const isWorking = updateRequest.isLoading;
   
   return <ContainerCard title={`Edit RAiD`} action={<EditRaidHelp/>}>
