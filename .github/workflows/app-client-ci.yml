@@ -18,11 +18,10 @@ jobs:
       
       - name: Set up Node.js
         uses: actions/setup-node@v3
-        working-directory: app-client
         with:
           node-version: 16
           cache: 'npm'
-          
+          cache-dependency-path: 'app-client/package-lock.json'          
       - name: run ci
         run: npm ci            
         working-directory: app-client
