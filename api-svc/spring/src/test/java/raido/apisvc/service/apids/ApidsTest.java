@@ -35,7 +35,7 @@ public class ApidsTest {
     MockRestServiceServer mockServer = 
       MockRestServiceServer.createServer(restTemplate);
     mockServer.expect( requestTo(
-      new URI("/testserver?" + formatMintParams(UNIT_TEST_CONTENT_PATH)) 
+      new URI("/testserver/mint?" + formatMintParams(UNIT_TEST_CONTENT_PATH)) 
     )).
       andExpect( method(POST) ).
       andRespond( 
