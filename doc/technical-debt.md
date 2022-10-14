@@ -29,7 +29,7 @@ still have stuff work inside `codepipeline`
 
 # api-svc
 
-## IDL projects generate java of the from `Void entpointNAme()`   
+## IDL projects generate java of the from `Void entpointName()`   
 
 When we have a POST endpoint that doesn't return anything, we end with a method
 with the `Void` return type, which we then have to `return null` from, ick.
@@ -42,6 +42,21 @@ We should be generating methods that just return `void` in this case.
 This might not be worth fixing though.  Most endpoints will end up returning a 
 generic "sucess/fail" type that can return info about the failure. So the 
 awkwardness with `Void` may not turn out to be much of an issue.
+
+
+## Current API is very "non-REST"
+
+We need a "REST API" guidelines policy, similar to the 
+[DB schema guidlines](../api-svc/db/raido/doc/schema-guideline.md).
+
+Randomly structured endpoints for experimental stuff is fine - but we need to 
+be more rigorous for the stable endpoints.
+
+I've never actually seen an actual, concrete, *practical* 
+"right way to do REST endpoints" document. 
+I need a concrete set of guidelines to conform to - that  can reasonably be 
+implemented in the context of our tooling (openapi-generator).
+
 
 # AWS / Infra
 
