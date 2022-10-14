@@ -105,3 +105,16 @@ an inconsistent mess.
   * especially, modules are often referred to frequently as prefixes
   * so it's a multiplier, shorter names give shorter references, paths, etc.
 * english pluralisation and grammar rules is dumb
+
+
+## Consider avoiding negation in conditionals
+
+In the pursuit of increased readability of the overall logic.
+
+Instead of `if( !isBlank(field) ){...}`, consider if you can refactor to 
+something like `if( hasValue(field) ){...}`.
+
+Some people go to the length of writing methods lie `isNotBlank()`, but it's 
+arguable if that actually achieves the goal.
+
+Please don't write `if( !isNotBlank() ){...}`.
