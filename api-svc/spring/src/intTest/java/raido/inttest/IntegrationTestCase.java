@@ -1,5 +1,6 @@
 package raido.inttest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Contract;
 import feign.Feign;
 import feign.Logger.Level;
@@ -16,12 +17,14 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.RestTemplate;
 import raido.apisvc.util.Log;
 import raido.idl.raidv1.api.RaidV1Api;
+import raido.idl.raidv2.api.BasicRaidExperimentalApi;
 import raido.inttest.config.IntTestProps;
 import raido.inttest.config.IntegrationTestConfig;
 import raido.inttest.service.auth.TestAuthTokenService;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static raido.apisvc.spring.config.RaidWebSecurityConfig.RAID_V1_API;
+import static raido.apisvc.spring.config.RaidWebSecurityConfig.RAID_V2_API;
 import static raido.apisvc.util.Log.to;
 
 @SpringJUnitConfig(IntegrationTestConfig.class)
@@ -33,8 +36,10 @@ public abstract class IntegrationTestCase {
   @Autowired protected DSLContext db;
   @Autowired protected TestAuthTokenService authTokenSvc;
   @Autowired protected Contract feignContract;
+  @Autowired protected ObjectMapper mapper;
 
   protected String raidV1TestToken;
+  protected String raidApiAdminTestToken;
   
   @RegisterExtension
   protected static JettyTestServer jettyTestServer =
@@ -51,7 +56,8 @@ public abstract class IntegrationTestCase {
       return;
     }
     
-    raidV1TestToken = authTokenSvc.initTestToken();
+    raidV1TestToken = authTokenSvc.initRaidV1TestToken();
+    raidApiAdminTestToken = authTokenSvc.initRaidV2ApiAdminTestToken();
   }
 
   /**
@@ -63,14 +69,27 @@ public abstract class IntegrationTestCase {
   public RaidV1Api raidV1Client(){
     return Feign.builder().
       client(new OkHttpClient()).
-      encoder(new JacksonEncoder()).
-      decoder(new JacksonDecoder()).
+      encoder(new JacksonEncoder(mapper)).
+      decoder(new JacksonDecoder(mapper)).
       contract(feignContract).
       requestInterceptor(request->
         request.header(AUTHORIZATION, "Bearer " + raidV1TestToken) ).
       logger(new Slf4jLogger(RaidV1Api.class)).
       logLevel(Level.FULL).
       target(RaidV1Api.class, props.getRaidoServerUrl() + RAID_V1_API);
+  }
+
+  public BasicRaidExperimentalApi basicRaidExperimentalClient(){
+    return Feign.builder().
+      client(new OkHttpClient()).
+      encoder(new JacksonEncoder(mapper)).
+      decoder(new JacksonDecoder(mapper)).
+      contract(feignContract).
+      requestInterceptor(request->
+        request.header(AUTHORIZATION, "Bearer " + raidApiAdminTestToken) ).
+      logger(new Slf4jLogger(BasicRaidExperimentalApi.class)).
+      logLevel(Level.FULL).
+      target(BasicRaidExperimentalApi.class, props.getRaidoServerUrl());
   }
 
   public String raidoApiServerUrl(String url){

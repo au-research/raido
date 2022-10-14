@@ -77,8 +77,8 @@ public class RestUtil {
   public static <
     TResult,
     TEntity extends HttpEntity<?>,
-    TResultResponse extends ResponseEntity<TResult>
-    > TResult logExchange(
+    TResultResponse extends ResponseEntity<TResult> > 
+  TResult logExchange(
     Log httpLog,
     String description,
     TEntity entity,

@@ -153,6 +153,9 @@ openApiGenerate {
 tasks.openApiGenerate{
   // make sure task is re-run if templates are changed
   inputs.files templateDirName
+  /* make sure task is re-run if reference files are changed, it appears 
+  the task only looks at the base file. */
+  inputs.files fileTree("src/**/*.yaml")
 }
 
 /* tell Gradle to generate the openapi code before compiling it (without this,

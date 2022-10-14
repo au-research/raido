@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 public class ApidsMintResponse {
   // sourced by observation from https://demo.ands.org.au
-  public static final String successExample = """
+  public static final String mintSuccessExample = """
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
     <response type="success">
       <identifier handle="10378.1/1687706">
@@ -24,6 +24,56 @@ public class ApidsMintResponse {
     <timestamp>2022-07-29T06:28:33Z</timestamp>
     <message type="user">Authentication Failed</message>
     </response""".trim();
+  
+  // sourced by observation from running BasicRaidExperimentalTest
+  public static final String mintWithDescResponseExample = """
+    {
+      "type": "success",
+      "identifier": {
+        "handle": "10378.1/1692314",
+        "property": {
+          "index": 1,
+          "type": "DESC",
+          "value": "RAID handle"
+        }
+      },
+      "timestamp": [
+        2022,
+        10,
+        13,
+        6,
+        18,
+        22
+      ],
+      "message": {
+        "type": "user",
+        "value": "Successfully authenticated and created handle"
+      }
+    }""".trim();
+  public static final String addValueResponseExample = """
+    {
+       "type": "success",
+       "identifier": {
+         "handle": "10378.1/1692314",
+         "property": {
+           "index": 2,
+           "type": "URL",
+           "value": "https://demo.raido-infra.com/10378.1/1692314"
+         }
+       },
+       "timestamp": [
+         2022,
+         10,
+         13,
+         6,
+         18,
+         23
+       ],
+       "message": {
+         "type": "user",
+         "value": "Successfully updated handle"
+       }
+     }""".trim();
 
   public String type;
   public Identifier identifier;

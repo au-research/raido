@@ -8,7 +8,8 @@ plugins {
 }
 
 ext {
-  raidV2SpecFile = file("../api-svc/idl-raid-v2/src/raid-openapi-3.0.yaml")
+  raidV2SpecDir = file("../api-svc/idl-raid-v2/src")
+  raidV2SpecFile = new File(raidV2SpecDir, "raid-openapi-3.0.yaml")
   generateDirName = "src/Generated/Raidv2"
   templateDirName = "openapi-template"
 }
@@ -65,12 +66,15 @@ openApiGenerate {
     name. 
     */
     useTags: "true",
-    
+//    stringEnums: "true",
   ]  
 }
 tasks.openApiGenerate{
   // make sure task is re-run if templates are changed
   inputs.files templateDirName
+  /* make sure task is re-run if reference files are changed, it appears 
+  the task only looks at the base file. */
+  inputs.files fileTree("${raidV2SpecDir.path}/**/*.yaml")
 }
 
 // to upgrade the wrapper, change the version and run this task

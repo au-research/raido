@@ -99,6 +99,11 @@ public class Guard {
     Guard.allHaveValue(msg, v.toArray(new String[0]));
   }
   
+  public static void isPositive(String msg, Long value) {
+    Guard.notNull(msg, value);
+    Guard.isTrue(msg, value != 0);
+  }
+  
   public static void hasValue(String msg, String... v) {
     Guard.notNull(msg, v);
     Guard.isTrue(msg, v.length > 0);

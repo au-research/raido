@@ -1,6 +1,7 @@
 package raido.apisvc.service.auth;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -47,12 +48,28 @@ public class RaidV2ApiKeyAuthService {
     this.db = db;
   }
 
-  public String sign(AuthzTokenPayload payload, Instant expiresAt){
+  public String sign(
+    AuthzTokenPayload payload,
+    Instant expiresAt
+  ) {
+    return sign(
+      apiAuthProps.signingAlgo, 
+      payload, 
+      expiresAt, 
+      apiAuthProps.issuer );
+  }
+  
+  public static String sign(
+    Algorithm algorithm,
+    AuthzTokenPayload payload, 
+    Instant expiresAt,
+    String issuer
+  ){
     try {
       String token = JWT.create().
         // remember the standard claim for subject is "sub"
         withSubject(payload.getSubject()).
-        withIssuer(apiAuthProps.issuer).
+        withIssuer(issuer).
         withIssuedAt(Instant.now()).
         withExpiresAt(expiresAt).
         withClaim(RaidoClaim.IS_AUTHORIZED_APP_USER.getId(), true).
@@ -61,7 +78,7 @@ public class RaidV2ApiKeyAuthService {
         withClaim(RaidoClaim.CLIENT_ID.getId(), payload.getClientId()).
         withClaim(RaidoClaim.EMAIL.getId(), payload.getEmail()).
         withClaim(RaidoClaim.ROLE.getId(), payload.getRole()).
-        sign(apiAuthProps.signingAlgo);
+        sign(algorithm);
 
       return token;
     } catch ( JWTCreationException ex){

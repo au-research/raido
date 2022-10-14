@@ -41,7 +41,7 @@ public class ApidsTest {
       andRespond( 
         withStatus(OK).
         contentType(APPLICATION_XML).
-        body(ApidsMintResponse.successExample) );
+        body(ApidsMintResponse.mintSuccessExample) );
 
     var svc = new ApidsService(props, restTemplate);
     var response = svc.mintApidsHandle(UNIT_TEST_CONTENT_PATH);

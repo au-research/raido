@@ -42,6 +42,10 @@ paths:
     $ref: "basic-raid-experimental.yaml#/paths/~1list-raid"
   /v2/experimental/mint-raid/v1:
     $ref: "basic-raid-experimental.yaml#/paths/~1mint-raid-v1"
+  /v2/experimental/update-raid/v1:
+    $ref: "basic-raid-experimental.yaml#/paths/~1update-raid-v1"
+  /v2/experimental/read-raid/v1:
+    $ref: "basic-raid-experimental.yaml#/paths/~1read-raid-v1"
 
 
   #### Admin endpoints ####

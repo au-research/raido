@@ -7,6 +7,7 @@ import React from "react";
 import { ContainerCard } from "Design/ContainerCard";
 import { LargeContentMain } from "Design/LayoutMain";
 import {
+  DateDisplay,
   DateTimeDisplay,
   IdProviderDisplay,
   raidoTitle,
@@ -33,6 +34,8 @@ import { RefreshIconButton } from "Component/RefreshIconButton";
 import { CompactLinearProgress } from "Component/SmallPageSpinner";
 import { Add } from "@mui/icons-material";
 import { getMintRaidPageLink } from "Page/MintRaidPage";
+import { RaidoLink } from "Component/RaidoLink";
+import { getEditRaidPageLink } from "Page/EditRaidPage";
 
 const log = console;
 
@@ -91,11 +94,12 @@ function RaidCurrentUser(){
   </ContainerCard>
   
 }
-function RaidTableContainer({servicePointId}: {servicePointId: number}){
+
+export function RaidTableContainer({servicePointId}: {servicePointId: number}){
   const api = useAuthApi();
   const raidQuery: RqQuery<RaidListItemV1[]> = 
     useQuery(['listRaids', servicePointId], async () => {
-      return await api.raido.listRaid({
+      return await api.basicRaid.listRaid({
         raidListRequest: {servicePointId: servicePointId}
       });
     });
@@ -144,13 +148,15 @@ function RaidTableContainer({servicePointId}: {servicePointId: number}){
               sx={{'&:last-child td, &:last-child th': {border: 0}}}
             >
               <TableCell>
-                <TextSpan>{row.name || ''}</TextSpan>
+                <RaidoLink href={getEditRaidPageLink(row.handle)}>
+                  <TextSpan>{row.name || ''}</TextSpan>
+                </RaidoLink>
               </TableCell>
               <TableCell>
                 <TextSpan>{row.handle || ''}</TextSpan>
               </TableCell>
               <TableCell>
-                <DateTimeDisplay date={row.startDate}/>
+                <DateDisplay date={row.startDate}/>
               </TableCell>
             </TableRow>
           ))}

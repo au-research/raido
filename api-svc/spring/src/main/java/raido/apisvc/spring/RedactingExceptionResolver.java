@@ -24,7 +24,7 @@ import static raido.apisvc.util.Log.to;
  sure we don't send any exception details to callers of the API (to avoid
  accidentall leakage of information). 
  
- IMPROVE:  Excpetion hierarchy + resolver implementation is getting messy.
+ IMPROVE:  Exception hierarchy + resolver implementation is getting messy.
  There's no clear definition of how to use the various exceptions and what a 
  dev should expect to happen with regards to client-facing behaviour.
  When authn/authz implementation is finished, we need to re-visit the design

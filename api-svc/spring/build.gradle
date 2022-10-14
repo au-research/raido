@@ -82,15 +82,15 @@ dependencies{
    - generating/verifying HS256 JWTs for raido authz token  
    */
   implementation 'com.auth0:java-jwt:4.0.0'
-  implementation 'com.auth0:jwks-rsa:0.21.1'
+  implementation 'com.auth0:jwks-rsa:0.21.2'
   
   // use logback as the backing log implementation for slf4j
   runtimeOnly libs.bundles.logback.runtime
 
   testImplementation libs.bundles.spring6.test
 
-  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 
   testImplementation libs.assertj
 
@@ -106,7 +106,7 @@ compileJava {
 testing{
   suites{
     intTest(JvmTestSuite){
-      testType = TestSuiteType.FUNCTIONAL_TEST
+      testType = TestSuiteType.INTEGRATION_TEST
       dependencies{
         implementation project
         implementation project(':api-svc:db:raido')
@@ -130,6 +130,10 @@ testing{
         implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
         
         implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:3.1.2'
+        implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3"
+
+        implementation 'com.auth0:java-jwt:4.0.0'
+
       }
     }
   }

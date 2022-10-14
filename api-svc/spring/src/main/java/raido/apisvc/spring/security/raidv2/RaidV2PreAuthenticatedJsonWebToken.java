@@ -16,6 +16,7 @@ import static raido.apisvc.service.auth.RaidoClaim.IS_AUTHORIZED_APP_USER;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.mask;
+import static raido.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
 
 /**
  Final is intended to avoid sub-classing - there should be no need for a 
@@ -65,6 +66,11 @@ implements Authentication {
 
   public boolean isAuthorizedAppUser(){
     return token.getClaim(IS_AUTHORIZED_APP_USER.getId()).asBoolean();
+  }
+  
+  public boolean isApiKey(){
+    return RAIDO_API.getLiteral().equals(
+      token.getClaim(RaidoClaim.CLIENT_ID.getId()).asString() );
   }
   
   @Override

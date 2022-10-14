@@ -10,7 +10,7 @@ import { raidoTitle } from "Component/Util";
 import { LargeContentMain } from "Design/LayoutMain";
 import { ContainerCard } from "Design/ContainerCard";
 import React, { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ApiKey, MintRaidRequestV1 } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
@@ -20,27 +20,27 @@ import { navBrowserBack } from "Util/WindowUtil";
 import { HelpChip, HelpPopover } from "Component/HelpPopover";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
-import { getEditRaidPageLink } from "Page/EditRaidPage";
+import { RqQuery } from "Util/ReactQueryUtil";
 
 const log = console;
 
-const pageUrl = "/mint-raid";
+const pageUrl = "/edit-raid";
 
-export function getMintRaidPageLink(servicePointId: number): string{
-  return `${pageUrl}/${servicePointId}`;
+export function getEditRaidPageLink(handle: string): string{
+  return `${pageUrl}/${handle}`;
 }
 
-export function isMintRaidPagePath(pathname: string): NavPathResult{
+export function isEditRaidPagePath(pathname: string): NavPathResult{
   return isPagePath(pathname, pageUrl);
 }
 
-export function getServicePointIdFromPathname(nav: NavigationState): number{
-  return parsePageSuffixParams<number>(nav, isMintRaidPagePath, Number)
+export function getRaidHandleFromPathname(nav: NavigationState): string{
+  return parsePageSuffixParams<string>(nav, isEditRaidPagePath, String)
 }
 
-export function MintRaidPage(){
-  return <NavTransition isPagePath={isMintRaidPagePath}
-    title={raidoTitle("Mint RAiD")}
+export function EditRaidPage(){
+  return <NavTransition isPagePath={isEditRaidPagePath}
+    title={raidoTitle("Edit RAiD")}
   >
     <Content/>
   </NavTransition>
@@ -49,16 +49,10 @@ export function MintRaidPage(){
 
 function Content(){
   const nav = useNavigation()
-  const [servicePointId] = 
-    useState(getServicePointIdFromPathname(nav));
+  const [handle] = useState(getRaidHandleFromPathname(nav));
 
   return <LargeContentMain>
-    <MintRaidContainer 
-      servicePointId={servicePointId}
-      onCreate={(handle)=>{
-        nav.replace(getEditRaidPageLink(handle));
-      }}
-    />
+    <EditRaidContainer handle={handle}/>
   </LargeContentMain>
 }
 
@@ -69,37 +63,46 @@ function isDifferent(formData: ApiKey, original: ApiKey){
     formData.tokenCutoff?.getTime() !== original.tokenCutoff?.getTime();
 }
 
-function MintRaidContainer({servicePointId, onCreate}: {
-  servicePointId: number,
-  onCreate: (handle: string)=>void,
+function EditRaidContainer({handle}: {
+  handle: string,
 }){
   const api = useAuthApi();
+  const queryName = 'readRaid';
   const [formData, setFormData] = useState({
     // id set to null signals creation is being requested  
-    handle: undefined as unknown as string,
-    servicePointId: servicePointId,
+    handle,
     name: "",
     startDate: new Date(),
   } as MintRaidRequestV1);
-  const mintRequest = useMutation(
+  const query: RqQuery<MintRaidRequestV1> = useQuery(
+    [queryName, handle],
+    async () => {
+      let raid = await api.basicRaid.readRaidV1({
+        readRaidV1Request: { handle }
+      });
+      setFormData({...raid});
+      return raid;
+    }
+  );
+  
+  const updateRequest = useMutation(
     async (data: MintRaidRequestV1) => {
-      return await api.basicRaid.mintRaidV1({mintRaidRequestV1: data});
+      return await api.basicRaid.updateRaidV1({mintRaidRequestV1: data});
     },
     {
-      onSuccess: async (data) => {
-        onCreate(data.handle);
+      onSuccess: async () => {
       },
     }
   );
 
   const isNameValid = !!formData.name;
   const canSubmit = isNameValid;
-  const isWorking = mintRequest.isLoading;
+  const isWorking = updateRequest.isLoading;
   
-  return <ContainerCard title={"Mint RAiD"} action={<MintRaidHelp/>}>
-    <form autoComplete="off" onSubmit={(e) => {
+  return <ContainerCard title={"Edit RAiD"} action={<EditRaidHelp/>}>
+    <form autoComplete="off" onSubmit={async (e) => {
       e.preventDefault();
-      mintRequest.mutate({...formData});
+      await updateRequest.mutate({...formData});
     }}>
       <Stack spacing={2}>
         <TextField id="name" label="Name" variant="outlined"
@@ -127,18 +130,18 @@ function MintRaidContainer({servicePointId, onCreate}: {
           <PrimaryActionButton type="submit" context={"minting raid"}
             disabled={!canSubmit}
             isLoading={isWorking}
-            error={mintRequest.error}
+            error={updateRequest.error}
           >
-            Mint RAiD
+            Update
           </PrimaryActionButton>
         </Stack>
-        <CompactErrorPanel error={mintRequest.error} />
+        <CompactErrorPanel error={updateRequest.error} />
       </Stack>
     </form>
   </ContainerCard>
 }
 
-function MintRaidHelp(){
+function EditRaidHelp(){
   return <HelpPopover content={
     <Stack spacing={1}>
       <ul>

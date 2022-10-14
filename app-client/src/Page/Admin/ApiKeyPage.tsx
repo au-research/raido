@@ -201,7 +201,7 @@ function ApiKeyContainer({apiKeyId, servicePointId, onCreate}: {
     }}>
       <Stack spacing={2}>
         <TextField id="subject" label="Subject" variant="outlined"
-          focused autoCorrect="off" autoCapitalize="on"
+          autoFocus autoCorrect="off" autoCapitalize="on"
           disabled={isWorking || !canEditSubject}
           value={formData.subject || ''}
           onChange={(e) => {

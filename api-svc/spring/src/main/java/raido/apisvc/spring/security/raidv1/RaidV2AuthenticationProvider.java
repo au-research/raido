@@ -3,6 +3,7 @@ package raido.apisvc.spring.security.raidv1;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import raido.apisvc.service.auth.RaidV2ApiKeyAuthService;
 import raido.apisvc.service.auth.RaidV2AppUserAuthService;
 import raido.apisvc.spring.security.raidv2.RaidV2PreAuthenticatedJsonWebToken;
 import raido.apisvc.util.Log;
@@ -25,10 +26,15 @@ import static raido.apisvc.util.Log.to;
 public class RaidV2AuthenticationProvider implements AuthenticationProvider {
   private static final Log log = to(RaidV2AuthenticationProvider.class);
   
-  private RaidV2AppUserAuthService raidSvc;
+  private RaidV2AppUserAuthService appUserAuthSvc;
+  private RaidV2ApiKeyAuthService apiKeyAuthSvc;
 
-  public RaidV2AuthenticationProvider(RaidV2AppUserAuthService raidSvc) {
-    this.raidSvc = raidSvc;
+  public RaidV2AuthenticationProvider(
+    RaidV2AppUserAuthService appUserAuthSvc,
+    RaidV2ApiKeyAuthService apiKeyAuthSvc
+  ) {
+    this.appUserAuthSvc = appUserAuthSvc;
+    this.apiKeyAuthSvc = apiKeyAuthSvc;
   }
 
   @Override
@@ -36,8 +42,14 @@ public class RaidV2AuthenticationProvider implements AuthenticationProvider {
   throws AuthenticationException {
 
     if( isRaid2PreAuth(authentication.getClass()) ){
-      return raidSvc.authorize(
-        (RaidV2PreAuthenticatedJsonWebToken) authentication).orElse(null);
+      var preAuth = (RaidV2PreAuthenticatedJsonWebToken) authentication;
+      
+      if( preAuth.isApiKey() ){
+        return apiKeyAuthSvc.authorize(preAuth).orElse(null);
+      }
+      else {
+        return appUserAuthSvc.authorize(preAuth).orElse(null);
+      }
     }
     
     

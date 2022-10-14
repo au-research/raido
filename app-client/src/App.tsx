@@ -27,6 +27,9 @@ import { AppUserPage } from "Page/Admin/AppUserPage";
 import { ListApiKeyPage } from "Page/Admin/ListApiKeyPage";
 import { ApiKeyPage } from "Page/Admin/ApiKeyPage";
 import { MintRaidPage } from "Page/MintRaidPage";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { EditRaidPage } from "Page/EditRaidPage";
 
 export function App(){
   /* theme defines the basic color palette and styling, etc. */
@@ -37,44 +40,48 @@ export function App(){
     <ReactErrorBoundary>
       {/* deal with "handled" errors as a global, generic modal dialog  */}
       <ErrorDialogProvider>
-        {/* manages window.location for routing */}
-        <LocationPathnameProvider>
-          <LocationSearchProvider>
-            {/* authentication and authorization */}
-            <AuthProvider unauthenticatedPaths={[
-              isPrivacyPagePath, isUsageTermsPagePath, isAboutRaidPagePath
-            ]}>
-              {/* binds authentication stuff to OpenAPI stuff */}
-              <AuthApiProvider>
-                {/* transition animation and delegates to location infra */}
-                <NavigationProvider>
-                  {/* NavBar across the top of screen and sliding drawer */}
-                  <AppNavBar/>
+        {/* https://mui.com/x/react-date-pickers/getting-started/ */}
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          {/* manages window.location for routing */}
+          <LocationPathnameProvider>
+            <LocationSearchProvider>
+              {/* authentication and authorization */}
+              <AuthProvider unauthenticatedPaths={[
+                isPrivacyPagePath, isUsageTermsPagePath, isAboutRaidPagePath
+              ]}>
+                {/* binds authentication stuff to OpenAPI stuff */}
+                <AuthApiProvider>
+                  {/* transition animation and delegates to location infra */}
+                  <NavigationProvider>
+                    {/* NavBar across the top of screen and sliding drawer */}
+                    <AppNavBar/>
 
-                  {/* Navigable, authenticated pages, self-routed */}
-                  <HomePage/>
-                  <AboutAppPage/>
-                  <AdminAuthzRequestPage/>
-                  <AuthzRespondPage/>
-                  <ListServicePointPage/>
-                  <ServicePointPage/>
-                  <ListAppUserPage/>
-                  <AppUserPage/>
-                  <ListApiKeyPage/>
-                  <ApiKeyPage/>
-                  <MintRaidPage/>
+                    {/* Navigable, authenticated pages, self-routed */}
+                    <HomePage/>
+                    <AboutAppPage/>
+                    <AdminAuthzRequestPage/>
+                    <AuthzRespondPage/>
+                    <ListServicePointPage/>
+                    <ServicePointPage/>
+                    <ListAppUserPage/>
+                    <AppUserPage/>
+                    <ListApiKeyPage/>
+                    <ApiKeyPage/>
+                    <MintRaidPage/>
+                    <EditRaidPage/>
 
-                </NavigationProvider>
-              </AuthApiProvider>
-            </AuthProvider>
+                  </NavigationProvider>
+                </AuthApiProvider>
+              </AuthProvider>
 
-            {/* unauthenticated pages, self-routed */}
-            <PrivacyPage/>
-            <UsageTermsPage/>
-            <AboutRaidPage/>
+              {/* unauthenticated pages, self-routed */}
+              <PrivacyPage/>
+              <UsageTermsPage/>
+              <AboutRaidPage/>
 
-          </LocationSearchProvider>
-        </LocationPathnameProvider>
+            </LocationSearchProvider>
+          </LocationPathnameProvider>
+        </LocalizationProvider>
       </ErrorDialogProvider>
     </ReactErrorBoundary>
   </RaidoTheme>;

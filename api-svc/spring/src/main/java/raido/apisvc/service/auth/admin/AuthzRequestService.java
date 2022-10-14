@@ -28,7 +28,7 @@ import java.util.Optional;
 import static java.time.ZoneOffset.UTC;
 import static org.jooq.impl.DSL.asterisk;
 import static org.jooq.impl.DSL.inline;
-import static raido.apisvc.endpoint.raidv2.RaidoExperimental.RAIDO_SP_ID;
+import static raido.apisvc.endpoint.raidv2.BasicRaidExperimental.RAIDO_SP_ID;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.db.jooq.api_svc.enums.AuthRequestStatus.REQUESTED;

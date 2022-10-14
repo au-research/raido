@@ -6,7 +6,7 @@ paths:
   /list-raid:          
     post:
       tags:
-        - raido-experimental
+        - basic-raid-experimental
       operationId: list-raid
       summary: list raids
       requestBody:
@@ -27,7 +27,7 @@ paths:
   /mint-raid-v1:          
     post:
       tags:
-        - raido-experimental
+        - basic-raid-experimental
       operationId: mint-raid-v1
       summary: mint a raid
       requestBody:
@@ -43,6 +43,49 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RaidListItemV1'
+  /update-raid-v1:          
+    post:
+      tags:
+        - basic-raid-experimental
+      operationId: update-raid-v1
+      summary: mint a raid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MintRaidRequestV1'
+      responses:
+        '200':
+          description: data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MintRaidRequestV1'
+  /read-raid-v1:          
+    post:
+      tags:
+        - basic-raid-experimental
+      operationId: read-raid-v1
+      summary: read a raid
+      # going with post, because I think we are gonna get complex with this
+      # eventually (specifying what we want to read, graphql-style).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [handle]
+              properties:
+                handle: {type: string}
+      responses:
+        '200':
+          description: data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MintRaidRequestV1'
 
 components:
   schemas:
@@ -51,11 +94,13 @@ components:
       required: [servicePointId]
       properties:
         servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        name: {type: string}
     MintRaidRequestV1:
       type: object
-      required: [handle]
+      required: [handle, servicePointId, name]
       properties:
         handle: {type: string}
+        servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
         name: {type: string}
         startDate: { type: string, format: date-time }
         metadataEnvelopeSchema: {type: string}

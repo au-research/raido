@@ -2,7 +2,10 @@ import {styled} from "@mui/system";
 import {TableRow} from "@mui/material";
 import { TypographyProps } from "@mui/material/Typography";
 import { TextSpan } from "Component/TextSpan";
-import { formatLocalDateAsIsoShortDateTime } from "Util/DateUtil";
+import {
+  formatLocalDateAsIso,
+  formatLocalDateAsIsoShortDateTime
+} from "Util/DateUtil";
 import React from "react";
 import { AuthzTokenPayload } from "Shared/ApiTypes";
 import { Config } from "Config";
@@ -48,6 +51,14 @@ export function DateTimeDisplay({date, ...props}: {
 } & TypographyProps ){
   return <TextSpan {...props}>
     {formatLocalDateAsIsoShortDateTime(date)}
+  </TextSpan>
+}
+
+export function DateDisplay({date, ...props}: {
+  date?: Date,
+} & TypographyProps ){
+  return <TextSpan {...props}>
+    {formatLocalDateAsIso(date)}
   </TextSpan>
 }
 

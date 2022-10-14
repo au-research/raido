@@ -13,10 +13,10 @@ dependencyResolutionManagement{
   versionCatalogs{
     libs{
       version('jooq', '3.17.4')
-      version('spring6', '6.0.0-M5')
-      version('jetty11', '11.0.9')
+      version('spring6', '6.0.0-M6')
+      version('jetty11', '11.0.12')
       version('logback', '1.4.0')
-      version('feign', '11.9.1')
+      version('feign', '11.10')
 
       plugin('flyway', 'org.flywaydb.flyway').version('9.3.0')      
       plugin('jooq', 'nu.studer.jooq').version('7.1.1')      

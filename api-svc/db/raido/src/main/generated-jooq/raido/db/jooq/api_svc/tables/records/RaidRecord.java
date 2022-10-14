@@ -115,17 +115,17 @@ public class RaidRecord extends UpdatableRecordImpl<RaidRecord> implements Recor
     }
 
     /**
-     * Setter for <code>api_svc.raid.dmr</code>.
+     * Setter for <code>api_svc.raid.metadata</code>.
      */
-    public RaidRecord setDmr(JSONB value) {
+    public RaidRecord setMetadata(JSONB value) {
         set(6, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.raid.dmr</code>.
+     * Getter for <code>api_svc.raid.metadata</code>.
      */
-    public JSONB getDmr() {
+    public JSONB getMetadata() {
         return (JSONB) get(6);
     }
 
@@ -214,7 +214,7 @@ public class RaidRecord extends UpdatableRecordImpl<RaidRecord> implements Recor
 
     @Override
     public Field<JSONB> field7() {
-        return Raid.RAID.DMR;
+        return Raid.RAID.METADATA;
     }
 
     @Override
@@ -259,7 +259,7 @@ public class RaidRecord extends UpdatableRecordImpl<RaidRecord> implements Recor
 
     @Override
     public JSONB component7() {
-        return getDmr();
+        return getMetadata();
     }
 
     @Override
@@ -304,7 +304,7 @@ public class RaidRecord extends UpdatableRecordImpl<RaidRecord> implements Recor
 
     @Override
     public JSONB value7() {
-        return getDmr();
+        return getMetadata();
     }
 
     @Override
@@ -355,7 +355,7 @@ public class RaidRecord extends UpdatableRecordImpl<RaidRecord> implements Recor
 
     @Override
     public RaidRecord value7(JSONB value) {
-        setDmr(value);
+        setMetadata(value);
         return this;
     }
 
@@ -399,7 +399,7 @@ public class RaidRecord extends UpdatableRecordImpl<RaidRecord> implements Recor
     /**
      * Create a detached, initialised RaidRecord
      */
-    public RaidRecord(String handle, Long servicePointId, String contentPath, Integer contentIndex, String name, String description, JSONB dmr, LocalDateTime startDate, LocalDateTime dateCreated) {
+    public RaidRecord(String handle, Long servicePointId, String contentPath, Integer contentIndex, String name, String description, JSONB metadata, LocalDateTime startDate, LocalDateTime dateCreated) {
         super(Raid.RAID);
 
         setHandle(handle);
@@ -408,7 +408,7 @@ public class RaidRecord extends UpdatableRecordImpl<RaidRecord> implements Recor
         setContentIndex(contentIndex);
         setName(name);
         setDescription(description);
-        setDmr(dmr);
+        setMetadata(metadata);
         setStartDate(startDate);
         setDateCreated(dateCreated);
     }

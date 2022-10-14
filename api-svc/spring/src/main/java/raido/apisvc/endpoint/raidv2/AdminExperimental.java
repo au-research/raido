@@ -11,7 +11,6 @@ import raido.apisvc.service.auth.admin.AuthzRequestService;
 import raido.apisvc.service.auth.admin.ServicePointService;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
-import raido.db.jooq.api_svc.enums.IdProvider;
 import raido.db.jooq.api_svc.tables.records.AppUserRecord;
 import raido.idl.raidv2.api.AdminExperimentalApi;
 import raido.idl.raidv2.model.ApiKey;
@@ -23,17 +22,13 @@ import raido.idl.raidv2.model.GenerateApiTokenResponse;
 import raido.idl.raidv2.model.ServicePoint;
 import raido.idl.raidv2.model.UpdateAuthzRequestStatus;
 
-import java.time.ZoneOffset;
 import java.util.List;
 
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
-import static raido.apisvc.endpoint.message.RaidApiMessage.CANT_GENERATE_DISABLED_KEY;
-import static raido.apisvc.endpoint.message.RaidApiMessage.NO_APP_USER_WITH_API_KEY_ENDPOINT;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociatedSpAdmin;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrSpAdmin;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.isOperatorOrSpAdmin;
-import static raido.apisvc.service.auth.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.areEqual;
@@ -52,20 +47,17 @@ public class AdminExperimental implements AdminExperimentalApi {
   private ServicePointService servicePointSvc;
   private AppUserService appUserSvc;
   private DSLContext db;
-  private RaidV2ApiKeyAuthService apiAuthSvc;
 
   public AdminExperimental(
     AuthzRequestService authzRequestSvc,
     ServicePointService servicePointSvc,
     AppUserService appUserSvc, 
-    DSLContext db,
-    RaidV2ApiKeyAuthService apiAuthSvc
+    DSLContext db
   ) {
     this.authzRequestSvc = authzRequestSvc;
     this.servicePointSvc = servicePointSvc;
     this.appUserSvc = appUserSvc;
     this.db = db;
-    this.apiAuthSvc = apiAuthSvc;
   }
 
   @Override
@@ -240,36 +232,12 @@ public class AdminExperimental implements AdminExperimentalApi {
     AppUserRecord apiKey = db.
       fetchSingle(APP_USER, APP_USER.ID.eq(req.getApiKeyId()));
     guardOperatorOrAssociatedSpAdmin(invokingUser, apiKey.getServicePointId());
-   
-    if( apiKey.getIdProvider() != IdProvider.RAIDO_API ){
-      var iae = iae(NO_APP_USER_WITH_API_KEY_ENDPOINT);
-      log.with("appUserIdProvider", apiKey.getIdProvider()).
-        error(iae.getMessage());
-      throw iae;
-    }
 
-    if( !apiKey.getEnabled() ){
-      var iae = iae(CANT_GENERATE_DISABLED_KEY);
-      log.with("appUserIdProvider", apiKey.getIdProvider()).
-        error(iae.getMessage());
-      throw iae;
-    }
+    String apiToken = appUserSvc.generateApiToken(apiKey);
 
-
-    var apiToken = apiAuthSvc.sign(
-      anAuthzTokenPayload().
-        withAppUserId(apiKey.getId()).
-        withServicePointId(apiKey.getServicePointId()).
-        withSubject(apiKey.getSubject()).
-        withClientId(apiKey.getClientId()).
-        withEmail(apiKey.getEmail()).
-        withRole(apiKey.getRole().getLiteral()).
-        build(),
-      apiKey.getTokenCutoff().toInstant(ZoneOffset.UTC)
-    );
-    
     return new GenerateApiTokenResponse().
       apiKeyId(req.getApiKeyId()).
       apiToken(apiToken);
   }
+
 }

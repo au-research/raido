@@ -82,6 +82,10 @@ Should probably try to use Feign or some other proper client instead of
 the current dodgy hardcoded/handcoded XML RestTemplate implementation.
 
 
+## Exception handling needs clean up
+
+See 
+
 # AWS / Infra
 
 AWS debt is documented in that repo, don't put it here.

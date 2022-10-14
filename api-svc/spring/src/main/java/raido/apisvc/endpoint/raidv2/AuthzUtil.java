@@ -39,6 +39,8 @@ public class AuthzUtil {
     AuthzTokenPayload user,
     Long servicePointId
   ) {
+    Guard.notNull("user must be set", user);
+    Guard.isPositive("servicePointId must be set", servicePointId);
     if( areEqual(user.getRole(), OPERATOR.getLiteral()) ){
       // operator can update requests for any service point
       return;

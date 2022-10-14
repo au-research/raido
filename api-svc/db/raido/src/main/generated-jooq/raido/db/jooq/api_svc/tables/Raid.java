@@ -84,9 +84,9 @@ public class Raid extends TableImpl<RaidRecord> {
     public final TableField<RaidRecord, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.VARCHAR(1024).nullable(false), this, "");
 
     /**
-     * The column <code>api_svc.raid.dmr</code>.
+     * The column <code>api_svc.raid.metadata</code>.
      */
-    public final TableField<RaidRecord, JSONB> DMR = createField(DSL.name("dmr"), SQLDataType.JSONB.nullable(false), this, "");
+    public final TableField<RaidRecord, JSONB> METADATA = createField(DSL.name("metadata"), SQLDataType.JSONB.nullable(false), this, "");
 
     /**
      * The column <code>api_svc.raid.start_date</code>.

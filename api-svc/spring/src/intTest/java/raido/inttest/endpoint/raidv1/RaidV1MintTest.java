@@ -43,7 +43,7 @@ public class RaidV1MintTest extends IntegrationTestCase {
 
     EXPECT("should be able to read the minted raid");
     var getResult = raidV1.handleRaidIdGet(mintResult.getHandle(), false);
-    assertThat(mintResult).isNotNull();
+    assertThat(getResult).isNotNull();
     assertThat(getResult.getHandle()).isEqualTo(mintResult.getHandle());
   }
 

@@ -2,7 +2,9 @@ package raido.apisvc.service.auth.admin;
 
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Component;
+import raido.apisvc.endpoint.raidv2.AdminExperimental;
 import raido.apisvc.service.auth.AuthzTokenPayload;
+import raido.apisvc.service.auth.RaidV2ApiKeyAuthService;
 import raido.apisvc.util.DateUtil;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
@@ -12,9 +14,13 @@ import raido.idl.raidv2.model.ApiKey;
 import raido.idl.raidv2.model.AppUser;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 import static raido.apisvc.endpoint.Constant.MAX_EXPERIMENTAL_RECORDS;
+import static raido.apisvc.endpoint.message.RaidApiMessage.CANT_GENERATE_DISABLED_KEY;
+import static raido.apisvc.endpoint.message.RaidApiMessage.NO_APP_USER_WITH_API_KEY_ENDPOINT;
+import static raido.apisvc.service.auth.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
 import static raido.apisvc.util.DateUtil.offset2Local;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
@@ -33,9 +39,15 @@ public class AppUserService {
   private static final Log log = to(AppUserService.class);
 
   private DSLContext db;
+  RaidV2ApiKeyAuthService apiAuthSvc;
 
-  public AppUserService(DSLContext db) {
+  public AppUserService(
+    DSLContext db,
+    RaidV2ApiKeyAuthService apiAuthSvc
+  ) {
     this.db = db;
+    this.apiAuthSvc = apiAuthSvc;
+
   }
 
   public void updateAppUser(
@@ -190,4 +202,37 @@ public class AppUserService {
       where(APP_USER.ID.eq(appUserId)).
       fetchSingleInto(ApiKey.class);
   }
+
+  public String generateApiToken(
+    AppUserRecord apiKey
+  ) {
+    if( apiKey.getIdProvider() != RAIDO_API ){
+      var iae = iae(NO_APP_USER_WITH_API_KEY_ENDPOINT);
+      log.with("appUserIdProvider", apiKey.getIdProvider()).
+        error(iae.getMessage());
+      throw iae;
+    }
+
+    if( !apiKey.getEnabled() ){
+      var iae = iae(CANT_GENERATE_DISABLED_KEY);
+      log.with("appUserIdProvider", apiKey.getIdProvider()).
+        error(iae.getMessage());
+      throw iae;
+    }
+
+
+    var apiToken = apiAuthSvc.sign(
+      anAuthzTokenPayload().
+        withAppUserId(apiKey.getId()).
+        withServicePointId(apiKey.getServicePointId()).
+        withSubject(apiKey.getSubject()).
+        withClientId(apiKey.getClientId()).
+        withEmail(apiKey.getEmail()).
+        withRole(apiKey.getRole().getLiteral()).
+        build(),
+      apiKey.getTokenCutoff().toInstant(ZoneOffset.UTC)
+    );
+    return apiToken;
+  }
+  
 }
