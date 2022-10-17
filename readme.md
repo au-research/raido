@@ -7,18 +7,18 @@ It is not yet live, though you can find the demo environment at
 https://demo.raido-infra.com.  
 
 Note that:
-* you will not be approved to use the demo enviornment without prior agreement
+* you will not be approved to use the demo environment without prior agreement
 * the demo environment is under active development and is very unstable 
 
 It's called "v2" because initially it was called raid-v2 because there was a
 v1. Should've just called it "raido" - oh well.
 
-Important architecural decisions are recorded in [/doc/adr](./doc/adr).
+Important architectural decisions are recorded in [/doc/adr](./doc/adr).
 Different sub-projects have their own ADR log, in their local /doc/adr
-directories (i.e. db, app, [api](/api-svc/doc/adr), etc.)
+directories (db, app-client, [api-svc](/api-svc/doc/adr), etc.)
 
 The overall technology stack can be found in the
-[tecnnology-stack.md](/doc/tecnnology-stack.md) page.
+[technology-stack.md](/doc/technology-stack.md) page.
 
 The [service-level-guide.md](/doc/service-level-guide.md) page provides guidance
 to the expected level of service provided by the Raido team.
@@ -27,7 +27,7 @@ to the expected level of service provided by the Raido team.
 # Project structure
 
 * /
-  * the root project contains no production code, it's just the container that
+  * the rooot project contains no production code, it's just the container that
   holds all the other sub-projects
   * it does contain some build code though, 
   see: [/buildSrc](./buildSrc)
@@ -35,9 +35,9 @@ to the expected level of service provided by the Raido team.
   * [/api-svc/db](/api-svc/db)
     * database schema definition, implemented as a series of Flyway migrations
   * [/api-svc/spring](/api-svc/spring) 
-    * the main API server, implemented as a Spring appliation
+    * the main API server, implemented as a Spring application
   * [/api-svc/idl-raid-v2](./api-svc/idl-raid-v2/src/raid-openapi-3.0.yaml)
-    * the OpenAPI definiton of the API that the api-svc serves
+    * the OpenAPI definition of the API that the api-svc serves
 * [/app-client](/app-client)
   * The Raido UI that calls uses api-svc 
 
@@ -48,7 +48,7 @@ Using a Github action at the moment to run tests.
 
 * [CI - gradle.yml](.github/workflows/gradle.yml)
   * builds and runs unit and integration tests
-  * executes on pusto to `main` or on pull-requests
+  * executes on push to to `main` or on pull-requests
     * So if you want to test stuff in Github without pushing to `main`;
       work in your own branch, create a PR and it will run the build
       and tests.
