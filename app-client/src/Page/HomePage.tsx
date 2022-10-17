@@ -121,9 +121,9 @@ export function RaidTableContainer({servicePointId}: {servicePointId: number}){
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell >Name</TableCell>
-            <TableCell >Handle</TableCell>
-            <TableCell >Start date</TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell>Handle</TableCell>
+            <TableCell>Start date</TableCell>
           </TableRow>
         </TableHead>
         { raidQuery.isLoading &&
