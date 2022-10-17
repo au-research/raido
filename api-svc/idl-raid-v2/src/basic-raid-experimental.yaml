@@ -61,7 +61,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MintRaidRequestV1'
+                $ref: '#/components/schemas/ReadRaidResponseV1'
   /read-raid-v1:          
     post:
       tags:
@@ -85,7 +85,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MintRaidRequestV1'
+                $ref: '#/components/schemas/ReadRaidResponseV1'
 
 components:
   schemas:
@@ -103,6 +103,18 @@ components:
         servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
         name: {type: string}
         startDate: { type: string, format: date-time }
+        metadataEnvelopeSchema: {type: string}
+        metadata: {type: object}
+    ReadRaidResponseV1:
+      type: object
+      required: [handle, servicePointId, name, url, startDate, createDate]
+      properties:
+        handle: {type: string}
+        servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        name: {type: string}
+        startDate: { type: string, format: date-time }
+        createDate: { type: string, format: date-time }
+        url: {type: string}
         metadataEnvelopeSchema: {type: string}
         metadata: {type: object}
     RaidListItemV1:

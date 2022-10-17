@@ -128,6 +128,14 @@ public class DateUtil {
     return d.toLocalDateTime();
   }
   
+  public static OffsetDateTime local2Offset(@Nullable LocalDateTime d){
+    if( d == null ){
+      return null;
+    }
+    
+    return d.atOffset(ZoneOffset.UTC);
+  }
+  
   public static Instant local2Instant(@Nullable LocalDateTime d){
     if( d == null ){
       return null;

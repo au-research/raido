@@ -8,22 +8,24 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.service.apids.ApidsService;
+import raido.apisvc.spring.config.environment.EnvironmentProps;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.idl.raidv2.api.BasicRaidExperimentalApi;
 import raido.idl.raidv2.model.MintRaidRequestV1;
 import raido.idl.raidv2.model.RaidListItemV1;
 import raido.idl.raidv2.model.RaidListRequest;
+import raido.idl.raidv2.model.ReadRaidResponseV1;
 import raido.idl.raidv2.model.ReadRaidV1Request;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 import static raido.apisvc.endpoint.Constant.MAX_EXPERIMENTAL_RECORDS;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.getAuthzPayload;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
+import static raido.apisvc.util.DateUtil.local2Offset;
 import static raido.apisvc.util.DateUtil.offset2Local;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
@@ -41,13 +43,16 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
 
   private DSLContext db;
   private ApidsService apidsSvc;
+  private EnvironmentProps envProps;
   
   public BasicRaidExperimental(
     DSLContext db,
-    ApidsService apidsSvc
+    ApidsService apidsSvc,
+    EnvironmentProps envProps
   ) {
     this.db = db;
     this.apidsSvc = apidsSvc;
+    this.envProps = envProps;
   }
 
   @Override
@@ -83,6 +88,10 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     return searchCondition;
   }
 
+  public String formatLandingPageUrl(String handle){
+    return "%s/%s".formatted(envProps.raidLandingPrefix, handle);
+  }
+  
   @Override
   public RaidListItemV1 mintRaidV1(MintRaidRequestV1 req) {
     var user = getAuthzPayload();
@@ -92,8 +101,9 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
       req.getMetadata() == null ? "{}" : req.getMetadata().toString()
     );
 
+    
     var response = apidsSvc.mintApidsHandleContentPrefix(
-      "https://demo.raido-infra.com/%s"::formatted);
+      this::formatLandingPageUrl );
 
     db.insertInto(RAID).
       set(RAID.HANDLE, response.identifier.handle).
@@ -117,10 +127,10 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
    curl -s -X POST https://demo.raido-infra.com/v2/experimental/read-raid/v1 \
      -H 'Content-Type: application/json' \
      -H "Authorization: Bearer $RAID_API_TOKEN" \
-     -d '{"handle":"10378.1/1692442"}'   
+     -d '{"handle":"123.456/789"}'   
    */
   @Override
-  public MintRaidRequestV1 readRaidV1(ReadRaidV1Request req) {
+  public ReadRaidResponseV1 readRaidV1(ReadRaidV1Request req) {
     var user = getAuthzPayload();
 
     var raid = db.fetchSingle(RAID, RAID.HANDLE.eq(req.getHandle())).
@@ -128,17 +138,19 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
 
     guardOperatorOrAssociated(user, raid.getServicePointId());
     
-    return new MintRaidRequestV1().
+    return new ReadRaidResponseV1().
       handle(raid.getHandle()).
       servicePointId(raid.getServicePointId()).
       name(raid.getName()).
-      startDate(raid.getStartDate().atOffset(ZoneOffset.UTC)).
+      startDate(local2Offset(raid.getStartDate())).
+      createDate(local2Offset(raid.getDateCreated())).
+      url(raid.getContentPath()).
       metadataEnvelopeSchema("unknown").
       metadata(raid.getMetadata().data());
   }
 
   @Override
-  public MintRaidRequestV1 updateRaidV1(MintRaidRequestV1 req) {
+  public ReadRaidResponseV1 updateRaidV1(MintRaidRequestV1 req) {
     db.update(RAID).
       set(RAID.NAME, req.getName()).
       set(RAID.START_DATE, req.getStartDate() == null ?

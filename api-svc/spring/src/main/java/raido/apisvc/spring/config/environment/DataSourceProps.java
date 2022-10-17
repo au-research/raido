@@ -101,7 +101,7 @@ public class DataSourceProps
    <li>increase CPU, RAM, IO or whatever of the DB</li>
    <li>manage long running queries with a proper job queue
    <ul>
-   <li>preferrably working off of a separate read-replica DB on a
+   <li>preferably working off of a separate read-replica DB on a
    dedicated job processing</li>
    <li>at least working off its own connection pool</li>
    </ul>

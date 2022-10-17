@@ -6,7 +6,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import { useNavigation } from "Design/NavigationProvider";
 import { useLocationPathname } from "Util/Hook/LocationPathname";
 import { getHomePageLink, isHomePagePath } from "Page/HomePage";
-import { getAboutAppPagePath, isAboutAppPagePath } from "Page/AboutAppPage";
+import { getAboutAppPagePath, isAboutAppPagePath } from "Page/Public/AboutAppPage";
 import { Info } from "@mui/icons-material";
 import {
   getAdminAuthzRequestPageLink,

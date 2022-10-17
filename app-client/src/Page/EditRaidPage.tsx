@@ -11,7 +11,11 @@ import { LargeContentMain } from "Design/LayoutMain";
 import { ContainerCard } from "Design/ContainerCard";
 import React, { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { ApiKey, MintRaidRequestV1, ServicePoint } from "Generated/Raidv2";
+import {
+  MintRaidRequestV1,
+  ReadRaidResponseV1,
+  ServicePoint
+} from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import { Stack, TextField } from "@mui/material";
@@ -24,10 +28,14 @@ import { RqQuery } from "Util/ReactQueryUtil";
 import { InfoField, InfoFieldList } from "Component/InfoField";
 import Divider from "@mui/material/Divider";
 import { assert } from "Util/TypeUtil";
+import { NewWindowLink } from "Component/ExternalLink";
 
 const log = console;
 
 const pageUrl = "/edit-raid";
+
+// nothing else uses this at the moment
+const globalHandleDomain = `https://hdl.handle.net`;
 
 export function getEditRaidPageLink(handle: string): string{
   return `${pageUrl}/${handle}`;
@@ -75,9 +83,10 @@ function EditRaidContainer({handle}: {
     name: "",
     startDate: new Date(),
   } as MintRaidRequestV1);
-  const raidQuery: RqQuery<MintRaidRequestV1> = useQuery(
+  const raidQuery: RqQuery<ReadRaidResponseV1> = useQuery(
     [raidQueryName, handle],
     async () => {
+      //await delay(2000);
       let raid = await api.basicRaid.readRaidV1({
         readRaidV1Request: { handle }
       });
@@ -111,12 +120,15 @@ function EditRaidContainer({handle}: {
     isDifferent(formData, raidQuery.data) : false;
   const canSubmit = isNameValid && hasChanged;
   const isWorking = updateRequest.isLoading;
-  
+
   return <ContainerCard title={`Edit RAiD`} action={<EditRaidHelp/>}>
+    <CompactErrorPanel error={raidQuery.error}/>
     <InfoFieldList>
-      <InfoField id="handle" label="Handle"
-        value={handle}
-      />
+      <InfoField id="handle" label="Handle" value={
+        <NewWindowLink href={`${globalHandleDomain}/${handle}`}>
+          {handle}
+        </NewWindowLink>
+      }/>
       <InfoField id="servicePoint" label="Service point"
         value={spQuery.data?.name}
       />
@@ -132,15 +144,15 @@ function EditRaidContainer({handle}: {
       <Stack spacing={2}>
         <TextField id="name" label="Name" variant="outlined"
           autoFocus autoCorrect="off" autoCapitalize="on"
-          required disabled={isWorking}
+          required disabled={isWorking || raidQuery.isLoading}
           value={formData.name}
           onChange={(e) => {
             setFormData({...formData, name: e.target.value});
           }}
-          error={!isNameValid}
+          error={!!raidQuery.data && !isNameValid}
         />
         <DesktopDatePicker label={"Start date"} inputFormat="YYYY-MM-DD"
-          disabled={isWorking}
+          disabled={isWorking || raidQuery.isLoading}
           value={formData.startDate}
           onChange={(newValue: Dayjs | null) => {
             setFormData({...formData, startDate: newValue?.toDate()})
@@ -160,7 +172,7 @@ function EditRaidContainer({handle}: {
             Update
           </PrimaryActionButton>
         </Stack>
-        <CompactErrorPanel error={updateRequest.error} />
+        <CompactErrorPanel error={updateRequest.error}/>
       </Stack>
     </form>
   </ContainerCard>

@@ -14,7 +14,7 @@ import {
   isUsageTermsPagePath,
   UsageTermsPage
 } from "Page/Unauth/UsageTermsPage";
-import { AboutAppPage } from "Page/AboutAppPage";
+import { AboutAppPage } from "Page/Public/AboutAppPage";
 import { AboutRaidPage, isAboutRaidPagePath } from "Page/Unauth/AboutRaidPage";
 import { AuthApiProvider } from "Api/AuthApi";
 import { AdminAuthzRequestPage } from "Page/Admin/AdminAuthzRequestPage";
@@ -30,6 +30,10 @@ import { MintRaidPage } from "Page/MintRaidPage";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { EditRaidPage } from "Page/EditRaidPage";
+import {
+  isRaidLandingPagePath,
+  RaidLandingPage
+} from "Page/Public/RaidLandingPage";
 
 export function App(){
   /* theme defines the basic color palette and styling, etc. */
@@ -47,7 +51,8 @@ export function App(){
             <LocationSearchProvider>
               {/* authentication and authorization */}
               <AuthProvider unauthenticatedPaths={[
-                isPrivacyPagePath, isUsageTermsPagePath, isAboutRaidPagePath
+                isPrivacyPagePath, isUsageTermsPagePath, isAboutRaidPagePath,
+                isRaidLandingPagePath,
               ]}>
                 {/* binds authentication stuff to OpenAPI stuff */}
                 <AuthApiProvider>
@@ -78,6 +83,7 @@ export function App(){
               <PrivacyPage/>
               <UsageTermsPage/>
               <AboutRaidPage/>
+              <RaidLandingPage/>
 
             </LocationSearchProvider>
           </LocationPathnameProvider>
