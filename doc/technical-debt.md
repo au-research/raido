@@ -35,6 +35,21 @@ didn't want to get side-tracked but still wanted have routable urls with params.
 Look at the multiple url stuff for supporting creating and editing on 
 ApiKeyPage.
 
+## app-client error handling needs work
+
+The error display page (ErrorDialog, not CompactErrorPanel) needs to provide
+better user instructions and components for users to get out of error states
+caused by stuff like:
+* token being expired - the authcontext picks this up when loading the page,
+  but we're not dealing with the page being open for N hours.
+  * need token refresh logic
+  * or at least a sign-out/refresh button
+* some change in server data causing unexpected issues
+  * user is currently on an SP_ADMIN page, but has been demoted to SP_USER
+causing data synch issue)
+
+Might be a good idea to do this in concert with fixing up the api-svc error
+handling.
 
 # api-svc
 
@@ -53,7 +68,7 @@ generic "sucess/fail" type that can return info about the failure. So the
 awkwardness with `Void` may not turn out to be much of an issue.
 
 
-## Current API is very "non-REST"
+## Current API is very "un-RESTful"
 
 We need a "REST API" guidelines policy, similar to the 
 [DB schema guidlines](../api-svc/db/raido/doc/schema-guideline.md).
@@ -84,8 +99,21 @@ the current dodgy hardcoded/handcoded XML RestTemplate implementation.
 
 ## Exception handling needs clean up
 
-See 
+See class comment on RedactingExceptionResolver
+
+
+## Versioning needs to be re-done
+
+I still want to use a `git describe` approach for versioning, but need to
+get rid of the palantir plugin and make the git string optionally come from
+the environment (for AWS CI/CD stuff that doesn't provide the repo).
+
+That said, how can we use `git describe` functionality for the AWS stuff?
+I don't think we can :(
+
 
 # AWS / Infra
 
-AWS debt is documented in that repo, don't put it here.
+AWS tech debt is documented in that repo, don't put it here.
+
+
