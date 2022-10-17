@@ -54,13 +54,19 @@ public class BasicRaidExperimentalTest extends IntegrationTestCase {
 
 
     EXPECT("should be able to update the minted");
-    readResult.setName(readResult.getName() + " updated");
-    var updateResult = raidApi.updateRaidV1(readResult);
+    String updatedName = readResult.getName() + " updated";
+    var updateResult = raidApi.updateRaidV1(
+      new MintRaidRequestV1().
+        handle(readResult.getHandle()).
+        name(updatedName).
+        servicePointId(readResult.getServicePointId()).
+        startDate(readResult.getStartDate())
+    );
     assertThat(updateResult).isNotNull();
     assertThat(updateResult.getHandle()).isEqualTo(mintResult.getHandle());
     assertThat(updateResult.getStartDate()).
       isEqualTo(readResult.getStartDate());
-    assertThat(updateResult.getName()).isEqualTo(readResult.getName());
+    assertThat(updateResult.getName()).isEqualTo(updatedName);
 
 
     WHEN("list by initial name from before update");
@@ -69,7 +75,7 @@ public class BasicRaidExperimentalTest extends IntegrationTestCase {
     THEN("should find raid with updated name");
     assertThat(listResult2).singleElement().satisfies(i->{
       assertThat(i.getHandle()).isEqualTo(mintResult.getHandle());
-      assertThat(i.getName()).isEqualTo(readResult.getName());
+      assertThat(i.getName()).isEqualTo(updatedName);
       assertThat(i.getStartDate()).isEqualTo(LocalDate.now());
     });
 
