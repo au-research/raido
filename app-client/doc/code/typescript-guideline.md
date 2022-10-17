@@ -1,5 +1,5 @@
 
-# Guidelines
+# TypeScript guidelines
 
 > At least just think about it for a second.
 

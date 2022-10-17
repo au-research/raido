@@ -3,7 +3,7 @@
 > Doesn't really matter. This is one way to do it - whatever floats your boat.
 
 
-## use funtion declarations instead of const
+## use function declarations instead of const
 
 i.e `export function doSomething()` instead of 
 `export const doSomething = () =>{}` 
