@@ -16,7 +16,7 @@ import { SmallPageSpinner } from "Component/SmallPageSpinner";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import { DateDisplay } from "Component/Util";
 
-const pageUrl = "/raid";
+const pageUrl = "/handle";
 
 export function formatGlobalHandle(handle: string){
   return `https://hdl.handle.net/${handle}`;

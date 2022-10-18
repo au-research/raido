@@ -24,6 +24,6 @@ public class EnvironmentProps {
    demo is set to `https://demo.raido-infra.com/raid`.
    */
   @Value("${EnvironmentConfig.raidLandingPrefix:" +
-    "http://localhost:7080/raid}")
+    "http://localhost:7080/handle}")
   public String raidLandingPrefix;
 }

@@ -37,7 +37,7 @@ import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 @RestController
 @Transactional
 public class PublicExperimental implements PublicExperimentalApi {
-  public static final String HANDLE_URL_PREFIX = "/public/raid/v1";
+  public static final String HANDLE_URL_PREFIX = "/public/handle/v1";
   public static final String HANDLE_CATCHALL_PREFIX =
     RAID_V2_API + HANDLE_URL_PREFIX + "/";
   public static final String HANDLE_SEPERATOR = "/";
