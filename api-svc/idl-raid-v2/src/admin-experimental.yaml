@@ -335,12 +335,13 @@ components:
       type: string
       enum: ['APPROVED', 'REQUESTED', 'REJECTED']
     UpdateAuthzRequestStatus:
-      description: approve/reject a reqeust
+      description: approve/reject a request, role is not set if rejecting.
       type: object
       required: [authzRequestId, status]
       properties:
         authzRequestId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
         status: {$ref: 'AuthzRequestStatus' }
+        role: {type: string}
     ServicePoint:
       description: data that any member of service-point and operators can see
       type: object

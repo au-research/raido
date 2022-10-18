@@ -100,7 +100,7 @@ public class AppUserService {
     targetUser.update();
   }
 
-  private UserRole mapRestRole2Jq(String role) {
+  public static UserRole mapRestRole2Jq(String role) {
     if( areEqual(OPERATOR.getLiteral(), role) ){
       return OPERATOR;
     }

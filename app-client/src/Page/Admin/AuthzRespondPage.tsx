@@ -1,22 +1,30 @@
 import { isPagePath, NavTransition } from "Design/NavigationProvider";
-import { raidoTitle } from "Component/Util";
+import { DateTimeDisplay, raidoTitle } from "Component/Util";
 import { LargeContentMain } from "Design/LayoutMain";
 import { ContainerCard } from "Design/ContainerCard";
 import { TextSpan } from "Component/TextSpan";
-import React from "react";
+import React, { useState } from "react";
 import { normalisePath } from "Util/Location";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { UpdateAuthzRequestStatusRequest } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
-import { Stack, TextField } from "@mui/material";
-import { formatLocalDateAsIsoShortDateTime } from "Util/DateUtil";
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Stack,
+  TextField
+} from "@mui/material";
 import {
   PrimaryActionButton,
   PrimaryButton,
   SecondaryButton
 } from "Component/AppButton";
 import { navBrowserBack } from "Util/WindowUtil";
+import { InfoField, InfoFieldList } from "Component/InfoField";
 
 const log = console;
 
@@ -59,6 +67,7 @@ function AuthzResponseContainer({authzRequestId}:{authzRequestId: number}){
   const api = useAuthApi();
   const queryClient = useQueryClient();
   const queryName = 'readAuthzRequest';
+  const [role, setRole] = useState("SP_USER");
   const query = useQuery(
     [queryName, authzRequestId], 
     async () => {
@@ -89,27 +98,49 @@ function AuthzResponseContainer({authzRequestId}:{authzRequestId: number}){
     return <TextSpan>unexpected state</TextSpan>
   }
 
+  const roleSelect = <FormControl focused>
+    <InputLabel id="roleLabel">Role</InputLabel>
+    <Select
+      labelId="roleLabel"
+      id="roleSelect"
+      value={role}
+      label="Role"
+      onChange={(event: SelectChangeEvent) => {
+        setRole(event.target.value);
+      }}
+    >
+      <MenuItem value={"SP_USER"}>Service Point User</MenuItem>
+      <MenuItem value={"SP_ADMIN"}>Service Point Admin</MenuItem>
+    </Select>
+  </FormControl>
+
+  const responseInfo = <InfoFieldList>
+    <InfoField id={"responderEmail"} label={"Responder"} 
+      value={query.data.email}/>
+    <InfoField id={"respondedDate"} label={"Responded"} 
+      value={<DateTimeDisplay date={query.data.dateResponded}/>}/>
+  </InfoFieldList>
+
   return <ContainerCard title={"Authorisation request"}>
     <Stack spacing={2} >
-      <TextSpan>Service point: {query.data.servicePointName}</TextSpan>
-      <TextSpan>Email: {query.data.email}</TextSpan>
-      <TextSpan>ID Provider: {query.data.idProvider}</TextSpan>
-      <TextSpan>Requested:{" "} 
-        {formatLocalDateAsIsoShortDateTime(query.data.dateRequested)}
-      </TextSpan>
-      <TextSpan>Status: {query.data.status}</TextSpan>
+      <InfoFieldList>
+        <InfoField id="servicePointName" label="Service point"
+          value={query.data.servicePointName}/>
+        <InfoField id="email" label="Email" value={query.data.email}/>
+        <InfoField id="idProvider" label="ID provider" 
+          value={query.data.idProvider}/>
+        <InfoField id="requestedDate" label="Requested"
+          value={<DateTimeDisplay date={query.data.dateRequested}/>}/>
+        <InfoField id="status" label="Status" value={query.data.status}/>
+      </InfoFieldList>
       <TextField id="reqeust-text" label="Comments / Information"
         multiline rows={4} variant="outlined"
         value={query.data.comments}
         disabled={true}
       />
-      { query.data.dateResponded && <>
-        <TextSpan>Responder: {query.data.email}</TextSpan>
-        <TextSpan>
-          Responded:{' '}
-          {formatLocalDateAsIsoShortDateTime(query.data.dateResponded)}
-        </TextSpan>
-      </>}
+      
+      { query.data.status === "REQUESTED" ? roleSelect : responseInfo }
+      
       <Stack direction={"row"} spacing={2}>
         <SecondaryButton onClick={navBrowserBack}
           disabled={updateRequest.isLoading}>
@@ -133,7 +164,7 @@ function AuthzResponseContainer({authzRequestId}:{authzRequestId: number}){
             error={updateRequest.error}
             onClick={() => updateRequest.mutate({
               updateAuthzRequestStatus: {
-                authzRequestId, status: "APPROVED"
+                authzRequestId, status: "APPROVED", role
               }
             })}
           >

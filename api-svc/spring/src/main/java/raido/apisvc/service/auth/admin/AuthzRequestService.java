@@ -29,9 +29,11 @@ import static java.time.ZoneOffset.UTC;
 import static org.jooq.impl.DSL.asterisk;
 import static org.jooq.impl.DSL.inline;
 import static raido.apisvc.endpoint.raidv2.BasicRaidExperimental.RAIDO_SP_ID;
+import static raido.apisvc.service.auth.admin.AppUserService.mapRestRole2Jq;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.db.jooq.api_svc.enums.AuthRequestStatus.REQUESTED;
+import static raido.db.jooq.api_svc.enums.UserRole.OPERATOR;
 import static raido.db.jooq.api_svc.enums.UserRole.SP_USER;
 import static raido.db.jooq.api_svc.tables.AppUser.APP_USER;
 import static raido.db.jooq.api_svc.tables.RaidoOperator.RAIDO_OPERATOR;
@@ -204,20 +206,31 @@ public class AuthzRequestService {
   }
 
   public void updateAuthzRequestStatus(
-    AuthzTokenPayload user,
+    AuthzTokenPayload respondingUser,
     UpdateAuthzRequestStatus req,
     UserAuthzRequestRecord authzRecord
   ) {
     if( req.getStatus() == APPROVED ){
       Guard.isTrue(authzRecord.getStatus() == REQUESTED);
-      
+
+      var approvedRole = mapRestRole2Jq(req.getRole());
+      if( approvedRole == OPERATOR ){
+        /* operators don't get "approved". they get auto-approved, or manually
+        promoted via the edit user screen. */
+        var iae = iae("approved role can not be operator");
+        log.with("respondingUser", respondingUser).
+          with("authzRequestId", req.getAuthzRequestId()).
+          error(iae.getMessage());
+        throw iae;
+      }
+
       var approvedUser = db.insertInto(APP_USER).
         set(APP_USER.SERVICE_POINT_ID, authzRecord.getServicePointId()).
         set(APP_USER.EMAIL, authzRecord.getEmail()).
         set(APP_USER.CLIENT_ID, authzRecord.getClientId()).
         set(APP_USER.SUBJECT, authzRecord.getSubject()).
         set(APP_USER.ID_PROVIDER, authzRecord.getIdProvider()).
-        set(APP_USER.ROLE, SP_USER).
+        set(APP_USER.ROLE, approvedRole).
         onConflict(APP_USER.EMAIL, APP_USER.CLIENT_ID, APP_USER.SUBJECT).
         where(APP_USER.ENABLED.eq(true)).
         doUpdate().
@@ -227,20 +240,20 @@ public class AuthzRequestService {
 
       authzRecord.setStatus(AuthRequestStatus.APPROVED);
       authzRecord.setApprovedUser(approvedUser.getId());
-      authzRecord.setRespondingUser(user.getAppUserId());
+      authzRecord.setRespondingUser(respondingUser.getAppUserId());
       authzRecord.setDateResponded(LocalDateTime.now());
       authzRecord.update();
       
     }
     else if( req.getStatus() == AuthzRequestStatus.REJECTED ){
       authzRecord.setStatus(AuthRequestStatus.REJECTED);
-      authzRecord.setRespondingUser(user.getAppUserId());
+      authzRecord.setRespondingUser(respondingUser.getAppUserId());
       authzRecord.setDateResponded(LocalDateTime.now());
       authzRecord.update();
     }
     else {
       var iae = iae("invalid status update value");
-      log.with("user", user).
+      log.with("user", respondingUser).
         with("request", req).
         with("db.status", authzRecord.getStatus()).
         error(iae.getMessage());
