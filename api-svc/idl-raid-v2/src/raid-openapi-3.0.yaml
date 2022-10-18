@@ -23,20 +23,30 @@ security:
   - BearerAuth:
     # Mandatory, but I don't know what the content is supposed to be?    
     - unknown
-      
+
 paths:
 
-  #### public endpoints (signing in and requesting authz, etc.) ####
-  
+  # region public endpoints (signing in and requesting authz, etc.)
+
   /v2/public/version:
     $ref: "public-experimental.yaml#/paths/~1version"
   /v2/public/list-service-point/v1:
-    $ref: "public-experimental.yaml#/paths/~1list-public-service-point"
+    $ref: "public-experimental.yaml#/paths/~1public-list-service-point"
+  /v2/public/raid/v1/{handle}:
+    $ref: "public-experimental.yaml#/paths/~1public-read-raid"
+
+  # endregion
+  
+  
+  # region Unauthorized user endpoints 
+  
   /v2/public/request-authz/v1:
-    $ref: "public-experimental.yaml#/paths/~1update-request-authz"
-  
-  
-  #### Basic RAID endpoints ####
+    $ref: "unauthz-experimental.yaml#/paths/~1update-request-authz"
+
+  # endregion
+
+
+  # region Basic RAID endpoints
   
   /v2/experimental/list-raid/v1:
     $ref: "basic-raid-experimental.yaml#/paths/~1list-raid"
@@ -46,9 +56,11 @@ paths:
     $ref: "basic-raid-experimental.yaml#/paths/~1update-raid-v1"
   /v2/experimental/read-raid/v1:
     $ref: "basic-raid-experimental.yaml#/paths/~1read-raid-v1"
-
-
-  #### Admin endpoints ####
+      
+  # endregion
+      
+      
+  # region Admin endpoints
                 
   /v2/public/request-authz/v1/{authzRequestId}:
     $ref: "admin-experimental.yaml#/paths/~1read-request-authz"
@@ -76,6 +88,8 @@ paths:
     $ref: "admin-experimental.yaml#/paths/~1read-app-user-extra"
   /v2/experimental/generate-api-token/v1:
     $ref: "admin-experimental.yaml#/paths/~1generate-api-token"
+
+  # endregion
 
 
 components:
