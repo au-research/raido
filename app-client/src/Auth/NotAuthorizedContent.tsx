@@ -6,26 +6,19 @@ import {
   useMutation,
   useQuery
 } from "@tanstack/react-query";
-import {
-  Configuration,
-  PublicExperimentalApi,
-  UpdateRequestAuthzRequest
-} from "Generated/Raidv2";
+import { UpdateRequestAuthzRequest } from "Generated/Raidv2";
 import { LargeContentMain } from "Design/LayoutMain";
 import { ContainerCard } from "Design/ContainerCard";
 import {
   Alert,
   Autocomplete,
-  FormControl, Grid,
+  FormControl,
+  Grid,
   Stack,
   TextField,
   Typography
 } from "@mui/material";
-import {
-  PrimaryActionButton,
-  PrimaryButton,
-  SecondaryButton
-} from "Component/AppButton";
+import { PrimaryActionButton, SecondaryButton } from "Component/AppButton";
 import { Config } from "Config";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import { HelpChip, HelpPopover } from "Component/HelpPopover";
@@ -33,15 +26,7 @@ import { TextSpan } from "Component/TextSpan";
 import jwtDecode from "jwt-decode";
 import { signOutUser } from "Auth/Authz";
 import { assert } from "Util/TypeUtil";
-
-function publicApi(accessToken: string){
-  const config = new Configuration({
-    basePath: Config.raidoApiSvc,
-    // If we end up "refreshing" accessTokens, this is how it'll be hooked in 
-    accessToken: () => accessToken,
-  });
-  return new PublicExperimentalApi(config);
-}
+import { publicApi, unauthzApi } from "Api/SimpleApi";
 
 export function NotAuthorizedContent({accessToken}: {accessToken: string}){
   const queryClient = new QueryClient({
@@ -85,11 +70,13 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
   const inst = React.useState(null as InstData | null);
   const [institution] = inst;
   const [comments, setComments] = React.useState("");
-  const api = publicApi(accessToken);
+  const unauthz = unauthzApi(accessToken);
+  const pubApi = publicApi();
   const jwt = jwtDecode(accessToken) as any;
 
-  const query: RqQuery<InstData[]> = useQuery(['listInst'], async () => {
-    return (await api.listPublicServicePoint()).map(i => {
+  const queryName = 'listPublicServicePoint';
+  const query: RqQuery<InstData[]> = useQuery([queryName], async () => {
+    return (await pubApi.publicListServicePoint()).map(i => {
       //throw new Error("intended error");
       return ({
         id: i.id,
@@ -100,7 +87,7 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
 
   const submitRequest = useMutation((data: UpdateRequestAuthzRequest) => {
       //throw new Error("intended error");
-      return api.updateRequestAuthz(data);
+      return unauthz.updateRequestAuthz(data);
     }
   );
 
@@ -126,7 +113,7 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
     action={<AuthRequestHelp/>}
   >
     <Typography>
-      You have identfied yourself as: <HelpChip label={jwt.email}/>
+      You have identified yourself as: <HelpChip label={jwt.email}/>
     </Typography>
     <Typography paragraph>
       You have not yet been authorised to use the application.

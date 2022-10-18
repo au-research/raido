@@ -1,0 +1,43 @@
+openapi: 3.0.3
+info:
+  title: >
+    Endpoints that are expected to be called after authn, but before authz.
+    Must be passed a `NonAuthzTokenPayload` see RaidV2AppUserAuthService.
+  version: 1.0.0
+paths:
+  /update-request-authz:
+    post:
+      tags:
+        - unauthz-experimental
+      operationId: update-request-authz
+      summary: create or update an authz request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAuthzRequest'
+      responses:
+        '200':
+          description: result of request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateAuthzResponse'
+
+components:
+  schemas:
+    UpdateAuthzRequest:
+      description: authorization request
+      type: object
+      required: [servicePointId, name]
+      properties:
+        servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        comments: {type: string}
+    UpdateAuthzResponse:
+      type: object
+      required: [status]
+      properties:
+        status: {
+          $ref: 'admin-experimental.yaml#/components/schemas/AuthzRequestStatus'
+        }

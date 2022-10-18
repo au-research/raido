@@ -7,10 +7,11 @@ import org.jooq.impl.DSL;
 import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
+import raido.apisvc.service.RaidService;
 import raido.apisvc.service.apids.ApidsService;
 import raido.apisvc.spring.config.environment.EnvironmentProps;
+import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
-import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.idl.raidv2.api.BasicRaidExperimentalApi;
 import raido.idl.raidv2.model.MintRaidRequestV1;
 import raido.idl.raidv2.model.RaidListItemV1;
@@ -44,15 +45,18 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
   private DSLContext db;
   private ApidsService apidsSvc;
   private EnvironmentProps envProps;
+  private RaidService raidSvc;
   
   public BasicRaidExperimental(
     DSLContext db,
     ApidsService apidsSvc,
-    EnvironmentProps envProps
+    EnvironmentProps envProps,
+    RaidService raidSvc
   ) {
     this.db = db;
     this.apidsSvc = apidsSvc;
     this.envProps = envProps;
+    this.raidSvc = raidSvc;
   }
 
   @Override
@@ -122,6 +126,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
       into(RaidListItemV1.class); 
   }
 
+  
   /**
    export RAID_API_TOKEN=xxx.yyy.zzz
    curl -s -X POST https://demo.raido-infra.com/v2/experimental/read-raid/v1 \
@@ -133,20 +138,22 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
   public ReadRaidResponseV1 readRaidV1(ReadRaidV1Request req) {
     var user = getAuthzPayload();
 
-    var raid = db.fetchSingle(RAID, RAID.HANDLE.eq(req.getHandle())).
-      into(RaidRecord.class);
-
-    guardOperatorOrAssociated(user, raid.getServicePointId());
+    Guard.hasValue("must pass a handle", req.getHandle());
     
+    var data = raidSvc.readRaidData(req.getHandle());
+    
+    guardOperatorOrAssociated(user, data.servicePoint().getId());
+
     return new ReadRaidResponseV1().
-      handle(raid.getHandle()).
-      servicePointId(raid.getServicePointId()).
-      name(raid.getName()).
-      startDate(local2Offset(raid.getStartDate())).
-      createDate(local2Offset(raid.getDateCreated())).
-      url(raid.getContentPath()).
+      handle(data.raid().getHandle()).
+      servicePointId(data.servicePoint().getId()).
+      servicePointName(data.servicePoint().getName()).
+      name(data.raid().getName()).
+      startDate(local2Offset(data.raid().getStartDate())).
+      createDate(local2Offset(data.raid().getDateCreated())).
+      url(data.raid().getContentPath()).
       metadataEnvelopeSchema("unknown").
-      metadata(raid.getMetadata().data());
+      metadata(data.raid().getMetadata().data());
   }
 
   @Override

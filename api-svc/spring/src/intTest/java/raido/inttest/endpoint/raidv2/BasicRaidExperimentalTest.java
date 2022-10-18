@@ -2,7 +2,6 @@ package raido.inttest.endpoint.raidv2;
 
 import org.junit.jupiter.api.Test;
 import raido.idl.raidv2.model.MintRaidRequestV1;
-import raido.idl.raidv2.model.RaidListItemV1;
 import raido.idl.raidv2.model.RaidListRequest;
 import raido.idl.raidv2.model.ReadRaidV1Request;
 import raido.inttest.IntegrationTestCase;
@@ -50,6 +49,7 @@ public class BasicRaidExperimentalTest extends IntegrationTestCase {
     assertThat(readResult).isNotNull();
     assertThat(readResult.getHandle()).isEqualTo(mintResult.getHandle());
     assertThat(readResult.getServicePointId()).isEqualTo(RAIDO_SP_ID);
+    assertThat(readResult.getServicePointName()).isEqualTo("raido");
     assertThat(readResult.getStartDate()).isNotNull();
 
 

@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: raid listing and minting endpoints
+  title: public endpoints, these can be called anonymously
   version: 1.0.0
 paths:
   /version:
@@ -17,12 +17,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/VersionResult'
-  /list-public-service-point:
+  /public-list-service-point:
     get:
       security: []
       tags:
         - public-experimental
-      operationId: list-public-service-point
+      operationId: public-list-service-point
       summary: list service point data that un-authn users can see
       responses:
         '200':
@@ -33,25 +33,28 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PublicServicePoint'
-  /update-request-authz:
-    post:
+  /public-read-raid:
+    get:
+      security: []
       tags:
         - public-experimental
-      operationId: update-request-authz
-      summary: create or update an authz request
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateAuthzRequest'
+      operationId: public-read-raid
+      summary: >
+        read raid data, anybody can call this but it might not return useful
+        info, RAiD may be confidential or embargoed
+      parameters:
+        - in: path
+          name: handle
+          schema: { type: string }
+          required: true
+          description: handle
       responses:
         '200':
           description: result of request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UpdateAuthzResponse'
+                $ref: '#/components/schemas/PublicReadRaidResponseV1'
 
 
 components:
@@ -70,19 +73,18 @@ components:
       properties:
         id: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
         name: {type: string}
-    UpdateAuthzRequest:
-      description: authorization request
+    PublicReadRaidResponseV1:
       type: object
-      required: [servicePointId, name]
+      required: [handle, url, createDate]
+      description: >
+        ownerName is the name of the service point that owns the raid
       properties:
+        handle: {type: string}
         servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
-        comments: {type: string}
-    # would be nice to do an "any-of" type spec that generates an enum on the 
-    # TS side - not sure OAS spec and the tooling supports it yet?
-    UpdateAuthzResponse:
-      type: object
-      required: [status]
-      properties:
-        status: {
-          $ref: 'admin-experimental.yaml#/components/schemas/AuthzRequestStatus'
-        }
+        servicePointName: {type: string}
+        name: {type: string}
+        startDate: { type: string, format: date-time }
+        createDate: { type: string, format: date-time }
+        url: {type: string}
+        metadataEnvelopeSchema: {type: string}
+        metadata: {type: object}

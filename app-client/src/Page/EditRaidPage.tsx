@@ -29,13 +29,11 @@ import { InfoField, InfoFieldList } from "Component/InfoField";
 import Divider from "@mui/material/Divider";
 import { assert } from "Util/TypeUtil";
 import { NewWindowLink } from "Component/ExternalLink";
+import { formatGlobalHandle } from "Page/Public/RaidLandingPage";
 
 const log = console;
 
 const pageUrl = "/edit-raid";
-
-// nothing else uses this at the moment
-const globalHandleDomain = `https://hdl.handle.net`;
 
 export function getEditRaidPageLink(handle: string): string{
   return `${pageUrl}/${handle}`;
@@ -125,7 +123,7 @@ function EditRaidContainer({handle}: {
     <CompactErrorPanel error={raidQuery.error}/>
     <InfoFieldList>
       <InfoField id="handle" label="Handle" value={
-        <NewWindowLink href={`${globalHandleDomain}/${handle}`}>
+        <NewWindowLink href={formatGlobalHandle(handle)}>
           {handle}
         </NewWindowLink>
       }/>

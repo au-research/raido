@@ -4,21 +4,20 @@ import org.jooq.DSLContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
-import raido.apisvc.service.auth.admin.AuthzRequestService;
+import raido.apisvc.service.RaidService;
 import raido.apisvc.spring.StartupListener;
 import raido.apisvc.spring.bean.AppInfoBean;
 import raido.apisvc.util.Log;
 import raido.idl.raidv2.api.PublicExperimentalApi;
+import raido.idl.raidv2.model.PublicReadRaidResponseV1;
 import raido.idl.raidv2.model.PublicServicePoint;
-import raido.idl.raidv2.model.UpdateAuthzRequest;
-import raido.idl.raidv2.model.UpdateAuthzResponse;
 import raido.idl.raidv2.model.VersionResult;
 
 import java.util.List;
 
 import static java.time.ZoneOffset.UTC;
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
-import static raido.apisvc.endpoint.raidv2.AuthzUtil.getNonAuthzPayload;
+import static raido.apisvc.util.DateUtil.local2Offset;
 import static raido.apisvc.util.Log.to;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 
@@ -31,17 +30,18 @@ public class PublicExperimental implements PublicExperimentalApi {
   private DSLContext db;
   private AppInfoBean appInfo;
   private StartupListener startup;
-  private AuthzRequestService authzRequestSvc;
+  private RaidService raidSvc;
 
-  public PublicExperimental(DSLContext db,
+  public PublicExperimental(
+    DSLContext db,
     AppInfoBean appInfo,
     StartupListener startup,
-    AuthzRequestService authzRequestSvc
+    RaidService raidSvc
   ) {
     this.db = db;
     this.appInfo = appInfo;
     this.startup = startup;
-    this.authzRequestSvc = authzRequestSvc;
+    this.raidSvc = raidSvc;
   }
 
   @Override
@@ -55,7 +55,7 @@ public class PublicExperimental implements PublicExperimentalApi {
   }
 
   @Override
-  public List<PublicServicePoint> listPublicServicePoint() {
+  public List<PublicServicePoint> publicListServicePoint() {
     return db.
       select(
         SERVICE_POINT.ID,
@@ -66,12 +66,24 @@ public class PublicExperimental implements PublicExperimentalApi {
   }
 
   @Override
-  public UpdateAuthzResponse updateRequestAuthz(UpdateAuthzRequest req) {
-    var user = getNonAuthzPayload();
+  public PublicReadRaidResponseV1 publicReadRaid(String handle) {
+    
+    var data = raidSvc.readRaidData(handle);
+    
+    // improve:sto - deal with confidential and embargoed raids
+    // if isNotPublic return handle, url, createDate
 
-    // TODO:STO validate the request data
-
-    return authzRequestSvc.updateRequestAuthz(user, req);
+    return new PublicReadRaidResponseV1().
+      handle(data.raid().getHandle()).
+      servicePointId(data.servicePoint().getId()).
+      servicePointName(data.servicePoint().getName()).
+      name(data.raid().getName()).
+      startDate(local2Offset(data.raid().getStartDate())).
+      createDate(local2Offset(data.raid().getDateCreated())).
+      url(data.raid().getContentPath()).
+      metadataEnvelopeSchema("unknown").
+      metadata(data.raid().getMetadata().data());
   }
+
 
 }

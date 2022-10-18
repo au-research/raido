@@ -68,6 +68,7 @@ export interface EnvironmentConfig {
   raidoApiSvc: string,
 
   authApiQuery?: ReactQueryConfig,
+  publicApiQuery?: ReactQueryConfig,
 }
 
 function initConfig(){
@@ -152,6 +153,10 @@ const devConfig: EnvironmentConfig = {
     retry: false,
     refetchOnWindowFocus: false,
   },
+  publicApiQuery: {
+    retry: false,
+    refetchOnWindowFocus: false,
+  },
 };
 
 const demoConfig: EnvironmentConfig = {
@@ -173,6 +178,10 @@ const demoConfig: EnvironmentConfig = {
     retry: 1,
     refetchOnWindowFocus: true,
   },
+  publicApiQuery: {
+    retry: false,
+    refetchOnWindowFocus: false,
+  },
 };
 
 const prodConfig: EnvironmentConfig = {
@@ -193,6 +202,10 @@ const prodConfig: EnvironmentConfig = {
   authApiQuery: {
     retry: 1,
     refetchOnWindowFocus: true,
+  },
+  publicApiQuery: {
+    retry: false,
+    refetchOnWindowFocus: false,
   },
 };
 

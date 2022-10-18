@@ -67,7 +67,7 @@ paths:
       tags:
         - basic-raid-experimental
       operationId: read-raid-v1
-      summary: read a raid
+      summary: read a raid, caller must be authorized
       # going with post, because I think we are gonna get complex with this
       # eventually (specifying what we want to read, graphql-style).
       requestBody:
@@ -111,6 +111,7 @@ components:
       properties:
         handle: {type: string}
         servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        servicePointName: {type: string}
         name: {type: string}
         startDate: { type: string, format: date-time }
         createDate: { type: string, format: date-time }
