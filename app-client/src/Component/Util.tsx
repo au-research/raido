@@ -62,6 +62,14 @@ export function DateDisplay({date, ...props}: {
   </TextSpan>
 }
 
+export function BooleanDisplay({value, ...props}: {
+  value: boolean,
+} & TypographyProps ){
+  return <TextSpan {...props}>
+    {value ? "Yes" : "No"}
+  </TextSpan>
+}
+
 function mapProviderName(payload: AuthzTokenPayload): string {
   if( payload.clientId === Config.aaf.clientId ){
     return "AAF";

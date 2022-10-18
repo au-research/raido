@@ -89,6 +89,14 @@ public class PublicExperimental implements PublicExperimentalApi {
     // improve:sto - deal with confidential and embargoed raids
     // if isNotPublic return handle, url, createDate
 
+    if( data.raid().getConfidential() ){
+      return new PublicReadRaidResponseV1().
+        handle(data.raid().getHandle()).
+        createDate(local2Offset(data.raid().getDateCreated())).
+        url(data.raid().getContentPath()).
+        confidential(data.raid().getConfidential());
+    }
+    
     return new PublicReadRaidResponseV1().
       handle(data.raid().getHandle()).
       servicePointId(data.servicePoint().getId()).
@@ -98,7 +106,8 @@ public class PublicExperimental implements PublicExperimentalApi {
       createDate(local2Offset(data.raid().getDateCreated())).
       url(data.raid().getContentPath()).
       metadataEnvelopeSchema("unknown").
-      metadata(data.raid().getMetadata().data());
+      metadata(data.raid().getMetadata().data()).
+      confidential(data.raid().getConfidential());
   }
 
   /**

@@ -10,7 +10,7 @@ import { raidoTitle } from "Component/Util";
 import { LargeContentMain } from "Design/LayoutMain";
 import { ContainerCard } from "Design/ContainerCard";
 import React, { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   MintRaidRequestV1,
   ReadRaidResponseV1,
@@ -18,7 +18,13 @@ import {
 } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
-import { Stack, TextField } from "@mui/material";
+import {
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  Stack,
+  TextField
+} from "@mui/material";
 import { PrimaryActionButton, SecondaryButton } from "Component/AppButton";
 import { navBrowserBack } from "Util/WindowUtil";
 import { HelpChip, HelpPopover } from "Component/HelpPopover";
@@ -67,7 +73,8 @@ function Content(){
 
 function isDifferent(formData: MintRaidRequestV1, original: MintRaidRequestV1){
   return formData.name !== original.name ||
-    formData.startDate?.getDate() !== original.startDate?.getDate();
+    formData.startDate?.getDate() !== original.startDate?.getDate() ||
+    formData.confidential !== original.confidential;
 }
 
 function EditRaidContainer({handle}: {
@@ -102,13 +109,15 @@ function EditRaidContainer({handle}: {
     },
     {enabled: !!servicePointId}
   );
-  
+
+  const queryClient = useQueryClient();
   const updateRequest = useMutation(
     async (data: MintRaidRequestV1) => {
       return await api.basicRaid.updateRaidV1({mintRaidRequestV1: data});
     },
     {
       onSuccess: async () => {
+        await queryClient.invalidateQueries([raidQueryName]);
       },
     }
   );
@@ -157,6 +166,31 @@ function EditRaidContainer({handle}: {
           }}
           renderInput={(params) => <TextField {...params} />}
         />
+        <FormControl>
+          <FormControlLabel
+            disabled={isWorking || raidQuery.isLoading}
+            label="Confidential"
+            labelPlacement="start"
+            style={{
+              /* by default, MUI lays this out as <checkbox><label>.
+               Doing `labelPlacement=start`, flips that around, but ends up 
+               right-justifying the content, `marginRight=auto` pushes it back 
+               across to the left and `marginLeft=0` aligns nicely. */
+              marginLeft: 0,
+              marginRight: "auto",
+            }}
+            control={
+              <Checkbox
+                checked={formData.confidential ?? false}
+                onChange={() => {
+                  setFormData({...formData,
+                    confidential: !formData.confidential
+                  })
+                }}
+              />
+            }
+          />
+        </FormControl>
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton onClick={navBrowserBack}
             disabled={isWorking}>

@@ -97,17 +97,23 @@ components:
         name: {type: string}
     MintRaidRequestV1:
       type: object
-      required: [handle, servicePointId, name]
+      required: [handle, servicePointId, name, confidential]
       properties:
         handle: {type: string}
         servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
         name: {type: string}
         startDate: { type: string, format: date-time }
+        confidential: {type: boolean}
         metadataEnvelopeSchema: {type: string}
         metadata: {type: object}
     ReadRaidResponseV1:
       type: object
-      required: [handle, servicePointId, name, url, startDate, createDate]
+      required: [
+        handle, servicePointId,
+        name, url,
+        startDate, createDate,
+        confidential 
+      ]
       properties:
         handle: {type: string}
         servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
@@ -115,13 +121,16 @@ components:
         name: {type: string}
         startDate: { type: string, format: date-time }
         createDate: { type: string, format: date-time }
+        confidential: {type: boolean}
         url: {type: string}
         metadataEnvelopeSchema: {type: string}
         metadata: {type: object}
     RaidListItemV1:
       type: object
-      required: [handle]
+      required: [handle, confidential, createdDateTime]
       properties:
         handle: {type: string}
         name: {type: string}
         startDate: { type: string, format: date }
+        createDate: { type: string, format: date-time }
+        confidential: {type: boolean}

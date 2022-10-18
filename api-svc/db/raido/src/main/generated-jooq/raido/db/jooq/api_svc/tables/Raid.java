@@ -11,12 +11,12 @@ import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function9;
+import org.jooq.Function10;
 import org.jooq.JSONB;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row9;
+import org.jooq.Row10;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -82,6 +82,11 @@ public class Raid extends TableImpl<RaidRecord> {
      * The column <code>api_svc.raid.description</code>.
      */
     public final TableField<RaidRecord, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.VARCHAR(1024).nullable(false), this, "");
+
+    /**
+     * The column <code>api_svc.raid.confidential</code>.
+     */
+    public final TableField<RaidRecord, Boolean> CONFIDENTIAL = createField(DSL.name("confidential"), SQLDataType.BOOLEAN.nullable(false), this, "");
 
     /**
      * The column <code>api_svc.raid.metadata</code>.
@@ -199,18 +204,18 @@ public class Raid extends TableImpl<RaidRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row9 type methods
+    // Row10 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row9<String, Long, String, Integer, String, String, JSONB, LocalDateTime, LocalDateTime> fieldsRow() {
-        return (Row9) super.fieldsRow();
+    public Row10<String, Long, String, Integer, String, String, Boolean, JSONB, LocalDateTime, LocalDateTime> fieldsRow() {
+        return (Row10) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function9<? super String, ? super Long, ? super String, ? super Integer, ? super String, ? super String, ? super JSONB, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function10<? super String, ? super Long, ? super String, ? super Integer, ? super String, ? super String, ? super Boolean, ? super JSONB, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -218,7 +223,7 @@ public class Raid extends TableImpl<RaidRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function9<? super String, ? super Long, ? super String, ? super Integer, ? super String, ? super String, ? super JSONB, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function10<? super String, ? super Long, ? super String, ? super Integer, ? super String, ? super String, ? super Boolean, ? super JSONB, ? super LocalDateTime, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

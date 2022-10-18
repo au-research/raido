@@ -75,7 +75,7 @@ components:
         name: {type: string}
     PublicReadRaidResponseV1:
       type: object
-      required: [handle, url, createDate]
+      required: [handle, url, createDate, confidential]
       description: >
         ownerName is the name of the service point that owns the raid
       properties:
@@ -88,3 +88,4 @@ components:
         url: {type: string}
         metadataEnvelopeSchema: {type: string}
         metadata: {type: object}
+        confidential: {type: boolean}

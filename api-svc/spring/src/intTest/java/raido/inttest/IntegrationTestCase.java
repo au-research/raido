@@ -18,13 +18,13 @@ import org.springframework.web.client.RestTemplate;
 import raido.apisvc.util.Log;
 import raido.idl.raidv1.api.RaidV1Api;
 import raido.idl.raidv2.api.BasicRaidExperimentalApi;
+import raido.idl.raidv2.api.PublicExperimentalApi;
 import raido.inttest.config.IntTestProps;
 import raido.inttest.config.IntegrationTestConfig;
 import raido.inttest.service.auth.TestAuthTokenService;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static raido.apisvc.spring.config.RaidWebSecurityConfig.RAID_V1_API;
-import static raido.apisvc.spring.config.RaidWebSecurityConfig.RAID_V2_API;
 import static raido.apisvc.util.Log.to;
 
 @SpringJUnitConfig(IntegrationTestConfig.class)
@@ -90,6 +90,17 @@ public abstract class IntegrationTestCase {
       logger(new Slf4jLogger(BasicRaidExperimentalApi.class)).
       logLevel(Level.FULL).
       target(BasicRaidExperimentalApi.class, props.getRaidoServerUrl());
+  }
+
+  public PublicExperimentalApi publicExperimentalClient(){
+    return Feign.builder().
+      client(new OkHttpClient()).
+      encoder(new JacksonEncoder(mapper)).
+      decoder(new JacksonDecoder(mapper)).
+      contract(feignContract).
+      logger(new Slf4jLogger(PublicExperimentalApi.class)).
+      logLevel(Level.FULL).
+      target(PublicExperimentalApi.class, props.getRaidoServerUrl());
   }
 
   public String raidoApiServerUrl(String url){

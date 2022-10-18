@@ -14,7 +14,7 @@ import { SmallContentMain } from "Design/LayoutMain";
 import { InfoField, InfoFieldList } from "Component/InfoField";
 import { SmallPageSpinner } from "Component/SmallPageSpinner";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
-import { DateDisplay } from "Component/Util";
+import { BooleanDisplay, DateDisplay } from "Component/Util";
 
 const pageUrl = "/handle";
 
@@ -93,16 +93,24 @@ function Content({handle}: {handle: string}){
     <InfoFieldList>
       <InfoField id="handle" label="Handle"
         value={formatGlobalHandle(handle)}/>
-      <InfoField id="servicePoint" label="Service point"
-        value={query.data.servicePointName}
-      />
-      <InfoField id="name" label="Name" value={query.data.name}/>
-      <InfoField id="startDate" label="Start Date" value={
-        <DateDisplay date={query.data.startDate}/>
-      }/>
       <InfoField id="createDate" label="Create Date" value={
         <DateDisplay date={query.data.createDate}/>
       }/>
+
+      <InfoField id="confidential" label="Confidential"
+        value={<BooleanDisplay value={query.data.confidential}/>}
+      />
+
+      { !query.data.confidential &&  <>
+        <InfoField id="servicePoint" label="Service point"
+          value={query.data.servicePointName}
+        />
+        <InfoField id="name" label="Name" value={query.data.name}/>
+        <InfoField id="startDate" label="Start Date" value={
+          <DateDisplay date={query.data.startDate}/>
+        }/>
+      </>}
+        
     </InfoFieldList>
   </SmallContentMain>
 }

@@ -64,7 +64,8 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     var user = getAuthzPayload();
     guardOperatorOrAssociated(user, req.getServicePointId());
 
-    return db.select(RAID.HANDLE, RAID.NAME, RAID.START_DATE).
+    return db.select(RAID.HANDLE, RAID.NAME, RAID.START_DATE, 
+        RAID.CONFIDENTIAL, RAID.DATE_CREATED.as("createDate")).
       from(RAID).
       where(
         RAID.SERVICE_POINT_ID.eq(req.getServicePointId()).
@@ -98,6 +99,8 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
   
   @Override
   public RaidListItemV1 mintRaidV1(MintRaidRequestV1 req) {
+    Guard.notNull("confidential flag must be set", req.getConfidential());
+    Guard.hasValue("name field must be set", req.getName());
     var user = getAuthzPayload();
     guardOperatorOrAssociated(user, req.getServicePointId());
 
@@ -120,6 +123,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
       set(RAID.START_DATE, req.getStartDate() == null ? 
         LocalDateTime.now() : offset2Local(req.getStartDate()) ).
       set(RAID.DATE_CREATED, LocalDateTime.now()).
+      set(RAID.CONFIDENTIAL, req.getConfidential()).
       execute();
 
     return db.fetchSingle(RAID, RAID.HANDLE.eq(response.identifier.handle)).
@@ -136,10 +140,8 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
    */
   @Override
   public ReadRaidResponseV1 readRaidV1(ReadRaidV1Request req) {
-    var user = getAuthzPayload();
-
     Guard.hasValue("must pass a handle", req.getHandle());
-    
+    var user = getAuthzPayload();
     var data = raidSvc.readRaidData(req.getHandle());
     
     guardOperatorOrAssociated(user, data.servicePoint().getId());
@@ -153,15 +155,21 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
       createDate(local2Offset(data.raid().getDateCreated())).
       url(data.raid().getContentPath()).
       metadataEnvelopeSchema("unknown").
-      metadata(data.raid().getMetadata().data());
+      metadata(data.raid().getMetadata().data()).
+      confidential(data.raid().getConfidential());
   }
 
   @Override
   public ReadRaidResponseV1 updateRaidV1(MintRaidRequestV1 req) {
+    Guard.hasValue("must pass a name", req.getName());
+    Guard.hasValue("must pass a handle", req.getHandle());
+    Guard.notNull("confidential flag must be set", req.getConfidential());
+    
     db.update(RAID).
       set(RAID.NAME, req.getName()).
       set(RAID.START_DATE, req.getStartDate() == null ?
         LocalDateTime.now() : offset2Local(req.getStartDate()) ).
+      set(RAID.CONFIDENTIAL, req.getConfidential()).
       where( RAID.HANDLE.eq(req.getHandle())).
       execute();
     

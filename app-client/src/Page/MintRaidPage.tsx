@@ -11,10 +11,16 @@ import { LargeContentMain } from "Design/LayoutMain";
 import { ContainerCard } from "Design/ContainerCard";
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { ApiKey, MintRaidRequestV1 } from "Generated/Raidv2";
+import { MintRaidRequestV1 } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
-import { Stack, TextField } from "@mui/material";
+import {
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  Stack,
+  TextField
+} from "@mui/material";
 import { PrimaryActionButton, SecondaryButton } from "Component/AppButton";
 import { navBrowserBack } from "Util/WindowUtil";
 import { HelpChip, HelpPopover } from "Component/HelpPopover";
@@ -62,13 +68,6 @@ function Content(){
   </LargeContentMain>
 }
 
-function isDifferent(formData: ApiKey, original: ApiKey){
-  return formData.subject !== original.subject ||
-    formData.role !== original.role ||
-    formData.enabled !== original.enabled ||
-    formData.tokenCutoff?.getTime() !== original.tokenCutoff?.getTime();
-}
-
 function MintRaidContainer({servicePointId, onCreate}: {
   servicePointId: number,
   onCreate: (handle: string)=>void,
@@ -80,6 +79,7 @@ function MintRaidContainer({servicePointId, onCreate}: {
     servicePointId: servicePointId,
     name: "",
     startDate: new Date(),
+    confidential: false
   } as MintRaidRequestV1);
   const mintRequest = useMutation(
     async (data: MintRaidRequestV1) => {
@@ -119,6 +119,32 @@ function MintRaidContainer({servicePointId, onCreate}: {
           }}
           renderInput={(params) => <TextField {...params} />}
         />
+        <FormControl>
+          <FormControlLabel
+            disabled={isWorking}
+            label="Confidential"
+            labelPlacement="start"
+            style={{
+              /* by default, MUI lays this out as <checkbox><label>.
+               Doing `labelPlacement=start`, flips that around, but ends up 
+               right-justifying the content, `marginRight=auto` pushes it back 
+               across to the left and `marginLeft=0` aligns nicely. */
+              marginLeft: 0,
+              marginRight: "auto",
+            }}
+            control={
+              <Checkbox
+                checked={formData.confidential ?? false}
+                onChange={() => {
+                  setFormData({...formData, 
+                    confidential: !formData.confidential 
+                  })
+                }}
+              />
+            }
+          />
+        </FormControl>
+
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton onClick={navBrowserBack}
             disabled={isWorking}>
