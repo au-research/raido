@@ -108,6 +108,11 @@ export function RaidTableContainer({servicePointId}: {servicePointId: number}){
     return <CompactErrorPanel error={raidQuery.error}/>
   }
 
+  console.log("HomePage render", {
+    isLoading: raidQuery.isLoading,
+    isRefetching: raidQuery.isRefetching,
+    raidQuery,
+  })
   return <ContainerCard title={"Recently minted RAiD data"}
     action={<>
       <RefreshIconButton onClick={() => raidQuery.refetch()} 

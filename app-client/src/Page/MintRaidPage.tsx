@@ -62,6 +62,7 @@ function Content(){
     <MintRaidContainer 
       servicePointId={servicePointId}
       onCreate={(handle)=>{
+        console.log("Mint nav.replace to edit")
         nav.replace(getEditRaidPageLink(handle));
       }}
     />
@@ -95,6 +96,8 @@ function MintRaidContainer({servicePointId, onCreate}: {
   const isNameValid = !!formData.name;
   const canSubmit = isNameValid;
   const isWorking = mintRequest.isLoading;
+  
+  console.log("MinPage render");
   
   return <ContainerCard title={"Mint RAiD"} action={<MintRaidHelp/>}>
     <form autoComplete="off" onSubmit={(e) => {
