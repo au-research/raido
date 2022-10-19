@@ -194,7 +194,7 @@ function EditRaidContainer({handle}: {
         </FormControl>
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton type="button" onClick={(e)=>{
-            console.log("back button clicked");
+            console.log("back button clicked", {referrer: document.referrer});
             e.preventDefault();
             navBrowserBack();
             console.log("after navBrowserBack()");

@@ -11,7 +11,6 @@ import { ServicePoint } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import {
-  Fab, IconButton,
   Table,
   TableBody,
   TableCell,
@@ -22,15 +21,10 @@ import {
 import { RefreshIconButton } from "Component/RefreshIconButton";
 import { RaidoLink } from "Component/RaidoLink";
 import { getServicePointPageLink } from "Page/Admin/ServicePointPage";
-import {
-  Add,
-  Key,
-  People,
-  Visibility,
-  VisibilityOff
-} from "@mui/icons-material";
+import { Key, People, Visibility, VisibilityOff } from "@mui/icons-material";
 import { getListAppUserPageLink } from "Page/Admin/ListAppUserPage";
 import { getListApiKeyPageLink } from "Page/Admin/ListApiKeyPage";
+import { RaidoAddFab } from "Component/AppButton";
 
 const log = console;
 
@@ -81,11 +75,7 @@ function ServicePointListTable(){
     action={<>
       <RefreshIconButton refreshing={query.isLoading}
         onClick={() => query.refetch()}/>
-      <Fab href={getServicePointPageLink(undefined)} color="primary"
-        size="small"
-      >
-        <Add/>
-      </Fab>
+      <RaidoAddFab href={getServicePointPageLink(undefined)}/>
     </>}
   >
     <TableContainer>

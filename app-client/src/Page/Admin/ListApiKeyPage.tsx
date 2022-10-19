@@ -30,6 +30,8 @@ import {
   getCreateApiKeyPageLink,
   getViewApiKeyPageLink
 } from "Page/Admin/ApiKeyPage";
+import { RaidoAddFab } from "Component/AppButton";
+import { getMintRaidPageLink } from "Page/MintRaidPage";
 
 const log = console;
 
@@ -89,11 +91,7 @@ function AppUserListTable({servicePointId}: {
     action={<>
       <RefreshIconButton refreshing={apiKeysQuery.isLoading} 
         onClick={()=>apiKeysQuery.refetch()} />
-      <Fab href={getCreateApiKeyPageLink(servicePointId)} color="primary"
-        size="small"
-      >
-        <Add/>
-      </Fab>
+      <RaidoAddFab href={getCreateApiKeyPageLink(servicePointId)}/>
     </>}
   >
     <TableContainer>

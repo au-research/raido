@@ -1,7 +1,7 @@
 import {
   isPagePath,
   NavPathResult,
-  NavTransition
+  NavTransition, useNavigation
 } from "Design/NavigationProvider";
 import React from "react";
 import { ContainerCard } from "Design/ContainerCard";
@@ -36,6 +36,7 @@ import { Add } from "@mui/icons-material";
 import { getMintRaidPageLink } from "Page/MintRaidPage";
 import { RaidoLink } from "Component/RaidoLink";
 import { getEditRaidPageLink } from "Page/EditRaidPage";
+import { RaidoAddFab } from "Component/AppButton";
 
 const log = console;
 
@@ -97,6 +98,7 @@ function RaidCurrentUser(){
 
 export function RaidTableContainer({servicePointId}: {servicePointId: number}){
   const api = useAuthApi();
+  const nav = useNavigation();
   const raidQuery: RqQuery<RaidListItemV1[]> = 
     useQuery(['listRaids', servicePointId], async () => {
       return await api.basicRaid.listRaid({
@@ -117,9 +119,7 @@ export function RaidTableContainer({servicePointId}: {servicePointId: number}){
     action={<>
       <RefreshIconButton onClick={() => raidQuery.refetch()} 
         refreshing={raidQuery.isLoading || raidQuery.isRefetching} />
-      <Fab href={getMintRaidPageLink(servicePointId)} color="primary"
-        size="small"
-      ><Add/></Fab>
+      <RaidoAddFab href={getMintRaidPageLink(servicePointId)}/>
     </>}
   >
     <TableContainer>
