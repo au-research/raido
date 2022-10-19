@@ -197,7 +197,7 @@ function EditRaidContainer({handle}: {
             console.log("back button clicked");
             e.preventDefault();
             navBrowserBack();
-            console.log("post navBrowserBack()");
+            console.log("after navBrowserBack()");
           }}
             disabled={isWorking}>
             Back

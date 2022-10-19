@@ -35,6 +35,7 @@ export function navBrowserByAssign(url: string){
 }
 
 export function navBrowserBack(){
+  console.log("window.history.back()");
   window.history.back();
 }
 
