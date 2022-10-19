@@ -257,6 +257,7 @@ function PageHideListener({onPageHide, children}:{
 
     return () => {
       // cleanup
+      console.log("dismount PageHideListener");
       window.removeEventListener('pagehide', onPageHideCb);
     }
   }, [onPageHideCb]);  
