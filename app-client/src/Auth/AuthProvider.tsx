@@ -194,7 +194,7 @@ export function AuthProvider({unauthenticatedPaths = [], children}: {
   if( state.current === "not-signed-in" ){
     return <NotSignedInContent
       /* once the user has actually succeeded signing in, this logic 
-       will be able to pick that up from the userpool or url. */
+       will be able to pick that up from the userPool or url. */
       onSignInSucceeded={checkLoginState}
     />
   }
