@@ -38,7 +38,6 @@ import static raido.apisvc.util.StringUtil.*;
 public class ApidsService {
   private static final Log log = to(ApidsService.class);
   private static final Log httpLog = to(ApidsService.class, "http");
-  public static final String DRAFT_CONTENT_URL = "draft";
   public static final String RAID_HANDLE_DESC = "RAID+handle";
 
   private ApidsProps props;
