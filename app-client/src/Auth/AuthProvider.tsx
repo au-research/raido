@@ -87,7 +87,7 @@ export function AuthProvider({unauthenticatedPaths = [], children}: {
       return;
     }
     else {
-      /* getAuthSessiontFromStorage() returns undefined if there's nothing in
+      /* getAuthSessionFromStorage() returns undefined if there's nothing in
       storage and also if anything else goes wrong (malformed token, etc.) */
     }
 
@@ -103,7 +103,7 @@ export function AuthProvider({unauthenticatedPaths = [], children}: {
     id_token set to the actual access_token.  Might have to do an intermediate
     step for Cognito. */
 
-    /* verify user deatils and exchange the Cognito idToken for our 
+    /* verify user details and exchange the Cognito idToken for our 
     custom accessToken 
     setState({current: "authorizing"});
     const authzResult = await authorizeWithServer(idToken);
@@ -138,9 +138,9 @@ export function AuthProvider({unauthenticatedPaths = [], children}: {
     /* security:sto this is highly questionable.
      Better to just save what clientId the user logged in through last time and 
      use that to redirect to the IDP to authenticate again.
-     Proper OAuth2 Id Providers remember that the user has previosly 
+     Proper OAuth2 Id Providers remember that the user has previously 
      approved the app and will just immediately (seamless to user) 
-     redirect back to /idpresonse with a new auth code.
+     redirect back to /idpresponse with a new auth code.
      Pros of storing token in storage:
      - faster login UX, no waiting for the redirect chain of:
       app-client -302-> IDP -302-> api-svc -302-> app-client
