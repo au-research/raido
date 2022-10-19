@@ -26,7 +26,7 @@ still have stuff work inside `codepipeline`
     * if the dev really wants, they can force it by setting the env vars
       to "unknown" values
 
-## app-client routing is a mess
+## app-client routing needs a lot of work
 
 The NavigationProvider doesn't understand query parameters, only pathname.
 The implementation of pathname parameters is a hack - I ran into the problem,
@@ -34,6 +34,7 @@ didn't want to get side-tracked but still wanted have routable urls with params.
 
 Look at the multiple url stuff for supporting creating and editing on 
 ApiKeyPage.
+
 
 ## app-client error handling needs work
 
@@ -50,6 +51,18 @@ causing data synch issue)
 
 Might be a good idea to do this in concert with fixing up the api-svc error
 handling.
+
+
+## should not use the main app-client for presenting the raid landing page
+
+It's way bigger than necessary.  I think it would be better to have that 
+specific page generated using a completely different technology. 
+The page should be mostly static, it doesn't need interactivity.
+
+I think the page should be pre-generated, or maybe we should serve it through
+a lambda that can use whatever tech it wants (maybe still React, but it 
+generates the HTML rather than running on the client).
+
 
 # api-svc
 
