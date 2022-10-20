@@ -132,7 +132,10 @@ testing{
         implementation( 'org.springframework.cloud:spring-cloud-starter-openfeign:3.1.2'){
           /* Not a huge deal to pull in spring-boot, since it's only the 
           integration tests - but still I don't want to deal with it.
-          Excluding it here avoids any "it was already included" arguments. */
+          - avoids having to ignore all the confusing and unused  
+          implementations of Spring interfaces that it includes.
+          - avoids any "it was already included" arguments. 
+          */
           exclude group: 'org.springframework.boot'
         }
         implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3"
