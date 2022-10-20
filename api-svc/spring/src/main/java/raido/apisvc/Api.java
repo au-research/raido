@@ -31,11 +31,14 @@ public class Api {
     jetty.addServletContainerInitializer( (sci, ctx) -> 
         ApiConfig.initServletContext(ctx) );
 
-    // Will be called when pressing ctrl-c, for example.
+    /* Will be called when pressing ctrl-c, or `docker stop` is issued.
+    Note that when Jetty is shutdown cleanly like this it will call 
+    `ConfigurationApplicationContext.close()` which will shutdown Spring 
+    cleanly - with contextDestroyed() etc. being called. */
     Runtime.getRuntime().addShutdownHook(
       new Thread(jetty::shutdown, "app-shutdown") );
     
-    log.info("starting the server");
+    log.info("starting the Raido Jetty server");
     jetty.startJoin();
   }
 
