@@ -107,7 +107,7 @@ Start with the `list-raid` endpoint.
 It's very much a "just get it working" implementation at the moment.
 
 Should probably try to use Feign or some other proper client instead of 
-the current dodgy hardcoded/handcoded XML RestTemplate implementation.
+the current dodgy hardcoded/hand-coded XML RestTemplate implementation.
 
 
 ## Exception handling needs clean up
