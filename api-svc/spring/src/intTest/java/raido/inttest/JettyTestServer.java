@@ -73,7 +73,7 @@ implements BeforeAllCallback,
     serverConnector = jetty.configureHttpConnector(Api.PORT);
     jetty.addServletContainerInitializer((sci, ctx) ->
     {
-      rootContext = ApiConfig.initServletContext(ctx);
+      rootContext = ApiConfig.initApplicationContext(ctx);
       MutablePropertySources propertySources =
         rootContext.getEnvironment().getPropertySources();
 

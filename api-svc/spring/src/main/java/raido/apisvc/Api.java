@@ -29,7 +29,7 @@ public class Api {
     //noinspection resource
     jetty.configureHttpConnector(PORT);
     jetty.addServletContainerInitializer( (sci, ctx) -> 
-        ApiConfig.initServletContext(ctx) );
+        ApiConfig.initApplicationContext(ctx) );
 
     /* Will be called when pressing ctrl-c, or `docker stop` is issued.
     Note that when Jetty is shutdown cleanly like this it will call 

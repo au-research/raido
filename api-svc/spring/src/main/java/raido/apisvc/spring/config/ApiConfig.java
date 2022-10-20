@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
-import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.ServletRegistration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -88,7 +87,7 @@ public class ApiConfig implements WebMvcConfigurer {
 
   private static final Log log = to(ApiConfig.class);
   
-  public static AnnotationConfigWebApplicationContext initServletContext(
+  public static AnnotationConfigWebApplicationContext initApplicationContext(
     ServletContext ctx
   ) {
     log.with("contextName", ctx.getServletContextName()).
@@ -108,7 +107,7 @@ public class ApiConfig implements WebMvcConfigurer {
 
       @Override
       public void contextDestroyed(ServletContextEvent event) {
-        log.info("contextDestroyed()");
+        log.with("event", event).info("contextDestroyed()");
         super.contextDestroyed(event);
       }
     });
