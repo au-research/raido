@@ -1,13 +1,19 @@
 Did an DDB export to S3, downloaded manually.
 
 Export:
-* Destination: sto-raid-dev-manual
-* This AWS account
-* Export from an earlier point
-  * can't export multiple tables at once
-  * keep data consistent between tables by picking a specific timestamp
-* Format: Amazon ION 
-  * because it's more like normal JSON than DDB format 
+* from the DDB AWS console
+  * click through table name
+  * select / actions / export to s3
+* Export details
+  * Destination: sto-raid-dev-manual
+  * "This AWS account (005299621378)"
+  * Additional settings
+    * Export from an earlier point
+      * can't export multiple tables at once
+      * keep data consistent between tables by picking a specific timestamp
+    * "Exported file format"
+      * Amazon ION 
+      * because it's more like normal JSON than DDB format 
 
 Tables to export:
 * RAiD-MetadataTable-5X1IHWPICN82
@@ -17,3 +23,5 @@ Tables to export:
 
 As per https://confluence.ardc.edu.au/display/~stolley/Raid+V1+-+DDB+table+analysis
 
+After that, use cloudberry explorer to move each S3 directory to 
+/repo/ddb-migration/<table name>
