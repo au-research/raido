@@ -1,5 +1,5 @@
 
-## Running `Api.main()`
+## Running `Api.main()` from IDE
 
 If you want to start the app from your IDE, remember to specify JVM options:
 
@@ -45,4 +45,16 @@ Apids.secret=<APIDS API secret>
 ### Running integration tests
 
 See [intTest/readme.md](./src/intTest/readme.md)
+
+
+## Running `Api.main()` from command line
+
+* `cd /repository/api-svc/spring/build/libs`
+* `$JAVA_HOME/bin/java  \
+  -Duser.timezone=UTC -Dfile.encoding=UTF-8 \
+  -Duser.language= -Duser.country= -Duser.variant= \
+  -Dlogback.configurationFile=docker-logback.xml \
+  -jar raido-api-svc.jar`
+  * this was taken from [api-svc-start.sh](../docker/src/main/docker/script/api-svc-start.sh)
+  
 
