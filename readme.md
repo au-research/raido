@@ -27,7 +27,7 @@ to the expected level of service provided by the Raido team.
 # Project structure
 
 * /
-  * the rooot project contains no production code, it's just the container that
+  * the root project contains no production code, it's just the container that
   holds all the other sub-projects
   * it does contain some build code though, 
   see: [/buildSrc](./buildSrc)
@@ -44,15 +44,20 @@ to the expected level of service provided by the Raido team.
 
 # CI
 
-Using a Github action at the moment to run tests.
+Using Github actions at the moment to run build, test and quality tasks.
 
-* [CI - gradle.yml](.github/workflows/gradle.yml)
+These generally execute on push to to `main` or on pull-requests.
+So if you want to test stuff in Github without pushing to `main`;
+  work in your own branch, create a PR and it will run the build and tests.
+Note that changes consisiting soley of `*.md` files are intended to be ignored.
+
+* [api-svc-ci.yml](.github/workflows/api-svc-ci.yml)
   * builds and runs unit and integration tests
-  * executes on push to to `main` or on pull-requests
-    * So if you want to test stuff in Github without pushing to `main`;
-      work in your own branch, create a PR and it will run the build
-      and tests.
-  * Changes to `*.md` files are not built.
+* [app-client-ci.yml](.github/workflows/app-client-ci.yml)
+  * does a production build of the app-client
+* [codeql-analysis.yml](.github/workflows/codeql-analysis.yml)
+  * runs an api-svc build in the context of Github 
+  [codeql](https://github. com/github/codeql-action)
 
 * Look in [Github Actions](https://github.com/au-research/raido-v2/actions)
   console to see what's going on
