@@ -14,8 +14,9 @@ It's called "v2" because initially it was called raid-v2 because there was a
 v1. Should've just called it "raido" - oh well.
 
 Important architectural decisions are recorded in [/doc/adr](./doc/adr).
-Different sub-projects have their own ADR log, in their local /doc/adr
-directories (db, app-client, [api-svc](/api-svc/doc/adr), etc.)
+Different sub-projects can have their own ADR log, in their local /doc/adr
+directories ([app-client](./app-client/doc/adr), [api-svc](./api-svc/doc/adr), 
+etc.)
 
 The overall technology stack can be found in the
 [technology-stack.md](/doc/technology-stack.md) page.
