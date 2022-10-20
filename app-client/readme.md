@@ -84,7 +84,7 @@ https://ap-southeast-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/A
 
 This project was bootstrapped with:
 ```
-cd .../raido-v1
+cd .../raido-v2
 npx create-react-app app-client --template typescript
 ```
 
