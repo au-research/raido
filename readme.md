@@ -13,19 +13,30 @@ Note that:
 It's called "v2" because initially it was called raid-v2 because there was a
 v1. Should've just called it "raido" - oh well.
 
-Important architectural decisions are recorded in [/doc/adr](./doc/adr).
-Different sub-projects can have their own ADR log, in their local /doc/adr
-directories ([app-client](./app-client/doc/adr), [api-svc](./api-svc/doc/adr), 
-etc.)
 
-The overall technology stack can be found in the
+# Technology / Architecture
+
+The overall technology stack is described in the
 [technology-stack.md](/doc/technology-stack.md) page.
+
+
+Important architectural decisions are recorded in the 
+[Architecture Decision Log](./doc/adr/readme.md).
+
+* [/doc/adr](./doc/adr).
+
+Different sub-projects can have their own ADR log, in their local /doc/adr
+directory.
+
+* ([app-client](./app-client/doc/adr)
+* [api-svc](./api-svc/doc/adr)
+
 
 The [service-level-guide.md](/doc/service-level-guide.md) page provides guidance
 to the expected level of service provided by the Raido team.
 
 
-# Project structure
+## Project structure
 
 * /
   * the root project contains no production code, it's just the container that
