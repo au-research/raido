@@ -28,5 +28,6 @@ WORKDIR app
 
 EXPOSE 8080
 
-CMD ["/app/api-svc-start.sh"]
+# not sure if should use ENTRYPOINT / CMD.  Internet says use ENTRYPOINT.
+ENTRYPOINT ["/app/api-svc-start.sh"]
 
