@@ -3,6 +3,8 @@ package raido.apisvc.spring.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.ServletRegistration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -97,7 +99,19 @@ public class ApiConfig implements WebMvcConfigurer {
       new AnnotationConfigWebApplicationContext();
     rootContext.register(ApiConfig.class);
     // Manage the lifecycle of the root application context
-    ctx.addListener(new ContextLoaderListener(rootContext));
+    ctx.addListener(new ContextLoaderListener(rootContext){
+      @Override
+      public void contextInitialized(ServletContextEvent event) {
+        log.with("event", event).info("contextInitialized()");
+        super.contextInitialized(event);
+      }
+
+      @Override
+      public void contextDestroyed(ServletContextEvent event) {
+        log.info("contextDestroyed()");
+        super.contextDestroyed(event);
+      }
+    });
 
     // probs not necessary if Spring http config is set to STATELESS 
     ctx.setSessionTrackingModes(emptySet());
@@ -187,6 +201,7 @@ public class ApiConfig implements WebMvcConfigurer {
       disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     converters.add(jsonConverter);
   }
+
 }
 
 
