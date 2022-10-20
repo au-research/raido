@@ -15,7 +15,7 @@ public class Api {
 
   static {
     /* https://stackoverflow.com/a/43242620/924597 
-    Originally introduced for getting the pgjdbc driver stuff. */
+    Originally introduced for getting the pgjdbc driver logging working. */
     SLF4JBridgeHandler.install();
   }
   
