@@ -40,7 +40,7 @@ repositories{
 }
 
 dependencies{
-  // don't really care, whever version Gradle is using will do
+  // don't really care, whatever version Gradle is using will do
   implementation localGroovy()
 
   // look in settings.gradle for version catalog specs 
