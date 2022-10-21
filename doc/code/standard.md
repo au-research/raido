@@ -128,7 +128,7 @@ in a UTF-8 field with without concern.  Though if some other process stores
 non-ASCII in a UTF-8 field and you try to read it into an ASCII context,
 you will get one of three likely outcomes: 
 * a conversion error 
-* an ASCII string with the `?` used as a 
+* an ASCII string with the ASCII character `?` used as a 
 [replacement character](https://www.fileformat.info/info/unicode/char/fffd/index.htm) 
 for each non-ASCII character (Unicode standard behaviour for converting
 unrepresentable characters).
