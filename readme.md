@@ -75,15 +75,21 @@ Note that changes consisiting soley of `*.md` files are intended to be ignored.
   console to see what's going on
 
 
-# Development pre-requisites
+# Development 
+
+## Local build/development pre-requisites
 
 * [JDK 17](./doc/adr/2022-07-21_jdk-platform.md)
 * [Node.js 16](./doc/adr/2022-07-21_nodejs-platform.md)
 * Docker
   * postgres 14 
-  
+ 
+## Coding standards
 
-# Building
+See [/doc/code](./doc/code)) - there may also be further sub-project specific  
+standards local to that project, look in the local `/doc` directory.
+
+## Building
 See the relevant local readme for building api-svc, api-svc/db and app-client.
 
 See [build-troubleshooting.md](/doc/build-troubleshooting.md) if
