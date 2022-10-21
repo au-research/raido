@@ -21,14 +21,14 @@ The overall technology stack is described in the
 
 
 Important architectural decisions are recorded in the 
-[Architecture Decision Log](./doc/adr/readme.md).
+[Architecture Decision Log](https://github.com/joelparkerhenderson/architecture-decision-record#what-is-an-architecture-decision-record).
 
-* [/doc/adr](./doc/adr).
+* [/doc/adr](./doc/adr)
 
 Different sub-projects can have their own ADR log, in their local /doc/adr
 directory.
 
-* ([app-client](./app-client/doc/adr)
+* [app-client](./app-client/doc/adr)
 * [api-svc](./api-svc/doc/adr)
 
 
@@ -86,7 +86,7 @@ Note that changes consisiting soley of `*.md` files are intended to be ignored.
  
 ## Coding standards
 
-See [/doc/code](./doc/code)) - there may also be further sub-project specific  
+See [/doc/code](./doc/code) - there may also be further sub-project specific  
 standards local to that project, look in the local `/doc` directory.
 
 ## Building
