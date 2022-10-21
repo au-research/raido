@@ -126,10 +126,14 @@ By design, the first 128 characters of Unicode (when encoded as UTF-8) are
 exactly binary-compatible with US-ASCII. That means you can safely store ASCII 
 in a UTF-8 field with without concern.  Though if some other process stores
 non-ASCII in a UTF-8 field and you try to read it into an ASCII context,
-you will either get a conversion error or an ASCII `?` as a 
+you will get one of three likely outcomes: 
+* a conversion error 
+* an ASCII string with the `?` used as a 
 [replacement character](https://www.fileformat.info/info/unicode/char/fffd/index.htm) 
 for each non-ASCII character (Unicode standard behaviour for converting
 unrepresentable characters).
+* an ASCII string containing 
+[mojibake](https://en.wikipedia.org/wiki/Mojibake)
 
 
 ### UTC everywhere
