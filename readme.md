@@ -28,8 +28,8 @@ Important architectural decisions are recorded in the
 Different sub-projects can have their own ADR log, in their local /doc/adr
 directory.
 
-* [app-client/doc/adr](./app-client/doc/adr)
-* [api-svc/doc/adr](./api-svc/doc/adr)
+* [/app-client/doc/adr](./app-client/doc/adr)
+* [/api-svc/doc/adr](./api-svc/doc/adr)
 
 
 The [service-level-guide.md](/doc/service-level-guide.md) page provides guidance

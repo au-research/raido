@@ -1,5 +1,10 @@
 package raido
 
+/** Doesn't work yet.  
+ This will eventually contain code to retrieve the ECR login password via AWS
+ SDK standard mechanisms.  The password can then be used by the dockerEcrLogin
+ task.
+ */
 class EcrUtil {
   static String getEcrLoginPassword(String repoName) {
 
