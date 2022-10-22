@@ -66,6 +66,34 @@ generates the HTML rather than running on the client).
 
 # api-svc
 
+## JWT authorisation validation causes too much DB load
+
+At the moment, every endpoint reads from the app_user table for every 
+single authroizable endpoint call, every time.  This is done in order
+to validate that the user/token represented by the token:
+* had not been disabled 
+* has not been "blacklisted" via token cutoff
+
+Note that this read is *not* about reading user role or other future authz info
+- we trust the signing of the bearer token to ensure validity of that info
+(though it could be out of date).
+
+This will cause too many redundant queries to be issued on the prod DB under 
+load (most of the time, the user hasn't changed and the queries are completely 
+unnecessary).
+
+In the medium-term, we will alleviate this load by caching the relevant 
+app_user data (using the Caffeine libarary) with an agressive cache of a few 
+seconds.  This cache is not about latency/uptime/reliabilty - it's purely to 
+relieve the DB (and local connection pool) of the processing/connection 
+overhead of all those user queries. 
+
+Long-term, this could further be improved with a dedicated caching service
+such as redis/elasticache.  Though at that point it likely makes more sense
+to factor out the app_user stuff to a separate IDService that can control its
+own fate with regard to caching/DB technology used.
+
+
 ## IDL projects generate java of the from `Void entpointName()`   
 
 When we have a POST endpoint that doesn't return anything, we end with a method
