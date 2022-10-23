@@ -86,7 +86,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ReadRaidResponseV1'
-
+                
+                
 components:
   schemas:
     RaidListRequest:
@@ -97,6 +98,8 @@ components:
         name: {type: string}
     MintRaidRequestV1:
       type: object
+      description: >
+        handle is optional when minting, required when updating.
       required: [handle, servicePointId, name, confidential]
       properties:
         handle: {type: string}
