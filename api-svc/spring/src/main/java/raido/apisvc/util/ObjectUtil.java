@@ -180,4 +180,12 @@ public final class ObjectUtil {
     
     return value;
   }
+  
+  public static boolean isEmpty(@Nullable Collection<?> c){
+    if( c == null ){
+      return true;
+    }
+    
+    return c.isEmpty();
+  }
 }
