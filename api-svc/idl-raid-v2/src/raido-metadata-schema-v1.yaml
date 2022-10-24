@@ -62,7 +62,7 @@ components:
     RaidoMetadataSchemaV1:
       type: object
       properties:
-        metadataSchema: "raido-metadata-schema-v1"
+        metadataSchema: {type: string}
         id: {$ref: '#/components/schemas/IdBlock'}
         titles: 
           type: array
