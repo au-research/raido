@@ -155,8 +155,18 @@ public class ApiConfig implements WebMvcConfigurer {
     return new PropertySourcesPlaceholderConfigurer();
   }
 
-  @Bean public ObjectMapper objectMapper(){
+  /*
+   Given that we added WRITE_DATES_AS_TIMESTAMPS for this (which I think was 
+   for the REST API endpoints - I don't understand why we haven't needed to 
+   register JavaTimeModule for this? Like the raidMetadata mapper and the 
+   mapper used by the feign client for integration tests - we had to register
+   the module for those usages, why not here?
+  */
+  @Bean
+  public ObjectMapper objectMapper() {
     return new ObjectMapper().
+      /* from memory, this was to get the Spring REST API endpoints writing 
+      datetime the way I wanted. */
       disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
   }
   
@@ -174,7 +184,7 @@ public class ApiConfig implements WebMvcConfigurer {
 
     messageConverters.add(xmlConverter);
     messageConverters.add(jsonConverter);
-    messageConverters.add( new FormHttpMessageConverter());
+    messageConverters.add(new FormHttpMessageConverter());
 
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.setMessageConverters(messageConverters);
