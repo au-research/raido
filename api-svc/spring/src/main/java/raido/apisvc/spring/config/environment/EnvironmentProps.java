@@ -23,7 +23,11 @@ public class EnvironmentProps {
    app-client via running `npm run start`, so that local testing works.
    demo is set to `https://demo.raido-infra.com/raid`.
    */
-  @Value("${EnvironmentConfig.raidLandingPrefix:" +
+  @Value("${EnvironmentConfig.raidoLandingPrefix:" +
     "http://localhost:7080/handle}")
-  public String raidLandingPrefix;
+  public String raidoLandingPrefix;
+
+  @Value("${EnvironmentConfig.globalUrlPrefix:" +
+    "https://hdl.handle.net}")
+  public String globalUrlPrefix;
 }
