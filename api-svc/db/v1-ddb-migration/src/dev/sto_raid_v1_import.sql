@@ -1,22 +1,3 @@
-select true = true
-;
-
-select false = false
-;
-
-select false = true
-;
-
-select null = null
-;
-
-select false = null
-;
-
-select true = null
-;
-
-
 select * 
 from service_point
 ;
@@ -28,6 +9,20 @@ from app_user
 select * 
 from user_authz_request
 ;
+
+
+select * 
+from raid
+where owner = 'University of Notre Dame Library'
+order by creation_date desc
+limit 10
+;
+
+select *
+from raid
+where owner = 'RDM@UQ'
+order by creation_date desc
+limit 10
 
 -- expected default schema raid_v1_import 
 select * 

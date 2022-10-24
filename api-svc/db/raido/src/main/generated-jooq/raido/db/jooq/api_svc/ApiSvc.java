@@ -15,6 +15,7 @@ import raido.db.jooq.DefaultCatalog;
 import raido.db.jooq.api_svc.tables.AppUser;
 import raido.db.jooq.api_svc.tables.FlywaySchemaHistory;
 import raido.db.jooq.api_svc.tables.Raid;
+import raido.db.jooq.api_svc.tables.RaidV2;
 import raido.db.jooq.api_svc.tables.RaidoOperator;
 import raido.db.jooq.api_svc.tables.ServicePoint;
 import raido.db.jooq.api_svc.tables.UserAuthzRequest;
@@ -52,6 +53,7 @@ public class ApiSvc extends SchemaImpl {
             AppUser.APP_USER,
             FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
             Raid.RAID,
+            RaidV2.RAID_V2,
             RaidoOperator.RAIDO_OPERATOR,
             ServicePoint.SERVICE_POINT,
             UserAuthzRequest.USER_AUTHZ_REQUEST

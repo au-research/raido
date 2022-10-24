@@ -1,14 +1,13 @@
 package raido.inttest.endpoint.raidv2;
 
 import org.junit.jupiter.api.Test;
-import raido.idl.raidv2.model.MintRaidRequestV1;
-import raido.idl.raidv2.model.RaidListRequest;
-import raido.idl.raidv2.model.ReadRaidV1Request;
+import raido.apisvc.service.raid.MetadataService.Schema;
+import raido.idl.raidv2.model.*;
 import raido.inttest.IntegrationTestCase;
 import raido.inttest.util.IdFactory;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static raido.apisvc.endpoint.raidv2.BasicRaidExperimental.RAIDO_SP_ID;
@@ -29,7 +28,7 @@ public class BasicRaidExperimentalTest extends IntegrationTestCase {
     var mintResult = raidApi.mintRaidV1(new MintRaidRequestV1().
       servicePointId(RAIDO_SP_ID).
       name(initialName).
-      confidential(false) );
+      confidential(false));
     assertThat(mintResult).isNotNull();
     assertThat(mintResult.getHandle()).isNotBlank();
     assertThat(mintResult.getStartDate()).isNotNull();
@@ -77,7 +76,7 @@ public class BasicRaidExperimentalTest extends IntegrationTestCase {
     WHEN("list by initial name from before update");
     var listResult2 = raidApi.listRaid(new RaidListRequest().
       servicePointId(RAIDO_SP_ID).name(initialName));
-    
+
     THEN("should find raid with updated name");
     assertThat(listResult2).singleElement().satisfies(i->{
       assertThat(i.getHandle()).isEqualTo(mintResult.getHandle());
@@ -85,7 +84,7 @@ public class BasicRaidExperimentalTest extends IntegrationTestCase {
       assertThat(i.getStartDate()).isEqualTo(LocalDate.now());
     });
 
-    
+
     EXPECT("should be able to read the minted raid via public api");
     var pubRead = publicApi.publicReadRaid(mintResult.getHandle());
     assertThat(pubRead).isNotNull();
@@ -93,12 +92,12 @@ public class BasicRaidExperimentalTest extends IntegrationTestCase {
     assertThat(pubRead.getName()).isEqualTo(updatedName);
     assertThat(pubRead.getConfidential()).isFalse();
     assertThat(pubRead.getCreateDate()).isNotNull();
-    
-    
+
+
     WHEN("raid is made confidential");
     updateRequest.setConfidential(true);
     raidApi.updateRaidV1(updateRequest);
-    
+
     THEN("public read endpoint should not return data");
     pubRead = publicApi.publicReadRaid(mintResult.getHandle());
     assertThat(pubRead).isNotNull();
@@ -111,4 +110,40 @@ public class BasicRaidExperimentalTest extends IntegrationTestCase {
     assertThat(pubRead.getMetadata()).isNull();
   }
 
+  @Test
+  void happyDayMintRaidoSchemaV1() {
+    var raidApi = super.basicRaidExperimentalClient();
+    var publicApi = publicExperimentalClient();
+    String initialTitle = "intv2 test" + IdFactory.generateUniqueId();
+    var today = LocalDate.now();
+
+    EXPECT("minting a raid with minimal content should succeed");
+    var mintResult = raidApi.mintRaidoSchemaV1(
+      new MintRaidoSchemaV1Request().
+        mintRequest(new MintRaidoSchemaV1RequestMintRequest().
+          servicePointId(RAIDO_SP_ID)).
+        metadataSchema(Schema.RAIDO_V1.getId()).
+        metadata(new RaidoMetadataSchemaV1().
+          titles(List.of(new TitleBlock().
+            type(TitleType.PRIMARY_TITLE).
+            title(initialTitle).
+            startDate(today))).
+          dates(new DatesBlock().startDate(today)).
+          descriptions(List.of(new DescriptionBlock().
+            type(DescriptionType.PRIMARY_DESCRIPTION).
+            description("stuff about the int test raid"))).
+          access(new AccessBlock().type(AccessType.OPEN))
+        )
+    );
+
+    assertThat(mintResult).isNotNull();
+    assertThat(mintResult.getHandle()).isNotBlank();
+    assertThat(mintResult.getStartDate()).isNotNull();
+
+    EXPECT("should be able to read the minted raid via authz api");
+    var readResult = raidApi.readRaidV2(
+      new ReadRaidV1Request().handle(mintResult.getHandle()) );
+    assertThat(readResult).isNotNull();
+
+  }
 }

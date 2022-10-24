@@ -1,0 +1,140 @@
+openapi: 3.0.3
+info:
+  title: raido-metadata-schema-v1
+  version: 1.0.0
+  description: >
+    The first metadata schema supported by Raido.
+    This is what all raids imported from the legacy application were imported
+    as.
+paths:
+  /mint-raido-schema-v1:
+    post:
+      tags:
+        - basic-raid-experimental
+      operationId: mint-raido-schema-v1
+      summary: mint a raido-metadata-schema-v1 raid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mintRequest:
+                  type: object
+                  properties:
+                    servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+                metadataSchema: {type: string}
+                metadata: {$ref: '#/components/schemas/RaidoMetadataSchemaV1'}
+      responses:
+        '200':
+          description: data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadRaidResponseV2'
+  /read-raid-v2:
+    post:
+      tags:
+        - basic-raid-experimental
+      operationId: read-raid-v2
+      summary: read a raid, caller must be authorized
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [handle]
+              properties:
+                handle: {type: string}
+      responses:
+        '200':
+          description: data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadRaidResponseV2'
+
+
+components:
+  schemas:
+    RaidoMetadataSchemaV1:
+      type: object
+      properties:
+        metadataSchema: "raido-metadata-schema-v1"
+        id: {$ref: '#/components/schemas/IdBlock'}
+        titles: 
+          type: array
+          items: {$ref: '#/components/schemas/TitleBlock'}
+        dates: {$ref: '#/components/schemas/DatesBlock'}
+        descriptions:
+          type: array
+          items: {$ref: '#/components/schemas/DescriptionBlock'}
+        access: {$ref: '#/components/schemas/AccessBlock'}
+    IdBlock:
+      type: object
+      properties:
+        identifier: {type: string}
+        identifierTypeUri: {type: string}
+        globalUrl: {type: string}
+        raidoUrl: {type: string}
+    TitleBlock:
+      type: object
+      required: [title, type, startDate]
+      properties:
+        title: {type: string}
+        type: {$ref: '#/components/schemas/TitleType'}
+        startDate: { type: string, format: date }
+        endDate: { type: string, format: date }
+    DatesBlock:
+      type: object
+      required: ["startDate"]
+      properties:
+        startDate: { type: string, format: date }
+        endDate: { type: string, format: date }
+    DescriptionBlock:
+      type: object
+      required: ["description", "type"]
+      properties:
+        description: {type: string}
+        type: {$ref: '#/components/schemas/DescriptionType'}
+    AccessBlock:
+      type: object
+      required: ["access", "accessStatement"]
+      properties:
+        type: {$ref: '#/components/schemas/AccessType'}
+        accessStatement: {type: string}
+    TitleType:
+      type: string
+      enum: ['Primary Title', 'Alternative Title']
+    DescriptionType:
+      type: string
+      enum: ['Primary Description', 'Alternative Description']
+    AccessType:
+      type: string
+      enum: ['Open', 'Closed']
+    RaidListItemV2:
+      type: object
+      required: [handle, confidential, createdDateTime]
+      properties:
+        handle: {type: string}
+        primaryTitle: {type: string}
+        startDate: { type: string, format: date }
+        createDate: { type: string, format: date-time }
+    ReadRaidResponseV2:
+      type: object
+      required: [
+        handle, servicePointId,
+        primaryTitle, url,
+        startDate, createDate, ]
+      properties:
+        handle: { type: string }
+        servicePointId: { $ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        servicePointName: { type: string }
+        primaryTitle: { type: string }
+        startDate: { type: string, format: date }
+        createDate: { type: string, format: date-time }
+        url: { type: string }
+        metadataEnvelopeSchema: { type: string }
+        metadata: { type: object }

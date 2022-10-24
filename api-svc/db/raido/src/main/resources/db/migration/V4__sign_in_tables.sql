@@ -137,9 +137,6 @@ create unique index user_authz_request_once_active_key
   where status = 'REQUESTED';
 comment on index user_authz_request_once_active_key is
   'a user can only make one active request per service point';
--- alter table user_authz_request
---   add constraint once_active_key unique using index user_authz_request_once_active_key;
-
 
 comment on column user_authz_request.responding_user is
   'user that approved or rejected, not set until that happens';
@@ -151,35 +148,18 @@ comment on column user_authz_request.approved_user is
   'the user that was approved, set when request is approved and the 
   user is created or updated';
 
-create table raid (
-  handle           varchar(32) primary key                                     not null,
-  service_point_id bigint references service_point                             not null,
-  content_path     varchar(512)                                                not null,
-  content_index    integer                                                     not null,
-  name             varchar(256)                                                not null,
-  description      varchar(1024)                                               not null,
-  confidential     boolean                                                     not null,
-  metadata         jsonb                                                       not null,
-  start_date       timestamp without time zone default transaction_timestamp() not null,
-  date_created     timestamp without time zone default transaction_timestamp() not null
-);
-
-
+-- raido service point so operators can be auto-approved against it
 insert into service_point
   (name, admin_email, tech_email)
 values ('raido', 'web.services@ardc.edu.au', 'web.services@ardc.edu.au');
 
-insert into service_point
-  (name, search_content, admin_email, tech_email)
-values ('Australian Research Data Commons',
-        'ardc',
-        'matthias.liffers@ardc.edu.au',
-        'joel.benn@ardc.edu.au');
-
+-- these operators will be "auto-approved" against the raido service point 
 insert into raido_operator
 values ('shorn.tolley@ardc.edu.au');
 insert into raido_operator
 values ('matthias.liffers@ardc.edu.au');
 insert into raido_operator
 values ('shawn.ross@ardc.edu.au');
+insert into raido_operator
+values ('rob.leney@ardc.edu.au');
 
