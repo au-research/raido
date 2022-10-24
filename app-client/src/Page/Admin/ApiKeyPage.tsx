@@ -190,7 +190,7 @@ function ApiKeyContainer({apiKeyId, servicePointId, onCreate}: {
   const isValid = !!formData.subject;
   const hasChanged = isDifferent(formData, query.data);
   const canGenerateToken = 
-    !isWorking && !hasChanged && !updateRequest.isLoading;
+    !isWorking && !hasChanged && !updateRequest.isLoading && !!apiKeyId;
   const canSubmitUpdate = 
     !isWorking && hasChanged && isValid && !updateRequest.isLoading;
   
