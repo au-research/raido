@@ -83,9 +83,6 @@ public class PublicExperimental implements PublicExperimentalApi {
     
     var data = raidSvc.readRaidData(handle);
     
-    // improve:sto - deal with confidential and embargoed raids
-    // if isNotPublic return handle, url, createDate
-
     if( data.raid().getConfidential() ){
       return new PublicReadRaidResponseV1().
         handle(data.raid().getHandle()).
