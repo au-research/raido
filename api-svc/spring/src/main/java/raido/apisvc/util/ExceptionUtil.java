@@ -54,6 +54,18 @@ public class ExceptionUtil {
   }
 
   /**
+   Creates a new IllegalStateException.
+
+   @param format {@link String#format(String, Object...)} - ("%s")
+   */
+  public static IllegalStateException illegalStateException(
+    String format,
+    Object... args
+  ) {
+    return new IllegalStateException(String.format(format, args));
+  }
+
+  /**
    Creates a new IllegalArgumentException.
 
    @param format {@link String#format(String, Object...)} - ("%s")
@@ -63,6 +75,13 @@ public class ExceptionUtil {
     Object... args
   ) {
     return illegalArgException(format, args);
+  }
+  
+  public static IllegalStateException ise(
+    String format,
+    Object... args
+  ) {
+    return illegalStateException(format, args);
   }
   
   /** Not yet implemented */
