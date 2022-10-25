@@ -68,6 +68,9 @@ function AuthzResponseContainer({authzRequestId}:{authzRequestId: number}){
   const queryClient = useQueryClient();
   const queryName = 'readAuthzRequest';
   const [role, setRole] = useState("SP_USER");
+  const [responseClicked, setResponseClicked] = useState(
+    undefined as undefined | "REJECTED" | "APPROVED") ;
+  
   const query = useQuery(
     [queryName, authzRequestId], 
     async () => {
@@ -76,6 +79,10 @@ function AuthzResponseContainer({authzRequestId}:{authzRequestId: number}){
   );
   const updateRequest = useMutation(
     async (data: UpdateAuthzRequestStatusRequest) => {
+      if( data.updateAuthzRequestStatus.status === "REQUESTED" ){
+        throw new Error("cannot change to reqested");
+      }
+      setResponseClicked(data.updateAuthzRequestStatus.status);
       await api.admin.updateAuthzRequestStatus(data);
     },
     {
@@ -116,7 +123,7 @@ function AuthzResponseContainer({authzRequestId}:{authzRequestId: number}){
 
   const responseInfo = <InfoFieldList>
     <InfoField id={"responderEmail"} label={"Responder"} 
-      value={query.data.email}/>
+      value={query.data.respondingUserEmail}/>
     <InfoField id={"respondedDate"} label={"Responded"} 
       value={<DateTimeDisplay date={query.data.dateResponded}/>}/>
   </InfoFieldList>
@@ -149,7 +156,9 @@ function AuthzResponseContainer({authzRequestId}:{authzRequestId: number}){
         { query.data.status === "REQUESTED" && <>
           <PrimaryButton color={"error"}
             disabled={updateRequest.isLoading || query.isLoading}
-            isLoading={updateRequest.isLoading}
+            isLoading={
+              updateRequest.isLoading && responseClicked === "REJECTED" 
+            }
             onClick={() => updateRequest.mutate({
               updateAuthzRequestStatus: {
                 authzRequestId, status: "REJECTED"
@@ -160,7 +169,9 @@ function AuthzResponseContainer({authzRequestId}:{authzRequestId: number}){
           </PrimaryButton>
           <PrimaryActionButton context={"request response"} color={"success"}
             disabled={updateRequest.isLoading || query.isLoading}
-            isLoading={updateRequest.isLoading}
+            isLoading={
+              updateRequest.isLoading && responseClicked === "APPROVED"
+            }
             error={updateRequest.error}
             onClick={() => updateRequest.mutate({
               updateAuthzRequestStatus: {
