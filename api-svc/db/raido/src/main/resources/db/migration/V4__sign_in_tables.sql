@@ -63,6 +63,7 @@ comment on column service_point.search_content is
 
 
 -- 'user' is a reserved word
+-- but the "app" part is misleading, because we store api-keys in here too
 create table app_user (
   id               bigint generated always as identity
     (start with 1000000000)
@@ -82,6 +83,8 @@ create table app_user (
 
 -- worried about multiple user_request approvals and moving users around between
 -- service-points in case of user error, etc.
+-- TODO:STO but this means the "api-key" subject is globally unique - that's no
+-- good.  index should be partial, only where not id_prodvider is API?
 create unique index app_user_id_fields_active_key
   on app_user(email, client_id, subject)
   where enabled = true;
