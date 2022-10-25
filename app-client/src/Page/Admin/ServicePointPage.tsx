@@ -119,7 +119,7 @@ function ServicePointContainer({servicePointId, onCreate}: {
 
   const isWorking = query.isLoading || updateRequest.isLoading;
   
-  return <ContainerCard title={"Authorisation request"}>
+  return <ContainerCard title={"Service point"}>
     <form autoComplete="off" onSubmit={(e) => {
       e.preventDefault();
       updateRequest.mutate({servicePoint: formData});
