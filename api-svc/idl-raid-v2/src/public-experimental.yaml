@@ -55,6 +55,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PublicReadRaidResponseV1'
+  /public-read-raid-v2:
+    get:
+      security: []
+      tags:
+        - public-experimental
+      operationId: public-read-raid-v2
+      summary: >
+        read raid data, anybody can call this but it might not return useful
+        info, RAiD may be confidential or embargoed
+      parameters:
+        - in: path
+          name: handle
+          schema: { type: string }
+          required: true
+          description: handle
+      responses:
+        '200':
+          description: result of request
+          content:
+#            text/html:
+#              schema:
+#                type: object 
+            application/json:
+              # would have preferred to use "oneOf PublicReadResponse or 
+              # ClosedResponse", but though openapi generated appropriate code
+              # (an abstract base class and two concrete implementations) 
+              # open-feign failed with "InvalidDefinitionException: Cannot
+              # construct instance of AbstractBaseClass"
+              schema:
+                  $ref: '#/components/schemas/PublicReadRaidResponseV2'
 
 
 components:
@@ -89,3 +119,12 @@ components:
         metadataEnvelopeSchema: {type: string}
         metadata: {type: object}
         confidential: {type: boolean}
+    PublicReadRaidResponseV2:
+      type: object
+      required: [
+        handle, metadataEnvelopeSchema, metadata, createDate, ]
+      properties:
+        servicePointId: { $ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        servicePointName: { type: string }
+        createDate: { type: string, format: date-time }
+        metadata: { type: object }

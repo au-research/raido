@@ -1,6 +1,9 @@
 package raido.inttest.endpoint.raidv2;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import raido.apisvc.service.raid.MetadataService.Schema;
 import raido.idl.raidv2.model.*;
 import raido.inttest.IntegrationTestCase;
@@ -17,6 +20,8 @@ import static raido.apisvc.util.test.BddUtil.WHEN;
 
 public class BasicRaidExperimentalTest extends IntegrationTestCase {
 
+  @Autowired private ObjectMapper mapper;
+  
   @Test
   void happyDayMintListRead() {
     var raidApi = super.basicRaidExperimentalClient();
@@ -111,10 +116,10 @@ public class BasicRaidExperimentalTest extends IntegrationTestCase {
   }
 
   @Test
-  void happyDayMintRaidoSchemaV1() {
+  void happyDayMintRaidoSchemaV1() throws JsonProcessingException {
     var raidApi = super.basicRaidExperimentalClient();
     var publicApi = publicExperimentalClient();
-    String initialTitle = "intv2 test" + IdFactory.generateUniqueId();
+    String initialTitle = "intV2 test" + IdFactory.generateUniqueId();
     var today = LocalDate.now();
 
     EXPECT("minting a raid with minimal content should succeed");
@@ -122,8 +127,8 @@ public class BasicRaidExperimentalTest extends IntegrationTestCase {
       new MintRaidoSchemaV1Request().
         mintRequest(new MintRaidoSchemaV1RequestMintRequest().
           servicePointId(RAIDO_SP_ID)).
-        metadataSchema(Schema.RAIDO_V1.getId()).
         metadata(new RaidoMetadataSchemaV1().
+          metadataSchema(Schema.RAIDO_V1.getId()).
           titles(List.of(new TitleBlock().
             type(TitleType.PRIMARY_TITLE).
             title(initialTitle).
@@ -139,11 +144,37 @@ public class BasicRaidExperimentalTest extends IntegrationTestCase {
     assertThat(mintResult).isNotNull();
     assertThat(mintResult.getHandle()).isNotBlank();
     assertThat(mintResult.getStartDate()).isNotNull();
+    assertThat(mintResult.getMetadata()).isInstanceOf(String.class);
+    var mintedMetadata = mapper.readValue(
+      mintResult.getMetadata().toString(), RaidoMetadataSchemaV1.class);
+    assertThat(mintedMetadata.getMetadataSchema()).
+      isEqualTo(Schema.RAIDO_V1.getId());
 
     EXPECT("should be able to read the minted raid via authz api");
     var readResult = raidApi.readRaidV2(
       new ReadRaidV1Request().handle(mintResult.getHandle()) );
     assertThat(readResult).isNotNull();
+
+    EXPECT("should be able to read the minted raid via public api");
+    var pubReadObject = publicApi.publicReadRaidV2(mintResult.getHandle());
+    assertThat(pubReadObject).isNotNull();
+    assertThat(pubReadObject).isInstanceOf(PublicReadRaidResponseV2.class);
+    var pubRead = (PublicReadRaidResponseV2) pubReadObject;
+    assertThat(pubRead.getCreateDate()).isNotNull();
+    assertThat(pubRead.getServicePointId()).isEqualTo(RAIDO_SP_ID);
+
+    assertThat(mintResult.getMetadata()).isInstanceOf(String.class);
+    var pubReadMeta = mapper.readValue(
+      mintResult.getMetadata().toString(), RaidoMetadataSchemaV1.class);
+    assertThat(pubReadMeta.getMetadataSchema()).
+      isEqualTo(Schema.RAIDO_V1.getId());
+    
+    assertThat(pubReadMeta.getId()).isNotNull();
+    assertThat(pubReadMeta.getId().getIdentifier()).
+      isEqualTo(mintResult.getHandle());
+    assertThat(pubReadMeta.getTitles().get(0).getTitle()).
+      isEqualTo(initialTitle);
+    assertThat(pubReadMeta.getAccess().getType()).isEqualTo(AccessType.OPEN);
 
   }
 }

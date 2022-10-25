@@ -30,4 +30,11 @@ public class EnvironmentProps {
   @Value("${EnvironmentConfig.globalUrlPrefix:" +
     "https://hdl.handle.net}")
   public String globalUrlPrefix;
+
+  /**
+   in demo: `demo.raido-infra.com`
+   */
+  @Value("${EnvironmentConfig.raidAgencyIdentifier:" +
+    "localhost:7080}")
+  public String raidAgencyIdentifier;
 }

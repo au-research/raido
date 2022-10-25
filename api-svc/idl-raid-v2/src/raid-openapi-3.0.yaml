@@ -34,6 +34,8 @@ paths:
     $ref: "public-experimental.yaml#/paths/~1public-list-service-point"
   /v2/public/handle/v1/{handle}:
     $ref: "public-experimental.yaml#/paths/~1public-read-raid"
+  /v2/public/handle/v2/{handle}:
+    $ref: "public-experimental.yaml#/paths/~1public-read-raid-v2"
 
   # endregion
   

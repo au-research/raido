@@ -22,9 +22,12 @@ paths:
               properties:
                 mintRequest:
                   type: object
+                  description: > 
+                    Raido data that doesn't belong on the raid metadata.
+                    ServicePoint Id means nothing in a RAID context - it's 
+                    purely a Raido implementation detail (that may change).
                   properties:
                     servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
-                metadataSchema: {type: string}
                 metadata: {$ref: '#/components/schemas/RaidoMetadataSchemaV1'}
       responses:
         '200':
@@ -74,11 +77,14 @@ components:
         access: {$ref: '#/components/schemas/AccessBlock'}
     IdBlock:
       type: object
+      required: [identifier, identifierTypeUri,
+        globalUrl, raidAgencyUrl, raidAgencyIdentifier]
       properties:
         identifier: {type: string}
         identifierTypeUri: {type: string}
         globalUrl: {type: string}
-        raidoUrl: {type: string}
+        raidAgencyUrl: {type: string}
+        raidAgencyIdentifier: {type: string}
     TitleBlock:
       type: object
       required: [title, type, startDate]
@@ -101,7 +107,7 @@ components:
         type: {$ref: '#/components/schemas/DescriptionType'}
     AccessBlock:
       type: object
-      required: ["access", "accessStatement"]
+      required: ["access", ]
       properties:
         type: {$ref: '#/components/schemas/AccessType'}
         accessStatement: {type: string}
@@ -136,5 +142,4 @@ components:
         startDate: { type: string, format: date }
         createDate: { type: string, format: date-time }
         url: { type: string }
-        metadataEnvelopeSchema: { type: string }
         metadata: { type: object }

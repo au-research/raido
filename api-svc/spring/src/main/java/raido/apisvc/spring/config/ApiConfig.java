@@ -209,6 +209,9 @@ public class ApiConfig implements WebMvcConfigurer {
     jsonConverter.getObjectMapper().
       disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     converters.add(jsonConverter);
+
+    // prototype: used for returning static HTML from an endpoint
+//    converters.add(PublicExperimental.getHtmlStringConverter());
   }
 
 }

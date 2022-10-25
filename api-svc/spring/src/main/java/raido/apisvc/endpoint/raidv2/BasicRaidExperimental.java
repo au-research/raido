@@ -162,7 +162,6 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
       startDate(data.raid().getStartDate()).
       createDate(local2Offset(data.raid().getDateCreated())).
       url(data.raid().getUrl()).
-      metadataEnvelopeSchema(schema).
       metadata(data.raid().getMetadata().data());
   }
   
@@ -174,7 +173,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     var user = getAuthzPayload();
     guardOperatorOrAssociated(user, mint.getServicePointId());
 
-    String handle = raidSvc.mintRaidoV2(req);
+    String handle = raidSvc.mintRaidoSchemaV1(req);
 
     return readRaidV2(new ReadRaidV1Request().handle(handle));
   }

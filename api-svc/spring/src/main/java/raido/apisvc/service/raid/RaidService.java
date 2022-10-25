@@ -70,9 +70,9 @@ public class RaidService {
   }
 
 
-  public String mintRaidoV2(MintRaidoSchemaV1Request req) {
+  public String mintRaidoSchemaV1(MintRaidoSchemaV1Request req) {
     RaidoMetadataSchemaV1 metadata = req.getMetadata();
-    metaSvc.validateRaidoSchemaV1(req.getMetadataSchema(), metadata);
+    metaSvc.validateRaidoSchemaV1(metadata);
     String primaryTitle = metaSvc.validateHasPrimaryTitle(metadata.getTitles());
     LocalDate startDate = metadata.getDates().getStartDate();
     boolean confidential = metadata.getAccess().getType() != AccessType.OPEN;
@@ -86,7 +86,8 @@ public class RaidService {
       identifier(handle).
       identifierTypeUri("https://raid.org").
       globalUrl(formatGlobalUrl(handle)).
-      raidoUrl(raidUrl) );
+      raidAgencyUrl(raidUrl).
+      raidAgencyIdentifier(envProps.raidAgencyIdentifier) );
 
     JSONB jsonbMetadata = JSONB.valueOf( metaSvc.mapToJson(metadata) );
 
@@ -97,7 +98,7 @@ public class RaidService {
       set(RAID_V2.URL_INDEX, response.identifier.property.index).
       set(RAID_V2.PRIMARY_TITLE, primaryTitle).
       set(RAID_V2.METADATA, jsonbMetadata).
-      set(RAID_V2.METADATA_SCHEMA, req.getMetadataSchema()).
+      set(RAID_V2.METADATA_SCHEMA, metadata.getMetadataSchema()).
       set(RAID_V2.START_DATE, startDate).
       set(RAID_V2.DATE_CREATED, LocalDateTime.now()).
       set(RAID_V2.CONFIDENTIAL, confidential).
