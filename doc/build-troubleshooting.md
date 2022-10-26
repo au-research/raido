@@ -1,7 +1,7 @@
 
 # Java or node.exe / NPM not found
 
-I normall instally Java and Node using the `.zip` portable archives, meaning
+I normally install Java and Node using the `.zip` portable archives, meaning
 neither tool is on my global path nore are global environment variable set
 such as `JAVA_HOME`, `NODE_HOME` or `NPM_HOME`.
 
@@ -15,8 +15,8 @@ installation the executables and env vars will be added on your global
 environment and you shouldn't see this issue.
 
 The only real downside to doing the standard install in a "single-project" 
-enviornment is that diagnosing version issues, testing new versions, 
-upgrading/downgrading when the project prequisites change etc. can be a pain.
+environment is that diagnosing version issues, testing new versions, 
+upgrading/downgrading when the project prerequisites change etc. can be a pain.
 
 
 # Typescript compile taking a long time
@@ -34,11 +34,11 @@ Consider if this benefit is worth the protection this scanning is giving you
 
 To diagnose, try *temporarily* disabling the real-time scanning to see if 
 it speeds up the compile. Remember to consider caching, with scanning
-enabled, do the compile twice - the first time to get everthing cached, the 
+enabled, do the compile twice - the first time to get everything cached, the 
 second time to measure how long it takes.
 
 Then, *temporarily* disable the real-time scanning and do the compile again.
-Now re-enable, the real-teim scanning.
+Now re-enable, the real-time scanning.
 
 If the compile is appreciably faster, consider whether you want do disable 
 real-time scanning for your compile.
@@ -48,7 +48,7 @@ exclusions so that the software knows not to scan your build stuff.
 
 Consider excluding:
 * Node.Js and Java installed directories
-* The directory with the source code (escpecially because it contains the 
+* The directory with the source code (especially because it contains the 
   `node_modules` directory).
 * The cache directories for Maven/Gradle
 * The directory you load your IDE from (and it's configuration/caching)
@@ -62,7 +62,7 @@ to change that.  Add specific exclusions for things inside your home directory.
 
 Also consider if your IDE is writing configuration/caching info to your
 home directory - you probably don't want to do that, set it up to use a local
-directory somewhere else on your disk that is included in your exlude list.
+directory somewhere else on your disk that is included in your exclude list.
 
 This means any "roaming profile" won't be saving/reading your gigabytes of 
 cache files to the network server.  Decide for yourself if that's a good thing
