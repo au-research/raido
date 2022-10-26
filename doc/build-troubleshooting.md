@@ -2,7 +2,7 @@
 # Java or node.exe / NPM not found
 
 I normally install Java and Node using the `.zip` portable archives, meaning
-neither tool is on my global path nore are global environment variable set
+neither tool is on my global path nor are global environment variables set
 such as `JAVA_HOME`, `NODE_HOME` or `NPM_HOME`.
 
 Using IDEA, I manually configure the node/npm and JDK in IDEA settings.
