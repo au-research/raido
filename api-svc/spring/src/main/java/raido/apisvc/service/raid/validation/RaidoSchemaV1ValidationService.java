@@ -2,7 +2,9 @@ package raido.apisvc.service.raid.validation;
 
 import org.springframework.stereotype.Component;
 import raido.apisvc.util.Log;
+import raido.idl.raidv2.model.AccessBlock;
 import raido.idl.raidv2.model.AccessType;
+import raido.idl.raidv2.model.DatesBlock;
 import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
 import raido.idl.raidv2.model.ValidationFailure;
 
@@ -42,37 +44,57 @@ public class RaidoSchemaV1ValidationService {
         message("has unsupported value") );
     }
 
-    if( metadata.getDates() == null ) {
+    failures.addAll(validateDates(metadata.getDates()));
+
+    failures.addAll(validateAccess(metadata.getAccess()));
+
+    failures.addAll(titleSvc.validateTitles(metadata.getTitles()));
+
+    return failures;
+  }
+
+  private static List<ValidationFailure> validateDates(
+    DatesBlock dates
+  ) {
+    var failures = new ArrayList<ValidationFailure>();
+    if( dates == null ) {
       failures.add(new ValidationFailure().
         fieldId("metadata.dates").
         errorType("notSet").
         message("field must be set") );
     }
     else {
-      if( metadata.getDates().getStartDate() == null ){
+      if( dates.getStartDate() == null ){
         failures.add(new ValidationFailure().
           fieldId("metadata.dates.start").
           errorType("notSet").
           message("field must be set") );
       }
     }
+    return failures;
+  }
 
-    if( metadata.getAccess() == null ) {
+  private static List<ValidationFailure> validateAccess(
+    AccessBlock access
+  ) {
+    var failures = new ArrayList<ValidationFailure>();
+    
+    if( access == null ) {
       failures.add(new ValidationFailure().
         fieldId("metadata.access").
         errorType("notSet").
         message("field must be set") );
     }
     else {
-      if( metadata.getAccess().getType() == null ){
+      if( access.getType() == null ){
         failures.add(new ValidationFailure().
           fieldId("metadata.access.type").
           errorType("notSet").
           message("field must be set") );
       }
       else {
-        if( metadata.getAccess().getType() == AccessType.CLOSED ){
-          if( metadata.getAccess().getAccessStatement() == null ){
+        if( access.getType() == AccessType.CLOSED ){
+          if( access.getAccessStatement() == null ){
             failures.add(new ValidationFailure().
               fieldId("metadata.access.accessStatement").
               errorType("notSet").
@@ -81,12 +103,9 @@ public class RaidoSchemaV1ValidationService {
         }
       }
     }
-
-    failures.addAll(titleSvc.validateTitles(metadata.getTitles()));
-
+    
     return failures;
   }
-  
 
 
 }
