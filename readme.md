@@ -62,7 +62,7 @@ Using Github actions at the moment to run build, test and quality tasks.
 These generally execute on push to to `main` or on pull-requests.
 So if you want to test stuff in Github without pushing to `main`;
   work in your own branch, create a PR and it will run the build and tests.
-Note that changes consisiting soley of `*.md` files are intended to be ignored.
+Note that changes consisting solely of `*.md` files are intended to be ignored.
 
 * [api-svc-ci.yml](.github/workflows/api-svc-ci.yml)
   * builds and runs unit and integration tests
