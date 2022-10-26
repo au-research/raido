@@ -7,20 +7,13 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.jooq.JSONB;
 import org.springframework.stereotype.Component;
-import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.tables.records.RaidV2Record;
-import raido.idl.raidv2.model.AccessType;
 import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
-import raido.idl.raidv2.model.TitleBlock;
-import raido.idl.raidv2.model.TitleType;
-
-import java.util.List;
 
 import static com.fasterxml.jackson.core.JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.ExceptionUtil.ise;
-import static raido.apisvc.util.Guard.failedCheck;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.areEqual;
 
@@ -94,42 +87,8 @@ public class MetadataService {
         setSerializationInclusion(JsonInclude.Include.NON_ABSENT);
   }
 
-  // temporary, this is more of a "guard" method than a "validate"
-  public void validateRaidoSchemaV1(
-    RaidoMetadataSchemaV1 metadata
-  ) {
-    Guard.areEqual(metadata.getMetadataSchema(), Schema.RAIDO_V1.getId());
-    Guard.notNull("metadata field must be set", metadata);
-    Guard.notNull("metadata field must be set", metadata);
-    Guard.notNull("dates field must be set",
-      metadata.getDates());
-    Guard.notNull("dates.startDate field must be set",
-      metadata.getDates().getStartDate());
 
-    Guard.notNull("access field must be set", metadata.getAccess());
-    Guard.notNull("access.type field myst be set",
-      metadata.getAccess().getType());
-    if( metadata.getAccess().getType() == AccessType.CLOSED ){
-      Guard.hasValue("accessStatement field must be set if type is closed",
-        metadata.getAccess().getAccessStatement());
-    }
-  }
 
-  public String validateHasPrimaryTitle(List<TitleBlock> titles) {
-    Guard.notNull("titles field must be set", titles);
-
-    var primaryTitles = titles.stream().
-      filter(i->i.getType() == TitleType.PRIMARY_TITLE).toList();
-
-    if( primaryTitles.size() != 1 ){
-      throw failedCheck("titles field must have exactly one primary title");
-    }
-    Guard.hasValue("primaryTitle should have a value",
-      primaryTitles.get(0).getTitle() );
-
-    return primaryTitles.get(0).getTitle();
-  }
-  
   public <T> T mapObject(JSONB value, Class<T> type){
     try {
       return this.defaultMapper.readValue(value.data(), type);

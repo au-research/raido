@@ -84,7 +84,8 @@ public class TestAuthTokenService {
         APP_USER.EMAIL,
         APP_USER.CLIENT_ID,
         APP_USER.SUBJECT ).
-        where( APP_USER.ENABLED.eq(true)).
+        // inline needed because: https://stackoverflow.com/a/73782610/924597
+        where(APP_USER.ENABLED.eq(inline(true))).
       doUpdate().
         set(APP_USER.TOKEN_CUTOFF, (LocalDateTime) null).
       returningResult(APP_USER.ID).

@@ -6,13 +6,16 @@ import org.jooq.impl.DSL;
 import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
+import raido.apisvc.service.raid.MetadataService;
 import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.service.apids.model.ApidsMintResponse;
+import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.idl.raidv2.api.BasicRaidExperimentalApi;
 import raido.idl.raidv2.model.MintRaidRequestV1;
 import raido.idl.raidv2.model.MintRaidoSchemaV1Request;
+import raido.idl.raidv2.model.MintResponse;
 import raido.idl.raidv2.model.RaidListItemV1;
 import raido.idl.raidv2.model.RaidListRequest;
 import raido.idl.raidv2.model.ReadRaidResponseV1;
@@ -44,13 +47,19 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
 
   private DSLContext db;
   private RaidService raidSvc;
+  private MetadataService metaSvc;
+  private RaidoSchemaV1ValidationService validSvc;
 
   public BasicRaidExperimental(
     DSLContext db,
-    RaidService raidSvc
+    RaidService raidSvc,
+    MetadataService metaSvc,
+    RaidoSchemaV1ValidationService validSvc
   ) {
     this.db = db;
     this.raidSvc = raidSvc;
+    this.metaSvc = metaSvc;
+    this.validSvc = validSvc;
   }
 
   @Override
@@ -166,16 +175,23 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
   }
   
   @Override
-  public ReadRaidResponseV2 mintRaidoSchemaV1(
+  public MintResponse mintRaidoSchemaV1(
     MintRaidoSchemaV1Request req
   ) {
     var mint = req.getMintRequest();
     var user = getAuthzPayload();
     guardOperatorOrAssociated(user, mint.getServicePointId());
 
+    var failures = validSvc.validateRaidoSchemaV1(req.getMetadata());
+    
+    if( !failures.isEmpty() ){
+      return new MintResponse().success(false).failures(failures);
+    }
+
     String handle = raidSvc.mintRaidoSchemaV1(req);
 
-    return readRaidV2(new ReadRaidV1Request().handle(handle));
+    return new MintResponse().success(true). 
+      raid( readRaidV2(new ReadRaidV1Request().handle(handle)) );
   }
 
 

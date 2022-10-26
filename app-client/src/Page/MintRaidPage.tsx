@@ -97,8 +97,6 @@ function MintRaidContainer({servicePointId, onCreate}: {
   const canSubmit = isNameValid;
   const isWorking = mintRequest.isLoading;
   
-  console.log("MinPage render");
-  
   return <ContainerCard title={"Mint RAiD"} action={<MintRaidHelp/>}>
     <form autoComplete="off" onSubmit={(e) => {
       e.preventDefault();

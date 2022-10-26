@@ -35,7 +35,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ReadRaidResponseV2'
+                $ref: '#/components/schemas/MintResponse'
   /read-raid-v2:
     post:
       tags:
@@ -143,3 +143,20 @@ components:
         createDate: { type: string, format: date-time }
         url: { type: string }
         metadata: { type: object }
+    MintResponse:
+      type: object
+      required: [success]
+      properties:
+        success: { type: boolean }
+        raid: { $ref: '#/components/schemas/ReadRaidResponseV2' }
+        failures: 
+          type: array
+          items: {$ref: '#/components/schemas/ValidationFailure'}
+    ValidationFailure:
+      type: object
+      required: [fieldId, errorType, message]
+      properties:
+        fieldId: { type: string }
+        errorType: { type: string }
+        message: { type: string }  
+        

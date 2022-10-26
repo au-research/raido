@@ -18,6 +18,7 @@ import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitles;
 import static raido.apisvc.util.DateUtil.offset2Local;
 import static raido.db.jooq.api_svc.tables.Raid.RAID;
 import static raido.db.jooq.api_svc.tables.RaidV2.RAID_V2;
@@ -72,8 +73,8 @@ public class RaidService {
 
   public String mintRaidoSchemaV1(MintRaidoSchemaV1Request req) {
     RaidoMetadataSchemaV1 metadata = req.getMetadata();
-    metaSvc.validateRaidoSchemaV1(metadata);
-    String primaryTitle = metaSvc.validateHasPrimaryTitle(metadata.getTitles());
+    String primaryTitle = getPrimaryTitles(metadata.getTitles()).
+      get(0).getTitle();
     LocalDate startDate = metadata.getDates().getStartDate();
     boolean confidential = metadata.getAccess().getType() != AccessType.OPEN;
 
