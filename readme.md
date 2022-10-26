@@ -9,6 +9,7 @@ https://demo.raido-infra.com.
 Note that:
 * you will not be approved to use the demo environment without prior agreement
 * the demo environment is under active development and is very unstable 
+  * the data gets reset frequently (weekly, sometimes daily) 
 
 It's called "v2" because initially it was called raid-v2 because there was a
 v1. Should've just called it "raido" - oh well.
