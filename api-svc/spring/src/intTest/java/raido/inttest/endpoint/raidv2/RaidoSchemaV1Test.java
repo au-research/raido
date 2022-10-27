@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import raido.apisvc.service.raid.MetadataService.Schema;
 import raido.idl.raidv2.model.*;
 import raido.inttest.IntegrationTestCase;
 import raido.inttest.util.IdFactory;
@@ -17,6 +16,7 @@ import static raido.apisvc.endpoint.raidv2.BasicRaidExperimental.RAIDO_SP_ID;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
 import static raido.apisvc.util.test.BddUtil.THEN;
 import static raido.apisvc.util.test.BddUtil.WHEN;
+import static raido.idl.raidv2.model.Metaschema.RAIDO_METADATA_SCHEMA_V1;
 
 public class RaidoSchemaV1Test extends IntegrationTestCase {
 
@@ -34,8 +34,8 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
       new MintRaidoSchemaV1Request().
         mintRequest(new MintRaidoSchemaV1RequestMintRequest().
           servicePointId(RAIDO_SP_ID)).
-        metadata(new RaidoMetadataSchemaV1().
-          metadataSchema(Schema.RAIDO_V1.getId()).
+        metadata(new MetadataSchemaV1().
+          metadataSchema(RAIDO_METADATA_SCHEMA_V1).
           titles(List.of(new TitleBlock().
             type(TitleType.PRIMARY_TITLE).
             title(initialTitle).
@@ -55,9 +55,9 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
     assertThat(mintedRaid.getStartDate()).isNotNull();
     assertThat(mintedRaid.getMetadata()).isInstanceOf(String.class);
     var mintedMetadata = mapper.readValue(
-      mintedRaid.getMetadata().toString(), RaidoMetadataSchemaV1.class);
+      mintedRaid.getMetadata().toString(), MetadataSchemaV1.class);
     assertThat(mintedMetadata.getMetadataSchema()).
-      isEqualTo(Schema.RAIDO_V1.getId());
+      isEqualTo(RAIDO_METADATA_SCHEMA_V1);
 
     
     EXPECT("should be able to read the minted raid via authz api");
@@ -76,9 +76,9 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
 
     assertThat(mintedRaid.getMetadata()).isInstanceOf(String.class);
     var pubReadMeta = mapper.readValue(
-      mintedRaid.getMetadata().toString(), RaidoMetadataSchemaV1.class);
+      mintedRaid.getMetadata().toString(), MetadataSchemaV1.class);
     assertThat(pubReadMeta.getMetadataSchema()).
-      isEqualTo(Schema.RAIDO_V1.getId());
+      isEqualTo(RAIDO_METADATA_SCHEMA_V1);
     
     assertThat(pubReadMeta.getId()).isNotNull();
     assertThat(pubReadMeta.getId().getIdentifier()).
@@ -87,12 +87,22 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
       isEqualTo(initialTitle);
     assertThat(pubReadMeta.getAccess().getType()).isEqualTo(AccessType.OPEN);
 
+    /* list by unique name to prevent eventual pagination issues */
+    EXPECT("should be able to list the minted raid");
+    var listResult = raidApi.listRaidV2(new RaidListRequestV2().
+      servicePointId(RAIDO_SP_ID).primaryTitle(initialTitle));
+    assertThat(listResult).singleElement().satisfies(i->{
+      assertThat(i.getHandle()).isEqualTo(mintedRaid.getHandle());
+      assertThat(i.getPrimaryTitle()).isEqualTo(initialTitle);
+      assertThat(i.getStartDate()).isEqualTo(LocalDate.now());
+      assertThat(i.getCreateDate()).isNotNull();
+    });
+    
   }
 
   @Test
   void validateMintEmptyPrimaryTitle() throws JsonProcessingException {
     var raidApi = super.basicRaidExperimentalClient();
-    var publicApi = publicExperimentalClient();
     var today = LocalDate.now();
 
     WHEN("minting a raid with minimal content with empty primaryTitle");
@@ -100,21 +110,27 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
       new MintRaidoSchemaV1Request().
         mintRequest(new MintRaidoSchemaV1RequestMintRequest().
           servicePointId(RAIDO_SP_ID)).
-        metadata(new RaidoMetadataSchemaV1().
-          metadataSchema(Schema.RAIDO_V1.getId()).
+        metadata(new MetadataSchemaV1().
+          metadataSchema(RAIDO_METADATA_SCHEMA_V1).
           titles(List.of(new TitleBlock().
             type(TitleType.PRIMARY_TITLE).
             title(" ").
-            startDate(today))).
+            startDate(null) )).
           dates(new DatesBlock().startDate(today)).
           access(new AccessBlock().type(AccessType.OPEN))
         )
     );
     THEN("validation failure should result");
     assertThat(mintResult.getSuccess()).isFalse();
-    assertThat(mintResult.getFailures()).satisfiesExactly(i->{
-      assertThat(i.getFieldId()).isEqualTo("titles[0].title");
-      assertThat(i.getErrorType()).isEqualTo("notSet");
-    });
+    assertThat(mintResult.getFailures()).satisfiesExactlyInAnyOrder(
+      i->{
+        assertThat(i.getFieldId()).isEqualTo("titles[0].title");
+        assertThat(i.getErrorType()).isEqualTo("notSet");
+      },
+      i->{
+        assertThat(i.getFieldId()).isEqualTo("titles[0].startDate");
+        assertThat(i.getErrorType()).isEqualTo("notSet");
+      }
+    );
   }  
 }

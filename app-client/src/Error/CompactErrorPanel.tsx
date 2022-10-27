@@ -31,7 +31,7 @@ const log = console;
  */
 export function CompactErrorPanel({
   error,
-  border = "h-pad",
+  border = "redline",
   errorLink = "add",
   sendEvent = "send",
 }:{

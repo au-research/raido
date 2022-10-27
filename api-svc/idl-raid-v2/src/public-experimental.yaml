@@ -122,8 +122,9 @@ components:
     PublicReadRaidResponseV2:
       type: object
       required: [
-        handle, metadataEnvelopeSchema, metadata, createDate, ]
+        handle, metadata, createDate, ]
       properties:
+        handle: { type: string }
         servicePointId: { $ref: 'shared.yaml#/components/schemas/SurrogateKey' }
         servicePointName: { type: string }
         createDate: { type: string, format: date-time }

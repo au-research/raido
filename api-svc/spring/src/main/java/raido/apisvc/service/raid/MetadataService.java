@@ -8,14 +8,17 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.jooq.JSONB;
 import org.springframework.stereotype.Component;
 import raido.apisvc.util.Log;
+import raido.db.jooq.api_svc.enums.Metaschema;
 import raido.db.jooq.api_svc.tables.records.RaidV2Record;
-import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
+import raido.idl.raidv2.model.MetadataSchemaV1;
 
 import static com.fasterxml.jackson.core.JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.ExceptionUtil.ise;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.areEqual;
+import static raido.db.jooq.api_svc.enums.Metaschema.raido_metadata_schema_v1;
+import static raido.idl.raidv2.model.Metaschema.RAIDO_METADATA_SCHEMA_V1;
 
 @Component
 public class MetadataService {
@@ -24,28 +27,6 @@ public class MetadataService {
   private ObjectMapper defaultMapper = defaultMapper();
   private ObjectMapper indentedMapper = 
     defaultMapper().enable(SerializationFeature.INDENT_OUTPUT);
-
-  public enum Schema {
-    RAIDO_V1("raido-metadata-schema-v1");
-
-    private final String id;
-
-    Schema(String id) {
-      this.id = id;
-    }
-
-    public String getId() {
-      return id;
-    }
-  }
-
-  public Schema mapV1SchemaMetadata(String schema){
-    if( areEqual(schema, Schema.RAIDO_V1.getId()) ){
-      return Schema.RAIDO_V1;
-    }
-    
-    throw iae("unrecognised schema: %s", schema);
-  }
 
   public String mapToJson(Object metadataInstance){
     String jsonValue = null;
@@ -98,14 +79,12 @@ public class MetadataService {
     }
   }
   
-  public RaidoMetadataSchemaV1 mapV1SchemaMetadata(RaidV2Record raid){
-    
-    if( !areEqual(raid.getMetadataSchema(), Schema.RAIDO_V1.getId()) ){
-      throw ise("invalid raid metadata schema: %s", raid.getMetadataSchema());
-    }
-    
-    var result = mapObject(raid.getMetadata(), RaidoMetadataSchemaV1.class);
-    if( !areEqual(result.getMetadataSchema(), raid.getMetadataSchema()) ){
+  public MetadataSchemaV1 mapV1SchemaMetadata(RaidV2Record raid){
+    var result = mapObject(raid.getMetadata(), MetadataSchemaV1.class);
+    if( !areEqual(
+      result.getMetadataSchema().getValue(), 
+      raid.getMetadataSchema().getLiteral()) 
+    ){
       var ex = ise("DB column / JSON field mismatched schema");
       log.with("handle", raid.getHandle()).
         with("columnSchema", raid.getMetadataSchema()).
@@ -114,6 +93,26 @@ public class MetadataService {
       throw ise("mismatch between column and json: %s", raid.getMetadataSchema());
     }
     return result;
+  }
+  
+  public static Metaschema mapJs2Jq(raido.idl.raidv2.model.Metaschema schema){
+    if( areEqual(schema.getValue(), raido_metadata_schema_v1.getLiteral()) ){
+      return raido_metadata_schema_v1;
+    }
+    
+    var ex = iae("unknown json metaschema value");
+    log.with("schema", schema).error(ex.getMessage());
+    throw ex;
+  }
+
+  public static raido.idl.raidv2.model.Metaschema mapJq2Js(Metaschema schema){
+    if( areEqual(schema.getLiteral(), RAIDO_METADATA_SCHEMA_V1.getValue()) ){
+      return RAIDO_METADATA_SCHEMA_V1;
+    }
+    
+    var ex = iae("unknown json metaschema value");
+    log.with("schema", schema).error(ex.getMessage());
+    throw ex;
   }
 }
 

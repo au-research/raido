@@ -1,20 +1,19 @@
 import {
   isPagePath,
   NavPathResult,
-  NavTransition, useNavigation
+  NavTransition,
+  useNavigation
 } from "Design/NavigationProvider";
 import React from "react";
 import { ContainerCard } from "Design/ContainerCard";
 import { LargeContentMain } from "Design/LayoutMain";
 import {
   DateDisplay,
-  DateTimeDisplay,
   IdProviderDisplay,
   raidoTitle,
   RoleDisplay
 } from "Component/Util";
 import {
-  Fab,
   Table,
   TableBody,
   TableCell,
@@ -28,15 +27,16 @@ import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import { TextSpan } from "Component/TextSpan";
 import { useAuth } from "Auth/AuthProvider";
 import { RqQuery } from "Util/ReactQueryUtil";
-import { RaidListItemV1 } from "Generated/Raidv2";
+import { RaidListItemV1, RaidListItemV2 } from "Generated/Raidv2";
 import { InfoField, InfoFieldList } from "Component/InfoField";
 import { RefreshIconButton } from "Component/RefreshIconButton";
 import { CompactLinearProgress } from "Component/SmallPageSpinner";
-import { Add } from "@mui/icons-material";
 import { getMintRaidPageLink } from "Page/MintRaidPage";
 import { RaidoLink } from "Component/RaidoLink";
 import { getEditRaidPageLink } from "Page/EditRaidPage";
 import { RaidoAddFab } from "Component/AppButton";
+import { getEditRaidV2PageLink } from "Page/EditRaidPageV2";
+import { getMintRaidV2PageLink } from "Page/MintRaidPageV2";
 
 const log = console;
 
@@ -73,7 +73,7 @@ function Content(){
   return <LargeContentMain>
     <RaidCurrentUser/>
     <br/>
-    <RaidTableContainer servicePointId={user.servicePointId}/>
+    <RaidTableContainerV2 servicePointId={user.servicePointId}/>
   </LargeContentMain>
 }
 
@@ -110,11 +110,6 @@ export function RaidTableContainer({servicePointId}: {servicePointId: number}){
     return <CompactErrorPanel error={raidQuery.error}/>
   }
 
-  console.log("HomePage render", {
-    isLoading: raidQuery.isLoading,
-    isRefetching: raidQuery.isRefetching,
-    raidQuery,
-  })
   return <ContainerCard title={"Recently minted RAiD data"}
     action={<>
       <RefreshIconButton onClick={() => raidQuery.refetch()} 
@@ -170,5 +165,77 @@ export function RaidTableContainer({servicePointId}: {servicePointId: number}){
 
     </TableContainer>
     
+  </ContainerCard>
+}
+
+export function RaidTableContainerV2({servicePointId}: {servicePointId: number}){
+  const api = useAuthApi();
+  const nav = useNavigation();
+  const raidQuery: RqQuery<RaidListItemV2[]> =
+    useQuery(['listRaids', servicePointId], async () => {
+      return await api.basicRaid.listRaidV2({
+        raidListRequestV2: {servicePointId: servicePointId}
+      });
+    });
+
+  if( raidQuery.error ){
+    return <CompactErrorPanel error={raidQuery.error}/>
+  }
+
+  return <ContainerCard title={"Recently minted RAiD data"}
+    action={<>
+      <RefreshIconButton onClick={() => raidQuery.refetch()}
+        refreshing={raidQuery.isLoading || raidQuery.isRefetching} />
+      <RaidoAddFab href={getMintRaidV2PageLink(servicePointId)}/>
+    </>}
+  >
+    <TableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Primary title</TableCell>
+            <TableCell>Handle</TableCell>
+            <TableCell>Start date</TableCell>
+          </TableRow>
+        </TableHead>
+        { raidQuery.isLoading &&
+          <TableBody><TableRow style={{border: 0}}>
+            <TableCell colSpan={10} style={{border: 0, padding: 0}}>
+              <CompactLinearProgress isLoading={true}/>
+            </TableCell>
+          </TableRow></TableBody>
+        }
+        { !raidQuery.isLoading && raidQuery.data?.length === 0 &&
+          <TableBody><TableRow style={{border: 0}}>
+            <TableCell colSpan={10} style={{border: 0, padding: 0, textAlign: "center"}} >
+              <TextSpan style={{lineHeight: "3em"}}>No RAiD data has been minted yet.</TextSpan>
+            </TableCell>
+          </TableRow></TableBody>
+        }
+        <TableBody>
+          { raidQuery.data?.map((row) => (
+            <TableRow
+              key={row.handle}
+              // don't render a border under last row
+              sx={{'&:last-child td, &:last-child th': {border: 0}}}
+            >
+              <TableCell>
+                <RaidoLink href={getEditRaidV2PageLink(row.handle)}>
+                  <TextSpan>{row.primaryTitle || ''}</TextSpan>
+                </RaidoLink>
+              </TableCell>
+              <TableCell>
+                <TextSpan>{row.handle || ''}</TextSpan>
+              </TableCell>
+              <TableCell>
+                <DateDisplay date={row.startDate}/>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
+    </TableContainer>
+
   </ContainerCard>
 }

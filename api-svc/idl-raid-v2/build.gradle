@@ -15,7 +15,7 @@ plugins {
 }
 
 ext {
-  raidV2SpecFile = file("src/raid-openapi-3.0.yaml")
+  raidV2SpecFile = file("src/raido-openapi-3.0.yaml")
   generateDirName = "src/main/generated"
   generateTsDirName = "../../app-client/src/Generated/Raidv2"
   templateDirName = "src/main/resources/template"

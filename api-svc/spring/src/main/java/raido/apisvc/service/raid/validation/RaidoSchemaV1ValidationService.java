@@ -5,16 +5,15 @@ import raido.apisvc.util.Log;
 import raido.idl.raidv2.model.AccessBlock;
 import raido.idl.raidv2.model.AccessType;
 import raido.idl.raidv2.model.DatesBlock;
-import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
+import raido.idl.raidv2.model.Metaschema;
+import raido.idl.raidv2.model.MetadataSchemaV1;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.List.of;
-import static raido.apisvc.service.raid.MetadataService.Schema.RAIDO_V1;
 import static raido.apisvc.util.Log.to;
-import static raido.apisvc.util.StringUtil.areEqual;
 
 @Component
 public class RaidoSchemaV1ValidationService {
@@ -27,7 +26,7 @@ public class RaidoSchemaV1ValidationService {
   }
 
   public List<ValidationFailure> validateRaidoSchemaV1(
-    RaidoMetadataSchemaV1 metadata
+    MetadataSchemaV1 metadata
   ) {
     if( metadata == null ) {
       return of(new ValidationFailure().
@@ -37,7 +36,7 @@ public class RaidoSchemaV1ValidationService {
     }
 
     var failures = new ArrayList<ValidationFailure>();
-    if( !areEqual(metadata.getMetadataSchema(), RAIDO_V1.getId()) ) {
+    if( metadata.getMetadataSchema() != Metaschema.RAIDO_METADATA_SCHEMA_V1 ) {
       failures.add(new ValidationFailure().
         fieldId("metadata.metadataSchema").
         errorType("invalidSchema").
@@ -49,6 +48,8 @@ public class RaidoSchemaV1ValidationService {
     failures.addAll(validateAccess(metadata.getAccess()));
 
     failures.addAll(titleSvc.validateTitles(metadata.getTitles()));
+    
+    // todo:sto validate descriptions
 
     return failures;
   }

@@ -19,6 +19,7 @@ paths:
           application/json:
             schema:
               type: object
+              required: [mintRequest, metadata]
               properties:
                 mintRequest:
                   type: object
@@ -26,9 +27,10 @@ paths:
                     Raido data that doesn't belong on the raid metadata.
                     ServicePoint Id means nothing in a RAID context - it's 
                     purely a Raido implementation detail (that may change).
+                  required: [servicePointId]
                   properties:
                     servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
-                metadata: {$ref: '#/components/schemas/RaidoMetadataSchemaV1'}
+                metadata: {$ref: '#/components/schemas/MetadataSchemaV1'}
       responses:
         '200':
           description: data
@@ -58,14 +60,48 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ReadRaidResponseV2'
+  /list-raid-v2:
+    post:
+      tags:
+        - basic-raid-experimental
+      operationId: list-raid-v2
+      summary: list raids
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RaidListRequestV2'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RaidListItemV2'
 
 
 components:
   schemas:
-    RaidoMetadataSchemaV1:
+    Metaschema:
+      description: >
+        "Metaschema" is the enumeration of different "Metadata schema" 
+        that Raido supports. 
+      type: string
+      enum: ['raido-metadata-schema-v1']
+      # enum: ['raido-metadata-schema-v1', 'raido-metadata-schema-v2']
+    MetadataSchemaV1:
       type: object
+      required: [ metadataSchema, id, titles, dates, access]
       properties:
-        metadataSchema: {type: string}
+        # This should specify the value `raido-metadata-schema-v1`,
+        # but the OpenAPI tooling doesn't support constants yet.
+        # The next version of the raido schema will identified by the value
+        # `raido-metadata-schema-v2` and will be modeled as a whole new object
+        # type: `MetadataSchemaV2`
+        metadataSchema: {$ref: '#/components/schemas/Metaschema' }
         id: {$ref: '#/components/schemas/IdBlock'}
         titles: 
           type: array
@@ -120,6 +156,12 @@ components:
     AccessType:
       type: string
       enum: ['Open', 'Closed']
+    RaidListRequestV2:
+      type: object
+      required: [servicePointId]
+      properties:
+        servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        primaryTitle: {type: string}
     RaidListItemV2:
       type: object
       required: [handle, confidential, createdDateTime]

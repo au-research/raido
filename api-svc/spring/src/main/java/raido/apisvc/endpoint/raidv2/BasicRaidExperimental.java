@@ -17,7 +17,9 @@ import raido.idl.raidv2.model.MintRaidRequestV1;
 import raido.idl.raidv2.model.MintRaidoSchemaV1Request;
 import raido.idl.raidv2.model.MintResponse;
 import raido.idl.raidv2.model.RaidListItemV1;
+import raido.idl.raidv2.model.RaidListItemV2;
 import raido.idl.raidv2.model.RaidListRequest;
+import raido.idl.raidv2.model.RaidListRequestV2;
 import raido.idl.raidv2.model.ReadRaidResponseV1;
 import raido.idl.raidv2.model.ReadRaidResponseV2;
 import raido.idl.raidv2.model.ReadRaidV1Request;
@@ -35,6 +37,7 @@ import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.hasValue;
 import static raido.db.jooq.api_svc.tables.Raid.RAID;
+import static raido.db.jooq.api_svc.tables.RaidV2.RAID_V2;
 
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
@@ -194,5 +197,38 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
       raid( readRaidV2(new ReadRaidV1Request().handle(handle)) );
   }
 
+  @Override
+  public List<RaidListItemV2> listRaidV2(RaidListRequestV2 req) {
+    var user = getAuthzPayload();
+    guardOperatorOrAssociated(user, req.getServicePointId());
+
+    return db.select(RAID_V2.HANDLE, RAID_V2.PRIMARY_TITLE, RAID_V2.START_DATE,
+        RAID_V2.CONFIDENTIAL, RAID_V2.DATE_CREATED.as("createDate")).
+      from(RAID_V2).
+      where(
+        RAID_V2.SERVICE_POINT_ID.eq(req.getServicePointId()).
+          and(createV2SearchCondition(req))
+      ).
+      orderBy(RAID_V2.DATE_CREATED.desc()).
+      limit(MAX_EXPERIMENTAL_RECORDS).
+      fetchInto(RaidListItemV2.class);
+  }
+
+  private static Condition createV2SearchCondition(RaidListRequestV2 req) {
+    Condition searchCondition = DSL.trueCondition();
+    if( hasValue(req.getPrimaryTitle()) ){
+      String primaryTitle = req.getPrimaryTitle().trim();
+      /* client side should prevent this, don't need to worry about 
+       user-friendly error. */
+      if( primaryTitle.length() < 5 ){
+        var iae = iae("primaryTitle is too short to list raids");
+        log.with("primaryTitle", primaryTitle).error(iae.getMessage());
+        throw iae;
+      }
+      primaryTitle = "%"+primaryTitle+"%";
+      searchCondition = DSL.condition(RAID_V2.PRIMARY_TITLE.like(primaryTitle));
+    }
+    return searchCondition;
+  }
 
 }

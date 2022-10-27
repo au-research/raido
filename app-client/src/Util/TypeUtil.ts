@@ -25,3 +25,11 @@ export function assert(input: unknown, message?: string)
   }  
 }
 
+/*
+ https://stackoverflow.com/a/69328045/924597
+ Is there a builtin for this?
+*/
+export type WithRequired<T, K extends keyof T> = T & { 
+  [P in K]-?: T[P] 
+}
+

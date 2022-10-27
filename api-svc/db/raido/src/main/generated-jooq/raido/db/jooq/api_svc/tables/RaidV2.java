@@ -30,6 +30,7 @@ import org.jooq.impl.TableImpl;
 
 import raido.db.jooq.api_svc.ApiSvc;
 import raido.db.jooq.api_svc.Keys;
+import raido.db.jooq.api_svc.enums.Metaschema;
 import raido.db.jooq.api_svc.tables.records.RaidV2Record;
 
 
@@ -95,7 +96,7 @@ public class RaidV2 extends TableImpl<RaidV2Record> {
      * The column <code>api_svc.raid_v2.metadata_schema</code>. Identifies the
      * structure of the data in the metadata column
      */
-    public final TableField<RaidV2Record, String> METADATA_SCHEMA = createField(DSL.name("metadata_schema"), SQLDataType.VARCHAR(256).nullable(false), this, "Identifies the structure of the data in the metadata column");
+    public final TableField<RaidV2Record, Metaschema> METADATA_SCHEMA = createField(DSL.name("metadata_schema"), SQLDataType.VARCHAR.nullable(false).asEnumDataType(raido.db.jooq.api_svc.enums.Metaschema.class), this, "Identifies the structure of the data in the metadata column");
 
     /**
      * The column <code>api_svc.raid_v2.metadata</code>.
@@ -217,14 +218,14 @@ public class RaidV2 extends TableImpl<RaidV2Record> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row10<String, Long, String, Integer, String, Boolean, String, JSONB, LocalDate, LocalDateTime> fieldsRow() {
+    public Row10<String, Long, String, Integer, String, Boolean, Metaschema, JSONB, LocalDate, LocalDateTime> fieldsRow() {
         return (Row10) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function10<? super String, ? super Long, ? super String, ? super Integer, ? super String, ? super Boolean, ? super String, ? super JSONB, ? super LocalDate, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function10<? super String, ? super Long, ? super String, ? super Integer, ? super String, ? super Boolean, ? super Metaschema, ? super JSONB, ? super LocalDate, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -232,7 +233,7 @@ public class RaidV2 extends TableImpl<RaidV2Record> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function10<? super String, ? super Long, ? super String, ? super Integer, ? super String, ? super Boolean, ? super String, ? super JSONB, ? super LocalDate, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function10<? super String, ? super Long, ? super String, ? super Integer, ? super String, ? super Boolean, ? super Metaschema, ? super JSONB, ? super LocalDate, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

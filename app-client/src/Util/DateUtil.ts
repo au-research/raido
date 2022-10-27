@@ -116,3 +116,10 @@ export function cloneDate(d?: Date): Date|undefined{
   
   return new Date(d.getTime());
 }
+
+export function isValidDate(d?: Date): boolean {
+  if( !d ){
+    return false;
+  }
+  return !!d.getDate();
+}

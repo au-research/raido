@@ -13,11 +13,12 @@ import raido.idl.raidv2.model.AccessType;
 import raido.idl.raidv2.model.IdBlock;
 import raido.idl.raidv2.model.MintRaidRequestV1;
 import raido.idl.raidv2.model.MintRaidoSchemaV1Request;
-import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
+import raido.idl.raidv2.model.MetadataSchemaV1;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import static raido.apisvc.service.raid.MetadataService.mapJs2Jq;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitles;
 import static raido.apisvc.util.DateUtil.offset2Local;
 import static raido.db.jooq.api_svc.tables.Raid.RAID;
@@ -72,7 +73,7 @@ public class RaidService {
 
 
   public String mintRaidoSchemaV1(MintRaidoSchemaV1Request req) {
-    RaidoMetadataSchemaV1 metadata = req.getMetadata();
+    MetadataSchemaV1 metadata = req.getMetadata();
     String primaryTitle = getPrimaryTitles(metadata.getTitles()).
       get(0).getTitle();
     LocalDate startDate = metadata.getDates().getStartDate();
@@ -99,7 +100,7 @@ public class RaidService {
       set(RAID_V2.URL_INDEX, response.identifier.property.index).
       set(RAID_V2.PRIMARY_TITLE, primaryTitle).
       set(RAID_V2.METADATA, jsonbMetadata).
-      set(RAID_V2.METADATA_SCHEMA, metadata.getMetadataSchema()).
+      set(RAID_V2.METADATA_SCHEMA, mapJs2Jq(metadata.getMetadataSchema())).
       set(RAID_V2.START_DATE, startDate).
       set(RAID_V2.DATE_CREATED, LocalDateTime.now()).
       set(RAID_V2.CONFIDENTIAL, confidential).

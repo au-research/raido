@@ -1,7 +1,11 @@
 import React from "react";
 import { isPagePath } from "Design/NavigationProvider";
 import { normalisePath } from "Util/Location";
-import { PublicReadRaidResponseV1 } from "Generated/Raidv2";
+import {
+  MetadataSchemaV1,
+  Metaschema,
+  PublicReadRaidResponseV2
+} from "Generated/Raidv2";
 import { Config } from "Config";
 import { RqQuery } from "Util/ReactQueryUtil";
 import {
@@ -15,6 +19,7 @@ import { InfoField, InfoFieldList } from "Component/InfoField";
 import { SmallPageSpinner } from "Component/SmallPageSpinner";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import { BooleanDisplay, DateDisplay } from "Component/Util";
+import { TextSpan } from "Component/TextSpan";
 
 const pageUrl = "/handle";
 
@@ -68,11 +73,11 @@ export function RaidLandingPage(){
 function Content({handle}: {handle: string}){
   const api = publicApi();
   const queryName = 'publicReadRaid';
-  const query: RqQuery<PublicReadRaidResponseV1> = useQuery(
+  const query: RqQuery<PublicReadRaidResponseV2> = useQuery(
     [queryName, handle],
     async () => {
       //await delay(2000);
-      return await api.publicReadRaid({handle});
+      return await api.publicReadRaidV2({handle});
     }
   );
 
@@ -89,28 +94,82 @@ function Content({handle}: {handle: string}){
       error={"unknown state: not loading, no error, no data"}/>
   }
 
-  return <SmallContentMain>
-    <InfoFieldList>
-      <InfoField id="handle" label="Handle"
-        value={formatGlobalHandle(handle)}/>
-      <InfoField id="createDate" label="Create Date" value={
-        <DateDisplay date={query.data.createDate}/>
-      }/>
+  if( !query.data.metadata ){
+    return <CompactErrorPanel
+      error={"no metadata in response"}/>
+  }
+  
+  if( 
+    (query.data.metadata as any)?.metadataSchema !== 
+    Metaschema.RaidoMetadataSchemaV1 
+  ){
+    return <CompactErrorPanel error={{
+      message: `unknown metadataSchema`,
+      problem: query.data }}/>
+  }
 
-      <InfoField id="confidential" label="Confidential"
-        value={<BooleanDisplay value={query.data.confidential}/>}
-      />
+  /* need to do more work on the OpenAPI spec so that 
+   openapi-generator/typescript-fetch knows that it is/might be a 
+   MetadataSchemaV1.
+   Since it's plain JSON, dates will be strings - but we've casted to an object
+   that expects them to be dates, watch out.  
+   */
+  const metadata: MetadataSchemaV1 = query.data.metadata as MetadataSchemaV1;
+  
+  console.log("metadata", metadata);
 
-      { !query.data.confidential &&  <>
-        <InfoField id="servicePoint" label="Service point"
-          value={query.data.servicePointName}
-        />
-        <InfoField id="name" label="Name" value={query.data.name}/>
-        <InfoField id="startDate" label="Start Date" value={
-          <DateDisplay date={query.data.startDate}/>
-        }/>
-      </>}
-        
-    </InfoFieldList>
-  </SmallContentMain>
+  return <SmallContentMain>{
+    metadata.access.type === "Open" ?
+      <OpenRaid raid={query.data} metadata={metadata}/> :
+      <ConfidentialRaid raid={query.data} metadata={metadata}/>
+  }</SmallContentMain>;
+}
+
+function ConfidentialRaid({raid, metadata}: {
+  raid: PublicReadRaidResponseV2,
+  metadata: MetadataSchemaV1,
+}){
+  return <InfoFieldList>
+    <InfoField id="handle" label="Handle"
+      value={formatGlobalHandle(raid.handle)}/>
+    <InfoField id="createDate" label="Create Date" value={
+      <DateDisplay date={raid.createDate}/>
+    }/>
+
+    <InfoField id="confidential" label="Confidential"
+      value={<BooleanDisplay value={true}/>}
+    />
+    
+    <InfoField id="confidential" label="Access statement"
+      value={<TextSpan>{metadata.access.accessStatement}</TextSpan>}
+    />
+  </InfoFieldList>
+}
+
+function OpenRaid({raid, metadata}: {
+  raid: PublicReadRaidResponseV2,
+  metadata: MetadataSchemaV1,
+}){
+  return <InfoFieldList>
+    <InfoField id="handle" label="Handle"
+      value={formatGlobalHandle(raid.handle)}/>
+    <InfoField id="createDate" label="Create Date" value={
+      <DateDisplay date={raid.createDate}/>
+    }/>
+
+    <InfoField id="confidential" label="Confidential"
+      value={<BooleanDisplay value={false}/>}
+    />
+
+    <InfoField id="servicePoint" label="Service point"
+      value={raid.servicePointName}
+    />
+
+    {/*todo:sto make a widget, this only works when it's the first item*/}
+    <InfoField id="name" label="Name" value={metadata.titles[0]?.title}/>
+    
+    <InfoField id="startDate" label="Start Date" value={
+      metadata.dates.startDate.toString()
+    }/>
+  </InfoFieldList>
 }

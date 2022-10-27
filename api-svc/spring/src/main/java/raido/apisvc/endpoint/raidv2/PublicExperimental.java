@@ -8,17 +8,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.service.raid.MetadataService;
-import raido.apisvc.service.raid.MetadataService.Schema;
 import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.spring.StartupListener;
 import raido.apisvc.spring.bean.AppInfoBean;
 import raido.apisvc.util.Log;
+import raido.db.jooq.api_svc.enums.Metaschema;
 import raido.idl.raidv2.api.PublicExperimentalApi;
 import raido.idl.raidv2.model.AccessType;
 import raido.idl.raidv2.model.PublicReadRaidResponseV1;
 import raido.idl.raidv2.model.PublicReadRaidResponseV2;
 import raido.idl.raidv2.model.PublicServicePoint;
-import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
+import raido.idl.raidv2.model.MetadataSchemaV1;
 import raido.idl.raidv2.model.VersionResult;
 
 import java.util.List;
@@ -35,6 +35,7 @@ import static raido.apisvc.util.ExceptionUtil.ise;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.RestUtil.urlDecode;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
+import static raido.idl.raidv2.model.Metaschema.RAIDO_METADATA_SCHEMA_V1;
 
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
@@ -158,8 +159,8 @@ public class PublicExperimental implements PublicExperimentalApi {
   public PublicReadRaidResponseV2 publicReadRaidV2(String handle) {
     var data = raidSvc.readRaidV2Data(handle);
 
-    String schema = data.raid().getMetadataSchema();
-    if( metaSvc.mapV1SchemaMetadata(schema) != Schema.RAIDO_V1 ){
+    Metaschema schema = data.raid().getMetadataSchema();
+    if( schema != Metaschema.raido_metadata_schema_v1 ){
       var ex = ise("unknown raid schema");
       log.with("schema", schema).with("handle", handle).error(ex.getMessage());
       throw ex;
@@ -170,7 +171,8 @@ public class PublicExperimental implements PublicExperimentalApi {
     if( metadata.getAccess().getType() == AccessType.CLOSED ){
       return new PublicReadRaidResponseV2().
         createDate(local2Offset(data.raid().getDateCreated())).
-        metadata(new RaidoMetadataSchemaV1().
+        metadata(new MetadataSchemaV1().
+          metadataSchema(RAIDO_METADATA_SCHEMA_V1).
           id(metadata.getId()).
           access(metadata.getAccess()) );
     }

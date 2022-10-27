@@ -11,13 +11,19 @@ import { LargeContentMain } from "Design/LayoutMain";
 import { ContainerCard } from "Design/ContainerCard";
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { MintRaidRequestV1 } from "Generated/Raidv2";
+import {
+  AccessBlock,
+  MetadataSchemaV1,
+  ValidationFailure
+} from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import {
   Checkbox,
   FormControl,
   FormControlLabel,
+  List,
+  ListItem,
   Stack,
   TextField
 } from "@mui/material";
@@ -26,26 +32,27 @@ import { navBrowserBack } from "Util/WindowUtil";
 import { HelpChip, HelpPopover } from "Component/HelpPopover";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
-import { getEditRaidPageLink } from "Page/EditRaidPage";
+import { TextSpan } from "Component/TextSpan";
+import { assert, WithRequired } from "Util/TypeUtil";
+import { isValidDate } from "Util/DateUtil";
+import { getEditRaidV2PageLink } from "Page/EditRaidPageV2";
 
-const log = console;
+const pageUrl = "/mint-raid-v2";
 
-const pageUrl = "/mint-raid";
-
-export function getMintRaidPageLink(servicePointId: number): string{
+export function getMintRaidV2PageLink(servicePointId: number): string{
   return `${pageUrl}/${servicePointId}`;
 }
 
-export function isMintRaidPagePath(pathname: string): NavPathResult{
+export function isMintRaidV2PagePath(pathname: string): NavPathResult{
   return isPagePath(pathname, pageUrl);
 }
 
 export function getServicePointIdFromPathname(nav: NavigationState): number{
-  return parsePageSuffixParams<number>(nav, isMintRaidPagePath, Number)
+  return parsePageSuffixParams<number>(nav, isMintRaidV2PagePath, Number)
 }
 
-export function MintRaidPage(){
-  return <NavTransition isPagePath={isMintRaidPagePath}
+export function MintRaidV2Page(){
+  return <NavTransition isPagePath={isMintRaidV2PagePath}
     title={raidoTitle("Mint RAiD")}
   >
     <Content/>
@@ -62,10 +69,45 @@ function Content(){
     <MintRaidContainer 
       servicePointId={servicePointId}
       onCreate={(handle)=>{
-        nav.replace(getEditRaidPageLink(handle));
+        nav.replace(getEditRaidV2PageLink(handle));
       }}
     />
   </LargeContentMain>
+}
+
+interface FormData {
+  servicePointId: number,
+  primaryTitle: string,
+  // can't stop DesktopDatePicker from allowing the user to clear the value
+  startDate?: Date,
+  confidential: boolean,
+}
+type ValidFormData = WithRequired<FormData, 'startDate'>;
+
+function mapFormDataToMetadata(
+  form: ValidFormData 
+): Omit<MetadataSchemaV1, 'id'>{
+  const access: AccessBlock = form.confidential ?
+    {
+      type: "Closed",
+      accessStatement: "minted as closed by creator"
+    } :
+    {
+      type: "Open",
+    };
+  
+  return {
+    metadataSchema: "raido-metadata-schema-v1",
+    access,
+    dates: {
+      startDate: form.startDate,
+    },
+    titles: [{
+      title: form.primaryTitle,
+      type: "Primary Title",
+      startDate: form.startDate,
+    }],
+  }
 }
 
 function MintRaidContainer({servicePointId, onCreate}: {
@@ -74,46 +116,64 @@ function MintRaidContainer({servicePointId, onCreate}: {
 }){
   const api = useAuthApi();
   const [formData, setFormData] = useState({
-    // id set to null signals creation is being requested  
-    handle: undefined as unknown as string,
     servicePointId: servicePointId,
-    name: "",
+    primaryTitle: "",
     startDate: new Date(),
     confidential: false
-  } as MintRaidRequestV1);
+  } as FormData);
+  const [serverValidations, setServerValidations] = useState(
+    [] as ValidationFailure[] );
   const mintRequest = useMutation(
-    async (data: MintRaidRequestV1) => {
-      return await api.basicRaid.mintRaidV1({mintRaidRequestV1: data});
+    async (data: ValidFormData) => {
+      setServerValidations([]);
+      return await api.basicRaid.mintRaidoSchemaV1({
+        mintRaidoSchemaV1Request: {
+          mintRequest: {servicePointId},
+          // id is not required for minting
+          metadata: mapFormDataToMetadata(data) as MetadataSchemaV1,
+        }      
+      });
     },
     {
-      onSuccess: async (data) => {
-        onCreate(data.handle);
+      onSuccess: (mintResult) => {
+        if( !mintResult.success ){
+          assert(mintResult.failures);
+          setServerValidations(mintResult.failures);
+        }
+        else {
+          assert(mintResult.raid);
+          onCreate(mintResult.raid.handle);
+        }
       },
     }
   );
 
-  const isNameValid = !!formData.name;
-  const canSubmit = isNameValid;
+  const isTitleValid = !!formData.primaryTitle;
+  const isStartDateValid = isValidDate(formData?.startDate);
+  const canSubmit = isTitleValid && isStartDateValid;
   const isWorking = mintRequest.isLoading;
+  console.log("render()", {startDate: formData.startDate, isStartDateValid});
   
   return <ContainerCard title={"Mint RAiD"} action={<MintRaidHelp/>}>
     <form autoComplete="off" onSubmit={(e) => {
       e.preventDefault();
-      mintRequest.mutate({...formData});
+      assert(formData.startDate, "don't call this if startDate not set");
+      // shouldn't need this cast?  ask on SO
+      mintRequest.mutate({...formData} as ValidFormData);
     }}>
       <Stack spacing={2}>
-        <TextField id="name" label="Name" variant="outlined"
+        <TextField id="title" label="Primary title" variant="outlined"
           autoFocus autoCorrect="off" autoCapitalize="on"
           required disabled={isWorking}
-          value={formData.name}
+          value={formData.primaryTitle}
           onChange={(e) => {
-            setFormData({...formData, name: e.target.value});
+            setFormData({...formData, primaryTitle: e.target.value});
           }}
-          error={!isNameValid}
+          error={!isTitleValid}
         />
-        <DesktopDatePicker label={"Start date"} inputFormat="YYYY-MM-DD"
+        <DesktopDatePicker label={"Start date *"} inputFormat="YYYY-MM-DD"
           disabled={isWorking}
-          value={formData.startDate}
+          value={formData.startDate || ''}
           onChange={(newValue: Dayjs | null) => {
             setFormData({...formData, startDate: newValue?.toDate()})
           }}
@@ -159,6 +219,7 @@ function MintRaidContainer({servicePointId, onCreate}: {
           </PrimaryActionButton>
         </Stack>
         <CompactErrorPanel error={mintRequest.error} />
+        <ValidationFailureDisplay failures={serverValidations} />
       </Stack>
     </form>
   </ContainerCard>
@@ -175,3 +236,12 @@ function MintRaidHelp(){
     </Stack>
   }/>;
 }
+
+function ValidationFailureDisplay({failures}: {failures: ValidationFailure[]}){
+  return <List>{
+    failures.map(i => <ListItem>
+      <TextSpan>{i.fieldId} - {i.message}</TextSpan>
+    </ListItem>) 
+  }</List>
+}
+
