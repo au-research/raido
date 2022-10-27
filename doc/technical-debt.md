@@ -138,10 +138,25 @@ Should probably try to use Feign or some other proper client instead of
 the current dodgy hardcoded/hand-coded XML RestTemplate implementation.
 
 
-## Exception handling needs clean up
+## Exception handling - define a global strategy
 
 See class comment on RedactingExceptionResolver
 
+
+## ExceptionUtil - unclear method names
+
+ExceptionUtil has method names like `ise()` and `iae()` these are clear to 
+me because I'm used to talking about NPE/IAE/ISE, but I think too short.
+Change to `illegalState()`.  The "exception" part of the name is implied given
+the class name and that's short enough - we don't _need_ the extreme shortness
+of the initialisms.
+
+## Mapping methods - unclear method names
+
+There's various methods of the from `js2jq()` all over the place.
+It stands for "Javascript to Jooq", but that's a fairly obtuse naming scheme.
+Change to `api2Db()` and `db2Api()`, it's one extra char and a lot clearer
+about what's going on.
 
 ## Versioning needs to be re-done
 
