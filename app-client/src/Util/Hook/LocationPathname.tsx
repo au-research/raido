@@ -40,7 +40,6 @@ export function LocationPathnameProvider({children}: {
       console.warn("replaceState callback invoked before listener installed");
       return;
     }
-    console.log("LocationPathname.replaceState()");
     originalFunctions.replaceState(null, "", path);
     setPathname(parsePathname(path));
   }, [setPathname]);

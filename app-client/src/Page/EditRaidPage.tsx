@@ -128,7 +128,6 @@ function EditRaidContainer({handle}: {
   const canSubmit = isNameValid && hasChanged;
   const isWorking = updateRequest.isLoading;
 
-  console.log("EditPage render");
   return <ContainerCard title={`Edit RAiD`} action={<EditRaidHelp/>}>
     <CompactErrorPanel error={raidQuery.error}/>
     <InfoFieldList>
@@ -194,10 +193,8 @@ function EditRaidContainer({handle}: {
         </FormControl>
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton type="button" onClick={(e)=>{
-            console.log("back button clicked", {referrer: document.referrer});
             e.preventDefault();
             navBrowserBack();
-            console.log("after navBrowserBack()");
           }}
             disabled={isWorking}>
             Back
