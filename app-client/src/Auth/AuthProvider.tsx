@@ -248,7 +248,6 @@ function PageHideListener({onPageHide, children}:{
   children: ReactNode
 }){
   const onPageHideCb = useCallback((ev: PageTransitionEvent) => {
-    console.log("pagehide event", ev);
     onPageHide();
   }, [onPageHide]);
   
@@ -257,7 +256,6 @@ function PageHideListener({onPageHide, children}:{
 
     return () => {
       // cleanup
-      console.log("dismount PageHideListener");
       window.removeEventListener('pagehide', onPageHideCb);
     }
   }, [onPageHideCb]);  
