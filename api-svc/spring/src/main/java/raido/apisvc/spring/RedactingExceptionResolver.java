@@ -35,6 +35,8 @@ import static raido.apisvc.util.Log.to;
  stack trace is logged).
  If we don't do this it will cause security issues, inconsistent logging and
  accidetnal info leakage.
+ 
+ @see raido.apisvc.service.raid.ValidationFailureException
  */
 public class RedactingExceptionResolver implements HandlerExceptionResolver {
   private static final Log log = to(RedactingExceptionResolver.class);

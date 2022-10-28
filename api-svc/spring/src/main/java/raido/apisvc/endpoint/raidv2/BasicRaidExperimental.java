@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.service.raid.MetadataService;
 import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.service.apids.model.ApidsMintResponse;
+import raido.apisvc.service.raid.ValidationFailureException;
 import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
@@ -164,8 +165,6 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     var data = raidSvc.readRaidV2Data(req.getHandle());
     guardOperatorOrAssociated(user, data.servicePoint().getId());
 
-    var schema = data.raid().getMetadataSchema();
-    
     return new ReadRaidResponseV2().
       handle(data.raid().getHandle()).
       servicePointId(data.servicePoint().getId()).
@@ -177,6 +176,25 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
       metadata(data.raid().getMetadata().data());
   }
   
+  /* Performance:
+  - client sends json
+  - Spring parses it out into all these different objects 
+  - we validate it then immediately and turn the metadata (which is most of 
+    the payload) back into json
+  - save it to the DB
+  - then turn the whole thing back into json, but now with a handle!
+  And we're not even doing any validation or orcids/rors, etc. yet.
+  That is a *lot* of heap garbage. Large raids are gonna wreck our memory usage.
+  Especially if every update to single field is done by re-sending the full
+  raid. 
+  Also, sending the full 200K raid data, just to update the startDate - the 
+  bandwidth bills will be monstrous.  Mmmmm, but only on the way in - if we 
+  don't return the full raid from mint/update - that won't cost us.  But we'll
+  need more read calls - which will cost. I'm thinking stable API should not
+  return the raid, just the handle (or maybe IdBlock).  
+  A lot of API clients may just be dumping
+  raids into the system (i.e. RDM) they don't care to display anything.
+  */
   @Override
   public MintResponse mintRaidoSchemaV1(
     MintRaidoSchemaV1Request req
@@ -191,7 +209,15 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
       return new MintResponse().success(false).failures(failures);
     }
 
-    String handle = raidSvc.mintRaidoSchemaV1(req);
+    String handle = null;
+    try {
+      handle = raidSvc.mintRaidoSchemaV1(
+        req.getMintRequest().getServicePointId(),
+        req.getMetadata() );
+    }
+    catch( ValidationFailureException e ){
+      return new MintResponse().success(false).failures(e.getFailures());
+    }
 
     return new MintResponse().success(true). 
       raid( readRaidV2(new ReadRaidV1Request().handle(handle)) );

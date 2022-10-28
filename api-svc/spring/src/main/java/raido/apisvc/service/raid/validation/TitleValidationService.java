@@ -9,6 +9,13 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 import static java.util.List.of;
+import static raido.apisvc.endpoint.message.ValidationMessage.AT_LEAST_ONE_PRIMARY_TITLE;
+import static raido.apisvc.endpoint.message.ValidationMessage.TITLES_NOT_SET;
+import static raido.apisvc.endpoint.message.ValidationMessage.TOO_MANY_PRIMARY_TITLE;
+import static raido.apisvc.endpoint.message.ValidationMessage.titleNotSet;
+import static raido.apisvc.endpoint.message.ValidationMessage.titleStartDateNotSet;
+import static raido.apisvc.endpoint.message.ValidationMessage.titleTooLong;
+import static raido.apisvc.endpoint.message.ValidationMessage.titlesTypeNotSet;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitles;
 import static raido.apisvc.util.JooqUtil.valueFits;
 import static raido.apisvc.util.StringUtil.isBlank;
@@ -17,6 +24,7 @@ import static raido.db.jooq.api_svc.tables.RaidV2.RAID_V2;
 @Component
 public class TitleValidationService {
 
+
   public List<ValidationFailure> validatePrimaryTitle(
     List<TitleBlock> titles
   ) {
@@ -24,17 +32,11 @@ public class TitleValidationService {
     var primaryTitles = getPrimaryTitles(titles);
 
     if( primaryTitles.size() == 0 ){
-      return of(new ValidationFailure().
-        fieldId("titles.type").
-        errorType("missingPrimaryTitle").
-        message("at least one primaryTitle entry must be provided") );
+      return of(AT_LEAST_ONE_PRIMARY_TITLE);
     }
 
     if( primaryTitles.size() > 1 ){
-      return of(new ValidationFailure().
-        fieldId("titles.type").
-        errorType("tooManyPrimaryTitle").
-        message("too many primaryTitle entries provided") );
+      return of(TOO_MANY_PRIMARY_TITLE);
     }
 
     return emptyList();
@@ -42,10 +44,7 @@ public class TitleValidationService {
 
   public List<ValidationFailure> validateTitles(List<TitleBlock> titles) {
     if( titles == null ) {
-      return of(new ValidationFailure().
-        fieldId("titles").
-        errorType("notSet").
-        message("field must be set") );
+      return of(TITLES_NOT_SET);
     }
 
     var failures = new ArrayList<ValidationFailure>();
@@ -56,32 +55,21 @@ public class TitleValidationService {
       var iTitle = titles.get(i);
 
       if( isBlank(iTitle.getTitle()) ){
-        failures.add(new ValidationFailure().
-          fieldId("titles[%s].title".formatted(i)).
-          errorType("notSet").
-          message("field must be set") );
+        failures.add(titleNotSet(i));
       }
       if( !valueFits(RAID_V2.PRIMARY_TITLE, iTitle.getTitle()) ){
-        failures.add(new ValidationFailure().
-          fieldId("titles[%s].title".formatted(i)).
-          errorType("tooLong").
-          message("field must fit in length: " +
-            RAID_V2.PRIMARY_TITLE.getDataType().length() ));
+        failures.add(titleTooLong(i));
       }
       if( iTitle.getType() == null ){
-        failures.add(new ValidationFailure().
-          fieldId("titles[%s].type".formatted(i)).
-          errorType("notSet").
-          message("field must be set") );
+        failures.add(titlesTypeNotSet(i));
       }
       if( iTitle.getStartDate() == null ){
-        failures.add(new ValidationFailure().
-          fieldId("titles[%s].startDate".formatted(i)).
-          errorType("notSet").
-          message("field must be set") );
+        failures.add(titleStartDateNotSet(i));
       }
 
     }
     return failures;
-  }  
+  }
+
+
 }
