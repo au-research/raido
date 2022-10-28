@@ -18,9 +18,14 @@ import static java.util.List.of;
 public class RaidoSchemaV1ValidationService {
 
   private TitleValidationService titleSvc;
+  private DescriptionValidationService descSvc;
 
-  public RaidoSchemaV1ValidationService(TitleValidationService titleSvc) {
+  public RaidoSchemaV1ValidationService(
+    TitleValidationService titleSvc,
+    DescriptionValidationService descSvc
+  ) {
     this.titleSvc = titleSvc;
+    this.descSvc = descSvc;
   }
 
   public List<ValidationFailure> validateRaidoSchemaV1(
@@ -36,12 +41,9 @@ public class RaidoSchemaV1ValidationService {
     }
 
     failures.addAll(validateDates(metadata.getDates()));
-
     failures.addAll(validateAccess(metadata.getAccess()));
-
     failures.addAll(titleSvc.validateTitles(metadata.getTitles()));
-    
-    // todo:sto validate descriptions
+    failures.addAll(descSvc.validateDescriptions(metadata.getDescriptions()));
 
     return failures;
   }

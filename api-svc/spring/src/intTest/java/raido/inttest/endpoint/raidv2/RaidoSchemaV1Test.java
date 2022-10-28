@@ -83,10 +83,12 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
     assertThat(pubReadMeta.getId()).isNotNull();
     assertThat(pubReadMeta.getId().getIdentifier()).
       isEqualTo(mintedRaid.getHandle());
+    assertThat(pubReadMeta.getAccess().getType()).isEqualTo(AccessType.OPEN);
     assertThat(pubReadMeta.getTitles().get(0).getTitle()).
       isEqualTo(initialTitle);
-    assertThat(pubReadMeta.getAccess().getType()).isEqualTo(AccessType.OPEN);
-
+    assertThat(pubReadMeta.getDescriptions().get(0).getDescription()).
+      contains("stuff about the int test raid");
+    
     /* list by unique name to prevent eventual pagination issues */
     EXPECT("should be able to list the minted raid");
     var listResult = raidApi.listRaidV2(new RaidListRequestV2().

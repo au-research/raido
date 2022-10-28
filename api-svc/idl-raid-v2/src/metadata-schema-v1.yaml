@@ -20,6 +20,8 @@ paths:
             schema:
               type: object
               required: [mintRequest, metadata]
+              description: >
+                `id` block is not required for minting and is ignored if set.
               properties:
                 mintRequest:
                   type: object

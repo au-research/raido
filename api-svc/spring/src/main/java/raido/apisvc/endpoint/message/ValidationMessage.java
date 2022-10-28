@@ -9,6 +9,7 @@ public class ValidationMessage {
   public static final String NOT_SET_TYPE = "notSet";
   public static final String TOO_LONG_TYPE = "tooLong";
 
+  public static final String FIELD_MUST_BE_SET_MESSAGE = "field must be set";
 
   public static final ValidationFailure AT_LEAST_ONE_PRIMARY_TITLE =
     new ValidationFailure().
@@ -27,7 +28,7 @@ public class ValidationMessage {
     new ValidationFailure().
       fieldId("titles").
       errorType(NOT_SET_TYPE).
-      message("field must be set");
+      message(FIELD_MUST_BE_SET_MESSAGE);
   public static final ValidationFailure METADATA_TOO_LARGE =
     new ValidationFailure().
       fieldId("metadata").errorType(TOO_LONG_TYPE).
@@ -36,7 +37,7 @@ public class ValidationMessage {
     new ValidationFailure().
       fieldId("metadata").
       errorType(NOT_SET_TYPE).
-      message("field must be set");
+      message(FIELD_MUST_BE_SET_MESSAGE);
   public static final ValidationFailure INVALID_METADATA_SCHEMA =
     new ValidationFailure().
       fieldId("metadata.metadataSchema").
@@ -45,22 +46,22 @@ public class ValidationMessage {
   public static final ValidationFailure DATES_NOT_SET = new ValidationFailure().
     fieldId("metadata.dates").
     errorType(NOT_SET_TYPE).
-    message("field must be set");
+    message(FIELD_MUST_BE_SET_MESSAGE);
   public static final ValidationFailure DATES_START_DATE_NOT_SET =
     new ValidationFailure().
       fieldId("metadata.dates.start").
       errorType(NOT_SET_TYPE).
-      message("field must be set");
+      message(FIELD_MUST_BE_SET_MESSAGE);
   public static final ValidationFailure ACCESS_NOT_SET =
     new ValidationFailure().
       fieldId("metadata.access").
       errorType(NOT_SET_TYPE).
-      message("field must be set");
+      message(FIELD_MUST_BE_SET_MESSAGE);
   public static final ValidationFailure ACCESS_TYPE_NOT_SET =
     new ValidationFailure().
       fieldId("metadata.access.type").
       errorType(NOT_SET_TYPE).
-      message("field must be set");
+      message(FIELD_MUST_BE_SET_MESSAGE);
   public static final ValidationFailure ACCESS_STATEMENT_NOT_SET =
     new ValidationFailure().
       fieldId("metadata.access.accessStatement").
@@ -71,21 +72,21 @@ public class ValidationMessage {
     return new ValidationFailure().
       fieldId("titles[%s].title".formatted(i)).
       errorType(NOT_SET_TYPE).
-      message("field must be set");
+      message(FIELD_MUST_BE_SET_MESSAGE);
   }
 
   public static ValidationFailure titleStartDateNotSet(int i) {
     return new ValidationFailure().
       fieldId("titles[%s].startDate".formatted(i)).
       errorType(NOT_SET_TYPE).
-      message("field must be set");
+      message(FIELD_MUST_BE_SET_MESSAGE);
   }
 
   public static ValidationFailure titlesTypeNotSet(int i) {
     return new ValidationFailure().
       fieldId("titles[%s].type".formatted(i)).
       errorType(NOT_SET_TYPE).
-      message("field must be set");
+      message(FIELD_MUST_BE_SET_MESSAGE);
   }
 
   public static ValidationFailure titleTooLong(int i) {
@@ -101,4 +102,26 @@ public class ValidationMessage {
       errorType("jsonParse").
       message("could not parse json");
   }
+
+  public static final ValidationFailure DESCRIPTIONS_NOT_SET =
+    new ValidationFailure().
+      fieldId("descriptions").
+      errorType(NOT_SET_TYPE).
+      message(FIELD_MUST_BE_SET_MESSAGE);
+
+  public static ValidationFailure descriptionNotSet(int i) {
+    return new ValidationFailure().
+      fieldId("descriptions[%s].description".formatted(i)).
+      errorType(NOT_SET_TYPE).
+      message(FIELD_MUST_BE_SET_MESSAGE);
+  }
+
+  public static ValidationFailure descriptionTypeNotSet(int i) {
+    return new ValidationFailure().
+      fieldId("descriptions[%s].description".formatted(i)).
+      errorType(NOT_SET_TYPE).
+      message(FIELD_MUST_BE_SET_MESSAGE);
+  }
+
+
 }
