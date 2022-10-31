@@ -2,9 +2,7 @@ import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
 
 plugins {
   id 'base'
-  /* Had to downgrade to 6.0.0 from 6.0.1 because:
-  https://github.com/OpenAPITools/openapi-generator-cli/issues/655 */
-  id "org.openapi.generator" version "6.0.0"
+  id "org.openapi.generator" version "6.2.0"
 }
 
 ext {
