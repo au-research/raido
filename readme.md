@@ -87,8 +87,8 @@ Note that changes consisting solely of `*.md` files are intended to be ignored.
  
 ## Coding standards
 
-See [/doc/code](./doc/code) - there may also be further sub-project specific  
-standards local to that project, look in the local `/doc` directory.
+See [/doc/code](./doc/code/readme.md) - there may also be further sub-project 
+specific standards local to that project, look in the local `/doc` directory.
 
 ## Building
 See the relevant local readme for building api-svc, api-svc/db and app-client.
