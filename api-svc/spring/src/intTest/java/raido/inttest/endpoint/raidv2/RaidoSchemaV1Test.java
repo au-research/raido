@@ -16,7 +16,9 @@ import static raido.apisvc.endpoint.raidv2.BasicRaidExperimental.RAIDO_SP_ID;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
 import static raido.apisvc.util.test.BddUtil.THEN;
 import static raido.apisvc.util.test.BddUtil.WHEN;
+import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
 import static raido.idl.raidv2.model.Metaschema.RAIDO_METADATA_SCHEMA_V1;
+import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 
 public class RaidoSchemaV1Test extends IntegrationTestCase {
 
@@ -37,12 +39,12 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
         metadata(new MetadataSchemaV1().
           metadataSchema(RAIDO_METADATA_SCHEMA_V1).
           titles(List.of(new TitleBlock().
-            type(TitleType.PRIMARY_TITLE).
+            type(PRIMARY_TITLE).
             title(initialTitle).
             startDate(today))).
           dates(new DatesBlock().startDate(today)).
           descriptions(List.of(new DescriptionBlock().
-            type(DescriptionType.PRIMARY_DESCRIPTION).
+            type(PRIMARY_DESCRIPTION).
             description("stuff about the int test raid"))).
           access(new AccessBlock().type(AccessType.OPEN))
         )
@@ -115,7 +117,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
         metadata(new MetadataSchemaV1().
           metadataSchema(RAIDO_METADATA_SCHEMA_V1).
           titles(List.of(new TitleBlock().
-            type(TitleType.PRIMARY_TITLE).
+            type(PRIMARY_TITLE).
             title(" ").
             startDate(null) )).
           dates(new DatesBlock().startDate(today)).
