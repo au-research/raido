@@ -15,3 +15,14 @@ out that it wasn't something I was doing wrong.
 * Workaround: wrap the partial condition value in `DSL.inline()`
 * Solution: upgrade to jOOQ 3.18+
 * see https://stackoverflow.com/a/73782610/924597
+
+
+# Flyway new migration file not being run
+
+Twice now, I've taken something like `VX__something.sql` and named it 
+`VX_Y_something-else.sql` - but that won't work.
+Needs to be `VX_Y__something-else.sql` - not the two underbar chars that
+separate the versin from the description.  Each time I've done this, I've 
+assumed the minor version number goes between the two underbars, then I get
+selective blindness and can't see that the difference between the files that
+do get run and my new file is that final underbar char. 
