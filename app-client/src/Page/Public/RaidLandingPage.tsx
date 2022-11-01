@@ -118,21 +118,19 @@ function Content({handle}: {handle: string}){
   
   console.log("metadata", metadata);
 
-  return <SmallContentMain>{
-    metadata.access.type === "Open" ?
-      <OpenRaid raid={query.data} metadata={metadata}/> :
-      <ConfidentialRaid raid={query.data} metadata={metadata}/>
-  }</SmallContentMain>;
+  return metadata.access.type === "Open" ?
+    <OpenRaid raid={query.data} metadata={metadata}/> :
+    <ConfidentialRaid raid={query.data} metadata={metadata}/>
 }
 
 function ConfidentialRaid({raid, metadata}: {
   raid: PublicReadRaidResponseV2,
   metadata: MetadataSchemaV1,
 }){
-  return <InfoFieldList>
+  return <SmallContentMain><InfoFieldList>
     <InfoField id="handle" label="Handle"
       value={formatGlobalHandle(raid.handle)}/>
-    <InfoField id="createDate" label="Create Date" value={
+    <InfoField id="createDate" label="Create date" value={
       <DateDisplay date={raid.createDate}/>
     }/>
 
@@ -143,33 +141,53 @@ function ConfidentialRaid({raid, metadata}: {
     <InfoField id="confidential" label="Access statement"
       value={<TextSpan>{metadata.access.accessStatement}</TextSpan>}
     />
-  </InfoFieldList>
+  </InfoFieldList></SmallContentMain>
 }
 
 function OpenRaid({raid, metadata}: {
   raid: PublicReadRaidResponseV2,
   metadata: MetadataSchemaV1,
 }){
-  return <InfoFieldList>
-    <InfoField id="handle" label="Handle"
-      value={formatGlobalHandle(raid.handle)}/>
-    <InfoField id="createDate" label="Create Date" value={
-      <DateDisplay date={raid.createDate}/>
-    }/>
+  return <>
+    <SmallContentMain>
+      <InfoFieldList>
+        <InfoField id="handle" label="Handle"
+          value={formatGlobalHandle(raid.handle)}/>
+        <InfoField id="createDate" label="Create date" value={
+          <DateDisplay date={raid.createDate}/>
+        }/>
 
-    <InfoField id="confidential" label="Confidential"
-      value={<BooleanDisplay value={false}/>}
-    />
+        <InfoField id="confidential" label="Confidential"
+          value={<BooleanDisplay value={false}/>}
+        />
 
-    <InfoField id="servicePoint" label="Service point"
-      value={raid.servicePointName}
-    />
+        <InfoField id="servicePoint" label="Service point"
+          value={raid.servicePointName}
+        />
 
-    {/*todo:sto make a widget, this only works when it's the first item*/}
-    <InfoField id="name" label="Name" value={metadata.titles[0]?.title}/>
-    
-    <InfoField id="startDate" label="Start Date" value={
-      metadata.dates.startDate.toString()
-    }/>
-  </InfoFieldList>
+        {/*todo:sto make a widget, this only works when it's the first item*/}
+        <InfoField id="primaryTitle" label="Primary title"
+          value={metadata.titles[0]?.title}/>
+
+        <InfoField id="startDate" label="Start date" value={
+          metadata.dates.startDate.toString()
+        }/>
+      </InfoFieldList>
+    </SmallContentMain>
+    <SmallContentMain>
+      <pre style={{overflowX: "scroll"}}>
+        {formatMetadata(metadata)}
+      </pre>
+    </SmallContentMain>
+  </>
+}
+
+function formatMetadata(metadata: any): string{
+  return JSON.stringify(metadata, nullFieldReplacer, 2);
+}
+
+function nullFieldReplacer(key: any, value: any) : any {
+  /* "skip" (do not render) fields that do not have a value.
+  See https://stackoverflow.com/a/41116529/924597 */
+  return value ?? undefined
 }

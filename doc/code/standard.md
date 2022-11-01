@@ -61,11 +61,11 @@ Yes - Windows, Java and browsers are usually UTF-16 internally.  Use UTF-8
 everywhere there is a choice.
 
 This includes source, markdown and other resources.  
-Emojis are a crucuial documentation tool 🤠 ❤️‍🔥
+Emojis are a crucial documentation tool 🤠 ❤️‍🔥
 
 
 #### Postgres
-The actualy encoding of `TEXT`/`VARCHAR` values depends on the encoding config
+The actually encoding of `TEXT`/`VARCHAR` values depends on the encoding config
 of the DB.
 
 Raido database has these config values:
@@ -105,7 +105,7 @@ right/wrong (pro-tip: Microsoft is almost always "wrong") or advocating
 for/against standards issues.
 This is about us avoiding spending time dealing with niggling little issues
 around weird edge-cases.
-Stuff like this: https://stackoverflow.com/a/22828826/924597, wheeee!
+Stuff like this: https://stackoverflow.com/a/22828826/924597, whee!
 
 If you use funky names - nobody is going to sort out the tooling for you,
 either you're responsible for making sure all tooling (not just your personal
@@ -166,7 +166,7 @@ to UTC +0.
 Software VM components (JDK, Node.js, Spring, JDBC internals, JDBC driver) -
 should be configured to UTC +0 explicitly; in code if you have to otherwise 
 via config or startup params. Note that if you set the JVM timezone
-programatically, it doesn't propagate to the JDBC driver (at least - probably
+programmatically, it doesn't propagate to the JDBC driver (at least - probably
 other weirdness too).
 
 Note that most docker containers run in VMs (Windows docker desktop setups)
@@ -191,7 +191,7 @@ Windows developers: learn to use tools that can deal with that, or make sure
 you're software supports both (and defaults to unix for anything that gets
 committed, transferred to a server, etc.)
 
-Most repos should have a .gitattributes file with `text=lf`.
+Most repos should have a `.gitattributes` file with `text=lf`.
 
 #### Why not "auto"?
 

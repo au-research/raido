@@ -122,7 +122,6 @@ function EditRaidContainer({handle}: {
   const canSubmit = isNameValid && hasChanged;
   const isWorking = false; // updateRequest.isLoading;
 
-  console.log("EditPage render");
   return <ContainerCard title={`Edit RAiD`} action={<EditRaidHelp/>}>
     <CompactErrorPanel error={raidQuery.error}/>
     <InfoFieldList>
@@ -145,7 +144,7 @@ function EditRaidContainer({handle}: {
       //await updateRequest.mutate({...formData});
     }}>
       <Stack spacing={2}>
-        <TextField id="name" label="Name" variant="outlined"
+        <TextField id="primaryTitle" label="Primary title" variant="outlined"
           autoFocus autoCorrect="off" autoCapitalize="on"
           required disabled={isWorking || raidQuery.isLoading}
           value={formData.primaryTitle}
@@ -154,7 +153,7 @@ function EditRaidContainer({handle}: {
           }}
           error={!!raidQuery.data && !isNameValid}
         />
-        <DesktopDatePicker label={"Start date"} inputFormat="YYYY-MM-DD"
+        <DesktopDatePicker label={"Start date *"} inputFormat="YYYY-MM-DD"
           disabled={isWorking || raidQuery.isLoading}
           value={formData.startDate}
           onChange={(newValue: Dayjs | null) => {
