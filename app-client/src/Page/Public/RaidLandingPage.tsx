@@ -116,8 +116,6 @@ function Content({handle}: {handle: string}){
    */
   const metadata: MetadataSchemaV1 = query.data.metadata as MetadataSchemaV1;
   
-  console.log("metadata", metadata);
-
   return metadata.access.type === "Open" ?
     <OpenRaid raid={query.data} metadata={metadata}/> :
     <ConfidentialRaid raid={query.data} metadata={metadata}/>
