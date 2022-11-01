@@ -4,14 +4,10 @@ plugins {
   id 'java'
   /* note: we use custom templates, so if you upgrade this, consider that the 
   template files may have changed and you need to check and update them.
-  Had to downgrade to 6.0.0 from 6.0.1 because:
-  https://github.com/OpenAPITools/openapi-generator-cli/issues/655
-  Note that I did not update the mustache template, still based on the 6.0.1
-  version, no idead of compatible.
-  BUT - 6.0.0 generates incorrect java code for Raido (uses javax.servlet 
-  instead of jakarta). 
-  */
-  id "org.openapi.generator" version "6.0.1"
+  There were a few changed going from 6.0.1 to 6.2.0.  Particularly, seems like
+  the basepath support was added, maybe we can stop copy/pasting "/v2" prefix
+  into every. single. path? Needs testing. */
+  id "org.openapi.generator" version "6.2.0"
 }
 
 ext {
