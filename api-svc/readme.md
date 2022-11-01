@@ -49,7 +49,7 @@ AWS RDS maintenance window:
 
 * setup the postgres DB as described in [db/readme.md](./db/readme.md)
 * create the database schemas
-  * run `gradlew :api-svc:db:flywayMigrate`
+  * run `./gradlew :api-svc:db:flywayMigrate`
   * the migration will create the `api_user`, but the user is disabled 
 because it has no password
 * connect to your local database and run the following to set a password
