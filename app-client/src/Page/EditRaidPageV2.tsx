@@ -29,7 +29,10 @@ import { InfoField, InfoFieldList } from "Component/InfoField";
 import Divider from "@mui/material/Divider";
 import { assert } from "Util/TypeUtil";
 import { NewWindowLink } from "Component/ExternalLink";
-import { formatGlobalHandle } from "Page/Public/RaidLandingPage";
+import {
+  formatGlobalHandle,
+  getRaidLandingPagePath
+} from "Page/Public/RaidLandingPage";
 
 const log = console;
 
@@ -125,8 +128,13 @@ function EditRaidContainer({handle}: {
   return <ContainerCard title={`Edit RAiD`} action={<EditRaidHelp/>}>
     <CompactErrorPanel error={raidQuery.error}/>
     <InfoFieldList>
-      <InfoField id="handle" label="Handle" value={
+      <InfoField id="globalHandle" label="Global handle" value={
         <NewWindowLink href={formatGlobalHandle(handle)}>
+          {handle}
+        </NewWindowLink>
+      }/>
+      <InfoField id="raidoHandle" label="Raido handle" value={
+        <NewWindowLink href={getRaidLandingPagePath(handle)}>
           {handle}
         </NewWindowLink>
       }/>
