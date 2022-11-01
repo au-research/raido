@@ -62,7 +62,7 @@ same password you gave to create the database:
 `~/.config/raido-v2/api-svc-db.gradle`:
 ```
 apiSvcPgPassword="the password you specified"
-apiSvcExtraLocations="classpath:db/env/demo"
+apiSvcExtraLocations=["classpath:db/env/api_user","classpath:db/env/demo"]
 apiSvcRolePassword="password you want for api_user"
 ```
 
