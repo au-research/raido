@@ -75,6 +75,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
     var pubRead = (PublicReadRaidResponseV2) pubReadObject;
     assertThat(pubRead.getCreateDate()).isNotNull();
     assertThat(pubRead.getServicePointId()).isEqualTo(RAIDO_SP_ID);
+    assertThat(pubRead.getHandle()).isEqualTo(mintedRaid.getHandle());
 
     assertThat(mintedRaid.getMetadata()).isInstanceOf(String.class);
     var pubReadMeta = mapper.readValue(
@@ -101,7 +102,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
       assertThat(i.getStartDate()).isEqualTo(LocalDate.now());
       assertThat(i.getCreateDate()).isNotNull();
     });
-    
+
   }
 
   @Test

@@ -170,6 +170,7 @@ public class PublicExperimental implements PublicExperimentalApi {
     
     if( metadata.getAccess().getType() == AccessType.CLOSED ){
       return new PublicReadRaidResponseV2().
+        handle(data.raid().getHandle()).
         createDate(local2Offset(data.raid().getDateCreated())).
         metadata(new MetadataSchemaV1().
           metadataSchema(RAIDO_METADATA_SCHEMA_V1).
@@ -178,6 +179,7 @@ public class PublicExperimental implements PublicExperimentalApi {
     }
     
     return new PublicReadRaidResponseV2().
+      handle(data.raid().getHandle()).
       createDate(local2Offset(data.raid().getDateCreated())).
       servicePointId(data.servicePoint().getId()).
       servicePointName(data.servicePoint().getName()).
