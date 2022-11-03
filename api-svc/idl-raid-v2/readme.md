@@ -14,7 +14,7 @@ using their [Gradle plugin](https://github.com/OpenAPITools/openapi-generator/bl
 Java code is generated from this project, via the Gradle 
 [openApiGenerate](./build.gradle) task.
 
-Typescript code is generated from the `api-client` 
+Typescript code for use in the UI is generated from the `app-client` 
 [openApiGenerator](../../app-client/build.gradle) task.
 
 
