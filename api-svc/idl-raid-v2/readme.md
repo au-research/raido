@@ -1,10 +1,21 @@
 The OpenAPI YAML file: [raido-openapi-3.0.yaml](./src/raido-openapi-3.0.yaml)
 
 The file is used to generate Java code for the `/api-svc/spring` project and
-TypeScript for the `acpi-client` project.
+TypeScript for the `api-client` project.
 
 Currently, we don't publish any kind of "swagger UI".
 
+
+# Generating code from the spec
+
+Generating code is done via [openapi-generator](https://github.com/OpenAPITools/openapi-generator)
+using their [Gradle plugin](https://github.com/OpenAPITools/openapi-generator/blob/master/modules/openapi-generator-gradle-plugin/README.adoc).
+
+Java code is generated from this project, via the Gradle 
+[openApiGenerate](./build.gradle) task.
+
+Typescript code is generated from the `api-client` 
+[openApiGenerator](../../app-client/build.gradle) task.
 
 
 # YAML maintenance burden 
@@ -12,11 +23,15 @@ Currently, we don't publish any kind of "swagger UI".
 We currently split out the YAML into many separate files and link them back 
 into the root file via 
 [`$ref` references](https://oai.github.io/Documentation/specification-components.html#the-reference-object).
+
+This approach probably won't be appropriate when the API grows to have many 
+endpoints, but it'll do for now.
  
-IDEA and the openapi-generator tools seem to understand these Ok, not sure 
-about other tools.
+IDEA and the openapi-generator tools seem to understand this `$ref` based
+structure Ok, not sure about other tools.
 We may need a "build" step to produce a single YAML file if the references turn
-out to be problematic.
+out to be problematic for other tools (e.g. swagger-ui or other documentation
+generators).
 
 
 ## Long-term 
