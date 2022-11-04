@@ -3,7 +3,6 @@ package raido.inttest.service.auth;
 import jakarta.annotation.PostConstruct;
 import org.jooq.DSLContext;
 import org.jooq.JSONB;
-import org.jooq.impl.DSL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +19,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 import static org.jooq.impl.DSL.inline;
-import static raido.apisvc.endpoint.raidv2.BasicRaidExperimental.RAIDO_SP_ID;
+import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static raido.apisvc.service.auth.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
 import static raido.apisvc.util.Log.to;
 import static raido.db.jooq.api_svc.enums.IdProvider.RAIDO_API;

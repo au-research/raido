@@ -65,6 +65,8 @@ paths:
     $ref: "metadata-schema-v1.yaml#/paths/~1read-raid-v2"
   /v2/experimental/list-raid/v2:
     $ref: "metadata-schema-v1.yaml#/paths/~1list-raid-v2"
+  /v2/experimental/migrate-legacy-raid/v1:
+    $ref: "metadata-schema-v1.yaml#/paths/~1migrate-legacy-raid"
       
 #  /v2/experimental/mint-raido-schema-v2/v1:
 #    $ref: "raido-metadata-schema-v1.yaml#/paths/~1mint-raido-schema-v2-v1"

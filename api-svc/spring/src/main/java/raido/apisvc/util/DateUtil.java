@@ -2,6 +2,7 @@ package raido.apisvc.util;
 
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
@@ -22,6 +23,10 @@ public class DateUtil {
     DateTimeFormatter.ISO_DATE_TIME;
   public static final DateTimeFormatter ISO_SECONDS_DATE_TIME = 
     DateTimeFormatter.ofPattern(ISO_SECONDS_FORMAT);
+  public static final DateTimeFormatter COMPACT_ISO_DATE_FORMAT = 
+    DateTimeFormatter.ofPattern("yyyyMMdd");
+  public static final DateTimeFormatter COMPACT_TIME_MILLIS_FORMAT = 
+    DateTimeFormatter.ofPattern("HHmmssSSS");
   
   public static TimeZone utcTimezone() {
     return TimeZone.getTimeZone("UTC");
@@ -29,6 +34,14 @@ public class DateUtil {
 
   public static String formatIsoDateTime(LocalDateTime d){
     return ISO_DATE_TIME.format(d);
+  }
+
+  public static String formatCompactIsoDate(LocalDate d){
+    return COMPACT_ISO_DATE_FORMAT.format(d);
+  }
+
+  public static String formatCompactTimeMillis(LocalDateTime d){
+    return COMPACT_TIME_MILLIS_FORMAT.format(d);
   }
 
   public static String formatUtcDateTime(

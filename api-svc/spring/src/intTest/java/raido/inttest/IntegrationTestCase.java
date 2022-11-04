@@ -17,6 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.RestTemplate;
 import raido.apisvc.util.Log;
 import raido.idl.raidv1.api.RaidV1Api;
+import raido.idl.raidv2.api.AdminExperimentalApi;
 import raido.idl.raidv2.api.BasicRaidExperimentalApi;
 import raido.idl.raidv2.api.PublicExperimentalApi;
 import raido.inttest.config.IntTestProps;
@@ -101,6 +102,19 @@ public abstract class IntegrationTestCase {
       logger(new Slf4jLogger(PublicExperimentalApi.class)).
       logLevel(Level.FULL).
       target(PublicExperimentalApi.class, props.getRaidoServerUrl());
+  }
+
+  public AdminExperimentalApi adminExperimentalClient(){
+    return Feign.builder().
+      client(new OkHttpClient()).
+      encoder(new JacksonEncoder(mapper)).
+      decoder(new JacksonDecoder(mapper)).
+      contract(feignContract).
+      requestInterceptor(request->
+        request.header(AUTHORIZATION, "Bearer " + raidApiAdminTestToken) ).
+      logger(new Slf4jLogger(AdminExperimentalApi.class)).
+      logLevel(Level.FULL).
+      target(AdminExperimentalApi.class, props.getRaidoServerUrl());
   }
 
   public String raidoApiServerUrl(String url){

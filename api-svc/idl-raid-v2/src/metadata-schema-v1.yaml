@@ -83,6 +83,36 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RaidListItemV2'
+  /migrate-legacy-raid:
+    post:
+      tags:
+        - admin-experimental
+      operationId: /migrate-legacy-raid
+      summary: >
+        insert a legacy raid with schema raido-metadata-schema-v1, 
+        using it's originally minted handle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [mintRequest, metadata]
+              properties:
+                mintRequest:
+                  type: object
+                  required: [servicePointId]
+                  properties:
+                    servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+                    contentIndex: { type: integer}
+                metadata: {$ref: '#/components/schemas/MetadataSchemaV1'}
+      responses:
+        '200':
+          description: data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MintResponse'
 
 
 components:

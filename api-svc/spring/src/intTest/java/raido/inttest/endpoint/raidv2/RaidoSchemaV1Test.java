@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static raido.apisvc.endpoint.raidv2.BasicRaidExperimental.RAIDO_SP_ID;
+import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
 import static raido.apisvc.util.test.BddUtil.THEN;
 import static raido.apisvc.util.test.BddUtil.WHEN;
@@ -23,7 +23,7 @@ import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 public class RaidoSchemaV1Test extends IntegrationTestCase {
 
   @Autowired private ObjectMapper mapper;
-  
+
   @Test
   void happyDayScenario() throws JsonProcessingException {
     var raidApi = super.basicRaidExperimentalClient();
@@ -61,13 +61,13 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
     assertThat(mintedMetadata.getMetadataSchema()).
       isEqualTo(RAIDO_METADATA_SCHEMA_V1);
 
-    
+
     EXPECT("should be able to read the minted raid via authz api");
     var readResult = raidApi.readRaidV2(
-      new ReadRaidV1Request().handle(mintedRaid.getHandle()) );
+      new ReadRaidV1Request().handle(mintedRaid.getHandle()));
     assertThat(readResult).isNotNull();
 
-    
+
     EXPECT("should be able to read the minted raid via public api");
     var pubReadObject = publicApi.publicReadRaidV2(mintedRaid.getHandle());
     assertThat(pubReadObject).isNotNull();
@@ -82,7 +82,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
       mintedRaid.getMetadata().toString(), MetadataSchemaV1.class);
     assertThat(pubReadMeta.getMetadataSchema()).
       isEqualTo(RAIDO_METADATA_SCHEMA_V1);
-    
+
     assertThat(pubReadMeta.getId()).isNotNull();
     assertThat(pubReadMeta.getId().getIdentifier()).
       isEqualTo(mintedRaid.getHandle());
@@ -91,7 +91,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
       isEqualTo(initialTitle);
     assertThat(pubReadMeta.getDescriptions().get(0).getDescription()).
       contains("stuff about the int test raid");
-    
+
     /* list by unique name to prevent eventual pagination issues */
     EXPECT("should be able to list the minted raid");
     var listResult = raidApi.listRaidV2(new RaidListRequestV2().
@@ -120,7 +120,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
           titles(List.of(new TitleBlock().
             type(PRIMARY_TITLE).
             title(" ").
-            startDate(null) )).
+            startDate(null))).
           dates(new DatesBlock().startDate(today)).
           access(new AccessBlock().type(AccessType.OPEN))
         )

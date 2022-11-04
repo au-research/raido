@@ -30,6 +30,8 @@ import static raido.idl.raidv2.model.Metaschema.RAIDO_METADATA_SCHEMA_V1;
 
 @Component
 public class MetadataService {
+  public static final String RAID_ID_TYPE_URI = "https://raid.org";
+  
   private static final Log log = to(MetadataService.class);
 
   private ObjectMapper defaultMapper = defaultMapper();
@@ -133,7 +135,7 @@ public class MetadataService {
   public IdBlock createIdBlock(String handle, String raidUrl) {
     return new IdBlock().
       identifier(handle).
-      identifierTypeUri("https://raid.org").
+      identifierTypeUri(RAID_ID_TYPE_URI).
       globalUrl(formatGlobalUrl(handle)).
       raidAgencyUrl(raidUrl).
       raidAgencyIdentifier(metaProps.raidAgencyIdentifier);
@@ -158,6 +160,8 @@ public class MetadataService {
     return Collections.emptyList();
   }
 
-
+  public MetadataProps getMetaProps() {
+    return metaProps;
+  }
 }
 

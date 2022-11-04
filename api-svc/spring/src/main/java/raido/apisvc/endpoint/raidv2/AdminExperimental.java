@@ -5,29 +5,27 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.endpoint.Constant;
-import raido.apisvc.service.auth.RaidV2ApiKeyAuthService;
 import raido.apisvc.service.auth.admin.AppUserService;
 import raido.apisvc.service.auth.admin.AuthzRequestService;
 import raido.apisvc.service.auth.admin.ServicePointService;
+import raido.apisvc.service.raid.RaidService;
+import raido.apisvc.service.raid.ValidationFailureException;
+import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.tables.records.AppUserRecord;
 import raido.idl.raidv2.api.AdminExperimentalApi;
-import raido.idl.raidv2.model.ApiKey;
-import raido.idl.raidv2.model.AppUser;
-import raido.idl.raidv2.model.AppUserExtraV1;
-import raido.idl.raidv2.model.AuthzRequestExtraV1;
-import raido.idl.raidv2.model.GenerateApiTokenRequest;
-import raido.idl.raidv2.model.GenerateApiTokenResponse;
-import raido.idl.raidv2.model.ServicePoint;
-import raido.idl.raidv2.model.UpdateAuthzRequestStatus;
+import raido.idl.raidv2.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
+import static raido.apisvc.endpoint.raidv2.AuthzUtil.getAuthzPayload;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociatedSpAdmin;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrSpAdmin;
+import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardRaidoAdminApiKey;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.isOperatorOrSpAdmin;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
@@ -46,17 +44,26 @@ public class AdminExperimental implements AdminExperimentalApi {
   private AuthzRequestService authzRequestSvc;
   private ServicePointService servicePointSvc;
   private AppUserService appUserSvc;
+  private RaidoSchemaV1ValidationService validSvc;
+  private RaidService raidSvc;
+  private BasicRaidExperimental basicRaid;
   private DSLContext db;
 
   public AdminExperimental(
     AuthzRequestService authzRequestSvc,
     ServicePointService servicePointSvc,
-    AppUserService appUserSvc, 
+    AppUserService appUserSvc,
+    RaidoSchemaV1ValidationService validSvc, 
+    RaidService raidSvc,
+    BasicRaidExperimental basicRaid, 
     DSLContext db
   ) {
     this.authzRequestSvc = authzRequestSvc;
     this.servicePointSvc = servicePointSvc;
     this.appUserSvc = appUserSvc;
+    this.validSvc = validSvc;
+    this.raidSvc = raidSvc;
+    this.basicRaid = basicRaid;
     this.db = db;
   }
 
@@ -238,6 +245,41 @@ public class AdminExperimental implements AdminExperimentalApi {
     return new GenerateApiTokenResponse().
       apiKeyId(req.getApiKeyId()).
       apiToken(apiToken);
+  }
+
+  @Override
+  public MintResponse migrateLegacyRaid(MigrateLegacyRaidRequest req) {
+    var mint = req.getMintRequest();
+    var user = getAuthzPayload();
+    /* instead of allowing api-keys to have operator role, we just enforce
+    * that the key is admin role and is for the raido SP. */
+    guardRaidoAdminApiKey(user);
+
+    IdBlock id = req.getMetadata().getId();
+
+    var failures = new ArrayList<ValidationFailure>();
+    failures.addAll(validSvc.validateIdBlockForMigration(id));
+    failures.addAll(validSvc.validateRaidoSchemaV1(req.getMetadata()));
+    if( !failures.isEmpty() ){
+      return new MintResponse().success(false).failures(failures);
+    }
+    
+    String handle = id.getIdentifier();
+
+    try {
+      raidSvc.migrateRaidoSchemaV1(
+        req.getMintRequest().getServicePointId(), 
+        req.getMintRequest().getContentIndex(),
+        req.getMetadata() );
+    }
+    catch( ValidationFailureException e ){
+      return new MintResponse().success(false).failures(e.getFailures());
+    }
+
+    // improve: this is unnecessary overhead - migration scripts don't care
+    // about the response.
+    return new MintResponse().success(true).
+      raid( basicRaid.readRaidV2(new ReadRaidV1Request().handle(handle)) );
   }
 
 }

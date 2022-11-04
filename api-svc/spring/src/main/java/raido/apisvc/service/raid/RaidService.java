@@ -11,7 +11,6 @@ import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
 import raido.idl.raidv2.model.AccessType;
 import raido.idl.raidv2.model.MintRaidRequestV1;
 import raido.idl.raidv2.model.MetadataSchemaV1;
-import raido.idl.raidv2.model.MintResponse;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -133,5 +132,51 @@ public class RaidService {
         r.into(ServicePointRecord.class)) );
   }
 
+  public void migrateRaidoSchemaV1(
+    long servicePointId,
+    int urlContentIndex,
+    MetadataSchemaV1 metadata
+  ) throws ValidationFailureException {
+    String primaryTitle = getPrimaryTitles(metadata.getTitles()).
+      get(0).getTitle();
+    LocalDate startDate = metadata.getDates().getStartDate();
+    boolean confidential = metadata.getAccess().getType() != AccessType.OPEN;
 
+    // migrated raids already have handles
+    String handle = metadata.getId().getIdentifier();
+    String raidUrl = metaSvc.formatRaidoLandingPageUrl(handle);
+
+    metadata.getId().setRaidAgencyUrl(raidUrl);
+    metadata.getId().setRaidAgencyIdentifier(
+      metaSvc.getMetaProps().raidAgencyIdentifier );
+    
+    // validation failure possible
+    String metadataAsJson = metaSvc.mapToJson(metadata);
+
+    JSONB jsonbMetadata = JSONB.valueOf(metadataAsJson);
+
+    db.insertInto(RAID_V2).
+      set(RAID_V2.HANDLE, handle).
+      set(RAID_V2.SERVICE_POINT_ID, servicePointId).
+      set(RAID_V2.URL, raidUrl).
+      set(RAID_V2.URL_INDEX, urlContentIndex).
+      set(RAID_V2.PRIMARY_TITLE, primaryTitle).
+      set(RAID_V2.METADATA, jsonbMetadata).
+      set(RAID_V2.METADATA_SCHEMA, mapJs2Jq(metadata.getMetadataSchema())).
+      set(RAID_V2.START_DATE, startDate).
+      set(RAID_V2.DATE_CREATED, LocalDateTime.now()).
+      set(RAID_V2.CONFIDENTIAL, confidential).
+      onConflict(RAID_V2.HANDLE).doUpdate().
+        set(RAID_V2.SERVICE_POINT_ID, servicePointId).
+        set(RAID_V2.URL, raidUrl).
+        set(RAID_V2.URL_INDEX, urlContentIndex).
+        set(RAID_V2.PRIMARY_TITLE, primaryTitle).
+        set(RAID_V2.METADATA, jsonbMetadata).
+        set(RAID_V2.METADATA_SCHEMA, mapJs2Jq(metadata.getMetadataSchema())).
+        set(RAID_V2.START_DATE, startDate).
+        set(RAID_V2.DATE_CREATED, LocalDateTime.now()).
+        set(RAID_V2.CONFIDENTIAL, confidential).
+      execute();
+  }
+  
 }

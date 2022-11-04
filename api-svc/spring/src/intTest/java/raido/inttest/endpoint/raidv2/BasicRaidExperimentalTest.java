@@ -10,7 +10,7 @@ import raido.inttest.util.IdFactory;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static raido.apisvc.endpoint.raidv2.BasicRaidExperimental.RAIDO_SP_ID;
+import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
 import static raido.apisvc.util.test.BddUtil.THEN;
 import static raido.apisvc.util.test.BddUtil.WHEN;

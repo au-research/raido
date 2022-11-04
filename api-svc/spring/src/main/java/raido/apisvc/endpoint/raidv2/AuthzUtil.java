@@ -4,10 +4,12 @@ import raido.apisvc.service.auth.AuthzTokenPayload;
 import raido.apisvc.service.auth.NonAuthzTokenPayload;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
+import raido.db.jooq.api_svc.enums.IdProvider;
 
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 import static raido.apisvc.endpoint.message.RaidApiMessage.DISALLOWED_X_SVC_CALL;
 import static raido.apisvc.endpoint.message.RaidApiMessage.ONLY_OP_OR_SP_ADMIN;
+import static raido.apisvc.endpoint.message.RaidApiMessage.ONLY_RAIDO_ADMIN;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.areEqual;
@@ -15,6 +17,10 @@ import static raido.db.jooq.api_svc.enums.UserRole.OPERATOR;
 import static raido.db.jooq.api_svc.enums.UserRole.SP_ADMIN;
 
 public class AuthzUtil {
+  /* Hardcoded, we know this statically because we hardcoded the sequence to
+   20M and raido is the first SP inserted via flyway. */
+  public static final long RAIDO_SP_ID = 20_000_000;
+  
   private static final Log log = to(AuthzUtil.class);
   
   /** This will fail if the authentication is not a AuthzTokenPayload */
@@ -31,6 +37,35 @@ public class AuthzUtil {
       getContext().getAuthentication());
   }
 
+  /** User must be an admin associated specifically with the raido SP.
+  Originially implemented so I could write the migration endpoint that can 
+  insert raids across service points (i.e. migrating RDM and NotreDame raids,
+  etc.) - without having to allow api-keys to have an "operator" role. */
+  public static void guardRaidoAdminApiKey(AuthzTokenPayload user){
+    if( !areEqual(user.getClientId(), IdProvider.RAIDO_API.getLiteral()) ){
+      /* IMPROVE: there really ought to be a better/more explicit way to tell 
+      if a given user is an api-key or a real user. */
+      var iae = iae(ONLY_RAIDO_ADMIN);
+      log.with("user", user).with("reason", "not an api-key").
+        error(iae.getMessage());
+      throw iae;
+    }
+    
+    if( !areEqual(user.getRole(), SP_ADMIN.getLiteral()) ){
+      var iae = iae(ONLY_RAIDO_ADMIN);
+      log.with("user", user).with("reason", "not admin role").
+        error(iae.getMessage());
+      throw iae;
+    }
+    
+    if( !areEqual(user.getServicePointId(), RAIDO_SP_ID) ){
+      var iae = iae(ONLY_RAIDO_ADMIN);
+      log.with("user", user).with("reason", "not raido SP").
+        error(iae.getMessage());
+      throw iae;
+    }
+  }
+  
   /**
    Right now, "associated" means "directly associated", but 
    later might mean a more indirect association.

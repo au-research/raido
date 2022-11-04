@@ -6,7 +6,6 @@ import org.jooq.impl.DSL;
 import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
-import raido.apisvc.service.raid.MetadataService;
 import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.service.apids.model.ApidsMintResponse;
 import raido.apisvc.service.raid.ValidationFailureException;
@@ -45,24 +44,18 @@ import static raido.db.jooq.api_svc.tables.RaidV2.RAID_V2;
 @Transactional
 public class BasicRaidExperimental implements BasicRaidExperimentalApi {
   private static final Log log = to(BasicRaidExperimental.class);
-  /* Hardcoded, we know this statically because we hardcoded the sequence to
-   20M and raido is the first SP inserted */
-  public static final long RAIDO_SP_ID = 20_000_000;
 
   private DSLContext db;
   private RaidService raidSvc;
-  private MetadataService metaSvc;
   private RaidoSchemaV1ValidationService validSvc;
 
   public BasicRaidExperimental(
     DSLContext db,
     RaidService raidSvc,
-    MetadataService metaSvc,
     RaidoSchemaV1ValidationService validSvc
   ) {
     this.db = db;
     this.raidSvc = raidSvc;
-    this.metaSvc = metaSvc;
     this.validSvc = validSvc;
   }
 
