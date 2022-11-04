@@ -8,7 +8,7 @@ info:
   version: 2.0.0
   contact:
     name: ARDC RAiD team
-    email: web.services@ardc.edu.au
+    email: contact@raid.org
 tags:
   - name: public-experimental
     description: The APIs are not stable, they may change at any time.  
