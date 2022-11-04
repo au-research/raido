@@ -28,7 +28,7 @@ import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 
 public class MigrateRaidoSchemaV1Test  extends IntegrationTestCase {
   @Test
-  void happyDaySchenario(){
+  void happyDayScenario(){
     var raidApi = super.basicRaidExperimentalClient();
     var publicApi = super.publicExperimentalClient();
     var adminApi = super.adminExperimentalClient();
@@ -37,27 +37,29 @@ public class MigrateRaidoSchemaV1Test  extends IntegrationTestCase {
       DateUtil.formatCompactIsoDate(today), 
       // duplicate handle if two run in same millisecond
       DateUtil.formatCompactTimeMillis(LocalDateTime.now()) );
+
+    MetadataSchemaV1 metadata = new MetadataSchemaV1().
+      metadataSchema(RAIDO_METADATA_SCHEMA_V1).
+      id(new IdBlock().
+        identifier(handle).
+        identifierTypeUri(RAID_ID_TYPE_URI).
+        globalUrl("https://something.example.com")).
+      descriptions(List.of(new DescriptionBlock().
+        type(DescriptionType.PRIMARY_DESCRIPTION).
+        description("some description of the thing"))).
+      titles(List.of(new TitleBlock().
+        type(PRIMARY_TITLE).
+        title("some title").
+        startDate(today))).
+      dates(new DatesBlock().startDate(today)).
+      access(new AccessBlock().type(AccessType.OPEN));
     
     EXPECT("migrating a raid with correct content should work");
     var mintResult = adminApi.migrateLegacyRaid(
       new MigrateLegacyRaidRequest().
         mintRequest(new MigrateLegacyRaidRequestMintRequest().
           servicePointId(RAIDO_SP_ID).contentIndex(1) ).
-        metadata(new MetadataSchemaV1().
-          metadataSchema(RAIDO_METADATA_SCHEMA_V1).
-          id(new IdBlock().
-            identifier(handle).
-            identifierTypeUri(RAID_ID_TYPE_URI). 
-            globalUrl("https://something.example.com") ).
-          descriptions(List.of(new DescriptionBlock().
-            type(DescriptionType.PRIMARY_DESCRIPTION).
-            description("some description of the thing") )).
-          titles(List.of(new TitleBlock().
-            type(PRIMARY_TITLE).
-            title("some title").
-            startDate(today) )).
-          dates(new DatesBlock().startDate(today)).
-          access(new AccessBlock().type(AccessType.OPEN))
+        metadata(metadata
         )
     );
     assertThat(mintResult.getFailures()).isNullOrEmpty();
@@ -72,7 +74,17 @@ public class MigrateRaidoSchemaV1Test  extends IntegrationTestCase {
     assertThat(pubRead.getServicePointId()).isEqualTo(RAIDO_SP_ID);
     assertThat(pubRead.getHandle()).isEqualTo(handle);
 
-
+    EXPECT("should be re-migrate an existing raid");
+    var remintResult = adminApi.migrateLegacyRaid(
+      new MigrateLegacyRaidRequest().
+        mintRequest(new MigrateLegacyRaidRequestMintRequest().
+          servicePointId(RAIDO_SP_ID).contentIndex(1) ).
+        metadata(metadata
+        )
+    );
+    assertThat(remintResult.getFailures()).isNullOrEmpty();
+    assertThat(remintResult.getSuccess()).isTrue();
+    
   }
   
 }

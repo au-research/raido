@@ -176,6 +176,7 @@ public class RaidService {
         set(RAID_V2.START_DATE, startDate).
         set(RAID_V2.DATE_CREATED, LocalDateTime.now()).
         set(RAID_V2.CONFIDENTIAL, confidential).
+        where(RAID_V2.HANDLE.eq(handle)).
       execute();
   }
   
