@@ -155,18 +155,9 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
   public ReadRaidResponseV2 readRaidV2(ReadRaidV1Request req) {
     Guard.hasValue("must pass a handle", req.getHandle());
     var user = getAuthzPayload();
-    var data = raidSvc.readRaidV2Data(req.getHandle());
-    guardOperatorOrAssociated(user, data.servicePoint().getId());
-
-    return new ReadRaidResponseV2().
-      handle(data.raid().getHandle()).
-      servicePointId(data.servicePoint().getId()).
-      servicePointName(data.servicePoint().getName()).
-      primaryTitle(data.raid().getPrimaryTitle()).
-      startDate(data.raid().getStartDate()).
-      createDate(local2Offset(data.raid().getDateCreated())).
-      url(data.raid().getUrl()).
-      metadata(data.raid().getMetadata().data());
+    var data = raidSvc.readRaidResponseV2(req.getHandle());
+    guardOperatorOrAssociated(user, data.getServicePointId());
+    return data;
   }
   
   /* Performance:

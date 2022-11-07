@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
+import static raido.apisvc.endpoint.message.ValidationMessage.fieldNotSet;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.getAuthzPayload;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociatedSpAdmin;
@@ -260,6 +261,12 @@ public class AdminExperimental implements AdminExperimentalApi {
     var failures = new ArrayList<ValidationFailure>();
     failures.addAll(validSvc.validateIdBlockForMigration(id));
     failures.addAll(validSvc.validateRaidoSchemaV1(req.getMetadata()));
+    if( req.getMintRequest().getServicePointId() == null ){
+      failures.add(fieldNotSet("mintRequest.servicePointId"));
+    }
+    if( req.getMintRequest().getContentIndex() == null ){
+      failures.add(fieldNotSet("mintRequest.contentIndex"));
+    }
     if( !failures.isEmpty() ){
       return new MintResponse().success(false).failures(failures);
     }
@@ -279,7 +286,7 @@ public class AdminExperimental implements AdminExperimentalApi {
     // improve: this is unnecessary overhead - migration scripts don't care
     // about the response.
     return new MintResponse().success(true).
-      raid( basicRaid.readRaidV2(new ReadRaidV1Request().handle(handle)) );
+      raid( raidSvc.readRaidResponseV2(handle));
   }
 
 }

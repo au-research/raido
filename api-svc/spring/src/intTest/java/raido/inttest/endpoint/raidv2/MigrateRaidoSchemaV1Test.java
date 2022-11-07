@@ -2,17 +2,8 @@ package raido.inttest.endpoint.raidv2;
 
 import org.junit.jupiter.api.Test;
 import raido.apisvc.util.DateUtil;
-import raido.idl.raidv2.model.AccessBlock;
-import raido.idl.raidv2.model.AccessType;
-import raido.idl.raidv2.model.DatesBlock;
-import raido.idl.raidv2.model.DescriptionBlock;
-import raido.idl.raidv2.model.DescriptionType;
-import raido.idl.raidv2.model.IdBlock;
-import raido.idl.raidv2.model.MetadataSchemaV1;
-import raido.idl.raidv2.model.MigrateLegacyRaidRequest;
-import raido.idl.raidv2.model.MigrateLegacyRaidRequestMintRequest;
-import raido.idl.raidv2.model.PublicReadRaidResponseV2;
-import raido.idl.raidv2.model.TitleBlock;
+import raido.idl.raidv2.api.AdminExperimentalApi;
+import raido.idl.raidv2.model.*;
 import raido.inttest.IntegrationTestCase;
 
 import java.time.LocalDate;
@@ -20,13 +11,24 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static raido.apisvc.service.raid.MetadataService.RAID_ID_TYPE_URI;
+import static raido.apisvc.util.StringUtil.areEqual;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
 import static raido.idl.raidv2.model.Metaschema.RAIDO_METADATA_SCHEMA_V1;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 
 public class MigrateRaidoSchemaV1Test  extends IntegrationTestCase {
+
+  public static final String NOTRE_DAME = "University of Notre Dame Library";
+
+  public ServicePoint findServicePoint(
+    AdminExperimentalApi adminApi, String name
+  ){
+    return adminApi.listServicePoint().stream().
+      filter(i->areEqual(i.getName(), name)).
+      findFirst().orElseThrow();
+  }
+  
   @Test
   void happyDayScenario(){
     var raidApi = super.basicRaidExperimentalClient();
@@ -37,6 +39,8 @@ public class MigrateRaidoSchemaV1Test  extends IntegrationTestCase {
       DateUtil.formatCompactIsoDate(today), 
       // duplicate handle if two run in same millisecond
       DateUtil.formatCompactTimeMillis(LocalDateTime.now()) );
+    var servicePoint = findServicePoint(adminApi, NOTRE_DAME);
+    
 
     MetadataSchemaV1 metadata = new MetadataSchemaV1().
       metadataSchema(RAIDO_METADATA_SCHEMA_V1).
@@ -58,10 +62,9 @@ public class MigrateRaidoSchemaV1Test  extends IntegrationTestCase {
     var mintResult = adminApi.migrateLegacyRaid(
       new MigrateLegacyRaidRequest().
         mintRequest(new MigrateLegacyRaidRequestMintRequest().
-          servicePointId(RAIDO_SP_ID).contentIndex(1) ).
-        metadata(metadata
-        )
-    );
+          servicePointId(servicePoint.getId()).
+          contentIndex(1) ).
+        metadata(metadata) );
     assertThat(mintResult.getFailures()).isNullOrEmpty();
     assertThat(mintResult.getSuccess()).isTrue();
 
@@ -71,20 +74,18 @@ public class MigrateRaidoSchemaV1Test  extends IntegrationTestCase {
     assertThat(pubReadObject).isInstanceOf(PublicReadRaidResponseV2.class);
     var pubRead = (PublicReadRaidResponseV2) pubReadObject;
     assertThat(pubRead.getCreateDate()).isNotNull();
-    assertThat(pubRead.getServicePointId()).isEqualTo(RAIDO_SP_ID);
+    assertThat(pubRead.getServicePointId()).isEqualTo(servicePoint.getId());
     assertThat(pubRead.getHandle()).isEqualTo(handle);
 
     EXPECT("should be re-migrate an existing raid");
     var remintResult = adminApi.migrateLegacyRaid(
       new MigrateLegacyRaidRequest().
         mintRequest(new MigrateLegacyRaidRequestMintRequest().
-          servicePointId(RAIDO_SP_ID).contentIndex(1) ).
-        metadata(metadata
-        )
-    );
+          servicePointId(servicePoint.getId()). 
+          contentIndex(1) ).
+        metadata(metadata) );
     assertThat(remintResult.getFailures()).isNullOrEmpty();
     assertThat(remintResult.getSuccess()).isTrue();
-    
   }
   
 }

@@ -9,14 +9,16 @@ import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.db.jooq.api_svc.tables.records.RaidV2Record;
 import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
 import raido.idl.raidv2.model.AccessType;
-import raido.idl.raidv2.model.MintRaidRequestV1;
 import raido.idl.raidv2.model.MetadataSchemaV1;
+import raido.idl.raidv2.model.MintRaidRequestV1;
+import raido.idl.raidv2.model.ReadRaidResponseV2;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static raido.apisvc.service.raid.MetadataService.mapJs2Jq;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitles;
+import static raido.apisvc.util.DateUtil.local2Offset;
 import static raido.apisvc.util.DateUtil.offset2Local;
 import static raido.db.jooq.api_svc.tables.Raid.RAID;
 import static raido.db.jooq.api_svc.tables.RaidV2.RAID_V2;
@@ -130,6 +132,19 @@ public class RaidService {
       fetchSingle(r -> new ReadRaidV2Data(
         r.into(RaidV2Record.class), 
         r.into(ServicePointRecord.class)) );
+  }
+  
+  public ReadRaidResponseV2 readRaidResponseV2(String handle){
+    var data = readRaidV2Data(handle);
+    return new ReadRaidResponseV2().
+      handle(data.raid().getHandle()).
+      servicePointId(data.servicePoint().getId()).
+      servicePointName(data.servicePoint().getName()).
+      primaryTitle(data.raid().getPrimaryTitle()).
+      startDate(data.raid().getStartDate()).
+      createDate(local2Offset(data.raid().getDateCreated())).
+      url(data.raid().getUrl()).
+      metadata(data.raid().getMetadata().data());
   }
 
   public void migrateRaidoSchemaV1(
