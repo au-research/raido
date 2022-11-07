@@ -27,5 +27,8 @@
   <!-- generally don't want to see this, we're doing a lot of SQL statements -->
   <logger name="org.jooq" level="info"/>
 
+  <!-- openfeign logs stuff at debug level, default to off -->
+  <logger name="raido.idl.raidv2.api" level="info"/>
+  
 
 </configuration>

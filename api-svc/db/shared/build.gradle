@@ -9,6 +9,9 @@ ext{
   apiSvcPgUser = 'postgres'
   apiSvcPgPassword = ""
   
+  apiSvcMigrationHost = ""
+  apiSvcMigrationKey = ""
+  
   /* this is the password used by the api-svc, we need it at the gradle level
   so the flyway scripts can set the password for the api_user role. */
   apiSvcRolePassword = null

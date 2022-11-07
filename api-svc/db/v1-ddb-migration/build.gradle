@@ -37,9 +37,15 @@ flyway{
 
 repositories{
   mavenCentral()
+  // needed for resolving spring-6 milestone builds
+  // spring is pulled in for idl-raid-v2
+  maven { url "https://repo.spring.io/libs-milestone" }
 }
 
 dependencies{
+  implementation project(':api-svc:idl-raid-v2')
+  implementation libs.bundles.spring6
+
   // don't really care, whatever version Gradle is using will do
   implementation localGroovy()
 
@@ -52,6 +58,17 @@ dependencies{
   implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
   runtimeOnly 'ch.qos.logback:logback-core:1.3.0-alpha16'
   runtimeOnly 'ch.qos.logback:logback-classic:1.3.0-alpha16'
+
+  implementation( 'org.springframework.cloud:spring-cloud-starter-openfeign:3.1.2'){
+    exclude group: 'org.springframework.boot'
+  }
+  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3"
+  
+  // there were in api-svc somehow (transitively from spring?), 
+  // but missing from this project
+  implementation 'io.github.openfeign:feign-okhttp:12.0'
+  implementation 'io.github.openfeign:feign-jackson:12.0'
+
 
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
@@ -121,6 +138,23 @@ task importS3Files(type: JavaExec){
   setMainClass "raid.ddb_migration.ImportS3Files"
   workingDir rootProject.projectDir
   systemProperties defaultSysProps
+}
+
+task import1Raid(type: JavaExec){
+  group = "run"
+  description = "Run Import1Raid"
+  classpath = sourceSets.main.runtimeClasspath
+  setMainClass "raid.v2_api_migration.Import1Raid"
+  workingDir rootProject.projectDir
+  systemProperties defaultSysProps
+  systemProperties.apiSvcMigrationHost = sharedProject.apiSvcMigrationHost
+  systemProperties.apiSvcMigrationKey = sharedProject.apiSvcMigrationKey
+  
+  doFirst {
+    println "migrating data to raido system at: $defaultSysProps.apiSvcMigrationHost"
+    assert systemProperties.apiSvcMigrationHost
+    assert systemProperties.apiSvcMigrationKey
+  }
 }
 
 task cleanJooqGeneratedSrc(type: Delete){
