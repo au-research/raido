@@ -33,6 +33,7 @@ import {
   formatGlobalHandle,
   getRaidLandingPagePath
 } from "Page/Public/RaidLandingPage";
+import { MetaDataContainer } from "Component/MetaDataContainer";
 
 const log = console;
 
@@ -125,73 +126,77 @@ function EditRaidContainer({handle}: {
   const canSubmit = isNameValid && hasChanged;
   const isWorking = false; // updateRequest.isLoading;
 
-  return <ContainerCard title={`Edit RAiD`} action={<EditRaidHelp/>}>
-    <CompactErrorPanel error={raidQuery.error}/>
-    <InfoFieldList>
-      <InfoField id="globalHandle" label="Global handle" value={
-        <NewWindowLink href={formatGlobalHandle(handle)}>
-          {handle}
-        </NewWindowLink>
-      }/>
-      <InfoField id="raidoHandle" label="Raido handle" value={
-        <NewWindowLink href={getRaidLandingPagePath(handle)}>
-          {handle}
-        </NewWindowLink>
-      }/>
-      <InfoField id="servicePoint" label="Service point"
-        value={spQuery.data?.name}
+  return <>
+    <ContainerCard title={`Edit RAiD`} action={<EditRaidHelp/>}>
+      <CompactErrorPanel error={raidQuery.error}/>
+      <InfoFieldList>
+        <InfoField id="globalHandle" label="Global handle" value={
+          <NewWindowLink href={formatGlobalHandle(handle)}>
+            {handle}
+          </NewWindowLink>
+        }/>
+        <InfoField id="raidoHandle" label="Raido handle" value={
+          <NewWindowLink href={getRaidLandingPagePath(handle)}>
+            {handle}
+          </NewWindowLink>
+        }/>
+        <InfoField id="servicePoint" label="Service point"
+          value={spQuery.data?.name}
+        />
+      </InfoFieldList>
+      <Divider variant={"middle"}
+        style={{marginTop: "1em", marginBottom: "1.5em"}}
       />
-    </InfoFieldList>
-    <Divider variant={"middle"}
-      style={{marginTop: "1em", marginBottom: "1.5em"}}
-    />
 
-    <form autoComplete="off" onSubmit={async (e) => {
-      e.preventDefault();
-      alert("not yet implemented");
-      //await updateRequest.mutate({...formData});
-    }}>
-      <Stack spacing={2}>
-        <TextField id="primaryTitle" label="Primary title" variant="outlined"
-          autoFocus autoCorrect="off" autoCapitalize="on"
-          required disabled={isWorking || raidQuery.isLoading}
-          value={formData.primaryTitle}
-          onChange={(e) => {
-            setFormData({...formData, primaryTitle: e.target.value});
-          }}
-          error={!!raidQuery.data && !isNameValid}
-        />
-        <DesktopDatePicker label={"Start date *"} inputFormat="YYYY-MM-DD"
-          disabled={isWorking || raidQuery.isLoading}
-          value={formData.startDate}
-          onChange={(newValue: Dayjs | null) => {
-            setFormData({...formData, startDate: newValue?.toDate()!})
-          }}
-          renderInput={(params) => <TextField {...params} />}
-        />
-        <Stack direction={"row"} spacing={2}>
-          <SecondaryButton type="button" onClick={(e)=>{
-            console.log("back button clicked", {referrer: document.referrer});
-            e.preventDefault();
-            navBrowserBack();
-            console.log("after navBrowserBack()");
-          }}
-            disabled={isWorking}>
-            Back
-          </SecondaryButton>
-          <PrimaryActionButton type="submit" context={"minting raid"}
-            disabled={!canSubmit}
-            isLoading={isWorking}
-            //error={ updateRequest.error}
-            error={ undefined}
-          >
-            Update
-          </PrimaryActionButton>
+      <form autoComplete="off" onSubmit={async (e) => {
+        e.preventDefault();
+        alert("not yet implemented");
+        //await updateRequest.mutate({...formData});
+      }}>
+        <Stack spacing={2}>
+          <TextField id="primaryTitle" label="Primary title" variant="outlined"
+            autoFocus autoCorrect="off" autoCapitalize="on"
+            required disabled={isWorking || raidQuery.isLoading}
+            value={formData.primaryTitle}
+            onChange={(e) => {
+              setFormData({...formData, primaryTitle: e.target.value});
+            }}
+            error={!!raidQuery.data && !isNameValid}
+          />
+          <DesktopDatePicker label={"Start date *"} inputFormat="YYYY-MM-DD"
+            disabled={isWorking || raidQuery.isLoading}
+            value={formData.startDate}
+            onChange={(newValue: Dayjs | null) => {
+              setFormData({...formData, startDate: newValue?.toDate()!})
+            }}
+            renderInput={(params) => <TextField {...params} />}
+          />
+          <Stack direction={"row"} spacing={2}>
+            <SecondaryButton type="button" onClick={(e) => {
+              console.log("back button clicked", {referrer: document.referrer});
+              e.preventDefault();
+              navBrowserBack();
+              console.log("after navBrowserBack()");
+            }}
+              disabled={isWorking}>
+              Back
+            </SecondaryButton>
+            <PrimaryActionButton type="submit" context={"minting raid"}
+              disabled={!canSubmit}
+              isLoading={isWorking}
+              //error={ updateRequest.error}
+              error={undefined}
+            >
+              Update
+            </PrimaryActionButton>
+          </Stack>
+          {/*<CompactErrorPanel error={updateRequest.error}/>*/}
         </Stack>
-        {/*<CompactErrorPanel error={updateRequest.error}/>*/}
-      </Stack>
-    </form>
-  </ContainerCard>
+      </form>
+    </ContainerCard>
+    <br/>
+    <MetaDataContainer metadata={raidQuery.data?.metadata}/>
+  </>
 }
 
 function EditRaidHelp(){

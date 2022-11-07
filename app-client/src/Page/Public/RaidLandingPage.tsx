@@ -20,6 +20,7 @@ import { SmallPageSpinner } from "Component/SmallPageSpinner";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import { BooleanDisplay, DateDisplay } from "Component/Util";
 import { TextSpan } from "Component/TextSpan";
+import { formatMetadata } from "Component/MetaDataContainer";
 
 const pageUrl = "/handle";
 
@@ -180,12 +181,3 @@ function OpenRaid({raid, metadata}: {
   </>
 }
 
-function formatMetadata(metadata: any): string{
-  return JSON.stringify(metadata, nullFieldReplacer, 2);
-}
-
-function nullFieldReplacer(key: any, value: any) : any {
-  /* "skip" (do not render) fields that do not have a value.
-  See https://stackoverflow.com/a/41116529/924597 */
-  return value ?? undefined
-}
