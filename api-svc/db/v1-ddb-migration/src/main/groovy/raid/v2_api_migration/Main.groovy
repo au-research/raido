@@ -1,21 +1,15 @@
 package raid.v2_api_migration
 
+import org.jooq.Record
+import org.jooq.Result
 import raid.ddb_migration.JooqExec
-import raido.idl.raidv2.model.AccessBlock
-import raido.idl.raidv2.model.AccessType
-import raido.idl.raidv2.model.DatesBlock
-import raido.idl.raidv2.model.DescriptionBlock
-import raido.idl.raidv2.model.DescriptionType
-import raido.idl.raidv2.model.IdBlock
-import raido.idl.raidv2.model.MetadataSchemaV1
-import raido.idl.raidv2.model.Metaschema
 import raido.idl.raidv2.model.MigrateLegacyRaidRequest
 import raido.idl.raidv2.model.MigrateLegacyRaidRequestMintRequest
-import raido.idl.raidv2.model.TitleBlock
-import raido.idl.raidv2.model.TitleType
+import raido.idl.raidv2.model.ValidationFailure
 
 import static db.migration.jooq.tables.Raid.RAID
 import static java.lang.Integer.parseInt
+import static raid.v2_api_migration.RaidoApi.mapToMetadataSchemaV1
 
 class Import1Raid {
 
@@ -37,36 +31,89 @@ class Import1Raid {
         limit(1).fetchOne()
       println "raid to import: $raid"
     })
-    var startDate = raid.get(RAID.START_DATE)
 
     def raido = new RaidoApi()
     def servicePoint = raido.findServicePoint(svcPointName)
     println "service point to to import against" + servicePoint
-    var migrateResult = raido.adminApi.migrateLegacyRaid( new MigrateLegacyRaidRequest().
-      mintRequest(new MigrateLegacyRaidRequestMintRequest().
-        servicePointId(servicePoint.id).
-        contentIndex(parseInt(raid.getValue(RAID.CONTENT_INDEX))) ).
-      metadata( new MetadataSchemaV1().
-        metadataSchema(Metaschema.RAIDO_METADATA_SCHEMA_V1).
-        id(new IdBlock().
-          identifier(raid.get(RAID.HANDLE)).
-          identifierTypeUri("https://raid.org").
-          globalUrl(raid.getValue(RAID.CONTENT_PATH)) ).
-        access(new AccessBlock().
-          type(AccessType.CLOSED).
-          accessStatement("closed by data migration process") ).
-        dates( new DatesBlock().startDate(startDate.toLocalDate()) ).
-        titles([new TitleBlock().
-          type(TitleType.PRIMARY_TITLE).
-          title(raid.getValue(RAID.NAME)).
-          startDate(startDate.toLocalDate()) ]).
-        descriptions([new DescriptionBlock().
-          type(DescriptionType.PRIMARY_DESCRIPTION).
-          description(raid.get(RAID.DESCRIPTION)) ])
-      )
+    var migrateResult = raido.adminApi.migrateLegacyRaid(
+      new MigrateLegacyRaidRequest().
+        mintRequest(new MigrateLegacyRaidRequestMintRequest().
+          servicePointId(servicePoint.id).
+          contentIndex(parseInt(raid.getValue(RAID.CONTENT_INDEX)))).
+        metadata(mapToMetadataSchemaV1(raid))
     )
     assert migrateResult.success == true : migrateResult.getFailures()
     println migrateResult
     
+  }
+
+}
+
+class ImportAllRaids {
+
+  public static final String NOTRE_DAME = "University of Notre Dame Library"
+  public static final String RDM = "RDM@UQ"
+
+  static void main(String[] args) {
+    importAllRaids(NOTRE_DAME)
+    importAllRaids(RDM)
+  }
+
+  static void importAllRaids(String svcPointName) {
+    def exec = new JooqExec()
+
+    def raido = new RaidoApi()
+    def servicePoint = raido.findServicePoint(svcPointName)
+    println "importing service point raids: " + servicePoint.name
+
+    int successes = 0;
+    Map<String, List<ValidationFailure>> failures = [:]
+    Timer t = new Timer();
+    t.scheduleAtFixedRate(
+      ()->{
+        println "... $successes successes. ${failures.size()} failures ..."
+      },
+      10_000,   // first run   
+      10_000)  // then every    
+    
+    exec.withDb(db -> {
+      var Result<Record> raids = db.select().from(RAID).
+        where(RAID.OWNER.eq(svcPointName)).
+        orderBy(RAID.CREATION_DATE.desc()).
+        fetch()
+
+      raids.stream().forEach(iRaid -> {
+        var iMetadata = mapToMetadataSchemaV1(iRaid)
+        var migrateResult = raido.adminApi.migrateLegacyRaid(
+          new MigrateLegacyRaidRequest().
+            mintRequest(new MigrateLegacyRaidRequestMintRequest().
+              servicePointId(servicePoint.id).
+              contentIndex(parseInt(iRaid.getValue(RAID.CONTENT_INDEX)))).
+            metadata(iMetadata)
+        )
+
+        if( migrateResult.success ){
+          successes++ 
+        }
+        else{
+          failures[iMetadata.id.identifier] = migrateResult.failures
+        }
+
+        if( failures.size() > 5 && successes == 0 ){
+          // untested, dunno if using `!failures` is as clever as it looks
+          assert !failures : "first 5 raids have all failed, something's wrong"
+        }
+
+      })
+      
+      t.cancel()
+      
+      println "$successes successes. ${failures.size()} failures."
+      if( !failures.isEmpty() ){
+        println "failures for $svcPointName..."
+        println failures
+      }
+
+    })
   }
 }

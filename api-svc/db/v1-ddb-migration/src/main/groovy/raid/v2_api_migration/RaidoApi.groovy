@@ -9,10 +9,12 @@ import feign.jackson.JacksonDecoder
 import feign.jackson.JacksonEncoder
 import feign.okhttp.OkHttpClient
 import feign.slf4j.Slf4jLogger
+import org.jooq.Record
 import org.springframework.cloud.openfeign.support.SpringMvcContract
 import raido.idl.raidv2.api.AdminExperimentalApi
-import raido.idl.raidv2.model.ServicePoint
+import raido.idl.raidv2.model.*
 
+import static db.migration.jooq.tables.Raid.RAID
 import static org.springframework.http.HttpHeaders.AUTHORIZATION
 
 class RaidoApi {
@@ -56,5 +58,28 @@ class RaidoApi {
       logLevel(Logger.Level.FULL).
       target(AdminExperimentalApi.class, host);
   }
-    
+
+  static MetadataSchemaV1 mapToMetadataSchemaV1(
+    Record raid
+  ) {
+    var startDate = raid.get(RAID.START_DATE)
+    return new MetadataSchemaV1().
+      metadataSchema(Metaschema.RAIDO_METADATA_SCHEMA_V1).
+      id(new IdBlock().
+        identifier(raid.get(RAID.HANDLE)).
+        identifierTypeUri("https://raid.org").
+        globalUrl(raid.getValue(RAID.CONTENT_PATH))).
+      access(new AccessBlock().
+        type(AccessType.CLOSED).
+        accessStatement("closed by data migration process")).
+      dates(new DatesBlock().startDate(startDate.toLocalDate())).
+      titles([new TitleBlock().
+        type(TitleType.PRIMARY_TITLE).
+        title(raid.getValue(RAID.NAME)).
+        startDate(startDate.toLocalDate())]).
+      descriptions([new DescriptionBlock().
+        type(DescriptionType.PRIMARY_DESCRIPTION).
+        description(raid.get(RAID.DESCRIPTION))])
+  }
+  
 }

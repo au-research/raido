@@ -157,6 +157,23 @@ task import1Raid(type: JavaExec){
   }
 }
 
+task importAllRaids(type: JavaExec){
+  group = "run"
+  description = "Run Import1Raid"
+  classpath = sourceSets.main.runtimeClasspath
+  setMainClass "raid.v2_api_migration.ImportAllRaids"
+  workingDir rootProject.projectDir
+  systemProperties defaultSysProps
+  systemProperties.apiSvcMigrationHost = sharedProject.apiSvcMigrationHost
+  systemProperties.apiSvcMigrationKey = sharedProject.apiSvcMigrationKey
+  
+  doFirst {
+    println "migrating data to raido system at: $defaultSysProps.apiSvcMigrationHost"
+    assert systemProperties.apiSvcMigrationHost
+    assert systemProperties.apiSvcMigrationKey
+  }
+}
+
 task cleanJooqGeneratedSrc(type: Delete){
   group = "jooq"
   delete jooqGeneratedSrcDir
