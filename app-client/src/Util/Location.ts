@@ -84,7 +84,12 @@ export function normalisePath(path: string): string{
   if( !path ){
     return "";
   }
-  const normalizedPath = path.toLowerCase().trim();
+  /* if path normalisation changes path, it will change the case of any id
+  value that we parse out of the path.
+  If we're gonna stick with this custom routing stuff, then if we ant the 
+  path matching to be case-insensitive, we'll need more complexity to make sure
+  the case of the suffix is not affected. */
+  const normalizedPath = path.trim();
   if( normalizedPath.charAt(normalizedPath.length-1) === "/" ){
     return normalizedPath.slice(0, -1);
   }
