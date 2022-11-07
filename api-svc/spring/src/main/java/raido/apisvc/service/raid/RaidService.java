@@ -2,9 +2,11 @@ package raido.apisvc.service.raid;
 
 import org.jooq.DSLContext;
 import org.jooq.JSONB;
+import org.jooq.exception.NoDataFoundException;
 import org.springframework.stereotype.Component;
 import raido.apisvc.service.apids.ApidsService;
 import raido.apisvc.service.apids.model.ApidsMintResponse;
+import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.db.jooq.api_svc.tables.records.RaidV2Record;
 import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
@@ -20,12 +22,14 @@ import static raido.apisvc.service.raid.MetadataService.mapJs2Jq;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitles;
 import static raido.apisvc.util.DateUtil.local2Offset;
 import static raido.apisvc.util.DateUtil.offset2Local;
+import static raido.apisvc.util.Log.to;
 import static raido.db.jooq.api_svc.tables.Raid.RAID;
 import static raido.db.jooq.api_svc.tables.RaidV2.RAID_V2;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 
 @Component
 public class RaidService {
+  private static final Log log = to(RaidService.class);
   
   private DSLContext db;
   private ApidsService apidsSvc;
@@ -135,7 +139,17 @@ public class RaidService {
   }
   
   public ReadRaidResponseV2 readRaidResponseV2(String handle){
-    var data = readRaidV2Data(handle);
+    ReadRaidV2Data data = null;
+    try {
+      data = readRaidV2Data(handle);
+    }
+    catch( NoDataFoundException e ){
+      /* want to easily see what handles are failing, without having to 
+      turn on param logging for all endpoints. When we implement selective 
+      enablement of param logging at filter level, can get rid of this. */
+      log.with("handle", handle).warn(e.getMessage());
+      throw new RuntimeException(e);
+    }
     return new ReadRaidResponseV2().
       handle(data.raid().getHandle()).
       servicePointId(data.servicePoint().getId()).
