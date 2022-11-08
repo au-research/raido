@@ -188,6 +188,16 @@ That said, how can we use `git describe` functionality for the AWS stuff?
 I don't think we can :(
 
 
+## public API endpoints need CORS headers
+
+Mostly we're expecting non-browser calling contexts for the public API endpoints
+(i.e. curl clients, proper application integration on the backend).
+But do we want to add CORS headers in case people want to call from browser?
+Like I want to do for orcid?
+Do we really want to enable this?  Our API will get abused like hell (just like
+I want to abuse the orcid API).
+
+
 # AWS / Infra
 
 AWS tech debt is documented in that repo, don't put it here.
