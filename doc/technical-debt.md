@@ -66,6 +66,26 @@ generates the HTML rather than running on the client).
 
 # api-svc
 
+## Implement a "deny-by-default" authorization scheme
+
+Currently, the API endpoints are "deny-by-default" to un-authenticated users,
+if you're not authenticated, then you won't be able to call any endpoint unless
+that endpoint has been specifically declared to be pulicly accessible (by 
+placing it under the `/v2/public` prefix).
+
+That means anyone with any role (Operator, Admin, or User) can access an 
+endpoint if the developer hasn't implemented authz checking.
+
+Two approaches I've thought of:
+* an implementation approach - add a "I have checked authz flag", probably in 
+  the SecurityContext and if that flag never got set in the implmentation, 
+  abandon the endpoint call (what about transaction rollback?, what about 
+  side effect stuff done with other systems?)
+* a test-based approach 
+  * iterate all non-public endpoints (easy)
+  * somehow magically figure out if developer implmented authz  
+
+
 ## JWT authorisation validation causes too much DB load
 
 At the moment, every endpoint reads from the app_user table for every 
