@@ -23,6 +23,7 @@ from raid
 where owner = 'RDM@UQ'
 order by creation_date desc
 limit 10
+;
 
 -- expected default schema raid_v1_import 
 select * 

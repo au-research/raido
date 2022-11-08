@@ -151,7 +151,7 @@ task import1Raid(type: JavaExec){
   systemProperties.apiSvcMigrationKey = sharedProject.apiSvcMigrationKey
   
   doFirst {
-    println "migrating data to raido system at: $defaultSysProps.apiSvcMigrationHost"
+    println "migrating data to raido system at: $systemProperties.apiSvcMigrationHost"
     assert systemProperties.apiSvcMigrationHost
     assert systemProperties.apiSvcMigrationKey
   }
@@ -168,7 +168,7 @@ task importAllRaids(type: JavaExec){
   systemProperties.apiSvcMigrationKey = sharedProject.apiSvcMigrationKey
   
   doFirst {
-    println "migrating data to raido system at: $defaultSysProps.apiSvcMigrationHost"
+    println "migrating data to raido system at: $systemProperties.apiSvcMigrationHost"
     assert systemProperties.apiSvcMigrationHost
     assert systemProperties.apiSvcMigrationKey
   }

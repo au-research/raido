@@ -105,6 +105,7 @@ paths:
                   properties:
                     servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
                     contentIndex: { type: integer}
+                    createDate: { type: string, format: date-time }
                 metadata: {$ref: '#/components/schemas/MetadataSchemaV1'}
       responses:
         '200':

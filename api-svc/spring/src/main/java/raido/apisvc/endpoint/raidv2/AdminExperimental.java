@@ -267,6 +267,9 @@ public class AdminExperimental implements AdminExperimentalApi {
     if( req.getMintRequest().getContentIndex() == null ){
       failures.add(fieldNotSet("mintRequest.contentIndex"));
     }
+    if( req.getMintRequest().getCreateDate() == null ){
+      failures.add(fieldNotSet("mintRequest.createDate"));
+    }
     if( !failures.isEmpty() ){
       return new MintResponse().success(false).failures(failures);
     }
@@ -277,6 +280,7 @@ public class AdminExperimental implements AdminExperimentalApi {
       raidSvc.migrateRaidoSchemaV1(
         req.getMintRequest().getServicePointId(), 
         req.getMintRequest().getContentIndex(),
+        req.getMintRequest().getCreateDate(),
         req.getMetadata() );
     }
     catch( ValidationFailureException e ){

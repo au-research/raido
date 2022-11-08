@@ -8,6 +8,7 @@ import raido.inttest.IntegrationTestCase;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -63,7 +64,8 @@ public class MigrateRaidoSchemaV1Test  extends IntegrationTestCase {
       new MigrateLegacyRaidRequest().
         mintRequest(new MigrateLegacyRaidRequestMintRequest().
           servicePointId(servicePoint.getId()).
-          contentIndex(1) ).
+          contentIndex(1).
+          createDate(OffsetDateTime.now()) ).
         metadata(metadata) );
     assertThat(mintResult.getFailures()).isNullOrEmpty();
     assertThat(mintResult.getSuccess()).isTrue();
@@ -82,7 +84,8 @@ public class MigrateRaidoSchemaV1Test  extends IntegrationTestCase {
       new MigrateLegacyRaidRequest().
         mintRequest(new MigrateLegacyRaidRequestMintRequest().
           servicePointId(servicePoint.getId()). 
-          contentIndex(1) ).
+          contentIndex(1).
+          createDate(OffsetDateTime.now()) ).
         metadata(metadata) );
     assertThat(remintResult.getFailures()).isNullOrEmpty();
     assertThat(remintResult.getSuccess()).isTrue();

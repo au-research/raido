@@ -7,6 +7,10 @@ import raido.idl.raidv2.model.MigrateLegacyRaidRequest
 import raido.idl.raidv2.model.MigrateLegacyRaidRequestMintRequest
 import raido.idl.raidv2.model.ValidationFailure
 
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
+
 import static db.migration.jooq.tables.Raid.RAID
 import static java.lang.Integer.parseInt
 import static raid.v2_api_migration.RaidoApi.mapToMetadataSchemaV1
@@ -56,7 +60,7 @@ class ImportAllRaids {
 
   static void main(String[] args) {
     importAllRaids(NOTRE_DAME)
-    importAllRaids(RDM)
+//    importAllRaids(RDM)
   }
 
   static void importAllRaids(String svcPointName) {
@@ -81,14 +85,16 @@ class ImportAllRaids {
         where(RAID.OWNER.eq(svcPointName)).
         orderBy(RAID.CREATION_DATE.desc()).
         fetch()
-
+      
       raids.stream().forEach(iRaid -> {
+        var createDate = iRaid.get(RAID.CREATION_DATE)
         var iMetadata = mapToMetadataSchemaV1(iRaid)
         var migrateResult = raido.adminApi.migrateLegacyRaid(
           new MigrateLegacyRaidRequest().
             mintRequest(new MigrateLegacyRaidRequestMintRequest().
               servicePointId(servicePoint.id).
-              contentIndex(parseInt(iRaid.getValue(RAID.CONTENT_INDEX)))).
+              contentIndex(parseInt(iRaid.getValue(RAID.CONTENT_INDEX))).
+              createDate(local2Offset(createDate)) ).
             metadata(iMetadata)
         )
 
@@ -116,4 +122,24 @@ class ImportAllRaids {
 
     })
   }
+
+  /**
+   @return will return null if null is passed
+   */
+  public static LocalDateTime offset2Local(OffsetDateTime d){
+    if( d == null ){
+      return null;
+    }
+
+    return d.toLocalDateTime();
+  }
+
+  public static OffsetDateTime local2Offset(LocalDateTime d){
+    if( d == null ){
+      return null;
+    }
+
+    return d.atOffset(ZoneOffset.UTC);
+  }
+  
 }

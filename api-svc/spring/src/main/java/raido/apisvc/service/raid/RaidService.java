@@ -3,6 +3,7 @@ package raido.apisvc.service.raid;
 import org.jooq.DSLContext;
 import org.jooq.JSONB;
 import org.jooq.exception.NoDataFoundException;
+import org.jooq.impl.DSL;
 import org.springframework.stereotype.Component;
 import raido.apisvc.service.apids.ApidsService;
 import raido.apisvc.service.apids.model.ApidsMintResponse;
@@ -17,7 +18,10 @@ import raido.idl.raidv2.model.ReadRaidResponseV2;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toMap;
 import static raido.apisvc.service.raid.MetadataService.mapJs2Jq;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitles;
 import static raido.apisvc.util.DateUtil.local2Offset;
@@ -164,6 +168,7 @@ public class RaidService {
   public void migrateRaidoSchemaV1(
     long servicePointId,
     int urlContentIndex,
+    OffsetDateTime createDate, 
     MetadataSchemaV1 metadata
   ) throws ValidationFailureException {
     String primaryTitle = getPrimaryTitles(metadata.getTitles()).
@@ -193,18 +198,10 @@ public class RaidService {
       set(RAID_V2.METADATA, jsonbMetadata).
       set(RAID_V2.METADATA_SCHEMA, mapJs2Jq(metadata.getMetadataSchema())).
       set(RAID_V2.START_DATE, startDate).
-      set(RAID_V2.DATE_CREATED, LocalDateTime.now()).
+      set(RAID_V2.DATE_CREATED, offset2Local(createDate)).
       set(RAID_V2.CONFIDENTIAL, confidential).
       onConflict(RAID_V2.HANDLE).doUpdate().
-        set(RAID_V2.SERVICE_POINT_ID, servicePointId).
-        set(RAID_V2.URL, raidUrl).
-        set(RAID_V2.URL_INDEX, urlContentIndex).
-        set(RAID_V2.PRIMARY_TITLE, primaryTitle).
-        set(RAID_V2.METADATA, jsonbMetadata).
-        set(RAID_V2.METADATA_SCHEMA, mapJs2Jq(metadata.getMetadataSchema())).
-        set(RAID_V2.START_DATE, startDate).
-        set(RAID_V2.DATE_CREATED, LocalDateTime.now()).
-        set(RAID_V2.CONFIDENTIAL, confidential).
+        set(stream(RAID_V2.fields()).collect(toMap(f -> f, DSL::excluded))).
         where(RAID_V2.HANDLE.eq(handle)).
       execute();
   }
