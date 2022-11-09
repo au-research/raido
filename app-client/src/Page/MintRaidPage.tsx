@@ -78,11 +78,9 @@ function Content(){
 }
 
 type FormData = Readonly<{
-  servicePointId: number,
   primaryTitle: string,
   // can't stop DesktopDatePicker from allowing the user to clear the value
   startDate?: Date,
-  confidential: boolean,
   accessType: AccessType,
   accesStatement: string,
 }>;
@@ -114,10 +112,8 @@ function MintRaidContainer({servicePointId, onCreate}: {
 }){
   const api = useAuthApi();
   const [formData, setFormData] = useState({
-    servicePointId: servicePointId,
     primaryTitle: "",
     startDate: new Date(),
-    confidential: false,
     accessType: "Open",
     accesStatement: "",
   } as FormData);
