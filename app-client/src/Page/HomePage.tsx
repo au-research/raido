@@ -27,13 +27,11 @@ import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import { TextSpan } from "Component/TextSpan";
 import { useAuth } from "Auth/AuthProvider";
 import { RqQuery } from "Util/ReactQueryUtil";
-import { RaidListItemV1, RaidListItemV2 } from "Generated/Raidv2";
+import { RaidListItemV2 } from "Generated/Raidv2";
 import { InfoField, InfoFieldList } from "Component/InfoField";
 import { RefreshIconButton } from "Component/RefreshIconButton";
 import { CompactLinearProgress } from "Component/SmallPageSpinner";
-import { getMintRaidPageLink } from "Page/MintRaidPage";
 import { RaidoLink } from "Component/RaidoLink";
-import { getEditRaidPageLink } from "Page/EditRaidPage";
 import { RaidoAddFab } from "Component/AppButton";
 import { getEditRaidV2PageLink } from "Page/EditRaidPageV2";
 import { getMintRaidV2PageLink } from "Page/MintRaidPageV2";
@@ -96,78 +94,6 @@ function RaidCurrentUser(){
   
 }
 
-export function RaidTableContainer({servicePointId}: {servicePointId: number}){
-  const api = useAuthApi();
-  const nav = useNavigation();
-  const raidQuery: RqQuery<RaidListItemV1[]> = 
-    useQuery(['listRaids', servicePointId], async () => {
-      return await api.basicRaid.listRaid({
-        raidListRequest: {servicePointId: servicePointId}
-      });
-    });
-
-  if( raidQuery.error ){
-    return <CompactErrorPanel error={raidQuery.error}/>
-  }
-
-  return <ContainerCard title={"Recently minted RAiD data"}
-    action={<>
-      <RefreshIconButton onClick={() => raidQuery.refetch()} 
-        refreshing={raidQuery.isLoading || raidQuery.isRefetching} />
-      <RaidoAddFab href={getMintRaidPageLink(servicePointId)}/>
-    </>}
-  >
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Handle</TableCell>
-            <TableCell>Start date</TableCell>
-          </TableRow>
-        </TableHead>
-        { raidQuery.isLoading &&
-          <TableBody><TableRow style={{border: 0}}>
-            <TableCell colSpan={10} style={{border: 0, padding: 0}}>
-              <CompactLinearProgress isLoading={true}/>
-            </TableCell>
-          </TableRow></TableBody>
-        }
-        { !raidQuery.isLoading && raidQuery.data?.length === 0 &&
-          <TableBody><TableRow style={{border: 0}}>
-            <TableCell colSpan={10} style={{border: 0, padding: 0, textAlign: "center"}} >
-              <TextSpan style={{lineHeight: "3em"}}>No RAiD data has been minted yet.</TextSpan>
-            </TableCell>
-          </TableRow></TableBody>
-        }
-        <TableBody>
-          { raidQuery.data?.map((row) => (
-            <TableRow
-              key={row.handle}
-              // don't render a border under last row
-              sx={{'&:last-child td, &:last-child th': {border: 0}}}
-            >
-              <TableCell>
-                <RaidoLink href={getEditRaidPageLink(row.handle)}>
-                  <TextSpan>{row.name || ''}</TextSpan>
-                </RaidoLink>
-              </TableCell>
-              <TableCell>
-                <TextSpan>{row.handle || ''}</TextSpan>
-              </TableCell>
-              <TableCell>
-                <DateDisplay date={row.startDate}/>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-
-    </TableContainer>
-    
-  </ContainerCard>
-}
-
 export function RaidTableContainerV2({servicePointId}: {servicePointId: number}){
   const api = useAuthApi();
   const nav = useNavigation();
@@ -182,7 +108,7 @@ export function RaidTableContainerV2({servicePointId}: {servicePointId: number})
     return <CompactErrorPanel error={raidQuery.error}/>
   }
 
-  return <ContainerCard title={"Recently minted RAiD data"}
+  return <ContainerCard title={"Recently minted RAiD data"} 
     action={<>
       <RefreshIconButton onClick={() => raidQuery.refetch()}
         refreshing={raidQuery.isLoading || raidQuery.isRefetching} />

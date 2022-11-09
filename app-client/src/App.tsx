@@ -26,10 +26,8 @@ import { LocationSearchProvider } from "Util/Hook/LocationSearch";
 import { AppUserPage } from "Page/Admin/AppUserPage";
 import { ListApiKeyPage } from "Page/Admin/ListApiKeyPage";
 import { ApiKeyPage } from "Page/Admin/ApiKeyPage";
-import { MintRaidPage } from "Page/MintRaidPage";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import { EditRaidPage } from "Page/EditRaidPage";
 import {
   isRaidLandingPagePath,
   RaidLandingPage
@@ -74,8 +72,6 @@ export function App(){
                     <AppUserPage/>
                     <ListApiKeyPage/>
                     <ApiKeyPage/>
-                    <MintRaidPage/>
-                    <EditRaidPage/>
                     <EditRaidV2Page/>
                     <MintRaidV2Page/>
 

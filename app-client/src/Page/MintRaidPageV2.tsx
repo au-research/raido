@@ -12,18 +12,20 @@ import { ContainerCard } from "Design/ContainerCard";
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import {
-  AccessBlock,
+  AccessType,
   MetadataSchemaV1,
   ValidationFailure
 } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import {
-  Checkbox,
   FormControl,
-  FormControlLabel,
+  InputLabel,
   List,
   ListItem,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   Stack,
   TextField
 } from "@mui/material";
@@ -75,30 +77,26 @@ function Content(){
   </LargeContentMain>
 }
 
-interface FormData {
+type FormData = Readonly<{
   servicePointId: number,
   primaryTitle: string,
   // can't stop DesktopDatePicker from allowing the user to clear the value
   startDate?: Date,
   confidential: boolean,
-}
+  accessType: AccessType,
+  accesStatement: string,
+}>;
 type ValidFormData = WithRequired<FormData, 'startDate'>;
 
 function mapFormDataToMetadata(
   form: ValidFormData 
 ): Omit<MetadataSchemaV1, 'id'>{
-  const access: AccessBlock = form.confidential ?
-    {
-      type: "Closed",
-      accessStatement: "minted as closed by creator"
-    } :
-    {
-      type: "Open",
-    };
-  
   return {
     metadataSchema: "raido-metadata-schema-v1",
-    access,
+    access: {
+      type: form.accessType,
+      accessStatement: form.accesStatement,
+    },
     dates: {
       startDate: form.startDate,
     },
@@ -119,7 +117,9 @@ function MintRaidContainer({servicePointId, onCreate}: {
     servicePointId: servicePointId,
     primaryTitle: "",
     startDate: new Date(),
-    confidential: false
+    confidential: false,
+    accessType: "Open",
+    accesStatement: "",
   } as FormData);
   const [serverValidations, setServerValidations] = useState(
     [] as ValidationFailure[] );
@@ -149,10 +149,12 @@ function MintRaidContainer({servicePointId, onCreate}: {
   );
 
   const isTitleValid = !!formData.primaryTitle;
+  const isAccessStatementValid = formData.accessType === "Open" ? 
+    true : !!formData.accesStatement;
   const isStartDateValid = isValidDate(formData?.startDate);
-  const canSubmit = isTitleValid && isStartDateValid;
+  const canSubmit = isTitleValid && isStartDateValid && isAccessStatementValid;
   const isWorking = mintRequest.isLoading;
-  console.log("render()", {startDate: formData.startDate, isStartDateValid});
+  console.log("render()", {startDate: formData.startDate, isStartDateValid, formData});
   
   return <ContainerCard title={"Mint RAiD"} action={<MintRaidHelp/>}>
     <form autoComplete="off" onSubmit={(e) => {
@@ -180,30 +182,34 @@ function MintRaidContainer({servicePointId, onCreate}: {
           renderInput={(params) => <TextField {...params} />}
         />
         <FormControl>
-          <FormControlLabel
-            disabled={isWorking}
-            label="Confidential"
-            labelPlacement="start"
-            style={{
-              /* by default, MUI lays this out as <checkbox><label>.
-               Doing `labelPlacement=start`, flips that around, but ends up 
-               right-justifying the content, `marginRight=auto` pushes it back 
-               across to the left and `marginLeft=0` aligns nicely. */
-              marginLeft: 0,
-              marginRight: "auto",
+          <InputLabel id="accessTypeLabel">Access type</InputLabel>
+          <Select
+            labelId="accessTypeLabel"
+            id="accessTypeSelect"
+            value={formData.accessType ?? AccessType.Open.valueOf()}
+            label="Access type"
+            onChange={(event: SelectChangeEvent) => {
+              // maybe a type guard would be better? 
+              const accessType = event.target.value === "Open" ? 
+                AccessType.Open : AccessType.Closed;
+              console.log("onChange", {accessType, event});
+              setFormData({...formData, accessType});
             }}
-            control={
-              <Checkbox
-                checked={formData.confidential ?? false}
-                onChange={() => {
-                  setFormData({...formData, 
-                    confidential: !formData.confidential 
-                  })
-                }}
-              />
-            }
-          />
+          >
+            <MenuItem value={AccessType.Open}>Open</MenuItem>
+            <MenuItem value={AccessType.Closed}>Closed</MenuItem>
+          </Select>
         </FormControl>
+        <TextField id="accessStatement" label="Access statement" 
+          variant="outlined" autoCorrect="off" autoCapitalize="on"
+          required={formData.accessType !== "Open"} 
+          disabled={isWorking}
+          value={formData.accesStatement}
+          onChange={e => {
+            setFormData({...formData, accesStatement: e.target.value});
+          }}
+          error={!isAccessStatementValid}
+        />
 
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton onClick={navBrowserBack}

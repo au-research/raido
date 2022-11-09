@@ -15,7 +15,7 @@ select *
 from raid
 where owner = 'University of Notre Dame Library'
 order by creation_date desc
-limit 10
+limit 100
 ;
 
 select *
