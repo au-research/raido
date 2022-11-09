@@ -33,8 +33,8 @@ import { RefreshIconButton } from "Component/RefreshIconButton";
 import { CompactLinearProgress } from "Component/SmallPageSpinner";
 import { RaidoLink } from "Component/RaidoLink";
 import { RaidoAddFab } from "Component/AppButton";
-import { getEditRaidV2PageLink } from "Page/EditRaidPageV2";
-import { getMintRaidV2PageLink } from "Page/MintRaidPageV2";
+import { getEditRaidPageLink } from "Page/EditRaidPage";
+import { getMintRaidPageLink } from "Page/MintRaidPage";
 
 const log = console;
 
@@ -112,7 +112,7 @@ export function RaidTableContainerV2({servicePointId}: {servicePointId: number})
     action={<>
       <RefreshIconButton onClick={() => raidQuery.refetch()}
         refreshing={raidQuery.isLoading || raidQuery.isRefetching} />
-      <RaidoAddFab href={getMintRaidV2PageLink(servicePointId)}/>
+      <RaidoAddFab href={getMintRaidPageLink(servicePointId)}/>
     </>}
   >
     <TableContainer>
@@ -133,8 +133,12 @@ export function RaidTableContainerV2({servicePointId}: {servicePointId: number})
         }
         { !raidQuery.isLoading && raidQuery.data?.length === 0 &&
           <TableBody><TableRow style={{border: 0}}>
-            <TableCell colSpan={10} style={{border: 0, padding: 0, textAlign: "center"}} >
-              <TextSpan style={{lineHeight: "3em"}}>No RAiD data has been minted yet.</TextSpan>
+            <TableCell colSpan={10} 
+              style={{border: 0, padding: 0, textAlign: "center"}} 
+            >
+              <TextSpan style={{lineHeight: "3em"}}>
+                No RAiD data has been minted yet.
+              </TextSpan>
             </TableCell>
           </TableRow></TableBody>
         }
@@ -146,7 +150,7 @@ export function RaidTableContainerV2({servicePointId}: {servicePointId: number})
               sx={{'&:last-child td, &:last-child th': {border: 0}}}
             >
               <TableCell>
-                <RaidoLink href={getEditRaidV2PageLink(row.handle)}>
+                <RaidoLink href={getEditRaidPageLink(row.handle)}>
                   <TextSpan>{row.primaryTitle || ''}</TextSpan>
                 </RaidoLink>
               </TableCell>

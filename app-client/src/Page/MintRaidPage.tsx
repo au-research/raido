@@ -37,24 +37,24 @@ import { Dayjs } from "dayjs";
 import { TextSpan } from "Component/TextSpan";
 import { assert, WithRequired } from "Util/TypeUtil";
 import { isValidDate } from "Util/DateUtil";
-import { getEditRaidV2PageLink } from "Page/EditRaidPageV2";
+import { getEditRaidPageLink } from "Page/EditRaidPage";
 
 const pageUrl = "/mint-raid-v2";
 
-export function getMintRaidV2PageLink(servicePointId: number): string{
+export function getMintRaidPageLink(servicePointId: number): string{
   return `${pageUrl}/${servicePointId}`;
 }
 
-export function isMintRaidV2PagePath(pathname: string): NavPathResult{
+export function isMintRaidPagePath(pathname: string): NavPathResult{
   return isPagePath(pathname, pageUrl);
 }
 
 export function getServicePointIdFromPathname(nav: NavigationState): number{
-  return parsePageSuffixParams<number>(nav, isMintRaidV2PagePath, Number)
+  return parsePageSuffixParams<number>(nav, isMintRaidPagePath, Number)
 }
 
-export function MintRaidV2Page(){
-  return <NavTransition isPagePath={isMintRaidV2PagePath}
+export function MintRaidPage(){
+  return <NavTransition isPagePath={isMintRaidPagePath}
     title={raidoTitle("Mint RAiD")}
   >
     <Content/>
@@ -71,7 +71,7 @@ function Content(){
     <MintRaidContainer 
       servicePointId={servicePointId}
       onCreate={(handle)=>{
-        nav.replace(getEditRaidV2PageLink(handle));
+        nav.replace(getEditRaidPageLink(handle));
       }}
     />
   </LargeContentMain>

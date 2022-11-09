@@ -37,22 +37,22 @@ import { MetaDataContainer } from "Component/MetaDataContainer";
 
 const log = console;
 
-const pageUrl = "/edit-raid-v2";
+const pageUrl = "/edit-raid";
 
-export function getEditRaidV2PageLink(handle: string): string{
+export function getEditRaidPageLink(handle: string): string{
   return `${pageUrl}/${handle}`;
 }
 
-export function isEditRaidV2PagePath(pathname: string): NavPathResult{
+export function isEditRaidPagePath(pathname: string): NavPathResult{
   return isPagePath(pathname, pageUrl);
 }
 
 function getRaidHandleFromPathname(nav: NavigationState): string{
-  return parsePageSuffixParams<string>(nav, isEditRaidV2PagePath, String)
+  return parsePageSuffixParams<string>(nav, isEditRaidPagePath, String)
 }
 
-export function EditRaidV2Page(){
-  return <NavTransition isPagePath={isEditRaidV2PagePath}
+export function EditRaidPage(){
+  return <NavTransition isPagePath={isEditRaidPagePath}
     title={raidoTitle("Edit")}
   >
     <Content/>

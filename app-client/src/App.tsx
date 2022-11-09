@@ -32,8 +32,8 @@ import {
   isRaidLandingPagePath,
   RaidLandingPage
 } from "Page/Public/RaidLandingPage";
-import { EditRaidV2Page } from "Page/EditRaidPageV2";
-import { MintRaidV2Page } from "Page/MintRaidPageV2";
+import { MintRaidPage } from "Page/MintRaidPage";
+import { EditRaidPage } from "Page/EditRaidPage";
 
 export function App(){
   /* theme defines the basic color palette and styling, etc. */
@@ -72,8 +72,8 @@ export function App(){
                     <AppUserPage/>
                     <ListApiKeyPage/>
                     <ApiKeyPage/>
-                    <EditRaidV2Page/>
-                    <MintRaidV2Page/>
+                    <EditRaidPage/>
+                    <MintRaidPage/>
 
                   </NavigationProvider>
                 </AuthApiProvider>
