@@ -57,7 +57,7 @@ export function DateTimeDisplay({date, ...props}: {
 export function DateDisplay({date, ...props}: {
   date?: Date,
 } & TypographyProps ){
-  return <TextSpan {...props}>
+  return <TextSpan noWrap {...props}>
     {formatLocalDateAsIso(date)}
   </TextSpan>
 }
