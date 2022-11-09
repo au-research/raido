@@ -54,7 +54,7 @@ public class MigrateRaidoSchemaV1Test  extends IntegrationTestCase {
         description("some description of the thing"))).
       titles(List.of(new TitleBlock().
         type(PRIMARY_TITLE).
-        title("some title").
+        title("migration integration test").
         startDate(today))).
       dates(new DatesBlock().startDate(today)).
       access(new AccessBlock().type(AccessType.OPEN));
