@@ -6,8 +6,9 @@ import org.jooq.impl.DSL;
 import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
-import raido.apisvc.service.raid.RaidService;
+import raido.apisvc.endpoint.message.ValidationMessage;
 import raido.apisvc.service.apids.model.ApidsMintResponse;
+import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.service.raid.ValidationFailureException;
 import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
 import raido.apisvc.util.Guard;
@@ -23,6 +24,7 @@ import raido.idl.raidv2.model.RaidListRequestV2;
 import raido.idl.raidv2.model.ReadRaidResponseV1;
 import raido.idl.raidv2.model.ReadRaidResponseV2;
 import raido.idl.raidv2.model.ReadRaidV1Request;
+import raido.idl.raidv2.model.UpdateRaidoSchemaV1Request;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,11 +33,13 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 import static raido.apisvc.endpoint.Constant.MAX_EXPERIMENTAL_RECORDS;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.getAuthzPayload;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
+import static raido.apisvc.service.raid.RaidoSchemaV1Util.mintFailed;
 import static raido.apisvc.util.DateUtil.local2Offset;
 import static raido.apisvc.util.DateUtil.offset2Local;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.hasValue;
+import static raido.apisvc.util.StringUtil.isBlank;
 import static raido.db.jooq.api_svc.tables.Raid.RAID;
 import static raido.db.jooq.api_svc.tables.RaidV2.RAID_V2;
 
@@ -167,7 +171,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     the payload) back into json
   - save it to the DB
   - then turn the whole thing back into json, but now with a handle!
-  And we're not even doing any validation or orcids/rors, etc. yet.
+  And we're not even doing any validation of orcids/rors, etc. yet.
   That is a *lot* of heap garbage. Large raids are gonna wreck our memory usage.
   Especially if every update to single field is done by re-sending the full
   raid. 
@@ -190,7 +194,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     var failures = validSvc.validateRaidoSchemaV1(req.getMetadata());
     
     if( !failures.isEmpty() ){
-      return new MintResponse().success(false).failures(failures);
+      return mintFailed(failures);
     }
 
     String handle = null;
@@ -200,7 +204,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
         req.getMetadata() );
     }
     catch( ValidationFailureException e ){
-      return new MintResponse().success(false).failures(e.getFailures());
+      return mintFailed(failures);
     }
 
     return new MintResponse().success(true). 
@@ -239,6 +243,37 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
       searchCondition = DSL.condition(RAID_V2.PRIMARY_TITLE.like(primaryTitle));
     }
     return searchCondition;
+  }
+
+  @Override
+  public MintResponse updateRaidoSchemaV1(UpdateRaidoSchemaV1Request req) {
+    var user = getAuthzPayload();
+    var newData = req.getMetadata(); 
+    if( newData == null ){
+      return mintFailed(ValidationMessage.METADATA_NOT_SET);
+    }
+    
+    var id = newData.getId();
+    if( id == null ){
+      return mintFailed(ValidationMessage.ID_BLOCK_NOT_SET);
+    }
+
+    if( isBlank(id.getIdentifier()) ){
+      return mintFailed(ValidationMessage.IDENTIFIER_NOT_SET);
+    }
+
+    // improve: don't need the svcPoint, wasteful to read it here
+    var oldRaid = raidSvc.readRaidV2Data(id.getIdentifier()).raid();
+    guardOperatorOrAssociated(user, oldRaid.getServicePointId());
+
+    var failures = raidSvc.updateRaidoSchemaV1(req.getMetadata(), oldRaid);
+    if( failures.isEmpty() ){
+      return new MintResponse().success(true).raid( 
+        readRaidV2(new ReadRaidV1Request().handle(id.getIdentifier())) );
+    }
+    else {
+      return mintFailed(failures);
+    }
   }
 
 }

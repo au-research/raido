@@ -114,6 +114,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MintResponse'
+  /update-raido-schema-v1:
+    post:
+      tags:
+        - basic-raid-experimental
+      operationId: update-raido-schema-v1
+      summary: update a raido-metadata-schema-v1 raid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [metadata]
+              properties:
+                # could just pass this in directly, but think we might need to 
+                # extend it with extra out-of-band stuff later.  Though maybe
+                # we'll use a separate endpoint when that need arises.
+                metadata: {$ref: '#/components/schemas/MetadataSchemaV1'}
+      responses:
+        '200':
+          description: data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MintResponse'
 
 
 components:

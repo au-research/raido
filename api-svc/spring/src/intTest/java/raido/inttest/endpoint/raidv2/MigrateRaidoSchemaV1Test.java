@@ -79,7 +79,7 @@ public class MigrateRaidoSchemaV1Test  extends IntegrationTestCase {
     assertThat(pubRead.getServicePointId()).isEqualTo(servicePoint.getId());
     assertThat(pubRead.getHandle()).isEqualTo(handle);
 
-    EXPECT("should be re-migrate an existing raid");
+    EXPECT("should be able to re-migrate an existing raid");
     var remintResult = adminApi.migrateLegacyRaid(
       new MigrateLegacyRaidRequest().
         mintRequest(new MigrateLegacyRaidRequestMintRequest().

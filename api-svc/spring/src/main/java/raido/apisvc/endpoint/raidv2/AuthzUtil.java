@@ -67,6 +67,7 @@ public class AuthzUtil {
   }
   
   /**
+   User must be an OP, or must be "associated" to the SP passed.
    Right now, "associated" means "directly associated", but 
    later might mean a more indirect association.
    */

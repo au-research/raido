@@ -9,10 +9,13 @@ public class ValidationMessage {
   public static final String NOT_SET_TYPE = "notSet";
   public static final String TOO_LONG_TYPE = "tooLong";
   public static final String INVALID_VALUE_TYPE = "invalidValue";
+  public static final String DISALLOWED_CHANGE_TYPE = "disallowedChange";
 
   public static final String FIELD_MUST_BE_SET_MESSAGE = "field must be set";
   public static final String INVALID_VALUE_MESSAGE = 
     "has invalid/unsupported value";
+  public static final String DISALLOWED_CHANGE_MESSAGE = 
+    "value is not allowed to change";
 
   public static final ValidationFailure AT_LEAST_ONE_PRIMARY_TITLE =
     new ValidationFailure().
@@ -50,7 +53,7 @@ public class ValidationMessage {
     fieldNotSet("metadata.access.type");
   public static final ValidationFailure ACCESS_STATEMENT_NOT_SET =
     fieldNotSet("metadata.access.accessStatement");
-  public static final ValidationFailure ID_NOT_SET = fieldNotSet("metadata.id");
+  public static final ValidationFailure ID_BLOCK_NOT_SET = fieldNotSet("metadata.id");
   public static final ValidationFailure IDENTIFIER_NOT_SET =
     fieldNotSet("metadata.id.identifier");    
   public static final ValidationFailure IDENTIFIER_INVALID =
@@ -65,6 +68,8 @@ public class ValidationMessage {
       message(INVALID_VALUE_MESSAGE);
   public static final ValidationFailure GLOBAL_URL_NOT_SET =
     fieldNotSet("metadata.id.globalUrl");
+  public static final ValidationFailure SCHEMA_CHANGED =
+    fieldCannotChange("metadata.metadataSchema");
     
 
   public static ValidationFailure fieldNotSet(String fieldId){
@@ -72,6 +77,13 @@ public class ValidationMessage {
       fieldId(fieldId).
       errorType(NOT_SET_TYPE).
       message(FIELD_MUST_BE_SET_MESSAGE);
+  }
+  
+  public static ValidationFailure fieldCannotChange(String fieldId){
+    return new ValidationFailure().
+      fieldId(fieldId).
+      errorType(DISALLOWED_CHANGE_TYPE).
+      message(DISALLOWED_CHANGE_MESSAGE);
   }
   
   public static ValidationFailure titleNotSet(int i) {

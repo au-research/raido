@@ -3,6 +3,7 @@ package raido.apisvc.service.raid.validation;
 import org.springframework.stereotype.Component;
 import raido.apisvc.endpoint.message.ValidationMessage;
 import raido.apisvc.util.Log;
+import raido.apisvc.util.ObjectUtil;
 import raido.idl.raidv2.model.AccessBlock;
 import raido.idl.raidv2.model.AccessType;
 import raido.idl.raidv2.model.DatesBlock;
@@ -15,10 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.List.of;
+import static raido.apisvc.endpoint.message.ValidationMessage.fieldCannotChange;
 import static raido.apisvc.endpoint.raidv2.PublicExperimental.HANDLE_SEPERATOR;
 import static raido.apisvc.service.raid.MetadataService.RAID_ID_TYPE_URI;
 import static raido.apisvc.util.Log.to;
-import static raido.apisvc.util.ObjectUtil.areEqual;
+import static raido.apisvc.util.StringUtil.areEqual;
 import static raido.apisvc.util.StringUtil.isBlank;
 
 @Component
@@ -103,7 +105,7 @@ public class RaidoSchemaV1ValidationService {
   public List<ValidationFailure> validateIdBlockForMigration(IdBlock id){
     var failures = new ArrayList<ValidationFailure>();
     if( id == null ){
-      failures.add(ValidationMessage.ID_NOT_SET);
+      failures.add(ValidationMessage.ID_BLOCK_NOT_SET);
       return failures;
     }
     
@@ -134,7 +136,7 @@ public class RaidoSchemaV1ValidationService {
     // improve: would be good to validate the handle format
     // at least that prefix and suffix exist, separated by slash
     
-    if( !areEqual(id.getIdentifierTypeUri(), RAID_ID_TYPE_URI) ){
+    if( !ObjectUtil.areEqual(id.getIdentifierTypeUri(), RAID_ID_TYPE_URI) ){
       failures.add(ValidationMessage.ID_TYPE_URI_INVALID);
     }
 
@@ -144,6 +146,32 @@ public class RaidoSchemaV1ValidationService {
 
     // don't need client to send raidAgency fields, we'll set them on insert
     
+    return failures;
+  }
+
+  public List<ValidationFailure> validateIdBlockNotChanged(
+    IdBlock newId,
+    IdBlock oldId
+  ){
+    List<ValidationFailure> failures = new ArrayList<>();
+
+    if( !areEqual(newId.getIdentifierTypeUri(), oldId.getIdentifierTypeUri()) ){
+      // improve: factor these out to the ValidationMessage class
+      failures.add(fieldCannotChange("metadata.id.identifierTypeUri"));
+    }
+    if( !areEqual(newId.getGlobalUrl(), oldId.getGlobalUrl()) ){
+      failures.add(fieldCannotChange("metadata.id.globalUrl"));
+    }
+    if( !areEqual(newId.getRaidAgencyUrl(), oldId.getRaidAgencyUrl()) ){
+      failures.add(fieldCannotChange("metadata.id.raidAgencyUrl"));
+    }
+    if( !areEqual(
+      newId.getRaidAgencyIdentifier(), 
+      oldId.getRaidAgencyIdentifier()) 
+    ){
+      failures.add(fieldCannotChange("metadata.id.raidAgencyIdentifier"));
+    }
+
     return failures;
   }
 }
