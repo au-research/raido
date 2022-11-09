@@ -252,7 +252,7 @@ public class RaidService {
       validSvc.validateIdBlockNotChanged(newData.getId(), oldData.getId()) );
     failures.addAll(validSvc.validateRaidoSchemaV1(newData));
 
-    // validation failure possible
+    // validation failure possible (conversion error or maxSize of json)
     String metadataAsJson = null;
     try {
       metadataAsJson = metaSvc.mapToJson(newData);
