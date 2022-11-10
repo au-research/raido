@@ -10,15 +10,24 @@ import { raidoTitle } from "Component/Util";
 import { LargeContentMain } from "Design/LayoutMain";
 import { ContainerCard } from "Design/ContainerCard";
 import React, { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  MintRaidRequestV1,
+  AccessType,
+  MetadataSchemaV1,
   ReadRaidResponseV2,
   ServicePoint
 } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
-import { Stack, TextField } from "@mui/material";
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Stack,
+  TextField
+} from "@mui/material";
 import { PrimaryActionButton, SecondaryButton } from "Component/AppButton";
 import { navBrowserBack } from "Util/WindowUtil";
 import { HelpChip, HelpPopover } from "Component/HelpPopover";
@@ -27,13 +36,17 @@ import { Dayjs } from "dayjs";
 import { RqQuery } from "Util/ReactQueryUtil";
 import { InfoField, InfoFieldList } from "Component/InfoField";
 import Divider from "@mui/material/Divider";
-import { assert } from "Util/TypeUtil";
+import { assert, WithRequired } from "Util/TypeUtil";
 import { NewWindowLink } from "Component/ExternalLink";
 import {
   formatGlobalHandle,
   getRaidLandingPagePath
 } from "Page/Public/RaidLandingPage";
-import { MetaDataContainer } from "Component/MetaDataContainer";
+import {
+  convertMetadataSchemaV1,
+  MetaDataContainer
+} from "Component/MetaDataContainer";
+import { isValidDate } from "Util/DateUtil";
 
 const log = console;
 
@@ -69,36 +82,85 @@ function Content(){
   </LargeContentMain>
 }
 
-function isDifferent(formData: MintRaidRequestV1, original: MintRaidRequestV1){
-  return formData.name !== original.name ||
+function isDifferent(formData: FormData, original: FormData){
+  return formData.primaryTitle !== original.primaryTitle ||
     formData.startDate?.getDate() !== original.startDate?.getDate() ||
-    formData.confidential !== original.confidential;
+    formData.accessType !== original.accessType ||
+    formData.accessStatement !== original.accessStatement;
+}
+
+type FormData = Readonly<{
+  primaryTitle: string,
+  // can't stop DesktopDatePicker from allowing the user to clear the value
+  startDate?: Date,
+  accessType: AccessType,
+  accessStatement: string,
+}>;
+type ValidFormData = WithRequired<FormData, 'startDate'>;
+
+function mapReadQueryDataToFormData(data: ReadData): FormData{
+  return {
+    primaryTitle: data.raid.primaryTitle,
+    startDate: data.raid.startDate,
+    accessType: data.metadata.access.type,
+    accessStatement: data.metadata.access.accessStatement ?? "", 
+  }
+}
+
+interface ReadData {
+  readonly raid: ReadRaidResponseV2,
+  readonly metadata: MetadataSchemaV1,
+}
+
+function createUpdateMetadata(
+  formData: ValidFormData, 
+  oldMetadata: MetadataSchemaV1
+): MetadataSchemaV1{
+  // todo:sto won't work when we have many titles
+  const oldTitle = oldMetadata.titles[0];
+  return {
+    ...oldMetadata,
+    titles: [{
+      ...oldTitle,
+      title: formData.primaryTitle,
+    }],
+    dates: {
+      ...oldMetadata.dates,
+      startDate: formData.startDate,
+    },
+    access: {
+      type: formData.accessType,
+      accessStatement: formData.accessStatement,
+    }
+  };
 }
 
 function EditRaidContainer({handle}: {
   handle: string,
 }){
   const api = useAuthApi();
-  const raidQueryName = 'readRaid';
+  const readQueryName = 'readRaid';
   const [formData, setFormData] = useState({
-    // id set to null signals creation is being requested  
-    handle,
     primaryTitle: "",
     startDate: new Date(),
-  } as ReadRaidResponseV2);
-  const raidQuery: RqQuery<ReadRaidResponseV2> = useQuery(
-    [raidQueryName, handle],
+    accessType: "Open",
+    accessStatement: "",
+  } as FormData);
+  const readQuery: RqQuery<ReadData> = useQuery(
+    [readQueryName, handle],
     async () => {
       //await delay(2000);
-      let raid = await api.basicRaid.readRaidV2({
+      const raid = await api.basicRaid.readRaidV2({
         readRaidV1Request: { handle }
       });
-      setFormData({...raid});
-      return raid;
+      const metadata = convertMetadataSchemaV1(raid.metadata);
+      const readData: ReadData = {raid, metadata};
+      setFormData(mapReadQueryDataToFormData(readData));
+      return readData;
     }
   );
   
-  const servicePointId = raidQuery.data?.servicePointId
+  const servicePointId = readQuery.data?.raid.servicePointId
   const spQuery: RqQuery<ServicePoint> = useQuery(
     ['readServicePoint', servicePointId],
     async () => {
@@ -108,75 +170,102 @@ function EditRaidContainer({handle}: {
     {enabled: !!servicePointId}
   );
 
-  //const queryClient = useQueryClient();
-  //const updateRequest = useMutation(
-  //  async (data: MintRaidRequestV1) => {
-  //    return await api.basicRaid.updateRaidV1({mintRaidRequestV1: data});
-  //  },
-  //  {
-  //    onSuccess: async () => {
-  //      await queryClient.invalidateQueries([raidQueryName]);
-  //    },
-  //  }
-  //);
+  const queryClient = useQueryClient();
+  const updateRequest = useMutation(
+    async (props: {formData: ValidFormData, oldMetadata: MetadataSchemaV1}) => {
+      return await api.basicRaid.updateRaidoSchemaV1({
+        updateRaidoSchemaV1Request: {metadata: 
+            createUpdateMetadata(props.formData, props.oldMetadata)
+        }
+      });
+    },
+    {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries([readQueryName]);
+      },
+    }
+  );
 
-  const isNameValid = !!formData.primaryTitle;
-  const hasChanged = false;
-     // raidQuery.data ? isDifferent(formData, raidQuery.data) : false;
-  const canSubmit = isNameValid && hasChanged;
+  const isTitleValid = !!formData.primaryTitle;
+  const isAccessStatementValid = formData.accessType === "Open" ?
+    true : !!formData.accessStatement;
+  const hasChanged = readQuery.data ? 
+    isDifferent(formData, mapReadQueryDataToFormData(readQuery.data)) : false;
+  const isStartDateValid = isValidDate(formData?.startDate);
+  
+  const canSubmit = isTitleValid && isAccessStatementValid 
+    && isStartDateValid && hasChanged;
   const isWorking = false; // updateRequest.isLoading;
 
   return <>
     <ContainerCard title={`Edit RAiD`} action={<EditRaidHelp/>}>
-      <CompactErrorPanel error={raidQuery.error}/>
-      <InfoFieldList>
-        <InfoField id="globalHandle" label="Global handle" value={
-          <NewWindowLink href={formatGlobalHandle(handle)}>
-            {handle}
-          </NewWindowLink>
-        }/>
-        <InfoField id="raidoHandle" label="Raido handle" value={
-          <NewWindowLink href={getRaidLandingPagePath(handle)}>
-            {handle}
-          </NewWindowLink>
-        }/>
-        <InfoField id="servicePoint" label="Service point"
-          value={spQuery.data?.name}
-        />
-      </InfoFieldList>
+      <CompactErrorPanel error={readQuery.error}/>
+      <RaidInfoList handle={handle} servicePointName={spQuery.data?.name} />
       <Divider variant={"middle"}
-        style={{marginTop: "1em", marginBottom: "1.5em"}}
-      />
+        style={{marginTop: "1em", marginBottom: "1.5em"}} />
 
       <form autoComplete="off" onSubmit={async (e) => {
         e.preventDefault();
-        alert("not yet implemented");
-        //await updateRequest.mutate({...formData});
+        assert(formData.startDate);
+        assert(readQuery.data?.metadata);
+        await updateRequest.mutate({
+          /* the assert type-guard only asserts about the parameter object,
+           not the property of the param object, that's why we have to do 
+           the cast. */
+          formData: formData as ValidFormData, 
+          oldMetadata: readQuery.data.metadata 
+        });
       }}>
         <Stack spacing={2}>
           <TextField id="primaryTitle" label="Primary title" variant="outlined"
             autoFocus autoCorrect="off" autoCapitalize="on"
-            required disabled={isWorking || raidQuery.isLoading}
+            required disabled={isWorking || readQuery.isLoading}
             value={formData.primaryTitle}
             onChange={(e) => {
               setFormData({...formData, primaryTitle: e.target.value});
             }}
-            error={!!raidQuery.data && !isNameValid}
+            error={!!readQuery.data && !isTitleValid}
           />
           <DesktopDatePicker label={"Start date *"} inputFormat="YYYY-MM-DD"
-            disabled={isWorking || raidQuery.isLoading}
-            value={formData.startDate}
+            disabled={isWorking || readQuery.isLoading}
+            value={formData.startDate || ''}
             onChange={(newValue: Dayjs | null) => {
-              setFormData({...formData, startDate: newValue?.toDate()!})
+              setFormData({...formData, startDate: newValue?.toDate()}) 
             }}
             renderInput={(params) => <TextField {...params} />}
           />
+          <FormControl>
+            <InputLabel id="accessTypeLabel">Access type</InputLabel>
+            <Select
+              labelId="accessTypeLabel"
+              id="accessTypeSelect"
+              value={formData.accessType ?? AccessType.Open.valueOf()}
+              label="Access type"
+              onChange={(event: SelectChangeEvent) => {
+                // maybe a type guard would be better? 
+                const accessType = event.target.value === "Open" ?
+                  AccessType.Open : AccessType.Closed;
+                setFormData({...formData, accessType});
+              }}
+            >
+              <MenuItem value={AccessType.Open}>Open</MenuItem>
+              <MenuItem value={AccessType.Closed}>Closed</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField id="accessStatement" label="Access statement"
+            variant="outlined" autoCorrect="off" autoCapitalize="on"
+            required={formData.accessType !== "Open"}
+            disabled={isWorking}
+            value={formData.accessStatement}
+            onChange={e => {
+              setFormData({...formData, accessStatement: e.target.value});
+            }}
+            error={!isAccessStatementValid}
+          />
           <Stack direction={"row"} spacing={2}>
             <SecondaryButton type="button" onClick={(e) => {
-              console.log("back button clicked", {referrer: document.referrer});
               e.preventDefault();
               navBrowserBack();
-              console.log("after navBrowserBack()");
             }}
               disabled={isWorking}>
               Back
@@ -184,19 +273,39 @@ function EditRaidContainer({handle}: {
             <PrimaryActionButton type="submit" context={"minting raid"}
               disabled={!canSubmit}
               isLoading={isWorking}
-              //error={ updateRequest.error}
-              error={undefined}
+              error={ updateRequest.error}
             >
               Update
             </PrimaryActionButton>
           </Stack>
-          {/*<CompactErrorPanel error={updateRequest.error}/>*/}
+          <CompactErrorPanel error={updateRequest.error}/>
         </Stack>
       </form>
     </ContainerCard>
     <br/>
-    <MetaDataContainer metadata={raidQuery.data?.metadata}/>
+    <MetaDataContainer metadata={readQuery.data?.metadata}/>
   </>
+}
+
+function RaidInfoList({handle, servicePointName}: {
+  handle: string,
+  servicePointName?: string
+}){
+  return <InfoFieldList>
+    <InfoField id="globalHandle" label="Global handle" value={
+      <NewWindowLink href={formatGlobalHandle(handle)}>
+        {handle}
+      </NewWindowLink>
+    }/>
+    <InfoField id="raidoHandle" label="Raido handle" value={
+      <NewWindowLink href={getRaidLandingPagePath(handle)}>
+        {handle}
+      </NewWindowLink>
+    }/>
+    <InfoField id="servicePoint" label="Service point"
+      value={servicePointName ?? ""}
+    />
+  </InfoFieldList>;
 }
 
 function EditRaidHelp(){
@@ -210,29 +319,3 @@ function EditRaidHelp(){
     </Stack>
   }/>;
 }
-
-//<FormControl>
-//  <FormControlLabel
-//    disabled={isWorking || raidQuery.isLoading}
-//    label="Confidential"
-//    labelPlacement="start"
-//    style={{
-//      /* by default, MUI lays this out as <checkbox><label>.
-//       Doing `labelPlacement=start`, flips that around, but ends up 
-//       right-justifying the content, `marginRight=auto` pushes it back 
-//       across to the left and `marginLeft=0` aligns nicely. */
-//      marginLeft: 0,
-//      marginRight: "auto",
-//    }}
-//    control={
-//      <Checkbox
-//        checked={formData.metadata ?? false}
-//        onChange={() => {
-//          setFormData({...formData,
-//            confidential: !formData.confidential
-//          })
-//        }}
-//      />
-//    }
-//  />
-//</FormControl>
