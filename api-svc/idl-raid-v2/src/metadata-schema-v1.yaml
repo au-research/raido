@@ -201,7 +201,7 @@ components:
         type: {$ref: '#/components/schemas/DescriptionType'}
     AccessBlock:
       type: object
-      required: ["access", ]
+      required: ["type", ]
       properties:
         type: {$ref: '#/components/schemas/AccessType'}
         accessStatement: {type: string}
