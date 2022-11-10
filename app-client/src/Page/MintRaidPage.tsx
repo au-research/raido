@@ -82,7 +82,7 @@ type FormData = Readonly<{
   // can't stop DesktopDatePicker from allowing the user to clear the value
   startDate?: Date,
   accessType: AccessType,
-  accesStatement: string,
+  accessStatement: string,
 }>;
 type ValidFormData = WithRequired<FormData, 'startDate'>;
 
@@ -93,7 +93,7 @@ function mapFormDataToMetadata(
     metadataSchema: "raido-metadata-schema-v1",
     access: {
       type: form.accessType,
-      accessStatement: form.accesStatement,
+      accessStatement: form.accessStatement,
     },
     dates: {
       startDate: form.startDate,
@@ -115,7 +115,7 @@ function MintRaidContainer({servicePointId, onCreate}: {
     primaryTitle: "",
     startDate: new Date(),
     accessType: "Open",
-    accesStatement: "",
+    accessStatement: "",
   } as FormData);
   const [serverValidations, setServerValidations] = useState(
     [] as ValidationFailure[] );
@@ -146,7 +146,7 @@ function MintRaidContainer({servicePointId, onCreate}: {
 
   const isTitleValid = !!formData.primaryTitle;
   const isAccessStatementValid = formData.accessType === "Open" ? 
-    true : !!formData.accesStatement;
+    true : !!formData.accessStatement;
   const isStartDateValid = isValidDate(formData?.startDate);
   const canSubmit = isTitleValid && isStartDateValid && isAccessStatementValid;
   const isWorking = mintRequest.isLoading;
@@ -200,9 +200,9 @@ function MintRaidContainer({servicePointId, onCreate}: {
           variant="outlined" autoCorrect="off" autoCapitalize="on"
           required={formData.accessType !== "Open"} 
           disabled={isWorking}
-          value={formData.accesStatement}
+          value={formData.accessStatement}
           onChange={e => {
-            setFormData({...formData, accesStatement: e.target.value});
+            setFormData({...formData, accessStatement: e.target.value});
           }}
           error={!isAccessStatementValid}
         />
