@@ -91,7 +91,7 @@ export function ValidationFailureDisplay({failures}: {
   failures: ValidationFailure[]
 }){
   return <List>{
-    failures.map(i => <ListItem>
+    failures.map(i => <ListItem key={i.fieldId}>
       <TextSpan color={"error"}>{i.fieldId} - {i.message}</TextSpan>
     </ListItem>)
   }</List>
