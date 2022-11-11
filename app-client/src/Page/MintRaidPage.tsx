@@ -188,7 +188,7 @@ function MintRaidContainer({servicePointId, onCreate}: {
         />
         <TextField id="description" label="Primary description" 
           variant="outlined" autoCorrect="off" autoCapitalize="on"
-          required disabled={isWorking}
+          disabled={isWorking}
           value={formData.primaryDescription ?? ""}
           onChange={(e) => {
             setFormData({...formData, primaryDescription: e.target.value});

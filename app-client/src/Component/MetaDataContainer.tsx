@@ -1,9 +1,10 @@
 import React from "react";
 import { ContainerCard } from "Design/ContainerCard";
 import {
+  DescriptionBlock,
   instanceOfMetadataSchemaV1,
   MetadataSchemaV1,
-  MetadataSchemaV1FromJSON
+  MetadataSchemaV1FromJSON, TitleBlock
 } from "Generated/Raidv2";
 
 export function MetaDataContainer({metadata}: {metadata: any}){
@@ -47,3 +48,19 @@ export function nullFieldReplacer(key: any, value: any): any{
   return value ?? undefined
 }
 
+export function getFirstPrimaryDescription(
+  metadata: MetadataSchemaV1
+): undefined | DescriptionBlock {
+  return metadata.descriptions?.
+    find(i=> i.type === "Primary Description");
+}
+
+export function getPrimaryTitle(
+  metadata: MetadataSchemaV1
+): TitleBlock {
+  let primary = metadata.titles.find(i=> i.type === "Primary Title");
+  if( !primary ){
+    throw new Error("no primary title could be found on metadata");
+  }
+  return primary;
+}

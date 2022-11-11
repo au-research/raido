@@ -12,7 +12,7 @@ import { ContainerCard } from "Design/ContainerCard";
 import React, { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  AccessType,
+  AccessType, DescriptionBlock,
   MetadataSchemaV1,
   ReadRaidResponseV2,
   ServicePoint
@@ -43,7 +43,7 @@ import {
   getRaidLandingPagePath
 } from "Page/Public/RaidLandingPage";
 import {
-  convertMetadataSchemaV1,
+  convertMetadataSchemaV1, getFirstPrimaryDescription, getPrimaryTitle,
   MetaDataContainer
 } from "Component/MetaDataContainer";
 import { isValidDate } from "Util/DateUtil";
@@ -85,6 +85,7 @@ function Content(){
 function isDifferent(formData: FormData, original: FormData){
   return formData.primaryTitle !== original.primaryTitle ||
     formData.startDate?.getDate() !== original.startDate?.getDate() ||
+    formData.primaryDescription !== original.primaryDescription ||
     formData.accessType !== original.accessType ||
     formData.accessStatement !== original.accessStatement;
 }
@@ -93,6 +94,7 @@ type FormData = Readonly<{
   primaryTitle: string,
   // can't stop DesktopDatePicker from allowing the user to clear the value
   startDate?: Date,
+  primaryDescription: string,
   accessType: AccessType,
   accessStatement: string,
 }>;
@@ -102,6 +104,8 @@ function mapReadQueryDataToFormData(data: ReadData): FormData{
   return {
     primaryTitle: data.raid.primaryTitle,
     startDate: data.raid.startDate,
+    primaryDescription: getFirstPrimaryDescription(data.metadata)?.
+      description ?? "",
     accessType: data.metadata.access.type,
     accessStatement: data.metadata.access.accessStatement ?? "", 
   }
@@ -116,8 +120,25 @@ function createUpdateMetadata(
   formData: ValidFormData, 
   oldMetadata: MetadataSchemaV1
 ): MetadataSchemaV1{
-  // todo:sto won't work when we have many titles
-  const oldTitle = oldMetadata.titles[0];
+  const oldTitle = getPrimaryTitle(oldMetadata);
+  
+  const newDescriptions: DescriptionBlock[] = [];
+  if( formData.primaryDescription ){
+    const oldPrimaryDesc = getFirstPrimaryDescription(oldMetadata);
+    if( oldPrimaryDesc ){
+      newDescriptions.push({
+        ...oldPrimaryDesc,
+        description: formData.primaryDescription,
+      });
+    }
+    else {
+      newDescriptions.push({
+        type: "Primary Description",
+        description: formData.primaryDescription,
+      });
+    }
+  }
+  
   return {
     ...oldMetadata,
     titles: [{
@@ -128,6 +149,7 @@ function createUpdateMetadata(
       ...oldMetadata.dates,
       startDate: formData.startDate,
     },
+    descriptions: newDescriptions,
     access: {
       type: formData.accessType,
       accessStatement: formData.accessStatement,
@@ -195,7 +217,7 @@ function EditRaidContainer({handle}: {
   
   const canSubmit = isTitleValid && isAccessStatementValid 
     && isStartDateValid && hasChanged;
-  const isWorking = false; // updateRequest.isLoading;
+  const isWorking = updateRequest.isLoading;
 
   return <>
     <ContainerCard title={`Edit RAiD`} action={<EditRaidHelp/>}>
@@ -233,6 +255,14 @@ function EditRaidContainer({handle}: {
               setFormData({...formData, startDate: newValue?.toDate()}) 
             }}
             renderInput={(params) => <TextField {...params} />}
+          />
+          <TextField id="description" label="Primary description"
+            variant="outlined" autoCorrect="off" autoCapitalize="on"
+            disabled={isWorking}
+            value={formData.primaryDescription ?? ""}
+            onChange={(e) => {
+              setFormData({...formData, primaryDescription: e.target.value});
+            }}
           />
           <FormControl>
             <InputLabel id="accessTypeLabel">Access type</InputLabel>
