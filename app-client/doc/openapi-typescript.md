@@ -37,7 +37,7 @@ Again, poorly documented 😒
 Very open to finding a better library / way.
 
 Doco implies it doesn't support unions, but it does seem to work Ok. See the
-various enum types in [metadata-schema-v1.yaml](../api-svc/idl-raid-v2/src/metadata-schema-v1.yaml),
+various enum types in [metadata-schema-v1.yaml](../../api-svc/idl-raid-v2/src/metadata-schema-v1.yaml),
 the code generated for both TS and Java is fine.
 
 
