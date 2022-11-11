@@ -24,7 +24,6 @@ Actually has a few generators that might be suitable:
   * inversify is a IoC container library/framework thing
   * I've never really felt the need for IoC on client
     * but it does 600K weekly downloads?
-    * OTOH Redux does 8.5M weeklies and is a gross waste of time 🤷
 
 Probably going to do the ts-fetch library to begin.  Then try to integrate it
 manually into react-query to see if that's worth doing (I don't actually have
