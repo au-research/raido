@@ -12,7 +12,7 @@ import { ContainerCard } from "Design/ContainerCard";
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import {
-  AccessType,
+  AccessType, DescriptionBlock,
   MetadataSchemaV1,
   ValidationFailure
 } from "Generated/Raidv2";
@@ -81,6 +81,7 @@ type FormData = Readonly<{
   primaryTitle: string,
   // can't stop DesktopDatePicker from allowing the user to clear the value
   startDate?: Date,
+  primaryDescription: string,
   accessType: AccessType,
   accessStatement: string,
 }>;
@@ -89,6 +90,13 @@ type ValidFormData = WithRequired<FormData, 'startDate'>;
 function mapFormDataToMetadata(
   form: ValidFormData 
 ): Omit<MetadataSchemaV1, 'id'>{
+  const descriptions: DescriptionBlock[] = [];
+  if( form.primaryDescription ){
+    descriptions.push({
+      type: "Primary Description",
+      description: form.primaryDescription,
+    });
+  }
   return {
     metadataSchema: "raido-metadata-schema-v1",
     access: {
@@ -103,6 +111,7 @@ function mapFormDataToMetadata(
       type: "Primary Title",
       startDate: form.startDate,
     }],
+    descriptions,
   }
 }
 
@@ -163,7 +172,7 @@ function MintRaidContainer({servicePointId, onCreate}: {
         <TextField id="title" label="Primary title" variant="outlined"
           autoFocus autoCorrect="off" autoCapitalize="on"
           required disabled={isWorking}
-          value={formData.primaryTitle}
+          value={formData.primaryTitle ?? ""}
           onChange={(e) => {
             setFormData({...formData, primaryTitle: e.target.value});
           }}
@@ -176,6 +185,14 @@ function MintRaidContainer({servicePointId, onCreate}: {
             setFormData({...formData, startDate: newValue?.toDate()})
           }}
           renderInput={(params) => <TextField {...params} />}
+        />
+        <TextField id="description" label="Primary description" 
+          variant="outlined" autoCorrect="off" autoCapitalize="on"
+          required disabled={isWorking}
+          value={formData.primaryDescription ?? ""}
+          onChange={(e) => {
+            setFormData({...formData, primaryDescription: e.target.value});
+          }}
         />
         <FormControl>
           <InputLabel id="accessTypeLabel">Access type</InputLabel>
