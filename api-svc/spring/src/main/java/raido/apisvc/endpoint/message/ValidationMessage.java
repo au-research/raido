@@ -107,11 +107,11 @@ public class ValidationMessage {
       message(FIELD_MUST_BE_SET_MESSAGE);
   }
 
-  public static ValidationFailure titleTooLong(int i) {
+  public static ValidationFailure primaryTitleTooLong(int i) {
     return new ValidationFailure().
       fieldId("titles[%s].title".formatted(i)).
       errorType(TOO_LONG_TYPE).
-      message("field must fit in length: " +
+      message("primaryTitle field must fit in length: " +
         RAID_V2.PRIMARY_TITLE.getDataType().length());
   }
 

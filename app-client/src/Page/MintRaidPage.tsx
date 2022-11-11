@@ -6,7 +6,7 @@ import {
   parsePageSuffixParams,
   useNavigation
 } from "Design/NavigationProvider";
-import { raidoTitle } from "Component/Util";
+import { raidoTitle, ValidationFailureDisplay } from "Component/Util";
 import { LargeContentMain } from "Design/LayoutMain";
 import { ContainerCard } from "Design/ContainerCard";
 import React, { useState } from "react";
@@ -256,11 +256,4 @@ function MintRaidHelp(){
   }/>;
 }
 
-function ValidationFailureDisplay({failures}: {failures: ValidationFailure[]}){
-  return <List>{
-    failures.map(i => <ListItem>
-      <TextSpan>{i.fieldId} - {i.message}</TextSpan>
-    </ListItem>) 
-  }</List>
-}
 

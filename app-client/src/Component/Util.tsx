@@ -1,5 +1,5 @@
 import {styled} from "@mui/system";
-import {TableRow} from "@mui/material";
+import { List, ListItem, TableRow } from "@mui/material";
 import { TypographyProps } from "@mui/material/Typography";
 import { TextSpan } from "Component/TextSpan";
 import {
@@ -9,6 +9,7 @@ import {
 import React from "react";
 import { AuthzTokenPayload } from "Shared/ApiTypes";
 import { Config } from "Config";
+import { ValidationFailure } from "Generated/Raidv2";
 
 export const AlternatingTableRow = styled(TableRow)(({theme}) => ({
   '&:nth-of-type(odd)': {
@@ -84,4 +85,14 @@ function mapProviderName(payload: AuthzTokenPayload): string {
     console.log("unknown idp clientId", payload);
     return "Unknown";
   }
+}
+
+export function ValidationFailureDisplay({failures}: {
+  failures: ValidationFailure[]
+}){
+  return <List>{
+    failures.map(i => <ListItem>
+      <TextSpan color={"error"}>{i.fieldId} - {i.message}</TextSpan>
+    </ListItem>)
+  }</List>
 }

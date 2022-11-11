@@ -6,7 +6,7 @@ import {
   parsePageSuffixParams,
   useNavigation
 } from "Design/NavigationProvider";
-import { raidoTitle } from "Component/Util";
+import { raidoTitle, ValidationFailureDisplay } from "Component/Util";
 import { LargeContentMain } from "Design/LayoutMain";
 import { ContainerCard } from "Design/ContainerCard";
 import React, { useState } from "react";
@@ -15,7 +15,7 @@ import {
   AccessType, DescriptionBlock,
   MetadataSchemaV1,
   ReadRaidResponseV2,
-  ServicePoint
+  ServicePoint, ValidationFailure
 } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
@@ -168,6 +168,8 @@ function EditRaidContainer({handle}: {
     accessType: "Open",
     accessStatement: "",
   } as FormData);
+  const [serverValidations, setServerValidations] = useState(
+    [] as ValidationFailure[] );
   const readQuery: RqQuery<ReadData> = useQuery(
     [readQueryName, handle],
     async () => {
@@ -195,6 +197,7 @@ function EditRaidContainer({handle}: {
   const queryClient = useQueryClient();
   const updateRequest = useMutation(
     async (props: {formData: ValidFormData, oldMetadata: MetadataSchemaV1}) => {
+      setServerValidations([]);
       return await api.basicRaid.updateRaidoSchemaV1({
         updateRaidoSchemaV1Request: {metadata: 
             createUpdateMetadata(props.formData, props.oldMetadata)
@@ -202,8 +205,14 @@ function EditRaidContainer({handle}: {
       });
     },
     {
-      onSuccess: async () => {
-        await queryClient.invalidateQueries([readQueryName]);
+      onSuccess: async (mintResult) => {
+        if( !mintResult.success ){
+          assert(mintResult.failures);
+          setServerValidations(mintResult.failures);
+        }
+        else {
+          await queryClient.invalidateQueries([readQueryName]);
+        }
       },
     }
   );
@@ -309,6 +318,7 @@ function EditRaidContainer({handle}: {
             </PrimaryActionButton>
           </Stack>
           <CompactErrorPanel error={updateRequest.error}/>
+          <ValidationFailureDisplay failures={serverValidations} />
         </Stack>
       </form>
     </ContainerCard>

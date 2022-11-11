@@ -14,7 +14,7 @@ import static raido.apisvc.endpoint.message.ValidationMessage.TITLES_NOT_SET;
 import static raido.apisvc.endpoint.message.ValidationMessage.TOO_MANY_PRIMARY_TITLE;
 import static raido.apisvc.endpoint.message.ValidationMessage.titleNotSet;
 import static raido.apisvc.endpoint.message.ValidationMessage.titleStartDateNotSet;
-import static raido.apisvc.endpoint.message.ValidationMessage.titleTooLong;
+import static raido.apisvc.endpoint.message.ValidationMessage.primaryTitleTooLong;
 import static raido.apisvc.endpoint.message.ValidationMessage.titlesTypeNotSet;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitles;
 import static raido.apisvc.util.JooqUtil.valueFits;
@@ -58,7 +58,7 @@ public class TitleValidationService {
         failures.add(titleNotSet(i));
       }
       if( !valueFits(RAID_V2.PRIMARY_TITLE, iTitle.getTitle()) ){
-        failures.add(titleTooLong(i));
+        failures.add(primaryTitleTooLong(i));
       }
       if( iTitle.getType() == null ){
         failures.add(titlesTypeNotSet(i));
