@@ -169,6 +169,9 @@ components:
           type: array
           items: {$ref: '#/components/schemas/DescriptionBlock'}
         access: {$ref: '#/components/schemas/AccessBlock'}
+        alternateUrls:
+          type: array
+          items: {$ref: '#/components/schemas/AlternateUrlBlock'}
     IdBlock:
       type: object
       required: [identifier, identifierTypeUri,
@@ -205,6 +208,11 @@ components:
       properties:
         type: {$ref: '#/components/schemas/AccessType'}
         accessStatement: {type: string}
+    AlternateUrlBlock:
+      type: object
+      required: ["url", ]
+      properties:
+        url: {type: string}
     TitleType:
       type: string
       enum: ['Primary Title', 'Alternative Title']

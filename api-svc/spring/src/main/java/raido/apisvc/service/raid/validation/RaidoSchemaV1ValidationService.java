@@ -6,6 +6,7 @@ import raido.apisvc.util.Log;
 import raido.apisvc.util.ObjectUtil;
 import raido.idl.raidv2.model.AccessBlock;
 import raido.idl.raidv2.model.AccessType;
+import raido.idl.raidv2.model.AlternateUrlBlock;
 import raido.idl.raidv2.model.DatesBlock;
 import raido.idl.raidv2.model.IdBlock;
 import raido.idl.raidv2.model.MetadataSchemaV1;
@@ -13,6 +14,7 @@ import raido.idl.raidv2.model.Metaschema;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.List.of;
@@ -44,12 +46,12 @@ public class RaidoSchemaV1ValidationService {
   public List<ValidationFailure> validateRaidoSchemaV1(
     MetadataSchemaV1 metadata
   ) {
-    if( metadata == null ) {
+    if( metadata == null ){
       return of(ValidationMessage.METADATA_NOT_SET);
     }
 
     var failures = new ArrayList<ValidationFailure>();
-    if( metadata.getMetadataSchema() != Metaschema.RAIDO_METADATA_SCHEMA_V1 ) {
+    if( metadata.getMetadataSchema() != Metaschema.RAIDO_METADATA_SCHEMA_V1 ){
       failures.add(ValidationMessage.INVALID_METADATA_SCHEMA);
     }
 
@@ -57,6 +59,7 @@ public class RaidoSchemaV1ValidationService {
     failures.addAll(validateAccess(metadata.getAccess()));
     failures.addAll(titleSvc.validateTitles(metadata.getTitles()));
     failures.addAll(descSvc.validateDescriptions(metadata.getDescriptions()));
+    failures.addAll(validateAlternateUrls(metadata.getAlternateUrls()));
 
     return failures;
   }
@@ -65,7 +68,7 @@ public class RaidoSchemaV1ValidationService {
     DatesBlock dates
   ) {
     var failures = new ArrayList<ValidationFailure>();
-    if( dates == null ) {
+    if( dates == null ){
       failures.add(ValidationMessage.DATES_NOT_SET);
     }
     else {
@@ -80,8 +83,8 @@ public class RaidoSchemaV1ValidationService {
     AccessBlock access
   ) {
     var failures = new ArrayList<ValidationFailure>();
-    
-    if( access == null ) {
+
+    if( access == null ){
       failures.add(ValidationMessage.ACCESS_NOT_SET);
     }
     else {
@@ -89,26 +92,26 @@ public class RaidoSchemaV1ValidationService {
         failures.add(ValidationMessage.ACCESS_TYPE_NOT_SET);
       }
       else {
-        if( 
-          access.getType() == AccessType.CLOSED && 
-            access.getAccessStatement() == null 
+        if(
+          access.getType() == AccessType.CLOSED &&
+            access.getAccessStatement() == null
         ){
           failures.add(ValidationMessage.ACCESS_STATEMENT_NOT_SET);
         }
       }
     }
-    
+
     return failures;
   }
 
 
-  public List<ValidationFailure> validateIdBlockForMigration(IdBlock id){
+  public List<ValidationFailure> validateIdBlockForMigration(IdBlock id) {
     var failures = new ArrayList<ValidationFailure>();
     if( id == null ){
       failures.add(ValidationMessage.ID_BLOCK_NOT_SET);
       return failures;
     }
-    
+
     if( isBlank(id.getIdentifier()) ){
       failures.add(ValidationMessage.IDENTIFIER_NOT_SET);
     }
@@ -132,10 +135,10 @@ public class RaidoSchemaV1ValidationService {
         failures.add(ValidationMessage.IDENTIFIER_INVALID);
       }
     }
-    
+
     // improve: would be good to validate the handle format
     // at least that prefix and suffix exist, separated by slash
-    
+
     if( !ObjectUtil.areEqual(id.getIdentifierTypeUri(), RAID_ID_TYPE_URI) ){
       failures.add(ValidationMessage.ID_TYPE_URI_INVALID);
     }
@@ -145,14 +148,14 @@ public class RaidoSchemaV1ValidationService {
     }
 
     // don't need client to send raidAgency fields, we'll set them on insert
-    
+
     return failures;
   }
 
   public List<ValidationFailure> validateIdBlockNotChanged(
     IdBlock newId,
     IdBlock oldId
-  ){
+  ) {
     List<ValidationFailure> failures = new ArrayList<>();
 
     if( !areEqual(newId.getIdentifierTypeUri(), oldId.getIdentifierTypeUri()) ){
@@ -166,12 +169,37 @@ public class RaidoSchemaV1ValidationService {
       failures.add(fieldCannotChange("metadata.id.raidAgencyUrl"));
     }
     if( !areEqual(
-      newId.getRaidAgencyIdentifier(), 
-      oldId.getRaidAgencyIdentifier()) 
+      newId.getRaidAgencyIdentifier(),
+      oldId.getRaidAgencyIdentifier())
     ){
       failures.add(fieldCannotChange("metadata.id.raidAgencyIdentifier"));
     }
 
     return failures;
   }
+
+  public List<ValidationFailure> validateAlternateUrls(
+    List<AlternateUrlBlock> urls
+  ) {
+    if( urls == null ){
+      return Collections.emptyList();
+    }
+
+    var failures = new ArrayList<ValidationFailure>();
+
+    for( int i = 0; i < urls.size(); i++ ){
+      var iUrl = urls.get(i);
+
+      if( isBlank(iUrl.getUrl()) ){
+        failures.add(ValidationMessage.alternateUrlNotSet(i));
+      }
+
+      /* not sure yet if we want to be doing any further validation of this 
+      - only https, or only http/https?
+      - must be a formal URI?
+      - url must exist (ping if it returns a 200 response?) */
+    }
+    return failures;
+  }
+
 }

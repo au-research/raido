@@ -1,10 +1,18 @@
 package raido.inttest.endpoint.raidv2;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import raido.idl.raidv2.model.*;
+import raido.idl.raidv2.model.AccessBlock;
+import raido.idl.raidv2.model.DatesBlock;
+import raido.idl.raidv2.model.DescriptionBlock;
+import raido.idl.raidv2.model.MetadataSchemaV1;
+import raido.idl.raidv2.model.MintRaidoSchemaV1Request;
+import raido.idl.raidv2.model.MintRaidoSchemaV1RequestMintRequest;
+import raido.idl.raidv2.model.PublicReadRaidResponseV2;
+import raido.idl.raidv2.model.RaidListRequestV2;
+import raido.idl.raidv2.model.ReadRaidV1Request;
+import raido.idl.raidv2.model.TitleBlock;
+import raido.idl.raidv2.model.UpdateRaidoSchemaV1Request;
 import raido.inttest.IntegrationTestCase;
 import raido.inttest.util.IdFactory;
 
@@ -26,12 +34,9 @@ import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 
 public class RaidoSchemaV1Test extends IntegrationTestCase {
 
-  @Autowired private ObjectMapper mapper;
-
   @Test
   void happyDayScenario() throws JsonProcessingException {
     var raidApi = super.basicRaidExperimentalClient();
-    var publicApi = publicExperimentalClient();
     String initialTitle = "intV2 test" + IdFactory.generateUniqueId();
     var today = LocalDate.now();
 
@@ -73,7 +78,8 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
 
 
     EXPECT("should be able to read the minted raid via public api");
-    var pubReadObject = publicApi.publicReadRaidV2(mintedRaid.getHandle());
+    var pubReadObject = raidoApi.getPublicExperimintal().
+      publicReadRaidV2(mintedRaid.getHandle());
     assertThat(pubReadObject).isNotNull();
     assertThat(pubReadObject).isInstanceOf(PublicReadRaidResponseV2.class);
     var pubRead = (PublicReadRaidResponseV2) pubReadObject;
@@ -119,7 +125,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
     assertThat(updateResult.getSuccess()).isTrue();
 
     THEN("should be able to read new value via publicRead");
-    var readUpdatedData = readPublicV1RaidMeta(mintedRaid.getHandle());
+    var readUpdatedData = raidoApi.readPublicV1RaidMeta(mintedRaid.getHandle());
     assertThat(readUpdatedData.getAccess().getType()).isEqualTo(OPEN);
     assertThat(readUpdatedData.getTitles().get(0).getTitle()).isEqualTo(
       initialTitle + " updated" );
@@ -136,7 +142,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
     assertThat(closeResult.getSuccess()).isTrue();
 
     THEN("publicRaid should now return closed");
-    var readClosedData = readPublicV1RaidMeta(mintedRaid.getHandle());
+    var readClosedData = raidoApi.readPublicV1RaidMeta(mintedRaid.getHandle());
     assertThat(readClosedData.getAccess().getType()).isEqualTo(CLOSED);
     AND("titles should not be returned");
     assertThat(readClosedData.getTitles()).isNullOrEmpty();
@@ -177,20 +183,4 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
     );
   }
   
-  public MetadataSchemaV1 readPublicV1RaidMeta(String handle){
-    // improve: creating a client just for this is silly and wasteful
-    var publicApi = publicExperimentalClient();
-
-    var pubReadObject = publicApi.publicReadRaidV2(handle);
-    var pubRead = (PublicReadRaidResponseV2) pubReadObject;
-    
-    assertThat(pubRead.getMetadata()).isInstanceOf(LinkedHashMap.class);
-    MetadataSchemaV1 pubReadMeta = null;
-    pubReadMeta = mapper.convertValue(
-      pubRead.getMetadata(), MetadataSchemaV1.class);
-    assertThat(pubReadMeta.getMetadataSchema()).
-      isEqualTo(RAIDO_METADATA_SCHEMA_V1);
-    
-    return pubReadMeta;
-  }
 }

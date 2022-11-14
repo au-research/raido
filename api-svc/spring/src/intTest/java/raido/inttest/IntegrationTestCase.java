@@ -41,10 +41,10 @@ public abstract class IntegrationTestCase {
 
   protected String raidV1TestToken;
   protected String raidApiAdminTestToken;
+  protected RaidoApiUtil raidoApi;
   
   @RegisterExtension
-  protected static JettyTestServer jettyTestServer =
-    new JettyTestServer();
+  protected static JettyTestServer jettyTestServer = new JettyTestServer();
 
   /**
    IMPROVE: do this in a beforeAll, so the time isn't counted as
@@ -59,13 +59,18 @@ public abstract class IntegrationTestCase {
     
     raidV1TestToken = authTokenSvc.initRaidV1TestToken();
     raidApiAdminTestToken = authTokenSvc.initRaidV2ApiAdminTestToken();
+    /* the feign clients passed to this wrapper and bound to the test tokens 
+    created above.  When we want to "change" user, need to use a new feign 
+    clients bound the new user identity. */
+    raidoApi = new RaidoApiUtil(publicExperimentalClient(), mapper);
   }
 
   /**
    Once we figure out how to use the token statically, would like to figure
    out how to integrate this into Spring better.  Would like to inject
    the client as autowired, but not sure how the interceptor would work to
-   get the auth token.
+   get the auth token, especially as we start wanting to work with multiple
+   users in the scope of a single test.
    */
   public RaidV1Api raidV1Client(){
     return Feign.builder().

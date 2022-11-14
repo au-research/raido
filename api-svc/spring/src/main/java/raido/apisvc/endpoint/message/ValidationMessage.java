@@ -135,5 +135,11 @@ public class ValidationMessage {
       message(FIELD_MUST_BE_SET_MESSAGE);
   }
 
+  public static ValidationFailure alternateUrlNotSet(int i) {
+    return new ValidationFailure().
+      fieldId("alternateUrls[%s].url".formatted(i)).
+      errorType(NOT_SET_TYPE).
+      message(FIELD_MUST_BE_SET_MESSAGE);
+  }
 
 }
