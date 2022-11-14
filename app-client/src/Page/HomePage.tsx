@@ -86,8 +86,12 @@ function RaidCurrentUser(){
       <InfoField id={"email"} label={"Email"} value={user.email}/>
       <InfoField id={"idProvider"} label={"ID provider"}
         value={<IdProviderDisplay payload={user}/> }/>
-      <InfoField id={"servicePoint"} label={"Service point"} value={spQuery.data?.name || ""}/>
-      <InfoField id={"role"} label={"Role"} value={<RoleDisplay role={user.role}/>}/>
+      <InfoField id={"servicePoint"} label={"Service point"} 
+        value={spQuery.data?.name || ""}
+      />
+      <InfoField id={"role"} label={"Role"} value={
+        <RoleDisplay role={user.role}/>
+      }/>
     </InfoFieldList>
     <CompactErrorPanel error={spQuery.error}/>
   </ContainerCard>
