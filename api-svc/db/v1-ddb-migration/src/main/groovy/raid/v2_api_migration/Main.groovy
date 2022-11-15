@@ -7,12 +7,9 @@ import raido.idl.raidv2.model.MigrateLegacyRaidRequest
 import raido.idl.raidv2.model.MigrateLegacyRaidRequestMintRequest
 import raido.idl.raidv2.model.ValidationFailure
 
-import java.time.LocalDateTime
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
-
 import static db.migration.jooq.tables.Raid.RAID
 import static java.lang.Integer.parseInt
+import static raid.ddb_migration.Util.local2Offset
 import static raid.v2_api_migration.RaidoApi.mapToMetadataSchemaV1
 
 class Import1Raid {
@@ -43,7 +40,8 @@ class Import1Raid {
       new MigrateLegacyRaidRequest().
         mintRequest(new MigrateLegacyRaidRequestMintRequest().
           servicePointId(servicePoint.id).
-          contentIndex(parseInt(raid.getValue(RAID.CONTENT_INDEX)))).
+          createDate(local2Offset(raid.get(RAID.CREATION_DATE))).
+          contentIndex(parseInt(raid.get(RAID.CONTENT_INDEX)))).
         metadata(mapToMetadataSchemaV1(raid))
     )
     assert migrateResult.success == true : migrateResult.getFailures()
@@ -60,7 +58,7 @@ class ImportAllRaids {
 
   static void main(String[] args) {
     importAllRaids(NOTRE_DAME)
-//    importAllRaids(RDM)
+    importAllRaids(RDM)
   }
 
   static void importAllRaids(String svcPointName) {
@@ -93,7 +91,8 @@ class ImportAllRaids {
           new MigrateLegacyRaidRequest().
             mintRequest(new MigrateLegacyRaidRequestMintRequest().
               servicePointId(servicePoint.id).
-              contentIndex(parseInt(iRaid.getValue(RAID.CONTENT_INDEX))).
+              createDate(local2Offset(iRaid.get(RAID.CREATION_DATE))).
+              contentIndex(parseInt(iRaid.get(RAID.CONTENT_INDEX))).
               createDate(local2Offset(createDate)) ).
             metadata(iMetadata)
         )
@@ -123,23 +122,4 @@ class ImportAllRaids {
     })
   }
 
-  /**
-   @return will return null if null is passed
-   */
-  public static LocalDateTime offset2Local(OffsetDateTime d){
-    if( d == null ){
-      return null;
-    }
-
-    return d.toLocalDateTime();
-  }
-
-  public static OffsetDateTime local2Offset(LocalDateTime d){
-    if( d == null ){
-      return null;
-    }
-
-    return d.atOffset(ZoneOffset.UTC);
-  }
-  
 }

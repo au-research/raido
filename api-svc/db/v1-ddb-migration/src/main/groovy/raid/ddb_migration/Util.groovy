@@ -2,14 +2,10 @@ package raid.ddb_migration
 
 import groovy.json.JsonBuilder
 
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZonedDateTime
+import java.time.*
 import java.util.function.Supplier
 
 import static java.lang.String.format
-import static raid.ddb_migration.Util.getSydneyZone
-import static raid.ddb_migration.Util.getUtcZone
 
 class Util {
   static ZoneId sydneyZone = ZoneId.of("Australia/Sydney")
@@ -67,4 +63,25 @@ class Util {
   static ZonedDateTime inSystemZone(LocalDateTime date){
     return date.atZone(utcZone).withZoneSameInstant(ZoneId.systemDefault())    
   }
+
+  /**
+   @return will return null if null is passed
+   */
+  static LocalDateTime offset2Local(OffsetDateTime d){
+    if( d == null ){
+      return null;
+    }
+
+    return d.toLocalDateTime();
+  }
+
+  static OffsetDateTime local2Offset(LocalDateTime d){
+    if( d == null ){
+      return null;
+    }
+
+    return d.atOffset(ZoneOffset.UTC);
+  }
+
+
 }

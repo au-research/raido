@@ -42,13 +42,28 @@ DB migrations are in
 
 ## Tasks
 
-* checkS3Files
+* `checkS3Files`
   * run through files checking for bad data, output errors to file 
-* importS3Files
+* `importS3Files`
   * import all data into tables
   * the "import" is a "merge" operation, so it's re-runnable - it'll just 
   overwrite rows (where row is identified by the Handle primary key)
+* `importAllRaids`
+  * imports all raids for specifically chosen service points
+  * before running this you need to configure the "API import key", see 
+    section below 
+  * takes about 2 - 3 minutes to run on local dev machine (16K RDM raids) 
+* `import1Raid`
+  * does the same as import, but only for 1 raid for each SP
+  * used to quickly check that the migration is working
 
+
+## Raido API import key
+
+* sign-in to Raido as a raido operator or admin
+* add an api key, save it and generate the token
+* add the api key to `~/.config/raido-v2/api-svc-db-.gradle`
+  * `apiSvcMigrationKey="xxx.yyy.zzz"`
 
 ## Git history
 
