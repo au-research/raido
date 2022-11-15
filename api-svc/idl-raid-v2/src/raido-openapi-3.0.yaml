@@ -50,15 +50,6 @@ paths:
 
   # region Basic RAID endpoints
   
-  /v2/experimental/list-raid/v1:
-    $ref: "basic-raid-experimental.yaml#/paths/~1list-raid"
-  /v2/experimental/mint-raid/v1:
-    $ref: "basic-raid-experimental.yaml#/paths/~1mint-raid-v1"
-  /v2/experimental/update-raid/v1:
-    $ref: "basic-raid-experimental.yaml#/paths/~1update-raid-v1"
-  /v2/experimental/read-raid/v1:
-    $ref: "basic-raid-experimental.yaml#/paths/~1read-raid-v1"
-  
   /v2/experimental/mint-raido-schema/v1:
     $ref: "metadata-schema-v1.yaml#/paths/~1mint-raido-schema-v1"
   /v2/experimental/update-raido-schema/v1:

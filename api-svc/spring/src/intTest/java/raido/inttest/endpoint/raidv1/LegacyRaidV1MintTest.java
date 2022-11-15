@@ -20,10 +20,10 @@ import static raido.apisvc.util.test.BddUtil.EXPECT;
 import static raido.apisvc.util.test.BddUtil.GIVEN;
 import static raido.inttest.config.IntegrationTestConfig.restTemplateWithEncodingMode;
 
-public class RaidV1MintTest extends IntegrationTestCase {
+public class LegacyRaidV1MintTest extends IntegrationTestCase {
   public static final String INT_TEST_CONTENT_PATH = "https://raido.int.test";
 
-  private static final Log log = to(RaidV1MintTest.class);
+  private static final Log log = to(LegacyRaidV1MintTest.class);
 
   public static String getForbiddenMessage(String path) {
     return """

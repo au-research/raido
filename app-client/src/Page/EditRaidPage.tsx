@@ -175,7 +175,7 @@ function EditRaidContainer({handle}: {
     async () => {
       //await delay(2000);
       const raid = await api.basicRaid.readRaidV2({
-        readRaidV1Request: { handle }
+        readRaidV2Request: { handle }
       });
       const metadata = convertMetadataSchemaV1(raid.metadata);
       const readData: ReadData = {raid, metadata};

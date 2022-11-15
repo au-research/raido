@@ -2,17 +2,7 @@ package raido.inttest.endpoint.raidv2;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
-import raido.idl.raidv2.model.AccessBlock;
-import raido.idl.raidv2.model.DatesBlock;
-import raido.idl.raidv2.model.DescriptionBlock;
-import raido.idl.raidv2.model.MetadataSchemaV1;
-import raido.idl.raidv2.model.MintRaidoSchemaV1Request;
-import raido.idl.raidv2.model.MintRaidoSchemaV1RequestMintRequest;
-import raido.idl.raidv2.model.PublicReadRaidResponseV2;
-import raido.idl.raidv2.model.RaidListRequestV2;
-import raido.idl.raidv2.model.ReadRaidV1Request;
-import raido.idl.raidv2.model.TitleBlock;
-import raido.idl.raidv2.model.UpdateRaidoSchemaV1Request;
+import raido.idl.raidv2.model.*;
 import raido.inttest.IntegrationTestCase;
 import raido.inttest.util.IdFactory;
 
@@ -73,7 +63,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
 
     EXPECT("should be able to read the minted raid via authz api");
     var readResult = raidApi.readRaidV2(
-      new ReadRaidV1Request().handle(mintedRaid.getHandle()));
+      new ReadRaidV2Request().handle(mintedRaid.getHandle()));
     assertThat(readResult).isNotNull();
 
 
