@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import raido.apisvc.spring.config.environment.MetadataProps;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.Metaschema;
-import raido.db.jooq.api_svc.tables.records.RaidV2Record;
+import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.idl.raidv2.model.IdBlock;
 import raido.idl.raidv2.model.MetadataSchemaV1;
 import raido.idl.raidv2.model.ValidationFailure;
@@ -87,7 +87,7 @@ public class MetadataService {
     }
   }
   
-  public MetadataSchemaV1 mapV1SchemaMetadata(RaidV2Record raid){
+  public MetadataSchemaV1 mapV1SchemaMetadata(RaidRecord raid){
     var result = mapObject(raid.getMetadata(), MetadataSchemaV1.class);
     if( !areEqual(
       result.getMetadataSchema().getValue(), 

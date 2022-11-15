@@ -2,7 +2,7 @@ package raido.apisvc.endpoint.message;
 
 import raido.idl.raidv2.model.ValidationFailure;
 
-import static raido.db.jooq.api_svc.tables.RaidV2.RAID_V2;
+import static raido.db.jooq.api_svc.tables.Raid.RAID;
 
 public class ValidationMessage {
 
@@ -112,7 +112,7 @@ public class ValidationMessage {
       fieldId("titles[%s].title".formatted(i)).
       errorType(TOO_LONG_TYPE).
       message("primaryTitle field must fit in length: " +
-        RAID_V2.PRIMARY_TITLE.getDataType().length());
+        RAID.PRIMARY_TITLE.getDataType().length());
   }
 
   public static ValidationFailure metadataJsonParseFailure() {

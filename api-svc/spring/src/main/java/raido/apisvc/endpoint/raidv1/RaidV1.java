@@ -57,7 +57,7 @@ import static raido.apisvc.util.ObjectUtil.isTrue;
 import static raido.apisvc.util.RestUtil.urlDecode;
 import static raido.apisvc.util.StringUtil.hasValue;
 import static raido.apisvc.util.StringUtil.isBlank;
-import static raido.db.jooq.api_svc.tables.RaidV2.RAID_V2;
+import static raido.db.jooq.api_svc.tables.Raid.RAID;
 import static raido.idl.raidv2.model.AccessType.CLOSED;
 import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
 import static raido.idl.raidv2.model.Metaschema.RAIDO_METADATA_SCHEMA_V1;
@@ -120,13 +120,13 @@ public class RaidV1 implements RaidV1Api {
     guardDemoEnv(demo);
 
     RaidPublicModel result = db.
-      select(RAID_V2.HANDLE, RAID_V2.URL, RAID_V2.DATE_CREATED).
-      from(RAID_V2).
-      where(RAID_V2.HANDLE.eq(raidId)).
+      select(RAID.HANDLE, RAID.URL, RAID.DATE_CREATED).
+      from(RAID).
+      where(RAID.HANDLE.eq(raidId)).
       fetchOne(r->new RaidPublicModel().
-        handle(r.get(RAID_V2.HANDLE)).
-        contentPath(r.get(RAID_V2.URL)).
-        creationDate(formatIsoDateTime(r.get(RAID_V2.DATE_CREATED))));
+        handle(r.get(RAID.HANDLE)).
+        contentPath(r.get(RAID.URL)).
+        creationDate(formatIsoDateTime(r.get(RAID.DATE_CREATED))));
     if( result == null ){
       throw apiSafe(HANDLE_NOT_FOUND, NOT_FOUND_404, of(raidId));
     }

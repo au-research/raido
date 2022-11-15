@@ -10,7 +10,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import raido.apisvc.service.apids.ApidsService;
 import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
 import raido.apisvc.util.Log;
-import raido.db.jooq.api_svc.tables.records.RaidV2Record;
+import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
 import raido.idl.raidv2.model.AccessType;
 import raido.idl.raidv2.model.MetadataSchemaV1;
@@ -36,7 +36,7 @@ import static raido.apisvc.util.DateUtil.local2Offset;
 import static raido.apisvc.util.DateUtil.offset2Local;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.areEqual;
-import static raido.db.jooq.api_svc.tables.RaidV2.RAID_V2;
+import static raido.db.jooq.api_svc.tables.Raid.RAID;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 
 @Component
@@ -105,17 +105,17 @@ public class RaidService {
     var raidData = getDenormalisedRaidData(metadata);
 
     tx.executeWithoutResult((status)->{
-      db.insertInto(RAID_V2).
-        set(RAID_V2.HANDLE, handle).
-        set(RAID_V2.SERVICE_POINT_ID, servicePointId).
-        set(RAID_V2.URL, raidUrl).
-        set(RAID_V2.URL_INDEX, response.identifier.property.index).
-        set(RAID_V2.PRIMARY_TITLE, raidData.primaryTitle()).
-        set(RAID_V2.METADATA, JSONB.valueOf(metadataAsJson)).
-        set(RAID_V2.METADATA_SCHEMA, mapJs2Jq(metadata.getMetadataSchema())).
-        set(RAID_V2.START_DATE, raidData.startDate()).
-        set(RAID_V2.DATE_CREATED, LocalDateTime.now()).
-        set(RAID_V2.CONFIDENTIAL, raidData.confidential()).
+      db.insertInto(RAID).
+        set(RAID.HANDLE, handle).
+        set(RAID.SERVICE_POINT_ID, servicePointId).
+        set(RAID.URL, raidUrl).
+        set(RAID.URL_INDEX, response.identifier.property.index).
+        set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
+        set(RAID.METADATA, JSONB.valueOf(metadataAsJson)).
+        set(RAID.METADATA_SCHEMA, mapJs2Jq(metadata.getMetadataSchema())).
+        set(RAID.START_DATE, raidData.startDate()).
+        set(RAID.DATE_CREATED, LocalDateTime.now()).
+        set(RAID.CONFIDENTIAL, raidData.confidential()).
         execute();
     });
     
@@ -123,17 +123,17 @@ public class RaidService {
   }
 
   public record ReadRaidV2Data(
-    RaidV2Record raid, 
+    RaidRecord raid, 
     ServicePointRecord servicePoint
   ){}
 
   public ReadRaidV2Data readRaidV2Data(String handle){
-    return db.select(RAID_V2.fields()).
+    return db.select(RAID.fields()).
       select(SERVICE_POINT.fields()).
-      from(RAID_V2).join(SERVICE_POINT).onKey().
-      where(RAID_V2.HANDLE.eq(handle)).
+      from(RAID).join(SERVICE_POINT).onKey().
+      where(RAID.HANDLE.eq(handle)).
       fetchSingle(r -> new ReadRaidV2Data(
-        r.into(RaidV2Record.class), 
+        r.into(RaidRecord.class), 
         r.into(ServicePointRecord.class)) );
   }
   
@@ -184,20 +184,20 @@ public class RaidService {
 
     JSONB jsonbMetadata = JSONB.valueOf(metadataAsJson);
 
-    db.insertInto(RAID_V2).
-      set(RAID_V2.HANDLE, handle).
-      set(RAID_V2.SERVICE_POINT_ID, servicePointId).
-      set(RAID_V2.URL, raidUrl).
-      set(RAID_V2.URL_INDEX, urlContentIndex).
-      set(RAID_V2.PRIMARY_TITLE, primaryTitle).
-      set(RAID_V2.METADATA, jsonbMetadata).
-      set(RAID_V2.METADATA_SCHEMA, mapJs2Jq(metadata.getMetadataSchema())).
-      set(RAID_V2.START_DATE, startDate).
-      set(RAID_V2.DATE_CREATED, offset2Local(createDate)).
-      set(RAID_V2.CONFIDENTIAL, confidential).
-      onConflict(RAID_V2.HANDLE).doUpdate().
-        set(stream(RAID_V2.fields()).collect(toMap(f -> f, DSL::excluded))).
-        where(RAID_V2.HANDLE.eq(handle)).
+    db.insertInto(RAID).
+      set(RAID.HANDLE, handle).
+      set(RAID.SERVICE_POINT_ID, servicePointId).
+      set(RAID.URL, raidUrl).
+      set(RAID.URL_INDEX, urlContentIndex).
+      set(RAID.PRIMARY_TITLE, primaryTitle).
+      set(RAID.METADATA, jsonbMetadata).
+      set(RAID.METADATA_SCHEMA, mapJs2Jq(metadata.getMetadataSchema())).
+      set(RAID.START_DATE, startDate).
+      set(RAID.DATE_CREATED, offset2Local(createDate)).
+      set(RAID.CONFIDENTIAL, confidential).
+      onConflict(RAID.HANDLE).doUpdate().
+        set(stream(RAID.fields()).collect(toMap(f -> f, DSL::excluded))).
+        where(RAID.HANDLE.eq(handle)).
       execute();
   }
 
@@ -207,7 +207,7 @@ public class RaidService {
    work that this method actually does. */
   public List<ValidationFailure> updateRaidoSchemaV1(
     MetadataSchemaV1 newData,
-    RaidV2Record oldRaid
+    RaidRecord oldRaid
   ) {
 
     if( !areEqual(
@@ -240,12 +240,12 @@ public class RaidService {
 
     var raidData = getDenormalisedRaidData(newData);
 
-    db.update(RAID_V2).
-      set(RAID_V2.PRIMARY_TITLE, raidData.primaryTitle()).
-      set(RAID_V2.METADATA, JSONB.valueOf(metadataAsJson)).
-      set(RAID_V2.START_DATE, raidData.startDate()).
-      set(RAID_V2.CONFIDENTIAL, raidData.confidential()).
-      where(RAID_V2.HANDLE.eq(oldRaid.getHandle())).
+    db.update(RAID).
+      set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
+      set(RAID.METADATA, JSONB.valueOf(metadataAsJson)).
+      set(RAID.START_DATE, raidData.startDate()).
+      set(RAID.CONFIDENTIAL, raidData.confidential()).
+      where(RAID.HANDLE.eq(oldRaid.getHandle())).
       execute();
     
     return emptyList();

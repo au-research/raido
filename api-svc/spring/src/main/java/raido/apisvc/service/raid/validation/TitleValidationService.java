@@ -19,7 +19,7 @@ import static raido.apisvc.endpoint.message.ValidationMessage.titlesTypeNotSet;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitles;
 import static raido.apisvc.util.JooqUtil.valueFits;
 import static raido.apisvc.util.StringUtil.isBlank;
-import static raido.db.jooq.api_svc.tables.RaidV2.RAID_V2;
+import static raido.db.jooq.api_svc.tables.Raid.RAID;
 
 @Component
 public class TitleValidationService {
@@ -57,7 +57,7 @@ public class TitleValidationService {
       if( isBlank(iTitle.getTitle()) ){
         failures.add(titleNotSet(i));
       }
-      if( !valueFits(RAID_V2.PRIMARY_TITLE, iTitle.getTitle()) ){
+      if( !valueFits(RAID.PRIMARY_TITLE, iTitle.getTitle()) ){
         failures.add(primaryTitleTooLong(i));
       }
       if( iTitle.getType() == null ){

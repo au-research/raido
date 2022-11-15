@@ -33,7 +33,7 @@ import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.hasValue;
 import static raido.apisvc.util.StringUtil.isBlank;
-import static raido.db.jooq.api_svc.tables.RaidV2.RAID_V2;
+import static raido.db.jooq.api_svc.tables.Raid.RAID;
 
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
@@ -118,14 +118,14 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     var user = getAuthzPayload();
     guardOperatorOrAssociated(user, req.getServicePointId());
 
-    return db.select(RAID_V2.HANDLE, RAID_V2.PRIMARY_TITLE, RAID_V2.START_DATE,
-        RAID_V2.CONFIDENTIAL, RAID_V2.DATE_CREATED.as("createDate")).
-      from(RAID_V2).
+    return db.select(RAID.HANDLE, RAID.PRIMARY_TITLE, RAID.START_DATE,
+        RAID.CONFIDENTIAL, RAID.DATE_CREATED.as("createDate")).
+      from(RAID).
       where(
-        RAID_V2.SERVICE_POINT_ID.eq(req.getServicePointId()).
+        RAID.SERVICE_POINT_ID.eq(req.getServicePointId()).
           and(createV2SearchCondition(req))
       ).
-      orderBy(RAID_V2.DATE_CREATED.desc()).
+      orderBy(RAID.DATE_CREATED.desc()).
       limit(MAX_EXPERIMENTAL_RECORDS).
       fetchInto(RaidListItemV2.class);
   }
@@ -142,7 +142,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
         throw iae;
       }
       primaryTitle = "%"+primaryTitle+"%";
-      searchCondition = DSL.condition(RAID_V2.PRIMARY_TITLE.like(primaryTitle));
+      searchCondition = DSL.condition(RAID.PRIMARY_TITLE.like(primaryTitle));
     }
     return searchCondition;
   }
