@@ -7,10 +7,12 @@ package raido.apisvc.endpoint.message;
  It's not about i18n or anything (that's why it's just a bunch of statics).
  */
 public class RaidApiMessage {
-  public static final String MINT_DATA_ERROR = 
+  public static final String RAID_V1_MINT_DATA_ERROR = 
     "There was a problem with the input data." +
     " This endpoint exists to support legacy V1 usage for existing customers," +
     " please contact support or updgrade to a newer endpoint version.";
+  public static final String RAID_V1_ACCESS_STATEMENT = 
+    "RAiD minted via legacy V1 endpoint is closed by default";
 
   public static final String HANDLE_NOT_FOUND = "Raid handle not found";
 
@@ -26,5 +28,7 @@ public class RaidApiMessage {
   public static final String NO_APP_USER_WITH_API_KEY_ENDPOINT =
     "cannot use app-user with api-key endpoint";  
   public static final String CANT_GENERATE_DISABLED_KEY =
-    "cannot generate a token for a disable key";  
+    "cannot generate a token for a disable key";
+
+  
 }

@@ -125,7 +125,8 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
     assertThat(updateResult.getSuccess()).isTrue();
 
     THEN("should be able to read new value via publicRead");
-    var readUpdatedData = raidoApi.readPublicV1RaidMeta(mintedRaid.getHandle());
+    var readUpdatedData = raidoApi.
+      readPublicRaidMetadataV1(mintedRaid.getHandle());
     assertThat(readUpdatedData.getAccess().getType()).isEqualTo(OPEN);
     assertThat(readUpdatedData.getTitles().get(0).getTitle()).isEqualTo(
       initialTitle + " updated" );
@@ -142,7 +143,8 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
     assertThat(closeResult.getSuccess()).isTrue();
 
     THEN("publicRaid should now return closed");
-    var readClosedData = raidoApi.readPublicV1RaidMeta(mintedRaid.getHandle());
+    var readClosedData = raidoApi.
+      readPublicRaidMetadataV1(mintedRaid.getHandle());
     assertThat(readClosedData.getAccess().getType()).isEqualTo(CLOSED);
     AND("titles should not be returned");
     assertThat(readClosedData.getTitles()).isNullOrEmpty();

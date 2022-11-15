@@ -14,22 +14,13 @@ import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.idl.raidv2.api.BasicRaidExperimentalApi;
-import raido.idl.raidv2.model.MintRaidRequestV1;
-import raido.idl.raidv2.model.MintRaidoSchemaV1Request;
-import raido.idl.raidv2.model.MintResponse;
-import raido.idl.raidv2.model.RaidListItemV1;
-import raido.idl.raidv2.model.RaidListItemV2;
-import raido.idl.raidv2.model.RaidListRequest;
-import raido.idl.raidv2.model.RaidListRequestV2;
-import raido.idl.raidv2.model.ReadRaidResponseV1;
-import raido.idl.raidv2.model.ReadRaidResponseV2;
-import raido.idl.raidv2.model.ReadRaidV1Request;
-import raido.idl.raidv2.model.UpdateRaidoSchemaV1Request;
+import raido.idl.raidv2.model.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
+import static org.springframework.transaction.annotation.Propagation.NEVER;
 import static raido.apisvc.endpoint.Constant.MAX_EXPERIMENTAL_RECORDS;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.getAuthzPayload;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
@@ -184,6 +175,8 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
   raids into the system (i.e. RDM) they don't care to display anything.
   */
   @Override
+  // See the RaidSvc.mint() method for an explanation of Transaction stuff
+  @Transactional(propagation = NEVER)
   public MintResponse mintRaidoSchemaV1(
     MintRaidoSchemaV1Request req
   ) {

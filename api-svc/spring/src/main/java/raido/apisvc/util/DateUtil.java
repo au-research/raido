@@ -14,13 +14,16 @@ import java.util.TimeZone;
 public class DateUtil {
   public static ZoneId SYD_ZONE_ID = ZoneId.of("Australia/Sydney");
   public static ZoneId UTC_ZONE_ID = ZoneId.of("UTC");
-  
+
+  // improve: improve consistency of names across all strings/formatters
   public static final String ISO_MINUTES_FORMAT = "yyyy-MM-dd HH:mm";
   public static final String ISO_SECONDS_FORMAT = "yyyy-MM-dd HH:mm:ss";
   
   // doco says it's thread safe
   public static final DateTimeFormatter ISO_DATE_TIME = 
     DateTimeFormatter.ISO_DATE_TIME;
+  public static final DateTimeFormatter ISO_DATE_FORMAT = 
+    DateTimeFormatter.ISO_DATE;
   public static final DateTimeFormatter ISO_SECONDS_DATE_TIME = 
     DateTimeFormatter.ofPattern(ISO_SECONDS_FORMAT);
   public static final DateTimeFormatter COMPACT_ISO_DATE_FORMAT = 
@@ -38,6 +41,10 @@ public class DateUtil {
 
   public static String formatCompactIsoDate(LocalDate d){
     return COMPACT_ISO_DATE_FORMAT.format(d);
+  }
+  
+  public static String formatIsoDate(LocalDate d){
+    return ISO_DATE_FORMAT.format(d);
   }
 
   public static String formatCompactTimeMillis(LocalDateTime d){

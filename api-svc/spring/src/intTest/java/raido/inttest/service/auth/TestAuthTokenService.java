@@ -34,7 +34,11 @@ public class TestAuthTokenService {
   @Autowired protected RaidV1AuthProps authProps;
   @Autowired protected RaidV2ApiKeyAuthProps authApiKeyProps;
 
-  private String testOwner = "raido.inttest";
+  /* v1TestOwner is only used for minting via raidV1 endpoint, which is 
+  only designed for use by RDM anyway.  The logic in the endpoint implementation
+  requires it to match an existing service-point, might as well use the real 
+  one. */
+  private String v1TestOwner = "RDM@UQ";
 
   /**
    Doing this eagerly, so the execution time is not counted against
@@ -51,8 +55,8 @@ public class TestAuthTokenService {
     var authSvc = new RaidV1AuthService(db, authProps);
 
     TokenRecord record = db.newRecord(TOKEN);
-    String testToken = authSvc.sign(testOwner);
-    record.setName(testOwner).
+    String testToken = authSvc.sign(v1TestOwner);
+    record.setName(v1TestOwner).
       setEnvironment("test").
       setDateCreated(LocalDateTime.now()).
       setToken(testToken).
@@ -109,7 +113,4 @@ public class TestAuthTokenService {
     return apiToken;
   }
 
-  public String getTestOwner() {
-    return testOwner;
-  }
 }

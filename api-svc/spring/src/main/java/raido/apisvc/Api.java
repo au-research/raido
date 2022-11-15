@@ -28,7 +28,7 @@ public class Api {
     daemon threads to keep the JVM alive.  */
     //noinspection resource
     jetty.configureHttpConnector(PORT);
-    jetty.addServletContainerInitializer( (sci, ctx) -> 
+    jetty.addServletContainerInitializer( "Api.main", (sci, ctx) -> 
         ApiConfig.initApplicationContext(ctx) );
 
     /* Will be called when pressing ctrl-c, or `docker stop` is issued.

@@ -71,7 +71,7 @@ implements BeforeAllCallback,
     }
 
     serverConnector = jetty.configureHttpConnector(Api.PORT);
-    jetty.addServletContainerInitializer((sci, ctx) ->
+    jetty.addServletContainerInitializer("JettyTestServer", (sci, ctx) ->
     {
       rootContext = ApiConfig.initApplicationContext(ctx);
       MutablePropertySources propertySources =

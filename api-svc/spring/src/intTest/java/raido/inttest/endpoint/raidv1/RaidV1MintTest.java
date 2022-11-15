@@ -32,16 +32,20 @@ public class RaidV1MintTest extends IntegrationTestCase {
   }
 
   @Test void happyDayMintAndGet(){
-    EXPECT("minting a raid with minimal content should succeed");
     var create = createSimpleRaid("happyDayMintAndGet inttest");
-
     RaidV1Api raidV1 = super.raidV1Client();
-    var mintResult = raidV1.raidPost(create);
 
+    EXPECT("mint V1 legacy raid with RDM-style content should succeed");
+    var mintResult = raidV1.raidPost(create);
     assertThat(mintResult).isNotNull();
     assertThat(mintResult.getHandle()).isNotBlank();
 
-    EXPECT("should be able to read the minted raid");
+    EXPECT("should be able to read the minted raid via V2 public endpoint");
+    var pubReadV2 = raidoApi.readPublicRaidMetadataV1(mintResult.getHandle());
+    assertThat(pubReadV2).isNotNull();
+    assertThat(pubReadV2.getId().getIdentifier()).isEqualTo(mintResult.getHandle());
+    
+    EXPECT("should be able to read the minted raid via V1 endpoint");
     var getResult = raidV1.handleRaidIdGet(mintResult.getHandle(), false);
     assertThat(getResult).isNotNull();
     assertThat(getResult.getHandle()).isEqualTo(mintResult.getHandle());

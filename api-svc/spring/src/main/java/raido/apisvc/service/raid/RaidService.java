@@ -5,6 +5,8 @@ import org.jooq.JSONB;
 import org.jooq.exception.NoDataFoundException;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 import raido.apisvc.service.apids.ApidsService;
 import raido.apisvc.service.apids.model.ApidsMintResponse;
 import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
@@ -28,8 +30,10 @@ import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toMap;
+import static org.springframework.transaction.annotation.Propagation.NEVER;
 import static raido.apisvc.endpoint.message.ValidationMessage.SCHEMA_CHANGED;
 import static raido.apisvc.service.raid.MetadataService.mapJs2Jq;
+import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitle;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitles;
 import static raido.apisvc.util.DateUtil.local2Offset;
 import static raido.apisvc.util.DateUtil.offset2Local;
@@ -47,17 +51,20 @@ public class RaidService {
   private ApidsService apidsSvc;
   private MetadataService metaSvc;
   private RaidoSchemaV1ValidationService validSvc;
+  private TransactionTemplate tx;
 
   public RaidService(
     DSLContext db,
     ApidsService apidsSvc,
     MetadataService metaSvc,
-    RaidoSchemaV1ValidationService validSvc
+    RaidoSchemaV1ValidationService validSvc,
+    TransactionTemplate tx
   ) {
     this.db = db;
     this.apidsSvc = apidsSvc;
     this.metaSvc = metaSvc;
     this.validSvc = validSvc;
+    this.tx = tx;
   }
 
 
@@ -92,23 +99,29 @@ public class RaidService {
     boolean confidential
   ) { }
 
+  /** Expects the passed metadata is valid. */
   public DenormalisedRaidData getDenormalisedRaidData(
     MetadataSchemaV1 metadata
   ){
     return new DenormalisedRaidData(
-      getPrimaryTitles(metadata.getTitles()).
-        get(0).getTitle(),
+      getPrimaryTitle(metadata.getTitles()).getTitle(),
       metadata.getDates().getStartDate(),
       metadata.getAccess().getType() != AccessType.OPEN
     );
   }
-  
+
+  /**
+   Note propagation=NEVER causes this to fail if called when a TX is 
+   currently active. The method does manual TX handling internally, 
+   to avoid holding an open TX while talking to the APIDS service.
+   */
+  @Transactional(propagation = NEVER)
   public String mintRaidoSchemaV1(
     long servicePointId, 
     MetadataSchemaV1 metadata
   ) throws ValidationFailureException {
-    var raidData = getDenormalisedRaidData(metadata);
-
+    /* this is the part where we want to make sure no TX is help open.
+    * Maybe *this* should be marked tx.prop=never? */
     var response = apidsSvc.mintApidsHandleContentPrefix(
       metaSvc::formatRaidoLandingPageUrl);
     String handle = response.identifier.handle;
@@ -118,19 +131,23 @@ public class RaidService {
 
     // validation failure possible
     String metadataAsJson = metaSvc.mapToJson(metadata);
+    var raidData = getDenormalisedRaidData(metadata);
 
-    db.insertInto(RAID_V2).
-      set(RAID_V2.HANDLE, handle).
-      set(RAID_V2.SERVICE_POINT_ID, servicePointId).
-      set(RAID_V2.URL, raidUrl).
-      set(RAID_V2.URL_INDEX, response.identifier.property.index).
-      set(RAID_V2.PRIMARY_TITLE, raidData.primaryTitle()).
-      set(RAID_V2.METADATA, JSONB.valueOf(metadataAsJson)).
-      set(RAID_V2.METADATA_SCHEMA, mapJs2Jq(metadata.getMetadataSchema())).
-      set(RAID_V2.START_DATE, raidData.startDate()).
-      set(RAID_V2.DATE_CREATED, LocalDateTime.now()).
-      set(RAID_V2.CONFIDENTIAL, raidData.confidential()).
-      execute();
+    tx.executeWithoutResult((status)->{
+      db.insertInto(RAID_V2).
+        set(RAID_V2.HANDLE, handle).
+        set(RAID_V2.SERVICE_POINT_ID, servicePointId).
+        set(RAID_V2.URL, raidUrl).
+        set(RAID_V2.URL_INDEX, response.identifier.property.index).
+        set(RAID_V2.PRIMARY_TITLE, raidData.primaryTitle()).
+        set(RAID_V2.METADATA, JSONB.valueOf(metadataAsJson)).
+        set(RAID_V2.METADATA_SCHEMA, mapJs2Jq(metadata.getMetadataSchema())).
+        set(RAID_V2.START_DATE, raidData.startDate()).
+        set(RAID_V2.DATE_CREATED, LocalDateTime.now()).
+        set(RAID_V2.CONFIDENTIAL, raidData.confidential()).
+        execute();
+    });
+    
     return handle;
   }
 
@@ -278,4 +295,9 @@ public class RaidService {
     return emptyList();
   }
 
+  public ServicePointRecord findServicePoint(String name){
+    return db.select().from(SERVICE_POINT).
+      where(SERVICE_POINT.NAME.eq(name)).
+      fetchSingleInto(SERVICE_POINT);
+  }
 }

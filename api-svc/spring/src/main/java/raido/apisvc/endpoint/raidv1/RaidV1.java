@@ -9,19 +9,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import raido.apisvc.service.apids.ApidsService;
-import raido.apisvc.service.apids.model.ApidsMintResponse;
+import raido.apisvc.service.raid.MetadataService;
+import raido.apisvc.service.raid.RaidService;
+import raido.apisvc.service.raid.ValidationFailureException;
 import raido.apisvc.spring.config.RaidWebSecurityConfig;
 import raido.apisvc.spring.security.raidv1.Raid1PostAuthenicationJsonWebToken;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
-import raido.db.jooq.raid_v1_import.tables.records.RaidRecord;
 import raido.idl.raidv1.api.RaidV1Api;
 import raido.idl.raidv1.model.RaidCreateModel;
 import raido.idl.raidv1.model.RaidModel;
 import raido.idl.raidv1.model.RaidModelMeta;
 import raido.idl.raidv1.model.RaidPublicModel;
+import raido.idl.raidv2.model.AccessBlock;
+import raido.idl.raidv2.model.DatesBlock;
+import raido.idl.raidv2.model.DescriptionBlock;
+import raido.idl.raidv2.model.MetadataSchemaV1;
+import raido.idl.raidv2.model.TitleBlock;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +38,17 @@ import static org.eclipse.jetty.http.HttpStatus.BAD_REQUEST_400;
 import static org.eclipse.jetty.http.HttpStatus.NOT_FOUND_404;
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
+import static org.springframework.transaction.annotation.Propagation.NEVER;
 import static raido.apisvc.endpoint.message.RaidApiMessage.DEMO_NOT_SUPPPORTED;
 import static raido.apisvc.endpoint.message.RaidApiMessage.HANDLE_NOT_FOUND;
-import static raido.apisvc.endpoint.message.RaidApiMessage.MINT_DATA_ERROR;
+import static raido.apisvc.endpoint.message.RaidApiMessage.RAID_V1_ACCESS_STATEMENT;
+import static raido.apisvc.endpoint.message.RaidApiMessage.RAID_V1_MINT_DATA_ERROR;
+import static raido.apisvc.service.raid.RaidoSchemaV1Util.getFirstPrimaryDescription;
 import static raido.apisvc.spring.config.RaidWebSecurityConfig.RAID_V1_API;
 import static raido.apisvc.spring.security.ApiSafeException.apiSafe;
 import static raido.apisvc.util.DateUtil.formatDynamoDateTime;
+import static raido.apisvc.util.DateUtil.formatIsoDate;
+import static raido.apisvc.util.DateUtil.formatIsoDateTime;
 import static raido.apisvc.util.DateUtil.formatRaidV1DateTime;
 import static raido.apisvc.util.DateUtil.parseDynamoDateTime;
 import static raido.apisvc.util.ExceptionUtil.iae;
@@ -46,7 +57,11 @@ import static raido.apisvc.util.ObjectUtil.isTrue;
 import static raido.apisvc.util.RestUtil.urlDecode;
 import static raido.apisvc.util.StringUtil.hasValue;
 import static raido.apisvc.util.StringUtil.isBlank;
-import static raido.db.jooq.raid_v1_import.tables.Raid.RAID;
+import static raido.db.jooq.api_svc.tables.RaidV2.RAID_V2;
+import static raido.idl.raidv2.model.AccessType.CLOSED;
+import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
+import static raido.idl.raidv2.model.Metaschema.RAIDO_METADATA_SCHEMA_V1;
+import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 
 /* without the proxy mode setting, Spring doesn't see the requestmappings from 
 the interface and so won't define our RaidV1 endpoints */
@@ -60,15 +75,21 @@ public class RaidV1 implements RaidV1Api {
   public static final String HANDLE_SEPERATOR = "/";
   
   public static final JSONB NON_EXPORTED_MARKER_VALUE = JSONB.valueOf("{}");
-  
+
   private static final Log log = to(RaidV1.class);
 
-  private ApidsService apidsSvc;
   private DSLContext db;
+  private RaidService raidSvc;
+  private MetadataService metaSvc;
 
-  public RaidV1(ApidsService apidsSvc, DSLContext db) {
-    this.apidsSvc = apidsSvc;
+  public RaidV1(
+    DSLContext db, 
+    RaidService raidSvc,
+    MetadataService metaSvc
+  ) {
     this.db = db;
+    this.raidSvc = raidSvc;
+    this.metaSvc = metaSvc;
   }
 
   /**
@@ -98,10 +119,14 @@ public class RaidV1 implements RaidV1Api {
     Guard.hasValue("raidId must have a value", raidId);
     guardDemoEnv(demo);
 
-    RaidPublicModel result = db.select().
-      from(RAID).
-      where(RAID.HANDLE.eq(raidId)).
-      fetchOneInto(RaidPublicModel.class);
+    RaidPublicModel result = db.
+      select(RAID_V2.HANDLE, RAID_V2.URL, RAID_V2.DATE_CREATED).
+      from(RAID_V2).
+      where(RAID_V2.HANDLE.eq(raidId)).
+      fetchOne(r->new RaidPublicModel().
+        handle(r.get(RAID_V2.HANDLE)).
+        contentPath(r.get(RAID_V2.URL)).
+        creationDate(formatIsoDateTime(r.get(RAID_V2.DATE_CREATED))));
     if( result == null ){
       throw apiSafe(HANDLE_NOT_FOUND, NOT_FOUND_404, of(raidId));
     }
@@ -152,43 +177,86 @@ public class RaidV1 implements RaidV1Api {
     return handleRaidIdGet(handle, demo);
   }
 
-  @Transactional
+
+  /**
+   There was no authz in the legacy app, this endpoint will allow minting
+   as longs as there's a valid legacy token whose name matches exactly with 
+   a service point in the new system.  
+   So the authz logic is "if they submit with a valid token from the old system
+   that has a "name" that matches a service point in the new system, they can
+   mint.
+   */
+  @Transactional(propagation = NEVER)
+  @Override
   public RaidModel raidPost(RaidCreateModel req) {
-    var identity = getAuthentication();
+    var v1UserToken = getAuthentication();
     guardV1MintInput(req);
-    populateMintDefaultValues(req, identity.getName());
+    populateMintDefaultValues(req, v1UserToken.getName());
+    
+    /* not sure about the timezone stuff here, I guess we're assuming the 
+     client is sending what they used to send, which I think was AEST/Sydney
+     time? */
+    var startDate = parseDynamoDateTime(req.getStartDate()).toLocalDate();
 
-    /* Do not hold TX open across this, it takes SECONDS.
-    Note that security stuff (i.e. to populate `identity`) happens under its
-    own TX, so no need to worry about that. */
-    ApidsMintResponse apidsHandle = 
-      apidsSvc.mintApidsHandle(req.getContentPath());
+    var servicePoint = raidSvc.findServicePoint(v1UserToken.getName());
+    MetadataSchemaV1 metadataToMint = 
+      mapLegacyModelToMetadataV1Schema(req, startDate);
 
-    // everything above this point needs to be non-transactional
-    RaidRecord record = db.newRecord(RAID).
-      setHandle(apidsHandle.identifier.handle).
-      setOwner(identity.getName()).
-      setContentPath(req.getContentPath()).
-      setContentIndex(apidsHandle.identifier.property.index.toString()).
-      setName(req.getMeta().getName()).
-      setDescription(req.getMeta().getDescription()).
-      setStartDate(parseDynamoDateTime(req.getStartDate())).
-      setCreationDate(LocalDateTime.now()).
-      setS3Export(NON_EXPORTED_MARKER_VALUE);
-    record.insert();
+    String handle = null;
+    try {
+      handle = raidSvc.mintRaidoSchemaV1(
+        servicePoint.getId(),
+        metadataToMint);
+    }
+    catch( ValidationFailureException e ){
+      log.with("failures", e.getFailures()).
+        warn("legacy mint raid v1 endpoint failed");
+      throw apiSafe(RAID_V1_MINT_DATA_ERROR,  BAD_REQUEST_400, 
+        e.getFailures().stream().map(i1-> 
+          "%s - %s".formatted(i1.getFieldId(), i1.getMessage())
+        ).toList() );
+    }
 
+    var raid = raidSvc.readRaidV2Data(handle);
+    var mintedMetadata = metaSvc.mapObject(
+      raid.raid().getMetadata(), MetadataSchemaV1.class );
+    var description = 
+      getFirstPrimaryDescription(mintedMetadata.getDescriptions()).
+        map(i-> i.getDescription()).
+        orElse(null);
+      
     return new RaidModel().
-      handle(record.getHandle()).
-      owner(record.getOwner()).
-      contentPath(record.getContentPath()).
-      contentIndex(record.getContentIndex()).
-      startDate(formatDynamoDateTime(record.getStartDate())).
-      creationDate(formatDynamoDateTime(record.getCreationDate())).
+      handle(handle).
+      owner(raid.servicePoint().getName()).
+      contentPath(raid.raid().getUrl()).
+      contentIndex(raid.raid().getUrlIndex().toString()).
+      startDate(formatIsoDate(raid.raid().getStartDate())).
+      creationDate(formatDynamoDateTime(raid.raid().getDateCreated())).
       meta(new RaidModelMeta().
-        name(record.getName()).
-        description(record.getDescription())).
+        name(raid.raid().getPrimaryTitle()).
+        description(description) ).
       providers(emptyList()).
       institutions(emptyList());
+  }
+
+  private static MetadataSchemaV1 mapLegacyModelToMetadataV1Schema(
+    RaidCreateModel req,
+    LocalDate startDate
+  ) {
+    var metadataToMint = new MetadataSchemaV1().
+      metadataSchema(RAIDO_METADATA_SCHEMA_V1).
+      titles(List.of(new TitleBlock().
+        type(PRIMARY_TITLE).
+        title(req.getMeta().getName()).
+        startDate(startDate))).
+      dates(new DatesBlock().startDate(startDate)).
+      descriptions(List.of(new DescriptionBlock().
+        type(PRIMARY_DESCRIPTION).
+        description(req.getMeta().getDescription()))).
+      access(new AccessBlock().
+        type(CLOSED).
+        accessStatement(RAID_V1_ACCESS_STATEMENT) );
+    return metadataToMint;
   }
 
   private void populateMintDefaultValues(RaidCreateModel create, String owner) {
@@ -220,7 +288,7 @@ public class RaidV1 implements RaidV1Api {
 
     if( create.getMeta() == null ){
       problems.add("no 'meta' provided");
-      throw apiSafe(MINT_DATA_ERROR, BAD_REQUEST_400, problems);
+      throw apiSafe(RAID_V1_MINT_DATA_ERROR, BAD_REQUEST_400, problems);
     }
     
     /* the  fake name generation logic has been removed - makes no sense
@@ -231,7 +299,7 @@ public class RaidV1 implements RaidV1Api {
     }
     
     if( !problems.isEmpty() ){
-      throw apiSafe(MINT_DATA_ERROR, BAD_REQUEST_400, problems);
+      throw apiSafe(RAID_V1_MINT_DATA_ERROR, BAD_REQUEST_400, problems);
     }
   }
 

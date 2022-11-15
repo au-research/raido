@@ -83,7 +83,7 @@ public class MigrateRaidoSchemaV1Test  extends IntegrationTestCase {
     assertThat(pubRead.getServicePointId()).isEqualTo(servicePoint.getId());
     assertThat(pubRead.getHandle()).isEqualTo(handle);
     assertThat(pubRead.getHandle()).isEqualTo(handle);
-    var pubReadMeta = raidoApi.readPublicV1RaidMeta(handle);
+    var pubReadMeta = raidoApi.readPublicRaidMetadataV1(handle);
     assertThat(pubReadMeta.getAlternateUrls()).isNotEmpty();
     assertThat(pubReadMeta.getAlternateUrls()).satisfiesExactly(i->
       assertThat(i.getUrl()).isEqualTo(

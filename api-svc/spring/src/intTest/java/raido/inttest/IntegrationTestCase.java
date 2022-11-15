@@ -28,7 +28,9 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static raido.apisvc.spring.config.RaidWebSecurityConfig.RAID_V1_API;
 import static raido.apisvc.util.Log.to;
 
-@SpringJUnitConfig(IntegrationTestConfig.class)
+@SpringJUnitConfig(
+  name="SpringJUnitConfigContext",
+  value=IntegrationTestConfig.class )
 public abstract class IntegrationTestCase {
   private static final Log log = to(IntegrationTestCase.class);
 

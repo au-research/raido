@@ -23,10 +23,14 @@ public class EmbeddedJetty {
     server = new Server(qtp);
   }
 
-  public void addServletContainerInitializer(ServletContainerInitializer sci) {
+  public void addServletContainerInitializer(
+    String name,
+    ServletContainerInitializer sci
+  ) {
     ServletContextHandler contextHandler = new ServletContextHandler();
     server.setHandler(contextHandler);
     contextHandler.addServletContainerInitializer(sci);
+    contextHandler.setDisplayName(name);
   }
 
   public ServerConnector configureHttpConnector(int port) {

@@ -27,7 +27,7 @@ public class RaidoApiUtil {
     this.mapper = mapper;
   }
 
-  public MetadataSchemaV1 readPublicV1RaidMeta(String handle){
+  public MetadataSchemaV1 readPublicRaidMetadataV1(String handle){
     // improve: creating a client just for this is silly and wasteful
 
     var pubReadObject = publicApi.publicReadRaidV2(handle);
