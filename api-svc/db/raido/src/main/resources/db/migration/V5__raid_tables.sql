@@ -3,19 +3,6 @@ drop table if exists raid_v2 cascade;
 
 drop type if exists metaschema;
 
-create table raid (
-  handle           varchar(32) primary key                                     not null,
-  service_point_id bigint references service_point                             not null,
-  content_path     varchar(512)                                                not null,
-  content_index    integer                                                     not null,
-  name             varchar(256)                                                not null,
-  description      varchar(1024)                                               not null,
-  confidential     boolean                                                     not null,
-  metadata         jsonb                                                       not null,
-  start_date       timestamp without time zone default transaction_timestamp() not null,
-  date_created     timestamp without time zone default transaction_timestamp() not null
-);
-
 create type metaschema as enum ('raido-metadata-schema-v1');
 
 create table raid_V2 (

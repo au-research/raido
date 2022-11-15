@@ -15,10 +15,9 @@ import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.Metaschema;
 import raido.idl.raidv2.api.PublicExperimentalApi;
 import raido.idl.raidv2.model.AccessType;
-import raido.idl.raidv2.model.PublicReadRaidResponseV1;
+import raido.idl.raidv2.model.MetadataSchemaV1;
 import raido.idl.raidv2.model.PublicReadRaidResponseV2;
 import raido.idl.raidv2.model.PublicServicePoint;
-import raido.idl.raidv2.model.MetadataSchemaV1;
 import raido.idl.raidv2.model.VersionResult;
 
 import java.util.List;
@@ -41,10 +40,7 @@ import static raido.idl.raidv2.model.Metaschema.RAIDO_METADATA_SCHEMA_V1;
 @RestController
 @Transactional
 public class PublicExperimental implements PublicExperimentalApi {
-  public static final String HANDLE_URL_PREFIX = "/public/handle/v1";
   public static final String HANDLE_URL_V2_PREFIX = "/public/handle/v2";
-  public static final String HANDLE_CATCHALL_PREFIX =
-    RAID_V2_API + HANDLE_URL_PREFIX + "/";
   public static final String HANDLE_V2_CATCHALL_PREFIX =
     RAID_V2_API + HANDLE_URL_V2_PREFIX + "/";
   public static final String HANDLE_SEPERATOR = "/";
@@ -91,69 +87,6 @@ public class PublicExperimental implements PublicExperimentalApi {
       fetchInto(PublicServicePoint.class);
   }
 
-  @Override
-  public PublicReadRaidResponseV1 publicReadRaid(String handle) {
-    
-    var data = raidSvc.readRaidData(handle);
-    
-    if( data.raid().getConfidential() ){
-      return new PublicReadRaidResponseV1().
-        handle(data.raid().getHandle()).
-        createDate(local2Offset(data.raid().getDateCreated())).
-        url(data.raid().getContentPath()).
-        confidential(data.raid().getConfidential());
-    }
-    
-    return new PublicReadRaidResponseV1().
-      handle(data.raid().getHandle()).
-      servicePointId(data.servicePoint().getId()).
-      servicePointName(data.servicePoint().getName()).
-      name(data.raid().getName()).
-      startDate(local2Offset(data.raid().getStartDate())).
-      createDate(local2Offset(data.raid().getDateCreated())).
-      url(data.raid().getContentPath()).
-      metadataEnvelopeSchema("unknown").
-      metadata(data.raid().getMetadata().data()).
-      confidential(data.raid().getConfidential());
-  }
-
-  /**
-   This method catches all prefixes with path prefix `/v2/raid` and attempts
-   to parse the parameter manually, so that we can receive handles that are
-   just formatted with simple slashes.
-   The openapi spec is defined with the "{raidId}' path param because it makes
-   it more clear to the caller what the url is expected to look like.
-   <p>
-   IMPROVE: should write some detailed/edge-case unit tests for this
-   path parsing logic.
-   */
-  @RequestMapping(
-    method = RequestMethod.GET,
-    value = HANDLE_CATCHALL_PREFIX + "**",
-    produces = {"application/json"}
-  )
-  public PublicReadRaidResponseV1 handleRaidCatchAll(
-    HttpServletRequest req
-  ) {
-    String path = urlDecode(req.getServletPath().trim());
-    log.with("path", req.getServletPath()).
-      with("decodedPath", path).
-      with("params", req.getParameterMap()).
-      info("handleRaidCatchAll() called");
-
-    if( !path.startsWith(HANDLE_CATCHALL_PREFIX) ){
-      throw iae("unexpected path: %s", path);
-    }
-
-    String handle = path.substring(HANDLE_CATCHALL_PREFIX.length());
-    if( !handle.contains(HANDLE_SEPERATOR) ){
-      throw apiSafe("handle did not contain a slash character",
-        BAD_REQUEST_400, of(handle));
-    }
-
-    return publicReadRaid(handle);
-  }
-
 
   @Override
   public PublicReadRaidResponseV2 publicReadRaidV2(String handle) {
@@ -186,6 +119,16 @@ public class PublicExperimental implements PublicExperimentalApi {
       metadata(metadata);
   }
 
+  /**
+   This method catches all prefixes with path prefix `/v2/raid` and attempts
+   to parse the parameter manually, so that we can receive handles that are
+   just formatted with simple slashes.
+   The openapi spec is defined with the "{raidId}' path param because it makes
+   it more clear to the reader/caller what the url is expected to look like.
+   <p>
+   IMPROVE: should write some detailed/edge-case unit tests for this
+   path parsing logic.
+   */
   @RequestMapping(
     method = RequestMethod.GET,
     value = HANDLE_V2_CATCHALL_PREFIX + "**")
@@ -202,7 +145,7 @@ public class PublicExperimental implements PublicExperimentalApi {
       throw iae("unexpected path: %s", path);
     }
 
-    String handle = path.substring(HANDLE_CATCHALL_PREFIX.length());
+    String handle = path.substring(HANDLE_V2_CATCHALL_PREFIX.length());
     if( !handle.contains(HANDLE_SEPERATOR) ){
       throw apiSafe("handle did not contain a slash character",
         BAD_REQUEST_400, of(handle));

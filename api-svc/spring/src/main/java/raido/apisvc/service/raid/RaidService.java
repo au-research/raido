@@ -8,15 +8,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import raido.apisvc.service.apids.ApidsService;
-import raido.apisvc.service.apids.model.ApidsMintResponse;
 import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
 import raido.apisvc.util.Log;
-import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.db.jooq.api_svc.tables.records.RaidV2Record;
 import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
 import raido.idl.raidv2.model.AccessType;
 import raido.idl.raidv2.model.MetadataSchemaV1;
-import raido.idl.raidv2.model.MintRaidRequestV1;
 import raido.idl.raidv2.model.ReadRaidResponseV2;
 import raido.idl.raidv2.model.ValidationFailure;
 
@@ -39,7 +36,6 @@ import static raido.apisvc.util.DateUtil.local2Offset;
 import static raido.apisvc.util.DateUtil.offset2Local;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.areEqual;
-import static raido.db.jooq.api_svc.tables.Raid.RAID;
 import static raido.db.jooq.api_svc.tables.RaidV2.RAID_V2;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 
@@ -67,31 +63,6 @@ public class RaidService {
     this.tx = tx;
   }
 
-
-  public ApidsMintResponse mintSchemalessRaid(MintRaidRequestV1 req) {
-    JSONB jsonbMetadata = JSONB.valueOf(
-      req.getMetadata() == null ? "{}" : req.getMetadata().toString()
-    );
-
-    var response = apidsSvc.mintApidsHandleContentPrefix(
-      metaSvc::formatRaidoLandingPageUrl);
-
-    db.insertInto(RAID).
-      set(RAID.HANDLE, response.identifier.handle).
-      set(RAID.SERVICE_POINT_ID, req.getServicePointId()).
-      set(RAID.CONTENT_PATH, response.identifier.property.value).
-      set(RAID.CONTENT_INDEX, response.identifier.property.index).
-      set(RAID.NAME, req.getName()).
-      set(RAID.DESCRIPTION, "").
-      set(RAID.METADATA, jsonbMetadata).
-      set(RAID.START_DATE, req.getStartDate() == null ?
-        LocalDateTime.now() : offset2Local(req.getStartDate()) ).
-      set(RAID.DATE_CREATED, LocalDateTime.now()).
-      set(RAID.CONFIDENTIAL, req.getConfidential()).
-      execute();
-    
-    return response;
-  }
 
   record DenormalisedRaidData(
     String primaryTitle,
@@ -151,26 +122,11 @@ public class RaidService {
     return handle;
   }
 
-  public record ReadRaidData(
-    RaidRecord raid, 
-    ServicePointRecord servicePoint
-  ){}
-
   public record ReadRaidV2Data(
     RaidV2Record raid, 
     ServicePointRecord servicePoint
   ){}
 
-  public ReadRaidData readRaidData(String handle){
-    return db.select(RAID.fields()).
-      select(SERVICE_POINT.fields()).
-      from(RAID).join(SERVICE_POINT).onKey().
-      where(RAID.HANDLE.eq(handle)).
-      fetchSingle(r -> new ReadRaidData(
-        r.into(RaidRecord.class), 
-        r.into(ServicePointRecord.class)) );
-  }
-  
   public ReadRaidV2Data readRaidV2Data(String handle){
     return db.select(RAID_V2.fields()).
       select(SERVICE_POINT.fields()).

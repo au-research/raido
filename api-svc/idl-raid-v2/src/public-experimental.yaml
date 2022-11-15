@@ -33,28 +33,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PublicServicePoint'
-  /public-read-raid:
-    get:
-      security: []
-      tags:
-        - public-experimental
-      operationId: public-read-raid
-      summary: >
-        read raid data, anybody can call this but it might not return useful
-        info, RAiD may be confidential or embargoed
-      parameters:
-        - in: path
-          name: handle
-          schema: { type: string }
-          required: true
-          description: handle
-      responses:
-        '200':
-          description: result of request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PublicReadRaidResponseV1'
   /public-read-raid-v2:
     get:
       security: []
@@ -103,22 +81,6 @@ components:
       properties:
         id: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
         name: {type: string}
-    PublicReadRaidResponseV1:
-      type: object
-      required: [handle, url, createDate, confidential]
-      description: >
-        ownerName is the name of the service point that owns the raid
-      properties:
-        handle: {type: string}
-        servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
-        servicePointName: {type: string}
-        name: {type: string}
-        startDate: { type: string, format: date-time }
-        createDate: { type: string, format: date-time }
-        url: {type: string}
-        metadataEnvelopeSchema: {type: string}
-        metadata: {type: object}
-        confidential: {type: boolean}
     PublicReadRaidResponseV2:
       type: object
       required: [
