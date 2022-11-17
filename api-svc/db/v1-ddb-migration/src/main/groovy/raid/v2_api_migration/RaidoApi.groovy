@@ -3,6 +3,7 @@ package raid.v2_api_migration
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import db.migration.jooq.tables.Raid
 import feign.Feign
 import feign.Logger
 import feign.jackson.JacksonDecoder
@@ -63,12 +64,20 @@ class RaidoApi {
     Record raid
   ) {
     var startDate = raid.get(RAID.START_DATE)
+
+    var contentPath = raid.getValue(RAID.CONTENT_PATH)
+    List<AlternateUrlBlock> urls = null;
+    if( contentPath !== "https://raid.org.au" ){
+      urls = new ArrayList<>()
+      urls.add(new AlternateUrlBlock().url(contentPath))
+    }
+
     return new MetadataSchemaV1().
       metadataSchema(Metaschema.RAIDO_METADATA_SCHEMA_V1).
       id(new IdBlock().
         identifier(raid.get(RAID.HANDLE)).
         identifierTypeUri("https://raid.org").
-        globalUrl(raid.getValue(RAID.CONTENT_PATH))).
+        globalUrl(contentPath)).
       access(new AccessBlock().
         type(AccessType.CLOSED).
         accessStatement("closed by data migration process")).
@@ -79,7 +88,9 @@ class RaidoApi {
         startDate(startDate.toLocalDate())]).
       descriptions([new DescriptionBlock().
         type(DescriptionType.PRIMARY_DESCRIPTION).
-        description(raid.get(RAID.DESCRIPTION))])
+        description(raid.get(RAID.DESCRIPTION))]).
+      alternateUrls(urls)
+
   }
-  
 }
+  
