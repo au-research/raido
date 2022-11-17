@@ -27,9 +27,9 @@
   * On Windows, the simplest approach is to use Docker-desktop: 
   https://www.docker.com/products/docker-desktop/
   * It's often installed on dev environments for convenience though, e.g.
-  running a docker container.
+  running a postgres container.
   * It is necessary to have a local docker installation if you're developing
- /deploying Dockerfile scripts (api-svc, etc.)
+  /deploying Dockerfile scripts (api-svc, etc.)
 
 
 # Local development setup
