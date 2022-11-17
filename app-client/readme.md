@@ -26,6 +26,9 @@ raido-v2 gradle build.
   
 # Developing 
 
+Look in [build-troubleshooting](../doc/build-troubleshooting.md) if having
+Node/Java problems.
+
 ## Running a local Node.js server in IDEA
 
 * Right-click the `/app-client/package.json` and do `Run 'npm install'` to get
@@ -43,8 +46,18 @@ libraries installed
   `api-svc` during local dev
     * you could change this to `https://demo.raido-infra.com` if you don't want
     to run the api-svc locally
-      * don't commmit that, preferrably find a way to customise it in a local 
+      * don't commit that, preferably find a way to customise it in a local 
       file or something (and add it to this doco)
+
+## Running a local Node.js server from command line
+
+* in the directory: `<repo>/app-client`
+* run `npm install`
+  * this step installs all the npm dependencies locally
+* run `npm run start`
+  * this step runs a local Node.js web server
+  * the node.js server takes care of building and serving the app so you can
+  access it in your local browser at `http://localhost:7080`
 
 
 ## Debugging the app in IDEA

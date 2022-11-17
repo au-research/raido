@@ -15,7 +15,7 @@ for zero downtime.
 
 # Upgrading the api-svc
 
-api-svc is intended to be completely stateless, running serveral compute nodes 
+api-svc is intended to be completely stateless, running several compute nodes 
 spread across separate physical datacenters.  New versions are rolled out
 by adding nodes with the new version to the pool, and then draining the old
 instances so that all versions are running the new software.
@@ -24,7 +24,7 @@ instances so that all versions are running the new software.
 
 Schema migrations are carried out via Flyway, keeping backwards compatibility
 between the new schema and the previous version of the api-svc so the two can
-be deployed indepedently without either the api-svc or DB having to be taken 
+be deployed independently without either the api-svc or DB having to be taken 
 offline.
 
 # Upgrading / patching compute instances
@@ -37,7 +37,7 @@ api-svc: new nodes are rolled across the pool until all instances are upgraded.
 Raido uses AWS RDS to manage the Postgres database in a multi-az configuration.
 
 When running minor database updates against this RDS configuration, AWS will
-keep the databse available the same "rolling upgrade" process as the api-svc.
+keep the database available the same "rolling upgrade" process as the api-svc.
 
 When running major database updates, there is usually some downtime - on the 
 order of 10 minutes.  Downtime like this is scheduled to happen in the 
@@ -49,12 +49,20 @@ AWS RDS maintenance window:
 
 * setup the postgres DB as described in [db/readme.md](./db/readme.md)
 * create the database schemas
-  * run `./gradlew :api-svc:db:flywayMigrate`
+  * in the root directory of the git repo 
+  * run `./gradlew :api-svc:db:raido:flywayMigrate`
   * the migration will create the `api_user`, but the user is disabled 
 because it has no password
 * connect to your local database and run the following to set a password
   * `alter user api_user password ''` (supply your own password)
-* optionally, import the raid V1 data
-  * see [v1-ddb-migration/readme.md](./db/v1-ddb-migration/readme.md)
 * see [spring/readme.md](./spring/readme.md) for instructions on running the
   actual server, including configuring the password for the `api_user`
+
+# Importing legacy data for use in local environment
+This is optional (and the data files are not publicly available) - it's not 
+necessary for just running Raido. 
+
+Import the raid V1 data
+  * run `./gradlew :api-svc:db:v1-ddb-migration:flywayMigrate`
+  * see [v1-ddb-migration/readme.md](./db/v1-ddb-migration/readme.md)
+

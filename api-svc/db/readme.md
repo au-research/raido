@@ -48,7 +48,10 @@ then run the command to get a `raido` database.
 The DB at that point will be completely empty (no schema structure or data).
 
 
-# Configuring to use the DB for flyway migration of local DB
+# Configuring `api-svc-db.gradle` 
+
+This file controls the configuration used to do database schema creation and
+migration of the Postgres DB. 
 
 The `:api-svc:db:shared` has these default values:
 * `apiSvcPgUrl` = jdbc:postgresql://localhost:7432/raido

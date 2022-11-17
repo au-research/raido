@@ -18,6 +18,9 @@ The only real downside to doing the standard install in a "single-project"
 environment is that diagnosing version issues, testing new versions, 
 upgrading/downgrading when the project prerequisites change etc. can be a pain.
 
+Some pople use https://sdkman.io/ for managing their environment, opther people
+use the package manager of their local system.
+
 
 # Typescript compile taking a long time
 
