@@ -78,12 +78,8 @@ Note that changes consisting solely of `*.md` files are intended to be ignored.
 
 # Development 
 
-## Local build/development pre-requisites
-
-* [JDK 17](./doc/adr/2022-07-21_jdk-platform.md)
-* [Node.js 16](./doc/adr/2022-07-21_nodejs-platform.md)
-* Docker
-  * postgres 14 
+Pre-requisites and instructions for 
+[local development](./doc/local-development.md) 
  
 ## Coding standards
 
