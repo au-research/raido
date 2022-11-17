@@ -2,6 +2,7 @@ import React from "react";
 import { isPagePath } from "Design/NavigationProvider";
 import { normalisePath } from "Util/Location";
 import {
+  AlternateUrlBlock,
   MetadataSchemaV1,
   Metaschema,
   PublicReadRaidResponseV2
@@ -14,13 +15,19 @@ import {
   useQuery
 } from "@tanstack/react-query";
 import { publicApi } from "Api/SimpleApi";
-import { SmallContentMain } from "Design/LayoutMain";
+import {
+  SmallContentMain,
+  SmallScreenMain,
+  SmallScreenPaper
+} from "Design/LayoutMain";
 import { InfoField, InfoFieldList } from "Component/InfoField";
 import { SmallPageSpinner } from "Component/SmallPageSpinner";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import { BooleanDisplay, DateDisplay } from "Component/Util";
 import { TextSpan } from "Component/TextSpan";
 import { formatMetadata } from "Component/MetaDataContainer";
+import { List, ListItem } from "@mui/material";
+import { NewWindowLink } from "Component/ExternalLink";
 
 const pageUrl = "/handle";
 
@@ -147,8 +154,8 @@ function OpenRaid({raid, metadata}: {
   raid: PublicReadRaidResponseV2,
   metadata: MetadataSchemaV1,
 }){
-  return <>
-    <SmallContentMain>
+  return <SmallScreenMain>
+    <SmallScreenPaper>  
       <InfoFieldList>
         <InfoField id="handle" label="Handle"
           value={formatGlobalHandle(raid.handle)}/>
@@ -172,12 +179,28 @@ function OpenRaid({raid, metadata}: {
           metadata.dates.startDate.toString()
         }/>
       </InfoFieldList>
-    </SmallContentMain>
-    <SmallContentMain>
+    </SmallScreenPaper>
+    <AlternateUrlLinks urls={metadata.alternateUrls}></AlternateUrlLinks>
+    <SmallScreenPaper>
       <pre style={{overflowX: "scroll"}}>
         {formatMetadata(metadata)}
       </pre>
-    </SmallContentMain>
-  </>
+    </SmallScreenPaper>
+  </SmallScreenMain>
 }
 
+function AlternateUrlLinks({urls}:{urls?: AlternateUrlBlock[]}){
+  if( !urls || urls.length === 0 ){
+    return null;
+  }
+  
+  return <SmallScreenPaper>
+    <List>{urls.map(iUrl=>
+      <ListItem key={iUrl.url}>
+        <NewWindowLink href={iUrl.url}>
+          {iUrl.url}
+        </NewWindowLink>
+      </ListItem>
+    )}</List>
+  </SmallScreenPaper>
+}

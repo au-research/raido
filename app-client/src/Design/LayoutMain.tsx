@@ -31,11 +31,11 @@ export function SmallContentMain(props: {
   children: React.ReactNode,
   center?: boolean,
 }){
-  return <SmallScreenStyledMain>
-    <SmallScreenStyledPaper style={props.center ? {textAlign: "center"} : {}}>
+  return <SmallScreenMain>
+    <SmallScreenPaper style={props.center ? {textAlign: "center"} : {}}>
       {props.children}
-    </SmallScreenStyledPaper>
-  </SmallScreenStyledMain>
+    </SmallScreenPaper>
+  </SmallScreenMain>
 }
 
 /** Used when screen is split up into multiple, granular sections that can 
@@ -85,7 +85,7 @@ const LargeScreenStyledMain = styled('main')(({theme}) => ({
  spaced because of all the margin - then the screen you're working on is 
  probably no longer "small content" and should be promoted to "large content",
  possibly with a screen-specific styling for maxWidth or something. */
-const SmallScreenStyledMain = styled('main')(({theme}) => ({
+export const SmallScreenMain = styled('main')(({theme}) => ({
   // default for mobile
   width: 'auto',
   marginTop: theme.spacing(1),
@@ -102,7 +102,7 @@ const SmallScreenStyledMain = styled('main')(({theme}) => ({
   }
 }));
 
-const SmallScreenStyledPaper = styled(Paper)(({theme}) => ({
+export const SmallScreenPaper = styled(Paper)(({theme}) => ({
   // default for mobile
   marginTop: theme.spacing(3),
   marginBottom: theme.spacing(3),
