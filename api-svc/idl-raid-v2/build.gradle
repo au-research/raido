@@ -7,7 +7,7 @@ plugins {
   There were a few changed going from 6.0.1 to 6.2.0.  Particularly, seems like
   the basepath support was added, maybe we can stop copy/pasting "/v2" prefix
   into every. single. path? Needs testing. */
-  id "org.openapi.generator" version "6.2.0"
+  id "org.openapi.generator" version "6.2.1"
 }
 
 ext {
@@ -131,7 +131,7 @@ openApiGenerate {
     optional. */
     useOptional: "true",
 
-    /* set to false because model classes were filing because of the import of 
+    /* set to false because model classes were failing because of the import of 
     jackson.Nullable */
     openApiNullable: "false",
 

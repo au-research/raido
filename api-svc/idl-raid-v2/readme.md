@@ -43,3 +43,4 @@ Consider writing our own DSL for generating the YAML file programmatically.
 * not sure if we should commit the final YAML file or not
 * don't do this until it's really needed, i.e. lots of YAML is really killing us
 * wait for full openapi 3.1.0 support in our tooling
+
