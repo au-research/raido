@@ -10,7 +10,7 @@ import raido.idl.raidv2.model.AlternateUrlBlock;
 import raido.idl.raidv2.model.DatesBlock;
 import raido.idl.raidv2.model.IdBlock;
 import raido.idl.raidv2.model.MetadataSchemaV1;
-import raido.idl.raidv2.model.Metaschema;
+import raido.idl.raidv2.model.RaidoMetaschema;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.ArrayList;
@@ -24,6 +24,7 @@ import static raido.apisvc.service.raid.MetadataService.RAID_ID_TYPE_URI;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.areEqual;
 import static raido.apisvc.util.StringUtil.isBlank;
+import static raido.idl.raidv2.model.RaidoMetaschema.RAIDO_METADATA_SCHEMA_V1;
 
 @Component
 public class RaidoSchemaV1ValidationService {
@@ -51,7 +52,7 @@ public class RaidoSchemaV1ValidationService {
     }
 
     var failures = new ArrayList<ValidationFailure>();
-    if( metadata.getMetadataSchema() != Metaschema.RAIDO_METADATA_SCHEMA_V1 ){
+    if( metadata.getMetadataSchema() != RAIDO_METADATA_SCHEMA_V1 ){
       failures.add(ValidationMessage.INVALID_METADATA_SCHEMA);
     }
 

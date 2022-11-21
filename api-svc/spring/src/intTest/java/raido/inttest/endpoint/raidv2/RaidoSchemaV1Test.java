@@ -19,7 +19,7 @@ import static raido.apisvc.util.test.BddUtil.WHEN;
 import static raido.idl.raidv2.model.AccessType.CLOSED;
 import static raido.idl.raidv2.model.AccessType.OPEN;
 import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
-import static raido.idl.raidv2.model.Metaschema.RAIDO_METADATA_SCHEMA_V1;
+import static raido.idl.raidv2.model.RaidoMetaschema.RAIDO_METADATA_SCHEMA_V1;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 
 public class RaidoSchemaV1Test extends IntegrationTestCase {
@@ -67,7 +67,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
     assertThat(readResult).isNotNull();
 
 
-    EXPECT("should be able to read the minted raid via public api");
+    EXPECT("should be able to read the minted raid via public api (v2) ");
     var pubReadObject = raidoApi.getPublicExperimintal().
       publicReadRaidV2(mintedRaid.getHandle());
     assertThat(pubReadObject).isNotNull();
@@ -91,6 +91,28 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
       isEqualTo(initialTitle);
     assertThat(pubReadMeta.getDescriptions().get(0).getDescription()).
       contains("stuff about the int test raid");
+
+    EXPECT("should be able to read the minted raid via public api (v3)");
+    var v3Read = raidoApi.getPublicExperimintal().
+      publicReadRaidV3(mintedRaid.getHandle());
+    assertThat(v3Read).isNotNull();
+    assertThat(v3Read.getCreateDate()).isNotNull();
+    assertThat(v3Read.getServicePointId()).isEqualTo(RAIDO_SP_ID);
+    assertThat(v3Read.getHandle()).isEqualTo(mintedRaid.getHandle());
+    
+    ReadRaidMetadataResponseV1 v3MetaRead = v3Read.getMetadata();
+    assertThat(v3MetaRead.getMetadataSchema()).isEqualTo(
+      PublicMetadataSchemaV1.class.getSimpleName());
+    assertThat(v3MetaRead).isInstanceOf(PublicMetadataSchemaV1.class);
+    PublicMetadataSchemaV1 v3Meta = (PublicMetadataSchemaV1) v3MetaRead; 
+    assertThat(v3Meta.getId().getIdentifier()).
+      isEqualTo(mintedRaid.getHandle());
+    assertThat(pubReadMeta.getAccess().getType()).isEqualTo(OPEN);
+    assertThat(pubReadMeta.getTitles().get(0).getTitle()).
+      isEqualTo(initialTitle);
+    assertThat(pubReadMeta.getDescriptions().get(0).getDescription()).
+      contains("stuff about the int test raid");
+
 
     /* list by unique name to prevent eventual pagination issues */
     EXPECT("should be able to list the minted raid");

@@ -26,7 +26,7 @@ import static raido.apisvc.util.ExceptionUtil.ise;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.areEqual;
 import static raido.db.jooq.api_svc.enums.Metaschema.raido_metadata_schema_v1;
-import static raido.idl.raidv2.model.Metaschema.RAIDO_METADATA_SCHEMA_V1;
+import static raido.idl.raidv2.model.RaidoMetaschema.RAIDO_METADATA_SCHEMA_V1;
 
 @Component
 public class MetadataService {
@@ -103,22 +103,22 @@ public class MetadataService {
     }
     return result;
   }
-  
-  public static Metaschema mapJs2Jq(raido.idl.raidv2.model.Metaschema schema){
+
+  public static Metaschema mapJs2Jq(raido.idl.raidv2.model.RaidoMetaschema schema){
     if( areEqual(schema.getValue(), raido_metadata_schema_v1.getLiteral()) ){
       return raido_metadata_schema_v1;
     }
-    
+
     var ex = iae("unknown json metaschema value");
     log.with("schema", schema).error(ex.getMessage());
     throw ex;
   }
 
-  public static raido.idl.raidv2.model.Metaschema mapJq2Js(Metaschema schema){
+  public static raido.idl.raidv2.model.RaidoMetaschema mapJq2Js(Metaschema schema){
     if( areEqual(schema.getLiteral(), RAIDO_METADATA_SCHEMA_V1.getValue()) ){
       return RAIDO_METADATA_SCHEMA_V1;
     }
-    
+
     var ex = iae("unknown json metaschema value");
     log.with("schema", schema).error(ex.getMessage());
     throw ex;

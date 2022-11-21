@@ -17,6 +17,7 @@ import raido.idl.raidv2.model.*
 
 import static db.migration.jooq.tables.Raid.RAID
 import static org.springframework.http.HttpHeaders.AUTHORIZATION
+import static raido.idl.raidv2.model.RaidoMetaschema.RAIDO_METADATA_SCHEMA_V1
 
 class RaidoApi {
 
@@ -73,7 +74,7 @@ class RaidoApi {
     }
 
     return new MetadataSchemaV1().
-      metadataSchema(Metaschema.RAIDO_METADATA_SCHEMA_V1).
+      metadataSchema(RAIDO_METADATA_SCHEMA_V1).
       id(new IdBlock().
         identifier(raid.get(RAID.HANDLE)).
         identifierTypeUri("https://raid.org").

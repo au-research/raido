@@ -9,4 +9,84 @@ paths:
   
 components:
   schemas:
+    # Raido defined stuff
     SurrogateKey: { type: integer, format: int64}
+    ValidationFailure:
+      type: object
+      required: [fieldId, errorType, message]
+      properties:
+        fieldId: { type: string }
+        errorType: { type: string }
+        message: { type: string }
+
+    # RAiD stuff
+    RaidoMetaschema:
+      description: >
+        "Metaschema" is the enumeration of different "Metadata schema" 
+        that Raido supports. 
+      type: string
+      enum: ['raido-metadata-schema-v1', 'closed-metadata-schema-v1']
+    ReadRaidMetadataResponseV1:
+      # Using oneOf/discriminator is probably pushing too close to the edge of 
+      # what openapi-gen can do yet, for example that's why metadataSchema is a
+      # string instead of an enum:
+      # https://github.com/OpenAPITools/openapi-generator/pull/13846
+      type: object
+      description: Any type of metadata
+      oneOf:
+#        - $ref: 'metadata-schema-v1.yaml#/components/schemas/MetadataSchemaV1'
+        - $ref: '#/components/schemas/PublicMetadataSchemaV1'
+        - $ref: '#/components/schemas/ClosedMetadataSchemaV1'
+      discriminator:
+        propertyName: metadataSchema
+        mapping:
+          raido-metadata-schema-v1: '#/components/schemas/PublicMetadataSchemaV1'
+          closed-metadata-schema-v1: '#/components/schemas/ClosedMetadataSchemaV1'
+    PublicMetadataSchemaV1:
+      description: >
+        This object only exists because openapi-gen discriminator needs to be 
+        a string, currently.
+        See https://github.com/OpenAPITools/openapi-generator/pull/13846.
+        Eventually, want the mapping to just use MetadataSchemaV1.
+      type: object
+      required: [ metadataSchema, id, titles, dates, access]
+      # this is how we make PublicMetadataSchemaV1 inherit all the fields oneOf: 
+      # MetadataSchemaV1.
+      allOf: 
+        - $ref: 'metadata-schema-v1.yaml#/components/schemas/MetadataSchemaV1'
+      properties:
+        # This is where we "override" the type of metadataSchema to be a string
+        # instead of the enum that we would prefer it to be.
+        # Rather than "string" this should be a "constant" with value `raido-metadata-schema-v1`
+        # metadataSchema: {$ref: 'shared.yaml#/components/schemas/RaidoMetaschema' }
+        metadataSchema: { type: string }
+    ClosedMetadataSchemaV1:
+      type: object
+      required: [ metadataSchema, id, titles, dates, access]
+      properties:
+        # Rather than "string" this should be a "constant" with value `closed-metadata-schema-v1`
+        # metadataSchema: {$ref: 'shared.yaml#/components/schemas/RaidoMetaschema' }
+        metadataSchema: { type: string }
+        id: {$ref: 'shared.yaml#/components/schemas/IdBlock'}
+        access: {$ref: 'shared.yaml#/components/schemas/AccessBlock'}
+    
+    IdBlock:
+      type: object
+      required: [identifier, identifierTypeUri,
+                 globalUrl, raidAgencyUrl, raidAgencyIdentifier]
+      properties:
+        identifier: {type: string}
+        identifierTypeUri: {type: string}
+        globalUrl: {type: string}
+        raidAgencyUrl: {type: string}
+        raidAgencyIdentifier: {type: string}
+    AccessBlock:
+      type: object
+      required: ["type", ]
+      properties:
+        type: {$ref: '#/components/schemas/AccessType'}
+        accessStatement: {type: string}
+    AccessType:
+      type: string
+      enum: ['Open', 'Closed']
+      

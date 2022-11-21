@@ -143,24 +143,12 @@ paths:
 
 components:
   schemas:
-    Metaschema:
-      description: >
-        "Metaschema" is the enumeration of different "Metadata schema" 
-        that Raido supports. 
-      type: string
-      enum: ['raido-metadata-schema-v1']
-      # enum: ['raido-metadata-schema-v1', 'raido-metadata-schema-v2']
     MetadataSchemaV1:
       type: object
       required: [ metadataSchema, id, titles, dates, access]
       properties:
-        # This should specify the value `raido-metadata-schema-v1`,
-        # but the OpenAPI tooling doesn't support constants yet.
-        # The next version of the raido schema will identified by the value
-        # `raido-metadata-schema-v2` and will be modeled as a whole new object
-        # type: `MetadataSchemaV2`
-        metadataSchema: {$ref: '#/components/schemas/Metaschema' }
-        id: {$ref: '#/components/schemas/IdBlock'}
+        metadataSchema: {$ref: 'shared.yaml#/components/schemas/RaidoMetaschema'}
+        id: {$ref: 'shared.yaml#/components/schemas/IdBlock'}
         titles: 
           type: array
           items: {$ref: '#/components/schemas/TitleBlock'}
@@ -168,20 +156,10 @@ components:
         descriptions:
           type: array
           items: {$ref: '#/components/schemas/DescriptionBlock'}
-        access: {$ref: '#/components/schemas/AccessBlock'}
+        access: {$ref: 'shared.yaml#/components/schemas/AccessBlock'}
         alternateUrls:
           type: array
           items: {$ref: '#/components/schemas/AlternateUrlBlock'}
-    IdBlock:
-      type: object
-      required: [identifier, identifierTypeUri,
-        globalUrl, raidAgencyUrl, raidAgencyIdentifier]
-      properties:
-        identifier: {type: string}
-        identifierTypeUri: {type: string}
-        globalUrl: {type: string}
-        raidAgencyUrl: {type: string}
-        raidAgencyIdentifier: {type: string}
     TitleBlock:
       type: object
       required: [title, type, startDate]
@@ -202,12 +180,6 @@ components:
       properties:
         description: {type: string}
         type: {$ref: '#/components/schemas/DescriptionType'}
-    AccessBlock:
-      type: object
-      required: ["type", ]
-      properties:
-        type: {$ref: '#/components/schemas/AccessType'}
-        accessStatement: {type: string}
     AlternateUrlBlock:
       type: object
       required: ["url", ]
@@ -219,9 +191,6 @@ components:
     DescriptionType:
       type: string
       enum: ['Primary Description', 'Alternative Description']
-    AccessType:
-      type: string
-      enum: ['Open', 'Closed']
     RaidListRequestV2:
       type: object
       required: [servicePointId]
@@ -259,12 +228,5 @@ components:
         raid: { $ref: '#/components/schemas/ReadRaidResponseV2' }
         failures: 
           type: array
-          items: {$ref: '#/components/schemas/ValidationFailure'}
-    ValidationFailure:
-      type: object
-      required: [fieldId, errorType, message]
-      properties:
-        fieldId: { type: string }
-        errorType: { type: string }
-        message: { type: string }  
-        
+          items: {$ref: 'shared.yaml#/components/schemas/ValidationFailure'}
+      

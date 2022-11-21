@@ -60,7 +60,7 @@ import static raido.apisvc.util.StringUtil.isBlank;
 import static raido.db.jooq.api_svc.tables.Raid.RAID;
 import static raido.idl.raidv2.model.AccessType.CLOSED;
 import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
-import static raido.idl.raidv2.model.Metaschema.RAIDO_METADATA_SCHEMA_V1;
+import static raido.idl.raidv2.model.RaidoMetaschema.RAIDO_METADATA_SCHEMA_V1;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 
 /* without the proxy mode setting, Spring doesn't see the requestmappings from 

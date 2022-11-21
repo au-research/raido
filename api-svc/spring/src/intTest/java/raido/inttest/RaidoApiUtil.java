@@ -8,7 +8,7 @@ import raido.idl.raidv2.model.PublicReadRaidResponseV2;
 import java.util.LinkedHashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static raido.idl.raidv2.model.Metaschema.RAIDO_METADATA_SCHEMA_V1;
+import static raido.idl.raidv2.model.RaidoMetaschema.RAIDO_METADATA_SCHEMA_V1;
 
 /**
  convenience stuff for doing common stuff with the Raido API.

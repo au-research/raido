@@ -4,8 +4,8 @@ import { normalisePath } from "Util/Location";
 import {
   AlternateUrlBlock,
   MetadataSchemaV1,
-  Metaschema,
-  PublicReadRaidResponseV2
+  RaidoMetaschema,
+  PublicReadRaidResponseV2, PublicReadRaidResponseV3
 } from "Generated/Raidv2";
 import { Config } from "Config";
 import { RqQuery } from "Util/ReactQueryUtil";
@@ -81,11 +81,11 @@ export function RaidLandingPage(){
 function Content({handle}: {handle: string}){
   const api = publicApi();
   const queryName = 'publicReadRaid';
-  const query: RqQuery<PublicReadRaidResponseV2> = useQuery(
+  const query: RqQuery<PublicReadRaidResponseV3> = useQuery(
     [queryName, handle],
     async () => {
       //await delay(2000);
-      return await api.publicReadRaidV2({handle});
+      return await api.publicReadRaidV3({handle});
     }
   );
 
@@ -107,9 +107,12 @@ function Content({handle}: {handle: string}){
       error={"no metadata in response"}/>
   }
   
+  console.log("landingPage.render()", 
+    query.data, typeof query.data);
+  
   if( 
     (query.data.metadata as any)?.metadataSchema !== 
-    Metaschema.RaidoMetadataSchemaV1 
+    RaidoMetaschema.RaidoMetadataSchemaV1 
   ){
     return <CompactErrorPanel error={{
       message: `unknown metadataSchema`,

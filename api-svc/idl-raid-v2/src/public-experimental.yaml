@@ -63,7 +63,28 @@ paths:
               # construct instance of AbstractBaseClass"
               schema:
                   $ref: '#/components/schemas/PublicReadRaidResponseV2'
-
+  /public-read-raid-v3:
+    get:
+      security: []
+      tags:
+        - public-experimental
+      operationId: public-read-raid-v3
+      summary: >
+        read raid data, anybody can call this but it might not return useful
+        info, note that returned RAiD may be open or closed
+      parameters:
+        - in: path
+          name: handle
+          schema: { type: string }
+          required: true
+          description: handle
+      responses:
+        '200':
+          description: result of request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicReadRaidResponseV3'
 
 components:
   schemas:
@@ -91,3 +112,13 @@ components:
         servicePointName: { type: string }
         createDate: { type: string, format: date-time }
         metadata: { type: object }
+    PublicReadRaidResponseV3:
+      type: object
+      required: [
+        handle, metadata, createDate, ]
+      properties:
+        handle: { type: string }
+        servicePointId: { $ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        servicePointName: { type: string }
+        createDate: { type: string, format: date-time }
+        metadata: { $ref: 'shared.yaml#/components/schemas/ReadRaidMetadataResponseV1' }

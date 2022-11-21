@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static raido.apisvc.service.raid.MetadataService.RAID_ID_TYPE_URI;
 import static raido.apisvc.util.StringUtil.areEqual;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
-import static raido.idl.raidv2.model.Metaschema.RAIDO_METADATA_SCHEMA_V1;
+import static raido.idl.raidv2.model.RaidoMetaschema.RAIDO_METADATA_SCHEMA_V1;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 
 public class MigrateRaidoSchemaV1Test  extends IntegrationTestCase {

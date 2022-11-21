@@ -63,7 +63,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     guardOperatorOrAssociated(user, data.getServicePointId());
     return data;
   }
-  
+
   /* Performance:
   - client sends json
   - Spring parses it out into all these different objects 
@@ -177,5 +177,6 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
       return mintFailed(failures);
     }
   }
+
 
 }
