@@ -25,7 +25,7 @@ components:
         "Metaschema" is the enumeration of different "Metadata schema" 
         that Raido supports. 
       type: string
-      enum: ['raido-metadata-schema-v1', 'closed-metadata-schema-v1']
+      enum: ['PublicMetadataSchemaV1', 'ClosedMetadataSchemaV1']
     ReadRaidMetadataResponseV1:
       # Using oneOf/discriminator is probably pushing too close to the edge of 
       # what openapi-gen can do yet, for example that's why metadataSchema is a
@@ -40,8 +40,8 @@ components:
       discriminator:
         propertyName: metadataSchema
         mapping:
-          raido-metadata-schema-v1: '#/components/schemas/PublicMetadataSchemaV1'
-          closed-metadata-schema-v1: '#/components/schemas/ClosedMetadataSchemaV1'
+          PublicMetadataSchemaV1: '#/components/schemas/PublicMetadataSchemaV1'
+          ClosedMetadataSchemaV1: '#/components/schemas/ClosedMetadataSchemaV1'
     PublicMetadataSchemaV1:
       description: >
         This object only exists because openapi-gen discriminator needs to be 

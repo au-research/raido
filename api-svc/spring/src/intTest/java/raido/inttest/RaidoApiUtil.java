@@ -2,13 +2,6 @@ package raido.inttest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import raido.idl.raidv2.api.PublicExperimentalApi;
-import raido.idl.raidv2.model.MetadataSchemaV1;
-import raido.idl.raidv2.model.PublicReadRaidResponseV2;
-
-import java.util.LinkedHashMap;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static raido.idl.raidv2.model.RaidoMetaschema.RAIDO_METADATA_SCHEMA_V1;
 
 /**
  convenience stuff for doing common stuff with the Raido API.
@@ -26,23 +19,6 @@ public class RaidoApiUtil {
     this.publicApi = publicApi;
     this.mapper = mapper;
   }
-
-  public MetadataSchemaV1 readPublicRaidMetadataV1(String handle){
-    // improve: creating a client just for this is silly and wasteful
-
-    var pubReadObject = publicApi.publicReadRaidV2(handle);
-    var pubRead = (PublicReadRaidResponseV2) pubReadObject;
-
-    assertThat(pubRead.getMetadata()).isInstanceOf(LinkedHashMap.class);
-    MetadataSchemaV1 pubReadMeta = null;
-    pubReadMeta = mapper.convertValue(
-      pubRead.getMetadata(), MetadataSchemaV1.class);
-    assertThat(pubReadMeta.getMetadataSchema()).
-      isEqualTo(RAIDO_METADATA_SCHEMA_V1);
-
-    return pubReadMeta;
-  }
-
 
   public PublicExperimentalApi getPublicExperimintal() {
     return publicApi;

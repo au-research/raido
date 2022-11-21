@@ -3,7 +3,6 @@ package raid.v2_api_migration
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import db.migration.jooq.tables.Raid
 import feign.Feign
 import feign.Logger
 import feign.jackson.JacksonDecoder
@@ -17,7 +16,6 @@ import raido.idl.raidv2.model.*
 
 import static db.migration.jooq.tables.Raid.RAID
 import static org.springframework.http.HttpHeaders.AUTHORIZATION
-import static raido.idl.raidv2.model.RaidoMetaschema.RAIDO_METADATA_SCHEMA_V1
 
 class RaidoApi {
 
@@ -74,7 +72,7 @@ class RaidoApi {
     }
 
     return new MetadataSchemaV1().
-      metadataSchema(RAIDO_METADATA_SCHEMA_V1).
+      metadataSchema(RaidoMetaschema.PUBLICMETADATASCHEMAV1).
       id(new IdBlock().
         identifier(raid.get(RAID.HANDLE)).
         identifierTypeUri("https://raid.org").

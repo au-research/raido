@@ -25,6 +25,7 @@ import raido.idl.raidv2.model.AccessBlock;
 import raido.idl.raidv2.model.DatesBlock;
 import raido.idl.raidv2.model.DescriptionBlock;
 import raido.idl.raidv2.model.MetadataSchemaV1;
+import raido.idl.raidv2.model.RaidoMetaschema;
 import raido.idl.raidv2.model.TitleBlock;
 
 import java.time.LocalDate;
@@ -60,7 +61,6 @@ import static raido.apisvc.util.StringUtil.isBlank;
 import static raido.db.jooq.api_svc.tables.Raid.RAID;
 import static raido.idl.raidv2.model.AccessType.CLOSED;
 import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
-import static raido.idl.raidv2.model.RaidoMetaschema.RAIDO_METADATA_SCHEMA_V1;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 
 /* without the proxy mode setting, Spring doesn't see the requestmappings from 
@@ -244,7 +244,7 @@ public class RaidV1 implements RaidV1Api {
     LocalDate startDate
   ) {
     var metadataToMint = new MetadataSchemaV1().
-      metadataSchema(RAIDO_METADATA_SCHEMA_V1).
+      metadataSchema(RaidoMetaschema.PUBLICMETADATASCHEMAV1).
       titles(List.of(new TitleBlock().
         type(PRIMARY_TITLE).
         title(req.getMeta().getName()).

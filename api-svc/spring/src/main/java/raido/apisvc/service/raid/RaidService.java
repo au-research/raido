@@ -10,6 +10,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import raido.apisvc.service.apids.ApidsService;
 import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
 import raido.apisvc.util.Log;
+import raido.db.jooq.api_svc.enums.Metaschema;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
 import raido.idl.raidv2.model.AccessType;
@@ -210,10 +211,8 @@ public class RaidService {
     RaidRecord oldRaid
   ) {
 
-    if( !areEqual(
-      newData.getMetadataSchema().getValue(), 
-      oldRaid.getMetadataSchema().getLiteral()) 
-    ){
+    Metaschema newMetadataSchema = mapJs2Jq(newData.getMetadataSchema());
+    if( newMetadataSchema != oldRaid.getMetadataSchema() ){
       return singletonList(SCHEMA_CHANGED);
     }
     

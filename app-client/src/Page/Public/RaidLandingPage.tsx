@@ -112,7 +112,7 @@ function Content({handle}: {handle: string}){
   
   if( 
     (query.data.metadata as any)?.metadataSchema !== 
-    RaidoMetaschema.RaidoMetadataSchemaV1 
+    RaidoMetaschema.PublicMetadataSchemaV1 
   ){
     return <CompactErrorPanel error={{
       message: `unknown metadataSchema`,

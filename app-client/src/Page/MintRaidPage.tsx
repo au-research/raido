@@ -98,7 +98,7 @@ function mapFormDataToMetadata(
     });
   }
   return {
-    metadataSchema: "raido-metadata-schema-v1",
+    metadataSchema: "PublicMetadataSchemaV1",
     access: {
       type: form.accessType,
       accessStatement: form.accessStatement,

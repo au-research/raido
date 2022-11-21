@@ -12,14 +12,13 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
-import static raido.apisvc.util.test.BddUtil.AND;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
 import static raido.apisvc.util.test.BddUtil.THEN;
 import static raido.apisvc.util.test.BddUtil.WHEN;
 import static raido.idl.raidv2.model.AccessType.CLOSED;
 import static raido.idl.raidv2.model.AccessType.OPEN;
 import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
-import static raido.idl.raidv2.model.RaidoMetaschema.RAIDO_METADATA_SCHEMA_V1;
+import static raido.idl.raidv2.model.RaidoMetaschema.PUBLICMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 
 public class RaidoSchemaV1Test extends IntegrationTestCase {
@@ -36,7 +35,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
         mintRequest(new MintRaidoSchemaV1RequestMintRequest().
           servicePointId(RAIDO_SP_ID)).
         metadata(new MetadataSchemaV1().
-          metadataSchema(RAIDO_METADATA_SCHEMA_V1).
+          metadataSchema(PUBLICMETADATASCHEMAV1).
           titles(List.of(new TitleBlock().
             type(PRIMARY_TITLE).
             title(initialTitle).
@@ -58,7 +57,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
     var mintedMetadata = mapper.readValue(
       mintedRaid.getMetadata().toString(), MetadataSchemaV1.class);
     assertThat(mintedMetadata.getMetadataSchema()).
-      isEqualTo(RAIDO_METADATA_SCHEMA_V1);
+      isEqualTo(PUBLICMETADATASCHEMAV1);
 
 
     EXPECT("should be able to read the minted raid via authz api");
@@ -81,7 +80,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
     var pubReadMeta = mapper.convertValue(
       pubRead.getMetadata(), MetadataSchemaV1.class);
     assertThat(pubReadMeta.getMetadataSchema()).
-      isEqualTo(RAIDO_METADATA_SCHEMA_V1);
+      isEqualTo(PUBLICMETADATASCHEMAV1);
 
     assertThat(pubReadMeta.getId()).isNotNull();
     assertThat(pubReadMeta.getId().getIdentifier()).
@@ -127,7 +126,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
 
     
     WHEN("raid primaryTitle is updated");
-    var readPrimaryTitle = pubReadMeta.getTitles().get(0);
+    var readPrimaryTitle = v3Meta.getTitles().get(0);
     var newTitle = 
       readPrimaryTitle.title(readPrimaryTitle.getTitle()+" updated");
     var updateResult = raidApi.updateRaidoSchemaV1(
@@ -137,8 +136,10 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
     assertThat(updateResult.getSuccess()).isTrue();
 
     THEN("should be able to read new value via publicRead");
-    var readUpdatedData = raidoApi.
-      readPublicRaidMetadataV1(mintedRaid.getHandle());
+    var readUpdatedData = (PublicMetadataSchemaV1)
+      raidoApi.getPublicExperimintal().
+        publicReadRaidV3(mintedRaid.getHandle()).getMetadata();
+    
     assertThat(readUpdatedData.getAccess().getType()).isEqualTo(OPEN);
     assertThat(readUpdatedData.getTitles().get(0).getTitle()).isEqualTo(
       initialTitle + " updated" );
@@ -147,19 +148,34 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
     WHEN("raid is updated to closed");
     var closeResult = raidApi.updateRaidoSchemaV1(
       new UpdateRaidoSchemaV1Request().metadata(
-        readUpdatedData.access(
-          new AccessBlock().type(CLOSED).
-            accessStatement("closed by update")
-      )));
+        new MetadataSchemaV1().
+          metadataSchema(PUBLICMETADATASCHEMAV1).
+          id(readUpdatedData.getId()).
+          dates(readUpdatedData.getDates()).
+          titles(readUpdatedData.getTitles()).
+          descriptions(readUpdatedData.getDescriptions()).
+          alternateUrls(readUpdatedData.getAlternateUrls()).
+          access(
+            readUpdatedData.getAccess().
+              type(CLOSED).
+              accessStatement("closed by update") )
+      ));
     assertThat(closeResult.getFailures()).isNullOrEmpty();
     assertThat(closeResult.getSuccess()).isTrue();
 
     THEN("publicRaid should now return closed");
-    var readClosedData = raidoApi.
-      readPublicRaidMetadataV1(mintedRaid.getHandle());
-    assertThat(readClosedData.getAccess().getType()).isEqualTo(CLOSED);
-    AND("titles should not be returned");
-    assertThat(readClosedData.getTitles()).isNullOrEmpty();
+    var readClosed = raidoApi.getPublicExperimintal().
+      publicReadRaidV3(mintedRaid.getHandle());
+    var readClosedMeta = (ClosedMetadataSchemaV1) readClosed.getMetadata(); 
+    assertThat(readClosedMeta.getAccess().getType()).isEqualTo(CLOSED);
+    
+    // IMPROVE: maybe we ought to have at least one non-feign test, that
+    // tests the raw data returned for a closed raid, to make sure there's 
+    // no mistakes with how the data mapping works.
+    // Since this now uses a generated "Closed" class, how can we be *sure*
+    // that our API doesn't leak stuff for closed raids?
+//    AND("titles should not be returned");
+//    assertThat(readClosedMeta.getTitles()).isNullOrEmpty();
     
   }
 
@@ -174,7 +190,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
         mintRequest(new MintRaidoSchemaV1RequestMintRequest().
           servicePointId(RAIDO_SP_ID)).
         metadata(new MetadataSchemaV1().
-          metadataSchema(RAIDO_METADATA_SCHEMA_V1).
+          metadataSchema(PUBLICMETADATASCHEMAV1).
           titles(List.of(new TitleBlock().
             type(PRIMARY_TITLE).
             title(" ").

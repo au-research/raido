@@ -9,6 +9,8 @@ import raido.idl.raidv1.api.RaidV1Api;
 import raido.idl.raidv1.model.RaidCreateModel;
 import raido.idl.raidv1.model.RaidCreateModelMeta;
 import raido.idl.raidv1.model.RaidModel;
+import raido.idl.raidv2.model.ClosedMetadataSchemaV1;
+import raido.idl.raidv2.model.PublicReadRaidResponseV3;
 import raido.inttest.IntegrationTestCase;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,10 +42,13 @@ public class LegacyRaidV1MintTest extends IntegrationTestCase {
     assertThat(mintResult).isNotNull();
     assertThat(mintResult.getHandle()).isNotBlank();
 
-    EXPECT("should be able to read the minted raid via V2 public endpoint");
-    var pubReadV2 = raidoApi.readPublicRaidMetadataV1(mintResult.getHandle());
-    assertThat(pubReadV2).isNotNull();
-    assertThat(pubReadV2.getId().getIdentifier()).isEqualTo(mintResult.getHandle());
+    EXPECT("should be able to read the minted raid via V3 public endpoint");
+    PublicReadRaidResponseV3 pubReadV3 = raidoApi.getPublicExperimintal().
+      publicReadRaidV3(mintResult.getHandle());
+    assertThat(pubReadV3).isNotNull();
+    var pubMetaV3 = (ClosedMetadataSchemaV1) pubReadV3.getMetadata();
+    assertThat(pubMetaV3.getId().getIdentifier()).
+      isEqualTo(mintResult.getHandle());
     
     EXPECT("should be able to read the minted raid via V1 endpoint");
     var getResult = raidV1.handleRaidIdGet(mintResult.getHandle(), false);

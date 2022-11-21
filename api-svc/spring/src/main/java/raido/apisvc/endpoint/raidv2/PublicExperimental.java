@@ -21,6 +21,7 @@ import raido.idl.raidv2.model.PublicMetadataSchemaV1;
 import raido.idl.raidv2.model.PublicReadRaidResponseV2;
 import raido.idl.raidv2.model.PublicReadRaidResponseV3;
 import raido.idl.raidv2.model.PublicServicePoint;
+import raido.idl.raidv2.model.RaidoMetaschema;
 import raido.idl.raidv2.model.VersionResult;
 
 import java.util.List;
@@ -37,8 +38,7 @@ import static raido.apisvc.util.ExceptionUtil.ise;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.RestUtil.urlDecode;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
-import static raido.idl.raidv2.model.RaidoMetaschema.CLOSED_METADATA_SCHEMA_V1;
-import static raido.idl.raidv2.model.RaidoMetaschema.RAIDO_METADATA_SCHEMA_V1;
+import static raido.idl.raidv2.model.RaidoMetaschema.CLOSEDMETADATASCHEMAV1;
 
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
@@ -112,7 +112,7 @@ public class PublicExperimental implements PublicExperimentalApi {
         handle(data.raid().getHandle()).
         createDate(local2Offset(data.raid().getDateCreated())).
         metadata(new MetadataSchemaV1().
-          metadataSchema(RAIDO_METADATA_SCHEMA_V1).
+          metadataSchema(CLOSEDMETADATASCHEMAV1).
           id(metadata.getId()).
           access(metadata.getAccess()) );
     }
@@ -143,7 +143,7 @@ public class PublicExperimental implements PublicExperimentalApi {
         handle(data.raid().getHandle()).
         createDate(local2Offset(data.raid().getDateCreated())).
         metadata(new ClosedMetadataSchemaV1().
-          metadataSchema(CLOSED_METADATA_SCHEMA_V1.getValue()).
+          metadataSchema(CLOSEDMETADATASCHEMAV1.getValue()).
           id(metadata.getId()).
           access(metadata.getAccess()) );
     }
@@ -158,7 +158,7 @@ public class PublicExperimental implements PublicExperimentalApi {
         `ReadRaidMetadataResponseV1`.  The value sent down the wire comes from
          the `@JsonSubTypes` which always picks `PublicMetadataSchemaV1` instead
          of `raido-metadata-schema-v1`. */
-        metadataSchema(RAIDO_METADATA_SCHEMA_V1.getValue()).
+        metadataSchema(RaidoMetaschema.PUBLICMETADATASCHEMAV1.getValue()).
         id(metadata.getId()).
         titles(metadata.getTitles()).
         dates(metadata.getDates()).

@@ -15,7 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static raido.apisvc.service.raid.MetadataService.RAID_ID_TYPE_URI;
 import static raido.apisvc.util.StringUtil.areEqual;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
-import static raido.idl.raidv2.model.RaidoMetaschema.RAIDO_METADATA_SCHEMA_V1;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 
 public class MigrateRaidoSchemaV1Test  extends IntegrationTestCase {
@@ -45,7 +44,7 @@ public class MigrateRaidoSchemaV1Test  extends IntegrationTestCase {
     
 
     MetadataSchemaV1 initMetadata = new MetadataSchemaV1().
-      metadataSchema(RAIDO_METADATA_SCHEMA_V1).
+      metadataSchema(RaidoMetaschema.PUBLICMETADATASCHEMAV1).
       id(new IdBlock().
         identifier(handle).
         identifierTypeUri(RAID_ID_TYPE_URI).
@@ -83,7 +82,8 @@ public class MigrateRaidoSchemaV1Test  extends IntegrationTestCase {
     assertThat(pubRead.getServicePointId()).isEqualTo(servicePoint.getId());
     assertThat(pubRead.getHandle()).isEqualTo(handle);
     assertThat(pubRead.getHandle()).isEqualTo(handle);
-    var pubReadMeta = raidoApi.readPublicRaidMetadataV1(handle);
+    var pubReadMeta = (PublicMetadataSchemaV1) 
+      raidoApi.getPublicExperimintal().publicReadRaidV3(handle).getMetadata();
     assertThat(pubReadMeta.getAlternateUrls()).isNotEmpty();
     assertThat(pubReadMeta.getAlternateUrls()).satisfiesExactly(i->
       assertThat(i.getUrl()).isEqualTo(
