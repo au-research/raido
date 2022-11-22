@@ -2,7 +2,10 @@ openapi: 3.0.3
 info:
   title: administration endpoints
   version: 1.0.0
-
+  description: >
+    Contains a bunch of experimental API endpoints used to manage 
+    service-points, users, etc.
+    
 paths:
   /read-request-authz:
     get:
@@ -29,7 +32,7 @@ paths:
       tags:
         - admin-experimental
       operationId: update-authz-request-status
-      summary: udpate a request to change its status
+      summary: update a request to change its status
       requestBody:
         required: true
         content:
@@ -59,7 +62,7 @@ paths:
       tags:
         - admin-experimental
       operationId: list-service-point
-      summary: list service point data that authz'd users can see
+      summary: list service point data that authorized users can see
       responses:
         '200':
           description: all service-point data
@@ -112,7 +115,7 @@ paths:
       tags:
         - admin-experimental
       operationId: list-app-user
-      summary: list app user data for service point that authz'd users can see
+      summary: list app user data for service point that authz users can see
       parameters:
         - in: path
           name: servicePointId

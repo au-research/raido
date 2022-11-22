@@ -43,8 +43,8 @@ public class MigrateRaidoSchemaV1Test  extends IntegrationTestCase {
     var servicePoint = findServicePoint(adminApi, NOTRE_DAME);
     
 
-    MetadataSchemaV1 initMetadata = new MetadataSchemaV1().
-      metadataSchema(RaidoMetaschema.PUBLICMETADATASCHEMAV1).
+    RaidoMetadataSchemaV1 initMetadata = new RaidoMetadataSchemaV1().
+      metadataSchema(RaidoMetaschema.RAIDOMETADATASCHEMAV1).
       id(new IdBlock().
         identifier(handle).
         identifierTypeUri(RAID_ID_TYPE_URI).
@@ -73,17 +73,14 @@ public class MigrateRaidoSchemaV1Test  extends IntegrationTestCase {
     assertThat(mintResult.getSuccess()).isTrue();
 
     EXPECT("should be able to read the minted raid via public api");
-    var pubReadObject = raidoApi.getPublicExperimintal().
-      publicReadRaidV2(handle);
-    assertThat(pubReadObject).isNotNull();
-    assertThat(pubReadObject).isInstanceOf(PublicReadRaidResponseV2.class);
-    var pubRead = (PublicReadRaidResponseV2) pubReadObject;
+    var pubRead = raidoApi.getPublicExperimintal().
+      publicReadRaidV3(handle);
+    assertThat(pubRead).isNotNull();
     assertThat(pubRead.getCreateDate()).isNotNull();
     assertThat(pubRead.getServicePointId()).isEqualTo(servicePoint.getId());
     assertThat(pubRead.getHandle()).isEqualTo(handle);
     assertThat(pubRead.getHandle()).isEqualTo(handle);
-    var pubReadMeta = (PublicMetadataSchemaV1) 
-      raidoApi.getPublicExperimintal().publicReadRaidV3(handle).getMetadata();
+    var pubReadMeta = (PublicRaidMetadataSchemaV1) pubRead.getMetadata(); 
     assertThat(pubReadMeta.getAlternateUrls()).isNotEmpty();
     assertThat(pubReadMeta.getAlternateUrls()).satisfiesExactly(i->
       assertThat(i.getUrl()).isEqualTo(

@@ -4,6 +4,8 @@ info:
   version: 1.0.0
   description: >
     The first metadata schema supported by Raido.
+    The stuff in this "raido-metadata" file is "Raido" specific, as compared to 
+    the more standard "Raid" stuff defined in the "raid-metadata" file. 
     This is what all raids imported from the legacy application were imported
     as.
 paths:
@@ -32,7 +34,7 @@ paths:
                   required: [servicePointId]
                   properties:
                     servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
-                metadata: {$ref: '#/components/schemas/MetadataSchemaV1'}
+                metadata: {$ref: '#/components/schemas/RaidoMetadataSchemaV1'}
       responses:
         '200':
           description: data
@@ -103,10 +105,10 @@ paths:
                   type: object
                   required: [servicePointId]
                   properties:
-                    servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+                    servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey'}
                     contentIndex: { type: integer}
                     createDate: { type: string, format: date-time }
-                metadata: {$ref: '#/components/schemas/MetadataSchemaV1'}
+                metadata: {$ref: '#/components/schemas/RaidoMetadataSchemaV1'}
       responses:
         '200':
           description: data
@@ -131,7 +133,7 @@ paths:
                 # could just pass this in directly, but think we might need to 
                 # extend it with extra out-of-band stuff later.  Though maybe
                 # we'll use a separate endpoint when that need arises.
-                metadata: {$ref: '#/components/schemas/MetadataSchemaV1'}
+                metadata: {$ref: '#/components/schemas/RaidoMetadataSchemaV1'}
       responses:
         '200':
           description: data
@@ -143,54 +145,29 @@ paths:
 
 components:
   schemas:
-    MetadataSchemaV1:
+    RaidoMetadataSchemaV1:
+      description: >
+        This type is expected to be used for Raido endpoint stuff.
+        It can diverge from the "raid standard", if needed.  
+        There is a companion `PublicRaidMetadataSchemaV1` type that's intended
+        to stick more closely to the standard.
       type: object
       required: [ metadataSchema, id, titles, dates, access]
       properties:
         metadataSchema: {$ref: 'shared.yaml#/components/schemas/RaidoMetaschema'}
-        id: {$ref: 'shared.yaml#/components/schemas/IdBlock'}
+        id: {$ref: 'metadata-block.yaml#/components/schemas/IdBlock'}
         titles: 
           type: array
-          items: {$ref: '#/components/schemas/TitleBlock'}
-        dates: {$ref: '#/components/schemas/DatesBlock'}
+          items: {$ref: 'metadata-block.yaml#/components/schemas/TitleBlock'}
+        dates: {$ref: 'metadata-block.yaml#/components/schemas/DatesBlock'}
         descriptions:
           type: array
-          items: {$ref: '#/components/schemas/DescriptionBlock'}
-        access: {$ref: 'shared.yaml#/components/schemas/AccessBlock'}
+          items: {$ref: 'metadata-block.yaml#/components/schemas/DescriptionBlock'}
+        access: {$ref: 'metadata-block.yaml#/components/schemas/AccessBlock'}
         alternateUrls:
           type: array
-          items: {$ref: '#/components/schemas/AlternateUrlBlock'}
-    TitleBlock:
-      type: object
-      required: [title, type, startDate]
-      properties:
-        title: {type: string}
-        type: {$ref: '#/components/schemas/TitleType'}
-        startDate: { type: string, format: date }
-        endDate: { type: string, format: date }
-    DatesBlock:
-      type: object
-      required: ["startDate"]
-      properties:
-        startDate: { type: string, format: date }
-        endDate: { type: string, format: date }
-    DescriptionBlock:
-      type: object
-      required: ["description", "type"]
-      properties:
-        description: {type: string}
-        type: {$ref: '#/components/schemas/DescriptionType'}
-    AlternateUrlBlock:
-      type: object
-      required: ["url", ]
-      properties:
-        url: {type: string}
-    TitleType:
-      type: string
-      enum: ['Primary Title', 'Alternative Title']
-    DescriptionType:
-      type: string
-      enum: ['Primary Description', 'Alternative Description']
+          items: {$ref: 'metadata-block.yaml#/components/schemas/AlternateUrlBlock'}
+
     RaidListRequestV2:
       type: object
       required: [servicePointId]

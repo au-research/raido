@@ -24,7 +24,7 @@ import raido.idl.raidv1.model.RaidPublicModel;
 import raido.idl.raidv2.model.AccessBlock;
 import raido.idl.raidv2.model.DatesBlock;
 import raido.idl.raidv2.model.DescriptionBlock;
-import raido.idl.raidv2.model.MetadataSchemaV1;
+import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
 import raido.idl.raidv2.model.RaidoMetaschema;
 import raido.idl.raidv2.model.TitleBlock;
 
@@ -199,7 +199,7 @@ public class RaidV1 implements RaidV1Api {
     var startDate = parseDynamoDateTime(req.getStartDate()).toLocalDate();
 
     var servicePoint = raidSvc.findServicePoint(v1UserToken.getName());
-    MetadataSchemaV1 metadataToMint = 
+    RaidoMetadataSchemaV1 metadataToMint = 
       mapLegacyModelToMetadataV1Schema(req, startDate);
 
     String handle = null;
@@ -219,7 +219,7 @@ public class RaidV1 implements RaidV1Api {
 
     var raid = raidSvc.readRaidV2Data(handle);
     var mintedMetadata = metaSvc.mapObject(
-      raid.raid().getMetadata(), MetadataSchemaV1.class );
+      raid.raid().getMetadata(), RaidoMetadataSchemaV1.class );
     var description = 
       getFirstPrimaryDescription(mintedMetadata.getDescriptions()).
         map(i-> i.getDescription()).
@@ -239,12 +239,12 @@ public class RaidV1 implements RaidV1Api {
       institutions(emptyList());
   }
 
-  private static MetadataSchemaV1 mapLegacyModelToMetadataV1Schema(
+  private static RaidoMetadataSchemaV1 mapLegacyModelToMetadataV1Schema(
     RaidCreateModel req,
     LocalDate startDate
   ) {
-    var metadataToMint = new MetadataSchemaV1().
-      metadataSchema(RaidoMetaschema.PUBLICMETADATASCHEMAV1).
+    var metadataToMint = new RaidoMetadataSchemaV1().
+      metadataSchema(RaidoMetaschema.RAIDOMETADATASCHEMAV1).
       titles(List.of(new TitleBlock().
         type(PRIMARY_TITLE).
         title(req.getMeta().getName()).

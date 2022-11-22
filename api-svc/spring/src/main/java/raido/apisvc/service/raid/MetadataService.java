@@ -12,8 +12,7 @@ import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.Metaschema;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.idl.raidv2.model.IdBlock;
-import raido.idl.raidv2.model.MetadataSchemaV1;
-import raido.idl.raidv2.model.RaidoMetaschema;
+import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.Collections;
@@ -27,6 +26,7 @@ import static raido.apisvc.util.ExceptionUtil.ise;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.areEqual;
 import static raido.db.jooq.api_svc.enums.Metaschema.raido_metadata_schema_v1;
+import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 
 @Component
 public class MetadataService {
@@ -87,12 +87,12 @@ public class MetadataService {
     }
   }
   
-  public MetadataSchemaV1 mapV1SchemaMetadata(RaidRecord raid){
-    var result = mapObject(raid.getMetadata(), MetadataSchemaV1.class);
+  public RaidoMetadataSchemaV1 mapV1SchemaMetadata(RaidRecord raid){
+    var result = mapObject(raid.getMetadata(), RaidoMetadataSchemaV1.class);
     if( !(
       areEqual(
         result.getMetadataSchema().getValue(),
-        RaidoMetaschema.PUBLICMETADATASCHEMAV1.getValue()
+        RAIDOMETADATASCHEMAV1.getValue()
       ) &&
       raid.getMetadataSchema() == raido_metadata_schema_v1
     )){
@@ -107,8 +107,10 @@ public class MetadataService {
     return result;
   }
 
-  public static Metaschema mapJs2Jq(raido.idl.raidv2.model.RaidoMetaschema schema){
-    if( areEqual(schema.getValue(), RaidoMetaschema.PUBLICMETADATASCHEMAV1.getValue()) ){
+  public static Metaschema mapJs2Jq(
+    raido.idl.raidv2.model.RaidoMetaschema schema
+  ){
+    if( areEqual(schema.getValue(), RAIDOMETADATASCHEMAV1.getValue()) ){
       return raido_metadata_schema_v1;
     }
 

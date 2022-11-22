@@ -3,9 +3,9 @@ import { isPagePath } from "Design/NavigationProvider";
 import { normalisePath } from "Util/Location";
 import {
   AlternateUrlBlock,
-  MetadataSchemaV1,
-  RaidoMetaschema,
-  PublicReadRaidResponseV2, PublicReadRaidResponseV3
+  PublicClosedMetadataSchemaV1,
+  PublicRaidMetadataSchemaV1,
+  PublicReadRaidResponseV3
 } from "Generated/Raidv2";
 import { Config } from "Config";
 import { RqQuery } from "Util/ReactQueryUtil";
@@ -106,35 +106,29 @@ function Content({handle}: {handle: string}){
     return <CompactErrorPanel
       error={"no metadata in response"}/>
   }
-  
-  console.log("landingPage.render()", 
-    query.data, typeof query.data);
-  
-  if( 
-    (query.data.metadata as any)?.metadataSchema !== 
-    RaidoMetaschema.PublicMetadataSchemaV1 
-  ){
+
+  // just in case things go weird
+  console.debug("landingPage.render()", typeof query.data, query.data);
+
+  // now typesafe with the discriminator - yay openapi!
+  const metadata = query.data.metadata;
+  if( metadata.metadataSchema === "PublicRaidMetadataSchemaV1" ){
+    return <OpenRaid raid={query.data} metadata={metadata}/>
+  }
+  else if( metadata.metadataSchema === "PublicClosedMetadataSchemaV1" ){
+    return <ClosedRaid raid={query.data} metadata={metadata}/>
+  }
+  else {
     return <CompactErrorPanel error={{
       message: `unknown metadataSchema`,
-      problem: query.data }}/>
+      problem: query.data
+    }}/>
   }
-
-  /* need to do more work on the OpenAPI spec so that 
-   openapi-generator/typescript-fetch knows that it is/might be a 
-   MetadataSchemaV1.
-   Since it's plain JSON, dates will be strings - but we've casted to an object
-   that expects them to be dates, watch out.  
-   */
-  const metadata: MetadataSchemaV1 = query.data.metadata as MetadataSchemaV1;
-  
-  return metadata.access.type === "Open" ?
-    <OpenRaid raid={query.data} metadata={metadata}/> :
-    <ConfidentialRaid raid={query.data} metadata={metadata}/>
 }
 
-function ConfidentialRaid({raid, metadata}: {
-  raid: PublicReadRaidResponseV2,
-  metadata: MetadataSchemaV1,
+function ClosedRaid({raid, metadata}: {
+  raid: PublicReadRaidResponseV3,
+  metadata: PublicClosedMetadataSchemaV1,
 }){
   return <SmallContentMain><InfoFieldList>
     <InfoField id="handle" label="Handle"
@@ -154,8 +148,8 @@ function ConfidentialRaid({raid, metadata}: {
 }
 
 function OpenRaid({raid, metadata}: {
-  raid: PublicReadRaidResponseV2,
-  metadata: MetadataSchemaV1,
+  raid: PublicReadRaidResponseV3,
+  metadata: PublicRaidMetadataSchemaV1,
 }){
   return <SmallScreenMain>
     <SmallScreenPaper>  
@@ -179,7 +173,7 @@ function OpenRaid({raid, metadata}: {
           value={metadata.titles[0]?.title}/>
 
         <InfoField id="startDate" label="Start date" value={
-          metadata.dates.startDate.toString()
+          <DateDisplay date={metadata.dates.startDate}/>
         }/>
       </InfoFieldList>
     </SmallScreenPaper>

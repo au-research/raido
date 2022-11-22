@@ -1,6 +1,10 @@
 openapi: 3.0.3
 info:
-  title: public endpoints, these can be called anonymously
+  title: public endpoints
+  description: >
+    Contains all the end points that can called anonymously.
+    Including the API endpoint that produces data for the public 
+    "landing page".
   version: 1.0.0
 paths:
   /version:
@@ -33,36 +37,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/PublicServicePoint'
-  /public-read-raid-v2:
-    get:
-      security: []
-      tags:
-        - public-experimental
-      operationId: public-read-raid-v2
-      summary: >
-        read raid data, anybody can call this but it might not return useful
-        info, RAiD may be confidential or embargoed
-      parameters:
-        - in: path
-          name: handle
-          schema: { type: string }
-          required: true
-          description: handle
-      responses:
-        '200':
-          description: result of request
-          content:
-#            text/html:
-#              schema:
-#                type: object 
-            application/json:
-              # would have preferred to use "oneOf PublicReadResponse or 
-              # ClosedResponse", but though openapi generated appropriate code
-              # (an abstract base class and two concrete implementations) 
-              # open-feign failed with "InvalidDefinitionException: Cannot
-              # construct instance of AbstractBaseClass"
-              schema:
-                  $ref: '#/components/schemas/PublicReadRaidResponseV2'
   /public-read-raid-v3:
     get:
       security: []
@@ -70,8 +44,7 @@ paths:
         - public-experimental
       operationId: public-read-raid-v3
       summary: >
-        read raid data, anybody can call this but it might not return useful
-        info, note that returned RAiD may be open or closed
+        read raid data
       parameters:
         - in: path
           name: handle
@@ -84,7 +57,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PublicReadRaidResponseV3'
+                $ref: 'raid-metadata-schema.yaml#/components/schemas/PublicReadRaidResponseV3'
 
 components:
   schemas:
@@ -112,13 +85,3 @@ components:
         servicePointName: { type: string }
         createDate: { type: string, format: date-time }
         metadata: { type: object }
-    PublicReadRaidResponseV3:
-      type: object
-      required: [
-        handle, metadata, createDate, ]
-      properties:
-        handle: { type: string }
-        servicePointId: { $ref: 'shared.yaml#/components/schemas/SurrogateKey' }
-        servicePointName: { type: string }
-        createDate: { type: string, format: date-time }
-        metadata: { $ref: 'shared.yaml#/components/schemas/ReadRaidMetadataResponseV1' }

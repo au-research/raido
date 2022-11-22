@@ -14,7 +14,7 @@ import raido.db.jooq.api_svc.enums.Metaschema;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
 import raido.idl.raidv2.model.AccessType;
-import raido.idl.raidv2.model.MetadataSchemaV1;
+import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
 import raido.idl.raidv2.model.ReadRaidResponseV2;
 import raido.idl.raidv2.model.ValidationFailure;
 
@@ -36,7 +36,6 @@ import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitles;
 import static raido.apisvc.util.DateUtil.local2Offset;
 import static raido.apisvc.util.DateUtil.offset2Local;
 import static raido.apisvc.util.Log.to;
-import static raido.apisvc.util.StringUtil.areEqual;
 import static raido.db.jooq.api_svc.tables.Raid.RAID;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 
@@ -73,7 +72,7 @@ public class RaidService {
 
   /** Expects the passed metadata is valid. */
   public DenormalisedRaidData getDenormalisedRaidData(
-    MetadataSchemaV1 metadata
+    RaidoMetadataSchemaV1 metadata
   ){
     return new DenormalisedRaidData(
       getPrimaryTitle(metadata.getTitles()).getTitle(),
@@ -89,8 +88,8 @@ public class RaidService {
    */
   @Transactional(propagation = NEVER)
   public String mintRaidoSchemaV1(
-    long servicePointId, 
-    MetadataSchemaV1 metadata
+    long servicePointId,
+    RaidoMetadataSchemaV1 metadata
   ) throws ValidationFailureException {
     /* this is the part where we want to make sure no TX is help open.
     * Maybe *this* should be marked tx.prop=never? */
@@ -165,7 +164,7 @@ public class RaidService {
     long servicePointId,
     int urlContentIndex,
     OffsetDateTime createDate, 
-    MetadataSchemaV1 metadata
+    RaidoMetadataSchemaV1 metadata
   ) throws ValidationFailureException {
     String primaryTitle = getPrimaryTitles(metadata.getTitles()).
       get(0).getTitle();
@@ -207,7 +206,7 @@ public class RaidService {
    Might not be possible though, think validation is too intertwined with the
    work that this method actually does. */
   public List<ValidationFailure> updateRaidoSchemaV1(
-    MetadataSchemaV1 newData,
+    RaidoMetadataSchemaV1 newData,
     RaidRecord oldRaid
   ) {
 

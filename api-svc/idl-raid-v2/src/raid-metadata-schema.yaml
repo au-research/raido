@@ -1,0 +1,67 @@
+openapi: 3.0.3
+info:
+  title: raido-metadata-schema-v1
+  version: 1.0.0
+  description: >
+    Public facing "raid" stuff, intended to be more "standard" than "raido" 
+    stuff.
+paths:
+  
+components:
+  schemas:
+    PublicReadRaidResponseV3:
+      description: >
+        The top-level "return type" for the public endpoint that returns RAiD
+        data.
+      type: object
+      required: [
+        handle, metadata, createDate, ]
+      properties:
+        handle: { type: string }
+        servicePointId: { $ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        servicePointName: { type: string }
+        createDate: { type: string, format: date-time }
+        metadata: { $ref: '#/components/schemas/PublicReadRaidMetadataResponseV1' }
+    PublicReadRaidMetadataResponseV1:
+      # Using oneOf/discriminator is probably pushing too close to the edge of 
+      # what openapi-gen can do yet, have had a few different issues with it:
+      # https://github.com/OpenAPITools/openapi-generator/pull/13846
+      # https://stackoverflow.com/a/74515434/924597
+      type: object
+      description: Any type of metadata
+      oneOf:
+        - $ref: '#/components/schemas/PublicRaidMetadataSchemaV1'
+        - $ref: '#/components/schemas/PublicClosedMetadataSchemaV1'
+      discriminator:
+        propertyName: metadataSchema
+        # mapping values must match the typename used
+        # see https://stackoverflow.com/a/74515434/924597
+        mapping:
+          PublicRaidMetadataSchemaV1: '#/components/schemas/PublicRaidMetadataSchemaV1'
+          PublicClosedMetadataSchemaV1: '#/components/schemas/PublicClosedMetadataSchemaV1'
+    PublicRaidMetadataSchemaV1:
+      description: >
+        This is the "public facing" version of the metadata, that's intended to 
+        be as closely aligned to "the standard" as possible.  It mirrors the
+        "raido" type, but having two seperately defined types allows them to 
+        diverge where that's necessary for the Raido implementation.
+      type: object
+      required: [ metadataSchema, id, titles, dates, access]
+      allOf:
+        # inherit all the fields of the Raido type 
+        - $ref: 'raido-metadata-schema.yaml#/components/schemas/RaidoMetadataSchemaV1'
+      properties:
+        # This is where we "override" the type of metadataSchema to be a string
+        # instead of the enum that we would prefer it to be.
+        # Rather than "string" this should be a "constant" with value `PublicRaidMetadataSchemaV1`
+        # See https://github.com/OpenAPITools/openapi-generator/pull/13846.
+        # metadataSchema: {$ref: 'shared.yaml#/components/schemas/RaidoMetaschema' }
+        metadataSchema: { type: string }
+    PublicClosedMetadataSchemaV1:
+      type: object
+      required: [ metadataSchema, id, titles, dates, access]
+      properties:
+        # Rather than "string" this should be a "constant" with value `PublicClosedMetadataSchemaV1`
+        metadataSchema: { type: string }
+        id: {$ref: 'metadata-block.yaml#/components/schemas/IdBlock'}
+        access: {$ref: 'metadata-block.yaml#/components/schemas/AccessBlock'}      

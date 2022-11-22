@@ -9,7 +9,7 @@ import raido.idl.raidv1.api.RaidV1Api;
 import raido.idl.raidv1.model.RaidCreateModel;
 import raido.idl.raidv1.model.RaidCreateModelMeta;
 import raido.idl.raidv1.model.RaidModel;
-import raido.idl.raidv2.model.ClosedMetadataSchemaV1;
+import raido.idl.raidv2.model.PublicClosedMetadataSchemaV1;
 import raido.idl.raidv2.model.PublicReadRaidResponseV3;
 import raido.inttest.IntegrationTestCase;
 
@@ -46,7 +46,7 @@ public class LegacyRaidV1MintTest extends IntegrationTestCase {
     PublicReadRaidResponseV3 pubReadV3 = raidoApi.getPublicExperimintal().
       publicReadRaidV3(mintResult.getHandle());
     assertThat(pubReadV3).isNotNull();
-    var pubMetaV3 = (ClosedMetadataSchemaV1) pubReadV3.getMetadata();
+    var pubMetaV3 = (PublicClosedMetadataSchemaV1) pubReadV3.getMetadata();
     assertThat(pubMetaV3.getId().getIdentifier()).
       isEqualTo(mintResult.getHandle());
     

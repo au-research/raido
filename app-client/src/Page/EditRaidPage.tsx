@@ -13,7 +13,7 @@ import React, { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AccessType, DescriptionBlock,
-  MetadataSchemaV1,
+  RaidoMetadataSchemaV1,
   ReadRaidResponseV2,
   ServicePoint, ValidationFailure
 } from "Generated/Raidv2";
@@ -43,7 +43,8 @@ import {
   getRaidLandingPagePath
 } from "Page/Public/RaidLandingPage";
 import {
-  convertMetadataSchemaV1, getFirstPrimaryDescription, getPrimaryTitle,
+  convertRaidoMetadataSchemaV1,
+  getFirstPrimaryDescription, getPrimaryTitle,
   MetaDataContainer
 } from "Component/MetaDataContainer";
 import { isValidDate } from "Util/DateUtil";
@@ -113,13 +114,13 @@ function mapReadQueryDataToFormData(data: ReadData): FormData{
 
 interface ReadData {
   readonly raid: ReadRaidResponseV2,
-  readonly metadata: MetadataSchemaV1,
+  readonly metadata: RaidoMetadataSchemaV1,
 }
 
 function createUpdateMetadata(
   formData: ValidFormData, 
-  oldMetadata: MetadataSchemaV1
-): MetadataSchemaV1{
+  oldMetadata: RaidoMetadataSchemaV1
+): RaidoMetadataSchemaV1{
   const oldTitle = getPrimaryTitle(oldMetadata);
   
   const newDescriptions: DescriptionBlock[] = [];
@@ -177,7 +178,8 @@ function EditRaidContainer({handle}: {
       const raid = await api.basicRaid.readRaidV2({
         readRaidV2Request: { handle }
       });
-      const metadata = convertMetadataSchemaV1(raid.metadata);
+      const metadata = convertRaidoMetadataSchemaV1(raid.metadata);
+      console.log("md", metadata);
       const readData: ReadData = {raid, metadata};
       setFormData(mapReadQueryDataToFormData(readData));
       return readData;
@@ -196,7 +198,7 @@ function EditRaidContainer({handle}: {
 
   const queryClient = useQueryClient();
   const updateRequest = useMutation(
-    async (props: {formData: ValidFormData, oldMetadata: MetadataSchemaV1}) => {
+    async (props: {formData: ValidFormData, oldMetadata: RaidoMetadataSchemaV1}) => {
       setServerValidations([]);
       return await api.basicRaid.updateRaidoSchemaV1({
         updateRaidoSchemaV1Request: {metadata: 

@@ -15,13 +15,10 @@ import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.Metaschema;
 import raido.idl.raidv2.api.PublicExperimentalApi;
 import raido.idl.raidv2.model.AccessType;
-import raido.idl.raidv2.model.ClosedMetadataSchemaV1;
-import raido.idl.raidv2.model.MetadataSchemaV1;
-import raido.idl.raidv2.model.PublicMetadataSchemaV1;
-import raido.idl.raidv2.model.PublicReadRaidResponseV2;
+import raido.idl.raidv2.model.PublicClosedMetadataSchemaV1;
+import raido.idl.raidv2.model.PublicRaidMetadataSchemaV1;
 import raido.idl.raidv2.model.PublicReadRaidResponseV3;
 import raido.idl.raidv2.model.PublicServicePoint;
-import raido.idl.raidv2.model.RaidoMetaschema;
 import raido.idl.raidv2.model.VersionResult;
 
 import java.util.List;
@@ -38,15 +35,12 @@ import static raido.apisvc.util.ExceptionUtil.ise;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.RestUtil.urlDecode;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
-import static raido.idl.raidv2.model.RaidoMetaschema.CLOSEDMETADATASCHEMAV1;
+import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
 @Transactional
 public class PublicExperimental implements PublicExperimentalApi {
-  public static final String HANDLE_URL_V2_PREFIX = "/public/handle/v2";
-  public static final String HANDLE_V2_CATCHALL_PREFIX =
-    RAID_V2_API + HANDLE_URL_V2_PREFIX + "/";
   public static final String HANDLE_V3_CATCHALL_PREFIX =
     RAID_V2_API + "/public/handle/v3" + "/";
   public static final String HANDLE_SEPERATOR = "/";
@@ -93,38 +87,6 @@ public class PublicExperimental implements PublicExperimentalApi {
       fetchInto(PublicServicePoint.class);
   }
 
-
-  @Override
-  public PublicReadRaidResponseV2 publicReadRaidV2(String handle) {
-    var data = raidSvc.readRaidV2Data(handle);
-
-    Metaschema schema = data.raid().getMetadataSchema();
-    if( schema != Metaschema.raido_metadata_schema_v1 ){
-      var ex = ise("unknown raid schema");
-      log.with("schema", schema).with("handle", handle).error(ex.getMessage());
-      throw ex;
-    }
-    
-    var metadata = metaSvc.mapV1SchemaMetadata(data.raid());
-    
-    if( metadata.getAccess().getType() == AccessType.CLOSED ){
-      return new PublicReadRaidResponseV2().
-        handle(data.raid().getHandle()).
-        createDate(local2Offset(data.raid().getDateCreated())).
-        metadata(new MetadataSchemaV1().
-          metadataSchema(CLOSEDMETADATASCHEMAV1).
-          id(metadata.getId()).
-          access(metadata.getAccess()) );
-    }
-    
-    return new PublicReadRaidResponseV2().
-      handle(data.raid().getHandle()).
-      createDate(local2Offset(data.raid().getDateCreated())).
-      servicePointId(data.servicePoint().getId()).
-      servicePointName(data.servicePoint().getName()).
-      metadata(metadata);
-  }
-
   @Override
   public PublicReadRaidResponseV3 publicReadRaidV3(String handle) {
     var data = raidSvc.readRaidV2Data(handle);
@@ -142,8 +104,10 @@ public class PublicExperimental implements PublicExperimentalApi {
       return new PublicReadRaidResponseV3().
         handle(data.raid().getHandle()).
         createDate(local2Offset(data.raid().getDateCreated())).
-        metadata(new ClosedMetadataSchemaV1().
-          metadataSchema(CLOSEDMETADATASCHEMAV1.getValue()).
+        metadata(new PublicClosedMetadataSchemaV1().
+          /* metadstaSchema ignored because of the `@JsonIgnoreProperties` on 
+          `PublicReadRaidMetadataResponseV1`.  The value sent down the wire 
+          comes from the `@JsonSubTypes` depending on the class type. */
           id(metadata.getId()).
           access(metadata.getAccess()) );
     }
@@ -153,12 +117,8 @@ public class PublicExperimental implements PublicExperimentalApi {
       createDate(local2Offset(data.raid().getDateCreated())).
       servicePointId(data.servicePoint().getId()).
       servicePointName(data.servicePoint().getName()).
-      metadata(new PublicMetadataSchemaV1().
-        /* This value gets ignored because of the `@JsonIgnoreProperties` on 
-        `ReadRaidMetadataResponseV1`.  The value sent down the wire comes from
-         the `@JsonSubTypes` which always picks `PublicMetadataSchemaV1` instead
-         of `raido-metadata-schema-v1`. */
-        metadataSchema(RaidoMetaschema.PUBLICMETADATASCHEMAV1.getValue()).
+      metadata(new PublicRaidMetadataSchemaV1().
+        // metdataSchema set from the class type
         id(metadata.getId()).
         titles(metadata.getTitles()).
         dates(metadata.getDates()).
@@ -169,40 +129,14 @@ public class PublicExperimental implements PublicExperimentalApi {
   }
 
   /**
-   This method catches all prefixes with path prefix `/v2/raid` and attempts
+   This method catches all prefixes with path prefix `/v3/raid` and attempts
    to parse the parameter manually, so that we can receive handles that are
    just formatted with simple slashes.
    The openapi spec is defined with the "{raidId}' path param because it makes
    it more clear to the reader/caller what the url is expected to look like.
    <p>
-   IMPROVE: should write some detailed/edge-case unit tests for this
-   path parsing logic.
+   IMPROVE: factor out parsing logic and write detailed/edge-case unit tests 
    */
-  @RequestMapping(
-    method = RequestMethod.GET,
-    value = HANDLE_V2_CATCHALL_PREFIX + "**")
-  public PublicReadRaidResponseV2 handleRaidV2CatchAll(
-    HttpServletRequest req
-  ) {
-    String path = urlDecode(req.getServletPath().trim());
-    log.with("path", req.getServletPath()).
-      with("decodedPath", path).
-      with("params", req.getParameterMap()).
-      info("handleRaidV2CatchAllAsHtml() called");
-
-    if( !path.startsWith(HANDLE_V2_CATCHALL_PREFIX) ){
-      throw iae("unexpected path: %s", path);
-    }
-
-    String handle = path.substring(HANDLE_V2_CATCHALL_PREFIX.length());
-    if( !handle.contains(HANDLE_SEPERATOR) ){
-      throw apiSafe("handle did not contain a slash character",
-        BAD_REQUEST_400, of(handle));
-    }
-
-    return publicReadRaidV2(handle);
-  }
-
   @RequestMapping(
     method = RequestMethod.GET,
     value = HANDLE_V3_CATCHALL_PREFIX + "**")

@@ -12,8 +12,9 @@ import { ContainerCard } from "Design/ContainerCard";
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import {
-  AccessType, DescriptionBlock,
-  MetadataSchemaV1,
+  AccessType,
+  DescriptionBlock,
+  RaidoMetadataSchemaV1,
   ValidationFailure
 } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
@@ -21,8 +22,6 @@ import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import {
   FormControl,
   InputLabel,
-  List,
-  ListItem,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -34,7 +33,6 @@ import { navBrowserBack } from "Util/WindowUtil";
 import { HelpChip, HelpPopover } from "Component/HelpPopover";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
-import { TextSpan } from "Component/TextSpan";
 import { assert, WithRequired } from "Util/TypeUtil";
 import { isValidDate } from "Util/DateUtil";
 import { getEditRaidPageLink } from "Page/EditRaidPage";
@@ -89,7 +87,7 @@ type ValidFormData = WithRequired<FormData, 'startDate'>;
 
 function mapFormDataToMetadata(
   form: ValidFormData 
-): Omit<MetadataSchemaV1, 'id'>{
+): Omit<RaidoMetadataSchemaV1, 'id'>{
   const descriptions: DescriptionBlock[] = [];
   if( form.primaryDescription ){
     descriptions.push({
@@ -98,7 +96,7 @@ function mapFormDataToMetadata(
     });
   }
   return {
-    metadataSchema: "PublicMetadataSchemaV1",
+    metadataSchema: "RaidoMetadataSchemaV1",
     access: {
       type: form.accessType,
       accessStatement: form.accessStatement,
@@ -135,7 +133,7 @@ function MintRaidContainer({servicePointId, onCreate}: {
         mintRaidoSchemaV1Request: {
           mintRequest: {servicePointId},
           // id is not required for minting
-          metadata: mapFormDataToMetadata(data) as MetadataSchemaV1,
+          metadata: mapFormDataToMetadata(data) as RaidoMetadataSchemaV1,
         }      
       });
     },

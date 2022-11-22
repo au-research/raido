@@ -1,0 +1,61 @@
+openapi: 3.0.3
+info:
+  title: metadata blocks
+  version: 1.0.0
+  description: >
+    Types that model the standard metadata blocks. Intended to be re-used
+    across the "raid" and "raido" stuff.
+paths:
+  
+components:
+  schemas:
+    IdBlock:
+      type: object
+      required: [identifier, identifierTypeUri,
+                 globalUrl, raidAgencyUrl, raidAgencyIdentifier]
+      properties:
+        identifier: {type: string}
+        identifierTypeUri: {type: string}
+        globalUrl: {type: string}
+        raidAgencyUrl: {type: string}
+        raidAgencyIdentifier: {type: string}
+    AccessBlock:
+      type: object
+      required: ["type", ]
+      properties:
+        type: {$ref: '#/components/schemas/AccessType'}
+        accessStatement: {type: string}
+    AccessType:
+      type: string
+      enum: ['Open', 'Closed']
+    TitleBlock:
+      type: object
+      required: [title, type, startDate]
+      properties:
+        title: {type: string}
+        type: {$ref: '#/components/schemas/TitleType'}
+        startDate: { type: string, format: date }
+        endDate: { type: string, format: date }
+    DatesBlock:
+      type: object
+      required: ["startDate"]
+      properties:
+        startDate: { type: string, format: date }
+        endDate: { type: string, format: date }
+    DescriptionBlock:
+      type: object
+      required: ["description", "type"]
+      properties:
+        description: {type: string}
+        type: {$ref: '#/components/schemas/DescriptionType'}
+    AlternateUrlBlock:
+      type: object
+      required: ["url", ]
+      properties:
+        url: {type: string}
+    TitleType:
+      type: string
+      enum: ['Primary Title', 'Alternative Title']
+    DescriptionType:
+      type: string
+      enum: ['Primary Description', 'Alternative Description']          
