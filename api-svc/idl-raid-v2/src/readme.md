@@ -21,10 +21,10 @@ All "Raido" metadata, when accessed via the public raid API, get mapped to
 this standard public schema, intended to be as close as possible to the 
 published formal metadata definition.
   
-* "legacy" metadata access this have placeholder values inserted for
-  standard metadata schema fields that the legacy data doesn't actually 
-  support.
-* a future "raido v2" schema that we define for use by Raido customers,
+* "legacy" metadata accessed via the public API will  have placeholder 
+  values supplied for standard metadata schema fields that the legacy data 
+  doesn't actually support (`contributor`, etc.)
+* any future "raido v2" schema we define for use by Raido customers
   will have to have a mapping to this
 * the process of mapping "raido" schema to this schema is also known as 
   "cross walking"
