@@ -49,7 +49,7 @@ to the expected level of service provided by the Raido team.
     * database schema definition, implemented as a series of Flyway migrations
   * [/api-svc/spring](/api-svc/spring) 
     * the main API server, implemented as a Spring application
-  * [/api-svc/idl-raid-v2](./api-svc/idl-raid-v2/src/raido-openapi-3.0.yaml)
+  * [/api-svc/idl-raid-v2](./api-svc/idl-raid-v2/src/readme.md)
     * the OpenAPI definition of the API that the api-svc serves
 * [/app-client](/app-client)
   * The Raido UI that calls uses api-svc 
