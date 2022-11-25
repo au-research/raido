@@ -134,8 +134,7 @@ testing{
           integration tests - but still I don't want to deal with it.
           - avoids having to ignore all the confusing and unused  
           implementations of Spring interfaces that it includes.
-          - avoids any "it was already included" arguments. 
-          */
+          - avoids any "it was already included" arguments. */
           exclude group: 'org.springframework.boot'
         }
         implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3"
