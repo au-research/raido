@@ -2,6 +2,7 @@ package raido.apisvc.spring.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.core.context.DeferredSecurityContext;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
@@ -11,7 +12,6 @@ import raido.apisvc.util.ExceptionUtil;
 import raido.apisvc.util.Log;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 import static org.springframework.security.core.context.SecurityContextHolder.createEmptyContext;
 import static raido.apisvc.spring.config.RaidWebSecurityConfig.RAID_V1_API;
@@ -41,33 +41,44 @@ public class RaidoSecurityContextRepository implements SecurityContextRepository
   }
 
   @Override
-  public Supplier<SecurityContext> loadContext(HttpServletRequest request) {
-    return ()->{
-      var token = authTokenFromRequest(request);
-      if( token.isEmpty() ){
-        return createEmptyContext();
+  public DeferredSecurityContext loadDeferredContext(HttpServletRequest request) {
+    return new DeferredSecurityContext() {
+      @Override
+      public boolean isGenerated() {
+        /* Introduced when going from spring-security 6.0.0-M6 to 6.0.0.
+         Petty sure this is right, but could use more digging into what the 
+         effect of isGenerated() is on the security flow. */
+        return true;
       }
 
-      if( isRaidV2Api(request) ){
-        var authentication = decodeRaidV2Token(token.get());
-        if( authentication == null ){
+      @Override
+      public SecurityContext get() {
+        var token = authTokenFromRequest(request);
+        if( token.isEmpty() ){
           return createEmptyContext();
         }
-        return createRaidV2AuthContext(authentication);
-      }
 
-      if( isRaidV1Api(request) ){
-        var authentication = decodeRaidV1Token(token.get());
-        if( authentication == null ){
-          return createEmptyContext();
+        if( isRaidV2Api(request) ){
+          var authentication = decodeRaidV2Token(token.get());
+          if( authentication == null ){
+            return createEmptyContext();
+          }
+          return createRaidV2AuthContext(authentication);
         }
-        return createRaidV1AuthContext(authentication);
+
+        if( isRaidV1Api(request) ){
+          var authentication = decodeRaidV1Token(token.get());
+          if( authentication == null ){
+            return createEmptyContext();
+          }
+          return createRaidV1AuthContext(authentication);
+        }
+
+        log.with("path", request.getServletPath()).
+          with("token", mask(token.get())).
+          info("SCR no match");
+        throw ExceptionUtil.authFailed();      
       }
-      
-      log.with("path", request.getServletPath()).
-        with("token", mask(token.get())).
-        info("SCR no match");
-      throw ExceptionUtil.authFailed();
     };
   }
 

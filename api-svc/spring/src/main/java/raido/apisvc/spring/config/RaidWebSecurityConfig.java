@@ -3,6 +3,7 @@ package raido.apisvc.spring.config;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -28,6 +29,13 @@ import static raido.apisvc.util.Log.to;
 
 // https://github.com/spring-projects/spring-security-samples/blob/655cf77ea4fed8dcd910b1151c126991bf5527d5/servlet/java-configuration/hello-security-explicit/src/main/java/example/SecurityConfiguration.java
 @EnableWebSecurity
+/* between Spring 6.0.0-M6 and RC1, something changed so that the 
+`@Configuration` annotation is necessary - was getting "NoSuchBean: 
+springSecurityFilterChain", apparently cause this wasn't being found, so 
+spring wasn't finding our `securityFilterChain` definition and defaulted
+to expecting there to be a `springSecurityFilterChain` bean. 
+The @Configuration anno is now present on the spring-security-samples code. */
+@Configuration
 public class RaidWebSecurityConfig {
   private static final Log log = to(RaidWebSecurityConfig.class);
 
@@ -37,6 +45,8 @@ public class RaidWebSecurityConfig {
   public static final String PUBLIC = "/public";
 
 
+  /* the name is significant - when prefixed "spring", got error about  
+  it returning the wrong type (it wanted a `Filter` instead of FilterChain. */
   @Bean
   public SecurityFilterChain securityFilterChain(
     HttpSecurity http, 
@@ -45,40 +55,57 @@ public class RaidWebSecurityConfig {
     RaidV2ApiKeyAuthService apiKeyAuthSvc
   ) throws Exception {
     log.info("securityFilterChain()");
+
+    RaidV2AuthenticationProvider raidV2AuthProvider =
+      new RaidV2AuthenticationProvider(appUserAuthSvc, apiKeyAuthSvc);
+    RaidV1AuthenticationProvider raidV1AuthProvider =
+      new RaidV1AuthenticationProvider(raid1Svc);
+    RaidoSecurityContextRepository securityRepo =
+      new RaidoSecurityContextRepository();
+
+    // @formatter:off
+    //noinspection deprecation - for authorizeRequests()
     http.
-      authenticationProvider(
-        new RaidV2AuthenticationProvider(appUserAuthSvc, apiKeyAuthSvc)).
-      authenticationProvider(
-          new RaidV1AuthenticationProvider(raid1Svc)).
-      securityContext().
-      securityContextRepository(new RaidoSecurityContextRepository()).
-      and().
+      authenticationProvider(raidV2AuthProvider).
+      authenticationProvider(raidV1AuthProvider).
+      securityContext().securityContextRepository(securityRepo).
+    and().
+      // supposed to be implied by @EnableWebSecurity - don't need this?
       exceptionHandling().
-      and().authorizeRequests().
-      // order is important, more specific has to come before more general
-      mvcMatchers(RAID_V1_API + HANDLE_URL_PREFIX + "/**" ).permitAll().
-      mvcMatchers(RAID_V1_API + "/**").fullyAuthenticated().
-      mvcMatchers(RAID_V2_PUBLIC_API + "/**").permitAll().
-      mvcMatchers(RAID_V2_API + "/**").fullyAuthenticated().
-      mvcMatchers(IDP_URL).permitAll().
-      mvcMatchers(PUBLIC + "/**").permitAll().
-      anyRequest().denyAll().
-      and().
+    and().
+      /* deprecation notice says to use `authorizeHttpRequests()` but that 
+      causes 403 errors because ProviderManager never gets called; 
+      thus AuthnProviders don't get called, so the security context still 
+      contains the pre-auth token instead of a verified post-auth token, 
+      so the eventual call to AuthorizationStrategy.isGranted() ends up 
+      calling isAuthenticated() on the pre-auth token, which (correctly) 
+      returns false and the request is denied. */
+      authorizeRequests().
+        // order is important, more specific has to come before more general
+        requestMatchers(RAID_V1_API + HANDLE_URL_PREFIX + "/**" ).permitAll().
+        requestMatchers(RAID_V1_API + "/**").fullyAuthenticated().
+        requestMatchers(RAID_V2_PUBLIC_API + "/**").permitAll().
+        requestMatchers(RAID_V2_API + "/**").fullyAuthenticated().
+        requestMatchers(IDP_URL).permitAll().
+        requestMatchers(PUBLIC + "/**").permitAll().
+        anyRequest().denyAll().
+    and().
       httpBasic().disable().
       /* api-svc is stateless and the browser client does not use cookies.
       https://www.baeldung.com/csrf-stateless-rest-api */
       csrf().disable().
       sessionManagement().sessionCreationPolicy(STATELESS).
-      and().
+    and().
       /* https://www.baeldung.com/spring-prevent-xss */
       headers().xssProtection().
-      and().
+    and().
       /* No real point in doing this - api-svc only serves data.
       This is only added to avoid arguments and false-positives on 
       security scans. */
       contentSecurityPolicy("script-src 'self'")
     ;
-
+    // @formatter:on
+    
     return http.build();
   }
 
