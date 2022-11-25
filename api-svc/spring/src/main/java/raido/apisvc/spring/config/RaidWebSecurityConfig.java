@@ -4,6 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -50,24 +52,17 @@ public class RaidWebSecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(
     HttpSecurity http, 
-    RaidV1AuthService raid1Svc,
-    RaidV2AppUserAuthService appUserAuthSvc,
-    RaidV2ApiKeyAuthService apiKeyAuthSvc
+    AuthenticationManager authnManager
   ) throws Exception {
     log.info("securityFilterChain()");
 
-    RaidV2AuthenticationProvider raidV2AuthProvider =
-      new RaidV2AuthenticationProvider(appUserAuthSvc, apiKeyAuthSvc);
-    RaidV1AuthenticationProvider raidV1AuthProvider =
-      new RaidV1AuthenticationProvider(raid1Svc);
     RaidoSecurityContextRepository securityRepo =
       new RaidoSecurityContextRepository();
 
     // @formatter:off
     //noinspection deprecation - for authorizeRequests()
     http.
-      authenticationProvider(raidV2AuthProvider).
-      authenticationProvider(raidV1AuthProvider).
+      authenticationManager(authnManager).
       securityContext().securityContextRepository(securityRepo).
     and().
       // supposed to be implied by @EnableWebSecurity - don't need this?
@@ -80,6 +75,7 @@ public class RaidWebSecurityConfig {
       so the eventual call to AuthorizationStrategy.isGranted() ends up 
       calling isAuthenticated() on the pre-auth token, which (correctly) 
       returns false and the request is denied. */
+      // authorizeHttpRequests().
       authorizeRequests().
         // order is important, more specific has to come before more general
         requestMatchers(RAID_V1_API + HANDLE_URL_PREFIX + "/**" ).permitAll().
@@ -109,6 +105,21 @@ public class RaidWebSecurityConfig {
     return http.build();
   }
 
+  // can be inlined into the http config, but it's more readable this way
+  @Bean
+  public AuthenticationManager authenticationManager(
+    RaidV1AuthService raid1Svc,
+    RaidV2AppUserAuthService appUserAuthSvc,
+    RaidV2ApiKeyAuthService apiKeyAuthSvc
+  ){
+    RaidV2AuthenticationProvider raidV2AuthProvider =
+      new RaidV2AuthenticationProvider(appUserAuthSvc, apiKeyAuthSvc);
+    RaidV1AuthenticationProvider raidV1AuthProvider =
+      new RaidV1AuthenticationProvider(raid1Svc);
+
+    return new ProviderManager(raidV2AuthProvider, raidV1AuthProvider);
+  }
+
   @Bean
   public RequestRejectedHandler requestRejectedHandler() {
     /* sends an error response with a configurable status code (default is 400 
@@ -135,9 +146,11 @@ public class RaidWebSecurityConfig {
 
   /** If encoded slashes aren't allowed, then calls of the form:
   `http://localhost:8080/v1/handle/102.100.100%2F75517`
-  would get rejected by HttpStrictFirewall.  Which is unfortunate, because
-  handles contain slashes as defined in the ISO standard. 😢
-   */
+  would get rejected by HttpStrictFirewall.  Which is unfortunate because
+  handles contain slashes as defined in the ISO standard. 
+  Most client-technologies (Feign, RestTemplate, openapi-fetch, etc.) will, by 
+  default, percent-encode data that is passed to them as a "parameter value". 
+  😢  */
   @Bean 
   public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
     log.info("allowUrlEncodedSlashHttpFirewall()");
