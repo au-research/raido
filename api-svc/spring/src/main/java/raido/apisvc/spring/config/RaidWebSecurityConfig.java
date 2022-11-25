@@ -96,8 +96,7 @@ public class RaidWebSecurityConfig {
       headers().xssProtection().
     and().
       /* No real point in doing this - api-svc only serves data.
-      This is only added to avoid arguments and false-positives on 
-      security scans. */
+      Added to avoid arguments and false-positives on security scans. */
       contentSecurityPolicy("script-src 'self'")
     ;
     // @formatter:on
