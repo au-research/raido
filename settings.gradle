@@ -14,6 +14,9 @@ dependencyResolutionManagement{
     libs{
       version('jooq', '3.17.4')
       version('spring6', '6.0.0-M6')
+      /* sometimes the latest version of spring-sec matches the spring version, 
+      but often if lags behind, especially for fix versions. */
+      version('spring6-sec', '6.0.0-M6')
       version('jetty11', '11.0.12')
       version('logback', '1.4.0')
       version('feign', '11.10')
@@ -27,22 +30,22 @@ dependencyResolutionManagement{
 
       // core spring/web - pkg: org.springframework
       library('spring-webmvc', 'org.springframework', 'spring-webmvc').versionRef('spring6')
-      // core spring/web security - pkg: import org.sf.security
-      library('spring-security-core', 'org.springframework.security', 'spring-security-core').versionRef('spring6')
-      // pkg: org.sf.security.web
-      library('spring-security-web', 'org.springframework.security', 'spring-security-web').versionRef('spring6')
-      // for configuring through code - pkg: org.sf.security.config
-      library('spring-security-config', 'org.springframework.security', 'spring-security-config').versionRef('spring6')
       // for @Transactional annotation
       library('spring-tx', 'org.springframework', 'spring-tx').versionRef('spring6')
       library('spring-jdbc', 'org.springframework', 'spring-jdbc').versionRef('spring6')
+      // core spring/web security - pkg: import org.sf.security
+      library('spring-security-core', 'org.springframework.security', 'spring-security-core').versionRef('spring6-sec')
+      // pkg: org.sf.security.web
+      library('spring-security-web', 'org.springframework.security', 'spring-security-web').versionRef('spring6-sec')
+      // for configuring through code - pkg: org.sf.security.config
+      library('spring-security-config', 'org.springframework.security', 'spring-security-config').versionRef('spring6-sec')
       bundle('spring6', [
         'spring-webmvc', 
-        'spring-security-core', 
-        'spring-security-web', 
-        'spring-security-config',
         'spring-tx',
         'spring-jdbc',
+        'spring-security-core',
+        'spring-security-web',
+        'spring-security-config',
       ])
 
       library('feign-okhttp', 'io.github.openfeign', 'feign-okhttp').versionRef('feign')
@@ -67,7 +70,7 @@ dependencyResolutionManagement{
       bundle('logback-runtime', ['logback-core', 'logback-classic'])
 
       library('spring-test', 'org.springframework', 'spring-test').versionRef('spring6')
-      library('spring-security-test', 'org.springframework.security', 'spring-security-test').versionRef('spring6')
+      library('spring-security-test', 'org.springframework.security', 'spring-security-test').versionRef('spring6-sec')
       bundle('spring6-test', [ 'spring-test', 'spring-security-test'])
       
     }
