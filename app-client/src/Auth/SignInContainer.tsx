@@ -104,7 +104,8 @@ export function SignInContainer(){
   const disabled = !!signInContext.action;
   return <ContainerCard title={"Sign-in"} action={<OidcSignInHelp/>}> 
     <div style={{display: "grid", 
-      gridTemplateColumns: "8em 8em",
+      // repeat tells grid to fill the width but wrap like a flex 
+      gridTemplateColumns: "repeat(auto-fill, 8em)",
       justifyContent: "center",
       columnGap: "1em", rowGap: "1em",
       // the textspan following was too cramped
@@ -150,8 +151,8 @@ function OidcSignInHelp(){
   return <HelpPopover content={
     <>
       <Typography>
-        You can sign in either directly with Google or via the AAF if your
-        organisation has an agreement.
+        You can sign in either directly with Google or Orcid, or via the AAF 
+        if your organisation has an agreement.
       </Typography>
       <Typography>
         Once you've signed in and authenticated yourself, you will be able to 
