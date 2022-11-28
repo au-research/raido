@@ -48,6 +48,7 @@ public class RaidWebSecurityConfig {
 
   /* the name is significant - when prefixed "spring", got error about  
   it returning the wrong type (it wanted a `Filter` instead of FilterChain. */
+  @SuppressWarnings("deprecation")  // for authorizeRequests()
   @Bean
   public SecurityFilterChain securityFilterChain(
     HttpSecurity http, 
@@ -73,7 +74,6 @@ public class RaidWebSecurityConfig {
     so the eventual call to AuthorizationStrategy.isGranted() ends up 
     calling isAuthenticated() on the pre-auth token, which (correctly) 
     returns false and the request is denied. */
-    //noinspection deprecation
     http.authorizeRequests(). // authorizeHttpRequests().
       // order is important, more specific has to come before more general
       requestMatchers(RAID_V1_API + HANDLE_URL_PREFIX + "/**" ).permitAll().
