@@ -88,6 +88,7 @@ jobs:
           
           AafOidc.clientSecret=notTheRealSecret
           GoogleOidc.clientSecret=notTheRealSecret
+          OrcidOidc.clientSecret=notTheRealSecret
 
           Apids.secret=$APIDS_JWT_SECRET
           EOF

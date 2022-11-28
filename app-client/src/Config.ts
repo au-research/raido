@@ -59,7 +59,8 @@ export interface EnvironmentConfig {
   isProd: boolean,
 
   aaf: AuthnConfig,
-  google:AuthnConfig,
+  google: AuthnConfig,
+  orcid: AuthnConfig,
   
   raidoIssuer: string,
   /** Generally empty string, so that API calls are a relative to current host.
@@ -126,7 +127,12 @@ const ciConfig: EnvironmentConfig = {
     clientId: "",
     authorizeUrl: "",
     authnScope: "",
-  }
+  },
+  orcid: {
+    clientId: "",
+    authorizeUrl: "",
+    authnScope: "",
+  },
 };
 
 const devConfig: EnvironmentConfig = {
@@ -147,6 +153,13 @@ const devConfig: EnvironmentConfig = {
     clientId: "112489799301-m39l17uigum61l64uakb32vjhujuuk73.apps.googleusercontent.com",
     authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
     authnScope: "openid email profile",
+  },
+  // this is not going to work, orcid require https and it's currently set
+  // to demo.raido-infra.com anyway 
+  orcid: {
+    clientId: "APP-IZBIZ6O7XH9RFG0X",
+    authorizeUrl: "https://orcid.org/oauth/authorize",
+    authnScope: "openid",
   },
   // disable because kind of annoying in a development context
   authApiQuery: {
@@ -174,6 +187,11 @@ const demoConfig: EnvironmentConfig = {
     authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
     authnScope: "openid email profile",
   },
+  orcid: {
+    clientId: "APP-IZBIZ6O7XH9RFG0X",
+    authorizeUrl: "https://orcid.org/oauth/authorize",
+    authnScope: "openid",
+  },
   authApiQuery: {
     retry: 1,
     refetchOnWindowFocus: true,
@@ -195,6 +213,11 @@ const prodConfig: EnvironmentConfig = {
     authnScope: "",
   },
   google: {
+    clientId: "",
+    authorizeUrl: "",
+    authnScope: "",
+  },
+  orcid: {
     clientId: "",
     authorizeUrl: "",
     authnScope: "",

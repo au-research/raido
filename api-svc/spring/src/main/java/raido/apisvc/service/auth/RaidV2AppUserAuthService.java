@@ -45,6 +45,7 @@ public class RaidV2AppUserAuthService {
   private DSLContext db;
   private AafOidc aaf;
   private GoogleOidc google;
+  private OrcidOidc orcid;
   
   private Duration expiryPeriod = Duration.ofHours(9);
   
@@ -52,12 +53,14 @@ public class RaidV2AppUserAuthService {
     RaidV2AppUserAuthProps userAuthProps, 
     DSLContext db,
     AafOidc aaf,
-    GoogleOidc google
+    GoogleOidc google,
+    OrcidOidc orcid
   ) {
     this.userAuthProps = userAuthProps;
     this.db = db;
     this.aaf = aaf;
     this.google = google;
+    this.orcid = orcid;
   }
 
   public String sign(AuthzTokenPayload payload){
@@ -257,6 +260,8 @@ public class RaidV2AppUserAuthService {
         google.exchangeCodeForVerifiedJwt(idpResponseCode);
       case AAF -> idProviderJwt =
         aaf.exchangeCodeForVerifiedJwt(idpResponseCode);
+      case ORCID -> idProviderJwt =
+        orcid.exchangeCodeForVerifiedJwt(idpResponseCode);
       default -> throw idpException("unknown clientId %s", clientId);
     }
 
@@ -269,6 +274,9 @@ public class RaidV2AppUserAuthService {
     }
     else if( google.canHandle(clientId) ){
       return IdProvider.GOOGLE;
+    }
+    else if( orcid.canHandle(clientId) ){
+      return IdProvider.ORCID;
     }
     else {
       // improve should be a specific authn error?

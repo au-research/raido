@@ -28,7 +28,7 @@ drop table if exists test_table;
 
 create type user_role as enum ('OPERATOR', 'SP_ADMIN', 'SP_USER', 'API');
 create type auth_request_status as enum ('REQUESTED', 'APPROVED', 'REJECTED');
-create type id_provider as enum ('GOOGLE', 'AAF', 'RAIDO_API', 'COGNITO');
+create type id_provider as enum ('GOOGLE', 'AAF', 'RAIDO_API', 'ORCID');
 
 create table service_point (
   id             bigint generated always as identity
@@ -101,6 +101,11 @@ comment on column app_user.token_cutoff is
 comment on column app_user.id_provider is
   'not a real identity field, its just redundant info we figure it out from 
   the clientId or issuer and store it for easy analysis'
+;
+
+comment on column app_user.email is
+  'should be renamed to "description" or some such.  api-keys do not and orcid 
+  sign-ins might not have email address'
 ;
 
 create table raido_operator (

@@ -13,6 +13,7 @@ import { Google } from "@mui/icons-material";
 
 const googleAction = "google-direct";
 const aafAction = "aaf-direct";
+const orcidAction = "orcid-direct";
  
 export function SignInContainer(){
   //const serverInfo = useServerInfo();
@@ -68,6 +69,34 @@ export function SignInContainer(){
     }
   }
 
+  async function orcidSignIn(){
+    const state: RaidoOAuthState = {
+      redirectUri: window.location.href,
+      clientId: Config.orcid.clientId,
+    }
+    signInContext.setAction(orcidAction);
+    
+    if( Config.environmentName === "dev" ){
+      alert("Orcid login doesn't work locally, because it needs https");
+      // but don't return, let the request be made, helps during development
+    }
+    
+    try {
+      let loginUrl = `${Config.orcid.authorizeUrl}` +
+        `?client_id=${Config.orcid.clientId}` +
+        `&scope=${encodeURIComponent(Config.orcid.authnScope)}` +
+        // we're mixing between authorize and OIDC implicit flows, could be bad
+        `&response_type=${oauthCodeGrantFlow}` +
+        `&redirect_uri=${Config.raidoIssuer}/idpresponse` +
+        `&state=${formatStateValue(state)}`;
+      navBrowserByAssign(loginUrl);
+    }
+    catch( err ){
+      signInContext.setAction(undefined);
+      throw err;
+    }
+  }
+
 
   const disabled = !!signInContext.action;
   return <ContainerCard title={"Sign-in"} action={<OidcSignInHelp/>}> 
@@ -89,6 +118,12 @@ export function SignInContainer(){
         disabled={disabled} onClick={aafSignIn}
       >
         AAF
+      </PrimaryButton>
+      <PrimaryButton  
+        isLoading={signInContext.action === orcidAction} 
+        disabled={disabled} onClick={orcidSignIn}
+      >
+        ORCiD
       </PrimaryButton>
     </div>
   </ContainerCard>

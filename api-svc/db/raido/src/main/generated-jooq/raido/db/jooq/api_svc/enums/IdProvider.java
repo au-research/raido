@@ -23,7 +23,7 @@ public enum IdProvider implements EnumType {
 
     RAIDO_API("RAIDO_API"),
 
-    COGNITO("COGNITO");
+    ORCID("ORCID");
 
     private final String literal;
 
