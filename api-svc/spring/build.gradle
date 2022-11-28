@@ -100,7 +100,13 @@ dependencies{
 }
 
 compileJava {
-  options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+  options.compilerArgs <<
+    // avoid warnings about spring classes using deprecated '-debug' 
+    "-parameters" <<
+    // annoy people into not doing unchecked shenanigans 😒
+    "-Xlint:unchecked" <<
+    // annoy people into fixing their deprecation warnings 
+    "-Xlint:deprecation"
 }
 
 testing{
