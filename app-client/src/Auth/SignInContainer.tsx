@@ -80,6 +80,9 @@ export function SignInContainer(){
       alert("Orcid login doesn't work locally, because it needs https");
       // but don't return, let the request be made, helps during development
     }
+    else {
+      alert("Orcid sign-in is not working yet");
+    }
     
     try {
       let loginUrl = `${Config.orcid.authorizeUrl}` +
