@@ -65,7 +65,7 @@ public class OrcidOidc {
     HttpEntity<OAuthTokenRequest> request =
       new HttpEntity<>(tokenRequest, headers);
 
-//    log.with("bod", request.getBody()).info();
+    log.with("bod", request.getBody()).info();
 
     ResponseEntity<OAuthTokenResponse> response = rest.postForEntity(
       orcid.tokenUrl, request, OAuthTokenResponse.class);
