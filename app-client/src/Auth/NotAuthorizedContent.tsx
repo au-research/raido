@@ -112,7 +112,7 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
   
   return <ContainerCard title={"Request RAiD Authorisation"}
     // improve:sto shouldn't need this any more, delete after testing in  
-    // demo with the signout container present. 
+    // demo with the sign-out container present. 
     // minHeight so the autocomplete drop box has lots of space
     //contentStyle={{minHeight: "60vh"}}
     action={<AuthRequestHelp/>}
