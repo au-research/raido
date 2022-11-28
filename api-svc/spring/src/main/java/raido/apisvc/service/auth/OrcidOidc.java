@@ -13,6 +13,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import raido.apisvc.spring.config.environment.OrcidOidcProps;
 import raido.apisvc.spring.config.environment.RaidoAuthnProps;
@@ -54,17 +56,29 @@ public class OrcidOidc {
   
   public DecodedJWT exchangeCodeForVerifiedJwt(String idpResponseCode){
     HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    var tokenRequest = new OAuthTokenRequest().
-      code(idpResponseCode).
-      client_id(orcid.clientId).
-      client_secret(orcid.clientSecret).
-      grant_type("authorization_code").
-      redirect_uri(raido.serverRedirectUri);
+//    headers.setContentType(MediaType.APPLICATION_JSON);
+//    var tokenRequest = new OAuthTokenRequest().
+//      code(idpResponseCode).
+//      client_id(orcid.clientId).
+//      client_secret(orcid.clientSecret).
+//      grant_type("authorization_code").
+//      redirect_uri(raido.serverRedirectUri);
+//
+//    HttpEntity<OAuthTokenRequest> request =
+//      new HttpEntity<>(tokenRequest, headers);
 
-    HttpEntity<OAuthTokenRequest> request =
-      new HttpEntity<>(tokenRequest, headers);
+    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
+    MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+    map.add("code", idpResponseCode);
+    map.add("client_id", orcid.clientId);
+    map.add("client_secret", orcid.clientSecret);
+    map.add("grant_type", "authorization_code");
+    map.add("redirect_uri", raido.serverRedirectUri);
+
+    HttpEntity<MultiValueMap<String, String>> request =
+      new HttpEntity<>(map, headers);
+    
     log.with("bod", request.getBody()).info();
 
     ResponseEntity<OAuthTokenResponse> response = rest.postForEntity(
