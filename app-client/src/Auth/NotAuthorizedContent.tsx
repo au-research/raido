@@ -56,11 +56,16 @@ function InfoContainer({accessToken}: {accessToken: string}){
       "Sign out" if you want to sign in as a different user.
     </Typography>
     <Grid container justifyContent={"center"}>
+      {/* From our perspective, it's "sign out", because user is technically 
+      already signed in, and we're signing them out to force them to sign in 
+      again (to force a new token to be generated that will included their 
+      authorization approval, if they've been approved). 
+      But to the user - we're just forcing them to "sign in" again. */}
       <SecondaryButton onClick={async () => {
         await signOutUser();
         window.location.reload();
       }}>
-        Sign out
+        Sign in
       </SecondaryButton>
     </Grid>
   </ContainerCard>
