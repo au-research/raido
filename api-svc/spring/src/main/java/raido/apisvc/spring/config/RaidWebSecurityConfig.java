@@ -29,7 +29,6 @@ import static raido.apisvc.endpoint.auth.AppUserAuthnEndpoint.IDP_URL;
 import static raido.apisvc.endpoint.raidv1.RaidV1.HANDLE_URL_PREFIX;
 import static raido.apisvc.util.Log.to;
 
-// https://github.com/spring-projects/spring-security-samples/blob/655cf77ea4fed8dcd910b1151c126991bf5527d5/servlet/java-configuration/hello-security-explicit/src/main/java/example/SecurityConfiguration.java
 @EnableWebSecurity
 /* between Spring 6.0.0-M6 and RC1, something changed so that the 
 `@Configuration` annotation is necessary - was getting "NoSuchBean: 
@@ -56,55 +55,71 @@ public class RaidWebSecurityConfig {
   ) throws Exception {
     log.info("securityFilterChain()");
 
-    RaidoSecurityContextRepository securityRepo =
-      new RaidoSecurityContextRepository();
+    /* repo checks if user is authenticating with a raidV1 or raidV2 token
+    (currently based on what endpoint they're accessing)  
+    and populates the SecurityContext with a "pre-auth" token. */
+    http.securityContext().securityContextRepository(
+      new RaidoSecurityContextRepository() );
+    
+    /* AuthnManager contains multiple AuthnProviders, these are the what 
+    verifies the specific type of token (raidV1 or V2) is secure, then swaps 
+    the pre-auth token in the SecurityContext for a "post-auth" token. */
+    http.authenticationManager(authnManager);
 
-    // @formatter:off
-    //noinspection deprecation - for authorizeRequests()
-    http.
-      authenticationManager(authnManager).
-      securityContext().securityContextRepository(securityRepo).
-    and().
-      // supposed to be implied by @EnableWebSecurity - don't need this?
-      exceptionHandling().
-    and().
-      /* deprecation notice says to use `authorizeHttpRequests()` but that 
-      causes 403 errors because ProviderManager never gets called; 
-      thus AuthnProviders don't get called, so the security context still 
-      contains the pre-auth token instead of a verified post-auth token, 
-      so the eventual call to AuthorizationStrategy.isGranted() ends up 
-      calling isAuthenticated() on the pre-auth token, which (correctly) 
-      returns false and the request is denied. */
-      // authorizeHttpRequests().
-      authorizeRequests().
-        // order is important, more specific has to come before more general
-        requestMatchers(RAID_V1_API + HANDLE_URL_PREFIX + "/**" ).permitAll().
-        requestMatchers(RAID_V1_API + "/**").fullyAuthenticated().
-        requestMatchers(RAID_V2_PUBLIC_API + "/**").permitAll().
-        requestMatchers(RAID_V2_API + "/**").fullyAuthenticated().
-        requestMatchers(IDP_URL).permitAll().
-        requestMatchers(PUBLIC + "/**").permitAll().
-        anyRequest().denyAll().
-    and().
-      httpBasic().disable().
-      /* api-svc is stateless and the browser client does not use cookies.
-      https://www.baeldung.com/csrf-stateless-rest-api */
+    /* deprecation notice says to use `authorizeHttpRequests()` but that 
+    causes 403 errors because ProviderManager never gets called; 
+    thus AuthnProviders don't get called, so the security context still 
+    contains the pre-auth token instead of a verified post-auth token, 
+    so the eventual call to AuthorizationStrategy.isGranted() ends up 
+    calling isAuthenticated() on the pre-auth token, which (correctly) 
+    returns false and the request is denied. */
+    //noinspection deprecation
+    http.authorizeRequests(). // authorizeHttpRequests().
+      // order is important, more specific has to come before more general
+      requestMatchers(RAID_V1_API + HANDLE_URL_PREFIX + "/**" ).permitAll().
+      requestMatchers(RAID_V2_PUBLIC_API + "/**").permitAll().
+      requestMatchers(IDP_URL).permitAll().
+      /* Used only for the status endpoint; either make this explicit (no 
+      wildcard, like IDP_URL) or better, move status endpoint under `/v2`. 
+      Remember to update ASG health check, ALB rules, cloudfront rules. */
+      requestMatchers(PUBLIC + "/**").permitAll().
+      requestMatchers(RAID_V1_API + "/**").fullyAuthenticated().
+      requestMatchers(RAID_V2_API + "/**").fullyAuthenticated().
+      // "default deny" anything not explicitly allowed above
+      anyRequest().denyAll();
+
+    http.httpBasic().disable().
+      /* api-svc is stateless and the browser client does not use cookies;
+      in the baeldung article, section 2.1 and 2.2 are most applicable:
+      https://www.baeldung.com/csrf-stateless-rest-api
+      Spring-security ref doco itself only talks about CSRF being a concern 
+      when the the token is stored in a cookie, which we don't.
+      https://docs.spring.io/spring-security/reference/features/exploits/csrf.html#csrf-when-stateless
+      That said, we're still open to a CSRF implementation, as long as it works 
+      in an architecture of stateless backend nodes.  Note that CSRF strategies 
+      involving replicated sessions are not likely to be accepted. 
+      We would have to build the infrastructure for it - which would be an 
+      unworkable amount of effort given the current threat model and our 
+      available infrastructure resourcing constraints. */
       csrf().disable().
-      sessionManagement().sessionCreationPolicy(STATELESS).
-    and().
+      sessionManagement().sessionCreationPolicy(STATELESS);
+      
+    http.headers().
       /* https://www.baeldung.com/spring-prevent-xss */
-      headers().xssProtection().
-    and().
+      xssProtection().and().
       /* No real point in doing this - api-svc only serves data.
       Added to avoid arguments and false-positives on security scans. */
-      contentSecurityPolicy("script-src 'self'")
-    ;
-    // @formatter:on
-    
+      contentSecurityPolicy("script-src 'self'");
+
+    // supposed to be implied by @EnableWebSecurity
+    // put it back or remove the code after the big error handling refactor
+    // http.exceptionHandling();
+
     return http.build();
   }
 
-  // can be inlined into the http config, but it's more readable this way
+  /* AuthnProviders can be inlined directly into the http config, but it's 
+  more readable this way. */
   @Bean
   public AuthenticationManager authenticationManager(
     RaidV1AuthService raid1Svc,
@@ -157,6 +172,5 @@ public class RaidWebSecurityConfig {
     firewall.setAllowUrlEncodedSlash(true);
     return firewall;
   }
-
   
 }
