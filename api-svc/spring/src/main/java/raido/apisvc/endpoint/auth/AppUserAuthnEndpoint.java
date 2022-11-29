@@ -8,15 +8,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.service.auth.RaidV2AppUserAuthService;
-import raido.apisvc.service.auth.RaidoClaim;
 import raido.apisvc.spring.security.ApiSafeException;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.apisvc.util.RestUtil;
-import raido.apisvc.util.StringUtil;
 import raido.db.jooq.api_svc.enums.IdProvider;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static org.eclipse.jetty.util.TypeUtil.isFalse;
 import static raido.apisvc.service.auth.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
@@ -24,7 +23,8 @@ import static raido.apisvc.service.auth.NonAuthzTokenPayload.NonAuthzTokenPayloa
 import static raido.apisvc.spring.security.IdProviderException.idpException;
 import static raido.apisvc.util.ExceptionUtil.authFailed;
 import static raido.apisvc.util.Log.to;
-import static raido.apisvc.util.StringUtil.hasValue;
+import static raido.apisvc.util.StringUtil.blankToDefault;
+import static raido.apisvc.util.StringUtil.isBlank;
 import static raido.apisvc.util.StringUtil.isNullOrEmpty;
 import static raido.db.jooq.api_svc.enums.IdProvider.ORCID;
 
@@ -99,19 +99,17 @@ public class AppUserAuthnEndpoint {
     It means that each time an orcid users frobs their permissions (potentially
     three times between email, name, neither), the user will be counted as
     a separate user, because we use a tuple of [email, subject, clientId] to 
-    link the "id_token" to an app_user record.
+    link the "id_token" to an app_user record.  That means they'll have to be
+    authorized by someone again, too.
     I think we're going to have to just use subject.
     This new approach would align with our usage of app_user table for api-keys
     too. */
-    if( raidv2UserAuthSvc.mapIdProvider(state.clientId) == ORCID  ){
+    if( raidv2UserAuthSvc.mapIdProvider(state.clientId) == ORCID ){
       // try name fields, but that's also allowed to be private
-      email = idProviderJwt.getClaim("given_name").asString() + " " +
-        idProviderJwt.getClaim("family_name").asString();
-      
-      // fall back to just using the orcid id stored in the JWT subject
-      if( isNullOrEmpty(email) ){
-        email = "ORCiD " + subject;
-      }
+      email = formatOrcidName(idProviderJwt).
+        // otherwise, fallback to the subject
+        // note the email field forces to lowercase, so no good using branding  
+        orElseGet(()-> "orcid " + subject);
     }
 
     Guard.hasValue(email);
@@ -161,6 +159,20 @@ public class AppUserAuthnEndpoint {
         build()
       )
     ));
+  }
+
+  private static Optional<String> formatOrcidName(DecodedJWT idProviderJwt) {
+    String givenName = idProviderJwt.getClaim("given_name").asString();
+    String familyName = idProviderJwt.getClaim("family_name").asString();
+
+    String formattedName = blankToDefault(givenName, "") +
+      " " + blankToDefault(familyName, "");
+    formattedName = formattedName.trim();
+    if( isBlank(formattedName) ){
+      return Optional.empty();
+    }
+    
+    return Optional.of(formattedName);
   }
 
 
