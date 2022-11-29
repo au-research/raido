@@ -63,9 +63,10 @@ export interface EnvironmentConfig {
   orcid: AuthnConfig,
   
   raidoIssuer: string,
-  /** Generally empty string, so that API calls are a relative to current host.
+  /** The hostname to use to call the api-svc endpoints. 
+  Generally empty string, so that API calls are a relative to current host.
   But you can use a different host if desired (but remember to configure CORS
-  headers if you want to do that. */
+  headers if you want to do that). */
   raidoApiSvc: string,
 
   authApiQuery?: ReactQueryConfig,
@@ -138,6 +139,8 @@ const ciConfig: EnvironmentConfig = {
 const devConfig: EnvironmentConfig = {
   environmentName: "dev",
   isProd: false,
+  // have to run the https proxy for this, see local-orcid-signin.md  
+  //raidoIssuer: "https://localhost:6080",
   raidoIssuer: "http://localhost:8080",
   raidoApiSvc: "",
   aaf: {
