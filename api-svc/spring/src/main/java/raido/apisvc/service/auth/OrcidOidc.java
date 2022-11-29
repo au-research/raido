@@ -83,6 +83,7 @@ public class OrcidOidc {
     Guard.notNull(response.getBody());
 
     DecodedJWT jwt = JWT.decode(response.getBody().id_token);
+    log.with("jwt", jwt).info();
     verify(jwt);
     
     return jwt;
