@@ -78,9 +78,7 @@ export function SignInContainer(){
 
     let redirectUri = `${Config.raidoIssuer}/idpresponse`
     if( Config.environmentName === "dev" ){
-      alert("Orcid requires https, see `local-orcid-signin.md`");
-      // you have to run the local https proxy for this to work
-      redirectUri = "https://localhost:6080/idpresponse"
+      console.warn("Orcid requires https, see `local-orcid-signin.md`");
     }
 
     try {
