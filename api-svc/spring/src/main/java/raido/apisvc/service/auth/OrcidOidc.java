@@ -68,7 +68,8 @@ public class OrcidOidc {
     HttpEntity<MultiValueMap<String, String>> request =
       new HttpEntity<>(map, headers);
     
-    log.with("bod", request.getBody()).debug();
+    // do not log this because it contains the client_secret
+    // log.with("bod", request.getBody()).debug();
 
     ResponseEntity<OAuthTokenResponse> response = rest.postForEntity(
       orcid.tokenUrl, request, OAuthTokenResponse.class);
