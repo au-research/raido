@@ -224,12 +224,16 @@ public class RaidV2AppUserAuthService {
     Guard.hasValue(email);
     Guard.hasValue(clientId);
     Guard.hasValue(subject);
-
+    
     // service_point_id_fields_active_idx enforces uniqueness 
     return db.select().
       from(APP_USER).
       where(
-        APP_USER.EMAIL.eq(email).
+        /* had to lowercase() the email because the name fields (that can 
+        end up in the "email" field) come back from orcid with initcaps 
+        and it wasn't matching.
+        The real fix is to start matching on only "subject" claim. */
+        APP_USER.EMAIL.eq(email.toLowerCase()).
           and(APP_USER.CLIENT_ID.eq(clientId)).
           and(APP_USER.SUBJECT.eq(subject)).
           and(APP_USER.ENABLED.isTrue())
