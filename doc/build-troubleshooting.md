@@ -76,4 +76,11 @@ This means any "roaming profile" won't be saving/reading your gigabytes of
 cache files to the network server.  Decide for yourself if that's a good thing
 or a bad thing.
 
+# CodeBuild project fails because "too many requests" when pulling from DockerHub
+
+Known issue because we share source IP addresses with all the other CodeBuild
+projects out there.  
+
+Workaround is to just try again.
+Potential fixes listed in [technical-debt.md](./technical-debt.md).
 
