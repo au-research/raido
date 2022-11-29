@@ -51,9 +51,10 @@ export function NotAuthorizedContent({accessToken}: {accessToken: string}){
 }
 
 function InfoContainer({accessToken}: {accessToken: string}){
-  return <ContainerCard title={"Sign out"}>
+  return <ContainerCard title={"Sign in"}>
     <Typography paragraph>
-      "Sign out" if you want to sign in as a different user.
+      "Sign in" again if you want to sign in as a different user, or use 
+      a different ID Provider.
     </Typography>
     <Grid container justifyContent={"center"}>
       {/* From our perspective, it's "sign out", because user is technically 
