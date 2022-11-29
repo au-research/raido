@@ -94,7 +94,15 @@ public class AppUserAuthnEndpoint {
     everyone from ARDC so far. */
     String email = idProviderJwt.getClaim(EMAIL_CLAIM).asString();
     String subject = idProviderJwt.getSubject();
-    
+
+    /* Really not sure this is a good idea.
+    It means that each time an orcid users frobs their permissions (potentially
+    three times between email, name, neither), the user will be counted as
+    a separate user, because we use a tuple of [email, subject, clientId] to 
+    link the "id_token" to an app_user record.
+    I think we're going to have to just use subject.
+    This new approach would align with our usage of app_user table for api-keys
+    too. */
     if( raidv2UserAuthSvc.mapIdProvider(state.clientId) == ORCID  ){
       // try name fields, but that's also allowed to be private
       email = idProviderJwt.getClaim("given_name").asString() + " " +
