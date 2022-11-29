@@ -68,10 +68,7 @@ public class OrcidOidc {
     HttpEntity<MultiValueMap<String, String>> request =
       new HttpEntity<>(map, headers);
     
-    log.with("bod", request.getBody()).info();
-
-//    ResponseEntity<String> response = rest.postForEntity(
-//      orcid.tokenUrl, request, String.class);
+    log.with("bod", request.getBody()).debug();
 
     ResponseEntity<OAuthTokenResponse> response = rest.postForEntity(
       orcid.tokenUrl, request, OAuthTokenResponse.class);
@@ -79,11 +76,11 @@ public class OrcidOidc {
 
     log.with("response", response).
       with("response.body", response.getBody()).
-      info("orcid response");
+      debug("orcid response");
     Guard.notNull(response.getBody());
 
     DecodedJWT jwt = JWT.decode(response.getBody().id_token);
-    log.with("jwt", jwt.getClaims()).info();
+    log.with("jwt", jwt.getClaims()).debug();
     verify(jwt);
     
     return jwt;
@@ -91,6 +88,7 @@ public class OrcidOidc {
   
   public void verify(DecodedJWT jwt){
     Guard.areEqual(jwt.getAlgorithm(), "RS256");
+    
     // orcid id_token does not have a type, see comment at end of file
     // Guard.areEqual(jwt.getType(), "bearer");
 
