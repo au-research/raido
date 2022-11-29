@@ -75,22 +75,21 @@ export function SignInContainer(){
       clientId: Config.orcid.clientId,
     }
     signInContext.setAction(orcidAction);
-    
+
+    let redirectUri = `${Config.raidoIssuer}/idpresponse`
     if( Config.environmentName === "dev" ){
-      alert("Orcid login doesn't work locally, because it needs https");
-      // but don't return, let the request be made, helps during development
+      alert("Orcid requires https, see `local-orcid-signin.md`");
+      // you have to run the local https proxy for this to work
+      redirectUri = "https://localhost:6080/idpresponse"
     }
-    else {
-      alert("Orcid sign-in is not working yet");
-    }
-    
+
     try {
       let loginUrl = `${Config.orcid.authorizeUrl}` +
         `?client_id=${Config.orcid.clientId}` +
         `&scope=${encodeURIComponent(Config.orcid.authnScope)}` +
         // we're mixing between authorize and OIDC implicit flows, could be bad
         `&response_type=${oauthCodeGrantFlow}` +
-        `&redirect_uri=${Config.raidoIssuer}/idpresponse` +
+        `&redirect_uri=${redirectUri}` +
         `&state=${formatStateValue(state)}`;
       navBrowserByAssign(loginUrl);
     }

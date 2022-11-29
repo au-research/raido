@@ -81,6 +81,9 @@ function mapProviderName(payload: AuthzTokenPayload): string {
   else if( payload.clientId === "RAIDO_API" ){
     return "Raido API";
   }
+  else if( payload.clientId === "ORCID" ){
+    return "ORCiD";
+  }
   else {
     console.log("unknown idp clientId", payload);
     return "Unknown";
