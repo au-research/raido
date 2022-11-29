@@ -91,7 +91,8 @@ public class OrcidOidc {
   
   public void verify(DecodedJWT jwt){
     Guard.areEqual(jwt.getAlgorithm(), "RS256");
-    Guard.areEqual(jwt.getType(), "bearer");
+    // orcid id_token does not have a type, see comment at end of file
+    // Guard.areEqual(jwt.getType(), "bearer");
 
     /* Probably overkill and unnecessary. If the attacker can intercept calls
     between api-svc and orcid to feed us a fake JWT, then they can intercept 
@@ -111,12 +112,13 @@ public class OrcidOidc {
         plusMillis(1000).
         isAfter(Instant.now()) );
     
+    /* Orcid allows users to choose to not make their email public. 
     Guard.hasValue("email claim must have value", 
       jwt.getClaim("email").asString());
     
     Guard.isTrue("email_verified must be true", 
       jwt.getClaim("email_verified").asBoolean());
-    
+    */
   }
 
   private void verifyOrcidJwksSignature(DecodedJWT jwt) {
@@ -160,9 +162,19 @@ public class OrcidOidc {
 }
 
 /*
-  access_token='a9ccc0d...36', 
-  expires_in=631138518, 
-  scope='openid', 
-  token_type='bearer', 
-  id_token='eyJraWQ...803'
+- orcid uses the orcid id as the sub, seems dangerous
+- no email because I didn not have it public
+- name fields were returned because I had it public
+id_token: jwt={
+  at_hash="UDS4BWIO0XKVVnJAr36Q1w", 
+  sub="0000-0001-7233-7241", 
+  iss="https://orcid.org", 
+  given_name="Shorn", 
+  aud="APP-IZBIZ6O7XH9RFG0X", 
+  auth_time=1669694767, 
+  exp=1669781174, 
+  iat=1669694774, 
+  family_name="Tolley", 
+  jti="fe7bcdba-66bb-44c0-a6b8-d1b7383ac585"
+  } 
  */

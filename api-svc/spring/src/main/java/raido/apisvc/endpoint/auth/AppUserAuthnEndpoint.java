@@ -13,6 +13,7 @@ import raido.apisvc.spring.security.ApiSafeException;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.apisvc.util.RestUtil;
+import raido.apisvc.util.StringUtil;
 import raido.db.jooq.api_svc.enums.IdProvider;
 
 import java.io.IOException;
@@ -23,7 +24,9 @@ import static raido.apisvc.service.auth.NonAuthzTokenPayload.NonAuthzTokenPayloa
 import static raido.apisvc.spring.security.IdProviderException.idpException;
 import static raido.apisvc.util.ExceptionUtil.authFailed;
 import static raido.apisvc.util.Log.to;
+import static raido.apisvc.util.StringUtil.hasValue;
 import static raido.apisvc.util.StringUtil.isNullOrEmpty;
+import static raido.db.jooq.api_svc.enums.IdProvider.ORCID;
 
 
 @RequestMapping
@@ -32,6 +35,7 @@ public class AppUserAuthnEndpoint {
   public static final String IDP_URL = "/idpresponse";
 
   private static final Log log = to(AppUserAuthnEndpoint.class);
+  public static final String EMAIL_CLAIM = "email";
 
   private ObjectMapper map;
   
@@ -82,10 +86,26 @@ public class AppUserAuthnEndpoint {
     DecodedJWT idProviderJwt = raidv2UserAuthSvc.
       exchangeCodeForVerfiedJwt(state.clientId, idpResponseCode);
 
-    // no email for orcid!
-    String email = idProviderJwt.getClaim("email").asString().
-      toLowerCase().trim();
+    /* "email" isn't really email any more, going to rename it to 
+    "description" or something. 
+    Orcid may not have an email, user doesn't have to make it public.
+    Google always provides email.
+    AAF, not sure if it's always there - can only say it's been there for 
+    everyone from ARDC so far. */
+    String email = idProviderJwt.getClaim(EMAIL_CLAIM).asString();
     String subject = idProviderJwt.getSubject();
+    
+    if( raidv2UserAuthSvc.mapIdProvider(state.clientId) == ORCID  ){
+      // try name fields, but that's also allowed to be private
+      email = idProviderJwt.getClaim("given_name").asString() + " " +
+        idProviderJwt.getClaim("family_name").asString();
+      
+      // fall back to just using the orcid id stored in the JWT subject
+      if( isNullOrEmpty(email) ){
+        email = "ORCiD " + subject;
+      }
+    }
+
     Guard.hasValue(email);
     Guard.hasValue(subject);
 
@@ -98,7 +118,7 @@ public class AppUserAuthnEndpoint {
         raidv2UserAuthSvc.sign( aNonAuthzTokenPayload().
           withSubject(idProviderJwt.getSubject()).
           withClientId(state.clientId).
-          withEmail(idProviderJwt.getClaim("email").asString()).
+          withEmail(idProviderJwt.getClaim(EMAIL_CLAIM).asString()).
           build()
         )
       ));
