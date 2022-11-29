@@ -68,9 +68,11 @@ public class AppUser extends TableImpl<AppUserRecord> {
     public final TableField<AppUserRecord, Long> SERVICE_POINT_ID = createField(DSL.name("service_point_id"), SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
-     * The column <code>api_svc.app_user.email</code>.
+     * The column <code>api_svc.app_user.email</code>. should be renamed to
+     * "description" or some such.  api-keys do not and orcid 
+     *   sign-ins might not have email address
      */
-    public final TableField<AppUserRecord, String> EMAIL = createField(DSL.name("email"), SQLDataType.VARCHAR(256).nullable(false), this, "");
+    public final TableField<AppUserRecord, String> EMAIL = createField(DSL.name("email"), SQLDataType.VARCHAR(256).nullable(false), this, "should be renamed to \"description\" or some such.  api-keys do not and orcid \r\n  sign-ins might not have email address");
 
     /**
      * The column <code>api_svc.app_user.client_id</code>.

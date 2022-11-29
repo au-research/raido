@@ -56,7 +56,9 @@ public class AppUserRecord extends UpdatableRecordImpl<AppUserRecord> implements
     }
 
     /**
-     * Setter for <code>api_svc.app_user.email</code>.
+     * Setter for <code>api_svc.app_user.email</code>. should be renamed to
+     * "description" or some such.  api-keys do not and orcid 
+     *   sign-ins might not have email address
      */
     public AppUserRecord setEmail(String value) {
         set(2, value);
@@ -64,7 +66,9 @@ public class AppUserRecord extends UpdatableRecordImpl<AppUserRecord> implements
     }
 
     /**
-     * Getter for <code>api_svc.app_user.email</code>.
+     * Getter for <code>api_svc.app_user.email</code>. should be renamed to
+     * "description" or some such.  api-keys do not and orcid 
+     *   sign-ins might not have email address
      */
     public String getEmail() {
         return (String) get(2);
