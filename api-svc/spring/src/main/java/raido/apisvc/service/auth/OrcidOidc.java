@@ -90,7 +90,7 @@ public class OrcidOidc {
   
   public void verify(DecodedJWT jwt){
     Guard.areEqual(jwt.getAlgorithm(), "RS256");
-    Guard.areEqual(jwt.getType(), "JWT");
+    Guard.areEqual(jwt.getType(), "bearer");
 
     /* Probably overkill and unnecessary. If the attacker can intercept calls
     between api-svc and orcid to feed us a fake JWT, then they can intercept 
@@ -157,3 +157,11 @@ public class OrcidOidc {
   }
 
 }
+
+/*
+  access_token='a9ccc0d...36', 
+  expires_in=631138518, 
+  scope='openid', 
+  token_type='bearer', 
+  id_token='eyJraWQ...803'
+ */
