@@ -72,17 +72,18 @@ export function BooleanDisplay({value, ...props}: {
 }
 
 function mapProviderName(payload: AuthzTokenPayload): string {
+  // clientId for this is dody, I think we need to add provider to payload 
   if( payload.clientId === Config.aaf.clientId ){
     return "AAF";
   }
   else if( payload.clientId === Config.google.clientId ){
     return "Google";
   }
+  else if( payload.clientId === Config.orcid.clientId ){
+    return "ORCiD";
+  }
   else if( payload.clientId === "RAIDO_API" ){
     return "Raido API";
-  }
-  else if( payload.clientId === "ORCID" ){
-    return "ORCiD";
   }
   else {
     console.log("unknown idp clientId", payload);
