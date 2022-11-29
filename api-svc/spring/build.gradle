@@ -225,7 +225,7 @@ task uberJar(type: Jar) {
   }
 
   doFirst{
-    println "generating uberJar to ${archiveFile.get()}"
+    println "generating uberJar to ${archiveFile.get()} from version ${archiveVersion}"
   }
 }
 tasks.build.dependsOn uberJar
