@@ -197,6 +197,17 @@ Like I want to do for orcid?
 Do we really want to enable this?  Our API will get abused like hell (just like
 I want to abuse the orcid API).
 
+## CodeBuild projects pull from Docker anonlymously
+
+That means we sometimes see errors from docker about:
+`Step 1/11 : FROM amazonlinux:2.0.20220218.1
+toomanyrequests: You have reached your pull rate limit. You may increase the limit by authenticating and upgrading: https://www.docker.com/increase-rate-limit`
+
+There's a few different ways to address it:
+https://cloudkatha.com/too-many-requests-you-reached-pull-rate-limit/
+
+Reckon the easiest would be to make another codebuild project whose job it
+is to push the image to our ECR.
 
 # AWS / Infra
 
