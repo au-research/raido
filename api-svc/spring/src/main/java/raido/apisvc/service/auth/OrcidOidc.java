@@ -56,17 +56,6 @@ public class OrcidOidc {
   
   public DecodedJWT exchangeCodeForVerifiedJwt(String idpResponseCode){
     HttpHeaders headers = new HttpHeaders();
-//    headers.setContentType(MediaType.APPLICATION_JSON);
-//    var tokenRequest = new OAuthTokenRequest().
-//      code(idpResponseCode).
-//      client_id(orcid.clientId).
-//      client_secret(orcid.clientSecret).
-//      grant_type("authorization_code").
-//      redirect_uri(raido.serverRedirectUri);
-//
-//    HttpEntity<OAuthTokenRequest> request =
-//      new HttpEntity<>(tokenRequest, headers);
-
     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
     MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
@@ -81,13 +70,16 @@ public class OrcidOidc {
     
     log.with("bod", request.getBody()).info();
 
+//    ResponseEntity<String> response = rest.postForEntity(
+//      orcid.tokenUrl, request, String.class);
+
     ResponseEntity<OAuthTokenResponse> response = rest.postForEntity(
       orcid.tokenUrl, request, OAuthTokenResponse.class);
 
 
     log.with("response", response).
       with("response.body", response.getBody()).
-      debug("orcid response");
+      info("orcid response");
     Guard.notNull(response.getBody());
 
     DecodedJWT jwt = JWT.decode(response.getBody().id_token);
