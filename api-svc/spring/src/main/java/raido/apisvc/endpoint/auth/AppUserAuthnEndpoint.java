@@ -118,7 +118,7 @@ public class AppUserAuthnEndpoint {
         raidv2UserAuthSvc.sign( aNonAuthzTokenPayload().
           withSubject(idProviderJwt.getSubject()).
           withClientId(state.clientId).
-          withEmail(idProviderJwt.getClaim(EMAIL_CLAIM).asString()).
+          withEmail(email).
           build()
         )
       ));
@@ -148,7 +148,7 @@ public class AppUserAuthnEndpoint {
         withServicePointId(user.getServicePointId()).
         withSubject(idProviderJwt.getSubject()).
         withClientId(state.clientId).
-        withEmail(idProviderJwt.getClaim(RaidoClaim.EMAIL.getId()).asString()).
+        withEmail(email).
         withRole(user.getRole().getLiteral()).
         build()
       )
