@@ -57,8 +57,6 @@ public class AppUserAuthnEndpoint {
   ) throws IOException, ApiSafeException {
     // don't log values, don't want authn codes in logs
     log.with("params", req.getParameterMap().keySet()).debug("/idpresponse");
-    // security:sto remove this after orcid is working 
-    log.with("params", req.getParameterMap()).debug("/idpresponse");
     
     String idpResponseCode = req.getParameter("code");
     if( isNullOrEmpty(idpResponseCode) ){
@@ -71,10 +69,10 @@ public class AppUserAuthnEndpoint {
     }
 
     String decodedState = RestUtil.base64Decode(stateValue);
-    log.with("decodeState", decodedState).info("");
+    log.with("decodeState", decodedState).debug("");
     
     var state = map.readValue(decodedState, AuthState.class);
-    log.with("state", state).info("");
+    log.with("state", state).debug("");
     
     if( isNullOrEmpty(state.clientId) ){
       throw idpException("no clientId provided in state"); 
