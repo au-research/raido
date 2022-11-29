@@ -72,7 +72,6 @@ public class AppUserAuthnEndpoint {
     log.with("decodeState", decodedState).debug("");
     
     var state = map.readValue(decodedState, AuthState.class);
-    log.with("state", state).debug("");
     
     if( isNullOrEmpty(state.clientId) ){
       throw idpException("no clientId provided in state"); 
@@ -94,7 +93,7 @@ public class AppUserAuthnEndpoint {
     String subject = idProviderJwt.getSubject();
 
     /* Really not sure this is a good idea.
-    It means that each time an orcid users frobs their permissions (potentially
+    It means that each time orcid users change their permissions (potentially
     three times between email, name, neither), the user will be counted as
     a separate user, because we use a tuple of [email, subject, clientId] to 
     link the "id_token" to an app_user record.  That means they'll have to be
@@ -116,6 +115,10 @@ public class AppUserAuthnEndpoint {
     var userRecord = raidv2UserAuthSvc.
       getAppUserRecord(email, subject, state.clientId); 
     if( userRecord.isEmpty() ){
+      log.with("email", email).
+        with("subject", subject).
+        with("clientId", state.clientId).
+        debug("identified new NonAuthz user");
       // valid: authenticated via an IdP but not authorized/approved as a user
       res.sendRedirect( "%s#id_token=%s".formatted(
         state.redirectUri,
@@ -141,7 +144,7 @@ public class AppUserAuthnEndpoint {
     if( user.getIdProvider() == IdProvider.RAIDO_API ){
       log.with("appUserId", user.getId()).
         with("subject", user.getSubject()).
-        info("api-key users cannot authneticate using user service");
+        info("api-key users cannot authenticate using user service");
       throw authFailed();
     }
 
