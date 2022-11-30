@@ -8,9 +8,9 @@ See the "Gradle build" section of the
 Want to re-do the versioning.
 Current plan:
 * replace the `git-version` plugin with some simple imperative code to 
-lookip the version from `git describe` and commit id.
+lookup the version from `git describe` and commit id.
   * can just try to invoke `git` at the command line
-* allow the ability to pre-empt the lookup with an env var - so you can
+* allow the ability to preempt the lookup with an env var - so you can
 still have stuff work inside `codepipeline`
   * passing in the commit id will be easy, probably have to go `git descrive`
   based functionality.  That's ok, because we don't use a version for the 
@@ -41,7 +41,7 @@ ApiKeyPage.
 The error display page (ErrorDialog, not CompactErrorPanel) needs to provide
 better user instructions and components for users to get out of error states
 caused by stuff like:
-* token being expired - the authcontext picks this up when loading the page,
+* token being expired - the authContext picks this up when loading the page,
   but we're not dealing with the page being open for N hours.
   * need token refresh logic
   * or at least a sign-out/refresh button
@@ -70,7 +70,7 @@ generates the HTML rather than running on the client).
 
 Currently, the API endpoints are "deny-by-default" to un-authenticated users,
 if you're not authenticated, then you won't be able to call any endpoint unless
-that endpoint has been specifically declared to be pulicly accessible (by 
+that endpoint has been specifically declared to be publicly accessible (by 
 placing it under the `/v2/public` prefix).
 
 That means anyone with any role (Operator, Admin, or User) can access an 
@@ -78,18 +78,18 @@ endpoint if the developer hasn't implemented authz checking.
 
 Two approaches I've thought of:
 * an implementation approach - add a "I have checked authz flag", probably in 
-  the SecurityContext and if that flag never got set in the implmentation, 
+  the SecurityContext and if that flag never got set in the implementation, 
   abandon the endpoint call (what about transaction rollback?, what about 
   side effect stuff done with other systems?)
 * a test-based approach 
   * iterate all non-public endpoints (easy)
-  * somehow magically figure out if developer implmented authz  
+  * somehow magically figure out if developer implemented authz  
 
 
 ## JWT authorisation validation causes too much DB load
 
 At the moment, every endpoint reads from the app_user table for every 
-single authroizable endpoint call, every time.  This is done in order
+single authorized endpoint call, every time.  This is done in order
 to validate that the user/token represented by the token:
 * had not been disabled 
 * has not been "blacklisted" via token cutoff
@@ -103,21 +103,21 @@ load (most of the time, the user hasn't changed and the queries are completely
 unnecessary).
 
 In the medium-term, we will alleviate this load by caching the relevant 
-app_user data (using the Caffeine libarary) with an agressive cache of a few 
-seconds.  This cache is not about latency/uptime/reliabilty - it's purely to 
+app_user data (using the Caffeine library) with an aggressive cache of a few 
+seconds.  This cache is not about latency/uptime/reliability - it's purely to 
 relieve the DB (and local connection pool) of the processing/connection 
 overhead of all those user queries. 
 
 Long-term, this could further be improved with a dedicated caching service
-such as redis/elasticache.  Though at that point it likely makes more sense
+such as Redis/ElasticCache.  Though at that point it likely makes more sense
 to factor out the app_user stuff to a separate IDService that can control its
 own fate with regard to caching/DB technology used.
 
 
-## IDL projects generate java of the from `Void entpointName()`   
+## IDL projects generate java of the from `Void endpointName()`   
 
-When we have a POST endpoint that doesn't return anything, we end with a method
-with the `Void` return type, which we then have to `return null` from, ick.
+When we have a POST endpoint that doesn't return anything, OpenAPI generates a 
+method with the `Void` return type, from which we then have to `return null`.
 
 This happens because we customise the return type of OpenAPI generated methods
 to not wrap return values in a `ResponseEntity`.  
@@ -125,14 +125,14 @@ Returning `ResponseEntity<Void>` makes sense, returning `Void` is silly.
 We should be generating methods that just return `void` in this case.
 
 This might not be worth fixing though.  Most endpoints will end up returning a 
-generic "sucess/fail" type that can return info about the failure. So the 
+generic "success/fail" type that can return info about the failure. So the 
 awkwardness with `Void` may not turn out to be much of an issue.
 
 
-## Current API is very "un-RESTful"
+## Current API is very "un-REST-ful"
 
 We need a "REST API" guidelines policy, similar to the 
-[DB schema guidlines](../api-svc/db/raido/doc/schema-guideline.md).
+[DB schema guidelines](../api-svc/db/raido/doc/schema-guideline.md).
 
 Randomly structured endpoints for experimental stuff is fine - but we need to 
 be more rigorous for the stable endpoints.
@@ -148,6 +148,10 @@ But want to avoid usage of `limit` / `offset`.
 https://use-the-index-luke.com/blog/2013-07/pagination-done-the-postgresql-way
 
 Start with the `list-raid` endpoint.
+
+Maybe *don't* do pagination, but just limit the records (as we currently do)
+and make sure any page like this has workable search functionality.
+This avoids any API clients from iterating through the DB by abusing pagination.
 
 
 ## APIDS service needs refactoring
@@ -197,7 +201,7 @@ Like I want to do for orcid?
 Do we really want to enable this?  Our API will get abused like hell (just like
 I want to abuse the orcid API).
 
-## CodeBuild projects pull from Docker anonlymously
+## CodeBuild projects pull from Docker anonymously
 
 That means we sometimes see errors from docker about:
 `Step 1/11 : FROM amazonlinux:2.0.20220218.1
