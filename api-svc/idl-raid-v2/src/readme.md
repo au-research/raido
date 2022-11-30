@@ -2,6 +2,15 @@
 
 ## "Raid" metadata vs "Raido" metadata
 
+In general, and in this document specifically:
+* "Raid" refers to the concept of the global RAiD ISO standard and its
+  associated metadata.
+* "Raido" is the ARDC's implementation of the Raid standard for Oceania region.
+  It is expected that there will be many separately operated Raid 
+  implementations which will likely support different region-appropriate 
+  customise metadata schema.
+
+
 ### Raido metadata
 
 The Raido metaschema currently consists of two schema:
@@ -26,8 +35,8 @@ published formal metadata definition.
   doesn't actually support (`contributor`, etc.)
 * any future "raido v2" schema we define for use by Raido customers
   will have to have a mapping to this
-* the process of mapping "raido" schema to this schema is also known as 
-  "cross walking"
+* the process of mapping custom "raido" schema (like the legacy metadata) to 
+  the public "raid" schema is also known as "cross walking"
 
 #### `PublicClosedMetadataSchemaV1`
 
