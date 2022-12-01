@@ -7,22 +7,22 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.jooq.DSLContext;
+import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken;
 import org.springframework.stereotype.Component;
-import raido.apisvc.util.ExceptionUtil;
-import raido.db.jooq.raid_v1_import.tables.records.TokenRecord;
 import raido.apisvc.spring.config.environment.RaidV1AuthProps;
 import raido.apisvc.spring.security.ApiSvcAuthenticationException;
 import raido.apisvc.spring.security.raidv1.Raid1PostAuthenicationJsonWebToken;
-import raido.apisvc.spring.security.raidv1.RaidV1PreAuthenticatedJsonWebToken;
+import raido.apisvc.util.ExceptionUtil;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
+import raido.db.jooq.raid_v1_import.tables.records.TokenRecord;
 
 import java.util.Optional;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static raido.db.jooq.raid_v1_import.tables.Token.TOKEN;
 import static raido.apisvc.util.Log.to;
+import static raido.db.jooq.raid_v1_import.tables.Token.TOKEN;
 
 @Component
 public class RaidV1AuthService {
@@ -60,10 +60,14 @@ public class RaidV1AuthService {
   }
 
   public Optional<Raid1PostAuthenicationJsonWebToken> authenticate(
-    RaidV1PreAuthenticatedJsonWebToken preAuth
+    BearerTokenAuthenticationToken preAuth
   ){
-    String originalToken = preAuth.getToken().getToken();
+    String originalToken = preAuth.getToken();
     DecodedJWT jwt = this.verify(originalToken);
+    
+    // security:sto assert the token is the shape we expect
+    // issuer, etc.
+    // make sure it's a V1 token, not a V2 token
 
     var record = db.select().from(TOKEN).
       where(TOKEN.NAME.eq(jwt.getSubject())).

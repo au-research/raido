@@ -4,7 +4,7 @@ import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.springframework.stereotype.Component;
 import raido.apisvc.endpoint.Constant;
-import raido.apisvc.service.auth.AuthzTokenPayload;
+import raido.apisvc.spring.security.raidv2.AuthzTokenPayload;
 import raido.apisvc.service.auth.NonAuthzTokenPayload;
 import raido.apisvc.service.auth.RaidV2AppUserAuthService;
 import raido.apisvc.util.Guard;

@@ -1,6 +1,6 @@
 package raido.apisvc.endpoint.raidv2;
 
-import raido.apisvc.service.auth.AuthzTokenPayload;
+import raido.apisvc.spring.security.raidv2.AuthzTokenPayload;
 import raido.apisvc.service.auth.NonAuthzTokenPayload;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;

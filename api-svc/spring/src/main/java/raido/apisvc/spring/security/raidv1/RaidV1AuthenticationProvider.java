@@ -3,6 +3,7 @@ package raido.apisvc.spring.security.raidv1;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken;
 import raido.apisvc.service.raidv1.RaidV1AuthService;
 import raido.apisvc.util.Log;
 
@@ -20,27 +21,16 @@ public class RaidV1AuthenticationProvider implements AuthenticationProvider {
   @Override
   public Authentication authenticate(Authentication authentication) 
   throws AuthenticationException {
-
-    if( isRaid1PreAuth(authentication.getClass()) ){
-      return raidSvc.authenticate(
-        (RaidV1PreAuthenticatedJsonWebToken) authentication).orElse(null);
+    if( !(authentication instanceof BearerTokenAuthenticationToken bearer) ){
+      return null;
     }
-    
-    
-    /* Do not log the details of the object.  
-     Since we we don't know what it is we certainly don't know if 
-     it might print out sensitive info. */
-    log.with("class", authentication.getClass().getName()).
-      warn("AuthProvider can't handle");
-    return null;
-  }
 
-  private boolean isRaid1PreAuth(Class<?> authentication){
-    return authentication.equals(RaidV1PreAuthenticatedJsonWebToken.class);
+    return raidSvc.authenticate(bearer).orElse(null);
   }
 
   @Override
   public boolean supports(Class<?> authentication) {
-    return isRaid1PreAuth(authentication);
+    return authentication.isAssignableFrom(
+      BearerTokenAuthenticationToken.class );
   }
 }

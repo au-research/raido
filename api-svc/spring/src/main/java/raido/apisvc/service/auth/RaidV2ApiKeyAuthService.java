@@ -9,8 +9,7 @@ import org.jooq.DSLContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import raido.apisvc.spring.config.environment.RaidV2ApiKeyAuthProps;
-import raido.apisvc.spring.security.ApiSvcAuthenticationException;
-import raido.apisvc.spring.security.raidv2.RaidV2PreAuthenticatedJsonWebToken;
+import raido.apisvc.spring.security.raidv2.AuthzTokenPayload;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.tables.records.AppUserRecord;
@@ -21,8 +20,8 @@ import java.util.Optional;
 
 import static java.util.Optional.of;
 import static org.eclipse.jetty.util.TypeUtil.isFalse;
-import static raido.apisvc.service.auth.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
 import static raido.apisvc.service.auth.NonAuthzTokenPayload.NonAuthzTokenPayloadBuilder.aNonAuthzTokenPayload;
+import static raido.apisvc.spring.security.raidv2.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
 import static raido.apisvc.util.ExceptionUtil.authFailed;
 import static raido.apisvc.util.ExceptionUtil.wrapException;
 import static raido.apisvc.util.Log.to;
@@ -86,37 +85,36 @@ public class RaidV2ApiKeyAuthService {
     }
   }
 
-  public Optional<Authentication> authorize(
-    RaidV2PreAuthenticatedJsonWebToken preAuth
-  ){
-    String originalToken = preAuth.getToken().getToken();
-    DecodedJWT jwt = this.verify(originalToken);
-
+  public Optional<Authentication> verifyAndAuthorize(DecodedJWT decodedJwt){
+    var verifiedJwt = verify(decodedJwt);
+    
     // security:sto check claims and expiry and stuff
-    String clientId = jwt.getClaim(RaidoClaim.CLIENT_ID.getId()).asString();
-    String email = jwt.getClaim(RaidoClaim.EMAIL.getId()).asString();
-    Boolean isAuthzAppUser = jwt.getClaim(
+    String clientId = verifiedJwt.
+      getClaim(RaidoClaim.CLIENT_ID.getId()).asString();
+    String email = verifiedJwt.getClaim(RaidoClaim.EMAIL.getId()).asString();
+    Boolean isAuthzAppUser = verifiedJwt.getClaim(
       RaidoClaim.IS_AUTHORIZED_APP_USER.getId() ).asBoolean();
     
-    var issuedAt = jwt.getIssuedAtAsInstant();
+    var issuedAt = verifiedJwt.getIssuedAtAsInstant();
     Guard.notNull(issuedAt);
     
-    Guard.hasValue(jwt.getSubject());
+    Guard.hasValue(verifiedJwt.getSubject());
     Guard.hasValue(clientId);
     Guard.hasValue(email);
     
     if( !isAuthzAppUser ){
       return of(aNonAuthzTokenPayload().
-        withSubject(jwt.getSubject()).
+        withSubject(verifiedJwt.getSubject()).
         withEmail(email).
         withClientId(clientId).
         build() );
     }
 
-    Long appUserId = jwt.getClaim(RaidoClaim.APP_USER_ID.getId()).asLong();
-    Long servicePointId = jwt.getClaim(
+    Long appUserId = verifiedJwt.
+      getClaim(RaidoClaim.APP_USER_ID.getId()).asLong();
+    Long servicePointId = verifiedJwt.getClaim(
       RaidoClaim.SERVICE_POINT_ID.getId()).asLong();
-    String role = jwt.getClaim(RaidoClaim.ROLE.getId()).asString();
+    String role = verifiedJwt.getClaim(RaidoClaim.ROLE.getId()).asString();
     Guard.notNull(appUserId);
     Guard.hasValue(role);
     
@@ -124,7 +122,7 @@ public class RaidV2ApiKeyAuthService {
       orElseThrow(()->{
         log.with("appUserId", appUserId).
           with("email", email).
-          with("subject", jwt.getSubject()).
+          with("subject", verifiedJwt.getSubject()).
           with("clientId", clientId).
           with("role", role).
           warn("attempted token authz -" +
@@ -163,19 +161,19 @@ public class RaidV2ApiKeyAuthService {
     return of(anAuthzTokenPayload().
       withAppUserId(appUserId).
       withServicePointId(servicePointId).
-      withSubject(jwt.getSubject()).
+      withSubject(verifiedJwt.getSubject()).
       withEmail(email).
       withClientId(clientId).
       withRole(role).
       build() );
   }
 
-  public DecodedJWT verify(String token) {
-    DecodedJWT jwt = null;
+  public DecodedJWT verify(DecodedJWT decodedJwt) {
+    DecodedJWT verifiedJwt = null;
     JWTVerificationException firstEx = null;
     for( int i = 0; i < apiAuthProps.verifiers.length; i++ ){
       try {
-        jwt = apiAuthProps.verifiers[i].verify(token);
+        verifiedJwt = apiAuthProps.verifiers[i].verify(decodedJwt);
       }
       catch( JWTVerificationException e ){
         if( firstEx == null ){
@@ -183,19 +181,18 @@ public class RaidV2ApiKeyAuthService {
         }
       }
     }
-    if( jwt != null ){
-      return jwt;
+    if( verifiedJwt != null ){
+      return verifiedJwt;
     }
     log.with("firstException", firstEx == null ? "null" : firstEx.getMessage()).
-      with("token", mask(token)).
+      with("token", mask(decodedJwt.getToken())).
       with("verifiers", apiAuthProps.verifiers.length).
       info("jwt not verified by any of the secrets");
-    throw new ApiSvcAuthenticationException();
+    throw authFailed();
   }
 
   /** This should be cached read, otherwise we're gonna be doing 
-   this for every single API call for a user.  Use Caffeine.
-   */
+   this for every single API call for a user.  Use Caffeine. */
   public Optional<AppUserRecord> getAppUserRecord(
     long appUserId
   ){

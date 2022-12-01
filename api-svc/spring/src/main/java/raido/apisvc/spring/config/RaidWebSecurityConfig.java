@@ -4,8 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.AuthenticationManagerResolver;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -17,9 +16,8 @@ import org.springframework.security.web.firewall.StrictHttpFirewall;
 import raido.apisvc.service.auth.RaidV2ApiKeyAuthService;
 import raido.apisvc.service.auth.RaidV2AppUserAuthService;
 import raido.apisvc.service.raidv1.RaidV1AuthService;
-import raido.apisvc.spring.security.RaidoSecurityContextRepository;
 import raido.apisvc.spring.security.raidv1.RaidV1AuthenticationProvider;
-import raido.apisvc.spring.security.raidv1.RaidV2AuthenticationProvider;
+import raido.apisvc.spring.security.raidv2.RaidV2AuthenticationProvider;
 import raido.apisvc.util.Log;
 
 import java.io.IOException;
@@ -48,33 +46,14 @@ public class RaidWebSecurityConfig {
 
   /* the name is significant - when prefixed "spring", got error about  
   it returning the wrong type (it wanted a `Filter` instead of FilterChain. */
-  @SuppressWarnings("deprecation")  // for authorizeRequests()
   @Bean
   public SecurityFilterChain securityFilterChain(
-    HttpSecurity http, 
-    AuthenticationManager authnManager
+    HttpSecurity http,  
+    AuthenticationManagerResolver<HttpServletRequest>  tokenResolver
   ) throws Exception {
     log.info("securityFilterChain()");
 
-    /* repo checks if user is authenticating with a raidV1 or raidV2 token
-    (currently based on what endpoint they're accessing)  
-    and populates the SecurityContext with a "pre-auth" token. */
-    http.securityContext().securityContextRepository(
-      new RaidoSecurityContextRepository() );
-    
-    /* AuthnManager contains multiple AuthnProviders, these are the what 
-    verifies the specific type of token (raidV1 or V2) is secure, then swaps 
-    the pre-auth token in the SecurityContext for a "post-auth" token. */
-    http.authenticationManager(authnManager);
-
-    /* deprecation notice says to use `authorizeHttpRequests()` but that 
-    causes 403 errors because ProviderManager never gets called; 
-    thus AuthnProviders don't get called, so the security context still 
-    contains the pre-auth token instead of a verified post-auth token, 
-    so the eventual call to AuthorizationStrategy.isGranted() ends up 
-    calling isAuthenticated() on the pre-auth token, which (correctly) 
-    returns false and the request is denied. */
-    http.authorizeRequests(). // authorizeHttpRequests().
+    http.authorizeHttpRequests().
       // order is important, more specific has to come before more general
       requestMatchers(RAID_V1_API + HANDLE_URL_PREFIX + "/**" ).permitAll().
       requestMatchers(RAID_V2_PUBLIC_API + "/**").permitAll().
@@ -88,6 +67,9 @@ public class RaidWebSecurityConfig {
       // "default deny" anything not explicitly allowed above
       anyRequest().denyAll();
 
+    http.oauth2ResourceServer(oauth2 ->
+      oauth2.authenticationManagerResolver(tokenResolver) );    
+    
     http.httpBasic().disable().
       /* api-svc is stateless and the browser client does not use cookies;
       in the baeldung article, section 2.1 and 2.2 are most applicable:
@@ -118,22 +100,42 @@ public class RaidWebSecurityConfig {
     return http.build();
   }
 
-  /* AuthnProviders can be inlined directly into the http config, but it's 
-  more readable this way. */
   @Bean
-  public AuthenticationManager authenticationManager(
-    RaidV1AuthService raid1Svc,
+  public AuthenticationManagerResolver<HttpServletRequest> 
+  tokenAuthenticationManagerResolver(
+    RaidV1AuthenticationProvider raidV1AuthProvider,
+    RaidV2AuthenticationProvider raidV2AuthProvider
+  ) {
+    return (request)-> {
+      if( isRaidV2Api(request) ){
+        return raidV2AuthProvider::authenticate;
+      }
+      else if( isRaidV1Api(request) ){
+        return raidV1AuthProvider::authenticate;
+      }
+      else {
+        return null;
+      }
+    };
+  }
+
+  // maybe authprovider can just be @Components now instead of explicit beans?
+  @Bean
+  public RaidV2AuthenticationProvider raidV2AuthProvider(
     RaidV2AppUserAuthService appUserAuthSvc,
     RaidV2ApiKeyAuthService apiKeyAuthSvc
   ){
-    RaidV2AuthenticationProvider raidV2AuthProvider =
-      new RaidV2AuthenticationProvider(appUserAuthSvc, apiKeyAuthSvc);
-    RaidV1AuthenticationProvider raidV1AuthProvider =
-      new RaidV1AuthenticationProvider(raid1Svc);
-
-    return new ProviderManager(raidV2AuthProvider, raidV1AuthProvider);
+    return new RaidV2AuthenticationProvider(
+      appUserAuthSvc, apiKeyAuthSvc);
   }
-
+  
+  @Bean
+  public RaidV1AuthenticationProvider raidV1AuthProvider(
+    RaidV1AuthService raid1Svc
+  ){
+    return new RaidV1AuthenticationProvider(raid1Svc);
+  }
+  
   @Bean
   public RequestRejectedHandler requestRejectedHandler() {
     /* sends an error response with a configurable status code (default is 400 
@@ -172,5 +174,13 @@ public class RaidWebSecurityConfig {
     firewall.setAllowUrlEncodedSlash(true);
     return firewall;
   }
-  
+
+  public static boolean isRaidV1Api(HttpServletRequest request) {
+    return request.getServletPath().startsWith(RAID_V1_API);
+  }
+
+  public static boolean isRaidV2Api(HttpServletRequest request) {
+    return request.getServletPath().startsWith(RAID_V2_API);
+  }
+
 }

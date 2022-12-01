@@ -20,7 +20,7 @@ import java.time.ZoneOffset;
 
 import static org.jooq.impl.DSL.inline;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
-import static raido.apisvc.service.auth.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
+import static raido.apisvc.spring.security.raidv2.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
 import static raido.apisvc.util.Log.to;
 import static raido.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
 import static raido.db.jooq.api_svc.tables.AppUser.APP_USER;

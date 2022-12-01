@@ -1,4 +1,4 @@
-package raido.apisvc.service.auth;
+package raido.apisvc.spring.security.raidv2;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

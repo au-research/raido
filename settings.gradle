@@ -39,6 +39,12 @@ dependencyResolutionManagement{
       library('spring-security-web', 'org.springframework.security', 'spring-security-web').versionRef('spring6-sec')
       // for configuring through code - pkg: org.sf.security.config
       library('spring-security-config', 'org.springframework.security', 'spring-security-config').versionRef('spring6-sec')
+      library('spring-security-oauth2-core', 'org.springframework.security', 'spring-security-oauth2-core').versionRef('spring6-sec')
+      library(
+        'spring-security-oauth2-resource-server', 
+        'org.springframework.security', 
+        'spring-security-oauth2-resource-server'
+      ).versionRef('spring6-sec')
       bundle('spring6', [
         'spring-webmvc', 
         'spring-tx',
@@ -46,6 +52,8 @@ dependencyResolutionManagement{
         'spring-security-core',
         'spring-security-web',
         'spring-security-config',
+        'spring-security-oauth2-core',
+        'spring-security-oauth2-resource-server',
       ])
 
       library('feign-okhttp', 'io.github.openfeign', 'feign-okhttp').versionRef('feign')

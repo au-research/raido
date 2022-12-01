@@ -78,14 +78,17 @@ public class LegacyRaidV1MintTest extends IntegrationTestCase {
     assertThat(getResult.getHandle()).isEqualTo(raid.getHandle());
   }
 
+  /* previously, this test expected a 403 error, but after upgrading 
+  spring-security and changing over to their `oauth2ResourceServer` stuff,
+  this started getting a 401, which I believe is the more correct code. */
   @Test
   void shoudRejectAnonCalltoMint() {
     EXPECT("minting a raid without authenticating should fail");
     assertThatThrownBy(()->
       anonPost(rest, raidoApiServerUrl("/v1/raid"), "{}", Object.class)
-    ).isInstanceOf(HttpClientErrorException.class).
-        /* full text match to ensure there's no info leakage */
-        hasMessage(getForbiddenMessage("/v1/raid"));
+    ).isInstanceOf(HttpClientErrorException.Unauthorized.class).
+      /* full text match to ensure there's no info leakage */
+      hasMessage("401 Unauthorized: [no body]");
   }
 
   @Test
