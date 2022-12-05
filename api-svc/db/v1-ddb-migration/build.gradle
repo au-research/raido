@@ -37,9 +37,6 @@ flyway{
 
 repositories{
   mavenCentral()
-  // needed for resolving spring-6 milestone builds
-  // spring is pulled in for idl-raid-v2
-  maven { url "https://repo.spring.io/libs-milestone" }
 }
 
 dependencies{

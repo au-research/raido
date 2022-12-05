@@ -13,8 +13,6 @@ ext {
 
 repositories{
   mavenCentral()
-  // needed for resolving spring-6 milestone builds
-  maven { url "https://repo.spring.io/libs-milestone" }
 }
 
 dependencies{

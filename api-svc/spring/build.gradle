@@ -30,9 +30,6 @@ if( file(configPath).exists() ){
 
 repositories{
   mavenCentral()
-  
-  // needed for resolving spring-6 milestone builds
-  maven { url "https://repo.spring.io/libs-milestone" }
 }
 
 version = rootProject.version
