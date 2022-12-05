@@ -114,20 +114,20 @@ testing{
     intTest(JvmTestSuite){
       testType = TestSuiteType.INTEGRATION_TEST
       dependencies{
-        implementation project
+        implementation project()
         implementation project(':api-svc:db:raido')
         implementation project(':api-svc:idl-raid-v1')
         implementation project(':api-svc:idl-raid-v2')
 
         // for booting a custom test server
-        implementation libs.bundles.jetty11
+        implementation.bundle libs.bundles.jetty11
 
         // for having our own spring context in intTest
-        implementation libs.bundles.spring6
-        implementation libs.bundles.spring6.test
+        implementation.bundle libs.bundles.spring6
+        implementation.bundle libs.bundles.spring6.test
 
-        implementation libs.bundles.feign
-        
+        implementation.bundle libs.bundles.feign
+
         implementation libs.assertj
 
         implementation libs.jooq

@@ -98,7 +98,7 @@ testing{
     dev(JvmTestSuite){
       testType = TestSuiteType.INTEGRATION_TEST
       dependencies{
-        implementation project
+        implementation project()
 
         // doesn't work: No signature of method: build_999.testing() is applicable for argument types
         // implementation localGroovy()
