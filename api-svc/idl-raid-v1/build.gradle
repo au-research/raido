@@ -21,7 +21,7 @@ dependencies{
   // pkg: jakarta.servlet - used to be javax.servlet  
   compileOnly 'jakarta.platform:jakarta.jakartaee-web-api:9.1.0'
 
-  implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
+  implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'
 
 }
 

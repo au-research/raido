@@ -49,9 +49,9 @@ dependencies{
   /* use SLf4J API to log against - pkg: org.slf4j
      using 2.0.0 for Raido code because that's what jetty uses
      NOTE:STO: this might not be right since we're Jetty 11/Servlet 5 */
-  implementation 'org.slf4j:slf4j-api:2.0.0'
+  implementation 'org.slf4j:slf4j-api:2.0.5'
   // allow SLF4J to capture java.util logging 
-  implementation 'org.slf4j:jul-to-slf4j:2.0.0'
+  implementation 'org.slf4j:jul-to-slf4j:2.0.5'
 
   // connection pool - upgraded from 3.4.5, rollback if issues with 5.0.0
   implementation "com.zaxxer:HikariCP:5.0.0"
@@ -66,19 +66,19 @@ dependencies{
   runtimeOnly libs.pgjdbc
 
   // support for JSON serialization for Spring endpoints
-  runtimeOnly 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
+  runtimeOnly 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'
   // support for XML serialization for APIDS endpoints (probably others later)
-  implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.13.3'
+  implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.1'
 
   // so that MappingJackson2XmlHttpMessageConverter can parse to LocalDateTime 
-  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3"
+  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.1"
 
   /* used for:
    - generating/verifying HS256 JWTs for RAID v1 tokens 
    - verifying OIDC (google, aaf) RS256 JWTs 
    - generating/verifying HS256 JWTs for raido authz token  
    */
-  implementation 'com.auth0:java-jwt:4.0.0'
+  implementation 'com.auth0:java-jwt:4.2.1'
   implementation 'com.auth0:jwks-rsa:0.21.2'
   
   // use logback as the backing log implementation for slf4j
@@ -86,8 +86,8 @@ dependencies{
 
   testImplementation libs.bundles.spring6.test
 
-  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
 
   testImplementation libs.assertj
 
