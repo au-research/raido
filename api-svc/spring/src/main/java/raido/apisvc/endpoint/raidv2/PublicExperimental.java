@@ -14,9 +14,6 @@ import raido.apisvc.spring.bean.AppInfoBean;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.Metaschema;
 import raido.idl.raidv2.api.PublicExperimentalApi;
-import raido.idl.raidv2.model.AccessType;
-import raido.idl.raidv2.model.PublicClosedMetadataSchemaV1;
-import raido.idl.raidv2.model.PublicRaidMetadataSchemaV1;
 import raido.idl.raidv2.model.PublicReadRaidResponseV3;
 import raido.idl.raidv2.model.PublicServicePoint;
 import raido.idl.raidv2.model.VersionResult;
@@ -29,13 +26,13 @@ import static org.eclipse.jetty.http.HttpStatus.BAD_REQUEST_400;
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 import static raido.apisvc.spring.config.RaidWebSecurityConfig.RAID_V2_API;
 import static raido.apisvc.spring.security.ApiSafeException.apiSafe;
-import static raido.apisvc.util.DateUtil.local2Offset;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.ExceptionUtil.ise;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.RestUtil.urlDecode;
+import static raido.db.jooq.api_svc.enums.Metaschema.legacy_metadata_schema_v1;
+import static raido.db.jooq.api_svc.enums.Metaschema.raido_metadata_schema_v1;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
-import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
@@ -90,42 +87,19 @@ public class PublicExperimental implements PublicExperimentalApi {
   @Override
   public PublicReadRaidResponseV3 publicReadRaidV3(String handle) {
     var data = raidSvc.readRaidV2Data(handle);
-
     Metaschema schema = data.raid().getMetadataSchema();
-    if( schema != Metaschema.raido_metadata_schema_v1 ){
-      var ex = ise("unknown raid schema");
-      log.with("schema", schema).with("handle", handle).error(ex.getMessage());
-      throw ex;
+    
+    if( schema == legacy_metadata_schema_v1 ){
+      return metaSvc.mapLegacySchemaToPublic(data);
+    }
+    
+    if( schema == raido_metadata_schema_v1 ){
+      return metaSvc.mapRaidoV1SchemaToPublic(data);
     }
 
-    var metadata = metaSvc.mapV1SchemaMetadata(data.raid());
-
-    if( metadata.getAccess().getType() == AccessType.CLOSED ){
-      return new PublicReadRaidResponseV3().
-        handle(data.raid().getHandle()).
-        createDate(local2Offset(data.raid().getDateCreated())).
-        metadata(new PublicClosedMetadataSchemaV1().
-          /* metadstaSchema ignored because of the `@JsonIgnoreProperties` on 
-          `PublicReadRaidMetadataResponseV1`.  The value sent down the wire 
-          comes from the `@JsonSubTypes` depending on the class type. */
-          id(metadata.getId()).
-          access(metadata.getAccess()) );
-    }
-
-    return new PublicReadRaidResponseV3().
-      handle(data.raid().getHandle()).
-      createDate(local2Offset(data.raid().getDateCreated())).
-      servicePointId(data.servicePoint().getId()).
-      servicePointName(data.servicePoint().getName()).
-      metadata(new PublicRaidMetadataSchemaV1().
-        // metdataSchema set from the class type
-        id(metadata.getId()).
-        titles(metadata.getTitles()).
-        dates(metadata.getDates()).
-        descriptions(metadata.getDescriptions()).
-        access(metadata.getAccess()).
-        alternateUrls(metadata.getAlternateUrls())
-      );
+    var ex = ise("unknown raid schema");
+    log.with("schema", schema).with("handle", handle).error(ex.getMessage());
+    throw ex;
   }
 
   /**

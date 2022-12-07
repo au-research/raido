@@ -6,7 +6,6 @@ import org.jooq.impl.DSL;
 import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
-import raido.apisvc.endpoint.message.ValidationMessage;
 import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.service.raid.ValidationFailureException;
 import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
@@ -26,14 +25,21 @@ import java.util.List;
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 import static org.springframework.transaction.annotation.Propagation.NEVER;
 import static raido.apisvc.endpoint.Constant.MAX_EXPERIMENTAL_RECORDS;
+import static raido.apisvc.endpoint.message.ValidationMessage.CANNOT_UPDATE_LEGACY_SCHEMA;
+import static raido.apisvc.endpoint.message.ValidationMessage.IDENTIFIER_NOT_SET;
+import static raido.apisvc.endpoint.message.ValidationMessage.ID_BLOCK_NOT_SET;
+import static raido.apisvc.endpoint.message.ValidationMessage.METADATA_NOT_SET;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.getAuthzPayload;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
+import static raido.apisvc.service.raid.MetadataService.mapDb2Api;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.mintFailed;
+import static raido.apisvc.util.DateUtil.local2Offset;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.hasValue;
 import static raido.apisvc.util.StringUtil.isBlank;
 import static raido.db.jooq.api_svc.tables.Raid.RAID;
+import static raido.idl.raidv2.model.RaidoMetaschema.LEGACYMETADATASCHEMAV1;
 
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
@@ -64,7 +70,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     return data;
   }
 
-  /* Performance:
+  /* Performance notes:
   - client sends json
   - Spring parses it out into all these different objects 
   - we validate it then immediately and turn the metadata (which is most of 
@@ -99,7 +105,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
       return mintFailed(failures);
     }
 
-    String handle = null;
+    String handle;
     try {
       handle = raidSvc.mintRaidoSchemaV1(
         req.getMintRequest().getServicePointId(),
@@ -119,7 +125,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     guardOperatorOrAssociated(user, req.getServicePointId());
 
     return db.select(RAID.HANDLE, RAID.PRIMARY_TITLE, RAID.START_DATE,
-        RAID.CONFIDENTIAL, RAID.DATE_CREATED.as("createDate")).
+        RAID.CONFIDENTIAL, RAID.METADATA_SCHEMA, RAID.DATE_CREATED).
       from(RAID).
       where(
         RAID.SERVICE_POINT_ID.eq(req.getServicePointId()).
@@ -127,7 +133,12 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
       ).
       orderBy(RAID.DATE_CREATED.desc()).
       limit(MAX_EXPERIMENTAL_RECORDS).
-      fetchInto(RaidListItemV2.class);
+      fetch(r-> new RaidListItemV2().
+        handle(r.get(RAID.HANDLE)).
+        primaryTitle(r.get(RAID.PRIMARY_TITLE)).
+        startDate(r.get(RAID.START_DATE)).
+        createDate(local2Offset(r.get(RAID.DATE_CREATED))).
+        metadataSchema(mapDb2Api(r.get(RAID.METADATA_SCHEMA))) );
   }
 
   private static Condition createV2SearchCondition(RaidListRequestV2 req) {
@@ -152,16 +163,20 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     var user = getAuthzPayload();
     var newData = req.getMetadata(); 
     if( newData == null ){
-      return mintFailed(ValidationMessage.METADATA_NOT_SET);
+      return mintFailed(METADATA_NOT_SET);
     }
     
     var id = newData.getId();
     if( id == null ){
-      return mintFailed(ValidationMessage.ID_BLOCK_NOT_SET);
+      return mintFailed(ID_BLOCK_NOT_SET);
     }
 
     if( isBlank(id.getIdentifier()) ){
-      return mintFailed(ValidationMessage.IDENTIFIER_NOT_SET);
+      return mintFailed(IDENTIFIER_NOT_SET);
+    }
+    
+    if( req.getMetadata().getMetadataSchema() == LEGACYMETADATASCHEMAV1 ){
+      return mintFailed(CANNOT_UPDATE_LEGACY_SCHEMA);
     }
 
     // improve: don't need the svcPoint, wasteful to read it here

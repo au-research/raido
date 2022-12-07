@@ -3,7 +3,6 @@ package raido.inttest.endpoint.raidv1;
 import feign.FeignException.BadRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.HttpClientErrorException;
-import raido.apisvc.util.Log;
 import raido.apisvc.util.RestUtil;
 import raido.idl.raidv1.api.RaidV1Api;
 import raido.idl.raidv1.model.RaidCreateModel;
@@ -15,7 +14,6 @@ import raido.inttest.IntegrationTestCase;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.RestUtil.anonPost;
 import static raido.apisvc.util.RestUtil.urlEncode;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
@@ -25,16 +23,8 @@ import static raido.inttest.config.IntegrationTestConfig.restTemplateWithEncodin
 public class LegacyRaidV1MintTest extends IntegrationTestCase {
   public static final String INT_TEST_CONTENT_PATH = "https://raido.int.test";
 
-  private static final Log log = to(LegacyRaidV1MintTest.class);
-
-  public static String getForbiddenMessage(String path) {
-    return """
-      403 Forbidden: "{<EOL>"message":"Access Denied",<EOL>"url":"%s",<EOL>"status":"403"<EOL>}"
-      """.formatted(path).trim();
-  }
-
   @Test void happyDayMintAndGet(){
-    var create = createSimpleRaid("happyDayMintAndGet inttest");
+    var create = createSimpleRaid("happyDayMintAndGet intTest");
     RaidV1Api raidV1 = super.raidV1Client();
 
     EXPECT("mint V1 legacy raid with RDM-style content should succeed");
@@ -43,7 +33,7 @@ public class LegacyRaidV1MintTest extends IntegrationTestCase {
     assertThat(mintResult.getHandle()).isNotBlank();
 
     EXPECT("should be able to read the minted raid via V3 public endpoint");
-    PublicReadRaidResponseV3 pubReadV3 = raidoApi.getPublicExperimintal().
+    PublicReadRaidResponseV3 pubReadV3 = raidoApi.getPublicExperimental().
       publicReadRaidV3(mintResult.getHandle());
     assertThat(pubReadV3).isNotNull();
     var pubMetaV3 = (PublicClosedMetadataSchemaV1) pubReadV3.getMetadata();
@@ -65,7 +55,7 @@ public class LegacyRaidV1MintTest extends IntegrationTestCase {
   @Test void getHandleWithEncodedSlashShouldSucceed(){
     GIVEN("raid exists");
     var raid = super.raidV1Client().raidPost(
-      createSimpleRaid("getHandleWithEncodedSlashShouldSucceed inttest"));
+      createSimpleRaid("encodedSlash raidV1 intTest"));
 
     // dunno how to get feign to do the encoding thing - this'll do
     var rest = restTemplateWithEncodingMode();
@@ -82,7 +72,7 @@ public class LegacyRaidV1MintTest extends IntegrationTestCase {
   spring-security and changing over to their `oauth2ResourceServer` stuff,
   this started getting a 401, which I believe is the more correct code. */
   @Test
-  void shoudRejectAnonCalltoMint() {
+  void shouldRejectAnonCallToMint() {
     EXPECT("minting a raid without authenticating should fail");
     assertThatThrownBy(()->
       anonPost(rest, raidoApiServerUrl("/v1/raid"), "{}", Object.class)
@@ -96,7 +86,7 @@ public class LegacyRaidV1MintTest extends IntegrationTestCase {
     EXPECT("minting a raid without a contentPath should fail");
     assertThatThrownBy(()->
       super.raidV1Client().raidPost(
-        createSimpleRaid("inttest").contentPath(null) )
+        createSimpleRaid("intTest").contentPath(null) )
     ).isInstanceOf(BadRequest.class).
       hasMessageContaining("no 'contentPath'");
   }
@@ -106,7 +96,7 @@ public class LegacyRaidV1MintTest extends IntegrationTestCase {
     EXPECT("minting a raid without a meta should fail");
     assertThatThrownBy(()->
       super.raidV1Client().raidPost(
-        createSimpleRaid("inttest").meta(null) )
+        createSimpleRaid("intTest").meta(null) )
     ).isInstanceOf(BadRequest.class).
       hasMessageContaining("no 'meta'");
   }

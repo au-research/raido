@@ -14,6 +14,7 @@ import raido.db.jooq.api_svc.enums.Metaschema;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
 import raido.idl.raidv2.model.AccessType;
+import raido.idl.raidv2.model.LegacyMetadataSchemaV1;
 import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
 import raido.idl.raidv2.model.ReadRaidResponseV2;
 import raido.idl.raidv2.model.ValidationFailure;
@@ -30,7 +31,7 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toMap;
 import static org.springframework.transaction.annotation.Propagation.NEVER;
 import static raido.apisvc.endpoint.message.ValidationMessage.SCHEMA_CHANGED;
-import static raido.apisvc.service.raid.MetadataService.mapJs2Jq;
+import static raido.apisvc.service.raid.MetadataService.mapApi2Db;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitle;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitles;
 import static raido.apisvc.util.DateUtil.local2Offset;
@@ -81,6 +82,16 @@ public class RaidService {
     );
   }
 
+  public DenormalisedRaidData getDenormalisedRaidData(
+    LegacyMetadataSchemaV1 metadata
+  ){
+    return new DenormalisedRaidData(
+      getPrimaryTitle(metadata.getTitles()).getTitle(),
+      metadata.getDates().getStartDate(),
+      metadata.getAccess().getType() != AccessType.OPEN
+    );
+  }
+
   /**
    Note propagation=NEVER causes this to fail if called when a TX is 
    currently active. The method does manual TX handling internally, 
@@ -112,7 +123,7 @@ public class RaidService {
         set(RAID.URL_INDEX, response.identifier.property.index).
         set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
         set(RAID.METADATA, JSONB.valueOf(metadataAsJson)).
-        set(RAID.METADATA_SCHEMA, mapJs2Jq(metadata.getMetadataSchema())).
+        set(RAID.METADATA_SCHEMA, mapApi2Db(metadata.getMetadataSchema())).
         set(RAID.START_DATE, raidData.startDate()).
         set(RAID.DATE_CREATED, LocalDateTime.now()).
         set(RAID.CONFIDENTIAL, raidData.confidential()).
@@ -122,6 +133,42 @@ public class RaidService {
     return handle;
   }
 
+  @Transactional(propagation = NEVER)
+  public String mintLegacySchemaV1(
+    long servicePointId,
+    LegacyMetadataSchemaV1 metadata
+  ) throws ValidationFailureException {
+    /* this is the part where we want to make sure no TX is help open.
+     * Maybe *this* should be marked tx.prop=never? */
+    var response = apidsSvc.mintApidsHandleContentPrefix(
+      metaSvc::formatRaidoLandingPageUrl);
+    String handle = response.identifier.handle;
+    String raidUrl = response.identifier.property.value;
+
+    metadata.setId(metaSvc.createIdBlock(handle, raidUrl));
+
+    // validation failure possible
+    String metadataAsJson = metaSvc.mapToJson(metadata);
+    var raidData = getDenormalisedRaidData(metadata);
+
+    tx.executeWithoutResult((status)->{
+      db.insertInto(RAID).
+        set(RAID.HANDLE, handle).
+        set(RAID.SERVICE_POINT_ID, servicePointId).
+        set(RAID.URL, raidUrl).
+        set(RAID.URL_INDEX, response.identifier.property.index).
+        set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
+        set(RAID.METADATA, JSONB.valueOf(metadataAsJson)).
+        set(RAID.METADATA_SCHEMA, mapApi2Db(metadata.getMetadataSchema())).
+        set(RAID.START_DATE, raidData.startDate()).
+        set(RAID.DATE_CREATED, LocalDateTime.now()).
+        set(RAID.CONFIDENTIAL, raidData.confidential()).
+        execute();
+    });
+
+    return handle;
+  }
+  
   public record ReadRaidV2Data(
     RaidRecord raid, 
     ServicePointRecord servicePoint
@@ -164,7 +211,7 @@ public class RaidService {
     long servicePointId,
     int urlContentIndex,
     OffsetDateTime createDate, 
-    RaidoMetadataSchemaV1 metadata
+    LegacyMetadataSchemaV1 metadata
   ) throws ValidationFailureException {
     String primaryTitle = getPrimaryTitles(metadata.getTitles()).
       get(0).getTitle();
@@ -184,6 +231,12 @@ public class RaidService {
 
     JSONB jsonbMetadata = JSONB.valueOf(metadataAsJson);
 
+    /* planning to implement a "migrate legacy to raid v1" endpoint, what
+    happens if someone "re-migrates" a raid that has already been upgraded?
+    Without testing, pretty sure it will just stomp/reset - losing any data
+    that was added during upgrade or added after upgrade. 
+    This is where a raid metadata version would implement optimistic locking*/
+    
     db.insertInto(RAID).
       set(RAID.HANDLE, handle).
       set(RAID.SERVICE_POINT_ID, servicePointId).
@@ -191,7 +244,7 @@ public class RaidService {
       set(RAID.URL_INDEX, urlContentIndex).
       set(RAID.PRIMARY_TITLE, primaryTitle).
       set(RAID.METADATA, jsonbMetadata).
-      set(RAID.METADATA_SCHEMA, mapJs2Jq(metadata.getMetadataSchema())).
+      set(RAID.METADATA_SCHEMA, mapApi2Db(metadata.getMetadataSchema())).
       set(RAID.START_DATE, startDate).
       set(RAID.DATE_CREATED, offset2Local(createDate)).
       set(RAID.CONFIDENTIAL, confidential).
@@ -209,8 +262,7 @@ public class RaidService {
     RaidoMetadataSchemaV1 newData,
     RaidRecord oldRaid
   ) {
-
-    Metaschema newMetadataSchema = mapJs2Jq(newData.getMetadataSchema());
+    Metaschema newMetadataSchema = mapApi2Db(newData.getMetadataSchema());
     if( newMetadataSchema != oldRaid.getMetadataSchema() ){
       return singletonList(SCHEMA_CHANGED);
     }

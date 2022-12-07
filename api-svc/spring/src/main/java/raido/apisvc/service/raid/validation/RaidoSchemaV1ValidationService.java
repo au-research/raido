@@ -9,6 +9,7 @@ import raido.idl.raidv2.model.AccessType;
 import raido.idl.raidv2.model.AlternateUrlBlock;
 import raido.idl.raidv2.model.DatesBlock;
 import raido.idl.raidv2.model.IdBlock;
+import raido.idl.raidv2.model.LegacyMetadataSchemaV1;
 import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
 import raido.idl.raidv2.model.ValidationFailure;
 
@@ -23,6 +24,7 @@ import static raido.apisvc.service.raid.MetadataService.RAID_ID_TYPE_URI;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.areEqual;
 import static raido.apisvc.util.StringUtil.isBlank;
+import static raido.idl.raidv2.model.RaidoMetaschema.LEGACYMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 
 @Component
@@ -52,6 +54,29 @@ public class RaidoSchemaV1ValidationService {
 
     var failures = new ArrayList<ValidationFailure>();
     if( metadata.getMetadataSchema() != RAIDOMETADATASCHEMAV1 ){
+      failures.add(ValidationMessage.INVALID_METADATA_SCHEMA);
+    }
+
+    failures.addAll(validateDates(metadata.getDates()));
+    failures.addAll(validateAccess(metadata.getAccess()));
+    failures.addAll(titleSvc.validateTitles(metadata.getTitles()));
+    failures.addAll(descSvc.validateDescriptions(metadata.getDescriptions()));
+    failures.addAll(validateAlternateUrls(metadata.getAlternateUrls()));
+
+    return failures;
+  }
+
+  public List<ValidationFailure> validateLegacySchemaV1(
+    LegacyMetadataSchemaV1 metadata
+  ) {
+    if( metadata == null ){
+      return of(ValidationMessage.METADATA_NOT_SET);
+    }
+
+    var failures = new ArrayList<ValidationFailure>();
+    if( metadata.getMetadataSchema() != LEGACYMETADATASCHEMAV1 ){
+      log.with("metadataSchema", metadata.getMetadataSchema()).
+        warn("attempted to migrate non-legacy schema");
       failures.add(ValidationMessage.INVALID_METADATA_SCHEMA);
     }
 

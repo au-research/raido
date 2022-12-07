@@ -66,7 +66,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
 
 
     EXPECT("should be able to read the minted raid via public api (v3)");
-    var v3Read = raidoApi.getPublicExperimintal().
+    var v3Read = raidoApi.getPublicExperimental().
       publicReadRaidV3(mintedRaid.getHandle());
     assertThat(v3Read).isNotNull();
     assertThat(v3Read.getCreateDate()).isNotNull();
@@ -113,7 +113,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
 
     THEN("should be able to read new value via publicRead");
     var readUpdatedData = (PublicRaidMetadataSchemaV1)
-      raidoApi.getPublicExperimintal().
+      raidoApi.getPublicExperimental().
         publicReadRaidV3(mintedRaid.getHandle()).getMetadata();
     
     assertThat(readUpdatedData.getAccess().getType()).isEqualTo(OPEN);
@@ -134,7 +134,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
     assertThat(closeResult.getSuccess()).isTrue();
 
     THEN("publicRaid should now return closed");
-    var readClosed = raidoApi.getPublicExperimintal().
+    var readClosed = raidoApi.getPublicExperimental().
       publicReadRaidV3(mintedRaid.getHandle());
     var readClosedMeta = (PublicClosedMetadataSchemaV1) readClosed.getMetadata(); 
     assertThat(readClosedMeta.getAccess().getType()).isEqualTo(CLOSED);

@@ -164,5 +164,13 @@ public class DateUtil {
     return d.toInstant(ZoneOffset.UTC);
   }
 
+  public static OffsetDateTime local2Offset(@Nullable LocalDate d){
+    if( d == null ){
+      return null;
+    }
+
+    return OffsetDateTime.of(LocalDateTime.now(), ZoneOffset.UTC);
+  }
+
 }
 

@@ -17,7 +17,9 @@ import raido.db.jooq.api_svc.ApiSvc;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public enum Metaschema implements EnumType {
 
-    raido_metadata_schema_v1("raido-metadata-schema-v1");
+    raido_metadata_schema_v1("raido-metadata-schema-v1"),
+
+    legacy_metadata_schema_v1("legacy-metadata-schema-v1");
 
     private final String literal;
 

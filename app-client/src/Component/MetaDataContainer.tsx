@@ -1,10 +1,12 @@
 import React from "react";
 import { ContainerCard } from "Design/ContainerCard";
 import {
-  DescriptionBlock,
+  DescriptionBlock, instanceOfLegacyMetadataSchemaV1,
   instanceOfRaidoMetadataSchemaV1,
+  LegacyMetadataSchemaV1,
+  LegacyMetadataSchemaV1FromJSON,
   RaidoMetadataSchemaV1,
-  RaidoMetadataSchemaV1FromJSON,
+  RaidoMetadataSchemaV1FromJSON, RaidoMetaschema,
   TitleBlock
 } from "Generated/Raidv2";
 
@@ -14,21 +16,29 @@ export function MetaDataContainer({metadata}: {metadata: any}){
         {formatMetadata(metadata)}
       </pre>
   </ContainerCard>
-
 }
 
-export function convertRaidoMetadataSchemaV1(value: any): RaidoMetadataSchemaV1{
+export function convertMetadata(value: any): 
+RaidoMetadataSchemaV1|LegacyMetadataSchemaV1 {
   if( typeof value === 'string' ){
     const parsed = JSON.parse(value);
-    console.log("is string", parsed);
-    return RaidoMetadataSchemaV1FromJSON(parsed);
+    
+    if( parsed.metadataSchema === RaidoMetaschema.LegacyMetadataSchemaV1 ){
+      return LegacyMetadataSchemaV1FromJSON(parsed);
+    }
+    else if( parsed.metadataSchema === RaidoMetaschema.RaidoMetadataSchemaV1 ){
+      return RaidoMetadataSchemaV1FromJSON(parsed);
+    }
   }
 
   /* openapi "instanceof" functions expect an object can be used with the
   "in" operator. */
   if( instanceOfRaidoMetadataSchemaV1(value) ){
-    console.log("is instance");
     return value as RaidoMetadataSchemaV1;
+  }
+
+  if( instanceOfLegacyMetadataSchemaV1(value) ){
+    return value as LegacyMetadataSchemaV1;
   }
 
   console.error("expected to be a metadata", value);
@@ -37,10 +47,10 @@ export function convertRaidoMetadataSchemaV1(value: any): RaidoMetadataSchemaV1{
 
 export function formatMetadata(value: any): string{
   if( !value ){
-    return "No metadata";
+    return "No metadata loaded";
   }
 
-  const metadata = convertRaidoMetadataSchemaV1(value);
+  const metadata = convertMetadata(value);
 
   return JSON.stringify(metadata, nullFieldReplacer, 2);
 }

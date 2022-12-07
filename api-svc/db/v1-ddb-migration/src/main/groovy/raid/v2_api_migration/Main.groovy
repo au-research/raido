@@ -10,7 +10,7 @@ import raido.idl.raidv2.model.ValidationFailure
 import static db.migration.jooq.tables.Raid.RAID
 import static java.lang.Integer.parseInt
 import static raid.ddb_migration.Util.local2Offset
-import static raid.v2_api_migration.RaidoApi.mapToMetadataSchemaV1
+import static raid.v2_api_migration.RaidoApi.mapToLegacySchema
 
 class Import1Raid {
 
@@ -30,6 +30,7 @@ class Import1Raid {
         where(RAID.OWNER.eq(svcPointName)).
         orderBy(RAID.CREATION_DATE.desc()).
         limit(1).fetchOne()
+      assert raid : "could not find a raid to import for service point: $svcPointName"
       println "raid to import: $raid"
     })
 
@@ -42,7 +43,7 @@ class Import1Raid {
           servicePointId(servicePoint.id).
           createDate(local2Offset(raid.get(RAID.CREATION_DATE))).
           contentIndex(parseInt(raid.get(RAID.CONTENT_INDEX)))).
-        metadata(mapToMetadataSchemaV1(raid))
+        metadata(mapToLegacySchema(raid))
     )
     assert migrateResult.success == true : migrateResult.getFailures()
     println migrateResult
@@ -86,7 +87,7 @@ class ImportAllRaids {
       
       raids.stream().forEach(iRaid -> {
         var createDate = iRaid.get(RAID.CREATION_DATE)
-        var iMetadata = mapToMetadataSchemaV1(iRaid)
+        var iMetadata = mapToLegacySchema(iRaid)
         var migrateResult = raido.adminApi.migrateLegacyRaid(
           new MigrateLegacyRaidRequest().
             mintRequest(new MigrateLegacyRaidRequestMintRequest().

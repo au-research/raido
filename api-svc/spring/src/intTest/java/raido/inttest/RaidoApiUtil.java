@@ -20,7 +20,7 @@ public class RaidoApiUtil {
     this.mapper = mapper;
   }
 
-  public PublicExperimentalApi getPublicExperimintal() {
+  public PublicExperimentalApi getPublicExperimental() {
     return publicApi;
   }
 }

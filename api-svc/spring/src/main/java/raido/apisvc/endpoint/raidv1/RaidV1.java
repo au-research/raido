@@ -2,7 +2,6 @@ package raido.apisvc.endpoint.raidv1;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.jooq.DSLContext;
-import org.jooq.JSONB;
 import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +23,7 @@ import raido.idl.raidv1.model.RaidPublicModel;
 import raido.idl.raidv2.model.AccessBlock;
 import raido.idl.raidv2.model.DatesBlock;
 import raido.idl.raidv2.model.DescriptionBlock;
+import raido.idl.raidv2.model.LegacyMetadataSchemaV1;
 import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
 import raido.idl.raidv2.model.RaidoMetaschema;
 import raido.idl.raidv2.model.TitleBlock;
@@ -63,7 +63,7 @@ import static raido.idl.raidv2.model.AccessType.CLOSED;
 import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 
-/* without the proxy mode setting, Spring doesn't see the requestmappings from 
+/* without the proxy mode setting, Spring doesn't see the RequestMappings from 
 the interface and so won't define our RaidV1 endpoints */
 @Scope(proxyMode = TARGET_CLASS)
 @RequestMapping(RAID_V1_API)
@@ -72,10 +72,8 @@ public class RaidV1 implements RaidV1Api {
   public static final String HANDLE_URL_PREFIX = "/handle";
   public static final String HANDLE_CATCHALL_PREFIX =
     RAID_V1_API + HANDLE_URL_PREFIX + "/";
-  public static final String HANDLE_SEPERATOR = "/";
+  public static final String HANDLE_SEPARATOR = "/";
   
-  public static final JSONB NON_EXPORTED_MARKER_VALUE = JSONB.valueOf("{}");
-
   private static final Log log = to(RaidV1.class);
 
   private DSLContext db;
@@ -146,7 +144,7 @@ public class RaidV1 implements RaidV1Api {
    The openapi spec is defined with the "{raidId}' path param because it makes
    it more clear to the caller what the url is expected to look like.
    <p>
-   IMPROVE: should write some detailed/edgecase unit tests for this
+   IMPROVE: should write some detailed/edgeCase unit tests for this
    path parsing logic.
    */
   @RequestMapping(
@@ -169,7 +167,7 @@ public class RaidV1 implements RaidV1Api {
     }
     
     String handle = path.substring(HANDLE_CATCHALL_PREFIX.length());
-    if( !handle.contains(HANDLE_SEPERATOR) ){
+    if( !handle.contains(HANDLE_SEPARATOR) ){
       throw apiSafe("handle did not contain a slash character", 
         BAD_REQUEST_400, of(handle));
     }
@@ -199,12 +197,12 @@ public class RaidV1 implements RaidV1Api {
     var startDate = parseDynamoDateTime(req.getStartDate()).toLocalDate();
 
     var servicePoint = raidSvc.findServicePoint(v1UserToken.getName());
-    RaidoMetadataSchemaV1 metadataToMint = 
-      mapLegacyModelToMetadataV1Schema(req, startDate);
+    LegacyMetadataSchemaV1 metadataToMint = 
+      mapLegacyApiModelToLegacySchema(req, startDate);
 
-    String handle = null;
+    String handle;
     try {
-      handle = raidSvc.mintRaidoSchemaV1(
+      handle = raidSvc.mintLegacySchemaV1(
         servicePoint.getId(),
         metadataToMint);
     }
@@ -222,7 +220,7 @@ public class RaidV1 implements RaidV1Api {
       raid.raid().getMetadata(), RaidoMetadataSchemaV1.class );
     var description = 
       getFirstPrimaryDescription(mintedMetadata.getDescriptions()).
-        map(i-> i.getDescription()).
+        map(DescriptionBlock::getDescription).
         orElse(null);
       
     return new RaidModel().
@@ -239,12 +237,12 @@ public class RaidV1 implements RaidV1Api {
       institutions(emptyList());
   }
 
-  private static RaidoMetadataSchemaV1 mapLegacyModelToMetadataV1Schema(
+  private static LegacyMetadataSchemaV1 mapLegacyApiModelToLegacySchema(
     RaidCreateModel req,
     LocalDate startDate
   ) {
-    var metadataToMint = new RaidoMetadataSchemaV1().
-      metadataSchema(RaidoMetaschema.RAIDOMETADATASCHEMAV1).
+    var metadataToMint = new LegacyMetadataSchemaV1().
+      metadataSchema(RaidoMetaschema.LEGACYMETADATASCHEMAV1).
       titles(List.of(new TitleBlock().
         type(PRIMARY_TITLE).
         title(req.getMeta().getName()).
@@ -272,7 +270,7 @@ public class RaidV1 implements RaidV1Api {
     if( isBlank(create.getMeta().getDescription()) ){
       /* current time in sydney is dodgy.
       Doesn't even work for most of Aus, let alone Oceania and people are
-      allowed to mint from other timezoness too! */
+      allowed to mint from other timezones too! */
       create.getMeta().setDescription(
         "RAiD created by '%s' at '%s'".formatted(
           owner, formatRaidV1DateTime(LocalDateTime.now()) ));

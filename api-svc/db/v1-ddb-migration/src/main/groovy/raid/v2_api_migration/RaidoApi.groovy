@@ -59,7 +59,7 @@ class RaidoApi {
       target(AdminExperimentalApi.class, host);
   }
 
-  static RaidoMetadataSchemaV1 mapToMetadataSchemaV1(
+  static LegacyMetadataSchemaV1 mapToLegacySchema(
     Record raid
   ) {
     var startDate = raid.get(RAID.START_DATE)
@@ -71,8 +71,8 @@ class RaidoApi {
       urls.add(new AlternateUrlBlock().url(contentPath))
     }
 
-    return new RaidoMetadataSchemaV1().
-      metadataSchema(RaidoMetaschema.RAIDOMETADATASCHEMAV1).
+    return new LegacyMetadataSchemaV1().
+      metadataSchema(RaidoMetaschema.LEGACYMETADATASCHEMAV1).
       id(new IdBlock().
         identifier(raid.get(RAID.HANDLE)).
         identifierTypeUri("https://raid.org").

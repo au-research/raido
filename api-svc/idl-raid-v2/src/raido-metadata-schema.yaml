@@ -108,7 +108,7 @@ paths:
                     servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey'}
                     contentIndex: { type: integer}
                     createDate: { type: string, format: date-time }
-                metadata: {$ref: '#/components/schemas/RaidoMetadataSchemaV1'}
+                metadata: {$ref: '#/components/schemas/LegacyMetadataSchemaV1'}
       responses:
         '200':
           description: data
@@ -167,6 +167,32 @@ components:
         alternateUrls:
           type: array
           items: {$ref: 'metadata-block.yaml#/components/schemas/AlternateUrlBlock'}
+    LegacyMetadataSchemaV1:
+      description: >
+        This type is used for raid data imported from the legacy raid system 
+        (pre-raido) and for raid data still being minted via the (deprecated) 
+        V1 API.  Started as a copy paste from RaidoMetadataSchemaV1; the 
+        structure could be simplified greatly, but then we'd just have to 
+        have special logic for it, keeping it like this (especially, sharing the 
+        block types) makes it mostly structurally compatible with the original.  
+        See how it goes, if the structural similarity doesn't end up saving 
+        implementation effort, then it would make sense to simplify this.
+      type: object
+      required: [ metadataSchema, id, titles, dates, access]
+      properties:
+        metadataSchema: {$ref: 'shared.yaml#/components/schemas/RaidoMetaschema'}
+        id: {$ref: 'metadata-block.yaml#/components/schemas/IdBlock'}
+        titles: 
+          type: array
+          items: {$ref: 'metadata-block.yaml#/components/schemas/TitleBlock'}
+        dates: {$ref: 'metadata-block.yaml#/components/schemas/DatesBlock'}
+        descriptions:
+          type: array
+          items: {$ref: 'metadata-block.yaml#/components/schemas/DescriptionBlock'}
+        access: {$ref: 'metadata-block.yaml#/components/schemas/AccessBlock'}
+        alternateUrls:
+          type: array
+          items: {$ref: 'metadata-block.yaml#/components/schemas/AlternateUrlBlock'}
 
     RaidListRequestV2:
       type: object
@@ -182,6 +208,7 @@ components:
         primaryTitle: {type: string}
         startDate: { type: string, format: date }
         createDate: { type: string, format: date-time }
+        metadataSchema: {$ref: 'shared.yaml#/components/schemas/RaidoMetaschema'}
     ReadRaidResponseV2:
       type: object
       required: [
@@ -196,6 +223,8 @@ components:
         startDate: { type: string, format: date }
         createDate: { type: string, format: date-time }
         url: { type: string }
+        # would like to use "oneOf" here, but there's still a few issues that
+        # OpenAPI haven't sorted out, see PublicReadRaidMetadataResponseV1 
         metadata: { type: object }
     MintResponse:
       type: object

@@ -43,7 +43,7 @@ components:
       description: >
         This is the "public facing" version of the metadata, that's intended to 
         be as closely aligned to "the standard" as possible.  It mirrors the
-        "raido" type, but having two seperately defined types allows them to 
+        "raido" type, but having two separately defined types allows them to 
         diverge where that's necessary for the Raido implementation.
       type: object
       required: [ metadataSchema, id, titles, dates, access]

@@ -14,11 +14,31 @@ components:
       required: [identifier, identifierTypeUri,
                  globalUrl, raidAgencyUrl, raidAgencyIdentifier]
       properties:
-        identifier: {type: string}
-        identifierTypeUri: {type: string}
-        globalUrl: {type: string}
-        raidAgencyUrl: {type: string}
-        raidAgencyIdentifier: {type: string}
+        identifier: 
+          type: string  
+          description: The handle, e.g. xxx.yyy/zzz
+        identifierTypeUri: {type: string} 
+        globalUrl: 
+          type: string
+          description: >
+            The URL for the raid via the CNRI handle system, e.g 
+            https://hdl.handle.net/xxx.yyy/zzz
+        raidAgencyUrl: 
+          type: string
+          description: >
+            The URL for the raid via the minting raid agency system, e.g 
+            https://demo.raido-infra.com/handle/10378.1/1695863
+        raidAgencyIdentifier: 
+          type: string
+          description: >
+            Identifier of the raid agency system that controls the raid, e.g
+            demo.raido-infra.com
+      example: 
+        identifier: xxx.yyy/zzz
+        identifierTypeUri: https://raid.org
+        globalUrl: https://hdl.handle.net/xxx.yyy/zzz
+        raidAgencyUrl: https://demo.raido-infra.com/handle/10378.1/1695863
+        raidAgencyIdentifier: demo.raido-infra.com
     AccessBlock:
       type: object
       required: ["type", ]

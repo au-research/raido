@@ -43,6 +43,12 @@ public class ValidationMessage {
       fieldId("metadata.metadataSchema").
       errorType(INVALID_VALUE_TYPE).
       message(INVALID_VALUE_MESSAGE);
+  public static final ValidationFailure CANNOT_UPDATE_LEGACY_SCHEMA =
+    new ValidationFailure().
+      fieldId("metadata.metadataSchema").
+      errorType(INVALID_VALUE_TYPE).
+      message("cannot update a legacy raid," +
+        " must be converted to RaidoMetadataSchemaV1");
   public static final ValidationFailure DATES_NOT_SET = 
     fieldNotSet("metadata.dates");
   public static final ValidationFailure DATES_START_DATE_NOT_SET =

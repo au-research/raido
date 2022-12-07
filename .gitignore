@@ -5,3 +5,9 @@
 # gradle build artifacts
 build/
 
+# input for the import of legacy raids from DDB to v1 schema
+# used to dump it in the `build` dir, but then I ran `clean` by accident 😭 
+/s3/
+
+# output from checking import files
+*.error.json

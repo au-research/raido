@@ -16,17 +16,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.RestTemplate;
 import raido.apisvc.util.Log;
+import raido.db.jooq.api_svc.enums.UserRole;
 import raido.idl.raidv1.api.RaidV1Api;
 import raido.idl.raidv2.api.AdminExperimentalApi;
 import raido.idl.raidv2.api.BasicRaidExperimentalApi;
 import raido.idl.raidv2.api.PublicExperimentalApi;
+import raido.idl.raidv2.model.ApiKey;
+import raido.idl.raidv2.model.GenerateApiTokenRequest;
+import raido.idl.raidv2.model.ServicePoint;
 import raido.inttest.config.IntTestProps;
 import raido.inttest.config.IntegrationTestConfig;
 import raido.inttest.service.auth.TestAuthTokenService;
 
+import java.time.LocalDateTime;
+
+import static java.time.ZoneOffset.UTC;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static raido.apisvc.spring.config.RaidWebSecurityConfig.RAID_V1_API;
 import static raido.apisvc.util.Log.to;
+import static raido.apisvc.util.StringUtil.areEqual;
+import static raido.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
+import static raido.db.jooq.api_svc.enums.UserRole.OPERATOR;
+import static raido.db.jooq.api_svc.enums.UserRole.SP_ADMIN;
 
 @SpringJUnitConfig(
   name="SpringJUnitConfigContext",
@@ -42,7 +54,8 @@ public abstract class IntegrationTestCase {
   @Autowired protected ObjectMapper mapper;
 
   protected String raidV1TestToken;
-  protected String raidApiAdminTestToken;
+  protected String operatorToken;
+  protected String adminToken;
   protected RaidoApiUtil raidoApi;
   
   @RegisterExtension
@@ -60,7 +73,10 @@ public abstract class IntegrationTestCase {
     }
     
     raidV1TestToken = authTokenSvc.initRaidV1TestToken();
-    raidApiAdminTestToken = authTokenSvc.initRaidV2ApiAdminTestToken();
+    operatorToken = authTokenSvc.bootstrapToken(
+      RAIDO_SP_ID, "intTestOperatorApiToken", OPERATOR);
+    adminToken = authTokenSvc.bootstrapToken(
+      RAIDO_SP_ID, "intTestAdminApiToken", SP_ADMIN);
     /* the feign clients passed to this wrapper and bound to the test tokens 
     created above.  When we want to "change" user, need to use a new feign 
     clients bound the new user identity. */
@@ -88,13 +104,41 @@ public abstract class IntegrationTestCase {
   }
 
   public BasicRaidExperimentalApi basicRaidExperimentalClient(){
+    return basicRaidExperimentalClient(operatorToken);
+  }
+
+  /** Acts "as" an operator and uses prod endpoints to create an api-key for 
+   the given input and generate a token. */
+  public BasicRaidExperimentalApi basicRaidExperimentalClientAs(
+    long servicePointId,
+    String subject,
+    UserRole role
+  ){
+    var adminApi = adminExperimentalClientAs(operatorToken);
+    LocalDateTime expiry = LocalDateTime.now().plusDays(30);
+
+    var apiKey = adminApi.updateApiKey(new ApiKey().
+      servicePointId(servicePointId).
+      idProvider(RAIDO_API.getLiteral()).
+      role(role.getLiteral()).
+      subject(subject).
+      enabled(true).
+      tokenCutoff(expiry.atOffset(UTC))
+    );
+    var token = adminApi.generateApiToken(new GenerateApiTokenRequest().
+      apiKeyId(apiKey.getId()) );
+    
+    return basicRaidExperimentalClient(token.getApiToken());
+  }
+
+  public BasicRaidExperimentalApi basicRaidExperimentalClient(String token){
     return Feign.builder().
       client(new OkHttpClient()).
       encoder(new JacksonEncoder(mapper)).
       decoder(new JacksonDecoder(mapper)).
       contract(feignContract).
       requestInterceptor(request->
-        request.header(AUTHORIZATION, "Bearer " + raidApiAdminTestToken) ).
+        request.header(AUTHORIZATION, "Bearer " + token) ).
       logger(new Slf4jLogger(BasicRaidExperimentalApi.class)).
       logLevel(Level.FULL).
       target(BasicRaidExperimentalApi.class, props.getRaidoServerUrl());
@@ -111,14 +155,14 @@ public abstract class IntegrationTestCase {
       target(PublicExperimentalApi.class, props.getRaidoServerUrl());
   }
 
-  public AdminExperimentalApi adminExperimentalClient(){
+  public AdminExperimentalApi adminExperimentalClientAs(String token){
     return Feign.builder().
       client(new OkHttpClient()).
       encoder(new JacksonEncoder(mapper)).
       decoder(new JacksonDecoder(mapper)).
       contract(feignContract).
       requestInterceptor(request->
-        request.header(AUTHORIZATION, "Bearer " + raidApiAdminTestToken) ).
+        request.header(AUTHORIZATION, "Bearer " + token) ).
       logger(new Slf4jLogger(AdminExperimentalApi.class)).
       logLevel(Level.FULL).
       target(AdminExperimentalApi.class, props.getRaidoServerUrl());
@@ -132,4 +176,14 @@ public abstract class IntegrationTestCase {
   protected String getTestPrefix(TestInfo testInfo) {
     return testInfo.getTestClass().orElseThrow().getSimpleName();
   }
+
+  public static ServicePoint findServicePoint(
+    AdminExperimentalApi adminApi, String name
+  ){
+    return adminApi.listServicePoint().stream().
+      filter(i->areEqual(i.getName(), name)).
+      findFirst().orElseThrow();
+  }
+
+
 }

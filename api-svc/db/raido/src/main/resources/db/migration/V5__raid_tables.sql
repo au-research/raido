@@ -3,7 +3,7 @@ drop table if exists raid_v2 cascade;
 
 drop type if exists metaschema;
 
-create type metaschema as enum ('raido-metadata-schema-v1');
+create type metaschema as enum ('raido-metadata-schema-v1', 'legacy-metadata-schema-v1');
 
 create table raid (
   handle           varchar(32) primary key                                     not null,

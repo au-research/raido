@@ -260,7 +260,7 @@ public class AdminExperimental implements AdminExperimentalApi {
 
     var failures = new ArrayList<ValidationFailure>();
     failures.addAll(validSvc.validateIdBlockForMigration(id));
-    failures.addAll(validSvc.validateRaidoSchemaV1(req.getMetadata()));
+    failures.addAll(validSvc.validateLegacySchemaV1(req.getMetadata()));
     if( req.getMintRequest().getServicePointId() == null ){
       failures.add(fieldNotSet("mintRequest.servicePointId"));
     }

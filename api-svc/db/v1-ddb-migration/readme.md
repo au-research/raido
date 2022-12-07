@@ -14,10 +14,10 @@ so groovy was convenient because of prior experience.
 ### S3 Export files
 
 [Main.groovy](./src/main/groovy/raid/ddb_migration/Main.groovy) expects the 
-S3 export files to be in the relative subdir `./build/ddb-migration-data`.
+S3 export files to be in the relative subdir `s3/ddb-migration-data`.
 
 i.e. if you cloned to `/repo-location/raido-v2`, then the S3 directories are 
-expected to be in `/repo-location/build/ddb-migration-data`.
+expected to be in `/repo-location/s3/ddb-migration-data`.
 The script expects you to rename the directory exported from AWS to one of
 the expected tables names.
 
