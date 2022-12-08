@@ -72,7 +72,7 @@ public class RaidWebSecurityConfig {
     
     http.httpBasic().disable().
       /* api-svc is stateless and the browser client does not use cookies;
-      in the baeldung article, section 2.1 and 2.2 are most applicable:
+      in this article, section 2.1 and 2.2 are most applicable:
       https://www.baeldung.com/csrf-stateless-rest-api
       Spring-security ref doco itself only talks about CSRF being a concern 
       when the the token is stored in a cookie, which we don't.
@@ -119,7 +119,7 @@ public class RaidWebSecurityConfig {
     };
   }
 
-  // maybe authprovider can just be @Components now instead of explicit beans?
+  // maybe AuthnProvider can just be @Components now instead of explicit beans?
   @Bean
   public RaidV2AuthenticationProvider raidV2AuthProvider(
     RaidV2AppUserAuthService appUserAuthSvc,
