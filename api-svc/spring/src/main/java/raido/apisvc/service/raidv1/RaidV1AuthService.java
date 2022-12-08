@@ -24,6 +24,9 @@ import static java.util.Optional.of;
 import static raido.apisvc.util.Log.to;
 import static raido.db.jooq.raid_v1_import.tables.Token.TOKEN;
 
+/** "RaidV1" refers to the "v1" API supported by the legacy raid system
+ (the one using python lambdas and DynamoDB).
+ */
 @Component
 public class RaidV1AuthService {
   private static final Log log = to(RaidV1AuthService.class);
@@ -43,7 +46,7 @@ public class RaidV1AuthService {
     Algorithm algorithm = Algorithm.HMAC256(props.jwtSecret);
     JWTVerifier verifier = JWT.require(algorithm).
       withIssuer(props.issuer).
-      build(); //Reusable verifier instance
+      build(); 
 
     DecodedJWT jwt = null;
     try {
