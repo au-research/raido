@@ -1,11 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 import {
   AccessType,
+  ContributorBlock,
   DescriptionBlock,
   RaidoMetadataSchemaV1,
   ReadRaidResponseV2,
   ValidationFailure
-} from "Generated/Raidv2";
+} from "Generated/Raidv2"; 
 import { assert, WithRequired } from "Util/TypeUtil";
 import { isValidDate } from "Util/DateUtil";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
@@ -24,25 +25,29 @@ import { PrimaryActionButton, SecondaryButton } from "Component/AppButton";
 import { navBrowserBack } from "Util/WindowUtil";
 import { ValidationFailureDisplay } from "Component/Util";
 import {
+  getFirstLeader,
   getFirstPrimaryDescription,
   getPrimaryTitle
 } from "Component/MetaDataContainer";
 import React, { useState } from "react";
 import { useAuthApi } from "Api/AuthApi";
+import { findOrcidProblem, mapInvalidOrcidChars } from "Page/MintRaidPage";
 
 function isDifferent(formData: FormData, original: FormData){
   return formData.primaryTitle !== original.primaryTitle ||
     formData.startDate?.getDate() !== original.startDate?.getDate() ||
     formData.primaryDescription !== original.primaryDescription ||
+    formData.leadContributor !== original.leadContributor ||
     formData.accessType !== original.accessType ||
     formData.accessStatement !== original.accessStatement;
 }
 
 type FormData = Readonly<{
   primaryTitle: string,
-  // can't stop DesktopDatePicker from allowing the user to clear the value
+  // optional because can't stop Picker from allowing user to clear the value
   startDate?: Date,
   primaryDescription: string,
+  leadContributor: string,
   accessType: AccessType,
   accessStatement: string,
 }>;
@@ -55,8 +60,9 @@ function mapReadQueryDataToFormData(
   return {
     primaryTitle: raid.primaryTitle,
     startDate: raid.startDate,
-    primaryDescription: getFirstPrimaryDescription(metadata)?.
+    primaryDescription: getFirstPrimaryDescription(metadata)?. 
       description ?? "",
+    leadContributor: getFirstLeader(metadata)?.id ?? "",
     accessType: metadata.access.type,
     accessStatement: metadata.access.accessStatement ?? "",
   }
@@ -85,6 +91,14 @@ function createUpdateMetadata(
     }
   }
 
+  const newContributors: ContributorBlock[] = [];
+  const oldLeader = getFirstLeader(oldMetadata);
+  assert(oldLeader);
+  newContributors.push({
+    ...oldLeader,
+    id: formData.leadContributor,
+  })
+  
   return {
     ...oldMetadata,
     titles: [{
@@ -96,6 +110,7 @@ function createUpdateMetadata(
       startDate: formData.startDate,
     },
     descriptions: newDescriptions,
+    contributors: newContributors,
     access: {
       type: formData.accessType,
       accessStatement: formData.accessStatement,
@@ -137,6 +152,7 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
   );
 
   const isTitleValid = !!formData.primaryTitle;
+  const orcidProblem = findOrcidProblem(formData.leadContributor);
   const isAccessStatementValid = formData.accessType === "Open" ?
     true : !!formData.accessStatement;
   const hasChanged = 
@@ -184,6 +200,21 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
           onChange={(e) => {
             setFormData({...formData, primaryDescription: e.target.value});
           }}
+        />
+        <TextField id="contributor"
+          variant="outlined" autoCorrect="off" autoCapitalize="on"
+          disabled={isWorking}
+          value={formData.leadContributor ?? ""}
+          onChange={(e) => {
+            setFormData({
+              ...formData,
+              leadContributor: mapInvalidOrcidChars(e.target.value)
+            });
+          }}
+          label={ orcidProblem ?
+            "Lead contributor - " + orcidProblem :
+            "Lead contributor"}
+          error={!!orcidProblem}
         />
         <FormControl>
           <InputLabel id="accessTypeLabel">Access type</InputLabel>

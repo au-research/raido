@@ -137,7 +137,7 @@ function RaidDataForm({readQuery, onUpdateSuccess}: {
   
   if( readQuery.data.metadata.metadataSchema === "RaidoMetadataSchemaV1" ){
     return <EditRaidoV1SchemaForm raid={readQuery.data.raid}
-      metadata={readQuery.data.metadata}
+      metadata={readQuery.data.metadata as RaidoMetadataSchemaV1}
       onUpdateSuccess={onUpdateSuccess}
     />
   }

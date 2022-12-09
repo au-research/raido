@@ -13,6 +13,9 @@ import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import {
   AccessType,
+  ContributorIdentifierSchemeType,
+  ContributorPositionSchemeType,
+  ContributorRoleSchemeType,
   DescriptionBlock,
   RaidoMetadataSchemaV1,
   ValidationFailure
@@ -77,9 +80,10 @@ function Content(){
 
 type FormData = Readonly<{
   primaryTitle: string,
-  // can't stop DesktopDatePicker from allowing the user to clear the value
+  // optional because can't stop Picker from allowing user to clear the value
   startDate?: Date,
   primaryDescription: string,
+  leadContributor: string,
   accessType: AccessType,
   accessStatement: string,
 }>;
@@ -110,6 +114,19 @@ function mapFormDataToMetadata(
       startDate: form.startDate,
     }],
     descriptions,
+    contributors: [{
+      id: form.leadContributor,
+      identifierSchemeUri: ContributorIdentifierSchemeType.HttpsOrcidOrg,
+      positions: [{
+        position: "Leader",
+        positionSchemaUri: ContributorPositionSchemeType.HttpsRaidOrg,
+        startDate: form.startDate,
+      }],
+      roles: [{
+        role: "project-administration",
+        roleSchemeUri: ContributorRoleSchemeType.HttpsCreditNisoOrg,
+      }]
+    }]
   }
 }
 
@@ -121,6 +138,8 @@ function MintRaidContainer({servicePointId, onCreate}: {
   const [formData, setFormData] = useState({
     primaryTitle: "",
     startDate: new Date(),
+    // just a random value that hopefully is valid but not a real person
+    leadContributor: "0000-0001-0000-0009",
     accessType: "Open",
     accessStatement: "",
   } as FormData);
@@ -152,12 +171,12 @@ function MintRaidContainer({servicePointId, onCreate}: {
   );
 
   const isTitleValid = !!formData.primaryTitle;
+  const orcidProblem = findOrcidProblem(formData.leadContributor);
   const isAccessStatementValid = formData.accessType === "Open" ? 
     true : !!formData.accessStatement;
   const isStartDateValid = isValidDate(formData?.startDate);
   const canSubmit = isTitleValid && isStartDateValid && isAccessStatementValid;
   const isWorking = mintRequest.isLoading;
-  console.log("render()", {startDate: formData.startDate, isStartDateValid, formData});
   
   return <ContainerCard title={"Mint RAiD"} action={<MintRaidHelp/>}>
     <form autoComplete="off" onSubmit={(e) => {
@@ -191,6 +210,21 @@ function MintRaidContainer({servicePointId, onCreate}: {
           onChange={(e) => {
             setFormData({...formData, primaryDescription: e.target.value});
           }}
+        />
+        <TextField id="contributor"  
+          variant="outlined" autoCorrect="off" autoCapitalize="on"
+          disabled={isWorking}
+          value={formData.leadContributor ?? ""}
+          onChange={(e) => {
+            setFormData({
+              ...formData, 
+              leadContributor: mapInvalidOrcidChars(e.target.value)
+            });
+          }}
+          label={ orcidProblem ? 
+            "Lead contributor - " + orcidProblem : 
+            "Lead contributor"}
+          error={!!orcidProblem}
         />
         <FormControl>
           <InputLabel id="accessTypeLabel">Access type</InputLabel>
@@ -252,6 +286,27 @@ function MintRaidHelp(){
       </ul>
     </Stack>
   }/>;
+}
+
+export function findOrcidProblem(id: string): string|undefined{
+  if( !id ){
+    return "must be set"
+  }
+  if( id.length < 19 ){
+    return "too short"
+  }
+  if( id.length > 19 ){
+    return "too long"
+  }
+
+  // add checksum logic?
+
+  return undefined;
+}
+
+export function mapInvalidOrcidChars(id: string): string{
+  // improve - only the last char can be an X 
+  return id.toUpperCase().replace(/[^\dX-]/g, '');
 }
 
 

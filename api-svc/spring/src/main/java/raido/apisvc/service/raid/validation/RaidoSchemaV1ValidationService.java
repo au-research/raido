@@ -33,13 +33,16 @@ public class RaidoSchemaV1ValidationService {
 
   private TitleValidationService titleSvc;
   private DescriptionValidationService descSvc;
-
+  private ContributorValidationService contribSvc;
+  
   public RaidoSchemaV1ValidationService(
     TitleValidationService titleSvc,
-    DescriptionValidationService descSvc
+    DescriptionValidationService descSvc,
+    ContributorValidationService contribSvc
   ) {
     this.titleSvc = titleSvc;
     this.descSvc = descSvc;
+    this.contribSvc = contribSvc;
   }
 
   /**
@@ -62,6 +65,7 @@ public class RaidoSchemaV1ValidationService {
     failures.addAll(titleSvc.validateTitles(metadata.getTitles()));
     failures.addAll(descSvc.validateDescriptions(metadata.getDescriptions()));
     failures.addAll(validateAlternateUrls(metadata.getAlternateUrls()));
+    failures.addAll(contribSvc.validateContributors(metadata.getContributors()));
 
     return failures;
   }

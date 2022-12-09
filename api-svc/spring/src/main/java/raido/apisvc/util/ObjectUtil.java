@@ -9,11 +9,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -187,5 +190,21 @@ public final class ObjectUtil {
     }
     
     return c.isEmpty();
+  }
+
+  /**
+   Use with Stream.collect() to iterate over a stream with an index, 
+   so you can bind the index into lambdas.
+   https://stackoverflow.com/a/71885044/924597
+   Note the index is 0-based, unlike the SO answer.
+   */
+  public static <T> Collector<T, ?, Map<Integer, T>> indexed() {
+    return Collector.of(
+      LinkedHashMap::new,
+      (Map<Integer, T> map, T element)-> map.put(map.size(), element),
+      (Map<Integer, T> left, Map<Integer, T> right)-> {
+        left.putAll(right);
+        return left;
+      });
   }
 }

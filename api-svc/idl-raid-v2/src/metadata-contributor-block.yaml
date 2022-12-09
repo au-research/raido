@@ -1,0 +1,77 @@
+openapi: 3.0.3
+info:
+  title: metadata blocks
+  version: 1.0.0
+  description: >
+    Types that model the standard metadata blocks. Intended to be re-used
+    across the "raid" and "raido" stuff.
+paths:
+
+components:
+  schemas:
+    ContributorBlock:
+      type: object
+      required: [id, identifierSchemeUri, positions, roles]
+      properties:
+        id: { type: string }
+        identifierSchemeUri:
+          {$ref: '#/components/schemas/ContributorIdentifierSchemeType'}
+        positions:
+          type: array
+          items: {$ref: '#/components/schemas/ContributorPosition'}
+        roles:
+          type: array
+          items: {$ref: '#/components/schemas/ContributorRole'}
+    ContributorIdentifierSchemeType:
+      type: string
+      enum: ['https://orcid.org/'] # ISNI, etc.          
+    ContributorPosition:
+      type: object
+      required: [positionSchemaUri, position, startDate]
+      properties:
+        positionSchemaUri:
+          {$ref: '#/components/schemas/ContributorPositionSchemeType'}
+        position:
+          {$ref: '#/components/schemas/ContributorPositionRaidMetadataSchemaType'}
+        startDate: { type: string, format: date }
+        endDate: { type: string, format: date }
+    ContributorPositionSchemeType:
+      type: string
+      enum: ['https://raid.org/']
+    ContributorPositionRaidMetadataSchemaType:
+      type: string
+      enum:
+        - Leader
+        - Contact Person
+        - Principal Investigator
+        - Co-Investigator
+        - Other Participant
+    ContributorRole:
+      type: object
+      required: [role, roleSchemeUri]
+      properties:
+        roleSchemeUri:
+          {$ref: '#/components/schemas/ContributorRoleSchemeType'}
+        role:
+          {$ref: '#/components/schemas/ContributorRoleCreditNisoOrgType'}
+    ContributorRoleSchemeType:
+      type: string
+      enum: ['https://credit.niso.org/']
+    ContributorRoleCreditNisoOrgType:
+      type: string
+      enum:
+        - conceptualization
+        - data-curation
+        - formal-analysis
+        - funding-acquisition
+        - investigation
+        - methodology
+        - project-administration
+        - resources
+        - software
+        - supervision
+        - validation
+        - visualization
+        - writing-original-draft
+        - writing-review-editing 
+      

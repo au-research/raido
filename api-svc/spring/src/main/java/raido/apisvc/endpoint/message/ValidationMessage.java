@@ -32,6 +32,8 @@ public class ValidationMessage {
 
   public static final ValidationFailure TITLES_NOT_SET =
     fieldNotSet("titles");    
+  public static final ValidationFailure CONTRIB_NOT_SET =
+    fieldNotSet("contributors");    
   public static final ValidationFailure METADATA_TOO_LARGE =
     new ValidationFailure().
       fieldId("metadata").errorType(TOO_LONG_TYPE).
@@ -99,6 +101,13 @@ public class ValidationMessage {
       message(FIELD_MUST_BE_SET_MESSAGE);
   }
 
+  public static ValidationFailure contribIdNotSet(int i) {
+    return new ValidationFailure().
+      fieldId("contributor[%s].id".formatted(i)).
+      errorType(NOT_SET_TYPE).
+      message(FIELD_MUST_BE_SET_MESSAGE);
+  }
+
   public static ValidationFailure titleStartDateNotSet(int i) {
     return new ValidationFailure().
       fieldId("titles[%s].startDate".formatted(i)).
@@ -111,6 +120,20 @@ public class ValidationMessage {
       fieldId("titles[%s].type".formatted(i)).
       errorType(NOT_SET_TYPE).
       message(FIELD_MUST_BE_SET_MESSAGE);
+  }
+
+  public static ValidationFailure contribIdSchemeNotSet(int i) {
+    return new ValidationFailure().
+      fieldId("contributors[%s].identifierSchemeUri".formatted(i)).
+      errorType(NOT_SET_TYPE).
+      message(FIELD_MUST_BE_SET_MESSAGE);
+  }
+
+  public static ValidationFailure contribInvalidIdScheme(int i) {
+    return new ValidationFailure().
+      fieldId("contributors[%s].identifierSchemeUri".formatted(i)).
+      errorType(INVALID_VALUE_TYPE).
+      message(INVALID_VALUE_MESSAGE);
   }
 
   public static ValidationFailure primaryTitleTooLong(int i) {

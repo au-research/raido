@@ -152,7 +152,7 @@ components:
         There is a companion `PublicRaidMetadataSchemaV1` type that's intended
         to stick more closely to the standard.
       type: object
-      required: [ metadataSchema, id, titles, dates, access]
+      required: [ metadataSchema, id, titles, dates, contributors, access]
       properties:
         metadataSchema: {$ref: 'shared.yaml#/components/schemas/RaidoMetaschema'}
         id: {$ref: 'metadata-block.yaml#/components/schemas/IdBlock'}
@@ -167,6 +167,9 @@ components:
         alternateUrls:
           type: array
           items: {$ref: 'metadata-block.yaml#/components/schemas/AlternateUrlBlock'}
+        contributors:
+          type: array
+          items: {$ref: 'metadata-contributor-block.yaml#/components/schemas/ContributorBlock'}
     LegacyMetadataSchemaV1:
       description: >
         This type is used for raid data imported from the legacy raid system 

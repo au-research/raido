@@ -1,12 +1,15 @@
 import React from "react";
 import { ContainerCard } from "Design/ContainerCard";
 import {
-  DescriptionBlock, instanceOfLegacyMetadataSchemaV1,
+  ContributorBlock,
+  DescriptionBlock,
+  instanceOfLegacyMetadataSchemaV1,
   instanceOfRaidoMetadataSchemaV1,
   LegacyMetadataSchemaV1,
   LegacyMetadataSchemaV1FromJSON,
   RaidoMetadataSchemaV1,
-  RaidoMetadataSchemaV1FromJSON, RaidoMetaschema,
+  RaidoMetadataSchemaV1FromJSON,
+  RaidoMetaschema,
   TitleBlock
 } from "Generated/Raidv2";
 
@@ -66,6 +69,16 @@ export function getFirstPrimaryDescription(
 ): undefined | DescriptionBlock {
   return metadata.descriptions?.
     find(i=> i.type === "Primary Description");
+}
+
+export function getFirstLeader(
+  metadata: RaidoMetadataSchemaV1
+): undefined | ContributorBlock {
+  return metadata.contributors.find(i=> {
+    return i.positions?.find(j => {
+      return j.position === 'Leader';
+    });
+  });
 }
 
 export function getPrimaryTitle(

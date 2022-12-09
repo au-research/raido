@@ -228,7 +228,8 @@ public class MetadataService {
         dates(metadata.getDates()).
         descriptions(metadata.getDescriptions()).
         access(metadata.getAccess()).
-        alternateUrls(metadata.getAlternateUrls())
+        alternateUrls(metadata.getAlternateUrls()).
+        contributors(metadata.getContributors())
       );
   }
   
@@ -280,6 +281,7 @@ public class MetadataService {
         descriptions(metadata.getDescriptions()).
         access(metadata.getAccess()).
         alternateUrls(metadata.getAlternateUrls())
+        // invalid because no contrib
       );
   }
 }

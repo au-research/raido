@@ -16,11 +16,20 @@ import static raido.apisvc.util.test.BddUtil.THEN;
 import static raido.apisvc.util.test.BddUtil.WHEN;
 import static raido.idl.raidv2.model.AccessType.CLOSED;
 import static raido.idl.raidv2.model.AccessType.OPEN;
+import static raido.idl.raidv2.model.ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_;
+import static raido.idl.raidv2.model.ContributorPositionRaidMetadataSchemaType.LEADER;
+import static raido.idl.raidv2.model.ContributorPositionSchemeType.HTTPS_RAID_ORG_;
+import static raido.idl.raidv2.model.ContributorRoleCreditNisoOrgType.PROJECT_ADMINISTRATION;
+import static raido.idl.raidv2.model.ContributorRoleSchemeType.HTTPS_CREDIT_NISO_ORG_;
 import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 
 public class RaidoSchemaV1Test extends IntegrationTestCase {
+  /* lowest orcid withing the 0000-0001 range, with check digit.
+   * verified doesn't exist (or at least, non-public): 
+   * https://orcid.org/0000-0001-0000-0009 */
+  public static String DUMMY_ORCID = "0000-0001-0000-0009";
 
   @Test
   void happyDayScenario() throws JsonProcessingException {
@@ -43,10 +52,23 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
           descriptions(List.of(new DescriptionBlock().
             type(PRIMARY_DESCRIPTION).
             description("stuff about the int test raid"))).
+          contributors(List.of(new ContributorBlock().
+            id(DUMMY_ORCID).
+            identifierSchemeUri(HTTPS_ORCID_ORG_).
+            positions(List.of(new ContributorPosition().
+              positionSchemaUri(HTTPS_RAID_ORG_).
+              position(LEADER).
+              startDate(today) )).
+            roles(List.of(
+              new ContributorRole().
+                roleSchemeUri(HTTPS_CREDIT_NISO_ORG_).
+                role(PROJECT_ADMINISTRATION)  )) 
+          )).
           access(new AccessBlock().type(OPEN))
         )
     );
     assertThat(mintResult).isNotNull();
+    assertThat(mintResult.getFailures()).isNullOrEmpty();
     assertThat(mintResult.getSuccess()).isTrue();
     assertThat(mintResult.getRaid()).isNotNull();
     var mintedRaid = mintResult.getRaid();
@@ -159,6 +181,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
       titles(in.getTitles()).
       descriptions(in.getDescriptions()).
       alternateUrls(in.getAlternateUrls()).
+      contributors(in.getContributors()).
       access(in.getAccess());
   }
 
@@ -178,6 +201,18 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
             type(PRIMARY_TITLE).
             title(" ").
             startDate(null))).
+          contributors(List.of(new ContributorBlock().
+            id(DUMMY_ORCID).
+            identifierSchemeUri(HTTPS_ORCID_ORG_).
+            positions(List.of(new ContributorPosition().
+              positionSchemaUri(HTTPS_RAID_ORG_).
+              position(LEADER).
+              startDate(today) )).
+            roles(List.of(
+              new ContributorRole().
+                roleSchemeUri(HTTPS_CREDIT_NISO_ORG_).
+                role(PROJECT_ADMINISTRATION)  ))
+          )).
           dates(new DatesBlock().startDate(today)).
           access(new AccessBlock().type(OPEN))
         )
