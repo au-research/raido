@@ -1,0 +1,37 @@
+@startuml
+
+' load the C4 PlantUML template  
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+' for the databse shape `ContainerDb`
+!define ICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/
+
+LAYOUT_TOP_DOWN()
+LAYOUT_WITH_LEGEND()
+
+title C4 Container diagram for Raido
+
+Person_Ext(PublicUser, "Public User", "[anonymous]")
+Person(SpUser, "ServicePoint User", "[OIDC authenticated]")
+System_Ext(SpInt, "ServicePoint\nIntegration", "[api-key authenticated]")
+System_Ext(IdProvider, "ID Provider", "[Google / AAF / ORCiD]")
+System_Ext(LocalHdlSvc, "Local Handle Service", "[ARDC DevOps]")
+
+
+Container(AppClient, "app-client", "Raido UI React/SPA") 
+Container(PubClient, "pub-client", "any web tech\ncurrently uses app-client") 
+
+Container(ApiSvc, "api-svc", "REST API") 
+ContainerDb(db, "Database", "PostgreSQL")
+ 
+
+Rel(PublicUser, PubClient, "interact", "in browser")
+Rel(SpUser, AppClient, "interact", "in browser")
+Rel(SpUser, IdProvider, "identify", "HTTPS/OAuth2")
+Rel(AppClient, ApiSvc, "invoke", "HTTPS")
+Rel(PubClient, ApiSvc, "invoke", "HTTPS")
+Rel(SpInt, ApiSvc, "invoke", "HTTPS")
+Rel(ApiSvc, db, "read/write", "postgres:5432")
+Rel(ApiSvc, LocalHdlSvc, "mint", "HTTPS")
+@enduml
+
