@@ -1,3 +1,5 @@
+The top level YAML file is [raido-openapi-3.0.yaml](./raido-openapi-3.0.yaml).
+
 # Concepts 
 
 ## "Raid" metadata vs "Raido" metadata
