@@ -17,6 +17,9 @@ v1. Should've just called it "raido" - oh well.
 
 # Technology / Architecture
 
+A C4 container diagram for the basic architecture can be found in 
+[raido-container-c4.md](./doc/architecture/raido-container-c4.md).
+
 The overall technology stack is described in the
 [technology-stack.md](/doc/technology-stack.md) page.
 
