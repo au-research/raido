@@ -1,6 +1,7 @@
-The OpenAPI YAML files are in the [`/src directory`](./src).
+The OpenAPI definition files are in the [`/src directory`](./src).
 
-The file is used to generate Java code for the `/api-svc/spring` project and
+The OpenAPI defintion is used to generate Java code for the 
+`/api-svc/spring` project and
 TypeScript for the `api-client` project.
 
 Currently, we don't publish any kind of "swagger UI".
