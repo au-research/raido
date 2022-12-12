@@ -1,4 +1,5 @@
 
+<!--- Note the `?cache=no` param --->
 ![PlantUML model](https://www.plantuml.com/plantuml/svg/BOr12a8n34Jtda8Fq0R4bQj_bPW66sZJJvhezMt1rS2y6Tun7SsZjyjDb5eK3clNwdxE9u3XDx_5QxnYij5GP_LCemD6CfwCHdMjf8pqkKD7KIY3ODVYJ1x6VxpF2xCbUkHp2m_Mil87?cache=no)
 
 [Click to see on PlantUML](https://www.plantuml.com/plantuml/svg/BOr12a8n34Jtda8Fq0R4bQj_bPW66sZJJvhezMt1rS2y6Tun7SsZjyjDb5eK3clNwdxE9u3XDx_5QxnYij5GP_LCemD6CfwCHdMjf8pqkKD7KIY3ODVYJ1x6VxpF2xCbUkHp2m_Mil87) 
@@ -16,5 +17,8 @@ Note that we are only just learning about C4 modelling and the diagram above
 likely mis-uses the C4 constructs - this diagram is very much a work in 
 progress.
 
-I've added `cache=no` to the url to try to get PlantUML to return a no cache
-header so that the browser will update when the diagram source changes.
+Maintainers, there's a decent 
+[PlantUML plugin](https://plugins.jetbrains.com/plugin/7017-plantuml-integration) 
+to help with writing diagrams, 
+note that it is not maintained by JetBrains.
+Also, I think non-Windows users may have to install PlantUML locally.
