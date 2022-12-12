@@ -73,7 +73,7 @@ Note that changes consisting solely of `*.md` files are intended to be ignored.
   * does a production build of the app-client
 * [codeql-analysis.yml](.github/workflows/codeql-analysis.yml)
   * runs an api-svc build in the context of Github 
-  [codeql](https://github. com/github/codeql-action)
+  [codeql](https://github.com/github/codeql-action)
 
 * Look in [Github Actions](https://github.com/au-research/raido-v2/actions)
   console to see what's going on
