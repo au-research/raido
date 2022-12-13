@@ -14,6 +14,8 @@ Note that:
 It's called "v2" because initially it was called raid-v2 because there was a
 v1. Should've just called it "raido" - oh well.
 
+The [service-level-guide.md](/doc/service-level-guide.md) page provides guidance
+to the expected level of service provided by the Raido team.
 
 # Technology / Architecture
 
@@ -34,10 +36,6 @@ directory.
 
 * [/app-client/doc/adr](./app-client/doc/adr)
 * [/api-svc/doc/adr](./api-svc/doc/adr)
-
-
-The [service-level-guide.md](/doc/service-level-guide.md) page provides guidance
-to the expected level of service provided by the Raido team.
 
 
 ## Project structure
