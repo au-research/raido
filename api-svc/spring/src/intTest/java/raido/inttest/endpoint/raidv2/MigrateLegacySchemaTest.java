@@ -71,8 +71,7 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
     assertThat(mintResult.getSuccess()).isTrue();
 
     EXPECT("should be able to read the minted raid via public api");
-    var pubRead = raidoApi.getPublicExperimental().
-      publicReadRaidV3(handle);
+    var pubRead = raidoApi.getPublicExperimental().publicReadRaidV3(handle);
     assertThat(pubRead).isNotNull();
     assertThat(pubRead.getCreateDate()).isNotNull();
     assertThat(pubRead.getServicePointId()).isEqualTo(servicePoint.getId());
@@ -83,6 +82,8 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
     assertThat(pubReadMeta.getAlternateUrls()).satisfiesExactly(i->
       assertThat(i.getUrl()).isEqualTo(
         initMetadata.getAlternateUrls().get(0).getUrl() ));
+    // technically this is an invalid raid, contrib is supposed to be mandatory
+    assertThat(pubReadMeta.getContributors()).isNullOrEmpty();
 
     EXPECT("should be able to list a migrated raid");
     var listResult = basicApi.listRaidV2(new RaidListRequestV2().
@@ -126,7 +127,33 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
       ) );
     assertThat(upgradeResult.getFailures()).isNullOrEmpty();
     assertThat(upgradeResult.getSuccess()).isTrue();
+
+    EXPECT("upgraded raid should have a contributor");
+    pubRead = raidoApi.getPublicExperimental().publicReadRaidV3(handle);
+    pubReadMeta = (PublicRaidMetadataSchemaV1) pubRead.getMetadata();
+    assertThat(pubReadMeta.getContributors()).isNotEmpty();
+
+    /* "reproduce" because we don't actually want this behaviour, we'd prefer 
+    that this failed - this "documents" the existing undesirable behaviour */
+    EXPECT("reproduce that upgraded raids are able to re-migrated");
+    remintResult = adminApi.migrateLegacyRaid(
+      new MigrateLegacyRaidRequest().
+        mintRequest(new MigrateLegacyRaidRequestMintRequest().
+          servicePointId(servicePoint.getId()).
+          contentIndex(1).
+          createDate(OffsetDateTime.now()) ).
+        metadata(initMetadata) );
+    assertThat(remintResult.getFailures()).isNullOrEmpty();
+    assertThat(remintResult.getSuccess()).isTrue();
+
+
+    EXPECT("reproduce that upgraded re-migrated raid had contributors stomped");
+    pubRead = raidoApi.getPublicExperimental().publicReadRaidV3(handle);
+    pubReadMeta = (PublicRaidMetadataSchemaV1) pubRead.getMetadata();
+    assertThat(pubReadMeta.getContributors()).isNullOrEmpty();
     
   }
+
+  
   
 }
