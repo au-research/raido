@@ -1,6 +1,6 @@
 -- user and role are synonyms in PG 
 
--- because I couldn't get the "drop user" funtionality workin in RDS, now 
+-- because I couldn't get the "drop user" functionality working in RDS, now 
 -- this whole script is "conditional" 
 -- https://flywaydb.org/documentation/learnmore/faq.html#db-specific-sql
 -- this script should only be run the very first time, after a DB was created
