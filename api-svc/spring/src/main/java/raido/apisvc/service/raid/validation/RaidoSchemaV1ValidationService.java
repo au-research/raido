@@ -187,8 +187,10 @@ public class RaidoSchemaV1ValidationService {
   ) {
     List<ValidationFailure> failures = new ArrayList<>();
 
+    if( !areEqual(newId.getIdentifier(), oldId.getIdentifier()) ){
+      failures.add(fieldCannotChange("metadata.id.identifier"));
+    }
     if( !areEqual(newId.getIdentifierTypeUri(), oldId.getIdentifierTypeUri()) ){
-      // improve: factor these out to the ValidationMessage class
       failures.add(fieldCannotChange("metadata.id.identifierTypeUri"));
     }
     if( !areEqual(newId.getGlobalUrl(), oldId.getGlobalUrl()) ){

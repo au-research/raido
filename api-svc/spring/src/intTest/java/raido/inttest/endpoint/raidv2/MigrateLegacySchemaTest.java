@@ -1,5 +1,6 @@
 package raido.inttest.endpoint.raidv2;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
 import raido.apisvc.util.DateUtil;
 import raido.db.jooq.api_svc.enums.UserRole;
@@ -15,7 +16,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static raido.apisvc.service.raid.MetadataService.RAID_ID_TYPE_URI;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
 import static raido.idl.raidv2.model.RaidoMetaschema.LEGACYMETADATASCHEMAV1;
+import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
+import static raido.inttest.endpoint.raidv2.RaidoSchemaV1Test.createDummyLeaderContributor;
 
 public class MigrateLegacySchemaTest extends IntegrationTestCase {
 
@@ -24,7 +27,7 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
 //  @Autowired private RaidoApiUtil api;
 
   @Test
-  void happyDayScenario(){
+  void happyDayScenario() throws JsonProcessingException {
     
     var adminApi = super.adminExperimentalClientAs(adminToken);
     var today = LocalDate.now();
@@ -103,6 +106,26 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
         metadata(initMetadata) );
     assertThat(remintResult.getFailures()).isNullOrEmpty();
     assertThat(remintResult.getSuccess()).isTrue();
+    
+    EXPECT("should be able to upgrade a legacy raid to raido schema");
+    var remintMetadata = mapper.readValue(
+      remintResult.getRaid().getMetadata().toString(), 
+      LegacyMetadataSchemaV1.class );
+    
+    var upgradeResult = basicApi.upgradeLegacyToRaidoSchema(
+      new UpdateRaidoSchemaV1Request().metadata(
+        new RaidoMetadataSchemaV1().
+          metadataSchema(RAIDOMETADATASCHEMAV1).
+          id(remintMetadata.getId()).
+          dates(remintMetadata.getDates()).
+          access(remintMetadata.getAccess()).
+          titles(remintMetadata.getTitles()).
+          descriptions(remintMetadata.getDescriptions()).
+          alternateUrls(remintMetadata.getAlternateUrls()).
+          contributors(List.of(createDummyLeaderContributor(today)))
+      ) );
+    assertThat(upgradeResult.getFailures()).isNullOrEmpty();
+    assertThat(upgradeResult.getSuccess()).isTrue();
     
   }
   

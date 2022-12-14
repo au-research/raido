@@ -141,6 +141,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MintResponse'
+  /upgrade-legacy-to-raido-schema:
+    post:
+      tags:
+        - basic-raid-experimental
+      operationId: upgrade-legacy-to-raido-schema
+      summary: > 
+        upgrade (i.e. change the schema) of a legacy raid to be a 
+        raido-metadata-schema-v1 raid, but supplying the missing data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [metadata]
+              properties:
+                metadata: {$ref: '#/components/schemas/RaidoMetadataSchemaV1'}
+      responses:
+        '200':
+          description: data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MintResponse'
 
 
 components:

@@ -52,17 +52,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
           descriptions(List.of(new DescriptionBlock().
             type(PRIMARY_DESCRIPTION).
             description("stuff about the int test raid"))).
-          contributors(List.of(new ContributorBlock().
-            id(DUMMY_ORCID).
-            identifierSchemeUri(HTTPS_ORCID_ORG_).
-            positions(List.of(new ContributorPosition().
-              positionSchemaUri(HTTPS_RAID_ORG_).
-              position(LEADER).
-              startDate(today) )).
-            roles(List.of(
-              new ContributorRole().
-                roleSchemeUri(HTTPS_CREDIT_NISO_ORG_).
-                role(PROJECT_ADMINISTRATION)  )) 
+          contributors(List.of(createDummyLeaderContributor(today) 
           )).
           access(new AccessBlock().type(OPEN))
         )
@@ -170,7 +160,21 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
 //    assertThat(readClosedMeta.getTitles()).isNullOrEmpty();
     
   }
-  
+
+  public static ContributorBlock createDummyLeaderContributor(LocalDate today) {
+    return new ContributorBlock().
+      id(DUMMY_ORCID).
+      identifierSchemeUri(HTTPS_ORCID_ORG_).
+      positions(List.of(new ContributorPosition().
+        positionSchemaUri(HTTPS_RAID_ORG_).
+        position(LEADER).
+        startDate(today))).
+      roles(List.of(
+        new ContributorRole().
+          roleSchemeUri(HTTPS_CREDIT_NISO_ORG_).
+          role(PROJECT_ADMINISTRATION)));
+  }
+
   public static RaidoMetadataSchemaV1 mapRaidMetadataToRaido(
     PublicRaidMetadataSchemaV1 in
   ){
@@ -201,17 +205,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
             type(PRIMARY_TITLE).
             title(" ").
             startDate(null))).
-          contributors(List.of(new ContributorBlock().
-            id(DUMMY_ORCID).
-            identifierSchemeUri(HTTPS_ORCID_ORG_).
-            positions(List.of(new ContributorPosition().
-              positionSchemaUri(HTTPS_RAID_ORG_).
-              position(LEADER).
-              startDate(today) )).
-            roles(List.of(
-              new ContributorRole().
-                roleSchemeUri(HTTPS_CREDIT_NISO_ORG_).
-                role(PROJECT_ADMINISTRATION)  ))
+          contributors(List.of(createDummyLeaderContributor(today)
           )).
           dates(new DatesBlock().startDate(today)).
           access(new AccessBlock().type(OPEN))

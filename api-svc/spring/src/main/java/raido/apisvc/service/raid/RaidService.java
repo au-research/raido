@@ -30,15 +30,20 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toMap;
 import static org.springframework.transaction.annotation.Propagation.NEVER;
+import static raido.apisvc.endpoint.message.ValidationMessage.CANNOT_UPGRADE_TO_OTHER_SCHEMA;
 import static raido.apisvc.endpoint.message.ValidationMessage.SCHEMA_CHANGED;
+import static raido.apisvc.endpoint.message.ValidationMessage.UPGRADE_LEGACY_SCHEMA_ONLY;
 import static raido.apisvc.service.raid.MetadataService.mapApi2Db;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitle;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitles;
 import static raido.apisvc.util.DateUtil.local2Offset;
 import static raido.apisvc.util.DateUtil.offset2Local;
 import static raido.apisvc.util.Log.to;
+import static raido.db.jooq.api_svc.enums.Metaschema.legacy_metadata_schema_v1;
+import static raido.db.jooq.api_svc.enums.Metaschema.raido_metadata_schema_v1;
 import static raido.db.jooq.api_svc.tables.Raid.RAID;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
+import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 
 @Component
 public class RaidService {
@@ -301,6 +306,52 @@ public class RaidService {
     return emptyList();
   }
 
+  public List<ValidationFailure> upgradeRaidoSchemaV1(
+    RaidoMetadataSchemaV1 newData,
+    RaidRecord oldRaid
+  ) {
+
+    if( newData.getMetadataSchema() != RAIDOMETADATASCHEMAV1 ){
+      return List.of(CANNOT_UPGRADE_TO_OTHER_SCHEMA);
+    }
+    if( oldRaid.getMetadataSchema() != legacy_metadata_schema_v1 ){
+      return List.of(UPGRADE_LEGACY_SCHEMA_ONLY);
+    }
+    
+    var legacyData = metaSvc.mapLegacyMetadata(oldRaid);
+
+    List<ValidationFailure> failures = new ArrayList<>();
+    failures.addAll(
+      validSvc.validateIdBlockNotChanged(newData.getId(), legacyData.getId()) );
+    failures.addAll(validSvc.validateRaidoSchemaV1(newData));
+
+    // validation failure possible (conversion error or maxSize of json)
+    String metadataAsJson = null;
+    try {
+      metadataAsJson = metaSvc.mapToJson(newData);
+    }
+    catch( ValidationFailureException e ){
+      failures.addAll(e.getFailures());
+    }
+
+    if( !failures.isEmpty() ){
+      return failures;
+    }
+
+    var raidData = getDenormalisedRaidData(newData);
+
+    db.update(RAID).
+      set(RAID.METADATA_SCHEMA, raido_metadata_schema_v1).
+      set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
+      set(RAID.METADATA, JSONB.valueOf(metadataAsJson)).
+      set(RAID.START_DATE, raidData.startDate()).
+      set(RAID.CONFIDENTIAL, raidData.confidential()).
+      where(RAID.HANDLE.eq(oldRaid.getHandle())).
+      execute();
+
+    return emptyList();
+  }
+  
   public ServicePointRecord findServicePoint(String name){
     return db.select().from(SERVICE_POINT).
       where(SERVICE_POINT.NAME.eq(name)).

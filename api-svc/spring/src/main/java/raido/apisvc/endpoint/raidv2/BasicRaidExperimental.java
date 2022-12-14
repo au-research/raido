@@ -193,5 +193,41 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     }
   }
 
+  @Override
+  public MintResponse upgradeLegacyToRaidoSchema(
+    UpdateRaidoSchemaV1Request req
+  ) {
+    var user = getAuthzPayload();
+    var newData = req.getMetadata();
+    if( newData == null ){
+      return mintFailed(METADATA_NOT_SET);
+    }
+
+    var id = newData.getId();
+    if( id == null ){
+      return mintFailed(ID_BLOCK_NOT_SET);
+    }
+
+    if( isBlank(id.getIdentifier()) ){
+      return mintFailed(IDENTIFIER_NOT_SET);
+    }
+
+    var oldRaid = raidSvc.readRaidV2Data(id.getIdentifier()).raid();
+    guardOperatorOrAssociated(user, oldRaid.getServicePointId());
+    
+    /* re-using updateRaidoSchemaV1() allows the upgrade process to make any 
+    change, not just add the necessary data to make it compatible with the 
+    upgrade schema.  
+    But as long as the new structure obeys the schema rules, who cares? */
+    var failures = raidSvc.upgradeRaidoSchemaV1(req.getMetadata(), oldRaid);
+    if( failures.isEmpty() ){
+      return new MintResponse().success(true).raid(
+        readRaidV2(new ReadRaidV2Request().handle(id.getIdentifier())) );
+    }
+    else {
+      return mintFailed(failures);
+    }
+  }
+
 
 }

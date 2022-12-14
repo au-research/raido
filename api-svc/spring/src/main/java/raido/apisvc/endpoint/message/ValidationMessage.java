@@ -51,6 +51,16 @@ public class ValidationMessage {
       errorType(INVALID_VALUE_TYPE).
       message("cannot update a legacy raid," +
         " must be converted to RaidoMetadataSchemaV1");
+  public static final ValidationFailure UPGRADE_LEGACY_SCHEMA_ONLY =
+    new ValidationFailure().
+      fieldId("metadata.metadataSchema").
+      errorType(INVALID_VALUE_TYPE).
+      message("can only call upgrade from a legacy raid");
+  public static final ValidationFailure CANNOT_UPGRADE_TO_OTHER_SCHEMA =
+    new ValidationFailure().
+      fieldId("metadata.metadataSchema").
+      errorType(INVALID_VALUE_TYPE).
+      message("can only call upgrade legacy raid to RaidoMetadataSchemaV1");
   public static final ValidationFailure DATES_NOT_SET = 
     fieldNotSet("metadata.dates");
   public static final ValidationFailure DATES_START_DATE_NOT_SET =
