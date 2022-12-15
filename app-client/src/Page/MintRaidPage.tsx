@@ -13,9 +13,6 @@ import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import {
   AccessType,
-  ContributorIdentifierSchemeType,
-  ContributorPositionSchemeType,
-  ContributorRoleSchemeType,
   DescriptionBlock,
   RaidoMetadataSchemaV1,
   ValidationFailure
@@ -39,6 +36,7 @@ import { Dayjs } from "dayjs";
 import { assert, WithRequired } from "Util/TypeUtil";
 import { isValidDate } from "Util/DateUtil";
 import { getEditRaidPageLink } from "Page/EditRaidPage";
+import { createLeadContributor } from "Page/UpgradeLegacySchemaForm";
 
 const pageUrl = "/mint-raid-v2";
 
@@ -114,21 +112,12 @@ function mapFormDataToMetadata(
       startDate: form.startDate,
     }],
     descriptions,
-    contributors: [{
-      id: form.leadContributor,
-      identifierSchemeUri: ContributorIdentifierSchemeType.HttpsOrcidOrg,
-      positions: [{
-        position: "Leader",
-        positionSchemaUri: ContributorPositionSchemeType.HttpsRaidOrg,
-        startDate: form.startDate,
-      }],
-      roles: [{
-        role: "project-administration",
-        roleSchemeUri: ContributorRoleSchemeType.HttpsCreditNisoOrg,
-      }]
-    }]
+    contributors: [
+      createLeadContributor(form.leadContributor, form.startDate)
+    ],
   }
 }
+
 
 function MintRaidContainer({servicePointId, onCreate}: {
   servicePointId: number,
@@ -138,8 +127,7 @@ function MintRaidContainer({servicePointId, onCreate}: {
   const [formData, setFormData] = useState({
     primaryTitle: "",
     startDate: new Date(),
-    // just a random value that hopefully is valid but not a real person
-    leadContributor: "0000-0001-0000-0009",
+    leadContributor: "",
     accessType: "Open",
     accessStatement: "",
   } as FormData);
@@ -171,11 +159,12 @@ function MintRaidContainer({servicePointId, onCreate}: {
   );
 
   const isTitleValid = !!formData.primaryTitle;
-  const orcidProblem = findOrcidProblem(formData.leadContributor);
+  const leadContribProblem = findOrcidProblem(formData.leadContributor);
   const isAccessStatementValid = formData.accessType === "Open" ? 
     true : !!formData.accessStatement;
   const isStartDateValid = isValidDate(formData?.startDate);
-  const canSubmit = isTitleValid && isStartDateValid && isAccessStatementValid;
+  const canSubmit = isTitleValid && isStartDateValid && 
+    isAccessStatementValid && !leadContribProblem;
   const isWorking = mintRequest.isLoading;
   
   return <ContainerCard title={"Mint RAiD"} action={<MintRaidHelp/>}>
@@ -221,10 +210,10 @@ function MintRaidContainer({servicePointId, onCreate}: {
               leadContributor: mapInvalidOrcidChars(e.target.value)
             });
           }}
-          label={ orcidProblem ? 
-            "Lead contributor - " + orcidProblem : 
+          label={ leadContribProblem ? 
+            "Lead contributor - " + leadContribProblem : 
             "Lead contributor"}
-          error={!!orcidProblem}
+          error={!!leadContribProblem}
         />
         <FormControl>
           <InputLabel id="accessTypeLabel">Access type</InputLabel>

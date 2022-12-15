@@ -152,7 +152,7 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
   );
 
   const isTitleValid = !!formData.primaryTitle;
-  const orcidProblem = findOrcidProblem(formData.leadContributor);
+  const leadContribProblem = findOrcidProblem(formData.leadContributor);
   const isAccessStatementValid = formData.accessType === "Open" ?
     true : !!formData.accessStatement;
   const hasChanged = 
@@ -160,7 +160,7 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
   const isStartDateValid = isValidDate(formData?.startDate);
 
   const canSubmit = isTitleValid && isAccessStatementValid
-    && isStartDateValid && hasChanged;
+    && isStartDateValid && !leadContribProblem && hasChanged;
   const isWorking = updateRequest.isLoading;
 
   return <>
@@ -211,10 +211,10 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
               leadContributor: mapInvalidOrcidChars(e.target.value)
             });
           }}
-          label={ orcidProblem ?
-            "Lead contributor - " + orcidProblem :
+          label={ leadContribProblem ?
+            "Lead contributor - " + leadContribProblem :
             "Lead contributor"}
-          error={!!orcidProblem}
+          error={!!leadContribProblem}
         />
         <FormControl>
           <InputLabel id="accessTypeLabel">Access type</InputLabel>

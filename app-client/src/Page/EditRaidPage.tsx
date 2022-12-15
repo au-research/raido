@@ -36,7 +36,7 @@ import {
 } from "Component/MetaDataContainer";
 import { EditRaidoV1SchemaForm } from "Page/EditRaidoV1SchemaForm";
 import { SmallPageSpinner } from "Component/SmallPageSpinner";
-import { TextSpan } from "Component/TextSpan";
+import { UpgradeLegacySchemaForm } from "Page/UpgradeLegacySchemaForm";
 
 const log = console;
 
@@ -143,8 +143,9 @@ function RaidDataForm({readQuery, onUpdateSuccess}: {
   }
   
   if( readQuery.data.metadata.metadataSchema === "LegacyMetadataSchemaV1" ){
-    return <TextSpan>Legacy schema must be upgraded to
-      RaidoMetadataSchemaV1 before it can be edited</TextSpan>
+    return <UpgradeLegacySchemaForm onUpgradeSuccess={onUpdateSuccess} 
+      raid={readQuery.data.raid} 
+      metadata={readQuery.data.metadata}/>
   }
   
   return <CompactErrorPanel error={{
