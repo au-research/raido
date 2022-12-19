@@ -19,14 +19,14 @@ public class AafOidcProps {
   /**
    The issuer that JWTs should be generated with.
    */
-  @Value("${GoogleOidc.issuer:https://central.test.aaf.edu.au}")
+  @Value("${AafOidc.issuer:https://central.test.aaf.edu.au}")
   public String issuer;
 
   /**
    The url where the IdP publishes its JWT public keys.
    https://auth0.com/docs/secure/tokens/json-web-tokens/json-web-key-sets
    */
-  @Value("${GoogleOidc.jwks:https://central.test.aaf.edu.au/providers/op/jwks}")
+  @Value("${AafOidc.jwks:https://central.test.aaf.edu.au/providers/op/jwks}")
   public String jwks;
 
 }
