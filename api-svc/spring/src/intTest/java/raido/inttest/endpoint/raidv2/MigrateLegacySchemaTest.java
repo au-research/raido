@@ -124,6 +124,8 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
           descriptions(remintMetadata.getDescriptions()).
           alternateUrls(remintMetadata.getAlternateUrls()).
           contributors(List.of(createDummyLeaderContributor(today)))
+//            .organisations(List.of(createDummyOrganisation(today)))
+
       ) );
     assertThat(upgradeResult.getFailures()).isNullOrEmpty();
     assertThat(upgradeResult.getSuccess()).isTrue();

@@ -126,7 +126,7 @@ public class ApiConfig implements WebMvcConfigurer {
     dispatcher.setLoadOnStartup(1);
     dispatcher.addMapping("/");
 
-    RequestLoggingFilter.add(ctx, DISPATCHER_NAME);    
+    RequestLoggingFilter.add(ctx, DISPATCHER_NAME);
     
     /* Dunno why, but Spring doesn't find WebApplicationInitializer 
     interfaces automatically, so we have to call onStartup() directly. 

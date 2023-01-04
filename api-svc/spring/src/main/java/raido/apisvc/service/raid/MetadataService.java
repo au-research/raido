@@ -44,9 +44,9 @@ public class MetadataService {
   
   private static final Log log = to(MetadataService.class);
 
-  private ObjectMapper defaultMapper = defaultMapper();
+  private final ObjectMapper defaultMapper = defaultMapper();
   
-  private MetadataProps metaProps;
+  private final MetadataProps metaProps;
 
   public MetadataService(MetadataProps metaProps) {
     this.metaProps = metaProps;
@@ -54,7 +54,7 @@ public class MetadataService {
 
   public String mapToJson(Object metadataInstance) 
   throws ValidationFailureException{
-    String jsonValue = null;
+    String jsonValue;
     try {
       jsonValue = defaultMapper.writeValueAsString(metadataInstance);
     }
@@ -229,7 +229,8 @@ public class MetadataService {
         descriptions(metadata.getDescriptions()).
         access(metadata.getAccess()).
         alternateUrls(metadata.getAlternateUrls()).
-        contributors(metadata.getContributors())
+        contributors(metadata.getContributors()).
+        organisations((metadata.getOrganisations()))
       );
   }
   

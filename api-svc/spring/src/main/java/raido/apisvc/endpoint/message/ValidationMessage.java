@@ -31,9 +31,12 @@ public class ValidationMessage {
       message("too many primaryTitle entries provided");
 
   public static final ValidationFailure TITLES_NOT_SET =
-    fieldNotSet("titles");    
+    fieldNotSet("titles");
   public static final ValidationFailure CONTRIB_NOT_SET =
-    fieldNotSet("contributors");    
+    fieldNotSet("contributors");
+
+  public static final ValidationFailure ORGANISATION_NOT_SET =
+    fieldNotSet("organisations");
   public static final ValidationFailure METADATA_TOO_LARGE =
     new ValidationFailure().
       fieldId("metadata").errorType(TOO_LONG_TYPE).
@@ -118,6 +121,13 @@ public class ValidationMessage {
       message(FIELD_MUST_BE_SET_MESSAGE);
   }
 
+  public static ValidationFailure organisationIdNotSet(int i) {
+    return new ValidationFailure().
+      fieldId("organisation[%s].id".formatted(i)).
+      errorType(NOT_SET_TYPE).
+      message(FIELD_MUST_BE_SET_MESSAGE);
+  }
+
   public static ValidationFailure titleStartDateNotSet(int i) {
     return new ValidationFailure().
       fieldId("titles[%s].startDate".formatted(i)).
@@ -139,6 +149,13 @@ public class ValidationMessage {
       message(FIELD_MUST_BE_SET_MESSAGE);
   }
 
+  public static ValidationFailure organisationIdSchemeNotSet(int i) {
+    return new ValidationFailure().
+      fieldId("organisations[%s].identifierSchemeUri".formatted(i)).
+      errorType(NOT_SET_TYPE).
+      message(FIELD_MUST_BE_SET_MESSAGE);
+  }
+
   public static ValidationFailure contribInvalidIdScheme(int i) {
     return new ValidationFailure().
       fieldId("contributors[%s].identifierSchemeUri".formatted(i)).
@@ -146,6 +163,12 @@ public class ValidationMessage {
       message(INVALID_VALUE_MESSAGE);
   }
 
+  public static ValidationFailure organisationInvalidIdScheme(int i) {
+    return new ValidationFailure().
+      fieldId("organisations[%s].identifierSchemeUri".formatted(i)).
+      errorType(INVALID_VALUE_TYPE).
+      message(INVALID_VALUE_MESSAGE);
+  }
   public static ValidationFailure primaryTitleTooLong(int i) {
     return new ValidationFailure().
       fieldId("titles[%s].title".formatted(i)).

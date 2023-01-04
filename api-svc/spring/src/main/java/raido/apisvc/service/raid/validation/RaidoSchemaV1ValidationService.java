@@ -31,18 +31,22 @@ import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 public class RaidoSchemaV1ValidationService {
   private static final Log log = to(RaidoSchemaV1ValidationService.class);
 
-  private TitleValidationService titleSvc;
-  private DescriptionValidationService descSvc;
-  private ContributorValidationService contribSvc;
+  private final TitleValidationService titleSvc;
+  private final DescriptionValidationService descSvc;
+  private final ContributorValidationService contribSvc;
+
+  private final OrganisationValidationService orgSvc;
   
   public RaidoSchemaV1ValidationService(
     TitleValidationService titleSvc,
     DescriptionValidationService descSvc,
-    ContributorValidationService contribSvc
+    ContributorValidationService contribSvc,
+    OrganisationValidationService orgSvc
   ) {
     this.titleSvc = titleSvc;
     this.descSvc = descSvc;
     this.contribSvc = contribSvc;
+    this.orgSvc = orgSvc;
   }
 
   /**
@@ -66,6 +70,7 @@ public class RaidoSchemaV1ValidationService {
     failures.addAll(descSvc.validateDescriptions(metadata.getDescriptions()));
     failures.addAll(validateAlternateUrls(metadata.getAlternateUrls()));
     failures.addAll(contribSvc.validateContributors(metadata.getContributors()));
+    failures.addAll(orgSvc.validateOrganisations(metadata.getOrganisations()));
 
     return failures;
   }

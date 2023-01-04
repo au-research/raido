@@ -1,0 +1,46 @@
+openapi: 3.0.3
+info:
+  title: metadata blocks
+  version: 1.0.0
+  description: >
+    Types that model the standard metadata blocks. Intended to be re-used
+    across the "raid" and "raido" stuff.
+paths:
+
+components:
+  schemas:
+    OrganisationBlock:
+      type: object
+      required: [id, identifierSchemeUri, roles]
+      properties:
+        id: { type: string }
+        identifierSchemeUri:
+          {$ref: '#/components/schemas/OrganisationIdentifierSchemeType'}
+        roles:
+          type: array
+          items: {$ref: '#/components/schemas/OrganisationRole'}
+    OrganisationIdentifierSchemeType:
+      type: string
+      enum: ['https://ror.org/']
+    OrganisationRole:
+      type: object
+      required: [role, roleSchemeUri, startDate]
+      properties:
+        roleSchemeUri:
+          {$ref: '#/components/schemas/OrganisationRoleSchemeType'}
+        role:
+          {$ref: '#/components/schemas/OrganisationRoleType'}
+        startDate: { type: string, format: date }
+        endDate: { type: string, format: date }
+    OrganisationRoleSchemeType:
+      type: string
+      enum: ['https://raid.org/']
+    OrganisationRoleType:
+      type: string
+      enum:
+        - Lead Research Organisation
+        - Other Research Organisation
+        - Partner Organisation
+        - Contractor
+        - Other Organisation
+

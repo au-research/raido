@@ -30,6 +30,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
    * verified doesn't exist (or at least, non-public): 
    * https://orcid.org/0000-0001-0000-0009 */
   public static String DUMMY_ORCID = "0000-0001-0000-0009";
+  public static String DUMMY_ROR = "https://ror.org/123xx4567";
 
   @Test
   void happyDayScenario() throws JsonProcessingException {
@@ -52,8 +53,8 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
           descriptions(List.of(new DescriptionBlock().
             type(PRIMARY_DESCRIPTION).
             description("stuff about the int test raid"))).
-          contributors(List.of(createDummyLeaderContributor(today) 
-          )).
+          contributors(List.of(createDummyLeaderContributor(today))).
+          organisations(List.of(createDummyOrganisation(today))).
           access(new AccessBlock().type(OPEN))
         )
     );
@@ -175,6 +176,17 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
           role(PROJECT_ADMINISTRATION)));
   }
 
+  public static OrganisationBlock createDummyOrganisation(LocalDate today) {
+    return new OrganisationBlock().
+      id(DUMMY_ROR).
+      identifierSchemeUri(OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_).
+      roles(List.of(
+        new OrganisationRole().
+          roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_).
+          role(OrganisationRoleType.LEAD_RESEARCH_ORGANISATION)
+          .startDate(today)));
+  }
+
   public static RaidoMetadataSchemaV1 mapRaidMetadataToRaido(
     PublicRaidMetadataSchemaV1 in
   ){
@@ -186,6 +198,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
       descriptions(in.getDescriptions()).
       alternateUrls(in.getAlternateUrls()).
       contributors(in.getContributors()).
+      organisations(in.getOrganisations()).
       access(in.getAccess());
   }
 
@@ -205,8 +218,8 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
             type(PRIMARY_TITLE).
             title(" ").
             startDate(null))).
-          contributors(List.of(createDummyLeaderContributor(today)
-          )).
+          contributors(List.of(createDummyLeaderContributor(today))).
+          organisations(List.of(createDummyOrganisation(today))).
           dates(new DatesBlock().startDate(today)).
           access(new AccessBlock().type(OPEN))
         )
@@ -224,5 +237,4 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
       }
     );
   }
-  
 }
