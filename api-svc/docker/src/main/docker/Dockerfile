@@ -1,7 +1,7 @@
 
 FROM amazonlinux:2.0.20220218.1
 
-MAINTAINER Raido support team "web.services@ardc.edu.au"
+MAINTAINER Raido support team "contact@raid.org"
 
 RUN yum update -y \
   && yum install -y \
