@@ -58,6 +58,28 @@ because it has no password
 * see [spring/readme.md](./spring/readme.md) for instructions on running the
   actual server, including configuring the password for the `api_user`
 
+# Signing in to the app when doing local dev
+
+In usual operation, someone needs to "authorise" you to use the app:
+* you sign-in via an IDP (Google, etc)
+* that takes you to a page where you request "authorisation" to specific 
+  Service Point
+* someone else, who is an Operator or SpAdmin "approves" you to use Raido with 
+  your requested service point
+
+To "bootstrap" the sign-in process, you need to sign in as an "auto-approved" 
+operator, using the Google IDP and requesting authorisation to the `Raido` 
+service point.
+
+The list of "auto-approved" users is stored in the `raido_operator` table:
+* rows are inserted for all environments (including PROD) via standard flyway
+  migration (e.g. [V4__sign_in_tables.sql](./db/raido/src/main/resources/db/migration/V4__sign_in_tables.sql) 
+* DEMO environment: [V4_1__surf_operators.sql](./db/raido/src/main/resources/db/env/demo/V4_1__surf_operators.sql)
+
+If you've done it right, you should get an alert dialog telling you you've been
+auto-approved immediately after hitting the submit button.
+
+
 # Importing legacy data for use in local environment
 This is optional (and the data files are not publicly available) - it's not 
 necessary for just running Raido. 
