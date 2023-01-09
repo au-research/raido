@@ -36,7 +36,7 @@ import { Dayjs } from "dayjs";
 import { assert, WithRequired } from "Util/TypeUtil";
 import { isValidDate } from "Util/DateUtil";
 import { getEditRaidPageLink } from "Page/EditRaidPage";
-import { createLeadContributor } from "Page/UpgradeLegacySchemaForm";
+import {createLeadContributor, createLeadOrganisation} from "Page/UpgradeLegacySchemaForm";
 
 const pageUrl = "/mint-raid-v2";
 
@@ -82,6 +82,7 @@ type FormData = Readonly<{
   startDate?: Date,
   primaryDescription: string,
   leadContributor: string,
+  leadorganisation: string,
   accessType: AccessType,
   accessStatement: string,
 }>;
@@ -115,9 +116,11 @@ function mapFormDataToMetadata(
     contributors: [
       createLeadContributor(form.leadContributor, form.startDate)
     ],
+    organisations: [
+      createLeadOrganisation(form.leadorganisation, form.startDate)
+    ]
   }
 }
-
 
 function MintRaidContainer({servicePointId, onCreate}: {
   servicePointId: number,
@@ -160,11 +163,12 @@ function MintRaidContainer({servicePointId, onCreate}: {
 
   const isTitleValid = !!formData.primaryTitle;
   const leadContribProblem = findOrcidProblem(formData.leadContributor);
-  const isAccessStatementValid = formData.accessType === "Open" ? 
+  const leadOrganisationProblem = findOrganisationIdProblem(formData.leadorganisation);
+  const isAccessStatementValid = formData.accessType === "Open" ?
     true : !!formData.accessStatement;
   const isStartDateValid = isValidDate(formData?.startDate);
   const canSubmit = isTitleValid && isStartDateValid && 
-    isAccessStatementValid && !leadContribProblem;
+    isAccessStatementValid && !leadContribProblem && !leadOrganisationProblem;
   const isWorking = mintRequest.isLoading;
   
   return <ContainerCard title={"Mint RAiD"} action={<MintRaidHelp/>}>
@@ -215,7 +219,21 @@ function MintRaidContainer({servicePointId, onCreate}: {
             "Lead contributor"}
           error={!!leadContribProblem}
         />
-        <FormControl>
+        <TextField id="organisation"
+                   variant="outlined" autoCorrect="off" autoCapitalize="on"
+                   disabled={isWorking}
+                   value={formData.leadorganisation ?? ""}
+                   onChange={(e) => {
+                     setFormData({
+                       ...formData,
+                       leadorganisation: e.target.value
+                     });
+                   }}
+                   label={ leadOrganisationProblem ?
+                     "Lead organisation - " + leadOrganisationProblem :
+                     "Lead Organisation"}
+                   error={!!leadOrganisationProblem}
+        />        <FormControl>
           <InputLabel id="accessTypeLabel">Access type</InputLabel>
           <Select
             labelId="accessTypeLabel"
@@ -286,6 +304,29 @@ export function findOrcidProblem(id: string): string|undefined{
   }
   if( id.length > 19 ){
     return "too long"
+  }
+
+  // add checksum logic?
+
+  return undefined;
+}
+
+export function findOrganisationIdProblem(id: string): string|undefined{
+  if( !id ){
+    return "must be set";
+  }
+  if( id.length < 25 ){
+    return "too short";
+  }
+  if( id.length > 25 ){
+    return "too long";
+  }
+  if(!id.startsWith('https://ror.org/')) {
+    return 'should start with https://ror.org/';
+  }
+  const regex = new RegExp('^https://ror.org/[a-z0-9]{9}$')
+  if (!regex.test(id)) {
+    return `final portion of id should include only numbers and lower case letters`;
   }
 
   // add checksum logic?

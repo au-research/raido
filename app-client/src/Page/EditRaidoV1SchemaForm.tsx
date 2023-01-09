@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import {
   AccessType,
   ContributorBlock,
-  DescriptionBlock,
+  DescriptionBlock, OrganisationBlock,
   RaidoMetadataSchemaV1,
   ReadRaidResponseV2,
   ValidationFailure
@@ -26,18 +26,19 @@ import { navBrowserBack } from "Util/WindowUtil";
 import { ValidationFailureDisplay } from "Component/Util";
 import {
   getFirstLeader,
-  getFirstPrimaryDescription,
+  getFirstPrimaryDescription, getLeadOrganisation,
   getPrimaryTitle
 } from "Component/MetaDataContainer";
 import React, { useState } from "react";
 import { useAuthApi } from "Api/AuthApi";
-import { findOrcidProblem, mapInvalidOrcidChars } from "Page/MintRaidPage";
+import {findOrcidProblem, findOrganisationIdProblem, mapInvalidOrcidChars} from "Page/MintRaidPage";
 
 function isDifferent(formData: FormData, original: FormData){
   return formData.primaryTitle !== original.primaryTitle ||
     formData.startDate?.getDate() !== original.startDate?.getDate() ||
     formData.primaryDescription !== original.primaryDescription ||
     formData.leadContributor !== original.leadContributor ||
+    formData.leadOrganisation !== original.leadOrganisation ||
     formData.accessType !== original.accessType ||
     formData.accessStatement !== original.accessStatement;
 }
@@ -48,6 +49,7 @@ type FormData = Readonly<{
   startDate?: Date,
   primaryDescription: string,
   leadContributor: string,
+  leadOrganisation: string,
   accessType: AccessType,
   accessStatement: string,
 }>;
@@ -63,6 +65,7 @@ function mapReadQueryDataToFormData(
     primaryDescription: getFirstPrimaryDescription(metadata)?. 
       description ?? "",
     leadContributor: getFirstLeader(metadata)?.id ?? "",
+    leadOrganisation: getLeadOrganisation(metadata)?.id ?? "",
     accessType: metadata.access.type,
     accessStatement: metadata.access.accessStatement ?? "",
   }
@@ -98,6 +101,14 @@ function createUpdateMetadata(
     ...oldLeader,
     id: formData.leadContributor,
   })
+
+  const newOrganisations: OrganisationBlock[] = [];
+  const oldLeadOrganisation = getLeadOrganisation(oldMetadata);
+  assert(oldLeadOrganisation);
+  newOrganisations.push({
+    ...oldLeadOrganisation,
+    id: formData.leadOrganisation,
+  })
   
   return {
     ...oldMetadata,
@@ -111,6 +122,7 @@ function createUpdateMetadata(
     },
     descriptions: newDescriptions,
     contributors: newContributors,
+    organisations: newOrganisations,
     access: {
       type: formData.accessType,
       accessStatement: formData.accessStatement,
@@ -153,6 +165,7 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
 
   const isTitleValid = !!formData.primaryTitle;
   const leadContribProblem = findOrcidProblem(formData.leadContributor);
+  const leadOrganisationProblem = findOrganisationIdProblem(formData.leadOrganisation);
   const isAccessStatementValid = formData.accessType === "Open" ?
     true : !!formData.accessStatement;
   const hasChanged = 
@@ -160,7 +173,7 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
   const isStartDateValid = isValidDate(formData?.startDate);
 
   const canSubmit = isTitleValid && isAccessStatementValid
-    && isStartDateValid && !leadContribProblem && hasChanged;
+    && isStartDateValid && !leadContribProblem && !leadOrganisationProblem && hasChanged;
   const isWorking = updateRequest.isLoading;
 
   return <>
@@ -215,6 +228,21 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
             "Lead contributor - " + leadContribProblem :
             "Lead contributor"}
           error={!!leadContribProblem}
+        />
+        <TextField id="organisation"
+                   variant="outlined" autoCorrect="off" autoCapitalize="on"
+                   disabled={isWorking}
+                   value={formData.leadOrganisation ?? ""}
+                   onChange={(e) => {
+                     setFormData({
+                       ...formData,
+                       leadOrganisation: e.target.value
+                     });
+                   }}
+                   label={ leadOrganisationProblem ?
+                     "Lead organisation - " + leadOrganisationProblem :
+                     "Lead organisation"}
+                   error={!!leadOrganisationProblem}
         />
         <FormControl>
           <InputLabel id="accessTypeLabel">Access type</InputLabel>

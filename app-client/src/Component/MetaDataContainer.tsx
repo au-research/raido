@@ -6,7 +6,7 @@ import {
   instanceOfLegacyMetadataSchemaV1,
   instanceOfRaidoMetadataSchemaV1,
   LegacyMetadataSchemaV1,
-  LegacyMetadataSchemaV1FromJSON,
+  LegacyMetadataSchemaV1FromJSON, OrganisationBlock,
   RaidoMetadataSchemaV1,
   RaidoMetadataSchemaV1FromJSON,
   RaidoMetaschema,
@@ -81,6 +81,15 @@ export function getFirstLeader(
   });
 }
 
+export function getLeadOrganisation(
+  metadata: RaidoMetadataSchemaV1
+): undefined | OrganisationBlock {
+  return metadata.organisations?.find(i=> { // not nullable?
+    return i.roles.find(j => {
+      return j.role === 'Lead Research Organisation';
+    });
+  });
+}
 export function getPrimaryTitle(
   metadata: RaidoMetadataSchemaV1
 ): TitleBlock {
