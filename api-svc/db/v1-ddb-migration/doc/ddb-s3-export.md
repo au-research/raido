@@ -17,9 +17,13 @@ Export:
 
 Tables to export:
 * RAiD-MetadataTable-5X1IHWPICN82
+  * put export files files into: s3/ddb-migration-data/metadata-table 
 * RAiD-RAiDLiveDB-1SX7NYTSOSUKX-AssociationIndexTable-1EMNYHDPK9NBP
+  * s3/ddb-migration-data/association-index-table
 * RAiD-RAiDLiveDB-1SX7NYTSOSUKX-RAiDTable-1PO1W2ASWY0OV
+  * s3/ddb-migration-data/raid-table
 * RAiD-TokenTable-1P6MFZ0WFEETH
+  * s3/ddb-migration-data/token-table
 
 As per https://confluence.ardc.edu.au/display/~stolley/Raid+V1+-+DDB+table+analysis
 
