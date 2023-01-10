@@ -59,6 +59,23 @@ task dockerBuild(type: Exec){
   commandLine osCmd('docker', 'build', '-t', localImagePath, '.')
 }
 
+task ecsDockerBuild(type: Exec){
+  group = 'docker.build'
+  dependsOn dockerStage
+  description = "build the docker image $containerName:[project version]"
+  
+  doFirst{
+    println "building $localImagePath ..."
+  }
+  workingDir = project.ext.stagingDir
+  
+  commandLine osCmd('docker', 'build', 
+    '-t', localImagePath, 
+    '-f', 'Ecs.Dockerfile', 
+    '.'
+  )
+}
+
 task dockerTagDemo(type: Exec){
   group = 'docker.build'
   dependsOn dockerBuild

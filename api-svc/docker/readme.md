@@ -54,8 +54,13 @@
 * to delete the container: 
   * `docker rm --force sto-test-raido`
 * to run the container
-  * `docker run --name sto-test-raido --publish 8042:8080 --detach --init \
-  --volume C:\\Users\\stolley\\.config\\raido-v2:/home/appuser/.config/raido-v2 raido-api-svc:f353110.dirty` 
+  * 
+```
+docker rm --force sto-test-raido; \
+ docker run --name sto-test-raido --publish 8042:8080 --detach --init \
+  --volume C:\\Users\\stolley\\.config\\raido-v2:/home/appuser/.config/raido-v2 raido-api-svc:587ccd7.dirty
+```
+
 * to see logs from the container
   * `docker logs sto-test-raido`
 * to hit the verison url
