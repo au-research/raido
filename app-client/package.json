@@ -37,11 +37,15 @@
     "@tanstack/react-query": "4.19.1",
     "@tanstack/react-query-devtools" : "4.19.1",
 
-    "web-vitals": "2.1.4"
+    "web-vitals": "2.1.4",
+
+    "json5": ">=2.2.2"
   },
   "devDependencies": {
     "source-map-explorer": "2.5.3",
-    "cross-env": "7.0.3"
+    "cross-env": "7.0.3",
+
+    "json5": ">=2.2.2"
   },
   "eslintConfig": {
     "extends": [

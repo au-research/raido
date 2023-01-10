@@ -106,3 +106,11 @@ npx create-react-app app-client --template typescript
 * replaced the react `src/log.svg` with raido
 * updated `App.tsx` to show Raido stuff
 
+
+# NPM notes on dependencies
+
+This is in the readme because you can't add comments to `package.json`.
+
+* `"json5": ">=2.2.2"` - added 2023-01-10 to resolve a dependabot alert
+  * currently an unused transitive dep, should be able to remove it after all 
+    libs are updated to force it themselves 
