@@ -184,8 +184,8 @@ task buildInfo(type: WriteProperties){
   encoding = "UTF-8"
   comment = "This file built by Gradle task buildInfo"
 
-  property("build.version", project.version as String)
-  property("build.commitId", rootProject.versionDetails().gitHashFull as String)
+  property("build.version", project.version)
+  property("build.commitId", rootProject.gitCommitHash)
   // we don't use it for stuff, it's for people, so format it nice
   property("build.buildDate", new Date().toString())
 }

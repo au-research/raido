@@ -182,16 +182,6 @@ It stands for "Javascript to Jooq", but that's a fairly obtuse naming scheme.
 Change to `api2Db()` and `db2Api()`, it's one extra char and a lot clearer
 about what's going on.
 
-## Versioning needs to be re-done
-
-I still want to use a `git describe` approach for versioning, but need to
-get rid of the palantir plugin and make the git string optionally come from
-the environment (for AWS CI/CD stuff that doesn't provide the repo).
-
-That said, how can we use `git describe` functionality for the AWS stuff?
-I don't think we can :(
-
-
 ## public API endpoints need CORS headers
 
 Mostly we're expecting non-browser calling contexts for the public API endpoints

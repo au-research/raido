@@ -20,10 +20,38 @@ ext{
   ecrHost = "954053438637.dkr.ecr.ap-southeast-2.amazonaws.com"
   ecrRepo = "demostage-apisvcstack-apisvcecr870e734e-79dngtjzwbpy"
 
+  /* decided not to default these to demo any more, when run via 
+  codebuild/codepipeline or locally via dev, you need to decide what env 
+  your trying to push to (demo/prod, etc.) and set the values in 
+  api-svc-docker.gradle
+  Don't forget to login to the ECR if you want to do a push. */
+  ecsEcrHost = ""
+  ecsEcrRepo = ""
+  
   /* image path we build for local use, nice and short and readable. */
   localImagePath = "$imageName:$project.version"
   /* tag/push tasks use this path so that it can be pushed to ECR. */ 
   ecrImagePath = "$ecrHost/$ecrRepo:DEMO"
+
+  // the config loading config :/
+  homeDir = System.properties['user.home']
+  configPath = System.getProperty("RAIDO_APISVC_DOCKER_CONFIG_PATH",
+    "${homeDir}/.config/raido-v2/api-svc-docker.gradle")
+  
+}
+
+/* after ext{} block so that stuff is the default, and so the config
+   can refer to those default values */
+if( file(configPath).exists() ){
+  println "loading config from: ${configPath}"
+  apply from: configPath
+}
+else {
+  println "no file found at: ${configPath}"
+}
+
+ext {
+  ecsEcrImagePath = "$ecsEcrHost/$ecsEcrRepo:$project.version"
 }
 
 task dockerStage(type: Copy) {
@@ -75,6 +103,42 @@ task ecsDockerBuild(type: Exec){
     '.'
   )
 }
+
+task ecsDockerTag(type: Exec){
+  group = 'docker.build'
+  dependsOn ecsDockerBuild
+  description = "tag local image so that it can be pushed to ECR," +
+    " using project.version as the image tag"
+
+  doFirst {
+    assert ecsEcrHost : "ecsEcrHost must be set in api-svc-docker.gradle"
+    assert ecsEcrRepo : "ecsEcrRepo must be set in api-svc-docker.gradle"
+    // add a check that makes sure we're not tagging a dirty version as a 
+    // release image
+    println "tagging $localImagePath as $ecsEcrImagePath ..."
+  }
+
+  workingDir = project.ext.stagingDir
+  commandLine osCmd('docker', 'tag', localImagePath, ecsEcrImagePath)
+}
+
+task ecsDockerPush(type: Exec){
+  group = 'docker.build'
+  dependsOn ecsDockerTag
+  description = "push project.version tagged image to ECR"
+
+  workingDir = project.ext.stagingDir
+  commandLine osCmd('docker', 'push', ecsEcrImagePath)
+
+  doFirst {
+    assert ecsEcrHost : "ecsEcrHost must be set in api-svc-docker.gradle"
+    assert ecsEcrRepo : "ecsEcrRepo must be set in api-svc-docker.gradle"
+    // add a check that makes sure we're not tagging a dirty version as a 
+    // release image
+    println "pushing $ecsEcrImagePath ..."
+  }
+}
+
 
 task dockerTagDemo(type: Exec){
   group = 'docker.build'
