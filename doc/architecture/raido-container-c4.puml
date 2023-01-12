@@ -3,7 +3,7 @@
 ' load the C4 PlantUML template  
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
-' for the databse shape `ContainerDb`
+' for the database shape `ContainerDb`
 !define ICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/
 
 LAYOUT_TOP_DOWN()
