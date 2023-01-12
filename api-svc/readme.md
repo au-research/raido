@@ -88,4 +88,3 @@ Import the raid V1 data
   * run `./gradlew :api-svc:db:v1-ddb-migration:flywayMigrate`
   * see [v1-ddb-migration/readme.md](./db/v1-ddb-migration/readme.md)
 
-bump
