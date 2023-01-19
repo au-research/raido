@@ -26,7 +26,7 @@ just really want to get Gradle running, set the value to "unknown" or something.
 
 To tag a new version, invoke: 
 `git tag --annotate raido-v-<version> <COMMITHASH> -m "manual tag"`
-eg: `git tag --annotate raido-v-0.9 29567130 -m "manual tag"`
+eg: `git tag --annotate raido-v-0.9 HEAD -m "manual tag"`
 Dont' forget to make sure you push the tag to Github, something like:
 `git push --follow-tags`  (I've never done this, I use IDEA).
 */
