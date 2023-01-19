@@ -3,6 +3,7 @@ package raido.apisvc.endpoint.raidv2;
 import jakarta.servlet.http.HttpServletRequest;
 import org.jooq.DSLContext;
 import org.springframework.context.annotation.Scope;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -63,6 +64,11 @@ public class PublicExperimental implements PublicExperimentalApi {
     this.metaSvc = metaSvc;
   }
 
+  /** Transactional=SUPPORTS because when testing this out in AWS and I had 
+   bad DB config, found out this method was creating a TX.  Doesn't need to do
+   that, so I added supports so that it would not create a TX if called at
+   top level. */
+  @Transactional(propagation = Propagation.SUPPORTS)
   @Override
   public VersionResult version() {
     return new VersionResult().
