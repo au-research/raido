@@ -1,0 +1,128 @@
+openapi: 3.0.3
+info:
+  title: stable-api-endpoints
+  version: 1.0.0
+  description: >
+    The first metadata schema supported by Raido.
+    The stuff in this "raido-metadata" file is "Raido" specific, as compared to
+    the more standard "Raid" stuff defined in the "raid-metadata" file.
+    This is what all raids imported from the legacy application were imported
+    as.
+paths:
+  /raid/v1:
+    post:
+      tags:
+        - basic-raid-stable
+      operationId: create-raid-v1
+      summary: mint a raid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [mintRequest, metadata]
+              description: >
+                `id` block is not required for minting and is ignored if set.
+              properties:
+                mintRequest:
+                  type: object
+                  description: >
+                    Raido data that doesn't belong on the raid metadata.
+                    ServicePoint Id means nothing in a RAID context - it's
+                    purely a Raido implementation detail (that may change).
+                  required: [servicePointId]
+                  properties:
+                    servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+                metadata: {$ref: 'components.yaml#/components/schemas/CreateRaidSchemaV1' }
+      responses:
+        201:
+          description: The Raid was successfully created.
+          headers:
+            Location:
+              schema:
+                type: string
+                description: The location of the created Raid.
+          content:
+            application/json:
+              schema:
+                $ref: 'components.yaml#/components/schemas/RaidSchemaV1'
+        400:
+          description: There was a problem with the message sent to the server.
+          content:
+            application/json:
+              schema:
+                $ref: 'components.yaml#/components/schemas/ErrorResponse'
+    get:
+      tags:
+        - basic-raid-stable
+      operationId: list-raids-v1
+      summary: list raids
+      parameters:
+        - name: servicePointId
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'components.yaml#/components/schemas/RaidSchemaV1'
+  /raid/v1/{handle}:
+    parameters:
+      - name: handle
+        in: path
+        required: true
+        description: ID of the raid
+        schema:
+          type: string
+    get:
+      tags:
+        - basic-raid-stable
+      operationId: read-raid-v1
+      summary: read a raid, caller must be authorized
+      responses:
+        200:
+          description: data
+          content:
+            application/json:
+              schema:
+                $ref: 'components.yaml#/components/schemas/RaidSchemaV1'
+    put:
+      tags:
+        - basic-raid-stable
+      operationId: update-raid-v1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [mintRequest, metadata]
+              properties:
+                mintRequest:
+                  type: object
+                  required: [servicePointId]
+                  properties:
+                    servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey'}
+                    contentIndex: { type: integer}
+                    createDate: { type: string, format: date-time }
+                metadata: {$ref: 'components.yaml#/components/schemas/RaidSchemaV1' }
+      responses:
+        200:
+          description: The Raid was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: 'components.yaml#/components/schemas/RaidSchemaV1'
+        400:
+          description: Bad request. There was a problem with the message sent to the server.
+          content:
+            application/json:
+              schema:
+                $ref: 'components.yaml#/components/schemas/ErrorResponse'

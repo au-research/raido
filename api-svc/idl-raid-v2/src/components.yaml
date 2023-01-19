@@ -1,0 +1,50 @@
+openapi: 3.0.3
+info:
+  title: shared types
+  version: 1.0.0
+  description: >
+    This file contains types that are broadly shared across the API.
+    It is not expected to contain any endpoints.
+paths:
+
+components:
+  schemas:
+    CreateRaidSchemaV1:
+      description: >
+        This is the schema needed to create a Raid. It contains all of the properties of a Raid except for the id.
+      type: object
+      required: [ metadataSchema, titles, dates, contributors, access ]
+      properties:
+        metadataSchema: { $ref: 'shared.yaml#/components/schemas/RaidoMetaschema' }
+        titles:
+          type: array
+          items: { $ref: 'metadata-block.yaml#/components/schemas/TitleBlock' }
+        dates: { $ref: 'metadata-block.yaml#/components/schemas/DatesBlock' }
+        descriptions:
+          type: array
+          items: { $ref: 'metadata-block.yaml#/components/schemas/DescriptionBlock' }
+        access: { $ref: 'metadata-block.yaml#/components/schemas/AccessBlock' }
+        alternateUrls:
+          type: array
+          items: { $ref: 'metadata-block.yaml#/components/schemas/AlternateUrlBlock' }
+        contributors:
+          type: array
+          items: { $ref: 'metadata-contributor-block.yaml#/components/schemas/ContributorBlock' }
+        organisations:
+          type: array
+          items: { $ref: 'metadata-organisation-block.yaml#/components/schemas/OrganisationBlock' }
+    RaidSchemaV1:
+      allOf:
+        - $ref: "#/components/schemas/CreateRaidSchemaV1"
+      description: > 
+        All of the properties of CreateRaidSchemaV1 plus id.
+      required: [ "id" ]
+      properties:
+          id: {$ref: 'metadata-block.yaml#/components/schemas/IdBlock'}
+    ErrorResponse:
+      type: object
+      required: [type, title, status]
+      properties:
+        type: { type: string }
+        title: { type: string }
+

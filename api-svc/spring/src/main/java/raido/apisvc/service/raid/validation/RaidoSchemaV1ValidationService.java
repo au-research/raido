@@ -4,14 +4,7 @@ import org.springframework.stereotype.Component;
 import raido.apisvc.endpoint.message.ValidationMessage;
 import raido.apisvc.util.Log;
 import raido.apisvc.util.ObjectUtil;
-import raido.idl.raidv2.model.AccessBlock;
-import raido.idl.raidv2.model.AccessType;
-import raido.idl.raidv2.model.AlternateUrlBlock;
-import raido.idl.raidv2.model.DatesBlock;
-import raido.idl.raidv2.model.IdBlock;
-import raido.idl.raidv2.model.LegacyMetadataSchemaV1;
-import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
-import raido.idl.raidv2.model.ValidationFailure;
+import raido.idl.raidv2.model.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,6 +47,29 @@ public class RaidoSchemaV1ValidationService {
    */
   public List<ValidationFailure> validateRaidoSchemaV1(
     RaidoMetadataSchemaV1 metadata
+  ) {
+    if( metadata == null ){
+      return of(ValidationMessage.METADATA_NOT_SET);
+    }
+
+    var failures = new ArrayList<ValidationFailure>();
+    if( metadata.getMetadataSchema() != RAIDOMETADATASCHEMAV1 ){
+      failures.add(ValidationMessage.INVALID_METADATA_SCHEMA);
+    }
+
+    failures.addAll(validateDates(metadata.getDates()));
+    failures.addAll(validateAccess(metadata.getAccess()));
+    failures.addAll(titleSvc.validateTitles(metadata.getTitles()));
+    failures.addAll(descSvc.validateDescriptions(metadata.getDescriptions()));
+    failures.addAll(validateAlternateUrls(metadata.getAlternateUrls()));
+    failures.addAll(contribSvc.validateContributors(metadata.getContributors()));
+    failures.addAll(orgSvc.validateOrganisations(metadata.getOrganisations()));
+
+    return failures;
+  }
+
+  public List<ValidationFailure> validateCreateRaidV1Request(
+    CreateRaidSchemaV1 metadata
   ) {
     if( metadata == null ){
       return of(ValidationMessage.METADATA_NOT_SET);

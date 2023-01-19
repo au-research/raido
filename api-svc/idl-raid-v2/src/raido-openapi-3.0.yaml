@@ -25,6 +25,8 @@ tags:
     description: The APIs are not stable, they may change at any time.
       These endpoints are intended to be called by the Raido UI.
       Must be called with auth.
+  - name: basic-raid-stable
+    description: Stable APIs.
 security:
   # without this, or if you override with `[]`, no header will be sent
   # by the openapi generated code
@@ -42,7 +44,6 @@ paths:
     $ref: "public-experimental.yaml#/paths/~1public-list-service-point"
   /v2/public/handle/v3/{handle}:
     $ref: "public-experimental.yaml#/paths/~1public-read-raid-v3"
-
   # endregion
   
   
@@ -70,8 +71,15 @@ paths:
     $ref: "raido-metadata-schema.yaml#/paths/~1upgrade-legacy-to-raido-schema"
       
   # endregion
-      
-      
+
+  # region Basic Raido raid endpoints
+  /raid/v1:
+    $ref: "basic-raid-stable.yaml#/paths/~1raid~1v1"
+  /raid/v1/{handle}:
+    $ref: "basic-raid-stable.yaml#/paths/~1raid~1v1~1{handle}"
+
+  # endregion
+
   # region Admin endpoints
                 
   /v2/public/request-authz/v1/{authzRequestId}:
