@@ -113,4 +113,7 @@ This is in the readme because you can't add comments to `package.json`.
 
 * `"json5": ">=2.2.2"` - added 2023-01-10 to resolve a dependabot alert
   * currently an unused transitive dep, should be able to remove it after all 
-    libs are updated to force it themselves 
+    libs are updated to force it themselves
+* `cross-env` - Allows you to set ENV variables in npm scripts in a way that
+  works on both Windows and Linux, https://www.npmjs.com/package/cross-env.
+  I can't remember what I was doing that needed this, can probably be removed.
