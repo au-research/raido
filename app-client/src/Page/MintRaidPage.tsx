@@ -13,7 +13,7 @@ import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import {
   AccessType,
-  DescriptionBlock,
+  DescriptionBlock, OrganisationBlock,
   RaidoMetadataSchemaV1,
   ValidationFailure
 } from "Generated/Raidv2";
@@ -82,7 +82,7 @@ type FormData = Readonly<{
   startDate?: Date,
   primaryDescription: string,
   leadContributor: string,
-  leadorganisation: string,
+  leadOrganisation: string,
   accessType: AccessType,
   accessStatement: string,
 }>;
@@ -98,6 +98,11 @@ function mapFormDataToMetadata(
       description: form.primaryDescription,
     });
   }
+  const organisations: OrganisationBlock[] = [];
+  if (form.leadOrganisation) {
+    organisations.push(createLeadOrganisation(form.leadOrganisation, form.startDate))
+  }
+
   return {
     metadataSchema: "RaidoMetadataSchemaV1",
     access: {
@@ -116,10 +121,8 @@ function mapFormDataToMetadata(
     contributors: [
       createLeadContributor(form.leadContributor, form.startDate)
     ],
-    organisations: [
-      createLeadOrganisation(form.leadorganisation, form.startDate)
-    ]
-  }
+    organisations,
+  };
 }
 
 function MintRaidContainer({servicePointId, onCreate}: {
@@ -163,7 +166,7 @@ function MintRaidContainer({servicePointId, onCreate}: {
 
   const isTitleValid = !!formData.primaryTitle;
   const leadContribProblem = findOrcidProblem(formData.leadContributor);
-  const leadOrganisationProblem = findOrganisationIdProblem(formData.leadorganisation);
+  const leadOrganisationProblem = findOrganisationIdProblem(formData.leadOrganisation);
   const isAccessStatementValid = formData.accessType === "Open" ?
     true : !!formData.accessStatement;
   const isStartDateValid = isValidDate(formData?.startDate);
@@ -222,11 +225,11 @@ function MintRaidContainer({servicePointId, onCreate}: {
         <TextField id="organisation"
                    variant="outlined" autoCorrect="off" autoCapitalize="on"
                    disabled={isWorking}
-                   value={formData.leadorganisation ?? ""}
+                   value={formData.leadOrganisation ?? ""}
                    onChange={(e) => {
                      setFormData({
                        ...formData,
-                       leadorganisation: e.target.value
+                       leadOrganisation: e.target.value
                      });
                    }}
                    label={ leadOrganisationProblem ?
@@ -313,7 +316,7 @@ export function findOrcidProblem(id: string): string|undefined{
 
 export function findOrganisationIdProblem(id: string): string|undefined{
   if( !id ){
-    return "must be set";
+    return undefined;
   }
   if( id.length < 25 ){
     return "too short";
