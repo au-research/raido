@@ -65,6 +65,8 @@ import static raido.apisvc.util.Log.to;
   config files. IMPROVE: use XDG_CONFIG_HOME env variable */
   @PropertySource(name = "user_config_environment",
     value = ApiConfig.ENV_PROPERTIES, ignoreResourceNotFound = true),
+  @PropertySource(name = "user_config_environment2",
+    value = ApiConfig.ENV_PROPERTIES2, ignoreResourceNotFound = true),
   
   /* we put secrets into a separate file so we can keep env stuff in a nice
   visible SSM String param, and secrets can be in a SecureString or even 
@@ -72,6 +74,8 @@ import static raido.apisvc.util.Log.to;
   env properties without risking logging secret properties. */
   @PropertySource(name = "user_config_secret",
     value = ApiConfig.SECRET_PROPERTIES, ignoreResourceNotFound = true),
+  @PropertySource(name = "user_config_secret2",
+    value = ApiConfig.SECRET_PROPERTIES2, ignoreResourceNotFound = true),
   
   // added to jar at build time by gradle springBoot.buildInfo config
   @PropertySource( name = "build_info",
@@ -80,10 +84,16 @@ import static raido.apisvc.util.Log.to;
 })
 public class ApiConfig implements WebMvcConfigurer {
   public static final String DISPATCHER_NAME = "raido_dispatcher";
+  /* IMPROVE:STO after everything is stabilised on the new `raido` repo name,
+  delete the old raido-v2 references. */
   public static final String ENV_PROPERTIES = "file:///${user.home}/" +
     ".config/raido-v2/api-svc-env.properties";
   public static final String SECRET_PROPERTIES = "file:///${user.home}/" +
     ".config/raido-v2/api-svc-secret.properties";
+  public static final String ENV_PROPERTIES2 = "file:///${user.home}/" +
+    ".config/raido/api-svc-env.properties";
+  public static final String SECRET_PROPERTIES2 = "file:///${user.home}/" +
+    ".config/raido/api-svc-secret.properties";
 
   private static final Log log = to(ApiConfig.class);
   
