@@ -61,5 +61,5 @@ apiSvcPgPassword="password"
 ## Invoke import task
 
 ```
-./gradlew :api-svc:db:v1-ddb-migration:importS3Files -DRAIDOV2_APISVC_DB_CONFIG_PATH=c:/users/stolley/.config/raido/api-svc-demo-migrate-db.gradle
+./gradlew :api-svc:db:v1-ddb-migration:importS3Files -DRAIDO_APISVC_DB_CONFIG_PATH=c:/users/stolley/.config/raido/api-svc-demo-migrate-db.gradle
 ```

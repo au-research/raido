@@ -15,7 +15,7 @@ ext{
   
   // the config loading config :/
   homeDir = System.properties['user.home']
-  configPath = System.getProperty("RAIDOV2_APISVC_CONFIG_PATH",
+  configPath = System.getProperty("RAIDO_APISVC_CONFIG_PATH",
     "${homeDir}/.config/raido/api-svc.gradle")
 }
 
