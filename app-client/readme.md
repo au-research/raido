@@ -13,7 +13,7 @@
 # Gradle build
 
 The gradle build in this project is standalone, not a part of the overall
-raido-v2 gradle build.
+raido gradle build.
 * because the `git-version` plugin was dying when run inside the codepipeline
 * because the source artifact just brings the code, not the `.git` dir
 * improvements to sort this out
@@ -97,7 +97,7 @@ https://ap-southeast-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/A
 
 This project was bootstrapped with:
 ```
-cd .../raido-v2
+cd .../raido
 npx create-react-app app-client --template typescript
 ```
 

@@ -40,7 +40,7 @@ import static raido.apisvc.util.Log.to;
   value = "./inttest.properties",
   ignoreResourceNotFound = true)
 @PropertySource(name = "inttest_user_config_environment",
-  value = "file:///${user.home}/.config/raido-v2/api-svc-inttest.properties",
+  value = "file:///${user.home}/.config/raido/api-svc-inttest.properties",
   ignoreResourceNotFound = true)
 public class IntegrationTestConfig {
   private static final Log log = to(IntegrationTestConfig.class);

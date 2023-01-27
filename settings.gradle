@@ -1,4 +1,4 @@
-rootProject.name = "raido-v2"
+rootProject.name = "raido"
 
 include ":api-svc:idl-raid-v1"
 include ":api-svc:idl-raid-v2"

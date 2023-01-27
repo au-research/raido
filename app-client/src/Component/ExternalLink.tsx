@@ -5,7 +5,7 @@ import { Link } from "@mui/material";
 export const supportEmail = "web.services@ardc.edu.au";
 
 export const muiUrl = "https://mui.com";
-export const raidoGithubUrl = "https://github.com/au-research/raido-v2"
+export const raidoGithubUrl = "https://github.com/au-research/raido"
 
 export function NewWindowLink({href, children}: {
   href: string,

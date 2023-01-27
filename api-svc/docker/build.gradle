@@ -36,7 +36,7 @@ ext{
   // the config loading config :/
   homeDir = System.properties['user.home']
   configPath = System.getProperty("RAIDO_APISVC_DOCKER_CONFIG_PATH",
-    "${homeDir}/.config/raido-v2/api-svc-docker.gradle")
+    "${homeDir}/.config/raido/api-svc-docker.gradle")
   
 }
 

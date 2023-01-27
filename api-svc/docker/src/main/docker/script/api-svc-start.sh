@@ -10,7 +10,7 @@ echo "starting api-svc.... "
 # added `exec` because the app wasn't receiving the signal to shut down 
 # when running `docker stop`, so the Spring app wasn't shutting down gracefully
 # https://stackoverflow.com/a/68578067/924597
-exec java $(cat $HOME/.config/raido-v2/api-svc-jvm.properties) \
+exec java $(cat $HOME/.config/raido/api-svc-jvm.properties) \
   -Duser.timezone=UTC -Dfile.encoding=UTF-8 \
   -Duser.language= -Duser.country= -Duser.variant= \
   -Dlogback.configurationFile=docker-logback.xml \

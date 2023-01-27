@@ -1,4 +1,4 @@
-# raido-v2
+# Raido
 
 "Raido" is the new implementation of the Oceania region 
 [RAiD](https://raid.org.au) implementation.
@@ -11,8 +11,8 @@ Note that:
 * the demo environment is under active development and is very unstable 
   * the data gets reset frequently (weekly, sometimes daily) 
 
-It's called "v2" because initially it was called raid-v2 because there was a
-v1. Should've just called it "raido" - oh well.
+Note that previously, the repo was named `raido-v2`, but that has been 
+[fixed](https://github.com/au-research/raido/issues/4). 
 
 The [service-level-guide.md](/doc/service-level-guide.md) page provides guidance
 to the expected level of service provided by the Raido team.
@@ -73,7 +73,7 @@ Note that changes consisting solely of `*.md` files are intended to be ignored.
   * runs an api-svc build in the context of Github 
   [codeql](https://github.com/github/codeql-action)
 
-* Look in [Github Actions](https://github.com/au-research/raido-v2/actions)
+* Look in [Github Actions](https://github.com/au-research/raido/actions)
   console to see what's going on
 
 

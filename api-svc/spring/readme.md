@@ -12,7 +12,7 @@ Local dev uses a separate file like this because this is how the service is
 run - there's no Gradle files or build involved when running the service in 
 a real deployment environment. 
 
-`~/.config/raido-v2/api-svc-env.properties`
+`~/.config/raido/api-svc-env.properties`
 ```properties
 # so you can see errors more easily in network responses
 redactErrorDetails=false
@@ -59,7 +59,7 @@ If you want to start the app from your IDE, remember to specify JVM options:
 
 The properties when running via main method, either from IDE or gradle (as
 opposed to integration or functional test) are loaded from
-`~/.config/raido-v2/api-svc-env.properties`, see
+`~/.config/raido/api-svc-env.properties`, see
 [ApiConfig](./src/main/java/raido/apisvc/spring/config/ApiConfig.java).
 
 
