@@ -129,7 +129,7 @@ public class ApiConfig implements WebMvcConfigurer {
      Example code used a separate Spring context of the servlet, but I don't
      see why that's necessary. */
     DispatcherServlet servlet = new DispatcherServlet(rootContext);
-    // Make sure NoHandlerFound is handled by custom HandlerEexceptionResolver
+    // Make sure NoHandlerFound is handled by custom HandlerExceptionResolver
     servlet.setThrowExceptionIfNoHandlerFound(true);
     ServletRegistration.Dynamic dispatcher = 
       ctx.addServlet(DISPATCHER_NAME, servlet);
