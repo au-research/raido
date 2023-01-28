@@ -15,26 +15,18 @@ paths:
         - basic-raid-stable
       operationId: create-raid-v1
       summary: mint a raid
+      parameters:
+        - in: header
+          name: X-Raido-ServicePointId
+          schema:
+            type: integer
+          required: true
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              required: [mintRequest, metadata]
-              description: >
-                `id` block is not required for minting and is ignored if set.
-              properties:
-                mintRequest:
-                  type: object
-                  description: >
-                    Raido data that doesn't belong on the raid metadata.
-                    ServicePoint Id means nothing in a RAID context - it's
-                    purely a Raido implementation detail (that may change).
-                  required: [servicePointId]
-                  properties:
-                    servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
-                metadata: {$ref: 'components.yaml#/components/schemas/CreateRaidSchemaV1' }
+              { $ref: 'components.yaml#/components/schemas/CreateRaidSchemaV1' }
       responses:
         201:
           description: The Raid was successfully created.
@@ -97,22 +89,21 @@ paths:
       tags:
         - basic-raid-stable
       operationId: update-raid-v1
+      parameters:
+        - in: header
+          name: X-Raido-ServicePointId
+          schema:
+            type: integer
+          required: true
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [mintRequest, metadata]
               properties:
-                mintRequest:
-                  type: object
-                  required: [servicePointId]
-                  properties:
-                    servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey'}
-                    contentIndex: { type: integer}
-                    createDate: { type: string, format: date-time }
-                metadata: {$ref: 'components.yaml#/components/schemas/RaidSchemaV1' }
+                allOf:
+                  { $ref: 'components.yaml#/components/schemas/RaidSchemaV1' }
       responses:
         200:
           description: The Raid was successfully updated.

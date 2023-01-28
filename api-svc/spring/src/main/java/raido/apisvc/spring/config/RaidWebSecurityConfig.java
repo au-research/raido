@@ -40,6 +40,7 @@ public class RaidWebSecurityConfig {
 
   public static final String RAID_V1_API = "/v1";
   public static final String RAID_V2_API = "/v2";
+  public static final String RAID_STABLE_API = "/raid";
   public static final String RAID_V2_PUBLIC_API = RAID_V2_API + "/public";
   public static final String PUBLIC = "/public";
 
@@ -113,6 +114,9 @@ public class RaidWebSecurityConfig {
       else if( isRaidV1Api(request) ){
         return raidV1AuthProvider::authenticate;
       }
+      else if( isStableApi(request) ){
+        return raidV2AuthProvider::authenticate;
+      }
       else {
         return null;
       }
@@ -181,6 +185,10 @@ public class RaidWebSecurityConfig {
 
   public static boolean isRaidV2Api(HttpServletRequest request) {
     return request.getServletPath().startsWith(RAID_V2_API);
+  }
+
+  public static boolean isStableApi(HttpServletRequest request) {
+    return request.getServletPath().startsWith(RAID_STABLE_API);
   }
 
 }

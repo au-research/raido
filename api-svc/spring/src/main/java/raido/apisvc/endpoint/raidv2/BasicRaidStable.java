@@ -6,27 +6,38 @@ import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
 import raido.idl.raidv2.api.BasicRaidStableApi;
-import raido.idl.raidv2.model.CreateRaidV1Request;
+import raido.idl.raidv2.model.CreateRaidSchemaV1;
 import raido.idl.raidv2.model.RaidSchemaV1;
 import raido.idl.raidv2.model.UpdateRaidV1Request;
 
 import java.util.List;
 
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
+import static raido.apisvc.endpoint.raidv2.AuthzUtil.getAuthzPayload;
+import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
 
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
 @Transactional
 public class BasicRaidStable implements BasicRaidStableApi {
   private final RaidoSchemaV1ValidationService validSvc;
-  private RaidService raidSvc;
+  private final RaidService raidSvc;
 
-  public BasicRaidStable(RaidoSchemaV1ValidationService validSvc) {
+  public BasicRaidStable(RaidoSchemaV1ValidationService validSvc, RaidService raidSvc) {
     this.validSvc = validSvc;
+    this.raidSvc = raidSvc;
   }
 
   @Override
-  public RaidSchemaV1 createRaidV1(CreateRaidV1Request request) {
+  public RaidSchemaV1 readRaidV1(String handle) {
+    var user = getAuthzPayload();
+    var data = raidSvc.readRaidV1(handle);
+    guardOperatorOrAssociated(user, data.getMintRequest().getServicePointId());
+    return data;
+  }
+
+  @Override
+  public RaidSchemaV1 createRaidV1(Integer xRaidoServicePointId, CreateRaidSchemaV1 createRaidSchemaV1) {
     return null;
   }
 
@@ -36,12 +47,7 @@ public class BasicRaidStable implements BasicRaidStableApi {
   }
 
   @Override
-  public RaidSchemaV1 readRaidV1(String handle) {
-    return null;
-  }
-
-  @Override
-  public RaidSchemaV1 updateRaidV1(String handle, UpdateRaidV1Request updateRaidV1Request) {
+  public RaidSchemaV1 updateRaidV1(Integer xRaidoServicePointId, String handle, UpdateRaidV1Request updateRaidV1Request) {
     return null;
   }
 }

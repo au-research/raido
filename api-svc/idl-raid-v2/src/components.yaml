@@ -13,8 +13,27 @@ components:
       description: >
         This is the schema needed to create a Raid. It contains all of the properties of a Raid except for the id.
       type: object
+      required: [ mintRequest, metadata ]
+      properties:
+        mintRequest:
+          $ref: "#/components/schemas/MintRequestSchemaV1"
+        metadata:
+          $ref: "#/components/schemas/CreateMetadataSchemaV1"
+    RaidSchemaV1:
+      allOf:
+        - $ref: "#/components/schemas/CreateRaidSchemaV1"
+      description: > 
+        All of the properties of CreateRaidSchemaV1 plus id.
+      properties:
+        mintRequest:
+          $ref: "#/components/schemas/MintRequestSchemaV1"
+        metadata:
+          $ref: "components.yaml#/components/schemas/MetadataSchemaV1"
+    CreateMetadataSchemaV1:
+      type: object
       required: [ metadataSchema, titles, dates, contributors, access ]
       properties:
+        id: { $ref: 'metadata-block.yaml#/components/schemas/IdBlock' }
         metadataSchema: { $ref: 'shared.yaml#/components/schemas/RaidoMetaschema' }
         titles:
           type: array
@@ -33,14 +52,20 @@ components:
         organisations:
           type: array
           items: { $ref: 'metadata-organisation-block.yaml#/components/schemas/OrganisationBlock' }
-    RaidSchemaV1:
+    MetadataSchemaV1:
       allOf:
-        - $ref: "#/components/schemas/CreateRaidSchemaV1"
-      description: > 
-        All of the properties of CreateRaidSchemaV1 plus id.
-      required: [ "id" ]
+        - $ref: "#/components/schemas/CreateMetadataSchemaV1"
+      type: object
+      required: [ id ]
+    MintRequestSchemaV1:
+      type: object
+      description: >
+        Raido data that doesn't belong on the raid metadata.
+        ServicePoint Id means nothing in a RAID context - it's
+        purely a Raido implementation detail (that may change).
+      required: [ servicePointId ]
       properties:
-          id: {$ref: 'metadata-block.yaml#/components/schemas/IdBlock'}
+        servicePointId: { $ref: 'shared.yaml#/components/schemas/SurrogateKey' }
     ErrorResponse:
       type: object
       required: [type, title, status]

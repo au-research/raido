@@ -64,6 +64,8 @@ openApiGenerate {
   modelPackage = "raido.idl.raidv2.model"
   apiPackage = "raido.idl.raidv2.api"
 
+
+
   /* Setting globals seems to mean it only generates what you specify. 
   If no globalProps, it generates everything.*/
   globalProperties = [

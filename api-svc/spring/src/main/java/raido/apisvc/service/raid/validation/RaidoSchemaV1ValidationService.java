@@ -68,29 +68,6 @@ public class RaidoSchemaV1ValidationService {
     return failures;
   }
 
-  public List<ValidationFailure> validateCreateRaidV1Request(
-    CreateRaidSchemaV1 metadata
-  ) {
-    if( metadata == null ){
-      return of(ValidationMessage.METADATA_NOT_SET);
-    }
-
-    var failures = new ArrayList<ValidationFailure>();
-    if( metadata.getMetadataSchema() != RAIDOMETADATASCHEMAV1 ){
-      failures.add(ValidationMessage.INVALID_METADATA_SCHEMA);
-    }
-
-    failures.addAll(validateDates(metadata.getDates()));
-    failures.addAll(validateAccess(metadata.getAccess()));
-    failures.addAll(titleSvc.validateTitles(metadata.getTitles()));
-    failures.addAll(descSvc.validateDescriptions(metadata.getDescriptions()));
-    failures.addAll(validateAlternateUrls(metadata.getAlternateUrls()));
-    failures.addAll(contribSvc.validateContributors(metadata.getContributors()));
-    failures.addAll(orgSvc.validateOrganisations(metadata.getOrganisations()));
-
-    return failures;
-  }
-
   public List<ValidationFailure> validateLegacySchemaV1(
     LegacyMetadataSchemaV1 metadata
   ) {

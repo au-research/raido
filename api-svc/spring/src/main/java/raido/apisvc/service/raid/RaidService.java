@@ -1,5 +1,8 @@
 package raido.apisvc.service.raid;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.jooq.DSLContext;
 import org.jooq.JSONB;
 import org.jooq.exception.NoDataFoundException;
@@ -13,11 +16,7 @@ import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.Metaschema;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
-import raido.idl.raidv2.model.AccessType;
-import raido.idl.raidv2.model.LegacyMetadataSchemaV1;
-import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
-import raido.idl.raidv2.model.ReadRaidResponseV2;
-import raido.idl.raidv2.model.ValidationFailure;
+import raido.idl.raidv2.model.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,9 +29,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toMap;
 import static org.springframework.transaction.annotation.Propagation.NEVER;
-import static raido.apisvc.endpoint.message.ValidationMessage.CANNOT_UPGRADE_TO_OTHER_SCHEMA;
-import static raido.apisvc.endpoint.message.ValidationMessage.SCHEMA_CHANGED;
-import static raido.apisvc.endpoint.message.ValidationMessage.UPGRADE_LEGACY_SCHEMA_ONLY;
+import static raido.apisvc.endpoint.message.ValidationMessage.*;
 import static raido.apisvc.service.raid.MetadataService.mapApi2Db;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitle;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitles;
@@ -49,11 +46,11 @@ import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 public class RaidService {
   private static final Log log = to(RaidService.class);
   
-  private DSLContext db;
-  private ApidsService apidsSvc;
-  private MetadataService metaSvc;
-  private RaidoSchemaV1ValidationService validSvc;
-  private TransactionTemplate tx;
+  private final DSLContext db;
+  private final ApidsService apidsSvc;
+  private final MetadataService metaSvc;
+  private final RaidoSchemaV1ValidationService validSvc;
+  private  final TransactionTemplate tx;
 
   public RaidService(
     DSLContext db,
@@ -120,20 +117,18 @@ public class RaidService {
     String metadataAsJson = metaSvc.mapToJson(metadata);
     var raidData = getDenormalisedRaidData(metadata);
 
-    tx.executeWithoutResult((status)->{
-      db.insertInto(RAID).
-        set(RAID.HANDLE, handle).
-        set(RAID.SERVICE_POINT_ID, servicePointId).
-        set(RAID.URL, raidUrl).
-        set(RAID.URL_INDEX, response.identifier.property.index).
-        set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
-        set(RAID.METADATA, JSONB.valueOf(metadataAsJson)).
-        set(RAID.METADATA_SCHEMA, mapApi2Db(metadata.getMetadataSchema())).
-        set(RAID.START_DATE, raidData.startDate()).
-        set(RAID.DATE_CREATED, LocalDateTime.now()).
-        set(RAID.CONFIDENTIAL, raidData.confidential()).
-        execute();
-    });
+    tx.executeWithoutResult((status)-> db.insertInto(RAID).
+      set(RAID.HANDLE, handle).
+      set(RAID.SERVICE_POINT_ID, servicePointId).
+      set(RAID.URL, raidUrl).
+      set(RAID.URL_INDEX, response.identifier.property.index).
+      set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
+      set(RAID.METADATA, JSONB.valueOf(metadataAsJson)).
+      set(RAID.METADATA_SCHEMA, mapApi2Db(metadata.getMetadataSchema())).
+      set(RAID.START_DATE, raidData.startDate()).
+      set(RAID.DATE_CREATED, LocalDateTime.now()).
+      set(RAID.CONFIDENTIAL, raidData.confidential()).
+      execute());
     
     return handle;
   }
@@ -156,20 +151,18 @@ public class RaidService {
     String metadataAsJson = metaSvc.mapToJson(metadata);
     var raidData = getDenormalisedRaidData(metadata);
 
-    tx.executeWithoutResult((status)->{
-      db.insertInto(RAID).
-        set(RAID.HANDLE, handle).
-        set(RAID.SERVICE_POINT_ID, servicePointId).
-        set(RAID.URL, raidUrl).
-        set(RAID.URL_INDEX, response.identifier.property.index).
-        set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
-        set(RAID.METADATA, JSONB.valueOf(metadataAsJson)).
-        set(RAID.METADATA_SCHEMA, mapApi2Db(metadata.getMetadataSchema())).
-        set(RAID.START_DATE, raidData.startDate()).
-        set(RAID.DATE_CREATED, LocalDateTime.now()).
-        set(RAID.CONFIDENTIAL, raidData.confidential()).
-        execute();
-    });
+    tx.executeWithoutResult((status)-> db.insertInto(RAID).
+      set(RAID.HANDLE, handle).
+      set(RAID.SERVICE_POINT_ID, servicePointId).
+      set(RAID.URL, raidUrl).
+      set(RAID.URL_INDEX, response.identifier.property.index).
+      set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
+      set(RAID.METADATA, JSONB.valueOf(metadataAsJson)).
+      set(RAID.METADATA_SCHEMA, mapApi2Db(metadata.getMetadataSchema())).
+      set(RAID.START_DATE, raidData.startDate()).
+      set(RAID.DATE_CREATED, LocalDateTime.now()).
+      set(RAID.CONFIDENTIAL, raidData.confidential()).
+      execute());
 
     return handle;
   }
@@ -190,7 +183,8 @@ public class RaidService {
   }
   
   public ReadRaidResponseV2 readRaidResponseV2(String handle){
-    ReadRaidV2Data data = null;
+
+    ReadRaidV2Data data;
     try {
       data = readRaidV2Data(handle);
     }
@@ -210,6 +204,34 @@ public class RaidService {
       createDate(local2Offset(data.raid().getDateCreated())).
       url(data.raid().getUrl()).
       metadata(data.raid().getMetadata().data());
+
+
+  }
+
+  public RaidSchemaV1 readRaidV1(String handle){
+    ReadRaidV2Data data;
+    try {
+      data = readRaidV2Data(handle);
+    }
+    catch( NoDataFoundException e ){
+      /* want to easily see what handles are failing, without having to
+      turn on param logging for all endpoints. When we implement selective
+      enablement of param logging at filter level, can get rid of this. */
+      log.with("handle", handle).warn(e.getMessage());
+      throw new RuntimeException(e);
+    }
+    final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+
+    try {
+      return new RaidSchemaV1().
+        mintRequest(
+          new MintRequestSchemaV1().servicePointId(data.servicePoint.getId())).
+        metadata(
+          objectMapper.readValue(data.raid().getMetadata().data(), MetadataSchemaV1.class)
+        );
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public void migrateRaidoSchemaV1(

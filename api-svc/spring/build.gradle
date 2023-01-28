@@ -86,7 +86,9 @@ dependencies{
 
   testImplementation libs.bundles.spring6.test
 
-  testImplementation 'org.mockito:mockito-core:4.11.0'
+//  testImplementation 'org.mockito:mockito-core:4.11.0'
+  testImplementation 'org.mockito:mockito-inline:4.11.0'
+  testImplementation 'org.mockito:mockito-junit-jupiter:4.11.0'
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
 
@@ -94,7 +96,13 @@ dependencies{
 
   // because MockRestServiceServer couldn't find class org.hamcrest.Matcher
   testImplementation 'org.hamcrest:hamcrest:2.2'
- 
+
+  // beacuse Spring MockMvc couldn't find jakarta.servlet.ServletConnection
+  testImplementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+
+  // needed for jsonpath testing in Spring MVC tests
+  testImplementation 'com.jayway.jsonpath:json-path:2.7.0'
+
 }
 
 compileJava {
