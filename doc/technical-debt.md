@@ -142,17 +142,6 @@ I've never actually seen an actual, concrete, *practical*
 I need a concrete set of guidelines to conform to - that  can reasonably be 
 implemented in the context of our tooling (openapi-generator).
 
-## Need endpoint pagination
-
-But want to avoid usage of `limit` / `offset`.
-https://use-the-index-luke.com/blog/2013-07/pagination-done-the-postgresql-way
-
-Start with the `list-raid` endpoint.
-
-Maybe *don't* do pagination, but just limit the records (as we currently do)
-and make sure any page like this has workable search functionality.
-This avoids any API clients from iterating through the DB by abusing pagination.
-
 
 ## APIDS service needs refactoring
 
