@@ -22,8 +22,22 @@ Not even as "debug".
 
 ## API Pagination
 
-List-type endpoints must implement pagination, or implement a hard maximum 
+List-type endpoints must implement should generally implement a hard maximum 
 limit on the number of items returned.
+
+Prefer building user-specified search functionality in preference to paging
+through many pages or implementing-client side searching.
+
+If pagination is needed, prefer "key-set" style pagination over "offset-limit".  
+The most important thing though is just to make sure we're not
+creating endpoints that could end up unintentionally returning large sets
+of data (for DB locking, performance, network and cost reasons).
+
+https://use-the-index-luke.com/blog/2013-07/pagination-done-the-postgresql-way
+https://medium.com/swlh/sql-pagination-you-are-probably-doing-it-wrong-d0f2719cc166
+
+Where large data-sets *are* required, we should be using an 
+asynchronous "export" rather than returning large amounts of data via endpoint. 
 
 
 ## Consider the SQL being issued
