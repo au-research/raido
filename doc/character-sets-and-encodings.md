@@ -39,8 +39,11 @@ using the shared handle prefix `10378.1`.
 
 
 DEMO environment example 
-* https://demo.raido-infra.com/edit-raid/10378.1/1696575
-* note that the above raid URL will fail to resolve the next time the 
+* https://demo.raido-infra.com/edit-raid/10378.1/1696575 
+* https://hdl.handle.net/10378.1/1696575
+  * note that we do not intend to present raid urls to the user as 
+  `hdl.handle.net`, the behavior is documented here for completeness 
+* note that the above raid URL will fail to resolve the next time the
   database is reset, as this is just test data
 
 
