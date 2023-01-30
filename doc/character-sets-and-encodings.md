@@ -14,7 +14,8 @@ Major changes and announcements regarding handle generationa and character sets
 /encodings will also likely be added as an "Announcement" in the 
 [Siscussions](https://github.com/au-research/raido/discussions) forum.
 
-Please submit issues or feedback using GitHub, or email to `contact@raid.org`.
+Please submit issues or feedback using GitHub Issues, Discussions or email to 
+`contact@raid.org`.
 
 
 # Terminology
