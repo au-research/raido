@@ -27,6 +27,23 @@ This topic uses these definitions:
 | Number suffix | `99999999`                          |
 
 
+# Current functionality 
+
+Note that `raid.org` and `raid.org.au` do not currently resolve RAID handles 
+and the Raido demo environment currently mints raid handles as pointing to 
+`demo.raido-infra.com`.
+
+Additionally, RAID numbers are minted using the 
+[ARDC APIDS service](https://github.com/au-research/ANDS-Registry-Core) 
+using the shared handle prefix `10378.1`. 
+
+
+DEMO environment example 
+* https://demo.raido-infra.com/edit-raid/10378.1/1696575
+* note that the above raid URL will fail to resolve the next time the 
+  database is reset, as this is just test data
+
+
 # Character set
 
 ## Supported character set for Handles
