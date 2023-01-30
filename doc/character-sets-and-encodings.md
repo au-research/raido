@@ -1,8 +1,10 @@
 This page is expected to kept up to date when terminology is finalised or if 
 there are any significant changes in how Raido handles characters.
 
-Use this RSS url to watch for changes to 
-[this specific file](https://github.com/au-research/raido/commits/main/doc/character-sets-and-encodings.md.atom).
+RSS users, you can watch for changes to a specific file by appending `.atom`
+to the URL of the history page for that file.
+For example to watch this page, subscribe to this 
+[RSS feed url](https://github.com/au-research/raido/commits/main/doc/character-sets-and-encodings.md.atom).
 
 
 Please submit issues or feedback using GitHub.
