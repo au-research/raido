@@ -2,7 +2,8 @@ This page is expected to kept up to date when terminology is finalised or if
 there are any significant changes in how Raido handles characters.
 
 RSS users, you can watch for changes to a specific file by appending `.atom`
-to the URL of the history page for that file.
+to the URL of the history page (`History`"` link in the top right of the page)
+for that file.
 For example to watch this page, subscribe to this 
 [RSS feed url](https://github.com/au-research/raido/commits/main/doc/character-sets-and-encodings.md.atom).
 
