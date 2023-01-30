@@ -8,6 +8,9 @@ Please submit issues or feedback using GitHub.
 
 Exact terminology for the RAID things is still being defined in the handbook.
 
+See the [readme](../readme.md#raid-vs-raido) for a discussion of the difference
+between "RAiD" and "Raido".
+
 Example: `https://raid.org/11111.1/99999999`
 
 Note that `11111.1` is not a registered prefix, it's just used here as an 
