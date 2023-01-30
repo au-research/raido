@@ -15,12 +15,6 @@ paths:
         - basic-raid-stable
       operationId: create-raid-v1
       summary: mint a raid
-      parameters:
-        - in: header
-          name: X-Raido-ServicePointId
-          schema:
-            type: integer
-          required: true
       requestBody:
         required: true
         content:
@@ -28,13 +22,8 @@ paths:
             schema:
               { $ref: 'components.yaml#/components/schemas/CreateRaidSchemaV1' }
       responses:
-        201:
+        200:
           description: The Raid was successfully created.
-          headers:
-            Location:
-              schema:
-                type: string
-                description: The location of the created Raid.
           content:
             application/json:
               schema:
@@ -89,12 +78,6 @@ paths:
       tags:
         - basic-raid-stable
       operationId: update-raid-v1
-      parameters:
-        - in: header
-          name: X-Raido-ServicePointId
-          schema:
-            type: integer
-          required: true
       requestBody:
         required: true
         content:

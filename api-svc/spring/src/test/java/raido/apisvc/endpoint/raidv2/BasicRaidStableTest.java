@@ -1,5 +1,7 @@
 package raido.apisvc.endpoint.raidv2;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,12 +24,13 @@ import raido.idl.raidv2.model.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringJUnitWebConfig(BasicRaidStableTest.Config.class)
 class BasicRaidStableTest {
@@ -41,6 +44,34 @@ class BasicRaidStableTest {
   @BeforeEach
   void setup(WebApplicationContext context) {
     this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+  }
+
+  @Test
+  void mintRaidV1_ReturnsCreated() throws Exception {
+    final var servicePointId = 999L;
+    final var title = "test-title";
+    final var startDate = LocalDate.now();
+    final var handle = "test-handle";
+
+    final var raid = createRaidForPost(servicePointId, title, startDate);
+
+    final var objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+
+    final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
+    when(authzTokenPayload.getServicePointId()).thenReturn(servicePointId);
+
+    try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
+      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
+
+      when(raidService.mintRaidSchemaV1(any(CreateRaidSchemaV1.class))).thenReturn(handle);
+
+      mockMvc.perform(post("/raid/v1")
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(raid))
+          .characterEncoding("utf-8"))
+        .andDo(print())
+        .andExpect(status().isOk());
+    }
   }
 
   @Test
@@ -97,18 +128,25 @@ class BasicRaidStableTest {
         .andExpect(jsonPath("$.metadata.organisations[0].identifierSchemeUri", Matchers.is("https://ror.org/")));
 
     }
-
   }
 
-
   private RaidSchemaV1 createRaid(final String handle, final long servicePointId, final String title, final LocalDate startDate) {
-    final var endDate = startDate.plusMonths(6);
+    var raid = createRaidForPost(servicePointId, title, startDate);
+
     final var idBlock = new IdBlock();
     idBlock.identifier(handle);
     idBlock.identifierTypeUri("https://raid.org");
     idBlock.globalUrl(String.format("https://hdl.handle.net/%s", handle));
     idBlock.raidAgencyUrl(String.format("https://raid.org.au/handle/%s", handle));
     idBlock.raidAgencyIdentifier("raid.org.au");
+
+    raid.getMetadata().setId(idBlock);
+
+    return raid;
+  }
+
+  private RaidSchemaV1 createRaidForPost(final long servicePointId, final String title, final LocalDate startDate) {
+    final var endDate = startDate.plusMonths(6);
 
     final var titleBlock = new TitleBlock();
     titleBlock.setTitle(title);
@@ -168,7 +206,6 @@ class BasicRaidStableTest {
     metadata.addContributorsItem(contributorBlock);
     metadata.addOrganisationsItem(organisationBlock);
 
-    metadata.setId(idBlock);
     raid.setMintRequest(mintRequest);
     raid.setMetadata(metadata);
 

@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.service.raid.RaidService;
+import raido.apisvc.service.raid.ValidationFailureException;
 import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
 import raido.idl.raidv2.api.BasicRaidStableApi;
 import raido.idl.raidv2.model.CreateRaidSchemaV1;
@@ -13,6 +14,7 @@ import raido.idl.raidv2.model.UpdateRaidV1Request;
 import java.util.List;
 
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
+import static org.springframework.transaction.annotation.Propagation.NEVER;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.getAuthzPayload;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
 
@@ -37,8 +39,28 @@ public class BasicRaidStable implements BasicRaidStableApi {
   }
 
   @Override
-  public RaidSchemaV1 createRaidV1(Integer xRaidoServicePointId, CreateRaidSchemaV1 createRaidSchemaV1) {
-    return null;
+  @Transactional(propagation = NEVER)
+  public RaidSchemaV1 createRaidV1(CreateRaidSchemaV1 request) {
+    var mint = request.getMintRequest();
+    var user = getAuthzPayload();
+    guardOperatorOrAssociated(user, mint.getServicePointId());
+
+//    var failures = validSvc.validateCreateMetadataSchemaV1(request.getMetadata());
+//
+//    if( !failures.isEmpty() ){
+//      return mintFailed(failures);
+//    }
+
+    String handle;
+    try {
+      handle = raidSvc.mintRaidSchemaV1(request);
+    }
+    catch( ValidationFailureException e ){
+      throw new RuntimeException(e);
+//      return mintFailed(failures);
+    }
+
+    return raidSvc.readRaidV1(handle);
   }
 
   @Override
@@ -47,7 +69,7 @@ public class BasicRaidStable implements BasicRaidStableApi {
   }
 
   @Override
-  public RaidSchemaV1 updateRaidV1(Integer xRaidoServicePointId, String handle, UpdateRaidV1Request updateRaidV1Request) {
+  public RaidSchemaV1 updateRaidV1(String handle, UpdateRaidV1Request updateRaidV1Request) {
     return null;
   }
 }

@@ -10,6 +10,7 @@ import org.jooq.impl.DSL;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
+import raido.apisvc.repository.RaidRepository;
 import raido.apisvc.service.apids.ApidsService;
 import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
 import raido.apisvc.util.Log;
@@ -51,19 +52,21 @@ public class RaidService {
   private final MetadataService metaSvc;
   private final RaidoSchemaV1ValidationService validSvc;
   private  final TransactionTemplate tx;
+  private final RaidRepository raidRepository;
 
   public RaidService(
     DSLContext db,
     ApidsService apidsSvc,
     MetadataService metaSvc,
     RaidoSchemaV1ValidationService validSvc,
-    TransactionTemplate tx
-  ) {
+    TransactionTemplate tx,
+    RaidRepository raidRepository) {
     this.db = db;
     this.apidsSvc = apidsSvc;
     this.metaSvc = metaSvc;
     this.validSvc = validSvc;
     this.tx = tx;
+    this.raidRepository = raidRepository;
   }
 
 
@@ -72,6 +75,16 @@ public class RaidService {
     LocalDate startDate,
     boolean confidential
   ) { }
+
+  public DenormalisedRaidData getDenormalisedRaidData(
+    CreateMetadataSchemaV1 metadata
+  ){
+    return new DenormalisedRaidData(
+      getPrimaryTitle(metadata.getTitles()).getTitle(),
+      metadata.getDates().getStartDate(),
+      metadata.getAccess().getType() != AccessType.OPEN
+    );
+  }
 
   /** Expects the passed metadata is valid. */
   public DenormalisedRaidData getDenormalisedRaidData(
@@ -130,6 +143,35 @@ public class RaidService {
       set(RAID.CONFIDENTIAL, raidData.confidential()).
       execute());
     
+    return handle;
+  }
+
+  @Transactional(propagation = NEVER)
+  public String mintRaidSchemaV1(
+    final CreateRaidSchemaV1 raidSchemaV1
+  ) throws ValidationFailureException {
+    /* this is the part where we want to make sure no TX is help open.
+     * Maybe *this* should be marked tx.prop=never? */
+    var response = apidsSvc.mintApidsHandleContentPrefix(
+      metaSvc::formatRaidoLandingPageUrl);
+    String handle = response.identifier.handle;
+    String raidUrl = response.identifier.property.value;
+
+    raidSchemaV1.getMetadata().setId(metaSvc.createIdBlock(handle, raidUrl));
+
+    // validation failure possible
+    var raidData = getDenormalisedRaidData(raidSchemaV1.getMetadata());
+
+    raidRepository.save(handle,
+      raidSchemaV1.getMintRequest().getServicePointId(),
+      raidUrl,
+      response.identifier.property.index,
+      raidData.primaryTitle(),
+      raidSchemaV1.getMetadata(),
+      mapApi2Db(raidSchemaV1.getMetadata().getMetadataSchema()),
+      raidData.startDate(),
+      raidData.confidential);
+
     return handle;
   }
 
