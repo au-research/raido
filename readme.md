@@ -3,6 +3,14 @@
 "Raido" is the new implementation of the Oceania region 
 [RAiD](https://raid.org.au) implementation.
 
+So when you see these terms in this codebase, they usually have the meaning:
+* `Raido`, `raido` - refers to our "local" Oceania region implementation
+  (i.e. `raid.org.au`) of RAiD, being operated and maintained by ARDC in our 
+  capacity as one of the (hopefully many) "registration agency" providers.
+* `RAiD`, `RAID`, `Raid`, `raid` - refers to the "global" RAiD standard and 
+  supporting global infrastructure (i.e. `raid.org`), being operated and 
+  maintained by ARDC in our capacity as the global "registration authority".
+
 It is not yet live, though you can find the demo environment at 
 https://demo.raido-infra.com.  
 
