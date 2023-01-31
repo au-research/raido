@@ -65,6 +65,7 @@ public class RaidWebSecurityConfig {
       requestMatchers(PUBLIC + "/**").permitAll().
       requestMatchers(RAID_V1_API + "/**").fullyAuthenticated().
       requestMatchers(RAID_V2_API + "/**").fullyAuthenticated().
+      requestMatchers(RAID_STABLE_API + "/**").fullyAuthenticated().
       // "default deny" anything not explicitly allowed above
       anyRequest().denyAll();
 

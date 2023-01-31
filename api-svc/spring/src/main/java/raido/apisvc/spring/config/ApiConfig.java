@@ -42,7 +42,7 @@ import static raido.apisvc.util.Log.to;
   // spring bootup and config
   "raido.apisvc.spring", 
   // services and endpoints
-  "raido.apisvc.service", "raido.apisvc.endpoint"
+  "raido.apisvc.service", "raido.apisvc.endpoint", "raido.apisvc.repository"
 })
 @PropertySources({
   /* This is NOT for you to put an `env.properties` file with credentials in the 
