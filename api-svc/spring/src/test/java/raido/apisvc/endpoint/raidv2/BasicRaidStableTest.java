@@ -5,72 +5,157 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import raido.apisvc.service.raid.RaidService;
+import raido.apisvc.service.raid.validation.RaidSchemaV1ValidationService;
+import raido.apisvc.spring.RedactingExceptionResolver;
 import raido.apisvc.spring.security.raidv2.AuthzTokenPayload;
 import raido.idl.raidv2.model.*;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringJUnitWebConfig(BasicRaidStableTest.Config.class)
+@ExtendWith(MockitoExtension.class)
 class BasicRaidStableTest {
 
   private MockMvc mockMvc;
 
-  @Autowired
+  @Mock
   private RaidService raidService;
 
+  @Mock
+  private RaidSchemaV1ValidationService validationService;
+
+  @InjectMocks
+  private BasicRaidStable controller;
+
+  final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule()).setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
 
   @BeforeEach
-  void setup(WebApplicationContext context) {
-    this.mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+  void setup() {
+    mockMvc = MockMvcBuilders.standaloneSetup(controller)
+      .setHandlerExceptionResolvers(new RedactingExceptionResolver(false))
+      .setMessageConverters(new MappingJackson2HttpMessageConverter(objectMapper))
+      .build();
   }
 
   @Test
-  void mintRaidV1_ReturnsCreated() throws Exception {
+  void mintRaidV1_ReturnsBadRequest() throws Exception {
     final var servicePointId = 999L;
     final var title = "test-title";
     final var startDate = LocalDate.now();
-    final var handle = "test-handle";
+    final var validationFailureMessage = "validation failure message";
+    final var validationFailureType = "validation failure type";
+    final var validationFailureFieldId = "validation failure id";
 
     final var raid = createRaidForPost(servicePointId, title, startDate);
 
-    final var objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+    final var validationFailure = new ValidationFailure();
+    validationFailure.setFieldId(validationFailureFieldId);
+    validationFailure.setMessage(validationFailureMessage);
+    validationFailure.setErrorType(validationFailureType);
 
     final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
-    when(authzTokenPayload.getServicePointId()).thenReturn(servicePointId);
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
       authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
 
-      when(raidService.mintRaidSchemaV1(any(CreateRaidSchemaV1.class))).thenReturn(handle);
+      when(validationService.validateCreateMetadataSchemaV1(any(CreateMetadataSchemaV1.class)))
+        .thenReturn(List.of(validationFailure));
 
       mockMvc.perform(post("/raid/v1")
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(raid))
           .characterEncoding("utf-8"))
         .andDo(print())
-        .andExpect(status().isOk());
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error.detail[0].fieldId", Matchers.is(validationFailureFieldId)))
+        .andExpect(jsonPath("$.error.detail[0].errorType", Matchers.is(validationFailureType)))
+        .andExpect(jsonPath("$.error.detail[0].message", Matchers.is(validationFailureMessage)));
+
+      verify(raidService, never()).mintRaidSchemaV1(any(CreateRaidSchemaV1.class));
+      verify(raidService, never()).readRaidV1(anyString());
+    }
+  }
+
+  @Test
+  void mintRaidV1_ReturnsOk() throws Exception {
+    final Long servicePointId = 999L;
+    final var title = "test-title";
+    final var startDate = LocalDate.now();
+    final var handle = "test-handle";
+    final var endDate = startDate.plusMonths(6);
+
+    final var raidForPost = createRaidForPost(servicePointId, title, startDate);
+    final var raidForGet = createRaidForGet(handle, servicePointId, title, startDate);
+
+
+    try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
+      final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
+      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
+
+      when(raidService.mintRaidSchemaV1(any(CreateRaidSchemaV1.class))).thenReturn(handle);
+      when(raidService.readRaidV1(handle)).thenReturn(raidForGet);
+
+      mockMvc.perform(post("/raid/v1")
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(raidForPost))
+          .characterEncoding("utf-8"))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.mintRequest.servicePointId", Matchers.is(servicePointId.intValue())))
+        .andExpect(jsonPath("$.metadata.id.identifier", Matchers.is(handle)))
+        .andExpect(jsonPath("$.metadata.id.identifierTypeUri", Matchers.is("https://raid.org")))
+        .andExpect(jsonPath("$.metadata.id.globalUrl", Matchers.is("https://hdl.handle.net/" + handle)))
+        .andExpect(jsonPath("$.metadata.id.raidAgencyUrl", Matchers.is("https://raid.org.au/handle/" + handle)))
+        .andExpect(jsonPath("$.metadata.id.raidAgencyIdentifier", Matchers.is("raid.org.au")))
+        .andExpect(jsonPath("$.metadata.titles[0].title", Matchers.is(title)))
+        .andExpect(jsonPath("$.metadata.titles[0].type", Matchers.is(TitleType.PRIMARY_TITLE.getValue())))
+        .andExpect(jsonPath("$.metadata.titles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.titles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.dates.startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.dates.endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.descriptions[0].description", Matchers.is("Test description...")))
+        .andExpect(jsonPath("$.metadata.descriptions[0].type", Matchers.is("Primary Description")))
+        .andExpect(jsonPath("$.metadata.access.type", Matchers.is("Open")))
+        .andExpect(jsonPath("$.metadata.access.accessStatement", Matchers.is("Test access statement...")))
+        .andExpect(jsonPath("$.metadata.contributors[0].id", Matchers.is("0000-0000-0000-0001")))
+        .andExpect(jsonPath("$.metadata.contributors[0].identifierSchemeUri", Matchers.is("https://orcid.org/")))
+        .andExpect(jsonPath("$.metadata.contributors[0].positions[0].positionSchemaUri", Matchers.is("https://raid.org/")))
+        .andExpect(jsonPath("$.metadata.contributors[0].positions[0].position", Matchers.is("Leader")))
+        .andExpect(jsonPath("$.metadata.contributors[0].positions[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.contributors[0].positions[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.contributors[0].roles[0].roleSchemeUri", Matchers.is("https://credit.niso.org/")))
+        .andExpect(jsonPath("$.metadata.contributors[0].roles[0].role", Matchers.is("project-administration")))
+        .andExpect(jsonPath("$.metadata.organisations[0].roles[0].role", Matchers.is("Lead Research Organisation")))
+        .andExpect(jsonPath("$.metadata.organisations[0].roles[0].roleSchemeUri", Matchers.is("https://raid.org/")))
+        .andExpect(jsonPath("$.metadata.organisations[0].roles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.organisations[0].roles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.organisations[0].id", Matchers.is("https://ror.org/038sjwq14")))
+        .andExpect(jsonPath("$.metadata.organisations[0].identifierSchemeUri", Matchers.is("https://ror.org/")));
     }
   }
 
@@ -81,12 +166,11 @@ class BasicRaidStableTest {
     final var title = "test-title";
     final var handle = "test-handle";
     final Long servicePointId = 123L;
-    final var raid = createRaid(handle, servicePointId, title, startDate);
+    final var raid = createRaidForGet(handle, servicePointId, title, startDate);
 
-    final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
-    when(authzTokenPayload.getServicePointId()).thenReturn(servicePointId);
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
+      final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
       authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
 
       when(raidService.readRaidV1(handle)).thenReturn(raid);
@@ -126,11 +210,10 @@ class BasicRaidStableTest {
         .andExpect(jsonPath("$.metadata.organisations[0].roles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.metadata.organisations[0].id", Matchers.is("https://ror.org/038sjwq14")))
         .andExpect(jsonPath("$.metadata.organisations[0].identifierSchemeUri", Matchers.is("https://ror.org/")));
-
     }
   }
 
-  private RaidSchemaV1 createRaid(final String handle, final long servicePointId, final String title, final LocalDate startDate) {
+  private RaidSchemaV1 createRaidForGet(final String handle, final long servicePointId, final String title, final LocalDate startDate) {
     var raid = createRaidForPost(servicePointId, title, startDate);
 
     final var idBlock = new IdBlock();
@@ -210,23 +293,5 @@ class BasicRaidStableTest {
     raid.setMetadata(metadata);
 
     return raid;
-  }
-
-  @Configuration
-  @EnableWebMvc
-  @ComponentScan(basePackages = {
-    // spring bootup and config
-    "raido.apisvc.spring",
-    // services and endpoints
-    "raido.apisvc.service",
-    "raido.apisvc.endpoint"
-  })
-  static class Config {
-    @Bean
-    RaidService raidService() {
-      return mock(RaidService.class);
-    }
-
-
   }
 }

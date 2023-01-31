@@ -53,7 +53,7 @@ public class MetadataService {
   }
 
   public String mapToJson(Object metadataInstance) 
-  throws ValidationFailureException{
+  throws ValidationFailureException {
     String jsonValue;
     try {
       jsonValue = defaultMapper.writeValueAsString(metadataInstance);

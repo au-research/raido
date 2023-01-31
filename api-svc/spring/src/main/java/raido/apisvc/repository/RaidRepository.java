@@ -4,6 +4,7 @@ import org.jooq.DSLContext;
 import org.jooq.JSONB;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
+import raido.apisvc.exception.ValidationException;
 import raido.apisvc.service.raid.MetadataService;
 import raido.apisvc.service.raid.ValidationFailureException;
 import raido.db.jooq.api_svc.enums.Metaschema;
@@ -29,9 +30,14 @@ public class RaidRepository {
 
   public void save(final String handle, final Long servicePointId, final String raidUrl, final Integer urlIndex,
                    final String primaryTitle, final CreateMetadataSchemaV1 metadata, final Metaschema metaschema,
-                   final LocalDate startDate, final boolean isConfidential) throws ValidationFailureException {
+                   final LocalDate startDate, final boolean isConfidential) {
 
-    final var metadataJson = metadataService.mapToJson(metadata);
+    final String metadataJson;
+    try {
+      metadataJson = metadataService.mapToJson(metadata);
+    } catch (ValidationFailureException e) {
+      throw new ValidationException(e.getFailures());
+    }
 
     transactionTemplate.executeWithoutResult((status) -> dslContext.insertInto(RAID).
       set(RAID.HANDLE, handle).

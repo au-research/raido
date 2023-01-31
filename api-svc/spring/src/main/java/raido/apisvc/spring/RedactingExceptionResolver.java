@@ -10,6 +10,8 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
+import raido.apisvc.exception.ValidationException;
+import raido.apisvc.service.raid.ValidationFailureException;
 import raido.apisvc.spring.security.ApiSafeException;
 import raido.apisvc.spring.security.IdProviderException;
 import raido.apisvc.util.Log;
@@ -36,7 +38,7 @@ import static raido.apisvc.util.Log.to;
  If we don't do this it will cause security issues, inconsistent logging and
  accidetnal info leakage.
  
- @see raido.apisvc.service.raid.ValidationFailureException
+ @see ValidationFailureException
  */
 public class RedactingExceptionResolver implements HandlerExceptionResolver {
   private static final Log log = to(RedactingExceptionResolver.class);
@@ -143,7 +145,12 @@ public class RedactingExceptionResolver implements HandlerExceptionResolver {
     if( ex instanceof ApiSafeException ){
       return ((ApiSafeException) ex).getHttpStatus();
     }
-    
+
+    if( ex instanceof ValidationException){
+      return HttpStatus.BAD_REQUEST_400;
+    }
+
+
     if( ex instanceof BadCredentialsException ){
       return HttpStatus.UNAUTHORIZED_401;
     }
@@ -167,6 +174,10 @@ public class RedactingExceptionResolver implements HandlerExceptionResolver {
   private Object mapDetail(Exception ex){
     if( ex instanceof ApiSafeException ){
       return ((ApiSafeException) ex).getDetail();
+    }
+
+    if( ex instanceof ValidationException) {
+      return ((ValidationException) ex).getFailures();
     }
     
     return null;

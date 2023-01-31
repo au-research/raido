@@ -149,7 +149,7 @@ public class RaidService {
   @Transactional(propagation = NEVER)
   public String mintRaidSchemaV1(
     final CreateRaidSchemaV1 raidSchemaV1
-  ) throws ValidationFailureException {
+  ) {
     /* this is the part where we want to make sure no TX is help open.
      * Maybe *this* should be marked tx.prop=never? */
     var response = apidsSvc.mintApidsHandleContentPrefix(

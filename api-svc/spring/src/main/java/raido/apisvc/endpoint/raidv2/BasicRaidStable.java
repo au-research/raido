@@ -3,9 +3,9 @@ package raido.apisvc.endpoint.raidv2;
 import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
+import raido.apisvc.exception.ValidationException;
 import raido.apisvc.service.raid.RaidService;
-import raido.apisvc.service.raid.ValidationFailureException;
-import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
+import raido.apisvc.service.raid.validation.RaidSchemaV1ValidationService;
 import raido.idl.raidv2.api.BasicRaidStableApi;
 import raido.idl.raidv2.model.CreateRaidSchemaV1;
 import raido.idl.raidv2.model.RaidSchemaV1;
@@ -22,18 +22,18 @@ import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
 @RestController
 @Transactional
 public class BasicRaidStable implements BasicRaidStableApi {
-  private final RaidoSchemaV1ValidationService validSvc;
-  private final RaidService raidSvc;
+  private final RaidSchemaV1ValidationService validationService;
+  private final RaidService raidService;
 
-  public BasicRaidStable(RaidoSchemaV1ValidationService validSvc, RaidService raidSvc) {
-    this.validSvc = validSvc;
-    this.raidSvc = raidSvc;
+  public BasicRaidStable(final RaidSchemaV1ValidationService validationService, final RaidService raidService) {
+    this.validationService = validationService;
+    this.raidService = raidService;
   }
 
   @Override
   public RaidSchemaV1 readRaidV1(String handle) {
     var user = getAuthzPayload();
-    var data = raidSvc.readRaidV1(handle);
+    var data = raidService.readRaidV1(handle);
     guardOperatorOrAssociated(user, data.getMintRequest().getServicePointId());
     return data;
   }
@@ -45,22 +45,15 @@ public class BasicRaidStable implements BasicRaidStableApi {
     var user = getAuthzPayload();
     guardOperatorOrAssociated(user, mint.getServicePointId());
 
-//    var failures = validSvc.validateCreateMetadataSchemaV1(request.getMetadata());
-//
-//    if( !failures.isEmpty() ){
-//      return mintFailed(failures);
-//    }
+    var failures = validationService.validateCreateMetadataSchemaV1(request.getMetadata());
 
-    String handle;
-    try {
-      handle = raidSvc.mintRaidSchemaV1(request);
-    }
-    catch( ValidationFailureException e ){
-      throw new RuntimeException(e);
-//      return mintFailed(failures);
+    if( !failures.isEmpty() ){
+      throw new ValidationException(failures);
     }
 
-    return raidSvc.readRaidV1(handle);
+    String handle = raidService.mintRaidSchemaV1(request);
+
+    return raidService.readRaidV1(handle);
   }
 
   @Override
