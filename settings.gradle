@@ -23,7 +23,7 @@ dependencyResolutionManagement{
       version('feign', '12.1')
 
       plugin('flyway', 'org.flywaydb.flyway').version('9.4.0')      
-      plugin('jooq', 'nu.studer.jooq').version('8.0')      
+      plugin('jooq', 'nu.studer.jooq').version('8.1')      
       
       library('jooq', 'org.jooq', 'jooq').versionRef('jooq')
       library('pgjdbc', 'org.postgresql:postgresql:42.5.1')
