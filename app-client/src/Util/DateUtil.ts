@@ -8,13 +8,14 @@ export function parseDateFromEpoch(millis: string): Date {
 
 /** expected to be passed to the JSON.parse() method to "fix" Dates. */
 export function dateTimeReviver(key : string, value: any) {
+  let a;
   if (typeof value === 'string') {
     if( value.length === 24 && value[4] === '-' && value[value.length-1] === 'Z' ){
       // looks, sounds and smells like a duck
       try {
         const dateValue = parseServerDate(value);
         if( !dateValue ){
-          console.warn("ignored un-parsable server date", value);
+          console.warn("ignored unparsable server date", value);
           return value;
         }
         else {
@@ -22,7 +23,7 @@ export function dateTimeReviver(key : string, value: any) {
         }
       }
       catch( err ){
-        console.warn("ignored un-parsable server date",
+        console.warn("ignored unparsable server date",
           forceError(err).message, value );
         return value;
       }
@@ -31,7 +32,7 @@ export function dateTimeReviver(key : string, value: any) {
   return value;
 }
 
-const shortTimeFormatOptions: Intl.DateTimeFormatOptions = {
+const shorTimeformatOptions: Intl.DateTimeFormatOptions = {
   hour12: false, hour: "2-digit", minute: "2-digit"
 };
 
@@ -73,7 +74,7 @@ export function formatShortTime(
   if( !date ){
     return ""
   }
-  return date.toLocaleTimeString(locale, shortTimeFormatOptions);
+  return date.toLocaleTimeString(locale, shorTimeformatOptions);
 }
 
 /* if you just call date.toISOString(), you get the day in UTC, i.e.

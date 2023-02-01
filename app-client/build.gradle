@@ -75,3 +75,8 @@ tasks.openApiGenerate{
   inputs.files fileTree("${raidV2SpecDir.path}/**/*.yaml")
 }
 
+// to upgrade the wrapper, change the version and run this task
+tasks.named('wrapper') {
+  distributionType = Wrapper.DistributionType.ALL
+  gradleVersion = '7.6'
+}

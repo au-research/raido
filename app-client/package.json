@@ -4,7 +4,7 @@
   "private": true,
   "proxy": "http://localhost:8080",
   "scripts": {
-    "generate-api": "../gradlew :app-client:openApiGenerate",
+    "generate-api": "./gradlew openApiGenerate",
     "prestart": "npm run generate-api",
     "start":  "react-scripts start",
     "prebuild": "npm run generate-api",

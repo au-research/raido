@@ -3,7 +3,7 @@ import { normalisePath } from "Util/Location";
 import { SmallContentMain } from "Design/LayoutMain";
 import { RaidoDescription } from "Auth/IntroContainer";
 import { ContainerCard } from "Design/ContainerCard";
-import { Config, unknownBuildDate, unknownCommitId } from "Config";
+import { Config, unknownCommitId } from "Config";
 import {
   formatLocalDateAsIsoShortDateTime,
   parseDateFromEpoch
@@ -49,33 +49,31 @@ function Content(){
       <ServerPanel/>
     </Stack>
   </SmallContentMain>
+
 }
 
 function ClientPanel(){
 
+  let buildDate = parseDateFromEpoch(Config.buildDate);
+  log.debug("Config.buildDate", {
+    configBuildDate: Config.buildDate,
+    parsedBuildDate: buildDate
+  });
 
-  let localDateString: string = "unknown";
-  let localTimeString: string = "";
-  let buildDateString: string = "unknown";
+  let localDateString: string;
+  let localTimeString: string;
+  let buildDateString: string;
 
-  if( Config.buildDate && Config.buildDate !== unknownBuildDate ){
-    let buildDate = parseDateFromEpoch(Config.buildDate);
-    if( buildDate && !isNaN(buildDate.getTime()) ){
-      localDateString = buildDate.toDateString();
-      localTimeString = buildDate.toLocaleTimeString();
-      buildDateString = buildDate.toISOString();
-    }
-    else {
-      log.warn("appBuildDate could not be parsed", buildDate);
-      // leave the defaults
-    }
-    log.debug("Config.buildDate", {
-      configBuildDate: Config.buildDate,
-      parsedBuildDate: buildDate
-    });
+  if( !buildDate || isNaN(buildDate.getTime()) ){
+    log.warn("appBuildDate could not be parsed", buildDate);
+    localDateString = "unknown";
+    localTimeString = "unknown";
+    buildDateString = Config.buildDate.toString();
   }
   else {
-    // no build date provided, leave the defaults
+    localDateString = buildDate.toDateString();
+    localTimeString = buildDate.toLocaleTimeString();
+    buildDateString = buildDate.toISOString();
   }
 
   return <ContainerCard title="App client">
