@@ -91,11 +91,13 @@ Note that changes consisting solely of `*.md` files are intended to be ignored.
 
 Pre-requisites and instructions for 
 [local development](./doc/local-development.md) 
+
  
 ## Coding standards
 
 See [/doc/code](./doc/code/readme.md) - there may also be further sub-project 
 specific standards local to that project, look in the local `/doc` directory.
+
 
 ## Building
 See the relevant local readme for building api-svc, api-svc/db and app-client.
@@ -103,3 +105,11 @@ See the relevant local readme for building api-svc, api-svc/db and app-client.
 See [build-troubleshooting.md](/doc/build-troubleshooting.md) if
 having issues.
 
+
+## Development and Release Branching
+
+Currently daily development, DEMO and PROD builds and releases are all done 
+using the `main` branch.
+
+Releases are tracks and built using `git describe` functionality working off
+of annotated tags with the prefix `raido-v-`.
