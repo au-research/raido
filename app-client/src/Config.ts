@@ -84,10 +84,13 @@ function initConfig(){
 }
 
 export const unknownCommitId = "unknown commit";
+export const unknownBuildDate = "unknown";
 
 const buildConfig = {
-  buildDate: process.env.REACT_APP_BUILD_DATE_MS ?? 
-    new Date().getTime().toString() ,
+  /* expected to be populated from something like 
+  `date --iso-8601=seconds --utc`, e.g. `2023-02-01T06:31:13+00:00` */
+  buildDate: process.env.REACT_APP_BUILD_DATE_MS ?? "unknownBuildDate" ,
+  version: process.env.REACT_APP_RAIDO_VERSION ?? "unknown version",
   gitCommit: process.env.REACT_APP_COMMIT_REF ?? unknownCommitId,
 };
 
