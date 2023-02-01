@@ -7,9 +7,7 @@ import raido.apisvc.exception.ValidationException;
 import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.service.raid.validation.RaidSchemaV1ValidationService;
 import raido.idl.raidv2.api.BasicRaidStableApi;
-import raido.idl.raidv2.model.CreateRaidSchemaV1;
-import raido.idl.raidv2.model.RaidSchemaV1;
-import raido.idl.raidv2.model.UpdateRaidV1Request;
+import raido.idl.raidv2.model.*;
 
 import java.util.List;
 
@@ -17,6 +15,7 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 import static org.springframework.transaction.annotation.Propagation.NEVER;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.getAuthzPayload;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
+import static raido.apisvc.service.raid.RaidoSchemaV1Util.mintFailed;
 
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
@@ -40,12 +39,12 @@ public class BasicRaidStable implements BasicRaidStableApi {
 
   @Override
   @Transactional(propagation = NEVER)
-  public RaidSchemaV1 createRaidV1(CreateRaidSchemaV1 request) {
+  public RaidSchemaV1 createRaidV1(CreateRaidV1Request request) {
     var mint = request.getMintRequest();
     var user = getAuthzPayload();
     guardOperatorOrAssociated(user, mint.getServicePointId());
 
-    var failures = validationService.validateCreateMetadataSchemaV1(request.getMetadata());
+    var failures = validationService.validateForCreate(request.getMetadata());
 
     if( !failures.isEmpty() ){
       throw new ValidationException(failures);
@@ -62,7 +61,16 @@ public class BasicRaidStable implements BasicRaidStableApi {
   }
 
   @Override
-  public RaidSchemaV1 updateRaidV1(String handle, UpdateRaidV1Request updateRaidV1Request) {
-    return null;
+  public RaidSchemaV1 updateRaidV1(String handle, UpdateRaidV1Request request) {
+    var user = getAuthzPayload();
+    guardOperatorOrAssociated(user, request.getMintRequest().getServicePointId());
+
+    var failures = validationService.validateForUpdate(handle, request.getMetadata());
+
+    if( !failures.isEmpty() ){
+      throw new ValidationException(failures);
+    }
+
+    return raidService.updateRaidV1(request.getMintRequest(), request.getMetadata());
   }
 }

@@ -11,14 +11,11 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import raido.apisvc.exception.ResourceNotFoundException;
 import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.service.raid.validation.RaidSchemaV1ValidationService;
 import raido.apisvc.spring.RedactingExceptionResolver;
@@ -28,12 +25,12 @@ import raido.idl.raidv2.model.*;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -83,7 +80,7 @@ class BasicRaidStableTest {
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
       authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
 
-      when(validationService.validateCreateMetadataSchemaV1(any(CreateMetadataSchemaV1.class)))
+      when(validationService.validateForCreate(any(MetadataSchemaV1.class)))
         .thenReturn(List.of(validationFailure));
 
       mockMvc.perform(post("/raid/v1")
@@ -96,7 +93,7 @@ class BasicRaidStableTest {
         .andExpect(jsonPath("$.error.detail[0].errorType", Matchers.is(validationFailureType)))
         .andExpect(jsonPath("$.error.detail[0].message", Matchers.is(validationFailureMessage)));
 
-      verify(raidService, never()).mintRaidSchemaV1(any(CreateRaidSchemaV1.class));
+      verify(raidService, never()).mintRaidSchemaV1(any(CreateRaidV1Request.class));
       verify(raidService, never()).readRaidV1(anyString());
     }
   }
@@ -117,7 +114,7 @@ class BasicRaidStableTest {
       final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
       authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
 
-      when(raidService.mintRaidSchemaV1(any(CreateRaidSchemaV1.class))).thenReturn(handle);
+      when(raidService.mintRaidSchemaV1(any(CreateRaidV1Request.class))).thenReturn(handle);
       when(raidService.readRaidV1(handle)).thenReturn(raidForGet);
 
       mockMvc.perform(post("/raid/v1")
@@ -160,7 +157,189 @@ class BasicRaidStableTest {
   }
 
   @Test
+  void updateRaidV1_ReturnsBadRequest() throws Exception {
+    final Long servicePointId = 999L;
+    final var title = "test-title";
+    final var startDate = LocalDate.now();
+    final var handle = "test-handle";
+    final var endDate = startDate.plusMonths(6);
+    final var validationFailureMessage = "validation failure message";
+    final var validationFailureType = "validation failure type";
+    final var validationFailureFieldId = "validation failure id";
+
+    final var input = createRaidForGet(handle, servicePointId, title, startDate);
+
+    final var validationFailure = new ValidationFailure();
+    validationFailure.setFieldId(validationFailureFieldId);
+    validationFailure.setMessage(validationFailureMessage);
+    validationFailure.setErrorType(validationFailureType);
+
+    try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
+      final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
+      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
+
+      when(validationService.validateForUpdate(eq(handle), any(MetadataSchemaV1.class))).thenReturn(List.of(validationFailure));
+
+
+      mockMvc.perform(put(String.format("/raid/v1/%s", handle))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(input))
+          .characterEncoding("utf-8"))
+        .andDo(print())
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.error.status", Matchers.is(400)))
+        .andExpect(jsonPath("$.error.message", Matchers.is("There were validation failures")))
+        .andExpect(jsonPath("$.error.detail[0].fieldId", Matchers.is(validationFailureFieldId)))
+        .andExpect(jsonPath("$.error.detail[0].errorType", Matchers.is(validationFailureType)))
+        .andExpect(jsonPath("$.error.detail[0].message", Matchers.is(validationFailureMessage)));
+
+      verify(raidService, never()).updateRaidV1(input.getMintRequest(), input.getMetadata());
+
+    }
+  }
+
+  @Test
+  void updateRaidV1_ReturnsOk() throws Exception {
+    final Long servicePointId = 999L;
+    final var title = "test-title";
+    final var startDate = LocalDate.now();
+    final var handle = "test-handle";
+    final var endDate = startDate.plusMonths(6);
+
+    final var input = createRaidForGet(handle, servicePointId, title, startDate);
+
+    try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
+      final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
+      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
+      when(validationService.validateForUpdate(eq(handle), any(MetadataSchemaV1.class))).thenReturn(Collections.emptyList());
+
+      when(raidService.updateRaidV1(input.getMintRequest(), input.getMetadata())).thenReturn(input);
+
+      mockMvc.perform(put(String.format("/raid/v1/%s", handle))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(input))
+          .characterEncoding("utf-8"))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.mintRequest.servicePointId", Matchers.is(servicePointId.intValue())))
+        .andExpect(jsonPath("$.metadata.id.identifier", Matchers.is(handle)))
+        .andExpect(jsonPath("$.metadata.id.identifierTypeUri", Matchers.is("https://raid.org")))
+        .andExpect(jsonPath("$.metadata.id.globalUrl", Matchers.is("https://hdl.handle.net/" + handle)))
+        .andExpect(jsonPath("$.metadata.id.raidAgencyUrl", Matchers.is("https://raid.org.au/handle/" + handle)))
+        .andExpect(jsonPath("$.metadata.id.raidAgencyIdentifier", Matchers.is("raid.org.au")))
+        .andExpect(jsonPath("$.metadata.titles[0].title", Matchers.is(title)))
+        .andExpect(jsonPath("$.metadata.titles[0].type", Matchers.is(TitleType.PRIMARY_TITLE.getValue())))
+        .andExpect(jsonPath("$.metadata.titles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.titles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.dates.startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.dates.endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.descriptions[0].description", Matchers.is("Test description...")))
+        .andExpect(jsonPath("$.metadata.descriptions[0].type", Matchers.is("Primary Description")))
+        .andExpect(jsonPath("$.metadata.access.type", Matchers.is("Open")))
+        .andExpect(jsonPath("$.metadata.access.accessStatement", Matchers.is("Test access statement...")))
+        .andExpect(jsonPath("$.metadata.contributors[0].id", Matchers.is("0000-0000-0000-0001")))
+        .andExpect(jsonPath("$.metadata.contributors[0].identifierSchemeUri", Matchers.is("https://orcid.org/")))
+        .andExpect(jsonPath("$.metadata.contributors[0].positions[0].positionSchemaUri", Matchers.is("https://raid.org/")))
+        .andExpect(jsonPath("$.metadata.contributors[0].positions[0].position", Matchers.is("Leader")))
+        .andExpect(jsonPath("$.metadata.contributors[0].positions[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.contributors[0].positions[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.contributors[0].roles[0].roleSchemeUri", Matchers.is("https://credit.niso.org/")))
+        .andExpect(jsonPath("$.metadata.contributors[0].roles[0].role", Matchers.is("project-administration")))
+        .andExpect(jsonPath("$.metadata.organisations[0].roles[0].role", Matchers.is("Lead Research Organisation")))
+        .andExpect(jsonPath("$.metadata.organisations[0].roles[0].roleSchemeUri", Matchers.is("https://raid.org/")))
+        .andExpect(jsonPath("$.metadata.organisations[0].roles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.organisations[0].roles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.organisations[0].id", Matchers.is("https://ror.org/038sjwq14")))
+        .andExpect(jsonPath("$.metadata.organisations[0].identifierSchemeUri", Matchers.is("https://ror.org/")));
+    }
+  }
+
+  @Test
+  void updateRaidV1_Returns404IfNotFound() throws Exception {
+    final Long servicePointId = 999L;
+    final var title = "test-title";
+    final var startDate = LocalDate.now();
+    final var handle = "test-handle";
+    final var endDate = startDate.plusMonths(6);
+
+    final var input = createRaidForGet(handle, servicePointId, title, startDate);
+
+    try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
+      final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
+      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
+
+      when(validationService.validateForUpdate(eq(handle), any(MetadataSchemaV1.class))).thenReturn(Collections.emptyList());
+
+      doThrow(new ResourceNotFoundException(handle))
+        .when(raidService).updateRaidV1(input.getMintRequest(), input.getMetadata());
+
+      mockMvc.perform(put(String.format("/raid/v1/%s", handle))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(input))
+          .characterEncoding("utf-8"))
+        .andDo(print())
+        .andExpect(status().isNotFound())
+        .andExpect(jsonPath("$.error.message", Matchers.is("No RAiD found with handle test-handle")));
+    }
+  }
+
+
+  @Test
   void readRaidV1_ReturnsOk() throws Exception {
+    final var startDate = LocalDate.now().minusYears(1);
+    final var endDate = startDate.plusMonths(6);
+    final var title = "test-title";
+    final var handle = "test-handle";
+    final Long servicePointId = 123L;
+    final var raid = createRaidForGet(handle, servicePointId, title, startDate);
+
+
+    try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
+      final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
+      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
+
+      when(raidService.readRaidV1(handle)).thenReturn(raid);
+
+      mockMvc.perform(get(String.format("/raid/v1/%s", handle))
+          .characterEncoding("utf-8")
+          .accept(MediaType.APPLICATION_JSON))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.mintRequest.servicePointId", Matchers.is(servicePointId.intValue())))
+        .andExpect(jsonPath("$.metadata.id.identifier", Matchers.is(handle)))
+        .andExpect(jsonPath("$.metadata.id.identifierTypeUri", Matchers.is("https://raid.org")))
+        .andExpect(jsonPath("$.metadata.id.globalUrl", Matchers.is("https://hdl.handle.net/" + handle)))
+        .andExpect(jsonPath("$.metadata.id.raidAgencyUrl", Matchers.is("https://raid.org.au/handle/" + handle)))
+        .andExpect(jsonPath("$.metadata.id.raidAgencyIdentifier", Matchers.is("raid.org.au")))
+        .andExpect(jsonPath("$.metadata.titles[0].title", Matchers.is(title)))
+        .andExpect(jsonPath("$.metadata.titles[0].type", Matchers.is(TitleType.PRIMARY_TITLE.getValue())))
+        .andExpect(jsonPath("$.metadata.titles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.titles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.dates.startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.dates.endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.descriptions[0].description", Matchers.is("Test description...")))
+        .andExpect(jsonPath("$.metadata.descriptions[0].type", Matchers.is("Primary Description")))
+        .andExpect(jsonPath("$.metadata.access.type", Matchers.is("Open")))
+        .andExpect(jsonPath("$.metadata.access.accessStatement", Matchers.is("Test access statement...")))
+        .andExpect(jsonPath("$.metadata.contributors[0].id", Matchers.is("0000-0000-0000-0001")))
+        .andExpect(jsonPath("$.metadata.contributors[0].identifierSchemeUri", Matchers.is("https://orcid.org/")))
+        .andExpect(jsonPath("$.metadata.contributors[0].positions[0].positionSchemaUri", Matchers.is("https://raid.org/")))
+        .andExpect(jsonPath("$.metadata.contributors[0].positions[0].position", Matchers.is("Leader")))
+        .andExpect(jsonPath("$.metadata.contributors[0].positions[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.contributors[0].positions[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.contributors[0].roles[0].roleSchemeUri", Matchers.is("https://credit.niso.org/")))
+        .andExpect(jsonPath("$.metadata.contributors[0].roles[0].role", Matchers.is("project-administration")))
+        .andExpect(jsonPath("$.metadata.organisations[0].roles[0].role", Matchers.is("Lead Research Organisation")))
+        .andExpect(jsonPath("$.metadata.organisations[0].roles[0].roleSchemeUri", Matchers.is("https://raid.org/")))
+        .andExpect(jsonPath("$.metadata.organisations[0].roles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.organisations[0].roles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$.metadata.organisations[0].id", Matchers.is("https://ror.org/038sjwq14")))
+        .andExpect(jsonPath("$.metadata.organisations[0].identifierSchemeUri", Matchers.is("https://ror.org/")));
+    }
+  }
+
+  @Test
+  void readRaidV1_ReturnsNotFound() throws Exception {
     final var startDate = LocalDate.now().minusYears(1);
     final var endDate = startDate.plusMonths(6);
     final var title = "test-title";

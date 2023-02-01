@@ -17,6 +17,8 @@ public class ValidationMessage {
   public static final String DISALLOWED_CHANGE_MESSAGE = 
     "value is not allowed to change";
 
+  public static final String HANDLE_DOES_NOT_MATCH_MESSAGE = "RAiD handle does not match handle in URL";
+
   public static final ValidationFailure AT_LEAST_ONE_PRIMARY_TITLE =
     new ValidationFailure().
       fieldId("titles.type").
@@ -203,5 +205,13 @@ public class ValidationMessage {
       errorType(NOT_SET_TYPE).
       message(FIELD_MUST_BE_SET_MESSAGE);
   }
+
+  public static ValidationFailure handlesDoNotMatch() {
+    return new ValidationFailure().
+      fieldId("id.identifier").
+      errorType(INVALID_VALUE_TYPE).
+      message(HANDLE_DOES_NOT_MATCH_MESSAGE);
+  }
+
 
 }

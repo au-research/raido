@@ -5,15 +5,20 @@ import org.jooq.JSONB;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
 import raido.apisvc.exception.ValidationException;
+import raido.apisvc.repository.dto.Raid;
 import raido.apisvc.service.raid.MetadataService;
 import raido.apisvc.service.raid.ValidationFailureException;
 import raido.db.jooq.api_svc.enums.Metaschema;
-import raido.idl.raidv2.model.CreateMetadataSchemaV1;
+import raido.db.jooq.api_svc.tables.records.RaidRecord;
+import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
+import raido.idl.raidv2.model.MetadataSchemaV1;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static raido.db.jooq.api_svc.tables.Raid.RAID;
+import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 
 @Repository
 public class RaidRepository {
@@ -29,7 +34,7 @@ public class RaidRepository {
   }
 
   public void save(final String handle, final Long servicePointId, final String raidUrl, final Integer urlIndex,
-                   final String primaryTitle, final CreateMetadataSchemaV1 metadata, final Metaschema metaschema,
+                   final String primaryTitle, final MetadataSchemaV1 metadata, final Metaschema metaschema,
                    final LocalDate startDate, final boolean isConfidential) {
 
     final String metadataJson;
@@ -51,5 +56,37 @@ public class RaidRepository {
       set(RAID.DATE_CREATED, LocalDateTime.now()).
       set(RAID.CONFIDENTIAL, isConfidential).
       execute());
+  }
+
+  public void update(final String handle, final Long servicePointId, final String raidUrl, final Integer urlIndex,
+                   final String primaryTitle, final MetadataSchemaV1 metadata, final Metaschema metaschema,
+                   final LocalDate startDate, final boolean isConfidential) {
+
+    final String metadataJson;
+    try {
+      metadataJson = metadataService.mapToJson(metadata);
+    } catch (ValidationFailureException e) {
+      throw new ValidationException(e.getFailures());
+    }
+
+    transactionTemplate.executeWithoutResult((status) -> dslContext.update(RAID).
+      set(RAID.PRIMARY_TITLE, primaryTitle).
+      set(RAID.METADATA, JSONB.valueOf(metadataJson)).
+      set(RAID.METADATA_SCHEMA, metaschema).
+      set(RAID.START_DATE, startDate).
+      set(RAID.DATE_CREATED, LocalDateTime.now()).
+      set(RAID.CONFIDENTIAL, isConfidential).
+      where(RAID.HANDLE.eq(handle)).
+      execute());
+  }
+
+  public Optional<Raid> findByHandle(final String handle) {
+    return dslContext.select(RAID.fields()).
+      select(SERVICE_POINT.fields()).
+      from(RAID).join(SERVICE_POINT).onKey().
+      where(RAID.HANDLE.eq(handle)).
+      fetchOptional(record -> new Raid(
+        record.into(RaidRecord.class), record.into(ServicePointRecord.class)
+      ));
   }
 }

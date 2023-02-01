@@ -20,7 +20,9 @@ paths:
         content:
           application/json:
             schema:
-              { $ref: 'components.yaml#/components/schemas/CreateRaidSchemaV1' }
+              allOf:
+                - { $ref: 'components.yaml#/components/schemas/RaidSchemaV1' }
+              required: [ metadataSchema, titles, dates, contributors, access ]
       responses:
         200:
           description: The Raid was successfully created.
@@ -83,10 +85,9 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                allOf:
-                  { $ref: 'components.yaml#/components/schemas/RaidSchemaV1' }
+              allOf:
+                - { $ref: 'components.yaml#/components/schemas/RaidSchemaV1' }
+              required: [ id, metadataSchema, titles, dates, contributors, access ]
       responses:
         200:
           description: The Raid was successfully updated.

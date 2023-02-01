@@ -9,7 +9,7 @@ paths:
 
 components:
   schemas:
-    CreateRaidSchemaV1:
+    RaidSchemaV1:
       description: >
         This is the schema needed to create a Raid. It contains all of the properties of a Raid except for the id.
       type: object
@@ -18,20 +18,10 @@ components:
         mintRequest:
           $ref: "#/components/schemas/MintRequestSchemaV1"
         metadata:
-          $ref: "#/components/schemas/CreateMetadataSchemaV1"
-    RaidSchemaV1:
-      allOf:
-        - $ref: "#/components/schemas/CreateRaidSchemaV1"
-      description: > 
-        All of the properties of CreateRaidSchemaV1 plus id.
-      properties:
-        mintRequest:
-          $ref: "#/components/schemas/MintRequestSchemaV1"
-        metadata:
-          $ref: "components.yaml#/components/schemas/MetadataSchemaV1"
-    CreateMetadataSchemaV1:
+          $ref: "#/components/schemas/MetadataSchemaV1"
+    MetadataSchemaV1:
       type: object
-      required: [ metadataSchema, titles, dates, contributors, access ]
+#      required: [ metadataSchema, titles, dates, contributors, access ]
       properties:
         id: { $ref: 'metadata-block.yaml#/components/schemas/IdBlock' }
         metadataSchema: { $ref: 'shared.yaml#/components/schemas/RaidoMetaschema' }
@@ -52,11 +42,11 @@ components:
         organisations:
           type: array
           items: { $ref: 'metadata-organisation-block.yaml#/components/schemas/OrganisationBlock' }
-    MetadataSchemaV1:
-      allOf:
-        - $ref: "#/components/schemas/CreateMetadataSchemaV1"
-      type: object
-      required: [ id ]
+#    MetadataSchemaV1:
+#      allOf:
+#        - $ref: "#/components/schemas/CreateMetadataSchemaV1"
+#      type: object
+#      required: [ id ]
     MintRequestSchemaV1:
       type: object
       description: >

@@ -4,12 +4,14 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.http.HttpStatus;
+import org.jooq.exception.NoDataFoundException;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
+import raido.apisvc.exception.ResourceNotFoundException;
 import raido.apisvc.exception.ValidationException;
 import raido.apisvc.service.raid.ValidationFailureException;
 import raido.apisvc.spring.security.ApiSafeException;
@@ -131,6 +133,10 @@ public class RedactingExceptionResolver implements HandlerExceptionResolver {
       return nested.getRootCause().getMessage();
     }
 
+    if (ex instanceof ResourceNotFoundException) {
+      return ex.getMessage();
+    }
+
     if( redactErrorDetails ){
       return "internal error, see server logs for details";
     }
@@ -146,10 +152,14 @@ public class RedactingExceptionResolver implements HandlerExceptionResolver {
       return ((ApiSafeException) ex).getHttpStatus();
     }
 
+
     if( ex instanceof ValidationException){
       return HttpStatus.BAD_REQUEST_400;
     }
 
+    if( ex instanceof ResourceNotFoundException){
+      return HttpStatus.NOT_FOUND_404;
+    }
 
     if( ex instanceof BadCredentialsException ){
       return HttpStatus.UNAUTHORIZED_401;

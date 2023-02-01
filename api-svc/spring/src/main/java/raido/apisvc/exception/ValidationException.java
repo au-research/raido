@@ -10,6 +10,7 @@ public class ValidationException extends RuntimeException {
   private final List<ValidationFailure> failures;
 
   public ValidationException(Collection<ValidationFailure> failures) {
+    super("There were validation failures");
     this.failures = copyOf(failures);
   }
 

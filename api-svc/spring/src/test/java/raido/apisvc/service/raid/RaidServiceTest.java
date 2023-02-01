@@ -11,7 +11,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import raido.apisvc.exception.ResourceNotFoundException;
 import raido.apisvc.repository.RaidRepository;
+import raido.apisvc.repository.dto.Raid;
 import raido.apisvc.service.apids.ApidsService;
 import raido.apisvc.service.apids.model.ApidsMintResponse;
 import raido.db.jooq.api_svc.enums.Metaschema;
@@ -21,9 +23,12 @@ import raido.idl.raidv2.model.*;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static raido.apisvc.service.raid.MetadataService.RAID_ID_TYPE_URI;
@@ -68,7 +73,7 @@ class RaidServiceTest {
     final var mintRequest = new MintRequestSchemaV1();
     mintRequest.servicePointId(servicePointId);
 
-    final var createRaidSchemaV1 = new CreateRaidSchemaV1();
+    final var createRaidSchemaV1 = new CreateRaidV1Request();
     createRaidSchemaV1.setMintRequest(mintRequest);
 
     createRaidSchemaV1.setMetadata(metadata);
@@ -108,29 +113,11 @@ class RaidServiceTest {
 
     raidRecord.setMetadata(JSONB.valueOf(metadataJson()));
 
-    final RaidService.ReadRaidV2Data data = new RaidService.ReadRaidV2Data(
+    final Raid data = new Raid(
       raidRecord, new ServicePointRecord()
     );
 
-    final SelectConditionStep selectConditionStep = mock(SelectConditionStep.class);
-    when(selectConditionStep.fetchSingle(any(RecordMapper.class))).thenReturn(data);
-
-    final SelectOnConditionStep selectOnConditionStep = mock(SelectOnConditionStep.class);
-    when(selectOnConditionStep.where(any(Condition.class))).thenReturn(selectConditionStep);
-
-    final SelectOnStep selectOnStep = mock(SelectOnStep.class);
-    when(selectOnStep.onKey()).thenReturn(selectOnConditionStep);
-
-    final SelectJoinStep selectJoinStep = mock(SelectJoinStep.class);
-    when(selectJoinStep.join(SERVICE_POINT)).thenReturn(selectOnStep);
-
-    final SelectSelectStep servicePointSelectStep = mock(SelectSelectStep.class);
-    when(servicePointSelectStep.from(RAID)).thenReturn(selectJoinStep);
-
-    final SelectSelectStep raidSelectStep = mock(SelectSelectStep.class);
-    when(raidSelectStep.select(SERVICE_POINT.fields())).thenReturn(servicePointSelectStep);
-
-    when(db.select(RAID.fields())).thenReturn(raidSelectStep);
+    when(raidRepository.findByHandle(handle)).thenReturn(Optional.of(data));
 
     final var expectedMetadata = objectMapper.readValue(metadataJson(), MetadataSchemaV1.class);
 
@@ -139,6 +126,90 @@ class RaidServiceTest {
     assertThat(result.getMetadata(), Matchers.is(expectedMetadata));
   }
 
+  @Test
+  void readRaidV1_throwsResourceNoFoundException() {
+    final String handle = "test-handle";
+    final Long servicePointId = 999L;
+    final RaidRecord raidRecord = new RaidRecord();
+    final ServicePointRecord servicePointRecord = new ServicePointRecord();
+    servicePointRecord.setId(servicePointId);
+
+    raidRecord.setMetadata(JSONB.valueOf(metadataJson()));
+
+    final Raid data = new Raid(
+      raidRecord, new ServicePointRecord()
+    );
+
+    when(raidRepository.findByHandle(handle)).thenReturn(Optional.empty());
+
+    assertThrows(ResourceNotFoundException.class, () -> raidService.readRaidV1(handle));
+  }
+
+  @Test
+  void updateRaidSchemaV1() throws JsonProcessingException {
+    final var handle = "10378.1/1696639";
+    final var servicePointId = 999L;
+    final var confidential = true;
+    final var metaschema = Metaschema.raido_metadata_schema_v1;
+    final var dateCreated = LocalDateTime.now();
+    final var primaryTitle = "C. Japonicum Genome";
+    final var startDate = LocalDate.of(2020,11,1);
+    final var url = "https://demo.raido-infra.com/handle/10378.1/1696639";
+    final var urlIndex = 123;
+    final var metadata = objectMapper.readValue(metadataJson(), MetadataSchemaV1.class);
+    final var mintRequest = new MintRequestSchemaV1().servicePointId(servicePointId);
+
+    final var raidRecord = new RaidRecord();
+    raidRecord.setHandle(handle);
+    raidRecord.setServicePointId(servicePointId);
+    raidRecord.setConfidential(confidential);
+    raidRecord.setMetadataSchema(metaschema);
+    raidRecord.setDateCreated(dateCreated);
+    raidRecord.setPrimaryTitle(primaryTitle);
+    raidRecord.setStartDate(startDate);
+    raidRecord.setUrl(url);
+    raidRecord.setUrlIndex(urlIndex);
+
+    final var servicePointRecord = new ServicePointRecord();
+    servicePointRecord.setId(servicePointId);
+
+    final var existingRaid = new Raid(raidRecord, servicePointRecord);
+
+    when(raidRepository.findByHandle(handle)).thenReturn(Optional.of(existingRaid));
+
+    final var result = raidService.updateRaidV1(mintRequest, metadata);
+
+    verify(raidRepository).findByHandle(handle);
+    verify(raidRepository).update(
+      handle,
+      servicePointId,
+      url,
+      urlIndex,
+      primaryTitle,
+      metadata,
+      metaschema,
+      startDate,
+      confidential
+    );
+
+    assertThat(result.getMetadata(), Matchers.is(metadata));
+    assertThat(result.getMintRequest(), Matchers.is(mintRequest));
+  }
+
+  @Test
+  void updateRaidSchemaV1_throwsResourceNotFoundException() throws JsonProcessingException {
+    final var handle = "10378.1/1696639";
+    final var servicePointId = 999L;
+    final var metadata = objectMapper.readValue(metadataJson(), MetadataSchemaV1.class);
+    final var mintRequest = new MintRequestSchemaV1().servicePointId(servicePointId);
+
+    when(raidRepository.findByHandle(handle)).thenReturn(Optional.empty());
+
+    assertThrows(ResourceNotFoundException.class, () -> raidService.updateRaidV1(mintRequest, metadata));
+
+    verify(raidRepository).findByHandle(handle);
+    verifyNoMoreInteractions(raidRepository);
+  }
   private String metadataJson() {
     return """
       {
@@ -206,11 +277,12 @@ class RaidServiceTest {
       """;
   }
 
-  private CreateMetadataSchemaV1 createMetadataJson() throws JsonProcessingException {
-    final var metadata = objectMapper.readValue(metadataJson(), CreateMetadataSchemaV1.class);
+
+
+  private MetadataSchemaV1 createMetadataJson() throws JsonProcessingException {
+    final var metadata = objectMapper.readValue(metadataJson(), MetadataSchemaV1.class);
     metadata.id(null);
 
     return metadata;
   }
-
 }

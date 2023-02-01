@@ -10,6 +10,7 @@ import org.jooq.impl.DSL;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
+import raido.apisvc.exception.ResourceNotFoundException;
 import raido.apisvc.repository.RaidRepository;
 import raido.apisvc.service.apids.ApidsService;
 import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
@@ -77,7 +78,7 @@ public class RaidService {
   ) { }
 
   public DenormalisedRaidData getDenormalisedRaidData(
-    CreateMetadataSchemaV1 metadata
+    MetadataSchemaV1 metadata
   ){
     return new DenormalisedRaidData(
       getPrimaryTitle(metadata.getTitles()).getTitle(),
@@ -148,7 +149,7 @@ public class RaidService {
 
   @Transactional(propagation = NEVER)
   public String mintRaidSchemaV1(
-    final CreateRaidSchemaV1 raidSchemaV1
+    final CreateRaidV1Request request
   ) {
     /* this is the part where we want to make sure no TX is help open.
      * Maybe *this* should be marked tx.prop=never? */
@@ -157,22 +158,50 @@ public class RaidService {
     String handle = response.identifier.handle;
     String raidUrl = response.identifier.property.value;
 
-    raidSchemaV1.getMetadata().setId(metaSvc.createIdBlock(handle, raidUrl));
+    request.getMetadata().setId(metaSvc.createIdBlock(handle, raidUrl));
 
     // validation failure possible
-    var raidData = getDenormalisedRaidData(raidSchemaV1.getMetadata());
+    var raidData = getDenormalisedRaidData(request.getMetadata());
 
     raidRepository.save(handle,
-      raidSchemaV1.getMintRequest().getServicePointId(),
+      request.getMintRequest().getServicePointId(),
       raidUrl,
       response.identifier.property.index,
       raidData.primaryTitle(),
-      raidSchemaV1.getMetadata(),
-      mapApi2Db(raidSchemaV1.getMetadata().getMetadataSchema()),
+      request.getMetadata(),
+      mapApi2Db(request.getMetadata().getMetadataSchema()),
       raidData.startDate(),
       raidData.confidential);
 
     return handle;
+  }
+
+  public RaidSchemaV1 updateRaidV1(
+    final MintRequestSchemaV1 mintRequest, final MetadataSchemaV1 metadata
+  ) {
+    final var handle = metadata.getId().getIdentifier();
+
+    final var existingRaid = raidRepository.findByHandle(handle)
+      .orElseThrow(() -> new ResourceNotFoundException(handle));
+
+    // validation failure possible
+    final var raidData = getDenormalisedRaidData(metadata);
+
+    raidRepository.update(handle,
+      existingRaid.servicePoint().getId(),
+      existingRaid.raid().getUrl(),
+      existingRaid.raid().getUrlIndex(),
+      raidData.primaryTitle(),
+      metadata,
+      mapApi2Db(metadata.getMetadataSchema()),
+      raidData.startDate(),
+      raidData.confidential);
+
+    final var raid = new RaidSchemaV1();
+    raid.mintRequest(mintRequest);
+    raid.metadata(metadata);
+
+    return raid;
   }
 
   @Transactional(propagation = NEVER)
@@ -210,7 +239,7 @@ public class RaidService {
   }
   
   public record ReadRaidV2Data(
-    RaidRecord raid, 
+    RaidRecord raid,
     ServicePointRecord servicePoint
   ){}
 
@@ -251,25 +280,16 @@ public class RaidService {
   }
 
   public RaidSchemaV1 readRaidV1(String handle){
-    ReadRaidV2Data data;
-    try {
-      data = readRaidV2Data(handle);
-    }
-    catch( NoDataFoundException e ){
-      /* want to easily see what handles are failing, without having to
-      turn on param logging for all endpoints. When we implement selective
-      enablement of param logging at filter level, can get rid of this. */
-      log.with("handle", handle).warn(e.getMessage());
-      throw new RuntimeException(e);
-    }
+    final var raid = raidRepository.findByHandle(handle).orElseThrow(() -> new ResourceNotFoundException(handle));
+
     final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     try {
       return new RaidSchemaV1().
         mintRequest(
-          new MintRequestSchemaV1().servicePointId(data.servicePoint.getId())).
+          new MintRequestSchemaV1().servicePointId(raid.servicePoint().getId())).
         metadata(
-          objectMapper.readValue(data.raid().getMetadata().data(), MetadataSchemaV1.class)
+          objectMapper.readValue(raid.raid().getMetadata().data(), MetadataSchemaV1.class)
         );
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
