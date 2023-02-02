@@ -70,6 +70,24 @@ public class RaidService {
     this.raidRepository = raidRepository;
   }
 
+  public List<RaidSchemaV1> listRaidsV1(final Long servicePointId) {
+    final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+
+    return raidRepository.findAllByServicePointId(servicePointId).stream().
+      map(raid -> {
+        try {
+          return new RaidSchemaV1().
+            mintRequest(
+              new MintRequestSchemaV1().servicePointId(raid.servicePoint().getId())).
+            metadata(
+              objectMapper.readValue(raid.raid().getMetadata().data(), MetadataSchemaV1.class)
+            );
+        } catch (JsonProcessingException e) {
+          throw new RuntimeException(e);
+        }
+      }).toList();
+  }
+
 
   record DenormalisedRaidData(
     String primaryTitle,
@@ -181,16 +199,13 @@ public class RaidService {
   ) {
     final var handle = metadata.getId().getIdentifier();
 
-    final var existingRaid = raidRepository.findByHandle(handle)
+    raidRepository.findByHandle(handle)
       .orElseThrow(() -> new ResourceNotFoundException(handle));
 
     // validation failure possible
     final var raidData = getDenormalisedRaidData(metadata);
 
     raidRepository.update(handle,
-      existingRaid.servicePoint().getId(),
-      existingRaid.raid().getUrl(),
-      existingRaid.raid().getUrlIndex(),
       raidData.primaryTitle(),
       metadata,
       mapApi2Db(metadata.getMetadataSchema()),
@@ -280,7 +295,8 @@ public class RaidService {
   }
 
   public RaidSchemaV1 readRaidV1(String handle){
-    final var raid = raidRepository.findByHandle(handle).orElseThrow(() -> new ResourceNotFoundException(handle));
+    final var raid = raidRepository.findByHandle(handle).
+      orElseThrow(() -> new ResourceNotFoundException(handle));
 
     final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 

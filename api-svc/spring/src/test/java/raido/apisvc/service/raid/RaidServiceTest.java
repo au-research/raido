@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.hamcrest.Matchers;
-import org.jooq.*;
+import org.jooq.JSONB;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,6 +24,7 @@ import raido.idl.raidv2.model.*;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -32,15 +33,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static raido.apisvc.service.raid.MetadataService.RAID_ID_TYPE_URI;
-import static raido.db.jooq.api_svc.tables.Raid.RAID;
-import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 
 @ExtendWith(MockitoExtension.class)
 class RaidServiceTest {
-
-  @Mock
-  private DSLContext db;
-
   @Mock
   private ApidsService apidsService;
 
@@ -59,7 +54,7 @@ class RaidServiceTest {
     .setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
   @Test
-  void mintRaidV1() throws ValidationFailureException, JsonProcessingException {
+  void mintRaidV1() throws JsonProcessingException {
     final long servicePointId = 123;
     final var handle = "10378.1/1696639";
     final var raidUrl = "https://demo.raido-infra.com/handle/" + handle;
@@ -127,6 +122,23 @@ class RaidServiceTest {
   }
 
   @Test
+  void listRaidsV1() throws JsonProcessingException {
+    final Long servicePointId = 999L;
+    final ServicePointRecord servicePointRecord = new ServicePointRecord();
+    servicePointRecord.setId(servicePointId);
+
+    List<Raid> data = List.of(
+      new Raid(new RaidRecord().setMetadata(JSONB.valueOf(metadataJson())), new ServicePointRecord().setId(servicePointId))
+    );
+
+    when(raidRepository.findAllByServicePointId(servicePointId)).thenReturn(data);
+
+    List<RaidSchemaV1> results = raidService.listRaidsV1(servicePointId);
+    assertThat(results.get(0).getMintRequest().getServicePointId(), Matchers.is(servicePointId));
+    assertThat(results.get(0).getMetadata(), Matchers.is(objectMapper.readValue(metadataJson(), MetadataSchemaV1.class)));
+  }
+
+  @Test
   void readRaidV1_throwsResourceNoFoundException() {
     final String handle = "test-handle";
     final Long servicePointId = 999L;
@@ -135,10 +147,6 @@ class RaidServiceTest {
     servicePointRecord.setId(servicePointId);
 
     raidRecord.setMetadata(JSONB.valueOf(metadataJson()));
-
-    final Raid data = new Raid(
-      raidRecord, new ServicePointRecord()
-    );
 
     when(raidRepository.findByHandle(handle)).thenReturn(Optional.empty());
 
@@ -182,9 +190,6 @@ class RaidServiceTest {
     verify(raidRepository).findByHandle(handle);
     verify(raidRepository).update(
       handle,
-      servicePointId,
-      url,
-      urlIndex,
       primaryTitle,
       metadata,
       metaschema,

@@ -4,13 +4,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.http.HttpStatus;
-import org.jooq.exception.NoDataFoundException;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
+import raido.apisvc.exception.CrossAccountAccessException;
 import raido.apisvc.exception.ResourceNotFoundException;
 import raido.apisvc.exception.ValidationException;
 import raido.apisvc.service.raid.ValidationFailureException;
@@ -168,6 +168,10 @@ public class RedactingExceptionResolver implements HandlerExceptionResolver {
     if( ex instanceof IdProviderException ){
       return HttpStatus.BAD_REQUEST_400;
     }
+
+    if( ex instanceof CrossAccountAccessException){
+      return HttpStatus.FORBIDDEN_403;
+    }
     
 //    if( ex instanceof NotAuthorizedExcepton ){
 //      return HttpStatus.UNAUTHORIZED;
@@ -188,6 +192,10 @@ public class RedactingExceptionResolver implements HandlerExceptionResolver {
 
     if( ex instanceof ValidationException) {
       return ((ValidationException) ex).getFailures();
+    }
+
+    if (ex instanceof CrossAccountAccessException) {
+      return ((CrossAccountAccessException) ex).getDetail();
     }
     
     return null;

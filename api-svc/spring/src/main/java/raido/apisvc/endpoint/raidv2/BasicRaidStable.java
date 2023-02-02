@@ -7,7 +7,9 @@ import raido.apisvc.exception.ValidationException;
 import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.service.raid.validation.RaidSchemaV1ValidationService;
 import raido.idl.raidv2.api.BasicRaidStableApi;
-import raido.idl.raidv2.model.*;
+import raido.idl.raidv2.model.CreateRaidV1Request;
+import raido.idl.raidv2.model.RaidSchemaV1;
+import raido.idl.raidv2.model.UpdateRaidV1Request;
 
 import java.util.List;
 
@@ -15,7 +17,6 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 import static org.springframework.transaction.annotation.Propagation.NEVER;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.getAuthzPayload;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
-import static raido.apisvc.service.raid.RaidoSchemaV1Util.mintFailed;
 
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
@@ -56,8 +57,12 @@ public class BasicRaidStable implements BasicRaidStableApi {
   }
 
   @Override
-  public List<RaidSchemaV1> listRaidsV1(Integer servicePointId) {
-    return null;
+  public List<RaidSchemaV1> listRaidsV1(Long servicePointId) {
+    var user = getAuthzPayload();
+    guardOperatorOrAssociated(user, servicePointId);
+
+    return raidService.listRaidsV1(servicePointId);
+
   }
 
   @Override

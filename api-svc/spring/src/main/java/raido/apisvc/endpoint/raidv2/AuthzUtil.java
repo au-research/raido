@@ -1,5 +1,6 @@
 package raido.apisvc.endpoint.raidv2;
 
+import raido.apisvc.exception.CrossAccountAccessException;
 import raido.apisvc.spring.security.raidv2.AuthzTokenPayload;
 import raido.apisvc.service.auth.NonAuthzTokenPayload;
 import raido.apisvc.util.Guard;
@@ -83,10 +84,10 @@ public class AuthzUtil {
     }
 
     if( !areEqual(servicePointId, user.getServicePointId()) ){
-      var iae = iae(DISALLOWED_X_SVC_CALL);
+      var exception = new CrossAccountAccessException(servicePointId);
       log.with("user", user).with("servicePointId", servicePointId).
-        error(iae.getMessage());
-      throw iae;
+        error(exception.getMessage());
+      throw exception;
     }
   }
 

@@ -11,10 +11,12 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import raido.apisvc.exception.CrossAccountAccessException;
 import raido.apisvc.exception.ResourceNotFoundException;
 import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.service.raid.validation.RaidSchemaV1ValidationService;
@@ -162,7 +164,6 @@ class BasicRaidStableTest {
     final var title = "test-title";
     final var startDate = LocalDate.now();
     final var handle = "test-handle";
-    final var endDate = startDate.plusMonths(6);
     final var validationFailureMessage = "validation failure message";
     final var validationFailureType = "validation failure type";
     final var validationFailureFieldId = "validation failure id";
@@ -179,7 +180,6 @@ class BasicRaidStableTest {
       authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
 
       when(validationService.validateForUpdate(eq(handle), any(MetadataSchemaV1.class))).thenReturn(List.of(validationFailure));
-
 
       mockMvc.perform(put(String.format("/raid/v1/%s", handle))
           .contentType(MediaType.APPLICATION_JSON)
@@ -260,7 +260,6 @@ class BasicRaidStableTest {
     final var title = "test-title";
     final var startDate = LocalDate.now();
     final var handle = "test-handle";
-    final var endDate = startDate.plusMonths(6);
 
     final var input = createRaidForGet(handle, servicePointId, title, startDate);
 
@@ -283,6 +282,33 @@ class BasicRaidStableTest {
     }
   }
 
+  @Test
+  void updateRaidsV1_ReturnsForbiddenWithInvalidServicePoint() throws Exception {
+    final Long servicePointId = 999L;
+    final var handle = "test-handle";
+    final var input = createRaidForGet(handle, servicePointId, "", LocalDate.now());
+
+    try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
+      final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
+      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
+
+      authzUtil.when(() -> AuthzUtil.guardOperatorOrAssociated(authzTokenPayload, servicePointId))
+        .thenThrow(new CrossAccountAccessException(servicePointId));
+
+      mockMvc.perform(put(String.format("/raid/v1/%s", handle))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(input))
+          .characterEncoding("utf-8"))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(jsonPath("$.error.status", Matchers.is(HttpStatus.FORBIDDEN.value())))
+        .andExpect(jsonPath("$.error.message", Matchers.is("disallowed cross-service point call")))
+        .andExpect(jsonPath("$.error.detail", Matchers.is("You don't have permission to access RAiDs with a service point of 999")));
+    }
+
+    verifyNoInteractions(validationService);
+    verifyNoInteractions(raidService);
+  }
 
   @Test
   void readRaidV1_ReturnsOk() throws Exception {
@@ -389,6 +415,110 @@ class BasicRaidStableTest {
         .andExpect(jsonPath("$.metadata.organisations[0].roles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.metadata.organisations[0].id", Matchers.is("https://ror.org/038sjwq14")))
         .andExpect(jsonPath("$.metadata.organisations[0].identifierSchemeUri", Matchers.is("https://ror.org/")));
+    }
+  }
+
+  @Test
+  void readRaidsV1_ReturnsForbiddenWithInvalidServicePoint() throws Exception {
+    final Long servicePointId = 999L;
+    final var handle = "test-handle";
+    final var raid = createRaidForGet(handle, servicePointId, "", LocalDate.now());
+
+    try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
+      final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
+      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
+
+      when(raidService.readRaidV1(handle)).thenReturn(raid);
+
+
+      authzUtil.when(() -> AuthzUtil.guardOperatorOrAssociated(authzTokenPayload, servicePointId))
+        .thenThrow(new CrossAccountAccessException(servicePointId));
+
+      mockMvc.perform(get(String.format("/raid/v1/%s", handle))
+          .characterEncoding("utf-8"))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(jsonPath("$.error.status", Matchers.is(HttpStatus.FORBIDDEN.value())))
+        .andExpect(jsonPath("$.error.message", Matchers.is("disallowed cross-service point call")))
+        .andExpect(jsonPath("$.error.detail", Matchers.is("You don't have permission to access RAiDs with a service point of 999")));
+    }
+  }
+
+  @Test
+  void listRaidsV1_ReturnsOk() throws Exception {
+    final Long servicePointId = 999L;
+    final var title = "test-title";
+    final var startDate = LocalDate.now();
+    final var handle = "test-handle";
+    final var endDate = startDate.plusMonths(6);
+
+    final var output = createRaidForGet(handle, servicePointId, title, startDate);
+
+    try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
+      final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
+      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
+
+      when(raidService.listRaidsV1(servicePointId)).thenReturn(Collections.singletonList(output));
+
+      mockMvc.perform(get("/raid/v1", handle)
+          .queryParam("servicePointId", servicePointId.toString())
+          .characterEncoding("utf-8"))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].mintRequest.servicePointId", Matchers.is(servicePointId.intValue())))
+        .andExpect(jsonPath("$[0].metadata.id.identifier", Matchers.is(handle)))
+        .andExpect(jsonPath("$[0].metadata.id.identifierTypeUri", Matchers.is("https://raid.org")))
+        .andExpect(jsonPath("$[0].metadata.id.globalUrl", Matchers.is("https://hdl.handle.net/" + handle)))
+        .andExpect(jsonPath("$[0].metadata.id.raidAgencyUrl", Matchers.is("https://raid.org.au/handle/" + handle)))
+        .andExpect(jsonPath("$[0].metadata.id.raidAgencyIdentifier", Matchers.is("raid.org.au")))
+        .andExpect(jsonPath("$[0].metadata.titles[0].title", Matchers.is(title)))
+        .andExpect(jsonPath("$[0].metadata.titles[0].type", Matchers.is(TitleType.PRIMARY_TITLE.getValue())))
+        .andExpect(jsonPath("$[0].metadata.titles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$[0].metadata.titles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$[0].metadata.dates.startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$[0].metadata.dates.endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$[0].metadata.descriptions[0].description", Matchers.is("Test description...")))
+        .andExpect(jsonPath("$[0].metadata.descriptions[0].type", Matchers.is("Primary Description")))
+        .andExpect(jsonPath("$[0].metadata.access.type", Matchers.is("Open")))
+        .andExpect(jsonPath("$[0].metadata.access.accessStatement", Matchers.is("Test access statement...")))
+        .andExpect(jsonPath("$[0].metadata.contributors[0].id", Matchers.is("0000-0000-0000-0001")))
+        .andExpect(jsonPath("$[0].metadata.contributors[0].identifierSchemeUri", Matchers.is("https://orcid.org/")))
+        .andExpect(jsonPath("$[0].metadata.contributors[0].positions[0].positionSchemaUri", Matchers.is("https://raid.org/")))
+        .andExpect(jsonPath("$[0].metadata.contributors[0].positions[0].position", Matchers.is("Leader")))
+        .andExpect(jsonPath("$[0].metadata.contributors[0].positions[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$[0].metadata.contributors[0].positions[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$[0].metadata.contributors[0].roles[0].roleSchemeUri", Matchers.is("https://credit.niso.org/")))
+        .andExpect(jsonPath("$[0].metadata.contributors[0].roles[0].role", Matchers.is("project-administration")))
+        .andExpect(jsonPath("$[0].metadata.organisations[0].roles[0].role", Matchers.is("Lead Research Organisation")))
+        .andExpect(jsonPath("$[0].metadata.organisations[0].roles[0].roleSchemeUri", Matchers.is("https://raid.org/")))
+        .andExpect(jsonPath("$[0].metadata.organisations[0].roles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$[0].metadata.organisations[0].roles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
+        .andExpect(jsonPath("$[0].metadata.organisations[0].id", Matchers.is("https://ror.org/038sjwq14")))
+        .andExpect(jsonPath("$[0].metadata.organisations[0].identifierSchemeUri", Matchers.is("https://ror.org/")));
+    }
+  }
+
+  @Test
+  void listRaidsV1_ReturnsForbiddenWithInvalidServicePoint() throws Exception {
+    final Long servicePointId = 999L;
+
+    try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
+      final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
+      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
+
+      authzUtil.when(() -> AuthzUtil.guardOperatorOrAssociated(authzTokenPayload, servicePointId))
+        .thenThrow(new CrossAccountAccessException(servicePointId));
+
+      mockMvc.perform(get("/raid/v1")
+          .queryParam("servicePointId", servicePointId.toString())
+          .characterEncoding("utf-8"))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(jsonPath("$.error.status", Matchers.is(HttpStatus.FORBIDDEN.value())))
+        .andExpect(jsonPath("$.error.message", Matchers.is("disallowed cross-service point call")))
+        .andExpect(jsonPath("$.error.detail", Matchers.is("You don't have permission to access RAiDs with a service point of 999")));
+
+      verifyNoInteractions(raidService);
     }
   }
 

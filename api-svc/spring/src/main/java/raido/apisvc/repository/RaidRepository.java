@@ -15,8 +15,10 @@ import raido.idl.raidv2.model.MetadataSchemaV1;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
+import static raido.apisvc.endpoint.Constant.MAX_EXPERIMENTAL_RECORDS;
 import static raido.db.jooq.api_svc.tables.Raid.RAID;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 
@@ -58,7 +60,7 @@ public class RaidRepository {
       execute());
   }
 
-  public void update(final String handle, final Long servicePointId, final String raidUrl, final Integer urlIndex,
+  public void update(final String handle,
                    final String primaryTitle, final MetadataSchemaV1 metadata, final Metaschema metaschema,
                    final LocalDate startDate, final boolean isConfidential) {
 
@@ -86,6 +88,20 @@ public class RaidRepository {
       from(RAID).join(SERVICE_POINT).onKey().
       where(RAID.HANDLE.eq(handle)).
       fetchOptional(record -> new Raid(
+        record.into(RaidRecord.class), record.into(ServicePointRecord.class)
+      ));
+  }
+
+  public List<Raid> findAllByServicePointId(final Long servicePointId) {
+    return dslContext.select(RAID.fields()).
+      select(SERVICE_POINT.fields()).
+      from(RAID).
+      where(
+        RAID.SERVICE_POINT_ID.eq(servicePointId)
+      ).
+      orderBy(RAID.DATE_CREATED.desc()).
+      limit(MAX_EXPERIMENTAL_RECORDS).
+      fetch(record -> new Raid(
         record.into(RaidRecord.class), record.into(ServicePointRecord.class)
       ));
   }
