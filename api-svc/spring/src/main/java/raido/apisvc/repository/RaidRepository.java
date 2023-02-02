@@ -95,7 +95,7 @@ public class RaidRepository {
   public List<Raid> findAllByServicePointId(final Long servicePointId) {
     return dslContext.select(RAID.fields()).
       select(SERVICE_POINT.fields()).
-      from(RAID).
+      from(RAID).join(SERVICE_POINT).onKey().
       where(
         RAID.SERVICE_POINT_ID.eq(servicePointId)
       ).
