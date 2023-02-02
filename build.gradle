@@ -5,6 +5,7 @@ plugins {
   id 'base'
 }
 
+// added in case of accidentally running with wrong JDK version
 println "Gradle build launched with Java version: " + JavaVersion.current()
 
 ext {
