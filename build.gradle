@@ -5,6 +5,8 @@ plugins {
   id 'base'
 }
 
+println "Gradle build launched with Java version: " + JavaVersion.current()
+
 ext {
   versionEnvName = "RAIDO_PROJECT_VERSION"
   gitCommitHash = GitUtil.fullCommitHash(ext.versionEnvName)
@@ -31,7 +33,7 @@ Dont' forget to make sure you push the tag to Github, something like:
 `git push --follow-tags`  (I've never done this, I use IDEA).
 */
 version = GitUtil.describe("raido-v-", ext.versionEnvName)
-println "project version: $version"
+println "Project version: $version"
 
 // to upgrade the wrapper, change the version and run this task
 tasks.named('wrapper') {
