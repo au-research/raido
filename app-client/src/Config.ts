@@ -211,7 +211,7 @@ const demoConfig: EnvironmentConfig = {
 const prodConfig: EnvironmentConfig = {
   environmentName: "prod",
   isProd: true,
-  raidoIssuer: "https://demo.raido-infra.com",
+  raidoIssuer: "https://prod.raido-infra.com",
   raidoApiSvc: "",
   aaf: {
     /* This is the PROD client ID allocated by AAF via ticket
