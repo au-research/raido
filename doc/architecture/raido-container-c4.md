@@ -1,4 +1,8 @@
-This is a high-level view of the architecture "current state" as at 2023-01-12.
+This is high-level view of the architecture is  a mix of "current state"
+and "future state" as at 2023-02-06.
+
+The Raido stuff exists and is "current state".
+The Raid stuff does not exist yet.
 
 <!--- Note the `?cache=no` param --->
 ![PlantUML model](https://www.plantuml.com/plantuml/svg/BOr12a8n34Jtda8Fq0R4bQj_bPW66sZJJvhezMt1rS2y6Tun7SsZjyjDb5eK3clNwdxE9u3XDx_5QxnYij5GP_LCemD6CfwCHdMjf8pqkKD7KIY3ODVYJ1x6VxpF2xCbUkHp2m_Mil87?cache=no)
