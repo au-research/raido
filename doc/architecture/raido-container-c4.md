@@ -6,13 +6,30 @@ The Raid stuff does not exist yet; in the medium to long term, the components
 of the "Raid system" will likely be managed in a separate repository to this
 one. 
 
+
+# Architecture
 <!--- Note the `?cache=no` param --->
 ![PlantUML model](https://www.plantuml.com/plantuml/svg/BOr12a8n34Jtda8Fq0R4bQj_bPW66sZJJvhezMt1rS2y6Tun7SsZjyjDb5eK3clNwdxE9u3XDx_5QxnYij5GP_LCemD6CfwCHdMjf8pqkKD7KIY3ODVYJ1x6VxpF2xCbUkHp2m_Mil87?cache=no)
 
-[Click to see on PlantUML](https://www.plantuml.com/plantuml/svg/BOr12a8n34Jtda8Fq0R4bQj_bPW66sZJJvhezMt1rS2y6Tun7SsZjyjDb5eK3clNwdxE9u3XDx_5QxnYij5GP_LCemD6CfwCHdMjf8pqkKD7KIY3ODVYJ1x6VxpF2xCbUkHp2m_Mil87) 
-(useful if you think the diagram might be cached).
+Major architectural decisions are documented in the Architecture Decision Log:
+* [high level](../adr)
+* [api-svc](../../api-svc/doc/adr)
+* [app-client](../../app-client/doc/adr)
 
-This is a [C4 container diagram](https://en.wikipedia.org/wiki/C4_model), 
+
+# Technology
+
+More info about individual technology choices can be found in the  
+[technology-stack.md](../technology-stack.md).
+
+
+----
+
+# PlantUML technical information  
+
+
+The diagram above is a 
+[C4 container diagram](https://en.wikipedia.org/wiki/C4_model), 
 generated using [PlantUML](https://plantuml.com/).
 The source for this diagram is at
 [raido-container-c4.puml](./raido-container-c4.puml).
