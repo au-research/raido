@@ -12,8 +12,8 @@ LAYOUT_WITH_LEGEND()
 title C4 Container diagram for Raido
 
 Person_Ext(PublicUser, "Public User", "[anonymous]")
-Person(SpUser, "ServicePoint User", "[OIDC authenticated]")
-System_Ext(SpInt, "ServicePoint\nIntegration", "[api-key authenticated]")
+Person(SpUser, "Raido\nServicePoint User", "[OIDC authenticated]")
+System_Ext(SpInt, "Raido\nServicePoint Integrator", "[api-key authenticated]")
 System_Ext(IdProvider, "ID Provider", "[Google / AAF / ORCiD]")
 System_Ext(LocalHdlSvc, "Local Handle Service", "[ARDC DevOps]")
 
@@ -27,7 +27,7 @@ System_Boundary(raidC1, "Raid") {
 
 
 System_Boundary(raidoC1, "Raido") {
-  Container(AppClient, "app-client", "Raido UI React/SPA") 
+  Container(AppClient, "app-client", "Raido UI -\nSinglePageApp") 
   
   Container(RaidoWebServer, "web server", "Cloudfront") 
   Container(RaidoApiSvc, "raido-api-svc", "Spring REST API") 
@@ -43,7 +43,7 @@ Rel(AppClient, RaidoWebServer, "Uses", "HTTPS")
 Rel(PubClient, RaidWebServer, "Uses", "HTTPS")
 Rel(RaidoWebServer, RaidoApiSvc, "Uses", "HTTPS")
 Rel(RaidWebServer, RaidApiSvc, "Uses", "HTTPS")
-Rel(RaidApiSvc, RaidoApiSvc, "read", "postgres:5432")
+Rel(RaidApiSvc, RaidoApiSvc, "read", "HTTPS")
 Rel(SpInt, RaidoWebServer, "Uses", "HTTPS")
 Rel(RaidoApiSvc, db, "read/write", "postgres:5432")
 Rel(RaidoApiSvc, LocalHdlSvc, "mint", "HTTPS")
