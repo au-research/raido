@@ -1,5 +1,5 @@
-This is high-level view of the architecture is  a mix of "current state"
-and "future state" as at 2023-02-06.
+This is a high-level view of the architecture is.
+The diagram is a a mix of "current state" and "future state" as at 2023-02-06.
 
 The Raido stuff exists and is "current state".
 The Raid stuff does not exist yet.
