@@ -6,6 +6,9 @@ The Raid stuff does not exist yet; in the medium to long term, the components
 of the "Raid system" will likely be managed in a separate repository to this
 one. 
 
+See the [project readme](../../readme.md#raid-vs-raido) for a description of 
+the difference between Raid and Raido.
+
 
 # Architecture
 <!--- Note the `?cache=no` param --->
