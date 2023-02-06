@@ -18,12 +18,19 @@ System_Ext(IdProvider, "ID Provider", "[Google / AAF / ORCiD]")
 System_Ext(LocalHdlSvc, "Local Handle Service", "[ARDC DevOps]")
 
 
-System_Boundary(raidoC1, "Raido") {
-  Container(AppClient, "app-client", "Raido UI React/SPA") 
+System_Boundary(raidC1, "Raid") {
   Container(PubClient, "pub-client", "any web tech\ncurrently uses app-client") 
   
-  Container(WebServer, "web server", "Cloudfront") 
-  Container(ApiSvc, "api-svc", "Spring REST API") 
+  Container(RaidWebServer, "web server", "Cloudfront") 
+  Container(RaidApiSvc, "raid-api-svc", "Spring REST API") 
+}
+
+
+System_Boundary(raidoC1, "Raido") {
+  Container(AppClient, "app-client", "Raido UI React/SPA") 
+  
+  Container(RaidoWebServer, "web server", "Cloudfront") 
+  Container(RaidoApiSvc, "raido-api-svc", "Spring REST API") 
   ContainerDb(db, "Database", "RDS PostgreSQL")
 }
 
@@ -32,11 +39,13 @@ System_Boundary(raidoC1, "Raido") {
 Rel(PublicUser, PubClient, "Uses", "in browser")
 Rel(SpUser, AppClient, "Uses", "in browser")
 Rel(SpUser, IdProvider, "Identifies with", "HTTPS/OAuth2")
-Rel(AppClient, WebServer, "Uses", "HTTPS")
-Rel(PubClient, WebServer, "Uses", "HTTPS")
-Rel(WebServer, ApiSvc, "Uses", "HTTPS")
-Rel(SpInt, WebServer, "Uses", "HTTPS")
-Rel(ApiSvc, db, "read/write", "postgres:5432")
-Rel(ApiSvc, LocalHdlSvc, "mint", "HTTPS")
+Rel(AppClient, RaidoWebServer, "Uses", "HTTPS")
+Rel(PubClient, RaidWebServer, "Uses", "HTTPS")
+Rel(RaidoWebServer, RaidoApiSvc, "Uses", "HTTPS")
+Rel(RaidWebServer, RaidApiSvc, "Uses", "HTTPS")
+Rel(RaidApiSvc, RaidoApiSvc, "read", "postgres:5432")
+Rel(SpInt, RaidoWebServer, "Uses", "HTTPS")
+Rel(RaidoApiSvc, db, "read/write", "postgres:5432")
+Rel(RaidoApiSvc, LocalHdlSvc, "mint", "HTTPS")
 @enduml
 
