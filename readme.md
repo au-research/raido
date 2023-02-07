@@ -5,7 +5,7 @@
 
 ## RAiD vs Raido
 
-So when you see these terms in this codebase, they usually have the meaning:
+When you see these terms in this codebase, they usually have the meaning:
 * `Raido`, `raido` - refers to our "local" Oceania region implementation
   (i.e. `raid.org.au`) of RAiD, being operated and maintained by ARDC in our 
   capacity as one of the (hopefully many) "registration agency" providers.
