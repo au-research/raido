@@ -3,6 +3,7 @@
 "Raido" is the new implementation of the Oceania region 
 [RAiD](https://raid.org.au) implementation.
 
+
 ## RAiD vs Raido
 
 When you see these terms in this codebase, they usually have the meaning:
@@ -18,8 +19,8 @@ https://demo.raido-infra.com.
 
 Note that:
 * you will not be approved to use the demo environment without prior agreement
-* the demo environment is under active development and is very unstable 
-  * the data gets reset frequently (weekly, sometimes daily) 
+* the demo environment is under active development and is unstable 
+  * the data gets reset frequently  
 
 Note that previously, the repo was named `raido-v2`, but that has been 
 [fixed](https://github.com/au-research/raido/issues/4). 
@@ -27,26 +28,10 @@ Note that previously, the repo was named `raido-v2`, but that has been
 The [service-level-guide.md](/doc/service-level-guide.md) page provides guidance
 to the expected level of service provided by the Raido team.
 
+
 # Technology / Architecture
 
-A C4 container diagram for the basic architecture can be found in 
-[raido-container-c4.md](./doc/architecture/raido-container-c4.md).
-
-The overall technology stack is described in the
-[technology-stack.md](/doc/technology-stack.md) page.
-
-
-Important architectural decisions are recorded in the 
-[Architecture Decision Log](https://github.com/joelparkerhenderson/architecture-decision-record#what-is-an-architecture-decision-record).
-
-* [/doc/adr](./doc/adr)
-
-Different sub-projects can have their own ADR log, in their local /doc/adr
-directory.
-
-* [/app-client/doc/adr](./app-client/doc/adr)
-* [/api-svc/doc/adr](./api-svc/doc/adr)
-
+See [raid-architecture.md](./doc/architecture/raid-architecture.md).
 
 ## Project structure
 
@@ -100,6 +85,7 @@ specific standards local to that project, look in the local `/doc` directory.
 
 
 ## Building
+
 See the relevant local readme for building api-svc, api-svc/db and app-client.
 
 See [build-troubleshooting.md](/doc/build-troubleshooting.md) if
@@ -113,3 +99,8 @@ using the `main` branch.
 
 Releases are tracks and built using `git describe` functionality working off
 of annotated tags with the prefix `raido-v-`.
+
+AWS build and deployment is automated via AWS CodeBuild projects - see the 
+(private) [raido-v2-aws-private](https://github.com/au-research/raido-v2-aws-private) 
+repo for details.
+
