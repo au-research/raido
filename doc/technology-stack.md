@@ -6,25 +6,6 @@
 * SQL 
 
 
-# Glue code
-
-Little bits of scripting stuff, the usual glue code.
-
-* Docker  
-  * i.e. `Dockerfile`
-* Groovy
-  * Gradle build scripts
-  * legacy data migration
-* Shell scripts
-  * for booting up EC2 instances, 
-  * `codebuild` definitions
-* Scala 
-  * load testing
-  * doesn't exist yet, will use Gatling
-* Javascript
-  * little bits of glue, like in NPM scripts, etc.
-
-
 # Infrastructure
 
 AWS, CDK - TypeScript
@@ -106,3 +87,24 @@ generated from the OpenApi definition.
 
 * [/api-svc/idl-raid-v2](/api-svc/idl-raid-v2)
 * [/app-client](/app-client)
+
+
+# Miscellaneous
+
+Little bits of scripting stuff, the usual glue code.
+
+* Docker
+  * i.e. `Dockerfile`
+* Groovy
+  * Gradle build scripts
+  * legacy data migration
+* Shell scripts
+  * for booting up EC2 instances,
+  * `codebuild` definitions
+* Scala
+  * load testing
+  * doesn't exist yet, will use Gatling
+* Javascript
+  * little bits of glue, like in NPM scripts, etc.
+
+
