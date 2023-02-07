@@ -35,7 +35,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'components.yaml#/components/schemas/ErrorResponse'
+                $ref: 'components.yaml#/components/schemas/ValidationFailureResponse'
     get:
       tags:
         - basic-raid-stable
@@ -101,4 +101,4 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'components.yaml#/components/schemas/ErrorResponse'
+                $ref: 'components.yaml#/components/schemas/ValidationFailureResponse'

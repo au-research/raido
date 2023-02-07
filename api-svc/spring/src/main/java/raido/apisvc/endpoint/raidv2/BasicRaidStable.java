@@ -10,7 +10,9 @@ import raido.idl.raidv2.api.BasicRaidStableApi;
 import raido.idl.raidv2.model.CreateRaidV1Request;
 import raido.idl.raidv2.model.RaidSchemaV1;
 import raido.idl.raidv2.model.UpdateRaidV1Request;
+import raido.idl.raidv2.model.ValidationFailure;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
@@ -41,11 +43,20 @@ public class BasicRaidStable implements BasicRaidStableApi {
   @Override
   @Transactional(propagation = NEVER)
   public RaidSchemaV1 createRaidV1(CreateRaidV1Request request) {
-    var mint = request.getMintRequest();
-    var user = getAuthzPayload();
-    guardOperatorOrAssociated(user, mint.getServicePointId());
+    final var user = getAuthzPayload();
 
-    var failures = validationService.validateForCreate(request.getMetadata());
+    final var mintRequest = request.getMintRequest();
+
+    final var failures = new ArrayList<ValidationFailure>();
+    failures.addAll(validationService.validateMintRequest(mintRequest));
+
+    if( !failures.isEmpty() ){
+      throw new ValidationException(failures);
+    }
+
+    guardOperatorOrAssociated(user, mintRequest.getServicePointId());
+
+    failures.addAll(validationService.validateForCreate(request.getMetadata()));
 
     if( !failures.isEmpty() ){
       throw new ValidationException(failures);
@@ -68,9 +79,16 @@ public class BasicRaidStable implements BasicRaidStableApi {
   @Override
   public RaidSchemaV1 updateRaidV1(String handle, UpdateRaidV1Request request) {
     var user = getAuthzPayload();
+    final var failures = new ArrayList<ValidationFailure>();
+    failures.addAll(validationService.validateMintRequest(request.getMintRequest()));
+
+    if( !failures.isEmpty() ){
+      throw new ValidationException(failures);
+    }
+
     guardOperatorOrAssociated(user, request.getMintRequest().getServicePointId());
 
-    var failures = validationService.validateForUpdate(handle, request.getMetadata());
+    failures.addAll(validationService.validateForUpdate(handle, request.getMetadata()));
 
     if( !failures.isEmpty() ){
       throw new ValidationException(failures);

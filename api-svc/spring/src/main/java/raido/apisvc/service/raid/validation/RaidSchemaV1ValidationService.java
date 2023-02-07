@@ -7,11 +7,13 @@ import raido.apisvc.util.ObjectUtil;
 import raido.idl.raidv2.model.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import static java.util.List.of;
 import static raido.apisvc.endpoint.message.ValidationMessage.fieldCannotChange;
+import static raido.apisvc.endpoint.message.ValidationMessage.fieldNotSet;
 import static raido.apisvc.endpoint.raidv2.PublicExperimental.HANDLE_SEPERATOR;
 import static raido.apisvc.service.raid.MetadataService.RAID_ID_TYPE_URI;
 import static raido.apisvc.util.Log.to;
@@ -140,6 +142,16 @@ public class RaidSchemaV1ValidationService {
 
     failures.addAll(validateHandle(handle, metadata.getId()));
     failures.addAll(validateForCreate(metadata));
+
+    return failures;
+  }
+
+  public List<ValidationFailure> validateMintRequest(final MintRequestSchemaV1 mintRequest) {
+    final var failures = new ArrayList<ValidationFailure>();
+
+    if( mintRequest.getServicePointId() == null ){
+      failures.add(fieldNotSet("mintRequest.servicePointId"));
+    }
 
     return failures;
   }

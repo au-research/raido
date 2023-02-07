@@ -62,4 +62,22 @@ components:
       properties:
         type: { type: string }
         title: { type: string }
+    FailureResponse:
+      type: object
+      required: [type, title, status, detail, instance]
+      properties:
+        type: { type: string }
+        title: { type: string }
+        status: {type: integer }
+        detail: { type: string }
+        instance: { type: string }
+    ValidationFailureResponse:
+      allOf:
+        - $ref: '#/components/schemas/FailureResponse'
+      required: [failures]
+      properties:
+        failures:
+          type: array
+          items:
+            $ref: 'shared.yaml#/components/schemas/ValidationFailure'
 

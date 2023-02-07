@@ -141,12 +141,12 @@ public class ApiConfig implements WebMvcConfigurer {
    This replaces the default resolver, I was having trouble with ordering and
    besides - no reason to have the default if it shouldn't be invoked.
    */
-  @Bean
-  public HandlerExceptionResolver handlerExceptionResolver(
-    @Value("${redactErrorDetails:true}") boolean redactErrorDetails
-  ) {
-    return new RedactingExceptionResolver(redactErrorDetails);
-  }
+//  @Bean
+//  public HandlerExceptionResolver handlerExceptionResolver(
+//    @Value("${redactErrorDetails:true}") boolean redactErrorDetails
+//  ) {
+//    return new RedactingExceptionResolver(redactErrorDetails);
+//  }
 
   /** Without this, @Value annotation don't resolve ${} placeholders */
   @Bean

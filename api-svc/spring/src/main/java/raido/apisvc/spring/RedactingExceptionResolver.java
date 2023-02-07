@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -152,6 +153,9 @@ public class RedactingExceptionResolver implements HandlerExceptionResolver {
       return ((ApiSafeException) ex).getHttpStatus();
     }
 
+    if( ex instanceof org.springframework.web.ErrorResponse )  {
+      return ((ErrorResponse) ex).getStatusCode().value();
+    }
 
     if( ex instanceof ValidationException){
       return HttpStatus.BAD_REQUEST_400;
