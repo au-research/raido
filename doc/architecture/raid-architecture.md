@@ -22,7 +22,7 @@ Major architectural decisions are documented in the Architecture Decision Log:
 
 # Technology
 
-More info about individual technology choices can be found in the  
+More info about individual technology choices can be found in 
 [technology-stack.md](../technology-stack.md).
 
 
