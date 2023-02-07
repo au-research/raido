@@ -3,7 +3,7 @@
 "Raido" is the new implementation of the Oceania region 
 [RAiD](https://raid.org.au) implementation.
 
-It replaces the now deprecated https://github.com/ResearchDataServices/RAiD-API
+It replaces the now deprecated https://github.com/ResearchDataServices/RAiD-API.
 
 
 ## RAiD vs Raido
