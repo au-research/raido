@@ -3,6 +3,8 @@
 "Raido" is the new implementation of the Oceania region 
 [RAiD](https://raid.org.au) implementation.
 
+It replaces the now deprecated https://github.com/ResearchDataServices/RAiD-API
+
 
 ## RAiD vs Raido
 
@@ -14,8 +16,11 @@ When you see these terms in this codebase, they usually have the meaning:
   supporting global infrastructure (i.e. `raid.org`), being operated and 
   maintained by ARDC in our capacity as the global "registration authority".
 
-It is not yet live, though you can find the demo environment at 
-https://demo.raido-infra.com.  
+
+The Raid infrastructure does not yet exist at all.
+
+Raido is not yet live, though you can find the demo environment at
+https://demo.raido-infra.com.
 
 Note that:
 * you will not be approved to use the demo environment without prior agreement
