@@ -7,9 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import raido.apisvc.exception.CrossAccountAccessException;
-import raido.apisvc.exception.RaidApiException;
 import raido.apisvc.exception.ResourceNotFoundException;
 import raido.apisvc.exception.ValidationException;
+import raido.apisvc.spring.RedactingExceptionResolver;
+import raido.apisvc.spring.security.ApiSafeException;
 import raido.idl.raidv2.model.FailureResponse;
 import raido.idl.raidv2.model.ValidationFailureResponse;
 
@@ -68,4 +69,18 @@ public class RaidExceptionHandler {
       .body(body);
   }
 
+  /*
+  Added this to fix LegacyRaidV1MintTest. Can probably be deleted once new error handling is supported by the app.
+   */
+  @ExceptionHandler(ApiSafeException.class)
+  public ResponseEntity<RedactingExceptionResolver.ErrorJson> handleApiSafeException(HttpServletRequest request, Exception e) {
+    final var errorJson = new RedactingExceptionResolver.ErrorJson();
+    errorJson.detail = ((ApiSafeException) e).getDetail();
+    errorJson.status = ((ApiSafeException) e).getHttpStatus();
+    errorJson.message = e.getMessage();
+
+    return ResponseEntity
+      .badRequest()
+      .body(errorJson);
+  }
 }
