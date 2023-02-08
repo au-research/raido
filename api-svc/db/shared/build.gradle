@@ -16,7 +16,7 @@ ext{
   so the flyway scripts can set the password for the api_user role. */
   apiSvcRolePassword = null
   
-  // non-prod, usually want to set in ~/.config/raido-v2/api-svc-db.gradle:
+  // non-prod, usually want to set in ~/.config/raido/api-svc-db.gradle:
   // apiSvcExtraLocations=["classpath:db/env/api_user","classpath:db/env/demo"]
   apiSvcExtraLocations = [""]
 
@@ -29,8 +29,8 @@ ext{
 
   // the config loading config :/
   homeDir = System.properties['user.home']
-  configPath = System.getProperty("RAIDOV2_APISVC_DB_CONFIG_PATH",
-    "${homeDir}/.config/raido-v2/api-svc-db.gradle")
+  configPath = System.getProperty("RAIDO_APISVC_DB_CONFIG_PATH",
+    "${homeDir}/.config/raido/api-svc-db.gradle")
 }
 
 /* after ext{} block so that stuff is the default, and so the config

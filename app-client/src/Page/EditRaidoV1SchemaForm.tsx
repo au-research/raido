@@ -32,6 +32,7 @@ import {
 import React, { useState } from "react";
 import { useAuthApi } from "Api/AuthApi";
 import {findOrcidProblem, findOrganisationIdProblem, mapInvalidOrcidChars} from "Page/MintRaidPage";
+import {createLeadOrganisation} from "./UpgradeLegacySchemaForm";
 
 function isDifferent(formData: FormData, original: FormData){
   return formData.primaryTitle !== original.primaryTitle ||
@@ -103,13 +104,10 @@ function createUpdateMetadata(
   })
 
   const newOrganisations: OrganisationBlock[] = [];
-  const oldLeadOrganisation = getLeadOrganisation(oldMetadata);
-  assert(oldLeadOrganisation);
-  newOrganisations.push({
-    ...oldLeadOrganisation,
-    id: formData.leadOrganisation,
-  })
-  
+  if (formData.leadOrganisation) {
+    newOrganisations.push(createLeadOrganisation(formData.leadOrganisation, formData.startDate))
+  }
+
   return {
     ...oldMetadata,
     titles: [{

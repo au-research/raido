@@ -15,7 +15,12 @@ is what you'll use to query against with cloudwatch log insights, etc.
 
   <appender name="UNMASKED_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
-      <pattern>%date{"HHmmssSSS"} [%thread] %level %logger{0} %m%n</pattern>
+      <!-- matching Python strftime format "%H:%M:%S.%f", 
+      used by the AWS ECS logdriver for detecting multiline log statements.
+      The "000" is just a hack to display the milliseconds as micro seconds,
+      just makes it appear that everything that happened at the millisecond
+      happened within the same microsecond - nobody cares. -->
+      <pattern>%date{"HH:mm:ss.SSS"}000 [%thread] %level %logger{0} %m%n</pattern>
     </encoder>
   </appender>
 

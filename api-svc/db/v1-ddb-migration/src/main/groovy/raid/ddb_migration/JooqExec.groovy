@@ -21,7 +21,7 @@ class JooqExec {
     acutally sourced from the :api-svc:db:shared project.
     The default values in the shared project should work if you're following
     the readme instructions - but as per instructions, the password must be 
-    set in ~/.config/raido-v2/api-svc-db.gradle
+    set in ~/.config/raido/api-svc-db.gradle
     */
   String url = System.properties['apiSvcPgUrl']
   String user = System.properties['apiSvcPgUser']

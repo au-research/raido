@@ -1,31 +1,5 @@
 # app-client
 
-## `/app-client` is a standalone gradle project
-
-See the "Gradle build" section of the 
-[/app-client/readme.md](/app-client/readme.md).
-
-Want to re-do the versioning.
-Current plan:
-* replace the `git-version` plugin with some simple imperative code to 
-lookup the version from `git describe` and commit id.
-  * can just try to invoke `git` at the command line
-* allow the ability to preempt the lookup with an env var - so you can
-still have stuff work inside `codepipeline`
-  * passing in the commit id will be easy, probably have to go `git descrive`
-  based functionality.  That's ok, because we don't use a version for the 
-  cpp-client - it would be meaningless.
-* should still fast fail though, i.e. 
-  * first look for a provided version/commit id in the env vars
-  * then try to invoke `git` at the command line
-  * probably not a good idea to have a "unknown" fallback
-    * dev should get feedback immediately if they're building an environment 
-    and the links to source code / version aren't going to work
-    * want to avoid _accidentally_ building environments/artifacts that don't
-    track their version properly
-    * if the dev really wants, they can force it by setting the env vars
-      to "unknown" values
-
 ## app-client routing needs a lot of work
 
 The NavigationProvider doesn't understand query parameters, only pathname.
@@ -141,17 +115,6 @@ I've never actually seen an actual, concrete, *practical*
 "right way to do REST endpoints" document. 
 I need a concrete set of guidelines to conform to - that  can reasonably be 
 implemented in the context of our tooling (openapi-generator).
-
-## Need endpoint pagination
-
-But want to avoid usage of `limit` / `offset`.
-https://use-the-index-luke.com/blog/2013-07/pagination-done-the-postgresql-way
-
-Start with the `list-raid` endpoint.
-
-Maybe *don't* do pagination, but just limit the records (as we currently do)
-and make sure any page like this has workable search functionality.
-This avoids any API clients from iterating through the DB by abusing pagination.
 
 
 ## APIDS service needs refactoring

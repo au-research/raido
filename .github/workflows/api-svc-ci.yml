@@ -55,9 +55,9 @@ jobs:
         # it should run as the api_user, but I don't know how to sort out
         # the password.
         run: |
-          mkdir -p ~/.config/raido-v2/
+          mkdir -p ~/.config/raido/
           
-          cat <<EOF > ~/.config/raido-v2/api-svc-db.gradle
+          cat <<EOF > ~/.config/raido/api-svc-db.gradle
           apiSvcPgUrl="jdbc:postgresql://localhost:5432/raido"
           apiSvcPgUser="postgres"
           apiSvcPgPassword="githubActionIntTestPgPassword"
@@ -66,7 +66,7 @@ jobs:
           EOF
 
           echo "cat api-svc-db.gradle"
-          cat ~/.config/raido-v2/api-svc-db.gradle
+          cat ~/.config/raido/api-svc-db.gradle
 
       # requires api-svc-db.gradle to be populated
       - name: Create DB schemata
@@ -76,9 +76,9 @@ jobs:
         env:
           APIDS_JWT_SECRET: ${{ secrets.APIDS_DEMO_JWT_SECRET }}
         run: |
-          mkdir -p ~/.config/raido-v2/
+          mkdir -p ~/.config/raido/
 
-          cat <<EOF > ~/.config/raido-v2/api-svc-env.properties
+          cat <<EOF > ~/.config/raido/api-svc-env.properties
           DatasourceConfig.url=jdbc:p6spy:postgresql://localhost:5432/raido
           DatasourceConfig.username=api_user
           DatasourceConfig.password=githubActionIntTestRolePassword
@@ -96,7 +96,7 @@ jobs:
           # commented out to protect secrets
           # Github redacts secrets that it recognises anyway, but still.
           # echo "cat api-svc-env.properties"
-          # cat ~/.config/raido-v2/api-svc-env.properties
+          # cat ~/.config/raido/api-svc-env.properties
 
       # requires api-svc-env.properties to be populated
       - name: Run integration tests

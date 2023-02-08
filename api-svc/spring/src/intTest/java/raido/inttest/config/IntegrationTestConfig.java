@@ -36,11 +36,13 @@ import static raido.apisvc.util.Log.to;
  */
 @PropertySource(name = "user_config_environment",
   value = ApiConfig.ENV_PROPERTIES, ignoreResourceNotFound = true)
+@PropertySource(name = "user_config_environment2",
+  value = ApiConfig.ENV_PROPERTIES2, ignoreResourceNotFound = true)
 @PropertySource(name = "inttest_working_dir_environment",
   value = "./inttest.properties",
   ignoreResourceNotFound = true)
 @PropertySource(name = "inttest_user_config_environment",
-  value = "file:///${user.home}/.config/raido-v2/api-svc-inttest.properties",
+  value = "file:///${user.home}/.config/raido/api-svc-inttest.properties",
   ignoreResourceNotFound = true)
 public class IntegrationTestConfig {
   private static final Log log = to(IntegrationTestConfig.class);
@@ -57,8 +59,8 @@ public class IntegrationTestConfig {
     var restTemplate = new RestTemplate();
 
     /* The overridden RestTemplate with overridden encodingMode has been
-    removed as a bean and is called explictly by the tests that really need it.
-    Most of the rest of the tests should just use a fiegn client. */
+    removed as a bean and is called explicitly by the tests that really need it.
+    Most of the rest of the tests should just use a feign client. */
 
     return restTemplate;
   }

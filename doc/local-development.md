@@ -4,7 +4,7 @@
 
 * [JDK 17](./doc/adr/2022-07-21_jdk-platform.md)
   * The specific version we use for deployment is declared in the api-svc
-  [dockerfile](https://github.com/au-research/raido-v2/blob/main/api-svc/docker/src/main/docker/Dockerfile#L9)
+  [dockerfile](https://github.com/au-research/raido/blob/main/api-svc/docker/src/main/docker/Dockerfile#L9)
   * We use the Amazon Corretto JDK, but any version 17+ JDK should work
   * There are many ways to install JDK's depending on your environment
     * one simple way is to download a simple zip file and keep it local to your

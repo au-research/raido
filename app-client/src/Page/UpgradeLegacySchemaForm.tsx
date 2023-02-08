@@ -46,15 +46,18 @@ function createUpgradeMetadata(
   formData: ValidFormData,
   oldMetadata: LegacyMetadataSchemaV1
 ): RaidoMetadataSchemaV1{
+  const organisations: OrganisationBlock[] = [];
+  if (formData.leadOrganisation) {
+    organisations.push(createLeadOrganisation(formData.leadOrganisation, oldMetadata.dates.startDate));
+  }
+
   return {
     ...oldMetadata,
     metadataSchema: "RaidoMetadataSchemaV1",
     contributors: [
       createLeadContributor(
         formData.leadContributor, oldMetadata.dates.startDate )],
-    organisations: [
-      createLeadOrganisation(formData.leadOrganisation, oldMetadata.dates.startDate)
-    ],
+    organisations,
   };
 }
 
@@ -190,17 +193,14 @@ export function createLeadContributor(
   }
 }
 
-export function createLeadOrganisation(
-  id: string,
-  startDate: Date
-): OrganisationBlock{
-  return {
-    id,
-    identifierSchemeUri: OrganisationIdentifierSchemeType.HttpsRorOrg,
-    roles: [{
-      role: "Lead Research Organisation",
-      roleSchemeUri: OrganisationRoleSchemeType.HttpsRaidOrg,
-      startDate: startDate,
-    }],
-  }
+export function createLeadOrganisation(id: string, startDate: Date): OrganisationBlock {
+    return {
+      id,
+      identifierSchemeUri: OrganisationIdentifierSchemeType.HttpsRorOrg,
+      roles: [{
+        role: "Lead Research Organisation",
+        roleSchemeUri: OrganisationRoleSchemeType.HttpsRaidOrg,
+        startDate: startDate,
+      }],
+    }
 }

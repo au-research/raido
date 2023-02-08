@@ -1,4 +1,4 @@
-rootProject.name = "raido-v2"
+rootProject.name = "raido"
 
 include ":api-svc:idl-raid-v1"
 include ":api-svc:idl-raid-v2"
@@ -8,6 +8,7 @@ include ":api-svc:db"
 include ":api-svc:db:shared"
 include ":api-svc:db:raido"
 include ":api-svc:db:v1-ddb-migration"
+include ":app-client"
 
 dependencyResolutionManagement{
   versionCatalogs{
@@ -22,7 +23,7 @@ dependencyResolutionManagement{
       version('feign', '12.1')
 
       plugin('flyway', 'org.flywaydb.flyway').version('9.4.0')      
-      plugin('jooq', 'nu.studer.jooq').version('8.0')      
+      plugin('jooq', 'nu.studer.jooq').version('8.1')      
       
       library('jooq', 'org.jooq', 'jooq').versionRef('jooq')
       library('pgjdbc', 'org.postgresql:postgresql:42.5.1')

@@ -98,6 +98,8 @@ export function ErrorDialogProvider(props: {children: React.ReactNode}){
   </errorDialogContext.Provider>
 }
 
+/* This needs to catch browser navigation (esp. "back") and we should dismiss
+ the modal - I hate that the back button doesn't currently work with this. */
 function ErrorDialog(props:{
   dialogOpen: boolean,
   errors: ErrorInfo[],

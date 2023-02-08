@@ -3,14 +3,14 @@
 
 ## Configure Raido DB url to work from withing a container
 
-* edit `~/.config/raido-v2/api-svc-env.properties`
+* edit `~/.config/raido/api-svc-env.properties`
   * set `DatasourceConfig.url=jdbc:p6spy:postgresql://host.docker.internal:7432/raido`
     * as per: https://stackoverflow.com/a/71446292/924597
 
 
 ## Build the container image
 
-* run Gradle task `raido-v2:api-svc:docker:dockerBuild`
+* run Gradle task `raido:api-svc:docker:dockerBuild`
 * note the image name
   * e.g. "#12 naming to docker.io/library/raido-api-svc:f353110.dirty done"
     * "raido-api-svc:f353110.dirty"
@@ -29,10 +29,10 @@
     * give it a name something like `Docker Windows`
     * make sure `Docker for Windows` is selected
   * add a path mapping so the container can find your local config files
-    * VM path = `~/.config/raido-v2`
+    * VM path = `~/.config/raido`
       * this matches the Spring config in 
       [ApiConfig.java](../spring/src/main/java/raido/apisvc/spring/config/ApiConfig.java)
-    * local path = `c:\Users\username\.config\raido-v2`
+    * local path = `c:\Users\username\.config\raido`
       * i.e your local dir that contains config files like 
       `api-svc-env.properties` 
 
@@ -58,7 +58,7 @@
 ```
 docker rm --force sto-test-raido; \
  docker run --name sto-test-raido --publish 8042:8080 --detach --init \
-  --volume C:\\Users\\stolley\\.config\\raido-v2:/home/appuser/.config/raido-v2 raido-api-svc:587ccd7.dirty
+  --volume C:\\Users\\stolley\\.config\\raido:/home/appuser/.config/raido raido-api-svc:587ccd7.dirty
 ```
 
 * to see logs from the container

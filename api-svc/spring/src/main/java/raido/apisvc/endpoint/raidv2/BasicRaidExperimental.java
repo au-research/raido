@@ -96,6 +96,12 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     MintRaidoSchemaV1Request req
   ) {
     var mint = req.getMintRequest();
+
+    /* when I did a "curl" with just an "empty object ", i.e. 
+    `{}`, we got an NPE at mint.getServicePointId() */
+    Guard.notNull("request param may not be null", req);
+    Guard.notNull("mintRequest field may not be null", mint);
+    
     var user = getAuthzPayload();
     guardOperatorOrAssociated(user, mint.getServicePointId());
 

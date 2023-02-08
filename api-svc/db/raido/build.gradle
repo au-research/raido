@@ -22,8 +22,8 @@ ext{
 
   // the config loading config :/
   homeDir = System.properties['user.home']
-  configPath = System.getProperty("RAIDOV2_APISVC_DB_RAIDO_CONFIG_PATH",
-    "${homeDir}/.config/raido-v2/api-svc-db-raido.gradle")
+  configPath = System.getProperty("RAIDO_APISVC_DB_RAIDO_CONFIG_PATH",
+    "${homeDir}/.config/raido/api-svc-db-raido.gradle")
 }
 
 /* after ext{} block so that stuff is the default, and so the config

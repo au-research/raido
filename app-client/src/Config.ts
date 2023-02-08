@@ -84,10 +84,13 @@ function initConfig(){
 }
 
 export const unknownCommitId = "unknown commit";
+export const unknownBuildDate = "unknown";
 
 const buildConfig = {
-  buildDate: process.env.REACT_APP_BUILD_DATE_MS ?? 
-    new Date().getTime().toString() ,
+  /* expected to be populated from something like 
+  `date --iso-8601=seconds --utc`, e.g. `2023-02-01T06:31:13+00:00` */
+  buildDate: process.env.REACT_APP_BUILD_DATE_MS ?? "unknownBuildDate" ,
+  version: process.env.REACT_APP_RAIDO_VERSION ?? "unknown version",
   gitCommit: process.env.REACT_APP_COMMIT_REF ?? unknownCommitId,
 };
 
@@ -208,22 +211,26 @@ const demoConfig: EnvironmentConfig = {
 const prodConfig: EnvironmentConfig = {
   environmentName: "prod",
   isProd: true,
-  raidoIssuer: "",
+  raidoIssuer: "https://prod.raido-infra.com",
   raidoApiSvc: "",
   aaf: {
-    clientId: "",
-    authorizeUrl: "",
-    authnScope: "",
+    /* This is the PROD client ID allocated by AAF via ticket
+    https://aaf.freshdesk.com/helpdesk/tickets/9910 */
+    clientId: "205290b0-8bd6-4d53-8605-d0237636b235",
+    authorizeUrl: "https://central.aaf.edu.au/providers/op/authorize",
+    authnScope: "openid email profile",
   },
   google: {
-    clientId: "",
-    authorizeUrl: "",
-    authnScope: "",
+    /* this is the DEMO client ID, created under STO's ARDC email address */
+    clientId: "112489799301-m39l17uigum61l64uakb32vjhujuuk73.apps.googleusercontent.com",
+    authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
+    authnScope: "openid email profile",
   },
   orcid: {
-    clientId: "",
-    authorizeUrl: "",
-    authnScope: "",
+    // this is the DEMO client ID, created under STO's ORCiD account
+    clientId: "APP-IZBIZ6O7XH9RFG0X",
+    authorizeUrl: "https://orcid.org/oauth/authorize",
+    authnScope: "openid",
   },
   authApiQuery: {
     retry: 1,

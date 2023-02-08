@@ -37,6 +37,7 @@ I chose c-r-a in the short term, the decision can be reversed later.
 
 * c-r-a tends to lag React and other ecosystem features
 * support is spotty and "best effort"
+  * future of C-R-A - https://github.com/reactjs/reactjs.org/pull/5487#issuecomment-1409720741
 * limited 
   * single entry point
   * no support for using shared code or new tooling (yarn, npm workspaces, 

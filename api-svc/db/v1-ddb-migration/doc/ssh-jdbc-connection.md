@@ -15,18 +15,18 @@ hardcoded in the import script.
 Host sto-bastion.demo.raido-infra.com
   User ec2-user
   # don't forget to update the remote build.gradle task 
-  IdentityFile ~/.config/raido-v2/keypair/sto-bastion-keypair-2022-08-14.pem
+  IdentityFile ~/.config/raido/keypair/sto-bastion-keypair-2022-08-14.pem
   StrictHostKeyChecking=no
 
 Host bastion
   HostName sto-bastion.demo.raido-infra.com
   User ec2-user
-  IdentityFile ~/.config/raido-v2/keypair/sto-bastion-keypair-2022-08-14.pem
+  IdentityFile ~/.config/raido/keypair/sto-bastion-keypair-2022-08-14.pem
   StrictHostKeyChecking=no
 
 Host 10.20.*
   User ec2-user
-  IdentityFile ~/.config/raido-v2/keypair/api-svc-keypair-2022-08-17.pem
+  IdentityFile ~/.config/raido/keypair/api-svc-keypair-2022-08-17.pem
   StrictHostKeyChecking=no
   ProxyCommand ssh sto-bastion.demo.raido-infra.com nc %h %p
 
@@ -61,5 +61,5 @@ apiSvcPgPassword="password"
 ## Invoke import task
 
 ```
-./gradlew :api-svc:db:v1-ddb-migration:importS3Files -DRAIDOV2_APISVC_DB_CONFIG_PATH=c:/users/stolley/.config/raido-v2/api-svc-demo-migrate-db.gradle
+./gradlew :api-svc:db:v1-ddb-migration:importS3Files -DRAIDO_APISVC_DB_CONFIG_PATH=c:/users/stolley/.config/raido/api-svc-demo-migrate-db.gradle
 ```

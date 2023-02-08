@@ -16,7 +16,7 @@ so groovy was convenient because of prior experience.
 [Main.groovy](./src/main/groovy/raid/ddb_migration/Main.groovy) expects the 
 S3 export files to be in the relative subdir `s3/ddb-migration-data`.
 
-i.e. if you cloned to `/repo-location/raido-v2`, then the S3 directories are 
+i.e. if you cloned to `/repo-location/raido`, then the S3 directories are 
 expected to be in `/repo-location/s3/ddb-migration-data`.
 The script expects you to rename the directory exported from AWS to one of
 the expected tables names.
@@ -62,12 +62,12 @@ DB migrations are in
 
 * sign-in to Raido as a raido operator or admin
 * add an api key, save it and generate the token
-* add the api key to `~/.config/raido-v2/api-svc-db-.gradle`
+* add the api key to `~/.config/raido/api-svc-db-.gradle`
   * `apiSvcMigrationKey="xxx.yyy.zzz"`
 
 ## Git history
 
-Manually imported from /au-research/raido-v2-aws-private #8ca84286.  
+Manually imported from /au-research/raido-aws-private #8ca84286.  
 Look there for earlier git history.
 
 Imported because I plan to use the v1 schema directly at first.  Not sure when

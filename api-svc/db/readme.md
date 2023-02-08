@@ -23,7 +23,7 @@ Take the data migration process for the legacy V1 data as an example:
     * empty project, it exists to collect stuff that needs to be shared between
       the `db` subprojects
     * specifically, the `apiSvcPg` properties and the loading of those from
-      the `~/.config/raido-v2/api-svc-db.gradle` config file
+      the `~/.config/raido/api-svc-db.gradle` config file
   * `:api-svc:db:raido`
     * contains the flyway and jooq stuff for the `raido` schema
     * have a quick scan of [/doc/schema-guideline.md](./raido/doc/schema-guideline.md)
@@ -62,7 +62,7 @@ These defaults will work with the `raido-db` container described above.
 You must configure the `apiSvcPgPassword` property to specify the
 same password you gave to create the database:
 
-`~/.config/raido-v2/api-svc-db.gradle`:
+`~/.config/raido/api-svc-db.gradle`:
 ```
 apiSvcPgPassword="the password you specified"
 apiSvcExtraLocations=["classpath:db/env/api_user","classpath:db/env/demo"]
