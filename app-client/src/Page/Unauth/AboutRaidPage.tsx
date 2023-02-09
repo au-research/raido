@@ -3,7 +3,7 @@ import { normalisePath } from "Util/Location";
 import { useLocationPathname } from "Util/Hook/LocationPathname";
 import { SmallContentMain } from "Design/LayoutMain";
 import { List, ListItem, Stack, Typography } from "@mui/material";
-import { NewWindowLink } from "Component/ExternalLink";
+import { NewWindowLink, raidoGithubUrl } from "Component/ExternalLink";
 import { HomeLink } from "Auth/IntroContainer";
 import { raidoTitle } from "Component/Util";
 import { TextSpan } from "Component/TextSpan";
@@ -37,12 +37,12 @@ function Content(){
         the RAiD ISO standard.
       </Typography>
       <Typography paragraph>
-        RAiD is a Persistent IDentifier for research projects.
+        RAiD is a Persistent Identifier for research projects.
       </Typography>
       <Typography paragraph>
         Anybody can use the application as long as they are approved by one
         of the research institutions that use RAiD for publishing Research 
-        Activity IDentfiers.
+        Activity Identifiers.
       </Typography>
       <Typography paragraph>
         A research project is an activity.  It takes place over a period of 
@@ -61,13 +61,17 @@ function Content(){
         <List  >
           You can find more information here:
           <ListItem>
-            <NewWindowLink href={"https://raid.org.au"}>
+            <NewWindowLink href={"https://www.raid.org"}>
               RAiD project
             </NewWindowLink>
           </ListItem>
           <ListItem>
-            <NewWindowLink href="https://www.raid.org.au/">
+            <NewWindowLink href="https://www.iso.org/standard/75931.html">
               RAiD ISO standard</NewWindowLink>
+          </ListItem>
+          <ListItem>
+            <NewWindowLink href={raidoGithubUrl}>
+              Raido GitHub</NewWindowLink>
           </ListItem>
           <ListItem>
             <NewWindowLink href="https://ardc.edu.au/">
