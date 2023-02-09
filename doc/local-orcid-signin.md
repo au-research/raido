@@ -13,6 +13,7 @@ My workaround for local testing:
   * this forces the api-svc use the https proxy for the redirect uri 
   (this will break other id providers in your local environment, unless you 
   configure `https://localhost:6080/idpresponse` as valid redirect uris for 
-  google and AAF too
+  google and AAF too.
+    * I have added this as a valid redirectURL for the google demo OAuth config
 
  
