@@ -123,6 +123,13 @@ public class ValidationMessage {
       message(FIELD_MUST_BE_SET_MESSAGE);
   }
 
+  public static ValidationFailure contribIdInvalid(int i) {
+    return new ValidationFailure().
+      fieldId("contributor[%s].id".formatted(i)).
+      errorType(INVALID_VALUE_TYPE).
+      message(INVALID_VALUE_MESSAGE);
+  }
+
   public static ValidationFailure organisationIdNotSet(int i) {
     return new ValidationFailure().
       fieldId("organisation[%s].id".formatted(i)).
