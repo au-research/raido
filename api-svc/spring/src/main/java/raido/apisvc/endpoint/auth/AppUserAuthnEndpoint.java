@@ -81,7 +81,7 @@ public class AppUserAuthnEndpoint {
 
 
     DecodedJWT idProviderJwt = raidv2UserAuthSvc.
-      exchangeCodeForVerfiedJwt(state.clientId, idpResponseCode);
+      exchangeCodeForVerifiedJwt(state.clientId, idpResponseCode);
 
     /* "email" isn't really email any more, going to rename it to 
     "description" or something. 
