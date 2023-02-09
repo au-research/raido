@@ -5,8 +5,8 @@ import { RaidoDescription } from "Auth/IntroContainer";
 import { ContainerCard } from "Design/ContainerCard";
 import { Config, unknownBuildDate, unknownCommitId } from "Config";
 import {
-  formatLocalDateAsIsoShortDateTime,
-  parseDateFromEpoch
+  formatLocalDateAsIsoShortDateTime, parseClientDate,
+  parseDateFromEpoch, parseServerDate
 } from "Util/DateUtil";
 import { TextSpan } from "Component/TextSpan";
 import { isPagePath, NavTransition } from "Design/NavigationProvider";
@@ -58,7 +58,7 @@ function ClientPanel(){
   let buildDateString: string = "unknown";
 
   if( Config.buildDate && Config.buildDate !== unknownBuildDate ){
-    let buildDate = parseDateFromEpoch(Config.buildDate);
+    let buildDate = parseClientDate(Config.buildDate);
     if( buildDate && !isNaN(buildDate.getTime()) ){
       localDateString = buildDate.toDateString();
       localTimeString = buildDate.toLocaleTimeString();
