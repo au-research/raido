@@ -27,6 +27,7 @@ import jwtDecode from "jwt-decode";
 import { signOutUser } from "Auth/Authz";
 import { assert } from "Util/TypeUtil";
 import { publicApi, unauthzApi } from "Api/SimpleApi";
+import { mapClientIdToDisplay } from "Component/Util";
 
 export function NotAuthorizedContent({accessToken}: {accessToken: string}){
   const queryClient = new QueryClient({
@@ -79,6 +80,8 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
   const unauthz = unauthzApi(accessToken);
   const pubApi = publicApi();
   const jwt = jwtDecode(accessToken) as any;
+  
+  const {email, clientId, sub} = jwt;
 
   const queryName = 'listPublicServicePoint';
   const query: RqQuery<InstData[]> = useQuery([queryName], async () => {
@@ -119,7 +122,8 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
     action={<AuthRequestHelp/>}
   >
     <Typography>
-      You have identified yourself as: <HelpChip label={jwt.email}/>
+      You have identified yourself as: <HelpChip label={email}/>
+      via{' '}<HelpChip label={mapClientIdToDisplay(clientId)}/>
     </Typography>
     <Typography paragraph>
       You have not yet been authorised to use the application.
@@ -149,7 +153,7 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
             onChange={(e) => setComments(e.target.value)}
           />
         </FormControl>
-        { requested &&
+        { requested && <>
           <Alert severity="success">
             <Typography>
               Your authorisation reqeust has been submitted.
@@ -159,7 +163,14 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
               request is approved you will be able to use the system.
             </Typography>
           </Alert>
-        }
+          <Alert severity="warning">
+            <Typography>
+              Our notification system is not yet implemented.  
+              Please inform your administrators manually (email, 
+              phone call, etc.) so that they know to process your request.
+            </Typography>
+          </Alert>
+        </>}
         <PrimaryActionButton context={"submitting authorization request"}
           disabled={!institution || submitRequest.isLoading}
           type={"submit"} isLoading={submitRequest.isLoading}
