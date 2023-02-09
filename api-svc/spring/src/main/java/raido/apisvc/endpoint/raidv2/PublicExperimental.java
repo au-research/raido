@@ -73,7 +73,7 @@ public class PublicExperimental implements PublicExperimentalApi {
   public VersionResult version() {
     return new VersionResult().
       buildVersion(appInfo.getBuildVersion()).
-      buildCommitId(appInfo.getBuildVersion()).
+      buildCommitId(appInfo.getBuildCommitId()).
       buildDate(appInfo.getBuildDate()).
       startDate(startup.getStartTime().atOffset(UTC));
  
