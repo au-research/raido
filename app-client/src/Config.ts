@@ -58,6 +58,7 @@ export interface EnvironmentConfig {
    */
   isProd: boolean,
 
+  signInWarning?: string, 
   aaf: AuthnConfig,
   google: AuthnConfig,
   orcid: AuthnConfig,
@@ -180,6 +181,9 @@ const devConfig: EnvironmentConfig = {
 
 const demoConfig: EnvironmentConfig = {
   environmentName: "demo",
+  signInWarning: `We will be resetting the DEMO database sometime in the
+    near future (in February).
+    This warning will be updated when that happens.`,
   isProd: false,
   raidoIssuer: "https://demo.raido-infra.com",
   raidoApiSvc: "",
