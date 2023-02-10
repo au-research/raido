@@ -13,14 +13,7 @@ import java.util.function.Supplier;
 
 import static java.util.Collections.emptyList;
 import static java.util.List.of;
-import static raido.apisvc.endpoint.message.ValidationMessage.CONTRIB_NOT_SET;
-import static raido.apisvc.endpoint.message.ValidationMessage.FIELD_MUST_BE_SET_MESSAGE;
-import static raido.apisvc.endpoint.message.ValidationMessage.INVALID_VALUE_MESSAGE;
-import static raido.apisvc.endpoint.message.ValidationMessage.INVALID_VALUE_TYPE;
-import static raido.apisvc.endpoint.message.ValidationMessage.NOT_SET_TYPE;
-import static raido.apisvc.endpoint.message.ValidationMessage.contribIdNotSet;
-import static raido.apisvc.endpoint.message.ValidationMessage.contribIdSchemeNotSet;
-import static raido.apisvc.endpoint.message.ValidationMessage.contribInvalidIdScheme;
+import static raido.apisvc.endpoint.message.ValidationMessage.*;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.indexed;
 import static raido.apisvc.util.StringUtil.isBlank;
@@ -51,7 +44,6 @@ public class ContributorValidationService {
           validatePositionFields(fieldPrefix, iContrib.getPositions()) );
         failures.addAll(
           validateRoleFields(fieldPrefix, iContrib.getRoles()) );
-        
       });
     
     failures.addAll(validateLeader(contribs));
@@ -158,14 +150,17 @@ public class ContributorValidationService {
     ContributorBlock contrib
   ){
     String id = contrib.getId().trim();
-    if( id.length() > 19 ){
+    if(!id.startsWith(HTTPS_ORCID_ORG_.getValue()) ){
+      return List.of(contribInvalidOrcidFormat(index, String.format("should start with %s", HTTPS_ORCID_ORG_)));
+    }
+    if( id.length() > 37 ){
       return List.of(contribInvalidOrcidFormat(index, "too long"));
     }
-    if( id.length() < 19 ){
+    if( id.length() < 37 ){
       return List.of(contribInvalidOrcidFormat(index, "too short"));
     }
     
-    String orcidDigits = id.replaceAll("-", "");
+    String orcidDigits = id.replaceAll(HTTPS_ORCID_ORG_.getValue(), "").replaceAll("-", "");
     String baseDigits = orcidDigits.substring(0, orcidDigits.length()-1);
     char checkDigit = orcidDigits.substring(orcidDigits.length()-1).charAt(0);
     var generatedCheckDigit = generateOrcidCheckDigit(baseDigits);
