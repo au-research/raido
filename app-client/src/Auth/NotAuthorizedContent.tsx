@@ -27,7 +27,7 @@ import jwtDecode from "jwt-decode";
 import { signOutUser } from "Auth/Authz";
 import { assert } from "Util/TypeUtil";
 import { publicApi, unauthzApi } from "Api/SimpleApi";
-import { mapClientIdToDisplay } from "Component/Util";
+import { mapClientIdToIdProvider } from "Component/IdProviderDisplay";
 
 export function NotAuthorizedContent({accessToken}: {accessToken: string}){
   const queryClient = new QueryClient({
@@ -123,7 +123,7 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
   >
     <Typography>
       You have identified yourself as: <HelpChip label={email}/>
-      via{' '}<HelpChip label={mapClientIdToDisplay(clientId)}/>
+      via{' '}<HelpChip label={mapClientIdToIdProvider(clientId)}/>
     </Typography>
     <Typography paragraph>
       You have not yet been authorised to use the application.
@@ -167,7 +167,7 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
             <Typography>
               Our notification system is not yet implemented.  
               Please inform your administrators manually (email, 
-              phone call, etc.) so that they know to process your request.
+              phone call, etc.) so that they know to approve your request.
             </Typography>
           </Alert>
         </>}
