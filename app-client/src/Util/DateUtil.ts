@@ -57,6 +57,16 @@ export function parseServerDate(date: string): Date{
   return new Date(date);
 }
 
+/**
+ * Client Config.buildDate value comes from unix command, looks like:
+ * `2023-02-01T06:31:13+00:00`
+ * Slightly different from the "server date" documented above.
+ * Maybe this is the one with Safari issues, dunno.
+ */
+export function parseClientDate(date: string): Date{
+  return new Date(date);
+}
+
 
 export function formatLocalDateAsIsoShortDateTime(date?: Date){
   if( !date ){

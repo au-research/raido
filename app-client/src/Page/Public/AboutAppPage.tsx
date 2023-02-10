@@ -5,8 +5,8 @@ import { RaidoDescription } from "Auth/IntroContainer";
 import { ContainerCard } from "Design/ContainerCard";
 import { Config, unknownBuildDate, unknownCommitId } from "Config";
 import {
-  formatLocalDateAsIsoShortDateTime,
-  parseDateFromEpoch
+  formatLocalDateAsIsoShortDateTime, parseClientDate,
+  parseDateFromEpoch, parseServerDate
 } from "Util/DateUtil";
 import { TextSpan } from "Component/TextSpan";
 import { isPagePath, NavTransition } from "Design/NavigationProvider";
@@ -53,13 +53,12 @@ function Content(){
 
 function ClientPanel(){
 
-
   let localDateString: string = "unknown";
   let localTimeString: string = "";
   let buildDateString: string = "unknown";
 
   if( Config.buildDate && Config.buildDate !== unknownBuildDate ){
-    let buildDate = parseDateFromEpoch(Config.buildDate);
+    let buildDate = parseClientDate(Config.buildDate);
     if( buildDate && !isNaN(buildDate.getTime()) ){
       localDateString = buildDate.toDateString();
       localTimeString = buildDate.toLocaleTimeString();
@@ -80,7 +79,8 @@ function ClientPanel(){
 
   return <ContainerCard title="App client">
     <TextSpan>
-      Commit: <GitCommitLink commitId={Config.gitCommit}/><br/>
+      Client version: {Config.version}<br/>
+      Commit id: <GitCommitLink commitId={Config.gitCommit}/><br/>
       Build date&nbsp;(UTC):
       <wbr/>
       <NoWrap>&nbsp;{buildDateString}</NoWrap>
@@ -95,30 +95,6 @@ function ClientPanel(){
       <br/>
     </TextSpan>
   </ContainerCard>;
-}
-
-function NoWrap(props: {children: React.ReactNode}){
-  return <span style={{whiteSpace: "nowrap"}}>{props.children}</span>
-}
-
-function GitCommitLink({commitId}: {commitId: string}){
-  if( !commitId || commitId === unknownCommitId ){
-    return <>Unknown commit</>
-  }
-  return <NewWindowLink href={raidoGithubUrl + "/commit/" + commitId}>
-    {commitId.substring(0, 8)}
-  </NewWindowLink>
-}
-
-function ApiSpecLink({commitId}: {commitId: string|undefined}){
-  if( !commitId || commitId === unknownCommitId ){
-    return <>Unknown commit</>
-  }
-  const fileHref = raidoGithubUrl + "/blob/" + commitId + 
-    "/api-svc/idl-raid-v2/src/raido-openapi-3.0.yaml";
-  return <NewWindowLink href={fileHref}>
-    raido-openapi-3.0.yaml
-  </NewWindowLink>
 }
 
 function ServerPanel(){
@@ -156,7 +132,7 @@ function ServerPanel(){
   return <ContainerCard title="API service"
     action={<RefreshIconButton refreshing={isLoading} onClick={loadApiInfo}/>}
   >
-    <TextSpan><>
+    <TextSpan>
       Server version: {serverDetails ? serverDetails.buildVersion : ""}<br/>
       Commit id:{" "}
       <GitCommitLink commitId={serverDetails?.buildCommitId || ""}/><br/>
@@ -167,7 +143,30 @@ function ServerPanel(){
           formatLocalDateAsIsoShortDateTime(serverDetails.startDate) : ""
       }
       <br/>
-    </>
     </TextSpan>
   </ContainerCard>;
+}
+
+function NoWrap(props: {children: React.ReactNode}){
+  return <span style={{whiteSpace: "nowrap"}}>{props.children}</span>
+}
+
+function GitCommitLink({commitId}: {commitId: string}){
+  if( !commitId || commitId === unknownCommitId ){
+    return <>Unknown commit</>
+  }
+  return <NewWindowLink href={raidoGithubUrl + "/commit/" + commitId}>
+    {commitId.substring(0, 8)}
+  </NewWindowLink>
+}
+
+function ApiSpecLink({commitId}: {commitId: string|undefined}){
+  if( !commitId || commitId === unknownCommitId ){
+    return <>Unknown commit</>
+  }
+  const fileHref = raidoGithubUrl + "/blob/" + commitId +
+    "/api-svc/idl-raid-v2/src/raido-openapi-3.0.yaml";
+  return <NewWindowLink href={fileHref}>
+    raido-openapi-3.0.yaml
+  </NewWindowLink>
 }

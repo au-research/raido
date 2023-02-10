@@ -19,6 +19,7 @@ public class RaidV2AppUserAuthProps {
   private static final Log log = to(RaidV2AppUserAuthProps.class);
   
   /** spring el uses `,` as separator, so secrets can't contain them.
+   Minimum length 32 characters.
    Maybe use horizontal tab or something as separator? */
   @Value("${RaidV2AppUserAuth.jwtSecrets}")
   private String[] jwtSecrets;
