@@ -15,7 +15,7 @@ import { RaidoLogoSvg } from "Component/Icon";
 import { getHomePageLink } from "Page/HomePage";
 import { Color } from "Design/RaidoTheme";
 import { useAuth } from "Auth/AuthProvider";
-import { IdProviderDisplay } from "Component/Util";
+import { IdProviderDisplay } from "Component/IdProviderDisplay";
 
 const log = console;
 

@@ -9,7 +9,6 @@ import { ContainerCard } from "Design/ContainerCard";
 import { LargeContentMain } from "Design/LayoutMain";
 import {
   DateDisplay,
-  IdProviderDisplay,
   raidoTitle,
   RoleDisplay
 } from "Component/Util";
@@ -35,6 +34,7 @@ import { RaidoLink } from "Component/RaidoLink";
 import { RaidoAddFab } from "Component/AppButton";
 import { getEditRaidPageLink } from "Page/EditRaidPage";
 import { getMintRaidPageLink } from "Page/MintRaidPage";
+import { IdProviderDisplay } from "Component/IdProviderDisplay";
 
 const log = console;
 
