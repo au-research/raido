@@ -151,7 +151,10 @@ function AuthzResponseContainer({authzRequestId}:{authzRequestId: number}){
       <TextField id="reqeust-text" label="Comments / Information"
         multiline rows={4} variant="outlined"
         value={query.data.comments}
-        disabled={true}
+        // I kept missing that there were comments, because the field was marked 
+        // disabled (grey), I kept not reading the "greyed out" filler text.
+        InputProps={{readOnly: true}}
+        error={!!query.data.comments}
       />
       
       { query.data.status === "REQUESTED" ? roleSelect : responseInfo }
