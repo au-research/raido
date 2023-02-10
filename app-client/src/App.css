@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+aside.raido-environment-banner {
+  display: block;
+  position: absolute;
+  top: .75em;
+  left: -8.25em;
+  width: 20em;
+  text-align: center;
+  transform: rotate(-45deg);
+  font-size: 1em;
+  color: white;
+  background-color: firebrick;
+  border: 1px solid white;
+  z-index: 500;
+}
