@@ -18,7 +18,7 @@ the difference between Raid and Raido.
 endpoint.
 
 The only "central RAiD API" exists for the convenience of _readers_ who do not 
-need/want to understand the federated nature of the RAiD system.
+need/want to deal with the federated nature of the RAiD system.
 
 In order to mint a RAiD, a customer must have a direct legal relationship 
 with an organisation operating as a RAiD registration agency.  The customer 
