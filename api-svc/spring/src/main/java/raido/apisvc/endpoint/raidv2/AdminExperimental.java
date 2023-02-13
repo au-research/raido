@@ -130,6 +130,7 @@ public class AdminExperimental implements AdminExperimentalApi {
     
     Guard.notNull(req);
     Guard.hasValue("must have a name", req.getName());
+    Guard.hasValue("must have an identifier owner", req.getIdentifierOwner());
     Guard.notNull("must have adminEmail", req.getAdminEmail());
     Guard.notNull("must have techEmail", req.getTechEmail());
     Guard.notNull("must have a enabled flag", req.getEnabled());

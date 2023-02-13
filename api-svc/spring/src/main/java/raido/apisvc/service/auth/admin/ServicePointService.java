@@ -26,6 +26,7 @@ public class ServicePointService {
       db.fetchSingle(SERVICE_POINT, SERVICE_POINT.ID.eq(req.getId()));
 
     record.setName(req.getName());
+    record.setIdentifierOwner(req.getIdentifierOwner());
     record.setSearchContent(req.getSearchContent());
     record.setAdminEmail(req.getAdminEmail());
     record.setTechEmail(req.getTechEmail());
@@ -42,6 +43,7 @@ public class ServicePointService {
     return new ServicePoint().
       id(record.getId()).
       name((record.getName())).
+      identifierOwner((record.getIdentifierOwner())).
       searchContent(record.getSearchContent()).
       adminEmail(record.getAdminEmail()).
       techEmail(record.getTechEmail()).

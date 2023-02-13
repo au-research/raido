@@ -348,10 +348,11 @@ components:
     ServicePoint:
       description: data that any member of service-point and operators can see
       type: object
-      required: [id, name, adminEmail, techEmail, enabled]
+      required: [id, name, identifierOwner, adminEmail, techEmail, enabled]
       properties:
         id: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
         name: {type: string}
+        identifierOwner: { type: string }
         searchContent: {type: string}
         techEmail: {type: string}
         adminEmail: {type: string}

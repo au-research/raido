@@ -134,6 +134,17 @@ function ServicePointContainer({servicePointId, onCreate}: {
           }}
         />
       </FormControl>
+
+      <FormControl focused autoCorrect="off" autoCapitalize="on">
+        <TextField id="identifierOwner" label="Identifier Owner" variant="outlined"
+          disabled={isWorking}
+          value={formData.identifierOwner || ''}
+          onChange={(e) => {
+           setFormData({...formData, identifierOwner: e.target.value});
+          }}
+        />
+      </FormControl>
+
       <FormControl>
         <TextField id="adminEmail" label="Admin email" variant="outlined"
           disabled={isWorking}
@@ -179,7 +190,7 @@ function ServicePointContainer({servicePointId, onCreate}: {
           Back
         </SecondaryButton>
         <PrimaryActionButton type="submit" context={"update service point"}
-          disabled={isWorking || !formData.name}
+          disabled={isWorking || !formData.name || !formData.identifierOwner}
           isLoading={updateRequest.isLoading}
           error={updateRequest.error}
         >

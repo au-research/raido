@@ -11,12 +11,12 @@ import java.util.function.Function;
 import org.jooq.Check;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function7;
+import org.jooq.Function8;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row7;
+import org.jooq.Row8;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -89,6 +89,11 @@ public class ServicePoint extends TableImpl<ServicePointRecord> {
      * The column <code>api_svc.service_point.lower_name</code>.
      */
     public final TableField<ServicePointRecord, String> LOWER_NAME = createField(DSL.name("lower_name"), SQLDataType.CLOB, this, "");
+
+    /**
+     * The column <code>api_svc.service_point.identifier_owner</code>.
+     */
+    public final TableField<ServicePointRecord, String> IDENTIFIER_OWNER = createField(DSL.name("identifier_owner"), SQLDataType.CHAR(25).nullable(false), this, "");
 
     private ServicePoint(Name alias, Table<ServicePointRecord> aliased) {
         this(alias, aliased, null);
@@ -190,18 +195,18 @@ public class ServicePoint extends TableImpl<ServicePointRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row7 type methods
+    // Row8 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row7<Long, String, String, String, String, Boolean, String> fieldsRow() {
-        return (Row7) super.fieldsRow();
+    public Row8<Long, String, String, String, String, Boolean, String, String> fieldsRow() {
+        return (Row8) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function7<? super Long, ? super String, ? super String, ? super String, ? super String, ? super Boolean, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function8<? super Long, ? super String, ? super String, ? super String, ? super String, ? super Boolean, ? super String, ? super String, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -209,7 +214,7 @@ public class ServicePoint extends TableImpl<ServicePointRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function7<? super Long, ? super String, ? super String, ? super String, ? super String, ? super Boolean, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function8<? super Long, ? super String, ? super String, ? super String, ? super String, ? super Boolean, ? super String, ? super String, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }
