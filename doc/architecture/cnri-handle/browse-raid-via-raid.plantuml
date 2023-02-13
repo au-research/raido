@@ -1,5 +1,5 @@
 @startuml
-title Browse RAID landing page, via "raid.org.au"
+title Browse RAID landing page, via "raid.org"
 
 actor "reader" as reader
 

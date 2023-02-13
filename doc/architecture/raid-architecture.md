@@ -12,7 +12,7 @@ the difference between Raid and Raido.
 
 # Architecture
 <!--- Note the `?cache=no` param --->
-![PlantUML model](https://www.plantuml.com/plantuml/svg/BOr12a8n34Jtda8Fq0R4bQj_bPW66sZJJvhezMt1rS2y6Tun7SsZjyjDb5eK3clNwdxE9u3XDx_5QxnYij5GP_LCemD6CfwCHdMjf8pqkKD7KIY3ODVYJ1x6VxpF2xCbUkHp2m_Mil87?cache=no)
+![PlantUML model](https://www.plantuml.com/plantuml/png/9Sl13G8n34JHErL00OaldEZ6E1Qnb3WhPopQPrTSvyr_cCl8fXdZte5ZluY2l_LZwFdEhI7BeOugQn9d2TtA8VryMLiqsPpQ4hesWmeoz6_bAa_MAFAins17pd7x0G00?cache=no)
 
 **Note**: There is no short-term plan to implement a global RAiD "mint" 
 endpoint.
