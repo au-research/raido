@@ -10,14 +10,14 @@ participant "raido-api-svc" as raidoApi
 database "Raido DB" as raidoDb
 
 
-reader -> raidoWeb: browse to \n`hdl.raid.org.au/20.2000.1/111111`
-raidoWeb <-- reader: app-client HTML/JS code
-reader -> appClient: execute app-client code  
-appClient -> raidoApi: GET /raid/v1/20.2000.1/111111
-raidoApi -> raidoDb: lookup `20.2000.1/111111`
-raidoDb --> raidoApi: return `{metadata}`
-raidoApi --> appClient: return `{metadata}`
-appClient --> reader: render RAiD as HTML\n for user to view  
+reader -> raidoWeb: browse to \n`hdl.raid.org/20.2000.1/111111`
+'raidoWeb <-- reader: app-client HTML/JS code
+'reader -> appClient: execute app-client code  
+'appClient -> raidoApi: GET /raid/v1/20.2000.1/111111
+'raidoApi -> raidoDb: lookup `20.2000.1/111111`
+'raidoDb --> raidoApi: return `{metadata}`
+'raidoApi --> appClient: return `{metadata}`
+'appClient --> reader: render RAiD as HTML\n for user to view  
 @enduml
 
 
