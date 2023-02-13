@@ -11,3 +11,13 @@ WIP
 # Resolve a RAiD through RAiD global infra
 
 WIP
+
+
+# Resolve a RAiD through hdl.handle.net
+
+Note: we never present this URL to users and dont' expect anyone to resolve
+raids via this mechanism.
+But this mechanism exists, so it is documented here for completeness and 
+clarity.
+
+WIP

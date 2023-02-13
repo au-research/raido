@@ -11,9 +11,10 @@ database "Local Handle Service DB" as lhsDb
 
 participant "Global Handle Infra" as ghs
 
-minter -> raidoApi: mint request
-raidoApi ->raidoApi: generate suffix `111111`
-raidoApi -> lhs: register handle `20.2000.1/111111` 
+minter -> raidoApi: mint request\n with <metadata> 
+raidoApi -> raidoDb: generate next suffix\n in sequence 
+raidoDb --> raidoApi: next suffix is `111111`
+raidoApi -> lhs: register new suffix `111111` 
 lhs -> ghs: register handle `20.2000.1/111111`
 ghs -> ghs: "is the prefix registered properly?"
 ghs -> ghs: "is the suffix unique to the prefix?"

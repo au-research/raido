@@ -14,6 +14,27 @@ the difference between Raid and Raido.
 <!--- Note the `?cache=no` param --->
 ![PlantUML model](https://www.plantuml.com/plantuml/svg/BOr12a8n34Jtda8Fq0R4bQj_bPW66sZJJvhezMt1rS2y6Tun7SsZjyjDb5eK3clNwdxE9u3XDx_5QxnYij5GP_LCemD6CfwCHdMjf8pqkKD7KIY3ODVYJ1x6VxpF2xCbUkHp2m_Mil87?cache=no)
 
+**Note**: There is no short-term plan to implement a global RAiD "mint" 
+endpoint.
+
+The only "central RAiD API" exists for the convenience of _readers_ who do not 
+need/want to understand the federated nature of the RAiD system.
+
+In order to mint a RAiD, a customer must have a direct legal relationship 
+with an organisation operating as a RAiD registration agency.  The customer 
+may then mint their RAiDs by using the API or App made available to them by
+the registration agency, secured by an appropriate mechanism (`api-key`, etc.)
+
+Oceania RAiD clients will mint their RAiDs via Raido after establishing 
+their relationship with the ARDC.
+
+It is possible the global RAiD infrastructure could be expanded in the 
+future to support a global "mint" endpoint.  But that would depend on organising
+all RAiD agencies to provide a commitment to support the requirement and 
+it's availability needs (an organisational challenge) and securing funding to 
+maintain/operate it on an on-going basis (a financial challenge).  
+
+
 Major architectural decisions are documented in the Architecture Decision Log:
 * [high level](../adr)
 * [api-svc](../../api-svc/doc/adr)
