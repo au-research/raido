@@ -3,6 +3,8 @@ title Browse RAID landing page, via "raid.org.au"
 
 actor "reader" as reader
 
+
+
 participant "Raido web-server" as raidoWeb
 participant "Raido app-client" as appClient
 
@@ -22,7 +24,3 @@ appClient --> reader: render RAiD as HTML\n for user to view
 
 
 
-participant "Local Handle Service" as lhs
-database "Local Handle Service DB" as lhsDb
-
-participant "Global Handle Infra" as ghs
