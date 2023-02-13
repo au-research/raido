@@ -1,0 +1,26 @@
+@startuml
+title Browse RAID landing page, via "raid.org"
+
+actor "reader" as reader
+
+participant "Raid web-server" as raidWeb
+participant "raid-api-svc" as raidApi
+participant "raido-api-svc" as raidoApi
+database "Raido DB" as raidoDb
+
+reader -> raidWeb: browse to \n`hdl.raid.org/20.2000.1/111111`
+raidWeb -> raidApi: GET\n /raid/v1/20.2000.1/111111
+
+raidApi -> raidApi: is prefix `20.2000.1`?
+
+raidApi -> raidoApi: GET\n /raid/v1/20.2000.1/111111
+raidoApi -> raidoDb: query `20.2000.1/111111`
+raidoDb --> raidoApi: return `{metadata}`
+raidoApi --> raidApi: return `{metadata}`
+raidApi --> raidWeb: return `{metadata}`
+raidWeb --> reader: render RAiD as HTML\n for user to view  
+
+@enduml
+
+
+

@@ -1,0 +1,14 @@
+@startuml
+title Browse RAID landing page, via "raid.org"
+
+actor "reader" as reader
+
+participant "Global Handle Infra" as ghi
+
+
+reader -> ghi: browse to \n`hdl.handle.net/20.2000.1/111111`
+
+@enduml
+
+
+

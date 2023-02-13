@@ -4,21 +4,21 @@
 ![Mint RAID handle](https://www.plantuml.com/plantuml/png/7Sj1Ze8n20RG_PnYF43BtjiW9PQ4qZ_qGwzlTFkITxCGhw6L_Z-1wzo9aj_zQPZrgACfEw21BdiHLqizoYcJacriMcn1OmjzpQ22IYM9j3OvXYij2xINSVk5VZa7QldV1m00?cache=no)
 
 
-# Resolve a RAiD through Raido - `raid.org.au`
+# Local resolve via Raido - `raid.org.au`
 
 ![Browse RAID via `raid.org.au`](https://www.plantuml.com/plantuml/png/7Sf13W8n243HlQVG0xJilGr3YIMXCA7WND-Ckv-Vzn8ZhS4L-foPvtu315xz8pdhgCr1RicMdNm1LWlUZ44J0cKuB1I3uGJtasJA2WQoa3RHXZ8SuTVcTlFs5Vo7zrFHifO-VW00?cache=no)
 
 
-# Resolve a RAiD through RAiD global infra - `raid.org`
+# Global resolve via redirect - `raid.org`
 
-![Browse RAID via `raid.org`](https://www.plantuml.com/plantuml/png/7Sf13W8n243HlQVG0xJilGr3YIMXCA7WND-Ckv-Vzn8ZhS4L-foPvtu315xz8pdhgCr1RicMdNm1LWlUZ44J0cKuB1I3uGJtasJA2WQoa3RHXZ8SuTVcTlFs5Vn7FnKjQ-dZ1m00?cache=no)
+![Browse RAID via `raid.org`](https://www.plantuml.com/plantuml/png/9Sv1hiCm20JG_J_5xm4SzbtbAWHGZMJZ24Dp_JhjQaQZjvXz1dfaRtyFDMh9ajx-QyGvdm2Er_RIg7da5ATX8HORZGwOnMKAEjMbb0TqL0CU1FUc8HJf0cIkfQ9n4pXyN5FApSjRyLTSM7tXxMnetoEx6A_y0000?cache=no)
+
+# Global resolve via passthrough - `raid.org`
+
+![Browse RAID via `raid.org`](https://www.plantuml.com/plantuml/png/9OwxZSD030Npg-9Sm8gv8xL2SGajWHKfy6ErRykEtiDWWbaZqREE-VSGfLcTo-V_o3pZ2U1uBRlagAs2dKoJDHUo0x2QSp0w3N2KRd2WA7GZk9aaKvOpaBgqWTedm-Ps1RTRRo_1tpan8eTRxMCv9-gtPMNjdtq3?cache=no)
 
 
 # Resolve a RAiD through hdl.handle.net
 
-Note: we never present this URL to users and dont' expect anyone to resolve
-raids via this mechanism.
-But this mechanism exists, so it is documented here for completeness and 
-clarity.
+![Browse RAID via `handle.net`](https://www.plantuml.com/plantuml/png/7SrB3i8m30JGFQU00wJUi-fLNCSYbXAdyeTUduRLI3DFcjq3BNBqnqkKUbPEwyyMSVeRmF3QFX8jZtGscXgiiT4SW5cCdT6etKhgX86YK2V1wYIO8es1rAGqrDeP3fkNSrcyV0NBshQpe_x_TzPwvmy0?cache=no)
 
-WIP
