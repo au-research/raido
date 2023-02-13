@@ -11,7 +11,7 @@ database "Local Handle Service DB" as lhsDb
 
 participant "Global Handle Infra" as ghs
 
-minter -> raidoApi: mint request\n with <metadata> 
+minter -> raidoApi: mint request\n with `{metadata}` 
 raidoApi -> raidoDb: generate next suffix\n in sequence 
 raidoDb --> raidoApi: next suffix is `111111`
 raidoApi -> lhs: register new suffix `111111` 
@@ -21,7 +21,7 @@ ghs -> ghs: "is the suffix unique to the prefix?"
 ghs --> lhs: "succeeded"
 lhs -> lhsDb: "insert `20.2000.1/111111` points to\n `raid.org/20.2000.1/111111`"
 lhs --> raidoApi: "succeeded"
-raidoApi -> raidoDb: "insert `20.2000.1/111111`\n is `<metadata>`"
-raidoApi --> minter: "succeeded, your handle is\n `20.2000.1/111111`"
+raidoApi -> raidoDb: "insert `20.2000.1/111111`\n is `{metadata}`"
+raidoApi --> minter: "handle `20.2000.1/111111`\n now associated with `{metadata}`"
 @enduml
 
