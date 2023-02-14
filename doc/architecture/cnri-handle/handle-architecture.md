@@ -28,7 +28,7 @@
 
 ![Browse RAID via `handle.net`](https://www.plantuml.com/plantuml/png/7SlH3SCm20JG_qxH3a3uxpO4enZ9nX66Plqw-JlTlVkeSSiYwUrT8yxvHNIwjaEZvfvJd8U5M6myEbA2onHohajf6TX93SjWl3iDuKWNP7E5IbQQuExZcW8tXvyIFDjpXhQ4sh6TAqJszle3?cache=no)
 
-# API get metadata through `hdle.handle.net` landing on `raid.org`
+# API get metadata through `hdl.handle.net` landing on `raid.org`
 
 ![Get RAID via `handle.net`](https://www.plantuml.com/plantuml/png/7ShB4G8n20RWkrLe0Intkq72R9X9I8Q0jczsR__ZUwbnooBfxLaZvdeZElsEKwFc9vSu3mknE7Xqf0IN9UHSjz8oi9CQbi5uRHh2aIx8vWgLh3H1cWgd15mUlafmdtThMwYTnzmXihV77m00?cache=no)
 
