@@ -1,7 +1,8 @@
 # Raido
 
 "Raido" is the new implementation of the Oceania region 
-[RAiD](https://raid.org.au) implementation.
+[RAiD](https://raid.org.au) implementation for 
+[ISO 23527:2022](https://www.iso.org/standard/75931.html).
 
 It replaces the now deprecated https://github.com/ResearchDataServices/RAiD-API.
 
