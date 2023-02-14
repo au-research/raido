@@ -13,6 +13,7 @@
 
 ![Browse RAID via `raid.org`](https://www.plantuml.com/plantuml/png/9Sv1hiCm20JG_J_5xm4SzbtbAWHGZMJZ24Dp_JhjQaQZjvXz1dfaRtyFDMh9ajx-QyGvdm2Er_RIg7da5ATX8HORZGwOnMKAEjMbb0TqL0CU1FUc8HJf0cIkfQ9n4pXyN5FApSjRyLTSM7tXxMnetoEx6A_y0000?cache=no)
 
+
 # Global resolve via passthrough - `raid.org`
 
 ![Browse RAID via `raid.org`](https://www.plantuml.com/plantuml/png/9OwxZSD030Npg-9Sm8gv8xL2SGajWHKfy6ErRykEtiDWWbaZqREE-VSGfLcTo-V_o3pZ2U1uBRlagAs2dKoJDHUo0x2QSp0w3N2KRd2WA7GZk9aaKvOpaBgqWTedm-Ps1RTRRo_1tpan8eTRxMCv9-gtPMNjdtq3?cache=no)
@@ -20,9 +21,14 @@
 
 # Resolve a RAiD through `hdl.handle.net` landing on `raid.org`
 
-![Browse RAID via `handle.net`](https://www.plantuml.com/plantuml/png/7Oux4iCW34Jxd28v05QVobUHXSPe1eH7IF7rWwdsiw_OVJYQHwklZoZLo1nMtyNz6by0mtixnKiSCTYegxFwHhq1HZ8UZ4PbKf8xD1I5t0cUJfp9mnX8JL91pPNXi7uFJW-UVe9fRIlL2OYUspNDEhEpvgb_?cache=no)
+![Browse RAID via `handle.net`](https://www.plantuml.com/plantuml/png/7ShB3SCm20RWUwTe1t2uTnk2KOnaGuIXMRzERl_Z-uXIpyhf_TqYpla5SBosGwBbdfETJ8CrDh81cCLvCZgrfQGQ31I5QWJt9i4KwGoaBgMXriwmkrsJoytBJx0ytzFw0gB7TguGEVhh3m00?cache=no)
+
 
 # Resolve a RAiD through `hdl.handle.net` landing on `raido.org`
 
-![Browse RAID via `handle.net`](https://www.plantuml.com/plantuml/png/7OvB3iCm24JtFKLx08TzLxaA0HGZEJZ2q5o_YLSpce_qrX7eaKTxVTIe9KjwUzU8Stm17AzbrwYvvH2dRY4M2_K3C8lB47IguAZSuK0ru4xmP1f2aIv0vbeg6ZU1pVirf3ppybCiivldqj1ORL_EsqoQLOnl_GC0?cache=no)
+![Browse RAID via `handle.net`](https://www.plantuml.com/plantuml/png/7SlH3SCm20JG_qxH3a3uxpO4enZ9nX66Plqw-JlTlVkeSSiYwUrT8yxvHNIwjaEZvfvJd8U5M6myEbA2onHohajf6TX93SjWl3iDuKWNP7E5IbQQuExZcW8tXvyIFDjpXhQ4sh6TAqJszle3?cache=no)
+
+# API get metadata through `hdle.handle.net` landing on `raid.org`
+
+![Get RAID via `handle.net`](https://www.plantuml.com/plantuml/png/9OhH3K8n203_dK87eFox3LBIahIqeQ3hwuj_TvTxgF78AkdZtYFsUI8wVKhJwFdA8yxBGYmAhucKu7A4d3iwQLquIGthOhoQXd2a2z9MQ19mFV1M0ZRNlmsogjRA_a7a7BSl?cache=no)
 
