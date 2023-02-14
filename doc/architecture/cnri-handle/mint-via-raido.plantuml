@@ -1,7 +1,7 @@
 @startuml
 title Mint RAID via Oceania registration-agency service - "Raido"
 
-actor "minter" as minter
+actor "minter\n authenticated via api-key" as minter
 
 participant "raido-api-svc" as raidoApi
 database "Raido DB" as raidoDb
