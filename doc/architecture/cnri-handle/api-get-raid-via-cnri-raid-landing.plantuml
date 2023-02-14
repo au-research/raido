@@ -4,16 +4,11 @@ title API GET Raid metadata, via "handle.net" with global redirect
 participant "global read\nintegrator" as integrator
 
 participant "Global Handle Infra" as ghi
-participant "Raid Handle Prefix Service" as hps
-database "Handle Prefix Service DB" as hpsDb
 participant "Raido Local Handle Service" as lhs
 database "Local Handle Service DB" as lhsDb
 
 
 participant "Raid web-server" as raidWeb
-
-'participant "Raido web-server" as raidoWeb
-'participant "Raido app-client" as appClient
 
 participant "raido-api-svc" as raidoApi
 database "Raido DB" as raidoDb
@@ -24,14 +19,10 @@ database "Raido DB" as raidoDb
 alt handle.net
 group CNRI
 integrator -> ghi: GET `hdl.handle.net/20.2000.1/111111`
-ghi -> hps: find LHS for prefix\n `20.2000.1`
-hps -> hpsDb: query `20.2000.1`
-return `Raido Local Handle Service`
-hps -> lhs: GET `20.2000.1/111111`
+ghi -> lhs: GET `20.2000.1/111111`
 lhs -> lhsDb: query `20.2000.1/111111`
 return `raid.org/20.2000.1/111111`
-lhs --> hps: `raid.org/20.2000.1/111111`
-hps --> ghi: `raid.org/20.2000.1/111111`
+lhs --> ghi: `raid.org/20.2000.1/111111`
 ghi --> integrator: HTTP 302 redirect\n location: raid.org/20.2000.1/111111
 end
 integrator -> integrator : follow redirect
