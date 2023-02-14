@@ -1,3 +1,21 @@
+Note: this page is not yet "documentation" - the handle architecture is at the
+proposal stage. We've not yet decided how the handle strategy will be
+implemented.
+
+This page will document how we implement the [RAiD handle strategy](https://confluence.ardc.edu.au/display/~stolley/RAID+handles+-+requirements+and+strategy).
+Note that the handle strategy itself is not public - it is not finished or 
+agreed upon and the requirements are not complete.
+
+The legacy RAiD system and current-state Raido uses [APIDS](https://github.com/au-research/ANDS-PIDS-Service) 
+to assign numbers under the `102.100.100` prefix, which is shared with many  
+other (non-RAiD related) customers of ARDC.
+
+----
+
+Below are possible implementations presented by STO. The CNRI parts may not 
+be accurate - they reflect my current understanding of how this stuff works,
+but that understanding is very likely flawed.
+
 
 # Mint a RAiD via Raido 
 
