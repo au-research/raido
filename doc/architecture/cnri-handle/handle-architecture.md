@@ -30,5 +30,5 @@
 
 # API get metadata through `hdle.handle.net` landing on `raid.org`
 
-![Get RAID via `handle.net`](https://www.plantuml.com/plantuml/png/9OhH3K8n203_dK87eFox3LBIahIqeQ3hwuj_TvTxgF78AkdZtYFsUI8wVKhJwFdA8yxBGYmAhucKu7A4d3iwQLquIGthOhoQXd2a2z9MQ19mFV1M0ZRNlmsogjRA_a7a7BSl?cache=no)
+![Get RAID via `handle.net`](https://www.plantuml.com/plantuml/png/7ShB4G8n20RWkrLe0Intkq72R9X9I8Q0jczsR__ZUwbnooBfxLaZvdeZElsEKwFc9vSu3mknE7Xqf0IN9UHSjz8oi9CQbi5uRHh2aIx8vWgLh3H1cWgd15mUlafmdtThMwYTnzmXihV77m00?cache=no)
 
