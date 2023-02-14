@@ -18,7 +18,11 @@
 ![Browse RAID via `raid.org`](https://www.plantuml.com/plantuml/png/9OwxZSD030Npg-9Sm8gv8xL2SGajWHKfy6ErRykEtiDWWbaZqREE-VSGfLcTo-V_o3pZ2U1uBRlagAs2dKoJDHUo0x2QSp0w3N2KRd2WA7GZk9aaKvOpaBgqWTedm-Ps1RTRRo_1tpan8eTRxMCv9-gtPMNjdtq3?cache=no)
 
 
-# Resolve a RAiD through hdl.handle.net
+# Resolve a RAiD through `hdl.handle.net` landing on `raid.org`
 
-![Browse RAID via `handle.net`](https://www.plantuml.com/plantuml/png/7SrB3i8m30JGFQU00wJUi-fLNCSYbXAdyeTUduRLI3DFcjq3BNBqnqkKUbPEwyyMSVeRmF3QFX8jZtGscXgiiT4SW5cCdT6etKhgX86YK2V1wYIO8es1rAGqrDeP3fkNSrcyV0NBshQpe_x_TzPwvmy0?cache=no)
+![Browse RAID via `handle.net`](https://www.plantuml.com/plantuml/png/7Oux4iCW34Jxd28v05QVobUHXSPe1eH7IF7rWwdsiw_OVJYQHwklZoZLo1nMtyNz6by0mtixnKiSCTYegxFwHhq1HZ8UZ4PbKf8xD1I5t0cUJfp9mnX8JL91pPNXi7uFJW-UVe9fRIlL2OYUspNDEhEpvgb_?cache=no)
+
+# Resolve a RAiD through `hdl.handle.net` landing on `raido.org`
+
+![Browse RAID via `handle.net`](https://www.plantuml.com/plantuml/png/7OvB3iCm24JtFKLx08TzLxaA0HGZEJZ2q5o_YLSpce_qrX7eaKTxVTIe9KjwUzU8Stm17AzbrwYvvH2dRY4M2_K3C8lB47IguAZSuK0ru4xmP1f2aIv0vbeg6ZU1pVirf3ppybCiivldqj1ORL_EsqoQLOnl_GC0?cache=no)
 

@@ -1,17 +1,41 @@
 @startuml
-title Browse RAID landing page, via "raid.org"
+title Browse RAID landing page, via "handle.net" with global landing page
 
 actor "reader" as reader
 
+participant "Global Handle Infra" as ghi
+participant "Raid Handle Prefix Service" as hps
+database "Handle Prefix Service DB" as hpsDb
+participant "Raido Local Handle Service" as lhs
+database "Local Handle Service DB" as lhsDb
+
+
 participant "Raid web-server" as raidWeb
+
 participant "Raido web-server" as raidoWeb
 participant "Raido app-client" as appClient
 
 participant "raido-api-svc" as raidoApi
 database "Raido DB" as raidoDb
-
 participant "raido-api-svc" as raidoApi
 database "Raido DB" as raidoDb
+
+
+alt handle.net
+group CNRI
+reader -> ghi: browse to\n `hdl.handle.net/20.2000.1/111111`
+ghi -> hps: find LHS for prefix\n `20.2000.1`
+hps -> hpsDb: query `20.2000.1`
+return `Raido Local Handle Service`
+hps -> lhs: GET `20.2000.1/111111`
+lhs -> lhsDb: query `20.2000.1/111111`
+return `raid.org/20.2000.1/111111`
+lhs --> hps: `raid.org/20.2000.1/111111`
+hps --> ghi: `raid.org/20.2000.1/111111`
+ghi --> reader: HTTP 302 redirect\n location: raid.org/20.2000.1/111111
+end
+reader -> reader : reset browser location to:\n `raid.org/20.2000.1/111111`
+
 
 alt 
 group Raid 
