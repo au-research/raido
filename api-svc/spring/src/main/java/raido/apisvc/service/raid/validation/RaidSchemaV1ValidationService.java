@@ -116,12 +116,34 @@ public class RaidSchemaV1ValidationService {
     return failures;
   }
 
-  public List<ValidationFailure> validateForCreate(final MetadataSchemaV1 metadata) {
-    if( metadata == null ){
+  public List<ValidationFailure> validateForCreate(final CreateRaidV1Request request) {
+    if( request == null ){
       return of(ValidationMessage.METADATA_NOT_SET);
     }
 
     var failures = new ArrayList<ValidationFailure>();
+    if( request.getMetadataSchema() != RAIDOMETADATASCHEMAV1 ){
+      failures.add(ValidationMessage.INVALID_METADATA_SCHEMA);
+    }
+
+    failures.addAll(validateDates(request.getDates()));
+    failures.addAll(validateAccess(request.getAccess()));
+    failures.addAll(titleSvc.validateTitles(request.getTitles()));
+    failures.addAll(descSvc.validateDescriptions(request.getDescriptions()));
+    failures.addAll(validateAlternateUrls(request.getAlternateUrls()));
+    failures.addAll(contribSvc.validateContributors(request.getContributors()));
+    failures.addAll(orgSvc.validateOrganisations(request.getOrganisations()));
+
+    return failures;
+  }
+
+  public List<ValidationFailure> validateForUpdate(final String handle, final UpdateRaidV1Request metadata) {
+    if( metadata == null ){
+      return of(ValidationMessage.METADATA_NOT_SET);
+    }
+
+    final var failures = new ArrayList<>(validateHandle(handle, metadata.getId()));
+
     if( metadata.getMetadataSchema() != RAIDOMETADATASCHEMAV1 ){
       failures.add(ValidationMessage.INVALID_METADATA_SCHEMA);
     }
@@ -133,25 +155,6 @@ public class RaidSchemaV1ValidationService {
     failures.addAll(validateAlternateUrls(metadata.getAlternateUrls()));
     failures.addAll(contribSvc.validateContributors(metadata.getContributors()));
     failures.addAll(orgSvc.validateOrganisations(metadata.getOrganisations()));
-
-    return failures;
-  }
-
-  public List<ValidationFailure> validateForUpdate(final String handle, final MetadataSchemaV1 metadata) {
-    final var failures = new ArrayList<ValidationFailure>();
-
-    failures.addAll(validateHandle(handle, metadata.getId()));
-    failures.addAll(validateForCreate(metadata));
-
-    return failures;
-  }
-
-  public List<ValidationFailure> validateMintRequest(final MintRequestSchemaV1 mintRequest) {
-    final var failures = new ArrayList<ValidationFailure>();
-
-    if( mintRequest.getServicePointId() == null ){
-      failures.add(fieldNotSet("mintRequest.servicePointId"));
-    }
 
     return failures;
   }

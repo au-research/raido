@@ -36,7 +36,7 @@ public class BasicRaidStable implements BasicRaidStableApi {
   public RaidSchemaV1 readRaidV1(String handle) {
     var user = getAuthzPayload();
     var data = raidService.readRaidV1(handle);
-    guardOperatorOrAssociated(user, data.getMintRequest().getServicePointId());
+    guardOperatorOrAssociated(user, data.getId().getIdentifierServicePoint());
     return data;
   }
 
@@ -45,24 +45,13 @@ public class BasicRaidStable implements BasicRaidStableApi {
   public RaidSchemaV1 createRaidV1(CreateRaidV1Request request) {
     final var user = getAuthzPayload();
 
-    final var mintRequest = request.getMintRequest();
-
-    final var failures = new ArrayList<ValidationFailure>();
-    failures.addAll(validationService.validateMintRequest(mintRequest));
+    final var failures = new ArrayList<>(validationService.validateForCreate(request));
 
     if( !failures.isEmpty() ){
       throw new ValidationException(failures);
     }
 
-    guardOperatorOrAssociated(user, mintRequest.getServicePointId());
-
-    failures.addAll(validationService.validateForCreate(request.getMetadata()));
-
-    if( !failures.isEmpty() ){
-      throw new ValidationException(failures);
-    }
-
-    String handle = raidService.mintRaidSchemaV1(request);
+    String handle = raidService.mintRaidSchemaV1(request, user.getServicePointId());
 
     return raidService.readRaidV1(handle);
   }
@@ -73,27 +62,19 @@ public class BasicRaidStable implements BasicRaidStableApi {
     guardOperatorOrAssociated(user, servicePointId);
 
     return raidService.listRaidsV1(servicePointId);
-
   }
 
   @Override
   public RaidSchemaV1 updateRaidV1(String handle, UpdateRaidV1Request request) {
     var user = getAuthzPayload();
-    final var failures = new ArrayList<ValidationFailure>();
-    failures.addAll(validationService.validateMintRequest(request.getMintRequest()));
+    guardOperatorOrAssociated(user, request.getId().getIdentifierServicePoint());
+
+    final var failures = new ArrayList<>(validationService.validateForUpdate(handle, request));
 
     if( !failures.isEmpty() ){
       throw new ValidationException(failures);
     }
 
-    guardOperatorOrAssociated(user, request.getMintRequest().getServicePointId());
-
-    failures.addAll(validationService.validateForUpdate(handle, request.getMetadata()));
-
-    if( !failures.isEmpty() ){
-      throw new ValidationException(failures);
-    }
-
-    return raidService.updateRaidV1(request.getMintRequest(), request.getMetadata());
+    return raidService.updateRaidV1(request);
   }
 }

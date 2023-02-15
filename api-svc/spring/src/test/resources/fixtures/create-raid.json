@@ -1,0 +1,55 @@
+{
+  "metadataSchema": "RaidoMetadataSchemaV1",
+  "titles": [
+    {
+      "title": "C. Japonicum Genome",
+      "type": "Primary Title",
+      "startDate": "2020-10-07"
+    }
+  ],
+  "dates": {
+    "startDate": "2020-11-01"
+  },
+  "descriptions": [
+    {
+      "description": "Genome sequencing and assembly project at WUR of the C. Japonicum. ",
+      "type": "Primary Description"
+    }
+  ],
+  "access": {
+    "type": "Closed",
+    "accessStatement": "This RAiD is closed"
+  },
+  "contributors": [
+    {
+      "id": "0000-0002-4368-8058",
+      "identifierSchemeUri": "https://orcid.org/",
+      "positions": [
+        {
+          "positionSchemaUri": "https://raid.org/",
+          "position": "Leader",
+          "startDate": "2020-10-07"
+        }
+      ],
+      "roles": [
+        {
+          "roleSchemeUri": "https://credit.niso.org/",
+          "role": "project-administration"
+        }
+      ]
+    }
+  ],
+  "organisations": [
+    {
+      "id": "https://ror.org/04qw24q55",
+      "identifierSchemeUri": "https://ror.org/",
+      "roles": [
+        {
+          "roleSchemeUri": "https://raid.org/",
+          "role": "Lead Research Organisation",
+          "startDate": "2020-10-07"
+        }
+      ]
+    }
+  ]
+}

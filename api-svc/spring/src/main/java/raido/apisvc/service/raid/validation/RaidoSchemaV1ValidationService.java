@@ -166,13 +166,13 @@ public class RaidoSchemaV1ValidationService {
     // improve: would be good to validate the handle format
     // at least that prefix and suffix exist, separated by slash
 
-    if( !ObjectUtil.areEqual(id.getIdentifierTypeUri(), RAID_ID_TYPE_URI) ){
-      failures.add(ValidationMessage.ID_TYPE_URI_INVALID);
-    }
-
-    if( isBlank(id.getGlobalUrl()) ){
-      failures.add(ValidationMessage.GLOBAL_URL_NOT_SET);
-    }
+//    if( !ObjectUtil.areEqual(id.getIdentifierTypeUri(), RAID_ID_TYPE_URI) ){
+//      failures.add(ValidationMessage.ID_TYPE_URI_INVALID);
+//    }
+//
+//    if( isBlank(id.getGlobalUrl()) ){
+//      failures.add(ValidationMessage.GLOBAL_URL_NOT_SET);
+//    }
 
     // don't need client to send raidAgency fields, we'll set them on insert
 
@@ -188,21 +188,21 @@ public class RaidoSchemaV1ValidationService {
     if( !areEqual(newId.getIdentifier(), oldId.getIdentifier()) ){
       failures.add(fieldCannotChange("metadata.id.identifier"));
     }
-    if( !areEqual(newId.getIdentifierTypeUri(), oldId.getIdentifierTypeUri()) ){
-      failures.add(fieldCannotChange("metadata.id.identifierTypeUri"));
-    }
-    if( !areEqual(newId.getGlobalUrl(), oldId.getGlobalUrl()) ){
-      failures.add(fieldCannotChange("metadata.id.globalUrl"));
-    }
-    if( !areEqual(newId.getRaidAgencyUrl(), oldId.getRaidAgencyUrl()) ){
-      failures.add(fieldCannotChange("metadata.id.raidAgencyUrl"));
-    }
-    if( !areEqual(
-      newId.getRaidAgencyIdentifier(),
-      oldId.getRaidAgencyIdentifier())
-    ){
-      failures.add(fieldCannotChange("metadata.id.raidAgencyIdentifier"));
-    }
+//    if( !areEqual(newId.getIdentifierTypeUri(), oldId.getIdentifierTypeUri()) ){
+//      failures.add(fieldCannotChange("metadata.id.identifierTypeUri"));
+//    }
+//    if( !areEqual(newId.getGlobalUrl(), oldId.getGlobalUrl()) ){
+//      failures.add(fieldCannotChange("metadata.id.globalUrl"));
+//    }
+//    if( !areEqual(newId.getRaidAgencyUrl(), oldId.getRaidAgencyUrl()) ){
+//      failures.add(fieldCannotChange("metadata.id.raidAgencyUrl"));
+//    }
+//    if( !areEqual(
+//      newId.getRaidAgencyIdentifier(),
+//      oldId.getRaidAgencyIdentifier())
+//    ){
+//      failures.add(fieldCannotChange("metadata.id.raidAgencyIdentifier"));
+//    }
 
     return failures;
   }

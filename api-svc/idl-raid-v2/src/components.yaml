@@ -10,18 +10,7 @@ paths:
 components:
   schemas:
     RaidSchemaV1:
-      description: >
-        This is the schema needed to create a Raid. It contains all of the properties of a Raid except for the id.
       type: object
-      required: [ mintRequest, metadata ]
-      properties:
-        mintRequest:
-          $ref: "#/components/schemas/MintRequestSchemaV1"
-        metadata:
-          $ref: "#/components/schemas/MetadataSchemaV1"
-    MetadataSchemaV1:
-      type: object
-#      required: [ metadataSchema, titles, dates, contributors, access ]
       properties:
         id: { $ref: 'metadata-block.yaml#/components/schemas/IdBlock' }
         metadataSchema: { $ref: 'shared.yaml#/components/schemas/RaidoMetaschema' }
@@ -42,20 +31,6 @@ components:
         organisations:
           type: array
           items: { $ref: 'metadata-organisation-block.yaml#/components/schemas/OrganisationBlock' }
-#    MetadataSchemaV1:
-#      allOf:
-#        - $ref: "#/components/schemas/CreateMetadataSchemaV1"
-#      type: object
-#      required: [ id ]
-    MintRequestSchemaV1:
-      type: object
-      description: >
-        Raido data that doesn't belong on the raid metadata.
-        ServicePoint Id means nothing in a RAID context - it's
-        purely a Raido implementation detail (that may change).
-      required: [ servicePointId ]
-      properties:
-        servicePointId: { $ref: 'shared.yaml#/components/schemas/SurrogateKey' }
     ErrorResponse:
       type: object
       required: [type, title, status]

@@ -76,18 +76,12 @@ public class RaidService {
     return raidRepository.findAllByServicePointId(servicePointId).stream().
       map(raid -> {
         try {
-          return new RaidSchemaV1().
-            mintRequest(
-              new MintRequestSchemaV1().servicePointId(raid.servicePoint().getId())).
-            metadata(
-              objectMapper.readValue(raid.raid().getMetadata().data(), MetadataSchemaV1.class)
-            );
+          return objectMapper.readValue(raid.raid().getMetadata().data(), RaidSchemaV1.class);
         } catch (JsonProcessingException e) {
           throw new RuntimeException(e);
         }
       }).toList();
   }
-
 
   record DenormalisedRaidData(
     String primaryTitle,
@@ -96,7 +90,7 @@ public class RaidService {
   ) { }
 
   public DenormalisedRaidData getDenormalisedRaidData(
-    MetadataSchemaV1 metadata
+    RaidSchemaV1 metadata
   ){
     return new DenormalisedRaidData(
       getPrimaryTitle(metadata.getTitles()).getTitle(),
@@ -167,56 +161,64 @@ public class RaidService {
 
   @Transactional(propagation = NEVER)
   public String mintRaidSchemaV1(
-    final CreateRaidV1Request request
+    final CreateRaidV1Request request,
+    final long servicePoint
   ) {
     /* this is the part where we want to make sure no TX is help open.
      * Maybe *this* should be marked tx.prop=never? */
-    var response = apidsSvc.mintApidsHandleContentPrefix(
-      metaSvc::formatRaidoLandingPageUrl);
-    String handle = response.identifier.handle;
-    String raidUrl = response.identifier.property.value;
+//    var apidsResponse = apidsSvc.mintApidsHandleContentPrefix(
+//      metaSvc::formatRaidoLandingPageUrl);
+//    String handle = apidsResponse.identifier.handle;
+//    String raidUrl = apidsResponse.identifier.property.value;
+//
+//    request.setId(metaSvc.createIdBlock(handle, raidUrl));
+//
+//    // validation failure possible
+//    var raidData = getDenormalisedRaidData(request);
+//
+//    final ServicePointRecord servicePointRecord = servicePointRepository.findById(servicePoint);
+//
+//    raidRecordFactory.create(request, apidsResponse, servicePointRecord);
+//
+//    raidRepository.save(handle,
+//      request.getMintRequest().getServicePointId(),
+//      raidUrl,
+//      apidsResponse.identifier.property.index,
+//      raidData.primaryTitle(),
+//      request.getMetadata(),
+//      mapApi2Db(request.getMetadata().getMetadataSchema()),
+//      raidData.startDate(),
+//      raidData.confidential);
+//
+//    return handle;
 
-    request.getMetadata().setId(metaSvc.createIdBlock(handle, raidUrl));
-
-    // validation failure possible
-    var raidData = getDenormalisedRaidData(request.getMetadata());
-
-    raidRepository.save(handle,
-      request.getMintRequest().getServicePointId(),
-      raidUrl,
-      response.identifier.property.index,
-      raidData.primaryTitle(),
-      request.getMetadata(),
-      mapApi2Db(request.getMetadata().getMetadataSchema()),
-      raidData.startDate(),
-      raidData.confidential);
-
-    return handle;
+    return null;
   }
 
   public RaidSchemaV1 updateRaidV1(
-    final MintRequestSchemaV1 mintRequest, final MetadataSchemaV1 metadata
+    final UpdateRaidV1Request metadata
   ) {
-    final var handle = metadata.getId().getIdentifier();
-
-    raidRepository.findByHandle(handle)
-      .orElseThrow(() -> new ResourceNotFoundException(handle));
-
-    // validation failure possible
-    final var raidData = getDenormalisedRaidData(metadata);
-
-    raidRepository.update(handle,
-      raidData.primaryTitle(),
-      metadata,
-      mapApi2Db(metadata.getMetadataSchema()),
-      raidData.startDate(),
-      raidData.confidential);
-
-    final var raid = new RaidSchemaV1();
-    raid.mintRequest(mintRequest);
-    raid.metadata(metadata);
-
-    return raid;
+//    final var handle = metadata.getId().getIdentifier();
+//
+//    raidRepository.findByHandle(handle)
+//      .orElseThrow(() -> new ResourceNotFoundException(handle));
+//
+//    // validation failure possible
+//    final var raidData = getDenormalisedRaidData(metadata);
+//
+//    raidRepository.update(handle,
+//      raidData.primaryTitle(),
+//      metadata,
+//      mapApi2Db(metadata.getMetadataSchema()),
+//      raidData.startDate(),
+//      raidData.confidential);
+//
+//    final var raid = new RaidSchemaV1();
+//    raid.mintRequest(mintRequest);
+//    raid.metadata(metadata);
+//
+//    return raid;
+    return null;
   }
 
   @Transactional(propagation = NEVER)
@@ -301,12 +303,7 @@ public class RaidService {
     final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     try {
-      return new RaidSchemaV1().
-        mintRequest(
-          new MintRequestSchemaV1().servicePointId(raid.servicePoint().getId())).
-        metadata(
-          objectMapper.readValue(raid.raid().getMetadata().data(), MetadataSchemaV1.class)
-        );
+      return objectMapper.readValue(raid.raid().getMetadata().data(), RaidSchemaV1.class);
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     }
@@ -327,9 +324,9 @@ public class RaidService {
     String handle = metadata.getId().getIdentifier();
     String raidUrl = metaSvc.formatRaidoLandingPageUrl(handle);
 
-    metadata.getId().setRaidAgencyUrl(raidUrl);
-    metadata.getId().setRaidAgencyIdentifier(
-      metaSvc.getMetaProps().raidAgencyIdentifier );
+//    metadata.getId().setRaidAgencyUrl(raidUrl);
+//    metadata.getId().setRaidAgencyIdentifier(
+//      metaSvc.getMetaProps().raidAgencyIdentifier );
     
     // validation failure possible
     String metadataAsJson = metaSvc.mapToJson(metadata);

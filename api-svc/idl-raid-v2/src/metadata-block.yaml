@@ -11,34 +11,37 @@ components:
   schemas:
     IdBlock:
       type: object
-      required: [identifier, identifierTypeUri,
-                 globalUrl, raidAgencyUrl, raidAgencyIdentifier]
+      required: [identifier, identifierSchemeUri,
+                 identifierRegistrationAgency, identifierOwner, identifierServicePoint]
       properties:
         identifier: 
-          type: string  
-          description: The handle, e.g. xxx.yyy/zzz
-        identifierTypeUri: {type: string} 
-        globalUrl: 
+          type: string
+          description: The handle, e.g. https://raid.org/xxx.yyy/zzz
+        identifierSchemeURI:
+          type: string
+          description: > 
+            The URI of the Identifier scheme. For example, https://raid.org
+        identifierRegistrationAgency:
           type: string
           description: >
-            The URL for the raid via the CNRI handle system, e.g 
-            https://hdl.handle.net/xxx.yyy/zzz
-        raidAgencyUrl: 
+            The registration agency that minted the RAiD.
+        identifierOwner:
           type: string
           description: >
-            The URL for the raid via the minting raid agency system, e.g 
-            https://demo.raido-infra.com/handle/10378.1/1695863
-        raidAgencyIdentifier: 
-          type: string
+            The legal entity responsible for the RAiD; the ‘Owner’ of a RAiD. Analogous to a DataCite ‘Member’, has a 
+            legal agreement with the Registration Agency.
+        identifierServicePoint:
+          type: integer
+          format: int64
           description: >
-            Identifier of the raid agency system that controls the raid, e.g
-            demo.raido-infra.com
-      example: 
-        identifier: xxx.yyy/zzz
-        identifierTypeUri: https://raid.org
-        globalUrl: https://hdl.handle.net/xxx.yyy/zzz
-        raidAgencyUrl: https://demo.raido-infra.com/handle/10378.1/1695863
-        raidAgencyIdentifier: demo.raido-infra.com
+            The Service Point that requested the RAiD. Analogous to a DataCite ‘Repository’. ‘Owners’ can have multiple
+            Service Points, and SPs do not need to be legal entities.
+      example:
+        identifier: https://raid.org/xxx.yyy/zzz
+        identifierSchemeUri: https://raid.org
+        identifierRegistrationAgency: https://ror.org/038sjwq14
+        identifierOwner: https://ror.org/02stey378
+        identifierServicePoint: 20000003
     AccessBlock:
       type: object
       required: ["type", ]

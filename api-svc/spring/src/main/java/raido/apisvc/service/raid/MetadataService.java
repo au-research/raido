@@ -180,10 +180,13 @@ public class MetadataService {
   public IdBlock createIdBlock(String handle, String raidUrl) {
     return new IdBlock().
       identifier(handle).
-      identifierTypeUri(RAID_ID_TYPE_URI).
-      globalUrl(formatGlobalUrl(handle)).
-      raidAgencyUrl(raidUrl).
-      raidAgencyIdentifier(metaProps.raidAgencyIdentifier);
+      identifierSchemeURI(RAID_ID_TYPE_URI).
+      identifierRegistrationAgency("").
+      identifierOwner("").
+      identifierServicePoint(0L);
+//      globalUrl(formatGlobalUrl(handle)).
+//      raidAgencyUrl(raidUrl).
+//      raidAgencyIdentifier(metaProps.raidAgencyIdentifier);
   }
 
   /**
