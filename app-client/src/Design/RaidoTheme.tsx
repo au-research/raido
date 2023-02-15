@@ -18,6 +18,8 @@ export const Color = {
   // colors taken from the legacy raid impl
   raidDarkBlue: "#5594d8",
   raidLightBlue: "#5b9bd4",
+
+  orcidGreen: "#A6CE39",
 }
 
 /** use lightColor if light mode, otherwise use darkColor */

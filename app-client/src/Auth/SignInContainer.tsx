@@ -1,5 +1,5 @@
 import React from "react";
-import { navBrowserByAssign, serverLocationUrl } from "Util/WindowUtil";
+import { navBrowserByAssign } from "Util/WindowUtil";
 import { ContainerCard } from "Design/ContainerCard";
 import { PrimaryButton } from "Component/AppButton";
 import { RaidoOAuthState } from "Shared/ApiTypes";
@@ -10,6 +10,8 @@ import { oauthCodeGrantFlow } from "Auth/Constant";
 import { Config } from "Config";
 import { Typography } from "@mui/material";
 import { Google } from "@mui/icons-material";
+import { OrcidSvgIcon } from "Component/Icon";
+import { Color } from "Design/RaidoTheme";
 
 const googleAction = "google-direct";
 const aafAction = "aaf-direct";
@@ -120,8 +122,12 @@ export function SignInContainer(){
       >
         AAF
       </PrimaryButton>
-      <PrimaryButton  
-        isLoading={signInContext.action === orcidAction} 
+      <PrimaryButton
+        startIcon={
+          //letterColor={Color.lotion} circleColor={Color.orcidGreen}/>
+          <OrcidSvgIcon letterColor={Color.raidDarkBlue}/>
+        }
+        isLoading={signInContext.action === orcidAction}
         disabled={disabled} onClick={orcidSignIn}
       >
         ORCiD
