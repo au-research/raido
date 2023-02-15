@@ -41,7 +41,7 @@ import {
   createLeadContributor,
   createLeadOrganisation
 } from "Page/UpgradeLegacySchemaForm";
-import { OrcidField, orcidPrefixUrl } from "Component/OrcidField";
+import { OrcidField } from "Component/OrcidField";
 
 const pageUrl = "/mint-raid-v2";
 
@@ -220,7 +220,7 @@ function MintRaidContainer({servicePointId, onCreate}: {
             setIsContribValid(e.valid);
             setFormData({
               ...formData,
-              leadContributor: orcidPrefixUrl + e.value
+              leadContributor: e.value
             });
           }}
           label="Lead contributor"

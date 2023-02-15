@@ -28,7 +28,7 @@ export function OrcidField({
     React.useState<HTMLButtonElement | null>(null);
 
   const popoverOpen = Boolean(anchorEl);
-  const popoverId = popoverOpen ? 'simple-popover' : undefined;
+  const popoverId = popoverOpen ? id+'-orcid-popover' : undefined;
   const onOrcidIconClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -40,6 +40,7 @@ export function OrcidField({
 
   const textField = <TextField id={id}
     inputProps={{
+      //make the text field line up with the static url a bit better
       style:{paddingTop: ".5em", paddingLeft: ".25em"}
     }}
     variant="filled" autoCorrect="off" autoCapitalize="on"
@@ -52,12 +53,13 @@ export function OrcidField({
       setFieldValue(filteredValue);
 
       const orcidProblem = findOrcidProblem(filteredValue);
+      const orcidUrl = orcidPrefixUrl + filteredValue;
       if( orcidProblem ){
         onValueChange({
-          valid: false, value: filteredValue, problem: orcidProblem });
+          valid: false, value: orcidUrl, problem: orcidProblem });
       }
       else {
-        onValueChange({valid:true, value: filteredValue});
+        onValueChange({valid:true, value: orcidUrl});
       }
     }}
     error={!!orcidProblem}
@@ -89,7 +91,7 @@ export function OrcidField({
     {textField}
     <IconButton onClick={onOrcidIconClick} disabled={disabled} 
       style={{
-        /* This is what pushed the icon over to the right hand side. */
+        /* This is what pushes the icon over to the right hand side. */
         marginLeft: "auto",
         /* dodgy hack to make the icon line up with other input widgets like
         the calendar and dropdown icon.  It makes the button be "oblong shaped"
@@ -111,7 +113,7 @@ export function OrcidField({
   </fieldset>
 }
 
-export const orcidPrefixUrl = "https://orcid.org/";
+const orcidPrefixUrl = "https://orcid.org/";
 
 function insertString(value: string, insertedValue: string, insertedPosition: number): string {
   

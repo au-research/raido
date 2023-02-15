@@ -21,7 +21,7 @@ import { ValidationFailureDisplay } from "Component/Util";
 import React, { useState } from "react";
 import { useAuthApi } from "Api/AuthApi";
 import { findOrganisationIdProblem } from "Page/MintRaidPage";
-import { OrcidField, orcidPrefixUrl } from "Component/OrcidField";
+import { OrcidField } from "Component/OrcidField";
 
 function isDifferent(formData: FormData, original: FormData){
   return formData.leadContributor !== original.leadContributor;
@@ -133,7 +133,7 @@ export function UpgradeLegacySchemaForm({onUpgradeSuccess, raid, metadata}:{
             setIsContribValid(e.valid);
             setFormData({
               ...formData,
-              leadContributor: orcidPrefixUrl + e.value
+              leadContributor: e.value
             });
           }}
           label="Lead contributor"
