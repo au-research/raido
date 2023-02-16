@@ -199,7 +199,7 @@ const demoConfig: EnvironmentConfig = {
   },
   orcid: {
     clientId: "APP-207226CSNVZ1ZSQM",
-    authorizeUrl: "https://orcid.org/oauth/authorize",
+    authorizeUrl: "https://sandbox.orcid.org/oauth/authorize",
     authnScope: "openid",
   },
   authApiQuery: {
