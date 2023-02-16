@@ -130,7 +130,9 @@ export function SignInContainer(){
         isLoading={signInContext.action === orcidAction}
         disabled={disabled} onClick={orcidSignIn}
       >
-        ORCiD
+        {/* I'm confused what the case should be 
+        https://info.orcid.org/brand-guidelines/*/}
+        ORCID
       </PrimaryButton>
     </div>
   </ContainerCard>
