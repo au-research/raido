@@ -198,7 +198,7 @@ const demoConfig: EnvironmentConfig = {
     authnScope: "openid email profile",
   },
   orcid: {
-    clientId: "APP-IZBIZ6O7XH9RFG0X",
+    clientId: "APP-207226CSNVZ1ZSQM",
     authorizeUrl: "https://orcid.org/oauth/authorize",
     authnScope: "openid",
   },
