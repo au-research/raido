@@ -2,6 +2,8 @@ import { IconButton, Popover, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { TextSpan } from "Component/TextSpan";
 import { OrcidSvgIcon } from "Component/Icon";
+import { OpenInNew, PersonSearch } from "@mui/icons-material";
+import { NewWindowLink } from "Component/ExternalLink";
 
 /* I'm confused what the case should be 
 https://info.orcid.org/brand-guidelines/ */
@@ -12,11 +14,6 @@ export type ValueChange =
   { valid: false, value: string, problem: string}
 ;
 
-/*
-At the moment, when you use this on a narrow screen, it's the textfield that
-gets shorter - should be the static "url".  Probably ought to just make the 
-static part responsively disappear when screen gets narrow. 
- */
 export function OrcidField({
   id, label, value, onValueChange, disabled, 
 }:{
@@ -90,9 +87,18 @@ export function OrcidField({
     }}>
       {orcidProblem ? label + " - " + orcidProblem : label}
     </legend>
-    
-    <TextSpan>{orcidPrefixUrl}</TextSpan>
+
+    <TextSpan
+      // make the static text disappear on small devices
+      sx={{ display: { xs: 'none', sm: 'block' } }}
+    >{orcidPrefixUrl}</TextSpan>
     {textField}
+    { !orcidProblem && 
+      <NewWindowLink href={`${orcidPrefixUrl}/${fieldValue}`}>
+        <PersonSearch/>
+      </NewWindowLink>
+    }
+    {/* <PersonSearch/> <OpenInNew /> */}
     <IconButton onClick={onOrcidIconClick} disabled={disabled} 
       style={{
         /* This is what pushes the icon over to the right hand side. */
