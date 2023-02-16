@@ -142,10 +142,10 @@ function formatStateValue(state: RaidoOAuthState):string{
   let base64 = encodeBase64(JSON.stringify(state));
   /* the TwitterHandler was dying when the base64 encoding padded with `==`.
   The request never reached the lambda, AWS was returning a 400 error 
-  without invoking it.  At a guess, the AWS funtionUrl/lambda infra is trying 
+  without invoking it.  At a guess, the AWS functionUrl/lambda infra is trying 
   to parse out the query string parameters to pass in the Lambda context and 
   failing because those `=` chars were causing it to choke.  
-  We don't need to "un-uriencode" on the server because we use those lambda 
+  We don't need to "un-uriEncode" on the server because we use those lambda 
   context params and they've already been decoded for us by AWS.
   I never saw a problem from the other IdProviders, but I decided to use this 
   method to encode their state anyway - it makes sense. */
