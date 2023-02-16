@@ -12,6 +12,7 @@ import { Typography } from "@mui/material";
 import { Google } from "@mui/icons-material";
 import { AustraliaSvgIcon, OrcidSvgIcon } from "Component/Icon";
 import { Color } from "Design/RaidoTheme";
+import { orcidBrand } from "Component/OrcidField";
 
 const googleAction = "google-direct";
 const aafAction = "aaf-direct";
@@ -130,9 +131,7 @@ export function SignInContainer(){
         isLoading={signInContext.action === orcidAction}
         disabled={disabled} onClick={orcidSignIn}
       >
-        {/* I'm confused what the case should be 
-        https://info.orcid.org/brand-guidelines/*/}
-        ORCID
+        {orcidBrand}
       </PrimaryButton>
     </div>
   </ContainerCard>

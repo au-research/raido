@@ -30,6 +30,7 @@ import { navBrowserBack } from "Util/WindowUtil";
 import { InfoField, InfoFieldList } from "Component/InfoField";
 import { mapClientIdToIdProvider } from "Component/IdProviderDisplay";
 import { NewWindowLink } from "Component/ExternalLink";
+import { orcidBrand } from "Component/OrcidField";
 
 const log = console;
 
@@ -204,7 +205,7 @@ function SubjectField({request, id, label}:{
   label: string,
 }){
   const idp = mapClientIdToIdProvider(request.clientId);
-  if( idp === "ORCiD" ){
+  if( idp === orcidBrand ){
     return <InfoField id={id} label={label}
       value={
       <NewWindowLink href={`https://orcid.org/${request.subject}`}>

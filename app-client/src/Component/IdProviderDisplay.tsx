@@ -3,8 +3,9 @@ import { TypographyProps } from "@mui/material/Typography";
 import { TextSpan } from "Component/TextSpan";
 import React from "react";
 import { Config } from "Config";
+import { orcidBrand } from "Component/OrcidField";
 
-export type IdProvider = "AAF" | "Google" | "ORCiD" | "Raido API" | "Unknown";
+export type IdProvider = "AAF" | "Google" | typeof orcidBrand | "Raido API" | "Unknown";
 
 export function IdProviderDisplay({payload, ...props}: {
   payload: AuthzTokenPayload
@@ -31,7 +32,7 @@ export function mapClientIdToIdProvider(clientId: string): IdProvider{
     return "Google";
   }
   else if( clientId === Config.orcid.clientId ){
-    return "ORCiD";
+    return orcidBrand;
   }
   else if( clientId === "RAIDO_API" ){
     return "Raido API";

@@ -3,6 +3,10 @@ import React, { useState } from "react";
 import { TextSpan } from "Component/TextSpan";
 import { OrcidSvgIcon } from "Component/Icon";
 
+/* I'm confused what the case should be 
+https://info.orcid.org/brand-guidelines/ */
+export const orcidBrand = "ORCID";
+  
 export type ValueChange =
   { valid: true, value: string} |
   { valid: false, value: string, problem: string}
