@@ -10,7 +10,7 @@ import { oauthCodeGrantFlow } from "Auth/Constant";
 import { Config } from "Config";
 import { Typography } from "@mui/material";
 import { Google } from "@mui/icons-material";
-import { OrcidSvgIcon } from "Component/Icon";
+import { AustraliaSvgIcon, OrcidSvgIcon } from "Component/Icon";
 import { Color } from "Design/RaidoTheme";
 
 const googleAction = "google-direct";
@@ -116,7 +116,7 @@ export function SignInContainer(){
       >
         Google
       </PrimaryButton>
-      <PrimaryButton  
+      <PrimaryButton startIcon={<AustraliaSvgIcon/>}
         isLoading={signInContext.action === aafAction} 
         disabled={disabled} onClick={aafSignIn}
       >
