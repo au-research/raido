@@ -83,7 +83,7 @@ function RaidCurrentUser(){
       servicePointId: user.servicePointId }));
   return <ContainerCard title={"Signed-in user"}>
     <InfoFieldList>
-      <InfoField id={"email"} label={"Email"} value={user.email}/>
+      <InfoField id={"email"} label={"Identity"} value={user.email}/>
       <InfoField id={"idProvider"} label={"ID provider"}
         value={<IdProviderDisplay payload={user}/> }/>
       <InfoField id={"servicePoint"} label={"Service point"} 
