@@ -1,13 +1,21 @@
 package raido.apisvc.spring.config.environment;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import raido.apisvc.util.Guard;
+import raido.apisvc.util.Log;
 
+import java.util.Arrays;
 import java.util.List;
+
+import static raido.apisvc.util.Log.to;
+import static raido.apisvc.util.StringUtil.areEqual;
 
 @Component
 public class RaidoAuthnProps {
-
+  private static final Log log = to(RaidoAuthnProps.class);
+  
   /** This the location of the endpoint where Raido does OIDC responses.
    It's the Raido location where the IDP redirects the browser to after they 
    user has approved authentication.
@@ -22,9 +30,36 @@ public class RaidoAuthnProps {
    It's the place that the /idpresponse url  will redirect the client to after 
    successful authentication. 
    */
-  @Value("${RaidoAuthn.allowedRedirectUrls:" +
-    "['https://demo.raido-infra.com', 'http://localhost:7080']}")
-  public List<String> allowedClientRedirectUrls;
+  @Value("${RaidoAuthn.allowedRedirectUris:" +
+    "https://demo.raido-infra.com/,http://localhost:7080/,https://localhost:6080/}")
+  public String allowedClientRedirectUriString;
 
+  private List<String> allowedClientRedirectUris; 
+  @PostConstruct
+  public void init(){
+    this.allowedClientRedirectUris = Arrays.asList(
+      allowedClientRedirectUriString.split(",") );
+    log.with("allowedClientRedirectUris", allowedClientRedirectUris).
+      with("uriCount", allowedClientRedirectUris.size()).
+      info("RaidoAuthnProps");
+    allowedClientRedirectUris.forEach(i->{
+      Guard.isTrue( 
+        "must start with http or https: %s".formatted(i), 
+        i.toLowerCase().startsWith("http") );
+      Guard.isTrue( 
+        "must end with a slash: %s".formatted(i), 
+        i.toLowerCase().endsWith("/") );
+      Guard.isTrue( 
+        "allowed urls should be lowercase: %s".formatted(i), 
+        areEqual(i.toLowerCase(), i) );
+      Guard.isTrue( 
+        "allowed urls should be not have whitespace: %s".formatted(i), 
+        areEqual(i.trim(), i) );
+      
+    });
+  }
 
+  public List<String> getAllowedClientRedirectUris() {
+    return allowedClientRedirectUris;
+  }
 }
