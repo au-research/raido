@@ -45,11 +45,13 @@ DB migrations are in
 * `checkS3Files`
   * run through files checking for bad data, output errors to file 
 * `importS3Files`
-  * import all data into tables
+  * import all data into `raid_v1_import` tables
   * the "import" is a "merge" operation, so it's re-runnable - it'll just 
   overwrite rows (where row is identified by the Handle primary key)
 * `importAllRaids`
   * imports all raids for specifically chosen service points
+    * from `raid_v1_import.raid` table, into the `raido.raid` table by 
+      calling the `migrate` endpoint
   * before running this you need to configure the "API import key", see 
     section below 
   * takes about 2 - 3 minutes to run on local dev machine (16K RDM raids) 
