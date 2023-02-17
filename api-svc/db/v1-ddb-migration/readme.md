@@ -70,8 +70,6 @@ DB migrations are in
 Manually imported from /au-research/raido-aws-private #8ca84286.  
 Look there for earlier git history.
 
-Imported because I plan to use the v1 schema directly at first.  Not sure when
-I'm going to do the formal "v1-schema" to "v2-schema" migration.
 
 ----
 
