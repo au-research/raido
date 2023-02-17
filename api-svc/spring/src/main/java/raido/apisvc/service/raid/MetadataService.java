@@ -12,6 +12,7 @@ import raido.apisvc.spring.config.environment.MetadataProps;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.Metaschema;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
+import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
 import raido.idl.raidv2.model.AccessBlock;
 import raido.idl.raidv2.model.AccessType;
 import raido.idl.raidv2.model.IdBlock;
@@ -177,16 +178,13 @@ public class MetadataService {
     return "%s/%s".formatted(metaProps.globalUrlPrefix, handle);
   }
 
-  public IdBlock createIdBlock(String handle, String raidUrl) {
+  public IdBlock createIdBlock(final String handle, final ServicePointRecord servicePointRecord) {
     return new IdBlock().
       identifier(handle).
       identifierSchemeURI(RAID_ID_TYPE_URI).
-      identifierRegistrationAgency("").
-      identifierOwner("").
-      identifierServicePoint(0L);
-//      globalUrl(formatGlobalUrl(handle)).
-//      raidAgencyUrl(raidUrl).
-//      raidAgencyIdentifier(metaProps.raidAgencyIdentifier);
+      identifierRegistrationAgency(metaProps.raidAgencyIdentifier).
+      identifierOwner(servicePointRecord.getIdentifierOwner()).
+      identifierServicePoint(servicePointRecord.getId());
   }
 
   /**

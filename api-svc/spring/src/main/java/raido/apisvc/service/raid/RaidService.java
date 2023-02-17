@@ -3,6 +3,7 @@ package raido.apisvc.service.raid;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import raido.apisvc.factory.RaidRecordFactory;
 import org.jooq.DSLContext;
 import org.jooq.JSONB;
 import org.jooq.exception.NoDataFoundException;
@@ -10,8 +11,11 @@ import org.jooq.impl.DSL;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
+import raido.apisvc.exception.InvalidJsonException;
 import raido.apisvc.exception.ResourceNotFoundException;
+import raido.apisvc.exception.UnknownServicePointException;
 import raido.apisvc.repository.RaidRepository;
+import raido.apisvc.repository.ServicePointRepository;
 import raido.apisvc.service.apids.ApidsService;
 import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
 import raido.apisvc.util.Log;
@@ -54,25 +58,32 @@ public class RaidService {
   private final RaidoSchemaV1ValidationService validSvc;
   private  final TransactionTemplate tx;
   private final RaidRepository raidRepository;
+  private final ServicePointRepository servicePointRepository;
+
+  private final RaidRecordFactory raidRecordFactory;
+
+  private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
   public RaidService(
-    DSLContext db,
-    ApidsService apidsSvc,
-    MetadataService metaSvc,
-    RaidoSchemaV1ValidationService validSvc,
-    TransactionTemplate tx,
-    RaidRepository raidRepository) {
+    final DSLContext db,
+    final ApidsService apidsSvc,
+    final MetadataService metaSvc,
+    final RaidoSchemaV1ValidationService validSvc,
+    final TransactionTemplate tx,
+    final RaidRepository raidRepository,
+    final ServicePointRepository servicePointRepository,
+    final RaidRecordFactory raidRecordFactory) {
     this.db = db;
     this.apidsSvc = apidsSvc;
     this.metaSvc = metaSvc;
     this.validSvc = validSvc;
     this.tx = tx;
     this.raidRepository = raidRepository;
+    this.servicePointRepository = servicePointRepository;
+    this.raidRecordFactory = raidRecordFactory;
   }
 
   public List<RaidSchemaV1> listRaidsV1(final Long servicePointId) {
-    final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-
     return raidRepository.findAllByServicePointId(servicePointId).stream().
       map(raid -> {
         try {
@@ -88,16 +99,6 @@ public class RaidService {
     LocalDate startDate,
     boolean confidential
   ) { }
-
-  public DenormalisedRaidData getDenormalisedRaidData(
-    RaidSchemaV1 metadata
-  ){
-    return new DenormalisedRaidData(
-      getPrimaryTitle(metadata.getTitles()).getTitle(),
-      metadata.getDates().getStartDate(),
-      metadata.getAccess().getType() != AccessType.OPEN
-    );
-  }
 
   /** Expects the passed metadata is valid. */
   public DenormalisedRaidData getDenormalisedRaidData(
@@ -137,7 +138,11 @@ public class RaidService {
     String handle = response.identifier.handle;
     String raidUrl = response.identifier.property.value;
 
-    metadata.setId(metaSvc.createIdBlock(handle, raidUrl));
+    final var servicePointRecord =
+      servicePointRepository.findById(servicePointId)
+        .orElseThrow(() -> new UnknownServicePointException(servicePointId));
+
+    metadata.setId(metaSvc.createIdBlock(handle, servicePointRecord));
 
     // validation failure possible
     String metadataAsJson = metaSvc.mapToJson(metadata);
@@ -166,59 +171,39 @@ public class RaidService {
   ) {
     /* this is the part where we want to make sure no TX is help open.
      * Maybe *this* should be marked tx.prop=never? */
-//    var apidsResponse = apidsSvc.mintApidsHandleContentPrefix(
-//      metaSvc::formatRaidoLandingPageUrl);
-//    String handle = apidsResponse.identifier.handle;
-//    String raidUrl = apidsResponse.identifier.property.value;
-//
-//    request.setId(metaSvc.createIdBlock(handle, raidUrl));
-//
-//    // validation failure possible
-//    var raidData = getDenormalisedRaidData(request);
-//
-//    final ServicePointRecord servicePointRecord = servicePointRepository.findById(servicePoint);
-//
-//    raidRecordFactory.create(request, apidsResponse, servicePointRecord);
-//
-//    raidRepository.save(handle,
-//      request.getMintRequest().getServicePointId(),
-//      raidUrl,
-//      apidsResponse.identifier.property.index,
-//      raidData.primaryTitle(),
-//      request.getMetadata(),
-//      mapApi2Db(request.getMetadata().getMetadataSchema()),
-//      raidData.startDate(),
-//      raidData.confidential);
-//
-//    return handle;
+    final var servicePointRecord =
+      servicePointRepository.findById(servicePoint).orElseThrow(() -> new UnknownServicePointException(servicePoint));
 
-    return null;
+    final var apidsResponse = apidsSvc.mintApidsHandleContentPrefix(
+      metaSvc::formatRaidoLandingPageUrl);
+
+    String handle = apidsResponse.identifier.handle;
+    request.setId(metaSvc.createIdBlock(handle, servicePointRecord));
+
+    final var raidRecord = raidRecordFactory.create(request, apidsResponse, servicePointRecord);
+
+    raidRepository.insert(raidRecord);
+
+    return handle;
   }
 
   public RaidSchemaV1 updateRaidV1(
-    final UpdateRaidV1Request metadata
+    final UpdateRaidV1Request raid
   ) {
-//    final var handle = metadata.getId().getIdentifier();
-//
-//    raidRepository.findByHandle(handle)
-//      .orElseThrow(() -> new ResourceNotFoundException(handle));
-//
-//    // validation failure possible
-//    final var raidData = getDenormalisedRaidData(metadata);
-//
-//    raidRepository.update(handle,
-//      raidData.primaryTitle(),
-//      metadata,
-//      mapApi2Db(metadata.getMetadataSchema()),
-//      raidData.startDate(),
-//      raidData.confidential);
-//
-//    final var raid = new RaidSchemaV1();
-//    raid.mintRequest(mintRequest);
-//    raid.metadata(metadata);
-//
-//    return raid;
-    return null;
+    final var handle = raid.getId().getIdentifier();
+
+    final var existing = raidRepository.findByHandle(handle)
+      .orElseThrow(() -> new ResourceNotFoundException(handle));
+
+    final var raidRecord = raidRecordFactory.merge(raid, existing);
+
+    raidRepository.update(raidRecord);
+
+    try {
+      return objectMapper.readValue(raidRecord.getMetadata().data(), RaidSchemaV1.class);
+    } catch (JsonProcessingException e) {
+      throw new InvalidJsonException();
+    }
   }
 
   @Transactional(propagation = NEVER)
@@ -233,7 +218,11 @@ public class RaidService {
     String handle = response.identifier.handle;
     String raidUrl = response.identifier.property.value;
 
-    metadata.setId(metaSvc.createIdBlock(handle, raidUrl));
+    final var servicePointRecord =
+      servicePointRepository.findById(servicePointId)
+        .orElseThrow(() -> new UnknownServicePointException(servicePointId));
+
+    metadata.setId(metaSvc.createIdBlock(handle, servicePointRecord));
 
     // validation failure possible
     String metadataAsJson = metaSvc.mapToJson(metadata);
@@ -292,18 +281,14 @@ public class RaidService {
       createDate(local2Offset(data.raid().getDateCreated())).
       url(data.raid().getUrl()).
       metadata(data.raid().getMetadata().data());
-
-
   }
 
   public RaidSchemaV1 readRaidV1(String handle){
     final var raid = raidRepository.findByHandle(handle).
       orElseThrow(() -> new ResourceNotFoundException(handle));
 
-    final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-
     try {
-      return objectMapper.readValue(raid.raid().getMetadata().data(), RaidSchemaV1.class);
+      return objectMapper.readValue(raid.getMetadata().data(), RaidSchemaV1.class);
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     }
@@ -324,10 +309,12 @@ public class RaidService {
     String handle = metadata.getId().getIdentifier();
     String raidUrl = metaSvc.formatRaidoLandingPageUrl(handle);
 
-//    metadata.getId().setRaidAgencyUrl(raidUrl);
-//    metadata.getId().setRaidAgencyIdentifier(
-//      metaSvc.getMetaProps().raidAgencyIdentifier );
-    
+    final var servicePointRecord =
+      servicePointRepository.findById(servicePointId)
+        .orElseThrow(() -> new UnknownServicePointException(servicePointId));
+
+    metadata.setId(metaSvc.createIdBlock(handle, servicePointRecord));
+
     // validation failure possible
     String metadataAsJson = metaSvc.mapToJson(metadata);
 

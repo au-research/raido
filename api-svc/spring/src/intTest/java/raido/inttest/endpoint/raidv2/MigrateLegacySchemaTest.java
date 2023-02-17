@@ -45,7 +45,7 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
       metadataSchema(LEGACYMETADATASCHEMAV1).
       id(new IdBlock().
         identifier(handle).
-        identifierTypeUri(RAID_ID_TYPE_URI).
+        identifierSchemeURI(RAID_ID_TYPE_URI).
         globalUrl("https://something.example.com")).
       descriptions(List.of(new DescriptionBlock().
         type(DescriptionType.PRIMARY_DESCRIPTION).

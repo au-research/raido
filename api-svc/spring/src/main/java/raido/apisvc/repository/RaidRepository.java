@@ -21,40 +21,12 @@ public class RaidRepository {
   private final DSLContext dslContext;
   private final TransactionTemplate transactionTemplate;
 
-  private final MetadataService metadataService;
-
   public RaidRepository(final DSLContext dslContext, final TransactionTemplate transactionTemplate, final MetadataService metadataService) {
     this.dslContext = dslContext;
     this.transactionTemplate = transactionTemplate;
-    this.metadataService = metadataService;
   }
 
-//  public void save(final String handle, final Long servicePointId, final String raidUrl, final Integer urlIndex,
-//                   final String primaryTitle, final MetadataSchemaV1 metadata, final Metaschema metaschema,
-//                   final LocalDate startDate, final boolean isConfidential) {
-//
-//    final String metadataJson;
-//    try {
-//      metadataJson = metadataService.mapToJson(metadata);
-//    } catch (ValidationFailureException e) {
-//      throw new ValidationException(e.getFailures());
-//    }
-//
-//    transactionTemplate.executeWithoutResult((status) -> dslContext.insertInto(RAID).
-//      set(RAID.HANDLE, handle).
-//      set(RAID.SERVICE_POINT_ID, servicePointId).
-//      set(RAID.URL, raidUrl).
-//      set(RAID.URL_INDEX, urlIndex).
-//      set(RAID.PRIMARY_TITLE, primaryTitle).
-//      set(RAID.METADATA, JSONB.valueOf(metadataJson)).
-//      set(RAID.METADATA_SCHEMA, metaschema).
-//      set(RAID.START_DATE, startDate).
-//      set(RAID.DATE_CREATED, LocalDateTime.now()).
-//      set(RAID.CONFIDENTIAL, isConfidential).
-//      execute());
-//  }
-
-  public void save(final RaidRecord raid) {
+  public void insert(final RaidRecord raid) {
     transactionTemplate.executeWithoutResult((status) -> dslContext.insertInto(RAID).
       set(RAID.HANDLE, raid.getHandle()).
       set(RAID.SERVICE_POINT_ID, raid.getServicePointId()).
@@ -69,36 +41,33 @@ public class RaidRepository {
       execute());
   }
 
-//  public void update(final String handle,
-//                   final String primaryTitle, final MetadataSchemaV1 metadata, final Metaschema metaschema,
-//                   final LocalDate startDate, final boolean isConfidential) {
-//
-//    final String metadataJson;
-//    try {
-//      metadataJson = metadataService.mapToJson(metadata);
-//    } catch (ValidationFailureException e) {
-//      throw new ValidationException(e.getFailures());
-//    }
-//
-//    transactionTemplate.executeWithoutResult((status) -> dslContext.update(RAID).
-//      set(RAID.PRIMARY_TITLE, primaryTitle).
-//      set(RAID.METADATA, JSONB.valueOf(metadataJson)).
-//      set(RAID.METADATA_SCHEMA, metaschema).
-//      set(RAID.START_DATE, startDate).
-//      set(RAID.DATE_CREATED, LocalDateTime.now()).
-//      set(RAID.CONFIDENTIAL, isConfidential).
-//      where(RAID.HANDLE.eq(handle)).
-//      execute());
-//  }
+  public void update(final RaidRecord raidRecord) {
+    transactionTemplate.executeWithoutResult((status) -> dslContext.update(RAID)
+      .set(RAID.PRIMARY_TITLE, raidRecord.getPrimaryTitle())
+      .set(RAID.METADATA, raidRecord.getMetadata())
+      .set(RAID.METADATA_SCHEMA, raidRecord.getMetadataSchema())
+      .set(RAID.START_DATE, raidRecord.getStartDate())
+      .set(RAID.CONFIDENTIAL, raidRecord.getConfidential())
+      .where(RAID.HANDLE.eq(raidRecord.getHandle()))
+      .execute());
+      }
 
-  public Optional<Raid> findByHandle(final String handle) {
-    return dslContext.select(RAID.fields()).
-      select(SERVICE_POINT.fields()).
-      from(RAID).join(SERVICE_POINT).onKey().
-      where(RAID.HANDLE.eq(handle)).
-      fetchOptional(record -> new Raid(
-        record.into(RaidRecord.class), record.into(ServicePointRecord.class)
-      ));
+  public Optional<RaidRecord> findByHandle(final String handle) {
+    return dslContext.select(RAID.fields())
+      .from(RAID)
+      .where(RAID.HANDLE.eq(handle)).
+      fetchOptional(record -> new RaidRecord()
+        .setHandle(RAID.HANDLE.getValue(record))
+        .setServicePointId(RAID.SERVICE_POINT_ID.getValue(record))
+        .setUrl(RAID.URL.getValue(record))
+        .setUrlIndex(RAID.URL_INDEX.getValue(record))
+        .setMetadataSchema(RAID.METADATA_SCHEMA.getValue(record))
+        .setMetadata(RAID.METADATA.getValue(record))
+        .setDateCreated(RAID.DATE_CREATED.getValue(record))
+        .setStartDate(RAID.START_DATE.getValue(record))
+        .setConfidential(RAID.CONFIDENTIAL.getValue(record))
+        .setPrimaryTitle(RAID.PRIMARY_TITLE.getValue(record))
+      );
   }
 
   public List<Raid> findAllByServicePointId(final Long servicePointId) {

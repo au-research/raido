@@ -36,6 +36,21 @@ components:
           description: >
             The Service Point that requested the RAiD. Analogous to a DataCite ‘Repository’. ‘Owners’ can have multiple
             Service Points, and SPs do not need to be legal entities.
+        globalUrl:
+          type: string
+          description: >
+            The URL for the raid via the CNRI handle system, e.g 
+            https://hdl.handle.net/xxx.yyy/zzz
+        raidAgencyUrl:
+          type: string
+          description: >
+            The URL for the raid via the minting raid agency system, e.g 
+            https://demo.raido-infra.com/handle/10378.1/1695863
+        raidAgencyIdentifier:
+          type: string
+          description: >
+            Identifier of the raid agency system that controls the raid, e.g
+            demo.raido-infra.com
       example:
         identifier: https://raid.org/xxx.yyy/zzz
         identifierSchemeUri: https://raid.org

@@ -5,12 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletRegistration;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.FormHttpMessageConverter;
@@ -22,10 +17,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import raido.apisvc.spring.RedactingExceptionResolver;
 import raido.apisvc.spring.RequestLoggingFilter;
 import raido.apisvc.util.Log;
 
@@ -42,7 +35,10 @@ import static raido.apisvc.util.Log.to;
   // spring bootup and config
   "raido.apisvc.spring", 
   // services and endpoints
-  "raido.apisvc.service", "raido.apisvc.endpoint", "raido.apisvc.repository"
+  "raido.apisvc.service",
+  "raido.apisvc.endpoint",
+  "raido.apisvc.repository",
+  "raido.apisvc.factory"
 })
 @PropertySources({
   /* This is NOT for you to put an `env.properties` file with credentials in the 

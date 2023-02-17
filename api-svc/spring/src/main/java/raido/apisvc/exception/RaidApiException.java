@@ -6,10 +6,9 @@ public abstract class RaidApiException extends RuntimeException {
   public RaidApiException() {
     super();
   }
-
   public String getType() {
     return String.format(typeFormat, this.getClass().getSimpleName());
-  };
+  }
 
   public abstract String getTitle();
 
