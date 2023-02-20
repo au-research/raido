@@ -312,7 +312,7 @@ export function findOrganisationIdProblem(id: string): string|undefined{
   return undefined;
 }
 
-function MintRaidHelp(){
+export function MintRaidHelp(){
   return <HelpPopover content={
     <Stack spacing={1}>
       <ul>

@@ -19,8 +19,6 @@ import {
 } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
-import { Stack } from "@mui/material";
-import { HelpChip, HelpPopover } from "Component/HelpPopover";
 import { RqQuery } from "Util/ReactQueryUtil";
 import { InfoField, InfoFieldList } from "Component/InfoField";
 import Divider from "@mui/material/Divider";
@@ -37,6 +35,7 @@ import {
 import { EditRaidoV1SchemaForm } from "Page/EditRaidoV1SchemaForm";
 import { SmallPageSpinner } from "Component/SmallPageSpinner";
 import { UpgradeLegacySchemaForm } from "Page/UpgradeLegacySchemaForm";
+import { MintRaidHelp } from "Page/MintRaidPage";
 
 const log = console;
 
@@ -107,7 +106,11 @@ function EditRaidContainer({handle}: {
   );
 
   return <>
-    <ContainerCard title={`Edit RAiD`} action={<EditRaidHelp/>}>
+    <ContainerCard title={`Edit RAiD`} action={
+      /* bit dodgy, will have to re-factor when we want different help between
+      the edit page and the upgrade page. */
+      <MintRaidHelp/>}
+    >
       <CompactErrorPanel error={readQuery.error}/>
       <RaidInfoList handle={handle} servicePointName={spQuery.data?.name} />
       <Divider variant={"middle"}
@@ -173,16 +176,4 @@ function RaidInfoList({handle, servicePointName}: {
       value={servicePointName ?? ""}
     />
   </InfoFieldList>;
-}
-
-function EditRaidHelp(){
-  return <HelpPopover content={
-    <Stack spacing={1}>
-      <ul>
-        <li><HelpChip label={"XXX"}/>
-          Words.
-        </li>
-      </ul>
-    </Stack>
-  }/>;
 }
