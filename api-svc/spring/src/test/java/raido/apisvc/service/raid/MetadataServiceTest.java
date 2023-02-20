@@ -18,20 +18,27 @@ class MetadataServiceTest {
     final var identifierRegistrationAgency = "registration-agency";
     final var handle = "test-handle";
     final var identifierSchemeUri = "https://raid.org";
+    final var raidUrl = "raid-url";
+    final var globalUrlPrefix = "globalUrlPrefix";
 
     metadataProps.raidAgencyIdentifier = identifierRegistrationAgency;
+    metadataProps.globalUrlPrefix = globalUrlPrefix;
 
     final var servicePointRecord = new ServicePointRecord()
       .setId(servicePointId)
       .setIdentifierOwner(identifierOwner);
 
-    final var idBlock = metadataService.createIdBlock(handle, servicePointRecord);
+    final var idBlock = metadataService.createIdBlock(handle, servicePointRecord, raidUrl);
 
     assertThat(idBlock.getIdentifier(), is(handle));
     assertThat(idBlock.getIdentifierSchemeURI(), is(identifierSchemeUri));
     assertThat(idBlock.getIdentifierServicePoint(), is(servicePointId));
     assertThat(idBlock.getIdentifierOwner(), is(identifierOwner));
     assertThat(idBlock.getIdentifierRegistrationAgency(), is(identifierRegistrationAgency));
+
+    assertThat(idBlock.getGlobalUrl(), is("globalUrlPrefix/test-handle"));
+    assertThat(idBlock.getRaidAgencyUrl(), is(raidUrl));
+    assertThat(idBlock.getRaidAgencyIdentifier(), is(identifierRegistrationAgency));
 
   }
 }

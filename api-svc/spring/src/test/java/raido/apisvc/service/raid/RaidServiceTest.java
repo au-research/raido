@@ -93,7 +93,7 @@ class RaidServiceTest {
 
     when(servicePointRepository.findById(servicePointId)).thenReturn(Optional.of(servicePointRecord));
     when(apidsService.mintApidsHandleContentPrefix(any(Function.class))).thenReturn(apidsResponse);
-    when(metadataService.createIdBlock(handle, servicePointRecord)).thenReturn(idBlock);
+    when(metadataService.createIdBlock(handle, servicePointRecord, raidUrl)).thenReturn(idBlock);
     when(raidRecordFactory.create(createRaidRequest, apidsResponse, servicePointRecord)).thenReturn(raidRecord);
 
     raidService.mintRaidSchemaV1(createRaidRequest, servicePointId);

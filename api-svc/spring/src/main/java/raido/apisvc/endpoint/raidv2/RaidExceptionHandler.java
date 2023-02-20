@@ -87,12 +87,12 @@ public class RaidExceptionHandler {
       .body(body);
   }
 
-  @ExceptionHandler(Exception.class)
-  public ResponseEntity<Void> defaultHandler(HttpServletRequest request, Exception e) {
-    return ResponseEntity
-      .internalServerError()
-      .build();
-  }
+//  @ExceptionHandler(Exception.class)
+//  public ResponseEntity<Void> defaultHandler(HttpServletRequest request, Exception e) {
+//    return ResponseEntity
+//      .internalServerError()
+//      .build();
+//  }
 
 
   /*
