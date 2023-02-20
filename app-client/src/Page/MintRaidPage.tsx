@@ -41,7 +41,7 @@ import {
   createLeadContributor,
   createLeadOrganisation
 } from "Page/UpgradeLegacySchemaForm";
-import { OrcidField } from "Component/OrcidField";
+import { findOrcidProblem, OrcidField } from "Component/OrcidField";
 
 const pageUrl = "/mint-raid-v2";
 
@@ -135,7 +135,6 @@ function MintRaidContainer({servicePointId, onCreate}: {
   onCreate: (handle: string)=>void,
 }){
   const api = useAuthApi();
-  const [isContribValid, setIsContribValid] = useState(false);
   const [formData, setFormData] = useState({
     primaryTitle: "",
     startDate: new Date(),
@@ -175,8 +174,9 @@ function MintRaidContainer({servicePointId, onCreate}: {
   const isAccessStatementValid = formData.accessType === "Open" ?
     true : !!formData.accessStatement;
   const isStartDateValid = isValidDate(formData?.startDate);
+  const contribProblem = findOrcidProblem(formData.leadContributor);
   const canSubmit = isTitleValid && isStartDateValid && 
-    isAccessStatementValid && isContribValid && !leadOrganisationProblem;
+    isAccessStatementValid && !contribProblem && !leadOrganisationProblem;
   const isWorking = mintRequest.isLoading;
   
   return <ContainerCard title={"Mint RAiD"} action={<MintRaidHelp/>}>
@@ -217,12 +217,12 @@ function MintRaidContainer({servicePointId, onCreate}: {
           disabled={isWorking}
           value={formData.leadContributor}
           onValueChange={e=>{
-            setIsContribValid(e.valid);
             setFormData({
               ...formData,
               leadContributor: e.value
             });
           }}
+          valueProblem={contribProblem}
           label="Lead contributor"
         />
         <TextField id="organisation"
@@ -289,18 +289,6 @@ function MintRaidContainer({servicePointId, onCreate}: {
   </ContainerCard>
 }
 
-function MintRaidHelp(){
-  return <HelpPopover content={
-    <Stack spacing={1}>
-      <ul>
-        <li><HelpChip label={"XXX"}/>
-          Words.
-        </li>
-      </ul>
-    </Stack>
-  }/>;
-}
-
 export function findOrganisationIdProblem(id: string): string|undefined{
   if( !id ){
     return undefined;
@@ -322,5 +310,24 @@ export function findOrganisationIdProblem(id: string): string|undefined{
   // add checksum logic?
 
   return undefined;
+}
+
+function MintRaidHelp(){
+  return <HelpPopover content={
+    <Stack spacing={1}>
+      <ul>
+        <li><HelpChip label={"Access type"}/>
+          Controls if metadata is visible on the raid landing page.
+          For "Open" raids, all metadata is visible.
+          For "Closed" raids, only the "Access statement" and "Create date" are
+          visible.
+        </li>
+        <li><HelpChip label={"Access statement"}/>
+          Must be provided for "Closed" raids.  Should indicate to the reader 
+          how to obtain access to the raid.
+        </li>
+      </ul>
+    </Stack>
+  }/>;
 }
 

@@ -35,7 +35,7 @@ import React, { useState } from "react";
 import { useAuthApi } from "Api/AuthApi";
 import { findOrganisationIdProblem } from "Page/MintRaidPage";
 import { createLeadOrganisation } from "./UpgradeLegacySchemaForm";
-import { OrcidField } from "Component/OrcidField";
+import { findOrcidProblem, OrcidField } from "Component/OrcidField";
 
 function isDifferent(formData: FormData, original: FormData){
   return formData.primaryTitle !== original.primaryTitle ||
@@ -141,7 +141,6 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
   const api = useAuthApi();
   const [formData, setFormData] = useState(
     mapReadQueryDataToFormData(raid, metadata) );
-  const [isContribValid, setIsContribValid] = useState(false);
 
   const updateRequest = useMutation(
     async (props: {formData: ValidFormData, oldMetadata: RaidoMetadataSchemaV1}) => {
@@ -172,9 +171,10 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
   const hasChanged = 
     isDifferent(formData, mapReadQueryDataToFormData(raid, metadata));
   const isStartDateValid = isValidDate(formData?.startDate);
+  const contribProblem = findOrcidProblem(formData.leadContributor);
 
   const canSubmit = isTitleValid && isAccessStatementValid && 
-    isStartDateValid && isContribValid && 
+    isStartDateValid && !contribProblem && 
     !leadOrganisationProblem && hasChanged;
   const isWorking = updateRequest.isLoading;
 
@@ -221,12 +221,12 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
           disabled={isWorking}
           value={formData.leadContributor}
           onValueChange={e=>{
-            setIsContribValid(e.valid);
             setFormData({
               ...formData,
               leadContributor: e.value
-            });            
+            });
           }}
+          valueProblem={contribProblem}
           label="Lead contributor"
         />
         <TextField id="organisation"

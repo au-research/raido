@@ -21,7 +21,7 @@ import { ValidationFailureDisplay } from "Component/Util";
 import React, { useState } from "react";
 import { useAuthApi } from "Api/AuthApi";
 import { findOrganisationIdProblem } from "Page/MintRaidPage";
-import { OrcidField } from "Component/OrcidField";
+import { findOrcidProblem, OrcidField } from "Component/OrcidField";
 
 function isDifferent(formData: FormData, original: FormData){
   return formData.leadContributor !== original.leadContributor;
@@ -75,7 +75,6 @@ export function UpgradeLegacySchemaForm({onUpgradeSuccess, raid, metadata}:{
   const api = useAuthApi();
   const [formData, setFormData] = useState(
     mapReadQueryDataToFormData(raid, metadata) );
-  const [isContribValid, setIsContribValid] = useState(false);
 
   const upgradeRequest = useMutation(
     async (props: {
@@ -105,8 +104,9 @@ export function UpgradeLegacySchemaForm({onUpgradeSuccess, raid, metadata}:{
   const leadOrganisationProblem = findOrganisationIdProblem(formData.leadOrganisation);
   const hasChanged =
     isDifferent(formData, mapReadQueryDataToFormData(raid, metadata));
+  const contribProblem = findOrcidProblem(formData.leadContributor);
 
-  const canSubmit = isContribValid && !leadOrganisationProblem && hasChanged;
+  const canSubmit = !contribProblem && !leadOrganisationProblem && hasChanged;
   const isWorking = upgradeRequest.isLoading;
 
   return <>
@@ -130,12 +130,12 @@ export function UpgradeLegacySchemaForm({onUpgradeSuccess, raid, metadata}:{
           disabled={isWorking}
           value={formData.leadContributor}
           onValueChange={e=>{
-            setIsContribValid(e.valid);
             setFormData({
               ...formData,
               leadContributor: e.value
             });
           }}
+          valueProblem={contribProblem}
           label="Lead contributor"
         />
         <TextField id="organisation"
