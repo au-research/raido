@@ -1,8 +1,8 @@
 import { IconButton, Popover, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { TextSpan } from "Component/TextSpan";
 import { OrcidSvgIcon } from "Component/Icon";
-import { OpenInNew, PersonSearch } from "@mui/icons-material";
+import { PersonSearch } from "@mui/icons-material";
 import { NewWindowLink } from "Component/ExternalLink";
 
 /* I'm confused what the case should be 
@@ -10,21 +10,21 @@ https://info.orcid.org/brand-guidelines/ */
 export const orcidBrand = "ORCID";
   
 export type ValueChange =
-  { valid: true, value: string} |
-  { valid: false, value: string, problem: string}
+  { value: string } 
 ;
 
+export type ValueProblem = undefined | string;
+
 export function OrcidField({
-  id, label, value, onValueChange, disabled, 
+  id, label, value, onValueChange, valueProblem, disabled, 
 }:{
   id: string,
   label: string,
-  onValueChange: (e: ValueChange)=>void,
   value?: string,
+  onValueChange: (e: ValueChange)=>void,
+  valueProblem: ValueProblem,
   disabled?:boolean,
 }){
-  const [fieldValue, setFieldValue] = useState(
-    mapInvalidOrcidChars(value ?? "") );
   const [anchorEl, setAnchorEl] = 
     React.useState<HTMLButtonElement | null>(null);
 
@@ -37,8 +37,8 @@ export function OrcidField({
     setAnchorEl(null);
   };
 
-  const orcidProblem = findOrcidProblem(fieldValue);
-
+  const mappedValue = mapInvalidOrcidChars(value ?? "");
+  
   const textField = <TextField id={id}
     inputProps={{
       //make the text field line up with the static url a bit better
@@ -48,22 +48,14 @@ export function OrcidField({
     size={"small"}
     
     disabled={disabled}
-    value={fieldValue}
+    value={mappedValue}
     onChange={(e) => {
-      let filteredValue = mapInvalidOrcidChars(e.target.value);
-      setFieldValue(filteredValue);
-
-      const orcidProblem = findOrcidProblem(filteredValue);
-      const orcidUrl = orcidPrefixUrl + filteredValue;
-      if( orcidProblem ){
-        onValueChange({
-          valid: false, value: orcidUrl, problem: orcidProblem });
-      }
-      else {
-        onValueChange({valid:true, value: orcidUrl});
-      }
+      /* Can't use mappedValue here, it's based on param value, not user input.
+       Still have to map in here because we want mapping to turn 'x'->'X' */
+      let mappedEventValue = mapInvalidOrcidChars(e.target.value);
+      onValueChange({value: orcidPrefixUrl + mappedEventValue});
     }}
-    error={!!orcidProblem}
+    error={!!valueProblem}
   />
 
   return <fieldset style={{
@@ -85,7 +77,7 @@ export function OrcidField({
       just a little bit more one the left side, which looks nicer to me. */
       marginRight: ".5em"
     }}>
-      {orcidProblem ? label + " - " + orcidProblem : label}
+      {valueProblem ? label + " - " + valueProblem : label}
     </legend>
 
     <TextSpan
@@ -93,8 +85,8 @@ export function OrcidField({
       sx={{ display: { xs: 'none', sm: 'block' } }}
     >{orcidPrefixUrl}</TextSpan>
     {textField}
-    { !orcidProblem && 
-      <NewWindowLink href={`${orcidPrefixUrl}/${fieldValue}`}>
+    { !valueProblem && 
+      <NewWindowLink href={`${orcidPrefixUrl}/${mappedValue}`}>
         <PersonSearch/>
       </NewWindowLink>
     }
@@ -135,7 +127,16 @@ function insertString(value: string, insertedValue: string, insertedPosition: nu
     value.substring(insertedPosition);
 }
 
-export function mapInvalidOrcidChars(id: string): string{
+/* 
+poorly named, doesn't just map characters any more.
+Gets called 2 or 3 times in a single event:
+* in event handler - during onChange(), in order to construct the value to 
+  notify caller of the change with the "new value"
+* in caller - because they call findOrcidProblem() so they can know if there's 
+  a validation problem (they may also do their own extra validation)
+* in render function - to map it down to the value to display 
+*/
+function mapInvalidOrcidChars(id: string): string{
   /* try to make it work if someone copy/pastes a full url like 
    "https://orcid.org/1231-1231-1234-1234" */
   id = id.replace(orcidPrefixUrl, "");
@@ -154,6 +155,8 @@ export function mapInvalidOrcidChars(id: string): string{
 }
 
 export function findOrcidProblem(id: string): string|undefined{
+  id = mapInvalidOrcidChars(id);
+  
   if( !id ){
     return "must be set"
   }
