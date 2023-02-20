@@ -178,13 +178,18 @@ public class MetadataService {
     return "%s/%s".formatted(metaProps.globalUrlPrefix, handle);
   }
 
-  public IdBlock createIdBlock(final String handle, final ServicePointRecord servicePointRecord) {
-    return new IdBlock().
-      identifier(handle).
-      identifierSchemeURI(RAID_ID_TYPE_URI).
-      identifierRegistrationAgency(metaProps.raidAgencyIdentifier).
-      identifierOwner(servicePointRecord.getIdentifierOwner()).
-      identifierServicePoint(servicePointRecord.getId());
+  public IdBlock createIdBlock(final String handle,
+                               final ServicePointRecord servicePointRecord,
+                               final String raidUrl) {
+    return new IdBlock()
+      .identifier(handle)
+      .identifierSchemeURI(RAID_ID_TYPE_URI)
+      .identifierRegistrationAgency(metaProps.raidAgencyIdentifier)
+      .identifierOwner(servicePointRecord.getIdentifierOwner())
+      .identifierServicePoint(servicePointRecord.getId())
+      .globalUrl(formatGlobalUrl(handle))
+      .raidAgencyUrl(raidUrl)
+      .raidAgencyIdentifier(metaProps.raidAgencyIdentifier);
   }
 
   /**

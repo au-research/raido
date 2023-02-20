@@ -10,7 +10,6 @@ import raido.idl.raidv2.api.BasicRaidStableApi;
 import raido.idl.raidv2.model.CreateRaidV1Request;
 import raido.idl.raidv2.model.RaidSchemaV1;
 import raido.idl.raidv2.model.UpdateRaidV1Request;
-import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +66,7 @@ public class BasicRaidStable implements BasicRaidStableApi {
   @Override
   public RaidSchemaV1 updateRaidV1(String handle, UpdateRaidV1Request request) {
     var user = getAuthzPayload();
+
     guardOperatorOrAssociated(user, request.getId().getIdentifierServicePoint());
 
     final var failures = new ArrayList<>(validationService.validateForUpdate(handle, request));

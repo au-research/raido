@@ -142,7 +142,7 @@ public class RaidService {
       servicePointRepository.findById(servicePointId)
         .orElseThrow(() -> new UnknownServicePointException(servicePointId));
 
-    metadata.setId(metaSvc.createIdBlock(handle, servicePointRecord));
+    metadata.setId(metaSvc.createIdBlock(handle, servicePointRecord, raidUrl));
 
     // validation failure possible
     String metadataAsJson = metaSvc.mapToJson(metadata);
@@ -178,7 +178,8 @@ public class RaidService {
       metaSvc::formatRaidoLandingPageUrl);
 
     String handle = apidsResponse.identifier.handle;
-    request.setId(metaSvc.createIdBlock(handle, servicePointRecord));
+    String raidUrl = apidsResponse.identifier.property.value;
+    request.setId(metaSvc.createIdBlock(handle, servicePointRecord, raidUrl));
 
     final var raidRecord = raidRecordFactory.create(request, apidsResponse, servicePointRecord);
 
@@ -222,7 +223,7 @@ public class RaidService {
       servicePointRepository.findById(servicePointId)
         .orElseThrow(() -> new UnknownServicePointException(servicePointId));
 
-    metadata.setId(metaSvc.createIdBlock(handle, servicePointRecord));
+    metadata.setId(metaSvc.createIdBlock(handle, servicePointRecord, raidUrl));
 
     // validation failure possible
     String metadataAsJson = metaSvc.mapToJson(metadata);
@@ -313,7 +314,7 @@ public class RaidService {
       servicePointRepository.findById(servicePointId)
         .orElseThrow(() -> new UnknownServicePointException(servicePointId));
 
-    metadata.setId(metaSvc.createIdBlock(handle, servicePointRecord));
+    metadata.setId(metaSvc.createIdBlock(handle, servicePointRecord, raidUrl));
 
     // validation failure possible
     String metadataAsJson = metaSvc.mapToJson(metadata);
