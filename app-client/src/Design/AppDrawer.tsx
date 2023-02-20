@@ -51,7 +51,7 @@ export function AppDrawer(props: {
         { isOp && 
           <ListNavButton href={getAdminAuthzRequestPageLink()}
           isCurrent={isAdminAuthzRequestPagePath(pathname)}
-          description={"Authorisation Requests"}
+          description={"Authorisation requests"}
           />
         }
         { isOp && 
