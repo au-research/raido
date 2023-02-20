@@ -57,6 +57,9 @@ components:
         identifierRegistrationAgency: https://ror.org/038sjwq14
         identifierOwner: https://ror.org/02stey378
         identifierServicePoint: 20000003
+        globalUrl: https://hdl.handle.net/xxx.yyy/zzz
+        raidAgencyUrl: https://demo.raido-infra.com/handle/10378.1/1695863
+        raidAgencyIdentifier: demo.raido-infra.com
     AccessBlock:
       type: object
       required: ["type", ]

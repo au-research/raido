@@ -3,7 +3,9 @@ package raido.apisvc.endpoint.raidv2;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.hamcrest.Matchers;
+import org.jooq.exception.DataAccessException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,8 +40,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 class BasicRaidStableTest {
@@ -66,15 +67,40 @@ class BasicRaidStableTest {
   }
 
   @Test
+  @Disabled
+  void mintRaidV1_ReturnsRedactedInternalServerErrorOnDataAccessException() throws Exception {
+    final var servicePointId = 999L;
+    final var raid = createRaidForPost();
+
+    final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
+    when(authzTokenPayload.getServicePointId()).thenReturn(servicePointId);
+
+    try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
+      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
+
+      doThrow(DataAccessException.class)
+        .when(raidService).mintRaidSchemaV1(any(CreateRaidV1Request.class), eq(servicePointId));
+
+      mockMvc.perform(post("/raid/v1")
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(raid))
+          .characterEncoding("utf-8"))
+        .andDo(print())
+        .andExpect(status().isInternalServerError())
+        .andExpect(content().string(""))
+        .andReturn();
+    }
+  }
+
+
+  @Test
   void mintRaidV1_ReturnsBadRequest() throws Exception {
     final var servicePointId = 999L;
-    final var title = "test-title";
-    final var startDate = LocalDate.now();
     final var validationFailureMessage = "validation failure message";
     final var validationFailureType = "validation failure type";
     final var validationFailureFieldId = "validation failure id";
 
-    final var raid = createRaidForPost(servicePointId, title, startDate);
+    final var raid = createRaidForPost();
 
     final var validationFailure = new ValidationFailure();
     validationFailure.setFieldId(validationFailureFieldId);
@@ -117,10 +143,10 @@ class BasicRaidStableTest {
     final Long servicePointId = 999L;
     final var title = "test-title";
     final var startDate = LocalDate.now();
-    final var handle = "test-handle";
+    final var handle = "10378.1/1696639";
     final var endDate = startDate.plusMonths(6);
 
-    final var raidForPost = createRaidForPost(servicePointId, title, startDate);
+    final var raidForPost = createRaidForPost();
     final var raidForGet = createRaidForGet(handle, servicePointId, title, startDate);
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
@@ -148,11 +174,14 @@ class BasicRaidStableTest {
           .characterEncoding("utf-8"))
         .andDo(print())
         .andExpect(status().isOk())
-//        .andExpect(jsonPath("$.metadata.id.identifier", Matchers.is(handle)))
-//        .andExpect(jsonPath("$.metadata.id.identifierTypeUri", Matchers.is("https://raid.org")))
-//        .andExpect(jsonPath("$.metadata.id.globalUrl", Matchers.is("https://hdl.handle.net/" + handle)))
-//        .andExpect(jsonPath("$.metadata.id.raidAgencyUrl", Matchers.is("https://raid.org.au/handle/" + handle)))
-//        .andExpect(jsonPath("$.metadata.id.raidAgencyIdentifier", Matchers.is("raid.org.au")))
+        .andExpect(jsonPath("$.id.identifier", Matchers.is(handle)))
+        .andExpect(jsonPath("$.id.identifierSchemeURI", Matchers.is("https://raid.org")))
+        .andExpect(jsonPath("$.id.identifierRegistrationAgency", Matchers.is("https://ror.org/038sjwq14")))
+        .andExpect(jsonPath("$.id.identifierOwner", Matchers.is("https://ror.org/02stey378")))
+        .andExpect(jsonPath("$.id.identifierServicePoint", Matchers.is(servicePointId.intValue())))
+        .andExpect(jsonPath("$.id.globalUrl", Matchers.is("https://hdl.handle.net/" + handle)))
+        .andExpect(jsonPath("$.id.raidAgencyUrl", Matchers.is("https://demo.raido-infra.com/handle/" + handle)))
+        .andExpect(jsonPath("$.id.raidAgencyIdentifier", Matchers.is("demo.raido-infra.com")))
         .andExpect(jsonPath("$.titles[0].title", Matchers.is(title)))
         .andExpect(jsonPath("$.titles[0].type", Matchers.is(TitleType.PRIMARY_TITLE.getValue())))
         .andExpect(jsonPath("$.titles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
@@ -182,15 +211,12 @@ class BasicRaidStableTest {
 
   @Test
   void updateRaidV1_ReturnsBadRequest() throws Exception {
-    final Long servicePointId = 999L;
-    final var title = "test-title";
-    final var startDate = LocalDate.now();
     final var handle = "test-handle";
     final var validationFailureMessage = "validation failure message";
     final var validationFailureType = "validation failure type";
     final var validationFailureFieldId = "validation failure id";
 
-    final var input = createRaidForPut(handle, servicePointId, title, startDate);
+    final var input = createRaidForPut();
 
     final var validationFailure = new ValidationFailure();
     validationFailure.setFieldId(validationFailureFieldId);
@@ -234,7 +260,7 @@ class BasicRaidStableTest {
     final var handle = "test-handle";
     final var endDate = startDate.plusMonths(6);
 
-    final var input = createRaidForPut(handle, servicePointId, title, startDate);
+    final var input = createRaidForPut();
     final var output = createRaidForGet(handle, servicePointId, title, startDate);
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
@@ -329,12 +355,9 @@ class BasicRaidStableTest {
 
   @Test
   void updateRaidV1_Returns404IfNotFound() throws Exception {
-    final Long servicePointId = 999L;
-    final var title = "test-title";
-    final var startDate = LocalDate.now();
     final var handle = "test-handle";
 
-    final var input = createRaidForPut(handle, servicePointId, title, startDate);
+    final var input = createRaidForPut();
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
       final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
@@ -399,7 +422,6 @@ class BasicRaidStableTest {
   @Test
   void readRaidV1_ReturnsOk() throws Exception {
     final var startDate = LocalDate.now().minusYears(1);
-    final var endDate = startDate.plusMonths(6);
     final var title = "test-title";
     final var handle = "test-handle";
     final Long servicePointId = 123L;
@@ -426,12 +448,7 @@ class BasicRaidStableTest {
 
   @Test
   void readRaidV1_ReturnsNotFound() throws Exception {
-    final var startDate = LocalDate.now().minusYears(1);
-    final var endDate = startDate.plusMonths(6);
-    final var title = "test-title";
     final var handle = "test-handle";
-    final Long servicePointId = 123L;
-    final var raid = createRaidForGet(handle, servicePointId, title, startDate);
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
       final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
@@ -600,13 +617,13 @@ class BasicRaidStableTest {
     return raid;
   }
 
-  private UpdateRaidV1Request createRaidForPut(final String handle, final long servicePointId, final String title, final LocalDate startDate) throws IOException {
+  private UpdateRaidV1Request createRaidForPut() throws IOException {
     final String json = Files.readString(Path.of(Objects.requireNonNull(getClass().getResource("/fixtures/raid.json")).getPath()));
 
     return objectMapper.readValue(json, UpdateRaidV1Request.class);
   }
 
-  private CreateRaidV1Request createRaidForPost(final long servicePointId, final String title, final LocalDate startDate) throws IOException {
+  private CreateRaidV1Request createRaidForPost() throws IOException {
     final String json = Files.readString(Path.of(Objects.requireNonNull(getClass().getResource("/fixtures/create-raid.json")).getPath()));
     return objectMapper.readValue(json, CreateRaidV1Request.class);
   }
