@@ -14,12 +14,12 @@ import static raid.v2_api_migration.RaidoApi.mapToLegacySchema
 
 class Import1Raid {
 
-  public static final String NOTRE_DAME = "University of Notre Dame Library"
-  public static final String RDM = "RDM@UQ"
 
   static void main(String[] args) {
-    importMostRecentRaid(NOTRE_DAME)
-    importMostRecentRaid(RDM)
+    importMostRecentRaid(ImportAllRaids.NOTRE_DAME)
+    importMostRecentRaid(ImportAllRaids.RDM)
+    importMostRecentRaid(ImportAllRaids.ARDC)
+    importMostRecentRaid(ImportAllRaids.UQ_IMAGING)
   }
   
   static void importMostRecentRaid(String svcPointName) {
@@ -54,12 +54,20 @@ class Import1Raid {
 
 class ImportAllRaids {
 
+  /* these must previously have been created in the DB with this exact name
+     doesn't technically have to be a flyway migration, you can create the SP
+     in the DB by hand and as long as the description matches, the migrate 
+     will work.*/
   public static final String NOTRE_DAME = "University of Notre Dame Library"
   public static final String RDM = "RDM@UQ"
+  public static final String ARDC = "Australian Research Data Commons"
+  public static final String UQ_IMAGING = "UQ Centre for Advanced Imaging"
 
   static void main(String[] args) {
     importAllRaids(NOTRE_DAME)
     importAllRaids(RDM)
+    importAllRaids(ARDC)
+    importAllRaids(UQ_IMAGING)
   }
 
   static void importAllRaids(String svcPointName) {

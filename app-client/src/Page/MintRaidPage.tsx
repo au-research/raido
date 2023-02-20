@@ -13,7 +13,8 @@ import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import {
   AccessType,
-  DescriptionBlock, OrganisationBlock,
+  DescriptionBlock,
+  OrganisationBlock,
   RaidoMetadataSchemaV1,
   ValidationFailure
 } from "Generated/Raidv2";
@@ -36,7 +37,11 @@ import { Dayjs } from "dayjs";
 import { assert, WithRequired } from "Util/TypeUtil";
 import { isValidDate } from "Util/DateUtil";
 import { getEditRaidPageLink } from "Page/EditRaidPage";
-import {createLeadContributor, createLeadOrganisation} from "Page/UpgradeLegacySchemaForm";
+import {
+  createLeadContributor,
+  createLeadOrganisation
+} from "Page/UpgradeLegacySchemaForm";
+import { OrcidField } from "Component/OrcidField";
 
 const pageUrl = "/mint-raid-v2";
 
@@ -130,6 +135,7 @@ function MintRaidContainer({servicePointId, onCreate}: {
   onCreate: (handle: string)=>void,
 }){
   const api = useAuthApi();
+  const [isContribValid, setIsContribValid] = useState(false);
   const [formData, setFormData] = useState({
     primaryTitle: "",
     startDate: new Date(),
@@ -165,13 +171,12 @@ function MintRaidContainer({servicePointId, onCreate}: {
   );
 
   const isTitleValid = !!formData.primaryTitle;
-  const leadContribProblem = findOrcidProblem(formData.leadContributor);
   const leadOrganisationProblem = findOrganisationIdProblem(formData.leadOrganisation);
   const isAccessStatementValid = formData.accessType === "Open" ?
     true : !!formData.accessStatement;
   const isStartDateValid = isValidDate(formData?.startDate);
   const canSubmit = isTitleValid && isStartDateValid && 
-    isAccessStatementValid && !leadContribProblem && !leadOrganisationProblem;
+    isAccessStatementValid && isContribValid && !leadOrganisationProblem;
   const isWorking = mintRequest.isLoading;
   
   return <ContainerCard title={"Mint RAiD"} action={<MintRaidHelp/>}>
@@ -207,20 +212,18 @@ function MintRaidContainer({servicePointId, onCreate}: {
             setFormData({...formData, primaryDescription: e.target.value});
           }}
         />
-        <TextField id="contributor"  
-          variant="outlined" autoCorrect="off" autoCapitalize="on"
+        <OrcidField
+          id="contributor"
           disabled={isWorking}
-          value={formData.leadContributor ?? ""}
-          onChange={(e) => {
+          value={formData.leadContributor}
+          onValueChange={e=>{
+            setIsContribValid(e.valid);
             setFormData({
-              ...formData, 
-              leadContributor: mapInvalidOrcidChars(e.target.value)
+              ...formData,
+              leadContributor: e.value
             });
           }}
-          label={ leadContribProblem ? 
-            "Lead contributor - " + leadContribProblem : 
-            "Lead contributor"}
-          error={!!leadContribProblem}
+          label="Lead contributor"
         />
         <TextField id="organisation"
                    variant="outlined" autoCorrect="off" autoCapitalize="on"
@@ -298,22 +301,6 @@ function MintRaidHelp(){
   }/>;
 }
 
-export function findOrcidProblem(id: string): string|undefined{
-  if( !id ){
-    return "must be set"
-  }
-  if( id.length < 19 ){
-    return "too short"
-  }
-  if( id.length > 19 ){
-    return "too long"
-  }
-
-  // add checksum logic?
-
-  return undefined;
-}
-
 export function findOrganisationIdProblem(id: string): string|undefined{
   if( !id ){
     return undefined;
@@ -336,10 +323,4 @@ export function findOrganisationIdProblem(id: string): string|undefined{
 
   return undefined;
 }
-
-export function mapInvalidOrcidChars(id: string): string{
-  // improve - only the last char can be an X 
-  return id.toUpperCase().replace(/[^\dX-]/g, '');
-}
-
 

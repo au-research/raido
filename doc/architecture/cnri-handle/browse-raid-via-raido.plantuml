@@ -1,0 +1,26 @@
+@startuml
+title Browse RAID landing page, via "raid.org.au"
+
+actor "reader" as reader
+
+
+
+participant "Raido web-server" as raidoWeb
+participant "Raido app-client" as raidAppClient
+
+participant "raido-api-svc" as raidoApi
+database "Raido DB" as raidoDb
+
+
+reader -> raidoWeb: browse to \n`hdl.raid.org.au/20.2000.1/111111`
+reader <-- raidoWeb: app-client HTML/JS code
+reader -> raidAppClient: execute app-client code  
+raidAppClient -> raidoApi: GET /raid/v1/20.2000.1/111111
+raidoApi -> raidoDb: query `20.2000.1/111111`
+raidoDb --> raidoApi: return `{metadata}`
+raidoApi --> raidAppClient: return `{metadata}`
+raidAppClient --> reader: render RAiD as HTML\n for user to view  
+@enduml
+
+
+

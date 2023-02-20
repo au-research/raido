@@ -15,7 +15,8 @@ import { RaidoLogoSvg } from "Component/Icon";
 import { getHomePageLink } from "Page/HomePage";
 import { Color } from "Design/RaidoTheme";
 import { useAuth } from "Auth/AuthProvider";
-import { IdProviderDisplay } from "Component/Util";
+import { IdProviderDisplay } from "Component/IdProviderDisplay";
+import { Config } from "Config";
 
 const log = console;
 
@@ -27,6 +28,7 @@ export function AppNavBar(){
 
   return (
     <AppBar position="static">
+      <EnvironmentBanner />
       <Toolbar variant={"dense"}>
         <IconButton
           color="inherit"
@@ -151,3 +153,12 @@ function AccountMenu(){
   </>;
 }
 
+function EnvironmentBanner(){
+  if( Config.isProd ){
+    return null;
+  }
+  
+  return <aside className="raido-environment-banner">
+    {Config.environmentName.toUpperCase()}
+  </aside>
+}

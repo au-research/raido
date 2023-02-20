@@ -9,7 +9,6 @@ import { ContainerCard } from "Design/ContainerCard";
 import { LargeContentMain } from "Design/LayoutMain";
 import {
   DateDisplay,
-  IdProviderDisplay,
   raidoTitle,
   RoleDisplay
 } from "Component/Util";
@@ -35,6 +34,7 @@ import { RaidoLink } from "Component/RaidoLink";
 import { RaidoAddFab } from "Component/AppButton";
 import { getEditRaidPageLink } from "Page/EditRaidPage";
 import { getMintRaidPageLink } from "Page/MintRaidPage";
+import { IdProviderDisplay } from "Component/IdProviderDisplay";
 
 const log = console;
 
@@ -83,7 +83,7 @@ function RaidCurrentUser(){
       servicePointId: user.servicePointId }));
   return <ContainerCard title={"Signed-in user"}>
     <InfoFieldList>
-      <InfoField id={"email"} label={"Email"} value={user.email}/>
+      <InfoField id={"email"} label={"Identity"} value={user.email}/>
       <InfoField id={"idProvider"} label={"ID provider"}
         value={<IdProviderDisplay payload={user}/> }/>
       <InfoField id={"servicePoint"} label={"Service point"} 

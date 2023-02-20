@@ -157,7 +157,7 @@ task import1Raid(type: JavaExec){
 
 task importAllRaids(type: JavaExec){
   group = "run"
-  description = "Run Import1Raid"
+  description = "Run ImportAllRaids"
   classpath = sourceSets.main.runtimeClasspath
   setMainClass "raid.v2_api_migration.ImportAllRaids"
   workingDir rootProject.projectDir

@@ -1,0 +1,51 @@
+@startuml
+title API GET Raid metadata, via "handle.net" with global redirect
+
+participant "global read\nintegrator" as integrator
+
+participant "Global Handle Infra" as ghi
+participant "Raido Local Handle Service" as lhs
+database "Local Handle Service DB" as lhsDb
+
+
+participant "Raid web-server" as raidWeb
+
+participant "raido-api-svc" as raidoApi
+database "Raido DB" as raidoDb
+participant "raido-api-svc" as raidoApi
+database "Raido DB" as raidoDb
+
+
+alt handle.net
+group CNRI
+integrator -> ghi: GET `hdl.handle.net/20.2000.1/111111`
+ghi -> lhs: GET `20.2000.1/111111`
+lhs -> lhsDb: query `20.2000.1/111111`
+return `raid.org/20.2000.1/111111`
+lhs --> ghi: `raid.org/20.2000.1/111111`
+ghi --> integrator: HTTP 302 redirect\n location: raid.org/20.2000.1/111111
+end
+integrator -> integrator : follow redirect
+
+
+alt 
+group Raid 
+integrator -> raidWeb: GET `hdl.raid.org/20.2000.1/111111`
+raidWeb -> raidWeb: is prefix `20.2000.1`?
+raidWeb -> raidWeb: is `content-type: application/json` ?
+raidWeb --> integrator: HTTP 302 redirect\n location: api.raid.org.au/raid/v1/20.2000.1/111111
+end 
+integrator -> integrator : follow redirect
+
+alt
+group Raido
+integrator -> raidoApi: GET `api.raid.org.au/raid/v1/20.2000.1/111111`
+raidoApi -> raidoDb: lookup `20.2000.1/111111`
+return `{metadata}`
+raidoApi --> integrator: return `{metadata}`
+end
+ 
+@enduml
+
+
+

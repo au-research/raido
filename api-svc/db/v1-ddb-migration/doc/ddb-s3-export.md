@@ -5,15 +5,17 @@ Export:
   * click through table name
   * select / actions / export to s3
 * Export details
-  * Destination: sto-raid-dev-manual
+  * Destination: sto-raid-dev-manual/2023-02-17
   * "This AWS account (005299621378)"
   * Additional settings
     * Export from an earlier point
       * can't export multiple tables at once
       * keep data consistent between tables by picking a specific timestamp
+      * {date} / 00:00:00 
     * "Exported file format"
       * Amazon ION 
-      * because it's more like normal JSON than DDB format 
+      * the script code is hardcoded to this format
+        * because it's more like normal JSON than DDB format 
 
 Tables to export:
 * RAiD-MetadataTable-5X1IHWPICN82

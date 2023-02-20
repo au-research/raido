@@ -1,0 +1,39 @@
+@startuml
+title Browse RAID landing page, via "raid.org"
+
+actor "reader" as reader
+
+participant "Raid web-server" as raidWeb
+participant "Raido web-server" as raidoWeb
+participant "Raido app-client" as appClient
+
+participant "raido-api-svc" as raidoApi
+database "Raido DB" as raidoDb
+
+participant "raido-api-svc" as raidoApi
+database "Raido DB" as raidoDb
+
+alt 
+group Raid 
+reader -> raidWeb: browse to \n`hdl.raid.org/20.2000.1/111111`
+raidWeb -> raidWeb: is prefix `20.2000.1`?
+raidWeb --> reader: HTTP 302 redirect\n location: raid.org.au/20.2000.1/111111
+end 
+
+reader -> reader : reset browser location to:\n `raid.org.au/20.2000.1/111111`
+alt
+group Raido
+reader -> raidoWeb: browse to \n`hdl.raid.org.au/20.2000.1/111111`
+raidoWeb <-- reader: app-client HTML/JS code
+reader -> appClient: execute app-client code  
+appClient -> raidoApi: GET /raid/v1/20.2000.1/111111
+raidoApi -> raidoDb: lookup `20.2000.1/111111`
+raidoDb --> raidoApi: return `{metadata}`
+raidoApi --> appClient: return `{metadata}`
+appClient --> reader: render RAiD as HTML\n for user to view  
+end
+ 
+@enduml
+
+
+

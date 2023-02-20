@@ -2,11 +2,12 @@ import { useMutation } from "@tanstack/react-query";
 import {
   AccessType,
   ContributorBlock,
-  DescriptionBlock, OrganisationBlock,
+  DescriptionBlock,
+  OrganisationBlock,
   RaidoMetadataSchemaV1,
   ReadRaidResponseV2,
   ValidationFailure
-} from "Generated/Raidv2"; 
+} from "Generated/Raidv2";
 import { assert, WithRequired } from "Util/TypeUtil";
 import { isValidDate } from "Util/DateUtil";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
@@ -26,13 +27,15 @@ import { navBrowserBack } from "Util/WindowUtil";
 import { ValidationFailureDisplay } from "Component/Util";
 import {
   getFirstLeader,
-  getFirstPrimaryDescription, getLeadOrganisation,
+  getFirstPrimaryDescription,
+  getLeadOrganisation,
   getPrimaryTitle
 } from "Component/MetaDataContainer";
 import React, { useState } from "react";
 import { useAuthApi } from "Api/AuthApi";
-import {findOrcidProblem, findOrganisationIdProblem, mapInvalidOrcidChars} from "Page/MintRaidPage";
-import {createLeadOrganisation} from "./UpgradeLegacySchemaForm";
+import { findOrganisationIdProblem } from "Page/MintRaidPage";
+import { createLeadOrganisation } from "./UpgradeLegacySchemaForm";
+import { OrcidField } from "Component/OrcidField";
 
 function isDifferent(formData: FormData, original: FormData){
   return formData.primaryTitle !== original.primaryTitle ||
@@ -138,6 +141,7 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
   const api = useAuthApi();
   const [formData, setFormData] = useState(
     mapReadQueryDataToFormData(raid, metadata) );
+  const [isContribValid, setIsContribValid] = useState(false);
 
   const updateRequest = useMutation(
     async (props: {formData: ValidFormData, oldMetadata: RaidoMetadataSchemaV1}) => {
@@ -162,7 +166,6 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
   );
 
   const isTitleValid = !!formData.primaryTitle;
-  const leadContribProblem = findOrcidProblem(formData.leadContributor);
   const leadOrganisationProblem = findOrganisationIdProblem(formData.leadOrganisation);
   const isAccessStatementValid = formData.accessType === "Open" ?
     true : !!formData.accessStatement;
@@ -170,8 +173,9 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
     isDifferent(formData, mapReadQueryDataToFormData(raid, metadata));
   const isStartDateValid = isValidDate(formData?.startDate);
 
-  const canSubmit = isTitleValid && isAccessStatementValid
-    && isStartDateValid && !leadContribProblem && !leadOrganisationProblem && hasChanged;
+  const canSubmit = isTitleValid && isAccessStatementValid && 
+    isStartDateValid && isContribValid && 
+    !leadOrganisationProblem && hasChanged;
   const isWorking = updateRequest.isLoading;
 
   return <>
@@ -212,20 +216,18 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
             setFormData({...formData, primaryDescription: e.target.value});
           }}
         />
-        <TextField id="contributor"
-          variant="outlined" autoCorrect="off" autoCapitalize="on"
+        <OrcidField
+          id="contributor"
           disabled={isWorking}
-          value={formData.leadContributor ?? ""}
-          onChange={(e) => {
+          value={formData.leadContributor}
+          onValueChange={e=>{
+            setIsContribValid(e.valid);
             setFormData({
               ...formData,
-              leadContributor: mapInvalidOrcidChars(e.target.value)
-            });
+              leadContributor: e.value
+            });            
           }}
-          label={ leadContribProblem ?
-            "Lead contributor - " + leadContribProblem :
-            "Lead contributor"}
-          error={!!leadContribProblem}
+          label="Lead contributor"
         />
         <TextField id="organisation"
                    variant="outlined" autoCorrect="off" autoCapitalize="on"

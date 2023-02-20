@@ -20,6 +20,7 @@ import { formatLocalDateAsIsoShortDateTime } from "Util/DateUtil";
 import { RefreshIconButton } from "Component/RefreshIconButton";
 import { RaidoLink } from "Component/RaidoLink";
 import { getAuthzRespondPageLink } from "Page/Admin/AuthzRespondPage";
+import { AuthzRequestExtraV1 } from "Generated/Raidv2";
 
 const log = console;
 
@@ -74,7 +75,8 @@ function AuthzRequestContainer(){
         <TableHead>
           <TableRow>
             <TableCell>Service point</TableCell>
-            <TableCell>Email</TableCell>
+            <TableCell>Identity</TableCell>
+            <TableCell>ID Provider</TableCell>
             <TableCell>Requested</TableCell>
             <TableCell>Status</TableCell>
           </TableRow>
@@ -89,7 +91,8 @@ function AuthzRequestContainer(){
               <TableCell component="th" scope="row">
                 {row.servicePointName}
               </TableCell>
-              <TableCell>{row.email}</TableCell>
+              <TableCell><IdentityDisplay request={row}/></TableCell>
+              <TableCell>{row.idProvider}</TableCell>
               <TableCell>
                 {formatLocalDateAsIsoShortDateTime(row.dateRequested)}
               </TableCell>
@@ -105,4 +108,8 @@ function AuthzRequestContainer(){
 
     </TableContainer>
   </ContainerCard>
+}
+
+function IdentityDisplay({request}:{request: AuthzRequestExtraV1}){
+  return <>{request.email}</>
 }

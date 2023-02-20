@@ -6,7 +6,10 @@ import { TextSpan } from "Component/TextSpan";
 import React, { useState } from "react";
 import { normalisePath } from "Util/Location";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { UpdateAuthzRequestStatusRequest } from "Generated/Raidv2";
+import {
+  AuthzRequestExtraV1,
+  UpdateAuthzRequestStatusRequest
+} from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import {
@@ -25,6 +28,9 @@ import {
 } from "Component/AppButton";
 import { navBrowserBack } from "Util/WindowUtil";
 import { InfoField, InfoFieldList } from "Component/InfoField";
+import { mapClientIdToIdProvider } from "Component/IdProviderDisplay";
+import { NewWindowLink } from "Component/ExternalLink";
+import { orcidBrand } from "Component/OrcidField";
 
 const log = console;
 
@@ -55,7 +61,9 @@ export function AuthzRespondPage(){
 function Content(){
   const authzRequestId = getAuthzRequestIdFromLocation();
   if( !authzRequestId ){
-    return <TextSpan>Unable to parse Authz Request Id from browser location bar</TextSpan>;
+    return <TextSpan>
+      Unable to parse Authz Request Id from browser location bar
+    </TextSpan>;
   }
   
   return <LargeContentMain>
@@ -80,7 +88,7 @@ function AuthzResponseContainer({authzRequestId}:{authzRequestId: number}){
   const updateRequest = useMutation(
     async (data: UpdateAuthzRequestStatusRequest) => {
       if( data.updateAuthzRequestStatus.status === "REQUESTED" ){
-        throw new Error("cannot change to reqested");
+        throw new Error("cannot change to requested");
       }
       setResponseClicked(data.updateAuthzRequestStatus.status);
       await api.admin.updateAuthzRequestStatus(data);
@@ -133,9 +141,10 @@ function AuthzResponseContainer({authzRequestId}:{authzRequestId: number}){
       <InfoFieldList>
         <InfoField id="servicePointName" label="Service point"
           value={query.data.servicePointName}/>
-        <InfoField id="email" label="Email" value={query.data.email}/>
+        <InfoField id="identity" label="Identity" value={query.data.email}/>
         <InfoField id="idProvider" label="ID provider" 
           value={query.data.idProvider}/>
+        <SubjectField id="subject" label="Subject" request={query.data}/>
         <InfoField id="requestedDate" label="Requested"
           value={<DateTimeDisplay date={query.data.dateRequested}/>}/>
         <InfoField id="status" label="Status" value={query.data.status}/>
@@ -143,7 +152,10 @@ function AuthzResponseContainer({authzRequestId}:{authzRequestId: number}){
       <TextField id="reqeust-text" label="Comments / Information"
         multiline rows={4} variant="outlined"
         value={query.data.comments}
-        disabled={true}
+        // I kept missing that there were comments, because the field was marked 
+        // disabled (grey), I kept not reading the "greyed out" filler text.
+        InputProps={{readOnly: true}}
+        error={!!query.data.comments}
       />
       
       { query.data.status === "REQUESTED" ? roleSelect : responseInfo }
@@ -185,4 +197,21 @@ function AuthzResponseContainer({authzRequestId}:{authzRequestId: number}){
       </Stack>
     </Stack>
   </ContainerCard>
+}
+
+function SubjectField({request, id, label}:{
+  request: AuthzRequestExtraV1,
+  id: string,
+  label: string,
+}){
+  const idp = mapClientIdToIdProvider(request.clientId);
+  if( idp === orcidBrand ){
+    return <InfoField id={id} label={label}
+      value={
+      <NewWindowLink href={`https://orcid.org/${request.subject}`}>
+        {request.subject}
+      </NewWindowLink>
+    }/> 
+  } 
+  return <InfoField id={id} label={label} value={request.subject}/>
 }

@@ -4,7 +4,10 @@ import {
   ContributorIdentifierSchemeType,
   ContributorPositionSchemeType,
   ContributorRoleSchemeType,
-  LegacyMetadataSchemaV1, OrganisationBlock, OrganisationIdentifierSchemeType, OrganisationRoleSchemeType,
+  LegacyMetadataSchemaV1,
+  OrganisationBlock,
+  OrganisationIdentifierSchemeType,
+  OrganisationRoleSchemeType,
   RaidoMetadataSchemaV1,
   ReadRaidResponseV2,
   ValidationFailure
@@ -17,7 +20,8 @@ import { navBrowserBack } from "Util/WindowUtil";
 import { ValidationFailureDisplay } from "Component/Util";
 import React, { useState } from "react";
 import { useAuthApi } from "Api/AuthApi";
-import {findOrcidProblem, findOrganisationIdProblem, mapInvalidOrcidChars} from "Page/MintRaidPage";
+import { findOrganisationIdProblem } from "Page/MintRaidPage";
+import { OrcidField } from "Component/OrcidField";
 
 function isDifferent(formData: FormData, original: FormData){
   return formData.leadContributor !== original.leadContributor;
@@ -71,6 +75,7 @@ export function UpgradeLegacySchemaForm({onUpgradeSuccess, raid, metadata}:{
   const api = useAuthApi();
   const [formData, setFormData] = useState(
     mapReadQueryDataToFormData(raid, metadata) );
+  const [isContribValid, setIsContribValid] = useState(false);
 
   const upgradeRequest = useMutation(
     async (props: {
@@ -97,12 +102,11 @@ export function UpgradeLegacySchemaForm({onUpgradeSuccess, raid, metadata}:{
     }
   );
 
-  const leadContribProblem = findOrcidProblem(formData.leadContributor);
   const leadOrganisationProblem = findOrganisationIdProblem(formData.leadOrganisation);
   const hasChanged =
     isDifferent(formData, mapReadQueryDataToFormData(raid, metadata));
 
-  const canSubmit = !leadContribProblem && !leadOrganisationProblem && hasChanged;
+  const canSubmit = isContribValid && !leadOrganisationProblem && hasChanged;
   const isWorking = upgradeRequest.isLoading;
 
   return <>
@@ -121,20 +125,18 @@ export function UpgradeLegacySchemaForm({onUpgradeSuccess, raid, metadata}:{
       });
     }}>
       <Stack spacing={2}>
-        <TextField id="contributor"
-          variant="outlined" autoCorrect="off" autoCapitalize="on"
+        <OrcidField
+          id="contributor"
           disabled={isWorking}
-          value={formData.leadContributor ?? ""}
-          onChange={(e) => {
-           setFormData({
-             ...formData,
-             leadContributor: mapInvalidOrcidChars(e.target.value)
-           });
+          value={formData.leadContributor}
+          onValueChange={e=>{
+            setIsContribValid(e.valid);
+            setFormData({
+              ...formData,
+              leadContributor: e.value
+            });
           }}
-          label={leadContribProblem ?
-           "Lead contributor - " + leadContribProblem :
-           "Lead contributor"}
-          error={!!leadContribProblem}
+          label="Lead contributor"
         />
         <TextField id="organisation"
           variant="outlined" autoCorrect="off" autoCapitalize="on"

@@ -1,11 +1,12 @@
 import { SmallContentMain } from "Design/LayoutMain";
-import { Stack, StackProps, Typography } from "@mui/material";
+import { Alert, Stack, StackProps, Typography } from "@mui/material";
 import React from "react";
 import { RaidoLink } from "Component/RaidoLink";
 import { NewWindowLink } from "Component/ExternalLink";
 import { getPrivacyPagePath } from "Page/Unauth/PrivacyPage";
 import { getUsageTermsPagePath } from "Page/Unauth/UsageTermsPage";
 import { getAboutRaidPagePath } from "Page/Unauth/AboutRaidPage";
+import { Config } from "Config";
 
 export function IntroContainer(){
   return <SmallContentMain center>
@@ -16,6 +17,11 @@ export function IntroContainer(){
       &emsp;
       <RaidoLink href={getUsageTermsPagePath()}>Usage terms</RaidoLink>
     </Typography>
+    { Config.signInWarning &&
+      <Alert style={{textAlign: "left"}} severity="warning">
+        {Config.signInWarning}
+      </Alert>
+    }
   </SmallContentMain>
 }
 

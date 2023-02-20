@@ -18,7 +18,7 @@ import static raid.ddb_migration.Util.printExecTime
 
 class JooqExec {
   /* the build script feeds these in to the JVM system properties, they're 
-    acutally sourced from the :api-svc:db:shared project.
+    actually sourced from the :api-svc:db:shared project.
     The default values in the shared project should work if you're following
     the readme instructions - but as per instructions, the password must be 
     set in ~/.config/raido/api-svc-db.gradle
