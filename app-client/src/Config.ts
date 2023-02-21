@@ -152,9 +152,6 @@ const devConfig: EnvironmentConfig = {
     clientId: "accaabfd-a7c8-4d36-9363-ea7342e24db5",
     authorizeUrl: "https://central.test.aaf.edu.au/providers/op/authorize",
     authnScope: "openid email profile",
-    //authnScope: "openid profile email" +
-    //  " aueduperson eduperson_orcid eduperson_assurance eduperson_affiliation" +
-    //  " eduperson_entitlement schac_home_organization",
   },
   google: {
     clientId: "112489799301-m39l17uigum61l64uakb32vjhujuuk73.apps.googleusercontent.com",
@@ -181,9 +178,11 @@ const devConfig: EnvironmentConfig = {
 
 const demoConfig: EnvironmentConfig = {
   environmentName: "demo",
-  signInWarning: `We will be resetting the DEMO database sometime in the
-    near future (in February).
-    This warning will be updated when that happens.`,
+  signInWarning: `The DEMO environment has been reset as of 2023-02-21.
+    All previously created raids have been deleted.  
+    All previously create API-keys have been deleted.
+    You will need to submit a new authorisation request to use the system.
+    Please send an email to contact@raid.org to let us know you need approval.`,
   isProd: false,
   raidoIssuer: "https://demo.raido-infra.com",
   raidoApiSvc: "",
@@ -217,6 +216,8 @@ const prodConfig: EnvironmentConfig = {
   isProd: true,
   raidoIssuer: "https://prod.raido-infra.com",
   raidoApiSvc: "",
+  signInWarning: `Note that this service is not yet live and contains
+   no raid data.`,
   aaf: {
     /* This is the PROD client ID allocated by AAF via ticket
     https://aaf.freshdesk.com/helpdesk/tickets/9910 */
@@ -225,8 +226,8 @@ const prodConfig: EnvironmentConfig = {
     authnScope: "openid email profile",
   },
   google: {
-    /* this is the DEMO client ID, created under STO's ARDC email address */
-    clientId: "112489799301-m39l17uigum61l64uakb32vjhujuuk73.apps.googleusercontent.com",
+    /* this is the PROD client ID, created under raid.services@ardc account */
+    clientId: "333652356987-6n1dlouree79qbffrtgqd9fit6phkvs5.apps.googleusercontent.com\n",
     authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
     authnScope: "openid email profile",
   },

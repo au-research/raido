@@ -10,6 +10,16 @@ select *
 from user_authz_request
 ;
 
+select distinct owner
+from raid
+;
+
+select *
+from raid
+where owner = 'UQ Centre for Advanced Imaging '
+order by creation_date desc
+limit 100
+;
 
 select * 
 from raid
