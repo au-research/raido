@@ -181,9 +181,10 @@ const devConfig: EnvironmentConfig = {
 
 const demoConfig: EnvironmentConfig = {
   environmentName: "demo",
-  signInWarning: `We will be resetting the DEMO database sometime in the
-    near future (in February).
-    This warning will be updated when that happens.`,
+  signInWarning: `The DEMO environment has been reset as of 2023-02-21.
+    All previously created raids have been deleted.  
+    You will need to submit a new authorisation request to use the system.
+    Please send an email to contact@raid.org to let us know you need approval.`,
   isProd: false,
   raidoIssuer: "https://demo.raido-infra.com",
   raidoApiSvc: "",
