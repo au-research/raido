@@ -2,6 +2,7 @@ package raid.v2_api_migration
 
 import org.jooq.Record
 import org.jooq.Result
+import org.jooq.impl.DSL
 import raid.ddb_migration.JooqExec
 import raido.idl.raidv2.model.MigrateLegacyRaidRequest
 import raido.idl.raidv2.model.MigrateLegacyRaidRequestMintRequest
@@ -27,7 +28,8 @@ class Import1Raid {
     var raid = null
     exec.withDb(db -> {
       raid = db.select().from(RAID).
-        where(RAID.OWNER.eq(svcPointName)).
+        // trim because UW_IMAGING has a space at the end in the legacy data
+        where(DSL.trim(RAID.OWNER).eq(svcPointName)).
         orderBy(RAID.CREATION_DATE.desc()).
         limit(1).fetchOne()
       assert raid : "could not find a raid to import for service point: $svcPointName"
@@ -61,6 +63,7 @@ class ImportAllRaids {
   public static final String NOTRE_DAME = "University of Notre Dame Library"
   public static final String RDM = "RDM@UQ"
   public static final String ARDC = "Australian Research Data Commons"
+  // beware: the legacy "owner" field in DDB has a space at the end 
   public static final String UQ_IMAGING = "UQ Centre for Advanced Imaging"
 
   static void main(String[] args) {
@@ -89,7 +92,10 @@ class ImportAllRaids {
     
     exec.withDb(db -> {
       var Result<Record> raids = db.select().from(RAID).
-        where(RAID.OWNER.eq(svcPointName)).
+        where(
+          // trim because UW_IMAGING has a space at the end in the legacy data
+          DSL.trim(RAID.OWNER).eq(svcPointName)
+        ).
         orderBy(RAID.CREATION_DATE.desc()).
         fetch()
       
