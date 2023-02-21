@@ -28,6 +28,7 @@ import { signOutUser } from "Auth/Authz";
 import { assert } from "Util/TypeUtil";
 import { publicApi, unauthzApi } from "Api/SimpleApi";
 import { mapClientIdToIdProvider } from "Component/IdProviderDisplay";
+import { SupportMailLink } from "Component/ExternalLink";
 
 export function NotAuthorizedContent({accessToken}: {accessToken: string}){
   const queryClient = new QueryClient({
@@ -166,8 +167,8 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
           <Alert severity="warning">
             <Typography>
               Our notification system is not yet implemented.  
-              Please inform your administrators manually (email, 
-              phone call, etc.) so that they know to approve your request.
+              Please send an email to <SupportMailLink/> so we can approve 
+              your request.
             </Typography>
           </Alert>
         </>}

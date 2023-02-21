@@ -3,7 +3,7 @@ import { normalisePath } from "Util/Location";
 import { useLocationPathname } from "Util/Hook/LocationPathname";
 import { SmallContentMain } from "Design/LayoutMain";
 import { List, ListItemText } from "@mui/material";
-import { NewWindowLink, supportEmail } from "Component/ExternalLink";
+import { NewWindowLink, SupportMailLink } from "Component/ExternalLink";
 import { HomeLink } from "Auth/IntroContainer";
 import { raidoTitle } from "Component/Util";
 
@@ -39,7 +39,7 @@ function Content(){
       </NewWindowLink>).
       </ListItemText>
       <ListItemText>You can request that your own data be deleted by submitting 
-        a request to <a href={`mailto:${supportEmail}`}>{supportEmail}</a>.
+        a request to <SupportMailLink/>.
         All data associated with your account (especially anything from Identity
         Providers like Google, etc.) will be deleted within 7 days.
       </ListItemText>

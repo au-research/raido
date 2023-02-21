@@ -2,7 +2,7 @@ import * as React from "react";
 import { OpenInNew } from "@mui/icons-material";
 import { Link, LinkProps } from "@mui/material";
 
-export const supportEmail = "web.services@ardc.edu.au";
+const supportEmail = "contact@raid.org";
 
 export const muiUrl = "https://mui.com";
 export const raidoGithubUrl = "https://github.com/au-research/raido"
@@ -21,4 +21,8 @@ export function NewWindowLink({children, ...linkProps}: {
       verticalAlign: "text-bottom"
     }}/>
   </Link>
+}
+
+export function SupportMailLink(){
+  return <a href={`mailto:${supportEmail}`}>{supportEmail}</a>
 }
