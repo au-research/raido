@@ -5,7 +5,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.hamcrest.Matchers;
 import org.jooq.exception.DataAccessException;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -67,7 +66,6 @@ class BasicRaidStableTest {
   }
 
   @Test
-  @Disabled
   void mintRaidV1_ReturnsRedactedInternalServerErrorOnDataAccessException() throws Exception {
     final var servicePointId = 999L;
     final var raid = createRaidForPost();

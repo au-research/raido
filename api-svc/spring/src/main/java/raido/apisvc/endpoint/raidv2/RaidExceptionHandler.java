@@ -6,6 +6,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import raido.apisvc.exception.CrossAccountAccessException;
 import raido.apisvc.exception.InvalidJsonException;
 import raido.apisvc.exception.ResourceNotFoundException;
@@ -19,11 +21,11 @@ import raido.idl.raidv2.model.ValidationFailureResponse;
 import static raido.apisvc.util.Log.to;
 
 @ControllerAdvice
-public class RaidExceptionHandler {
+public class RaidExceptionHandler extends ResponseEntityExceptionHandler {
   private static final Log log = to(RaidExceptionHandler.class);
 
   @ExceptionHandler(ValidationException.class)
-  public ResponseEntity<ValidationFailureResponse> handleValidationException(Exception e) {
+  public ResponseEntity<ValidationFailureResponse> handleValidationException(final Exception e) {
     final var exception = (ValidationException) e;
     log.warnEx(exception.getTitle(), e);
 
@@ -42,7 +44,7 @@ public class RaidExceptionHandler {
   }
 
   @ExceptionHandler(CrossAccountAccessException.class)
-  public ResponseEntity<FailureResponse> handleCrossAccountException(Exception e) {
+  public ResponseEntity<FailureResponse> handleCrossAccountException(final Exception e) {
     final var exception = (CrossAccountAccessException) e;
     log.warnEx(exception.getTitle(), e);
 
@@ -60,7 +62,7 @@ public class RaidExceptionHandler {
   }
 
   @ExceptionHandler(ResourceNotFoundException.class)
-  public ResponseEntity<FailureResponse> handleRaidApiException(Exception e) {
+  public ResponseEntity<FailureResponse> handleRaidApiException(final Exception e) {
     final var exception = (ResourceNotFoundException) e;
     log.warnEx(exception.getTitle(), e);
 
@@ -78,7 +80,7 @@ public class RaidExceptionHandler {
   }
 
   @ExceptionHandler(InvalidJsonException.class)
-  public ResponseEntity<FailureResponse> handleInvalidJsonException(Exception e) {
+  public ResponseEntity<FailureResponse> handleInvalidJsonException(final Exception e) {
     final var exception = (InvalidJsonException) e;
     log.warnEx(exception.getTitle(), e);
 
@@ -96,8 +98,25 @@ public class RaidExceptionHandler {
   }
 
   @ExceptionHandler(DataAccessException.class)
-  public ResponseEntity<Void> dataAccessExceptionHandler(Exception e) {
-    log.warnEx(e.getMessage(), e);
+  public ResponseEntity<Void> dataAccessExceptionHandler(final Exception e) {
+    log.errorEx("Database exception", e);
+
+    return ResponseEntity
+      .internalServerError()
+      .build();
+  }
+
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<Object> defaultExceptionHandler(final Exception e, final WebRequest request) {
+    try {
+      final ResponseEntity<Object> response = super.handleException(e, request);
+      if (response != null) {
+        return response;
+      }
+    } catch (Exception ex) {
+      log.errorEx("Exception thrown in exception handler", e);
+    }
+    log.errorEx("Unhandled exception", e);
 
     return ResponseEntity
       .internalServerError()
