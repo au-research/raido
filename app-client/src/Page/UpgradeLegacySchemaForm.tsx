@@ -14,13 +14,12 @@ import {
 } from "Generated/Raidv2";
 import { assert } from "Util/TypeUtil";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
-import { Alert, Stack, TextField } from "@mui/material";
+import { Alert, Stack } from "@mui/material";
 import { PrimaryActionButton, SecondaryButton } from "Component/AppButton";
 import { navBrowserBack } from "Util/WindowUtil";
 import { ValidationFailureDisplay } from "Component/Util";
 import React, { useState } from "react";
 import { useAuthApi } from "Api/AuthApi";
-import { findOrganisationIdProblem } from "Page/MintRaidPage";
 import { findOrcidProblem, OrcidField } from "Component/OrcidField";
 
 function isDifferent(formData: FormData, original: FormData){
@@ -29,7 +28,6 @@ function isDifferent(formData: FormData, original: FormData){
 
 type FormData = Readonly<{
   readonly leadContributor: string,
-  readonly leadOrganisation: string,
 }>;
 /* Going to stick with the FormData/ValidatorFormData types (from the EditForm)
 because I think we'll end up needing it eventually.
@@ -42,7 +40,6 @@ function mapReadQueryDataToFormData(
 ): ValidFormData{
   return {
     leadContributor: "",
-    leadOrganisation: "",
   }
 }
 
@@ -50,10 +47,6 @@ function createUpgradeMetadata(
   formData: ValidFormData,
   oldMetadata: LegacyMetadataSchemaV1
 ): RaidoMetadataSchemaV1{
-  const organisations: OrganisationBlock[] = [];
-  if (formData.leadOrganisation) {
-    organisations.push(createLeadOrganisation(formData.leadOrganisation, oldMetadata.dates.startDate));
-  }
 
   return {
     ...oldMetadata,
@@ -61,7 +54,6 @@ function createUpgradeMetadata(
     contributors: [
       createLeadContributor(
         formData.leadContributor, oldMetadata.dates.startDate )],
-    organisations,
   };
 }
 
@@ -101,12 +93,11 @@ export function UpgradeLegacySchemaForm({onUpgradeSuccess, raid, metadata}:{
     }
   );
 
-  const leadOrganisationProblem = findOrganisationIdProblem(formData.leadOrganisation);
   const hasChanged =
     isDifferent(formData, mapReadQueryDataToFormData(raid, metadata));
   const contribProblem = findOrcidProblem(formData.leadContributor);
 
-  const canSubmit = !contribProblem && !leadOrganisationProblem && hasChanged;
+  const canSubmit = !contribProblem && hasChanged;
   const isWorking = upgradeRequest.isLoading;
 
   return <>
@@ -138,33 +129,20 @@ export function UpgradeLegacySchemaForm({onUpgradeSuccess, raid, metadata}:{
           valueProblem={contribProblem}
           label="Lead contributor"
         />
-        <TextField id="organisation"
-          variant="outlined" autoCorrect="off" autoCapitalize="on"
-          disabled={isWorking}
-          value={formData.leadOrganisation ?? ""}
-          onChange={(e) => {
-          setFormData({
-            ...formData,
-            leadOrganisation: e.target.value
-          });
-          }}
-          label={leadOrganisationProblem ?
-          "Lead organisation - " + leadOrganisationProblem :
-          "Lead organisation"}
-          error={!!leadOrganisationProblem}
-        />
         <Stack direction={"row"} spacing={2}>
-          <SecondaryButton type="button" onClick={(e) => {
-            e.preventDefault();
-            navBrowserBack();
-          }}
-                           disabled={isWorking}>
+          <SecondaryButton type="button" 
+            onClick={(e) => {
+              e.preventDefault();
+              navBrowserBack();
+            }}
+            disabled={isWorking}
+          >
             Back
           </SecondaryButton>
           <PrimaryActionButton type="submit" context={"upgrading raid"}
-                               disabled={!canSubmit}
-                               isLoading={isWorking}
-                               error={upgradeRequest.error}
+            disabled={!canSubmit}
+            isLoading={isWorking}
+            error={upgradeRequest.error}
           >
             Upgrade
           </PrimaryActionButton>
