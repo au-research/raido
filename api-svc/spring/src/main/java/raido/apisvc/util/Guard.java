@@ -1,8 +1,6 @@
 package raido.apisvc.util;
 
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -13,7 +11,7 @@ import static raido.apisvc.util.StringUtil.convertToString;
  Util functions to evaluate "guard clauses"; if the condition is true method
  will return, if false method will throw a runtime exception.
  Used to be called "check" but that word is now used for methods that return
- boolean or a list of problems (consisitent with Spring validations, etc.)
+ boolean or a list of problems (consistent with Spring validations, etc.)
  For complicated argument lists, "messages" come first, then other args go
  further to the right - for consistency with methods that check multiple args
  with a varargs param.
@@ -152,9 +150,15 @@ public class Guard {
     }
   }
 
-  public static void notNull(@Nullable String message, @Nullable Object value) {
+  public static void notNull(String message, @Nullable Object value) {
     if( value == null ){
       throw failedCheck("null value: %s", message);
+    }
+  }
+
+  public static void notNull(Supplier<String> message, @Nullable Object value) {
+    if( value == null ){
+      throw failedCheck("null value: %s", message.get());
     }
   }
 
@@ -164,7 +168,7 @@ public class Guard {
     }
   }
 
-  public static void allNotNull(@Nullable String message, Object... values) {
+  public static void allNotNull(String message, Object... values) {
     for( Object iValue : values ){
       if( iValue == null ){
         throw failedCheck("one of the passed args is null: %s", message);
