@@ -18,16 +18,14 @@ import raido.apisvc.repository.ServicePointRepository;
 import raido.apisvc.repository.dto.Raid;
 import raido.apisvc.service.apids.ApidsService;
 import raido.apisvc.service.apids.model.ApidsMintResponse;
+import raido.apisvc.util.FileUtil;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
 import raido.idl.raidv2.model.*;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -187,18 +185,13 @@ class RaidServiceTest {
 //    verifyNoMoreInteractions(raidRepository);
 //  }
   private String raidJson() {
-
-    try {
-      return Files.readString(Path.of(getClass().getResource("/fixtures/raid.json").getPath()));
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+      return FileUtil.resourceContent("/fixtures/raid.json");
   }
 
 
 
   private CreateRaidV1Request createRaidRequest() throws IOException {
-    final String json = Files.readString(Path.of(Objects.requireNonNull(getClass().getResource("/fixtures/create-raid.json")).getFile()));
+    final String json = FileUtil.resourceContent("/fixtures/create-raid.json");
     return objectMapper.readValue(json, CreateRaidV1Request.class);
   }
 }

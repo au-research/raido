@@ -22,24 +22,40 @@ import raido.apisvc.exception.ResourceNotFoundException;
 import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.service.raid.validation.RaidSchemaV1ValidationService;
 import raido.apisvc.spring.security.raidv2.AuthzTokenPayload;
-import raido.idl.raidv2.model.*;
+import raido.apisvc.util.FileUtil;
+import raido.idl.raidv2.model.CreateRaidV1Request;
+import raido.idl.raidv2.model.FailureResponse;
+import raido.idl.raidv2.model.RaidSchemaV1;
+import raido.idl.raidv2.model.TitleType;
+import raido.idl.raidv2.model.UpdateRaidV1Request;
+import raido.idl.raidv2.model.ValidationFailure;
+import raido.idl.raidv2.model.ValidationFailureResponse;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static raido.apisvc.util.FileUtil.resourceContent;
 
 @ExtendWith(MockitoExtension.class)
 class BasicRaidStableTest {
@@ -587,7 +603,7 @@ class BasicRaidStableTest {
   }
 
   private RaidSchemaV1 createRaidForGet(final String handle, final long servicePointId, final String title, final LocalDate startDate) throws IOException {
-    final String json = Files.readString(Path.of(Objects.requireNonNull(getClass().getResource("/fixtures/raid.json")).getPath()));
+    final String json = FileUtil.resourceContent("/fixtures/raid.json");
 
     var raid = objectMapper.readValue(json, RaidSchemaV1.class);
 
@@ -616,13 +632,13 @@ class BasicRaidStableTest {
   }
 
   private UpdateRaidV1Request createRaidForPut() throws IOException {
-    final String json = Files.readString(Path.of(Objects.requireNonNull(getClass().getResource("/fixtures/raid.json")).getPath()));
+    final String json = resourceContent("/fixtures/raid.json");
 
     return objectMapper.readValue(json, UpdateRaidV1Request.class);
   }
 
   private CreateRaidV1Request createRaidForPost() throws IOException {
-    final String json = Files.readString(Path.of(Objects.requireNonNull(getClass().getResource("/fixtures/create-raid.json")).getPath()));
+    final String json = resourceContent("/fixtures/create-raid.json");
     return objectMapper.readValue(json, CreateRaidV1Request.class);
   }
 }
