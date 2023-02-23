@@ -192,7 +192,8 @@ const demoConfig: EnvironmentConfig = {
     authnScope: "openid email profile",
   },
   google: {
-    clientId: "112489799301-m39l17uigum61l64uakb32vjhujuuk73.apps.googleusercontent.com",
+    // OAuth client: raid.service@ardc.edu.au / ardc.edu.au / Raido production / Raido DEMO
+    clientId: "333652356987-ecetlds8nprpf81er55jnva1750jputr.apps.googleusercontent.com",
     authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
     authnScope: "openid email profile",
   },
@@ -226,8 +227,8 @@ const prodConfig: EnvironmentConfig = {
     authnScope: "openid email profile",
   },
   google: {
-    /* this is the PROD client ID, created under raid.services@ardc account */
-    clientId: "333652356987-6n1dlouree79qbffrtgqd9fit6phkvs5.apps.googleusercontent.com\n",
+    // OAuth client: raid.service@ardc.edu.au / ardc.edu.au / Raido production / Raido PROD
+    clientId: "333652356987-6n1dlouree79qbffrtgqd9fit6phkvs5.apps.googleusercontent.com",
     authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
     authnScope: "openid email profile",
   },
