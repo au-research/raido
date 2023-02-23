@@ -13,7 +13,7 @@ public class FileUtil {
   public static String resourceContent(String resourcePath){
     Guard.hasValue(resourcePath);
     URL resource = FileUtil.class.getResource(resourcePath);
-    Guard.notNull(()->"cant find " + resource, resource);
+    Guard.notNull(()->"cant find " + resourcePath, resource);
     try {
       return new String(readAllBytes( Paths.get(resource.toURI()) ));
     }
