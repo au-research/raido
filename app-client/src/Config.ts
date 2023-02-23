@@ -184,7 +184,7 @@ const demoConfig: EnvironmentConfig = {
     You will need to submit a new authorisation request to use the system.
     Please send an email to contact@raid.org to let us know you need approval.`,
   isProd: false,
-  raidoIssuer: "https://api.demo.raido-infra.com",
+  raidoIssuer: "https://api.demo.raid.org.au",
   raidoApiSvc: "",
   aaf: {
     clientId: "accaabfd-a7c8-4d36-9363-ea7342e24db5",
