@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManagerResolver;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,6 +24,7 @@ import raido.apisvc.util.Log;
 
 import java.io.IOException;
 
+import static org.springframework.http.HttpHeaders.HOST;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 import static raido.apisvc.endpoint.auth.AppUserAuthnEndpoint.IDP_URL;
 import static raido.apisvc.endpoint.raidv1.RaidV1.HANDLE_URL_PREFIX;
@@ -128,8 +130,8 @@ public class RaidWebSecurityConfig {
         /* client has done a request (probably a POST), with a bearer token,
         but not on a recognised "API path". 
         IMPROVE: dig out the token and decode it, so we can log details? */
-        log.info("ignored bearer token authenticated request %s:%s", 
-          request.getMethod(), request.getRequestURI());
+        log.info("ignored bearer token authenticated request %s:%s:%s", 
+          request.getHeader(HOST), request.getMethod(), request.getRequestURI());
         throw ExceptionUtil.authFailed();
       }
     };
