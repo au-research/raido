@@ -10,7 +10,7 @@ import static raido.apisvc.spring.config.RaidWebSecurityConfig.PUBLIC;
 
 @RequestMapping(PUBLIC)
 @RestController
-public class AnonymousEndpoint {
+public class PublicEndpoint {
 
   /** Be careful with changes to this, it is used by the Auto-scaling group 
   health-check.
