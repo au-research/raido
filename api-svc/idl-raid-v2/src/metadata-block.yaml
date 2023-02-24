@@ -94,9 +94,18 @@ components:
       required: ["url", ]
       properties:
         url: {type: string}
+    SubjectBlock:
+      type: object
+      properties:
+        id: { type: array }
+        subjectSchemeURI: { type: string }
+        subjectKeyword: { type: string }
+        subjectKeywordLanguage: { type: string }
+        subjectLanguageSchemeURI: { type: string }
     TitleType:
       type: string
       enum: ['Primary Title', 'Alternative Title']
     DescriptionType:
       type: string
-      enum: ['Primary Description', 'Alternative Description']          
+      enum: ['Primary Description', 'Alternative Description']
+
