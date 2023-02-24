@@ -15,7 +15,7 @@ import java.util.TimeZone;
  This could be brought down to 11 chars by using Base64 alpha encoding
  (10 if we elide the "u" separator, but you'd have theoretical collisions
  between IDs generated in the same millisecond with later times, though
- you'd never collide with any time in the current millenium).
+ you'd never collide with any time in the current millennium).
  <p/>
  You could bring it down to 7 chars if you limit the generator to one
  per millisecond.

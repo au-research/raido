@@ -18,6 +18,7 @@ import raido.apisvc.service.auth.RaidV2AppUserAuthService;
 import raido.apisvc.service.raidv1.RaidV1AuthService;
 import raido.apisvc.spring.security.raidv1.RaidV1AuthenticationProvider;
 import raido.apisvc.spring.security.raidv2.RaidV2AuthenticationProvider;
+import raido.apisvc.util.ExceptionUtil;
 import raido.apisvc.util.Log;
 
 import java.io.IOException;
@@ -66,8 +67,13 @@ public class RaidWebSecurityConfig {
       requestMatchers(RAID_V1_API + "/**").fullyAuthenticated().
       requestMatchers(RAID_V2_API + "/**").fullyAuthenticated().
       requestMatchers(RAID_STABLE_API + "/**").fullyAuthenticated().
-      // "default deny" anything not explicitly allowed above
-      anyRequest().denyAll();
+
+      /** everything above this counts as an "API endpoint" and uses standard 
+      spring RestController mappings to match paths and methods, etc.
+      Everything not matching the above, is now handled by the 
+      {@link raido.apisvc.endpoint.anonymous.CatchAllController}
+       */
+      anyRequest().permitAll();
 
     http.oauth2ResourceServer(oauth2 ->
       oauth2.authenticationManagerResolver(tokenResolver) );    
@@ -119,7 +125,12 @@ public class RaidWebSecurityConfig {
         return raidV2AuthProvider::authenticate;
       }
       else {
-        return null;
+        /* client has done a request (probably a POST), with a bearer token,
+        but not on a recognised "API path". 
+        IMPROVE: dig out the token and decode it, so we can log details? */
+        log.info("ignored bearer token authenticated request %s:%s", 
+          request.getMethod(), request.getRequestURI());
+        throw ExceptionUtil.authFailed();
       }
     };
   }
