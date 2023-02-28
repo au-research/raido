@@ -197,6 +197,9 @@ components:
         organisations:
           type: array
           items: {$ref: 'metadata-organisation-block.yaml#/components/schemas/OrganisationBlock'}
+        subjects:
+          type: array
+          items: {$ref: 'metadata-block.yaml#/components/schemas/SubjectBlock'}
     LegacyMetadataSchemaV1:
       description: >
         This type is used for raid data imported from the legacy raid system 

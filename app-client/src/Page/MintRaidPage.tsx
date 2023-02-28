@@ -15,7 +15,7 @@ import {
   AccessType,
   DescriptionBlock,
   OrganisationBlock,
-  RaidoMetadataSchemaV1,
+  RaidoMetadataSchemaV1, SubjectBlock,
   ValidationFailure
 } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
@@ -42,6 +42,7 @@ import {
   createLeadOrganisation
 } from "Page/UpgradeLegacySchemaForm";
 import { findOrcidProblem, OrcidField } from "Component/OrcidField";
+import { findForCodeProblem, ForCodeField } from "Component/ForCodeField";
 
 const pageUrl = "/mint-raid-v2";
 
@@ -90,6 +91,7 @@ type FormData = Readonly<{
   leadOrganisation: string,
   accessType: AccessType,
   accessStatement: string,
+  subject: string
 }>;
 type ValidFormData = WithRequired<FormData, 'startDate'>;
 
@@ -106,6 +108,11 @@ function mapFormDataToMetadata(
   const organisations: OrganisationBlock[] = [];
   if (form.leadOrganisation) {
     organisations.push(createLeadOrganisation(form.leadOrganisation, form.startDate))
+  }
+
+  const subjects: SubjectBlock[] = []
+  if (form.subject) {
+    subjects.push({id: form.subject})
   }
 
   return {
@@ -127,6 +134,7 @@ function mapFormDataToMetadata(
       createLeadContributor(form.leadContributor, form.startDate)
     ],
     organisations,
+    subjects
   };
 }
 
@@ -175,7 +183,8 @@ function MintRaidContainer({servicePointId, onCreate}: {
     true : !!formData.accessStatement;
   const isStartDateValid = isValidDate(formData?.startDate);
   const contribProblem = findOrcidProblem(formData.leadContributor);
-  const canSubmit = isTitleValid && isStartDateValid && 
+  const subjectProblem = findForCodeProblem(formData.subject);
+  const canSubmit = isTitleValid && isStartDateValid &&
     isAccessStatementValid && !contribProblem && !leadOrganisationProblem;
   const isWorking = mintRequest.isLoading;
   
@@ -239,7 +248,9 @@ function MintRaidContainer({servicePointId, onCreate}: {
                      "Lead organisation - " + leadOrganisationProblem :
                      "Lead Organisation"}
                    error={!!leadOrganisationProblem}
-        />        <FormControl>
+        />
+
+        <FormControl>
           <InputLabel id="accessTypeLabel">Access type</InputLabel>
           <Select
             labelId="accessTypeLabel"
@@ -268,7 +279,19 @@ function MintRaidContainer({servicePointId, onCreate}: {
           }}
           error={!isAccessStatementValid}
         />
-
+        <ForCodeField
+          id="subject"
+          disabled={isWorking}
+          value={formData.subject}
+          onValueChange={e=>{
+            setFormData({
+              ...formData,
+              subject: e.value
+            });
+          }}
+          valueProblem={subjectProblem}
+          label="Subject "
+        />
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton onClick={navBrowserBack}
             disabled={isWorking}>

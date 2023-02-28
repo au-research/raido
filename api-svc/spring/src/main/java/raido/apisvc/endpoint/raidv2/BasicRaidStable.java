@@ -33,9 +33,6 @@ public class BasicRaidStable implements BasicRaidStableApi {
 
   @Override
   public RaidSchemaV1 readRaidV1(String handle) {
-//    if(true) {
-//      throw new NullPointerException();
-//    }
     var user = getAuthzPayload();
     var data = raidService.readRaidV1(handle);
     guardOperatorOrAssociated(user, data.getId().getIdentifierServicePoint());
