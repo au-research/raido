@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.RestTemplate;
+import raido.apisvc.spring.config.environment.EnvironmentProps;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.UserRole;
 import raido.idl.raidv1.api.RaidV1Api;
@@ -52,12 +53,15 @@ public abstract class IntegrationTestCase {
   @Autowired protected TestAuthTokenService authTokenSvc;
   @Autowired protected Contract feignContract;
   @Autowired protected ObjectMapper mapper;
+  @Autowired protected EnvironmentProps env;
 
   protected String raidV1TestToken;
   protected String operatorToken;
   protected String adminToken;
   protected RaidoApiUtil raidoApi;
-  
+
+  private TestInfo testInfo;
+
   @RegisterExtension
   protected static JettyTestServer jettyTestServer = new JettyTestServer();
 
@@ -83,6 +87,15 @@ public abstract class IntegrationTestCase {
     raidoApi = new RaidoApiUtil(publicExperimentalClient(), mapper);
   }
 
+  @BeforeEach
+  public void init(TestInfo testInfo) {
+    this.testInfo = testInfo;
+  }
+  
+  public String getName(){
+    return testInfo.getDisplayName();
+  }
+  
   /**
    Once we figure out how to use the token statically, would like to figure
    out how to integrate this into Spring better.  Would like to inject
@@ -184,6 +197,4 @@ public abstract class IntegrationTestCase {
       filter(i->areEqual(i.getName(), name)).
       findFirst().orElseThrow();
   }
-
-
 }

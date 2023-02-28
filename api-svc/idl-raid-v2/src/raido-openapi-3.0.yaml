@@ -1,7 +1,8 @@
 openapi: 3.0.3
 servers:
-  - url: 'https://demo.raido-infra.com'
-  - url: 'https://test.raido-infra.com'
+  - url: 'https://raid.org.au'
+  - url: 'https://demo.raid.org.au'
+  - url: 'https://test.raid.org.au'
   - url: 'http://localhost:8080'
 info:
   title: RAID v2 API
@@ -44,6 +45,9 @@ paths:
     $ref: "public-experimental.yaml#/paths/~1public-list-service-point"
   /v2/public/handle/v3/{handle}:
     $ref: "public-experimental.yaml#/paths/~1public-read-raid-v3"
+  /{prefix}/{suffix}:
+    $ref: "public-stable.yaml#/paths/~1public-api-get-raid"
+
   # endregion
   
   

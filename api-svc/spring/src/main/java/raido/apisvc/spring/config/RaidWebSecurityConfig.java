@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManagerResolver;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,6 +13,7 @@ import org.springframework.security.web.firewall.HttpStatusRequestRejectedHandle
 import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.security.web.firewall.RequestRejectedHandler;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
+import raido.apisvc.endpoint.anonymous.CatchRootPathController;
 import raido.apisvc.service.auth.RaidV2ApiKeyAuthService;
 import raido.apisvc.service.auth.RaidV2AppUserAuthService;
 import raido.apisvc.service.raidv1.RaidV1AuthService;
@@ -31,16 +31,11 @@ import static raido.apisvc.endpoint.raidv1.RaidV1.HANDLE_URL_PREFIX;
 import static raido.apisvc.util.Log.to;
 
 @EnableWebSecurity
-/* between Spring 6.0.0-M6 and RC1, something changed so that the 
-`@Configuration` annotation is necessary - was getting "NoSuchBean: 
-springSecurityFilterChain", apparently cause this wasn't being found, so 
-spring wasn't finding our `securityFilterChain` definition and defaulted
-to expecting there to be a `springSecurityFilterChain` bean. 
-The @Configuration anno is now present on the spring-security-samples code. */
 @Configuration
 public class RaidWebSecurityConfig {
   private static final Log log = to(RaidWebSecurityConfig.class);
 
+  public static final String ROOT_PATH = "/";
   public static final String RAID_V1_API = "/v1";
   public static final String RAID_V2_API = "/v2";
   public static final String RAID_STABLE_API = "/raid";
@@ -70,10 +65,11 @@ public class RaidWebSecurityConfig {
       requestMatchers(RAID_V2_API + "/**").fullyAuthenticated().
       requestMatchers(RAID_STABLE_API + "/**").fullyAuthenticated().
 
-      /** everything above this counts as an "API endpoint" and uses standard 
-      spring RestController mappings to match paths and methods, etc.
-      Everything not matching the above, is now handled by the 
-      {@link raido.apisvc.endpoint.anonymous.CatchAllController}
+      /** The "get raid" API looks like: `https://raid.org.au/prefix/suffix`, 
+       so it doesn't have an explicit url prefix - have to just use 
+       `anyRequest()`.
+       @see raido.apisvc.endpoint.raidv2.PublicStable
+       @see CatchRootPathController
        */
       anyRequest().permitAll();
 

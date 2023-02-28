@@ -42,6 +42,7 @@ public class StringUtilTest {
     assertThat(mask("xxxxxxxxx")).isEqualTo("...9");
     assertThat(mask("xxxxxxxxxx")).isEqualTo("xxxxxxx...10");
     assertThat(mask("xxxxxxxxxxx")).isEqualTo("xxxxxxx...11");
+    assertThat(mask("0123456789", 20)).isEqualTo("...10");
   }
 
   /*

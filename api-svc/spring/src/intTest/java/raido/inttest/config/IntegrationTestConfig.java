@@ -56,13 +56,7 @@ public class IntegrationTestConfig {
 
   @Bean
   public RestTemplate restTemplate(){
-    var restTemplate = new RestTemplate();
-
-    /* The overridden RestTemplate with overridden encodingMode has been
-    removed as a bean and is called explicitly by the tests that really need it.
-    Most of the rest of the tests should just use a feign client. */
-
-    return restTemplate;
+    return ApiConfig.restTemplate();
   }
 
   public static RestTemplate restTemplateWithEncodingMode(){
@@ -93,5 +87,6 @@ public class IntegrationTestConfig {
       "Java 8 date/time type `java.time.LocalDate` not supported by default" */
       registerModule(new JavaTimeModule());
   }
+  
   
 }

@@ -6,7 +6,11 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletRegistration;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.FormHttpMessageConverter;
@@ -21,6 +25,8 @@ import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import raido.apisvc.spring.RequestLoggingFilter;
+import raido.apisvc.spring.config.http.converter.FormProblemDetailConverter;
+import raido.apisvc.spring.config.http.converter.XmlProblemDetailConverter;
 import raido.apisvc.util.Log;
 
 import java.util.ArrayList;
@@ -33,7 +39,7 @@ import static raido.apisvc.util.Log.to;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = {
-  // spring bootup and config
+  // spring boot-up and config
   "raido.apisvc.spring", 
   // services and endpoints
   "raido.apisvc.service",
@@ -189,7 +195,6 @@ public class ApiConfig implements WebMvcConfigurer {
       new MappingJackson2HttpMessageConverter();
 
     List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
-
     messageConverters.add(xmlConverter);
     messageConverters.add(jsonConverter);
     messageConverters.add(new FormHttpMessageConverter());
@@ -203,13 +208,19 @@ public class ApiConfig implements WebMvcConfigurer {
   /* Not sure if we should be using "configure" or "extend".  AFAIK, this here
   is resetting the default converters, so this converter is the only one.
   Does this mean our server doesn't support other content types?
-  Not sure if that's a good thing or a bad thing. */
+  Not sure if that's a good thing or a bad thing. 
+  Whatever else this is used for, it is used by the HttpEntityMethodProcessor
+  to create the "return value" from a "ResponseEntity", so if you're having 
+  conversion errors caused by weird contentTypes or accept headers, this might
+  be the place you need to deal with it.
+  */
   @Override
   public void configureMessageConverters(
     List<HttpMessageConverter<?>> converters
   ) {
     MappingJackson2HttpMessageConverter jsonConverter =
       new MappingJackson2HttpMessageConverter();
+
     /* By default dates looked like `1662077155.409857400`. 
     The app-client openapi generated ts that converted this to dates with code 
     like `new Date(json['startDate']` which did not parse the date properly.
@@ -217,6 +228,9 @@ public class ApiConfig implements WebMvcConfigurer {
     jsonConverter.getObjectMapper().
       disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     converters.add(jsonConverter);
+    
+    converters.add(new FormProblemDetailConverter());
+    converters.add(new XmlProblemDetailConverter());
 
     // prototype: used for returning static HTML from an endpoint
 //    converters.add(PublicExperimental.getHtmlStringConverter());
