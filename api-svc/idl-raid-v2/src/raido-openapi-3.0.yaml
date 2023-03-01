@@ -1,8 +1,8 @@
 openapi: 3.0.3
 servers:
-  - url: 'https://raid.org.au'
-  - url: 'https://demo.raid.org.au'
-  - url: 'https://test.raid.org.au'
+  - url: 'https://api.prod.raid.org.au'
+  - url: 'https://api.demo.raid.org.au'
+  - url: 'https://api.test.raid.org.au'
   - url: 'http://localhost:8080'
 info:
   title: RAID v2 API
