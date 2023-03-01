@@ -30,6 +30,8 @@ public class EnvironmentProps {
   For the moment, set this in your api-svc-env.properties, but I need to work
   out how to override for just the int tests (or tell RestTemplate to not 
   follow redirects, but that's tricky).
+  When this is fixed, remember to remove the doco from spring/readme.md about
+  needing to override.
   
   There's an issue with following redirects when they use different protocols.
   So it turns out having this set to "https" makes the int tests work because 
