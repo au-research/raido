@@ -5,6 +5,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.HttpClientErrorException;
 import raido.apisvc.util.Log;
+import raido.apisvc.util.test.BddUtil;
 import raido.idl.raidv2.model.PublicRaidMetadataSchemaV1;
 import raido.idl.raidv2.model.PublicReadRaidResponseV3;
 import raido.inttest.IntegrationTestCase;
@@ -82,6 +83,34 @@ public class GetHandleTest extends IntegrationTestCase {
   }
 
   @Test
+  public void browserViewExistingRaidWithNoAcceptHeaderShouldRedirectToWebsite() {
+    BddUtil.EXPECT(getName());
+
+    var raidApi = super.basicRaidExperimentalClient();
+    String title = getName() + IdFactory.generateUniqueId();
+
+    WHEN("a raid is minted");
+    var mintResult = raidApi.mintRaidoSchemaV1(
+      createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID) );
+    
+    HttpHeaders headers = new HttpHeaders();
+    /* RestTemplate appears to default to 
+     accept=application/xml, application/json, application/*+json */
+    headers.set(ACCEPT, "");
+    HttpEntity<String> entity = new HttpEntity<>(headers);
+
+
+    THEN("GET handle and no Accept header should redirect to landing page");
+    var res = rest.exchange(
+      raidoApiServerUrl(ROOT_PATH)+ mintResult.getRaid().getHandle(),
+      GET, entity, Void.class);
+    assertThat(res.getStatusCode().is3xxRedirection()).isTrue();
+    assertThat(res.getHeaders().getLocation().toString()).
+      isEqualTo(env.raidoLandingPage+"/"+mintResult.getRaid().getHandle());
+  }
+
+
+  @Test
   void apiGetNonExistentRaidHandleShould404() {
     EXPECT(getName());
 
@@ -89,6 +118,7 @@ public class GetHandleTest extends IntegrationTestCase {
     headers.set(ACCEPT, APPLICATION_JSON_VALUE);
     HttpEntity<String> entity = new HttpEntity<>(headers);
 
+    
     assertThatThrownBy(()->{
       rest.exchange(
         raidoApiServerUrl(ROOT_PATH) + "/102.100.100/42.42",

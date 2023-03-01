@@ -64,6 +64,7 @@ export interface EnvironmentConfig {
   orcid: AuthnConfig,
   
   raidoIssuer: string,
+  raidoLandingPage: string,
   /** The hostname to use to call the api-svc endpoints. 
   Generally empty string, so that API calls are a relative to current host.
   But you can use a different host if desired (but remember to configure CORS
@@ -121,7 +122,8 @@ function chooseEnvironmentConfig(env: string | undefined){
 const ciConfig: EnvironmentConfig = {
   environmentName: "ci",
   isProd: false,
-  raidoIssuer: "https://demo.raido-infra.com",
+  raidoIssuer: "https://demo.raid.org.au",
+  raidoLandingPage: "https://demo.raid.org.au",
   raidoApiSvc: "",
   aaf: {
     clientId: "",
@@ -146,6 +148,7 @@ const devConfig: EnvironmentConfig = {
   // have to run the https proxy for this, see local-orcid-signin.md  
   //raidoIssuer: "https://localhost:6080",
   raidoIssuer: "http://localhost:8080",
+  raidoLandingPage: "http://localhost:8080",
   raidoApiSvc: "",
   aaf: {
     // https://aaf.freshdesk.com/support/solutions/articles/19000096640-openid-connect-
@@ -185,6 +188,7 @@ const demoConfig: EnvironmentConfig = {
     Please send an email to contact@raid.org to let us know you need approval.`,
   isProd: false,
   raidoIssuer: "https://api.demo.raid.org.au",
+  raidoLandingPage: "https://demo.raid.org.au",
   raidoApiSvc: "",
   aaf: {
     clientId: "accaabfd-a7c8-4d36-9363-ea7342e24db5",
@@ -216,6 +220,7 @@ const prodConfig: EnvironmentConfig = {
   environmentName: "prod",
   isProd: true,
   raidoIssuer: "https://prod.raido-infra.com",
+  raidoLandingPage: "https://raid.org.au",
   raidoApiSvc: "",
   signInWarning: `Note that this service is not yet live and contains
    no raid data.`,

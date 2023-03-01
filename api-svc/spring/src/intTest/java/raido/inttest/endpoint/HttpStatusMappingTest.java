@@ -41,7 +41,8 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
   public static final String NON_EXISTENT_NON_API_PATH = "/does-not-exist";
   
   public static final String AUTHN_READ_RAID = "/v2/experimental/read-raid/v2";
-  
+  public static final String EXAMPLE_HANDLE = "102.100.100/suffix";
+
   @Test
   public void getAnonymousExistentPublicApiEndpointShouldWork() {
     BddUtil.EXPECT(getName());
@@ -54,7 +55,7 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
   public void getAnonymousExistentAuthnApiEndpointShouldFail() {
     BddUtil.EXPECT(getName());
     assertThatThrownBy(()->{
-      anonGet(rest, raidoApiServerUrl(AUTHN_READ_RAID+"/prefix/suffix"),
+      anonGet(rest, raidoApiServerUrl(AUTHN_READ_RAID+"/"+EXAMPLE_HANDLE),
         Void.class );
     }).
       isInstanceOf(Unauthorized.class).
@@ -70,7 +71,7 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
     HttpEntity<Result> entity = new HttpEntity<>(headers);
 
     assertThatThrownBy(()->{
-      rest.exchange(raidoApiServerUrl(AUTHN_READ_RAID+"/prefix/suffix"), 
+      rest.exchange(raidoApiServerUrl(AUTHN_READ_RAID+"/"+EXAMPLE_HANDLE), 
         GET, entity, Void.class);
     }).
       isInstanceOf(Unauthorized.class).
@@ -148,11 +149,11 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
     HttpEntity<String> entity = new HttpEntity<>(headers);
     
     var res = rest.exchange(
-      raidoApiServerUrl(ROOT_PATH) + "102.100.100/suffix", 
+      raidoApiServerUrl(ROOT_PATH) + "/" + EXAMPLE_HANDLE, 
       GET, entity, Void.class);
     assertThat(res.getStatusCode().is3xxRedirection()).isTrue();
     assertThat(res.getHeaders().getLocation().toString()).
-      isEqualTo(env.raidoLandingPage+"/102.100.100/suffix");
+      isEqualTo(env.raidoLandingPage+"/"+EXAMPLE_HANDLE);
   }
 
   @Test
@@ -160,7 +161,7 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
     BddUtil.EXPECT(getName());
 
     var rest = restTemplateWithEncodingMode();
-    var encodedHandle = urlEncode("102.100.100/suffix");
+    var encodedHandle = urlEncode(EXAMPLE_HANDLE);
 
     HttpHeaders headers = new HttpHeaders();
     headers.set(ACCEPT, TEXT_HTML_VALUE);
@@ -171,7 +172,7 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
       GET, entity, Void.class);
     assertThat(res.getStatusCode().is3xxRedirection()).isTrue();
     assertThat(res.getHeaders().getLocation().toString()).
-      isEqualTo(env.raidoLandingPage+"/102.100.100/suffix");
+      isEqualTo(env.raidoLandingPage+"/"+ EXAMPLE_HANDLE);
   }
 
   @Test

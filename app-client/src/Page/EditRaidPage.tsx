@@ -25,7 +25,7 @@ import Divider from "@mui/material/Divider";
 import { assert } from "Util/TypeUtil";
 import { NewWindowLink } from "Component/ExternalLink";
 import {
-  formatGlobalHandle,
+  formatCnriHandle,
   getRaidLandingPagePath
 } from "Page/Public/RaidLandingPage";
 import {
@@ -162,12 +162,12 @@ function RaidInfoList({handle, servicePointName}: {
   servicePointName?: string
 }){
   return <InfoFieldList>
-    <InfoField id="globalHandle" label="Global handle" value={
-      <NewWindowLink href={formatGlobalHandle(handle)}>
+    <InfoField id="globalHandle" label="CNRI URL" value={
+      <NewWindowLink href={formatCnriHandle(handle)}>
         {handle}
       </NewWindowLink>
     }/>
-    <InfoField id="raidoHandle" label="Raido handle" value={
+    <InfoField id="raidoHandle" label="Agency URL" value={
       <NewWindowLink href={getRaidLandingPagePath(handle)}>
         {handle}
       </NewWindowLink>

@@ -24,7 +24,7 @@ public class EnvironmentProps {
   public String rootPathRedirect;
   
   @Value("${EnvironmentConfig.raidoLandingPage:" +
-    "https://localhost:7080/handle" +
+    "http://localhost:7080/handle" +
     "}")
   public String raidoLandingPage;
 
