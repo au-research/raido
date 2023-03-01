@@ -181,9 +181,9 @@ const devConfig: EnvironmentConfig = {
 
 const demoConfig: EnvironmentConfig = {
   environmentName: "demo",
-  signInWarning: `The DEMO environment has been reset as of 2023-02-21.
+  signInWarning: `The DEMO environment has been reset as of 2023-03-01.
     All previously created raids have been deleted.  
-    All previously create API-keys have been deleted.
+    All previously created API-keys have been deleted.
     You will need to submit a new authorisation request to use the system.
     Please send an email to contact@raid.org to let us know you need approval.`,
   isProd: false,
