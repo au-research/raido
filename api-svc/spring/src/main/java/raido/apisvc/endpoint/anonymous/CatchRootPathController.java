@@ -1,9 +1,14 @@
 package raido.apisvc.endpoint.anonymous;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import raido.apisvc.endpoint.raidv2.PublicStable;
+import raido.apisvc.spring.bean.HandleUrlParser;
 import raido.apisvc.spring.config.environment.EnvironmentProps;
 import raido.apisvc.util.Log;
 
@@ -18,13 +23,20 @@ import static raido.apisvc.util.Log.to;
 @RestController
 public class CatchRootPathController {
   private static final Log log = to(CatchRootPathController.class);
+  public static final String ROOT_CATCHALL_PATTERN = ROOT_PATH + "**";
 
   private EnvironmentProps env;
+  private HandleUrlParser parser;
+  private PublicStable publicApi;
   
   public CatchRootPathController(
-    EnvironmentProps env
+    EnvironmentProps env,
+    HandleUrlParser parser,
+    PublicStable publicApi
   ) {
     this.env = env;
+    this.parser = parser;
+    this.publicApi = publicApi;
   }
 
   @GetMapping(value = ROOT_PATH, produces = TEXT_HTML_VALUE)
@@ -40,4 +52,46 @@ public class CatchRootPathController {
     throw new ResponseStatusException(NOT_FOUND);
   }
 
+  /* Without this, `GET /prefix%2Fsuffix Accept:application/json` would 
+  return 404, because it wouldn't match the OpenAPI generated 
+  `/{prefix}/{suffix}` pattern. */
+  @GetMapping(value = ROOT_CATCHALL_PATTERN, produces = APPLICATION_JSON_VALUE)
+  public ResponseEntity<?> catchAllApiGetHandle(HttpServletRequest req){
+    var parse = parser.parse(req.getServletPath());
+    
+    var handle = parse.orElseThrow(()->new ResponseStatusException(NOT_FOUND));
+
+    return ResponseEntity.ok(
+      publicApi.publicApiGetRaid(
+        handle.prefix(), 
+        handle.suffix() ));
+  }
+
+  /**
+   This is done manually instead of via OpenAPI, because:
+   (A) openapi can't generate two mapping differentiated only by the "content"
+   key
+   (B) it's not really part of the "API", we don't expect/want integrators
+   to be using the HTML directly (besides, we render via React, so it would 
+   likely be a huge pain for them to use). They should call the API version and
+   deal with the JSON.
+   (C) we need to parse the handle ourselves to deal with URL encoded handles 
+   */
+  @RequestMapping(
+    method = RequestMethod.GET,
+    value = ROOT_CATCHALL_PATTERN,
+    produces = {TEXT_HTML_VALUE}
+  )
+  public ResponseEntity<Void> publicBrowserViewRaid(
+    HttpServletRequest req
+  ) {
+    var parse = parser.parse(req.getServletPath());
+
+    var handle = parse.orElseThrow(()->new ResponseStatusException(NOT_FOUND));
+
+    return ResponseEntity.status(FOUND).
+      header(LOCATION, handle.formatUrl(env.raidoLandingPage)).
+      build();
+  }
+  
 }

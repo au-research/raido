@@ -24,6 +24,8 @@ import static raido.apisvc.spring.config.RaidWebSecurityConfig.ROOT_PATH;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.RestUtil.anonGet;
 import static raido.apisvc.util.RestUtil.anonPost;
+import static raido.apisvc.util.RestUtil.urlEncode;
+import static raido.inttest.config.IntegrationTestConfig.restTemplateWithEncodingMode;
 
 /**
  Test result of issuing GET and POST requests against various URLS:
@@ -154,6 +156,25 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
   }
 
   @Test
+  public void browserViewEncodedHandleShouldRedirectToLandingPage() {
+    BddUtil.EXPECT(getName());
+
+    var rest = restTemplateWithEncodingMode();
+    var encodedHandle = urlEncode("102.100.100/suffix");
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.set(ACCEPT, TEXT_HTML_VALUE);
+    HttpEntity<String> entity = new HttpEntity<>(headers);
+    
+    var res = rest.exchange(
+      raidoApiServerUrl(ROOT_PATH) + encodedHandle, 
+      GET, entity, Void.class);
+    assertThat(res.getStatusCode().is3xxRedirection()).isTrue();
+    assertThat(res.getHeaders().getLocation().toString()).
+      isEqualTo(env.raidoLandingPage+"/102.100.100/suffix");
+  }
+
+  @Test
   public void apiGetRootShould404() {
     BddUtil.EXPECT(getName());
 
@@ -195,8 +216,7 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
         raidoApiServerUrl(NON_EXISTENT_NON_API_PATH), POST, 
         entity, String.class );
     }).
-      isInstanceOf(NotFound.class).
-      hasMessageContaining("404 Not Found");
+      isInstanceOf(MethodNotAllowed.class);
   }
 
   @Test
@@ -211,8 +231,7 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
         raidoApiServerUrl(NON_EXISTENT_NON_API_PATH), POST, 
         entity, String.class );
     }).
-      isInstanceOf(NotFound.class).
-      hasMessageContaining("404 Not Found");
+      isInstanceOf(MethodNotAllowed.class);
   }
 
   @Test
