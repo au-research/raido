@@ -8,7 +8,7 @@ import db.migration.jooq.tables.Metadata;
 
 import org.jooq.Field;
 import org.jooq.JSONB;
-import org.jooq.Record1;
+import org.jooq.Record2;
 import org.jooq.Record7;
 import org.jooq.Row7;
 import org.jooq.impl.UpdatableRecordImpl;
@@ -133,8 +133,8 @@ public class MetadataRecord extends UpdatableRecordImpl<MetadataRecord> implemen
     // -------------------------------------------------------------------------
 
     @Override
-    public Record1<String> key() {
-        return (Record1) super.key();
+    public Record2<String, String> key() {
+        return (Record2) super.key();
     }
 
     // -------------------------------------------------------------------------

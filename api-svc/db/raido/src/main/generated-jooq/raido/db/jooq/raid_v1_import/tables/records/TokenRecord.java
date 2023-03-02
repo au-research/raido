@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 import org.jooq.Field;
 import org.jooq.JSONB;
-import org.jooq.Record1;
+import org.jooq.Record3;
 import org.jooq.Record5;
 import org.jooq.Row5;
 import org.jooq.impl.UpdatableRecordImpl;
@@ -105,8 +105,8 @@ public class TokenRecord extends UpdatableRecordImpl<TokenRecord> implements Rec
     // -------------------------------------------------------------------------
 
     @Override
-    public Record1<String> key() {
-        return (Record1) super.key();
+    public Record3<String, String, LocalDateTime> key() {
+        return (Record3) super.key();
     }
 
     // -------------------------------------------------------------------------
