@@ -23,8 +23,8 @@ import static raido.apisvc.spring.config.RaidWebSecurityConfig.ROOT_PATH;
 import static raido.apisvc.util.Log.to;
 
 @RestController
-public class CatchRootPathController {
-  private static final Log log = to(CatchRootPathController.class);
+public class RootPathController {
+  private static final Log log = to(RootPathController.class);
   public static final String ROOT_CATCHALL_PATTERN = ROOT_PATH + "**";
   public static final String HANDLE_PATH_PATTERN = "{prefix}/{suffix}";
 
@@ -32,7 +32,7 @@ public class CatchRootPathController {
   private HandleUrlParser parser;
   private PublicStable publicApi;
   
-  public CatchRootPathController(
+  public RootPathController(
     EnvironmentProps env,
     HandleUrlParser parser,
     PublicStable publicApi

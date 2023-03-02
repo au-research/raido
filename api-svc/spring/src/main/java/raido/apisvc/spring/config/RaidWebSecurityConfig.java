@@ -13,7 +13,7 @@ import org.springframework.security.web.firewall.HttpStatusRequestRejectedHandle
 import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.security.web.firewall.RequestRejectedHandler;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
-import raido.apisvc.endpoint.anonymous.CatchRootPathController;
+import raido.apisvc.endpoint.anonymous.RootPathController;
 import raido.apisvc.service.auth.RaidV2ApiKeyAuthService;
 import raido.apisvc.service.auth.RaidV2AppUserAuthService;
 import raido.apisvc.service.raidv1.RaidV1AuthService;
@@ -69,7 +69,7 @@ public class RaidWebSecurityConfig {
        so it doesn't have an explicit url prefix - have to just use 
        `anyRequest()`.
        @see raido.apisvc.endpoint.raidv2.PublicStable
-       @see CatchRootPathController
+       @see RootPathController
        */
       anyRequest().permitAll();
 
