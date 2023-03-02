@@ -3,19 +3,19 @@ package raido.inttest.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import raido.apisvc.spring.config.ApiConfig;
 import raido.apisvc.util.Log;
-
-import java.time.format.DateTimeFormatter;
 
 import static raido.apisvc.util.Log.to;
 
@@ -46,7 +46,9 @@ import static raido.apisvc.util.Log.to;
   ignoreResourceNotFound = true)
 public class IntegrationTestConfig {
   private static final Log log = to(IntegrationTestConfig.class);
-  
+  public static final String REST_TEMPLATE_VALUES_ONLY_ENCODING = 
+    "restTemplateValuesOnlyEncoding";
+
   /** Without this, @Value annotation don't resolve ${} placeholders */
   @Bean
   public static PropertySourcesPlaceholderConfigurer
@@ -55,11 +57,21 @@ public class IntegrationTestConfig {
   }
 
   @Bean
-  public RestTemplate restTemplate(){
-    return ApiConfig.restTemplate();
+  public static ClientHttpRequestFactory clientHttpRequestFactory(){
+    return ApiConfig.clientHttpRequestFactory(false);
   }
 
-  public static RestTemplate restTemplateWithEncodingMode(){
+  @Bean @Primary
+  public RestTemplate restTemplate(ClientHttpRequestFactory factory){
+    RestTemplate restTemplate = ApiConfig.restTemplate();
+    restTemplate.setRequestFactory(factory);
+    return restTemplate;
+  }
+
+  @Bean @Qualifier(REST_TEMPLATE_VALUES_ONLY_ENCODING)
+  public static RestTemplate restTemplateWithEncodingMode(
+    ClientHttpRequestFactory factory
+  ){
     var restTemplate = new RestTemplate();
     /* this is because of the silly "handles contain a slash" problem.
     If I manually url encode the handle so that the slash is replaced, then
@@ -70,7 +82,7 @@ public class IntegrationTestConfig {
     defaultUriBuilderFactory.setEncodingMode(
       DefaultUriBuilderFactory.EncodingMode.VALUES_ONLY );
     restTemplate.setUriTemplateHandler(defaultUriBuilderFactory);
-
+    restTemplate.setRequestFactory(factory);
     return restTemplate;
   }
 

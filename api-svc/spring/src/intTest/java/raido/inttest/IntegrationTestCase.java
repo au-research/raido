@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.RestTemplate;
 import raido.apisvc.spring.config.environment.EnvironmentProps;
@@ -40,6 +41,7 @@ import static raido.apisvc.util.StringUtil.areEqual;
 import static raido.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
 import static raido.db.jooq.api_svc.enums.UserRole.OPERATOR;
 import static raido.db.jooq.api_svc.enums.UserRole.SP_ADMIN;
+import static raido.inttest.config.IntegrationTestConfig.REST_TEMPLATE_VALUES_ONLY_ENCODING;
 
 @SpringJUnitConfig(
   name="SpringJUnitConfigContext",
@@ -48,6 +50,8 @@ public abstract class IntegrationTestCase {
   private static final Log log = to(IntegrationTestCase.class);
 
   @Autowired protected RestTemplate rest;
+  @Autowired @Qualifier(REST_TEMPLATE_VALUES_ONLY_ENCODING) 
+  protected RestTemplate valuesEncodingRest;
   @Autowired protected IntTestProps props;
   @Autowired protected DSLContext db;
   @Autowired protected TestAuthTokenService authTokenSvc;

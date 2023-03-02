@@ -160,14 +160,13 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
   public void browserViewEncodedHandleShouldRedirectToLandingPage() {
     BddUtil.EXPECT(getName());
 
-    var rest = restTemplateWithEncodingMode();
     var encodedHandle = urlEncode(EXAMPLE_HANDLE);
 
     HttpHeaders headers = new HttpHeaders();
     headers.set(ACCEPT, TEXT_HTML_VALUE);
     HttpEntity<String> entity = new HttpEntity<>(headers);
     
-    var res = rest.exchange(
+    var res = valuesEncodingRest.exchange(
       raidoApiServerUrl(ROOT_PATH) + encodedHandle, 
       GET, entity, Void.class);
     assertThat(res.getStatusCode().is3xxRedirection()).isTrue();

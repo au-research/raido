@@ -23,7 +23,6 @@ import static raido.apisvc.util.RestUtil.urlEncode;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
 import static raido.apisvc.util.test.BddUtil.THEN;
 import static raido.apisvc.util.test.BddUtil.WHEN;
-import static raido.inttest.config.IntegrationTestConfig.restTemplateWithEncodingMode;
 import static raido.inttest.util.MinimalRaidTestData.createMinimalSchemaV1;
 import static raido.inttest.util.MinimalRaidTestData.createMintRequest;
 
@@ -59,7 +58,6 @@ public class GetHandleTest extends IntegrationTestCase {
     var raidApi = super.basicRaidExperimentalClient();
     String title = getName() + IdFactory.generateUniqueId();
 
-    var rest = restTemplateWithEncodingMode();
     
     WHEN("a raid is minted");
     var mintResult = raidApi.mintRaidoSchemaV1(
@@ -73,7 +71,7 @@ public class GetHandleTest extends IntegrationTestCase {
     
     String encodedHandle = urlEncode(mintResult.getRaid().getHandle());
     
-    var res = rest.exchange(
+    var res = valuesEncodingRest.exchange(
       raidoApiServerUrl(ROOT_PATH) + "/" + encodedHandle,
       GET, entity, PublicReadRaidResponseV3.class);
     

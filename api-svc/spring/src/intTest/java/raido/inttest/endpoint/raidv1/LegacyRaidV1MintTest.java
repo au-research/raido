@@ -57,12 +57,10 @@ public class LegacyRaidV1MintTest extends IntegrationTestCase {
     var raid = super.raidV1Client().raidPost(
       createSimpleRaid("encodedSlash raidV1 intTest"));
 
-    // dunno how to get feign to do the encoding thing - this'll do
-    var rest = restTemplateWithEncodingMode();
     var encodedHandle = urlEncode(raid.getHandle());
 
     EXPECT("get handle with encoded path should succeed");
-    var getResult = RestUtil.get(rest, raidV1TestToken,
+    var getResult = RestUtil.get(valuesEncodingRest, raidV1TestToken,
       raidoApiServerUrl("/v1/handle/" + encodedHandle),
       RaidModel.class);
     assertThat(getResult.getHandle()).isEqualTo(raid.getHandle());
