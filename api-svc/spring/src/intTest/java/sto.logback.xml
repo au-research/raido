@@ -11,7 +11,7 @@
     </encoder>
   </appender>
 
-  <!-- debug is usually disabled in deployment enviornments -->
+  <!-- debug is usually disabled in deployment environments -->
   <root level="info">
     <appender-ref ref="UNMASKED_CONSOLE"/>
   </root>
