@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 
+import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.HttpHeaders.LOCATION;
 import static raido.apisvc.endpoint.anonymous.PublicEndpoint.STATUS_PATH;
@@ -43,8 +44,9 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
 
   /** if this is set to debug, then the body of the request will be logged */
   private static final Log bodyLog = to(RequestLoggingFilter.class, "body");
+  private static final Log bodyLog400 = to(RequestLoggingFilter.class, "body400");
 
-  private int getMaxPayloadLength = 1024;
+  private static int getMaxPayloadLength = 1024;
 
   public static Optional<FilterRegistration.Dynamic> add(
     ServletContext ctx, 
@@ -129,13 +131,20 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
 
     
     if( bodyLog.isDebugEnabled() ){
-    /* I wanted to put this before the filter invocation, but it has to 
-    go after - the request underlying the CachingWrapper has to be read 
-    before we can read the content here. */
+      /* I wanted to put this before the filter invocation, but it has to 
+      go after - the request underlying the CachingWrapper has to be read 
+      before we can read the content here. */
       bodyLog.with("uri", request.getRequestURI()).
         with("requestPayload", getMessagePayload(requestToUse)).
         debug();
     }
+
+    if( response.getStatus() == SC_BAD_REQUEST && bodyLog400.isInfoEnabled() ){
+      bodyLog.with("uri", request.getRequestURI()).
+        with("requestPayload", getMessagePayload(requestToUse)).
+        info("400 bad request");
+    }
+    
   }
 
   record ServletRequestId(
@@ -156,7 +165,7 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
       req.getRemoteAddr(), req.getRemoteUser());
   }
 
-  protected String getMessagePayload(HttpServletRequest request) {
+  public static String getMessagePayload(HttpServletRequest request) {
     ContentCachingRequestWrapper wrapper =
       WebUtils.getNativeRequest(request, ContentCachingRequestWrapper.class);
 
