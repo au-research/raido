@@ -63,7 +63,7 @@ public class IntegrationTestConfig {
 
   @Bean @Primary
   public RestTemplate restTemplate(ClientHttpRequestFactory factory){
-    RestTemplate restTemplate = ApiConfig.restTemplate();
+    RestTemplate restTemplate = ApiConfig.restTemplate(factory);
     restTemplate.setRequestFactory(factory);
     return restTemplate;
   }

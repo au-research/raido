@@ -80,6 +80,9 @@ dependencies{
    */
   implementation 'com.auth0:java-jwt:4.2.1'
   implementation 'com.auth0:jwks-rsa:0.21.2'
+
+  // so we can customise to disable followRedirects for tests 
+  implementation "com.squareup.okhttp3:okhttp:4.10.0"
   
   // use logback as the backing log implementation for slf4j
   runtimeOnly libs.bundles.logback.runtime

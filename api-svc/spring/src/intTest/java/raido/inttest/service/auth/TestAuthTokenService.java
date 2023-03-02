@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import raido.apisvc.service.auth.RaidV2ApiKeyAuthService;
 import raido.apisvc.service.raidv1.RaidV1AuthService;
+import raido.apisvc.spring.config.environment.EnvironmentProps;
 import raido.apisvc.spring.config.environment.RaidV1AuthProps;
 import raido.apisvc.spring.config.environment.RaidV2ApiKeyAuthProps;
 import raido.apisvc.util.Log;
@@ -27,10 +28,13 @@ import static raido.db.jooq.raid_v1_import.tables.Token.TOKEN;
 @Component
 public class TestAuthTokenService {
   private static final Log log = to(TestAuthTokenService.class);
+  
+  public static final String INTTEST_ENV = "inttest";
 
   @Autowired protected DSLContext db;
   @Autowired protected RaidV1AuthProps authProps;
   @Autowired protected RaidV2ApiKeyAuthProps authApiKeyProps;
+  @Autowired protected EnvironmentProps env;
 
   /* v1TestOwner is only used for minting via raidV1 endpoint, which is 
   only designed for use by RDM anyway.  The logic in the endpoint implementation
@@ -50,12 +54,12 @@ public class TestAuthTokenService {
   @Transactional
   public String initRaidV1TestToken() {
 
-    var authSvc = new RaidV1AuthService(db, authProps);
+    var authSvc = new RaidV1AuthService(db, authProps, env);
 
     TokenRecord record = db.newRecord(TOKEN);
-    String testToken = authSvc.sign(v1TestOwner);
+    String testToken = authSvc.sign(v1TestOwner, INTTEST_ENV);
     record.setName(v1TestOwner).
-      setEnvironment("test").
+      setEnvironment(INTTEST_ENV).
       setDateCreated(LocalDateTime.now()).
       setToken(testToken).
       setS3Export(JSONB.valueOf("{}")).

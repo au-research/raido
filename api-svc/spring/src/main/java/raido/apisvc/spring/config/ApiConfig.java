@@ -3,9 +3,8 @@ package raido.apisvc.spring.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletContextEvent;
-import jakarta.servlet.ServletRegistration;
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -13,26 +12,23 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
-import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import raido.apisvc.spring.RequestLoggingFilter;
 import raido.apisvc.spring.config.http.converter.FormProblemDetailConverter;
 import raido.apisvc.spring.config.http.converter.XmlProblemDetailConverter;
 import raido.apisvc.util.Log;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
 import static raido.apisvc.util.Log.to;
 
@@ -137,7 +133,7 @@ public class ApiConfig implements WebMvcConfigurer {
   }
   
   @Bean
-  public static RestTemplate restTemplate(){
+  public static RestTemplate restTemplate(ClientHttpRequestFactory factory){
     MappingJackson2XmlHttpMessageConverter xmlConverter =
       new MappingJackson2XmlHttpMessageConverter();
     xmlConverter.setSupportedMediaTypes(
@@ -153,10 +149,38 @@ public class ApiConfig implements WebMvcConfigurer {
 
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.setMessageConverters(messageConverters);
+    restTemplate.setRequestFactory(factory);
 
     return restTemplate;
   }
 
+  @Bean 
+  public static ClientHttpRequestFactory clientHttpRequestFactory(){
+    return clientHttpRequestFactory(true);
+  }
+
+  public static ClientHttpRequestFactory clientHttpRequestFactory(
+    boolean followRedirects
+  ) {
+    OkHttpClient client = new OkHttpClient.Builder().
+      followRedirects(followRedirects).
+      build();
+
+    return new OkHttp3ClientHttpRequestFactory(client) {
+      @Override
+      public void destroy() throws IOException {
+        /* copy pasted from the spring impl, because it won't do this for a 
+        provide client. */
+        Cache cache = client.cache();
+        if( cache != null ){
+          cache.close();
+        }
+        client.dispatcher().executorService().shutdown();
+        client.connectionPool().evictAll();
+      }
+    };
+  }
+  
   /* Not sure if we should be using "configure" or "extend".  AFAIK, this here
   is resetting the default converters, so this converter is the only one.
   Does this mean our server doesn't support other content types?

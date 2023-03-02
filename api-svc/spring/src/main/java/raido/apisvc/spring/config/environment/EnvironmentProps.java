@@ -9,9 +9,14 @@ import static raido.apisvc.util.Log.to;
 @Component
 public class EnvironmentProps {
   private static final Log log = to(EnvironmentProps.class);
-  
+
+  /** avoid comparing the envName with a value, use isProd or make a proper
+   config parameter for the feature you want to control. */
   @Value("${EnvironmentConfig.envName:unknown}")
   public String envName;
+
+  @Value("${EnvironmentConfig.isProd:false}")
+  public boolean isProd;
 
   @Value("${EnvironmentConfig.nodeId:unknown}")
   public String nodeId;
@@ -39,7 +44,7 @@ public class EnvironmentProps {
   https://stackoverflow.com/a/1884427/924597  
   */
   @Value("${EnvironmentConfig.raidoLandingPage:" +
-    "https://localhost:7080/handle" +
+    "http://localhost:7080/handle" +
     "}")
   public String raidoLandingPage;
 
