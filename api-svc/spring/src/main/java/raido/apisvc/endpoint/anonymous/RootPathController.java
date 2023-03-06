@@ -7,12 +7,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import raido.apisvc.endpoint.raidv2.PublicStable;
-import raido.apisvc.spring.bean.HandleUrlParser;
-import raido.apisvc.spring.bean.HandleUrlParser.Handle;
+import raido.apisvc.service.raid.id.IdentifierParser;
+import raido.apisvc.service.raid.id.IdentifierHandle;
 import raido.apisvc.spring.config.environment.EnvironmentProps;
 import raido.apisvc.util.Log;
-
-import java.util.Optional;
 
 import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.FOUND;
@@ -29,12 +27,12 @@ public class RootPathController {
   public static final String HANDLE_PATH_PATTERN = "{prefix}/{suffix}";
 
   private EnvironmentProps env;
-  private HandleUrlParser parser;
+  private IdentifierParser parser;
   private PublicStable publicApi;
   
   public RootPathController(
     EnvironmentProps env,
-    HandleUrlParser parser,
+    IdentifierParser parser,
     PublicStable publicApi
   ) {
     this.env = env;
@@ -60,14 +58,16 @@ public class RootPathController {
   `/{prefix}/{suffix}` pattern. */
   @GetMapping(value = ROOT_CATCHALL_PATTERN, produces = APPLICATION_JSON_VALUE)
   public ResponseEntity<?> catchAllApiGetHandle(HttpServletRequest req){
-    var parse = parser.parse(req.getServletPath());
+    var parse = parser.parseHandle(req.getServletPath());
     
-    var handle = parse.orElseThrow(()->new ResponseStatusException(NOT_FOUND));
-
-    return ResponseEntity.ok(
-      publicApi.publicApiGetRaid(
-        handle.prefix(), 
-        handle.suffix() ));
+    if( parse instanceof IdentifierHandle handle ){
+      return ResponseEntity.ok(
+        publicApi.publicApiGetRaid(
+          handle.prefix(),
+          handle.suffix() ));
+    }
+    
+    throw new ResponseStatusException(NOT_FOUND);
   }
 
   /**
@@ -87,13 +87,15 @@ public class RootPathController {
   public ResponseEntity<Void> publicBrowserViewRaid(
     HttpServletRequest req
   ) {
-    var parse = parser.parse(req.getServletPath());
+    var parse = parser.parseHandle(req.getServletPath());
 
-    var handle = parse.orElseThrow(()->new ResponseStatusException(NOT_FOUND));
-
-    return ResponseEntity.status(FOUND).
-      header(LOCATION, handle.formatUrl(env.raidoLandingPage)).
-      build();
+    if( parse instanceof IdentifierHandle handle ){
+      return ResponseEntity.status(FOUND).
+        header(LOCATION, handle.format(env.raidoLandingPage)).
+        build();
+    }
+    
+    throw new ResponseStatusException(NOT_FOUND);
   }
 
   /** This was implemented because a browser request from an empty browser
@@ -105,9 +107,9 @@ public class RootPathController {
     @PathVariable("prefix") String prefix,
     @PathVariable("suffix") String suffix
   ) {
-    Handle handle = new Handle(prefix, suffix, Optional.empty());
+    IdentifierHandle handle = new IdentifierHandle(prefix, suffix);
     return ResponseEntity.status(FOUND).
-      header(LOCATION, handle.formatUrl(env.raidoLandingPage)).
+      header(LOCATION, handle.format(env.raidoLandingPage)).
       build();
   }
   

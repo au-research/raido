@@ -2,8 +2,9 @@ package raido.apisvc.service.raid.validation;
 
 import org.springframework.stereotype.Component;
 import raido.apisvc.endpoint.message.ValidationMessage;
+import raido.apisvc.service.raid.id.IdentifierParser;
+import raido.apisvc.service.raid.id.IdentifierParser.ParseProblems;
 import raido.apisvc.util.Log;
-import raido.apisvc.util.ObjectUtil;
 import raido.idl.raidv2.model.*;
 
 import java.util.ArrayList;
@@ -12,8 +13,7 @@ import java.util.List;
 
 import static java.util.List.of;
 import static raido.apisvc.endpoint.message.ValidationMessage.fieldCannotChange;
-import static raido.apisvc.endpoint.raidv2.PublicExperimental.HANDLE_SEPERATOR;
-import static raido.apisvc.service.raid.MetadataService.RAID_ID_TYPE_URI;
+import static raido.apisvc.service.raid.id.IdentifierParser.mapProblemsToValidationFailures;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.areEqual;
 import static raido.apisvc.util.StringUtil.isBlank;
@@ -29,17 +29,21 @@ public class RaidoSchemaV1ValidationService {
   private final ContributorValidationService contribSvc;
 
   private final OrganisationValidationService orgSvc;
+
+  private IdentifierParser handleParser;
   
   public RaidoSchemaV1ValidationService(
     TitleValidationService titleSvc,
     DescriptionValidationService descSvc,
     ContributorValidationService contribSvc,
-    OrganisationValidationService orgSvc
+    OrganisationValidationService orgSvc,
+    IdentifierParser handleParser
   ) {
     this.titleSvc = titleSvc;
     this.descSvc = descSvc;
     this.contribSvc = contribSvc;
     this.orgSvc = orgSvc;
+    this.handleParser = handleParser;
   }
 
   /**
@@ -143,23 +147,12 @@ public class RaidoSchemaV1ValidationService {
       failures.add(ValidationMessage.IDENTIFIER_NOT_SET);
     }
     else {
-      var handleSplit = id.getIdentifier().split(HANDLE_SEPERATOR);
-      if( handleSplit.length == 2 ){
-        if( isBlank(handleSplit[0]) ){
-          log.with("handle", id.getIdentifier()).
-            warn("handle prefix was blank");
-          failures.add(ValidationMessage.IDENTIFIER_INVALID);
-        }
-        if( isBlank(handleSplit[1]) ){
-          log.with("handle", id.getIdentifier()).
-            warn("handle suffix was blank");
-          failures.add(ValidationMessage.IDENTIFIER_INVALID);
-        }
-      }
-      else {
-        log.with("handle", id.getIdentifier()).with("split", handleSplit).
-          warn("attempted to import invalid handle");
-        failures.add(ValidationMessage.IDENTIFIER_INVALID);
+      var parseResult = handleParser.parseUrl(id.getIdentifier());
+      if( parseResult instanceof ParseProblems idProblems ){
+        log.with("handle", id.getIdentifier()).
+          with("problems", idProblems.getProblems()).
+          warn("migration identifier could not be parsed");
+        failures.addAll(mapProblemsToValidationFailures(idProblems));
       }
     }
 

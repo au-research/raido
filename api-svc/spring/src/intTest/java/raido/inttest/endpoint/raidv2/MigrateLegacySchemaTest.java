@@ -18,6 +18,7 @@ import static raido.apisvc.util.test.BddUtil.EXPECT;
 import static raido.idl.raidv2.model.RaidoMetaschema.LEGACYMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
+import static raido.inttest.endpoint.raidv1.LegacyRaidV1MintTest.INT_TEST_ID_URL;
 import static raido.inttest.endpoint.raidv2.RaidoSchemaV1Test.createDummyLeaderContributor;
 
 public class MigrateLegacySchemaTest extends IntegrationTestCase {
@@ -44,7 +45,7 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
     var initMetadata = new LegacyMetadataSchemaV1().
       metadataSchema(LEGACYMETADATASCHEMAV1).
       id(new IdBlock().
-        identifier(handle).
+        identifier(INT_TEST_ID_URL + "/" + handle).
         identifierSchemeURI(RAID_ID_TYPE_URI).
         globalUrl("https://something.example.com")).
       descriptions(List.of(new DescriptionBlock().

@@ -3,6 +3,7 @@ package raido.apisvc.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.client.ClientHttpRequestFactory;
 import raido.apisvc.spring.config.ApiConfig;
 
 import java.util.ArrayList;
@@ -150,7 +151,8 @@ public final class ObjectUtil {
    we want to avoid logging too much in general - and the "structured logging" 
    logic could also get fancy with this too, as long as we use `with()`). 
    This is just for usage in the context of `toString()` - wire serialisation 
-   for these objects is handled by Spring, see {@link ApiConfig#restTemplate()}.
+   for these objects is handled by Spring, 
+   see {@link ApiConfig#restTemplate(ClientHttpRequestFactory)}.
    */
   private static ObjectMapper jsonToStringMapper = new ObjectMapper().
     // so it can do LocalDateTime, etc.
