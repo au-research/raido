@@ -18,6 +18,7 @@ import { SignInContext } from "Auth/SignInContext";
 import {
   NotAuthorizedContent
 } from "Auth/NotAuthorizedContent";
+import { EnvironmentBanner } from "Design/AppNavBar";
 
 export interface AuthState {
   signOut: () => void,
@@ -226,6 +227,7 @@ function NotSignedInContent({onSignInSucceeded}: {
     undefined as string | undefined);
   
   return <LargeContentMain>
+    <EnvironmentBanner />
     <IntroContainer/>
     <SmallContentMain>
       <SignInContext.Provider value={{

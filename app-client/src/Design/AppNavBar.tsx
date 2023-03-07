@@ -153,7 +153,7 @@ function AccountMenu(){
   </>;
 }
 
-function EnvironmentBanner(){
+export function EnvironmentBanner(){
   if( Config.isProd ){
     return null;
   }
