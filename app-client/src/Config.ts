@@ -161,8 +161,7 @@ const devConfig: EnvironmentConfig = {
     authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
     authnScope: "openid email profile",
   },
-  // this is not going to work, orcid require https and it's currently set
-  // to demo.raido-infra.com anyway 
+  // this is not going to work, orcid require https
   orcid: {
     clientId: "APP-IZBIZ6O7XH9RFG0X",
     authorizeUrl: "https://orcid.org/oauth/authorize",
