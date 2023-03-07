@@ -218,12 +218,14 @@ const demoConfig: EnvironmentConfig = {
 
 const prodConfig: EnvironmentConfig = {
   environmentName: "prod",
-  isProd: true,
-  raidoIssuer: "https://prod.raido-infra.com",
-  raidoLandingPage: "https://raid.org.au",
-  raidoApiSvc: "",
   signInWarning: `Note that this service is not yet live and contains
-   no raid data.`,
+   no raid data.
+   All database and raid data will be reset before the production release.
+   `,
+  isProd: true,
+  raidoIssuer: "https://api.prod.raid.org.au",
+  raidoLandingPage: "https://prod.raid.org.au",
+  raidoApiSvc: "",
   aaf: {
     /* This is the PROD client ID allocated by AAF via ticket
     https://aaf.freshdesk.com/helpdesk/tickets/9910 */
@@ -238,8 +240,8 @@ const prodConfig: EnvironmentConfig = {
     authnScope: "openid email profile",
   },
   orcid: {
-    // this is the DEMO client ID, created under STO's ORCiD account
-    clientId: "APP-IZBIZ6O7XH9RFG0X",
+    // this is the PROD client ID, created under the raid.services@ardc.eud.au ORCiD account
+    clientId: "APP-89ARS7MGN01HGYUO",
     authorizeUrl: "https://orcid.org/oauth/authorize",
     authnScope: "openid",
   },
