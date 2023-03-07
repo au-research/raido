@@ -205,6 +205,17 @@ Most repos should have a `.gitattributes` file with `text=lf`.
   * example: depending on the tool/config used, lambda code built on different
     platforms ends up with different hash codes causing unnecessary deployments
 
+Examples of current, concrete line ending failures in the repo:
+* JOOQ/Flyway generates platform specific line endings in DB comments, so if a 
+  linux and windows user both migrate and generate code for the same 
+  schema, they git a bunch of diffs around 
+  line endings 
+    * it's only the line endings in things like column comments, so the 
+      problem is likely actually Flyway rather than JOOQ 
+* CDK
+  * "assets" in CDK seem to get generated with line endings in them, so when
+    running on Windows, you will always see these show in a "cdk diff"
+
 If you do need cr/lf endings, say you want to implement a user function for 
 downloading a CSV file that looks nice in Windows notepad. Push that code all 
 the way into the last possible layer where you detect the client platform 
