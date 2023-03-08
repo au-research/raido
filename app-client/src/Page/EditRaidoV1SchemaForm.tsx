@@ -33,10 +33,9 @@ import {
 } from "Component/MetaDataContainer";
 import React, { useState } from "react";
 import { useAuthApi } from "Api/AuthApi";
-import { findOrganisationIdProblem } from "Page/MintRaidPage";
+import {findOrganisationIdProblem, findSubjectProblem} from "Page/MintRaidPage";
 import { createLeadOrganisation } from "./UpgradeLegacySchemaForm";
 import { findOrcidProblem, OrcidField } from "Component/OrcidField";
-import {findForCodeProblem, ForCodeField} from "../Component/ForCodeField";
 
 function isDifferent(formData: FormData, original: FormData){
   return formData.primaryTitle !== original.primaryTitle ||
@@ -182,7 +181,7 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
     isDifferent(formData, mapReadQueryDataToFormData(raid, metadata));
   const isStartDateValid = isValidDate(formData?.startDate);
   const contribProblem = findOrcidProblem(formData.leadContributor);
-  const subjectProblem = findForCodeProblem(formData.subject);
+  const subjectProblem = findSubjectProblem(formData.subject);
 
   const canSubmit = isTitleValid && isAccessStatementValid && 
     isStartDateValid && !contribProblem && 
@@ -273,28 +272,20 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
             <MenuItem value={AccessType.Closed}>Closed</MenuItem>
           </Select>
         </FormControl>
-        <TextField id="accessStatement" label="Access statement"
-          variant="outlined" autoCorrect="off" autoCapitalize="on"
-          required={formData.accessType !== "Open"}
-          disabled={isWorking}
-          value={formData.accessStatement}
-          onChange={e => {
-            setFormData({...formData, accessStatement: e.target.value});
-          }}
-          error={!isAccessStatementValid}
-        />
-        <ForCodeField
-          id="subject"
-          disabled={isWorking}
-          value={formData.subject}
-          onValueChange={e=>{
-            setFormData({
-              ...formData,
-              subject: e.value
-            });
-          }}
-          valueProblem={subjectProblem}
-          label="Subject "
+        <TextField id="subject"
+                   variant="outlined" autoCorrect="off" autoCapitalize="off"
+                   disabled={isWorking}
+                   value={formData.subject ?? ""}
+                   onChange={(e) => {
+                     setFormData({
+                       ...formData,
+                       subject: e.target.value
+                     });
+                   }}
+                   label={ subjectProblem ?
+                     "Subject - " + leadOrganisationProblem :
+                     "Subject"}
+                   error={!!subjectProblem}
         />
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton type="button" onClick={(e) => {

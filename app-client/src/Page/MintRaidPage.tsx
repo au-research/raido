@@ -42,7 +42,6 @@ import {
   createLeadOrganisation
 } from "Page/UpgradeLegacySchemaForm";
 import { findOrcidProblem, OrcidField } from "Component/OrcidField";
-import { findForCodeProblem, ForCodeField } from "Component/ForCodeField";
 
 const pageUrl = "/mint-raid-v2";
 
@@ -183,7 +182,7 @@ function MintRaidContainer({servicePointId, onCreate}: {
     true : !!formData.accessStatement;
   const isStartDateValid = isValidDate(formData?.startDate);
   const contribProblem = findOrcidProblem(formData.leadContributor);
-  const subjectProblem = findForCodeProblem(formData.subject);
+  const subjectProblem = findSubjectProblem(formData.subject);
   const canSubmit = isTitleValid && isStartDateValid &&
     isAccessStatementValid && !contribProblem && !leadOrganisationProblem;
   const isWorking = mintRequest.isLoading;
@@ -279,18 +278,20 @@ function MintRaidContainer({servicePointId, onCreate}: {
           }}
           error={!isAccessStatementValid}
         />
-        <ForCodeField
-          id="subject"
-          disabled={isWorking}
-          value={formData.subject}
-          onValueChange={e=>{
-            setFormData({
-              ...formData,
-              subject: e.value
-            });
-          }}
-          valueProblem={subjectProblem}
-          label="Subject "
+        <TextField id="subject"
+                   variant="outlined" autoCorrect="off" autoCapitalize="off"
+                   disabled={isWorking}
+                   value={formData.subject ?? ""}
+                   onChange={(e) => {
+                     setFormData({
+                       ...formData,
+                       subject: e.target.value
+                     });
+                   }}
+                   label={ subjectProblem ?
+                     "Subject - " + subjectProblem :
+                     "Subject"}
+                   error={!!subjectProblem}
         />
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton onClick={navBrowserBack}
@@ -331,6 +332,30 @@ export function findOrganisationIdProblem(id: string): string|undefined{
   }
 
   // add checksum logic?
+
+  return undefined;
+}
+const forCodePrefixUrl = "https://linked.data.gov.au/def/anzsrc-for/2020/";
+
+function mapInvalidSubjectChars(id: string): string{
+  id = id.replace(forCodePrefixUrl, "");
+
+  return id;
+}
+
+export function findSubjectProblem(id: string): string|undefined{
+  if (id) {
+    if (!id.startsWith(forCodePrefixUrl)) {
+      return 'should start with ' + forCodePrefixUrl;
+    }
+
+    id = mapInvalidSubjectChars(id);
+    let code = id.substring(id.lastIndexOf('/') + 1)
+
+    if (code.match(/[^\d]/)) {
+      return "can only include numbers";
+    }
+  }
 
   return undefined;
 }

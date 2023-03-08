@@ -43,6 +43,12 @@ class SubjectValidationServiceTest {
   }
 
   @Test
+  void noFailuresIfSubjectBlockIsNull() {
+    final List<ValidationFailure> validationFailures = validationService.validateSubjects(null);
+    assertThat(validationFailures, empty());
+  }
+
+  @Test
   void returnsFailureWithAlphabeticCharactersInId() {
     final var id = "https://linked.data.gov.au/def/anzsrc-for/2020/22a222";
 

@@ -3,7 +3,6 @@ package raido.apisvc.service.raid.validation;
 import org.springframework.stereotype.Component;
 import raido.apisvc.endpoint.message.ValidationMessage;
 import raido.apisvc.util.Log;
-import raido.apisvc.util.ObjectUtil;
 import raido.idl.raidv2.model.*;
 
 import java.util.ArrayList;
@@ -13,7 +12,6 @@ import java.util.List;
 import static java.util.List.of;
 import static raido.apisvc.endpoint.message.ValidationMessage.fieldCannotChange;
 import static raido.apisvc.endpoint.raidv2.PublicExperimental.HANDLE_SEPERATOR;
-import static raido.apisvc.service.raid.MetadataService.RAID_ID_TYPE_URI;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.areEqual;
 import static raido.apisvc.util.StringUtil.isBlank;
@@ -29,17 +27,19 @@ public class RaidoSchemaV1ValidationService {
   private final ContributorValidationService contribSvc;
 
   private final OrganisationValidationService orgSvc;
-  
+  private final SubjectValidationService subjectSvc;
+
   public RaidoSchemaV1ValidationService(
     TitleValidationService titleSvc,
     DescriptionValidationService descSvc,
     ContributorValidationService contribSvc,
-    OrganisationValidationService orgSvc
-  ) {
+    OrganisationValidationService orgSvc,
+    final SubjectValidationService subjectSvc) {
     this.titleSvc = titleSvc;
     this.descSvc = descSvc;
     this.contribSvc = contribSvc;
     this.orgSvc = orgSvc;
+    this.subjectSvc = subjectSvc;
   }
 
   /**
@@ -64,6 +64,7 @@ public class RaidoSchemaV1ValidationService {
     failures.addAll(validateAlternateUrls(metadata.getAlternateUrls()));
     failures.addAll(contribSvc.validateContributors(metadata.getContributors()));
     failures.addAll(orgSvc.validateOrganisations(metadata.getOrganisations()));
+    failures.addAll(subjectSvc.validateSubjects(metadata.getSubjects()));
 
     return failures;
   }

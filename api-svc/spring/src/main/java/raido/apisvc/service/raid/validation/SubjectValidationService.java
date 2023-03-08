@@ -26,6 +26,10 @@ public class SubjectValidationService {
 
     final var failures = new ArrayList<ValidationFailure>();
 
+    if (subjects == null) {
+      return failures;
+    }
+
     subjects.stream().
       collect(indexed()).
       forEach((i, subject)->{
