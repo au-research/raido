@@ -151,7 +151,7 @@ function AppUserContainer({appUserId}: {
             value={formData.role ?? "SP_USER"}
             label="Role"
             onChange={(event: SelectChangeEvent) => {
-              formData.role = event.target.value;
+              setFormData({...formData, role: event.target.value})
             }}
           >
             <MenuItem value={"SP_USER"}>Service Point User</MenuItem>
