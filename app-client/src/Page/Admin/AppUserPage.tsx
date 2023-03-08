@@ -37,6 +37,7 @@ import { InfoFieldList, InfoField } from "Component/InfoField";
 import { NewWindowLink, orcidUrl } from "Component/ExternalLink";
 import { orcidBrand } from "Component/OrcidField";
 import { mapClientIdToIdProvider } from "Component/IdProviderDisplay";
+import { isOperator } from "Auth/Authz";
 
 const log = console;
 
@@ -159,21 +160,24 @@ function AppUserContainer({appUserId}: {
             <MenuItem value={"OPERATOR"}>Raido Operator</MenuItem>
           </Select>
         </FormControl>
-        <FormControl>
-          <Stack direction={"row"} spacing={2} alignItems={"center"}>
-            <TextField id="tokenCutoff" label="Sign-in cutoff"
-              variant="outlined" disabled
-              value={formatLocalDateAsIsoShortDateTime(formData.tokenCutoff)}
-            />
-            <West/>
-            <SecondaryButton onClick={(e) => {
-              e.preventDefault();
-              setFormData({...formData, tokenCutoff: new Date()});
-            }}>
-              Force sign-in
-            </SecondaryButton>
-          </Stack>
-        </FormControl>
+        {/* this isn't a security thing, it's about not confusing users */}
+        { isOperator(auth) && 
+          <FormControl>
+            <Stack direction={"row"} spacing={2} alignItems={"center"}>
+              <TextField id="tokenCutoff" label="Sign-in cutoff"
+                variant="outlined" disabled
+                value={formatLocalDateAsIsoShortDateTime(formData.tokenCutoff)}
+              />
+              <West/>
+              <SecondaryButton onClick={(e) => {
+                e.preventDefault();
+                setFormData({...formData, tokenCutoff: new Date()});
+              }}>
+                Force sign-in
+              </SecondaryButton>
+            </Stack>
+          </FormControl>
+        }
         <FormControl>
           <FormControlLabel
             disabled={isWorking}
