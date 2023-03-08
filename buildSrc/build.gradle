@@ -1,0 +1,9 @@
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation gradleApi()
+    implementation 'org.apache.jena:jena-arq:4.7.0'
+    implementation 'org.postgresql:postgresql:42.5.1'
+}
