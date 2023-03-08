@@ -15,7 +15,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuthApi } from "Api/AuthApi";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import {
-  Fab,
   Table,
   TableBody,
   TableCell,
@@ -25,7 +24,7 @@ import {
 } from "@mui/material";
 import { RefreshIconButton } from "Component/RefreshIconButton";
 import { RaidoLink } from "Component/RaidoLink";
-import { Add, Visibility, VisibilityOff } from "@mui/icons-material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { getAppUserPageLink } from "Page/Admin/AppUserPage";
 
 const log = console;
@@ -92,7 +91,7 @@ function AppUserListTable({servicePointId}: {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Email</TableCell>
+            <TableCell>Identity</TableCell>
             <TableCell>ID Provider</TableCell>
             <TableCell align="center">Enabled</TableCell>
           </TableRow>

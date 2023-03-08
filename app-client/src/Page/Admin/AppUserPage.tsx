@@ -34,6 +34,9 @@ import { West } from "@mui/icons-material";
 import { formatLocalDateAsIsoShortDateTime } from "Util/DateUtil";
 import Divider from "@mui/material/Divider";
 import { InfoFieldList, InfoField } from "Component/InfoField";
+import { NewWindowLink, orcidUrl } from "Component/ExternalLink";
+import { orcidBrand } from "Component/OrcidField";
+import { mapClientIdToIdProvider } from "Component/IdProviderDisplay";
 
 const log = console;
 
@@ -117,9 +120,11 @@ function AppUserContainer({appUserId}: {
       <InfoField id="servicePoint" label="Service Point"
         value={query.data.servicePoint.name}
       />
-      <InfoField id="email" label="Email"
+      <InfoField id="identity" label="Identity"
         value={query.data.appUser.email}
       />
+      <SubjectField id="subject" label="Subject" data={query.data.appUser}/>
+      
       <InfoField id="approvedBy" label="Approved by"
         value={query.data.authzRequest?.respondingUserEmail || 'Auto-approved'}
       />
@@ -237,4 +242,24 @@ function AppUserHelp(){
       </ul>
     </Stack>
   }/>;
+}
+
+export function SubjectField({data, id, label}:{
+  data: {
+    clientId: string,
+    subject: string,
+  },
+  id: string,
+  label: string,
+}){
+  const idp = mapClientIdToIdProvider(data.clientId);
+  if( idp === orcidBrand ){
+    return <InfoField id={id} label={label}
+      value={
+        <NewWindowLink href={`${orcidUrl}/${data.subject}`}>
+          {data.subject}
+        </NewWindowLink>
+      }/>
+  }
+  return <InfoField id={id} label={label} value={data.subject}/>
 }

@@ -6,6 +6,7 @@ const supportEmail = "contact@raid.org";
 
 export const muiUrl = "https://mui.com";
 export const raidoGithubUrl = "https://github.com/au-research/raido"
+export const orcidUrl = "https://orcid.org"
 
 export function NewWindowLink({children, ...linkProps}: {
   children: React.ReactNode,
