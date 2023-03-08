@@ -201,8 +201,14 @@ const demoConfig: EnvironmentConfig = {
     authnScope: "openid email profile",
   },
   orcid: {
-    clientId: "APP-207226CSNVZ1ZSQM",
-    authorizeUrl: "https://sandbox.orcid.org/oauth/authorize",
+    // sandbox test client from orcid
+    //clientId: "APP-207226CSNVZ1ZSQM",
+    //authorizeUrl: "https://sandbox.orcid.org/oauth/authorize",
+    
+    // client created under STO's personal orcid
+    clientId: "APP-IZBIZ6O7XH9RFG0X",
+    authorizeUrl: "https://orcid.org/oauth/authorize",
+    
     authnScope: "openid",
   },
   authApiQuery: {
