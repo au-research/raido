@@ -88,13 +88,12 @@ public class RaidV2ApiKeyAuthService {
   public Optional<Authentication> verifyAndAuthorize(DecodedJWT decodedJwt){
     var verifiedJwt = verify(decodedJwt);
     
-    // security:sto check claims and expiry and stuff
+    // security:sto check claims and expiry and stuff 
     String clientId = verifiedJwt.
       getClaim(RaidoClaim.CLIENT_ID.getId()).asString();
     String email = verifiedJwt.getClaim(RaidoClaim.EMAIL.getId()).asString();
     Boolean isAuthzAppUser = verifiedJwt.getClaim(
       RaidoClaim.IS_AUTHORIZED_APP_USER.getId() ).asBoolean();
-    
     var issuedAt = verifiedJwt.getIssuedAtAsInstant();
     Guard.notNull(issuedAt);
     
@@ -103,11 +102,12 @@ public class RaidV2ApiKeyAuthService {
     Guard.hasValue(email);
     
     if( !isAuthzAppUser ){
-      return of(aNonAuthzTokenPayload().
-        withSubject(verifiedJwt.getSubject()).
-        withEmail(email).
-        withClientId(clientId).
-        build() );
+      /* there's no "auth request" step for api-keys, they're "authorized as 
+      soon as an Op or Admin creates them.
+      This shouldn't happen - investigate.  */
+      log.with("claims", verifiedJwt.getClaims()).
+        error("verified api-key with bad IS_AUTHORIZED_APP_USER value");
+      throw authFailed();
     }
 
     Long appUserId = verifiedJwt.

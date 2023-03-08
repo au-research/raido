@@ -25,10 +25,11 @@ import raido.idl.raidv2.api.BasicRaidExperimentalApi;
 import raido.idl.raidv2.api.PublicExperimentalApi;
 import raido.idl.raidv2.model.ApiKey;
 import raido.idl.raidv2.model.GenerateApiTokenRequest;
-import raido.idl.raidv2.model.ServicePoint;
+import raido.idl.raidv2.model.GenerateApiTokenResponse;
+import raido.idl.raidv2.model.PublicServicePoint;
 import raido.inttest.config.IntTestProps;
 import raido.inttest.config.IntegrationTestConfig;
-import raido.inttest.service.auth.TestAuthTokenService;
+import raido.inttest.service.auth.BootstrapAuthTokenService;
 
 import java.time.LocalDateTime;
 
@@ -40,7 +41,6 @@ import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.areEqual;
 import static raido.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
 import static raido.db.jooq.api_svc.enums.UserRole.OPERATOR;
-import static raido.db.jooq.api_svc.enums.UserRole.SP_ADMIN;
 import static raido.inttest.config.IntegrationTestConfig.REST_TEMPLATE_VALUES_ONLY_ENCODING;
 
 @SpringJUnitConfig(
@@ -54,14 +54,13 @@ public abstract class IntegrationTestCase {
   protected RestTemplate valuesEncodingRest;
   @Autowired protected IntTestProps props;
   @Autowired protected DSLContext db;
-  @Autowired protected TestAuthTokenService authTokenSvc;
+  @Autowired protected BootstrapAuthTokenService bootstrapTokenSvc;
   @Autowired protected Contract feignContract;
   @Autowired protected ObjectMapper mapper;
   @Autowired protected EnvironmentProps env;
 
   protected String raidV1TestToken;
   protected String operatorToken;
-  protected String adminToken;
   protected RaidoApiUtil raidoApi;
 
   private TestInfo testInfo;
@@ -80,17 +79,14 @@ public abstract class IntegrationTestCase {
       return;
     }
     
-    raidV1TestToken = authTokenSvc.initRaidV1TestToken();
-    operatorToken = authTokenSvc.bootstrapToken(
+    raidV1TestToken = bootstrapTokenSvc.initRaidV1TestToken();
+    operatorToken = bootstrapTokenSvc.bootstrapToken(
       RAIDO_SP_ID, "intTestOperatorApiToken", OPERATOR);
-    adminToken = authTokenSvc.bootstrapToken(
-      RAIDO_SP_ID, "intTestAdminApiToken", SP_ADMIN);
-    /* the feign clients passed to this wrapper and bound to the test tokens 
-    created above.  When we want to "change" user, need to use a new feign 
-    clients bound the new user identity. */
+    
     raidoApi = new RaidoApiUtil(publicExperimentalClient(), mapper);
   }
 
+  
   @BeforeEach
   public void init(TestInfo testInfo) {
     this.testInfo = testInfo;
@@ -120,17 +116,20 @@ public abstract class IntegrationTestCase {
       target(RaidV1Api.class, props.getRaidoServerUrl() + RAID_V1_API);
   }
 
+  /**
+   Acts "as" the bootstrap operator token.
+   */
   public BasicRaidExperimentalApi basicRaidExperimentalClient(){
     return basicRaidExperimentalClient(operatorToken);
   }
 
-  /** Acts "as" an operator and uses prod endpoints to create an api-key for 
-   the given input and generate a token. */
-  public BasicRaidExperimentalApi basicRaidExperimentalClientAs(
+  /** Uses the bootstrapped `operatorToken` to create a new api-key with the 
+   given params, then returns a newly generated token. */
+  public GenerateApiTokenResponse createApiKeyUser(
     long servicePointId,
     String subject,
     UserRole role
-  ){
+  ) {
     var adminApi = adminExperimentalClientAs(operatorToken);
     LocalDateTime expiry = LocalDateTime.now().plusDays(30);
 
@@ -144,8 +143,7 @@ public abstract class IntegrationTestCase {
     );
     var token = adminApi.generateApiToken(new GenerateApiTokenRequest().
       apiKeyId(apiKey.getId()) );
-    
-    return basicRaidExperimentalClient(token.getApiToken());
+    return token;
   }
 
   public BasicRaidExperimentalApi basicRaidExperimentalClient(String token){
@@ -194,10 +192,8 @@ public abstract class IntegrationTestCase {
     return testInfo.getTestClass().orElseThrow().getSimpleName();
   }
 
-  public static ServicePoint findServicePoint(
-    AdminExperimentalApi adminApi, String name
-  ){
-    return adminApi.listServicePoint().stream().
+  public PublicServicePoint findPublicServicePoint(String name){
+    return publicExperimentalClient().publicListServicePoint().stream().
       filter(i->areEqual(i.getName(), name)).
       findFirst().orElseThrow();
   }

@@ -25,9 +25,21 @@ import static raido.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
 import static raido.db.jooq.api_svc.tables.AppUser.APP_USER;
 import static raido.db.jooq.raid_v1_import.tables.Token.TOKEN;
 
+/**
+ Component for bootstrapping tokens directly into the Database.
+ Integration Tests often just use this token directly, more complicated test
+ scenarios (i.e. testing as other service-points, testing multiple roles, etc.)
+ use it to create other proper api-tokens for more complicated test scenarios.
+ 
+ This direct write to the DB is why the int-tests need to know the DB connection
+ details.
+ 
+ The V1 bootstrapped token is hardcode for `RDM@UQ` because they're the only 
+ user of the V1 tokens anyway.
+ */
 @Component
-public class TestAuthTokenService {
-  private static final Log log = to(TestAuthTokenService.class);
+public class BootstrapAuthTokenService {
+  private static final Log log = to(BootstrapAuthTokenService.class);
   
   public static final String INTTEST_ENV = "inttest";
 
