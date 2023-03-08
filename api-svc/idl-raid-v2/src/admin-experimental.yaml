@@ -57,7 +57,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/AuthzRequestExtraV1'
-  /list-service-point:
+  /service-point:
     get:
       tags:
         - admin-experimental

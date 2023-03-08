@@ -10,7 +10,7 @@ import { raidoTitle } from "Component/Util";
 import { LargeContentMain } from "Design/LayoutMain";
 import { ContainerCard } from "Design/ContainerCard";
 import { TextSpan } from "Component/TextSpan";
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ApiKey,
@@ -308,11 +308,45 @@ function ApiKeyContainer({apiKeyId, servicePointId, onCreate}: {
 function ApiKeyHelp(){
   return <HelpPopover content={
     <Stack spacing={1}>
-      <ul>
-        <li><HelpChip label={"Subject"}/>
+      <HelpList>
+        <HelpItem><HelpChip label={"Subject"}/>
           Subject cannot be updated after the API key has been created.
-        </li>
-      </ul>
+        </HelpItem>
+        <HelpItem><HelpChip label={"Expire"}/>
+          Note that if you use "Extend expiry" - you still need to generate a 
+          new token if your old tokens are expired. Old, previously generated 
+          tokens have their "expires at" set to the old value as at the time 
+          they were generated.
+          <br/>
+          The "extend expiry" button exists to allow you to extend your 
+          api-key without having to create a whole new api-key with a new 
+          subject - it won't let you define old, stale tokens that are past 
+          their expiry date as "still valid" .
+        </HelpItem>
+        <HelpItem><HelpChip label={"Enabled"}/>
+          Setting the api-key to "disabled" invalidates all issued api-key
+          tokens, regardless of their expiry date.
+        </HelpItem>
+        <HelpItem><HelpChip label={"Generate token"}/>
+          This generates a brand new token based on the current api-key stored 
+          on the server.  Raido does not store api tokens on the server, every 
+          time you click the "Generate token" button, the token generated has 
+          an updated "issued at" claim, and the "expires at" claim is based on 
+          the api-key "Expire" field. 
+        </HelpItem>
+      </HelpList>
     </Stack>
   }/>;
+}
+
+function HelpList({children}:{children: ReactNode}){
+  return <ul>
+    {children}
+  </ul>
+}
+
+function HelpItem({children}:{children: ReactNode}){
+  return <li style={{marginBottom: ".5em"}}>
+    {children}
+  </li>
 }

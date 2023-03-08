@@ -1,6 +1,7 @@
 package raido.apisvc.endpoint.raidv2;
 
 import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +32,7 @@ import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrSpAdmin;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardRaidoAdminApiKey;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.isOperatorOrSpAdmin;
 import static raido.apisvc.util.ExceptionUtil.iae;
+import static raido.apisvc.util.JooqUtil.valueFits;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.areEqual;
 import static raido.db.jooq.api_svc.enums.UserRole.OPERATOR;
@@ -133,6 +135,7 @@ public class AdminExperimental implements AdminExperimentalApi {
     var user = AuthzUtil.getAuthzPayload();
     guardOperatorOrAssociatedSpAdmin(user, req.getId());
     
+    // IMPROVE: probably time to start doing proper validation 
     Guard.notNull(req);
     Guard.hasValue("must have a name", req.getName());
     Guard.hasValue("must have an identifier owner", req.getIdentifierOwner());
@@ -140,6 +143,10 @@ public class AdminExperimental implements AdminExperimentalApi {
     Guard.notNull("must have techEmail", req.getTechEmail());
     Guard.notNull("must have a enabled flag", req.getEnabled());
 
+    Guard.isTrue(
+      ()->"identifierOwner is too long: %s".formatted(req.getIdentifierOwner()),
+      valueFits(SERVICE_POINT.IDENTIFIER_OWNER, req.getIdentifierOwner()));
+    
     return servicePointSvc.updateServicePoint(req);
   }
 

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import raido.apisvc.spring.config.environment.RaidV2ApiKeyAuthProps;
 import raido.apisvc.spring.security.raidv2.AuthzTokenPayload;
 import raido.apisvc.util.Guard;
+import raido.apisvc.util.JwtUtil;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.tables.records.AppUserRecord;
 
@@ -24,6 +25,7 @@ import static raido.apisvc.service.auth.NonAuthzTokenPayload.NonAuthzTokenPayloa
 import static raido.apisvc.spring.security.raidv2.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
 import static raido.apisvc.util.ExceptionUtil.authFailed;
 import static raido.apisvc.util.ExceptionUtil.wrapException;
+import static raido.apisvc.util.JwtUtil.JWT_TOKEN_TYPE;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.areEqual;
 import static raido.apisvc.util.StringUtil.mask;
@@ -86,9 +88,31 @@ public class RaidV2ApiKeyAuthService {
   }
 
   public Optional<Authentication> verifyAndAuthorize(DecodedJWT decodedJwt){
-    var verifiedJwt = verify(decodedJwt);
     
-    // security:sto check claims and expiry and stuff 
+    // avoid dodgy stuff like someone crafting a JWT with alg = "none"
+    if( !areEqual(
+      decodedJwt.getAlgorithm(), 
+      apiAuthProps.signingAlgo.getName()) 
+    ){
+      log.with("signingAlgo", apiAuthProps.signingAlgo.getName()).
+        with("jwtAlgo", decodedJwt.getAlgorithm()).
+        with("claims", decodedJwt.getClaims()).
+        error("JWT signing algorithm mismatch for api-key");
+      throw authFailed();
+    }
+    
+    
+    if( !areEqual(decodedJwt.getType(), JWT_TOKEN_TYPE) ){
+      log.with("decodedJwt.type", decodedJwt.getType()).
+        with("claims", decodedJwt.getClaims()).
+        error("JWT type mismatch for api-key");
+      throw authFailed();
+    }
+
+    /* verify will fail if JWT is expired, the iat claim is driven by the 
+    tokenCutoff field. */
+    var verifiedJwt = verify(decodedJwt);
+
     String clientId = verifiedJwt.
       getClaim(RaidoClaim.CLIENT_ID.getId()).asString();
     String email = verifiedJwt.getClaim(RaidoClaim.EMAIL.getId()).asString();
