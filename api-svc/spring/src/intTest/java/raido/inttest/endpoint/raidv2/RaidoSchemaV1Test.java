@@ -24,18 +24,17 @@ import static raido.idl.raidv2.model.ContributorRoleSchemeType.HTTPS_CREDIT_NISO
 import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
+import static raido.inttest.endpoint.raidv1.LegacyRaidV1MintTest.INT_TEST_ID_URL;
+import static raido.inttest.util.MinimalRaidTestData.DUMMY_ORCID;
+import static raido.inttest.util.MinimalRaidTestData.DUMMY_ROR;
 
 public class RaidoSchemaV1Test extends IntegrationTestCase {
-  /* lowest orcid withing the 0000-0001 range, with check digit.
-   * verified doesn't exist (or at least, non-public): 
-   * https://orcid.org/0000-0001-0000-0009 */
-  public static String DUMMY_ORCID = "https://orcid.org/0000-0001-0000-0009";
-  public static String DUMMY_ROR = "https://ror.org/123xx4567";
 
   @Test
   void happyDayScenario() throws JsonProcessingException {
     var raidApi = super.basicRaidExperimentalClient();
-    String initialTitle = "intV2 test" + IdFactory.generateUniqueId();
+    String initialTitle = getClass().getSimpleName() + "." + getName() + 
+      IdFactory.generateUniqueId();
     var today = LocalDate.now();
 
     EXPECT("minting a raid with minimal content should succeed");
@@ -92,7 +91,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
     assertThat(v3MetaRead).isInstanceOf(PublicRaidMetadataSchemaV1.class);
     PublicRaidMetadataSchemaV1 v3Meta = (PublicRaidMetadataSchemaV1) v3MetaRead; 
     assertThat(v3Meta.getId().getIdentifier()).
-      isEqualTo(mintedRaid.getHandle());
+      isEqualTo(INT_TEST_ID_URL + "/" + mintedRaid.getHandle());
     assertThat(v3Meta.getAccess().getType()).isEqualTo(OPEN);
     assertThat(v3Meta.getTitles().get(0).getTitle()).
       isEqualTo(initialTitle);

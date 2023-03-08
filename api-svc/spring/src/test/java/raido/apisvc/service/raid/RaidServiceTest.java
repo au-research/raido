@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import raido.apisvc.factory.RaidRecordFactory;
 import org.hamcrest.Matchers;
 import org.jooq.JSONB;
 import org.junit.jupiter.api.Test;
@@ -12,16 +11,25 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 import raido.apisvc.exception.ResourceNotFoundException;
+import raido.apisvc.factory.RaidRecordFactory;
 import raido.apisvc.repository.RaidRepository;
 import raido.apisvc.repository.ServicePointRepository;
 import raido.apisvc.repository.dto.Raid;
 import raido.apisvc.service.apids.ApidsService;
 import raido.apisvc.service.apids.model.ApidsMintResponse;
+import raido.apisvc.service.raid.id.IdentifierHandle;
+import raido.apisvc.service.raid.id.IdentifierParser;
+import raido.apisvc.service.raid.id.IdentifierUrl;
+import raido.apisvc.spring.config.environment.MetadataProps;
 import raido.apisvc.util.FileUtil;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
-import raido.idl.raidv2.model.*;
+import raido.idl.raidv2.model.CreateRaidV1Request;
+import raido.idl.raidv2.model.IdBlock;
+import raido.idl.raidv2.model.RaidSchemaV1;
+import raido.idl.raidv2.model.UpdateRaidV1Request;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -32,7 +40,8 @@ import java.util.function.Function;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static raido.apisvc.service.raid.MetadataService.RAID_ID_TYPE_URI;
 
 @ExtendWith(MockitoExtension.class)
@@ -52,6 +61,12 @@ class RaidServiceTest {
   @Mock
   private RaidRecordFactory raidRecordFactory;
 
+  @Mock
+  private IdentifierParser idParser;
+
+  @Mock
+  private MetadataProps metaProps;
+
   @InjectMocks
   private RaidService raidService;
 
@@ -60,11 +75,11 @@ class RaidServiceTest {
     .setDateFormat(new SimpleDateFormat("yyyy-MM-dd"))
     .setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-  @Test
+  @Test 
   void mintRaidV1() throws IOException {
     final long servicePointId = 123;
-    final var handle = "https://raid.org/10378.1/1696639";
-    final var raidUrl = "https://demo.raido-infra.com/handle/" + handle;
+    final var handle = new IdentifierHandle("10378.1", "1696639");
+    final var id = new IdentifierUrl("https://raid.org.au", handle);
     final var urlIndex = 456;
     final var createRaidRequest = createRaidRequest();
     final var registrationAgency = "registration-agency";
@@ -73,25 +88,29 @@ class RaidServiceTest {
     final var apidsResponse = new ApidsMintResponse();
     final var apidsIdentifier = new ApidsMintResponse.Identifier();
     final var apidsIdentifierProperty = new ApidsMintResponse.Identifier.Property();
-    apidsIdentifier.handle = handle;
+    apidsIdentifier.handle = handle.format();
     apidsIdentifierProperty.index = urlIndex;
-    apidsIdentifierProperty.value = raidUrl;
+    apidsIdentifierProperty.value = id.formatUrl();
     apidsIdentifier.property = apidsIdentifierProperty;
     apidsResponse.identifier = apidsIdentifier;
 
     final var servicePointRecord = new ServicePointRecord();
     final var raidRecord = new RaidRecord();
 
+    
     final var idBlock = new IdBlock()
-      .identifier(handle)
+      .identifier(id.formatUrl())
       .identifierSchemeURI(RAID_ID_TYPE_URI)
       .identifierRegistrationAgency(registrationAgency)
       .identifierOwner(identifierOwner)
       .identifierServicePoint(servicePointId);
 
+    ReflectionTestUtils.setField(metaProps, "handleUrlPrefix", id.urlPrefix());
     when(servicePointRepository.findById(servicePointId)).thenReturn(Optional.of(servicePointRecord));
     when(apidsService.mintApidsHandleContentPrefix(any(Function.class))).thenReturn(apidsResponse);
-    when(metadataService.createIdBlock(handle, servicePointRecord, raidUrl)).thenReturn(idBlock);
+    when(idParser.parseHandle(handle.format())).thenReturn(handle);
+    when(metadataService.createIdBlock(id, servicePointRecord)).thenReturn(idBlock);
+    when(metadataService.getMetaProps()).thenReturn(metaProps);
     when(raidRecordFactory.create(createRaidRequest, apidsResponse, servicePointRecord)).thenReturn(raidRecord);
 
     raidService.mintRaidSchemaV1(createRaidRequest, servicePointId);
@@ -146,8 +165,7 @@ class RaidServiceTest {
   }
 
   @Test
-  void updateRaidSchemaV1() throws JsonProcessingException {
-    final var handle = "10378.1/1696639";
+  void updateRaidSchemaV1() throws JsonProcessingException, ValidationFailureException {
     final var servicePointId = 999L;
     final var metadata = objectMapper.readValue(raidJson(), UpdateRaidV1Request.class);
     final var expected = objectMapper.readValue(raidJson(), RaidSchemaV1.class);
@@ -156,11 +174,15 @@ class RaidServiceTest {
     final var updatedRaid = new RaidRecord()
       .setMetadata(JSONB.valueOf(raidJson()));
 
+    final var id = new IdentifierParser().parseUrlWithException(metadata.getId().getIdentifier());
+    final var handle = id.handle().format();
+    
     final var servicePointRecord = new ServicePointRecord();
     servicePointRecord.setId(servicePointId);
 
     when(raidRepository.findByHandle(handle)).thenReturn(Optional.of(existingRaid));
     when(raidRecordFactory.merge(metadata, existingRaid)).thenReturn(updatedRaid);
+    when(idParser.parseUrlWithException(id.formatUrl())).thenReturn(id);
 
     final var result = raidService.updateRaidV1(metadata);
 

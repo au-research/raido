@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import raido.apisvc.service.raid.id.IdentifierUrl;
 import raido.apisvc.service.raid.MetadataService;
 import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.service.raid.ValidationFailureException;
@@ -200,9 +201,9 @@ public class RaidV1 implements RaidV1Api {
     LegacyMetadataSchemaV1 metadataToMint = 
       mapLegacyApiModelToLegacySchema(req, startDate);
 
-    String handle;
+    IdentifierUrl id;
     try {
-      handle = raidSvc.mintLegacySchemaV1(
+      id = raidSvc.mintLegacySchemaV1(
         servicePoint.getId(),
         metadataToMint);
     }
@@ -215,7 +216,7 @@ public class RaidV1 implements RaidV1Api {
         ).toList() );
     }
 
-    var raid = raidSvc.readRaidV2Data(handle);
+    var raid = raidSvc.readRaidV2Data(id.handle().format());
     var mintedMetadata = metaSvc.mapObject(
       raid.raid().getMetadata(), RaidoMetadataSchemaV1.class );
     var description = 
@@ -224,7 +225,7 @@ public class RaidV1 implements RaidV1Api {
         orElse(null);
       
     return new RaidModel().
-      handle(handle).
+      handle(id.handle().format()).
       owner(raid.servicePoint().getName()).
       contentPath(raid.raid().getUrl()).
       contentIndex(raid.raid().getUrlIndex().toString()).

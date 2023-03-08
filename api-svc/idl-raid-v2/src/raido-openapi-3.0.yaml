@@ -1,7 +1,8 @@
 openapi: 3.0.3
 servers:
-  - url: 'https://demo.raido-infra.com'
-  - url: 'https://test.raido-infra.com'
+  - url: 'https://api.prod.raid.org.au'
+  - url: 'https://api.demo.raid.org.au'
+  - url: 'https://api.test.raid.org.au'
   - url: 'http://localhost:8080'
 info:
   title: RAID v2 API
@@ -21,7 +22,12 @@ tags:
   - name: public-experimental
     description: The APIs are not stable, they may change at any time.  
       Can be called without auth.
-  - name: raido-experimental
+  - name: public-stable
+    description: >
+      The APIs are stable and will be supported in to the future,
+      as per the service-level-guide.  
+      Can be called without auth.
+  - name: basic-raid-experimental
     description: The APIs are not stable, they may change at any time.
       These endpoints are intended to be called by the Raido UI.
       Must be called with auth.
@@ -44,6 +50,9 @@ paths:
     $ref: "public-experimental.yaml#/paths/~1public-list-service-point"
   /v2/public/handle/v3/{handle}:
     $ref: "public-experimental.yaml#/paths/~1public-read-raid-v3"
+  /{prefix}/{suffix}:
+    $ref: "public-stable.yaml#/paths/~1public-api-get-raid"
+
   # endregion
   
   
@@ -89,7 +98,7 @@ paths:
   /v2/experimental/admin-authz-request/v1:
     $ref: "admin-experimental.yaml#/paths/~1list-authz-request"
   /v2/experimental/service-point/v1:
-    $ref: "admin-experimental.yaml#/paths/~1list-service-point"
+    $ref: "admin-experimental.yaml#/paths/~1service-point"
   /v2/experimental/service-point/v1/{servicePointId}:
     $ref: "admin-experimental.yaml#/paths/~1read-service-point"
   /v2/experimental/service-point/v1/{servicePointId}/list-app-user:

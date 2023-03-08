@@ -3,7 +3,6 @@ package raido.apisvc.service.raid;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import raido.apisvc.factory.RaidRecordFactory;
 import org.jooq.DSLContext;
 import org.jooq.JSONB;
 import org.jooq.exception.NoDataFoundException;
@@ -14,15 +13,28 @@ import org.springframework.transaction.support.TransactionTemplate;
 import raido.apisvc.exception.InvalidJsonException;
 import raido.apisvc.exception.ResourceNotFoundException;
 import raido.apisvc.exception.UnknownServicePointException;
+import raido.apisvc.factory.RaidRecordFactory;
 import raido.apisvc.repository.RaidRepository;
 import raido.apisvc.repository.ServicePointRepository;
 import raido.apisvc.service.apids.ApidsService;
+import raido.apisvc.service.apids.model.ApidsMintResponse;
+import raido.apisvc.service.raid.id.IdentifierHandle;
+import raido.apisvc.service.raid.id.IdentifierParser;
+import raido.apisvc.service.raid.id.IdentifierParser.ParseProblems;
+import raido.apisvc.service.raid.id.IdentifierUrl;
 import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.Metaschema;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
-import raido.idl.raidv2.model.*;
+import raido.idl.raidv2.model.AccessType;
+import raido.idl.raidv2.model.CreateRaidV1Request;
+import raido.idl.raidv2.model.LegacyMetadataSchemaV1;
+import raido.idl.raidv2.model.RaidSchemaV1;
+import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
+import raido.idl.raidv2.model.ReadRaidResponseV2;
+import raido.idl.raidv2.model.UpdateRaidV1Request;
+import raido.idl.raidv2.model.ValidationFailure;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -35,12 +47,15 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toMap;
 import static org.springframework.transaction.annotation.Propagation.NEVER;
-import static raido.apisvc.endpoint.message.ValidationMessage.*;
+import static raido.apisvc.endpoint.message.ValidationMessage.CANNOT_UPGRADE_TO_OTHER_SCHEMA;
+import static raido.apisvc.endpoint.message.ValidationMessage.SCHEMA_CHANGED;
+import static raido.apisvc.endpoint.message.ValidationMessage.UPGRADE_LEGACY_SCHEMA_ONLY;
 import static raido.apisvc.service.raid.MetadataService.mapApi2Db;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitle;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitles;
 import static raido.apisvc.util.DateUtil.local2Offset;
 import static raido.apisvc.util.DateUtil.offset2Local;
+import static raido.apisvc.util.ExceptionUtil.runtimeException;
 import static raido.apisvc.util.Log.to;
 import static raido.db.jooq.api_svc.enums.Metaschema.legacy_metadata_schema_v1;
 import static raido.db.jooq.api_svc.enums.Metaschema.raido_metadata_schema_v1;
@@ -61,7 +76,7 @@ public class RaidService {
   private final ServicePointRepository servicePointRepository;
 
   private final RaidRecordFactory raidRecordFactory;
-
+  private final IdentifierParser idParser;
   private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
   public RaidService(
@@ -72,7 +87,9 @@ public class RaidService {
     final TransactionTemplate tx,
     final RaidRepository raidRepository,
     final ServicePointRepository servicePointRepository,
-    final RaidRecordFactory raidRecordFactory) {
+    final RaidRecordFactory raidRecordFactory, 
+    IdentifierParser idParser
+  ) {
     this.db = db;
     this.apidsSvc = apidsSvc;
     this.metaSvc = metaSvc;
@@ -81,6 +98,7 @@ public class RaidService {
     this.raidRepository = raidRepository;
     this.servicePointRepository = servicePointRepository;
     this.raidRecordFactory = raidRecordFactory;
+    this.idParser = idParser;
   }
 
   public List<RaidSchemaV1> listRaidsV1(final Long servicePointId) {
@@ -127,32 +145,34 @@ public class RaidService {
    to avoid holding an open TX while talking to the APIDS service.
    */
   @Transactional(propagation = NEVER)
-  public String mintRaidoSchemaV1(
+  public IdentifierUrl mintRaidoSchemaV1(
     long servicePointId,
     RaidoMetadataSchemaV1 metadata
   ) throws ValidationFailureException {
-    /* this is the part where we want to make sure no TX is help open.
-    * Maybe *this* should be marked tx.prop=never? */
-    var response = apidsSvc.mintApidsHandleContentPrefix(
+    /* this is the part where we want to make sure no TX is held open.
+    * Maybe *this* call should be marked tx.prop=never? */
+    var apidsResponse = apidsSvc.mintApidsHandleContentPrefix(
       metaSvc::formatRaidoLandingPageUrl);
-    String handle = response.identifier.handle;
-    String raidUrl = response.identifier.property.value;
+    IdentifierHandle handle = parseHandleFromApids(apidsResponse);
+
+    String raidUrl = apidsResponse.identifier.property.value;
 
     final var servicePointRecord =
       servicePointRepository.findById(servicePointId)
         .orElseThrow(() -> new UnknownServicePointException(servicePointId));
 
-    metadata.setId(metaSvc.createIdBlock(handle, servicePointRecord, raidUrl));
+    var id = new IdentifierUrl(metaSvc.getMetaProps().handleUrlPrefix, handle);
+    metadata.setId(metaSvc.createIdBlock(id, servicePointRecord));
 
     // validation failure possible
     String metadataAsJson = metaSvc.mapToJson(metadata);
     var raidData = getDenormalisedRaidData(metadata);
 
     tx.executeWithoutResult((status)-> db.insertInto(RAID).
-      set(RAID.HANDLE, handle).
+      set(RAID.HANDLE, handle.format()).
       set(RAID.SERVICE_POINT_ID, servicePointId).
       set(RAID.URL, raidUrl).
-      set(RAID.URL_INDEX, response.identifier.property.index).
+      set(RAID.URL_INDEX, apidsResponse.identifier.property.index).
       set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
       set(RAID.METADATA, JSONB.valueOf(metadataAsJson)).
       set(RAID.METADATA_SCHEMA, mapApi2Db(metadata.getMetadataSchema())).
@@ -161,38 +181,65 @@ public class RaidService {
       set(RAID.CONFIDENTIAL, raidData.confidential()).
       execute());
     
-    return handle;
+    return id;
+  }
+
+  private IdentifierHandle parseHandleFromApids(
+    ApidsMintResponse apidsResponse
+  ) {
+    var parseResult = idParser.parseHandle(apidsResponse.identifier.handle);
+    
+    if( parseResult instanceof ParseProblems problems ){
+      log.with("handle", apidsResponse.identifier.handle).
+        with("problems", problems.getProblems()).
+        error("APIDS service returned malformed handle");
+      throw runtimeException("APIDS service returned malformed handle: %s",
+        apidsResponse.identifier.handle);
+    }
+   
+    return (IdentifierHandle) parseResult; 
   }
 
   @Transactional(propagation = NEVER)
-  public String mintRaidSchemaV1(
+  public IdentifierUrl mintRaidSchemaV1(
     final CreateRaidV1Request request,
     final long servicePoint
   ) {
     /* this is the part where we want to make sure no TX is help open.
      * Maybe *this* should be marked tx.prop=never? */
     final var servicePointRecord =
-      servicePointRepository.findById(servicePoint).orElseThrow(() -> new UnknownServicePointException(servicePoint));
+      servicePointRepository.findById(servicePoint).orElseThrow(() -> 
+        new UnknownServicePointException(servicePoint) );
 
     final var apidsResponse = apidsSvc.mintApidsHandleContentPrefix(
       metaSvc::formatRaidoLandingPageUrl);
 
-    String handle = apidsResponse.identifier.handle;
-    String raidUrl = apidsResponse.identifier.property.value;
-    request.setId(metaSvc.createIdBlock(handle, servicePointRecord, raidUrl));
 
-    final var raidRecord = raidRecordFactory.create(request, apidsResponse, servicePointRecord);
+    IdentifierHandle handle = parseHandleFromApids(apidsResponse);
+    var id = new IdentifierUrl(metaSvc.getMetaProps().handleUrlPrefix, handle);
+    request.setId(metaSvc.createIdBlock(id, servicePointRecord));
+
+    final var raidRecord = raidRecordFactory.create(
+      request, apidsResponse, servicePointRecord );
 
     raidRepository.insert(raidRecord);
 
-    return handle;
+    return id;
   }
 
   public RaidSchemaV1 updateRaidV1(
     final UpdateRaidV1Request raid
   ) {
-    final var handle = raid.getId().getIdentifier();
-
+    final IdentifierUrl id;
+    try {
+      id = idParser.parseUrlWithException(raid.getId().getIdentifier());
+    }
+    catch( ValidationFailureException e ){
+      // it was already validated, so this shouldn't happen
+      throw new RuntimeException(e);
+    }
+    String handle = id.handle().format();
+    
     final var existing = raidRepository.findByHandle(handle)
       .orElseThrow(() -> new ResourceNotFoundException(handle));
 
@@ -201,39 +248,41 @@ public class RaidService {
     raidRepository.update(raidRecord);
 
     try {
-      return objectMapper.readValue(raidRecord.getMetadata().data(), RaidSchemaV1.class);
+      return objectMapper.readValue(
+        raidRecord.getMetadata().data(), RaidSchemaV1.class );
     } catch (JsonProcessingException e) {
       throw new InvalidJsonException();
     }
   }
 
   @Transactional(propagation = NEVER)
-  public String mintLegacySchemaV1(
+  public IdentifierUrl mintLegacySchemaV1(
     long servicePointId,
     LegacyMetadataSchemaV1 metadata
   ) throws ValidationFailureException {
     /* this is the part where we want to make sure no TX is help open.
      * Maybe *this* should be marked tx.prop=never? */
-    var response = apidsSvc.mintApidsHandleContentPrefix(
+    var apidsResponse = apidsSvc.mintApidsHandleContentPrefix(
       metaSvc::formatRaidoLandingPageUrl);
-    String handle = response.identifier.handle;
-    String raidUrl = response.identifier.property.value;
+    IdentifierHandle handle = parseHandleFromApids(apidsResponse);
+    String raidUrl = apidsResponse.identifier.property.value;
 
     final var servicePointRecord =
       servicePointRepository.findById(servicePointId)
         .orElseThrow(() -> new UnknownServicePointException(servicePointId));
 
-    metadata.setId(metaSvc.createIdBlock(handle, servicePointRecord, raidUrl));
+    var id = new IdentifierUrl(metaSvc.getMetaProps().handleUrlPrefix, handle);
+    metadata.setId(metaSvc.createIdBlock(id, servicePointRecord));
 
     // validation failure possible
     String metadataAsJson = metaSvc.mapToJson(metadata);
     var raidData = getDenormalisedRaidData(metadata);
 
     tx.executeWithoutResult((status)-> db.insertInto(RAID).
-      set(RAID.HANDLE, handle).
+      set(RAID.HANDLE, handle.format()).
       set(RAID.SERVICE_POINT_ID, servicePointId).
       set(RAID.URL, raidUrl).
-      set(RAID.URL_INDEX, response.identifier.property.index).
+      set(RAID.URL_INDEX, apidsResponse.identifier.property.index).
       set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
       set(RAID.METADATA, JSONB.valueOf(metadataAsJson)).
       set(RAID.METADATA_SCHEMA, mapApi2Db(metadata.getMetadataSchema())).
@@ -242,7 +291,7 @@ public class RaidService {
       set(RAID.CONFIDENTIAL, raidData.confidential()).
       execute());
 
-    return handle;
+    return id;
   }
   
   public record ReadRaidV2Data(
@@ -307,14 +356,15 @@ public class RaidService {
     boolean confidential = metadata.getAccess().getType() != AccessType.OPEN;
 
     // migrated raids already have handles
-    String handle = metadata.getId().getIdentifier();
-    String raidUrl = metaSvc.formatRaidoLandingPageUrl(handle);
-
+    String identifier = metadata.getId().getIdentifier();
+    IdentifierUrl id = idParser.parseUrlWithException(identifier);
+    String handle = id.handle().format();
+    
     final var servicePointRecord =
       servicePointRepository.findById(servicePointId)
         .orElseThrow(() -> new UnknownServicePointException(servicePointId));
 
-    metadata.setId(metaSvc.createIdBlock(handle, servicePointRecord, raidUrl));
+    metadata.setId(metaSvc.createIdBlock(id, servicePointRecord));
 
     // validation failure possible
     String metadataAsJson = metaSvc.mapToJson(metadata);
@@ -330,7 +380,7 @@ public class RaidService {
     db.insertInto(RAID).
       set(RAID.HANDLE, handle).
       set(RAID.SERVICE_POINT_ID, servicePointId).
-      set(RAID.URL, raidUrl).
+      set(RAID.URL, id.formatUrl()).
       set(RAID.URL_INDEX, urlContentIndex).
       set(RAID.PRIMARY_TITLE, primaryTitle).
       set(RAID.METADATA, jsonbMetadata).

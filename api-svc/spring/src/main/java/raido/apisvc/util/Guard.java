@@ -28,6 +28,7 @@ public class Guard {
   }
 
   public static void areEqual(
+    @Nullable String msg,
     @Nullable String left,
     @Nullable String right
   ) {
@@ -38,9 +39,16 @@ public class Guard {
 
     if( !StringUtil.areEqual(left, right) ){
       throw ExceptionUtil.illegalArgException(
-        "check failed, values are not equal - left=%s right=%s",
-        left, right);
+        "%s, values are not equal - left=%s right=%s",
+        msg, left, right);
     }
+  }
+  
+  public static void areEqual(
+    @Nullable String left,
+    @Nullable String right
+  ) {
+    areEqual("check failed", left, right);
   }
 
   public static void areEqual(

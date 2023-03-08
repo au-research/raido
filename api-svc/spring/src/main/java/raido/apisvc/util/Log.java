@@ -4,10 +4,13 @@ package raido.apisvc.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import static raido.apisvc.util.StringUtil.BRACKET_JOINER;
+import static raido.apisvc.util.StringUtil.blankToDefault;
 import static raido.apisvc.util.StringUtil.nullToString;
 
 /**
@@ -340,16 +343,41 @@ public class Log {
     /* This is useful at the moment as a flat string in the logs for viewing
     in the console output directly.  In a larger context, we'll probably want
     to output this as a json blob so it integrates with log aggregation
-    infrastructure (Splunk, etc.)
-    IMPROVE: specific collection handling for the flat format (JSON 
-    formatting will just work with collections easily). */
+    infrastructure (Splunk, etc.) */
     @Override
     public String toString() {
-      String message = String.format(msg, messageArgs);
+      String message = String.format(blankToDefault(msg, ""), messageArgs);
       StringBuilder sb = new StringBuilder(message).append(" - ");
       structuredArgs.forEach((key, value)->
         sb.append(key).append("=").append(nullToString(value)).append(" "));
       return sb.toString();
     }
+  }
+  
+  public static String formatArgValue(Object value){
+    if( value instanceof Map<?, ?> map){
+      return formatArgValueMap(map);
+    }
+    
+    if( value instanceof Collection<?> collection ){
+      return formatArgValueCollection(collection);
+    }
+    
+    // will call toString()
+    return nullToString(value);
+  }
+
+  public static String formatArgValueCollection(Collection<?> c){
+    return c.stream().
+      map(Log::formatArgValue).
+      // can the collector be shared across threads (i.e. use a static?)
+        collect(BRACKET_JOINER);
+  }
+
+  public static String formatArgValueMap(Map<?, ?> c){
+    return c.entrySet().stream().
+      map(i-> formatArgValue(i.getKey()) + "=" + formatArgValue(i.getValue()) ).
+      // can the collector be shared across threads (i.e. use a static?)
+      collect(BRACKET_JOINER);
   }
 }

@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.joining;
@@ -26,7 +27,10 @@ public final class StringUtil {
 
   public static final String COMMA_SPACE = ", ";
   public static final String MASK_SEPARATOR = "...";
-  public static final int DEFAUL_MASK_LENGTH = 10;
+  public static final int DEFAULT_MASK_LENGTH = 10;
+
+  public static final Collector<CharSequence, ?, String> BRACKET_JOINER =
+    Collectors.joining(",", "[", "]");
 
   /**
    Null is not a value.  Empty string is not a value.  Whitespace is not a
@@ -547,7 +551,7 @@ public final class StringUtil {
   }  
   
   public static String mask(String value){
-    return mask(value, DEFAUL_MASK_LENGTH);
+    return mask(value, DEFAULT_MASK_LENGTH);
   }
 
   /** makes a value that is safe to put in log messages, show to user, etc.

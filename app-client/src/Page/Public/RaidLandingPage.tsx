@@ -25,13 +25,13 @@ import { SmallPageSpinner } from "Component/SmallPageSpinner";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import { BooleanDisplay, DateDisplay } from "Component/Util";
 import { TextSpan } from "Component/TextSpan";
-import { formatMetadata } from "Component/MetaDataContainer";
+import { formatMetadata, getPrimaryTitle } from "Component/MetaDataContainer";
 import { List, ListItem } from "@mui/material";
 import { NewWindowLink } from "Component/ExternalLink";
 
 const pageUrl = "/handle";
 
-export function formatGlobalHandle(handle: string){
+export function formatCnriHandle(handle: string){
   return `https://hdl.handle.net/${handle}`;
 }
 
@@ -40,12 +40,9 @@ Not used by anything in the app, the "public landing page" link from the raid
 edit page links via the https://hdl.handle.net domain, which redirects to this
 url, but that's encoding the raid url (content path) on the server.
 
-This page should be its own separate codebase.  Probably should be server-side
-generated HTML, not an SPA;  or at least, should be Preact / Svelte or 
-something a bit more light weight.  
 */
 export function getRaidLandingPagePath(handle: string): string{
-  return `${pageUrl}/${handle}`;
+  return `${Config.raidoLandingPage}/${handle}`;
 }
 
 export function isRaidLandingPagePath(pathname: string): boolean{
@@ -132,7 +129,7 @@ function ClosedRaid({raid, metadata}: {
 }){
   return <SmallContentMain><InfoFieldList>
     <InfoField id="handle" label="Handle"
-      value={formatGlobalHandle(raid.handle)}/>
+      value={formatCnriHandle(raid.handle)}/>
     <InfoField id="createDate" label="Create date" value={
       <DateDisplay date={raid.createDate}/>
     }/>
@@ -155,7 +152,7 @@ function OpenRaid({raid, metadata}: {
     <SmallScreenPaper>  
       <InfoFieldList>
         <InfoField id="handle" label="Handle"
-          value={formatGlobalHandle(raid.handle)}/>
+          value={formatCnriHandle(raid.handle)}/>
         <InfoField id="createDate" label="Create date" value={
           <DateDisplay date={raid.createDate}/>
         }/>
@@ -168,9 +165,8 @@ function OpenRaid({raid, metadata}: {
           value={raid.servicePointName}
         />
 
-        {/*todo:sto make a widget, this only works when it's the first item*/}
         <InfoField id="primaryTitle" label="Primary title"
-          value={metadata.titles[0]?.title}/>
+          value={getPrimaryTitle(metadata).title}/>
 
         <InfoField id="startDate" label="Start date" value={
           <DateDisplay date={metadata.dates.startDate}/>

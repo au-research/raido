@@ -6,7 +6,7 @@ import {
   instanceOfLegacyMetadataSchemaV1,
   instanceOfRaidoMetadataSchemaV1,
   LegacyMetadataSchemaV1,
-  LegacyMetadataSchemaV1FromJSON, OrganisationBlock,
+  LegacyMetadataSchemaV1FromJSON, OrganisationBlock, PublicRaidMetadataSchemaV1,
   RaidoMetadataSchemaV1,
   RaidoMetadataSchemaV1FromJSON,
   RaidoMetaschema, SubjectBlock,
@@ -91,7 +91,7 @@ export function getLeadOrganisation(
   });
 }
 export function getPrimaryTitle(
-  metadata: RaidoMetadataSchemaV1
+  metadata: RaidoMetadataSchemaV1|PublicRaidMetadataSchemaV1
 ): TitleBlock {
   let primary = metadata.titles.find(i=> i.type === "Primary Title");
   if( !primary ){

@@ -16,6 +16,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
 
+import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static org.springframework.http.HttpHeaders.ACCEPT;
+import static org.springframework.http.HttpHeaders.LOCATION;
+import static raido.apisvc.endpoint.anonymous.PublicEndpoint.STATUS_PATH;
 import static raido.apisvc.endpoint.auth.AppUserAuthnEndpoint.IDP_URL;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.RestUtil.sanitiseLocationUrl;
@@ -40,8 +44,9 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
 
   /** if this is set to debug, then the body of the request will be logged */
   private static final Log bodyLog = to(RequestLoggingFilter.class, "body");
+  private static final Log bodyLog400 = to(RequestLoggingFilter.class, "body400");
 
-  private int getMaxPayloadLength = 1024;
+  private static int getMaxPayloadLength = 1024;
 
   public static Optional<FilterRegistration.Dynamic> add(
     ServletContext ctx, 
@@ -85,7 +90,7 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
       long time = (System.nanoTime() - beforeReq) / 1_000_000;
       
       boolean shouldLog = true;
-      if( areEqual(request.getRequestURI(), "/public/status") ){
+      if( areEqual(request.getRequestURI(), STATUS_PATH) ){
         // because used by the AWS ASG health check, too log noise  
         shouldLog = false;
       }
@@ -106,16 +111,18 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
     have been added to the filter-chain in the first place. * */
     
     var logBuild = log.with("url", request.getRequestURI()).
+      with("contentType", request.getContentType()).
+      with("accept", request.getHeader(ACCEPT)).
       with("user", request.getRemoteUser()).
       with("timeMs", time).
       with("status", response.getStatus());
 
-    String locationHeader = response.getHeader("Location");
+    String locationHeader = response.getHeader(LOCATION);
     if( locationHeader != null ){
       logBuild = logBuild.with("location", sanitiseLocationUrl(locationHeader));
     }
 
-    // don't log params becase they contain sensitive info
+    // don't log params because they contain sensitive info
     if( !trimEqualsIgnoreCase(request.getRequestURI(), IDP_URL) ){
       logBuild = logBuild.with("params", request.getParameterMap());
     }
@@ -124,13 +131,20 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
 
     
     if( bodyLog.isDebugEnabled() ){
-    /* I wanted to put this before the filter invocation, but it has to 
-    go after - the request underlying the CachingWrapper has to be read 
-    before we can read the content here. */
+      /* I wanted to put this before the filter invocation, but it has to 
+      go after - the request underlying the CachingWrapper has to be read 
+      before we can read the content here. */
       bodyLog.with("uri", request.getRequestURI()).
         with("requestPayload", getMessagePayload(requestToUse)).
         debug();
     }
+
+    if( response.getStatus() == SC_BAD_REQUEST && bodyLog400.isInfoEnabled() ){
+      bodyLog.with("uri", request.getRequestURI()).
+        with("requestPayload", getMessagePayload(requestToUse)).
+        info("400 bad request");
+    }
+    
   }
 
   record ServletRequestId(
@@ -151,7 +165,7 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
       req.getRemoteAddr(), req.getRemoteUser());
   }
 
-  protected String getMessagePayload(HttpServletRequest request) {
+  public static String getMessagePayload(HttpServletRequest request) {
     ContentCachingRequestWrapper wrapper =
       WebUtils.getNativeRequest(request, ContentCachingRequestWrapper.class);
 

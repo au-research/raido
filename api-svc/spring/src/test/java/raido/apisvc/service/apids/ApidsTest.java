@@ -30,7 +30,8 @@ public class ApidsTest {
     props.secret = "";
     props.serviceUrl = "testserver";
 
-    RestTemplate restTemplate = ApiConfig.restTemplate();
+    RestTemplate restTemplate = ApiConfig.restTemplate(
+      ApiConfig.clientHttpRequestFactory() );
 
     MockRestServiceServer mockServer = 
       MockRestServiceServer.createServer(restTemplate);

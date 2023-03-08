@@ -1,9 +1,10 @@
 create table token (
-  name text constraint token_pkey primary key not null,
+  name text not null,
   environment text not null,
   date_created timestamp without time zone,
   token text not null,
-  s3_export jsonb not null
+  s3_export jsonb not null,
+  primary key (name, environment, date_created)
 );
 
 comment on table token is

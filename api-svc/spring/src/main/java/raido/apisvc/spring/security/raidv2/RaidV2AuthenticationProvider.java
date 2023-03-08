@@ -1,6 +1,7 @@
 package raido.apisvc.spring.security.raidv2;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -9,9 +10,11 @@ import org.springframework.security.oauth2.server.resource.authentication.Bearer
 import raido.apisvc.service.auth.RaidV2ApiKeyAuthService;
 import raido.apisvc.service.auth.RaidV2AppUserAuthService;
 import raido.apisvc.service.auth.RaidoClaim;
+import raido.apisvc.util.ExceptionUtil;
 import raido.apisvc.util.Log;
 
 import static raido.apisvc.util.Log.to;
+import static raido.apisvc.util.StringUtil.mask;
 import static raido.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
 
 public class RaidV2AuthenticationProvider implements AuthenticationProvider {
@@ -28,7 +31,7 @@ public class RaidV2AuthenticationProvider implements AuthenticationProvider {
     this.apiKeyAuthSvc = apiKeyAuthSvc;
   }
 
-  /* security:sto this needs unit tests that prove
+  /* IMPROVE: this needs unit tests that prove
       - doesn't accept random signature string
         (I nearly refactored this to use `decode()` instead of `verify`()`)
       - doesn't accept `algorithm:none`
@@ -41,9 +44,18 @@ public class RaidV2AuthenticationProvider implements AuthenticationProvider {
       return null;
     }
 
-    DecodedJWT jwt = JWT.decode(bearer.getToken());
+    DecodedJWT jwt = null;
+    try {
+      jwt = JWT.decode(bearer.getToken());
+    }
+    catch( JWTDecodeException e ){
+      log.with("error", e.getMessage()).
+        with("token", mask(bearer.getToken())).
+        info("bearer token could not be decoded");
+      throw ExceptionUtil.authFailed();
+    }
 
-    // security:sto add more checks that the pre-auth is the expected shape
+    // IMPROVE: add more checks that the pre-auth is the expected shape
     // that it's a V2 token, expiry, issuer, etc.
 
     /* could move this switch logic to authn resolver and have 3rd type of

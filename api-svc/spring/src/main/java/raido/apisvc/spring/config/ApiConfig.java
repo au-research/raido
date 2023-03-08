@@ -3,37 +3,39 @@ package raido.apisvc.spring.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletContextEvent;
-import jakarta.servlet.ServletRegistration;
-import org.springframework.context.annotation.*;
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
-import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import raido.apisvc.spring.RequestLoggingFilter;
+import raido.apisvc.spring.config.http.converter.FormProblemDetailConverter;
+import raido.apisvc.spring.config.http.converter.XmlProblemDetailConverter;
 import raido.apisvc.util.Log;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
 import static raido.apisvc.util.Log.to;
 
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = {
-  // spring bootup and config
+  // spring boot-up and config
   "raido.apisvc.spring", 
   // services and endpoints
   "raido.apisvc.service",
@@ -80,7 +82,6 @@ import static raido.apisvc.util.Log.to;
     ignoreResourceNotFound = true)
 })
 public class ApiConfig implements WebMvcConfigurer {
-  public static final String DISPATCHER_NAME = "raido_dispatcher";
   /* IMPROVE:STO after everything is stabilised on the new `raido` repo name,
   delete the old raido-v2 references. */
   public static final String ENV_PROPERTIES = "file:///${user.home}/" +
@@ -94,54 +95,7 @@ public class ApiConfig implements WebMvcConfigurer {
 
   private static final Log log = to(ApiConfig.class);
   
-  public static AnnotationConfigWebApplicationContext initApplicationContext(
-    ServletContext ctx
-  ) {
-    log.with("contextName", ctx.getServletContextName()).
-      with("contextPath", ctx.getContextPath()).
-      info("initServletContext()");
-    // Create the 'root' Spring application context
-    AnnotationConfigWebApplicationContext rootContext =
-      new AnnotationConfigWebApplicationContext();
-    rootContext.register(ApiConfig.class);
-    // Manage the lifecycle of the root application context
-    ctx.addListener(new ContextLoaderListener(rootContext){
-      @Override
-      public void contextInitialized(ServletContextEvent event) {
-        log.with("event", event).info("contextInitialized()");
-        super.contextInitialized(event);
-      }
-
-      @Override
-      public void contextDestroyed(ServletContextEvent event) {
-        log.with("event", event).info("contextDestroyed()");
-        super.contextDestroyed(event);
-      }
-    });
-
-    // probs not necessary if Spring http config is set to STATELESS 
-    ctx.setSessionTrackingModes(emptySet());
-
-    /* Register and map the dispatcher servlet
-     Example code used a separate Spring context of the servlet, but I don't
-     see why that's necessary. */
-    DispatcherServlet servlet = new DispatcherServlet(rootContext);
-    // Make sure NoHandlerFound is handled by custom HandlerExceptionResolver
-    servlet.setThrowExceptionIfNoHandlerFound(true);
-    ServletRegistration.Dynamic dispatcher = 
-      ctx.addServlet(DISPATCHER_NAME, servlet);
-    dispatcher.setLoadOnStartup(1);
-    dispatcher.addMapping("/");
-
-    RequestLoggingFilter.add(ctx, DISPATCHER_NAME);
-    
-    /* Dunno why, but Spring doesn't find WebApplicationInitializer 
-    interfaces automatically, so we have to call onStartup() directly. 
-    */
-    new AbstractSecurityWebApplicationInitializer(){}.onStartup(ctx);
-    
-    return rootContext;
-  }
+  
 
 
   /**
@@ -179,7 +133,7 @@ public class ApiConfig implements WebMvcConfigurer {
   }
   
   @Bean
-  public static RestTemplate restTemplate(){
+  public static RestTemplate restTemplate(ClientHttpRequestFactory factory){
     MappingJackson2XmlHttpMessageConverter xmlConverter =
       new MappingJackson2XmlHttpMessageConverter();
     xmlConverter.setSupportedMediaTypes(
@@ -189,27 +143,60 @@ public class ApiConfig implements WebMvcConfigurer {
       new MappingJackson2HttpMessageConverter();
 
     List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
-
     messageConverters.add(xmlConverter);
     messageConverters.add(jsonConverter);
     messageConverters.add(new FormHttpMessageConverter());
 
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.setMessageConverters(messageConverters);
+    restTemplate.setRequestFactory(factory);
 
     return restTemplate;
   }
 
+  @Bean 
+  public static ClientHttpRequestFactory clientHttpRequestFactory(){
+    return clientHttpRequestFactory(true);
+  }
+
+  public static ClientHttpRequestFactory clientHttpRequestFactory(
+    boolean followRedirects
+  ) {
+    OkHttpClient client = new OkHttpClient.Builder().
+      followRedirects(followRedirects).
+      build();
+
+    return new OkHttp3ClientHttpRequestFactory(client) {
+      @Override
+      public void destroy() throws IOException {
+        /* copy pasted from the spring impl, because it won't do this for a 
+        provide client. */
+        Cache cache = client.cache();
+        if( cache != null ){
+          cache.close();
+        }
+        client.dispatcher().executorService().shutdown();
+        client.connectionPool().evictAll();
+      }
+    };
+  }
+  
   /* Not sure if we should be using "configure" or "extend".  AFAIK, this here
   is resetting the default converters, so this converter is the only one.
   Does this mean our server doesn't support other content types?
-  Not sure if that's a good thing or a bad thing. */
+  Not sure if that's a good thing or a bad thing. 
+  Whatever else this is used for, it is used by the HttpEntityMethodProcessor
+  to create the "return value" from a "ResponseEntity", so if you're having 
+  conversion errors caused by weird contentTypes or accept headers, this might
+  be the place you need to deal with it.
+  */
   @Override
   public void configureMessageConverters(
     List<HttpMessageConverter<?>> converters
   ) {
     MappingJackson2HttpMessageConverter jsonConverter =
       new MappingJackson2HttpMessageConverter();
+
     /* By default dates looked like `1662077155.409857400`. 
     The app-client openapi generated ts that converted this to dates with code 
     like `new Date(json['startDate']` which did not parse the date properly.
@@ -217,6 +204,9 @@ public class ApiConfig implements WebMvcConfigurer {
     jsonConverter.getObjectMapper().
       disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     converters.add(jsonConverter);
+    
+    converters.add(new FormProblemDetailConverter());
+    converters.add(new XmlProblemDetailConverter());
 
     // prototype: used for returning static HTML from an endpoint
 //    converters.add(PublicExperimental.getHtmlStringConverter());

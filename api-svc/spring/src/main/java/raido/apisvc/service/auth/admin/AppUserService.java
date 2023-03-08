@@ -146,8 +146,9 @@ public class AppUserService {
     ApiKey req,
     AuthzTokenPayload invokingUser
   ) {
-    Guard.isTrue("API key idProvider can only be RAIDO_API", 
-      areEqual(req.getIdProvider(), RAIDO_API.getLiteral()) );
+    Guard.hasValue("idProvider must be set", req.getIdProvider());
+    Guard.areEqual("API key idProvider can only be RAIDO_API", 
+      req.getIdProvider(), RAIDO_API.getLiteral() );
     
     var record = req.getId() == null ?
       db.newRecord(APP_USER) :

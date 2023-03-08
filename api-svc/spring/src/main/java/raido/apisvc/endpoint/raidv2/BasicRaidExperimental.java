@@ -8,6 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.service.raid.ValidationFailureException;
+import raido.apisvc.service.raid.id.IdentifierParser;
+import raido.apisvc.service.raid.id.IdentifierParser.ParseProblems;
+import raido.apisvc.service.raid.id.IdentifierUrl;
 import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
@@ -26,18 +29,17 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 import static org.springframework.transaction.annotation.Propagation.NEVER;
 import static raido.apisvc.endpoint.Constant.MAX_EXPERIMENTAL_RECORDS;
 import static raido.apisvc.endpoint.message.ValidationMessage.CANNOT_UPDATE_LEGACY_SCHEMA;
-import static raido.apisvc.endpoint.message.ValidationMessage.IDENTIFIER_NOT_SET;
 import static raido.apisvc.endpoint.message.ValidationMessage.ID_BLOCK_NOT_SET;
 import static raido.apisvc.endpoint.message.ValidationMessage.METADATA_NOT_SET;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.getAuthzPayload;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
 import static raido.apisvc.service.raid.MetadataService.mapDb2Api;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.mintFailed;
+import static raido.apisvc.service.raid.id.IdentifierParser.mapProblemsToValidationFailures;
 import static raido.apisvc.util.DateUtil.local2Offset;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.hasValue;
-import static raido.apisvc.util.StringUtil.isBlank;
 import static raido.db.jooq.api_svc.tables.Raid.RAID;
 import static raido.idl.raidv2.model.RaidoMetaschema.LEGACYMETADATASCHEMAV1;
 
@@ -50,15 +52,18 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
   private DSLContext db;
   private RaidService raidSvc;
   private RaidoSchemaV1ValidationService validSvc;
+  private IdentifierParser idParser;
 
   public BasicRaidExperimental(
     DSLContext db,
     RaidService raidSvc,
-    RaidoSchemaV1ValidationService validSvc
+    RaidoSchemaV1ValidationService validSvc,
+    IdentifierParser idParser
   ) {
     this.db = db;
     this.raidSvc = raidSvc;
     this.validSvc = validSvc;
+    this.idParser = idParser;
   }
 
   @Override
@@ -111,9 +116,9 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
       return mintFailed(failures);
     }
 
-    String handle;
+    IdentifierUrl id;
     try {
-      handle = raidSvc.mintRaidoSchemaV1(
+      id = raidSvc.mintRaidoSchemaV1(
         req.getMintRequest().getServicePointId(),
         req.getMetadata() );
     }
@@ -122,7 +127,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     }
 
     return new MintResponse().success(true). 
-      raid( readRaidV2(new ReadRaidV2Request().handle(handle)) );
+      raid( readRaidV2(new ReadRaidV2Request().handle(id.handle().format())) );
   }
 
   @Override
@@ -172,27 +177,30 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
       return mintFailed(METADATA_NOT_SET);
     }
     
-    var id = newData.getId();
-    if( id == null ){
+    var newIdBlock = newData.getId();
+    if( newIdBlock == null ){
       return mintFailed(ID_BLOCK_NOT_SET);
     }
 
-    if( isBlank(id.getIdentifier()) ){
-      return mintFailed(IDENTIFIER_NOT_SET);
+    var idParse = idParser.parseUrl(newIdBlock.getIdentifier());
+    if( idParse instanceof ParseProblems idProblems ){
+      return mintFailed(mapProblemsToValidationFailures(idProblems));
     }
+    var id = (IdentifierUrl) idParse; 
+    var handle = id.handle().format();
     
     if( req.getMetadata().getMetadataSchema() == LEGACYMETADATASCHEMAV1 ){
       return mintFailed(CANNOT_UPDATE_LEGACY_SCHEMA);
     }
 
     // improve: don't need the svcPoint, wasteful to read it here
-    var oldRaid = raidSvc.readRaidV2Data(id.getIdentifier()).raid();
+    var oldRaid = raidSvc.readRaidV2Data(handle).raid();
     guardOperatorOrAssociated(user, oldRaid.getServicePointId());
 
     var failures = raidSvc.updateRaidoSchemaV1(req.getMetadata(), oldRaid);
     if( failures.isEmpty() ){
       return new MintResponse().success(true).raid( 
-        readRaidV2(new ReadRaidV2Request().handle(id.getIdentifier())) );
+        readRaidV2(new ReadRaidV2Request().handle(handle)) );
     }
     else {
       return mintFailed(failures);
@@ -209,16 +217,21 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
       return mintFailed(METADATA_NOT_SET);
     }
 
-    var id = newData.getId();
-    if( id == null ){
+    var idBlock = newData.getId();
+    if( idBlock == null ){
       return mintFailed(ID_BLOCK_NOT_SET);
     }
 
-    if( isBlank(id.getIdentifier()) ){
-      return mintFailed(IDENTIFIER_NOT_SET);
+    IdentifierUrl id;
+    try {
+      id = idParser.parseUrlWithException(idBlock.getIdentifier());
     }
+    catch( ValidationFailureException e ){
+      throw new RuntimeException(e);
+    }
+    String handle = id.handle().format();
 
-    var oldRaid = raidSvc.readRaidV2Data(id.getIdentifier()).raid();
+    var oldRaid = raidSvc.readRaidV2Data(handle).raid();
     guardOperatorOrAssociated(user, oldRaid.getServicePointId());
     
     /* re-using updateRaidoSchemaV1() allows the upgrade process to make any 
@@ -228,7 +241,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     var failures = raidSvc.upgradeRaidoSchemaV1(req.getMetadata(), oldRaid);
     if( failures.isEmpty() ){
       return new MintResponse().success(true).raid(
-        readRaidV2(new ReadRaidV2Request().handle(id.getIdentifier())) );
+        readRaidV2(new ReadRaidV2Request().handle(handle)) );
     }
     else {
       return mintFailed(failures);

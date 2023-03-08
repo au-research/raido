@@ -34,6 +34,10 @@ import { West } from "@mui/icons-material";
 import { formatLocalDateAsIsoShortDateTime } from "Util/DateUtil";
 import Divider from "@mui/material/Divider";
 import { InfoFieldList, InfoField } from "Component/InfoField";
+import { NewWindowLink, orcidUrl } from "Component/ExternalLink";
+import { orcidBrand } from "Component/OrcidField";
+import { mapClientIdToIdProvider } from "Component/IdProviderDisplay";
+import { isOperator } from "Auth/Authz";
 
 const log = console;
 
@@ -117,9 +121,11 @@ function AppUserContainer({appUserId}: {
       <InfoField id="servicePoint" label="Service Point"
         value={query.data.servicePoint.name}
       />
-      <InfoField id="email" label="Email"
+      <InfoField id="identity" label="Identity"
         value={query.data.appUser.email}
       />
+      <SubjectField id="subject" label="Subject" data={query.data.appUser}/>
+      
       <InfoField id="approvedBy" label="Approved by"
         value={query.data.authzRequest?.respondingUserEmail || 'Auto-approved'}
       />
@@ -146,7 +152,7 @@ function AppUserContainer({appUserId}: {
             value={formData.role ?? "SP_USER"}
             label="Role"
             onChange={(event: SelectChangeEvent) => {
-              formData.role = event.target.value;
+              setFormData({...formData, role: event.target.value})
             }}
           >
             <MenuItem value={"SP_USER"}>Service Point User</MenuItem>
@@ -154,21 +160,24 @@ function AppUserContainer({appUserId}: {
             <MenuItem value={"OPERATOR"}>Raido Operator</MenuItem>
           </Select>
         </FormControl>
-        <FormControl>
-          <Stack direction={"row"} spacing={2} alignItems={"center"}>
-            <TextField id="tokenCutoff" label="Sign-in cutoff"
-              variant="outlined" disabled
-              value={formatLocalDateAsIsoShortDateTime(formData.tokenCutoff)}
-            />
-            <West/>
-            <SecondaryButton onClick={(e) => {
-              e.preventDefault();
-              setFormData({...formData, tokenCutoff: new Date()});
-            }}>
-              Force sign-in
-            </SecondaryButton>
-          </Stack>
-        </FormControl>
+        {/* this isn't a security thing, it's about not confusing users */}
+        { isOperator(auth) && 
+          <FormControl>
+            <Stack direction={"row"} spacing={2} alignItems={"center"}>
+              <TextField id="tokenCutoff" label="Sign-in cutoff"
+                variant="outlined" disabled
+                value={formatLocalDateAsIsoShortDateTime(formData.tokenCutoff)}
+              />
+              <West/>
+              <SecondaryButton onClick={(e) => {
+                e.preventDefault();
+                setFormData({...formData, tokenCutoff: new Date()});
+              }}>
+                Force sign-in
+              </SecondaryButton>
+            </Stack>
+          </FormControl>
+        }
         <FormControl>
           <FormControlLabel
             disabled={isWorking}
@@ -237,4 +246,24 @@ function AppUserHelp(){
       </ul>
     </Stack>
   }/>;
+}
+
+export function SubjectField({data, id, label}:{
+  data: {
+    clientId: string,
+    subject: string,
+  },
+  id: string,
+  label: string,
+}){
+  const idp = mapClientIdToIdProvider(data.clientId);
+  if( idp === orcidBrand ){
+    return <InfoField id={id} label={label}
+      value={
+        <NewWindowLink href={`${orcidUrl}/${data.subject}`}>
+          {data.subject}
+        </NewWindowLink>
+      }/>
+  }
+  return <InfoField id={id} label={label} value={data.subject}/>
 }

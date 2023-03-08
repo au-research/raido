@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.exception.ValidationException;
 import raido.apisvc.service.raid.RaidService;
+import raido.apisvc.service.raid.id.IdentifierUrl;
 import raido.apisvc.service.raid.validation.RaidSchemaV1ValidationService;
 import raido.idl.raidv2.api.BasicRaidStableApi;
 import raido.idl.raidv2.model.CreateRaidV1Request;
@@ -50,9 +51,10 @@ public class BasicRaidStable implements BasicRaidStableApi {
       throw new ValidationException(failures);
     }
 
-    String handle = raidService.mintRaidSchemaV1(request, user.getServicePointId());
+    IdentifierUrl id = raidService.mintRaidSchemaV1(
+      request, user.getServicePointId() );
 
-    return raidService.readRaidV1(handle);
+    return raidService.readRaidV1(id.handle().format());
   }
 
   @Override
@@ -66,7 +68,6 @@ public class BasicRaidStable implements BasicRaidStableApi {
   @Override
   public RaidSchemaV1 updateRaidV1(String handle, UpdateRaidV1Request request) {
     var user = getAuthzPayload();
-
     guardOperatorOrAssociated(user, request.getId().getIdentifierServicePoint());
 
     final var failures = new ArrayList<>(validationService.validateForUpdate(handle, request));

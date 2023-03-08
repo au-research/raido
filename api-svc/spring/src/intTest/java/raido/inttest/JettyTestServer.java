@@ -35,7 +35,7 @@ implements BeforeAllCallback,
   private static EmbeddedJetty jetty;
   private static AnnotationConfigWebApplicationContext rootContext;
 
-  private Map<RequestMappingInfo, HandlerMethod> turnipApiHandlerMethods;
+  private Map<RequestMappingInfo, HandlerMethod> intTestApiHandlerMethods;
 
 
   @Override
@@ -50,7 +50,7 @@ implements BeforeAllCallback,
 
   @Override
   public void close() {
-    shutdownTurnip();
+    shutdownIntTestServer();
   }
 
   public void initTestRaido() throws Exception {
@@ -73,13 +73,13 @@ implements BeforeAllCallback,
     serverConnector = jetty.configureHttpConnector(Api.PORT);
     jetty.addServletContainerInitializer("JettyTestServer", (sci, ctx) ->
     {
-      rootContext = ApiConfig.initApplicationContext(ctx);
+      rootContext = EmbeddedJetty.initApplicationContext(ctx, ApiConfig.class);
       MutablePropertySources propertySources =
         rootContext.getEnvironment().getPropertySources();
 
       rootContext.addApplicationListener(event -> {
         if( event instanceof ContextRefreshedEvent ){
-          turnipApiHandlerMethods = rootContext.
+          intTestApiHandlerMethods = rootContext.
             getBean(RequestMappingHandlerMapping.class).getHandlerMethods();
         }
       });
@@ -88,7 +88,7 @@ implements BeforeAllCallback,
     jetty.getServer().start();
   }
 
-  public static void shutdownTurnip() {
+  public static void shutdownIntTestServer() {
     try {
       jetty.shutdown();
     }
@@ -97,8 +97,8 @@ implements BeforeAllCallback,
     }
   }
 
-  public Map<RequestMappingInfo, HandlerMethod> getTurnipApiHandlerMethods() {
-    return turnipApiHandlerMethods;
+  public Map<RequestMappingInfo, HandlerMethod> getIntTestApiHandlerMethods() {
+    return intTestApiHandlerMethods;
   }
 
   public EmbeddedJetty getJetty() {

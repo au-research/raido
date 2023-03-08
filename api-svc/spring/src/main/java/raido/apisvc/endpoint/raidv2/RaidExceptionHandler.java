@@ -1,9 +1,12 @@
 package raido.apisvc.endpoint.raidv2;
 
 import org.jooq.exception.DataAccessException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -137,5 +140,21 @@ public class RaidExceptionHandler extends ResponseEntityExceptionHandler {
     return ResponseEntity
       .badRequest()
       .body(errorJson);
+  }
+
+  @Override
+  protected ResponseEntity<Object> handleHttpMessageNotReadable(
+    HttpMessageNotReadableException ex,
+    HttpHeaders headers,
+    HttpStatusCode status,
+    WebRequest request
+  ) {
+    /* I wanted to log the input message that caused the error here too, but 
+    I couldn't figure out how to actually print the content of 
+    ex.httpInputMessage.  So it's logged from the RequestLoggingFilter. 
+    */
+    log.with("problem", ex.getMessage()).
+      warn("bad request - http message not readable");
+    return super.handleHttpMessageNotReadable(ex, headers, status, request);
   }
 }

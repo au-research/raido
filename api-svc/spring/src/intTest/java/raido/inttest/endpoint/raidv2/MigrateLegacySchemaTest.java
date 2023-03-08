@@ -13,38 +13,42 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static raido.apisvc.service.raid.MetadataService.RAID_ID_TYPE_URI;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
 import static raido.idl.raidv2.model.RaidoMetaschema.LEGACYMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
+import static raido.inttest.endpoint.raidv1.LegacyRaidV1MintTest.INT_TEST_ID_URL;
 import static raido.inttest.endpoint.raidv2.RaidoSchemaV1Test.createDummyLeaderContributor;
 
 public class MigrateLegacySchemaTest extends IntegrationTestCase {
 
   public static final String NOTRE_DAME = "University of Notre Dame Library";
   
-//  @Autowired private RaidoApiUtil api;
-
   @Test
   void happyDayScenario() throws JsonProcessingException {
-    
-    var adminApi = super.adminExperimentalClientAs(adminToken);
     var today = LocalDate.now();
     var handle = "intTest%s/%s".formatted(
-      DateUtil.formatCompactIsoDate(today), 
+      DateUtil.formatCompactIsoDate(today),
       // duplicate handle if two run in same millisecond
       DateUtil.formatCompactTimeMillis(LocalDateTime.now()) );
-    var servicePoint = findServicePoint(adminApi, NOTRE_DAME);
-    var basicApi = basicRaidExperimentalClientAs(
-      servicePoint.getId(), handle, UserRole.SP_ADMIN);
+    var notreDame = findPublicServicePoint(NOTRE_DAME);
+    
+    GenerateApiTokenResponse notreDameAdmin = createApiKeyUser(
+      notreDame.getId(), handle+"-notreDame", UserRole.SP_ADMIN);
+    GenerateApiTokenResponse raidoAdmin = createApiKeyUser(
+      RAIDO_SP_ID, handle+"-raido", UserRole.SP_ADMIN);
+    
+    var basicApiAsNotreDame = basicRaidExperimentalClient(notreDameAdmin.getApiToken());
+    var adminApiAsRaido = adminExperimentalClientAs(raidoAdmin.getApiToken());
 
 
     String initialTitle = "migration integration test " + handle;
     var initMetadata = new LegacyMetadataSchemaV1().
       metadataSchema(LEGACYMETADATASCHEMAV1).
       id(new IdBlock().
-        identifier(handle).
+        identifier(INT_TEST_ID_URL + "/" + handle).
         identifierSchemeURI(RAID_ID_TYPE_URI).
         globalUrl("https://something.example.com")).
       descriptions(List.of(new DescriptionBlock().
@@ -60,10 +64,10 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
         url("https://example.com/some.url.related.to.the.raid") ));
     
     EXPECT("migrating a raid with correct content should work");
-    var mintResult = adminApi.migrateLegacyRaid(
+    var mintResult = adminApiAsRaido.migrateLegacyRaid(
       new MigrateLegacyRaidRequest().
         mintRequest(new MigrateLegacyRaidRequestMintRequest().
-          servicePointId(servicePoint.getId()).
+          servicePointId(notreDame.getId()).
           contentIndex(1).
           createDate(OffsetDateTime.now()) ).
         metadata(initMetadata) );
@@ -74,7 +78,7 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
     var pubRead = raidoApi.getPublicExperimental().publicReadRaidV3(handle);
     assertThat(pubRead).isNotNull();
     assertThat(pubRead.getCreateDate()).isNotNull();
-    assertThat(pubRead.getServicePointId()).isEqualTo(servicePoint.getId());
+    assertThat(pubRead.getServicePointId()).isEqualTo(notreDame.getId());
     assertThat(pubRead.getHandle()).isEqualTo(handle);
     assertThat(pubRead.getHandle()).isEqualTo(handle);
     var pubReadMeta = (PublicRaidMetadataSchemaV1) pubRead.getMetadata(); 
@@ -86,8 +90,8 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
     assertThat(pubReadMeta.getContributors()).isNullOrEmpty();
 
     EXPECT("should be able to list a migrated raid");
-    var listResult = basicApi.listRaidV2(new RaidListRequestV2().
-      servicePointId(servicePoint.getId()).primaryTitle(initialTitle));
+    var listResult = basicApiAsNotreDame.listRaidV2(new RaidListRequestV2().
+      servicePointId(notreDame.getId()).primaryTitle(initialTitle));
     assertThat(listResult).singleElement().satisfies(i->{
       assertThat(i.getHandle()).isEqualTo(mintResult.getRaid().getHandle());
       assertThat(i.getPrimaryTitle()).isEqualTo(initialTitle);
@@ -98,10 +102,10 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
     
     
     EXPECT("should be able to re-migrate an existing raid");
-    var remintResult = adminApi.migrateLegacyRaid(
+    var remintResult = adminApiAsRaido.migrateLegacyRaid(
       new MigrateLegacyRaidRequest().
         mintRequest(new MigrateLegacyRaidRequestMintRequest().
-          servicePointId(servicePoint.getId()). 
+          servicePointId(notreDame.getId()). 
           contentIndex(1).
           createDate(OffsetDateTime.now()) ).
         metadata(initMetadata) );
@@ -113,7 +117,7 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
       remintResult.getRaid().getMetadata().toString(), 
       LegacyMetadataSchemaV1.class );
     
-    var upgradeResult = basicApi.upgradeLegacyToRaidoSchema(
+    var upgradeResult = basicApiAsNotreDame.upgradeLegacyToRaidoSchema(
       new UpdateRaidoSchemaV1Request().metadata(
         new RaidoMetadataSchemaV1().
           metadataSchema(RAIDOMETADATASCHEMAV1).
@@ -124,8 +128,6 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
           descriptions(remintMetadata.getDescriptions()).
           alternateUrls(remintMetadata.getAlternateUrls()).
           contributors(List.of(createDummyLeaderContributor(today)))
-//            .organisations(List.of(createDummyOrganisation(today)))
-
       ) );
     assertThat(upgradeResult.getFailures()).isNullOrEmpty();
     assertThat(upgradeResult.getSuccess()).isTrue();
@@ -138,10 +140,10 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
     /* "reproduce" because we don't actually want this behaviour, we'd prefer 
     that this failed - this "documents" the existing undesirable behaviour */
     EXPECT("reproduce that upgraded raids are able to re-migrated");
-    remintResult = adminApi.migrateLegacyRaid(
+    remintResult = adminApiAsRaido.migrateLegacyRaid(
       new MigrateLegacyRaidRequest().
         mintRequest(new MigrateLegacyRaidRequestMintRequest().
-          servicePointId(servicePoint.getId()).
+          servicePointId(notreDame.getId()).
           contentIndex(1).
           createDate(OffsetDateTime.now()) ).
         metadata(initMetadata) );

@@ -10,6 +10,8 @@ import raido.apisvc.service.auth.admin.AuthzRequestService;
 import raido.apisvc.service.auth.admin.ServicePointService;
 import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.service.raid.ValidationFailureException;
+import raido.apisvc.service.raid.id.IdentifierParser;
+import raido.apisvc.service.raid.id.IdentifierUrl;
 import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
@@ -22,13 +24,9 @@ import java.util.List;
 
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 import static raido.apisvc.endpoint.message.ValidationMessage.fieldNotSet;
-import static raido.apisvc.endpoint.raidv2.AuthzUtil.getAuthzPayload;
-import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
-import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociatedSpAdmin;
-import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrSpAdmin;
-import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardRaidoAdminApiKey;
-import static raido.apisvc.endpoint.raidv2.AuthzUtil.isOperatorOrSpAdmin;
+import static raido.apisvc.endpoint.raidv2.AuthzUtil.*;
 import static raido.apisvc.util.ExceptionUtil.iae;
+import static raido.apisvc.util.JooqUtil.valueFits;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.areEqual;
 import static raido.db.jooq.api_svc.enums.UserRole.OPERATOR;
@@ -49,6 +47,7 @@ public class AdminExperimental implements AdminExperimentalApi {
   private RaidService raidSvc;
   private BasicRaidExperimental basicRaid;
   private DSLContext db;
+  private IdentifierParser idParser;
 
   public AdminExperimental(
     AuthzRequestService authzRequestSvc,
@@ -57,7 +56,8 @@ public class AdminExperimental implements AdminExperimentalApi {
     RaidoSchemaV1ValidationService validSvc, 
     RaidService raidSvc,
     BasicRaidExperimental basicRaid, 
-    DSLContext db
+    DSLContext db,
+    IdentifierParser idParser
   ) {
     this.authzRequestSvc = authzRequestSvc;
     this.servicePointSvc = servicePointSvc;
@@ -66,6 +66,7 @@ public class AdminExperimental implements AdminExperimentalApi {
     this.raidSvc = raidSvc;
     this.basicRaid = basicRaid;
     this.db = db;
+    this.idParser = idParser;
   }
 
   @Override
@@ -128,6 +129,7 @@ public class AdminExperimental implements AdminExperimentalApi {
     var user = AuthzUtil.getAuthzPayload();
     guardOperatorOrAssociatedSpAdmin(user, req.getId());
     
+    // IMPROVE: probably time to start doing proper validation 
     Guard.notNull(req);
     Guard.hasValue("must have a name", req.getName());
     Guard.hasValue("must have an identifier owner", req.getIdentifierOwner());
@@ -135,6 +137,10 @@ public class AdminExperimental implements AdminExperimentalApi {
     Guard.notNull("must have techEmail", req.getTechEmail());
     Guard.notNull("must have a enabled flag", req.getEnabled());
 
+    Guard.isTrue(
+      ()->"identifierOwner is too long: %s".formatted(req.getIdentifierOwner()),
+      valueFits(SERVICE_POINT.IDENTIFIER_OWNER, req.getIdentifierOwner()));
+    
     return servicePointSvc.updateServicePoint(req);
   }
 
@@ -257,10 +263,10 @@ public class AdminExperimental implements AdminExperimentalApi {
     * that the key is admin role and is for the raido SP. */
     guardRaidoAdminApiKey(user);
 
-    IdBlock id = req.getMetadata().getId();
+    IdBlock idBlock = req.getMetadata().getId();
 
     var failures = new ArrayList<ValidationFailure>();
-    failures.addAll(validSvc.validateIdBlockForMigration(id));
+    failures.addAll(validSvc.validateIdBlockForMigration(idBlock));
     failures.addAll(validSvc.validateLegacySchemaV1(req.getMetadata()));
     if( req.getMintRequest().getServicePointId() == null ){
       failures.add(fieldNotSet("mintRequest.servicePointId"));
@@ -275,7 +281,8 @@ public class AdminExperimental implements AdminExperimentalApi {
       return new MintResponse().success(false).failures(failures);
     }
     
-    String handle = id.getIdentifier();
+    // it'll work because IdBlock's already been validated
+    var id = (IdentifierUrl) idParser.parseUrl(idBlock.getIdentifier());
 
     try {
       raidSvc.migrateRaidoSchemaV1(
@@ -291,7 +298,7 @@ public class AdminExperimental implements AdminExperimentalApi {
     // improve: this is unnecessary overhead - migration scripts don't care
     // about the response.
     return new MintResponse().success(true).
-      raid( raidSvc.readRaidResponseV2(handle));
+      raid( raidSvc.readRaidResponseV2(id.handle().format()));
   }
 
 }

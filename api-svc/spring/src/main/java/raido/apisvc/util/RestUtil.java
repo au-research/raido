@@ -17,6 +17,7 @@ import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static raido.apisvc.util.ObjectUtil.infoLogExecutionTime;
 import static raido.apisvc.util.StringUtil.equalsIgnoreCase;
+import static raido.apisvc.util.StringUtil.hasValue;
 
 public class RestUtil {
 
@@ -167,4 +168,30 @@ public class RestUtil {
     }
     return url;
   }
+
+  public static String normaliseWithoutTrailingSlash(@Nullable String url){
+    if( !hasValue(url) ){
+      return "";
+    }
+    
+    url = url.trim();
+    if( url.charAt(url.length()-1) == '/'){
+      return url.substring(0, url.length()-2);
+    }
+    return url;
+  }
+
+  public static String normaliseWithTrailingSlash(@Nullable String url){
+    if( !hasValue(url) ){
+      return "/";
+    }
+    
+    url = url.trim();
+    if( url.charAt(url.length()-1) != '/'){
+      return url + '/';
+    }
+    return url;
+  }
+
+
 }

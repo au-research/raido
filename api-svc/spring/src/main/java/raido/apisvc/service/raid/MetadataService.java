@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.jooq.JSONB;
 import org.springframework.stereotype.Component;
 import raido.apisvc.service.raid.RaidService.ReadRaidV2Data;
+import raido.apisvc.service.raid.id.IdentifierUrl;
 import raido.apisvc.spring.config.environment.MetadataProps;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.Metaschema;
@@ -41,6 +42,9 @@ import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 
 @Component
 public class MetadataService {
+  /* I think this should point top the metadata schema definition 
+  in the readthedocs, or our github OpenApi definition, or the "formal 
+  metadata schema" think MBA is working on? */
   public static final String RAID_ID_TYPE_URI = "https://raid.org";
   
   private static final Log log = to(MetadataService.class);
@@ -174,22 +178,17 @@ public class MetadataService {
     return "%s/%s".formatted(metaProps.raidoLandingPrefix, handle);
   }
 
-  public String formatGlobalUrl(String handle){
-    return "%s/%s".formatted(metaProps.globalUrlPrefix, handle);
-  }
-
-  public IdBlock createIdBlock(final String handle,
-                               final ServicePointRecord servicePointRecord,
-                               final String raidUrl) {
-    return new IdBlock()
-      .identifier(handle)
-      .identifierSchemeURI(RAID_ID_TYPE_URI)
-      .identifierRegistrationAgency(metaProps.raidAgencyIdentifier)
-      .identifierOwner(servicePointRecord.getIdentifierOwner())
-      .identifierServicePoint(servicePointRecord.getId())
-      .globalUrl(formatGlobalUrl(handle))
-      .raidAgencyUrl(raidUrl)
-      .raidAgencyIdentifier(metaProps.raidAgencyIdentifier);
+  public IdBlock createIdBlock(final IdentifierUrl id,
+                               final ServicePointRecord servicePointRecord
+  ) {
+    return new IdBlock().
+      identifier(id.formatUrl()).
+      identifierSchemeURI(RAID_ID_TYPE_URI).
+      identifierRegistrationAgency(metaProps.identifierRegistrationAgency).
+      identifierOwner(servicePointRecord.getIdentifierOwner()).
+      identifierServicePoint(servicePointRecord.getId()).
+      globalUrl(id.handle().format(metaProps.globalUrlPrefix)).
+      raidAgencyUrl(id.handle().format(metaProps.handleUrlPrefix));
   }
 
   /**

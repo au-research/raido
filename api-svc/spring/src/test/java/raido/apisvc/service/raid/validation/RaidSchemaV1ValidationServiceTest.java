@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import raido.apisvc.service.raid.id.IdentifierParser;
 import raido.idl.raidv2.model.CreateRaidV1Request;
 import raido.idl.raidv2.model.IdBlock;
 import raido.idl.raidv2.model.SubjectBlock;
@@ -26,6 +27,8 @@ class RaidSchemaV1ValidationServiceTest {
   private ContributorValidationService contribSvc;
   @Mock
   private OrganisationValidationService orgSvc;
+  @Mock
+  private IdentifierParser identifierParser;
 
   @InjectMocks
   private RaidSchemaV1ValidationService validationService;

@@ -2,7 +2,10 @@ package raido.apisvc.service.raid.validation;
 
 import org.springframework.stereotype.Component;
 import raido.apisvc.endpoint.message.ValidationMessage;
-import raido.apisvc.util.Log;
+import raido.apisvc.service.raid.ValidationFailureException;
+import raido.apisvc.service.raid.id.IdentifierHandle;
+import raido.apisvc.service.raid.id.IdentifierParser;
+import raido.apisvc.service.raid.id.IdentifierUrl;
 import raido.idl.raidv2.model.*;
 
 import java.util.ArrayList;
@@ -10,7 +13,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static java.util.List.of;
-import static raido.apisvc.util.Log.to;
+import static raido.apisvc.endpoint.message.ValidationMessage.handlesDoNotMatch;
+import static raido.apisvc.util.RestUtil.urlDecode;
+import static raido.apisvc.util.StringUtil.areEqual;
 import static raido.apisvc.util.StringUtil.isBlank;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 
@@ -19,29 +24,48 @@ public class RaidSchemaV1ValidationService {
   private final TitleValidationService titleSvc;
   private final DescriptionValidationService descSvc;
   private final ContributorValidationService contribSvc;
-
   private final OrganisationValidationService orgSvc;
-
   private final SubjectValidationService subjectSvc;
-
+  private final IdentifierParser idParser;
   public RaidSchemaV1ValidationService(
-    TitleValidationService titleSvc,
-    DescriptionValidationService descSvc,
-    ContributorValidationService contribSvc,
-    OrganisationValidationService orgSvc,
-    final SubjectValidationService subjectSvc) {
+    final TitleValidationService titleSvc,
+    final DescriptionValidationService descSvc,
+    final ContributorValidationService contribSvc,
+    final OrganisationValidationService orgSvc,
+    final SubjectValidationService subjectSvc,
+    final IdentifierParser idParser
+  ) {
     this.titleSvc = titleSvc;
     this.descSvc = descSvc;
     this.contribSvc = contribSvc;
     this.orgSvc = orgSvc;
     this.subjectSvc = subjectSvc;
+    this.idParser = idParser;
   }
 
-  private static List<ValidationFailure> validateHandle(final String handle, final IdBlock idBlock) {
+  private List<ValidationFailure> validateUpdateHandle(final String decodedHandleFromPath, final IdBlock updateIdBlock) {
     final var failures = new ArrayList<ValidationFailure>();
 
-    if (!handle.equals(idBlock.getIdentifier())) {
-      failures.add(ValidationMessage.handlesDoNotMatch());
+    IdentifierUrl updateId = null;
+    try {
+      updateId = idParser.parseUrlWithException(updateIdBlock.getIdentifier());
+    }
+    catch( ValidationFailureException e ){
+      failures.addAll(e.getFailures());
+    }
+
+    IdentifierHandle pathHandle = null;
+    try {
+      pathHandle = idParser.parseHandleWithException(decodedHandleFromPath);
+    }
+    catch( ValidationFailureException e ){
+      failures.addAll(e.getFailures());
+    }
+
+    if( updateId != null && pathHandle != null ){
+      if( areEqual(pathHandle.format(), updateId.handle().format()) ){
+        failures.add(handlesDoNotMatch());
+      }
     }
 
     return failures;
@@ -138,7 +162,9 @@ public class RaidSchemaV1ValidationService {
       return of(ValidationMessage.METADATA_NOT_SET);
     }
 
-    final var failures = new ArrayList<>(validateHandle(handle, request.getId()));
+    String decodedHandle = urlDecode(handle);
+
+    final var failures = new ArrayList<>(validateUpdateHandle(decodedHandle, request.getId()));
 
     if( request.getMetadataSchema() != RAIDOMETADATASCHEMAV1 ){
       failures.add(ValidationMessage.INVALID_METADATA_SCHEMA);

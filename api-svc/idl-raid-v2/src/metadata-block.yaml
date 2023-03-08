@@ -11,12 +11,12 @@ components:
   schemas:
     IdBlock:
       type: object
-      required: [identifier, identifierSchemeUri,
-                 identifierRegistrationAgency, identifierOwner, identifierServicePoint]
+      required: [ identifier, identifierSchemeUri,
+        identifierRegistrationAgency, identifierOwner, identifierServicePoint ]
       properties:
         identifier: 
           type: string
-          description: The handle, e.g. https://raid.org/xxx.yyy/zzz
+          description: The identifier of the raid, e.g. https://raid.org.au/102.100.100/zzz
         identifierSchemeURI:
           type: string
           description: > 
@@ -24,7 +24,8 @@ components:
         identifierRegistrationAgency:
           type: string
           description: >
-            The registration agency that minted the RAiD.
+            ROR that identifies of the organisation that operates the 
+            raid registration agency software that minted this raid.
         identifierOwner:
           type: string
           description: >
@@ -45,12 +46,7 @@ components:
           type: string
           description: >
             The URL for the raid via the minting raid agency system, e.g 
-            https://demo.raido-infra.com/handle/10378.1/1695863
-        raidAgencyIdentifier:
-          type: string
-          description: >
-            Identifier of the raid agency system that controls the raid, e.g
-            demo.raido-infra.com
+            https://raid.org.au/10378.1/1695863
       example:
         identifier: https://raid.org/xxx.yyy/zzz
         identifierSchemeUri: https://raid.org

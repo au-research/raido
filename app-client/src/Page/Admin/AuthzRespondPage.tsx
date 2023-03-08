@@ -6,10 +6,7 @@ import { TextSpan } from "Component/TextSpan";
 import React, { useState } from "react";
 import { normalisePath } from "Util/Location";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  AuthzRequestExtraV1,
-  UpdateAuthzRequestStatusRequest
-} from "Generated/Raidv2";
+import { UpdateAuthzRequestStatusRequest } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import {
@@ -28,9 +25,7 @@ import {
 } from "Component/AppButton";
 import { navBrowserBack } from "Util/WindowUtil";
 import { InfoField, InfoFieldList } from "Component/InfoField";
-import { mapClientIdToIdProvider } from "Component/IdProviderDisplay";
-import { NewWindowLink } from "Component/ExternalLink";
-import { orcidBrand } from "Component/OrcidField";
+import { SubjectField } from "./AppUserPage";
 
 const log = console;
 
@@ -144,7 +139,7 @@ function AuthzResponseContainer({authzRequestId}:{authzRequestId: number}){
         <InfoField id="identity" label="Identity" value={query.data.email}/>
         <InfoField id="idProvider" label="ID provider" 
           value={query.data.idProvider}/>
-        <SubjectField id="subject" label="Subject" request={query.data}/>
+        <SubjectField id="subject" label="Subject" data={query.data}/>
         <InfoField id="requestedDate" label="Requested"
           value={<DateTimeDisplay date={query.data.dateRequested}/>}/>
         <InfoField id="status" label="Status" value={query.data.status}/>
@@ -199,19 +194,3 @@ function AuthzResponseContainer({authzRequestId}:{authzRequestId: number}){
   </ContainerCard>
 }
 
-function SubjectField({request, id, label}:{
-  request: AuthzRequestExtraV1,
-  id: string,
-  label: string,
-}){
-  const idp = mapClientIdToIdProvider(request.clientId);
-  if( idp === orcidBrand ){
-    return <InfoField id={id} label={label}
-      value={
-      <NewWindowLink href={`https://orcid.org/${request.subject}`}>
-        {request.subject}
-      </NewWindowLink>
-    }/> 
-  } 
-  return <InfoField id={id} label={label} value={request.subject}/>
-}

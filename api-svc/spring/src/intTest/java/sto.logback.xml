@@ -11,7 +11,7 @@
     </encoder>
   </appender>
 
-  <!-- debug is usually disabled in deployment enviornments -->
+  <!-- debug is usually disabled in deployment environments -->
   <root level="info">
     <appender-ref ref="UNMASKED_CONSOLE"/>
   </root>
@@ -27,5 +27,6 @@
   <logger name="raido.apisvc.service.apids.ApidsService" level="info"/>
 
   <logger name="raido.apisvc.spring.RequestLoggingFilter" level="info"/>
-  
+  <logger name="org.springframework.web.servlet.PageNotFound" level="error"/>
+
 </configuration>

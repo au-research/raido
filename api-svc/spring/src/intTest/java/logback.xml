@@ -21,5 +21,5 @@
   </root>
 
   <logger name="org.springframework.test.context.support" level="warn"/>
-
+  <logger name="org.springframework.web.servlet.PageNotFound" level="error"/>
 </configuration>

@@ -23,7 +23,8 @@ public class RaidHtmlService {
   }
 
   /**
-   TODO:STO This is awful, of course - replace with sutiable HTML tech.
+   This is awful, of course - replace with sutiable HTML tech if we actually
+   were to do server side generation of HTML.
    - no XSS protection
    - no escaping (i.e what if `{handle}` is actually in your content)? 
    */

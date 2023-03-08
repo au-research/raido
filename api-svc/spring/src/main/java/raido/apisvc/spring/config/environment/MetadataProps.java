@@ -24,11 +24,19 @@ public class MetadataProps {
   public String globalUrlPrefix;
 
   /**
-   in demo env: `demo.raido-infra.com`
+   For Raido, this is the RoR of the ARDC.
    */
-  @Value("${EnvironmentConfig.raidAgencyIdentifier:" +
-    "localhost:7080}")
-  public String raidAgencyIdentifier;
+  @Value("${EnvironmentConfig.identifierRegistrationAgency:" +
+    "https://ror.org/038sjwq14}")
+  public String identifierRegistrationAgency;
+
+  /**
+   demo: demo.raid.org.au
+   prod: raid.org.au
+   */
+  @Value("${MetadataConfig.handleUrlPrefix:" +
+    "http://localhost:8080}")
+  public String handleUrlPrefix;
 
   /**
    The servicelevel guide currently says "200 KB maximum size".

@@ -48,6 +48,11 @@ GoogleOidc.clientSecret=<Google client secret>
 # `/ardc-services/APIDS demo API secret`
 Apids.secret=<APIDS API secret>
 
+
+# code is currently defaulted to https to make int tests work
+# because it forces RestTemplate to not follow redirects
+EnvironmentConfig.raidoLandingPage=http://localhost:7080/handle
+
 ```
 
 

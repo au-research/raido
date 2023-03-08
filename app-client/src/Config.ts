@@ -64,6 +64,7 @@ export interface EnvironmentConfig {
   orcid: AuthnConfig,
   
   raidoIssuer: string,
+  raidoLandingPage: string,
   /** The hostname to use to call the api-svc endpoints. 
   Generally empty string, so that API calls are a relative to current host.
   But you can use a different host if desired (but remember to configure CORS
@@ -121,7 +122,8 @@ function chooseEnvironmentConfig(env: string | undefined){
 const ciConfig: EnvironmentConfig = {
   environmentName: "ci",
   isProd: false,
-  raidoIssuer: "https://demo.raido-infra.com",
+  raidoIssuer: "https://demo.raid.org.au",
+  raidoLandingPage: "https://demo.raid.org.au",
   raidoApiSvc: "",
   aaf: {
     clientId: "",
@@ -146,6 +148,7 @@ const devConfig: EnvironmentConfig = {
   // have to run the https proxy for this, see local-orcid-signin.md  
   //raidoIssuer: "https://localhost:6080",
   raidoIssuer: "http://localhost:8080",
+  raidoLandingPage: "http://localhost:8080",
   raidoApiSvc: "",
   aaf: {
     // https://aaf.freshdesk.com/support/solutions/articles/19000096640-openid-connect-
@@ -158,8 +161,7 @@ const devConfig: EnvironmentConfig = {
     authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
     authnScope: "openid email profile",
   },
-  // this is not going to work, orcid require https and it's currently set
-  // to demo.raido-infra.com anyway 
+  // this is not going to work, orcid require https
   orcid: {
     clientId: "APP-IZBIZ6O7XH9RFG0X",
     authorizeUrl: "https://orcid.org/oauth/authorize",
@@ -178,13 +180,14 @@ const devConfig: EnvironmentConfig = {
 
 const demoConfig: EnvironmentConfig = {
   environmentName: "demo",
-  signInWarning: `The DEMO environment has been reset as of 2023-02-21.
+  signInWarning: `The DEMO environment has been reset as of 2023-03-06.
     All previously created raids have been deleted.  
-    All previously create API-keys have been deleted.
+    All previously created API-keys have been deleted.
     You will need to submit a new authorisation request to use the system.
     Please send an email to contact@raid.org to let us know you need approval.`,
   isProd: false,
   raidoIssuer: "https://api.demo.raid.org.au",
+  raidoLandingPage: "https://demo.raid.org.au",
   raidoApiSvc: "",
   aaf: {
     clientId: "accaabfd-a7c8-4d36-9363-ea7342e24db5",
@@ -198,8 +201,14 @@ const demoConfig: EnvironmentConfig = {
     authnScope: "openid email profile",
   },
   orcid: {
-    clientId: "APP-207226CSNVZ1ZSQM",
-    authorizeUrl: "https://sandbox.orcid.org/oauth/authorize",
+    // sandbox test client from orcid
+    //clientId: "APP-207226CSNVZ1ZSQM",
+    //authorizeUrl: "https://sandbox.orcid.org/oauth/authorize",
+    
+    // client created under STO's personal orcid
+    clientId: "APP-IZBIZ6O7XH9RFG0X",
+    authorizeUrl: "https://orcid.org/oauth/authorize",
+    
     authnScope: "openid",
   },
   authApiQuery: {
@@ -214,11 +223,14 @@ const demoConfig: EnvironmentConfig = {
 
 const prodConfig: EnvironmentConfig = {
   environmentName: "prod",
-  isProd: true,
-  raidoIssuer: "https://prod.raido-infra.com",
-  raidoApiSvc: "",
   signInWarning: `Note that this service is not yet live and contains
-   no raid data.`,
+   no raid data.
+   All database and raid data will be reset before the production release.
+   `,
+  isProd: true,
+  raidoIssuer: "https://api.prod.raid.org.au",
+  raidoLandingPage: "https://prod.raid.org.au",
+  raidoApiSvc: "",
   aaf: {
     /* This is the PROD client ID allocated by AAF via ticket
     https://aaf.freshdesk.com/helpdesk/tickets/9910 */
@@ -233,8 +245,8 @@ const prodConfig: EnvironmentConfig = {
     authnScope: "openid email profile",
   },
   orcid: {
-    // this is the DEMO client ID, created under STO's ORCiD account
-    clientId: "APP-IZBIZ6O7XH9RFG0X",
+    // this is the PROD client ID, created under the raid.services@ardc.eud.au ORCiD account
+    clientId: "APP-89ARS7MGN01HGYUO",
     authorizeUrl: "https://orcid.org/oauth/authorize",
     authnScope: "openid",
   },

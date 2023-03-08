@@ -102,6 +102,13 @@ public class ValidationMessage {
       message(FIELD_MUST_BE_SET_MESSAGE);
   }
   
+  public static ValidationFailure invalidIdentifier(String problem){
+    return new ValidationFailure().
+      fieldId("metadata.id.identifier").
+      errorType(INVALID_VALUE_TYPE).
+      message(problem);
+  }
+  
   public static ValidationFailure fieldCannotChange(String fieldId){
     return new ValidationFailure().
       fieldId(fieldId).

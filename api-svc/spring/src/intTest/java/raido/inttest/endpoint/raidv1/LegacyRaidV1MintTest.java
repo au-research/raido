@@ -18,10 +18,11 @@ import static raido.apisvc.util.RestUtil.anonPost;
 import static raido.apisvc.util.RestUtil.urlEncode;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
 import static raido.apisvc.util.test.BddUtil.GIVEN;
-import static raido.inttest.config.IntegrationTestConfig.restTemplateWithEncodingMode;
 
 public class LegacyRaidV1MintTest extends IntegrationTestCase {
-  public static final String INT_TEST_CONTENT_PATH = "https://raido.int.test";
+  public static final String INT_TEST_CONTENT_PATH = "https://raido.int.test/content-path";
+
+  public static final String INT_TEST_ID_URL = "http://localhost:8080";
 
   @Test void happyDayMintAndGet(){
     var create = createSimpleRaid("happyDayMintAndGet intTest");
@@ -38,7 +39,7 @@ public class LegacyRaidV1MintTest extends IntegrationTestCase {
     assertThat(pubReadV3).isNotNull();
     var pubMetaV3 = (PublicClosedMetadataSchemaV1) pubReadV3.getMetadata();
     assertThat(pubMetaV3.getId().getIdentifier()).
-      isEqualTo(mintResult.getHandle());
+      isEqualTo(INT_TEST_ID_URL+"/"+mintResult.getHandle());
     
     EXPECT("should be able to read the minted raid via V1 endpoint");
     var getResult = raidV1.handleRaidIdGet(mintResult.getHandle(), false);
@@ -57,12 +58,10 @@ public class LegacyRaidV1MintTest extends IntegrationTestCase {
     var raid = super.raidV1Client().raidPost(
       createSimpleRaid("encodedSlash raidV1 intTest"));
 
-    // dunno how to get feign to do the encoding thing - this'll do
-    var rest = restTemplateWithEncodingMode();
     var encodedHandle = urlEncode(raid.getHandle());
 
     EXPECT("get handle with encoded path should succeed");
-    var getResult = RestUtil.get(rest, raidV1TestToken,
+    var getResult = RestUtil.get(valuesEncodingRest, raidV1TestToken,
       raidoApiServerUrl("/v1/handle/" + encodedHandle),
       RaidModel.class);
     assertThat(getResult.getHandle()).isEqualTo(raid.getHandle());

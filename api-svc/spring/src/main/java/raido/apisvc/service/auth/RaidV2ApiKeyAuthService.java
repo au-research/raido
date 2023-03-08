@@ -20,10 +20,10 @@ import java.util.Optional;
 
 import static java.util.Optional.of;
 import static org.eclipse.jetty.util.TypeUtil.isFalse;
-import static raido.apisvc.service.auth.NonAuthzTokenPayload.NonAuthzTokenPayloadBuilder.aNonAuthzTokenPayload;
 import static raido.apisvc.spring.security.raidv2.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
 import static raido.apisvc.util.ExceptionUtil.authFailed;
 import static raido.apisvc.util.ExceptionUtil.wrapException;
+import static raido.apisvc.util.JwtUtil.JWT_TOKEN_TYPE;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.areEqual;
 import static raido.apisvc.util.StringUtil.mask;
@@ -86,15 +86,36 @@ public class RaidV2ApiKeyAuthService {
   }
 
   public Optional<Authentication> verifyAndAuthorize(DecodedJWT decodedJwt){
-    var verifiedJwt = verify(decodedJwt);
     
-    // security:sto check claims and expiry and stuff
+    // avoid dodgy stuff like someone crafting a JWT with alg = "none"
+    if( !areEqual(
+      decodedJwt.getAlgorithm(), 
+      apiAuthProps.signingAlgo.getName()) 
+    ){
+      log.with("signingAlgo", apiAuthProps.signingAlgo.getName()).
+        with("jwtAlgo", decodedJwt.getAlgorithm()).
+        with("claims", decodedJwt.getClaims()).
+        error("JWT signing algorithm mismatch for api-key");
+      throw authFailed();
+    }
+    
+    
+    if( !areEqual(decodedJwt.getType(), JWT_TOKEN_TYPE) ){
+      log.with("decodedJwt.type", decodedJwt.getType()).
+        with("claims", decodedJwt.getClaims()).
+        error("JWT type mismatch for api-key");
+      throw authFailed();
+    }
+
+    /* verify will fail if JWT is expired, the iat claim is driven by the 
+    tokenCutoff field. */
+    var verifiedJwt = verify(decodedJwt);
+
     String clientId = verifiedJwt.
       getClaim(RaidoClaim.CLIENT_ID.getId()).asString();
     String email = verifiedJwt.getClaim(RaidoClaim.EMAIL.getId()).asString();
     Boolean isAuthzAppUser = verifiedJwt.getClaim(
       RaidoClaim.IS_AUTHORIZED_APP_USER.getId() ).asBoolean();
-    
     var issuedAt = verifiedJwt.getIssuedAtAsInstant();
     Guard.notNull(issuedAt);
     
@@ -103,11 +124,12 @@ public class RaidV2ApiKeyAuthService {
     Guard.hasValue(email);
     
     if( !isAuthzAppUser ){
-      return of(aNonAuthzTokenPayload().
-        withSubject(verifiedJwt.getSubject()).
-        withEmail(email).
-        withClientId(clientId).
-        build() );
+      /* there's no "auth request" step for api-keys, they're "authorized as 
+      soon as an Op or Admin creates them.
+      This shouldn't happen - investigate.  */
+      log.with("claims", verifiedJwt.getClaims()).
+        error("verified api-key with bad IS_AUTHORIZED_APP_USER value");
+      throw authFailed();
     }
 
     Long appUserId = verifiedJwt.
