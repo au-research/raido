@@ -226,6 +226,8 @@ const prodConfig: EnvironmentConfig = {
   signInWarning: `Note that this service is not yet live and contains
    no raid data.
    All database and raid data will be reset before the production release.
+   Cut-over to this service, including migration of legacy raids is expected to 
+   be on 2023-03-14.
    `,
   isProd: true,
   raidoIssuer: "https://api.prod.raid.org.au",
