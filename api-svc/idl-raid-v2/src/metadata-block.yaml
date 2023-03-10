@@ -93,7 +93,7 @@ components:
     SubjectBlock:
       type: object
       properties:
-        id: { type: string }
+        subject: { type: string }
         subjectSchemeURI: { type: string }
         subjectKeyword: { type: string }
         subjectKeywordLanguage: { type: string }

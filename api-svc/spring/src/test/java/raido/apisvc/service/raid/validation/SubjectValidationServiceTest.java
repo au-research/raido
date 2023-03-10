@@ -33,7 +33,7 @@ class SubjectValidationServiceTest {
   void noFailuresWithValidCode() {
     final var id = "https://linked.data.gov.au/def/anzsrc-for/2020/222222";
 
-    final var subject = new SubjectBlock().id(id);
+    final var subject = new SubjectBlock().subject(id);
 
     when(subjectRepository.findById("222222")).thenReturn(Optional.of(new SubjectRecord()));
 
@@ -52,7 +52,7 @@ class SubjectValidationServiceTest {
   void returnsFailureWithAlphabeticCharactersInId() {
     final var id = "https://linked.data.gov.au/def/anzsrc-for/2020/22a222";
 
-    final var subject = new SubjectBlock().id(id);
+    final var subject = new SubjectBlock().subject(id);
 
     final List<ValidationFailure> validationFailures = validationService.validateSubjects(Collections.singletonList(subject));
 
@@ -68,7 +68,7 @@ class SubjectValidationServiceTest {
   void returnsFailureWithInvalidUrlPrefix() {
     final var id = "https://data.gov.au/def/anzsrc-for/2020/222222";
 
-    final var subject = new SubjectBlock().id(id);
+    final var subject = new SubjectBlock().subject(id);
 
     final List<ValidationFailure> validationFailures = validationService.validateSubjects(Collections.singletonList(subject));
 
@@ -84,7 +84,7 @@ class SubjectValidationServiceTest {
   void returnsFailureIfCodeNotFound() {
     final var id = "https://linked.data.gov.au/def/anzsrc-for/2020/222222";
 
-    final var subject = new SubjectBlock().id(id);
+    final var subject = new SubjectBlock().subject(id);
 
     when(subjectRepository.findById("222222")).thenReturn(Optional.empty());
 
