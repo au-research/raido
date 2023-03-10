@@ -101,9 +101,9 @@ components:
     RelatedRaidBlock:
       type: object
       properties:
-        id: { type: string }
-        relatedRAiDType: { type: string }
-        relatedRAiDTypeSchemeURI: { type: string }
+        relatedRaid: { type: string }
+        relatedRaidType: { type: string }
+        relatedRaidTypeSchemeUri: { type: string }
     TitleType:
       type: string
       enum: ['Primary Title', 'Alternative Title']
