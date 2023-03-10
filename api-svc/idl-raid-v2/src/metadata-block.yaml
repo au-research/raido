@@ -94,10 +94,10 @@ components:
       type: object
       properties:
         subject: { type: string }
-        subjectSchemeURI: { type: string }
+        subjectSchemeUri: { type: string }
         subjectKeyword: { type: string }
         subjectKeywordLanguage: { type: string }
-        subjectLanguageSchemeURI: { type: string }
+        subjectLanguageSchemeUri: { type: string }
     TitleType:
       type: string
       enum: ['Primary Title', 'Alternative Title']
