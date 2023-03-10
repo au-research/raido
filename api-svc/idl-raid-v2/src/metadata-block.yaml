@@ -98,6 +98,12 @@ components:
         subjectKeyword: { type: string }
         subjectKeywordLanguage: { type: string }
         subjectLanguageSchemeURI: { type: string }
+    RelatedRaidBlock:
+      type: object
+      properties:
+        id: { type: string }
+        relatedRAiDType: { type: string }
+        relatedRAiDTypeSchemeURI: { type: string }
     TitleType:
       type: string
       enum: ['Primary Title', 'Alternative Title']
