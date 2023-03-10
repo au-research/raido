@@ -33,7 +33,7 @@ public class SubjectValidationService {
     subjects.stream().
       collect(indexed()).
       forEach((i, subject)->{
-        if (subject.getId() == null) {
+        if (subject.getSubject() == null) {
           final var failure = new ValidationFailure();
           failure.setFieldId(String.format("subjects[%d].id", i));
           failure.setMessage("Subject ID is required");
@@ -41,12 +41,12 @@ public class SubjectValidationService {
 
           failures.add(failure);
         } else {
-          final var subjectId = subject.getId().substring(subject.getId().lastIndexOf('/') + 1);
+          final var subjectId = subject.getSubject().substring(subject.getSubject().lastIndexOf('/') + 1);
 
-          if (!subject.getId().startsWith(URL_PREFIX) || subjectId.matches(".*\\D.*")) {
+          if (!subject.getSubject().startsWith(URL_PREFIX) || subjectId.matches(".*\\D.*")) {
             final var failure = new ValidationFailure();
             failure.setFieldId(String.format("subjects[%d].id", i));
-            failure.setMessage(String.format("%s is not a valid field of research", subject.getId()));
+            failure.setMessage(String.format("%s is not a valid field of research", subject.getSubject()));
             failure.setErrorType("invalid");
 
             failures.add(failure);
@@ -56,7 +56,7 @@ public class SubjectValidationService {
             if (subjectRecord.isEmpty()) {
               final var failure = new ValidationFailure();
               failure.setFieldId(String.format("subjects[%d].id", i));
-              failure.setMessage(String.format("%s is not a valid field of research", subject.getId()));
+              failure.setMessage(String.format("%s is not a valid field of research", subject.getSubject()));
               failure.setErrorType("invalid");
 
               failures.add(failure);
