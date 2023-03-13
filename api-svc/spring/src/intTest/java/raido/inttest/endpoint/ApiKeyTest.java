@@ -1,4 +1,4 @@
-package raido.inttest.service.auth;
+package raido.inttest.endpoint;
 
 import feign.FeignException.Forbidden;
 import feign.FeignException.Unauthorized;

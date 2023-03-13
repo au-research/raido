@@ -52,7 +52,8 @@ public class JvmUtil {
   public static void logStartupInfo() {
     infoLogSysProp("java.vendor", "java.vm.vendor", "java.vm.name",
       "java.version", "java.runtime.version", "java.runtime.name");
-    infoLogSysProp("os.name", "user.timezone", "file.encoding",
+    infoLogSysProp("user.dir", "user.name", "os.name", 
+      "user.timezone", "file.encoding", 
       "user.language", "user.country", "user.variant");
     logBuildInfo();
   }
