@@ -29,5 +29,9 @@ export function NewWindowLink({children, ...linkProps}: {
 }
 
 export function SupportMailLink(){
-  return <a href={`mailto:${supportEmail}`}>{supportEmail}</a>
+  return <a target="_blank" rel="noopener noreferrer"
+    href={`mailto:${supportEmail}`}
+  >
+    {supportEmail}
+  </a>
 }
