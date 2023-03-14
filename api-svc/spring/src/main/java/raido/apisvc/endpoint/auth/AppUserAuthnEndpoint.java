@@ -88,7 +88,7 @@ public class AppUserAuthnEndpoint {
       authnProps.getAllowedClientRedirectUris(), state.redirectUri )
     ){
       log.with("redirectUri", state.redirectUri).
-        info("redirectUri not in allowed list");
+        error("redirectUri not in allowed list");
       throw authFailed();
     }
 
@@ -196,7 +196,7 @@ public class AppUserAuthnEndpoint {
       return false;
     }
     String normalisedUri = redirectUri.trim().toLowerCase();
-    return allowedUris.stream().anyMatch(i-> areEqual(i, normalisedUri) );
+    return allowedUris.stream().anyMatch(normalisedUri::startsWith);
   }
 
 }
