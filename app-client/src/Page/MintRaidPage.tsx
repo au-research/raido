@@ -15,7 +15,7 @@ import {
   AccessType,
   DescriptionBlock,
   OrganisationBlock,
-  RaidoMetadataSchemaV1, SubjectBlock,
+  RaidoMetadataSchemaV1, RelatedRaidBlock, SubjectBlock,
   ValidationFailure
 } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
@@ -90,7 +90,8 @@ type FormData = Readonly<{
   leadOrganisation: string,
   accessType: AccessType,
   accessStatement: string,
-  subject: string
+  subject: string,
+  relatedRaid: string,
 }>;
 type ValidFormData = WithRequired<FormData, 'startDate'>;
 
@@ -111,7 +112,12 @@ function mapFormDataToMetadata(
 
   const subjects: SubjectBlock[] = []
   if (form.subject) {
-    subjects.push({id: form.subject})
+    subjects.push({subject: form.subject})
+  }
+
+  const relatedRaids: RelatedRaidBlock[] = []
+  if (form.relatedRaid) {
+    relatedRaids.push({relatedRaid: form.relatedRaid})
   }
 
   return {
@@ -133,7 +139,8 @@ function mapFormDataToMetadata(
       createLeadContributor(form.leadContributor, form.startDate)
     ],
     organisations,
-    subjects
+    subjects,
+    relatedRaids,
   };
 }
 
@@ -183,8 +190,11 @@ function MintRaidContainer({servicePointId, onCreate}: {
   const isStartDateValid = isValidDate(formData?.startDate);
   const contribProblem = findOrcidProblem(formData.leadContributor);
   const subjectProblem = findSubjectProblem(formData.subject);
+  const relatedRaidProblem = findRelatedRaidProblem(formData.relatedRaid)
+
   const canSubmit = isTitleValid && isStartDateValid &&
-    isAccessStatementValid && !contribProblem && !leadOrganisationProblem;
+    isAccessStatementValid && !contribProblem && !leadOrganisationProblem && !relatedRaidProblem
+  ;
   const isWorking = mintRequest.isLoading;
   
   return <ContainerCard title={"Mint RAiD"} action={<MintRaidHelp/>}>
@@ -293,6 +303,21 @@ function MintRaidContainer({servicePointId, onCreate}: {
                      "Subject"}
                    error={!!subjectProblem}
         />
+        <TextField id="relatedRaid"
+                   variant="outlined" autoCorrect="off" autoCapitalize="off"
+                   disabled={isWorking}
+                   value={formData.relatedRaid ?? ""}
+                   onChange={(e) => {
+                     setFormData({
+                       ...formData,
+                       relatedRaid: e.target.value
+                     });
+                   }}
+                   label={ relatedRaidProblem ?
+                     "Related Raid - " + relatedRaidProblem :
+                     "Related Raid"}
+                   error={!!relatedRaidProblem}
+        />
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton onClick={navBrowserBack}
             disabled={isWorking}>
@@ -357,6 +382,10 @@ export function findSubjectProblem(id: string): string|undefined{
     }
   }
 
+  return undefined;
+}
+
+export function findRelatedRaidProblem(id: string): string|undefined{
   return undefined;
 }
 
