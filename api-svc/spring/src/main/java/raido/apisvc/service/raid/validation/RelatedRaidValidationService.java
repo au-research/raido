@@ -9,7 +9,6 @@ import raido.apisvc.util.Log;
 import raido.idl.raidv2.model.RelatedRaidBlock;
 import raido.idl.raidv2.model.ValidationFailure;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +17,8 @@ import static raido.apisvc.util.Log.to;
 @Component
 public class RelatedRaidValidationService {
   private static final Log log = to(RelatedRaidValidationService.class);
+  private static final String RELATIONSHIP_TYPE_URL_PREFIX =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/";
 
   private final RestTemplate restTemplate;
   private final MetadataProps metadataProps;
@@ -39,12 +40,12 @@ public class RelatedRaidValidationService {
         failures.add(new ValidationFailure()
           .errorType("invalid")
           .fieldId(String.format("relatedRaids[%d].relatedRaid", i))
-          .message("Related Raid is invalid")
+          .message("RelatedRaid is invalid.")
         );
       }
       else {
         RequestEntity<Void> requestEntity =
-          RequestEntity.get(URI.create(relatedRaids.get(i).getRelatedRaid())).build();
+          RequestEntity.head(relatedRaids.get(i).getRelatedRaid()).build();
 
         try {
           restTemplate.exchange(requestEntity, Void.class);
@@ -55,6 +56,30 @@ public class RelatedRaidValidationService {
             .errorType("invalid")
             .fieldId(String.format("relatedRaids[%d].relatedRaid", i))
             .message("Related Raid was not found.")
+          );
+        }
+      }
+
+      if (!relatedRaids.get(i).getRelatedRaidType().startsWith(RELATIONSHIP_TYPE_URL_PREFIX)) {
+        failures.add(new ValidationFailure()
+          .errorType("invalid")
+          .fieldId(String.format("relatedRaids[%d].relatedRaidType", i))
+          .message("RelatedRaidType is invalid.")
+        );
+      }
+      else {
+        RequestEntity<Void> requestEntity =
+          RequestEntity.head(relatedRaids.get(i).getRelatedRaidType()).build();
+
+        try {
+          restTemplate.exchange(requestEntity, Void.class);
+        } catch (HttpClientErrorException e) {
+          log.warnEx("RelatedRaidType not found", e);
+
+          failures.add(new ValidationFailure()
+            .errorType("invalid")
+            .fieldId(String.format("relatedRaids[%d].relatedRaidType", i))
+            .message("Related Raid Type was not found.")
           );
         }
       }
