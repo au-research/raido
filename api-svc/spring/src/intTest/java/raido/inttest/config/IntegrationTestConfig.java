@@ -23,7 +23,7 @@ import static raido.apisvc.util.Log.to;
 @Configuration("IntegrationTestConfig")
 @ComponentScan(basePackages = {
   // test config
-  "raido.inttest.config", "raido.inttest.spring",
+  "raido.inttest.config",
   
   // services used by tests and infra
   "raido.inttest.service", 
