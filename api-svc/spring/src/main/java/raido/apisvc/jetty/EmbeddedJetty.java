@@ -110,6 +110,8 @@ public class EmbeddedJetty {
     // Create the 'root' Spring application context
     AnnotationConfigWebApplicationContext rootContext =
       new AnnotationConfigWebApplicationContext();
+    rootContext.setDisplayName("Root context - " +
+      configurationClass.getSimpleName());
     rootContext.register(configurationClass);
     // Manage the lifecycle of the root application context
     ctx.addListener(new ContextLoaderListener(rootContext){

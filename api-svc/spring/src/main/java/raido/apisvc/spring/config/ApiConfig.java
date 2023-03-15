@@ -54,7 +54,18 @@ import static raido.apisvc.util.Log.to;
   useful sometimes to run multiple configurations on the same machine. 
   */
   @PropertySource(name = "working_dir_environment",
-    value = "./env.properties",
+    value = "file:./env.properties",
+    ignoreResourceNotFound = true),
+  
+  /* This is NOT for you to put an `env.properties` file with credentials in the 
+  source tree!
+  This exists so we can override defaults values for intTests, on the rare 
+  occasion that makes sense (usually temporarily).
+  Actual default values for configuration should be embedding in the 
+  configuration annotation, see the implementations of the beans in 
+  /raido/apisvc/spring/config/environment */
+  @PropertySource(name = "hardcode_environment",
+    value = "classpath:./env.properties",
     ignoreResourceNotFound = true),
   
   /* This is where you should put credentials for standard development workflow,

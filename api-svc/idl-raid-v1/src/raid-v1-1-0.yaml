@@ -10,7 +10,7 @@ info:
 schemes:
 - https
 paths:
-  /raid:
+  /RAiD:
     post:
       summary: "Generate a raid with a unique URL handle"
       tags:

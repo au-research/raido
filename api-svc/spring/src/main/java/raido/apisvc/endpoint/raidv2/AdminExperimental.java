@@ -1,6 +1,7 @@
 package raido.apisvc.endpoint.raidv2;
 
 import org.jooq.DSLContext;
+import org.jooq.impl.DSL;
 import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;

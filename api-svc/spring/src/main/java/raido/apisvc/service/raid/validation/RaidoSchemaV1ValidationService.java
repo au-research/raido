@@ -38,7 +38,8 @@ public class RaidoSchemaV1ValidationService {
     final ContributorValidationService contribSvc,
     final OrganisationValidationService orgSvc,
     final SubjectValidationService subjectSvc,
-    final RelatedRaidValidationService relatedRaidSvc, final IdentifierParser handleParser
+    final RelatedRaidValidationService relatedRaidSvc,
+    final IdentifierParser handleParser
   ) {
     this.titleSvc = titleSvc;
     this.descSvc = descSvc;
@@ -164,16 +165,6 @@ public class RaidoSchemaV1ValidationService {
     // improve: would be good to validate the handle format
     // at least that prefix and suffix exist, separated by slash
 
-//    if( !ObjectUtil.areEqual(id.getIdentifierTypeUri(), RAID_ID_TYPE_URI) ){
-//      failures.add(ValidationMessage.ID_TYPE_URI_INVALID);
-//    }
-//
-//    if( isBlank(id.getGlobalUrl()) ){
-//      failures.add(ValidationMessage.GLOBAL_URL_NOT_SET);
-//    }
-
-    // don't need client to send raidAgency fields, we'll set them on insert
-
     return failures;
   }
 
@@ -186,21 +177,6 @@ public class RaidoSchemaV1ValidationService {
     if( !areEqual(newId.getIdentifier(), oldId.getIdentifier()) ){
       failures.add(fieldCannotChange("metadata.id.identifier"));
     }
-//    if( !areEqual(newId.getIdentifierTypeUri(), oldId.getIdentifierTypeUri()) ){
-//      failures.add(fieldCannotChange("metadata.id.identifierTypeUri"));
-//    }
-//    if( !areEqual(newId.getGlobalUrl(), oldId.getGlobalUrl()) ){
-//      failures.add(fieldCannotChange("metadata.id.globalUrl"));
-//    }
-//    if( !areEqual(newId.getRaidAgencyUrl(), oldId.getRaidAgencyUrl()) ){
-//      failures.add(fieldCannotChange("metadata.id.raidAgencyUrl"));
-//    }
-//    if( !areEqual(
-//      newId.getRaidAgencyIdentifier(),
-//      oldId.getRaidAgencyIdentifier())
-//    ){
-//      failures.add(fieldCannotChange("metadata.id.raidAgencyIdentifier"));
-//    }
 
     return failures;
   }
@@ -228,25 +204,4 @@ public class RaidoSchemaV1ValidationService {
     }
     return failures;
   }
-
-//  public List<ValidationFailure> validateMetadataSchemaV1(MetadataSchemaV1 metadata) {
-//    if( metadata == null ){
-//      return of(ValidationMessage.METADATA_NOT_SET);
-//    }
-//
-//    var failures = new ArrayList<ValidationFailure>();
-//    if( metadata.getMetadataSchema() != RAIDOMETADATASCHEMAV1 ){
-//      failures.add(ValidationMessage.INVALID_METADATA_SCHEMA);
-//    }
-//
-//    failures.addAll(validateDates(metadata.getDates()));
-//    failures.addAll(validateAccess(metadata.getAccess()));
-//    failures.addAll(titleSvc.validateTitles(metadata.getTitles()));
-//    failures.addAll(descSvc.validateDescriptions(metadata.getDescriptions()));
-//    failures.addAll(validateAlternateUrls(metadata.getAlternateUrls()));
-//    failures.addAll(contribSvc.validateContributors(metadata.getContributors()));
-//    failures.addAll(orgSvc.validateOrganisations(metadata.getOrganisations()));
-//
-//    return failures;
-//  }
 }

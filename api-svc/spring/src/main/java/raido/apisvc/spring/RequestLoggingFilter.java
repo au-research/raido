@@ -6,6 +6,7 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.WebUtils;
@@ -21,10 +22,11 @@ import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.HttpHeaders.LOCATION;
 import static raido.apisvc.endpoint.anonymous.PublicEndpoint.STATUS_PATH;
 import static raido.apisvc.endpoint.auth.AppUserAuthnEndpoint.IDP_URL;
+import static raido.apisvc.endpoint.raidv1.RaidV1.V1_RAID_POST_URL;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.RestUtil.sanitiseLocationUrl;
-import static raido.apisvc.util.StringUtil.*;
 import static raido.apisvc.util.StringUtil.areEqual;
+import static raido.apisvc.util.StringUtil.trimEqualsIgnoreCase;
 
 /**
  IMPROVE: add the ability to enable by requestPath and/or principal (probably 
@@ -144,9 +146,21 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
         with("requestPayload", getMessagePayload(requestToUse)).
         info("400 bad request");
     }
-    
+    else if( !succeeded(response) &&
+      trimEqualsIgnoreCase(request.getRequestURI(), V1_RAID_POST_URL) &&
+      bodyLog400.isInfoEnabled()
+    ){
+      bodyLog.with("uri", request.getRequestURI()).
+        with("requestPayload", getMessagePayload(requestToUse)).
+        info("failed request to v1 raid url");       
+    }
   }
 
+  public static boolean succeeded(HttpServletResponse response){
+    var responseCode = HttpStatusCode.valueOf(response.getStatus());
+    return responseCode.is2xxSuccessful();
+  }
+  
   record ServletRequestId(
     String method,
     String uri,

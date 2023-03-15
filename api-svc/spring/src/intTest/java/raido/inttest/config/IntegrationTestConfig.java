@@ -14,12 +14,13 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
+import raido.apisvc.spring.StartupListener;
 import raido.apisvc.spring.config.ApiConfig;
 import raido.apisvc.util.Log;
 
 import static raido.apisvc.util.Log.to;
 
-@Configuration
+@Configuration("IntegrationTestConfig")
 @ComponentScan(basePackages = {
   // test config
   "raido.inttest.config", "raido.inttest.spring",
@@ -31,16 +32,21 @@ import static raido.apisvc.util.Log.to;
   "raido.apisvc.spring.config.database", 
   "raido.apisvc.spring.config.environment"
 })
-/** this allows us to pick up the same props as used by the prod code 
- (for DB, jwtSecret, etc.) 
- */
-@PropertySource(name = "user_config_environment",
-  value = ApiConfig.ENV_PROPERTIES, ignoreResourceNotFound = true)
+/** reading from api-svc-env.props allows us to pick up the same props as used
+ by the actual api-server, so we don't have to configure stuff like env specific 
+ DB properties twice for the int-tests and the prod api-svc code. */
 @PropertySource(name = "user_config_environment2",
   value = ApiConfig.ENV_PROPERTIES2, ignoreResourceNotFound = true)
+/** pick up any "default" config for int tests that we might want to set 
+in the source tree  - this file is intended to be picked up from 
+`.../src/intTest/java` */
 @PropertySource(name = "inttest_working_dir_environment",
   value = "./inttest.properties",
   ignoreResourceNotFound = true)
+/** Allow env-specific configuration of the int-tests, separate from the 
+ config of the prod ApeConfig context.
+ For example, the legacy "liveToken" for integration tests, which we cannot
+ commit to the in-tree `inttest.properties` file. */
 @PropertySource(name = "inttest_user_config_environment",
   value = "file:///${user.home}/.config/raido/api-svc-inttest.properties",
   ignoreResourceNotFound = true)
@@ -99,6 +105,12 @@ public class IntegrationTestConfig {
       "Java 8 date/time type `java.time.LocalDate` not supported by default" */
       registerModule(new JavaTimeModule());
   }
-  
-  
+
+  /* Defining this bean demonstrates to the programmers (via the log output) 
+  that there are *two* Spring ApplicationContext objects that are used when 
+  an intTest is running, and that they have some separate and some shared 
+  config. */
+  @Bean public StartupListener startupListener(){
+    return new StartupListener();
+  }
 }

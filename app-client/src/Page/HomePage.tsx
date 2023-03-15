@@ -55,6 +55,15 @@ export function isHomePagePath(pathname: string): NavPathResult{
     return {isPath: true, pathSuffix: ""};
   }
 
+  /* Temporary workaround - the legacy app used land on a page like this,
+   if we didn't catch it, user would get a blank page.
+   This could be a problem actually if they do this with a bunch of urls, the
+   current page routing mechanism has no "catch all" mechanism (and admitted
+   short-coming). */
+  if( pathname === "/login.html" ){
+    return {isPath: true, pathSuffix: ""};
+  }
+  
   return { isPath: false }
 }
 

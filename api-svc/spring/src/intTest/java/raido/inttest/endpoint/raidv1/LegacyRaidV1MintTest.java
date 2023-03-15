@@ -29,7 +29,7 @@ public class LegacyRaidV1MintTest extends IntegrationTestCase {
     RaidV1Api raidV1 = super.raidV1Client();
 
     EXPECT("mint V1 legacy raid with RDM-style content should succeed");
-    var mintResult = raidV1.raidPost(create);
+    var mintResult = raidV1.rAiDPost(create);
     assertThat(mintResult).isNotNull();
     assertThat(mintResult.getHandle()).isNotBlank();
 
@@ -55,7 +55,7 @@ public class LegacyRaidV1MintTest extends IntegrationTestCase {
 
   @Test void getHandleWithEncodedSlashShouldSucceed(){
     GIVEN("raid exists");
-    var raid = super.raidV1Client().raidPost(
+    var raid = super.raidV1Client().rAiDPost(
       createSimpleRaid("encodedSlash raidV1 intTest"));
 
     var encodedHandle = urlEncode(raid.getHandle());
@@ -84,7 +84,7 @@ public class LegacyRaidV1MintTest extends IntegrationTestCase {
   void mintShouldRejectMissingContentPath() {
     EXPECT("minting a raid without a contentPath should fail");
     assertThatThrownBy(()->
-      super.raidV1Client().raidPost(
+      super.raidV1Client().rAiDPost(
         createSimpleRaid("intTest").contentPath(null) )
     ).isInstanceOf(BadRequest.class).
       hasMessageContaining("no 'contentPath'");
@@ -94,7 +94,7 @@ public class LegacyRaidV1MintTest extends IntegrationTestCase {
   void mintShouldRejectMissingMeta() {
     EXPECT("minting a raid without a meta should fail");
     assertThatThrownBy(()->
-      super.raidV1Client().raidPost(
+      super.raidV1Client().rAiDPost(
         createSimpleRaid("intTest").meta(null) )
     ).isInstanceOf(BadRequest.class).
       hasMessageContaining("no 'meta'");
@@ -104,7 +104,7 @@ public class LegacyRaidV1MintTest extends IntegrationTestCase {
   void mintShouldRejectMissingName() {
     EXPECT("minting a raid without a name should fail");
     assertThatThrownBy(()->
-      super.raidV1Client().raidPost(
+      super.raidV1Client().rAiDPost(
         createSimpleRaid(null) )
     ).isInstanceOf(BadRequest.class).
       hasMessageContaining("no 'meta.name'");

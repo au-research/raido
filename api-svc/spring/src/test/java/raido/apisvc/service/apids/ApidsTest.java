@@ -1,6 +1,7 @@
 package raido.apisvc.service.apids;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 import raido.apisvc.service.apids.model.ApidsMintResponse;

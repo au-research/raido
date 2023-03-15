@@ -26,10 +26,16 @@ public class RaidoAuthnProps {
   public String serverRedirectUri;
 
   /**
-   These are the urls that a client is allowed pass in the state param.
+   These are the hosts that a client is allowed pass in the state param.
    It's the place that the /idpresponse url  will redirect the client to after 
-   successful authentication. 
-   */
+   successful authentication.
+   Needs to be renamed from `allowedRedirectUris`, to `allowedRedirectHosts` - 
+   we want to allow any landing page to be navigated to even if the user had
+   to authenticate before we could let them get there.
+   Think about someone following a link to an auth-request that we email them:
+   if they're not signed in, we want them to sign-in (going through any number
+   of "chain of trust" OIDC pages) and then we want them to finally land on the
+   page that they were trying to get to. */
   @Value("${RaidoAuthn.allowedRedirectUris:" +
     "https://demo.raido-infra.com/,http://localhost:7080/,https://localhost:6080/}")
   public String allowedClientRedirectUriString;
