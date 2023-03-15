@@ -180,6 +180,10 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
       req.getRemoteAddr(), req.getRemoteUser());
   }
 
+  /* this doesn't work as well as I'd hoped, for example it doesn't 
+  log the body of a request that failed because of a 405 error (mis-spelled 
+  endpoint name) - it'll just log "requestPayload=0-length content", I 
+  think because the request never read the body, so it's not cached. */
   public static String getMessagePayload(HttpServletRequest request) {
     ContentCachingRequestWrapper wrapper =
       WebUtils.getNativeRequest(request, ContentCachingRequestWrapper.class);
@@ -190,7 +194,7 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
 
     byte[] buf = wrapper.getContentAsByteArray();
     if( buf.length <= 0 ){
-      /* can happens if the request content doesn't actually get read by spring
+      /* can happen if the request content doesn't actually get read by spring
        so the CachingWrapper hasn't got anything to return here. */
       return "0-length content";
     }
