@@ -65,7 +65,7 @@ public class Token extends TableImpl<TokenRecord> {
     /**
      * The column <code>raid_v1_import.token.date_created</code>.
      */
-    public final TableField<TokenRecord, LocalDateTime> DATE_CREATED = createField(DSL.name("date_created"), SQLDataType.LOCALDATETIME(6), this, "");
+    public final TableField<TokenRecord, LocalDateTime> DATE_CREATED = createField(DSL.name("date_created"), SQLDataType.LOCALDATETIME(6).nullable(false), this, "");
 
     /**
      * The column <code>raid_v1_import.token.token</code>.

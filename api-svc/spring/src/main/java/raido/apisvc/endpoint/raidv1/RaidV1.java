@@ -75,6 +75,8 @@ public class RaidV1 implements RaidV1Api {
     RAID_V1_API + HANDLE_URL_PREFIX + "/";
   public static final String HANDLE_SEPARATOR = "/";
   
+  public static final String V1_RAID_POST_URL = "/v1/RAiD";
+  
   private static final Log log = to(RaidV1.class);
 
   private DSLContext db;
@@ -187,7 +189,7 @@ public class RaidV1 implements RaidV1Api {
    */
   @Transactional(propagation = NEVER)
   @Override
-  public RaidModel raidPost(RaidCreateModel req) {
+  public RaidModel rAiDPost(RaidCreateModel req) {
     var v1UserToken = getAuthentication();
     guardV1MintInput(req);
     populateMintDefaultValues(req, v1UserToken.getName());

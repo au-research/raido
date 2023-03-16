@@ -32,7 +32,11 @@ import {
   convertMetadata,
   MetaDataContainer
 } from "Component/MetaDataContainer";
-import { EditRaidoV1SchemaForm } from "Page/EditRaidoV1SchemaForm";
+import {
+  ComplicatedMetadataWarning,
+  EditRaidoV1SchemaForm,
+  findMetadataUpdateProblems
+} from "Page/EditRaidoV1SchemaForm";
 import { SmallPageSpinner } from "Component/SmallPageSpinner";
 import { UpgradeLegacySchemaForm } from "Page/UpgradeLegacySchemaForm";
 import { MintRaidHelp } from "Page/MintRaidPage";
@@ -139,8 +143,16 @@ function RaidDataForm({readQuery, onUpdateSuccess}: {
   }
   
   if( readQuery.data.metadata.metadataSchema === "RaidoMetadataSchemaV1" ){
+    const metadata = readQuery.data.metadata as RaidoMetadataSchemaV1
+    const problems = findMetadataUpdateProblems(metadata);
+    
+    if( problems.length > 0 ){
+      return <ComplicatedMetadataWarning 
+        metadata={metadata} problems={problems}/>
+    }
+
     return <EditRaidoV1SchemaForm raid={readQuery.data.raid}
-      metadata={readQuery.data.metadata as RaidoMetadataSchemaV1}
+      metadata={metadata}
       onUpdateSuccess={onUpdateSuccess}
     />
   }

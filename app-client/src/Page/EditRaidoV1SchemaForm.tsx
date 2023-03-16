@@ -12,8 +12,10 @@ import { assert, WithRequired } from "Util/TypeUtil";
 import { isValidDate } from "Util/DateUtil";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import {
+  Alert,
   FormControl,
   InputLabel,
+  ListItemText,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -36,6 +38,8 @@ import { useAuthApi } from "Api/AuthApi";
 import {findOrganisationIdProblem, findSubjectProblem} from "Page/MintRaidPage";
 import { createLeadOrganisation } from "./UpgradeLegacySchemaForm";
 import { findOrcidProblem, OrcidField } from "Component/OrcidField";
+import List from "@mui/material/List";
+import { SupportMailLink } from "Component/ExternalLink";
 
 function isDifferent(formData: FormData, original: FormData){
   return formData.primaryTitle !== original.primaryTitle ||
@@ -78,6 +82,41 @@ function mapReadQueryDataToFormData(
   }
 }
 
+/** This function looks for problems with the metadata that mean the UI won't be
+ able to edit the raid - or worse, will the UI would actually stomp the old data
+ with invalid new raid data.
+ Example: 
+ the UI currently only knows about the concept of one "primary" title.  If the 
+ user were to use this form to edit the raid, the current logic would 
+ "overwrite" or "stomp" the the whole TitleBlock with a new TitleBlock that only
+ contains the single title that it knows about.
+ This function allows us to detect and respond to that scenario to prevent the 
+ UI from corrupting the metadata.
+ */
+export function findMetadataUpdateProblems(
+  metadata: RaidoMetadataSchemaV1
+): string[]{
+  const problems = [];
+  if( metadata.titles.length > 1 ){
+    problems.push("The metadata contains multiple titles.");
+  }
+  
+  if( metadata.descriptions && metadata.descriptions.length > 1 ){
+    problems.push("The metadata contains multiple descriptions.");
+  }
+  
+  if( metadata.contributors.length > 1 ){
+    problems.push("The metadata contains multiple contributors.");
+  }
+  
+  if( metadata.organisations && metadata.organisations.length > 1 ){
+    problems.push("The metadata contains multiple organisations.");
+  }
+  
+  return problems
+}
+
+
 function createUpdateMetadata(
   formData: ValidFormData,
   oldMetadata: RaidoMetadataSchemaV1
@@ -119,6 +158,8 @@ function createUpdateMetadata(
     newSubjects.push({id: formData.subject})
   }
 
+  /* make sure to update findMetadataUpdateProblems() to detect complicated
+  scenarios where this logic would stomp complicated raid data. */
   return {
     ...oldMetadata,
     titles: [{
@@ -308,4 +349,28 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
       </Stack>
     </form>
   </>  
+}
+
+export function ComplicatedMetadataWarning(
+  {metadata, problems}:{metadata: RaidoMetadataSchemaV1, problems: string[]}
+){
+  return <>
+    <Alert severity="warning">
+      This RAiD is too complicated to edit with the current simplified UI. 
+      <br/>
+      Please send an email to <SupportMailLink/> so we can help you to resolve
+      the issue.
+    </Alert>
+    <br/>
+    <Alert severity="info">
+      Problems:
+      <List>
+        {
+          problems.map(i=>{
+           return <ListItemText key={i} inset={true}>{i}</ListItemText> 
+          })
+        }
+      </List>
+    </Alert>
+  </>
 }

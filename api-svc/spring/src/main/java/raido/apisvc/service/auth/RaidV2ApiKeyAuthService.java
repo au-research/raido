@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import raido.apisvc.spring.config.environment.RaidV2ApiKeyAuthProps;
 import raido.apisvc.spring.security.raidv2.AuthzTokenPayload;
 import raido.apisvc.util.Guard;
+import raido.apisvc.util.JwtUtil;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.tables.records.AppUserRecord;
 
