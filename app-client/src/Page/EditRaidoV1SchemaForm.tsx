@@ -5,7 +5,7 @@ import {
   DescriptionBlock,
   OrganisationBlock,
   RaidoMetadataSchemaV1,
-  ReadRaidResponseV2,
+  ReadRaidResponseV2, SubjectBlock,
   ValidationFailure
 } from "Generated/Raidv2";
 import { assert, WithRequired } from "Util/TypeUtil";
@@ -29,13 +29,13 @@ import { navBrowserBack } from "Util/WindowUtil";
 import { ValidationFailureDisplay } from "Component/Util";
 import {
   getFirstLeader,
-  getFirstPrimaryDescription,
+  getFirstPrimaryDescription, getFirstSubject,
   getLeadOrganisation,
   getPrimaryTitle
 } from "Component/MetaDataContainer";
 import React, { useState } from "react";
 import { useAuthApi } from "Api/AuthApi";
-import { findOrganisationIdProblem } from "Page/MintRaidPage";
+import {findOrganisationIdProblem, findSubjectProblem} from "Page/MintRaidPage";
 import { createLeadOrganisation } from "./UpgradeLegacySchemaForm";
 import { findOrcidProblem, OrcidField } from "Component/OrcidField";
 import List from "@mui/material/List";
@@ -48,7 +48,8 @@ function isDifferent(formData: FormData, original: FormData){
     formData.leadContributor !== original.leadContributor ||
     formData.leadOrganisation !== original.leadOrganisation ||
     formData.accessType !== original.accessType ||
-    formData.accessStatement !== original.accessStatement;
+    formData.accessStatement !== original.accessStatement ||
+    formData.subject !== original.subject;
 }
 
 type FormData = Readonly<{
@@ -60,6 +61,7 @@ type FormData = Readonly<{
   leadOrganisation: string,
   accessType: AccessType,
   accessStatement: string,
+  subject: string,
 }>;
 type ValidFormData = WithRequired<FormData, 'startDate'>;
 
@@ -76,6 +78,7 @@ function mapReadQueryDataToFormData(
     leadOrganisation: getLeadOrganisation(metadata)?.id ?? "",
     accessType: metadata.access.type,
     accessStatement: metadata.access.accessStatement ?? "",
+    subject: getFirstSubject(metadata)?.subject ?? "",
   }
 }
 
@@ -150,6 +153,11 @@ function createUpdateMetadata(
     newOrganisations.push(createLeadOrganisation(formData.leadOrganisation, formData.startDate))
   }
 
+  const newSubjects: SubjectBlock[] = []
+  if (formData.subject) {
+    newSubjects.push({subject: formData.subject})
+  }
+
   /* make sure to update findMetadataUpdateProblems() to detect complicated
   scenarios where this logic would stomp complicated raid data. */
   return {
@@ -168,7 +176,8 @@ function createUpdateMetadata(
     access: {
       type: formData.accessType,
       accessStatement: formData.accessStatement,
-    }
+    },
+    subjects: newSubjects,
   };
 }
 
@@ -213,10 +222,11 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
     isDifferent(formData, mapReadQueryDataToFormData(raid, metadata));
   const isStartDateValid = isValidDate(formData?.startDate);
   const contribProblem = findOrcidProblem(formData.leadContributor);
+  const subjectProblem = findSubjectProblem(formData.subject);
 
   const canSubmit = isTitleValid && isAccessStatementValid && 
     isStartDateValid && !contribProblem && 
-    !leadOrganisationProblem && hasChanged;
+    !leadOrganisationProblem && !subjectProblem && hasChanged;
   const isWorking = updateRequest.isLoading;
 
   return <>
@@ -303,15 +313,20 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
             <MenuItem value={AccessType.Closed}>Closed</MenuItem>
           </Select>
         </FormControl>
-        <TextField id="accessStatement" label="Access statement"
-          variant="outlined" autoCorrect="off" autoCapitalize="on"
-          required={formData.accessType !== "Open"}
-          disabled={isWorking}
-          value={formData.accessStatement}
-          onChange={e => {
-            setFormData({...formData, accessStatement: e.target.value});
-          }}
-          error={!isAccessStatementValid}
+        <TextField id="subject"
+                   variant="outlined" autoCorrect="off" autoCapitalize="off"
+                   disabled={isWorking}
+                   value={formData.subject ?? ""}
+                   onChange={(e) => {
+                     setFormData({
+                       ...formData,
+                       subject: e.target.value
+                     });
+                   }}
+                   label={ subjectProblem ?
+                     "Subject - " + leadOrganisationProblem :
+                     "Subject"}
+                   error={!!subjectProblem}
         />
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton type="button" onClick={(e) => {

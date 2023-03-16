@@ -21,7 +21,6 @@ import java.util.Optional;
 
 import static java.util.Optional.of;
 import static org.eclipse.jetty.util.TypeUtil.isFalse;
-import static raido.apisvc.service.auth.NonAuthzTokenPayload.NonAuthzTokenPayloadBuilder.aNonAuthzTokenPayload;
 import static raido.apisvc.spring.security.raidv2.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
 import static raido.apisvc.util.ExceptionUtil.authFailed;
 import static raido.apisvc.util.ExceptionUtil.wrapException;

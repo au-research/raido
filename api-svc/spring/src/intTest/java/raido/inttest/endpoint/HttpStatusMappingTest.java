@@ -22,10 +22,7 @@ import static raido.apisvc.endpoint.anonymous.PublicEndpoint.STATUS_PATH;
 import static raido.apisvc.spring.config.RaidWebSecurityConfig.PUBLIC;
 import static raido.apisvc.spring.config.RaidWebSecurityConfig.ROOT_PATH;
 import static raido.apisvc.util.Log.to;
-import static raido.apisvc.util.RestUtil.anonGet;
-import static raido.apisvc.util.RestUtil.anonPost;
-import static raido.apisvc.util.RestUtil.urlEncode;
-import static raido.inttest.config.IntegrationTestConfig.restTemplateWithEncodingMode;
+import static raido.apisvc.util.RestUtil.*;
 
 /**
  Test result of issuing GET and POST requests against various URLS:

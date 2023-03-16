@@ -25,12 +25,7 @@ import java.util.List;
 
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 import static raido.apisvc.endpoint.message.ValidationMessage.fieldNotSet;
-import static raido.apisvc.endpoint.raidv2.AuthzUtil.getAuthzPayload;
-import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
-import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociatedSpAdmin;
-import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrSpAdmin;
-import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardRaidoAdminApiKey;
-import static raido.apisvc.endpoint.raidv2.AuthzUtil.isOperatorOrSpAdmin;
+import static raido.apisvc.endpoint.raidv2.AuthzUtil.*;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.JooqUtil.valueFits;
 import static raido.apisvc.util.Log.to;

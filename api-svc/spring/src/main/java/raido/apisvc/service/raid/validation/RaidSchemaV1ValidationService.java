@@ -6,8 +6,6 @@ import raido.apisvc.service.raid.ValidationFailureException;
 import raido.apisvc.service.raid.id.IdentifierHandle;
 import raido.apisvc.service.raid.id.IdentifierParser;
 import raido.apisvc.service.raid.id.IdentifierUrl;
-import raido.apisvc.spring.config.environment.MetadataProps;
-import raido.apisvc.util.Log;
 import raido.idl.raidv2.model.*;
 
 import java.util.ArrayList;
@@ -16,7 +14,6 @@ import java.util.List;
 
 import static java.util.List.of;
 import static raido.apisvc.endpoint.message.ValidationMessage.handlesDoNotMatch;
-import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.RestUtil.urlDecode;
 import static raido.apisvc.util.StringUtil.areEqual;
 import static raido.apisvc.util.StringUtil.isBlank;
@@ -24,27 +21,25 @@ import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 
 @Component
 public class RaidSchemaV1ValidationService {
-  private static final Log log = to(RaidSchemaV1ValidationService.class);
-
   private final TitleValidationService titleSvc;
   private final DescriptionValidationService descSvc;
   private final ContributorValidationService contribSvc;
-
   private final OrganisationValidationService orgSvc;
-
+  private final SubjectValidationService subjectSvc;
   private final IdentifierParser idParser;
-  
   public RaidSchemaV1ValidationService(
-    TitleValidationService titleSvc,
-    DescriptionValidationService descSvc,
-    ContributorValidationService contribSvc,
-    OrganisationValidationService orgSvc,
-    IdentifierParser idParser
+    final TitleValidationService titleSvc,
+    final DescriptionValidationService descSvc,
+    final ContributorValidationService contribSvc,
+    final OrganisationValidationService orgSvc,
+    final SubjectValidationService subjectSvc,
+    final IdentifierParser idParser
   ) {
     this.titleSvc = titleSvc;
     this.descSvc = descSvc;
     this.contribSvc = contribSvc;
     this.orgSvc = orgSvc;
+    this.subjectSvc = subjectSvc;
     this.idParser = idParser;
   }
 
@@ -156,30 +151,33 @@ public class RaidSchemaV1ValidationService {
     failures.addAll(validateAlternateUrls(request.getAlternateUrls()));
     failures.addAll(contribSvc.validateContributors(request.getContributors()));
     failures.addAll(orgSvc.validateOrganisations(request.getOrganisations()));
+    failures.addAll(subjectSvc.validateSubjects(request.getSubjects()));
+
 
     return failures;
   }
 
-  public List<ValidationFailure> validateForUpdate(final String handle, final UpdateRaidV1Request metadata) {
-    if( metadata == null ){
+  public List<ValidationFailure> validateForUpdate(final String handle, final UpdateRaidV1Request request) {
+    if( request == null ){
       return of(ValidationMessage.METADATA_NOT_SET);
     }
 
     String decodedHandle = urlDecode(handle);
 
-    final var failures = new ArrayList<>(validateUpdateHandle(decodedHandle, metadata.getId()));
+    final var failures = new ArrayList<>(validateUpdateHandle(decodedHandle, request.getId()));
 
-    if( metadata.getMetadataSchema() != RAIDOMETADATASCHEMAV1 ){
+    if( request.getMetadataSchema() != RAIDOMETADATASCHEMAV1 ){
       failures.add(ValidationMessage.INVALID_METADATA_SCHEMA);
     }
 
-    failures.addAll(validateDates(metadata.getDates()));
-    failures.addAll(validateAccess(metadata.getAccess()));
-    failures.addAll(titleSvc.validateTitles(metadata.getTitles()));
-    failures.addAll(descSvc.validateDescriptions(metadata.getDescriptions()));
-    failures.addAll(validateAlternateUrls(metadata.getAlternateUrls()));
-    failures.addAll(contribSvc.validateContributors(metadata.getContributors()));
-    failures.addAll(orgSvc.validateOrganisations(metadata.getOrganisations()));
+    failures.addAll(validateDates(request.getDates()));
+    failures.addAll(validateAccess(request.getAccess()));
+    failures.addAll(titleSvc.validateTitles(request.getTitles()));
+    failures.addAll(descSvc.validateDescriptions(request.getDescriptions()));
+    failures.addAll(validateAlternateUrls(request.getAlternateUrls()));
+    failures.addAll(contribSvc.validateContributors(request.getContributors()));
+    failures.addAll(orgSvc.validateOrganisations(request.getOrganisations()));
+    failures.addAll(subjectSvc.validateSubjects(request.getSubjects()));
 
     return failures;
   }

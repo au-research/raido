@@ -2,16 +2,7 @@ package raido.apisvc.util;
 
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static raido.apisvc.util.DateUtil.ISO_MINUTES_FORMAT;
-import static raido.apisvc.util.DateUtil.UTC_ZONE_ID;
-import static raido.apisvc.util.DateUtil.formatDynamoDateTime;
-import static raido.apisvc.util.DateUtil.formatIsoDateTime;
-import static raido.apisvc.util.DateUtil.formatUtcDateTime;
-import static raido.apisvc.util.DateUtil.parseDateTime;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.mask;
 

@@ -15,7 +15,7 @@ import {
   AccessType,
   DescriptionBlock,
   OrganisationBlock,
-  RaidoMetadataSchemaV1,
+  RaidoMetadataSchemaV1, SubjectBlock,
   ValidationFailure
 } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
@@ -90,6 +90,7 @@ type FormData = Readonly<{
   leadOrganisation: string,
   accessType: AccessType,
   accessStatement: string,
+  subject: string
 }>;
 type ValidFormData = WithRequired<FormData, 'startDate'>;
 
@@ -106,6 +107,11 @@ function mapFormDataToMetadata(
   const organisations: OrganisationBlock[] = [];
   if (form.leadOrganisation) {
     organisations.push(createLeadOrganisation(form.leadOrganisation, form.startDate))
+  }
+
+  const subjects: SubjectBlock[] = []
+  if (form.subject) {
+    subjects.push({subject: form.subject})
   }
 
   return {
@@ -127,6 +133,7 @@ function mapFormDataToMetadata(
       createLeadContributor(form.leadContributor, form.startDate)
     ],
     organisations,
+    subjects
   };
 }
 
@@ -175,8 +182,9 @@ function MintRaidContainer({servicePointId, onCreate}: {
     true : !!formData.accessStatement;
   const isStartDateValid = isValidDate(formData?.startDate);
   const contribProblem = findOrcidProblem(formData.leadContributor);
-  const canSubmit = isTitleValid && isStartDateValid && 
-    isAccessStatementValid && !contribProblem && !leadOrganisationProblem;
+  const subjectProblem = findSubjectProblem(formData.subject);
+  const canSubmit = isTitleValid && isStartDateValid &&
+    isAccessStatementValid && !contribProblem && !leadOrganisationProblem && !subjectProblem;
   const isWorking = mintRequest.isLoading;
   
   return <ContainerCard title={"Mint RAiD"} action={<MintRaidHelp/>}>
@@ -239,7 +247,9 @@ function MintRaidContainer({servicePointId, onCreate}: {
                      "Lead organisation - " + leadOrganisationProblem :
                      "Lead Organisation"}
                    error={!!leadOrganisationProblem}
-        />        <FormControl>
+        />
+
+        <FormControl>
           <InputLabel id="accessTypeLabel">Access type</InputLabel>
           <Select
             labelId="accessTypeLabel"
@@ -268,7 +278,21 @@ function MintRaidContainer({servicePointId, onCreate}: {
           }}
           error={!isAccessStatementValid}
         />
-
+        <TextField id="subject"
+                   variant="outlined" autoCorrect="off" autoCapitalize="off"
+                   disabled={isWorking}
+                   value={formData.subject ?? ""}
+                   onChange={(e) => {
+                     setFormData({
+                       ...formData,
+                       subject: e.target.value
+                     });
+                   }}
+                   label={ subjectProblem ?
+                     "Subject - " + subjectProblem :
+                     "Subject"}
+                   error={!!subjectProblem}
+        />
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton onClick={navBrowserBack}
             disabled={isWorking}>
@@ -308,6 +332,30 @@ export function findOrganisationIdProblem(id: string): string|undefined{
   }
 
   // add checksum logic?
+
+  return undefined;
+}
+const forCodePrefixUrl = "https://linked.data.gov.au/def/anzsrc-for/2020/";
+
+function mapInvalidSubjectChars(id: string): string{
+  id = id.replace(forCodePrefixUrl, "");
+
+  return id;
+}
+
+export function findSubjectProblem(id: string): string|undefined{
+  if (id) {
+    if (!id.startsWith(forCodePrefixUrl)) {
+      return 'should start with ' + forCodePrefixUrl;
+    }
+
+    id = mapInvalidSubjectChars(id);
+    let code = id.substring(id.lastIndexOf('/') + 1)
+
+    if (code.match(/[^\d]/)) {
+      return "can only include numbers";
+    }
+  }
 
   return undefined;
 }

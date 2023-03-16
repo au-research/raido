@@ -15,12 +15,14 @@ import raido.db.jooq.api_svc.tables.FlywaySchemaHistory;
 import raido.db.jooq.api_svc.tables.Raid;
 import raido.db.jooq.api_svc.tables.RaidoOperator;
 import raido.db.jooq.api_svc.tables.ServicePoint;
+import raido.db.jooq.api_svc.tables.Subject;
 import raido.db.jooq.api_svc.tables.UserAuthzRequest;
 import raido.db.jooq.api_svc.tables.records.AppUserRecord;
 import raido.db.jooq.api_svc.tables.records.FlywaySchemaHistoryRecord;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.db.jooq.api_svc.tables.records.RaidoOperatorRecord;
 import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
+import raido.db.jooq.api_svc.tables.records.SubjectRecord;
 import raido.db.jooq.api_svc.tables.records.UserAuthzRequestRecord;
 
 
@@ -41,6 +43,7 @@ public class Keys {
     public static final UniqueKey<RaidoOperatorRecord> RAIDO_OPERATOR_PKEY = Internal.createUniqueKey(RaidoOperator.RAIDO_OPERATOR, DSL.name("raido_operator_pkey"), new TableField[] { RaidoOperator.RAIDO_OPERATOR.EMAIL }, true);
     public static final UniqueKey<ServicePointRecord> SERVICE_POINT_PKEY = Internal.createUniqueKey(ServicePoint.SERVICE_POINT, DSL.name("service_point_pkey"), new TableField[] { ServicePoint.SERVICE_POINT.ID }, true);
     public static final UniqueKey<ServicePointRecord> UNIQUE_NAME = Internal.createUniqueKey(ServicePoint.SERVICE_POINT, DSL.name("unique_name"), new TableField[] { ServicePoint.SERVICE_POINT.LOWER_NAME }, true);
+    public static final UniqueKey<SubjectRecord> SUBJECT_PKEY = Internal.createUniqueKey(Subject.SUBJECT, DSL.name("subject_pkey"), new TableField[] { Subject.SUBJECT.ID }, true);
     public static final UniqueKey<UserAuthzRequestRecord> USER_AUTHZ_REQUEST_PKEY = Internal.createUniqueKey(UserAuthzRequest.USER_AUTHZ_REQUEST, DSL.name("user_authz_request_pkey"), new TableField[] { UserAuthzRequest.USER_AUTHZ_REQUEST.ID }, true);
 
     // -------------------------------------------------------------------------

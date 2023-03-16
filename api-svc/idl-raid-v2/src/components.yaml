@@ -31,6 +31,9 @@ components:
         organisations:
           type: array
           items: { $ref: 'metadata-organisation-block.yaml#/components/schemas/OrganisationBlock' }
+        subjects:
+          type: array
+          items: { $ref: 'metadata-block.yaml#/components/schemas/SubjectBlock' }
     ErrorResponse:
       type: object
       required: [type, title, status]

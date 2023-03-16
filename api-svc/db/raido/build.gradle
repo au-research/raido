@@ -1,5 +1,7 @@
 import org.flywaydb.gradle.task.AbstractFlywayTask
 
+import raido.apisvc.db.LoadSubjectsTask
+
 plugins{
   id 'java'
   alias(libs.plugins.flyway)
@@ -162,3 +164,10 @@ jooq{
   }
 }
 tasks.generateJooq.dependsOn cleanJooqGeneratedSrc
+
+tasks.register('loadSubjects', LoadSubjectsTask) {
+  dataFileUrl = 'https://vocabs.ardc.edu.au/registry/api/resource/downloads/1438/anzsrc-2020-for-20210429.ttl'
+  dbUrl = sharedProject.apiSvcPgUrl
+  dbUsername = sharedProject.apiSvcPgUser
+  dbPassword = sharedProject.apiSvcPgPassword
+}

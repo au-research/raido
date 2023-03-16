@@ -146,7 +146,7 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
         with("requestPayload", getMessagePayload(requestToUse)).
         info("400 bad request");
     }
-    else if( !succeeded(response) && 
+    else if( !succeeded(response) &&
       trimEqualsIgnoreCase(request.getRequestURI(), V1_RAID_POST_URL) &&
       bodyLog400.isInfoEnabled()
     ){
@@ -154,7 +154,6 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
         with("requestPayload", getMessagePayload(requestToUse)).
         info("failed request to v1 raid url");       
     }
-    
   }
 
   public static boolean succeeded(HttpServletResponse response){

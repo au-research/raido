@@ -9,7 +9,7 @@ import {
   LegacyMetadataSchemaV1FromJSON, OrganisationBlock, PublicRaidMetadataSchemaV1,
   RaidoMetadataSchemaV1,
   RaidoMetadataSchemaV1FromJSON,
-  RaidoMetaschema,
+  RaidoMetaschema, SubjectBlock,
   TitleBlock
 } from "Generated/Raidv2";
 
@@ -98,4 +98,12 @@ export function getPrimaryTitle(
     throw new Error("no primary title could be found on metadata");
   }
   return primary;
+}
+
+export function getFirstSubject(
+  metadata: RaidoMetadataSchemaV1
+): undefined | SubjectBlock {
+  if (metadata.subjects?.length) {
+    return metadata.subjects[0]
+  }
 }
