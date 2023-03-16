@@ -104,6 +104,14 @@ components:
         relatedRaid: { type: string }
         relatedRaidType: { type: string }
         relatedRaidTypeSchemeUri: { type: string }
+    RelatedObjectBlock:
+      type: object
+      properties:
+        relatedObject: { type: string }
+        relatedObjectSchemeURI: { type: string }
+        relatedObjectType: { type: string }
+        relatedObjectTypeSchemeURI: { type: string }
+        relatedObjectCategory: { type: string }
     TitleType:
       type: string
       enum: ['Primary Title', 'Alternative Title']
