@@ -78,7 +78,7 @@ function mapReadQueryDataToFormData(
     leadOrganisation: getLeadOrganisation(metadata)?.id ?? "",
     accessType: metadata.access.type,
     accessStatement: metadata.access.accessStatement ?? "",
-    subject: getFirstSubject(metadata)?.id ?? "",
+    subject: getFirstSubject(metadata)?.subject ?? "",
   }
 }
 
