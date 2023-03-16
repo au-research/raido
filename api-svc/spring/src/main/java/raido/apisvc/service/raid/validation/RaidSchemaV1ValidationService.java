@@ -37,13 +37,13 @@ public class RaidSchemaV1ValidationService {
     final SubjectValidationService subjectSvc,
     final IdentifierParser idParser,
     final RelatedRaidValidationService relatedRaidSvc) {
-    this.titleSvc = titleSvc;
-    this.descSvc = descSvc;
-    this.contribSvc = contribSvc;
-    this.orgSvc = orgSvc;
-    this.subjectSvc = subjectSvc;
-    this.idParser = idParser;
-    this.relatedRaidSvc = relatedRaidSvc;
+      this.titleSvc = titleSvc;
+      this.descSvc = descSvc;
+      this.contribSvc = contribSvc;
+      this.orgSvc = orgSvc;
+      this.subjectSvc = subjectSvc;
+      this.idParser = idParser;
+      this.relatedRaidSvc = relatedRaidSvc;
   }
 
   private List<ValidationFailure> validateUpdateHandle(final String decodedHandleFromPath, final IdBlock updateIdBlock) {

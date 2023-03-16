@@ -193,8 +193,7 @@ function MintRaidContainer({servicePointId, onCreate}: {
   const relatedRaidProblem = findRelatedRaidProblem(formData.relatedRaid)
 
   const canSubmit = isTitleValid && isStartDateValid &&
-    isAccessStatementValid && !contribProblem && !leadOrganisationProblem && !relatedRaidProblem
-  ;
+    isAccessStatementValid && !contribProblem && !leadOrganisationProblem && !subjectProblem && !relatedRaidProblem;
   const isWorking = mintRequest.isLoading;
   
   return <ContainerCard title={"Mint RAiD"} action={<MintRaidHelp/>}>
