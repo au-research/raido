@@ -326,6 +326,15 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
             <MenuItem value={AccessType.Closed}>Closed</MenuItem>
           </Select>
         </FormControl>
+        <TextField id="accessStatement" label="Access statement"
+                   variant="outlined" autoCorrect="off" autoCapitalize="on"
+                   required={formData.accessType !== "Open"}
+                   disabled={isWorking}
+                   value={formData.accessStatement}
+                   onChange={e => {
+                     setFormData({...formData, accessStatement: e.target.value});
+                   }}
+        />
         <TextField id="subject"
                    variant="outlined" autoCorrect="off" autoCapitalize="off"
                    disabled={isWorking}
