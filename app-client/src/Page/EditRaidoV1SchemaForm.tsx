@@ -155,7 +155,7 @@ function createUpdateMetadata(
 
   const newSubjects: SubjectBlock[] = []
   if (formData.subject) {
-    newSubjects.push({id: formData.subject})
+    newSubjects.push({subject: formData.subject})
   }
 
   /* make sure to update findMetadataUpdateProblems() to detect complicated
