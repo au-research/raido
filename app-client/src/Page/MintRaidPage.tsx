@@ -111,7 +111,7 @@ function mapFormDataToMetadata(
 
   const subjects: SubjectBlock[] = []
   if (form.subject) {
-    subjects.push({id: form.subject})
+    subjects.push({subject: form.subject})
   }
 
   return {
