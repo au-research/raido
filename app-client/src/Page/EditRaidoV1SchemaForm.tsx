@@ -5,7 +5,7 @@ import {
   DescriptionBlock,
   OrganisationBlock,
   RaidoMetadataSchemaV1,
-  ReadRaidResponseV2, SubjectBlock,
+  ReadRaidResponseV2, RelatedRaidBlock, SubjectBlock,
   ValidationFailure
 } from "Generated/Raidv2";
 import { assert, WithRequired } from "Util/TypeUtil";
@@ -161,6 +161,14 @@ function createUpdateMetadata(
     newSubjects.push({subject: formData.subject})
   }
 
+  const newRelatedRaids: RelatedRaidBlock[] = []
+  if (formData.relatedRaid) {
+    newRelatedRaids.push({
+      relatedRaid: formData.relatedRaid,
+      relatedRaidType: "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/continues.json",
+    })
+  }
+
   /* make sure to update findMetadataUpdateProblems() to detect complicated
   scenarios where this logic would stomp complicated raid data. */
   return {
@@ -181,6 +189,7 @@ function createUpdateMetadata(
       accessStatement: formData.accessStatement,
     },
     subjects: newSubjects,
+    relatedRaids: newRelatedRaids,
   };
 }
 

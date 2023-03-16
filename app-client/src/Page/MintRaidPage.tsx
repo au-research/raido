@@ -117,7 +117,10 @@ function mapFormDataToMetadata(
 
   const relatedRaids: RelatedRaidBlock[] = []
   if (form.relatedRaid) {
-    relatedRaids.push({relatedRaid: form.relatedRaid})
+    relatedRaids.push({
+      relatedRaid: form.relatedRaid,
+      relatedRaidType: "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/continues.json",
+    })
   }
 
   return {

@@ -60,7 +60,15 @@ public class RelatedRaidValidationService {
         }
       }
 
-      if (!relatedRaids.get(i).getRelatedRaidType().startsWith(RELATIONSHIP_TYPE_URL_PREFIX)) {
+      //TODO: Check related raid exists
+      if (relatedRaids.get(i).getRelatedRaidType() == null) {
+        failures.add(new ValidationFailure()
+          .errorType("required")
+          .fieldId(String.format("relatedRaids[%d].relatedRaidType", i))
+          .message("RelatedRaidType is required.")
+        );
+      }
+      else if (!relatedRaids.get(i).getRelatedRaidType().startsWith(RELATIONSHIP_TYPE_URL_PREFIX)) {
         failures.add(new ValidationFailure()
           .errorType("invalid")
           .fieldId(String.format("relatedRaids[%d].relatedRaidType", i))
