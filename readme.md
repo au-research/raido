@@ -4,7 +4,8 @@
 [RAiD](https://raid.org.au) implementation for 
 [ISO 23527:2022](https://www.iso.org/standard/75931.html).
 
-It replaces the now deprecated https://github.com/ResearchDataServices/RAiD-API.
+It replaces the now decommissioned 
+https://github.com/ResearchDataServices/RAiD-API.
 
 
 ## RAiD vs Raido
@@ -13,6 +14,8 @@ When you see these terms in this codebase:
 * `Raido`, `raido` - refers to our "local" Oceania region implementation
   (i.e. `raid.org.au`) of RAiD, being operated and maintained by ARDC in our 
   capacity as one of the (hopefully many) "registration agency" providers.
+  * It's a "codename" for the software project, not intended to be publicly 
+  visible
 * `RAiD`, `RAID`, `Raid`, `raid` - refers to the "global" RAiD standard and 
   supporting global infrastructure (i.e. `raid.org`), being operated and 
   maintained by ARDC in our capacity as the global "registration authority".
@@ -20,8 +23,8 @@ When you see these terms in this codebase:
 
 The Raid infrastructure does not yet exist at all.
 
-Raido is not yet live, though you can find the demo environment at
-https://demo.raido-infra.com.
+There is a DEMO environment for Raido available at 
+https://app.demo.raid.org.au.
 
 Note that:
 * you will not be approved to use the demo environment without prior agreement
@@ -105,6 +108,8 @@ using the `main` branch.
 
 Releases are tracks and built using `git describe` functionality working off
 of annotated tags with the prefix `raido-v-`.
+
+[release-process.md](./doc/release-process.md)
 
 AWS build and deployment is automated via AWS CodeBuild projects - see the 
 (private) [raido-v2-aws-private](https://github.com/au-research/raido-v2-aws-private) 
