@@ -223,10 +223,6 @@ const demoConfig: EnvironmentConfig = {
 
 const prodConfig: EnvironmentConfig = {
   environmentName: "prod",
-  signInWarning: `Note that this service is not yet live and contains
-   no raid data.
-   All database and raid data will be reset before the production release.
-   `,
   isProd: true,
   raidoIssuer: "https://api.prod.raid.org.au",
   raidoLandingPage: "https://prod.raid.org.au",
