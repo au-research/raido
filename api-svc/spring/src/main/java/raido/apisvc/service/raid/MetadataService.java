@@ -254,7 +254,7 @@ public class MetadataService {
     }
     
     return new PublicReadRaidResponseV3().
-      handle(id.getIdentifier()).
+      handle(raid.getHandle()).
       createDate(local2Offset(raid.getDateCreated())).
       metadata(new PublicClosedMetadataSchemaV1().
         /* metadataSchema ignored because of the `@JsonIgnoreProperties` on 
