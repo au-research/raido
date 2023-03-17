@@ -223,6 +223,10 @@ const demoConfig: EnvironmentConfig = {
 
 const prodConfig: EnvironmentConfig = {
   environmentName: "prod",
+  signInWarning: `ORCID users: note that uBlock Origin is currently blocking
+  ORCID sign-in scripts, which may prevent sign-in via ORCID.  
+  Please configure an exemption for the orcid.org domain if your ORCID sign-in 
+  is not working.`,
   isProd: true,
   raidoIssuer: "https://api.prod.raid.org.au",
   raidoLandingPage: "https://prod.raid.org.au",

@@ -2,6 +2,8 @@ package raido.inttest.endpoint.raidv2;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
+import raido.apisvc.service.raid.ValidationFailureException;
+import raido.apisvc.service.raid.id.IdentifierParser;
 import raido.idl.raidv2.model.*;
 import raido.inttest.IntegrationTestCase;
 import raido.inttest.util.IdFactory;
@@ -31,11 +33,14 @@ import static raido.inttest.util.MinimalRaidTestData.DUMMY_ROR;
 public class RaidoSchemaV1Test extends IntegrationTestCase {
 
   @Test
-  void happyDayScenario() throws JsonProcessingException {
+  void happyDayScenario() 
+    throws JsonProcessingException, ValidationFailureException 
+  {
     var raidApi = super.basicRaidExperimentalClient();
     String initialTitle = getClass().getSimpleName() + "." + getName() + 
       IdFactory.generateUniqueId();
     var today = LocalDate.now();
+    var idParser = new IdentifierParser();
 
     EXPECT("minting a raid with minimal content should succeed");
     var mintResult = raidApi.mintRaidoSchemaV1(
@@ -83,6 +88,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
     assertThat(v3Read).isNotNull();
     assertThat(v3Read.getCreateDate()).isNotNull();
     assertThat(v3Read.getServicePointId()).isEqualTo(RAIDO_SP_ID);
+
     assertThat(v3Read.getHandle()).isEqualTo(mintedRaid.getHandle());
     
     PublicReadRaidMetadataResponseV1 v3MetaRead = v3Read.getMetadata();
@@ -92,6 +98,9 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
     PublicRaidMetadataSchemaV1 v3Meta = (PublicRaidMetadataSchemaV1) v3MetaRead; 
     assertThat(v3Meta.getId().getIdentifier()).
       isEqualTo(INT_TEST_ID_URL + "/" + mintedRaid.getHandle());
+    var id = idParser.parseUrlWithException(v3Meta.getId().getIdentifier());
+    assertThat(v3Read.getHandle()).isEqualTo(id.handle().format());
+    
     assertThat(v3Meta.getAccess().getType()).isEqualTo(OPEN);
     assertThat(v3Meta.getTitles().get(0).getTitle()).
       isEqualTo(initialTitle);
@@ -148,8 +157,10 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
     THEN("publicRaid should now return closed");
     var readClosed = raidoApi.getPublicExperimental().
       publicReadRaidV3(mintedRaid.getHandle());
-    var readClosedMeta = (PublicClosedMetadataSchemaV1) readClosed.getMetadata(); 
+    var readClosedMeta = (PublicClosedMetadataSchemaV1) 
+      readClosed.getMetadata(); 
     assertThat(readClosedMeta.getAccess().getType()).isEqualTo(CLOSED);
+    assertThat(readClosed.getHandle()).isEqualTo(id.handle().format());
     
     // IMPROVE: maybe we ought to have at least one non-feign test, that
     // tests the raw data returned for a closed raid, to make sure there's 
