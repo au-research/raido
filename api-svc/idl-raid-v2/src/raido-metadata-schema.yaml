@@ -200,6 +200,9 @@ components:
         subjects:
           type: array
           items: {$ref: 'metadata-block.yaml#/components/schemas/SubjectBlock'}
+        relatedRaids:
+          type: array
+          items: {$ref: 'metadata-block.yaml#/components/schemas/RelatedRaidBlock'}
     LegacyMetadataSchemaV1:
       description: >
         This type is used for raid data imported from the legacy raid system 

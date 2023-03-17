@@ -5,7 +5,7 @@ import {
   DescriptionBlock,
   OrganisationBlock,
   RaidoMetadataSchemaV1,
-  ReadRaidResponseV2, SubjectBlock,
+  ReadRaidResponseV2, RelatedRaidBlock, SubjectBlock,
   ValidationFailure
 } from "Generated/Raidv2";
 import { assert, WithRequired } from "Util/TypeUtil";
@@ -29,13 +29,13 @@ import { navBrowserBack } from "Util/WindowUtil";
 import { ValidationFailureDisplay } from "Component/Util";
 import {
   getFirstLeader,
-  getFirstPrimaryDescription, getFirstSubject,
+  getFirstPrimaryDescription, getFirstRelatedRaid, getFirstSubject,
   getLeadOrganisation,
   getPrimaryTitle
 } from "Component/MetaDataContainer";
 import React, { useState } from "react";
 import { useAuthApi } from "Api/AuthApi";
-import {findOrganisationIdProblem, findSubjectProblem} from "Page/MintRaidPage";
+import {findOrganisationIdProblem, findRelatedRaidProblem, findSubjectProblem} from "Page/MintRaidPage";
 import { createLeadOrganisation } from "./UpgradeLegacySchemaForm";
 import { findOrcidProblem, OrcidField } from "Component/OrcidField";
 import List from "@mui/material/List";
@@ -49,7 +49,8 @@ function isDifferent(formData: FormData, original: FormData){
     formData.leadOrganisation !== original.leadOrganisation ||
     formData.accessType !== original.accessType ||
     formData.accessStatement !== original.accessStatement ||
-    formData.subject !== original.subject;
+    formData.subject !== original.subject ||
+    formData.relatedRaid !== original.relatedRaid;
 }
 
 type FormData = Readonly<{
@@ -62,6 +63,7 @@ type FormData = Readonly<{
   accessType: AccessType,
   accessStatement: string,
   subject: string,
+  relatedRaid: string,
 }>;
 type ValidFormData = WithRequired<FormData, 'startDate'>;
 
@@ -79,6 +81,7 @@ function mapReadQueryDataToFormData(
     accessType: metadata.access.type,
     accessStatement: metadata.access.accessStatement ?? "",
     subject: getFirstSubject(metadata)?.subject ?? "",
+    relatedRaid: getFirstRelatedRaid(metadata)?.relatedRaid ?? "",
   }
 }
 
@@ -158,6 +161,14 @@ function createUpdateMetadata(
     newSubjects.push({subject: formData.subject})
   }
 
+  const newRelatedRaids: RelatedRaidBlock[] = []
+  if (formData.relatedRaid) {
+    newRelatedRaids.push({
+      relatedRaid: formData.relatedRaid,
+      relatedRaidType: "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/continues.json",
+    })
+  }
+
   /* make sure to update findMetadataUpdateProblems() to detect complicated
   scenarios where this logic would stomp complicated raid data. */
   return {
@@ -178,6 +189,7 @@ function createUpdateMetadata(
       accessStatement: formData.accessStatement,
     },
     subjects: newSubjects,
+    relatedRaids: newRelatedRaids,
   };
 }
 
@@ -223,10 +235,11 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
   const isStartDateValid = isValidDate(formData?.startDate);
   const contribProblem = findOrcidProblem(formData.leadContributor);
   const subjectProblem = findSubjectProblem(formData.subject);
+  const relatedRaidProblem = findRelatedRaidProblem(formData.relatedRaid);
 
   const canSubmit = isTitleValid && isAccessStatementValid && 
     isStartDateValid && !contribProblem && 
-    !leadOrganisationProblem && !subjectProblem && hasChanged;
+    !leadOrganisationProblem && !subjectProblem && !relatedRaidProblem && hasChanged;
   const isWorking = updateRequest.isLoading;
 
   return <>
@@ -313,6 +326,15 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
             <MenuItem value={AccessType.Closed}>Closed</MenuItem>
           </Select>
         </FormControl>
+        <TextField id="accessStatement" label="Access statement"
+                   variant="outlined" autoCorrect="off" autoCapitalize="on"
+                   required={formData.accessType !== "Open"}
+                   disabled={isWorking}
+                   value={formData.accessStatement}
+                   onChange={e => {
+                     setFormData({...formData, accessStatement: e.target.value});
+                   }}
+        />
         <TextField id="subject"
                    variant="outlined" autoCorrect="off" autoCapitalize="off"
                    disabled={isWorking}
@@ -327,6 +349,21 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
                      "Subject - " + leadOrganisationProblem :
                      "Subject"}
                    error={!!subjectProblem}
+        />
+        <TextField id="relatedRaid"
+                   variant="outlined" autoCorrect="off" autoCapitalize="off"
+                   disabled={isWorking}
+                   value={formData.relatedRaid ?? ""}
+                   onChange={(e) => {
+                     setFormData({
+                       ...formData,
+                       relatedRaid: e.target.value
+                     });
+                   }}
+                   label={ relatedRaidProblem ?
+                     "Related Raid - " + relatedRaidProblem :
+                     "Related Raid"}
+                   error={!!relatedRaidProblem}
         />
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton type="button" onClick={(e) => {

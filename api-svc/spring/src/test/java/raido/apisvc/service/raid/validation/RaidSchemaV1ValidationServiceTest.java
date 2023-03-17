@@ -6,10 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import raido.apisvc.service.raid.id.IdentifierParser;
-import raido.idl.raidv2.model.CreateRaidV1Request;
-import raido.idl.raidv2.model.IdBlock;
-import raido.idl.raidv2.model.SubjectBlock;
-import raido.idl.raidv2.model.UpdateRaidV1Request;
+import raido.idl.raidv2.model.*;
 
 import java.util.Collections;
 
@@ -29,6 +26,8 @@ class RaidSchemaV1ValidationServiceTest {
   private OrganisationValidationService orgSvc;
   @Mock
   private IdentifierParser identifierParser;
+  @Mock
+  private RelatedRaidValidationService relatedRaidValidationService;
 
   @InjectMocks
   private RaidSchemaV1ValidationService validationService;
@@ -56,4 +55,27 @@ class RaidSchemaV1ValidationServiceTest {
 
     verify(subjectValidationService).validateSubjects(subjects);
   }
+
+  @Test
+  void validatesRelatedRaidsOnCreate() {
+    final var relatedRaids = Collections.singletonList(new RelatedRaidBlock());
+    final var raid = new CreateRaidV1Request().relatedRaids(relatedRaids);
+
+    validationService.validateForCreate(raid);
+    verify(relatedRaidValidationService).validateRelatedRaids(relatedRaids);
+  }
+
+  @Test
+  void validatesRelatedRaidsOnUpdate() {
+    final var handle = "test-handle";
+    final var relatedRaids = Collections.singletonList(new RelatedRaidBlock());
+
+    final var raid = new UpdateRaidV1Request()
+      .id(new IdBlock())
+      .relatedRaids(relatedRaids);
+
+    validationService.validateForUpdate(handle, raid);
+    verify(relatedRaidValidationService).validateRelatedRaids(relatedRaids);
+  }
+
 }

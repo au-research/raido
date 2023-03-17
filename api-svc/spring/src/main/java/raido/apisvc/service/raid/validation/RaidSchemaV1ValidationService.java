@@ -27,20 +27,23 @@ public class RaidSchemaV1ValidationService {
   private final OrganisationValidationService orgSvc;
   private final SubjectValidationService subjectSvc;
   private final IdentifierParser idParser;
+
+  private final RelatedRaidValidationService relatedRaidSvc;
   public RaidSchemaV1ValidationService(
     final TitleValidationService titleSvc,
     final DescriptionValidationService descSvc,
     final ContributorValidationService contribSvc,
     final OrganisationValidationService orgSvc,
     final SubjectValidationService subjectSvc,
-    final IdentifierParser idParser
-  ) {
-    this.titleSvc = titleSvc;
-    this.descSvc = descSvc;
-    this.contribSvc = contribSvc;
-    this.orgSvc = orgSvc;
-    this.subjectSvc = subjectSvc;
-    this.idParser = idParser;
+    final IdentifierParser idParser,
+    final RelatedRaidValidationService relatedRaidSvc) {
+      this.titleSvc = titleSvc;
+      this.descSvc = descSvc;
+      this.contribSvc = contribSvc;
+      this.orgSvc = orgSvc;
+      this.subjectSvc = subjectSvc;
+      this.idParser = idParser;
+      this.relatedRaidSvc = relatedRaidSvc;
   }
 
   private List<ValidationFailure> validateUpdateHandle(final String decodedHandleFromPath, final IdBlock updateIdBlock) {
@@ -152,7 +155,7 @@ public class RaidSchemaV1ValidationService {
     failures.addAll(contribSvc.validateContributors(request.getContributors()));
     failures.addAll(orgSvc.validateOrganisations(request.getOrganisations()));
     failures.addAll(subjectSvc.validateSubjects(request.getSubjects()));
-
+    failures.addAll(relatedRaidSvc.validateRelatedRaids(request.getRelatedRaids()));
 
     return failures;
   }
@@ -178,6 +181,7 @@ public class RaidSchemaV1ValidationService {
     failures.addAll(contribSvc.validateContributors(request.getContributors()));
     failures.addAll(orgSvc.validateOrganisations(request.getOrganisations()));
     failures.addAll(subjectSvc.validateSubjects(request.getSubjects()));
+    failures.addAll(relatedRaidSvc.validateRelatedRaids(request.getRelatedRaids()));
 
     return failures;
   }
