@@ -83,7 +83,7 @@ public class ServicePoint extends TableImpl<ServicePointRecord> {
     /**
      * The column <code>api_svc.service_point.enabled</code>.
      */
-    public final TableField<ServicePointRecord, Boolean> ENABLED = createField(DSL.name("enabled"), SQLDataType.BOOLEAN.nullable(false).defaultValue(DSL.field("true", SQLDataType.BOOLEAN)), this, "");
+    public final TableField<ServicePointRecord, Boolean> ENABLED = createField(DSL.name("enabled"), SQLDataType.BOOLEAN.nullable(false).defaultValue(DSL.field(DSL.raw("true"), SQLDataType.BOOLEAN)), this, "");
 
     /**
      * The column <code>api_svc.service_point.lower_name</code>.
