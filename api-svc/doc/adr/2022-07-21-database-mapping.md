@@ -24,7 +24,7 @@ Raido is designed to work on Postgres, using PG-specific features.
 * jOOQ allows us to write typesafe SQL queries instead of dealing with the 
   ORM impedance mismatch.  
 * No stringly typed queries.  Refactoring is so much easier and safer.
-  No real need for unit tests focusing soley on the DB mapping.
+  No real need for unit tests focusing solely on the DB mapping.
   TODO:STO link to coding guidelines, when I import them.
 * jOOQ is much better at taking advantage of the PG-only approach
   * Hibernate/JPA are "lowest common denominator" approaches
