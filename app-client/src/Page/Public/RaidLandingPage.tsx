@@ -31,7 +31,7 @@ import { NewWindowLink } from "Component/ExternalLink";
 
 const pageUrl = "/handle";
 
-export function formatCnriHandle(handle: string){
+export function formatCnriUrl(handle: string){
   return `https://hdl.handle.net/${handle}`;
 }
 
@@ -128,8 +128,8 @@ function ClosedRaid({raid, metadata}: {
   metadata: PublicClosedMetadataSchemaV1,
 }){
   return <SmallContentMain><InfoFieldList>
-    <InfoField id="handle" label="Handle"
-      value={formatCnriHandle(raid.handle)}/>
+    <InfoField id="globalHandle" label="CNRI URL"
+      value={formatCnriUrl(raid.handle)}/>
     <InfoField id="createDate" label="Create date" value={
       <DateDisplay date={raid.createDate}/>
     }/>
@@ -151,8 +151,8 @@ function OpenRaid({raid, metadata}: {
   return <SmallScreenMain>
     <SmallScreenPaper>  
       <InfoFieldList>
-        <InfoField id="handle" label="Handle"
-          value={formatCnriHandle(raid.handle)}/>
+        <InfoField id="globalUrl" label="CNRI URL"
+          value={formatCnriUrl(raid.handle)}/>
         <InfoField id="createDate" label="Create date" value={
           <DateDisplay date={raid.createDate}/>
         }/>
