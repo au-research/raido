@@ -14,10 +14,10 @@ dependencyResolutionManagement{
   versionCatalogs{
     libs{
       version('jooq', '3.18.0')
-      version('spring6', '6.0.2')
+      version('spring6', '6.0.6')
       /* sometimes the latest version of spring-sec matches the spring version, 
       but often if lags behind, especially for fix versions. */
-      version('spring6-sec', '6.0.0')
+      version('spring6-sec', '6.0.2')
       version('jetty11', '11.0.12')
       version('logback', '1.4.5')
       version('feign', '12.1')
