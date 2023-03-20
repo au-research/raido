@@ -10,6 +10,8 @@ import { DateDisplay, raidoTitle, RoleDisplay } from "Component/Util";
 import {
   Alert,
   IconButton,
+  Menu,
+  MenuItem,
   Snackbar,
   Table,
   TableBody,
@@ -33,9 +35,15 @@ import { RaidoAddFab } from "Component/AppButton";
 import { getEditRaidPageLink } from "Page/EditRaidPage";
 import { getMintRaidPageLink } from "Page/MintRaidPage";
 import { IdProviderDisplay } from "Component/IdProviderDisplay";
-import { ContentCopy } from "@mui/icons-material";
+import { ContentCopy, FileDownload, Settings } from "@mui/icons-material";
 import { toastDuration } from "Design/RaidoTheme";
 import { assert } from "Util/TypeUtil";
+import Typography from "@mui/material/Typography";
+import {
+  formatLocalDateAsFileSafeIsoShortDateTime,
+  formatLocalDateAsIso
+} from "Util/DateUtil";
+import { escapeCsvField } from "Util/DownloadUtil";
 
 const log = console;
 
@@ -143,6 +151,7 @@ export function RaidTableContainerV2({servicePointId}: {servicePointId: number})
   
   return <ContainerCard title={"Recently minted RAiD data"} 
     action={<>
+      <SettingsMenu raidData={raidQuery.data} />
       <RefreshIconButton onClick={() => raidQuery.refetch()}
         refreshing={raidQuery.isLoading || raidQuery.isRefetching} />
       <RaidoAddFab href={getMintRaidPageLink(servicePointId)}/>
@@ -254,4 +263,77 @@ function RaidoHandle({handle, onCopyHandleClicked}:{
       <ContentCopy/>
     </IconButton>
   </TextSpan>
+}
+
+function SettingsMenu({raidData}:{
+  raidData: RaidListItemV2[]|undefined
+}){
+  const[ isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const menuAnchorRef = React.useRef<HTMLButtonElement>(null!);
+
+  function onClose(){
+    setIsMenuOpen(false);
+  }
+
+  // taken from https://stackoverflow.com/a/40657767/924597
+  function downloadData(){
+    
+    assert(raidData, "raid data was empty when download clicked");
+
+    const escapedTextData = raidData.map(iRaid => {
+      return [
+        escapeCsvField(iRaid.primaryTitle),
+        escapeCsvField(iRaid.handle),
+        escapeCsvField(formatLocalDateAsIso(iRaid.startDate)),
+        escapeCsvField(formatLocalDateAsIso(iRaid.createDate)),
+      ]
+    });
+    escapedTextData.unshift([
+      "Primary title", "Handle", "Start date", "Create date" ]);
+
+    const csvData = escapedTextData.
+      map(iRow => iRow.join(",")).
+      join("\n");
+    
+    const downloadLink = "data:text/csv;charset=utf-8," + csvData;
+
+    /* I wanted to control the filename, so took from: 
+     https://stackoverflow.com/a/50540808/924597 */
+    const link = document.createElement("a");
+    link.href = downloadLink;
+    const fileSafeTimestamp = 
+      formatLocalDateAsFileSafeIsoShortDateTime(new Date());
+    link.download = `recent-raids-${fileSafeTimestamp}.csv`;
+    link.click();    
+  }
+
+  const noRaidData = !raidData || raidData.length === 0;
+
+  return <>
+    <IconButton 
+      ref={menuAnchorRef}
+      onClick={()=> setIsMenuOpen(true)}
+      color="primary"
+    >
+      <Settings/>
+    </IconButton>
+
+    <Menu id="menu-homepage-settings"
+      anchorEl={menuAnchorRef.current}
+      open={isMenuOpen}
+      onClose={()=> setIsMenuOpen(false)}
+    >
+      <MenuItem disabled={noRaidData} 
+        onClick={()=>{
+          downloadData();
+          onClose();
+        }}
+      >
+        <Typography>
+          <FileDownload style={{verticalAlign: "bottom"}}/>
+          Download report of recently minted RAiDs
+        </Typography>
+      </MenuItem>
+    </Menu>
+  </>;
 }
