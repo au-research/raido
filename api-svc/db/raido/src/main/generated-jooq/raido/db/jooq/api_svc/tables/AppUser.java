@@ -99,7 +99,7 @@ public class AppUser extends TableImpl<AppUserRecord> {
     /**
      * The column <code>api_svc.app_user.enabled</code>.
      */
-    public final TableField<AppUserRecord, Boolean> ENABLED = createField(DSL.name("enabled"), SQLDataType.BOOLEAN.nullable(false).defaultValue(DSL.field("true", SQLDataType.BOOLEAN)), this, "");
+    public final TableField<AppUserRecord, Boolean> ENABLED = createField(DSL.name("enabled"), SQLDataType.BOOLEAN.nullable(false).defaultValue(DSL.field(DSL.raw("true"), SQLDataType.BOOLEAN)), this, "");
 
     /**
      * The column <code>api_svc.app_user.token_cutoff</code>. Any endpoint call
@@ -111,7 +111,7 @@ public class AppUser extends TableImpl<AppUserRecord> {
     /**
      * The column <code>api_svc.app_user.date_created</code>.
      */
-    public final TableField<AppUserRecord, LocalDateTime> DATE_CREATED = createField(DSL.name("date_created"), SQLDataType.LOCALDATETIME(6).nullable(false).defaultValue(DSL.field("transaction_timestamp()", SQLDataType.LOCALDATETIME)), this, "");
+    public final TableField<AppUserRecord, LocalDateTime> DATE_CREATED = createField(DSL.name("date_created"), SQLDataType.LOCALDATETIME(6).nullable(false).defaultValue(DSL.field(DSL.raw("transaction_timestamp()"), SQLDataType.LOCALDATETIME)), this, "");
 
     private AppUser(Name alias, Table<AppUserRecord> aliased) {
         this(alias, aliased, null);
