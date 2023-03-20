@@ -13,21 +13,31 @@ include ":app-client"
 dependencyResolutionManagement{
   versionCatalogs{
     libs{
+      /* https://www.jooq.org/learn/ 
+      Follow relevant version link for patch release history. */
       version('jooq', '3.18.0')
+      // https://github.com/spring-projects/spring-framework/releases
       version('spring6', '6.0.6')
       /* sometimes the latest version of spring-sec matches the spring version, 
-      but often if lags behind, especially for fix versions. */
+      but often if lags behind, especially for fix versions.
+      https://github.com/spring-projects/spring-security/releases */
       version('spring6-sec', '6.0.2')
-      version('jetty11', '11.0.12')
-      version('logback', '1.4.5')
-      version('feign', '12.1')
+      // https://github.com/eclipse/jetty.project/releases
+      version('jetty11', '11.0.14')
+      // https://logback.qos.ch/news.html
+      version('logback', '1.4.6')
+      // https://github.com/OpenFeign/feign/releases
+      version('feign', '12.2')
 
-      plugin('flyway', 'org.flywaydb.flyway').version('9.4.0')      
+      // https://documentation.red-gate.com/fd/release-notes-for-flyway-engine-179732572.html
+      plugin('flyway', 'org.flywaydb.flyway').version('9.16.0')      
       plugin('jooq', 'nu.studer.jooq').version('8.1')      
       
       library('jooq', 'org.jooq', 'jooq').versionRef('jooq')
-      library('pgjdbc', 'org.postgresql:postgresql:42.5.1')
-      library('assertj', 'org.assertj:assertj-core:3.23.1')
+      // https://jdbc.postgresql.org/changelogs/
+      library('pgjdbc', 'org.postgresql:postgresql:42.6.0')
+      // https://assertj.github.io/doc/#assertj-core-release-notes
+      library('assertj', 'org.assertj:assertj-core:3.24.2')
 
       // core spring/web - pkg: org.springframework
       library('spring-webmvc', 'org.springframework', 'spring-webmvc').versionRef('spring6')
