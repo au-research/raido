@@ -46,13 +46,9 @@ dependencies{
   implementation libs.bundles.spring6
   implementation libs.jooq
 
-  /* use SLf4J API to log against - pkg: org.slf4j
-     using 2.0.0 for Raido code because that's what jetty uses
-     NOTE:STO: this might not be right since we're Jetty 11/Servlet 5 */
-  implementation 'org.slf4j:slf4j-api:2.0.5'
-  // allow SLF4J to capture java.util logging 
-  implementation 'org.slf4j:jul-to-slf4j:2.0.5'
-
+  /* use SLf4J API to log against - pkg: org.slf4j */
+  implementation libs.bundles.slf4j
+  
   // connection pool - upgraded from 3.4.5, rollback if issues with 5.0.0
   implementation "com.zaxxer:HikariCP:5.0.0"
 

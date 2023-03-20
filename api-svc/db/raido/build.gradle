@@ -47,13 +47,9 @@ dependencies{
   // for flyway
   runtimeOnly libs.pgjdbc
 
-  /* use SLf4J API to log against - pkg: org.slf4j
-     using 2.0.0 for Raido code because that's what jetty uses
-     NOTE:STO: this might not be right since we're Jetty 11/Servlet 5 */
-  implementation 'org.slf4j:slf4j-api:2.0.0-alpha7'
-  // allow SLF4J to capture java.util logging 
-  implementation 'org.slf4j:jul-to-slf4j:2.0.0-alpha7'
-
+  /* use SLf4J API to log against - pkg: org.slf4j */
+  implementation libs.bundles.slf4j
+  
   jooqGenerator libs.pgjdbc
 
   // use logback as the backing log implementation for slf4j

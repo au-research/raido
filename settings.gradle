@@ -28,6 +28,9 @@ dependencyResolutionManagement{
       version('logback', '1.4.6')
       // https://github.com/OpenFeign/feign/releases
       version('feign', '12.2')
+      // https://www.slf4j.org/news.html
+      version('slf4j', '2.0.7')
+
 
       // https://documentation.red-gate.com/fd/release-notes-for-flyway-engine-179732572.html
       plugin('flyway', 'org.flywaydb.flyway').version('9.16.0')      
@@ -92,6 +95,11 @@ dependencyResolutionManagement{
       library('spring-security-test', 'org.springframework.security', 'spring-security-test').versionRef('spring6-sec')
       bundle('spring6-test', [ 'spring-test', 'spring-security-test'])
       
+      library('slf4j-api', 'org.slf4j', 'slf4j-api').versionRef('slf4j')
+      // allows SLF4J to capture java.util logging 
+      library('slf4j-jul', 'org.slf4j', 'jul-to-slf4j').versionRef('slf4j')
+      bundle('slf4j', [ 'slf4j-api', 'slf4j-jul'])
+
     }
   }
 }
