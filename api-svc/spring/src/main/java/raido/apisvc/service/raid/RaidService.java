@@ -15,6 +15,7 @@ import raido.apisvc.exception.ResourceNotFoundException;
 import raido.apisvc.exception.UnknownServicePointException;
 import raido.apisvc.factory.RaidRecordFactory;
 import raido.apisvc.repository.RaidRepository;
+import raido.apisvc.repository.RelatedRaidTypeRepository;
 import raido.apisvc.repository.ServicePointRepository;
 import raido.apisvc.service.apids.ApidsService;
 import raido.apisvc.service.apids.model.ApidsMintResponse;
@@ -73,8 +74,8 @@ public class RaidService {
   private final RaidoSchemaV1ValidationService validSvc;
   private  final TransactionTemplate tx;
   private final RaidRepository raidRepository;
-  private final ServicePointRepository servicePointRepository;
 
+  private final ServicePointRepository servicePointRepository;
   private final RaidRecordFactory raidRecordFactory;
   private final IdentifierParser idParser;
   private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
@@ -87,7 +88,7 @@ public class RaidService {
     final TransactionTemplate tx,
     final RaidRepository raidRepository,
     final ServicePointRepository servicePointRepository,
-    final RaidRecordFactory raidRecordFactory, 
+    final RaidRecordFactory raidRecordFactory,
     IdentifierParser idParser
   ) {
     this.db = db;

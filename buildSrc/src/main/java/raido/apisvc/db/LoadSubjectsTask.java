@@ -104,5 +104,7 @@ public abstract class LoadSubjectsTask extends DefaultTask {
           throw new RuntimeException(e);
         }
       });
+
+    connection.close();
   }
 }
