@@ -190,8 +190,8 @@ const demoConfig: EnvironmentConfig = {
   raidoLandingPage: "https://demo.raid.org.au",
   raidoApiSvc: "",
   aaf: {
-    clientId: "accaabfd-a7c8-4d36-9363-ea7342e24db5",
-    authorizeUrl: "https://central.test.aaf.edu.au/providers/op/authorize",
+    clientId: "205290b0-8bd6-4d53-8605-d0237636b235",
+    authorizeUrl: "https://central.aaf.edu.au/providers/op/authorize",
     authnScope: "openid email profile",
   },
   google: {
