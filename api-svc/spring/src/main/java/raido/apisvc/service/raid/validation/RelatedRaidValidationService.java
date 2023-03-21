@@ -36,7 +36,7 @@ public class RelatedRaidValidationService {
     }
 
     final var raidUrlPattern = String.format("^%s\\/\\d+\\.\\d+\\/\\d+$", metadataProps.handleUrlPrefix);
-    final var relatedRaidTypeUrlPattern = String.format("^%s\\/[a-z]+.json$", RELATED_RAID_TYPE_URL_SCHEME_URI);
+    final var relatedRaidTypeUrlPattern = String.format("^%s\\/[a-z\\-]+.json$", RELATED_RAID_TYPE_URL_SCHEME_URI);
 
     for (int i = 0; i < relatedRaids.size(); i++) {
       final var raidUrl = relatedRaids.get(i).getRelatedRaid();

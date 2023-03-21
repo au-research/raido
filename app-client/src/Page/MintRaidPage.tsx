@@ -12,7 +12,7 @@ import { ContainerCard } from "Design/ContainerCard";
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import {
-  AccessType,
+  AccessType, ContributorBlock,
   DescriptionBlock,
   OrganisationBlock,
   RaidoMetadataSchemaV1, RelatedRaidBlock, SubjectBlock,
@@ -92,12 +92,13 @@ type FormData = Readonly<{
   accessStatement: string,
   subject: string,
   relatedRaid: string,
+  relatedRaidType: string,
 }>;
 type ValidFormData = WithRequired<FormData, 'startDate'>;
 
 function mapFormDataToMetadata(
   form: ValidFormData 
-): Omit<RaidoMetadataSchemaV1, 'id'>{
+): { metadataSchema: string; access: { accessStatement: string; type: "Closed" | "Open" }; organisations: OrganisationBlock[]; subjects: SubjectBlock[]; dates: { startDate: Date }; titles: { title: string; type: string; startDate: Date }[]; contributors: ContributorBlock[]; descriptions: DescriptionBlock[]; relatedRaids: RelatedRaidBlock[]; }{
   const descriptions: DescriptionBlock[] = [];
   if( form.primaryDescription ){
     descriptions.push({
@@ -112,14 +113,18 @@ function mapFormDataToMetadata(
 
   const subjects: SubjectBlock[] = []
   if (form.subject) {
-    subjects.push({subject: form.subject})
+    subjects.push({
+      subject: form.subject,
+      subjectSchemeUri: "https://linked.data.gov.au/def/anzsrc-for/2020",
+    })
   }
 
   const relatedRaids: RelatedRaidBlock[] = []
   if (form.relatedRaid) {
     relatedRaids.push({
       relatedRaid: form.relatedRaid,
-      relatedRaidType: "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/continues.json",
+      relatedRaidType: form.relatedRaidType,
+      relatedRaidTypeSchemeUri: "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type",
     })
   }
 
@@ -193,10 +198,12 @@ function MintRaidContainer({servicePointId, onCreate}: {
   const isStartDateValid = isValidDate(formData?.startDate);
   const contribProblem = findOrcidProblem(formData.leadContributor);
   const subjectProblem = findSubjectProblem(formData.subject);
-  const relatedRaidProblem = findRelatedRaidProblem(formData.relatedRaid)
+  const relatedRaidProblem = findRelatedRaidProblem(formData.relatedRaid, formData.relatedRaidType);
+  const relatedRaidTypeProblem = findRelatedRaidTypeProblem(formData.relatedRaidType, formData.relatedRaid);
 
   const canSubmit = isTitleValid && isStartDateValid &&
-    isAccessStatementValid && !contribProblem && !leadOrganisationProblem && !subjectProblem && !relatedRaidProblem;
+    isAccessStatementValid && !contribProblem && !leadOrganisationProblem && !subjectProblem && !relatedRaidProblem &&
+    !relatedRaidTypeProblem;
   const isWorking = mintRequest.isLoading;
   
   return <ContainerCard title={"Mint RAiD"} action={<MintRaidHelp/>}>
@@ -320,6 +327,34 @@ function MintRaidContainer({servicePointId, onCreate}: {
                      "Related Raid"}
                    error={!!relatedRaidProblem}
         />
+        <FormControl>
+          <InputLabel id="relatedRaidTypeLabel">{relatedRaidTypeProblem ?  "Related Raid type - " + relatedRaidTypeProblem : "Related Raid type"}</InputLabel>
+          <Select
+            labelId="relatedRaidTypeLabel"
+            id="relatedRaidTypeSelect"
+            value={formData.relatedRaidType}
+            label={relatedRaidTypeProblem ?  "Related Raid type - " + relatedRaidTypeProblem : "Related Raid type"}
+            error={!!relatedRaidTypeProblem}
+            onChange={(event: SelectChangeEvent) => {
+              // maybe a type guard would be better?
+              const relatedRaidType = event.target.value;
+              console.log("onChange", {relatedRaidType, event});
+              setFormData({...formData, relatedRaidType});
+
+            }}
+          >
+            <MenuItem value=""></MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/continues.json">Continues</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/has-part.json">HasPart</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-continued-by.json">IsContinuedBy</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-derived-from.json">IsDerivedFrom</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-identical-to.json">IsIdenticalTo</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-obsoleted-by.json">IsObsoletedBy</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-part-of.json">IsPartOf</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-source-of.json">IsSourceOf</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/obsoletes.json">Obsoletes</MenuItem>
+          </Select>
+        </FormControl>
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton onClick={navBrowserBack}
             disabled={isWorking}>
@@ -387,8 +422,12 @@ export function findSubjectProblem(id: string): string|undefined{
   return undefined;
 }
 
-export function findRelatedRaidProblem(id: string): string|undefined{
-  return undefined;
+export function findRelatedRaidProblem(relatedRaid: string, relatedRaidType: string) {
+  return (!relatedRaidType ? true : !!relatedRaid) ? undefined : "must be set";
+}
+
+export function findRelatedRaidTypeProblem(relatedRaidType: string, relatedRaid: string) {
+  return (!relatedRaid ? true : !!relatedRaidType) ? undefined : "must be set";
 }
 
 export function MintRaidHelp(){
