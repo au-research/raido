@@ -1,7 +1,7 @@
 # Raido
 
-"Raido" is the codename of the sourcecode for the new implementation of the 
-Oceania region [ARDC RAiD service](https://raid.org.au) implementation for 
+"Raido" is the codename of the sourcecode for the new Oceania region 
+[ARDC RAiD service](https://raid.org.au) implementation of 
 [ISO 23527:2022](https://www.iso.org/standard/75931.html).
 
 It replaces the now decommissioned 
