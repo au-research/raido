@@ -33,3 +33,22 @@ find -name '*.yaml' | grep -v 'node_modules' | xargs wc -l
 | groovy | 1,007  |
 | gradle | 1,207  |
 | yaml   | 1,721  |
+
+
+## 2023-03-21
+
+Just after 1.0 Raido rescue deployment.
+
+Not sure if original count was done on a clean codebase.
+These counts were taken after doing `gradlew clean`
+
+| type   | lines  |
+|--------|--------|
+| tsx    | 7,055  |
+| ts     | 1,215  |
+| md     | 4,156  |
+| sql    | 1,092  |
+| java   | 28,941 |
+| groovy | 1,332  |
+| gradle | 1,469  |
+| yaml   | 3,113  |
