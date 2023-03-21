@@ -8,7 +8,7 @@ It replaces the now decommissioned
 https://github.com/ResearchDataServices/RAiD-API.
 
 
-## RAiD vs Raido
+## `Raido` vs `RAiD Service` vs `RAiD`
 
 When you see these terms in this codebase:
 * `Raido`, `raido` - refers to the software codebase that implements
