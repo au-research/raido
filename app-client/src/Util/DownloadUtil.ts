@@ -1,13 +1,15 @@
-/* Taken from https://stackoverflow.com/a/40657767/924597.
-Literal copy/paste without thought: if it's busted, fix it. 
-*/
-export function escapeCsvField(text: string|undefined){
-  if( !text ){
-    return "";
-  }
-  
-  return text.replace(/\\/g, "\\\\").
-    replace(/\n/g, "\\n").
-    replace(/,/g, "\\,");
-}
 
+
+export function escapeCsvField(text: string|undefined): string {
+  if (!text) {
+    return '';
+  }
+
+  /* If the field contains a comma, a double quote, or a newline character,
+  enclose it in double quotes and escape any double quotes inside the field. */
+  if (text.includes(',') || text.includes('"') || text.includes('\n')) {
+    return `"${text.replace(/"/g, '""')}"`;
+  }
+
+  return text;
+}
