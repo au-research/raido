@@ -1,7 +1,7 @@
 # Raido
 
-"Raido" is the new implementation of the Oceania region 
-[RAiD](https://raid.org.au) implementation for 
+"Raido" is the codename of the sourcecode for the new implementation of the 
+Oceania region [ARDC RAiD service](https://raid.org.au) implementation for 
 [ISO 23527:2022](https://www.iso.org/standard/75931.html).
 
 It replaces the now decommissioned 
@@ -11,19 +11,27 @@ https://github.com/ResearchDataServices/RAiD-API.
 ## RAiD vs Raido
 
 When you see these terms in this codebase:
-* `Raido`, `raido` - refers to our "local" Oceania region implementation
-  (i.e. `raid.org.au`) of RAiD, being operated and maintained by ARDC in our 
-  capacity as one of the (hopefully many) "registration agency" providers.
-  * It's a "codename" for the software project, not intended to be publicly 
-  visible
-* `RAiD`, `RAID`, `Raid`, `raid` - refers to the "global" RAiD standard and 
+* `Raido`, `raido` - refers to the software codebase that implements
+  our "local" RAiD service for the Oceania region.
+  * It's a "codename" for the software project and not intended to be publicly 
+  visible.  
+  * The term should not be used in the UI or other user-visible places.
+* `RAiD service` - in customer/user communications, we always refer to the 
+  "RAiD service" or "ARDC RAiD service" when talking about the service we 
+  provide to our customers that is based on the Raido software (hosted in AWS).
+  * The `RAiD service` is operated and maintained by the ARDC in our
+    capacity as one of the (hopefully many) "registration agency" providers.
+  * The `RAiD service` is located in and primarily intended for customers in 
+    the Oceania region. 
+* `RAiD`, `RAID`, `Raid`, `raid` - refers to the "global" RAiD ISO standard and 
   supporting global infrastructure (i.e. `raid.org`), being operated and 
-  maintained by ARDC in our capacity as the global "registration authority".
+  maintained by ARDC in our capacity as the ISo standard "registration 
+  authority".
+  * note that `raid.org` does not exist yet, and when it does, the software will
+  live in a separate repository
 
 
-The Raid infrastructure does not yet exist at all.
-
-There is a DEMO environment for Raido available at 
+There is a DEMO environment for the RAiD service available at 
 https://app.demo.raid.org.au.
 
 Note that:
@@ -35,7 +43,7 @@ Note that previously, the repo was named `raido-v2`, but that has been
 [fixed](https://github.com/au-research/raido/issues/4). 
 
 The [service-level-guide.md](/doc/service-level-guide.md) page provides guidance
-to the expected level of service provided by the Raido team.
+to the expected level of the RAiD Service provided by the RAiD team.
 
 
 # Technology / Architecture
@@ -106,7 +114,7 @@ having issues.
 Currently daily development, DEMO and PROD builds and releases are all done 
 using the `main` branch.
 
-Releases are tracks and built using `git describe` functionality working off
+Releases are tracked and built using `git describe` functionality working off
 of annotated tags with the prefix `raido-v-`.
 
 [release-process.md](./doc/release-process.md)

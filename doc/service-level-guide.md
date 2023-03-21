@@ -1,24 +1,25 @@
-**Note**: This page is a prototype, it is not yet agreed that these are the 
-usage terms for Raido.
-
-It is intended that we will "publish" this guide by adding a link from 
-the new "about RAID" page to this page on github.
+This service level guide will be published by linking to it from the 
+[ARDC Product Service Versioning standard(https://confluence.ardc.edu.au/display/DPST/ARDC+Online+Services%3A+Introduction+of+Maintenance+Windows+and+Product+Versions)
+ 
+The link above will be updated when the standard is published.
 
 ----
 
-Raido is just one possible implementation of the RAiD ISO standard.
+The ARDC RAiD service is just one possible implementation of the RAiD ISO 
+standard registration-agency regional service functionality.
 Other registration agencies may run RAiD implementations with completely
 different levels of service.
 
 The below service level statements are in the nature of "aspirations" for the
-Raido system - they are not a guarantee and this document is not intended as a 
+RAiD Service - they are not a guarantee and this document is not intended as a 
 contract.
 
 The service level guide is published in order to set expectations around how 
-Raido can be used and what should be expected as baseline level of service.  
+the service can be used and what can be assumed as a baseline level of 
+support.  
 
-The Raido team aims to provide this level of service on a best-effort basis, 
-subject to funding and resource availability.
+The RAiD team aims to provide this level of service on a best-effort 
+basis, subject to funding and resource availability.
 
 The service level guide may change, if we find we can't meet this level of 
 service, we will adjust the guide to provide guidance on the service level
@@ -27,15 +28,15 @@ published at this location, previous versions of the document are available
 in the Git history.
 
 
-# Availablity
+# Availability
 
 * 24 / 7 operation on a "best effort" basis
 * "business-hours" support only - AEST (GMT +10) only
 
 # Maintenance window
 
-There are multiple separate maintenance windows for AWS and Raido managed 
-resources.
+There are multiple separate maintenance windows for various AWS resources and 
+the RAiD service itself.
 
 ## AWS maintenance windows
 
@@ -54,34 +55,43 @@ Weekly: Sunday 12:00 - Sunday 13:00 UTC (Monday 00:00 - 01:00 AEST)
 
 Users may experience degraded performance during the maintenance window.
 
-Occasionally, the Raido system may return HTTP 500 errors during the 
-maintenance window. The Raido team will make best efforts to communicate 
+Occasionally, the RAiD service may return HTTP 500 errors during the 
+maintenance window. The RAiD team will make best efforts to communicate 
 in advance when these outages are expected.
 
-## Raido maintenance window
+## RAiD service maintenance window
 
 Weekly: Tuesday 01:30 - 02:00 UTC (Tuesday 11:30 - 12:00 AEST)
 
-Where possible, Raido maintenance is carried out with zero downtime, but
+Where possible, RAiD service maintenance is carried out with zero downtime, but
 performance may be degraded during the maintenance window.
 
-Occasionally, the Raido system may return HTTP 500 errors during the
-maintenance window. The Raido team will make best efforts to communicate
+Occasionally, the RAiD service may return HTTP 500 errors during the
+maintenance window. The RAiD team will make best efforts to communicate
 in advance when these outages are expected.
 
 
 # Usage limits 
 
-In order to ensure availability and fairness to all institutions, the API 
-service has limits for various things.
+In order to ensure availability and fairness to all institutions and 
+customers of the system, the API service has limits for various things.
 
-* 5 mint requests per second, per institutuion
+* 5 mint requests per second, per service-point
   * requests in excess of the limit may be rejected with a HTTP 429 error
-* 25 general API requests per second, per institution
+* 25 general API requests per second, per service-point
   * requests in excess of the limit may be rejected with a HTTP 429 error
-* RAID DMR is limited to 200 KB maximum size
-  * requests to mint or update records with a DMR > 200 KB may be rejected
-  with a HTTP 413 error
+* RAID Metadata is limited to 200 KB maximum size
+  * requests to mint or update records with a metadata size of > 200 KB may be 
+    rejected with a HTTP 413 error
+
+Note that these limits may not initially be enforced, and when they are 
+enforced it's likely the limits will be set with some leeway.  Being able to 
+achieve a higher throughput than those documented should be taken as evidence
+that the higher throughput level will always be available.
+
+Furthermore, the documented throughput limits are "best effort" - if the 
+service comes under usage pressure, the endpoints may begin returning 429 
+errors even though your usage is within the throughput limits indicated.
 
 
 # API Compatibility 
@@ -90,7 +100,7 @@ service has limits for various things.
 
 API endpoints marked `stable` are intended to be supported in the long-term.
 However, sometimes it is necessary to remove old API endpoints so that the
-Raido team can maintain the system effectively.
+RAiD team can maintain the system effectively.
 
 Where it is deemed necessary, specific versions of an API endpoint may be
 marked `deprecated`. The users of that specific endpoint version will
@@ -105,8 +115,8 @@ Institutions using the API are expected to make best efforts to upgrade their
 integration with the API within the deprecation period.
 
 Where an institution cannot upgrade their integration and needs the deprecation
-window to be extended, they are expected to communicate with the Raido support
-team as soon as possible.
+window to be extended, they are expected to communicate with the RAiD team as 
+soon as possible.
 
 
 ## Experimental endpoints
