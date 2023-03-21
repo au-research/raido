@@ -76,6 +76,15 @@ export function formatLocalDateAsIsoShortDateTime(date?: Date){
   return formatLocalDateAsIso(date) + " " + formatShortTime(date);
 }
 
+export function formatLocalDateAsFileSafeIsoShortDateTime(date?: Date){
+  if( !date ){
+    return ""
+  }
+
+  return formatLocalDateAsIso(date) + "-" + 
+    formatShortTime(date).replace(":", "-");
+}
+
 export function formatShortTime(
   date?:Date,
   locale:string|undefined = undefined

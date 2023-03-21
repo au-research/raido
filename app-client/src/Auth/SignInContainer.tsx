@@ -155,13 +155,14 @@ function OidcSignInHelp(){
   return <HelpPopover content={
     <>
       <Typography>
-        You can sign in either directly with Google or Orcid, or via the AAF 
-        if your organisation has an agreement.
+        You can sign in either directly with your personal Google 
+        or {orcidBrand} account, 
+        or via the AAF if your organisation has an agreement.
       </Typography>
       <Typography>
         Once you've signed in and authenticated yourself, you will be able to 
         submit a request for a specific institution to authorize your usage of 
-        the RAID app with their data.
+        the RAiD app with their data.
       </Typography>
     </>
   }/>;

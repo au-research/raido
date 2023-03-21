@@ -36,7 +36,7 @@ function Content(){
         Please refer to the
         ARDC <NewWindowLink href={"https://ardc.edu.au/terms-conditions/"}>
         Terms & conditions</NewWindowLink> reference page for the list of
-        relevant Terms and Conditions for usage of the RAiD application.
+        relevant Terms and Conditions for usage of the RAiD Service.
       </ListItemText>
     </List>
     <HomeLink/>

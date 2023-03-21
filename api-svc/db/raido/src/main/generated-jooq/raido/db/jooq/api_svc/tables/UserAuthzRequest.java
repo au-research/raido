@@ -116,7 +116,7 @@ public class UserAuthzRequest extends TableImpl<UserAuthzRequestRecord> {
     /**
      * The column <code>api_svc.user_authz_request.date_requested</code>.
      */
-    public final TableField<UserAuthzRequestRecord, LocalDateTime> DATE_REQUESTED = createField(DSL.name("date_requested"), SQLDataType.LOCALDATETIME(6).defaultValue(DSL.field("transaction_timestamp()", SQLDataType.LOCALDATETIME)), this, "");
+    public final TableField<UserAuthzRequestRecord, LocalDateTime> DATE_REQUESTED = createField(DSL.name("date_requested"), SQLDataType.LOCALDATETIME(6).defaultValue(DSL.field(DSL.raw("transaction_timestamp()"), SQLDataType.LOCALDATETIME)), this, "");
 
     /**
      * The column <code>api_svc.user_authz_request.date_responded</code>. not

@@ -106,12 +106,12 @@ public class Raid extends TableImpl<RaidRecord> {
     /**
      * The column <code>api_svc.raid.start_date</code>.
      */
-    public final TableField<RaidRecord, LocalDate> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATE.nullable(false).defaultValue(DSL.field("transaction_timestamp()", SQLDataType.LOCALDATE)), this, "");
+    public final TableField<RaidRecord, LocalDate> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATE.nullable(false).defaultValue(DSL.field(DSL.raw("transaction_timestamp()"), SQLDataType.LOCALDATE)), this, "");
 
     /**
      * The column <code>api_svc.raid.date_created</code>.
      */
-    public final TableField<RaidRecord, LocalDateTime> DATE_CREATED = createField(DSL.name("date_created"), SQLDataType.LOCALDATETIME(6).nullable(false).defaultValue(DSL.field("transaction_timestamp()", SQLDataType.LOCALDATETIME)), this, "");
+    public final TableField<RaidRecord, LocalDateTime> DATE_CREATED = createField(DSL.name("date_created"), SQLDataType.LOCALDATETIME(6).nullable(false).defaultValue(DSL.field(DSL.raw("transaction_timestamp()"), SQLDataType.LOCALDATETIME)), this, "");
 
     private Raid(Name alias, Table<RaidRecord> aliased) {
         this(alias, aliased, null);

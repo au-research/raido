@@ -33,28 +33,25 @@ function Content(){
   return <SmallContentMain>
     <Stack spacing={2}>
       <Typography paragraph>
-        This is the Oceania region implementation of
+        This RAiD Service is the Oceania region implementation of
         the RAiD ISO standard.
       </Typography>
       <Typography paragraph>
-        RAiD is a Persistent Identifier for research projects.
+        RAiD is a unique and persistent identifier for research projects.
+        <br/>
+        It acts as a container for research project activities by collecting
+        identifiers for the people, publications, instruments and institutions
+        that are involved.
       </Typography>
       <Typography paragraph>
         Anybody can use the application as long as they are approved by one
-        of the research institutions that use RAiD for publishing Research 
-        Activity Identifiers.
+        of the research institutions that use the RAiD Service for publishing 
+        Research Activity Identifiers.
       </Typography>
       <Typography paragraph>
         A research project is an activity.  It takes place over a period of 
         time, has a set scope, is resourced by researchers, research support 
         staff and uses and produces data.
-      </Typography>
-      <Typography paragraph>
-        RAiD is a unique and persistent identifier for research projects.
-        <br/>
-        It acts as a container for research project activities by collecting 
-        identifiers for the people, publications, instruments and institutions
-        that are involved.
       </Typography>
 
       <TextSpan>
