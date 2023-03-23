@@ -5,7 +5,7 @@ import {
   DescriptionBlock,
   OrganisationBlock,
   RaidoMetadataSchemaV1,
-  ReadRaidResponseV2, SubjectBlock,
+  ReadRaidResponseV2, RelatedRaidBlock, SubjectBlock,
   ValidationFailure
 } from "Generated/Raidv2";
 import { assert, WithRequired } from "Util/TypeUtil";
@@ -35,7 +35,12 @@ import {
 } from "Component/MetaDataContainer";
 import React, { useState } from "react";
 import { useAuthApi } from "Api/AuthApi";
-import {findOrganisationIdProblem, findRelatedRaidProblem, findSubjectProblem} from "Page/MintRaidPage";
+import {
+  findOrganisationIdProblem,
+  findRelatedRaidProblem,
+  findRelatedRaidTypeProblem,
+  findSubjectProblem
+} from "Page/MintRaidPage";
 import { createLeadOrganisation } from "./UpgradeLegacySchemaForm";
 import { findOrcidProblem, OrcidField } from "Component/OrcidField";
 import List from "@mui/material/List";
@@ -50,7 +55,8 @@ function isDifferent(formData: FormData, original: FormData){
     formData.accessType !== original.accessType ||
     formData.accessStatement !== original.accessStatement ||
     formData.subject !== original.subject ||
-    formData.relatedRaid !== original.relatedRaid;
+    formData.relatedRaid !== original.relatedRaid ||
+    formData.relatedRaidType !== original.relatedRaidType;
 }
 
 type FormData = Readonly<{
@@ -64,6 +70,7 @@ type FormData = Readonly<{
   accessStatement: string,
   subject: string,
   relatedRaid: string,
+  relatedRaidType: string,
 }>;
 type ValidFormData = WithRequired<FormData, 'startDate'>;
 
@@ -82,6 +89,7 @@ function mapReadQueryDataToFormData(
     accessStatement: metadata.access.accessStatement ?? "",
     subject: getFirstSubject(metadata)?.subject ?? "",
     relatedRaid: getFirstRelatedRaid(metadata)?.relatedRaid ?? "",
+    relatedRaidType: getFirstRelatedRaid(metadata)?.relatedRaidType ?? "",
   }
 }
 
@@ -115,7 +123,15 @@ export function findMetadataUpdateProblems(
   if( metadata.organisations && metadata.organisations.length > 1 ){
     problems.push("The metadata contains multiple organisations.");
   }
-  
+
+  if( metadata.subjects && metadata.subjects.length > 1 ){
+    problems.push("The metadata contains multiple subjects.");
+  }
+
+  if( metadata.relatedRaids && metadata.relatedRaids.length > 1 ){
+    problems.push("The metadata contains multiple related raids.");
+  }
+
   return problems
 }
 
@@ -158,7 +174,19 @@ function createUpdateMetadata(
 
   const newSubjects: SubjectBlock[] = []
   if (formData.subject) {
-    newSubjects.push({subject: formData.subject})
+    newSubjects.push({
+      subject: formData.subject,
+      subjectSchemeUri: "https://linked.data.gov.au/def/anzsrc-for/2020",
+    })
+  }
+
+  const newRelatedRaids: RelatedRaidBlock[] = []
+  if (formData.relatedRaid) {
+    newRelatedRaids.push({
+      relatedRaid: formData.relatedRaid,
+      relatedRaidType: "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/continues.json",
+      relatedRaidTypeSchemeUri: "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type",
+    })
   }
 
   /* make sure to update findMetadataUpdateProblems() to detect complicated
@@ -181,6 +209,7 @@ function createUpdateMetadata(
       accessStatement: formData.accessStatement,
     },
     subjects: newSubjects,
+    relatedRaids: newRelatedRaids,
   };
 }
 
@@ -226,11 +255,12 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
   const isStartDateValid = isValidDate(formData?.startDate);
   const contribProblem = findOrcidProblem(formData.leadContributor);
   const subjectProblem = findSubjectProblem(formData.subject);
-  const relatedRaidProblem = findRelatedRaidProblem(formData.relatedRaid);
+  const relatedRaidProblem = findRelatedRaidProblem(formData.relatedRaid, formData.relatedRaidType);
+  const relatedRaidTypeProblem = findRelatedRaidTypeProblem(formData.relatedRaidType, formData.relatedRaid);
 
   const canSubmit = isTitleValid && isAccessStatementValid && 
     isStartDateValid && !contribProblem && 
-    !leadOrganisationProblem && !subjectProblem && !relatedRaidProblem && hasChanged;
+    !leadOrganisationProblem && !subjectProblem && !relatedRaidProblem && !relatedRaidTypeProblem && hasChanged;
   const isWorking = updateRequest.isLoading;
 
   return <>
@@ -317,6 +347,15 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
             <MenuItem value={AccessType.Closed}>Closed</MenuItem>
           </Select>
         </FormControl>
+        <TextField id="accessStatement" label="Access statement"
+                   variant="outlined" autoCorrect="off" autoCapitalize="on"
+                   required={formData.accessType !== "Open"}
+                   disabled={isWorking}
+                   value={formData.accessStatement}
+                   onChange={e => {
+                     setFormData({...formData, accessStatement: e.target.value});
+                   }}
+        />
         <TextField id="subject"
                    variant="outlined" autoCorrect="off" autoCapitalize="off"
                    disabled={isWorking}
@@ -347,6 +386,33 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
                      "Related Raid"}
                    error={!!relatedRaidProblem}
         />
+        <FormControl>
+          <InputLabel id="relatedRaidTypeLabel">{relatedRaidTypeProblem ?  "Related Raid type - " + relatedRaidTypeProblem : "Related Raid type"}</InputLabel>
+          <Select
+            labelId="relatedRaidTypeLabel"
+            id="relatedRaidTypeSelect"
+            value={formData.relatedRaidType}
+            label={relatedRaidTypeProblem ?  "Related Raid type - " + relatedRaidTypeProblem : "Related Raid type"}
+            error={!!relatedRaidTypeProblem}
+            onChange={(event: SelectChangeEvent) => {
+              // maybe a type guard would be better?
+              const relatedRaidType = event.target.value;
+              console.log("onChange", {relatedRaidType, event});
+              setFormData({...formData, relatedRaidType});
+            }}
+          >
+            <MenuItem value=""></MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/continues.json">Continues</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/has-part.json">HasPart</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-continued-by.json">IsContinuedBy</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-derived-from.json">IsDerivedFrom</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-identical-to.json">IsIdenticalTo</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-obsoleted-by.json">IsObsoletedBy</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-part-of.json">IsPartOf</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-source-of.json">IsSourceOf</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/obsoletes.json">Obsoletes</MenuItem>
+          </Select>
+        </FormControl>
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton type="button" onClick={(e) => {
             e.preventDefault();

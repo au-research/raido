@@ -1,18 +1,18 @@
 import {
   isPagePath,
   NavPathResult,
-  NavTransition,
-  useNavigation
+  NavTransition
 } from "Design/NavigationProvider";
-import React from "react";
+import React, { SyntheticEvent } from "react";
 import { ContainerCard } from "Design/ContainerCard";
 import { LargeContentMain } from "Design/LayoutMain";
+import { DateDisplay, raidoTitle, RoleDisplay } from "Component/Util";
 import {
-  DateDisplay,
-  raidoTitle,
-  RoleDisplay
-} from "Component/Util";
-import {
+  Alert,
+  IconButton,
+  Menu,
+  MenuItem,
+  Snackbar,
   Table,
   TableBody,
   TableCell,
@@ -35,6 +35,15 @@ import { RaidoAddFab } from "Component/AppButton";
 import { getEditRaidPageLink } from "Page/EditRaidPage";
 import { getMintRaidPageLink } from "Page/MintRaidPage";
 import { IdProviderDisplay } from "Component/IdProviderDisplay";
+import { ContentCopy, FileDownload, Settings } from "@mui/icons-material";
+import { toastDuration } from "Design/RaidoTheme";
+import { assert } from "Util/TypeUtil";
+import Typography from "@mui/material/Typography";
+import {
+  formatLocalDateAsFileSafeIsoShortDateTime,
+  formatLocalDateAsIso
+} from "Util/DateUtil";
+import { escapeCsvField } from "Util/DownloadUtil";
 
 const log = console;
 
@@ -107,9 +116,12 @@ function RaidCurrentUser(){
   
 }
 
+
 export function RaidTableContainerV2({servicePointId}: {servicePointId: number}){
+  const [handleCopied, setHandleCopied] = React.useState(
+    undefined as undefined | string);
+
   const api = useAuthApi();
-  const nav = useNavigation();
   const raidQuery: RqQuery<RaidListItemV2[]> =
     useQuery(['listRaids', servicePointId], async () => {
       return await api.basicRaid.listRaidV2({
@@ -121,8 +133,25 @@ export function RaidTableContainerV2({servicePointId}: {servicePointId: number})
     return <CompactErrorPanel error={raidQuery.error}/>
   }
 
+  const onCopyHandleClicked = async (e: SyntheticEvent)=>{
+    const handle = e.currentTarget.getAttribute("data-handle");
+    assert(handle, "onCopyHandleClicked() called with no handle"); 
+    await navigator.clipboard.writeText(handle);
+    setHandleCopied(handle);
+  };
+
+  const handleToastClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    // source copied from https://mui.com/material-ui/react-snackbar/#simple-snackbars
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setHandleCopied(undefined);
+  };
+  
   return <ContainerCard title={"Recently minted RAiD data"} 
     action={<>
+      <SettingsMenu raidData={raidQuery.data} />
       <RefreshIconButton onClick={() => raidQuery.refetch()}
         refreshing={raidQuery.isLoading || raidQuery.isRefetching} />
       <RaidoAddFab href={getMintRaidPageLink(servicePointId)}/>
@@ -160,6 +189,7 @@ export function RaidTableContainerV2({servicePointId}: {servicePointId: number})
           { raidQuery.data?.map((row) => (
             <TableRow
               key={row.handle}
+              data-handle={row.handle}
               // don't render a border under last row
               sx={{'&:last-child td, &:last-child th': {border: 0}}}
             >
@@ -184,7 +214,8 @@ export function RaidTableContainerV2({servicePointId}: {servicePointId: number})
                 </RaidoLink>
               </TableCell>
               <TableCell>
-                <TextSpan>{row.handle || ''}</TextSpan>
+                <RaidoHandle handle={row.handle} 
+                  onCopyHandleClicked={onCopyHandleClicked} />
               </TableCell>
               <TableCell>
                 <DateDisplay date={row.startDate}/>
@@ -198,6 +229,111 @@ export function RaidTableContainerV2({servicePointId}: {servicePointId: number})
       </Table>
 
     </TableContainer>
-
+    {/* This is first time I've used the Snackbar.
+    Personally I don't like toasts most of the time, but the copy button has
+    no feedback, so I felt it was necessary.
+    There's a lot of improvements to be made here.
+    I'd rather the snackbar was global, and we kept a history of all these 
+    notifications (just in memory, for the life of the browsing context, not
+    local storage or anything like that. */}
+    <Snackbar open={!!handleCopied} autoHideDuration={toastDuration} 
+      onClose={handleToastClose}
+    >
+      <Alert onClose={handleToastClose} severity="info" sx={{ width: '100%' }}>
+        Handle {handleCopied} copied to clipboard.
+      </Alert>
+    </Snackbar>
   </ContainerCard>
+}
+
+function RaidoHandle({handle, onCopyHandleClicked}:{
+  handle: string, 
+  onCopyHandleClicked: (event: SyntheticEvent)=>void,
+}){
+  return <TextSpan noWrap={true}>
+    {handle || ''}
+    {' '}
+    {/* using dataset because creating a list of 500 items would create 500  
+    onClick handlers, but stringly-typing like this is 🤮
+    I honestly don't know which is worse.  Is 500 onClick handlers even worth
+    worrying about? */}
+    <IconButton color={"primary"} data-handle={handle}
+      onClick={onCopyHandleClicked}
+    >
+      <ContentCopy/>
+    </IconButton>
+  </TextSpan>
+}
+
+function SettingsMenu({raidData}:{
+  raidData: RaidListItemV2[]|undefined
+}){
+  const[ isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const menuAnchorRef = React.useRef<HTMLButtonElement>(null!);
+
+  function onClose(){
+    setIsMenuOpen(false);
+  }
+
+  // taken from https://stackoverflow.com/a/40657767/924597
+  function downloadData(){
+    
+    assert(raidData, "raid data was empty when download clicked");
+
+    const escapedTextData = raidData.map(iRaid => {
+      return [
+        escapeCsvField(iRaid.primaryTitle),
+        escapeCsvField(iRaid.handle),
+        escapeCsvField(formatLocalDateAsIso(iRaid.startDate)),
+        escapeCsvField(formatLocalDateAsIso(iRaid.createDate)),
+      ]
+    });
+    escapedTextData.unshift([
+      "Primary title", "Handle", "Start date", "Create date" ]);
+
+    const csvData = escapedTextData.
+      map(iRow => iRow.join(",")).
+      join("\n");
+    
+    const downloadLink = "data:text/csv;charset=utf-8," + csvData;
+
+    /* I wanted to control the filename, so took from: 
+     https://stackoverflow.com/a/50540808/924597 */
+    const link = document.createElement("a");
+    link.href = downloadLink;
+    const fileSafeTimestamp = 
+      formatLocalDateAsFileSafeIsoShortDateTime(new Date());
+    link.download = `recent-raids-${fileSafeTimestamp}.csv`;
+    link.click();    
+  }
+
+  const noRaidData = !raidData || raidData.length === 0;
+
+  return <>
+    <IconButton 
+      ref={menuAnchorRef}
+      onClick={()=> setIsMenuOpen(true)}
+      color="primary"
+    >
+      <Settings/>
+    </IconButton>
+
+    <Menu id="menu-homepage-settings"
+      anchorEl={menuAnchorRef.current}
+      open={isMenuOpen}
+      onClose={()=> setIsMenuOpen(false)}
+    >
+      <MenuItem disabled={noRaidData} 
+        onClick={()=>{
+          downloadData();
+          onClose();
+        }}
+      >
+        <Typography>
+          <FileDownload style={{verticalAlign: "bottom"}}/>
+          Download report of recently minted RAiDs
+        </Typography>
+      </MenuItem>
+    </Menu>
+  </>;
 }

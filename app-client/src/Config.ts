@@ -190,8 +190,8 @@ const demoConfig: EnvironmentConfig = {
   raidoLandingPage: "https://demo.raid.org.au",
   raidoApiSvc: "",
   aaf: {
-    clientId: "accaabfd-a7c8-4d36-9363-ea7342e24db5",
-    authorizeUrl: "https://central.test.aaf.edu.au/providers/op/authorize",
+    clientId: "205290b0-8bd6-4d53-8605-d0237636b235",
+    authorizeUrl: "https://central.aaf.edu.au/providers/op/authorize",
     authnScope: "openid email profile",
   },
   google: {
@@ -223,10 +223,10 @@ const demoConfig: EnvironmentConfig = {
 
 const prodConfig: EnvironmentConfig = {
   environmentName: "prod",
-  signInWarning: `Note that this service is not yet live and contains
-   no raid data.
-   All database and raid data will be reset before the production release.
-   `,
+  signInWarning: `ORCID users: note that uBlock Origin is currently blocking
+  ORCID sign-in scripts, which may prevent sign-in via ORCID.  
+  Please configure an exemption for the orcid.org domain if your ORCID sign-in 
+  is not working.`,
   isProd: true,
   raidoIssuer: "https://api.prod.raid.org.au",
   raidoLandingPage: "https://prod.raid.org.au",

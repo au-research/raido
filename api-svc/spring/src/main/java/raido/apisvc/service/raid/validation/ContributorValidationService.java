@@ -125,6 +125,8 @@ public class ContributorValidationService {
   ) {
     var failures = new ArrayList<ValidationFailure>();
 
+    //RLE: Check to see of roles is null
+
     roles.stream().collect(indexed()).forEach((i, iRole)->{
       if( iRole.getRoleSchemeUri() == null ){
         failures.add(new ValidationFailure().

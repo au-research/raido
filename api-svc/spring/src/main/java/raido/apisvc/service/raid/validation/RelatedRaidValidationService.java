@@ -1,9 +1,8 @@
 package raido.apisvc.service.raid.validation;
 
-import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
+import raido.apisvc.repository.RaidRepository;
+import raido.apisvc.repository.RelatedRaidTypeRepository;
 import raido.apisvc.spring.config.environment.MetadataProps;
 import raido.apisvc.util.Log;
 import raido.idl.raidv2.model.RelatedRaidBlock;
@@ -17,14 +16,15 @@ import static raido.apisvc.util.Log.to;
 @Component
 public class RelatedRaidValidationService {
   private static final Log log = to(RelatedRaidValidationService.class);
-  private static final String RELATIONSHIP_TYPE_URL_PREFIX =
-    "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/";
+  private static final String RELATED_RAID_TYPE_URL_SCHEME_URI =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type";
 
-  private final RestTemplate restTemplate;
+  private final RaidRepository raidRepository;
+  private final RelatedRaidTypeRepository relatedRaidTypeRepository;
   private final MetadataProps metadataProps;
-
-  public RelatedRaidValidationService(final RestTemplate restTemplate, final MetadataProps metadataProps) {
-    this.restTemplate = restTemplate;
+  public RelatedRaidValidationService(final RaidRepository raidRepository, final RelatedRaidTypeRepository relatedRaidTypeRepository, final MetadataProps metadataProps) {
+    this.raidRepository = raidRepository;
+    this.relatedRaidTypeRepository = relatedRaidTypeRepository;
     this.metadataProps = metadataProps;
   }
 
@@ -35,23 +35,22 @@ public class RelatedRaidValidationService {
       return failures;
     }
 
+    final var raidUrlPattern = String.format("^%s\\/\\d+\\.\\d+\\/\\d+$", metadataProps.handleUrlPrefix);
+    final var relatedRaidTypeUrlPattern = String.format("^%s\\/[a-z\\-]+.json$", RELATED_RAID_TYPE_URL_SCHEME_URI);
+
     for (int i = 0; i < relatedRaids.size(); i++) {
-      if (!relatedRaids.get(i).getRelatedRaid().startsWith(metadataProps.handleUrlPrefix)) {
+      final var raidUrl = relatedRaids.get(i).getRelatedRaid();
+
+      if (!raidUrl.matches(raidUrlPattern)) {
         failures.add(new ValidationFailure()
           .errorType("invalid")
           .fieldId(String.format("relatedRaids[%d].relatedRaid", i))
           .message("RelatedRaid is invalid.")
         );
-      }
-      else {
-        RequestEntity<Void> requestEntity =
-          RequestEntity.head(relatedRaids.get(i).getRelatedRaid()).build();
+      } else {
+        final var handle = raidUrl.substring(raidUrl.lastIndexOf("/", raidUrl.lastIndexOf("/") - 1) + 1);
 
-        try {
-          restTemplate.exchange(requestEntity, Void.class);
-        } catch (HttpClientErrorException e) {
-          log.warnEx("Raid not found", e);
-
+        if (raidRepository.findByHandle(handle).isEmpty()) {
           failures.add(new ValidationFailure()
             .errorType("invalid")
             .fieldId(String.format("relatedRaids[%d].relatedRaid", i))
@@ -60,22 +59,21 @@ public class RelatedRaidValidationService {
         }
       }
 
-      if (!relatedRaids.get(i).getRelatedRaidType().startsWith(RELATIONSHIP_TYPE_URL_PREFIX)) {
+      final var relatedRaidTypeUrl = relatedRaids.get(i).getRelatedRaidType();
+      if (relatedRaidTypeUrl == null) {
+        failures.add(new ValidationFailure()
+          .errorType("required")
+          .fieldId(String.format("relatedRaids[%d].relatedRaidType", i))
+          .message("RelatedRaidType is required.")
+        );
+      } else if (!relatedRaidTypeUrl.matches(relatedRaidTypeUrlPattern)) {
         failures.add(new ValidationFailure()
           .errorType("invalid")
           .fieldId(String.format("relatedRaids[%d].relatedRaidType", i))
           .message("RelatedRaidType is invalid.")
         );
-      }
-      else {
-        RequestEntity<Void> requestEntity =
-          RequestEntity.head(relatedRaids.get(i).getRelatedRaidType()).build();
-
-        try {
-          restTemplate.exchange(requestEntity, Void.class);
-        } catch (HttpClientErrorException e) {
-          log.warnEx("RelatedRaidType not found", e);
-
+      } else {
+        if (relatedRaidTypeRepository.findByUrl(relatedRaidTypeUrl).isEmpty()) {
           failures.add(new ValidationFailure()
             .errorType("invalid")
             .fieldId(String.format("relatedRaids[%d].relatedRaidType", i))
@@ -83,8 +81,22 @@ public class RelatedRaidValidationService {
           );
         }
       }
-    }
 
+      if (relatedRaids.get(i).getRelatedRaidTypeSchemeUri() == null) {
+        failures.add(new ValidationFailure()
+          .errorType("required")
+          .fieldId(String.format("relatedRaids[%d].relatedRaidTypeSchemeUri", i))
+          .message("Related Raid Type Scheme URI is required.")
+        );
+      }
+      else if (!relatedRaids.get(i).getRelatedRaidTypeSchemeUri().equals(RELATED_RAID_TYPE_URL_SCHEME_URI)) {
+        failures.add(new ValidationFailure()
+          .errorType("invalid")
+          .fieldId(String.format("relatedRaids[%d].relatedRaidTypeSchemeUri", i))
+          .message("Related Raid Type Scheme URI is invalid.")
+        );
+      }
+    }
     return failures;
   }
 }

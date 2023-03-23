@@ -66,3 +66,5 @@ export function RaidoTheme({children}: { children: ReactNode }){
     {children}
   </ThemeProvider>
 }
+
+export const toastDuration = 6000;

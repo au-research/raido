@@ -32,7 +32,7 @@ function Content(){
   return <SmallContentMain>
     <List>
       <ListItemText>
-        The RAiD application fully conforms to 
+        The RAiD Service fully conforms to 
         the <NewWindowLink href="https://ardc.edu.au/privacy-policy/">
         privacy policy</NewWindowLink> of the Australian Research Data 
         Commons (<NewWindowLink href="https://ardc.edu.au/">ARDC

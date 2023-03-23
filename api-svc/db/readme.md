@@ -36,7 +36,7 @@ Take the data migration process for the legacy V1 data as an example:
 Launch local Postgres instance in a docker container.
 
 ```
-docker rm --force raido-db; docker run --name raido-db -p 7432:5432 -d --restart unless-stopped -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD= -e POSTGRES_DB=raido postgres
+docker rm --force raido-db; docker run --name raido-db -p 7432:5432 -d --restart unless-stopped -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD= -e POSTGRES_DB=raido postgres:15.2
 ```
 
 * `raido-db` is the docker container name

@@ -73,14 +73,14 @@ public class Raid extends TableImpl<RaidRecord> {
      * `https://hdl.handle.net/123.456/789`) 
      *   will redirect to this value.
      */
-    public final TableField<RaidRecord, String> URL = createField(DSL.name("url"), SQLDataType.VARCHAR(512).nullable(false), this, "The value that we set as the `URL` property via ARDC APIDS.\r\n  Example: `https://demo.raido-infra.com/raid/123.456/789`. \r\n  The global handle regisrty url (e.g. `https://hdl.handle.net/123.456/789`) \r\n  will redirect to this value.");
+    public final TableField<RaidRecord, String> URL = createField(DSL.name("url"), SQLDataType.VARCHAR(512).nullable(false), this, "The value that we set as the `URL` property via ARDC APIDS.\n  Example: `https://demo.raido-infra.com/raid/123.456/789`. \n  The global handle regisrty url (e.g. `https://hdl.handle.net/123.456/789`) \n  will redirect to this value.");
 
     /**
      * The column <code>api_svc.raid.url_index</code>. The `index` of the URL
      * property in APIDS. This can be different if we change
      *   how we mint URL values via APIDS.
      */
-    public final TableField<RaidRecord, Integer> URL_INDEX = createField(DSL.name("url_index"), SQLDataType.INTEGER.nullable(false), this, "The `index` of the URL property in APIDS. This can be different if we change\r\n  how we mint URL values via APIDS.");
+    public final TableField<RaidRecord, Integer> URL_INDEX = createField(DSL.name("url_index"), SQLDataType.INTEGER.nullable(false), this, "The `index` of the URL property in APIDS. This can be different if we change\n  how we mint URL values via APIDS.");
 
     /**
      * The column <code>api_svc.raid.primary_title</code>.
@@ -106,12 +106,12 @@ public class Raid extends TableImpl<RaidRecord> {
     /**
      * The column <code>api_svc.raid.start_date</code>.
      */
-    public final TableField<RaidRecord, LocalDate> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATE.nullable(false).defaultValue(DSL.field("transaction_timestamp()", SQLDataType.LOCALDATE)), this, "");
+    public final TableField<RaidRecord, LocalDate> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATE.nullable(false).defaultValue(DSL.field(DSL.raw("transaction_timestamp()"), SQLDataType.LOCALDATE)), this, "");
 
     /**
      * The column <code>api_svc.raid.date_created</code>.
      */
-    public final TableField<RaidRecord, LocalDateTime> DATE_CREATED = createField(DSL.name("date_created"), SQLDataType.LOCALDATETIME(6).nullable(false).defaultValue(DSL.field("transaction_timestamp()", SQLDataType.LOCALDATETIME)), this, "");
+    public final TableField<RaidRecord, LocalDateTime> DATE_CREATED = createField(DSL.name("date_created"), SQLDataType.LOCALDATETIME(6).nullable(false).defaultValue(DSL.field(DSL.raw("transaction_timestamp()"), SQLDataType.LOCALDATETIME)), this, "");
 
     private Raid(Name alias, Table<RaidRecord> aliased) {
         this(alias, aliased, null);
