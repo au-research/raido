@@ -166,6 +166,13 @@ https://cloudkatha.com/too-many-requests-you-reached-pull-rate-limit/
 Reckon the easiest would be to make another codebuild project whose job it
 is to push the image to our ECR.
 
+## Get rid of old api-svc/docker stuff
+
+We're not pulling back from ECS at this point.
+Rename the Ecs.Dockerfile to just Docker file and clean up old 
+"container-on-instance" support scripts.
+
+
 # AWS / Infra
 
 AWS tech debt is documented in that repo, don't put it here.
