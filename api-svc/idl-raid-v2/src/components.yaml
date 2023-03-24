@@ -37,6 +37,9 @@ components:
         relatedRaids:
           type: array
           items: { $ref: 'metadata-block.yaml#/components/schemas/RelatedRaidBlock' }
+        relatedObjects:
+          type: array
+          items: { $ref: 'metadata-block.yaml#/components/schemas/RelatedObjectBlock' }
 
     ErrorResponse:
       type: object

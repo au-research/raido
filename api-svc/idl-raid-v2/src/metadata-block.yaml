@@ -108,9 +108,9 @@ components:
       type: object
       properties:
         relatedObject: { type: string }
-        relatedObjectSchemeURI: { type: string }
+        relatedObjectSchemeUri: { type: string }
         relatedObjectType: { type: string }
-        relatedObjectTypeSchemeURI: { type: string }
+        relatedObjectTypeSchemeUri: { type: string }
         relatedObjectCategory: { type: string }
     TitleType:
       type: string

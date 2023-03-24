@@ -391,7 +391,7 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
           <Select
             labelId="relatedRaidTypeLabel"
             id="relatedRaidTypeSelect"
-            value={formData.relatedRaidType}
+            value={formData.relatedRaidType || ''}
             label={relatedRaidTypeProblem ?  "Related Raid type - " + relatedRaidTypeProblem : "Related Raid type"}
             error={!!relatedRaidTypeProblem}
             onChange={(event: SelectChangeEvent) => {

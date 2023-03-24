@@ -31,6 +31,8 @@ public class RaidoSchemaV1ValidationService {
   private final SubjectValidationService subjectSvc;
   private final RelatedRaidValidationService relatedRaidSvc;
   private final IdentifierParser handleParser;
+
+  private final RelatedObjectValidationService relatedObjectSvc;
   
   public RaidoSchemaV1ValidationService(
     final TitleValidationService titleSvc,
@@ -39,8 +41,8 @@ public class RaidoSchemaV1ValidationService {
     final OrganisationValidationService orgSvc,
     final SubjectValidationService subjectSvc,
     final RelatedRaidValidationService relatedRaidSvc,
-    final IdentifierParser handleParser
-  ) {
+    final IdentifierParser handleParser,
+    final RelatedObjectValidationService relatedObjectSvc) {
     this.titleSvc = titleSvc;
     this.descSvc = descSvc;
     this.contribSvc = contribSvc;
@@ -48,6 +50,7 @@ public class RaidoSchemaV1ValidationService {
     this.subjectSvc = subjectSvc;
     this.relatedRaidSvc = relatedRaidSvc;
     this.handleParser = handleParser;
+    this.relatedObjectSvc = relatedObjectSvc;
   }
 
   /**
@@ -74,6 +77,7 @@ public class RaidoSchemaV1ValidationService {
     failures.addAll(orgSvc.validateOrganisations(metadata.getOrganisations()));
     failures.addAll(subjectSvc.validateSubjects(metadata.getSubjects()));
     failures.addAll(relatedRaidSvc.validateRelatedRaids(metadata.getRelatedRaids()));
+    failures.addAll(relatedObjectSvc.validateRelatedObjects(metadata.getRelatedObjects()));
 
     return failures;
   }
