@@ -8,6 +8,7 @@ include ":api-svc:db"
 include ":api-svc:db:shared"
 include ":api-svc:db:raido"
 include ":api-svc:db:v1-ddb-migration"
+include ":api-svc:db:restore-raido-db"
 include ":app-client"
 
 dependencyResolutionManagement{
