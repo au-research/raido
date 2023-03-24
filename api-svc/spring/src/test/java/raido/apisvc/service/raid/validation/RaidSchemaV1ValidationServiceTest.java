@@ -29,6 +29,9 @@ class RaidSchemaV1ValidationServiceTest {
   @Mock
   private RelatedRaidValidationService relatedRaidValidationService;
 
+  @Mock
+  private RelatedObjectValidationService relatedObjectValidationService;
+
   @InjectMocks
   private RaidSchemaV1ValidationService validationService;
 
@@ -66,6 +69,15 @@ class RaidSchemaV1ValidationServiceTest {
   }
 
   @Test
+  void validatesRelatedObjectsOnCreate() {
+    final var relatedObjects = Collections.singletonList(new RelatedObjectBlock());
+    final var raid = new CreateRaidV1Request().relatedObjects(relatedObjects);
+
+    validationService.validateForCreate(raid);
+    verify(relatedObjectValidationService).validateRelatedObjects(relatedObjects);
+  }
+
+  @Test
   void validatesRelatedRaidsOnUpdate() {
     final var handle = "test-handle";
     final var relatedRaids = Collections.singletonList(new RelatedRaidBlock());
@@ -76,6 +88,19 @@ class RaidSchemaV1ValidationServiceTest {
 
     validationService.validateForUpdate(handle, raid);
     verify(relatedRaidValidationService).validateRelatedRaids(relatedRaids);
+  }
+
+  @Test
+  void validatesRelatedObjectsOnUpdate() {
+    final var handle = "test-handle";
+    final var relatedObjects = Collections.singletonList(new RelatedObjectBlock());
+
+    final var raid = new UpdateRaidV1Request()
+      .id(new IdBlock())
+      .relatedObjects(relatedObjects);
+
+    validationService.validateForUpdate(handle, raid);
+    verify(relatedObjectValidationService).validateRelatedObjects(relatedObjects);
   }
 
 }

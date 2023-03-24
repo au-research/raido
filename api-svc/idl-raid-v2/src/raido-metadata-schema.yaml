@@ -203,6 +203,9 @@ components:
         relatedRaids:
           type: array
           items: {$ref: 'metadata-block.yaml#/components/schemas/RelatedRaidBlock'}
+        relatedObjects:
+          type: array
+          items: {$ref: 'metadata-block.yaml#/components/schemas/RelatedObjectBlock'}
     LegacyMetadataSchemaV1:
       description: >
         This type is used for raid data imported from the legacy raid system 

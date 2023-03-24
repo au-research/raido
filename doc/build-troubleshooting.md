@@ -106,3 +106,13 @@ The fix is to add the Corretto 17 `uses` setup block to the CI build spec.
           - Variant 'apiElements' capability nu.studer:gradle-jooq-plugin:8.1 declares a library, packaged as a jar, and its dependencies declared externally:
               - Incompatible because this component declares an API of a component compatible with Java 17 and the consumer needed a runtime of a component compatible with Java 11
 ```
+
+# Can't sign-in locally, api-svc says "redirectUri not in allowed list - redirectUri=http://192.168.20.10:7080/"
+
+This can happen because if you click the wrong url in the app-client node.js 
+start-up message.  You want to use the "localhost" url, not the ip address.
+
+The reason it doesn't work is because your ip address is not in the 
+allowed redirectUri list on the OAuth2 client config (i.e. in Google, AAF 
+or ORCID).  Given that your ip addresses are generally ephemeral, we're not
+going to be adding them to allowed redirect urls - just use localhost.
