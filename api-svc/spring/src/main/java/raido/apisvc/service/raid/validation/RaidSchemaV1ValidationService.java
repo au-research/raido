@@ -28,6 +28,8 @@ public class RaidSchemaV1ValidationService {
   private final SubjectValidationService subjectSvc;
   private final IdentifierParser idParser;
 
+  private final RelatedObjectValidationService relatedObjectSvc;
+
   private final RelatedRaidValidationService relatedRaidSvc;
   public RaidSchemaV1ValidationService(
     final TitleValidationService titleSvc,
@@ -36,14 +38,15 @@ public class RaidSchemaV1ValidationService {
     final OrganisationValidationService orgSvc,
     final SubjectValidationService subjectSvc,
     final IdentifierParser idParser,
-    final RelatedRaidValidationService relatedRaidSvc) {
+    final RelatedObjectValidationService relatedObjectSvc, final RelatedRaidValidationService relatedRaidSvc) {
       this.titleSvc = titleSvc;
       this.descSvc = descSvc;
       this.contribSvc = contribSvc;
       this.orgSvc = orgSvc;
       this.subjectSvc = subjectSvc;
       this.idParser = idParser;
-      this.relatedRaidSvc = relatedRaidSvc;
+    this.relatedObjectSvc = relatedObjectSvc;
+    this.relatedRaidSvc = relatedRaidSvc;
   }
 
   private List<ValidationFailure> validateUpdateHandle(final String decodedHandleFromPath, final IdBlock updateIdBlock) {
@@ -156,6 +159,7 @@ public class RaidSchemaV1ValidationService {
     failures.addAll(orgSvc.validateOrganisations(request.getOrganisations()));
     failures.addAll(subjectSvc.validateSubjects(request.getSubjects()));
     failures.addAll(relatedRaidSvc.validateRelatedRaids(request.getRelatedRaids()));
+    failures.addAll(relatedObjectSvc.validateRelatedObjects(request.getRelatedObjects()));
 
     return failures;
   }
@@ -182,6 +186,7 @@ public class RaidSchemaV1ValidationService {
     failures.addAll(orgSvc.validateOrganisations(request.getOrganisations()));
     failures.addAll(subjectSvc.validateSubjects(request.getSubjects()));
     failures.addAll(relatedRaidSvc.validateRelatedRaids(request.getRelatedRaids()));
+    failures.addAll(relatedObjectSvc.validateRelatedObjects(request.getRelatedObjects()));
 
     return failures;
   }
