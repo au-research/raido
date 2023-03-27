@@ -267,5 +267,12 @@ public class DataSourceProps
       return Optional.ofNullable(defaultDriver);
     }
   }
-  
+
+  public String getUrl() {
+    return url;
+  }
+
+  public String getUsername() {
+    return username;
+  }
 }
