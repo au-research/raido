@@ -60,6 +60,9 @@ and suppressing various startup logs.
    good, doesn't show you what actually goes across the wire. -->
   <logger name="org.springframework.http.HttpLogging" level="info"/>
 
+  <!-- Not sure when this started happening in local dev, but it's annoying -->
+  <logger name="okhttp3" level="info"/>
+
   <!-- from our custom P6SpyLogger, configured in spy.props. 
   Generally only useful in local dev, don't want it on in deployments because
   it will flood the logging. -->
