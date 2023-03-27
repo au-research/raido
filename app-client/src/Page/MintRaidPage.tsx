@@ -15,7 +15,7 @@ import {
   AccessType, ContributorBlock,
   DescriptionBlock,
   OrganisationBlock,
-  RaidoMetadataSchemaV1, RelatedRaidBlock, SubjectBlock,
+  RaidoMetadataSchemaV1, RelatedObjectBlock, RelatedRaidBlock, SubjectBlock,
   ValidationFailure
 } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
@@ -93,12 +93,15 @@ type FormData = Readonly<{
   subject: string,
   relatedRaid: string,
   relatedRaidType: string,
+  relatedObject: string,
+  relatedObjectType: string,
+  relatedObjectCategory: string,
 }>;
 type ValidFormData = WithRequired<FormData, 'startDate'>;
 
 function mapFormDataToMetadata(
   form: ValidFormData 
-): { metadataSchema: string; access: { accessStatement: string; type: "Closed" | "Open" }; organisations: OrganisationBlock[]; subjects: SubjectBlock[]; dates: { startDate: Date }; titles: { title: string; type: string; startDate: Date }[]; contributors: ContributorBlock[]; descriptions: DescriptionBlock[]; relatedRaids: RelatedRaidBlock[]; }{
+): { metadataSchema: string; access: { accessStatement: string; type: "Closed" | "Open" }; organisations: OrganisationBlock[]; subjects: SubjectBlock[]; dates: { startDate: Date }; titles: { title: string; type: string; startDate: Date }[]; contributors: ContributorBlock[]; descriptions: DescriptionBlock[]; relatedRaids: RelatedRaidBlock[]; relatedObjects: RelatedObjectBlock[]; }{
   const descriptions: DescriptionBlock[] = [];
   if( form.primaryDescription ){
     descriptions.push({
@@ -128,6 +131,17 @@ function mapFormDataToMetadata(
     })
   }
 
+  const relatedObjects: RelatedObjectBlock[] = []
+  if (form.relatedObject) {
+    relatedObjects.push({
+      relatedObject: form.relatedObject,
+      relatedObjectSchemeUri: "https://doi.org/",
+      relatedObjectType: form.relatedObjectType,
+      relatedObjectTypeSchemeUri: "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/related-object-type/",
+      relatedObjectCategory: form.relatedObjectCategory,
+    })
+  }
+
   return {
     metadataSchema: "RaidoMetadataSchemaV1",
     access: {
@@ -149,6 +163,7 @@ function mapFormDataToMetadata(
     organisations,
     subjects,
     relatedRaids,
+    relatedObjects,
   };
 }
 
@@ -200,10 +215,16 @@ function MintRaidContainer({servicePointId, onCreate}: {
   const subjectProblem = findSubjectProblem(formData.subject);
   const relatedRaidProblem = findRelatedRaidProblem(formData.relatedRaid, formData.relatedRaidType);
   const relatedRaidTypeProblem = findRelatedRaidTypeProblem(formData.relatedRaidType, formData.relatedRaid);
+  const relatedObjectProblem =
+    findRelatedObjectProblem(formData.relatedObject, formData.relatedObjectType, formData.relatedObjectCategory);
+  const relatedObjectTypeProblem =
+    findRelatedObjectTypeProblem(formData.relatedObject, formData.relatedObjectType, formData.relatedObjectCategory);
+  const relatedObjectCategoryProblem =
+    findRelatedObjectCategoryProblem(formData.relatedObject, formData.relatedObjectType, formData.relatedObjectCategory);
 
   const canSubmit = isTitleValid && isStartDateValid &&
     isAccessStatementValid && !contribProblem && !leadOrganisationProblem && !subjectProblem && !relatedRaidProblem &&
-    !relatedRaidTypeProblem;
+    !relatedRaidTypeProblem && !relatedObjectProblem && !relatedObjectTypeProblem && !relatedObjectCategoryProblem;
   const isWorking = mintRequest.isLoading;
   
   return <ContainerCard title={"Mint RAiD"} action={<MintRaidHelp/>}>
@@ -279,7 +300,6 @@ function MintRaidContainer({servicePointId, onCreate}: {
               // maybe a type guard would be better? 
               const accessType = event.target.value === "Open" ? 
                 AccessType.Open : AccessType.Closed;
-              console.log("onChange", {accessType, event});
               setFormData({...formData, accessType});
             }}
           >
@@ -338,7 +358,6 @@ function MintRaidContainer({servicePointId, onCreate}: {
             onChange={(event: SelectChangeEvent) => {
               // maybe a type guard would be better?
               const relatedRaidType = event.target.value;
-              console.log("onChange", {relatedRaidType, event});
               setFormData({...formData, relatedRaidType});
 
             }}
@@ -355,6 +374,89 @@ function MintRaidContainer({servicePointId, onCreate}: {
             <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/obsoletes.json">Obsoletes</MenuItem>
           </Select>
         </FormControl>
+        <TextField id="relatedObject"
+                   variant="outlined" autoCorrect="off" autoCapitalize="off"
+                   disabled={isWorking}
+                   value={formData.relatedObject ?? ""}
+                   onChange={(e) => {
+                     setFormData({
+                       ...formData,
+                       relatedObject: e.target.value
+                     });
+                   }}
+                   label={ relatedObjectProblem ?
+                     "Related Object - " + relatedObjectProblem :
+                     "Related Object"}
+                   error={!!relatedObjectProblem}
+        />
+        <FormControl>
+          <InputLabel id="relatedObjectTypeLabel">{relatedObjectTypeProblem ?  "Related object type - " + relatedObjectTypeProblem : "Related object type"}</InputLabel>
+          <Select
+            labelId="relatedObjectTypeLabel"
+            id="relatedObjectTypeSelect"
+            value={formData.relatedObjectType || ''}
+            label={relatedObjectTypeProblem ?  "Related object type - " + relatedObjectTypeProblem : "Related object type"}
+            error={!!relatedObjectTypeProblem}
+            onChange={(event: SelectChangeEvent) => {
+              // maybe a type guard would be better?
+              const relatedObjectType = event.target.value;
+              setFormData({...formData, relatedObjectType});
+
+            }}
+          >
+            <MenuItem value=""></MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/audiovisual.json">Audiovisual</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book-chapter.json">Book Chapter</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book.json">Book</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/computational-notebook.json">Computational Notebook</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/conference-paper.json">Conference Paper</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/conference-poster.json">Conference Poster</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/conference-proceeding.json">Conference Proceeding</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/data-paper.json">Data Paper</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/dataset.json">Dataset</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/dissertation.json">Dissertation</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/educational-material.json">Educational Material</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/event.json">Event</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/funding.json">Funding</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/image.json">Image</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/instrument.json">Instrument</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/journal-article.json">Journal Article</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/model.json">Model</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/output-management-plan.json">Output Management Plan</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/physical-object.json">Physical Object</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/preprint.json">Preprint</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/prize.json">Prize</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/report.json">Report</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/service.json">Service</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/software.json">Software</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/sound.json">Sound</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/standard.json">Standard</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/text.json">Text</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/workflow.json">Workflow</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl>
+          <InputLabel id="relatedObjectCategoryLabel">{relatedObjectCategoryProblem ?  "Related object category - " + relatedObjectCategoryProblem : "Related object category"}</InputLabel>
+          <Select
+            labelId="relatedObjectCategoryLabel"
+            id="relatedObjectCategorySelect"
+            value={formData.relatedObjectCategory || ''}
+            label={relatedObjectCategoryProblem ?  "Related object category - " + relatedObjectCategoryProblem : "Related object category"}
+            error={!!relatedObjectCategoryProblem}
+            onChange={(event: SelectChangeEvent) => {
+              // maybe a type guard would be better?
+              const relatedObjectCategory = event.target.value;
+              setFormData({...formData, relatedObjectCategory});
+
+            }}
+          >
+            <MenuItem value=""></MenuItem>
+            <MenuItem value="Input">Input</MenuItem>
+            <MenuItem value="Output">Output</MenuItem>
+            <MenuItem value="Internal process document or artefact">Internal process document or artefact</MenuItem>
+          </Select>
+        </FormControl>
+
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton onClick={navBrowserBack}
             disabled={isWorking}>
@@ -428,6 +530,23 @@ export function findRelatedRaidProblem(relatedRaid: string, relatedRaidType: str
 
 export function findRelatedRaidTypeProblem(relatedRaidType: string, relatedRaid: string) {
   return (!relatedRaid ? true : !!relatedRaidType) ? undefined : "must be set";
+}
+
+export function findRelatedObjectProblem(relatedObject: string, relatedObjectType: string, relatedObjectCategory: string) {
+  if (!relatedObject) {
+    return (relatedObjectType || relatedObjectCategory) ? "must be set" : undefined;
+  }
+  else {
+    return relatedObject.match((/^http[s]?:\/\/doi.org\/10\./)) ? undefined : "identifier is invalid";
+  }
+}
+
+export function findRelatedObjectTypeProblem(relatedObject: string, relatedObjectType: string, relatedObjectCategory: string) {
+  return (!(relatedObject || relatedObjectCategory) ? true : !!relatedObjectType) ? undefined : "must be set";
+}
+
+export function findRelatedObjectCategoryProblem(relatedObject: string, relatedObjectType: string, relatedObjectCategory: string) {
+  return (!(relatedObject || relatedObjectType) ? true : !!relatedObjectCategory) ? undefined : "must be set";
 }
 
 export function MintRaidHelp(){

@@ -37,7 +37,7 @@ public class RelatedObjectValidationService {
       .forEach(i -> {
         final var relatedObject = relatedObjects.get(i);
 
-        final var relatedObjectPattern = String.format("^%s10\\.[0-9]+\\/[0-9]+", RELATED_OBJECT_SCHEME_URI);
+        final var relatedObjectPattern = "^http[s]?://doi.org/10\\..*";
         final var relatedObjectTypePattern =
           String.format("^%s[a-z\\-]+\\.json$", RELATED_OBJECT_TYPE_URL_PREFIX);
 

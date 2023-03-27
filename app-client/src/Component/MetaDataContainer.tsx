@@ -9,7 +9,7 @@ import {
   LegacyMetadataSchemaV1FromJSON, OrganisationBlock, PublicRaidMetadataSchemaV1,
   RaidoMetadataSchemaV1,
   RaidoMetadataSchemaV1FromJSON,
-  RaidoMetaschema, RelatedRaidBlock, SubjectBlock,
+  RaidoMetaschema, RelatedObjectBlock, RelatedRaidBlock, SubjectBlock,
   TitleBlock
 } from "Generated/Raidv2";
 
@@ -113,5 +113,13 @@ export function getFirstRelatedRaid(
 ): undefined | RelatedRaidBlock {
   if (metadata.relatedRaids?.length) {
     return metadata.relatedRaids[0]
+  }
+}
+
+export function getFirstRelatedObject(
+  metadata: RaidoMetadataSchemaV1
+): undefined | RelatedObjectBlock {
+  if (metadata.relatedObjects?.length) {
+    return metadata.relatedObjects[0]
   }
 }

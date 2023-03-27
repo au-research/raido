@@ -185,7 +185,7 @@ class RelatedObjectValidationServiceTest {
       "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book-chapter.json";
 
     final var relatedObject = new RelatedObjectBlock()
-      .relatedObject("https://doi.org/10.abc/00000")
+      .relatedObject("https://doi.org/99.abc/00000")
       .relatedObjectSchemeUri("https://doi.org/")
       .relatedObjectType(relatedObjectType)
       .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/related-object-type/")
