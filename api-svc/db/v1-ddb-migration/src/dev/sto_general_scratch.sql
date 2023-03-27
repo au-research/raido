@@ -1,3 +1,8 @@
+SELECT indexname FROM pg_indexes
+WHERE tablename = 'app_user' AND schemaname = 'api_svc' AND indexdef LIKE '%UNIQUE%'
+;
+
+
 select * 
 from app_user
 where 

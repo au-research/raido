@@ -9,7 +9,8 @@ ENV PG_PORT="7432"
 ENV PG_ADMIN_USER="postgres"
 ENV PG_ADMIN_PASSWORD=""
 
-ENV RAIDO_DB_NAME="raido_test"
+#ENV RAIDO_DB_NAME="raido_test"
+ENV RAIDO_DB_NAME="raido"
 
 # can't change these because the restore expects to match
 ENV API_USER_NAME="api_user"
@@ -24,9 +25,10 @@ WORKDIR /raido-db-restore
 COPY . .
 
 RUN chmod +x raido-db-restore.sh
+RUN chmod +x raido-db-restore-keep-users.sh
 
 
-ENTRYPOINT ["./raido-db-restore.sh"]
+CMD ["./raido-db-restore.sh"]
 #CMD ["ls", "-la"]
 
 
