@@ -17,3 +17,10 @@ _2023-03-15_
 
 Initial production deployment.
 
+# 1.1
+
+_TBD_
+
+* Addition of Subjects field to metadata
+* Addition of Related Raids to metadata
+

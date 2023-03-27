@@ -5,7 +5,7 @@ import {
   DescriptionBlock,
   OrganisationBlock,
   RaidoMetadataSchemaV1,
-  ReadRaidResponseV2, RelatedRaidBlock, SubjectBlock,
+  ReadRaidResponseV2, RelatedObjectBlock, RelatedRaidBlock, SubjectBlock,
   ValidationFailure
 } from "Generated/Raidv2";
 import { assert, WithRequired } from "Util/TypeUtil";
@@ -29,14 +29,14 @@ import { navBrowserBack } from "Util/WindowUtil";
 import { ValidationFailureDisplay } from "Component/Util";
 import {
   getFirstLeader,
-  getFirstPrimaryDescription, getFirstRelatedRaid, getFirstSubject,
+  getFirstPrimaryDescription, getFirstRelatedObject, getFirstRelatedRaid, getFirstSubject,
   getLeadOrganisation,
   getPrimaryTitle
 } from "Component/MetaDataContainer";
 import React, { useState } from "react";
 import { useAuthApi } from "Api/AuthApi";
 import {
-  findOrganisationIdProblem,
+  findOrganisationIdProblem, findRelatedObjectCategoryProblem, findRelatedObjectProblem, findRelatedObjectTypeProblem,
   findRelatedRaidProblem,
   findRelatedRaidTypeProblem,
   findSubjectProblem
@@ -56,7 +56,10 @@ function isDifferent(formData: FormData, original: FormData){
     formData.accessStatement !== original.accessStatement ||
     formData.subject !== original.subject ||
     formData.relatedRaid !== original.relatedRaid ||
-    formData.relatedRaidType !== original.relatedRaidType;
+    formData.relatedRaidType !== original.relatedRaidType ||
+    formData.relatedObject !== original.relatedObject ||
+    formData.relatedObjectType !== original.relatedObjectType ||
+    formData.relatedObjectCategory !== original.relatedObjectCategory;
 }
 
 type FormData = Readonly<{
@@ -71,6 +74,9 @@ type FormData = Readonly<{
   subject: string,
   relatedRaid: string,
   relatedRaidType: string,
+  relatedObject: string,
+  relatedObjectType: string,
+  relatedObjectCategory: string,
 }>;
 type ValidFormData = WithRequired<FormData, 'startDate'>;
 
@@ -90,6 +96,9 @@ function mapReadQueryDataToFormData(
     subject: getFirstSubject(metadata)?.subject ?? "",
     relatedRaid: getFirstRelatedRaid(metadata)?.relatedRaid ?? "",
     relatedRaidType: getFirstRelatedRaid(metadata)?.relatedRaidType ?? "",
+    relatedObject: getFirstRelatedObject(metadata)?.relatedObject ?? "",
+    relatedObjectType: getFirstRelatedObject(metadata)?.relatedObjectType ?? "",
+    relatedObjectCategory: getFirstRelatedObject(metadata)?.relatedObjectCategory ?? "",
   }
 }
 
@@ -132,6 +141,9 @@ export function findMetadataUpdateProblems(
     problems.push("The metadata contains multiple related raids.");
   }
 
+  if( metadata.relatedObjects && metadata.relatedObjects.length > 1 ){
+    problems.push("The metadata contains multiple related objects.");
+  }
   return problems
 }
 
@@ -189,6 +201,17 @@ function createUpdateMetadata(
     })
   }
 
+  const newRelatedObjects: RelatedObjectBlock[] = []
+  if (formData.relatedObject) {
+    newRelatedObjects.push({
+      relatedObject: formData.relatedObject,
+      relatedObjectSchemeUri: "https://doi.org/",
+      relatedObjectType: formData.relatedObjectType,
+      relatedObjectTypeSchemeUri: "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/related-object-type/",
+      relatedObjectCategory: formData.relatedObjectCategory,
+    })
+  }
+
   /* make sure to update findMetadataUpdateProblems() to detect complicated
   scenarios where this logic would stomp complicated raid data. */
   return {
@@ -210,6 +233,7 @@ function createUpdateMetadata(
     },
     subjects: newSubjects,
     relatedRaids: newRelatedRaids,
+    relatedObjects: newRelatedObjects,
   };
 }
 
@@ -257,6 +281,12 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
   const subjectProblem = findSubjectProblem(formData.subject);
   const relatedRaidProblem = findRelatedRaidProblem(formData.relatedRaid, formData.relatedRaidType);
   const relatedRaidTypeProblem = findRelatedRaidTypeProblem(formData.relatedRaidType, formData.relatedRaid);
+  const relatedObjectProblem =
+    findRelatedObjectProblem(formData.relatedObject, formData.relatedObjectType, formData.relatedObjectCategory);
+  const relatedObjectTypeProblem =
+    findRelatedObjectTypeProblem(formData.relatedObject, formData.relatedObjectType, formData.relatedObjectCategory);
+  const relatedObjectCategoryProblem =
+    findRelatedObjectCategoryProblem(formData.relatedObject, formData.relatedObjectType, formData.relatedObjectCategory);
 
   const canSubmit = isTitleValid && isAccessStatementValid && 
     isStartDateValid && !contribProblem && 
@@ -387,7 +417,7 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
                    error={!!relatedRaidProblem}
         />
         <FormControl>
-          <InputLabel id="relatedRaidTypeLabel">{relatedRaidTypeProblem ?  "Related Raid type - " + relatedRaidTypeProblem : "Related Raid type"}</InputLabel>
+          <InputLabel id="relatedRaidTypeLabel">{relatedRaidTypeProblem ?  "Related object - " + relatedRaidTypeProblem : "Related object"}</InputLabel>
           <Select
             labelId="relatedRaidTypeLabel"
             id="relatedRaidTypeSelect"
@@ -413,6 +443,89 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
             <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/obsoletes.json">Obsoletes</MenuItem>
           </Select>
         </FormControl>
+        <TextField id="relatedObject"
+                   variant="outlined" autoCorrect="off" autoCapitalize="off"
+                   disabled={isWorking}
+                   value={formData.relatedObject ?? ""}
+                   onChange={(e) => {
+                     setFormData({
+                       ...formData,
+                       relatedObject: e.target.value
+                     });
+                   }}
+                   label={ relatedObjectProblem ?
+                     "Related object - " + relatedObjectProblem :
+                     "Related object"}
+                   error={!!relatedObjectProblem}
+        />
+
+        <FormControl>
+          <InputLabel id="relatedObjectTypeLabel">{relatedObjectTypeProblem ?  "Related object type - " + relatedObjectTypeProblem : "Related object type"}</InputLabel>
+          <Select
+            labelId="relatedObjectTypeLabel"
+            id="relatedObjectTypeSelect"
+            value={formData.relatedObjectType || ''}
+            label={relatedObjectTypeProblem ?  "Related object type - " + relatedObjectTypeProblem : "Related object type"}
+            error={!!relatedObjectTypeProblem}
+            onChange={(event: SelectChangeEvent) => {
+              // maybe a type guard would be better?
+              const relatedObjectType = event.target.value;
+              setFormData({...formData, relatedObjectType});
+
+            }}
+          >
+            <MenuItem value=""></MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/audiovisual.json">Audiovisual</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book-chapter.json">Book Chapter</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book.json">Book</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/computational-notebook.json">Computational Notebook</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/conference-paper.json">Conference Paper</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/conference-poster.json">Conference Poster</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/conference-proceeding.json">Conference Proceeding</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/data-paper.json">Data Paper</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/dataset.json">Dataset</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/dissertation.json">Dissertation</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/educational-material.json">Educational Material</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/event.json">Event</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/funding.json">Funding</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/image.json">Image</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/instrument.json">Instrument</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/journal-article.json">Journal Article</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/model.json">Model</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/output-management-plan.json">Output Management Plan</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/physical-object.json">Physical Object</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/preprint.json">Preprint</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/prize.json">Prize</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/report.json">Report</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/service.json">Service</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/software.json">Software</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/sound.json">Sound</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/standard.json">Standard</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/text.json">Text</MenuItem>
+            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/workflow.json">Workflow</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl>
+          <InputLabel id="relatedObjectCategoryLabel">{relatedObjectCategoryProblem ?  "Related object category - " + relatedObjectCategoryProblem : "Related object category"}</InputLabel>
+          <Select
+            labelId="relatedObjectCategoryLabel"
+            id="relatedObjectCategorySelect"
+            value={formData.relatedObjectCategory || ''}
+            label={relatedObjectCategoryProblem ?  "Related object category  - " + relatedObjectCategoryProblem : "Related object category"}
+            error={!!relatedObjectCategoryProblem}
+            onChange={(event: SelectChangeEvent) => {
+              // maybe a type guard would be better?
+              const relatedObjectCategory = event.target.value;
+              setFormData({...formData, relatedObjectCategory});
+            }}
+          >
+            <MenuItem value=""></MenuItem>
+            <MenuItem value="Input">Input</MenuItem>
+            <MenuItem value="Output">Output</MenuItem>
+            <MenuItem value="Internal process document or artefact">Internal process document or artefact</MenuItem>
+          </Select>
+        </FormControl>
+
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton type="button" onClick={(e) => {
             e.preventDefault();
