@@ -112,6 +112,11 @@ components:
         relatedObjectType: { type: string }
         relatedObjectTypeSchemeUri: { type: string }
         relatedObjectCategory: { type: string }
+    AlternateIdentifierBlock:
+      type: object
+      properties:
+        alternateIdentifier: { type: string }
+        alternateIdentifierType: { type: string }
     TitleType:
       type: string
       enum: ['Primary Title', 'Alternative Title']

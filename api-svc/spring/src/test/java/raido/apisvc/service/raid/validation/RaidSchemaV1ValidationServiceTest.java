@@ -32,6 +32,9 @@ class RaidSchemaV1ValidationServiceTest {
   @Mock
   private RelatedObjectValidationService relatedObjectValidationService;
 
+  @Mock
+  private AlternateIdentifierValidationService alternateIdentifierValidationService;
+
   @InjectMocks
   private RaidSchemaV1ValidationService validationService;
 
@@ -103,4 +106,29 @@ class RaidSchemaV1ValidationServiceTest {
     verify(relatedObjectValidationService).validateRelatedObjects(relatedObjects);
   }
 
+  @Test
+  void validatesAlternateIdentifiersOnCreate() {
+    final var handle = "test-handle";
+    final var alternateIdentifiers = Collections.singletonList(new AlternateIdentifierBlock());
+
+    final var raid = new CreateRaidV1Request()
+      .id(new IdBlock())
+      .alternateIdentifiers(alternateIdentifiers);
+
+    validationService.validateForCreate(raid);
+    verify(alternateIdentifierValidationService).validateAlternateIdentifiers(alternateIdentifiers);
+  }
+
+  @Test
+  void validatesAlternateIdentifiersOnUpdate() {
+    final var handle = "test-handle";
+    final var alternateIdentifiers = Collections.singletonList(new AlternateIdentifierBlock());
+
+    final var raid = new UpdateRaidV1Request()
+      .id(new IdBlock())
+      .alternateIdentifiers(alternateIdentifiers);
+
+    validationService.validateForUpdate(handle, raid);
+    verify(alternateIdentifierValidationService).validateAlternateIdentifiers(alternateIdentifiers);
+  }
 }
