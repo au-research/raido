@@ -61,23 +61,23 @@ Complete, except missing language fields.
 
 Complete, except missing language fields.
 
-## 8. RelatedObject - Not started
+## 8. RelatedObject - Complete
 
-Not started.
+Implemented for DOI. Does not validate object exists.
 
-## 9. AlternateIdentifier - Not started
+## 9. AlternateIdentifier - Complete
 
-Not started.
+Complete.
 
 ## 10. AlternateURL - Complete
 
 Complete.
 
-## 11. RelatedRaid - In progress
+## 11. RelatedRaid - Complete
 
-In progress.
+Complete. Needs extra validation for other Raid agencies.
 
-## 12. Subject - In progress
+## 12. Subject - Complete
 
 In progress.
 
