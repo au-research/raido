@@ -5,6 +5,8 @@ import org.gradle.api.DefaultTask;
 import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -13,8 +15,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public abstract class LoadSubjectsTask extends DefaultTask {
+  private static final Logger LOG = LoggerFactory.getLogger(LoadSubjectsTask.class);
   private static final String ID_KEY = "notation";
   private static final String NAME_KEY = "prefLabel";
   private static final String DESCRIPTION_KEY = "definition";
@@ -89,7 +94,12 @@ public abstract class LoadSubjectsTask extends DefaultTask {
         }
 
         final var query = String.format("insert into raido.api_svc.subject (" +
-          String.join(",", columns) + ") values (" + String.join(",", placeholders) + ")");
+          String.join(",", columns) + ") values (" + String.join(",", placeholders) + ")") +
+          " ON CONFLICT (id) DO UPDATE SET " + IntStream.range(1, columns.size())
+          .mapToObj(i -> String.format("%s = EXCLUDED.%s", columns.get(i), columns.get(i)))
+          .collect(Collectors.joining(", "));
+
+        LOG.error(query);
 
         final PreparedStatement statement;
         try {

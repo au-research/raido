@@ -40,6 +40,9 @@ components:
         relatedObjects:
           type: array
           items: { $ref: 'metadata-block.yaml#/components/schemas/RelatedObjectBlock' }
+        alternateIdentifiers:
+          type: array
+          items: { $ref: 'metadata-block.yaml#/components/schemas/AlternateIdentifierBlock' }
 
     ErrorResponse:
       type: object

@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import {
-  AccessType,
+  AccessType, AlternateIdentifierBlock,
   ContributorBlock,
   DescriptionBlock,
   OrganisationBlock,
@@ -28,6 +28,7 @@ import { PrimaryActionButton, SecondaryButton } from "Component/AppButton";
 import { navBrowserBack } from "Util/WindowUtil";
 import { ValidationFailureDisplay } from "Component/Util";
 import {
+  getFirstAlternateIdentifier,
   getFirstLeader,
   getFirstPrimaryDescription, getFirstRelatedObject, getFirstRelatedRaid, getFirstSubject,
   getLeadOrganisation,
@@ -36,6 +37,7 @@ import {
 import React, { useState } from "react";
 import { useAuthApi } from "Api/AuthApi";
 import {
+  findAlternateIdentifierProblem, findAlternateIdentifierTypeProblem,
   findOrganisationIdProblem, findRelatedObjectCategoryProblem, findRelatedObjectProblem, findRelatedObjectTypeProblem,
   findRelatedRaidProblem,
   findRelatedRaidTypeProblem,
@@ -59,7 +61,9 @@ function isDifferent(formData: FormData, original: FormData){
     formData.relatedRaidType !== original.relatedRaidType ||
     formData.relatedObject !== original.relatedObject ||
     formData.relatedObjectType !== original.relatedObjectType ||
-    formData.relatedObjectCategory !== original.relatedObjectCategory;
+    formData.relatedObjectCategory !== original.relatedObjectCategory ||
+    formData.alternateIdentifier !== original.alternateIdentifier ||
+    formData.alternateIdentifierType !== original.alternateIdentifierType;
 }
 
 type FormData = Readonly<{
@@ -77,6 +81,8 @@ type FormData = Readonly<{
   relatedObject: string,
   relatedObjectType: string,
   relatedObjectCategory: string,
+  alternateIdentifier: string,
+  alternateIdentifierType: string,
 }>;
 type ValidFormData = WithRequired<FormData, 'startDate'>;
 
@@ -99,6 +105,8 @@ function mapReadQueryDataToFormData(
     relatedObject: getFirstRelatedObject(metadata)?.relatedObject ?? "",
     relatedObjectType: getFirstRelatedObject(metadata)?.relatedObjectType ?? "",
     relatedObjectCategory: getFirstRelatedObject(metadata)?.relatedObjectCategory ?? "",
+    alternateIdentifier: getFirstAlternateIdentifier(metadata)?.alternateIdentifier ?? "",
+    alternateIdentifierType: getFirstAlternateIdentifier(metadata)?.alternateIdentifierType ?? "",
   }
 }
 
@@ -144,6 +152,11 @@ export function findMetadataUpdateProblems(
   if( metadata.relatedObjects && metadata.relatedObjects.length > 1 ){
     problems.push("The metadata contains multiple related objects.");
   }
+
+  if( metadata.alternateIdentifiers && metadata.alternateIdentifiers.length > 1 ){
+    problems.push("The metadata contains multiple alternate identifiers.");
+  }
+
   return problems
 }
 
@@ -196,7 +209,7 @@ function createUpdateMetadata(
   if (formData.relatedRaid) {
     newRelatedRaids.push({
       relatedRaid: formData.relatedRaid,
-      relatedRaidType: "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/continues.json",
+      relatedRaidType: formData.relatedRaidType,
       relatedRaidTypeSchemeUri: "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type",
     })
   }
@@ -209,6 +222,14 @@ function createUpdateMetadata(
       relatedObjectType: formData.relatedObjectType,
       relatedObjectTypeSchemeUri: "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/related-object-type/",
       relatedObjectCategory: formData.relatedObjectCategory,
+    })
+  }
+
+  const newAlternateIdentifiers: AlternateIdentifierBlock[] = []
+  if (formData.alternateIdentifier) {
+    newAlternateIdentifiers.push({
+      alternateIdentifier: formData.alternateIdentifier,
+      alternateIdentifierType: formData.alternateIdentifierType,
     })
   }
 
@@ -234,6 +255,7 @@ function createUpdateMetadata(
     subjects: newSubjects,
     relatedRaids: newRelatedRaids,
     relatedObjects: newRelatedObjects,
+    alternateIdentifiers: newAlternateIdentifiers,
   };
 }
 
@@ -287,10 +309,15 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
     findRelatedObjectTypeProblem(formData.relatedObject, formData.relatedObjectType, formData.relatedObjectCategory);
   const relatedObjectCategoryProblem =
     findRelatedObjectCategoryProblem(formData.relatedObject, formData.relatedObjectType, formData.relatedObjectCategory);
+  const alternateIdentifierProblem =
+    findAlternateIdentifierProblem(formData.alternateIdentifier, formData.alternateIdentifierType);
+  const alternateIdentifierTypeProblem =
+    findAlternateIdentifierTypeProblem(formData.alternateIdentifier, formData.alternateIdentifierType);
 
   const canSubmit = isTitleValid && isAccessStatementValid && 
     isStartDateValid && !contribProblem && 
-    !leadOrganisationProblem && !subjectProblem && !relatedRaidProblem && !relatedRaidTypeProblem && hasChanged;
+    !leadOrganisationProblem && !subjectProblem && !relatedRaidProblem && !relatedRaidTypeProblem &&
+    !alternateIdentifierProblem && !alternateIdentifierTypeProblem && hasChanged;
   const isWorking = updateRequest.isLoading;
 
   return <>
@@ -525,6 +552,38 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
             <MenuItem value="Internal process document or artefact">Internal process document or artefact</MenuItem>
           </Select>
         </FormControl>
+
+        <TextField id="alternateIdentifier"
+                   variant="outlined" autoCorrect="off" autoCapitalize="off"
+                   disabled={isWorking}
+                   value={formData.alternateIdentifier ?? ""}
+                   onChange={(e) => {
+                     setFormData({
+                       ...formData,
+                       alternateIdentifier: e.target.value
+                     });
+                   }}
+                   label={ alternateIdentifierProblem ?
+                     "Alternate Identifier - " + alternateIdentifierProblem :
+                     "Alternate Identifier"}
+                   error={!!alternateIdentifierProblem}
+        />
+
+        <TextField id="alternateIdentifierType"
+                   variant="outlined" autoCorrect="off" autoCapitalize="off"
+                   disabled={isWorking}
+                   value={formData.alternateIdentifierType ?? ""}
+                   onChange={(e) => {
+                     setFormData({
+                       ...formData,
+                       alternateIdentifierType: e.target.value
+                     });
+                   }}
+                   label={ alternateIdentifierTypeProblem ?
+                     "Alternate Identifier Type - " + alternateIdentifierTypeProblem :
+                     "Alternate Identifier Type"}
+                   error={!!alternateIdentifierTypeProblem}
+        />
 
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton type="button" onClick={(e) => {

@@ -1,6 +1,7 @@
 import React from "react";
 import { ContainerCard } from "Design/ContainerCard";
 import {
+  AlternateIdentifierBlock,
   ContributorBlock,
   DescriptionBlock,
   instanceOfLegacyMetadataSchemaV1,
@@ -121,5 +122,13 @@ export function getFirstRelatedObject(
 ): undefined | RelatedObjectBlock {
   if (metadata.relatedObjects?.length) {
     return metadata.relatedObjects[0]
+  }
+}
+
+export function getFirstAlternateIdentifier(
+  metadata: RaidoMetadataSchemaV1
+): undefined | AlternateIdentifierBlock {
+  if (metadata.alternateIdentifiers?.length) {
+    return metadata.alternateIdentifiers[0]
   }
 }

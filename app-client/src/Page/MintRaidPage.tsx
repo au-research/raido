@@ -12,7 +12,7 @@ import { ContainerCard } from "Design/ContainerCard";
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import {
-  AccessType, ContributorBlock,
+  AccessType, AlternateIdentifierBlock, ContributorBlock,
   DescriptionBlock,
   OrganisationBlock,
   RaidoMetadataSchemaV1, RelatedObjectBlock, RelatedRaidBlock, SubjectBlock,
@@ -96,12 +96,14 @@ type FormData = Readonly<{
   relatedObject: string,
   relatedObjectType: string,
   relatedObjectCategory: string,
+  alternateIdentifier: string,
+  alternateIdentifierType: string,
 }>;
 type ValidFormData = WithRequired<FormData, 'startDate'>;
 
 function mapFormDataToMetadata(
   form: ValidFormData 
-): { metadataSchema: string; access: { accessStatement: string; type: "Closed" | "Open" }; organisations: OrganisationBlock[]; subjects: SubjectBlock[]; dates: { startDate: Date }; titles: { title: string; type: string; startDate: Date }[]; contributors: ContributorBlock[]; descriptions: DescriptionBlock[]; relatedRaids: RelatedRaidBlock[]; relatedObjects: RelatedObjectBlock[]; }{
+): { metadataSchema: string; access: { accessStatement: string; type: "Closed" | "Open" }; organisations: OrganisationBlock[]; subjects: SubjectBlock[]; dates: { startDate: Date }; titles: { title: string; type: string; startDate: Date }[]; contributors: ContributorBlock[]; descriptions: DescriptionBlock[]; relatedRaids: RelatedRaidBlock[]; relatedObjects: RelatedObjectBlock[]; alternateIdentifiers: AlternateIdentifierBlock[]; }{
   const descriptions: DescriptionBlock[] = [];
   if( form.primaryDescription ){
     descriptions.push({
@@ -142,6 +144,14 @@ function mapFormDataToMetadata(
     })
   }
 
+  const alternateIdentifiers: AlternateIdentifierBlock[] = []
+  if (form.alternateIdentifier) {
+    alternateIdentifiers.push({
+      alternateIdentifier: form.alternateIdentifier,
+      alternateIdentifierType: form.alternateIdentifierType,
+    })
+  }
+
   return {
     metadataSchema: "RaidoMetadataSchemaV1",
     access: {
@@ -164,6 +174,7 @@ function mapFormDataToMetadata(
     subjects,
     relatedRaids,
     relatedObjects,
+    alternateIdentifiers,
   };
 }
 
@@ -221,10 +232,15 @@ function MintRaidContainer({servicePointId, onCreate}: {
     findRelatedObjectTypeProblem(formData.relatedObject, formData.relatedObjectType, formData.relatedObjectCategory);
   const relatedObjectCategoryProblem =
     findRelatedObjectCategoryProblem(formData.relatedObject, formData.relatedObjectType, formData.relatedObjectCategory);
+  const alternateIdentifierProblem =
+    findAlternateIdentifierProblem(formData.alternateIdentifier, formData.alternateIdentifierType);
+  const alternateIdentifierTypeProblem =
+    findAlternateIdentifierTypeProblem(formData.alternateIdentifier, formData.alternateIdentifierType);
 
   const canSubmit = isTitleValid && isStartDateValid &&
     isAccessStatementValid && !contribProblem && !leadOrganisationProblem && !subjectProblem && !relatedRaidProblem &&
-    !relatedRaidTypeProblem && !relatedObjectProblem && !relatedObjectTypeProblem && !relatedObjectCategoryProblem;
+    !relatedRaidTypeProblem && !relatedObjectProblem && !relatedObjectTypeProblem && !relatedObjectCategoryProblem &&
+    !alternateIdentifierProblem && !alternateIdentifierTypeProblem;
   const isWorking = mintRequest.isLoading;
   
   return <ContainerCard title={"Mint RAiD"} action={<MintRaidHelp/>}>
@@ -457,6 +473,40 @@ function MintRaidContainer({servicePointId, onCreate}: {
           </Select>
         </FormControl>
 
+
+        <TextField id="alternateIdentifier"
+                   variant="outlined" autoCorrect="off" autoCapitalize="off"
+                   disabled={isWorking}
+                   value={formData.alternateIdentifier ?? ""}
+                   onChange={(e) => {
+                     setFormData({
+                       ...formData,
+                       alternateIdentifier: e.target.value
+                     });
+                   }}
+                   label={ alternateIdentifierProblem ?
+                     "Alternate Identifier - " + alternateIdentifierProblem :
+                     "Alternate Identifier"}
+                   error={!!alternateIdentifierProblem}
+        />
+
+        <TextField id="alternateIdentifierType"
+                   variant="outlined" autoCorrect="off" autoCapitalize="off"
+                   disabled={isWorking}
+                   value={formData.alternateIdentifierType ?? ""}
+                   onChange={(e) => {
+                     setFormData({
+                       ...formData,
+                       alternateIdentifierType: e.target.value
+                     });
+                   }}
+                   label={ alternateIdentifierTypeProblem ?
+                     "Alternate Identifier Type - " + alternateIdentifierTypeProblem :
+                     "Alternate Identifier Type"}
+                   error={!!alternateIdentifierTypeProblem}
+        />
+
+
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton onClick={navBrowserBack}
             disabled={isWorking}>
@@ -547,6 +597,14 @@ export function findRelatedObjectTypeProblem(relatedObject: string, relatedObjec
 
 export function findRelatedObjectCategoryProblem(relatedObject: string, relatedObjectType: string, relatedObjectCategory: string) {
   return (!(relatedObject || relatedObjectType) ? true : !!relatedObjectCategory) ? undefined : "must be set";
+}
+
+export function findAlternateIdentifierProblem(alternateIdentifier: string, alternateIdentifierType: string) {
+  return (!alternateIdentifierType ? true : !!alternateIdentifier) ? undefined : "must be set";
+}
+
+export function findAlternateIdentifierTypeProblem(alternateIdentifier: string, alternateIdentifierType: string) {
+  return (!alternateIdentifier ? true : !!alternateIdentifierType) ? undefined : "must be set";
 }
 
 export function MintRaidHelp(){

@@ -30,6 +30,8 @@ public class RaidSchemaV1ValidationService {
 
   private final RelatedObjectValidationService relatedObjectSvc;
 
+  private final AlternateIdentifierValidationService alternateIdentifierSvc;
+
   private final RelatedRaidValidationService relatedRaidSvc;
   public RaidSchemaV1ValidationService(
     final TitleValidationService titleSvc,
@@ -38,7 +40,7 @@ public class RaidSchemaV1ValidationService {
     final OrganisationValidationService orgSvc,
     final SubjectValidationService subjectSvc,
     final IdentifierParser idParser,
-    final RelatedObjectValidationService relatedObjectSvc, final RelatedRaidValidationService relatedRaidSvc) {
+    final RelatedObjectValidationService relatedObjectSvc, final AlternateIdentifierValidationService alternateIdentifierSvc, final RelatedRaidValidationService relatedRaidSvc) {
       this.titleSvc = titleSvc;
       this.descSvc = descSvc;
       this.contribSvc = contribSvc;
@@ -46,6 +48,7 @@ public class RaidSchemaV1ValidationService {
       this.subjectSvc = subjectSvc;
       this.idParser = idParser;
     this.relatedObjectSvc = relatedObjectSvc;
+    this.alternateIdentifierSvc = alternateIdentifierSvc;
     this.relatedRaidSvc = relatedRaidSvc;
   }
 
@@ -160,6 +163,7 @@ public class RaidSchemaV1ValidationService {
     failures.addAll(subjectSvc.validateSubjects(request.getSubjects()));
     failures.addAll(relatedRaidSvc.validateRelatedRaids(request.getRelatedRaids()));
     failures.addAll(relatedObjectSvc.validateRelatedObjects(request.getRelatedObjects()));
+    failures.addAll(alternateIdentifierSvc.validateAlternateIdentifiers(request.getAlternateIdentifiers()));
 
     return failures;
   }
@@ -187,6 +191,7 @@ public class RaidSchemaV1ValidationService {
     failures.addAll(subjectSvc.validateSubjects(request.getSubjects()));
     failures.addAll(relatedRaidSvc.validateRelatedRaids(request.getRelatedRaids()));
     failures.addAll(relatedObjectSvc.validateRelatedObjects(request.getRelatedObjects()));
+    failures.addAll(alternateIdentifierSvc.validateAlternateIdentifiers(request.getAlternateIdentifiers()));
 
     return failures;
   }
