@@ -209,7 +209,7 @@ function createUpdateMetadata(
   if (formData.relatedRaid) {
     newRelatedRaids.push({
       relatedRaid: formData.relatedRaid,
-      relatedRaidType: "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/continues.json",
+      relatedRaidType: formData.relatedRaidType,
       relatedRaidTypeSchemeUri: "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type",
     })
   }
