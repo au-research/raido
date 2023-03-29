@@ -16,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import raido.apisvc.spring.StartupListener;
 import raido.apisvc.spring.config.ApiConfig;
+import raido.apisvc.spring.config.environment.DataSourceProps;
 import raido.apisvc.util.Log;
 
 import static raido.apisvc.util.Log.to;
@@ -110,7 +111,7 @@ public class IntegrationTestConfig {
   that there are *two* Spring ApplicationContext objects that are used when 
   an intTest is running, and that they have some separate and some shared 
   config. */
-  @Bean public StartupListener startupListener(){
-    return new StartupListener();
+  @Bean public StartupListener startupListener(DataSourceProps dsProps){
+    return new StartupListener(dsProps);
   }
 }
