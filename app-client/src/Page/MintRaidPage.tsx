@@ -10,12 +10,18 @@ import { raidoTitle, ValidationFailureDisplay } from "Component/Util";
 import { LargeContentMain } from "Design/LayoutMain";
 import { ContainerCard } from "Design/ContainerCard";
 import React, { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  AccessType, AlternateIdentifierBlock, ContributorBlock,
+  AccessType,
+  AlternateIdentifierBlock,
+  ContributorBlock,
   DescriptionBlock,
   OrganisationBlock,
-  RaidoMetadataSchemaV1, RelatedObjectBlock, RelatedRaidBlock, SubjectBlock,
+  RaidoMetadataSchemaV1,
+  RelatedObjectBlock,
+  RelatedRaidBlock,
+  ServicePoint,
+  SubjectBlock,
   ValidationFailure
 } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
@@ -27,7 +33,7 @@ import {
   Select,
   SelectChangeEvent,
   Stack,
-  TextField
+  TextField, TextFieldProps
 } from "@mui/material";
 import { PrimaryActionButton, SecondaryButton } from "Component/AppButton";
 import { navBrowserBack } from "Util/WindowUtil";
@@ -47,6 +53,7 @@ import {
   InputLabelWithProblem,
   labelWithProblem
 } from "Component/InputLabelWithProblem";
+import { RqQuery } from "Util/ReactQueryUtil";
 
 const pageUrl = "/mint-raid-v2";
 
@@ -197,6 +204,7 @@ function MintRaidContainer({servicePointId, onCreate}: {
   } as FormData);
   const [serverValidations, setServerValidations] = useState(
     [] as ValidationFailure[] );
+  const leadOrgInputRef = React.useRef<TextFieldProps>(null);
   const mintRequest = useMutation(
     async (data: ValidFormData) => {
       setServerValidations([]);
@@ -222,6 +230,21 @@ function MintRaidContainer({servicePointId, onCreate}: {
     }
   );
 
+  const spQuery: RqQuery<ServicePoint> = useQuery(
+    ['readServicePoint', servicePointId],
+    async () => {
+      const result = await api.admin.readServicePoint({servicePointId});
+      assert(leadOrgInputRef.current, "inputRef not currently bound");
+      if( leadOrgInputRef.current.value === "" ){
+        setFormData((formData)=>{
+          return {...formData, leadOrganisation: result.identifierOwner}
+        });
+      }
+      return result;
+    },
+    {enabled: !!servicePointId}
+  );
+  
   const isTitleValid = !!formData.primaryTitle;
   const leadOrganisationProblem = findOrganisationIdProblem(formData.leadOrganisation);
   const isAccessStatementValid = formData.accessType === "Open" ?
@@ -296,6 +319,7 @@ function MintRaidContainer({servicePointId, onCreate}: {
         />
         <TextField id="organisation"
           variant="outlined" autoCorrect="off" autoCapitalize="on"
+          inputRef={leadOrgInputRef}
           disabled={isWorking}
           value={formData.leadOrganisation ?? ""}
           onChange={(e) => {
@@ -585,6 +609,12 @@ export function MintRaidHelp(){
   return <HelpPopover content={
     <Stack spacing={1}>
       <ul>
+        <li><HelpChip label={"Lead organisation"}/>
+          For your convenience, RAiD auto-populates the lead organisation field
+          with the RoR of the Institution associated with your Service Point.
+          Please note that this field can contain any organisation you choose
+          or you may set the field to blank.
+        </li>
         <li><HelpChip label={"Access type"}/>
           Controls if metadata is visible on the raid landing page.
           For "Open" raids, all metadata is visible.
