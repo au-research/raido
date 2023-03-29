@@ -84,8 +84,8 @@ paths:
   # region Basic Raido raid endpoints
   /raid/v1:
     $ref: "basic-raid-stable.yaml#/paths/~1raid~1v1"
-  /raid/v1/{handle}:
-    $ref: "basic-raid-stable.yaml#/paths/~1raid~1v1~1{handle}"
+  /raid/v1/{prefix}/{suffix}:
+    $ref: "basic-raid-stable.yaml#/paths/~1raid~1v1~1{prefix}~1{suffix}"
 
   # endregion
 

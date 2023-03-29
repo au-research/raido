@@ -228,8 +228,9 @@ class BasicRaidStableTest {
 
   @Test
   void updateRaidV1_ReturnsBadRequest() throws Exception {
-    final var handle = "test-handle";
-    final var validationFailureMessage = "validation failure message";
+    final var prefix = "10.38";
+    final var suffix = "99999";
+    final var handle = String.join("/", prefix, suffix);    final var validationFailureMessage = "validation failure message";
     final var validationFailureType = "validation failure type";
     final var validationFailureFieldId = "validation failure id";
 
@@ -246,7 +247,7 @@ class BasicRaidStableTest {
 
       when(validationService.validateForUpdate(eq(handle), any(UpdateRaidV1Request.class))).thenReturn(List.of(validationFailure));
 
-      final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/v1/%s", handle))
+      final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/v1/%s/%s", prefix, suffix))
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(input))
           .characterEncoding("utf-8"))
@@ -271,13 +272,14 @@ class BasicRaidStableTest {
 
   @Test
   void updateRaidV1_ReturnsOk() throws Exception {
+    final var prefix = "10378.1";
+    final var suffix = "1696639";
     final Long servicePointId = 999L;
     final var title = "test-title";
     final var startDate = LocalDate.now();
-    final var handle = new IdentifierHandle("10378.1", "1696639");
+    final var handle = new IdentifierHandle(prefix, suffix);
     final var id = new IdentifierUrl("https://raid.org.au", handle);
     final var endDate = startDate.plusMonths(6);
-    final String encodedHandle = RestUtil.urlEncode(handle.format());
 
     final var input = createRaidForPut();
     final var output = createRaidForGet(id, servicePointId, title, startDate);
@@ -285,11 +287,12 @@ class BasicRaidStableTest {
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
       final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
       authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
-      when(validationService.validateForUpdate(encodedHandle, input)).thenReturn(Collections.emptyList());
+      when(validationService.validateForUpdate(String.join("/", prefix, suffix), input))
+        .thenReturn(Collections.emptyList());
 
       when(raidService.updateRaidV1(input)).thenReturn(output);
 
-      mockMvc.perform(put(String.format("/raid/v1/%s", encodedHandle))
+      mockMvc.perform(put(String.format("/raid/v1/%s/%s", prefix, suffix))
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(input))
           .characterEncoding("utf-8"))
@@ -300,7 +303,6 @@ class BasicRaidStableTest {
         .andExpect(jsonPath("$.id.identifierRegistrationAgency", Matchers.is("https://ror.org/038sjwq14")))
         .andExpect(jsonPath("$.id.identifierOwner", Matchers.is("https://ror.org/02stey378")))
         .andExpect(jsonPath("$.id.identifierServicePoint", Matchers.is(servicePointId.intValue())))
-
         .andExpect(jsonPath("$.titles[0].title", Matchers.is(title)))
         .andExpect(jsonPath("$.titles[0].type", Matchers.is(TitleType.PRIMARY_TITLE.getValue())))
         .andExpect(jsonPath("$.titles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
@@ -328,54 +330,11 @@ class BasicRaidStableTest {
     }
   }
 
-//  @Test
-//  void updateRaidV1_ReturnsBadRequestWhenServicePointIsMissing() throws Exception {
-//    final Long servicePointId = 999L;
-//    final var title = "test-title";
-//    final var startDate = LocalDate.now();
-//    final var handle = "test-handle";
-//
-//    final var errorType = "test type";
-//    final var errorMessage = "test message";
-//    final var errorField = "test field";
-//
-//    final var input = createRaidForPut(handle, servicePointId, title, startDate);
-//
-//    try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-//      final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
-//      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
-//
-//      when(validationService.validateMintRequest(input.getMintRequest())).thenReturn(List.of(new ValidationFailure()
-//        .errorType(errorType)
-//        .message(errorMessage)
-//        .fieldId(errorField)
-//      ));
-//
-//      final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/v1/%s", handle))
-//          .contentType(MediaType.APPLICATION_JSON)
-//          .content(objectMapper.writeValueAsString(input))
-//          .characterEncoding("utf-8"))
-//        .andDo(print())
-//        .andExpect(status().isBadRequest())
-//        .andReturn();
-//
-//      final ValidationFailureResponse validationFailureResponse = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ValidationFailureResponse.class);
-//
-//      assertThat(validationFailureResponse.getType(), Matchers.is("https://raid.org.au/errors#ValidationException"));
-//      assertThat(validationFailureResponse.getTitle(), Matchers.is("There were validation failures."));
-//      assertThat(validationFailureResponse.getStatus(), Matchers.is(400));
-//      assertThat(validationFailureResponse.getDetail(), Matchers.is("Request had 1 validation failure(s). See failures for more details..."));
-//      assertThat(validationFailureResponse.getInstance(), Matchers.is("https://raid.org.au"));
-//
-//      verifyNoInteractions(raidService);
-//      verify(validationService, never()).validateForUpdate(eq(handle), any(MetadataSchemaV1.class));
-//    }
-//  }
-
   @Test
   void updateRaidV1_Returns404IfNotFound() throws Exception {
-    final var handle = "test-handle";
-
+    final var prefix = "10378.1";
+    final var suffix = "1696639";
+    final var handle = String.join("/", prefix, suffix);
     final var input = createRaidForPut();
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
@@ -387,7 +346,7 @@ class BasicRaidStableTest {
       doThrow(new ResourceNotFoundException(handle))
         .when(raidService).updateRaidV1(input);
 
-      final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/v1/%s", handle))
+      final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/v1/%s/%s", prefix, suffix))
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(input))
           .characterEncoding("utf-8"))
@@ -400,15 +359,17 @@ class BasicRaidStableTest {
       assertThat(failureResponse.getType(), Matchers.is("https://raid.org.au/errors#ResourceNotFoundException"));
       assertThat(failureResponse.getTitle(), Matchers.is("The resource was not found."));
       assertThat(failureResponse.getStatus(), Matchers.is(404));
-      assertThat(failureResponse.getDetail(), Matchers.is("No RAiD was found with handle test-handle."));
+      assertThat(failureResponse.getDetail(), Matchers.is("No RAiD was found with handle 10378.1/1696639."));
       assertThat(failureResponse.getInstance(), Matchers.is("https://raid.org.au"));
     }
   }
 
   @Test
   void updateRaidsV1_ReturnsForbiddenWithInvalidServicePoint() throws Exception {
+    final var prefix = "10378.1";
+    final var suffix = "1696639";
     final Long servicePointId = 999L;
-    final var handle = new IdentifierHandle("10378.1", "1696639");
+    final var handle = new IdentifierHandle(prefix, suffix);
     final var id = new IdentifierUrl("https://raid.org.au", handle);
     final var input = createRaidForGet(id, servicePointId, "", LocalDate.now());
 
@@ -419,7 +380,7 @@ class BasicRaidStableTest {
       authzUtil.when(() -> AuthzUtil.guardOperatorOrAssociated(authzTokenPayload, servicePointId))
         .thenThrow(new CrossAccountAccessException(servicePointId));
 
-      final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/v1/%s", handle))
+      final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/v1/%s/%s", prefix, suffix))
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(input))
           .characterEncoding("utf-8"))
@@ -441,21 +402,22 @@ class BasicRaidStableTest {
 
   @Test
   void readRaidV1_ReturnsOk() throws Exception {
+    final var prefix = "10378.1";
+    final var suffix = "1696639";
     final var startDate = LocalDate.now().minusYears(1);
     final var title = "test-title";
-    final var handle = new IdentifierHandle("10378.1", "1696639");
+    final var handle = new IdentifierHandle(prefix, suffix);
     final var id = new IdentifierUrl("https://raid.org.au", handle);
     final Long servicePointId = 123L;
     final var raid = createRaidForGet(id, servicePointId, title, startDate);
-    final String encodedHandle = RestUtil.urlEncode(handle.format());
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
       final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
       authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
 
-      when(raidService.readRaidV1(encodedHandle)).thenReturn(raid);
+      when(raidService.readRaidV1(String.join("/", prefix, suffix))).thenReturn(raid);
 
-      final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/v1/%s", encodedHandle))
+      final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/v1/%s/%s", prefix, suffix))
           .characterEncoding("utf-8")
           .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
@@ -470,7 +432,9 @@ class BasicRaidStableTest {
 
   @Test
   void readRaidV1_ReturnsNotFound() throws Exception {
-    final var handle = "test-handle";
+    final var prefix = "10.38";
+    final var suffix = "99999";
+    final var handle = String.join("/", prefix, suffix);
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
       final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
@@ -478,7 +442,7 @@ class BasicRaidStableTest {
 
       doThrow(new ResourceNotFoundException(handle)).when(raidService).readRaidV1(handle);
 
-      final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/v1/%s", handle))
+      final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/v1/%s/%s", prefix, suffix))
           .characterEncoding("utf-8")
           .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
@@ -490,30 +454,30 @@ class BasicRaidStableTest {
       assertThat(failureResponse.getType(), Matchers.is("https://raid.org.au/errors#ResourceNotFoundException"));
       assertThat(failureResponse.getTitle(), Matchers.is("The resource was not found."));
       assertThat(failureResponse.getStatus(), Matchers.is(404));
-      assertThat(failureResponse.getDetail(), Matchers.is("No RAiD was found with handle test-handle."));
+      assertThat(failureResponse.getDetail(), Matchers.is("No RAiD was found with handle 10.38/99999."));
       assertThat(failureResponse.getInstance(), Matchers.is("https://raid.org.au"));
     }
   }
 
   @Test
   void readRaidsV1_ReturnsForbiddenWithInvalidServicePoint() throws Exception {
+    final var prefix = "10378.1";
+    final var suffix = "1696639";
     final Long servicePointId = 999L;
-    final var handle = new IdentifierHandle("10378.1", "1696639");
+    final var handle = new IdentifierHandle(prefix, suffix);
     final var id = new IdentifierUrl("https://raid.org.au", handle);
     final var raid = createRaidForGet(id, servicePointId, "", LocalDate.now());
-    final String encodedHandle = RestUtil.urlEncode(handle.format());
-    
+
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
       final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
       authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
 
-      
-      when(raidService.readRaidV1(encodedHandle)).thenReturn(raid);
+      when(raidService.readRaidV1(String.join("/", prefix, suffix))).thenReturn(raid);
 
       authzUtil.when(() -> AuthzUtil.guardOperatorOrAssociated(authzTokenPayload, servicePointId))
         .thenThrow(new CrossAccountAccessException(servicePointId));
 
-      final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/v1/%s", encodedHandle))
+      final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/v1/%s/%s", prefix, suffix))
           .characterEncoding("utf-8"))
         .andDo(print())
         .andExpect(status().isForbidden())
