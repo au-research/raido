@@ -196,7 +196,7 @@ public abstract class IntegrationTestCase {
 
   public PublicServicePoint findPublicServicePoint(String name){
     return publicExperimentalClient().publicListServicePoint().stream().
-      filter(i->areEqual(i.getName(), name)).
+      filter(i->i.getName().contains(name)).
       findFirst().orElseThrow();
   }
   
