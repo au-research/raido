@@ -79,7 +79,7 @@ Complete. Needs extra validation for other Raid agencies.
 
 ## 12. Subject - Complete
 
-In progress.
+Complete. No validation for keyword/language.
 
 ## 13. TraditionalKnowledgeLabel - Not started
 
