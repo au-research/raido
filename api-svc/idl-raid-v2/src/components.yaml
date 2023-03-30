@@ -43,6 +43,9 @@ components:
         alternateIdentifiers:
           type: array
           items: { $ref: 'metadata-block.yaml#/components/schemas/AlternateIdentifierBlock' }
+        spatialCoverages:
+          type: array
+          items: { $ref: 'metadata-block.yaml#/components/schemas/SpatialCoverageBlock' }
 
     ErrorResponse:
       type: object
