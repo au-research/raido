@@ -30,7 +30,7 @@ public class RaidV2AppUserAuthProps {
 
   /** Amount of time an authzToken is valid for.
    Default 9 hours, approximately a work day. */
-  @Value("${RaidV2AppUserAuth.authzTokenExpirySeconds:540}")
+  @Value("${RaidV2AppUserAuth.authzTokenExpirySeconds:32400}")
   public int authzTokenExpirySeconds;
 
   public Algorithm signingAlgo;
