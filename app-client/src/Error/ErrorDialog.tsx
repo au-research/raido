@@ -1,13 +1,22 @@
 import * as React from "react";
-import {Dialog} from "@mui/material";
+import { Box, Dialog, IconButton } from "@mui/material";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
-import {ErrorInfo} from "Error/ErrorUtil";
+import { ErrorInfo } from "Error/ErrorUtil";
 import Divider from "@mui/material/Divider";
-import Typography from "@mui/material/Typography";
-import {ErrorInfoComponent} from "Error/ErrorInforComponent";
-import {PrimaryButton} from "Component/AppButton";
+import { ErrorInfoComponent } from "Error/ErrorInforComponent";
+import { PrimaryButton } from "Component/AppButton";
+import { ClientPanel } from "Page/Public/AboutAppPage";
+import { ContainerCard } from "Design/ContainerCard";
+import { TextSpan } from "Component/TextSpan";
+import { InfoField, InfoFieldList } from "Component/InfoField";
+import { IdProviderDisplay } from "Component/IdProviderDisplay";
+import { RoleDisplay } from "Component/Util";
+import { formatLocalDateAsIsoShortDateTime } from "Util/DateUtil";
+import { useAuthInAnyContext } from "Auth/AuthProvider";
+import { SmallScreenMain } from "Design/LayoutMain";
+import { Close } from "@mui/icons-material";
 
 const log = console;
 
@@ -110,6 +119,18 @@ function ErrorDialog(props:{
   >
     <DialogTitle id="error-dialog-title">
       Errors
+      <IconButton
+        aria-label="close"
+        onClick={props.onCloseClicked}
+        sx={{
+          position: 'absolute',
+          right: 8,
+          top: 8,
+          color: (theme) => theme.palette.grey[500],
+        }}
+      >
+        <Close />
+      </IconButton>
     </DialogTitle>
     <DialogContent>
 
@@ -118,31 +139,78 @@ function ErrorDialog(props:{
           <ErrorInfoComponent error={i}/>
         </li>
       })}</ul></div>
-
-      <br/><Divider/><br/>
-      <LoginDetails/>
-      <VersionDetails/>
-
     </DialogContent>
-    <DialogActions>
-      <PrimaryButton color="primary"
-        onClick={props.onCloseClicked}
-        disabled={false}
-      >
-        Close
-      </PrimaryButton>
+    
+    <DialogActions sx={{
+      display: "flex",
+      gap: "1em",
+      justifyContent: "center",
+      width: "100%",
+    }}>
+        <PrimaryButton color="primary"
+          onClick={() => window.location.reload() }
+          disabled={false}
+        >
+          Refresh browser
+        </PrimaryButton>
+        <PrimaryButton color="primary"
+          onClick={props.onCloseClicked}
+          disabled={false}
+        >
+          Dismiss errors
+        </PrimaryButton>
     </DialogActions>
+    
+    <br/><Divider/><br/>
+    <SmallScreenMain>
+      <SignInDetails/>
+      <br/>
+      <VersionDetails/>
+    </SmallScreenMain>
+
   </Dialog>
 }
 
-function LoginDetails(){
-  return <Typography>
-    Stuff about login details
-  </Typography>
+/* There are two ErrorDialog providers defined in App.tsx, we might be rendering
+in the context of an authorized or unauthorized user. */
+function SignInDetails(){
+  const auth = useAuthInAnyContext();
+
+  let details = <TextSpan>
+    You have not signed in tho the app.
+  </TextSpan>; 
+  if( auth ){
+    const {session} = auth;
+    const {payload: user} = session;
+    const expiry = session.accessTokenExpiry;
+    const formattedExpiry = formatLocalDateAsIsoShortDateTime(expiry);
+    const isSessionExpired = expiry.getTime() <= new Date().getTime();
+    const expiryFieldColor = isSessionExpired? "red":"inherit";
+    
+    details = <InfoFieldList>
+      <InfoField id={"email"} label={"Identity"} value={user.email}/>
+      <InfoField id={"idProvider"} label={"ID provider"}
+        value={<IdProviderDisplay payload={user}/> }/>
+      
+      <InfoField id={"sessionSignIn"} label={"Signed in at"}
+        value={formatLocalDateAsIsoShortDateTime(session.accessTokenIssuedAt)}/>
+
+      <InfoField id={"sessionExpiry"} label="Sign-in expiry"
+        value={
+          <TextSpan color={expiryFieldColor}>{formattedExpiry}</TextSpan>
+        }
+      />
+       
+      <InfoField id={"role"} label={"Role"} value={
+        <RoleDisplay role={user.role}/>
+      }/>
+    </InfoFieldList>
+  }
+  return <ContainerCard title="Signed-in user">
+    {details}
+  </ContainerCard>;  
 }
 
 function VersionDetails(){
-  return <Typography>
-    Stuff about client version
-  </Typography>
+  return <ClientPanel/>
 }

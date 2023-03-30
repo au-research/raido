@@ -7,6 +7,7 @@ import { Config } from "Config";
 import { useAuth } from "Auth/AuthProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { useOpenErrorDialog } from "Error/ErrorDialog";
 
 export interface AuthApiState {
   basicRaid: BasicRaidExperimentalApi,
@@ -19,7 +20,7 @@ const AuthApiContext = React.createContext(
 
 /** If `use()` is called when not underneath the context provider,
  * they will get an error. */
-export const useAuthApi = () => {
+export const useAuthApi = ():AuthApiState => {
   let ctx = useContext(AuthApiContext);
   if( !ctx ){
     throw new Error("No AuthApiProvider present in component hierarchy");
@@ -33,10 +34,20 @@ export function AuthApiProvider({children}: {
   // if the authn changes, apiProvider will re-render with a new config
   // and QueryClient
   const auth = useAuth();
+  const openErrorDialog = useOpenErrorDialog();
   const config = new Configuration({
     basePath: Config.raidoApiSvc,
     // If we end up "refreshing" accessTokens, this is how it'll be hooked in 
-    accessToken: ()=>auth.session.accessToken,
+    accessToken: ()=>{
+      if( auth.session.accessTokenExpiry.getTime() <= new Date().getTime() ){
+        console.log("session token is expired", auth.session);
+        openErrorDialog({type: "handleError", error: {
+          message: "Your sign-in session has expired, please refresh the browser to sign in again", 
+          problem: "",
+        }});
+      }
+      return auth.session.accessToken
+    },
   });
 
   /* First time trying react-query, no clue if this is a good design.

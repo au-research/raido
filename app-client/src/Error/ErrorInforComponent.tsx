@@ -5,13 +5,15 @@ import * as React from "react";
 import {ErrorInfo, } from "Error/ErrorUtil";
 import {isNonEmptyArrayOfString} from "Util/TypeUtil";
 import {PrimaryButton} from "Component/AppButton";
+import { isAuthorizedSession, isAuthState } from "Auth/AuthProvider";
+import { formatLocalDateAsIsoShortDateTime } from "Util/DateUtil";
 
 const log = console;
 
 export function ErrorInfoComponent(props: {
   error: ErrorInfo;
 }){
-  // explitly calling out that it's "any" to remind that you can't just
+  // explicitly calling out that it's "any" to remind that you can't just
   // dump the object into the HTML, need to at least stringify.
   let problem: any = props.error.problem;
 
@@ -31,8 +33,11 @@ export function ErrorInfoComponent(props: {
       <ListItemText key={index}>{it}</ListItemText>
     )}</List>
   }
+  else if( !problem ){
+    detailsErrorContent = undefined;
+  }
   else {
-    log.debug("problem type: unknown");
+    log.debug("problem type: unknown", problem);
     detailsErrorContent = <TextSpan>
       {safeStringify(problem)}
     </TextSpan>

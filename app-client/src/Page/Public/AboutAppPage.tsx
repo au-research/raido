@@ -51,7 +51,7 @@ function Content(){
   </SmallContentMain>
 }
 
-function ClientPanel(){
+export function ClientPanel(){
 
   let localDateString: string = "unknown";
   let localTimeString: string = "";
@@ -65,7 +65,10 @@ function ClientPanel(){
       buildDateString = buildDate.toISOString();
     }
     else {
-      log.warn("appBuildDate could not be parsed", buildDate);
+      log.info("appBuildDate could not be parsed", {
+        buildDate, 
+        configBuildDate: Config.buildDate
+      });
       // leave the defaults
     }
     log.debug("Config.buildDate", {
