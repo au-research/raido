@@ -22,6 +22,10 @@ import {
   isListAppUserPagePath
 } from "Page/Admin/ListAppUserPage";
 import { isOperator, isSpAdmin } from "Auth/Authz";
+import {
+  getListApiKeyPageLink,
+  isListApiKeyPagePath
+} from "Page/Admin/ListApiKeyPage";
 
 
 export function AppDrawer(props: {
@@ -65,6 +69,13 @@ export function AppDrawer(props: {
             href={getListAppUserPageLink(auth.session.payload.servicePointId)}
             isCurrent={isListAppUserPagePath(pathname).isPath}
             description={"Users"}
+          />
+        }
+        { (isOp || isAdmin) &&
+          <ListNavButton
+            href={getListApiKeyPageLink(auth.session.payload.servicePointId)}
+            isCurrent={isListApiKeyPagePath(pathname).isPath}
+            description={"API keys"}
           />
         }
       </List>
