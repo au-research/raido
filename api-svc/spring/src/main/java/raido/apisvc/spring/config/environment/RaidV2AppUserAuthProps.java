@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 
+import java.time.Duration;
 import java.util.Arrays;
 
 import static raido.apisvc.util.Log.to;
@@ -26,7 +27,12 @@ public class RaidV2AppUserAuthProps {
 
   @Value("${RaidV2AppUserAuth.issuer:https://localhost:8080}")
   public String issuer;
-  
+
+  /** Amount of time an authzToken is valid for.
+   Default 9 hours, approximately a work day. */
+  @Value("${RaidV2AppUserAuth.authzTokenExpirySeconds:540}")
+  public int authzTokenExpirySeconds;
+
   public Algorithm signingAlgo;
   public JWTVerifier[] verifiers;
   
@@ -38,9 +44,6 @@ public class RaidV2AppUserAuthProps {
     // for SHA256 to be secure, need to have a min level of entropy
     // https://auth0.com/blog/brute-forcing-hs256-is-possible-the-importance-of-using-strong-keys-to-sign-jwts/
     Guard.isTrue("signingSecret is too short", signingSecret.length() >= 32 );
-    log.with("size", jwtSecrets.length).
-      with("signingSecret", mask(signingSecret)).
-      info("jwtSecrets");
 
     this.signingAlgo = Algorithm.HMAC256(signingSecret);
     
@@ -50,5 +53,11 @@ public class RaidV2AppUserAuthProps {
         withIssuer(this.issuer).
         build() 
       ).toArray(JWTVerifier[]::new);
+
+    log.with("jwtSecrets.length", jwtSecrets.length).
+      with("signingSecret", mask(signingSecret)).
+      with("authzTokenExpirySeconds", authzTokenExpirySeconds).
+      with("issuer", issuer).
+      info("config");
   }
 }
