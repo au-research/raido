@@ -57,6 +57,7 @@ export function getAuthSessionFromStorage(): undefined | AuthorizedSession{
   return {
     accessToken: storedAccessToken,
     accessTokenExpiry: parseResult.accessTokenExpiry,
+    accessTokenIssuedAt: parseResult.accessTokenIssuedAt,
     payload: parseResult.payload
   };
 }
@@ -64,6 +65,7 @@ export function getAuthSessionFromStorage(): undefined | AuthorizedSession{
 export function parseAccessToken(accessToken: string):{
   result: "authorized",
   accessTokenExpiry: Date,
+  accessTokenIssuedAt: Date,
   payload: AuthzTokenPayload,
 } | {
   result: "not-authorized",
@@ -118,6 +120,12 @@ export function parseAccessToken(accessToken: string):{
     return {result: "failed", message: "accessToken is expired", decoded};
   }
 
+  const accessTokenIssuedAt: Date|undefined = parseJwtDate(decoded.iat);
+  if( !accessTokenIssuedAt ){
+    return {result: "failed",
+      message: "malformed accessToken payload iat", decoded};
+  }
+
   if( !decoded.isAuthorizedAppUser  || typeof(decoded.isAuthorizedAppUser) !== "boolean" ){
     return {result: "not-authorized", accessToken: accessToken};
   }
@@ -133,6 +141,7 @@ export function parseAccessToken(accessToken: string):{
   return {
     result: "authorized",
     accessTokenExpiry,
+    accessTokenIssuedAt,
     payload: {
       ...decoded,
       ///* date needs to be converted since it was decoded from a JWT, not passed

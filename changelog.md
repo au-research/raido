@@ -11,7 +11,7 @@ Tentative: 2023-04-04
 * Add subjects, related Raids, related objects and alternate identifiers to metadata
 * Default the lead organisation on the mint page to the institution
   associated with the service-point.
-
+* Add item to menu for admin users to access API keys
 
 # 1.0
 

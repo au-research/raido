@@ -3,7 +3,7 @@ import { LargeContentMain, SmallContentMain } from "Design/LayoutMain";
 import { SmallPageSpinner } from "Component/SmallPageSpinner";
 import { ErrorInfoComponent } from "Error/ErrorInforComponent";
 import { ErrorInfo } from "Error/ErrorUtil";
-import { AuthzTokenPayload } from "Shared/ApiTypes";
+import { AuthzTokenPayload, isAuthzTokenPayload } from "Shared/ApiTypes";
 import {
   getAuthSessionFromStorage,
   parseAccessToken,
@@ -15,9 +15,7 @@ import { IntroContainer } from "Auth/IntroContainer";
 import { SignInContainer } from "Auth/SignInContainer";
 import { useLocationPathname } from "Util/Hook/LocationPathname";
 import { SignInContext } from "Auth/SignInContext";
-import {
-  NotAuthorizedContent
-} from "Auth/NotAuthorizedContent";
+import { NotAuthorizedContent } from "Auth/NotAuthorizedContent";
 import { EnvironmentBanner } from "Design/AppNavBar";
 
 export interface AuthState {
@@ -25,9 +23,19 @@ export interface AuthState {
   session: AuthorizedSession,
 }
 
+export function isAuthState(obj: any): obj is AuthState {
+  return (
+    obj !== null &&
+    typeof obj === 'object' &&
+    typeof obj.signOut === 'function' &&
+    isAuthorizedSession(obj.session) 
+  );
+}
+
 export interface AuthorizedSession {
   payload: AuthzTokenPayload,
   accessTokenExpiry: Date,
+  accessTokenIssuedAt: Date,
   /* security:sto this should not be saved in globally accessible memory in the 
   current browser context.  Either use a Service Worker or closure variable to
   protect it from malicious JS running on the page.
@@ -35,15 +43,34 @@ export interface AuthorizedSession {
   accessToken: string,
 }
 
+export function isAuthorizedSession(obj: any): obj is AuthorizedSession {
+  return (
+    !!obj &&
+    isAuthzTokenPayload(obj.payload) &&
+    obj.accessTokenExpiry instanceof Date &&
+    obj.accessTokenIssuedAt instanceof Date &&
+    typeof obj.accessToken === "string"
+  );
+}
+
 const AuthContext = React.createContext(
   undefined as unknown as AuthState);
 
 /** If `use()` is called when not underneath the context provider,
  * they will get an error. */
-export const useAuth = () => {
+export const useAuth = ():AuthState => {
   let ctx = useContext(AuthContext);
   if( !ctx ){
     throw new Error("No AuthenticationProvider present in component hierarchy");
+  }
+  return ctx;
+};
+
+// implemented for the ErrorDialog functionality, user might not be signed in 
+export const useAuthInAnyContext = ():AuthState|undefined => {
+  let ctx = useContext(AuthContext);
+  if( !ctx ){
+    return undefined;
   }
   return ctx;
 };
@@ -153,7 +180,8 @@ export function AuthProvider({unauthenticatedPaths = [], children}: {
     setState({current: "signed-in", authSession: { 
       accessToken: idToken, 
       accessTokenExpiry: parseResult.accessTokenExpiry,
-      payload: parseResult.payload
+      accessTokenIssuedAt: parseResult.accessTokenIssuedAt,
+      payload: parseResult.payload, 
     }});
     
   }, []);

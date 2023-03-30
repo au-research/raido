@@ -1,9 +1,18 @@
 openapi: 3.0.3
+
+# note that swagger ui doesn't currently work with our spec, 
+# see https://github.com/swagger-api/swagger-ui/issues/7724
+# But the spec works fine with openapi-generator tooling.
 servers:
   - url: 'https://api.prod.raid.org.au'
+    description: The production service - "PROD".
   - url: 'https://api.demo.raid.org.au'
-  - url: 'https://api.test.raid.org.au'
+    description: >
+      DEMO environment, used for developer integration testing and 
+      customer demonstrations.
   - url: 'http://localhost:8080'
+    description: Local development.
+    
 info:
   title: RAID v2 API
   version: 2.0.0
@@ -13,7 +22,8 @@ info:
     The `3.0` in the filename refers to this file being based on OpenAPI 3.0 
     as opposed to OpenAPI 3.1, which the tooling doesn't support yet.
     The `2.0.0` in the version field refers to the fact that there's already 
-    a `1.0.0` used for the legacy RAiD application (not this project).
+    a `1.0.0` used for the legacy RAiD application (not used in this project, 
+    see ../idl-raid-v1).
   
   contact:
     name: ARDC RAiD team
@@ -34,11 +44,7 @@ tags:
   - name: basic-raid-stable
     description: Stable APIs.
 security:
-  # without this, or if you override with `[]`, no header will be sent
-  # by the openapi generated code
-  - BearerAuth:
-    # Mandatory, but I don't know what the content is supposed to be?    
-    - unknown
+  - BearerAuth: []
 
 paths:
 
@@ -126,3 +132,13 @@ components:
     BearerAuth:
       type: http
       scheme: bearer
+      bearerFormat: JWT
+      description: >
+        API users use an "access token" generated through the app-client UI,
+        the token is generated via the `/v2/experimental/generate-api-token/v1` 
+        endpoint.
+        Theoretically, we could create a token generation endpoint that creates 
+        ephemeral tokens for an API client to use, but we'd have to setup a 
+        machine-to-machine OAuth2 flow - contact us if you're keen on that.
+        The users of the app-client UI use an access token returned from the 
+        `/idpresponse` URL as part of the OIDC sign-in process.
