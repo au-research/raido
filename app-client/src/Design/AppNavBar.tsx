@@ -1,14 +1,15 @@
 import { useNavigation } from "Design/NavigationProvider";
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import {
   AppBar,
   Hidden,
   IconButton,
+  ListItemIcon,
   Menu,
   MenuItem,
   Toolbar
 } from "@mui/material";
-import { AccountCircle, Menu as MenuIcon } from "@mui/icons-material";
+import { AccountCircle, Logout, Menu as MenuIcon } from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
 import { AppDrawer } from "Design/AppDrawer";
 import { RaidoLogoSvg } from "Component/Icon";
@@ -17,6 +18,8 @@ import { Color } from "Design/RaidoTheme";
 import { useAuth } from "Auth/AuthProvider";
 import { IdProviderDisplay } from "Component/IdProviderDisplay";
 import { Config } from "Config";
+import { formatShortTime } from "Util/DateUtil";
+import { InfoField } from "Component/InfoField";
 
 const log = console;
 
@@ -101,13 +104,12 @@ function MenuShortcutNavItem(props: {
   );
 }
 
-
-
 function AccountMenu(){
-  const authn = useAuth();
+  const auth = useAuth();
   const[ isMenuOpen, setIsMenuOpen] = React.useState(false);
   const menuAnchorRef = React.useRef<HTMLButtonElement>(null!);
   const nav = useNavigation();
+  const session = auth.session;
 
   function onClose(){
     setIsMenuOpen(false);
@@ -130,27 +132,44 @@ function AccountMenu(){
       open={isMenuOpen}
       onClose={()=> setIsMenuOpen(false)}
     >
-      <MenuItem onClick={()=>{
-         //log.debug("authn identity and claims", identity, claim);
-        onClose();
-      }}>
-        <Typography>Email: {authn.session.payload.email}</Typography>
-      </MenuItem>
-      <MenuItem onClick={()=>{
-        onClose();
-      }}>
-        <Typography>
-          ID Provider: <IdProviderDisplay payload={authn.session.payload}/>
-        </Typography>
-      </MenuItem>
+      <InfoMenuItem>
+        <div style={{display: "grid", gridTemplateColumns: "1fr 1fr"}}>
+          <InfoField label="Identity"
+            value={session.payload.email}
+          />
+          <InfoField label={"ID provider"}
+            value={<IdProviderDisplay payload={session.payload}/> }/>
+          <InfoField label="Signed in"
+            value={formatShortTime(session.accessTokenIssuedAt)}
+          />
+          <InfoField label="Session expiry"
+            value={formatShortTime(session.accessTokenExpiry)}
+          />
+        </div>
+      </InfoMenuItem>
       <MenuItem onClick={async ()=>{
         log.debug("clicked sign-out");
-        authn.signOut();
+        auth.signOut();
       }}>
+        <ListItemIcon>
+          <Logout fontSize="small" />
+        </ListItemIcon>
         <Typography>Sign out</Typography>
       </MenuItem>
     </Menu>
   </>;
+}
+
+export function InfoMenuItem({children}: {
+  children: ReactNode,
+}){
+  return <MenuItem disabled={true} sx={{
+    '&.Mui-disabled': {
+      opacity: 1
+    },
+  }} >
+      {children}
+  </MenuItem>
 }
 
 export function EnvironmentBanner(){

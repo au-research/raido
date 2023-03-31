@@ -18,7 +18,7 @@ import { TextSpan } from "Component/TextSpan";
  */
 export function InfoField(
   {id, label, value}:{
-    id: string,
+    id?: string,
     label: string,
     value: string | ReactNode | undefined,
   }
