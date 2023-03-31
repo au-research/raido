@@ -128,6 +128,9 @@ function ErrorDialog(props:{
   
   return <Dialog fullScreen={true} open={props.dialogOpen}
     onClose={props.onCloseClicked}
+    /* on ios (iphone 8+), the error message wasn't visible
+    Was able to reproduce in local dev by setting profile to iphone 4. */
+    scroll={"body"}
   >
     <DialogTitle id="error-dialog-title">
       Errors
