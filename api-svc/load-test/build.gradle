@@ -1,0 +1,77 @@
+plugins{
+  id 'java'
+  id 'io.gatling.gradle' version "3.9.2.2"
+}
+ 
+ext{
+  defaultSysProps = [
+    /* prod machines will always be set to UTC, but developer machines are set 
+    to whatever they want - so this forces it for gradle stuff. */
+    'user.timezone': 'UTC',
+    // platform specific, so force it
+    'file.encoding': 'UTF-8',
+    // for consistency, rather than any specific reason 
+    "user.language":"", "user.country":"", "user.variant":"",
+  ]
+  
+  // the config loading config :/
+  homeDir = System.properties['user.home']
+  configPath = System.getProperty("RAIDO_APISVC_CONFIG_PATH",
+    "${homeDir}/.config/raido/api-svc.gradle")
+}
+
+/* after ext{} block so that stuff is the default, and so the config
+   can refer to those default values */
+if( file(configPath).exists() ){
+  println "loading config from: ${configPath}"
+  /* never done config this way before, not entirely sure it's a good idea,
+  probably a Bad Plan to use a full turing-complete language for config */
+  apply from: configPath
+}
+
+repositories{
+  mavenCentral()
+}
+
+version = rootProject.version
+
+/* don't use groovy for prod code: dynamic typing, slow startup and poor 
+   historical upgrade compatibility */
+dependencies{
+  gatling project(':api-svc:db:raido')
+  gatling project(':api-svc:idl-raid-v2')
+  
+  gatling libs.bundles.slf4j
+
+  runtimeOnly 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
+  gatling 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.2'
+  gatling "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2"
+
+  gatling 'com.auth0:java-jwt:4.3.0'
+
+  gatling "com.squareup.okhttp3:okhttp:4.10.0"
+  
+  // use logback as the backing log implementation for slf4j
+  gatlingRuntimeOnly libs.bundles.logback.runtime
+
+}
+
+compileJava {
+  options.compilerArgs <<
+    // avoid warnings about spring classes using deprecated '-debug' 
+    "-parameters" <<
+    // annoy people into not doing unchecked shenanigans 😒
+    "-Xlint:unchecked" <<
+    // annoy people into fixing their deprecation warnings 
+    "-Xlint:deprecation"
+}
+
+
+sourceSets{
+  gatling.resources{
+//    srcDirs "src/gatling/java"
+    // look for resources in the source tree, resources folder is pointless 
+    srcDirs sourceSets.gatling.java.srcDirs
+  }
+}
+
