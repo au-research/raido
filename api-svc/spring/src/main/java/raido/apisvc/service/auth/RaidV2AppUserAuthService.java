@@ -251,7 +251,7 @@ public class RaidV2AppUserAuthService {
   }
 
   /**
-   Retuns the verified `id_token` from the IDP by calling the OIDC /token
+   Returns the verified `id_token` from the IDP by calling the OIDC /token
    endpoint.
    */
   public DecodedJWT exchangeCodeForVerifiedJwt(
