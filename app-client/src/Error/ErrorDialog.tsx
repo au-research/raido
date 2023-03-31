@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box, Dialog, IconButton } from "@mui/material";
+import { Dialog } from "@mui/material";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
@@ -16,7 +16,6 @@ import { RoleDisplay } from "Component/Util";
 import { formatLocalDateAsIsoShortDateTime } from "Util/DateUtil";
 import { useAuthInAnyContext } from "Auth/AuthProvider";
 import { SmallScreenMain } from "Design/LayoutMain";
-import { Close } from "@mui/icons-material";
 
 const log = console;
 
