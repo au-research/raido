@@ -114,27 +114,26 @@ function ErrorDialog(props:{
   errors: ErrorInfo[],
   onCloseClicked: ()=>void,
 }){
+  
+  const filteredErrors:ErrorInfo[] = [];
+  props.errors.forEach(i=>{
+    if( filteredErrors.some(j=>i.message === j.message) ){
+      // IMPROVE: this filters errors with same message but different problem
+      console.info("ignored duplicate error message", i);
+    } 
+    else {
+      filteredErrors.push(i);
+    }
+  });
+  
   return <Dialog fullScreen={true} open={props.dialogOpen}
     onClose={props.onCloseClicked}
   >
     <DialogTitle id="error-dialog-title">
       Errors
-      <IconButton
-        aria-label="close"
-        onClick={props.onCloseClicked}
-        sx={{
-          position: 'absolute',
-          right: 8,
-          top: 8,
-          color: (theme) => theme.palette.grey[500],
-        }}
-      >
-        <Close />
-      </IconButton>
     </DialogTitle>
     <DialogContent>
-
-      <div><ul>{props.errors.reverse().map((i, index)=>{
+      <div><ul>{filteredErrors.reverse().map((i, index)=>{
         return <li key={index}>
           <ErrorInfoComponent error={i}/>
         </li>

@@ -1,12 +1,10 @@
-import {TextSpan} from "Component/TextSpan";
-import {List, ListItemText} from "@mui/material";
-import {safeStringify} from "Util/ObjectUtil";
+import { TextSpan } from "Component/TextSpan";
+import { List, ListItemText } from "@mui/material";
+import { safeStringify } from "Util/ObjectUtil";
 import * as React from "react";
-import {ErrorInfo, } from "Error/ErrorUtil";
-import {isNonEmptyArrayOfString} from "Util/TypeUtil";
-import {PrimaryButton} from "Component/AppButton";
-import { isAuthorizedSession, isAuthState } from "Auth/AuthProvider";
-import { formatLocalDateAsIsoShortDateTime } from "Util/DateUtil";
+import { ErrorInfo, } from "Error/ErrorUtil";
+import { isNonEmptyArrayOfString } from "Util/TypeUtil";
+import { SecondaryButton } from "Component/AppButton";
 
 const log = console;
 
@@ -58,9 +56,9 @@ function ErrorMoreDetailsExpando(props:{error: Error}){
   }
 
   return <div>
-    <PrimaryButton onClick={()=> setShowMore(!showMore)}>
+    <SecondaryButton size="small" onClick={()=> setShowMore(!showMore)}>
       More
-    </PrimaryButton>
+    </SecondaryButton>
     { showMore &&
     <div>
       <ErrorMessage error={props.error}/>
