@@ -40,6 +40,10 @@ version = rootProject.version
 dependencies{
   gatling project(':api-svc:db:raido')
   gatling project(':api-svc:idl-raid-v2')
+  gatling project(':api-svc:spring')
+
+  gatling libs.bundles.spring6
+  gatling libs.jooq
   
   gatling libs.bundles.slf4j
 
@@ -48,6 +52,7 @@ dependencies{
   gatling "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2"
 
   gatling 'com.auth0:java-jwt:4.3.0'
+  implementation 'com.auth0:java-jwt:4.3.0'
 
   gatling "com.squareup.okhttp3:okhttp:4.10.0"
   
