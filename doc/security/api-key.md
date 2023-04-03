@@ -49,3 +49,19 @@ Theoretically, we could create an api-token generation endpoint that
 creates ephemeral api-tokens for an API client to use, but we'd have to 
 setup a machine-to-machine OAuth2 flow - contact us if you're keen on 
 that.
+
+
+## api-keys and api-tokens across environments
+
+One benefit of the api-token approach is that we can use the same api-key 
+(and same app-user records for human users too).
+
+Note that the actual api-tokens don't work across environments.
+If you decode an api-token, you will note that the environment that created the
+api-token is embedded as the `issuer` claim.  An api-token issued in PROD 
+env cannot be used in DEMO and vice-versa (the environments also use 
+different signing keys for the actual JWT).
+
+But; an api-token issued in DEMO will continue to work in DEMO even after 
+a DB refresh from PROD. This  works as long as the api-key was present in PROD 
+before the DB snapshot was taken and the api-key has not been disabled. 
