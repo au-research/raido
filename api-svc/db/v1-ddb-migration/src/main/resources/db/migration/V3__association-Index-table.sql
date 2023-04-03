@@ -1,12 +1,11 @@
 create table association_index (
-  handle text not null,
+  handle text constraint association_index_pkey primary key not null,
   owner_name text not null,
   raid_name text not null,
   role text not null,
   type text not null,
   start_date timestamp without time zone,
-  s3_export jsonb not null,
-  primary key (handle)
+  s3_export jsonb not null
 );
 
 comment on table association_index is
