@@ -123,10 +123,13 @@ components:
         spatialCoverage: { type: string }
         spatialCoverageSchemeUri: { type: string }
         spatialCoveragePlace: { type: string }
+    TraditionalKnowledgeLabelBlock:
+      type: object
+      properties:
+        traditionalKnowledgeLabelSchemeUri: { type: string }
     TitleType:
       type: string
       enum: ['Primary Title', 'Alternative Title']
     DescriptionType:
       type: string
       enum: ['Primary Description', 'Alternative Description']
-

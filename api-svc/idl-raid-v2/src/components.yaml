@@ -46,6 +46,9 @@ components:
         spatialCoverages:
           type: array
           items: { $ref: 'metadata-block.yaml#/components/schemas/SpatialCoverageBlock' }
+        traditionalKnowledgeLabels:
+          type: array
+          items: { $ref: 'metadata-block.yaml#/components/schemas/TraditionalKnowledgeLabelBlock' }
 
     ErrorResponse:
       type: object
