@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -o errexit
+set -o errexit -o nounset -o pipefail
 
 echo "inside restore container"
 pwd
