@@ -134,11 +134,8 @@ components:
       scheme: bearer
       bearerFormat: JWT
       description: >
-        API users use an "access token" generated through the app-client UI,
-        the token is generated via the `/v2/experimental/generate-api-token/v1` 
-        endpoint.
-        Theoretically, we could create a token generation endpoint that creates 
-        ephemeral tokens for an API client to use, but we'd have to setup a 
-        machine-to-machine OAuth2 flow - contact us if you're keen on that.
-        The users of the app-client UI use an access token returned from the 
+        An api-token for integration is generated manually in the app-client 
+        (on the "API key" page). See 
+        https://github.com/au-research/raido/blob/main/doc/security/api-key.md
+        The app-client UI uses an ephemeral api-token returned from the 
         `/idpresponse` URL as part of the OIDC sign-in process.

@@ -100,7 +100,6 @@ public class RaidV2ApiKeyAuthService {
       throw authFailed();
     }
     
-    
     if( !areEqual(decodedJwt.getType(), JWT_TOKEN_TYPE) ){
       log.with("decodedJwt.type", decodedJwt.getType()).
         with("claims", decodedJwt.getClaims()).
@@ -139,6 +138,12 @@ public class RaidV2ApiKeyAuthService {
       RaidoClaim.SERVICE_POINT_ID.getId()).asLong();
     String role = verifiedJwt.getClaim(RaidoClaim.ROLE.getId()).asString();
     Guard.notNull(appUserId);
+
+    /* note that we don't currently validate the role from the claim (from when 
+    the api-token was generated) against the current value on the api-key in 
+    the DB. That means an api-token created before the api-key is changed is
+    still valid, but functions using the role from the api-token, not from 
+    the api-key. Update the api-key.md doco if you change this. */
     Guard.hasValue(role);
     
     var user = getAppUserRecord(appUserId).
@@ -180,7 +185,7 @@ public class RaidV2ApiKeyAuthService {
         error("service point id from DB and claim are different");
       throw authFailed();
     }
-
+    
     return of(anAuthzTokenPayload().
       withAppUserId(appUserId).
       withServicePointId(servicePointId).

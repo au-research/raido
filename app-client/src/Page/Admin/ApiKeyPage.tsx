@@ -210,9 +210,7 @@ function ApiKeyContainer({apiKeyId, servicePointId, onCreate}: {
         />
         <FormControl>
           <InputLabel id="roleLabel">Role</InputLabel>
-          <Select
-            labelId="roleLabel"
-            id="roleSelect"
+          <Select labelId="roleLabel" id="roleSelect"
             value={formData.role ?? "SP_USER"}
             label="Role"
             onChange={(event: SelectChangeEvent) => {
@@ -311,6 +309,11 @@ function ApiKeyHelp(){
       <HelpList>
         <HelpItem><HelpChip label={"Subject"}/>
           Subject cannot be updated after the API key has been created.
+        </HelpItem>
+        <HelpItem><HelpChip label={"Role"}/>
+          Role can be changed, but only api-tokens after the change has been 
+          saved will contain that role. Previously existing api-tokens will 
+          continue to function with the original role.
         </HelpItem>
         <HelpItem><HelpChip label={"Expire"}/>
           Note that if you use "Extend expiry" - you still need to generate a 
