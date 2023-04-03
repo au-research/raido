@@ -1,11 +1,17 @@
 import { useMutation } from "@tanstack/react-query";
 import {
-  AccessType, AlternateIdentifierBlock,
+  AccessType,
+  AlternateIdentifierBlock,
   ContributorBlock,
   DescriptionBlock,
   OrganisationBlock,
   RaidoMetadataSchemaV1,
-  ReadRaidResponseV2, RelatedObjectBlock, RelatedRaidBlock, SpatialCoverageBlock, SubjectBlock,
+  ReadRaidResponseV2,
+  RelatedObjectBlock,
+  RelatedRaidBlock,
+  SpatialCoverageBlock,
+  SubjectBlock,
+  TraditionalKnowledgeLabelBlock,
   ValidationFailure
 } from "Generated/Raidv2";
 import { assert, WithRequired } from "Util/TypeUtil";
@@ -30,7 +36,12 @@ import { ValidationFailureDisplay } from "Component/Util";
 import {
   getFirstAlternateIdentifier,
   getFirstLeader,
-  getFirstPrimaryDescription, getFirstRelatedObject, getFirstRelatedRaid, getFirstSpatialCoverage, getFirstSubject,
+  getFirstPrimaryDescription,
+  getFirstRelatedObject,
+  getFirstRelatedRaid,
+  getFirstSpatialCoverage,
+  getFirstSubject,
+  getFirstTraditionalKnowledgeLabel,
   getLeadOrganisation,
   getPrimaryTitle
 } from "Component/MetaDataContainer";
@@ -75,7 +86,8 @@ function isDifferent(formData: FormData, original: FormData){
     formData.alternateIdentifier !== original.alternateIdentifier ||
     formData.alternateIdentifierType !== original.alternateIdentifierType ||
     formData.spatialCoverage !== original.spatialCoverage ||
-    formData.spatialCoveragePlace !== original.spatialCoveragePlace;
+    formData.spatialCoveragePlace !== original.spatialCoveragePlace ||
+    formData.traditionalKnowledgeLabel !== original.traditionalKnowledgeLabel;
 }
 
 type FormData = Readonly<{
@@ -97,13 +109,14 @@ type FormData = Readonly<{
   alternateIdentifierType: string,
   spatialCoverage: string,
   spatialCoveragePlace: string,
+  traditionalKnowledgeLabel: string,
 }>;
 type ValidFormData = WithRequired<FormData, 'startDate'>;
 
 function mapReadQueryDataToFormData(
   raid: ReadRaidResponseV2, 
   metadata: RaidoMetadataSchemaV1
-): { primaryTitle: string; relatedRaid: string; leadOrganisation: string; accessStatement: string; subject: string; relatedObject: string; primaryDescription: string; relatedObjectCategory: string; accessType: "Closed" | "Open"; leadContributor: string; alternateIdentifier: string; relatedRaidType: string; relatedObjectType: string; startDate?: Date; alternateIdentifierType: string, spatialCoverage: string, spatialCoveragePlace: string }{
+): { primaryTitle: string; relatedRaid: string; leadOrganisation: string; accessStatement: string; subject: string; relatedObject: string; primaryDescription: string; relatedObjectCategory: string; accessType: "Closed" | "Open"; leadContributor: string; alternateIdentifier: string; relatedRaidType: string; relatedObjectType: string; startDate?: Date; alternateIdentifierType: string, spatialCoverage: string, spatialCoveragePlace: string, traditionalKnowledgeLabel: string }{
   return {
     primaryTitle: raid.primaryTitle,
     startDate: raid.startDate,
@@ -123,6 +136,7 @@ function mapReadQueryDataToFormData(
     alternateIdentifierType: getFirstAlternateIdentifier(metadata)?.alternateIdentifierType ?? "",
     spatialCoverage: getFirstSpatialCoverage(metadata)?.spatialCoverage ?? "",
     spatialCoveragePlace: getFirstSpatialCoverage(metadata)?.spatialCoveragePlace ?? "",
+    traditionalKnowledgeLabel: getFirstTraditionalKnowledgeLabel(metadata)?.traditionalKnowledgeLabelSchemeUri ?? "",
   }
 }
 
@@ -175,6 +189,10 @@ export function findMetadataUpdateProblems(
 
   if( metadata.spatialCoverages && metadata.spatialCoverages.length > 1 ){
     problems.push("The metadata contains multiple spatial coverages.");
+  }
+
+  if( metadata.traditionalKnowledgeLabels && metadata.traditionalKnowledgeLabels.length > 1 ){
+    problems.push("The metadata contains multiple traditional knowledge labels.");
   }
 
   return problems
@@ -262,6 +280,13 @@ function createUpdateMetadata(
     })
   }
 
+  const newTraditionalKnowledgeLabels: TraditionalKnowledgeLabelBlock[] = [];
+  if (formData.traditionalKnowledgeLabel) {
+    newTraditionalKnowledgeLabels.push({
+      traditionalKnowledgeLabelSchemeUri: formData.traditionalKnowledgeLabel,
+    })
+  }
+
   /* make sure to update findMetadataUpdateProblems() to detect complicated
   scenarios where this logic would stomp complicated raid data. */
   return {
@@ -286,6 +311,7 @@ function createUpdateMetadata(
     relatedObjects: newRelatedObjects,
     alternateIdentifiers: newAlternateIdentifiers,
     spatialCoverages: newSpatialCoverages,
+    traditionalKnowledgeLabels: newTraditionalKnowledgeLabels,
   };
 }
 
@@ -628,6 +654,28 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
                      label="Place"
           />
         </InputFieldGroup>
+
+        <FormControl>
+          <InputLabelWithProblem id="traditionalKnowledgeLabelSchemeLabel"
+                                 label="Traditional Knowledge Scheme"
+          />
+          <Select
+            labelId="traditionalKnowledgeLabelSchemeLabel"
+            id="traditionalKnowledgeSchemeSelect"
+            value={formData.traditionalKnowledgeLabel || ''}
+            label="Traditional Knowledge Scheme"
+            onChange={(event) => {
+              // maybe a type guard would be better?
+              const traditionalKnowledgeLabel = event.target.value;
+              setFormData({...formData, traditionalKnowledgeLabel});
+
+            }}
+          >
+            <MenuItem value=""></MenuItem>
+            <MenuItem value="https://localcontexts.org/labels/traditional-knowledge-labels/">Traditional Knowledge Labels</MenuItem>
+            <MenuItem value="https://localcontexts.org/labels/biocultural-labels/">Biocultural Labels</MenuItem>
+          </Select>
+        </FormControl>
         
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton type="button" onClick={(e) => {

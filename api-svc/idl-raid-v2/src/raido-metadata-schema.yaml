@@ -212,6 +212,9 @@ components:
         spatialCoverages:
           type: array
           items: {$ref: 'metadata-block.yaml#/components/schemas/SpatialCoverageBlock'}
+        traditionalKnowledgeLabels:
+          type: array
+          items: { $ref: 'metadata-block.yaml#/components/schemas/TraditionalKnowledgeLabelBlock' }
     LegacyMetadataSchemaV1:
       description: >
         This type is used for raid data imported from the legacy raid system 

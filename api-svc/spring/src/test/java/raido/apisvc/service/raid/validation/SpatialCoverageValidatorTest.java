@@ -13,7 +13,7 @@ import static org.hamcrest.Matchers.is;
 
 class SpatialCoverageValidatorTest {
 
-  private final SpatialCoverageValidator validator = new SpatialCoverageValidator();
+  private final SpatialCoverageValidationService validator = new SpatialCoverageValidationService();
 
   @Test
   void noFailuresWhenSpatialCoverageIsNull() {

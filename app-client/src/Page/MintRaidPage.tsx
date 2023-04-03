@@ -13,7 +13,7 @@ import React, {useState} from "react";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import {
   AccessType,
-  AlternateIdentifierBlock,
+  AlternateIdentifierBlock, ContributorBlock,
   DescriptionBlock,
   OrganisationBlock,
   RaidoMetadataSchemaV1,
@@ -21,7 +21,7 @@ import {
   RelatedRaidBlock,
   ServicePoint,
   SpatialCoverageBlock,
-  SubjectBlock,
+  SubjectBlock, TraditionalKnowledgeLabelBlock,
   ValidationFailure
 } from "Generated/Raidv2";
 import {useAuthApi} from "Api/AuthApi";
@@ -107,12 +107,13 @@ type FormData = Readonly<{
   alternateIdentifierType: string,
   spatialCoverage: string,
   spatialCoveragePlace: string,
+  traditionalKnowledgeLabel: string,
 }>;
 type ValidFormData = WithRequired<FormData, 'startDate'>;
 
 function mapFormDataToMetadata(
   form: ValidFormData 
-): Omit<RaidoMetadataSchemaV1, 'id'>{
+): { metadataSchema: string; spatialCoverages: SpatialCoverageBlock[]; access: { accessStatement: string; type: "Closed" | "Open" }; subjects: SubjectBlock[]; traditionalKnowledgeLabels: TraditionalKnowledgeLabelBlock[]; dates: { startDate: Date }; titles: { title: string; type: string; startDate: Date }[]; descriptions: DescriptionBlock[]; relatedRaids: RelatedRaidBlock[]; organisations: OrganisationBlock[]; alternateIdentifiers: AlternateIdentifierBlock[]; contributors: ContributorBlock[]; relatedObjects: RelatedObjectBlock[] }{
   const descriptions: DescriptionBlock[] = [];
   if( form.primaryDescription ){
     descriptions.push({
@@ -170,6 +171,13 @@ function mapFormDataToMetadata(
     })
   }
 
+  const traditionalKnowledgeLabels: TraditionalKnowledgeLabelBlock[] = [];
+  if(form.traditionalKnowledgeLabel) {
+    traditionalKnowledgeLabels.push({
+      traditionalKnowledgeLabelSchemeUri: form.traditionalKnowledgeLabel,
+    })
+  }
+
   return {
     metadataSchema: "RaidoMetadataSchemaV1",
     access: {
@@ -194,6 +202,7 @@ function mapFormDataToMetadata(
     relatedObjects,
     alternateIdentifiers,
     spatialCoverages,
+    traditionalKnowledgeLabels,
   };
 }
 
@@ -544,6 +553,28 @@ function MintRaidContainer({servicePointId, onCreate}: {
                      label="Place"
           />
         </InputFieldGroup>
+
+        <FormControl>
+          <InputLabelWithProblem id="traditionalKnowledgeLabelSchemeLabel"
+                                 label="Traditional Knowledge Scheme"
+                                 />
+          <Select
+            labelId="traditionalKnowledgeLabelSchemeLabel"
+            id="traditionalKnowledgeSchemeSelect"
+            value={formData.traditionalKnowledgeLabel || ''}
+            label="Traditional Knowledge Scheme"
+            onChange={(event: SelectChangeEvent) => {
+              // maybe a type guard would be better?
+              const traditionalKnowledgeLabel = event.target.value;
+              setFormData({...formData, traditionalKnowledgeLabel});
+
+            }}
+          >
+            <MenuItem value=""></MenuItem>
+            <MenuItem value="https://localcontexts.org/labels/traditional-knowledge-labels/">Traditional Knowledge Labels</MenuItem>
+            <MenuItem value="https://localcontexts.org/labels/biocultural-labels/">Biocultural Labels</MenuItem>
+          </Select>
+        </FormControl>
         
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton onClick={navBrowserBack}
@@ -647,13 +678,14 @@ export function findAlternateIdentifierTypeProblem(alternateIdentifier: string, 
 
 export function findSpatialCoverageProblem(spatialCoverage: string, spatialCoveragePlace: string) {
   if (spatialCoverage) {
-    return (spatialCoverage.match("^https:\/\/www\.geonames\.org\/[\\d]+\\/[\\w]+\.html$")) ? undefined :
+    return (spatialCoverage.match("^https://www.geonames.org/[\\d]+/[\\w]+.html$")) ? undefined :
       "URL is invalid"
   }
   else {
     return (!spatialCoveragePlace ? true : !!spatialCoverage) ? undefined : "must be set";
   }
 }
+
 export function MintRaidHelp(){
   return <HelpPopover content={
     <Stack spacing={1}>

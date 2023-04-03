@@ -11,7 +11,7 @@ import {
   RaidoMetadataSchemaV1,
   RaidoMetadataSchemaV1FromJSON,
   RaidoMetaschema, RelatedObjectBlock, RelatedRaidBlock, SpatialCoverageBlock, SubjectBlock,
-  TitleBlock
+  TitleBlock, TraditionalKnowledgeLabelBlock
 } from "Generated/Raidv2";
 
 export function MetaDataContainer({metadata}: {metadata: any}){
@@ -138,5 +138,13 @@ export function getFirstSpatialCoverage(
 ): undefined | SpatialCoverageBlock {
   if (metadata.spatialCoverages?.length) {
     return metadata.spatialCoverages[0]
+  }
+}
+
+export function getFirstTraditionalKnowledgeLabel(
+  metadata: RaidoMetadataSchemaV1
+): undefined | TraditionalKnowledgeLabelBlock {
+  if (metadata.traditionalKnowledgeLabels?.length) {
+    return metadata.traditionalKnowledgeLabels[0]
   }
 }

@@ -28,13 +28,15 @@ class RaidSchemaV1ValidationServiceTest {
   private IdentifierParser identifierParser;
   @Mock
   private RelatedRaidValidationService relatedRaidValidationService;
-
   @Mock
   private RelatedObjectValidationService relatedObjectValidationService;
-
   @Mock
   private AlternateIdentifierValidationService alternateIdentifierValidationService;
 
+  @Mock
+  private SpatialCoverageValidationService spatialCoverageValidationService;
+  @Mock
+  private TraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelValidatorService;
   @InjectMocks
   private RaidSchemaV1ValidationService validationService;
 
@@ -130,5 +132,61 @@ class RaidSchemaV1ValidationServiceTest {
 
     validationService.validateForUpdate(handle, raid);
     verify(alternateIdentifierValidationService).validateAlternateIdentifiers(alternateIdentifiers);
+  }
+
+  @Test
+  void validatesSpatialCoverageOnCreate() {
+    final var handle = "test-handle";
+    final var spatialCoverages =
+      Collections.singletonList(new SpatialCoverageBlock());
+
+    final var raid = new CreateRaidV1Request()
+      .id(new IdBlock())
+      .spatialCoverages(spatialCoverages);
+
+    validationService.validateForCreate(raid);
+    verify(spatialCoverageValidationService).validateSpatialCoverages(spatialCoverages);
+  }
+
+  @Test
+  void validatesSpatialCoverageOnUpdate() {
+    final var handle = "test-handle";
+    final var spatialCoverages =
+      Collections.singletonList(new SpatialCoverageBlock());
+
+    final var raid = new UpdateRaidV1Request()
+      .id(new IdBlock())
+      .spatialCoverages(spatialCoverages);
+
+    validationService.validateForUpdate(handle, raid);
+    verify(spatialCoverageValidationService).validateSpatialCoverages(spatialCoverages);
+  }
+
+  @Test
+  void validatesTraditionalKnowledgeLabelsOnCreate() {
+    final var handle = "test-handle";
+    final var traditionalKnowledgeLabels =
+      Collections.singletonList(new TraditionalKnowledgeLabelBlock());
+
+    final var raid = new CreateRaidV1Request()
+      .id(new IdBlock())
+      .traditionalKnowledgeLabels(traditionalKnowledgeLabels);
+
+    validationService.validateForCreate(raid);
+    verify(traditionalKnowledgeLabelValidatorService).validateTraditionalKnowledgeLabels(traditionalKnowledgeLabels);
+  }
+
+  @Test
+  void validatesTraditionalKnowledgeLabelsOnUpdate() {
+    final var handle = "test-handle";
+    final var traditionalKnowledgeLabels =
+      Collections.singletonList(new TraditionalKnowledgeLabelBlock());
+
+    final var raid = new UpdateRaidV1Request()
+      .id(new IdBlock())
+      .traditionalKnowledgeLabels(traditionalKnowledgeLabels);
+
+    validationService.validateForUpdate(handle, raid);
+    verify(traditionalKnowledgeLabelValidatorService).validateTraditionalKnowledgeLabels(traditionalKnowledgeLabels);
   }
 }

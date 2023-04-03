@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 @Component
-public class SpatialCoverageValidator {
+public class SpatialCoverageValidationService {
   private static final String URI_PATTERN =
     "^https://www\\.geonames\\.org/[\\d]+/[\\w]+\\.html";
 
