@@ -10,7 +10,7 @@ import {
   LegacyMetadataSchemaV1FromJSON, OrganisationBlock, PublicRaidMetadataSchemaV1,
   RaidoMetadataSchemaV1,
   RaidoMetadataSchemaV1FromJSON,
-  RaidoMetaschema, RelatedObjectBlock, RelatedRaidBlock, SubjectBlock,
+  RaidoMetaschema, RelatedObjectBlock, RelatedRaidBlock, SpatialCoverageBlock, SubjectBlock,
   TitleBlock
 } from "Generated/Raidv2";
 
@@ -130,5 +130,13 @@ export function getFirstAlternateIdentifier(
 ): undefined | AlternateIdentifierBlock {
   if (metadata.alternateIdentifiers?.length) {
     return metadata.alternateIdentifiers[0]
+  }
+}
+
+export function getFirstSpatialCoverage(
+  metadata: RaidoMetadataSchemaV1
+): undefined | SpatialCoverageBlock {
+  if (metadata.spatialCoverages?.length) {
+    return metadata.spatialCoverages[0]
   }
 }
