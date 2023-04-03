@@ -64,4 +64,4 @@ different signing keys for the actual JWT).
 
 But; an api-token issued in DEMO will continue to work in DEMO even after 
 a DB refresh from PROD. This  works as long as the api-key was present in PROD 
-before the DB snapshot was taken and the api-key has not been disabled. 
+before the DB baseline was taken (and the api-key has not been disabled). 
