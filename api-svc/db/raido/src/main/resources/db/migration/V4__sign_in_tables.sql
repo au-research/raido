@@ -83,7 +83,7 @@ create table app_user (
 
 -- worried about multiple user_request approvals and moving users around between
 -- service-points in case of user error, etc.
--- IMPROVE: but this means the "api-key" subject is globally unique - that's no
+-- TODO:STO but this means the "api-key" subject is globally unique - that's no
 -- good.  index should be partial, only where not id_prodvider is API?
 create unique index app_user_id_fields_active_key
   on app_user(email, client_id, subject)
