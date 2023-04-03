@@ -5,15 +5,13 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.jooq.DSLContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import raido.apisvc.repository.AppUserRepository;
 import raido.apisvc.spring.config.environment.RaidV2ApiKeyAuthProps;
 import raido.apisvc.spring.security.raidv2.AuthzTokenPayload;
 import raido.apisvc.util.Guard;
-import raido.apisvc.util.JwtUtil;
 import raido.apisvc.util.Log;
-import raido.db.jooq.api_svc.tables.records.AppUserRecord;
 
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -28,7 +26,6 @@ import static raido.apisvc.util.JwtUtil.JWT_TOKEN_TYPE;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.areEqual;
 import static raido.apisvc.util.StringUtil.mask;
-import static raido.db.jooq.api_svc.tables.AppUser.APP_USER;
 
 /**
  Handles signing and verifying JWTs for signing in (does not handle api-keys).
@@ -38,14 +35,14 @@ public class RaidV2ApiKeyAuthService {
   private static final Log log = to(RaidV2ApiKeyAuthService.class);
 
   private RaidV2ApiKeyAuthProps apiAuthProps;
-  private DSLContext db;
+  private AppUserRepository appUserRepo;
   
   public RaidV2ApiKeyAuthService(
-    RaidV2ApiKeyAuthProps apiAuthProps, 
-    DSLContext db
+    RaidV2ApiKeyAuthProps apiAuthProps,
+    AppUserRepository appUserRepo
   ) {
     this.apiAuthProps = apiAuthProps;
-    this.db = db;
+    this.appUserRepo = appUserRepo;
   }
 
   public String sign(
@@ -146,7 +143,7 @@ public class RaidV2ApiKeyAuthService {
     the api-key. Update the api-key.md doco if you change this. */
     Guard.hasValue(role);
     
-    var user = getAppUserRecord(appUserId).
+    var user = appUserRepo.getAppUserRecord(appUserId).
       orElseThrow(()->{
         log.with("appUserId", appUserId).
           with("email", email).
@@ -219,12 +216,5 @@ public class RaidV2ApiKeyAuthService {
     throw authFailed();
   }
 
-  /** This should be cached read, otherwise we're gonna be doing 
-   this for every single API call for a user.  Use Caffeine. */
-  public Optional<AppUserRecord> getAppUserRecord(
-    long appUserId
-  ){
-    return db.fetchOptional(APP_USER, APP_USER.ID.eq(appUserId));
-  }
 
 }

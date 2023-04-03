@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import raido.apisvc.repository.AppUserRepository;
 import raido.apisvc.service.auth.RaidV2AppUserAuthService;
 import raido.apisvc.spring.config.environment.RaidoAuthnProps;
 import raido.apisvc.spring.security.ApiSafeException;
@@ -26,7 +27,6 @@ import static raido.apisvc.service.auth.NonAuthzTokenPayload.NonAuthzTokenPayloa
 import static raido.apisvc.spring.security.IdProviderException.idpException;
 import static raido.apisvc.util.ExceptionUtil.authFailed;
 import static raido.apisvc.util.Log.to;
-import static raido.apisvc.util.StringUtil.areEqual;
 import static raido.apisvc.util.StringUtil.blankToDefault;
 import static raido.apisvc.util.StringUtil.isBlank;
 import static raido.apisvc.util.StringUtil.isNullOrEmpty;
@@ -45,15 +45,18 @@ public class AppUserAuthnEndpoint {
   
   private RaidV2AppUserAuthService raidV2UserAuthSvc;
   private RaidoAuthnProps authnProps;
+  private AppUserRepository appUserRepo;
 
   public AppUserAuthnEndpoint(
     ObjectMapper map,
     RaidV2AppUserAuthService raidV2UserAuthSvc,
-    RaidoAuthnProps authnProps
+    RaidoAuthnProps authnProps,
+    AppUserRepository appUserRepo
   ) {
     this.map = map;
     this.raidV2UserAuthSvc = raidV2UserAuthSvc;
     this.authnProps = authnProps;
+    this.appUserRepo = appUserRepo;
   }
 
   record AuthState(String redirectUri, String clientId) { }
@@ -124,7 +127,7 @@ public class AppUserAuthnEndpoint {
     Guard.hasValue(email);
     Guard.hasValue(subject);
 
-    var userRecord = raidV2UserAuthSvc.
+    var userRecord = appUserRepo.
       getAppUserRecord(email, subject, state.clientId); 
     if( userRecord.isEmpty() ){
       log.with("email", email).

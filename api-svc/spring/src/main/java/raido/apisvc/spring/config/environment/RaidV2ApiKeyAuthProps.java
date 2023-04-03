@@ -40,7 +40,8 @@ public class RaidV2ApiKeyAuthProps {
     Guard.isTrue("signingSecret is too short", signingSecret.length() >= 32 );
     log.with("size", jwtSecrets.length).
       with("signingSecret", mask(signingSecret)).
-      info("jwtSecrets");
+      with("issuer", issuer).
+      info("config");
 
     this.signingAlgo = Algorithm.HMAC256(signingSecret);
     

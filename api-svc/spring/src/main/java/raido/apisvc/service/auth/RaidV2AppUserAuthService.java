@@ -4,15 +4,14 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.jooq.DSLContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import raido.apisvc.repository.AppUserRepository;
 import raido.apisvc.spring.config.environment.RaidV2AppUserAuthProps;
 import raido.apisvc.spring.security.raidv2.AuthzTokenPayload;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.IdProvider;
-import raido.db.jooq.api_svc.tables.records.AppUserRecord;
 
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -28,7 +27,6 @@ import static raido.apisvc.util.ExceptionUtil.wrapException;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.areEqual;
 import static raido.apisvc.util.StringUtil.mask;
-import static raido.db.jooq.api_svc.tables.AppUser.APP_USER;
 
 /**
  Handles signing and verifying JWTs for signing in (does not handle api-keys).
@@ -40,20 +38,20 @@ public class RaidV2AppUserAuthService {
   public static final String IS_AUTHORIZED_APP_USER = "isAuthorizedAppUser";
 
   private RaidV2AppUserAuthProps userAuthProps;
-  private DSLContext db;
+  private AppUserRepository appUserRepo;
   private AafOidc aaf;
   private GoogleOidc google;
   private OrcidOidc orcid;
   
   public RaidV2AppUserAuthService(
-    RaidV2AppUserAuthProps userAuthProps, 
-    DSLContext db,
+    RaidV2AppUserAuthProps userAuthProps,
+    AppUserRepository appUserRepo, 
     AafOidc aaf,
     GoogleOidc google,
     OrcidOidc orcid
   ) {
     this.userAuthProps = userAuthProps;
-    this.db = db;
+    this.appUserRepo = appUserRepo;
     this.aaf = aaf;
     this.google = google;
     this.orcid = orcid;
@@ -140,7 +138,7 @@ public class RaidV2AppUserAuthService {
     Guard.notNull(appUserId);
     Guard.hasValue(role);
     
-    var user = getAppUserRecord(appUserId).
+    var user = appUserRepo.getAppUserRecord(appUserId).
       orElseThrow(()->{
         log.with("appUserId", appUserId).
           with("email", email).
@@ -213,42 +211,6 @@ public class RaidV2AppUserAuthService {
     throw authFailed();
   }
 
-  /**
-   This is for originating authentication, so don't need or want it to be 
-   cached.
-   */
-  public Optional<AppUserRecord> getAppUserRecord(
-    String email,
-    String subject, 
-    String clientId
-  ){
-    Guard.hasValue(email);
-    Guard.hasValue(clientId);
-    Guard.hasValue(subject);
-    
-    // service_point_id_fields_active_idx enforces uniqueness 
-    return db.select().
-      from(APP_USER).
-      where(
-        /* had to lowercase() the email because the name fields (that can 
-        end up in the "email" field) come back from orcid with initcaps 
-        and it wasn't matching.
-        The real fix is to start matching on only "subject" claim. */
-        APP_USER.EMAIL.eq(email.toLowerCase()).
-          and(APP_USER.CLIENT_ID.eq(clientId)).
-          and(APP_USER.SUBJECT.eq(subject)).
-          and(APP_USER.ENABLED.isTrue())
-      ).fetchOptionalInto(AppUserRecord.class);
-  }
-
-  /** This should be cached read, otherwise we're gonna be doing 
-   this for every single API call for a user.  Use Caffeine.
-   */
-  public Optional<AppUserRecord> getAppUserRecord(
-    long appUserId
-  ){
-    return db.fetchOptional(APP_USER, APP_USER.ID.eq(appUserId));
-  }
 
   /**
    Returns the verified `id_token` from the IDP by calling the OIDC /token
