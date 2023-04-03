@@ -180,10 +180,9 @@ const devConfig: EnvironmentConfig = {
 
 const demoConfig: EnvironmentConfig = {
   environmentName: "demo",
-  signInWarning: `The DEMO environment has been reset as of 2023-03-06.
-    All previously created raids have been deleted.  
-    All previously created API-keys have been deleted.
-    You will need to submit a new authorisation request to use the system.
+  signInWarning: `The DEMO environment has been reset as of 2023-04-03.
+    You may need to submit a new authorisation request to use the system.
+    The sign-in expiry time has been set to 30 minutes for testing.
     Please send an email to contact@raid.org to let us know you need approval.`,
   isProd: false,
   raidoIssuer: "https://api.demo.raid.org.au",
@@ -195,8 +194,8 @@ const demoConfig: EnvironmentConfig = {
     authnScope: "openid email profile",
   },
   google: {
-    // OAuth client: raid.service@ardc.edu.au / ardc.edu.au / Raido production / Raido DEMO
-    clientId: "333652356987-ecetlds8nprpf81er55jnva1750jputr.apps.googleusercontent.com",
+    // OAuth client: raid.service@ardc.edu.au / ardc.edu.au / Raido production / Raido PROD
+    clientId: "333652356987-6n1dlouree79qbffrtgqd9fit6phkvs5.apps.googleusercontent.com",
     authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
     authnScope: "openid email profile",
   },
@@ -205,8 +204,8 @@ const demoConfig: EnvironmentConfig = {
     //clientId: "APP-207226CSNVZ1ZSQM",
     //authorizeUrl: "https://sandbox.orcid.org/oauth/authorize",
     
-    // client created under STO's personal orcid
-    clientId: "APP-IZBIZ6O7XH9RFG0X",
+    // OAuth client: orcid "raido" account
+    clientId: "APP-89ARS7MGN01HGYUO",
     authorizeUrl: "https://orcid.org/oauth/authorize",
     
     authnScope: "openid",
