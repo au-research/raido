@@ -73,6 +73,26 @@ Manually imported from /au-research/raido-aws-private #8ca84286.
 Look there for earlier git history.
 
 
+# V1.0 Production deployment problem
+
+I had made changes to the V3, V4, and V5 sql files, expecting that I would
+clean the DB out and re-run the creation from scratch in production.
+
+I made mistake and didn't do the re-creation for the prod deployment.
+That was a big mistake, and the changes to the files meant that the 
+`flywayMigrate` would fail on the production database (reproced by doing a 
+DB refresh from prod onto my own machine via `pg_restore`/`pg_dump`).
+
+To fix that, I manually reverted the changes to the V3-5 files.
+It seems I got very lucky with the prod deployment and it (accidentally) 
+imported the correct RDM@UQ token. 
+
+After that, I  added the V7 migration to change the primary key for the 
+`token` table so that the int-tests would work properly.
+
+I didn't worry about the other two tables (metadata and association_index) 
+as they're not used anyway.
+
 ----
 
 

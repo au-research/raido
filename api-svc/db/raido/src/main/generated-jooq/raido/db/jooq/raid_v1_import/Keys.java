@@ -34,7 +34,7 @@ public class Keys {
 
     public static final UniqueKey<AssociationIndexRecord> ASSOCIATION_INDEX_PKEY = Internal.createUniqueKey(AssociationIndex.ASSOCIATION_INDEX, DSL.name("association_index_pkey"), new TableField[] { AssociationIndex.ASSOCIATION_INDEX.HANDLE }, true);
     public static final UniqueKey<FlywaySchemaHistoryRecord> FLYWAY_SCHEMA_HISTORY_PK = Internal.createUniqueKey(FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, DSL.name("flyway_schema_history_pk"), new TableField[] { FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.INSTALLED_RANK }, true);
-    public static final UniqueKey<MetadataRecord> METADATA_PKEY = Internal.createUniqueKey(Metadata.METADATA, DSL.name("metadata_pkey"), new TableField[] { Metadata.METADATA.NAME, Metadata.METADATA.TYPE }, true);
+    public static final UniqueKey<MetadataRecord> METADATA_PKEY = Internal.createUniqueKey(Metadata.METADATA, DSL.name("metadata_pkey"), new TableField[] { Metadata.METADATA.NAME }, true);
     public static final UniqueKey<RaidRecord> RAID_PKEY = Internal.createUniqueKey(Raid.RAID, DSL.name("raid_pkey"), new TableField[] { Raid.RAID.HANDLE }, true);
     public static final UniqueKey<TokenRecord> TOKEN_PKEY = Internal.createUniqueKey(Token.TOKEN, DSL.name("token_pkey"), new TableField[] { Token.TOKEN.NAME, Token.TOKEN.ENVIRONMENT, Token.TOKEN.DATE_CREATED }, true);
 }
