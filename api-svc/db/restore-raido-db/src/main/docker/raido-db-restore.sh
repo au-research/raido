@@ -8,13 +8,12 @@ ls -la
 
 # this is the env var that psql will pick up from 
 export PGPASSWORD="${PG_ADMIN_PASSWORD:?PG_ADMIN_PASSWORD environment variable is empty}"
+API_USER_PASSWORD_TEST="${API_USER_PASSWORD:?API_USER_PASSWORD environment variable is empty}"
 
 PG_DUMP_FILE="import-data/${PG_DUMP_FILE:?PG_DUMP_FILE environment variable is empty}"
 
 #make sure the file exists
 ls -la $PG_DUMP_FILE
-
-#export PGPASSWORD=$PG_ADMIN_PASSWORD:?PG_ADMIN_PASSWORD environment variable is empty
 
 export HOST_PORT="--host=$PG_HOST --port=$PG_PORT"
 export FAIL_ON_ERROR="-v ON_ERROR_STOP=1"
@@ -49,19 +48,10 @@ psql $HOST_PORT $FAIL_ON_ERROR --username=$PG_ADMIN_USER \
   -v API_USER_NAME="$API_USER_NAME" \
   --file create-database.sql
 
-echo "creating schema $API_SCHEMA_NAME"
-#cat create-schema.sql
-psql $HOST_PORT $FAIL_ON_ERROR --username=$PG_ADMIN_USER \
-  --dbname $RAIDO_DB_NAME \
-  -v API_USER_NAME="$API_USER_NAME" \
-  -v API_SCHEMA_NAME="$API_SCHEMA_NAME" \
-  --file create-schema.sql
-
 echo "restoring into database $RAIDO_DB_NAME"
 pg_restore $HOST_PORT --exit-on-error \
   --verbose --single-transaction --no-owner \
   --username=$PG_ADMIN_USER --dbname=$RAIDO_DB_NAME   \
-  --schema=$API_SCHEMA_NAME \
   $PG_DUMP_FILE
 
 #not sure if we want this

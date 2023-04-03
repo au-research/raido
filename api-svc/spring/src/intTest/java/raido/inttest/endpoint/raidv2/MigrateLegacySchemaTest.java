@@ -24,8 +24,14 @@ import static raido.inttest.endpoint.raidv2.RaidoSchemaV1Test.createDummyLeaderC
 
 public class MigrateLegacySchemaTest extends IntegrationTestCase {
 
-  public static final String NOTRE_DAME = "University of Notre Dame Library";
-  
+  /* we changed the name of this via the UI, so it doesn't line up with the 
+   flyway migration any more in demo/prod data.
+   Int tests were failing when run on an imported DB. 
+   In future for this kind of thing, need to work off id, not name.
+   But for this test specifically, we'll delete this functionality soon 
+   anyway. */
+  public static final String NOTRE_DAME = "University of Notre Dame";
+
   @Test
   void happyDayScenario() throws JsonProcessingException {
     var today = LocalDate.now();

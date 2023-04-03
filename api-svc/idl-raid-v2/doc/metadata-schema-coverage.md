@@ -57,9 +57,15 @@ Complete, except missing language fields.
 
 Complete, except missing language fields.
 
+Only supports ORCID identifiers at the moment.
+Can be extended on request to other (controlled) identifiers.
+
 ## 7. Organisation - Complete
 
 Complete, except missing language fields.
+
+Only supports RoR identifiers at the moment.
+Can be extended on request to other (controlled) identifiers.
 
 ## 8. RelatedObject - Complete
 

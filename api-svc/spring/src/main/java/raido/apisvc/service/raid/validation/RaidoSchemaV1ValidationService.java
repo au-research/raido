@@ -34,6 +34,8 @@ public class RaidoSchemaV1ValidationService {
 
   private final RelatedObjectValidationService relatedObjectSvc;
   private final AlternateIdentifierValidationService alternateIdentifierSvc;
+
+  private final SpatialCoverageValidator spatialCoverageSvc;
   
   public RaidoSchemaV1ValidationService(
     final TitleValidationService titleSvc,
@@ -43,7 +45,7 @@ public class RaidoSchemaV1ValidationService {
     final SubjectValidationService subjectSvc,
     final RelatedRaidValidationService relatedRaidSvc,
     final IdentifierParser handleParser,
-    final RelatedObjectValidationService relatedObjectSvc, final AlternateIdentifierValidationService alternateIdentifierSvc) {
+    final RelatedObjectValidationService relatedObjectSvc, final AlternateIdentifierValidationService alternateIdentifierSvc, final SpatialCoverageValidator spatialCoverageSvc) {
     this.titleSvc = titleSvc;
     this.descSvc = descSvc;
     this.contribSvc = contribSvc;
@@ -53,6 +55,7 @@ public class RaidoSchemaV1ValidationService {
     this.handleParser = handleParser;
     this.relatedObjectSvc = relatedObjectSvc;
     this.alternateIdentifierSvc = alternateIdentifierSvc;
+    this.spatialCoverageSvc = spatialCoverageSvc;
   }
 
   /**
@@ -81,6 +84,7 @@ public class RaidoSchemaV1ValidationService {
     failures.addAll(relatedRaidSvc.validateRelatedRaids(metadata.getRelatedRaids()));
     failures.addAll(relatedObjectSvc.validateRelatedObjects(metadata.getRelatedObjects()));
     failures.addAll(alternateIdentifierSvc.validateAlternateIdentifiers(metadata.getAlternateIdentifiers()));
+    failures.addAll(spatialCoverageSvc.validateSpatialCoverages(metadata.getSpatialCoverages()));
 
     return failures;
   }

@@ -117,6 +117,12 @@ components:
       properties:
         alternateIdentifier: { type: string }
         alternateIdentifierType: { type: string }
+    SpatialCoverageBlock:
+      type: object
+      properties:
+        spatialCoverage: { type: string }
+        spatialCoverageSchemeUri: { type: string }
+        spatialCoveragePlace: { type: string }
     TitleType:
       type: string
       enum: ['Primary Title', 'Alternative Title']

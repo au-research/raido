@@ -54,29 +54,40 @@ export function App(){
                 isPrivacyPagePath, isUsageTermsPagePath, isAboutRaidPagePath,
                 isRaidLandingPagePath,
               ]}>
-                {/* binds authentication stuff to OpenAPI stuff */}
-                <AuthApiProvider>
-                  {/* transition animation and delegates to location infra */}
-                  <NavigationProvider>
-                    {/* NavBar across the top of screen and sliding drawer */}
-                    <AppNavBar/>
-
-                    {/* Navigable, authenticated pages, self-routed */}
-                    <HomePage/>
-                    <AboutAppPage/>
-                    <AdminAuthzRequestPage/>
-                    <AuthzRespondPage/>
-                    <ListServicePointPage/>
-                    <ServicePointPage/>
-                    <ListAppUserPage/>
-                    <AppUserPage/>
-                    <ListApiKeyPage/>
-                    <ApiKeyPage/>
-                    <EditRaidPage/>
-                    <MintRaidPage/>
-
-                  </NavigationProvider>
-                </AuthApiProvider>
+                {/* re-bind a new ErrorDialog context where the auth context is 
+                available. Any errors in components above this will call the 
+                error handler on the "top" ErrorDialog where auth is not 
+                available, any below will have auth available.
+                By using a second instance of the *same* ErrorDialog context,
+                it means that the "handeError" context function is re-bound so 
+                that calling components don't need to worry about which 
+                ErrorDialog context is handling their error. */}
+                <ErrorDialogProvider>
+                  {/* binds authentication stuff to OpenAPI stuff */}
+                  <AuthApiProvider>
+                    
+                    {/* transition animation and delegates to location infra */}
+                    <NavigationProvider>
+                      {/* NavBar across the top of screen and sliding drawer */}
+                      <AppNavBar/>
+  
+                      {/* Navigable, authenticated pages, self-routed */}
+                      <HomePage/>
+                      <AboutAppPage/>
+                      <AdminAuthzRequestPage/>
+                      <AuthzRespondPage/>
+                      <ListServicePointPage/>
+                      <ServicePointPage/>
+                      <ListAppUserPage/>
+                      <AppUserPage/>
+                      <ListApiKeyPage/>
+                      <ApiKeyPage/>
+                      <EditRaidPage/>
+                      <MintRaidPage/>
+  
+                    </NavigationProvider>
+                  </AuthApiProvider>
+                </ErrorDialogProvider>
               </AuthProvider>
 
               {/* unauthenticated pages, self-routed */}

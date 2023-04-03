@@ -11,6 +11,16 @@ export interface AuthzTokenPayload {
   role: string,
 }
 
+export function isAuthzTokenPayload(obj: any): obj is AuthzTokenPayload {
+  return (
+    !!obj && 
+    typeof obj.clientId === "string" &&
+    typeof obj.servicePointId === "number" &&
+    typeof obj.sub === "string" &&
+    typeof obj.email === "string" &&
+    typeof obj.role === "string"
+  );
+}
 
 /** We need a client-driven redirectUri so we can use the same endpoint for 
 different clients (think: localhost for dev, DEMO and PROD environments. 

@@ -112,24 +112,27 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
     /* No need for an info level check, if info is disabled the filter won't 
     have been added to the filter-chain in the first place. * */
     
+    // url, user and time at the top so they're ease to see in cloudwatch logs
     var logBuild = log.with("url", request.getRequestURI()).
-      with("contentType", request.getContentType()).
-      with("accept", request.getHeader(ACCEPT)).
+      with("method",  request.getMethod()).
       with("user", request.getRemoteUser()).
       with("timeMs", time).
-      with("status", response.getStatus());
+      with("status", response.getStatus()).
+      with("contentType", request.getContentType()).
+      with("accept", request.getHeader(ACCEPT));
 
     String locationHeader = response.getHeader(LOCATION);
     if( locationHeader != null ){
       logBuild = logBuild.with("location", sanitiseLocationUrl(locationHeader));
     }
 
-    // don't log params because they contain sensitive info
+    // don't log params from IDP because they contain sensitive info
     if( !trimEqualsIgnoreCase(request.getRequestURI(), IDP_URL) ){
       logBuild = logBuild.with("params", request.getParameterMap());
     }
     
-    logBuild.info("endpoint " + request.getMethod());
+    // consider moving the method to the with clause 
+    logBuild.info("endpoint");
 
     
     if( bodyLog.isDebugEnabled() ){

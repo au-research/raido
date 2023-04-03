@@ -8,6 +8,7 @@ import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.support.ResourcePropertySource;
 import org.springframework.stereotype.Component;
+import raido.apisvc.spring.config.environment.DataSourceProps;
 import raido.apisvc.util.JvmUtil;
 import raido.apisvc.util.Log;
 
@@ -17,7 +18,8 @@ import static raido.apisvc.util.Log.to;
 
 @Component
 public class StartupListener implements
-  ApplicationListener<ContextRefreshedEvent> {
+  ApplicationListener<ContextRefreshedEvent> 
+{
   
   private static final Log log = to(StartupListener.class);
 
@@ -25,10 +27,19 @@ public class StartupListener implements
   private String greeting;
  
   private LocalDateTime startTime;
-  
+
+  private DataSourceProps dsProps;
+
+  public StartupListener(DataSourceProps dsProps) {
+    this.dsProps = dsProps;
+  }
+
   @Override public void onApplicationEvent(ContextRefreshedEvent event) {
     log.with("eventSource", event.getSource()).
       info("Greeting - %s", greeting );
+    log.with("url", dsProps.getUrl()).
+      with("username", dsProps.getUsername()).
+      info("DataSource");
     JvmUtil.logStartupInfo();
 
     this.startTime = LocalDateTime.now();

@@ -6,20 +6,26 @@ import {
   parsePageSuffixParams,
   useNavigation
 } from "Design/NavigationProvider";
-import { raidoTitle, ValidationFailureDisplay } from "Component/Util";
-import { LargeContentMain } from "Design/LayoutMain";
-import { ContainerCard } from "Design/ContainerCard";
-import React, { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import {raidoTitle, ValidationFailureDisplay} from "Component/Util";
+import {LargeContentMain} from "Design/LayoutMain";
+import {ContainerCard} from "Design/ContainerCard";
+import React, {useState} from "react";
+import {useMutation, useQuery} from "@tanstack/react-query";
 import {
-  AccessType, AlternateIdentifierBlock, ContributorBlock,
+  AccessType,
+  AlternateIdentifierBlock,
   DescriptionBlock,
   OrganisationBlock,
-  RaidoMetadataSchemaV1, RelatedObjectBlock, RelatedRaidBlock, SubjectBlock,
+  RaidoMetadataSchemaV1,
+  RelatedObjectBlock,
+  RelatedRaidBlock,
+  ServicePoint,
+  SpatialCoverageBlock,
+  SubjectBlock,
   ValidationFailure
 } from "Generated/Raidv2";
-import { useAuthApi } from "Api/AuthApi";
-import { CompactErrorPanel } from "Error/CompactErrorPanel";
+import {useAuthApi} from "Api/AuthApi";
+import {CompactErrorPanel} from "Error/CompactErrorPanel";
 import {
   FormControl,
   InputLabel,
@@ -27,21 +33,22 @@ import {
   Select,
   SelectChangeEvent,
   Stack,
-  TextField
+  TextField,
+  TextFieldProps
 } from "@mui/material";
-import { PrimaryActionButton, SecondaryButton } from "Component/AppButton";
-import { navBrowserBack } from "Util/WindowUtil";
-import { HelpChip, HelpPopover } from "Component/HelpPopover";
-import { DesktopDatePicker } from "@mui/x-date-pickers";
-import { Dayjs } from "dayjs";
-import { assert, WithRequired } from "Util/TypeUtil";
-import { isValidDate } from "Util/DateUtil";
-import { getEditRaidPageLink } from "Page/EditRaidPage";
-import {
-  createLeadContributor,
-  createLeadOrganisation
-} from "Page/UpgradeLegacySchemaForm";
-import { findOrcidProblem, OrcidField } from "Component/OrcidField";
+import {PrimaryActionButton, SecondaryButton} from "Component/AppButton";
+import {navBrowserBack} from "Util/WindowUtil";
+import {HelpChip, HelpPopover} from "Component/HelpPopover";
+import {DesktopDatePicker} from "@mui/x-date-pickers";
+import {Dayjs} from "dayjs";
+import {assert, WithRequired} from "Util/TypeUtil";
+import {isValidDate} from "Util/DateUtil";
+import {getEditRaidPageLink} from "Page/EditRaidPage";
+import {createLeadContributor, createLeadOrganisation} from "Page/UpgradeLegacySchemaForm";
+import {findOrcidProblem, OrcidField} from "Component/OrcidField";
+import {InputFieldGroup} from "Component/InputFieldGroup";
+import {InputLabelWithProblem, labelWithProblem} from "Component/InputLabelWithProblem";
+import {RqQuery} from "Util/ReactQueryUtil";
 
 const pageUrl = "/mint-raid-v2";
 
@@ -98,12 +105,14 @@ type FormData = Readonly<{
   relatedObjectCategory: string,
   alternateIdentifier: string,
   alternateIdentifierType: string,
+  spatialCoverage: string,
+  spatialCoveragePlace: string,
 }>;
 type ValidFormData = WithRequired<FormData, 'startDate'>;
 
 function mapFormDataToMetadata(
   form: ValidFormData 
-): { metadataSchema: string; access: { accessStatement: string; type: "Closed" | "Open" }; organisations: OrganisationBlock[]; subjects: SubjectBlock[]; dates: { startDate: Date }; titles: { title: string; type: string; startDate: Date }[]; contributors: ContributorBlock[]; descriptions: DescriptionBlock[]; relatedRaids: RelatedRaidBlock[]; relatedObjects: RelatedObjectBlock[]; alternateIdentifiers: AlternateIdentifierBlock[]; }{
+): Omit<RaidoMetadataSchemaV1, 'id'>{
   const descriptions: DescriptionBlock[] = [];
   if( form.primaryDescription ){
     descriptions.push({
@@ -152,6 +161,15 @@ function mapFormDataToMetadata(
     })
   }
 
+  const spatialCoverages: SpatialCoverageBlock[] = []
+  if (form.spatialCoverage) {
+    spatialCoverages.push({
+      spatialCoverage: form.spatialCoverage,
+      spatialCoverageSchemeUri: "https://www.geonames.org/",
+      spatialCoveragePlace: form.spatialCoveragePlace,
+    })
+  }
+
   return {
     metadataSchema: "RaidoMetadataSchemaV1",
     access: {
@@ -175,6 +193,7 @@ function mapFormDataToMetadata(
     relatedRaids,
     relatedObjects,
     alternateIdentifiers,
+    spatialCoverages,
   };
 }
 
@@ -192,6 +211,7 @@ function MintRaidContainer({servicePointId, onCreate}: {
   } as FormData);
   const [serverValidations, setServerValidations] = useState(
     [] as ValidationFailure[] );
+  const leadOrgInputRef = React.useRef<TextFieldProps>(null);
   const mintRequest = useMutation(
     async (data: ValidFormData) => {
       setServerValidations([]);
@@ -217,6 +237,21 @@ function MintRaidContainer({servicePointId, onCreate}: {
     }
   );
 
+  const spQuery: RqQuery<ServicePoint> = useQuery(
+    ['readServicePoint', servicePointId],
+    async () => {
+      const result = await api.admin.readServicePoint({servicePointId});
+      assert(leadOrgInputRef.current, "inputRef not currently bound");
+      if( leadOrgInputRef.current.value === "" ){
+        setFormData((formData)=>{
+          return {...formData, leadOrganisation: result.identifierOwner}
+        });
+      }
+      return result;
+    },
+    {enabled: !!servicePointId}
+  );
+  
   const isTitleValid = !!formData.primaryTitle;
   const leadOrganisationProblem = findOrganisationIdProblem(formData.leadOrganisation);
   const isAccessStatementValid = formData.accessType === "Open" ?
@@ -236,11 +271,13 @@ function MintRaidContainer({servicePointId, onCreate}: {
     findAlternateIdentifierProblem(formData.alternateIdentifier, formData.alternateIdentifierType);
   const alternateIdentifierTypeProblem =
     findAlternateIdentifierTypeProblem(formData.alternateIdentifier, formData.alternateIdentifierType);
+  const spatialCoverageProblem =
+    findSpatialCoverageProblem(formData.spatialCoverage, formData.spatialCoveragePlace);
 
   const canSubmit = isTitleValid && isStartDateValid &&
     isAccessStatementValid && !contribProblem && !leadOrganisationProblem && !subjectProblem && !relatedRaidProblem &&
     !relatedRaidTypeProblem && !relatedObjectProblem && !relatedObjectTypeProblem && !relatedObjectCategoryProblem &&
-    !alternateIdentifierProblem && !alternateIdentifierTypeProblem;
+    !alternateIdentifierProblem && !alternateIdentifierTypeProblem && !spatialCoverageProblem;
   const isWorking = mintRequest.isLoading;
   
   return <ContainerCard title={"Mint RAiD"} action={<MintRaidHelp/>}>
@@ -290,49 +327,51 @@ function MintRaidContainer({servicePointId, onCreate}: {
           label="Lead contributor"
         />
         <TextField id="organisation"
-                   variant="outlined" autoCorrect="off" autoCapitalize="on"
-                   disabled={isWorking}
-                   value={formData.leadOrganisation ?? ""}
-                   onChange={(e) => {
-                     setFormData({
-                       ...formData,
-                       leadOrganisation: e.target.value
-                     });
-                   }}
-                   label={ leadOrganisationProblem ?
-                     "Lead organisation - " + leadOrganisationProblem :
-                     "Lead Organisation"}
-                   error={!!leadOrganisationProblem}
+          variant="outlined" autoCorrect="off" autoCapitalize="on"
+          inputRef={leadOrgInputRef}
+          disabled={isWorking}
+          value={formData.leadOrganisation ?? ""}
+          onChange={(e) => {
+            setFormData({
+              ...formData,
+              leadOrganisation: e.target.value
+            });
+          }}
+          label={labelWithProblem("Lead Organisation", leadOrganisationProblem)}
+          error={!!leadOrganisationProblem}
         />
 
-        <FormControl>
-          <InputLabel id="accessTypeLabel">Access type</InputLabel>
-          <Select
-            labelId="accessTypeLabel"
-            id="accessTypeSelect"
-            value={formData.accessType ?? AccessType.Open.valueOf()}
-            label="Access type"
-            onChange={(event: SelectChangeEvent) => {
-              // maybe a type guard would be better? 
-              const accessType = event.target.value === "Open" ? 
-                AccessType.Open : AccessType.Closed;
-              setFormData({...formData, accessType});
+        <InputFieldGroup label={"Access"}>
+          <FormControl>
+            <InputLabel id="accessTypeLabel">Access type</InputLabel>
+            <Select
+              labelId="accessTypeLabel"
+              id="accessTypeSelect"
+              value={formData.accessType ?? AccessType.Open.valueOf()}
+              label="Access type"
+              onChange={(event: SelectChangeEvent) => {
+                // maybe a type guard would be better? 
+                const accessType = event.target.value === "Open" ? 
+                  AccessType.Open : AccessType.Closed;
+                setFormData({...formData, accessType});
+              }}
+            >
+              <MenuItem value={AccessType.Open}>Open</MenuItem>
+              <MenuItem value={AccessType.Closed}>Closed</MenuItem>
+            </Select>
+          </FormControl>
+          <TextField id="accessStatement" label="Access statement" 
+            variant="outlined" autoCorrect="off" autoCapitalize="on"
+            required={formData.accessType !== "Open"} 
+            disabled={isWorking}
+            value={formData.accessStatement}
+            onChange={e => {
+              setFormData({...formData, accessStatement: e.target.value});
             }}
-          >
-            <MenuItem value={AccessType.Open}>Open</MenuItem>
-            <MenuItem value={AccessType.Closed}>Closed</MenuItem>
-          </Select>
-        </FormControl>
-        <TextField id="accessStatement" label="Access statement" 
-          variant="outlined" autoCorrect="off" autoCapitalize="on"
-          required={formData.accessType !== "Open"} 
-          disabled={isWorking}
-          value={formData.accessStatement}
-          onChange={e => {
-            setFormData({...formData, accessStatement: e.target.value});
-          }}
-          error={!isAccessStatementValid}
-        />
+            error={!isAccessStatementValid}
+          />
+        </InputFieldGroup>
+        
         <TextField id="subject"
                    variant="outlined" autoCorrect="off" autoCapitalize="off"
                    disabled={isWorking}
@@ -343,170 +382,169 @@ function MintRaidContainer({servicePointId, onCreate}: {
                        subject: e.target.value
                      });
                    }}
-                   label={ subjectProblem ?
-                     "Subject - " + subjectProblem :
-                     "Subject"}
+                   label={ labelWithProblem("Subject", subjectProblem)}
                    error={!!subjectProblem}
         />
-        <TextField id="relatedRaid"
-                   variant="outlined" autoCorrect="off" autoCapitalize="off"
-                   disabled={isWorking}
-                   value={formData.relatedRaid ?? ""}
-                   onChange={(e) => {
-                     setFormData({
-                       ...formData,
-                       relatedRaid: e.target.value
-                     });
-                   }}
-                   label={ relatedRaidProblem ?
-                     "Related Raid - " + relatedRaidProblem :
-                     "Related Raid"}
-                   error={!!relatedRaidProblem}
-        />
-        <FormControl>
-          <InputLabel id="relatedRaidTypeLabel">{relatedRaidTypeProblem ?  "Related Raid type - " + relatedRaidTypeProblem : "Related Raid type"}</InputLabel>
-          <Select
-            labelId="relatedRaidTypeLabel"
-            id="relatedRaidTypeSelect"
-            value={formData.relatedRaidType || ''}
-            label={relatedRaidTypeProblem ?  "Related Raid type - " + relatedRaidTypeProblem : "Related Raid type"}
-            error={!!relatedRaidTypeProblem}
-            onChange={(event: SelectChangeEvent) => {
-              // maybe a type guard would be better?
-              const relatedRaidType = event.target.value;
-              setFormData({...formData, relatedRaidType});
-
+        
+        <InputFieldGroup label={"Related RAiD"}>
+          <TextField id="relatedRaid"
+            variant="outlined" autoCorrect="off" autoCapitalize="off"
+            disabled={isWorking}
+            value={formData.relatedRaid ?? ""}
+            onChange={(e) => {
+              setFormData({
+                ...formData,
+                relatedRaid: e.target.value
+              });
             }}
-          >
-            <MenuItem value=""></MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/continues.json">Continues</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/has-part.json">HasPart</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-continued-by.json">IsContinuedBy</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-derived-from.json">IsDerivedFrom</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-identical-to.json">IsIdenticalTo</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-obsoleted-by.json">IsObsoletedBy</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-part-of.json">IsPartOf</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-source-of.json">IsSourceOf</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/obsoletes.json">Obsoletes</MenuItem>
-          </Select>
-        </FormControl>
-        <TextField id="relatedObject"
-                   variant="outlined" autoCorrect="off" autoCapitalize="off"
-                   disabled={isWorking}
-                   value={formData.relatedObject ?? ""}
-                   onChange={(e) => {
-                     setFormData({
-                       ...formData,
-                       relatedObject: e.target.value
-                     });
-                   }}
-                   label={ relatedObjectProblem ?
-                     "Related Object - " + relatedObjectProblem :
-                     "Related Object"}
-                   error={!!relatedObjectProblem}
-        />
-        <FormControl>
-          <InputLabel id="relatedObjectTypeLabel">{relatedObjectTypeProblem ?  "Related object type - " + relatedObjectTypeProblem : "Related object type"}</InputLabel>
-          <Select
-            labelId="relatedObjectTypeLabel"
-            id="relatedObjectTypeSelect"
-            value={formData.relatedObjectType || ''}
-            label={relatedObjectTypeProblem ?  "Related object type - " + relatedObjectTypeProblem : "Related object type"}
-            error={!!relatedObjectTypeProblem}
-            onChange={(event: SelectChangeEvent) => {
-              // maybe a type guard would be better?
-              const relatedObjectType = event.target.value;
-              setFormData({...formData, relatedObjectType});
+            label={labelWithProblem("Related Raid", relatedRaidProblem)}
+            error={!!relatedRaidProblem}
+          />
+          <FormControl>
+            <InputLabelWithProblem  id="relatedRaidTypeLabel"
+              label="Related Raid type" problem={relatedRaidTypeProblem} />
+            <Select
+              labelId="relatedRaidTypeLabel"
+              id="relatedRaidTypeSelect"
+              value={formData.relatedRaidType || ''}
+              label={labelWithProblem("Related Raid type", relatedRaidTypeProblem)}
+              error={!!relatedRaidTypeProblem}
+              onChange={(event: SelectChangeEvent) => {
+                // maybe a type guard would be better?
+                const relatedRaidType = event.target.value;
+                setFormData({...formData, relatedRaidType});
+              }}
+            >
+              <RelatedRaidMenuItems/>
+            </Select>
+          </FormControl>
+        </InputFieldGroup>
 
-            }}
-          >
-            <MenuItem value=""></MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/audiovisual.json">Audiovisual</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book-chapter.json">Book Chapter</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book.json">Book</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/computational-notebook.json">Computational Notebook</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/conference-paper.json">Conference Paper</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/conference-poster.json">Conference Poster</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/conference-proceeding.json">Conference Proceeding</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/data-paper.json">Data Paper</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/dataset.json">Dataset</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/dissertation.json">Dissertation</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/educational-material.json">Educational Material</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/event.json">Event</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/funding.json">Funding</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/image.json">Image</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/instrument.json">Instrument</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/journal-article.json">Journal Article</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/model.json">Model</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/output-management-plan.json">Output Management Plan</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/physical-object.json">Physical Object</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/preprint.json">Preprint</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/prize.json">Prize</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/report.json">Report</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/service.json">Service</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/software.json">Software</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/sound.json">Sound</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/standard.json">Standard</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/text.json">Text</MenuItem>
-            <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/workflow.json">Workflow</MenuItem>
-          </Select>
-        </FormControl>
-        <FormControl>
-          <InputLabel id="relatedObjectCategoryLabel">{relatedObjectCategoryProblem ?  "Related object category - " + relatedObjectCategoryProblem : "Related object category"}</InputLabel>
-          <Select
-            labelId="relatedObjectCategoryLabel"
-            id="relatedObjectCategorySelect"
-            value={formData.relatedObjectCategory || ''}
-            label={relatedObjectCategoryProblem ?  "Related object category - " + relatedObjectCategoryProblem : "Related object category"}
-            error={!!relatedObjectCategoryProblem}
-            onChange={(event: SelectChangeEvent) => {
-              // maybe a type guard would be better?
-              const relatedObjectCategory = event.target.value;
-              setFormData({...formData, relatedObjectCategory});
+        <InputFieldGroup label={"Related object"}>
+          <TextField id="relatedObject"
+                     variant="outlined" autoCorrect="off" autoCapitalize="off"
+                     disabled={isWorking}
+                     value={formData.relatedObject ?? ""}
+                     onChange={(e) => {
+                       setFormData({
+                         ...formData,
+                         relatedObject: e.target.value
+                       });
+                     }}
+                     label={ relatedObjectProblem ?
+                       "Related Object - " + relatedObjectProblem :
+                       "Related Object"}
+                     error={!!relatedObjectProblem}
+          />
+          <FormControl>
+            <InputLabelWithProblem id="relatedObjectTypeLabel" 
+              label="Related object type" problem={relatedObjectTypeProblem}/>
+            <Select
+              labelId="relatedObjectTypeLabel"
+              id="relatedObjectTypeSelect"
+              value={formData.relatedObjectType || ''}
+              label={labelWithProblem("Related object type", relatedObjectTypeProblem)}
+              error={!!relatedObjectTypeProblem}
+              onChange={(event: SelectChangeEvent) => {
+                // maybe a type guard would be better?
+                const relatedObjectType = event.target.value;
+                setFormData({...formData, relatedObjectType});
+  
+              }}
+            >
+              <RelatedObjectMenuItems/>
+            </Select>
+          </FormControl>
+          <FormControl>
+            <InputLabelWithProblem id="relatedObjectCategoryLabel"
+              label="Related object category" 
+              problem={relatedObjectCategoryProblem}/>
+            <Select
+              labelId="relatedObjectCategoryLabel"
+              id="relatedObjectCategorySelect"
+              value={formData.relatedObjectCategory || ''}
+              label={labelWithProblem("Related object category", relatedObjectCategoryProblem)}
+              error={!!relatedObjectCategoryProblem}
+              onChange={(event: SelectChangeEvent) => {
+                // maybe a type guard would be better?
+                const relatedObjectCategory = event.target.value;
+                setFormData({...formData, relatedObjectCategory});
+  
+              }}
+            >
+              <MenuItem value=""></MenuItem>
+              <MenuItem value="Input">Input</MenuItem>
+              <MenuItem value="Output">Output</MenuItem>
+              <MenuItem value="Internal process document or artefact">Internal process document or artefact</MenuItem>
+            </Select>
+          </FormControl>
+        </InputFieldGroup>
 
-            }}
-          >
-            <MenuItem value=""></MenuItem>
-            <MenuItem value="Input">Input</MenuItem>
-            <MenuItem value="Output">Output</MenuItem>
-            <MenuItem value="Internal process document or artefact">Internal process document or artefact</MenuItem>
-          </Select>
-        </FormControl>
+        <InputFieldGroup label={"Alternate identifier"}>
+          <TextField id="alternateIdentifier"
+                     variant="outlined" autoCorrect="off" autoCapitalize="off"
+                     disabled={isWorking}
+                     value={formData.alternateIdentifier ?? ""}
+                     onChange={(e) => {
+                       setFormData({
+                         ...formData,
+                         alternateIdentifier: e.target.value
+                       });
+                     }}
+                     label={ alternateIdentifierProblem ?
+                       "Alternate Identifier - " + alternateIdentifierProblem :
+                       "Alternate Identifier"}
+                     error={!!alternateIdentifierProblem}
+          />
+  
+          <TextField id="alternateIdentifierType"
+                     variant="outlined" autoCorrect="off" autoCapitalize="off"
+                     disabled={isWorking}
+                     value={formData.alternateIdentifierType ?? ""}
+                     onChange={(e) => {
+                       setFormData({
+                         ...formData,
+                         alternateIdentifierType: e.target.value
+                       });
+                     }}
+                     label={ alternateIdentifierTypeProblem ?
+                       "Alternate Identifier Type - " + alternateIdentifierTypeProblem :
+                       "Alternate Identifier Type"}
+                     error={!!alternateIdentifierTypeProblem}
+          />
+        </InputFieldGroup>
 
+        <InputFieldGroup label={"Spatial Coverage"}>
+          <TextField id="spatialCoverage"
+                     variant="outlined" autoCorrect="off" autoCapitalize="off"
+                     disabled={isWorking}
+                     value={formData.spatialCoverage ?? ""}
+                     onChange={(e) => {
+                       setFormData({
+                         ...formData,
+                         spatialCoverage: e.target.value
+                       });
+                     }}
+                     label={ spatialCoverageProblem ?
+                       "Spatial Coverage - " + spatialCoverageProblem :
+                       "Spatial Coverage"}
+                     error={!!spatialCoverageProblem}
+          />
 
-        <TextField id="alternateIdentifier"
-                   variant="outlined" autoCorrect="off" autoCapitalize="off"
-                   disabled={isWorking}
-                   value={formData.alternateIdentifier ?? ""}
-                   onChange={(e) => {
-                     setFormData({
-                       ...formData,
-                       alternateIdentifier: e.target.value
-                     });
-                   }}
-                   label={ alternateIdentifierProblem ?
-                     "Alternate Identifier - " + alternateIdentifierProblem :
-                     "Alternate Identifier"}
-                   error={!!alternateIdentifierProblem}
-        />
-
-        <TextField id="alternateIdentifierType"
-                   variant="outlined" autoCorrect="off" autoCapitalize="off"
-                   disabled={isWorking}
-                   value={formData.alternateIdentifierType ?? ""}
-                   onChange={(e) => {
-                     setFormData({
-                       ...formData,
-                       alternateIdentifierType: e.target.value
-                     });
-                   }}
-                   label={ alternateIdentifierTypeProblem ?
-                     "Alternate Identifier Type - " + alternateIdentifierTypeProblem :
-                     "Alternate Identifier Type"}
-                   error={!!alternateIdentifierTypeProblem}
-        />
-
-
+          <TextField id="spatialCoveragePlace"
+                     variant="outlined" autoCorrect="off" autoCapitalize="off"
+                     disabled={isWorking}
+                     value={formData.spatialCoveragePlace ?? ""}
+                     onChange={(e) => {
+                       setFormData({
+                         ...formData,
+                         spatialCoveragePlace: e.target.value
+                       });
+                     }}
+                     label="Place"
+          />
+        </InputFieldGroup>
+        
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton onClick={navBrowserBack}
             disabled={isWorking}>
@@ -607,10 +645,25 @@ export function findAlternateIdentifierTypeProblem(alternateIdentifier: string, 
   return (!alternateIdentifier ? true : !!alternateIdentifierType) ? undefined : "must be set";
 }
 
+export function findSpatialCoverageProblem(spatialCoverage: string, spatialCoveragePlace: string) {
+  if (spatialCoverage) {
+    return (spatialCoverage.match("^https:\/\/www\.geonames\.org\/[\\d]+\\/[\\w]+\.html$")) ? undefined :
+      "URL is invalid"
+  }
+  else {
+    return (!spatialCoveragePlace ? true : !!spatialCoverage) ? undefined : "must be set";
+  }
+}
 export function MintRaidHelp(){
   return <HelpPopover content={
     <Stack spacing={1}>
       <ul>
+        <li><HelpChip label={"Lead organisation"}/>
+          For your convenience, RAiD auto-populates the lead organisation field
+          with the RoR of the Institution associated with your Service Point.
+          Please note that this field can contain any organisation you choose
+          or you may set the field to blank.
+        </li>
         <li><HelpChip label={"Access type"}/>
           Controls if metadata is visible on the raid landing page.
           For "Open" raids, all metadata is visible.
@@ -625,4 +678,80 @@ export function MintRaidHelp(){
     </Stack>
   }/>;
 }
+
+export function RelatedObjectMenuItems(){
+  return <>
+    <MenuItem value=""></MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/audiovisual.json">Audiovisual</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book-chapter.json">Book Chapter</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book.json">Book</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/computational-notebook.json">Computational Notebook</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/conference-paper.json">Conference Paper</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/conference-poster.json">Conference Poster</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/conference-proceeding.json">Conference Proceeding</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/data-paper.json">Data Paper</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/dataset.json">Dataset</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/dissertation.json">Dissertation</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/educational-material.json">Educational Material</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/event.json">Event</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/funding.json">Funding</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/image.json">Image</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/instrument.json">Instrument</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/journal-article.json">Journal Article</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/model.json">Model</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/output-management-plan.json">Output Management Plan</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/physical-object.json">Physical Object</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/preprint.json">Preprint</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/prize.json">Prize</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/report.json">Report</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/service.json">Service</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/software.json">Software</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/sound.json">Sound</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/standard.json">Standard</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/text.json">Text</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/workflow.json">Workflow</MenuItem>
+  </>
+}
+
+export function RelatedRaidMenuItems(){
+  return <>
+    <MenuItem value=""></MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/continues.json">Continues</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/has-part.json">HasPart</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-continued-by.json">IsContinuedBy</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-derived-from.json">IsDerivedFrom</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-identical-to.json">IsIdenticalTo</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-obsoleted-by.json">IsObsoletedBy</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-part-of.json">IsPartOf</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-source-of.json">IsSourceOf</MenuItem>
+    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/obsoletes.json">Obsoletes</MenuItem>
+  </>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

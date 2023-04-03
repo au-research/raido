@@ -14,7 +14,6 @@ import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.IdProvider;
 import raido.db.jooq.api_svc.tables.records.AppUserRecord;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.Optional;
@@ -46,8 +45,6 @@ public class RaidV2AppUserAuthService {
   private GoogleOidc google;
   private OrcidOidc orcid;
   
-  private Duration expiryPeriod = Duration.ofHours(9);
-  
   public RaidV2AppUserAuthService(
     RaidV2AppUserAuthProps userAuthProps, 
     DSLContext db,
@@ -69,10 +66,11 @@ public class RaidV2AppUserAuthService {
         withSubject(payload.getSubject()).
         withIssuer(userAuthProps.issuer).
         withIssuedAt(Instant.now()).
-        withExpiresAt(Instant.now().plus(expiryPeriod)).
+        withExpiresAt(calculateExpiresAt()).
         withClaim(RaidoClaim.IS_AUTHORIZED_APP_USER.getId(), true).
         withClaim(RaidoClaim.APP_USER_ID.getId(), payload.getAppUserId()).
-        withClaim(RaidoClaim.SERVICE_POINT_ID.getId(), payload.getServicePointId()).
+        withClaim(RaidoClaim.SERVICE_POINT_ID.getId(), 
+          payload.getServicePointId() ).
         withClaim(RaidoClaim.CLIENT_ID.getId(), payload.getClientId()).
         withClaim(RaidoClaim.EMAIL.getId(), payload.getEmail()).
         withClaim(RaidoClaim.ROLE.getId(), payload.getRole()).
@@ -84,6 +82,11 @@ public class RaidV2AppUserAuthService {
     }
   }
 
+  private Instant calculateExpiresAt() {
+    return Instant.now().plusSeconds(
+      userAuthProps.authzTokenExpirySeconds );
+  }
+
   public String sign(NonAuthzTokenPayload payload){
     try {
       String token = JWT.create().
@@ -91,7 +94,7 @@ public class RaidV2AppUserAuthService {
         withSubject(payload.getSubject()).
         withIssuer(userAuthProps.issuer).
         withIssuedAt(Instant.now()).
-        withExpiresAt(Instant.now().plus(expiryPeriod)).
+        withExpiresAt(calculateExpiresAt()).
         withClaim(IS_AUTHORIZED_APP_USER, false).
         withClaim(RaidoClaim.CLIENT_ID.getId(), payload.getClientId()).
         withClaim(RaidoClaim.EMAIL.getId(), payload.getEmail()).

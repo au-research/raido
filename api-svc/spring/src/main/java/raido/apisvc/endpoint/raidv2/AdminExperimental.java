@@ -183,7 +183,6 @@ public class AdminExperimental implements AdminExperimentalApi {
         servicePoint(servicePoint);
     }
 
-    log.with("authzRequest", authzRequest).debug("authzReqeust");
     return new AppUserExtraV1().
       appUser(appUser).
       servicePoint(servicePoint).

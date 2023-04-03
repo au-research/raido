@@ -16,3 +16,18 @@ For any change that was added to changelog but unexpectedly was not released
 (moved changes onto a feature branch because not ready, or just wholly reverted)
 just move the changelog entry from the release version to new "Not released" 
 section at the top.
+
+
+To tag a new version, invoke:
+`git tag --annotate raido-v-<version> <COMMITHASH> -m "manual tag"`
+eg: `git tag --annotate raido-v-0.9 HEAD -m "manual tag"`
+
+Dont' forget to make sure you push the tag to Github, something like:
+`git push --follow-tags`  (I've never done this, I use IDEA).
+
+
+To list tags: `git tag`
+
+To fetch tags from origin: `git fetch --tags`
+
+Delete a tag: `git tag -d raido-v-1.1`
