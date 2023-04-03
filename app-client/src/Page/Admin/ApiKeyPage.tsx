@@ -314,25 +314,34 @@ function ApiKeyHelp(){
         </HelpItem>
         <HelpItem><HelpChip label={"Expire"}/>
           Note that if you use "Extend expiry" - you still need to generate a 
-          new token if your old tokens are expired. Old, previously generated 
-          tokens have their "expires at" set to the old value as at the time 
-          they were generated.
+          new api-token if your old api-token is expired. Old, previously 
+          generated api-tokens have their "expires at" set to the original 
+          value as at the time they were generated (because they're only stored 
+          by API clients, not the RAiD service; we couldn't update them if we 
+          wanted to).
           <br/>
           The "extend expiry" button exists to allow you to extend your 
           api-key without having to create a whole new api-key with a new 
           subject - it won't let you define old, stale tokens that are past 
-          their expiry date as "still valid" .
+          their expiry date as "still valid".
         </HelpItem>
         <HelpItem><HelpChip label={"Enabled"}/>
-          Setting the api-key to "disabled" invalidates all issued api-key
-          tokens, regardless of their expiry date.
+          Setting the api-key to "disabled" invalidates all issued api-tokens
+          for that api-key.
+          An API call authorized with an api-token associated with a disabled
+          api-key will be rejected, regardless of the expiry date in the token's 
+          `exp` claim.
         </HelpItem>
         <HelpItem><HelpChip label={"Generate token"}/>
-          This generates a brand new token based on the current api-key stored 
-          on the server.  Raido does not store api tokens on the server, every 
-          time you click the "Generate token" button, the token generated has 
-          an updated "issued at" claim, and the "expires at" claim is based on 
-          the api-key "Expire" field. 
+          This generates a brand new api-token based on the current api-key 
+          stored on the server (i.e. subject, expiry date, role, etc.)  
+          The RAiD service does not store api-tokens on the server, every 
+          time you click the "Generate token" button, the api-token generated 
+          has an updated "issued at" claim, and the "expires at" claim is based 
+          on the api-key "Expire" field. 
+          If you change the "role" for your api-key, you must generate a new 
+          api-token, previously generated api-tokens will still contain the 
+          original "role" claim.
         </HelpItem>
       </HelpList>
     </Stack>
