@@ -14,7 +14,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   AccessType,
   AlternateIdentifierBlock,
-  ContributorBlock,
   DescriptionBlock,
   OrganisationBlock,
   RaidoMetadataSchemaV1,
@@ -33,7 +32,8 @@ import {
   Select,
   SelectChangeEvent,
   Stack,
-  TextField, TextFieldProps
+  TextField,
+  TextFieldProps
 } from "@mui/material";
 import { PrimaryActionButton, SecondaryButton } from "Component/AppButton";
 import { navBrowserBack } from "Util/WindowUtil";
@@ -49,11 +49,14 @@ import {
 } from "Page/UpgradeLegacySchemaForm";
 import { findOrcidProblem, OrcidField } from "Component/OrcidField";
 import { InputFieldGroup } from "Component/InputFieldGroup";
-import {
-  InputLabelWithProblem,
-  labelWithProblem
-} from "Component/InputLabelWithProblem";
+import { labelWithProblem } from "Component/InputLabelWithProblem";
 import { RqQuery } from "Util/ReactQueryUtil";
+import {
+  ListFormControl,
+  relatedObjectCategories,
+  relatedObjectTypes,
+  relatedRaidTypes
+} from "Api/ReferenceData";
 
 const pageUrl = "/mint-raid-v2";
 
@@ -391,84 +394,51 @@ function MintRaidContainer({servicePointId, onCreate}: {
             label={labelWithProblem("Related Raid", relatedRaidProblem)}
             error={!!relatedRaidProblem}
           />
-          <FormControl>
-            <InputLabelWithProblem  id="relatedRaidTypeLabel"
-              label="Related Raid type" problem={relatedRaidTypeProblem} />
-            <Select
-              labelId="relatedRaidTypeLabel"
-              id="relatedRaidTypeSelect"
-              value={formData.relatedRaidType || ''}
-              label={labelWithProblem("Related Raid type", relatedRaidTypeProblem)}
-              error={!!relatedRaidTypeProblem}
-              onChange={(event: SelectChangeEvent) => {
-                // maybe a type guard would be better?
-                const relatedRaidType = event.target.value;
-                setFormData({...formData, relatedRaidType});
-              }}
-            >
-              <RelatedRaidMenuItems/>
-            </Select>
-          </FormControl>
+          <ListFormControl idPrefix="relatedRaidType" label="Type"
+            items={relatedRaidTypes}
+            problem={relatedRaidTypeProblem}
+            value={formData.relatedRaidType}
+            onChange={(event) => {
+              const relatedRaidType = event.target.value;
+              setFormData({...formData, relatedRaidType});
+            }}
+          />
         </InputFieldGroup>
 
         <InputFieldGroup label={"Related object"}>
           <TextField id="relatedObject"
-                     variant="outlined" autoCorrect="off" autoCapitalize="off"
-                     disabled={isWorking}
-                     value={formData.relatedObject ?? ""}
-                     onChange={(e) => {
-                       setFormData({
-                         ...formData,
-                         relatedObject: e.target.value
-                       });
-                     }}
-                     label={ relatedObjectProblem ?
-                       "Related Object - " + relatedObjectProblem :
-                       "Related Object"}
-                     error={!!relatedObjectProblem}
+             variant="outlined" autoCorrect="off" autoCapitalize="off"
+             disabled={isWorking}
+             value={formData.relatedObject ?? ""}
+             onChange={(e) => {
+               setFormData({
+                 ...formData,
+                 relatedObject: e.target.value
+               });
+             }}
+             label={ relatedObjectProblem ?
+               "Related Object - " + relatedObjectProblem :
+               "Related Object"}
+             error={!!relatedObjectProblem}
           />
-          <FormControl>
-            <InputLabelWithProblem id="relatedObjectTypeLabel" 
-              label="Related object type" problem={relatedObjectTypeProblem}/>
-            <Select
-              labelId="relatedObjectTypeLabel"
-              id="relatedObjectTypeSelect"
-              value={formData.relatedObjectType || ''}
-              label={labelWithProblem("Related object type", relatedObjectTypeProblem)}
-              error={!!relatedObjectTypeProblem}
-              onChange={(event: SelectChangeEvent) => {
-                // maybe a type guard would be better?
-                const relatedObjectType = event.target.value;
-                setFormData({...formData, relatedObjectType});
-  
-              }}
-            >
-              <RelatedObjectMenuItems/>
-            </Select>
-          </FormControl>
-          <FormControl>
-            <InputLabelWithProblem id="relatedObjectCategoryLabel"
-              label="Related object category" 
-              problem={relatedObjectCategoryProblem}/>
-            <Select
-              labelId="relatedObjectCategoryLabel"
-              id="relatedObjectCategorySelect"
-              value={formData.relatedObjectCategory || ''}
-              label={labelWithProblem("Related object category", relatedObjectCategoryProblem)}
-              error={!!relatedObjectCategoryProblem}
-              onChange={(event: SelectChangeEvent) => {
-                // maybe a type guard would be better?
-                const relatedObjectCategory = event.target.value;
-                setFormData({...formData, relatedObjectCategory});
-  
-              }}
-            >
-              <MenuItem value=""></MenuItem>
-              <MenuItem value="Input">Input</MenuItem>
-              <MenuItem value="Output">Output</MenuItem>
-              <MenuItem value="Internal process document or artefact">Internal process document or artefact</MenuItem>
-            </Select>
-          </FormControl>
+          <ListFormControl idPrefix="relatedObjectType" label="Type"
+            items={relatedObjectTypes}
+            problem={relatedObjectTypeProblem}
+            value={formData.relatedObjectType}
+            onChange={(event) => {
+              const relatedObjectType = event.target.value;
+              setFormData({...formData, relatedObjectType});
+            }}
+          />
+          <ListFormControl idPrefix="relatedObjectCategory" label="Category"
+            items={relatedObjectCategories}
+            problem={relatedObjectCategoryProblem}
+            value={formData.relatedObjectCategory}
+            onChange={(event) => {
+              const relatedObjectCategory = event.target.value;
+              setFormData({...formData, relatedObjectCategory});
+            }}
+          />
         </InputFieldGroup>
 
         <InputFieldGroup label={"Alternate identifier"}>
@@ -629,80 +599,3 @@ export function MintRaidHelp(){
     </Stack>
   }/>;
 }
-
-export function RelatedObjectMenuItems(){
-  return <>
-    <MenuItem value=""></MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/audiovisual.json">Audiovisual</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book-chapter.json">Book Chapter</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book.json">Book</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/computational-notebook.json">Computational Notebook</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/conference-paper.json">Conference Paper</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/conference-poster.json">Conference Poster</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/conference-proceeding.json">Conference Proceeding</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/data-paper.json">Data Paper</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/dataset.json">Dataset</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/dissertation.json">Dissertation</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/educational-material.json">Educational Material</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/event.json">Event</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/funding.json">Funding</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/image.json">Image</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/instrument.json">Instrument</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/journal-article.json">Journal Article</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/model.json">Model</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/output-management-plan.json">Output Management Plan</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/physical-object.json">Physical Object</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/preprint.json">Preprint</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/prize.json">Prize</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/report.json">Report</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/service.json">Service</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/software.json">Software</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/sound.json">Sound</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/standard.json">Standard</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/text.json">Text</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/workflow.json">Workflow</MenuItem>
-  </>
-}
-
-export function RelatedRaidMenuItems(){
-  return <>
-    <MenuItem value=""></MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/continues.json">Continues</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/has-part.json">HasPart</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-continued-by.json">IsContinuedBy</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-derived-from.json">IsDerivedFrom</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-identical-to.json">IsIdenticalTo</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-obsoleted-by.json">IsObsoletedBy</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-part-of.json">IsPartOf</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-source-of.json">IsSourceOf</MenuItem>
-    <MenuItem value="https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/obsoletes.json">Obsoletes</MenuItem>
-  </>
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

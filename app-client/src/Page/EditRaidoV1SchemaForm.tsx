@@ -1,11 +1,15 @@
 import { useMutation } from "@tanstack/react-query";
 import {
-  AccessType, AlternateIdentifierBlock,
+  AccessType,
+  AlternateIdentifierBlock,
   ContributorBlock,
   DescriptionBlock,
   OrganisationBlock,
   RaidoMetadataSchemaV1,
-  ReadRaidResponseV2, RelatedObjectBlock, RelatedRaidBlock, SubjectBlock,
+  ReadRaidResponseV2,
+  RelatedObjectBlock,
+  RelatedRaidBlock,
+  SubjectBlock,
   ValidationFailure
 } from "Generated/Raidv2";
 import { assert, WithRequired } from "Util/TypeUtil";
@@ -30,7 +34,10 @@ import { ValidationFailureDisplay } from "Component/Util";
 import {
   getFirstAlternateIdentifier,
   getFirstLeader,
-  getFirstPrimaryDescription, getFirstRelatedObject, getFirstRelatedRaid, getFirstSubject,
+  getFirstPrimaryDescription,
+  getFirstRelatedObject,
+  getFirstRelatedRaid,
+  getFirstSubject,
   getLeadOrganisation,
   getPrimaryTitle
 } from "Component/MetaDataContainer";
@@ -45,8 +52,7 @@ import {
   findRelatedObjectTypeProblem,
   findRelatedRaidProblem,
   findRelatedRaidTypeProblem,
-  findSubjectProblem,
-  RelatedObjectMenuItems, RelatedRaidMenuItems
+  findSubjectProblem
 } from "Page/MintRaidPage";
 import { createLeadOrganisation } from "./UpgradeLegacySchemaForm";
 import { findOrcidProblem, OrcidField } from "Component/OrcidField";
@@ -54,9 +60,11 @@ import List from "@mui/material/List";
 import { SupportMailLink } from "Component/ExternalLink";
 import { InputFieldGroup } from "Component/InputFieldGroup";
 import {
-  InputLabelWithProblem,
-  labelWithProblem
-} from "Component/InputLabelWithProblem";
+  ListFormControl,
+  relatedObjectCategories,
+  relatedObjectTypes,
+  relatedRaidTypes
+} from "Api/ReferenceData";
 
 function isDifferent(formData: FormData, original: FormData){
   return formData.primaryTitle !== original.primaryTitle ||
@@ -460,25 +468,15 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
               "Related Raid"}
             error={!!relatedRaidProblem}
           />
-          <FormControl>
-            <InputLabelWithProblem  id="relatedRaidTypeLabel"
-              label="Related Raid type" problem={relatedRaidTypeProblem} />
-            <Select
-              labelId="relatedRaidTypeLabel"
-              id="relatedRaidTypeSelect"
-              value={formData.relatedRaidType || ''}
-              label={relatedRaidTypeProblem ? "Related Raid type - " + relatedRaidTypeProblem : "Related Raid type"}
-              error={!!relatedRaidTypeProblem}
-              onChange={(event: SelectChangeEvent) => {
-                // maybe a type guard would be better?
-                const relatedRaidType = event.target.value;
-                console.log("onChange", {relatedRaidType, event});
-                setFormData({...formData, relatedRaidType});
-              }}
-            >
-              <RelatedRaidMenuItems/>
-            </Select>
-          </FormControl>
+          <ListFormControl idPrefix="relatedRaidType" label="Type"
+            items={relatedRaidTypes}
+            problem={relatedRaidTypeProblem}
+            value={formData.relatedRaidType}
+            onChange={(event) => {
+              const relatedRaidType = event.target.value;
+              setFormData({...formData, relatedRaidType});
+            }}
+          />
         </InputFieldGroup>
 
         <InputFieldGroup label={"Related object"}>
@@ -498,48 +496,24 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
             error={!!relatedObjectProblem}
           />
 
-          <FormControl>
-            <InputLabelWithProblem id="relatedObjectTypeLabel"
-              label="Related object type" problem={relatedObjectTypeProblem}/>
-            <Select
-              labelId="relatedObjectTypeLabel"
-              id="relatedObjectTypeSelect"
-              value={formData.relatedObjectType || ''}
-              label={labelWithProblem("Related object type", relatedObjectTypeProblem)}
-              error={!!relatedObjectTypeProblem}
-              onChange={(event: SelectChangeEvent) => {
-                // maybe a type guard would be better?
-                const relatedObjectType = event.target.value;
-                setFormData({...formData, relatedObjectType});
-
-              }}
-            >
-              <RelatedObjectMenuItems/>
-            </Select>
-          </FormControl>
-          <FormControl>
-            <InputLabelWithProblem id="relatedObjectCategoryLabel"
-              label="Related object category"
-              problem={relatedObjectCategoryProblem}/>
-            <Select
-              labelId="relatedObjectCategoryLabel"
-              id="relatedObjectCategorySelect"
-              value={formData.relatedObjectCategory || ''}
-              label={labelWithProblem("Related object category", relatedObjectCategoryProblem)}
-              error={!!relatedObjectCategoryProblem}
-              onChange={(event: SelectChangeEvent) => {
-                // maybe a type guard would be better?
-                const relatedObjectCategory = event.target.value;
-                setFormData({...formData, relatedObjectCategory});
-              }}
-            >
-              <MenuItem value=""></MenuItem>
-              <MenuItem value="Input">Input</MenuItem>
-              <MenuItem value="Output">Output</MenuItem>
-              <MenuItem value="Internal process document or artefact">Internal
-                process document or artefact</MenuItem>
-            </Select>
-          </FormControl>
+          <ListFormControl idPrefix="relatedObjectType" label="Type"
+            items={relatedObjectTypes}
+            problem={relatedObjectTypeProblem}
+            value={formData.relatedObjectType}
+            onChange={(event) => {
+              const relatedObjectType = event.target.value;
+              setFormData({...formData, relatedObjectType});
+            }}
+          />
+          <ListFormControl idPrefix="relatedObjectCategory" label="Category"
+            items={relatedObjectCategories}
+            problem={relatedObjectCategoryProblem}
+            value={formData.relatedObjectCategory}
+            onChange={(event) => {
+              const relatedObjectCategory = event.target.value;
+              setFormData({...formData, relatedObjectCategory});
+            }}
+          />
         </InputFieldGroup>
 
         <InputFieldGroup label={"Alternate identifier"}>
