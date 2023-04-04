@@ -37,6 +37,19 @@ called an "authorization token" in the code).  The api-tokens tokens issued
 to app-users are ephemeral (current default expiry: 9 hours).
 
 
+# Possible integration of app-user with API clients
+
+Theoretically, we could create an OIDC flow to allow an integration client 
+(i.e. redbox etc.) to be issued with api-tokens as an OIDC "access token" 
+associated with individual users. 
+
+This would allow us to identify the principal performing the action (instead of
+just "a redbox user").
+
+This could then be integrated with the (not yet implemented) raid audit history
+functionality.
+
+
 ### Future changes to api-token format
 
 We ought to rename the `EMAIL` claim to `IDENTITY`.
