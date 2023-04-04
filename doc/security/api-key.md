@@ -65,10 +65,25 @@ But; an api-token issued in DEMO will continue to work in DEMO even after
 a DB refresh from PROD. This  works as long as the api-key was present in PROD 
 before the DB baseline was taken (and the api-key has not been disabled). 
 
-Note that the api-token verification works by looking up the api-key in the DB
-via the `app_user.id` value (i.e. surrogate key).  That's why you need to create
-an api-key in the PROD environment if you want api-tokens to work long-term, 
-across DB refreshes, in the DEMO environment.
+The api-token verification works by looking up the api-key in the DB
+via the `app_user.id` column (i.e. surrogate key), read from the `APP_USER_ID`.
+That's why you need to create an api-key in the PROD environment if you want 
+api-tokens to work long-term, across DB refreshes, in the DEMO environment.
+
+### Future changes to api-token format
+
+We ought to rename the `APP_USER_ID` to `API_KEY_ID` and the `EMAIL` claim
+should be renamed to `IDENTITY`.
+
+When this is done though, we will keep the authorization logic backward 
+compatible so that all api-tokens issued with the previous claims will 
+continue to work.
+
+The old claim logic will be removed once we're sure there are no old api-tokens
+being used in PROD environment.  Remember that the "expiry" period of the 
+api-key may have been extended, so there could be api-tokens out there with 
+longer expiry claims than you think.
+
 
 
 # Database model

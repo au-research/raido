@@ -20,6 +20,16 @@ that's what happened in the real world) - the app-user record  can be "disabled"
 at which point the user can re-submit an "authorization request" for the new
 service-point.
 
+### Future changes to api-token format
+
+We ought to rename the `EMAIL` claim to `IDENTITY`.
+
+When this is done though, we will keep the authorization logic backward
+compatible so that all api-tokens issued with the previous claims will
+continue to work.  The api-tokens for app-users are ephemeral (currently 
+default is 9 hours), so we won't have to carry the backwards compatibility 
+logic for long.
+
 
 # Database model
 
