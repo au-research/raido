@@ -50,7 +50,6 @@ creates ephemeral api-tokens for an API client to use, but we'd have to
 setup a machine-to-machine OAuth2 flow - contact us if you're keen on 
 that.
 
-
 ## api-keys and api-tokens across environments
 
 One benefit of the api-token approach is that we can use the same api-key 
@@ -65,3 +64,15 @@ different signing keys for the actual JWT).
 But; an api-token issued in DEMO will continue to work in DEMO even after 
 a DB refresh from PROD. This  works as long as the api-key was present in PROD 
 before the DB baseline was taken (and the api-key has not been disabled). 
+
+Note that the api-token verification works by looking up the api-key in the DB
+via the `app_user.id` value (i.e. surrogate key).  That's why you need to create
+an api-key in the PROD environment if you want api-tokens to work long-term, 
+across DB refreshes, in the DEMO environment.
+
+
+# Database model
+
+At the moment, both app-user and api-key are stored in the `app_user` table.
+See [app-user.md](./app-user.md#database-model) for more info.
+
