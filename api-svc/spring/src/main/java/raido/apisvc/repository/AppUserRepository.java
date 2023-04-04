@@ -1,7 +1,6 @@
 package raido.apisvc.repository;
 
 import org.jooq.DSLContext;
-import org.jooq.impl.DSL;
 import org.springframework.stereotype.Repository;
 import raido.apisvc.util.Guard;
 import raido.db.jooq.api_svc.tables.records.AppUserRecord;
@@ -18,30 +17,15 @@ public class AppUserRepository {
     this.db = db;
   }
 
-  /** This should be cached read, otherwise we're gonna be doing 
-   this for every single API call for a user.  Use Caffeine. */
-  public Optional<AppUserRecord> getApiKeyRecord(
-    long servicePointId,
-    String identity,
-    String clientId,
-    String subject
-  ){
-    return db.fetchOptional(APP_USER, DSL.and(
-      APP_USER.SERVICE_POINT_ID.eq(servicePointId),
-      APP_USER.EMAIL.eq(identity),
-      APP_USER.CLIENT_ID.eq(clientId),
-      APP_USER.SUBJECT.eq(subject)));
-  }
-
   /**
-   This is for originating authentication, so don't need or want it to be 
+   This is for originating authentication, so don't need or want it to be
    cached.
    */
   public Optional<AppUserRecord> getAppUserRecord(
     String email,
     String subject,
     String clientId
-  ){
+  ) {
     Guard.hasValue(email);
     Guard.hasValue(clientId);
     Guard.hasValue(subject);
@@ -61,14 +45,24 @@ public class AppUserRepository {
       ).fetchOptionalInto(AppUserRecord.class);
   }
 
-  /** This should be cached read, otherwise we're gonna be doing 
+  /**
+   This should be cached read, otherwise we're gonna be doing
    this for every single API call for a user.  Use Caffeine.
    */
   public Optional<AppUserRecord> getAppUserRecord(
     long appUserId
-  ){
+  ) {
     return db.fetchOptional(APP_USER, APP_USER.ID.eq(appUserId));
   }
 
+  /**
+   This should be cached read, otherwise we're gonna be doing
+   this for every single API call for a user.  Use Caffeine.
+   */
+  public Optional<AppUserRecord> getApiKeyRecord(
+    long appUserId
+  ) {
+    return db.fetchOptional(APP_USER, APP_USER.ID.eq(appUserId));
+  }
 
 }

@@ -110,15 +110,18 @@ public class RaidV2ApiKeyAuthService {
 
     String clientId = verifiedJwt.
       getClaim(RaidoClaim.CLIENT_ID.getId()).asString();
-    String email = verifiedJwt.getClaim(RaidoClaim.EMAIL.getId()).asString();
+    /* one day, we ought to change this claim to "IDENTITY", when that's 
+    implemented though, we need to consider backward compatibility. */
+    String identity = verifiedJwt.getClaim(RaidoClaim.EMAIL.getId()).asString();
     Boolean isAuthzAppUser = verifiedJwt.getClaim(
       RaidoClaim.IS_AUTHORIZED_APP_USER.getId() ).asBoolean();
     var issuedAt = verifiedJwt.getIssuedAtAsInstant();
     Guard.notNull(issuedAt);
+    var subject = verifiedJwt.getSubject();
     
-    Guard.hasValue(verifiedJwt.getSubject());
+    Guard.hasValue(subject);
     Guard.hasValue(clientId);
-    Guard.hasValue(email);
+    Guard.hasValue(identity);
     
     if( !isAuthzAppUser ){
       /* there's no "auth request" step for api-keys, they're "authorized as 
@@ -142,21 +145,25 @@ public class RaidV2ApiKeyAuthService {
     still valid, but functions using the role from the api-token, not from 
     the api-key. Update the api-key.md doco if you change this. */
     Guard.hasValue(role);
-    
-    var user = appUserRepo.getAppUserRecord(appUserId).
-      orElseThrow(()->{
-        log.with("appUserId", appUserId).
-          with("email", email).
-          with("subject", verifiedJwt.getSubject()).
-          with("clientId", clientId).
-          with("role", role).
-          warn("attempted token authz -" +
-            " 'isAuthorizedAppUser' but no DB record" );
-        return authFailed();
-      });
+
+    /* I considered changing this to a quad of [servicePoint, email, clientId, 
+    subject], but given this query runs for every single API request, I decided
+    to leave it so that the SQL query can just work off the PK index.
+    As long you create the api-key in PROD, the next DB refresh will bring that
+    to DEMO and then every DB refresh after that the appUserId is stable and
+    so their DEMO keys will work across refreshes. */
+    var user = appUserRepo.getApiKeyRecord(appUserId).orElseThrow(()->{
+      log.with("appUserId", appUserId).
+        with("email", identity).
+        with("subject", subject).
+        with("clientId", clientId).
+        with("role", role).
+        warn("attempted token authz - 'isAuthorizedAppUser' but no DB record");
+      return authFailed();
+    });
 
     if( isFalse(user.getEnabled()) ){
-      log.with("appUserId", appUserId).with("email", email).
+      log.with("appUserId", appUserId).with("email", identity).
         warn("attempted token authz - disabled user");
       throw authFailed();
     }
@@ -186,8 +193,8 @@ public class RaidV2ApiKeyAuthService {
     return of(anAuthzTokenPayload().
       withAppUserId(appUserId).
       withServicePointId(servicePointId).
-      withSubject(verifiedJwt.getSubject()).
-      withEmail(email).
+      withSubject(subject).
+      withEmail(identity).
       withClientId(clientId).
       withRole(role).
       build() );
