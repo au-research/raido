@@ -2,7 +2,7 @@
 
 # 1.1
 
-Tentative: 2023-04-04
+Tentative: 2023-04-11
 
 * Change public landing page title from "Raido" to "RAiD"
 * Add sign-in warning of uBlock Origin / ORCID issue
