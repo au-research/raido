@@ -21,7 +21,7 @@ public class MinimalRaidTestData {
   /* lowest orcid withing the 0000-0001 range, with check digit.
    * verified doesn't exist (or at least, non-public):
    * https://orcid.org/0000-0001-0000-0009 */
-  public static String DUMMY_ORCID = "https://orcid.org/0000-0001-0000-0009";
+  public static String DUMMY_ORCID = "https://orcid.org/0000-0003-0635-1998";
   public static String DUMMY_ROR = "https://ror.org/123xx4567";
 
   public static RaidoMetadataSchemaV1 createMinimalSchemaV1(String title) {

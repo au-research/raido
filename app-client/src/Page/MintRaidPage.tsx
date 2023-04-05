@@ -122,7 +122,7 @@ type ValidFormData = WithRequired<FormData, 'startDate'>;
 
 function mapFormDataToMetadata(
   form: ValidFormData 
-): { metadataSchema: string; spatialCoverages: SpatialCoverageBlock[]; access: { accessStatement: string; type: "Closed" | "Open" }; subjects: SubjectBlock[]; traditionalKnowledgeLabels: TraditionalKnowledgeLabelBlock[]; dates: { startDate: Date }; titles: { title: string; type: string; startDate: Date }[]; descriptions: DescriptionBlock[]; relatedRaids: RelatedRaidBlock[]; organisations: OrganisationBlock[]; alternateIdentifiers: AlternateIdentifierBlock[]; contributors: ContributorBlock[]; relatedObjects: RelatedObjectBlock[] }{
+):  Omit<RaidoMetadataSchemaV1, "id"> {
   const descriptions: DescriptionBlock[] = [];
   if( form.primaryDescription ){
     descriptions.push({
@@ -631,7 +631,7 @@ export function findAlternateIdentifierTypeProblem(alternateIdentifier: string, 
 
 export function findSpatialCoverageProblem(spatialCoverage: string, spatialCoveragePlace: string) {
   if (spatialCoverage) {
-    return (spatialCoverage.match("^https://www.geonames.org/[\\d]+/[\\w]+.html$")) ? undefined :
+    return (spatialCoverage.match('^https://www\\.geonames\\.org/[\\d]+/[\\w]+\\.html$')) ? undefined :
       "URL is invalid"
   }
   else {

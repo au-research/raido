@@ -1,6 +1,9 @@
 package raido.apisvc.service.raid.validation;
 
+import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 import raido.apisvc.util.Log;
 import raido.idl.raidv2.model.ContributorBlock;
 import raido.idl.raidv2.model.ContributorPosition;
@@ -25,6 +28,12 @@ import static raido.idl.raidv2.model.ContributorPositionSchemeType.HTTPS_RAID_OR
 public class ContributorValidationService {
   private static final Log log = to(ContributorValidationService.class);
 
+  private final RestTemplate restTemplate;
+
+  public ContributorValidationService(final RestTemplate restTemplate) {
+    this.restTemplate = restTemplate;
+  }
+
   public List<ValidationFailure> validateContributors(
     List<ContributorBlock> contribs
   ) {
@@ -44,6 +53,7 @@ public class ContributorValidationService {
           validatePositionFields(fieldPrefix, iContrib.getPositions()) );
         failures.addAll(
           validateRoleFields(fieldPrefix, iContrib.getRoles()) );
+        failures.addAll(validateOrcidExists(i, iContrib));
       });
     
     failures.addAll(validateLeader(contribs));
@@ -124,8 +134,6 @@ public class ContributorValidationService {
     Supplier<String> fieldPrefix, List<ContributorRole> roles
   ) {
     var failures = new ArrayList<ValidationFailure>();
-
-    //RLE: Check to see of roles is null
 
     roles.stream().collect(indexed()).forEach((i, iRole)->{
       if( iRole.getRoleSchemeUri() == null ){
@@ -229,5 +237,37 @@ public class ContributorValidationService {
     return failures;
   }
 
+  public List<ValidationFailure> validateOrcidExists(final int i, final ContributorBlock contributor) {
+
+    final var orcidPattern = "^https://orcid\\.org/[\\d]{4}-[\\d]{4}-[\\d]{4}-[\\d]{4}$";
+    final var failures = new ArrayList<ValidationFailure>();
+
+    final var requestEntity = RequestEntity
+      .head(contributor.getId())
+      .build();
+
+    if (!contributor.getId().matches(orcidPattern)) {
+      failures.add(new ValidationFailure()
+        .fieldId(String.format("contributors[%d].id", i))
+        .errorType("invalid")
+        .message("ORCID should have the format https://orcid.org/0000-0000-0000-0000.")
+      );
+    }
+    else {
+      try {
+        restTemplate.exchange(requestEntity, Void.class);
+      } catch (HttpClientErrorException e) {
+        log.warnEx("Problem retrieving ORCID", e);
+
+        failures.add(new ValidationFailure()
+          .fieldId(String.format("contributors[%d].id", i))
+          .errorType("invalid")
+          .message("The contributor does not exist.")
+        );
+      }
+    }
+
+    return failures;
+  }
 }
 
