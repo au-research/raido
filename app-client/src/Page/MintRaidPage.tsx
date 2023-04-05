@@ -50,6 +50,12 @@ import {
   relatedObjectTypes,
   relatedRaidTypes
 } from "Api/ReferenceData";
+import {
+  doiUrl,
+  fieldOfResearchUrl,
+  NewWindowLink,
+  rorUrl
+} from "Component/ExternalLink";
 
 const pageUrl = "/mint-raid-v2";
 
@@ -338,7 +344,7 @@ function MintRaidContainer({servicePointId, onCreate}: {
               setFormData({...formData, accessType: mapAccessType(item)});
             }}
           />
-          <TextField id="accessStatement" label="Access statement" 
+          <TextField id="accessStatement" label="Statement" 
             variant="outlined" autoCorrect="off" autoCapitalize="on"
             required={formData.accessType !== "Open"} 
             disabled={isWorking}
@@ -453,8 +459,8 @@ function MintRaidContainer({servicePointId, onCreate}: {
                        });
                      }}
                      label={ alternateIdentifierTypeProblem ?
-                       "Alternate Identifier Type - " + alternateIdentifierTypeProblem :
-                       "Alternate Identifier Type"}
+                       "Type - " + alternateIdentifierTypeProblem :
+                       "Type"}
                      error={!!alternateIdentifierTypeProblem}
           />
         </InputFieldGroup>
@@ -564,6 +570,9 @@ export function MintRaidHelp(){
     <Stack spacing={1}>
       <ul>
         <li><HelpChip label={"Lead organisation"}/>
+          A valid <NewWindowLink href={rorUrl}>
+            RoR identifier
+        </NewWindowLink> url.
           For your convenience, RAiD auto-populates the lead organisation field
           with the RoR of the Institution associated with your Service Point.
           Please note that this field can contain any organisation you choose
@@ -578,6 +587,16 @@ export function MintRaidHelp(){
         <li><HelpChip label={"Access statement"}/>
           Must be provided for "Closed" raids.  Should indicate to the reader 
           how to obtain access to the raid.
+        </li>
+        <li><HelpChip label={"Subject"}/>
+          A valid <NewWindowLink href={fieldOfResearchUrl}>
+            Field of Research identifier
+          </NewWindowLink> url.
+        </li>
+        <li><HelpChip label={"Related object"}/>
+          A valid <NewWindowLink href={doiUrl}>
+            DOI identifier
+          </NewWindowLink> url.
         </li>
       </ul>
     </Stack>
