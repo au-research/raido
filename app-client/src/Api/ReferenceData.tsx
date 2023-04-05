@@ -19,7 +19,7 @@ export function ListFormControl({
   idPrefix: string, 
   items: ControlledListItem[],
   label: string,
-  problem: string|undefined,
+  problem?: string|undefined,
 } & SelectProps<string>){
   return <FormControl>
     <InputLabelWithProblem id={idPrefix + "Label"}
@@ -37,6 +37,12 @@ export function ListFormControl({
     </Select>
   </FormControl>
 }
+
+export const traditionalKnowledgeLabelSchemeUris: ControlledListItem[] = [
+  { value: "", description: "" },
+  { value: "https://localcontexts.org/labels/traditional-knowledge-labels/", description: "Traditional Knowledge Labels" },
+  { value: "https://localcontexts.org/labels/biocultural-labels/", description: "Biocultural Labels" },
+]
 
 export const relatedObjectCategories: ControlledListItem[] = [
   {"value": "", "description": ""},
