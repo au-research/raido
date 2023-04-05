@@ -625,7 +625,7 @@ export function findAlternateIdentifierTypeProblem(alternateIdentifier: string, 
 
 export function findSpatialCoverageProblem(spatialCoverage: string, spatialCoveragePlace: string) {
   if (spatialCoverage) {
-    return (spatialCoverage.match("^https://www.geonames.org/[\\d]+/[\\w]+.html$")) ? undefined :
+    return (spatialCoverage.match('^https://www\\.geonames\\.org/[\\d]+/[\\w]+\\.html$')) ? undefined :
       "URL is invalid"
   }
   else {
