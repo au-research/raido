@@ -100,7 +100,7 @@ class SubjectValidationServiceTest {
     final List<ValidationFailure> validationFailures = validationService.validateSubjects(Collections.singletonList(subject));
 
     assertThat(validationFailures.size(), is(1));
-    assertThat(validationFailures.get(0).getMessage(), is(String.format("%s is not a valid field of research", id)));
+    assertThat(validationFailures.get(0).getMessage(), is(String.format("%s is not a standard FoR code", id)));
     assertThat(validationFailures.get(0).getErrorType(), is("invalid"));
     assertThat(validationFailures.get(0).getFieldId(), is("subjects[0].subject"));
   }
@@ -155,7 +155,7 @@ class SubjectValidationServiceTest {
     assertThat(validationFailures.get(0).getMessage(), is("must be https://linked.data.gov.au/def/anzsrc-for/2020."));
     assertThat(validationFailures.get(0).getErrorType(), is("invalid"));
     assertThat(validationFailures.get(0).getFieldId(), is("subjects[0].subjectSchemeUri"));
-    assertThat(validationFailures.get(1).getMessage(), is("https://linked.data.gov.au/def/anzsrc-for/2020/222222 is not a valid field of research"));
+    assertThat(validationFailures.get(1).getMessage(), is("https://linked.data.gov.au/def/anzsrc-for/2020/222222 is not a standard FoR code"));
     assertThat(validationFailures.get(1).getErrorType(), is("invalid"));
     assertThat(validationFailures.get(1).getFieldId(), is("subjects[0].subject"));
   }
