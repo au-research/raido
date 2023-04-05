@@ -450,7 +450,7 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
               setFormData({...formData, accessType: mapAccessType(item)});
             }}
           />
-          <TextField id="accessStatement" label="Access statement"
+          <TextField id="accessStatement" label="Statement"
             variant="outlined" autoCorrect="off" autoCapitalize="on"
             required={formData.accessType !== "Open"}
             disabled={isWorking}
@@ -569,8 +569,8 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
               });
             }}
             label={alternateIdentifierTypeProblem ?
-              "Alternate Identifier Type - " + alternateIdentifierTypeProblem :
-              "Alternate Identifier Type"}
+              "Type - " + alternateIdentifierTypeProblem :
+              "Type"}
             error={!!alternateIdentifierTypeProblem}
           />
         </InputFieldGroup>
