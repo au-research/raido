@@ -10,8 +10,8 @@ import {
   RelatedObjectBlock,
   RelatedRaidBlock,
   SpatialCoverageBlock,
-  TraditionalKnowledgeLabelBlock,
   SubjectBlock,
+  TraditionalKnowledgeLabelBlock,
   ValidationFailure
 } from "Generated/Raidv2";
 import { assert, WithRequired } from "Util/TypeUtil";
@@ -40,8 +40,8 @@ import {
   getFirstRelatedObject,
   getFirstRelatedRaid,
   getFirstSpatialCoverage,
-  getFirstTraditionalKnowledgeLabel,
   getFirstSubject,
+  getFirstTraditionalKnowledgeLabel,
   getLeadOrganisation,
   getPrimaryTitle
 } from "Component/MetaDataContainer";
@@ -632,6 +632,7 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
                            setFormData({...formData, traditionalKnowledgeLabel });
                          }}
         />
+
         
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton type="button" onClick={(e) => {

@@ -13,8 +13,7 @@ import React, {useState} from "react";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import {
   AccessType,
-  AlternateIdentifierBlock,
-  ContributorBlock,
+  AlternateIdentifierBlock, ContributorBlock,
   DescriptionBlock,
   OrganisationBlock,
   RaidoMetadataSchemaV1,
@@ -59,6 +58,7 @@ import {
   relatedObjectTypes,
   relatedRaidTypes, traditionalKnowledgeLabelSchemeUris
 } from "Api/ReferenceData";
+
 
 const pageUrl = "/mint-raid-v2";
 
