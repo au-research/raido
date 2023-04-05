@@ -1,27 +1,23 @@
 import { useMutation } from "@tanstack/react-query";
 import {
-  AccessType, AlternateIdentifierBlock,
+  AccessType,
+  AlternateIdentifierBlock,
   ContributorBlock,
   DescriptionBlock,
   OrganisationBlock,
   RaidoMetadataSchemaV1,
-  ReadRaidResponseV2, RelatedObjectBlock, RelatedRaidBlock, SubjectBlock,
+  ReadRaidResponseV2,
+  RelatedObjectBlock,
+  RelatedRaidBlock,
+  SpatialCoverageBlock,
+  SubjectBlock,
+  TraditionalKnowledgeLabelBlock,
   ValidationFailure
 } from "Generated/Raidv2";
 import { assert, WithRequired } from "Util/TypeUtil";
 import { isValidDate } from "Util/DateUtil";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
-import {
-  Alert,
-  FormControl,
-  InputLabel,
-  ListItemText,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Stack,
-  TextField
-} from "@mui/material";
+import { Alert, ListItemText, Stack, TextField } from "@mui/material";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
 import { PrimaryActionButton, SecondaryButton } from "Component/AppButton";
@@ -30,7 +26,12 @@ import { ValidationFailureDisplay } from "Component/Util";
 import {
   getFirstAlternateIdentifier,
   getFirstLeader,
-  getFirstPrimaryDescription, getFirstRelatedObject, getFirstRelatedRaid, getFirstSubject,
+  getFirstPrimaryDescription,
+  getFirstRelatedObject,
+  getFirstRelatedRaid,
+  getFirstSpatialCoverage,
+  getFirstSubject,
+  getFirstTraditionalKnowledgeLabel,
   getLeadOrganisation,
   getPrimaryTitle
 } from "Component/MetaDataContainer";
@@ -45,8 +46,8 @@ import {
   findRelatedObjectTypeProblem,
   findRelatedRaidProblem,
   findRelatedRaidTypeProblem,
+  findSpatialCoverageProblem,
   findSubjectProblem,
-  RelatedObjectMenuItems, RelatedRaidMenuItems
 } from "Page/MintRaidPage";
 import { createLeadOrganisation } from "./UpgradeLegacySchemaForm";
 import { findOrcidProblem, OrcidField } from "Component/OrcidField";
@@ -54,9 +55,14 @@ import List from "@mui/material/List";
 import { SupportMailLink } from "Component/ExternalLink";
 import { InputFieldGroup } from "Component/InputFieldGroup";
 import {
-  InputLabelWithProblem,
-  labelWithProblem
-} from "Component/InputLabelWithProblem";
+  accessTypes,
+  ListFormControl,
+  mapAccessType,
+  traditionalKnowledgeLabelSchemeUris,
+  relatedObjectCategories,
+  relatedObjectTypes,
+  relatedRaidTypes
+} from "Api/ReferenceData";
 
 function isDifferent(formData: FormData, original: FormData){
   return formData.primaryTitle !== original.primaryTitle ||
@@ -73,7 +79,10 @@ function isDifferent(formData: FormData, original: FormData){
     formData.relatedObjectType !== original.relatedObjectType ||
     formData.relatedObjectCategory !== original.relatedObjectCategory ||
     formData.alternateIdentifier !== original.alternateIdentifier ||
-    formData.alternateIdentifierType !== original.alternateIdentifierType;
+    formData.alternateIdentifierType !== original.alternateIdentifierType ||
+    formData.spatialCoverage !== original.spatialCoverage ||
+    formData.spatialCoveragePlace !== original.spatialCoveragePlace ||
+    formData.traditionalKnowledgeLabel !== original.traditionalKnowledgeLabel;
 }
 
 type FormData = Readonly<{
@@ -93,13 +102,16 @@ type FormData = Readonly<{
   relatedObjectCategory: string,
   alternateIdentifier: string,
   alternateIdentifierType: string,
+  spatialCoverage: string,
+  spatialCoveragePlace: string,
+  traditionalKnowledgeLabel: string,
 }>;
 type ValidFormData = WithRequired<FormData, 'startDate'>;
 
 function mapReadQueryDataToFormData(
   raid: ReadRaidResponseV2, 
   metadata: RaidoMetadataSchemaV1
-): FormData{
+): { primaryTitle: string; relatedRaid: string; leadOrganisation: string; accessStatement: string; subject: string; relatedObject: string; primaryDescription: string; relatedObjectCategory: string; accessType: "Closed" | "Open"; leadContributor: string; alternateIdentifier: string; relatedRaidType: string; relatedObjectType: string; startDate?: Date; alternateIdentifierType: string, spatialCoverage: string, spatialCoveragePlace: string, traditionalKnowledgeLabel: string }{
   return {
     primaryTitle: raid.primaryTitle,
     startDate: raid.startDate,
@@ -117,6 +129,9 @@ function mapReadQueryDataToFormData(
     relatedObjectCategory: getFirstRelatedObject(metadata)?.relatedObjectCategory ?? "",
     alternateIdentifier: getFirstAlternateIdentifier(metadata)?.alternateIdentifier ?? "",
     alternateIdentifierType: getFirstAlternateIdentifier(metadata)?.alternateIdentifierType ?? "",
+    spatialCoverage: getFirstSpatialCoverage(metadata)?.spatialCoverage ?? "",
+    spatialCoveragePlace: getFirstSpatialCoverage(metadata)?.spatialCoveragePlace ?? "",
+    traditionalKnowledgeLabel: getFirstTraditionalKnowledgeLabel(metadata)?.traditionalKnowledgeLabelSchemeUri ?? "",
   }
 }
 
@@ -165,6 +180,14 @@ export function findMetadataUpdateProblems(
 
   if( metadata.alternateIdentifiers && metadata.alternateIdentifiers.length > 1 ){
     problems.push("The metadata contains multiple alternate identifiers.");
+  }
+
+  if( metadata.spatialCoverages && metadata.spatialCoverages.length > 1 ){
+    problems.push("The metadata contains multiple spatial coverages.");
+  }
+
+  if( metadata.traditionalKnowledgeLabels && metadata.traditionalKnowledgeLabels.length > 1 ){
+    problems.push("The metadata contains multiple traditional knowledge labels.");
   }
 
   return problems
@@ -243,6 +266,22 @@ function createUpdateMetadata(
     })
   }
 
+  const newSpatialCoverages: SpatialCoverageBlock[] = [];
+  if (formData.spatialCoverage) {
+    newSpatialCoverages.push({
+      spatialCoverage: formData.spatialCoverage,
+      spatialCoverageSchemeUri: "https://www.geonames.org/",
+      spatialCoveragePlace: formData.spatialCoveragePlace,
+    })
+  }
+
+  const newTraditionalKnowledgeLabels: TraditionalKnowledgeLabelBlock[] = [];
+  if (formData.traditionalKnowledgeLabel) {
+    newTraditionalKnowledgeLabels.push({
+      traditionalKnowledgeLabelSchemeUri: formData.traditionalKnowledgeLabel,
+    })
+  }
+
   /* make sure to update findMetadataUpdateProblems() to detect complicated
   scenarios where this logic would stomp complicated raid data. */
   return {
@@ -266,6 +305,8 @@ function createUpdateMetadata(
     relatedRaids: newRelatedRaids,
     relatedObjects: newRelatedObjects,
     alternateIdentifiers: newAlternateIdentifiers,
+    spatialCoverages: newSpatialCoverages,
+    traditionalKnowledgeLabels: newTraditionalKnowledgeLabels,
   };
 }
 
@@ -323,11 +364,13 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
     findAlternateIdentifierProblem(formData.alternateIdentifier, formData.alternateIdentifierType);
   const alternateIdentifierTypeProblem =
     findAlternateIdentifierTypeProblem(formData.alternateIdentifier, formData.alternateIdentifierType);
+  const spatialCoverageProblem =
+    findSpatialCoverageProblem(formData.spatialCoverage, formData.spatialCoveragePlace);
 
   const canSubmit = isTitleValid && isAccessStatementValid && 
     isStartDateValid && !contribProblem && 
     !leadOrganisationProblem && !subjectProblem && !relatedRaidProblem && !relatedRaidTypeProblem &&
-    !alternateIdentifierProblem && !alternateIdentifierTypeProblem && hasChanged;
+    !alternateIdentifierProblem && !alternateIdentifierTypeProblem && !spatialCoverageProblem && hasChanged;
   const isWorking = updateRequest.isLoading;
 
   return <>
@@ -398,24 +441,15 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
         />
 
         <InputFieldGroup label={"Access"}>
-          <FormControl>
-            <InputLabel id="accessTypeLabel">Access type</InputLabel>
-            <Select
-              labelId="accessTypeLabel"
-              id="accessTypeSelect"
-              value={formData.accessType ?? AccessType.Open.valueOf()}
-              label="Access type"
-              onChange={(event: SelectChangeEvent) => {
-                // maybe a type guard would be better? 
-                const accessType = event.target.value === "Open" ?
-                  AccessType.Open : AccessType.Closed;
-                setFormData({...formData, accessType});
-              }}
-            >
-              <MenuItem value={AccessType.Open}>Open</MenuItem>
-              <MenuItem value={AccessType.Closed}>Closed</MenuItem>
-            </Select>
-          </FormControl>
+          <ListFormControl idPrefix="accessType" label="Type"
+            items={accessTypes}
+            problem={relatedObjectCategoryProblem}
+            disabled={isWorking}
+            value={formData.accessType ?? AccessType.Open}
+            onItemSelect={item => {
+              setFormData({...formData, accessType: mapAccessType(item)});
+            }}
+          />
           <TextField id="accessStatement" label="Access statement"
             variant="outlined" autoCorrect="off" autoCapitalize="on"
             required={formData.accessType !== "Open"}
@@ -460,25 +494,14 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
               "Related Raid"}
             error={!!relatedRaidProblem}
           />
-          <FormControl>
-            <InputLabelWithProblem  id="relatedRaidTypeLabel"
-              label="Related Raid type" problem={relatedRaidTypeProblem} />
-            <Select
-              labelId="relatedRaidTypeLabel"
-              id="relatedRaidTypeSelect"
-              value={formData.relatedRaidType || ''}
-              label={relatedRaidTypeProblem ? "Related Raid type - " + relatedRaidTypeProblem : "Related Raid type"}
-              error={!!relatedRaidTypeProblem}
-              onChange={(event: SelectChangeEvent) => {
-                // maybe a type guard would be better?
-                const relatedRaidType = event.target.value;
-                console.log("onChange", {relatedRaidType, event});
-                setFormData({...formData, relatedRaidType});
-              }}
-            >
-              <RelatedRaidMenuItems/>
-            </Select>
-          </FormControl>
+          <ListFormControl idPrefix="relatedRaidType" label="Type"
+            items={relatedRaidTypes}
+            problem={relatedRaidTypeProblem}
+            value={formData.relatedRaidType}
+            onItemSelect={item => {
+              setFormData({...formData, relatedRaidType: item.value});
+            }}
+          />
         </InputFieldGroup>
 
         <InputFieldGroup label={"Related object"}>
@@ -498,48 +521,24 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
             error={!!relatedObjectProblem}
           />
 
-          <FormControl>
-            <InputLabelWithProblem id="relatedObjectTypeLabel"
-              label="Related object type" problem={relatedObjectTypeProblem}/>
-            <Select
-              labelId="relatedObjectTypeLabel"
-              id="relatedObjectTypeSelect"
-              value={formData.relatedObjectType || ''}
-              label={labelWithProblem("Related object type", relatedObjectTypeProblem)}
-              error={!!relatedObjectTypeProblem}
-              onChange={(event: SelectChangeEvent) => {
-                // maybe a type guard would be better?
-                const relatedObjectType = event.target.value;
-                setFormData({...formData, relatedObjectType});
-
-              }}
-            >
-              <RelatedObjectMenuItems/>
-            </Select>
-          </FormControl>
-          <FormControl>
-            <InputLabelWithProblem id="relatedObjectCategoryLabel"
-              label="Related object category"
-              problem={relatedObjectCategoryProblem}/>
-            <Select
-              labelId="relatedObjectCategoryLabel"
-              id="relatedObjectCategorySelect"
-              value={formData.relatedObjectCategory || ''}
-              label={labelWithProblem("Related object category", relatedObjectCategoryProblem)}
-              error={!!relatedObjectCategoryProblem}
-              onChange={(event: SelectChangeEvent) => {
-                // maybe a type guard would be better?
-                const relatedObjectCategory = event.target.value;
-                setFormData({...formData, relatedObjectCategory});
-              }}
-            >
-              <MenuItem value=""></MenuItem>
-              <MenuItem value="Input">Input</MenuItem>
-              <MenuItem value="Output">Output</MenuItem>
-              <MenuItem value="Internal process document or artefact">Internal
-                process document or artefact</MenuItem>
-            </Select>
-          </FormControl>
+          <ListFormControl idPrefix="relatedObjectType" label="Type"
+            items={relatedObjectTypes}
+            problem={relatedObjectTypeProblem}
+            disabled={isWorking}
+            value={formData.relatedObjectType}
+            onItemSelect={item => {
+              setFormData({...formData, relatedObjectType: item.value});
+            }}
+          />
+          <ListFormControl idPrefix="relatedObjectCategory" label="Category"
+            items={relatedObjectCategories}
+            problem={relatedObjectCategoryProblem}
+            disabled={isWorking}
+            value={formData.relatedObjectCategory}
+            onItemSelect={item => {
+              setFormData({...formData, relatedObjectCategory: item.value});
+            }}
+          />
         </InputFieldGroup>
 
         <InputFieldGroup label={"Alternate identifier"}>
@@ -575,6 +574,46 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
             error={!!alternateIdentifierTypeProblem}
           />
         </InputFieldGroup>
+
+        <InputFieldGroup label={"Spatial Coverage"}>
+          <TextField id="spatialCoverage"
+                     variant="outlined" autoCorrect="off" autoCapitalize="off"
+                     disabled={isWorking}
+                     value={formData.spatialCoverage ?? ""}
+                     onChange={(e) => {
+                       setFormData({
+                         ...formData,
+                         spatialCoverage: e.target.value
+                       });
+                     }}
+                     label={spatialCoverageProblem ?
+                       "Spatial Coverage - " + spatialCoverageProblem :
+                       "Spatial Coverage"}
+                     error={!!spatialCoverageProblem}
+          />
+
+          <TextField id="spatialCoveragePlace"
+                     variant="outlined" autoCorrect="off" autoCapitalize="off"
+                     disabled={isWorking}
+                     value={formData.spatialCoveragePlace ?? ""}
+                     onChange={(e) => {
+                       setFormData({
+                         ...formData,
+                         spatialCoveragePlace: e.target.value
+                       });
+                     }}
+                     label="Place"
+          />
+        </InputFieldGroup>
+
+        <ListFormControl idPrefix="traditionalKnowledgeLabelScheme" label="Traditional Knowledge Label Scheme"
+                         items={traditionalKnowledgeLabelSchemeUris}
+                         value={formData.traditionalKnowledgeLabel}
+                         onItemSelect={(item) => {
+                           setFormData({...formData, traditionalKnowledgeLabel: item.value });
+                         }}
+        />
+
         
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton type="button" onClick={(e) => {

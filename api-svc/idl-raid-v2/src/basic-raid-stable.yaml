@@ -57,12 +57,18 @@ paths:
                 type: array
                 items:
                   $ref: 'components.yaml#/components/schemas/RaidSchemaV1'
-  /raid/v1/{handle}:
+  /raid/v1/{prefix}/{suffix}:
     parameters:
-      - name: handle
+      - name: prefix
         in: path
         required: true
-        description: ID of the raid
+        description: Prefix of the raid handle
+        schema:
+          type: string
+      - name: suffix
+        in: path
+        required: true
+        description: Suffix of the raid handle
         schema:
           type: string
     get:

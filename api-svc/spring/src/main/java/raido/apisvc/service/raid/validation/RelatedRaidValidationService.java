@@ -45,7 +45,10 @@ public class RelatedRaidValidationService {
         failures.add(new ValidationFailure()
           .errorType("invalid")
           .fieldId(String.format("relatedRaids[%d].relatedRaid", i))
-          .message("RelatedRaid is invalid.")
+          .message(
+            "RelatedRaid is invalid. Does not match %s/prefix/suffix"
+              .formatted(metadataProps.handleUrlPrefix)
+          )
         );
       } else {
         final var handle = raidUrl.substring(raidUrl.lastIndexOf("/", raidUrl.lastIndexOf("/") - 1) + 1);

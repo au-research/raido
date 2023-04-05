@@ -27,12 +27,12 @@ public class RaidSchemaV1ValidationService {
   private final OrganisationValidationService orgSvc;
   private final SubjectValidationService subjectSvc;
   private final IdentifierParser idParser;
-
   private final RelatedObjectValidationService relatedObjectSvc;
-
   private final AlternateIdentifierValidationService alternateIdentifierSvc;
-
   private final RelatedRaidValidationService relatedRaidSvc;
+  private final SpatialCoverageValidationService spatialCoverageSvc;
+  private final TraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelSvc;
+
   public RaidSchemaV1ValidationService(
     final TitleValidationService titleSvc,
     final DescriptionValidationService descSvc,
@@ -40,7 +40,7 @@ public class RaidSchemaV1ValidationService {
     final OrganisationValidationService orgSvc,
     final SubjectValidationService subjectSvc,
     final IdentifierParser idParser,
-    final RelatedObjectValidationService relatedObjectSvc, final AlternateIdentifierValidationService alternateIdentifierSvc, final RelatedRaidValidationService relatedRaidSvc) {
+    final RelatedObjectValidationService relatedObjectSvc, final AlternateIdentifierValidationService alternateIdentifierSvc, final RelatedRaidValidationService relatedRaidSvc, final SpatialCoverageValidationService spatialCoverageSvc, final TraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelSvc) {
       this.titleSvc = titleSvc;
       this.descSvc = descSvc;
       this.contribSvc = contribSvc;
@@ -50,6 +50,8 @@ public class RaidSchemaV1ValidationService {
     this.relatedObjectSvc = relatedObjectSvc;
     this.alternateIdentifierSvc = alternateIdentifierSvc;
     this.relatedRaidSvc = relatedRaidSvc;
+    this.spatialCoverageSvc = spatialCoverageSvc;
+    this.traditionalKnowledgeLabelSvc = traditionalKnowledgeLabelSvc;
   }
 
   private List<ValidationFailure> validateUpdateHandle(final String decodedHandleFromPath, final IdBlock updateIdBlock) {
@@ -164,6 +166,9 @@ public class RaidSchemaV1ValidationService {
     failures.addAll(relatedRaidSvc.validateRelatedRaids(request.getRelatedRaids()));
     failures.addAll(relatedObjectSvc.validateRelatedObjects(request.getRelatedObjects()));
     failures.addAll(alternateIdentifierSvc.validateAlternateIdentifiers(request.getAlternateIdentifiers()));
+    failures.addAll(spatialCoverageSvc.validateSpatialCoverages(request.getSpatialCoverages()));
+    failures.addAll(traditionalKnowledgeLabelSvc.validateTraditionalKnowledgeLabels(
+      request.getTraditionalKnowledgeLabels()));
 
     return failures;
   }
@@ -192,6 +197,9 @@ public class RaidSchemaV1ValidationService {
     failures.addAll(relatedRaidSvc.validateRelatedRaids(request.getRelatedRaids()));
     failures.addAll(relatedObjectSvc.validateRelatedObjects(request.getRelatedObjects()));
     failures.addAll(alternateIdentifierSvc.validateAlternateIdentifiers(request.getAlternateIdentifiers()));
+    failures.addAll(spatialCoverageSvc.validateSpatialCoverages(request.getSpatialCoverages()));
+    failures.addAll(traditionalKnowledgeLabelSvc.validateTraditionalKnowledgeLabels(
+      request.getTraditionalKnowledgeLabels()));
 
     return failures;
   }

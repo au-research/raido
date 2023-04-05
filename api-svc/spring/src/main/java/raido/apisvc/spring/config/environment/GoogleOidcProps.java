@@ -6,8 +6,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class GoogleOidcProps {
 
+  // default value is the DEMO OAuth client on raid.services@ardc account
   @Value("${GoogleOidc.clientId:" +
-    "112489799301-m39l17uigum61l64uakb32vjhujuuk73.apps.googleusercontent.com}")
+    "333652356987-ecetlds8nprpf81er55jnva1750jputr.apps.googleusercontent.com}")
   public String clientId;
 
   @Value("${GoogleOidc.clientSecret}")

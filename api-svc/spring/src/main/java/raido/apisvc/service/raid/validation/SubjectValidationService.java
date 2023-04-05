@@ -65,7 +65,7 @@ public class SubjectValidationService {
             if (subjectRecord.isEmpty()) {
               final var failure = new ValidationFailure();
               failure.setFieldId(String.format("subjects[%d].subject", i));
-              failure.setMessage(String.format("%s is not a valid field of research", subject.getSubject()));
+              failure.setMessage(String.format("%s is not a standard FoR code", subject.getSubject()));
               failure.setErrorType("invalid");
 
               failures.add(failure);

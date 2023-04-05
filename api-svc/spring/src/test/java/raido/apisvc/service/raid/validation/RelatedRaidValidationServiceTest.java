@@ -1,5 +1,7 @@
 package raido.apisvc.service.raid.validation;
 
+import org.hamcrest.Matchers;
+import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.Test;
 import raido.apisvc.repository.RaidRepository;
 import raido.apisvc.repository.RelatedRaidTypeRepository;
@@ -17,6 +19,7 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.core.StringContains.containsString;
 import static org.mockito.Mockito.*;
 
 class RelatedRaidValidationServiceTest {
@@ -52,7 +55,7 @@ class RelatedRaidValidationServiceTest {
     assertThat(validationFailures.size(), is(1));
     assertThat(validationFailure.getFieldId(), is("relatedRaids[0].relatedRaid"));
     assertThat(validationFailure.getErrorType(), is("invalid"));
-    assertThat(validationFailure.getMessage(), is("RelatedRaid is invalid."));
+    assertThat(validationFailure.getMessage(), containsString("RelatedRaid is invalid."));
 
     verifyNoInteractions(raidRepository);
   }

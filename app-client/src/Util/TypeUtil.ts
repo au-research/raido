@@ -33,3 +33,7 @@ export type WithRequired<T, K extends keyof T> = T & {
   [P in K]-?: T[P] 
 }
 
+export type WithStringKey<T> = {
+  [K in keyof T]: T[K] extends string ? K : never;
+}[keyof T];
+
