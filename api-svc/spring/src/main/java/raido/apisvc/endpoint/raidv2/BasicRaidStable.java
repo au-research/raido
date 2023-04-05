@@ -33,7 +33,8 @@ public class BasicRaidStable implements BasicRaidStableApi {
   }
 
   @Override
-  public RaidSchemaV1 readRaidV1(String handle) {
+  public RaidSchemaV1 readRaidV1(final String prefix, final String suffix) {
+    final var handle = String.join("/", prefix, suffix);
     var user = getAuthzPayload();
     var data = raidService.readRaidV1(handle);
     guardOperatorOrAssociated(user, data.getId().getIdentifierServicePoint());
@@ -66,7 +67,8 @@ public class BasicRaidStable implements BasicRaidStableApi {
   }
 
   @Override
-  public RaidSchemaV1 updateRaidV1(String handle, UpdateRaidV1Request request) {
+  public RaidSchemaV1 updateRaidV1(final String prefix, final String suffix, UpdateRaidV1Request request) {
+    final var handle = String.join("/", prefix, suffix);
     var user = getAuthzPayload();
     guardOperatorOrAssociated(user, request.getId().getIdentifierServicePoint());
 

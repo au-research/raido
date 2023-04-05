@@ -9,7 +9,9 @@ import {
   ReadRaidResponseV2,
   RelatedObjectBlock,
   RelatedRaidBlock,
+  SpatialCoverageBlock,
   SubjectBlock,
+  TraditionalKnowledgeLabelBlock,
   ValidationFailure
 } from "Generated/Raidv2";
 import { assert, WithRequired } from "Util/TypeUtil";
@@ -27,7 +29,9 @@ import {
   getFirstPrimaryDescription,
   getFirstRelatedObject,
   getFirstRelatedRaid,
+  getFirstSpatialCoverage,
   getFirstSubject,
+  getFirstTraditionalKnowledgeLabel,
   getLeadOrganisation,
   getPrimaryTitle
 } from "Component/MetaDataContainer";
@@ -42,7 +46,8 @@ import {
   findRelatedObjectTypeProblem,
   findRelatedRaidProblem,
   findRelatedRaidTypeProblem,
-  findSubjectProblem
+  findSpatialCoverageProblem,
+  findSubjectProblem,
 } from "Page/MintRaidPage";
 import { createLeadOrganisation } from "./UpgradeLegacySchemaForm";
 import { findOrcidProblem, OrcidField } from "Component/OrcidField";
@@ -53,6 +58,7 @@ import {
   accessTypes,
   ListFormControl,
   mapAccessType,
+  traditionalKnowledgeLabelSchemeUris,
   relatedObjectCategories,
   relatedObjectTypes,
   relatedRaidTypes
@@ -73,7 +79,10 @@ function isDifferent(formData: FormData, original: FormData){
     formData.relatedObjectType !== original.relatedObjectType ||
     formData.relatedObjectCategory !== original.relatedObjectCategory ||
     formData.alternateIdentifier !== original.alternateIdentifier ||
-    formData.alternateIdentifierType !== original.alternateIdentifierType;
+    formData.alternateIdentifierType !== original.alternateIdentifierType ||
+    formData.spatialCoverage !== original.spatialCoverage ||
+    formData.spatialCoveragePlace !== original.spatialCoveragePlace ||
+    formData.traditionalKnowledgeLabel !== original.traditionalKnowledgeLabel;
 }
 
 type FormData = Readonly<{
@@ -93,13 +102,16 @@ type FormData = Readonly<{
   relatedObjectCategory: string,
   alternateIdentifier: string,
   alternateIdentifierType: string,
+  spatialCoverage: string,
+  spatialCoveragePlace: string,
+  traditionalKnowledgeLabel: string,
 }>;
 type ValidFormData = WithRequired<FormData, 'startDate'>;
 
 function mapReadQueryDataToFormData(
   raid: ReadRaidResponseV2, 
   metadata: RaidoMetadataSchemaV1
-): FormData{
+): { primaryTitle: string; relatedRaid: string; leadOrganisation: string; accessStatement: string; subject: string; relatedObject: string; primaryDescription: string; relatedObjectCategory: string; accessType: "Closed" | "Open"; leadContributor: string; alternateIdentifier: string; relatedRaidType: string; relatedObjectType: string; startDate?: Date; alternateIdentifierType: string, spatialCoverage: string, spatialCoveragePlace: string, traditionalKnowledgeLabel: string }{
   return {
     primaryTitle: raid.primaryTitle,
     startDate: raid.startDate,
@@ -117,6 +129,9 @@ function mapReadQueryDataToFormData(
     relatedObjectCategory: getFirstRelatedObject(metadata)?.relatedObjectCategory ?? "",
     alternateIdentifier: getFirstAlternateIdentifier(metadata)?.alternateIdentifier ?? "",
     alternateIdentifierType: getFirstAlternateIdentifier(metadata)?.alternateIdentifierType ?? "",
+    spatialCoverage: getFirstSpatialCoverage(metadata)?.spatialCoverage ?? "",
+    spatialCoveragePlace: getFirstSpatialCoverage(metadata)?.spatialCoveragePlace ?? "",
+    traditionalKnowledgeLabel: getFirstTraditionalKnowledgeLabel(metadata)?.traditionalKnowledgeLabelSchemeUri ?? "",
   }
 }
 
@@ -165,6 +180,14 @@ export function findMetadataUpdateProblems(
 
   if( metadata.alternateIdentifiers && metadata.alternateIdentifiers.length > 1 ){
     problems.push("The metadata contains multiple alternate identifiers.");
+  }
+
+  if( metadata.spatialCoverages && metadata.spatialCoverages.length > 1 ){
+    problems.push("The metadata contains multiple spatial coverages.");
+  }
+
+  if( metadata.traditionalKnowledgeLabels && metadata.traditionalKnowledgeLabels.length > 1 ){
+    problems.push("The metadata contains multiple traditional knowledge labels.");
   }
 
   return problems
@@ -243,6 +266,22 @@ function createUpdateMetadata(
     })
   }
 
+  const newSpatialCoverages: SpatialCoverageBlock[] = [];
+  if (formData.spatialCoverage) {
+    newSpatialCoverages.push({
+      spatialCoverage: formData.spatialCoverage,
+      spatialCoverageSchemeUri: "https://www.geonames.org/",
+      spatialCoveragePlace: formData.spatialCoveragePlace,
+    })
+  }
+
+  const newTraditionalKnowledgeLabels: TraditionalKnowledgeLabelBlock[] = [];
+  if (formData.traditionalKnowledgeLabel) {
+    newTraditionalKnowledgeLabels.push({
+      traditionalKnowledgeLabelSchemeUri: formData.traditionalKnowledgeLabel,
+    })
+  }
+
   /* make sure to update findMetadataUpdateProblems() to detect complicated
   scenarios where this logic would stomp complicated raid data. */
   return {
@@ -266,6 +305,8 @@ function createUpdateMetadata(
     relatedRaids: newRelatedRaids,
     relatedObjects: newRelatedObjects,
     alternateIdentifiers: newAlternateIdentifiers,
+    spatialCoverages: newSpatialCoverages,
+    traditionalKnowledgeLabels: newTraditionalKnowledgeLabels,
   };
 }
 
@@ -323,11 +364,13 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
     findAlternateIdentifierProblem(formData.alternateIdentifier, formData.alternateIdentifierType);
   const alternateIdentifierTypeProblem =
     findAlternateIdentifierTypeProblem(formData.alternateIdentifier, formData.alternateIdentifierType);
+  const spatialCoverageProblem =
+    findSpatialCoverageProblem(formData.spatialCoverage, formData.spatialCoveragePlace);
 
   const canSubmit = isTitleValid && isAccessStatementValid && 
     isStartDateValid && !contribProblem && 
     !leadOrganisationProblem && !subjectProblem && !relatedRaidProblem && !relatedRaidTypeProblem &&
-    !alternateIdentifierProblem && !alternateIdentifierTypeProblem && hasChanged;
+    !alternateIdentifierProblem && !alternateIdentifierTypeProblem && !spatialCoverageProblem && hasChanged;
   const isWorking = updateRequest.isLoading;
 
   return <>
@@ -531,6 +574,46 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
             error={!!alternateIdentifierTypeProblem}
           />
         </InputFieldGroup>
+
+        <InputFieldGroup label={"Spatial Coverage"}>
+          <TextField id="spatialCoverage"
+                     variant="outlined" autoCorrect="off" autoCapitalize="off"
+                     disabled={isWorking}
+                     value={formData.spatialCoverage ?? ""}
+                     onChange={(e) => {
+                       setFormData({
+                         ...formData,
+                         spatialCoverage: e.target.value
+                       });
+                     }}
+                     label={spatialCoverageProblem ?
+                       "Spatial Coverage - " + spatialCoverageProblem :
+                       "Spatial Coverage"}
+                     error={!!spatialCoverageProblem}
+          />
+
+          <TextField id="spatialCoveragePlace"
+                     variant="outlined" autoCorrect="off" autoCapitalize="off"
+                     disabled={isWorking}
+                     value={formData.spatialCoveragePlace ?? ""}
+                     onChange={(e) => {
+                       setFormData({
+                         ...formData,
+                         spatialCoveragePlace: e.target.value
+                       });
+                     }}
+                     label="Place"
+          />
+        </InputFieldGroup>
+
+        <ListFormControl idPrefix="traditionalKnowledgeLabelScheme" label="Traditional Knowledge Label Scheme"
+                         items={traditionalKnowledgeLabelSchemeUris}
+                         value={formData.traditionalKnowledgeLabel}
+                         onItemSelect={(item) => {
+                           setFormData({...formData, traditionalKnowledgeLabel: item.value });
+                         }}
+        />
+
         
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton type="button" onClick={(e) => {

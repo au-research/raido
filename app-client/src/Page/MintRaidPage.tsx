@@ -6,21 +6,22 @@ import {
   parsePageSuffixParams,
   useNavigation
 } from "Design/NavigationProvider";
-import { raidoTitle, ValidationFailureDisplay } from "Component/Util";
-import { LargeContentMain } from "Design/LayoutMain";
-import { ContainerCard } from "Design/ContainerCard";
-import React, { useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import {raidoTitle, ValidationFailureDisplay} from "Component/Util";
+import {LargeContentMain} from "Design/LayoutMain";
+import {ContainerCard} from "Design/ContainerCard";
+import React, {useState} from "react";
+import {useMutation, useQuery} from "@tanstack/react-query";
 import {
   AccessType,
-  AlternateIdentifierBlock,
+  AlternateIdentifierBlock, ContributorBlock,
   DescriptionBlock,
   OrganisationBlock,
   RaidoMetadataSchemaV1,
   RelatedObjectBlock,
   RelatedRaidBlock,
   ServicePoint,
-  SubjectBlock,
+  SpatialCoverageBlock,
+  SubjectBlock, TraditionalKnowledgeLabelBlock,
   ValidationFailure
 } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
@@ -48,8 +49,9 @@ import {
   mapAccessType,
   relatedObjectCategories,
   relatedObjectTypes,
-  relatedRaidTypes
+  relatedRaidTypes, traditionalKnowledgeLabelSchemeUris
 } from "Api/ReferenceData";
+
 
 const pageUrl = "/mint-raid-v2";
 
@@ -106,12 +108,15 @@ type FormData = Readonly<{
   relatedObjectCategory: string,
   alternateIdentifier: string,
   alternateIdentifierType: string,
+  spatialCoverage: string,
+  spatialCoveragePlace: string,
+  traditionalKnowledgeLabel: string,
 }>;
 type ValidFormData = WithRequired<FormData, 'startDate'>;
 
 function mapFormDataToMetadata(
   form: ValidFormData 
-): Omit<RaidoMetadataSchemaV1, 'id'>{
+): { metadataSchema: string; spatialCoverages: SpatialCoverageBlock[]; access: { accessStatement: string; type: "Closed" | "Open" }; subjects: SubjectBlock[]; traditionalKnowledgeLabels: TraditionalKnowledgeLabelBlock[]; dates: { startDate: Date }; titles: { title: string; type: string; startDate: Date }[]; descriptions: DescriptionBlock[]; relatedRaids: RelatedRaidBlock[]; organisations: OrganisationBlock[]; alternateIdentifiers: AlternateIdentifierBlock[]; contributors: ContributorBlock[]; relatedObjects: RelatedObjectBlock[] }{
   const descriptions: DescriptionBlock[] = [];
   if( form.primaryDescription ){
     descriptions.push({
@@ -160,6 +165,22 @@ function mapFormDataToMetadata(
     })
   }
 
+  const spatialCoverages: SpatialCoverageBlock[] = []
+  if (form.spatialCoverage) {
+    spatialCoverages.push({
+      spatialCoverage: form.spatialCoverage,
+      spatialCoverageSchemeUri: "https://www.geonames.org/",
+      spatialCoveragePlace: form.spatialCoveragePlace,
+    })
+  }
+
+  const traditionalKnowledgeLabels: TraditionalKnowledgeLabelBlock[] = [];
+  if(form.traditionalKnowledgeLabel) {
+    traditionalKnowledgeLabels.push({
+      traditionalKnowledgeLabelSchemeUri: form.traditionalKnowledgeLabel,
+    })
+  }
+
   return {
     metadataSchema: "RaidoMetadataSchemaV1",
     access: {
@@ -183,6 +204,8 @@ function mapFormDataToMetadata(
     relatedRaids,
     relatedObjects,
     alternateIdentifiers,
+    spatialCoverages,
+    traditionalKnowledgeLabels,
   };
 }
 
@@ -260,11 +283,13 @@ function MintRaidContainer({servicePointId, onCreate}: {
     findAlternateIdentifierProblem(formData.alternateIdentifier, formData.alternateIdentifierType);
   const alternateIdentifierTypeProblem =
     findAlternateIdentifierTypeProblem(formData.alternateIdentifier, formData.alternateIdentifierType);
+  const spatialCoverageProblem =
+    findSpatialCoverageProblem(formData.spatialCoverage, formData.spatialCoveragePlace);
 
   const canSubmit = isTitleValid && isStartDateValid &&
     isAccessStatementValid && !contribProblem && !leadOrganisationProblem && !subjectProblem && !relatedRaidProblem &&
     !relatedRaidTypeProblem && !relatedObjectProblem && !relatedObjectTypeProblem && !relatedObjectCategoryProblem &&
-    !alternateIdentifierProblem && !alternateIdentifierTypeProblem;
+    !alternateIdentifierProblem && !alternateIdentifierTypeProblem && !spatialCoverageProblem;
   const isWorking = mintRequest.isLoading;
   
   return <ContainerCard title={"Mint RAiD"} action={<MintRaidHelp/>}>
@@ -458,6 +483,45 @@ function MintRaidContainer({servicePointId, onCreate}: {
                      error={!!alternateIdentifierTypeProblem}
           />
         </InputFieldGroup>
+
+        <InputFieldGroup label={"Spatial Coverage"}>
+          <TextField id="spatialCoverage"
+                     variant="outlined" autoCorrect="off" autoCapitalize="off"
+                     disabled={isWorking}
+                     value={formData.spatialCoverage ?? ""}
+                     onChange={(e) => {
+                       setFormData({
+                         ...formData,
+                         spatialCoverage: e.target.value
+                       });
+                     }}
+                     label={ spatialCoverageProblem ?
+                       "Spatial Coverage - " + spatialCoverageProblem :
+                       "Spatial Coverage"}
+                     error={!!spatialCoverageProblem}
+          />
+
+          <TextField id="spatialCoveragePlace"
+                     variant="outlined" autoCorrect="off" autoCapitalize="off"
+                     disabled={isWorking}
+                     value={formData.spatialCoveragePlace ?? ""}
+                     onChange={(e) => {
+                       setFormData({
+                         ...formData,
+                         spatialCoveragePlace: e.target.value
+                       });
+                     }}
+                     label="Place"
+          />
+        </InputFieldGroup>
+
+        <ListFormControl idPrefix="traditionalKnowledgeLabelScheme" label="Traditional Knowledge Label Scheme"
+                         items={traditionalKnowledgeLabelSchemeUris}
+                         value={formData.traditionalKnowledgeLabel}
+                         onItemSelect={(item) => {
+                           setFormData({...formData, traditionalKnowledgeLabel: item.value });
+                         }}
+        />
         
         <Stack direction={"row"} spacing={2}>
           <SecondaryButton onClick={navBrowserBack}
@@ -557,6 +621,16 @@ export function findAlternateIdentifierProblem(alternateIdentifier: string, alte
 
 export function findAlternateIdentifierTypeProblem(alternateIdentifier: string, alternateIdentifierType: string) {
   return (!alternateIdentifier ? true : !!alternateIdentifierType) ? undefined : "must be set";
+}
+
+export function findSpatialCoverageProblem(spatialCoverage: string, spatialCoveragePlace: string) {
+  if (spatialCoverage) {
+    return (spatialCoverage.match("^https://www.geonames.org/[\\d]+/[\\w]+.html$")) ? undefined :
+      "URL is invalid"
+  }
+  else {
+    return (!spatialCoveragePlace ? true : !!spatialCoverage) ? undefined : "must be set";
+  }
 }
 
 export function MintRaidHelp(){
