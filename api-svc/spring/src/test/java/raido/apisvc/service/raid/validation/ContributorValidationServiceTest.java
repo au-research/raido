@@ -19,6 +19,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 @ExtendWith(MockitoExtension.class)
 class ContributorValidationServiceTest {
@@ -53,6 +54,22 @@ class ContributorValidationServiceTest {
 
     final var failures = validationService.validateIdFields(1, contributor);
     assertThat(failures, is(empty()));
+  }
+
+  @Test
+  void addFailureIfContributorOrcidIsInvalid() {
+    final var contributor = new ContributorBlock()
+      .id("https://orcid.org/0000-00-000000-0001")
+      .identifierSchemeUri(ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_);
+
+    final var failures = validationService.validateOrcidExists(1, contributor);
+    final var failure = failures.get(0);
+
+    assertThat(failure.getFieldId(), is("contributors[1].id"));
+    assertThat(failure.getErrorType(), is("invalid"));
+    assertThat(failure.getMessage(), is("ORCID should have the format https://orcid.org/0000-0000-0000-0000."));
+
+    verifyNoInteractions(restTemplate);
   }
 
   @Test

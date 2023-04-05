@@ -238,22 +238,33 @@ public class ContributorValidationService {
   }
 
   public List<ValidationFailure> validateOrcidExists(final int i, final ContributorBlock contributor) {
+
+    final var orcidPattern = "^https://orcid\\.org/[\\d]{4}-[\\d]{4}-[\\d]{4}-[\\d]{4}$";
     final var failures = new ArrayList<ValidationFailure>();
 
     final var requestEntity = RequestEntity
       .head(contributor.getId())
       .build();
 
-    try {
-      restTemplate.exchange(requestEntity, Void.class);
-    } catch (HttpClientErrorException e) {
-      log.warnEx("Problem retrieving ORCID", e);
-
+    if (!contributor.getId().matches(orcidPattern)) {
       failures.add(new ValidationFailure()
         .fieldId(String.format("contributors[%d].id", i))
         .errorType("invalid")
-        .message("The contributor does not exist.")
+        .message("ORCID should have the format https://orcid.org/0000-0000-0000-0000.")
       );
+    }
+    else {
+      try {
+        restTemplate.exchange(requestEntity, Void.class);
+      } catch (HttpClientErrorException e) {
+        log.warnEx("Problem retrieving ORCID", e);
+
+        failures.add(new ValidationFailure()
+          .fieldId(String.format("contributors[%d].id", i))
+          .errorType("invalid")
+          .message("The contributor does not exist.")
+        );
+      }
     }
 
     return failures;
