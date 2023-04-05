@@ -25,16 +25,7 @@ import {
 } from "Generated/Raidv2";
 import { useAuthApi } from "Api/AuthApi";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Stack,
-  TextField,
-  TextFieldProps
-} from "@mui/material";
+import { Stack, TextField, TextFieldProps } from "@mui/material";
 import { PrimaryActionButton, SecondaryButton } from "Component/AppButton";
 import { navBrowserBack } from "Util/WindowUtil";
 import { HelpChip, HelpPopover } from "Component/HelpPopover";
@@ -52,7 +43,9 @@ import { InputFieldGroup } from "Component/InputFieldGroup";
 import { labelWithProblem } from "Component/InputLabelWithProblem";
 import { RqQuery } from "Util/ReactQueryUtil";
 import {
+  accessTypes,
   ListFormControl,
+  mapAccessType,
   relatedObjectCategories,
   relatedObjectTypes,
   relatedRaidTypes
@@ -202,7 +195,7 @@ function MintRaidContainer({servicePointId, onCreate}: {
     primaryTitle: "",
     startDate: new Date(),
     leadContributor: "",
-    accessType: "Open",
+    accessType: AccessType.Open,
     accessStatement: "",
   } as FormData);
   const [serverValidations, setServerValidations] = useState(
@@ -336,24 +329,15 @@ function MintRaidContainer({servicePointId, onCreate}: {
         />
 
         <InputFieldGroup label={"Access"}>
-          <FormControl>
-            <InputLabel id="accessTypeLabel">Access type</InputLabel>
-            <Select
-              labelId="accessTypeLabel"
-              id="accessTypeSelect"
-              value={formData.accessType ?? AccessType.Open.valueOf()}
-              label="Access type"
-              onChange={(event: SelectChangeEvent) => {
-                // maybe a type guard would be better? 
-                const accessType = event.target.value === "Open" ? 
-                  AccessType.Open : AccessType.Closed;
-                setFormData({...formData, accessType});
-              }}
-            >
-              <MenuItem value={AccessType.Open}>Open</MenuItem>
-              <MenuItem value={AccessType.Closed}>Closed</MenuItem>
-            </Select>
-          </FormControl>
+          <ListFormControl idPrefix="accessType" label="Type"
+            items={accessTypes}
+            problem={relatedObjectCategoryProblem}
+            disabled={isWorking}
+            value={formData.accessType ?? AccessType.Open} 
+            onItemSelect={item => {
+              setFormData({...formData, accessType: mapAccessType(item)});
+            }}
+          />
           <TextField id="accessStatement" label="Access statement" 
             variant="outlined" autoCorrect="off" autoCapitalize="on"
             required={formData.accessType !== "Open"} 
@@ -391,16 +375,16 @@ function MintRaidContainer({servicePointId, onCreate}: {
                 relatedRaid: e.target.value
               });
             }}
-            label={labelWithProblem("Related Raid", relatedRaidProblem)}
+            label={labelWithProblem("Related RAiD", relatedRaidProblem)}
             error={!!relatedRaidProblem}
           />
           <ListFormControl idPrefix="relatedRaidType" label="Type"
             items={relatedRaidTypes}
             problem={relatedRaidTypeProblem}
+            disabled={isWorking}
             value={formData.relatedRaidType}
-            onChange={(event) => {
-              const relatedRaidType = event.target.value;
-              setFormData({...formData, relatedRaidType});
+            onItemSelect={item => {
+              setFormData({...formData, relatedRaidType: item.value});
             }}
           />
         </InputFieldGroup>
@@ -424,19 +408,19 @@ function MintRaidContainer({servicePointId, onCreate}: {
           <ListFormControl idPrefix="relatedObjectType" label="Type"
             items={relatedObjectTypes}
             problem={relatedObjectTypeProblem}
+            disabled={isWorking}
             value={formData.relatedObjectType}
-            onChange={(event) => {
-              const relatedObjectType = event.target.value;
-              setFormData({...formData, relatedObjectType});
+            onItemSelect={item => {
+              setFormData({...formData, relatedObjectType: item.value});
             }}
           />
           <ListFormControl idPrefix="relatedObjectCategory" label="Category"
             items={relatedObjectCategories}
             problem={relatedObjectCategoryProblem}
+            disabled={isWorking}
             value={formData.relatedObjectCategory}
-            onChange={(event) => {
-              const relatedObjectCategory = event.target.value;
-              setFormData({...formData, relatedObjectCategory});
+            onItemSelect={item => {
+              setFormData({...formData, relatedObjectCategory: item.value});
             }}
           />
         </InputFieldGroup>

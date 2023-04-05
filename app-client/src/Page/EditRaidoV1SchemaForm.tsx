@@ -15,17 +15,7 @@ import {
 import { assert, WithRequired } from "Util/TypeUtil";
 import { isValidDate } from "Util/DateUtil";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
-import {
-  Alert,
-  FormControl,
-  InputLabel,
-  ListItemText,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Stack,
-  TextField
-} from "@mui/material";
+import { Alert, ListItemText, Stack, TextField } from "@mui/material";
 import { DesktopDatePicker } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
 import { PrimaryActionButton, SecondaryButton } from "Component/AppButton";
@@ -60,7 +50,9 @@ import List from "@mui/material/List";
 import { SupportMailLink } from "Component/ExternalLink";
 import { InputFieldGroup } from "Component/InputFieldGroup";
 import {
+  accessTypes,
   ListFormControl,
+  mapAccessType,
   relatedObjectCategories,
   relatedObjectTypes,
   relatedRaidTypes
@@ -406,24 +398,15 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
         />
 
         <InputFieldGroup label={"Access"}>
-          <FormControl>
-            <InputLabel id="accessTypeLabel">Access type</InputLabel>
-            <Select
-              labelId="accessTypeLabel"
-              id="accessTypeSelect"
-              value={formData.accessType ?? AccessType.Open.valueOf()}
-              label="Access type"
-              onChange={(event: SelectChangeEvent) => {
-                // maybe a type guard would be better? 
-                const accessType = event.target.value === "Open" ?
-                  AccessType.Open : AccessType.Closed;
-                setFormData({...formData, accessType});
-              }}
-            >
-              <MenuItem value={AccessType.Open}>Open</MenuItem>
-              <MenuItem value={AccessType.Closed}>Closed</MenuItem>
-            </Select>
-          </FormControl>
+          <ListFormControl idPrefix="accessType" label="Type"
+            items={accessTypes}
+            problem={relatedObjectCategoryProblem}
+            disabled={isWorking}
+            value={formData.accessType ?? AccessType.Open}
+            onItemSelect={item => {
+              setFormData({...formData, accessType: mapAccessType(item)});
+            }}
+          />
           <TextField id="accessStatement" label="Access statement"
             variant="outlined" autoCorrect="off" autoCapitalize="on"
             required={formData.accessType !== "Open"}
@@ -472,9 +455,8 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
             items={relatedRaidTypes}
             problem={relatedRaidTypeProblem}
             value={formData.relatedRaidType}
-            onChange={(event) => {
-              const relatedRaidType = event.target.value;
-              setFormData({...formData, relatedRaidType});
+            onItemSelect={item => {
+              setFormData({...formData, relatedRaidType: item.value});
             }}
           />
         </InputFieldGroup>
@@ -499,19 +481,19 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
           <ListFormControl idPrefix="relatedObjectType" label="Type"
             items={relatedObjectTypes}
             problem={relatedObjectTypeProblem}
+            disabled={isWorking}
             value={formData.relatedObjectType}
-            onChange={(event) => {
-              const relatedObjectType = event.target.value;
-              setFormData({...formData, relatedObjectType});
+            onItemSelect={item => {
+              setFormData({...formData, relatedObjectType: item.value});
             }}
           />
           <ListFormControl idPrefix="relatedObjectCategory" label="Category"
             items={relatedObjectCategories}
             problem={relatedObjectCategoryProblem}
+            disabled={isWorking}
             value={formData.relatedObjectCategory}
-            onChange={(event) => {
-              const relatedObjectCategory = event.target.value;
-              setFormData({...formData, relatedObjectCategory});
+            onItemSelect={item => {
+              setFormData({...formData, relatedObjectCategory: item.value});
             }}
           />
         </InputFieldGroup>
