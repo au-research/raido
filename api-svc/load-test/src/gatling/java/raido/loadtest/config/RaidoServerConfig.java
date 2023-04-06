@@ -1,15 +1,18 @@
-package raido.loadtest;
+package raido.loadtest.config;
 
 import raido.apisvc.util.Guard;
 
 import static raido.apisvc.util.StringUtil.hasValue;
 
-public class RaidoConfig {
+public class RaidoServerConfig {
+  
+  public static final RaidoServerConfig serverConfig = new RaidoServerConfig();
+  
   /** The baseUrl that will be used for all requests to the api-svc. */
   public String apiSvcUrl = "http://localhost:8080";
   public String apiKeyJwtSecret = "";
 
-  public RaidoConfig() {
+  public RaidoServerConfig() {
     apiSvcUrl = getConfig("apiSvcUrl", apiSvcUrl);
     apiKeyJwtSecret = getConfig("apiKeyJwtSecret", apiKeyJwtSecret);
 
@@ -19,7 +22,7 @@ public class RaidoConfig {
 
   public static String getConfig(String name, String defaultValue) {
     String configName = "%s.%s".formatted(
-      RaidoConfig.class.getSimpleName(), name);
+      RaidoServerConfig.class.getSimpleName(), name);
 
     String envValue = System.getenv(configName);
     if( hasValue(envValue) ){
