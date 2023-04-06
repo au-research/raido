@@ -3,7 +3,8 @@ on:
   pull_request:
   push:
     branches:
-    - main    
+    - main
+    - v1.1
     paths-ignore:
       # don't need doc updates to do a rebuild, it's a waste of build minutes   
       - '**.md'
