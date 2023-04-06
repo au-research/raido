@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+<!--      <pattern>xxx%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
+      <immediateFlush>false</immediateFlush>
+    </encoder>
+  </appender>
+<!-- logLevel does not appear to be being passed through from the Gradle plugin -->
+<!--  <root level="${logLevel}"> -->
+  <root level="WARN"> 
+    <appender-ref ref="CONSOLE"/>
+  </root>
+</configuration>

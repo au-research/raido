@@ -1,3 +1,5 @@
+import io.gatling.gradle.GatlingRunTask
+
 plugins{
   id 'java'
   id 'io.gatling.gradle' version "3.9.2.2"
@@ -13,20 +15,20 @@ ext{
     // for consistency, rather than any specific reason 
     "user.language":"", "user.country":"", "user.variant":"",
   ]
-  
+
+  /* these are copied from doco, dunno if they're defaulted: 
+  https://gatling.io/docs/gatling/reference/current/extensions/gradle_plugin/ */
+  defaultJvmArgs = [
+    '-server',
+    '-Xmx1G',
+    '-XX:+UseG1GC',
+    '-XX:+ParallelRefProcEnabled',
+    '-XX:MaxInlineLevel=20',
+    '-XX:MaxTrivialSize=12',
+  ]
+
   // the config loading config :/
   homeDir = System.properties['user.home']
-  configPath = System.getProperty("RAIDO_APISVC_CONFIG_PATH",
-    "${homeDir}/.config/raido/api-svc.gradle")
-}
-
-/* after ext{} block so that stuff is the default, and so the config
-   can refer to those default values */
-if( file(configPath).exists() ){
-  println "loading config from: ${configPath}"
-  /* never done config this way before, not entirely sure it's a good idea,
-  probably a Bad Plan to use a full turing-complete language for config */
-  apply from: configPath
 }
 
 repositories{
@@ -47,12 +49,11 @@ dependencies{
   
   gatling libs.bundles.slf4j
 
-  runtimeOnly 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
+  gatlingRuntimeOnly 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
   gatling 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.2'
   gatling "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2"
 
   gatling 'com.auth0:java-jwt:4.3.0'
-  implementation 'com.auth0:java-jwt:4.3.0'
 
   gatling "com.squareup.okhttp3:okhttp:4.10.0"
   
@@ -72,11 +73,25 @@ compileJava {
 }
 
 
-sourceSets{
-  gatling.resources{
-//    srcDirs "src/gatling/java"
-    // look for resources in the source tree, resources folder is pointless 
-    srcDirs sourceSets.gatling.java.srcDirs
+// look for resources in the source tree, resources folder is pointless 
+sourceSets.gatling.resources.srcDirs(sourceSets.gatling.java.srcDirs)
+
+gatling {
+  simulations = {
+    include "raido/loadtest/simulation/Read.java"
   }
+
+  logLevel = "WARN"
+  jvmArgs = defaultJvmArgs
+  systemProperties = defaultSysProps
 }
 
+tasks.register('gatlingRunDev', GatlingRunTask) {
+  simulations = {
+    include "raido/loadtest/simulation/Dev.java"
+  }
+
+  logLevel = "DEBUG"
+  jvmArgs = defaultJvmArgs
+  systemProperties = defaultSysProps
+}
