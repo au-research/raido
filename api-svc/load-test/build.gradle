@@ -2,7 +2,7 @@ import io.gatling.gradle.GatlingRunTask
 
 plugins{
   id 'java'
-  id 'io.gatling.gradle' version "3.9.2.2"
+  id 'io.gatling.gradle' version "3.9.3"
 }
  
 ext{
@@ -91,7 +91,7 @@ tasks.register('gatlingRunDev', GatlingRunTask) {
     include "raido/loadtest/simulation/Dev.java"
   }
 
-  logLevel = "DEBUG"
+  logLevel = "WARN"
   jvmArgs = defaultJvmArgs
   systemProperties = defaultSysProps
 }
