@@ -4,8 +4,8 @@
     <encoder>
       <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
 <!--      <pattern>xxx%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
-      <immediateFlush>false</immediateFlush>
     </encoder>
+    <immediateFlush>false</immediateFlush>
   </appender>
 <!-- logLevel does not appear to be being passed through from the Gradle plugin -->
 <!--  <root level="${logLevel}"> -->
