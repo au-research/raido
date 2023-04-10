@@ -1,3 +1,5 @@
+import org.gradle.api.plugins.jvm.JvmTestSuite
+
 plugins{
   id 'java'
 }
@@ -105,6 +107,7 @@ dependencies{
   // use logback as the backing log implementation for slf4j
   runtimeOnly libs.bundles.logback.runtime
 
+  testImplementation project(':api-svc:test-shared')
   testImplementation libs.bundles.spring6.test
 
 //  testImplementation 'org.mockito:mockito-core:4.11.0'
@@ -138,14 +141,19 @@ compileJava {
 }
 
 testing{
+  //noinspection GroovyAssignabilityCheck
   suites{
+    //noinspection GroovyAssignabilityCheck
     intTest(JvmTestSuite){
       testType = TestSuiteType.INTEGRATION_TEST
       dependencies{
+        // this brings the actual prod code
         implementation project()
+        
         implementation project(':api-svc:db:raido')
         implementation project(':api-svc:idl-raid-v1')
         implementation project(':api-svc:idl-raid-v2')
+        implementation project(':api-svc:test-shared')
 
         // for booting a custom test server
         implementation.bundle libs.bundles.jetty11

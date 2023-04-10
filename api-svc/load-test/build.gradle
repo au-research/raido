@@ -16,7 +16,7 @@ ext{
     "user.language":"", "user.country":"", "user.variant":"",
   ]
 
-  /* these are copied from doco, dunno if they're defaulted: 
+  /* these are copied from doco, dunno if they're defaulted (or still relevant): 
   https://gatling.io/docs/gatling/reference/current/extensions/gradle_plugin/ */
   defaultJvmArgs = [
     '-server',
@@ -37,16 +37,36 @@ repositories{
 
 version = rootProject.version
 
-/* don't use groovy for prod code: dynamic typing, slow startup and poor 
-   historical upgrade compatibility */
 dependencies{
+  // may be depended on from test projects (e.g. unit, int and load tests)
+  gatling project(':api-svc:test-shared')
+
+  /* we don't reach into the DB from load-tests, but some of the api-svc code
+  uses the DB Enums like UserRole and IdProvider as string values.
+  This is definitely a mistake, it's leaking internal service (literally DB 
+  schema structure out across the API.  We ought to be returning string 
+  constants/OpenAPI enum types at the API level, or at least defining these
+  internal API classes, like AuthzUtil with string params instead of DB enum
+  constants. */
   gatling project(':api-svc:db:raido')
+
+  /* needed because the above mentioned enums inherit from jooq classes  */
+  gatling libs.jooq
+
+  /* included for the generated API data classes, to format our endpoint calls 
+  without having to resort to string concatenation and so we get compile-time 
+  errors if API changes are made the will break the load tests.
+  We won't be using any OpenAPI client code (e.g. app-client) or feign client 
+  code (e.g. intTests) - we have to use the actual Gatling API to declare what
+  endpoints will be invoked with specific data (it's fundamental to how 
+  Gatling works; specifically, the Akka/actor-model implementation). */
   gatling project(':api-svc:idl-raid-v2')
+
+  /* for re-using code like AuthzUtil and AuthService classes 
+  Ideally, would probably be better to have a "shared" Gradle sub-project that 
+  both api-svc and this project (and others like it) can depend on. */
   gatling project(':api-svc:spring')
 
-  gatling libs.bundles.spring6
-  gatling libs.jooq
-  
   gatling libs.bundles.slf4j
 
   gatlingRuntimeOnly 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
@@ -55,11 +75,8 @@ dependencies{
 
   gatling 'com.auth0:java-jwt:4.3.0'
 
-  gatling "com.squareup.okhttp3:okhttp:4.10.0"
-  
   // use logback as the backing log implementation for slf4j
   gatlingRuntimeOnly libs.bundles.logback.runtime
-
 }
 
 compileJava {
@@ -72,16 +89,15 @@ compileJava {
     "-Xlint:deprecation"
 }
 
-
 // look for resources in the source tree, resources folder is pointless 
 sourceSets.gatling.resources.srcDirs(sourceSets.gatling.java.srcDirs)
 
+// logLevel doesn't work - see logback.xml
 gatling {
   simulations = {
     include "raido/loadtest/simulation/Read.java"
   }
-
-  logLevel = "WARN"
+  
   jvmArgs = defaultJvmArgs
   systemProperties = defaultSysProps
 }
@@ -91,7 +107,6 @@ tasks.register('gatlingRunDev', GatlingRunTask) {
     include "raido/loadtest/simulation/Dev.java"
   }
 
-  logLevel = "WARN"
   jvmArgs = defaultJvmArgs
   systemProperties = defaultSysProps
 }
