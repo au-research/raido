@@ -111,8 +111,11 @@ having issues.
 
 ## Development and Release Branching
 
-Currently daily development, DEMO and PROD builds and releases are all done 
-using the `main` branch.
+Currently daily development, CI and DEMO builds and releases are all 
+done using the `main` branch.
+
+Currently PROD is deployed from the `v1.1` branch, this approach is likely to 
+continue with future version.
 
 Releases are tracked and built using `git describe` functionality working off
 of annotated tags with the prefix `raido-v-`.
