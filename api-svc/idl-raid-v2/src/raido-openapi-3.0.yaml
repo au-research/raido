@@ -1,8 +1,5 @@
 openapi: 3.0.3
 
-# note that swagger ui doesn't currently work with our spec, 
-# see https://github.com/swagger-api/swagger-ui/issues/7724
-# But the spec works fine with openapi-generator tooling.
 servers:
   - url: 'https://api.prod.raid.org.au'
     description: The production service - "PROD".
@@ -24,7 +21,10 @@ info:
     The `2.0.0` in the version field refers to the fact that there's already 
     a `1.0.0` used for the legacy RAiD application (not used in this project, 
     see ../idl-raid-v1).
-  
+    Note that swagger ui doesn't currently work with our spec, 
+    see https://github.com/swagger-api/swagger-ui/issues/7724
+    But the spec works fine with openapi-generator tooling.
+
   contact:
     name: ARDC RAiD team
     email: contact@raid.org

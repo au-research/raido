@@ -1,8 +1,16 @@
-# Versions
+
+# Not released
+
+_Not yet scheduled_
+
+## App-client UI changes
+
+## API changes
+
 
 # 1.1
 
-Tentative: 2023-04-11
+_2023-04-11_
 
 ## App-client UI changes 
 

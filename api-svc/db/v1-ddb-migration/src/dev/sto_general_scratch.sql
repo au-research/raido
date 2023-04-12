@@ -1,3 +1,11 @@
+-- select * 
+select count(1)
+from raid
+where 
+  date_created >= '2021-07-1' and
+  date_created <  '2022-07-01'
+;
+
 SELECT indexname FROM pg_indexes
 WHERE tablename = 'app_user' AND schemaname = 'api_svc' AND indexdef LIKE '%UNIQUE%'
 ;

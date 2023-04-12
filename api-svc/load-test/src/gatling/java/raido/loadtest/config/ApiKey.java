@@ -1,4 +1,4 @@
-package raido.loadtest;
+package raido.loadtest.config;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import raido.apisvc.service.auth.RaidV2ApiKeyAuthService;
@@ -17,7 +17,7 @@ public class ApiKey {
   private long apiKeyId = 1000000001;
   private String issuer = "https://localhost:8080";
 
-  public ApiKey(RaidoConfig config) {
+  public ApiKey(RaidoServerConfig config) {
     signingAlgo = Algorithm.HMAC256(config.apiKeyJwtSecret);
   }
 

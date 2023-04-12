@@ -12,7 +12,7 @@ import static raido.apisvc.util.Log.to;
  output very easy.
  
  I find myself often writing log statements in integration/functional tests
- to deliniate logical sections of test code.  It helps when inspecting the 
+ to delineate logical sections of test code.  It helps when inspecting the 
  log output for a failed test and often helps track down other issues too -
  e.g turn on SQL/transaction tracing and you can track the SQL issued to what 
  the test is doing, often turns up surprising things.
@@ -20,13 +20,10 @@ import static raido.apisvc.util.Log.to;
  The method names are uppercase not because they're static, but to make them
  stand out in the test source.
  
- Same with uppercasing the actual message.
- 
- This exists in prod source because I can't figure out how to get Gradle to 
- depend on unit test classes from functional tests.
+ Same with upper-casing the actual message.
  */
 public class BddUtil {
-  private static final Log log = to(BddUtil.class);
+  private static final Log log = Log.to(BddUtil.class);
   
   public static void log(String classifier, String descrtiption) {
     log.info(classifier.toUpperCase() + ": " + descrtiption);

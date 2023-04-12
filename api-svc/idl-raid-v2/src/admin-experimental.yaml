@@ -5,7 +5,9 @@ info:
   description: >
     Contains a bunch of experimental API endpoints used to manage 
     service-points, users, etc.
-    
+    Most list endpoints return a limited number of records, currently defined
+    as the MAX_EXPERIMENTAL_RECORDS, and defaulted to 500, see
+    https://github.com/au-research/raido/blob/main/api-svc/spring/src/main/java/raido/apisvc/endpoint/Constant.java#L5    
 paths:
   /read-request-authz:
     get:
@@ -63,6 +65,9 @@ paths:
         - admin-experimental
       operationId: list-service-point
       summary: list service point data that authorized users can see
+      description: >
+        Returns both enabled and disabled service-points.  Returns up to
+        MAX_EXPERIMENTAL_RECORDS results.
       responses:
         '200':
           description: all service-point data
@@ -343,7 +348,7 @@ components:
       required: [authzRequestId, status]
       properties:
         authzRequestId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
-        status: {$ref: 'AuthzRequestStatus' }
+        status: {$ref: '#/components/schemas/AuthzRequestStatus' }
         role: {type: string}
     ServicePoint:
       description: data that any member of service-point and operators can see
