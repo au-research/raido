@@ -18,8 +18,9 @@ The changelog has multiple audiences:
 _Not yet scheduled_
 
 ## App-client UI
-* Spatial coverage field
-* Traditional knowledge label field
+* Additions to mint/edit page:
+  * Spatial coverage field
+  * Traditional knowledge label field
 
 ## API 
 * Validation to check ORCID exists for contributor
