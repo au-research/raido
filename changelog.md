@@ -18,8 +18,15 @@ The changelog has multiple audiences:
 _Not yet scheduled_
 
 ## App-client UI
+* Spatial coverage field
+* Traditional knowledge label field
 
 ## API 
+* Validation to check ORCID exists for contributor
+* Validation to check ROR exists for organisation
+* New metadata blocks:
+  * spatial coverages
+  * traditional knowledge labels
 
 ## Infrastructure
 
