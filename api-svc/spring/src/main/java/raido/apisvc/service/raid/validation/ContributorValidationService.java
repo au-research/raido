@@ -242,9 +242,7 @@ public class ContributorValidationService {
     final var orcidPattern = "^https://orcid\\.org/[\\d]{4}-[\\d]{4}-[\\d]{4}-[\\d]{4}$";
     final var failures = new ArrayList<ValidationFailure>();
 
-    final var requestEntity = RequestEntity
-      .head(contributor.getId())
-      .build();
+
 
     if (!contributor.getId().matches(orcidPattern)) {
       failures.add(new ValidationFailure()
@@ -254,6 +252,10 @@ public class ContributorValidationService {
       );
     }
     else {
+      final var requestEntity = RequestEntity
+        .head(contributor.getId())
+        .build();
+
       try {
         restTemplate.exchange(requestEntity, Void.class);
       } catch (HttpClientErrorException e) {

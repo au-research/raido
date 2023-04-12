@@ -1,6 +1,9 @@
 package raido.apisvc.service.raid.validation;
 
+import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 import raido.apisvc.util.Log;
 import raido.idl.raidv2.model.OrganisationBlock;
 import raido.idl.raidv2.model.OrganisationRole;
@@ -23,6 +26,12 @@ import static raido.idl.raidv2.model.OrganisationIdentifierSchemeType.HTTPS_ROR_
 public class OrganisationValidationService {
   private static final Log log = to(OrganisationValidationService.class);
   private static final int ROR_LENGTH = 25;
+
+  private final RestTemplate restTemplate;
+
+  public OrganisationValidationService(final RestTemplate restTemplate) {
+    this.restTemplate = restTemplate;
+  }
 
   public List<ValidationFailure> validateOrganisations(
     List<OrganisationBlock> organisations
@@ -62,7 +71,7 @@ public class OrganisationValidationService {
     }
     else {
       if( organisation.getIdentifierSchemeUri() == HTTPS_ROR_ORG_ ){
-        failures.addAll(validateRorFormat(i, organisation));
+        failures.addAll(validateRorExists(i, organisation));
       }
       else {
         // should fail to parse at openapi/spring/jackson, why validate it?
@@ -100,7 +109,7 @@ public class OrganisationValidationService {
     return failures;
   }
 
-  public List<ValidationFailure> validateRorFormat(
+  public List<ValidationFailure> validateRorExists(
     int index, 
     OrganisationBlock organisation
   ){
@@ -115,6 +124,23 @@ public class OrganisationValidationService {
     if( !Pattern.matches("^https://ror\\.org/[0-9a-z]{9}$", id) ){
       return List.of(organisationInvalidRorFormat( index,
         "Invalid ROR %s".formatted(id)) );
+    }
+    else {
+      final var requestEntity = RequestEntity
+        .head(organisation.getId())
+        .build();
+
+      try {
+        restTemplate.exchange(requestEntity, Void.class);
+      } catch (HttpClientErrorException e) {
+        log.warnEx("Problem retrieving ROR", e);
+
+        return List.of(new ValidationFailure()
+          .fieldId(String.format("organisations[%d].id", index))
+          .errorType(INVALID_VALUE_TYPE)
+          .message("The organisation does not exist.")
+        );
+      }
     }
     
     return emptyList();
