@@ -1,11 +1,27 @@
+# Audience
+
+The changelog has multiple audiences:
+* communications team - for preparing the notification email that 
+  will be sent for a new deployment
+  * mostly interested in the UI section
+  * but they also need to know about deprecations of stable API endpoints 
+* client API integrators
+  * mostly interested in the API section
+* test team
+  * interested in both UI And API sections
+* deployment team
+  * interested in the infrastructure section
+
 
 # Not released
 
 _Not yet scheduled_
 
-## App-client UI changes
+## App-client UI
 
-## API changes
+## API 
+
+## Infrastructure
 
 
 # 1.1
