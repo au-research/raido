@@ -139,7 +139,7 @@ public class ApiKeyScenario {
     Var<Map<String, Object>> iServicePointVar,
     Var<List<ApiKey>> iListApiKeyVar
   ) {
-    return http("list-api-key").
+    return http("list api-keys for service-point").
       get(sess->{
         var iRecord = iServicePointVar.get(sess);
         Long iSpId = parseLong(iRecord.get(I_SP_ID).toString());
@@ -181,7 +181,7 @@ public class ApiKeyScenario {
     String bootstrapApiToken,
     Var<Map<String, Object>> iServicePointVar
   ) {
-    return http("create api-key").
+    return http("create api-key for service-point").
       post(apiKey.url).
       headers(authzApiHeaders(bootstrapApiToken)).
       body(StringBody(sess->{
@@ -213,7 +213,7 @@ public class ApiKeyScenario {
   private static HttpRequestActionBuilder generateApiToken(
     String bootstrapApiToken
   ) {
-    return http("generate api-token").
+    return http("generate api-token for service-point").
       post(generateToken.url).
       headers(authzApiHeaders(bootstrapApiToken)).
       body(StringBody(sess->{

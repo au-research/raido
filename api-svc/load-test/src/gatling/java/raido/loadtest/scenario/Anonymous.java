@@ -16,7 +16,7 @@ public class Anonymous {
 
   public static ScenarioBuilder warmUp() {
     return scenario("Warm up").
-      exec(http(publicStatus.url).
+      exec(http("check %s is reachable".formatted(publicStatus.url)).
         get(publicStatus.url).
         // we don't check for status here, because we do it in the next exec()
         check(status().saveAs(STATUS_RESULT))
