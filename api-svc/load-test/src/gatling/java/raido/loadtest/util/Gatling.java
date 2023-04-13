@@ -13,7 +13,6 @@ import static io.gatling.javaapi.core.CoreDsl.bodyString;
 import static raido.loadtest.util.Json.parseJson;
 
 public class Gatling {
-  public static final String LOAD_TEST_ROR = "https://ror.org/load-test";
 
   public static Function<Session, Session> sessionDebug(Consumer<Session> f){
     return (sess)->{
@@ -57,10 +56,19 @@ public class Gatling {
     return (T) sess.get(varName);
   }
 
+  public static Function<Session, Session> convertSessionStringToType(
+    String varName,
+    TypeReference<?> type
+  ){
+    return (Session sess)-> sess.set(
+      varName,
+      parseJson(sess.getString(varName), type) );
+  }
+
   /**
    Avoids having to have two separate constants for typed session variables.
    Groups the name and the type together to avoid copy/paste type errors.
-   Allows to call `get()` method instead of the `sessionCast()` util. 
+   Adds convenience methods like `get()` and `saveBody()`. 
    */
   public static class Var<T> {
     public final String name;

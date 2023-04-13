@@ -3,12 +3,14 @@ package raido.loadtest.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public class Json {
 
   // confirmed thread-safe
   private static final ObjectMapper mapper = new ObjectMapper().
+    disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).
     registerModule(new JavaTimeModule());
 
   public static <T> T parseJson(String value, TypeReference<T> type){

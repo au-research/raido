@@ -45,7 +45,7 @@ public final class ObjectUtil {
   }
 
   /**
-   convenience delgator: {@link Objects#equals(Object, Object)}
+   convenience delegator: {@link Objects#equals(Object, Object)}
    */
   public static boolean areEqual(Object l, Object r) {
     return Objects.equals(l, r);
@@ -194,6 +194,20 @@ public final class ObjectUtil {
     return c.isEmpty();
   }
 
+  /**
+   Return a new list containing only up to the `first` element count.
+   I really thought this utility functionality existed somewhere already, but
+   I couldn't find it.  Remove this method if you can find a simple built-in
+   somewhere already including in the codebase.
+   */
+  public static <T> List<T> first(@Nullable List<T> list, int first){
+    if( list == null || list.isEmpty() ){
+      return list;
+    }
+    
+    return list.subList(0, Integer.min(list.size(), first));
+  }
+  
   /**
    Use with Stream.collect() to iterate over a stream with an index, 
    so you can bind the index into lambdas.

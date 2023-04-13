@@ -9,6 +9,7 @@ import io.gatling.javaapi.core.Simulation;
 import io.gatling.javaapi.http.HttpProtocolBuilder;
 import raido.apisvc.util.Log;
 
+import java.io.IOException;
 import java.util.List;
 
 import static io.gatling.javaapi.core.CoreDsl.atOnceUsers;
@@ -16,23 +17,41 @@ import static io.gatling.javaapi.http.HttpDsl.http;
 import static raido.apisvc.util.Log.to;
 import static raido.loadtest.config.RaidoServerConfig.serverConfig;
 import static raido.loadtest.scenario.Anonymous.warmUp;
-import static raido.loadtest.scenario.SvcPoint.prepareServicePoints;
+import static raido.loadtest.scenario.ApiKeyScenario.prepareApiKeys;
+import static raido.loadtest.scenario.ServicePointScenario.prepareServicePoints;
 
 /** Intended for development testing, not a real load test */
 public class Dev extends Simulation {
   private static final Log log = to(Dev.class);
+
+  int maxServicePoints = 2;
   
   HttpProtocolBuilder httpProtocol = http.
     baseUrl(serverConfig.apiSvcUrl);
   
   {
     log.info("initializer{}");
-    
-    setUp(
-      warmUp().injectOpen(atOnceUsers(1)).andThen(
-        prepareServicePoints().injectOpen(atOnceUsers(1))
-      )
-    ).protocols(httpProtocol);
+
+    try {
+      String spFile = "build/service-points.csv";
+      String apiKeyFile = "build/api-keys.csv";
+      
+      setUp(
+        warmUp().injectOpen(atOnceUsers(1)).
+          andThen(
+            prepareServicePoints(spFile, maxServicePoints)
+              .injectOpen(atOnceUsers(1))
+          ).
+          andThen(
+            prepareApiKeys(spFile, apiKeyFile)
+              .injectOpen(atOnceUsers(1))
+          )
+      ).protocols(httpProtocol);
+      
+    }
+    catch( IOException e ){
+      throw new RuntimeException(e);
+    }
 
   }
 
@@ -60,7 +79,7 @@ public class Dev extends Simulation {
       being .gitignore'd at both the repo root and project levels. */
       resultsDirectory("build/main-load-test-results").
       /* don't need them for a debug session - breakpoints would make the timing
-      results nonsensical anyway - use the gradle task if you want reports */
+      results nonsensical anyway - use the gradle task if you want reports. */
       noReports();
 
     var result = Gatling.fromMap(props.build());

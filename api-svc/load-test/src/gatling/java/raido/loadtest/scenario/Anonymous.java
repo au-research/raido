@@ -14,13 +14,6 @@ public class Anonymous {
   private static final Log log = to(Anonymous.class);
   public static final String STATUS_RESULT = "statusResult";
 
-  /**
-   if public status fails, the the service is not up or not reachable.
-   Is the service running (I do this a lot when doing local dev), is your
-   config correct and pointing at the service it should be?
-   Does the place you're running the test have a working connection to the
-   service (i.e. network rules/connectivity getting in the way).
-   */
   public static ScenarioBuilder warmUp() {
     return scenario("Warm up").
       exec(http(publicStatus.url).
