@@ -219,6 +219,8 @@ public class RaidV2ApiKeyAuthService {
     log.with("firstException", firstEx == null ? "null" : firstEx.getMessage()).
       with("token", mask(decodedJwt.getToken())).
       with("verifiers", apiAuthProps.verifiers.length).
+      with("serverIssuer", apiAuthProps).
+      with("tokenIssuer", decodedJwt.getIssuer()).
       info("jwt not verified by any of the secrets");
     throw authFailed();
   }

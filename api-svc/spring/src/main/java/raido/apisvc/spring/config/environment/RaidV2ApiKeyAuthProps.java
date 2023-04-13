@@ -24,7 +24,7 @@ public class RaidV2ApiKeyAuthProps {
   @Value("${RaidV2ApiKeyAuth.jwtSecrets}")
   private String[] jwtSecrets;
 
-  @Value("${RaidV2ApiKeyAuth.issuer:https://localhost:8080}")
+  @Value("${RaidV2ApiKeyAuth.issuer:http://localhost:8080}")
   public String issuer;
   
   public Algorithm signingAlgo;

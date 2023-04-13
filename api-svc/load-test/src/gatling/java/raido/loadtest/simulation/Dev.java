@@ -15,8 +15,8 @@ import static io.gatling.javaapi.core.CoreDsl.atOnceUsers;
 import static io.gatling.javaapi.http.HttpDsl.http;
 import static raido.apisvc.util.Log.to;
 import static raido.loadtest.config.RaidoServerConfig.serverConfig;
-import static raido.loadtest.scenario.Anonymous.publicStatus;
-import static raido.loadtest.scenario.ServicePoint.loadServicePoint;
+import static raido.loadtest.scenario.Anonymous.warmUp;
+import static raido.loadtest.scenario.SvcPoint.prepareServicePoints;
 
 /** Intended for development testing, not a real load test */
 public class Dev extends Simulation {
@@ -29,10 +29,9 @@ public class Dev extends Simulation {
     log.info("initializer{}");
     
     setUp(
-      // this'll probably be atOnceUsers(1), and there'll be a loop inside
-      loadServicePoint(serverConfig).injectOpen(atOnceUsers(5)).andThen(
-        publicStatus().injectOpen(atOnceUsers(1))
-      ) 
+      warmUp().injectOpen(atOnceUsers(1)).andThen(
+        prepareServicePoints().injectOpen(atOnceUsers(1))
+      )
     ).protocols(httpProtocol);
 
   }
@@ -52,6 +51,7 @@ public class Dev extends Simulation {
   public static void main(String... args) {
     var props = new GatlingPropertiesBuilder().
       simulationClass(Dev.class.getName()).
+      runDescription("run from Dev.main()").
       /* By default, Gatling will dump a `results` directory in the 
       current working dir.  When running a `main()` method from an IDE, most 
       will default the CWD to either the repo root, or the sub-project root.  

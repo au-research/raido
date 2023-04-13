@@ -19,7 +19,7 @@ public class Read extends Simulation {
   
   {
     setUp(
-      Anonymous.publicStatus().injectOpen(atOnceUsers(1))
+      Anonymous.warmUp().injectOpen(atOnceUsers(1))
 //      Anonymous.publicStatus().injectOpen(
 //        rampUsers(simConfig.users).during(simConfig.rampUp),
 //        constantUsersPerSec(simConfig.users).during(simConfig.steadyState)
