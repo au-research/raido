@@ -137,6 +137,15 @@ public class IdentifierParser {
     }
   }
 
+  public IdentifierUrl parseUrlWithRuntimeException(String input) {
+    try {
+      return parseUrlWithException(input);
+    }
+    catch( ValidationFailureException e ){
+      throw new RuntimeException(e);
+    }
+  }
+
   public static List<ValidationFailure> mapProblemsToValidationFailures(
     ParseProblems problems
   ){

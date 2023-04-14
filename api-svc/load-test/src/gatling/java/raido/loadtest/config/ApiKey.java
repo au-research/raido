@@ -11,7 +11,7 @@ import java.time.ZoneOffset;
 
 import static raido.apisvc.spring.security.raidv2.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
 import static raido.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
-import static raido.loadtest.config.RaidoServerConfig.serverConfig;
+import static raido.loadtest.config.GatlingRaidoServerConfig.serverConfig;
 
 public class ApiKey {
   private static String BOOTSTRAP_API_TOKEN;

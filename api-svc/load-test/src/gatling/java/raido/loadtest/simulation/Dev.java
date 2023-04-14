@@ -15,10 +15,11 @@ import java.util.List;
 import static io.gatling.javaapi.core.CoreDsl.atOnceUsers;
 import static io.gatling.javaapi.http.HttpDsl.http;
 import static raido.apisvc.util.Log.to;
-import static raido.loadtest.config.RaidoServerConfig.serverConfig;
+import static raido.loadtest.config.GatlingRaidoServerConfig.serverConfig;
 import static raido.loadtest.scenario.Anonymous.warmUp;
 import static raido.loadtest.scenario.ApiKeyScenario.prepareApiKeys;
 import static raido.loadtest.scenario.ServicePointScenario.prepareServicePoints;
+import static raido.loadtest.scenario.User.spUser;
 
 /** Intended for development testing, not a real load test */
 public class Dev extends Simulation {
@@ -39,12 +40,20 @@ public class Dev extends Simulation {
       setUp(
         warmUp().injectOpen(atOnceUsers(1)).
           andThen(
-            prepareServicePoints(spFile, maxServicePoints)
-              .injectOpen(atOnceUsers(1))
+            prepareServicePoints(spFile, maxServicePoints).
+              injectOpen(atOnceUsers(1))
           ).
           andThen(
-            prepareApiKeys(spFile, apiKeyFile)
-              .injectOpen(atOnceUsers(1))
+            prepareApiKeys(spFile, apiKeyFile).
+              injectOpen(atOnceUsers(1))
+          ).
+          andThen(
+            /* this doesn't work, the CSV file will have no rows at injection 
+            time because the prepare scenarios have not yet executed, but it
+            seems feeders only read the data at injection time */
+            spUser(apiKeyFile).
+//            spUser("build/sto-api-keys.csv").
+              injectOpen(atOnceUsers(3))
           )
       ).protocols(httpProtocol);
       
@@ -68,19 +77,27 @@ public class Dev extends Simulation {
    Intended for running from na IDE, in case of wanting to debug something.
    */
   public static void main(String... args) {
+    runSim(Dev.class, true);
+  }
+
+  public static void runSim(
+    Class<? extends Simulation> simClass, 
+    boolean reports
+  ) {
     var props = new GatlingPropertiesBuilder().
-      simulationClass(Dev.class.getName()).
-      runDescription("run from Dev.main()").
+      simulationClass(simClass.getName()).
+      runDescription("run from main() via Dev.runSim()").
       /* By default, Gatling will dump a `results` directory in the 
       current working dir.  When running a `main()` method from an IDE, most 
       will default the CWD to either the repo root, or the sub-project root.  
       We don't want Gatling dumping stuff in a random `results` dir that 
       somebody will commit, so we tuck it under a `build` dir, which is already 
       being .gitignore'd at both the repo root and project levels. */
-      resultsDirectory("build/main-load-test-results").
-      /* don't need them for a debug session - breakpoints would make the timing
-      results nonsensical anyway - use the gradle task if you want reports. */
-      noReports();
+      resultsDirectory("build/main-load-test-results");
+      
+      if( !reports ){
+        props = props.noReports();
+      }
 
     var result = Gatling.fromMap(props.build());
     if( result != 0 ){

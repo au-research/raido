@@ -62,6 +62,17 @@ dependencies{
   Gatling works; specifically, the Akka/actor-model implementation). */
   gatling project(':api-svc:idl-raid-v2')
 
+  /* Got a lot of compilation warnings about  
+  warning: unknown enum constant ISO.DATE_TIME
+    reason: class file for org.springframework.format.annotation.DateTimeFormat$ISO not found
+  I'm guessing it's coz open-api is generating IDL with Spring annotations, 
+  which makes sense since we're using the spring generator.
+  Would prefer to have load-test work off of its own non-spring generation step,
+  see comment on RaidoApi.Endpoint - then the load-test wouldn't need bring in
+  all of spring for no real reason. */
+  gatling libs.bundles.spring6
+
+
   /* for re-using code like AuthzUtil and AuthService classes 
   Ideally, would probably be better to have a "shared" Gradle sub-project that 
   both api-svc and this project (and others like it) can depend on. */
@@ -74,6 +85,11 @@ dependencies{
   gatling "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2"
 
   gatling 'com.auth0:java-jwt:4.3.0'
+
+  /* for random raid titles and other data
+  library is stale and has a lot of CVEs, but it's not prod code - it's ok */
+  //noinspection VulnerableLibrariesLocal
+  gatling 'com.github.javafaker:javafaker:1.0.2'
 
   // use logback as the backing log implementation for slf4j
   gatlingRuntimeOnly libs.bundles.logback.runtime
@@ -95,18 +111,33 @@ sourceSets.gatling.resources.srcDirs(sourceSets.gatling.java.srcDirs)
 // logLevel doesn't work - see logback.xml
 gatling {
   simulations = {
-    include "raido/loadtest/simulation/Read.java"
+    include "todo"
   }
   
   jvmArgs = defaultJvmArgs
   systemProperties = defaultSysProps
 }
 
-tasks.register('gatlingRunDev', GatlingRunTask) {
+task gatlingRunPrepareServicePoints(type: GatlingRunTask) {
   simulations = {
-    include "raido/loadtest/simulation/Dev.java"
+    include "raido/loadtest/simulation/PrepareServicePoints.java"
   }
 
+  outputs.upToDateWhen { false }
+  
   jvmArgs = defaultJvmArgs
   systemProperties = defaultSysProps
 }
+
+task gatlingRunCreateViewRaids(type: GatlingRunTask) {
+  dependsOn gatlingRunPrepareServicePoints
+  simulations = {
+    include "raido/loadtest/simulation/SimpleCreateViewRaids.java"
+  }
+
+  outputs.upToDateWhen { false }
+  
+  jvmArgs = defaultJvmArgs
+  systemProperties = defaultSysProps
+}
+
