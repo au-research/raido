@@ -27,6 +27,7 @@ import static io.gatling.javaapi.core.CoreDsl.csv;
 import static io.gatling.javaapi.core.CoreDsl.scenario;
 import static io.gatling.javaapi.http.HttpDsl.http;
 import static io.gatling.javaapi.http.HttpDsl.status;
+import static java.time.Duration.ofSeconds;
 import static raido.apisvc.util.Log.to;
 import static raido.loadtest.scenario.ApiKeyScenario.I_API_TOKEN;
 import static raido.loadtest.scenario.ServicePointScenario.I_SP_ID;
@@ -50,7 +51,7 @@ public class User {
    you can drive it off any other CSV file you want, as long as it has those 
    columns.
    */
-  public static ScenarioBuilder spUser(
+  public static ScenarioBuilder listCreateViewRaid(
     String apiKeyFile
   ) {
     String absolutePath = Paths.get(apiKeyFile).toFile().getAbsolutePath();
@@ -64,11 +65,38 @@ public class User {
     var readRaidVar = new Var<>("readRaid",
       new TypeReference<RaidoMetadataSchemaV1>(){}) {};
     
+    // not very realistic
+    var listPagePause = ofSeconds(2);
+    var mintPagePause = ofSeconds(2);
+    var editPagePause = ofSeconds(2);
+    
     return scenario("SP_USER").
       feed(csv(absolutePath).circular()).
+      
+      // user logs in to system, which calls API to show latest raids 
       exec(listRaids(I_API_TOKEN, I_SP_ID, raidListVar)).
+      // user takes time to read and comprehend the page 
+      pause(listPagePause).
+      
+      // IMPROVE: need to simulate whatever "reference data" loading is done 
+      // on mint page by the client
+      
+      // user takes time to fill out all the data fields   
+      pause(mintPagePause).  
+
+      // then they click mint, then client calls the API
       exec(mintRaid(I_API_TOKEN, I_SP_ID, mintedRaidVar)).
-      exec(readRaid(I_API_TOKEN, mintedRaidVar, readRaidVar))
+      // the users takes time to view the result of the create
+      pause(editPagePause).
+
+      // user goes back to home page
+      exec(listRaids(I_API_TOKEN, I_SP_ID, raidListVar)).
+      pause(listPagePause).
+      
+      // user decides to view the raid they created again, for some reason
+      exec(readRaid(I_API_TOKEN, mintedRaidVar, readRaidVar)).
+      pause(editPagePause)
+      
     ;
 
   }

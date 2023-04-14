@@ -19,7 +19,7 @@ import static raido.loadtest.config.GatlingRaidoServerConfig.serverConfig;
 import static raido.loadtest.scenario.Anonymous.warmUp;
 import static raido.loadtest.scenario.ApiKeyScenario.prepareApiKeys;
 import static raido.loadtest.scenario.ServicePointScenario.prepareServicePoints;
-import static raido.loadtest.scenario.User.spUser;
+import static raido.loadtest.scenario.User.listCreateViewRaid;
 
 /** Intended for development testing, not a real load test */
 public class Dev extends Simulation {
@@ -51,7 +51,7 @@ public class Dev extends Simulation {
             /* this doesn't work, the CSV file will have no rows at injection 
             time because the prepare scenarios have not yet executed, but it
             seems feeders only read the data at injection time */
-            spUser(apiKeyFile).
+            listCreateViewRaid(apiKeyFile).
 //            spUser("build/sto-api-keys.csv").
               injectOpen(atOnceUsers(3))
           )

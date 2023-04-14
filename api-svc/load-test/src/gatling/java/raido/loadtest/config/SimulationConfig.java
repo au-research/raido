@@ -11,16 +11,15 @@ public class SimulationConfig {
   
   public static final SimulationConfig simConfig = new SimulationConfig();
 
-  public int rampUp;
-  public int steadyState;
-  public int users;
+  public int rampUpSeconds;
+  public int steadyStateSeconds;
+  public int userCount;
   
 
   public SimulationConfig() {
-    rampUp = parseInt(getConfig("rampUp", "5"));
-    steadyState = parseInt(getConfig("steadyState", "5"));
-    users = parseInt(getConfig("users", "10"));
-    
+    rampUpSeconds = parseInt(getConfig("rampUpSeconds", "10"));
+    steadyStateSeconds = parseInt(getConfig("steadyStateSeconds", "20"));
+    userCount = parseInt(getConfig("users", "1"));
   }
 
   public static String getConfig(String name, String defaultValue) {
