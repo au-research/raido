@@ -15,9 +15,9 @@ Failure modes of the overall project:
 * lack of up-take
 * failure to realise the savings projected 
   * projections
-    * [PID cost-benefit analysis](https://doi.org/10.5281/zenodo.7356219)
-    (this is the UK one, can't find a public reference for the Aus version)
     * https://ardc.edu.au/article/how-much-are-persistent-identifiers-worth-to-australian-research/
+    * [AU PID cost-benefit analysis](https://zenodo.org/record/7100578)
+    * [UK PID cost-benefit analysis](https://doi.org/10.5281/zenodo.7356219)
   * the appearance of failure being just as important as actual failure
     * if we can't "show" (not "tell") the cost benefits of RAiD, then 
       eventually the funding will not be made available to continue and improve
