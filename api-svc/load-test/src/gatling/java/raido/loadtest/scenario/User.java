@@ -69,7 +69,8 @@ public class User {
     var listPagePause = ofSeconds(2);
     var mintPagePause = ofSeconds(2);
     var editPagePause = ofSeconds(2);
-    
+
+    /* IMPROVE: this should use stable API, not experimental */
     return scenario("SP_USER").
       feed(csv(absolutePath).circular()).
       
