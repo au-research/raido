@@ -96,8 +96,6 @@ components:
         subject: { type: string }
         subjectSchemeUri: { type: string }
         subjectKeyword: { type: string }
-        subjectKeywordLanguage: { type: string }
-        subjectLanguageSchemeUri: { type: string }
     RelatedRaidBlock:
       type: object
       properties:
