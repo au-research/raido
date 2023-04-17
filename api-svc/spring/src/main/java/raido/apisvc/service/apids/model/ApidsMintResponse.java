@@ -6,6 +6,38 @@ import raido.apisvc.util.ObjectUtil;
 import java.time.LocalDateTime;
 
 public class ApidsMintResponse {
+
+  public String type;
+  public Identifier identifier;
+  public LocalDateTime timestamp;
+  public Message message;
+
+  @Override
+  public String toString() {
+    return ObjectUtil.jsonToString(this);
+  }
+
+  public static class Identifier {
+    public String handle;
+    public Property property;
+
+    public static class Property {
+      public Integer index;
+      public String type;
+      public String value;
+    }
+  }
+
+  public static class Message {
+    public String type;
+    @JacksonXmlText public String value;
+
+    @Override
+    public String toString() {
+      return ObjectUtil.jsonToString(this);
+    }
+  }
+
   // sourced by observation from https://demo.ands.org.au
   public static final String mintSuccessExample = """
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -16,7 +48,7 @@ public class ApidsMintResponse {
       <timestamp>2022-07-29T03:14:05Z</timestamp>
       <message type="user">Successfully authenticated and created handle</message>
     </response>""".trim();
-  
+
   // reproduce by setting Apids.appId to incorrect value - yes, status is 200
   public static final String errorExample = """
     <?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -24,7 +56,7 @@ public class ApidsMintResponse {
     <timestamp>2022-07-29T06:28:33Z</timestamp>
     <message type="user">Authentication Failed</message>
     </response""".trim();
-  
+
   // sourced by observation from running BasicRaidExperimentalTest
   public static final String mintWithDescResponseExample = """
     {
@@ -74,36 +106,5 @@ public class ApidsMintResponse {
          "value": "Successfully updated handle"
        }
      }""".trim();
-
-  public String type;
-  public Identifier identifier;
-  public LocalDateTime timestamp;
-  public Message message;
-
-  @Override
-  public String toString() {
-    return ObjectUtil.jsonToString(this);
-  }
-
-  public static class Identifier {
-    public String handle;
-    public Property property;
-
-    public static class Property {
-      public Integer index;
-      public String type;
-      public String value;
-    }
-  }
-
-  public static class Message {
-    public String type;
-    @JacksonXmlText public String value;
-
-    @Override
-    public String toString() {
-      return ObjectUtil.jsonToString(this);
-    }
-  }
-
+  
 }

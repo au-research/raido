@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -21,6 +22,10 @@ import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConve
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import raido.apisvc.service.apids.ApidsService;
+import raido.apisvc.service.stub.apids.InMemoryApidsServiceStub;
+import raido.apisvc.spring.config.environment.ApidsProps;
+import raido.apisvc.spring.config.environment.EnvironmentProps;
 import raido.apisvc.spring.config.http.converter.FormProblemDetailConverter;
 import raido.apisvc.spring.config.http.converter.XmlProblemDetailConverter;
 import raido.apisvc.util.Log;
@@ -221,6 +226,28 @@ public class ApiConfig implements WebMvcConfigurer {
 
     // prototype: used for returning static HTML from an endpoint
 //    converters.add(PublicExperimental.getHtmlStringConverter());
+  }
+  
+  @Bean @Primary
+  public ApidsService apidsService(
+    ApidsProps apidsConfig,
+    EnvironmentProps envConfig,
+    RestTemplate rest
+  ){
+    /* IMPROVE: gotta be a better way to do this? */
+    ApidsService bean;
+    if( apidsConfig.inMemoryStub ){
+      bean = new InMemoryApidsServiceStub(apidsConfig, envConfig);
+    }
+    else {
+      bean = new ApidsService(apidsConfig, rest);
+    }
+
+    /* remember that by making ApidsService no longer a spring component 
+    (removed the annotation), @PostConstruct doesn't get called anymore either. 
+    Though we could just do this in the ctor() now? */
+    bean.onStartup();
+    return bean;
   }
 }
 
