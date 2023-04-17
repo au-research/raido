@@ -1,17 +1,5 @@
-# Audience
-
-The changelog has multiple audiences:
-* communications team - for preparing the notification email that 
-  will be sent for a new deployment
-  * mostly interested in the UI section
-  * but they also need to know about deprecations of stable API endpoints 
-* client API integrators
-  * mostly interested in the API section
-* test team
-  * interested in both UI And API sections
-* deployment team
-  * interested in the infrastructure section
-
+See the [Changelog audience](#changelog-audience) section for info about 
+ the expected audience and content of the changelog.
 
 # Not released
 
@@ -30,7 +18,14 @@ _Not yet scheduled_
   * traditional knowledge labels
 
 ## Infrastructure
+* introduced the InMemoryApidsServiceStub
+  * this is noted in changelog not because it changes anything, but the 
+    deployment plan should take it into account, specifically: 
+    * attention should be paid to env config (shouldn't need changing)
+    * post-deploy tests should verify that we didn't accidentally start using 
+      in-memory handles in production
 
+---
 
 # 1.1
 
@@ -61,4 +56,18 @@ _2023-03-15_
 
 Initial production deployment.
 
+---
 
+# Changelog audience
+
+The changelog has multiple audiences:
+* communications team - for preparing the notification email that
+  will be sent for a new deployment
+  * mostly interested in the UI section
+  * but they also need to know about deprecations of stable API endpoints
+* client API integrators
+  * mostly interested in the API section
+* test team
+  * interested in both UI And API sections
+* deployment team
+  * interested in the infrastructure section
