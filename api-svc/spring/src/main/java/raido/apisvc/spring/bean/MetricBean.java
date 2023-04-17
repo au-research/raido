@@ -24,5 +24,7 @@ public class MetricBean {
 
   public static final String APIDS_ADD_URL_VALUE = "APIDS addValue";
   public static final String APIDS_MINT_WITH_DESC = "APIDS mint with desc";
+  public static final String VALIDATE_ORCID_EXISTS = "validate ORCID exists";
+  public static final String VALIDATE_ROR_EXISTS = "validate ROR exists";
 
 }

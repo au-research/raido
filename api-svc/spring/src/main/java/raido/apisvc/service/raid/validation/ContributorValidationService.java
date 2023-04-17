@@ -17,8 +17,10 @@ import java.util.function.Supplier;
 import static java.util.Collections.emptyList;
 import static java.util.List.of;
 import static raido.apisvc.endpoint.message.ValidationMessage.*;
+import static raido.apisvc.spring.bean.MetricBean.VALIDATE_ORCID_EXISTS;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.indexed;
+import static raido.apisvc.util.ObjectUtil.infoLogExecutionTime;
 import static raido.apisvc.util.StringUtil.isBlank;
 import static raido.idl.raidv2.model.ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_;
 import static raido.idl.raidv2.model.ContributorPositionRaidMetadataSchemaType.LEADER;
@@ -257,7 +259,9 @@ public class ContributorValidationService {
         .build();
 
       try {
-        restTemplate.exchange(requestEntity, Void.class);
+        infoLogExecutionTime(log, VALIDATE_ORCID_EXISTS, ()->
+          restTemplate.exchange(requestEntity, Void.class)  
+        );
       } catch (HttpClientErrorException e) {
         log.warnEx("Problem retrieving ORCID", e);
 

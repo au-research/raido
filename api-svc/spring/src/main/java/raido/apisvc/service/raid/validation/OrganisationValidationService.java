@@ -16,9 +16,17 @@ import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 import static java.util.Collections.emptyList;
-import static raido.apisvc.endpoint.message.ValidationMessage.*;
+import static raido.apisvc.endpoint.message.ValidationMessage.FIELD_MUST_BE_SET_MESSAGE;
+import static raido.apisvc.endpoint.message.ValidationMessage.INVALID_VALUE_TYPE;
+import static raido.apisvc.endpoint.message.ValidationMessage.NOT_SET_TYPE;
+import static raido.apisvc.endpoint.message.ValidationMessage.organisationIdNotSet;
+import static raido.apisvc.endpoint.message.ValidationMessage.organisationIdSchemeNotSet;
+import static raido.apisvc.endpoint.message.ValidationMessage.organisationInvalidIdScheme;
+import static raido.apisvc.spring.bean.MetricBean.VALIDATE_ORCID_EXISTS;
+import static raido.apisvc.spring.bean.MetricBean.VALIDATE_ROR_EXISTS;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.indexed;
+import static raido.apisvc.util.ObjectUtil.infoLogExecutionTime;
 import static raido.apisvc.util.StringUtil.isBlank;
 import static raido.idl.raidv2.model.OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_;
 
@@ -131,7 +139,9 @@ public class OrganisationValidationService {
         .build();
 
       try {
-        restTemplate.exchange(requestEntity, Void.class);
+        infoLogExecutionTime(log, VALIDATE_ROR_EXISTS, ()->
+          restTemplate.exchange(requestEntity, Void.class)
+        );
       } catch (HttpClientErrorException e) {
         log.warnEx("Problem retrieving ROR", e);
 
