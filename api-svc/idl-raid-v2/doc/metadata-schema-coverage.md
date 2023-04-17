@@ -87,13 +87,13 @@ Complete. Needs extra validation for other Raid agencies.
 
 Complete. No validation for keyword/language.
 
-## 13. TraditionalKnowledgeLabel - Not started
+## 13. TraditionalKnowledgeLabel - Complete
 
-Not started.
+Complete.
 
-## 14. SpatialCoverage - Not started
+## 14. SpatialCoverage - Complete
 
-Not started.
+Complete, except missing labguage fields.
 
 ## 15. Access - Complete
 
