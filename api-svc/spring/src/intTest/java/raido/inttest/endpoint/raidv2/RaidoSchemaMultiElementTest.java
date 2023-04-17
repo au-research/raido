@@ -12,7 +12,7 @@ import raido.idl.raidv2.model.ReadRaidV2Request;
 import raido.idl.raidv2.model.TitleBlock;
 import raido.idl.raidv2.model.UpdateRaidoSchemaV1Request;
 import raido.inttest.IntegrationTestCase;
-import raido.inttest.util.IdFactory;
+import raido.apisvc.service.stub.util.IdFactory;
 
 import java.time.LocalDate;
 import java.util.List;

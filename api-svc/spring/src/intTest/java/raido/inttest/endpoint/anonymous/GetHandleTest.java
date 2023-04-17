@@ -9,7 +9,7 @@ import raido.apisvc.util.test.BddUtil;
 import raido.idl.raidv2.model.PublicRaidMetadataSchemaV1;
 import raido.idl.raidv2.model.PublicReadRaidResponseV3;
 import raido.inttest.IntegrationTestCase;
-import raido.inttest.util.IdFactory;
+import raido.apisvc.service.stub.util.IdFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

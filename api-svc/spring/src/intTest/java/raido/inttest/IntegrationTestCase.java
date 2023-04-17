@@ -28,7 +28,7 @@ import raido.idl.raidv2.model.*;
 import raido.inttest.config.IntTestProps;
 import raido.inttest.config.IntegrationTestConfig;
 import raido.inttest.service.auth.BootstrapAuthTokenService;
-import raido.inttest.util.IdFactory;
+import raido.apisvc.service.stub.util.IdFactory;
 
 import java.time.LocalDateTime;
 
@@ -37,7 +37,6 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static raido.apisvc.spring.config.RaidWebSecurityConfig.RAID_V1_API;
 import static raido.apisvc.util.Log.to;
-import static raido.apisvc.util.StringUtil.areEqual;
 import static raido.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
 import static raido.db.jooq.api_svc.enums.UserRole.OPERATOR;
 import static raido.inttest.config.IntegrationTestConfig.REST_TEMPLATE_VALUES_ONLY_ENCODING;

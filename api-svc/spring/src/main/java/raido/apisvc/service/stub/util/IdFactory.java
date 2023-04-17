@@ -1,4 +1,4 @@
-package raido.inttest.util;
+package raido.apisvc.service.stub.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

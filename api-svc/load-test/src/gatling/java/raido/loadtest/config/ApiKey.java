@@ -4,7 +4,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import raido.apisvc.endpoint.raidv2.AuthzUtil;
 import raido.apisvc.service.auth.RaidV2ApiKeyAuthService;
 import raido.db.jooq.api_svc.enums.UserRole;
-import raido.inttest.util.IdFactory;
+import raido.apisvc.service.stub.util.IdFactory;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
