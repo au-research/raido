@@ -64,8 +64,12 @@ public class User {
       new TypeReference<RaidoMetadataSchemaV1>(){}) {};
     var readRaidVar = new Var<>("readRaid",
       new TypeReference<RaidoMetadataSchemaV1>(){}) {};
-    
-    // not very realistic
+
+    /* Not very realistic - most users would take longer most of the time.
+    But sometimes users actually go even faster, e.g. an experienced user 
+    that already knows they're definitely going to mint a raid and they 
+    have memorised the location of the mint button will only on the "home" 
+    page for as long as it takes them to locate and click the button. */
     var listPagePause = ofSeconds(2);
     var mintPagePause = ofSeconds(2);
     var editPagePause = ofSeconds(2);
