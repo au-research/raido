@@ -4,8 +4,6 @@ on:
   push:
     branches:
     - main    
-    # todo:sto do not merge apids-stub CI to main branch
-    - sto/apids-stub    
     paths-ignore:
       # don't need doc updates to do a rebuild, it's a waste of build minutes   
       - '**.md'
