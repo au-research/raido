@@ -85,7 +85,7 @@ and suppressing various startup logs.
 
   <!-- end JUL stuff -->
 
-  <!--  local dev load-test config-->
+  <!-- local dev load-test config, need to factory out to separate file -->
 <!--  <logger name="raido.apisvc.spring.RequestLoggingFilter" level="info"/>-->
 <!--  <logger name="p6spy" level="info"/>-->
 <!--  <logger name="p6spy.tx" level="info"/>-->
@@ -95,5 +95,7 @@ and suppressing various startup logs.
 <!--  <logger name="raido.apisvc.service.orcid.OrcidService.http" level="warn"/>-->
 <!--  <logger name="raido.apisvc.service.ror.RorService.http" level="warn"/>-->
 <!--  <logger name="raido.apisvc.service.apids.ApidsService.http" level="warn"/>-->
+<!--  &lt;!&ndash; for debugging duplicate handle generation &ndash;&gt;-->
+<!--  <logger name="raido.apisvc.service.stub.apids.InMemoryApidsServiceStub" level="info"/>-->
 
 </configuration>

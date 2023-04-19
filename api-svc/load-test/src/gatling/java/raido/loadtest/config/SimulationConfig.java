@@ -26,12 +26,9 @@ public class SimulationConfig {
     thinkTimeMultiplier = parseInt(getConfig("thinkTimeMultiplier", "1"));
     
     // do not commit
-    // peak load is showing duplicate handle errors approx 2% of the time
-    // pretty sure these errors are on the load-test side, the in-mem ApidsStub 
-    // is likely not generating unique handles
-//    thinkTimeMultiplier = 1;
-//    userCount = 50;
-//    steadyStateSeconds = 60;
+    thinkTimeMultiplier = 1;
+    userCount = 50;
+    steadyStateSeconds = 60;
 
     log.with("config", this.toString()).info("startup");
   }
