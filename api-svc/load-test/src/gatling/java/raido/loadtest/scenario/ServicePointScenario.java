@@ -36,7 +36,7 @@ import static raido.loadtest.util.Gatling.sessionDebug;
 import static raido.loadtest.util.Gatling.setOrRemove;
 import static raido.loadtest.util.Json.formatJson;
 import static raido.loadtest.util.Json.parseJson;
-import static raido.loadtest.util.RaidoApi.Endpoint.listServicePoint;
+import static raido.loadtest.util.RaidoApi.Endpoint.publicListServicePoint;
 import static raido.loadtest.util.RaidoApi.Endpoint.servicePoint;
 import static raido.loadtest.util.RaidoApi.ROR_ID;
 import static raido.loadtest.util.RaidoApi.authzApiHeaders;
@@ -79,7 +79,7 @@ public class ServicePointScenario {
       ).
       exec(
         http("list existing service points").
-          get(listServicePoint.url).
+          get(publicListServicePoint.url).
           check(status().is(200)).
           check(existingServicePointsVar.saveBody())
       ).

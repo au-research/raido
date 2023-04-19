@@ -3,22 +3,11 @@ package raido.loadtest.util;
 import io.gatling.javaapi.http.HttpRequestActionBuilder;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
-import raido.idl.raidv2.model.AccessBlock;
-import raido.idl.raidv2.model.DatesBlock;
-import raido.idl.raidv2.model.DescriptionBlock;
-import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
-import raido.idl.raidv2.model.TitleBlock;
 
-import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 import static raido.apisvc.endpoint.anonymous.PublicEndpoint.STATUS_PATH;
 import static raido.apisvc.util.Log.to;
-import static raido.idl.raidv2.model.AccessType.OPEN;
-import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
-import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
-import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 
 public class RaidoApi {
   private static final Log log = to(RaidoApi.class);
@@ -36,7 +25,7 @@ public class RaidoApi {
   load-testing if we really want to compile time checking on this (using the 
   "java" generator or something). */
   public enum Endpoint {
-    listServicePoint("/v2/public/list-service-point/v1"),
+    publicListServicePoint("/v2/public/list-service-point/v1"),
     servicePoint("/v2/experimental/service-point/v1"),
     apiKey("/v2/experimental/api-key/v1"),
     listApiKey("/v2/experimental/service-point/v1/%s/list-api-key"),
