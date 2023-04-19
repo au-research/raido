@@ -40,7 +40,12 @@ public class InMemoryApidsServiceStub extends ApidsService {
     this.stubProps = stubProps;
 
     var digest = getSha1MessageDigest();
-    nodePrefix = generateShortenedNodeId(digest, envProps.nodeId);
+    if( envProps.nodeId.length() <= 8 ){
+      nodePrefix = envProps.nodeId;
+    }
+    else {
+      nodePrefix = generateShortenedNodeId(digest, envProps.nodeId);  
+    }
     log.with("nodeId", envProps.nodeId).with("prefix", nodePrefix).
       info("using compressed nodeId for handles");
   }

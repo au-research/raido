@@ -57,7 +57,7 @@ public class Anonymous {
       }).
       /* warm up the api-svc database stuff (jooq, connection-pool, DNS and
        other networking stuff for connecting to DB) */
-      exec(http("check %s is reachable".formatted(publicListServicePoint.url)).
+      exec(http("list service-points for warm-up").
         get(publicListServicePoint.url).
         // we don't check for status here, because we do it in the next exec()
           check(status().is(200))

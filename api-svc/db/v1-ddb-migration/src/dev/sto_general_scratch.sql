@@ -1,3 +1,12 @@
+select count(1) from raid
+;
+
+select * 
+from raid
+where handle = 'inmem/50d8b4a920230419032534212'
+-- inmem/50d8b4a9 20230419 0325 34 212
+;
+
 -- select * 
 select count(1)
 from raid

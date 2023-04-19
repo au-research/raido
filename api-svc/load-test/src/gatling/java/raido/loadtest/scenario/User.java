@@ -29,6 +29,7 @@ import static io.gatling.javaapi.http.HttpDsl.http;
 import static io.gatling.javaapi.http.HttpDsl.status;
 import static java.time.Duration.ofSeconds;
 import static raido.apisvc.util.Log.to;
+import static raido.loadtest.config.SimulationConfig.simConfig;
 import static raido.loadtest.scenario.ApiKeyScenario.I_API_TOKEN;
 import static raido.loadtest.scenario.ServicePointScenario.I_SP_ID;
 import static raido.loadtest.util.Gatling.sessionDebug;
@@ -70,9 +71,9 @@ public class User {
     that already knows they're definitely going to mint a raid and they 
     have memorised the location of the mint button will only on the "home" 
     page for as long as it takes them to locate and click the button. */
-    var listPagePause = ofSeconds(2);
-    var mintPagePause = ofSeconds(2);
-    var editPagePause = ofSeconds(2);
+    var listPagePause = ofSeconds(2 * simConfig.thinkTimeMultiplier);
+    var mintPagePause = ofSeconds(2 * simConfig.thinkTimeMultiplier);
+    var editPagePause = ofSeconds(2 * simConfig.thinkTimeMultiplier);
 
     /* IMPROVE: this should use stable API, not experimental */
     return scenario("SP_USER").
@@ -168,7 +169,7 @@ public class User {
             metadata(createRaidoMetadata())
           );
           log.with("servicePointId", spId).with("body", body).
-            info("minting raid");
+            debug("minting raid");
           return body;
         })).
         check(status().is(200)).
