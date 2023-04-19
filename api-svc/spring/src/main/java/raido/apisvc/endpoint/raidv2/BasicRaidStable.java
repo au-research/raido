@@ -3,6 +3,7 @@ package raido.apisvc.endpoint.raidv2;
 import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
+import raido.apisvc.exception.InvalidAccessException;
 import raido.apisvc.exception.ValidationException;
 import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.service.raid.id.IdentifierUrl;
@@ -46,6 +47,10 @@ public class BasicRaidStable implements BasicRaidStableApi {
   public RaidSchemaV1 createRaidV1(CreateRaidV1Request request) {
     final var user = getAuthzPayload();
 
+    if (!raidService.isEditable(user, user.getServicePointId())) {
+      throw new InvalidAccessException("This service point does not allow Raids to be edited in the app.");
+    }
+
     final var failures = new ArrayList<>(validationService.validateForCreate(request));
 
     if( !failures.isEmpty() ){
@@ -71,6 +76,10 @@ public class BasicRaidStable implements BasicRaidStableApi {
     final var handle = String.join("/", prefix, suffix);
     var user = getAuthzPayload();
     guardOperatorOrAssociated(user, request.getId().getIdentifierServicePoint());
+
+    if (!raidService.isEditable(user, request.getId().getIdentifierServicePoint())) {
+      throw new InvalidAccessException("This service point does not allow Raids to be edited in the app.");
+    }
 
     final var failures = new ArrayList<>(validationService.validateForUpdate(handle, request));
 

@@ -362,6 +362,7 @@ components:
         techEmail: {type: string}
         adminEmail: {type: string}
         enabled: {type: boolean}
+        appWritesEnabled: { type: boolean }
     AppUserExtraV1:
       type: object
       required: [appUser, servicePoint]

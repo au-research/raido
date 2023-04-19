@@ -3,13 +3,10 @@ package raido.apisvc.repository;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
-import raido.apisvc.repository.dto.Raid;
-import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
 
 import java.util.Optional;
 
-import static raido.db.jooq.api_svc.tables.Raid.RAID;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 
 @Repository
@@ -33,6 +30,7 @@ public class ServicePointRepository {
         .setTechEmail(SERVICE_POINT.TECH_EMAIL.getValue(record))
         .setLowerName(SERVICE_POINT.LOWER_NAME.getValue(record))
         .setSearchContent(SERVICE_POINT.SEARCH_CONTENT.getValue(record))
+        .setAppWritesEnabled(SERVICE_POINT.APP_WRITES_ENABLED.getValue(record))
       );
   }
 }

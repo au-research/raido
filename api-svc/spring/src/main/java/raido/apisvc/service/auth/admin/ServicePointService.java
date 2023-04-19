@@ -31,6 +31,7 @@ public class ServicePointService {
     record.setAdminEmail(req.getAdminEmail());
     record.setTechEmail(req.getTechEmail());
     record.setEnabled(req.getEnabled());
+    record.setAppWritesEnabled(req.getAppWritesEnabled());
 
     if( req.getId() == null ){
       record.insert();
