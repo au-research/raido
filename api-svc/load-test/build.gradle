@@ -118,7 +118,31 @@ gatling {
   systemProperties = defaultSysProps
 }
 
+/* rootProject.buildDir is where IDEA/Gradle sets the CWD to when running 
+load-tests, for whatever reason. 
+If the dir doesn't exist - writing the CSV outputs will fail.
+Because nothing happens in our root projects, it doesn't even have basic plugins
+that give "clean" functionality (maybe it should, more likely we should force
+the CWD for load tests so we control the output/input dirs directly).
+ */
+task createBuildDir{
+  doLast {
+    println "create $rootProject.buildDir.absolutePath"
+    mkdir rootProject.buildDir
+  }
+}
+
+clean {
+  delete rootProject.buildDir
+}
+
 task gatlingRunPrepareServicePoints(type: GatlingRunTask) {
+  group "load-test"
+  description "creates the service-points, api-keys, api-tokens used by load-tests"
+  dependsOn createBuildDir
+  /* I don't see why this is needed, but it wasn't recompiling when I was 
+  frobbing the maxServicePoints constant */
+  dependsOn compileGatlingJava
   simulations = {
     include "raido/loadtest/simulation/PrepareServicePoints.java"
   }
@@ -130,7 +154,10 @@ task gatlingRunPrepareServicePoints(type: GatlingRunTask) {
 }
 
 task gatlingRunCreateViewRaids(type: GatlingRunTask) {
+  group "load-test"
+  description "runs a simple listCreateView raid scenario"
   dependsOn gatlingRunPrepareServicePoints
+  dependsOn compileGatlingJava
   simulations = {
     include "raido/loadtest/simulation/SimpleCreateViewRaids.java"
   }

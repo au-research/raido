@@ -52,7 +52,7 @@ public class ServicePointScenario {
     int maxServicePoints
   ) throws IOException {
     var outFile = new File(servicePointFilePath);
-    var pw = new PrintWriter(new FileWriter(outFile), true);
+    var pw = new PrintWriter(new FileWriter(outFile.getAbsolutePath()), true);
     //header row
     pw.println(join(of(I_SP_ID, I_SP_NAME), ","));
     pw.flush();
@@ -73,8 +73,9 @@ public class ServicePointScenario {
 
     return scenario("prepare service-points").exitBlockOnFail(
       exec(sessionDebug(sess->
-        log.with("servicePointNames(first 5)", first(servicePointNames, 5)).
-          with("size", servicePointNames.size()).
+        log.with("size", servicePointNames.size()).
+          with("maxServicePoints", maxServicePoints).
+          with("servicePointNames(first 5)", first(servicePointNames, 5)).
           info("prepareServicePoints()"))
       ).
       exec(

@@ -22,7 +22,7 @@ public class PrepareServicePoints extends Simulation {
 
   private static final Log log = to(PrepareServicePoints.class);
 
-  int maxServicePoints = 2;
+  int maxServicePoints = 40;
   
   HttpProtocolBuilder httpProtocol = http.
     baseUrl(serverConfig.apiSvcUrl);

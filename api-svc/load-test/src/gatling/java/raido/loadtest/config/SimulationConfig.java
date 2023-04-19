@@ -26,9 +26,9 @@ public class SimulationConfig {
     thinkTimeMultiplier = parseInt(getConfig("thinkTimeMultiplier", "1"));
     
     // do not commit
-    thinkTimeMultiplier = 1;
-    userCount = 50;
-    steadyStateSeconds = 60;
+//    thinkTimeMultiplier = 1;
+//    userCount = 50;
+//    steadyStateSeconds = 60;
 
     log.with("config", this.toString()).info("startup");
   }
