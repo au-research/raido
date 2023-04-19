@@ -35,27 +35,36 @@ public class IdFactory {
   volatile static String lastGeneratedTimeSuffix = "start";
   volatile static int lastUniqueSuffix = 1;
 
-  static String nodePrefix;
-
-  static {
-    nodePrefix = System.getProperty("IdFactory.nodePrefix", "");
-  }
+  private static volatile String nodePrefix = "";
 
   private static Date now() {
     return new Date();
   }
-
+  
   public static String generateUniqueId() {
     return generateUniqueId(true);
   }
 
-  public static String generateUniqueId(boolean separator) {
+  /**
+   Doesn't need to by sync, concurrently executing id-generation
+   will just use the old value until the new value is written (atomically).
+   The volatile is just to make it so readers see the new value ASAP.
+   */
+  public static void setNodePrefix(String nodePrefix) {
+    IdFactory.nodePrefix = nodePrefix;
+  }
 
-    // questionable, might be better to use a proper java 8 locking structure
+  public static String generateUniqueId(boolean separator) {
+    return generateUniqueId(nodePrefix, separator);
+  }
+
+  public static String generateUniqueId(String prefix, boolean separator) {
+
+    // questionable, might be better to use a proper modern-java lock structure
     synchronized( generatorLock ){
       StringBuilder buf = new StringBuilder();
-      if( nodePrefix != null ){
-        buf.append(nodePrefix);
+      if( prefix != null ){
+        buf.append(prefix);
         if( separator ){
           buf.append(SEPARATOR);
         }

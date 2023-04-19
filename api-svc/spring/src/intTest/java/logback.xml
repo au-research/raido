@@ -11,7 +11,7 @@
     </encoder>
   </appender>
 
-  <!-- Debug is usually disabled in deployment enviornments.
+  <!-- Debug is usually disabled in deployment environments.
   The Github CI workflow uses this config.
   If you want to enable extra logging for running locally, add your own file 
   like `sto.logback.xml` and use it via `-Dlogback.configurationFile=sto.logback.xml`

@@ -19,11 +19,4 @@ public class ApidsProps {
   @Value("${Apids.serviceUrl:https://demo.identifiers.ardc.edu.au/pids}")
   public String serviceUrl;
   
-  // IMPROVE: change to true, so default development environments use it?
-  @Value("${Apids.inMemoryStub:false}")
-  public boolean inMemoryStub;
-
-  @Value("${Apids.inMemoryStubDelay:150}")
-  public long inMemoryStubDelay;
-
 }

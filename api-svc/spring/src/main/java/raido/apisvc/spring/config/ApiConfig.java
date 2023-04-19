@@ -23,11 +23,17 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import raido.apisvc.service.apids.ApidsService;
+import raido.apisvc.service.orcid.OrcidService;
+import raido.apisvc.service.ror.RorService;
 import raido.apisvc.service.stub.apids.InMemoryApidsServiceStub;
+import raido.apisvc.service.stub.orcid.InMemoryOrcidServiceStub;
+import raido.apisvc.service.stub.ror.InMemoryRorServiceStub;
 import raido.apisvc.spring.config.environment.ApidsProps;
 import raido.apisvc.spring.config.environment.EnvironmentProps;
+import raido.apisvc.spring.config.environment.InMemoryStubProps;
 import raido.apisvc.spring.config.http.converter.FormProblemDetailConverter;
 import raido.apisvc.spring.config.http.converter.XmlProblemDetailConverter;
+import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 
 import java.io.IOException;
@@ -230,24 +236,56 @@ public class ApiConfig implements WebMvcConfigurer {
   
   @Bean @Primary
   public ApidsService apidsService(
-    ApidsProps apidsConfig,
     EnvironmentProps envConfig,
+    InMemoryStubProps stubProps,
+    ApidsProps apidsConfig,
     RestTemplate rest
   ){
-    /* IMPROVE: gotta be a better way to do this? */
-    ApidsService bean;
-    if( apidsConfig.inMemoryStub ){
-      bean = new InMemoryApidsServiceStub(apidsConfig, envConfig);
-    }
-    else {
-      bean = new ApidsService(apidsConfig, rest);
+    /* IMPROVE: I'm fairly sure I'm not doing this the "spring way" */
+    if( stubProps.apidsInMemoryStub ){
+      Guard.isTrue("Cannot use InMemoryApidsServiceStub in a PROD env",
+        !envConfig.isProd);
+      log.warn("using the in-memory ORCID service");
+      return new InMemoryApidsServiceStub(stubProps, envConfig);
     }
 
-    /* remember that by making ApidsService no longer a spring component 
-    (removed the annotation), @PostConstruct doesn't get called anymore either. 
-    Though we could just do this in the ctor() now? */
-    bean.onStartup();
-    return bean;
+    /* now we aren't forced to set the secret if we're not using the real 
+    APIDS service - unexpected benefit! */
+    Guard.allHaveValue("must set ApidsProps values",
+      apidsConfig.secret, apidsConfig.appId, apidsConfig.serviceUrl);
+    return new ApidsService(apidsConfig, rest);
+  }
+    
+  @Bean @Primary
+  public OrcidService orcidService(
+    EnvironmentProps envConfig,
+    InMemoryStubProps stubProps,
+    RestTemplate rest
+  ){
+    if( stubProps.orcidInMemoryStub ){
+      Guard.isTrue("Cannot use InMemoryOrcidServiceStub in a PROD env",
+        !envConfig.isProd);
+      log.warn("using the in-memory ORCID service");
+      return new InMemoryOrcidServiceStub(stubProps);
+    }
+    
+    return new OrcidService(rest);
+  }
+  
+  @Bean @Primary
+  public RorService rorService(
+    EnvironmentProps envConfig,
+    InMemoryStubProps stubProps,
+    RestTemplate rest
+  ){
+    if( stubProps.rorInMemoryStub ){
+      Guard.isTrue("Cannot use InMemoryRorServiceStub in a PROD env",
+        !envConfig.isProd);
+      log.warn("using the in-memory ROR service");
+      return new InMemoryRorServiceStub(stubProps);
+    }
+    
+    return new RorService(rest);
   }
 }
 

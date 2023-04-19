@@ -53,17 +53,6 @@ public class ApidsService {
     this.rest = rest;
   }
 
-  /* IMPROVE: write a unit test for prod/in-memory mocking logic - I'm ok with 
-  having to maintain it, forcing folks to think about it's's literally the 
-  point here. 
-  OTOH, if it's complicated enough to need a unit test - maybe it just needs  
-  to be simplified. Dunno.
-  */
-  public void onStartup(){
-    Guard.allHaveValue("must set ApidsProps values",
-      props.secret, props.appId, props.serviceUrl);
-  }
-  
   public ApidsMintResponse mintApidsHandleContentPrefix(
     Function<String, String> raidLandingPageUrl
   ) {

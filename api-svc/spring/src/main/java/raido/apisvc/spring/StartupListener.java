@@ -8,6 +8,7 @@ import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.support.ResourcePropertySource;
 import org.springframework.stereotype.Component;
+import raido.apisvc.service.stub.util.IdFactory;
 import raido.apisvc.spring.config.environment.DataSourceProps;
 import raido.apisvc.spring.config.environment.EnvironmentProps;
 import raido.apisvc.util.JvmUtil;
@@ -52,6 +53,8 @@ public class StartupListener implements
       info("DataSource");
     JvmUtil.logStartupInfo();
 
+    IdFactory.setNodePrefix(envProps.nodeId);
+    
     this.startTime = LocalDateTime.now();
 
     if( event.getApplicationContext().getEnvironment() 

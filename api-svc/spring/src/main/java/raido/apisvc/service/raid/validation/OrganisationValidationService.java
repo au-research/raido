@@ -1,9 +1,7 @@
 package raido.apisvc.service.raid.validation;
 
-import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
+import raido.apisvc.service.ror.RorService;
 import raido.apisvc.util.Log;
 import raido.idl.raidv2.model.OrganisationBlock;
 import raido.idl.raidv2.model.OrganisationRole;
@@ -15,18 +13,15 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
-import static java.util.Collections.emptyList;
+import static java.util.regex.Pattern.compile;
 import static raido.apisvc.endpoint.message.ValidationMessage.FIELD_MUST_BE_SET_MESSAGE;
 import static raido.apisvc.endpoint.message.ValidationMessage.INVALID_VALUE_TYPE;
 import static raido.apisvc.endpoint.message.ValidationMessage.NOT_SET_TYPE;
 import static raido.apisvc.endpoint.message.ValidationMessage.organisationIdNotSet;
 import static raido.apisvc.endpoint.message.ValidationMessage.organisationIdSchemeNotSet;
 import static raido.apisvc.endpoint.message.ValidationMessage.organisationInvalidIdScheme;
-import static raido.apisvc.spring.bean.MetricBean.VALIDATE_ORCID_EXISTS;
-import static raido.apisvc.spring.bean.MetricBean.VALIDATE_ROR_EXISTS;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.indexed;
-import static raido.apisvc.util.ObjectUtil.infoLogExecutionTime;
 import static raido.apisvc.util.StringUtil.isBlank;
 import static raido.idl.raidv2.model.OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_;
 
@@ -34,11 +29,15 @@ import static raido.idl.raidv2.model.OrganisationIdentifierSchemeType.HTTPS_ROR_
 public class OrganisationValidationService {
   private static final Log log = to(OrganisationValidationService.class);
   private static final int ROR_LENGTH = 25;
+  public static final Pattern ROR_REGEX = 
+    compile("^https://ror\\.org/[0-9a-z]{9}$");
 
-  private final RestTemplate restTemplate;
+  private final RorService rorService;
 
-  public OrganisationValidationService(final RestTemplate restTemplate) {
-    this.restTemplate = restTemplate;
+  public OrganisationValidationService(
+    RorService rorService
+  ) {
+    this.rorService = rorService;
   }
 
   public List<ValidationFailure> validateOrganisations(
@@ -129,31 +128,17 @@ public class OrganisationValidationService {
       return List.of(organisationInvalidRorFormat(index, "too short"));
     }
 
-    if( !Pattern.matches("^https://ror\\.org/[0-9a-z]{9}$", id) ){
+    if( !ROR_REGEX.matcher(id).matches() ){
       return List.of(organisationInvalidRorFormat( index,
         "Invalid ROR %s".formatted(id)) );
     }
-    else {
-      final var requestEntity = RequestEntity
-        .head(organisation.getId())
-        .build();
-
-      try {
-        infoLogExecutionTime(log, VALIDATE_ROR_EXISTS, ()->
-          restTemplate.exchange(requestEntity, Void.class)
-        );
-      } catch (HttpClientErrorException e) {
-        log.warnEx("Problem retrieving ROR", e);
-
-        return List.of(new ValidationFailure()
-          .fieldId(String.format("organisations[%d].id", index))
-          .errorType(INVALID_VALUE_TYPE)
-          .message("The organisation does not exist.")
-        );
-      }
-    }
     
-    return emptyList();
+    return rorService.validateRorExists(id).stream().map(i->
+      new ValidationFailure()
+        .fieldId(String.format("organisations[%d].id", index))
+        .errorType(INVALID_VALUE_TYPE)
+        .message("The organisation ROR does not exist.")
+    ).toList();
   }
 
   public static ValidationFailure organisationInvalidRorFormat(
