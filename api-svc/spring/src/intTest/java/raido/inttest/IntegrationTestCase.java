@@ -49,6 +49,7 @@ public abstract class IntegrationTestCase {
   public static final String INT_TEST_ROR = "https://ror.org/int-test";
 
   private static final Log log = to(IntegrationTestCase.class);
+  protected static final IdFactory idFactory = new IdFactory("inttest");
 
   @Autowired protected RestTemplate rest;
   @Autowired @Qualifier(REST_TEMPLATE_VALUES_ONLY_ENCODING) 
@@ -65,7 +66,7 @@ public abstract class IntegrationTestCase {
   protected RaidoApiUtil raidoApi;
 
   private TestInfo testInfo;
-
+  
   @RegisterExtension
   protected static JettyTestServer jettyTestServer = new JettyTestServer();
 
@@ -204,7 +205,7 @@ public abstract class IntegrationTestCase {
     var spName = name != null ? name : 
       "%s-%s".formatted(
         this.getClass().getSimpleName(),
-        IdFactory.generateUniqueId() ); 
+        idFactory.generateUniqueId() ); 
 
     var adminApiAsOp = adminExperimentalClientAs(operatorToken);
     

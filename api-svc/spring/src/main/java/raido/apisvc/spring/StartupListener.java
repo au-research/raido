@@ -53,8 +53,6 @@ public class StartupListener implements
       info("DataSource");
     JvmUtil.logStartupInfo();
 
-    IdFactory.setNodePrefix(envProps.nodeId);
-    
     this.startTime = LocalDateTime.now();
 
     if( event.getApplicationContext().getEnvironment() 

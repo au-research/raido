@@ -43,7 +43,7 @@ public class RaidoSchemaMultiElementTest extends IntegrationTestCase {
   void multipleTitleDescriptionRaid() throws JsonProcessingException {
     var raidApi = super.basicRaidExperimentalClient();
     String primaryTitle = getClass().getSimpleName() + "." + getName() +
-      IdFactory.generateUniqueId();
+      idFactory.generateUniqueId();
     var today = LocalDate.now();
     String alternateTitle = "alternate title";
     

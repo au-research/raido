@@ -2,6 +2,7 @@ package raido.apisvc.service.stub.apids;
 
 import raido.apisvc.service.apids.ApidsService;
 import raido.apisvc.service.apids.model.ApidsMintResponse;
+import raido.apisvc.service.stub.util.IdFactory;
 import raido.apisvc.spring.bean.MetricBean;
 import raido.apisvc.spring.config.environment.EnvironmentProps;
 import raido.apisvc.spring.config.environment.InMemoryStubProps;
@@ -12,7 +13,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.function.Function;
 
-import static raido.apisvc.service.stub.util.IdFactory.generateUniqueId;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.infoLogExecutionTime;
 import static raido.apisvc.util.ThreadUtil.sleep;
@@ -31,7 +31,8 @@ public class InMemoryApidsServiceStub extends ApidsService {
 
   /** prepended to handle suffixes to guarantee uniqueness across nodes */
   private String nodePrefix;
-
+  private IdFactory idFactory;
+  
   public InMemoryApidsServiceStub(
     InMemoryStubProps stubProps,
     EnvironmentProps envProps
@@ -47,7 +48,9 @@ public class InMemoryApidsServiceStub extends ApidsService {
       nodePrefix = generateShortenedNodeId(digest, envProps.nodeId);  
     }
     log.with("nodeId", envProps.nodeId).with("prefix", nodePrefix).
-      info("using compressed nodeId for handles");
+      info("using prefix for handles");
+    
+    idFactory = new IdFactory(nodePrefix);
   }
 
   @Override
@@ -59,7 +62,7 @@ public class InMemoryApidsServiceStub extends ApidsService {
     resp.identifier = new ApidsMintResponse.Identifier();
 
     resp.identifier.handle = IN_MEMORY_HANDLE_PREFIX + "/" +
-      generateUniqueId(nodePrefix, false);
+      idFactory.generateUniqueId(nodePrefix, false);
 
     resp.identifier.property = new ApidsMintResponse.Identifier.Property();
     /* these are just copied from the example comment in ApidsMintResponse,

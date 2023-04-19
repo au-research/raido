@@ -20,6 +20,8 @@ public class ApiKey {
   // currently hardcoded to the key used in DEMO for legacy migration
   private static long API_KEY_ID = 1000000001;
   
+  private static final IdFactory idFactory = new IdFactory("load-api");
+  
   @SuppressWarnings("SameParameterValue")
   private static String generateApiToken(
     Algorithm signingAlgo, 
@@ -60,7 +62,7 @@ public class ApiKey {
     var signingAlgo = Algorithm.HMAC256(serverConfig.apiKeyJwtSecret);
     BOOTSTRAP_API_TOKEN = generateApiToken( signingAlgo, 
       AuthzUtil.RAIDO_SP_ID,
-      "load-test-%s".formatted(IdFactory.generateUniqueId()),
+      idFactory.generateUniqueId(),
       UserRole.OPERATOR );
 
     return BOOTSTRAP_API_TOKEN;

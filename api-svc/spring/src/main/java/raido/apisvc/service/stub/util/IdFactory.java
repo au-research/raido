@@ -1,5 +1,7 @@
 package raido.apisvc.service.stub.util;
 
+import raido.apisvc.util.ThreadUtil;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -29,36 +31,19 @@ import java.util.TimeZone;
 
  @see AlphaEncoder */
 public class IdFactory {
-  private static final Object generatorLock = new Object();
   public static final String SEPARATOR = "u";
 
-  volatile static String lastGeneratedTimeSuffix = "start";
-  volatile static int lastUniqueSuffix = 1;
+  private final Object generatorLock = new Object();
+  private final String nodePrefix;
 
-  private static volatile String nodePrefix = "";
+  private volatile String lastGeneratedTimeSuffix = "start";
+  private volatile int lastUniqueSuffix = 1;
 
-  private static Date now() {
-    return new Date();
-  }
-  
-  public static String generateUniqueId() {
-    return generateUniqueId(true);
+  public IdFactory(String nodePrefix) {
+    this.nodePrefix = nodePrefix;
   }
 
-  /**
-   Doesn't need to by sync, concurrently executing id-generation
-   will just use the old value until the new value is written (atomically).
-   The volatile is just to make it so readers see the new value ASAP.
-   */
-  public static void setNodePrefix(String nodePrefix) {
-    IdFactory.nodePrefix = nodePrefix;
-  }
-
-  public static String generateUniqueId(boolean separator) {
-    return generateUniqueId(nodePrefix, separator);
-  }
-
-  public static String generateUniqueId(String prefix, boolean separator) {
+  public String generateUniqueId(String prefix, boolean separator) {
 
     // questionable, might be better to use a proper modern-java lock structure
     synchronized( generatorLock ){
@@ -78,9 +63,26 @@ public class IdFactory {
       if( lastGeneratedTimeSuffix.equals(thisTimeSuffix) ){
         buf.append(SEPARATOR).append(lastUniqueSuffix++);
       }
+      else {
+        lastUniqueSuffix=1;
+      }
 
+      lastGeneratedTimeSuffix = thisTimeSuffix;
+      
       return buf.toString();
     }
+  }
+
+  public String generateUniqueId() {
+    return generateUniqueId(true);
+  }
+
+  public String generateUniqueId(boolean separator) {
+    return generateUniqueId(nodePrefix, separator);
+  }
+
+  private static Date now() {
+    return new Date();
   }
 
   private static String COMPACT_MIILLISECOND_DATETIME_FORMAT =
@@ -89,7 +91,7 @@ public class IdFactory {
   private static String FILESAFE_MIILLISECOND_DATETIME_FORMAT =
     "yyyyMMdd-HHmmss-SSS";
 
-  static String formatMillisecondFileSafe(Date date) {
+  private static String formatMillisecondFileSafe(Date date) {
 
     SimpleDateFormat fmt = new SimpleDateFormat(
       FILESAFE_MIILLISECOND_DATETIME_FORMAT);
@@ -98,7 +100,7 @@ public class IdFactory {
     return fmt.format(date);
   }
 
-  static String formatCompactMillisecond(Date date) {
+  private static String formatCompactMillisecond(Date date) {
     SimpleDateFormat fmt = new SimpleDateFormat(
       COMPACT_MIILLISECOND_DATETIME_FORMAT);
     fmt.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -106,4 +108,5 @@ public class IdFactory {
     return fmt.format(date);
   }
 
+  
 }

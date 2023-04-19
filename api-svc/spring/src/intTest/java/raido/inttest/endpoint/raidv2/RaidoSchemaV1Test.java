@@ -38,7 +38,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
   {
     var raidApi = super.basicRaidExperimentalClient();
     String initialTitle = getClass().getSimpleName() + "." + getName() + 
-      IdFactory.generateUniqueId();
+      idFactory.generateUniqueId();
     var today = LocalDate.now();
     var idParser = new IdentifierParser();
 
