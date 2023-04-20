@@ -18,6 +18,7 @@ import raido.idl.raidv2.model.ReadRaidV2Request;
 import raido.loadtest.util.Gatling.Var;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Function;
@@ -56,10 +57,15 @@ public class User {
   public static ScenarioBuilder listCreateViewRaid(
     String apiKeyFile
   ) {
-    File file = Paths.get(apiKeyFile).toFile();
+    Path apiKeyPath = Paths.get(apiKeyFile).toAbsolutePath();
+    File file = apiKeyPath.toFile();
     String absolutePath = file.getAbsolutePath();
+    Path cwd = Paths.get(System.getProperty("user.dir"));
+    String relativePath = cwd.relativize(apiKeyPath).toFile().getPath();
     log.with("apiKeyFile", absolutePath).
       with("apiKeyFile.canRead", file.canRead()).
+      with("cwd", cwd.toAbsolutePath()).
+      with("relativePath", relativePath).
       info("listCreateViewRaid()");
 
     var raidListVar = new Var<>("raidList",
@@ -78,9 +84,9 @@ public class User {
     var mintPagePause = ofSeconds(2 * simConfig.thinkTimeMultiplier);
     var editPagePause = ofSeconds(2 * simConfig.thinkTimeMultiplier);
 
-    /* IMPROVE: this should use stable API, not experimental */
+    /* IMPROVE: scenario should use stable API, not experimental */
     return scenario("SP_USER").
-      feed(csv(absolutePath).circular()).
+      feed(csv(relativePath).circular()).
       
       // user logs in to system, which calls API to show latest raids 
       exec(listRaids(I_API_TOKEN, I_SP_ID, raidListVar)).
