@@ -17,6 +17,7 @@ import raido.idl.raidv2.model.ReadRaidResponseV2;
 import raido.idl.raidv2.model.ReadRaidV2Request;
 import raido.loadtest.util.Gatling.Var;
 
+import java.io.File;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Function;
@@ -55,9 +56,11 @@ public class User {
   public static ScenarioBuilder listCreateViewRaid(
     String apiKeyFile
   ) {
-    String absolutePath = Paths.get(apiKeyFile).toFile().getAbsolutePath();
-    log.with("path", absolutePath).
-      info("spUser() config");
+    File file = Paths.get(apiKeyFile).toFile();
+    String absolutePath = file.getAbsolutePath();
+    log.with("apiKeyFile", absolutePath).
+      with("apiKeyFile.canRead", file.canRead()).
+      info("listCreateViewRaid()");
 
     var raidListVar = new Var<>("raidList",
       new TypeReference<List<RaidListItemV2>>(){}) {};
@@ -102,6 +105,10 @@ public class User {
       // user decides to view the raid they created again, for some reason
       exec(readRaid(I_API_TOKEN, mintedRaidVar, readRaidVar)).
       pause(editPagePause)
+      
+      // implement 3 "edit" operations, so the overall scenario is
+      // 3 "edit raid" for each "mint raid".  More realistic and will expose
+      // issues with edit holding external connections open.
       
     ;
 

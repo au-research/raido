@@ -45,11 +45,15 @@ public class SimpleCreateViewRaids extends Simulation {
             Overall, given minting time and think time, you end up with about
             14 simultaneous "virtual users" "using" the system.
             A total of 85 Requests Per Second, an avg 2.5 RPS, with a peak at 
-            about 4 RPS (because of initial rampUp phase).  
+            about 4 RPS (because of initial rampUp phase).
             */
             constantUsersPerSec(simConfig.userCount).
               during(simConfig.steadyStateSeconds)
-          )
+            
+            /* Should throw a `.randomized()` in here too, otherwise all the 
+            users get chunked into the test at exactly the same time, which 
+            makes the test easier to reason about, but less realistic. */
+)
         )
     ).protocols(httpProtocol);
       

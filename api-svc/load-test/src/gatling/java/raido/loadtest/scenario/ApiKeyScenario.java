@@ -71,17 +71,17 @@ public class ApiKeyScenario {
     var inFile = Paths.get(servicePointFile);
     var outFile = new File(apiKeyFile);
 
-    // logged during scenario creation, not execution
+    // logged during scenario injection, not execution
     log.with("servicePointFile", inFile.toFile().getAbsolutePath()).
       with("apiKeyFile", outFile.getAbsoluteFile()).
       info("prepareApiKeys()");
 
-    var pw = new PrintWriter(new FileWriter(outFile), true);
+    var apiKeyWriter = new PrintWriter(new FileWriter(outFile), true);
     //header row
-    pw.println(join(of(
+    apiKeyWriter.println(join(of(
       I_SP_ID, I_SP_NAME, I_API_KEY_ID, I_API_TOKEN
     ), ","));
-    pw.flush();
+    apiKeyWriter.flush();
 
     String bootstrapApiToken = bootstrapApiToken();
 
@@ -109,13 +109,13 @@ public class ApiKeyScenario {
         ).
         exec(sess->{
           var iRecord = iServicePointVar.get(sess);
-          pw.println(join(of(
+          apiKeyWriter.println(join(of(
             blankToDefault(iRecord.get(I_SP_ID).toString(), ""),
             blankToDefault(iRecord.get(I_SP_NAME).toString(), ""),
             blankToDefault(sess.getString(I_API_KEY_ID), ""),
             blankToDefault(sess.getString(I_API_TOKEN), "")
           ), ","));
-          pw.flush();
+          apiKeyWriter.flush();
           return sess;
         })
       )
