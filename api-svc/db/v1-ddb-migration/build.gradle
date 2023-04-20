@@ -35,10 +35,6 @@ flyway{
   cleanDisabled = sharedProject.flywayCleanDisabled
 }
 
-repositories{
-  mavenCentral()
-}
-
 dependencies{
   implementation project(':api-svc:idl-raid-v2')
   implementation libs.bundles.spring6

@@ -12,10 +12,6 @@ ext {
   templateDirName = "openapi-template"
 }
 
-repositories{
-  mavenCentral()
-}
-
 clean {
   delete generateDirName
 }

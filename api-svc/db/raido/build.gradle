@@ -37,10 +37,6 @@ if( file(configPath).exists() ){
   apply from: configPath
 }
 
-repositories{
-  mavenCentral()
-}
-
 dependencies{
   implementation libs.jooq
   

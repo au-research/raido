@@ -11,10 +11,6 @@ ext {
   templateDirName = "src/main/resources/template"
 }
 
-repositories{
-  mavenCentral()
-}
-
 dependencies{
   implementation libs.bundles.spring6
 

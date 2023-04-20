@@ -30,10 +30,6 @@ if( file(configPath).exists() ){
   apply from: configPath
 }
 
-repositories{
-  mavenCentral()
-}
-
 version = rootProject.version
 
 /* don't use groovy for prod code: dynamic typing, slow startup and poor 
