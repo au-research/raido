@@ -52,13 +52,16 @@ public class IdFactoryTest {
 
   /**
    How many may execute concurrently depends on your hardware.
-   STO machine: Ryzen 3600 - 6 core, 12 thread.
-   ChatGPT wrote thisconcurrent code - looks right but I wouldn't really know.
+   STO machine: Ryzen 3600 - 6 core, 12 thread (reports cores=12)
+   GitHub Action: reports cores=2
+   ChatGPT wrote this concurrent code - looks right but I wouldn't really know.
    On my machine the concurrent test runs a few hundreds millis faster.
    I'm taking that to mean that some concurrency is happening.
    It shouldn't really be much faster to execute, even on 12 thread hardware
    because the IdFactory.generateUniqueID() method is synchronised, that's the
    whole point of it.
+   On GitHub machine with only 2 cores, the last 20 id's regularly shows up 
+   150 ids within a ms for sequential, 300 ids for concurrent on 2 cores.
    */
   @Test
   public void shouldNotGenerateDuplicatesWhenExecutedConcurrently(){
@@ -68,6 +71,9 @@ public class IdFactoryTest {
     
     var exec = newFixedThreadPool(numberOfThreads);
     log.with("cores", getRuntime().availableProcessors()).
+      with("vm.vendor", System.getProperty("java.vm.vendor")).
+      with("vm.name", System.getProperty("java.vm.name")).
+      with("vm.version", System.getProperty("java.vm.version")).
       info("current machine");
     
     // allocate full capacity so it doesn't re-size in the middle of the loop
