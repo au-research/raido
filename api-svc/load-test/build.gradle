@@ -101,35 +101,14 @@ compileJava {
     "-Xlint:deprecation"
 }
 
-// look for resources in the source tree, resources folder is pointless 
-sourceSets.gatling.resources.srcDirs(sourceSets.gatling.java.srcDirs)
-
 // logLevel doesn't work - see logback.xml
 gatling {
   simulations = {
     include "todo"
   }
-  
+
   jvmArgs = defaultJvmArgs
   systemProperties = defaultSysProps
-}
-
-/* rootProject.buildDir is where IDEA/Gradle sets the CWD to when running 
-load-tests, for whatever reason. 
-If the dir doesn't exist - writing the CSV outputs will fail.
-Because nothing happens in our root projects, it doesn't even have basic plugins
-that give "clean" functionality (maybe it should, more likely we should force
-the CWD for load tests so we control the output/input dirs directly).
- */
-task createBuildDir{
-  doLast {
-    println "create $rootProject.buildDir.absolutePath"
-    mkdir rootProject.buildDir
-  }
-}
-
-clean {
-  delete rootProject.buildDir
 }
 
 task gatlingRunPrepareServicePoints(type: GatlingRunTask) {
@@ -138,7 +117,6 @@ task gatlingRunPrepareServicePoints(type: GatlingRunTask) {
   /* I don't see why this is needed, but it wasn't recompiling when I was 
   frobbing the maxServicePoints constant */
   dependsOn compileGatlingJava
-  dependsOn createBuildDir
   simulations = {
     include "raido/loadtest/simulation/PrepareServicePoints.java"
   }
@@ -159,7 +137,7 @@ task gatlingRunCreateViewRaids(type: GatlingRunTask) {
   }
 
   outputs.upToDateWhen { false }
-  
+
   jvmArgs = defaultJvmArgs
   systemProperties = defaultSysProps
 }

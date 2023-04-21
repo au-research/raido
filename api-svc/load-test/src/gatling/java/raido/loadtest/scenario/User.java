@@ -55,17 +55,11 @@ public class User {
    columns.
    */
   public static ScenarioBuilder listCreateViewRaid(
-    String apiKeyFile
+    Path apiKeyPath
   ) {
-    Path apiKeyPath = Paths.get(apiKeyFile).toAbsolutePath();
     File file = apiKeyPath.toFile();
-    String absolutePath = file.getAbsolutePath();
-    Path cwd = Paths.get(System.getProperty("user.dir"));
-    String relativePath = cwd.relativize(apiKeyPath).toFile().getPath();
-    log.with("apiKeyFile", absolutePath).
+    log.with("apiKeyFile", apiKeyPath).
       with("apiKeyFile.canRead", file.canRead()).
-      with("cwd", cwd.toAbsolutePath()).
-      with("relativePath", relativePath).
       info("listCreateViewRaid()");
 
     var raidListVar = new Var<>("raidList",
@@ -80,13 +74,13 @@ public class User {
     that already knows they're definitely going to mint a raid and they 
     have memorised the location of the mint button will only on the "home" 
     page for as long as it takes them to locate and click the button. */
-    var listPagePause = ofSeconds(2 * simConfig.thinkTimeMultiplier);
-    var mintPagePause = ofSeconds(2 * simConfig.thinkTimeMultiplier);
-    var editPagePause = ofSeconds(2 * simConfig.thinkTimeMultiplier);
+    var listPagePause = simConfig.thinkForSeconds(2);
+    var mintPagePause = simConfig.thinkForSeconds(2);
+    var editPagePause = simConfig.thinkForSeconds(2);
 
     /* IMPROVE: scenario should use stable API, not experimental */
     return scenario("SP_USER").
-      feed(csv(relativePath).circular()).
+      feed(csv(apiKeyPath.toString()).circular()).
       
       // user logs in to system, which calls API to show latest raids 
       exec(listRaids(I_API_TOKEN, I_SP_ID, raidListVar)).

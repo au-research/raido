@@ -14,7 +14,7 @@ import static raido.loadtest.config.SimulationConfig.simConfig;
 import static raido.loadtest.scenario.Anonymous.warmUp;
 import static raido.loadtest.scenario.User.listCreateViewRaid;
 import static raido.loadtest.simulation.Dev.runSim;
-import static raido.loadtest.simulation.PrepareServicePoints.API_KEYS_PATH;
+import static raido.loadtest.simulation.PrepareServicePoints.API_KEYS_FILENAME;
 
 /** Intended for development testing, not a real load test */
 public class SimpleCreateViewRaids extends Simulation {
@@ -29,7 +29,7 @@ public class SimpleCreateViewRaids extends Simulation {
     setUp(
       warmUp().injectOpen(atOnceUsers(1)).
         andThen(
-          listCreateViewRaid(API_KEYS_PATH).
+          listCreateViewRaid(simConfig.getDataPath(API_KEYS_FILENAME)).
 //            injectOpen(atOnceUsers(1))
           injectOpen(
             rampUsers(simConfig.userCount).

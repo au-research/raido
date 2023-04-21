@@ -11,11 +11,10 @@ import raido.idl.raidv2.model.GenerateApiTokenRequest;
 import raido.idl.raidv2.model.GenerateApiTokenResponse;
 import raido.loadtest.util.Gatling.Var;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -55,8 +54,8 @@ public class ApiKeyScenario {
   private static final Log log = to(ApiKeyScenario.class);
 
   public static ScenarioBuilder prepareApiKeys(
-    String servicePointFile,
-    String apiKeyFile
+    Path servicePointPath,
+    Path apiKeyPath
   ) throws IOException {
 
     var loadTestSpListVar = new Var<>("loadTestServicePointList",
@@ -68,12 +67,12 @@ public class ApiKeyScenario {
     var iListApiKeyVar = new Var<>("apiKeyList",
       new TypeReference<List<ApiKey>>() {}) {};
 
-    var inFile = Paths.get(servicePointFile);
-    var outFile = new File(apiKeyFile);
+    var inFile = servicePointPath.toFile();
+    var outFile = apiKeyPath.toFile();
 
     // logged during scenario injection, not execution
-    log.with("servicePointFile", inFile.toFile().getAbsolutePath()).
-      with("apiKeyFile", outFile.getAbsoluteFile()).
+    log.with("servicePointFile", inFile).
+      with("apiKeyFile", outFile).
       info("prepareApiKeys()");
 
     var apiKeyWriter = new PrintWriter(new FileWriter(outFile), true);
@@ -86,7 +85,7 @@ public class ApiKeyScenario {
     String bootstrapApiToken = bootstrapApiToken();
 
     return scenario("prepare api-keys").exitBlockOnFail(
-      exec(readServicePointsFromCsv(servicePointFile, loadTestSpListVar)).
+      exec(readServicePointsFromCsv(servicePointPath, loadTestSpListVar)).
       foreach(loadTestSpListVar::get, iServicePointVar.name).on(
         exec(listApiKeys(
           bootstrapApiToken, iServicePointVar, iListApiKeyVar)
@@ -123,12 +122,12 @@ public class ApiKeyScenario {
   }
 
   private static Function<Session, Session> readServicePointsFromCsv(
-    String servicePointFile,
+    Path servicePointPath,
     Var<List<Map<String, Object>>> loadTestSpListVar
   ) {
     return sess->{
       List<Map<String, Object>> records =
-        csv(servicePointFile).readRecords();
+        csv(servicePointPath.toString()).readRecords();
       log.with("size", records.size()).info("service-points from csv");
       return loadTestSpListVar.set(sess, records);
     };

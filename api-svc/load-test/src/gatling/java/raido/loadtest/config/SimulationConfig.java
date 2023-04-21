@@ -2,21 +2,30 @@ package raido.loadtest.config;
 
 import raido.apisvc.util.Log;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.StringJoiner;
 
 import static java.lang.Integer.parseInt;
+import static java.time.Duration.ofSeconds;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.hasValue;
+import static raido.loadtest.util.Jvm.cwd;
 
 public class SimulationConfig {
   private static final Log log = to(SimulationConfig.class);
   
   public static final SimulationConfig simConfig = new SimulationConfig();
+  
+  public static final String SUBPROJECT_DIR = "api-svc/load-test";
+  public static final String BUILD_DIR = "build";
 
   public int rampUpSeconds;
   public int steadyStateSeconds;
   public int userCount;
   
+  /** set to 0 for "Hulk, smash" 😠🟢💪 */
   public long thinkTimeMultiplier;
 
   public SimulationConfig() {
@@ -30,7 +39,9 @@ public class SimulationConfig {
 //    userCount = 50;
 //    steadyStateSeconds = 60;
 
-    log.with("config", this.toString()).info("startup");
+    log.with("config", this.toString()).
+      with("cwd", cwd().toAbsolutePath()).
+      info("startup");
   }
 
   public static String getConfig(String name, String defaultValue) {
@@ -56,5 +67,42 @@ public class SimulationConfig {
       .add("userCount=" + userCount)
       .add("thinkTimeMultiplier=" + thinkTimeMultiplier)
       .toString();
+  }
+
+  /* When running Gradle via IDEA, CWD will be: `<repo>/api-svc/load-test` 
+  If running gradlew in the normal way (via invoking `gradlew` with the repo 
+  root as the CWD) it will be: `<repo>/`
+  Seems IDEA sets the CWD to be the sub-project's dir, while if we run the 
+  task from the repo root in the normal way, the CWD will be the repo root.
+  The Gatling Gradle task appears to have no way to set the CWD (you could 
+  maybe set `user.dir` SysProp, but that's never a good idea). 
+  Note: it *is* possible to cd into the sub-project and run gradlew via 
+  `../../gradlew` but I don't want to have to remember to do that just for 
+  Gatling tasks.
+  */
+  public Path getDataPath(String fileName){
+    Path subProjectPath = Paths.get(SUBPROJECT_DIR);
+    boolean isExecutedInRootDir = !cwd().endsWith(subProjectPath);
+    
+    String filePath; 
+    if( isExecutedInRootDir ){
+      filePath = SUBPROJECT_DIR + "/" + BUILD_DIR + "/" +fileName;
+    }
+    else {
+      filePath = BUILD_DIR + "/" +fileName;
+    }
+
+    log.with("cwd", cwd()).
+      with("fileName", fileName).
+      with("filePath", filePath).
+      with("subProjectPath", subProjectPath).
+      with("isExecutedInRootDir", isExecutedInRootDir).
+      debug("dataPath");
+
+    return Paths.get(filePath).toAbsolutePath();
+  }
+
+  public Duration thinkForSeconds(int seconds){
+    return ofSeconds(seconds * thinkTimeMultiplier);
   }
 }
