@@ -48,9 +48,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
 
       - name: Build and unit test
-        env:
-          GRADLE_OPTS: -DtestLogging.showStandardStreams=true
-        run: ./gradlew build            
+        run: RAIDO_UNIT_TEST_OUTPUT=true ./gradlew build            
 
       - name: Create and populate api-svc-db.gradle
         # running the api-svc as the admin user is not good

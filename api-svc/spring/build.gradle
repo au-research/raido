@@ -205,6 +205,8 @@ tasks.build.dependsOn intTestClasses
 test{
   useJUnitPlatform()
   systemProperties defaultSysProps
+  testLogging.showStandardStreams =
+    System.getenv("RAIDO_UNIT_TEST_OUTPUT")?.toBoolean()
 }
 
 intTest{
