@@ -60,8 +60,6 @@ public class IdFactoryTest {
    It shouldn't really be much faster to execute, even on 12 thread hardware
    because the IdFactory.generateUniqueID() method is synchronised, that's the
    whole point of it.
-   On GitHub machine with only 2 cores, the last 20 id's regularly shows up 
-   150 ids within a ms for sequential, 300 ids for concurrent on 2 cores.
    */
   @Test
   public void shouldNotGenerateDuplicatesWhenExecutedConcurrently(){
