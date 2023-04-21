@@ -205,6 +205,8 @@ tasks.build.dependsOn intTestClasses
 test{
   useJUnitPlatform()
   systemProperties defaultSysProps
+  // added because I wanted to see test output in the github action
+  testLogging.showStandardStreams = true
 }
 
 intTest{
