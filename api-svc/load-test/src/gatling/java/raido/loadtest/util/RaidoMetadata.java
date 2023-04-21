@@ -13,6 +13,7 @@ import static raido.idl.raidv2.model.ContributorPositionSchemeType.HTTPS_RAID_OR
 import static raido.idl.raidv2.model.ContributorRoleCreditNisoOrgType.PROJECT_ADMINISTRATION;
 import static raido.idl.raidv2.model.ContributorRoleSchemeType.HTTPS_CREDIT_NISO_ORG_;
 import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
+import static raido.idl.raidv2.model.OrganisationRoleType.LEAD_RESEARCH_ORGANISATION;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 
@@ -41,14 +42,18 @@ public class RaidoMetadata {
         type(PRIMARY_DESCRIPTION).
         description(faker.ancient().primordial()))).
       contributors(List.of(
-        createDummyLeaderContributor(RAID_PRODUCT_MANAGER, today) )).
+        createContributor(RAID_PRODUCT_MANAGER,
+          LEADER, PROJECT_ADMINISTRATION, today ))).
       organisations(List.of(
-        createDummyOrganisation(ARDC_ROR, today) )).
+        createDummyOrganisation(
+          ARDC_ROR, LEAD_RESEARCH_ORGANISATION, today ))).
       access(new AccessBlock().type(OPEN));
   }
 
-  public static ContributorBlock createDummyLeaderContributor(
-    String orcid, 
+  public static ContributorBlock createContributor(
+    String orcid,
+    ContributorPositionRaidMetadataSchemaType position,
+    ContributorRoleCreditNisoOrgType role,
     LocalDate today
   ) {
     return new ContributorBlock().
@@ -56,16 +61,17 @@ public class RaidoMetadata {
       identifierSchemeUri(HTTPS_ORCID_ORG_).
       positions(List.of(new ContributorPosition().
         positionSchemaUri(HTTPS_RAID_ORG_).
-        position(LEADER).
+        position(position).
         startDate(today))).
       roles(List.of(
         new ContributorRole().
           roleSchemeUri(HTTPS_CREDIT_NISO_ORG_).
-          role(PROJECT_ADMINISTRATION)));
+          role(role)));
   }
 
   public static OrganisationBlock createDummyOrganisation(
     String ror,
+    OrganisationRoleType role, 
     LocalDate today
   ) {
     return new OrganisationBlock().
@@ -74,7 +80,7 @@ public class RaidoMetadata {
       roles(List.of(
         new OrganisationRole().
           roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_).
-          role(OrganisationRoleType.LEAD_RESEARCH_ORGANISATION)
+          role(role)
           .startDate(today)));
   }
 

@@ -49,12 +49,12 @@ public class SimpleCreateViewRaids extends Simulation {
             */
             constantUsersPerSec(simConfig.userCount).
               during(simConfig.steadyStateSeconds)
-            
+
             /* Should throw a `.randomized()` in here too, otherwise all the 
             users get chunked into the test at exactly the same time, which 
             makes the test easier to reason about, but less realistic. */
-)
         )
+      )
     ).protocols(httpProtocol);
       
   }

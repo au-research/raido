@@ -127,6 +127,9 @@ paths:
         content:
           application/json:
             schema:
+              description: >
+                An object with `metadata` field is used to ame future changes
+                easier to maintain backward compatibility, see comments in YAML.
               type: object
               required: [metadata]
               properties:

@@ -32,6 +32,7 @@ public class RaidoApi {
     generateToken("/v2/experimental/generate-api-token/v1"),
     listRaids("/v2/experimental/list-raid/v2"),
     mintRaid("/v2/experimental/mint-raido-schema/v1"),
+    updateRaid("/v2/experimental/update-raido-schema/v1"),
     readRaid("/v2/experimental/read-raid/v2"),
     publicStatus(STATUS_PATH);
 
