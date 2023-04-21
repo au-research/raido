@@ -2,6 +2,7 @@ package raido.loadtest.config;
 
 import raido.apisvc.util.Log;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -19,7 +20,7 @@ public class SimulationConfig {
   public static final SimulationConfig simConfig = new SimulationConfig();
   
   public static final String SUBPROJECT_DIR = "api-svc/load-test";
-  public static final String BUILD_DIR = "build";
+  public static final String DATA_DIR = "build/feeder-data";
 
   public int rampUpSeconds;
   public int steadyStateSeconds;
@@ -39,8 +40,17 @@ public class SimulationConfig {
 //    userCount = 50;
 //    steadyStateSeconds = 60;
 
+    var testDataFile = getDataPath("touch.txt");
+    File dataDir = testDataFile.getParent().toFile();
+    if( !dataDir.exists() ){
+      log.with("dataDir", dataDir).
+        with("mkdirs()", dataDir.mkdirs()).
+        info("creating data dir for feeders");
+    }
+    
     log.with("config", this.toString()).
       with("cwd", cwd().toAbsolutePath()).
+      with("testDataFile", testDataFile.toString()).
       info("startup");
   }
 
@@ -86,10 +96,10 @@ public class SimulationConfig {
     
     String filePath; 
     if( isExecutedInRootDir ){
-      filePath = SUBPROJECT_DIR + "/" + BUILD_DIR + "/" +fileName;
+      filePath = SUBPROJECT_DIR + "/" + DATA_DIR + "/" +fileName;
     }
     else {
-      filePath = BUILD_DIR + "/" +fileName;
+      filePath = DATA_DIR + "/" +fileName;
     }
 
     log.with("cwd", cwd()).
