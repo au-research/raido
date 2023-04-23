@@ -27,7 +27,9 @@ public class RaidRecord extends UpdatableRecordImpl<RaidRecord> implements Recor
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>api_svc.raid.handle</code>.
+     * Setter for <code>api_svc.raid.handle</code>. Holds the handle (i.e. just
+     * prefix/suffix) not the URL.  Usually quite  short in production, but the
+     * max length is set to accommodate int and load testing.
      */
     public RaidRecord setHandle(String value) {
         set(0, value);
@@ -35,7 +37,9 @@ public class RaidRecord extends UpdatableRecordImpl<RaidRecord> implements Recor
     }
 
     /**
-     * Getter for <code>api_svc.raid.handle</code>.
+     * Getter for <code>api_svc.raid.handle</code>. Holds the handle (i.e. just
+     * prefix/suffix) not the URL.  Usually quite  short in production, but the
+     * max length is set to accommodate int and load testing.
      */
     public String getHandle() {
         return (String) get(0);

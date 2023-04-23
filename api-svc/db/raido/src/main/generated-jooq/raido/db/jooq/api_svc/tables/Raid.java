@@ -56,9 +56,11 @@ public class Raid extends TableImpl<RaidRecord> {
     }
 
     /**
-     * The column <code>api_svc.raid.handle</code>.
+     * The column <code>api_svc.raid.handle</code>. Holds the handle (i.e. just
+     * prefix/suffix) not the URL.  Usually quite  short in production, but the
+     * max length is set to accommodate int and load testing.
      */
-    public final TableField<RaidRecord, String> HANDLE = createField(DSL.name("handle"), SQLDataType.VARCHAR(32).nullable(false), this, "");
+    public final TableField<RaidRecord, String> HANDLE = createField(DSL.name("handle"), SQLDataType.VARCHAR(128).nullable(false), this, "Holds the handle (i.e. just prefix/suffix) not the URL.  Usually quite  short in production, but the max length is set to accommodate int and load testing.");
 
     /**
      * The column <code>api_svc.raid.service_point_id</code>.
