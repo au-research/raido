@@ -1,14 +1,9 @@
 repositories {
-    // temporary workaround - see /settings.gradle
-    maven {
-        url "https://repo1.maven.org/maven2/"
-    }
-//    mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
     implementation gradleApi()
     implementation 'org.apache.jena:jena-arq:4.7.0'
     implementation 'org.postgresql:postgresql:42.5.4'
-//    implementation 'org.postgresql:postgresql:42.6.0'
 }

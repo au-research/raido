@@ -15,14 +15,7 @@ include ":app-client"
 
 dependencyResolutionManagement{
   repositories {
-    /* 2023-04-20 - problem resolving from repo.maven.apache.org, which is the 
-    gradle mavenCentral() default. 
-    Using repo1.maven.org as a workaround (random thing I found by browsing the 
-    maven central website. */
-    maven {
-      url "https://repo1.maven.org/maven2/"
-    }
-//    mavenCentral()
+    mavenCentral()
   }
 
   versionCatalogs{
