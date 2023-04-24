@@ -1,28 +1,24 @@
 import {
-  isPagePath, NavigationState, NavPathResult,
-  NavTransition, parsePageSuffixParams,
+  isPagePath,
+  NavigationState,
+  NavPathResult,
+  NavTransition,
+  parsePageSuffixParams,
   useNavigation
 } from "Design/NavigationProvider";
-import { raidoTitle } from "Component/Util";
-import { LargeContentMain } from "Design/LayoutMain";
-import { ContainerCard } from "Design/ContainerCard";
-import { TextSpan } from "Component/TextSpan";
-import React, { useState } from "react";
-import { normalisePath } from "Util/Location";
-import { RqQuery } from "Util/ReactQueryUtil";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ServicePoint, UpdateServicePointRequest } from "Generated/Raidv2";
-import { useAuthApi } from "Api/AuthApi";
-import { CompactErrorPanel } from "Error/CompactErrorPanel";
-import {
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  Stack,
-  TextField
-} from "@mui/material";
-import { PrimaryActionButton, SecondaryButton } from "Component/AppButton";
-import { navBrowserBack } from "Util/WindowUtil";
+import {raidoTitle} from "Component/Util";
+import {LargeContentMain} from "Design/LayoutMain";
+import {ContainerCard} from "Design/ContainerCard";
+import {TextSpan} from "Component/TextSpan";
+import React, {useState} from "react";
+import {RqQuery} from "Util/ReactQueryUtil";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
+import {ServicePoint, UpdateServicePointRequest} from "Generated/Raidv2";
+import {useAuthApi} from "Api/AuthApi";
+import {CompactErrorPanel} from "Error/CompactErrorPanel";
+import {Checkbox, FormControl, FormControlLabel, Stack, TextField} from "@mui/material";
+import {PrimaryActionButton, SecondaryButton} from "Component/AppButton";
+import {navBrowserBack} from "Util/WindowUtil";
 
 const log = console;
 
@@ -72,7 +68,7 @@ function ServicePointContainer({servicePointId, onCreate}: {
   const queryClient = useQueryClient();
   const queryName = 'readServicePoint';
   const [formData, setFormData] = useState({
-    techEmail: "", adminEmail: "", enabled: true
+    techEmail: "", adminEmail: "", enabled: true, appWritesEnabled: true
   } as ServicePoint );
   const query: RqQuery<ServicePoint> = useQuery(
     [queryName, servicePointId],
@@ -184,6 +180,31 @@ function ServicePointContainer({servicePointId, onCreate}: {
           }
         />        
       </FormControl>
+
+      <FormControl>
+        <FormControlLabel
+          disabled={isWorking}
+          label="Enable editing in app"
+          labelPlacement="start"
+          style={{
+            /* by default, MUI lays this out as <checkbox><label>.
+             Doing `labelPlacement=start`, flips that around, but ends up
+             right-justigying the content, so `marginRight=auto` pushes it back
+             across to the left and `marginLeft=0` aligns nicely. */
+            marginLeft: 0,
+            marginRight: "auto",
+          }}
+          control={
+            <Checkbox
+              checked={formData.appWritesEnabled ?? true}
+              onChange={()=>{
+                setFormData({...formData, appWritesEnabled: !formData.appWritesEnabled})
+              }}
+            />
+          }
+        />
+      </FormControl>
+
       <Stack direction={"row"} spacing={2}>
         <SecondaryButton onClick={navBrowserBack}
           disabled={updateRequest.isLoading}>

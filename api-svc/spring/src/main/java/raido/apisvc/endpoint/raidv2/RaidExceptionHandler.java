@@ -1,20 +1,13 @@
 package raido.apisvc.endpoint.raidv2;
 
 import org.jooq.exception.DataAccessException;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import raido.apisvc.exception.CrossAccountAccessException;
-import raido.apisvc.exception.InvalidJsonException;
-import raido.apisvc.exception.ResourceNotFoundException;
-import raido.apisvc.exception.ValidationException;
+import raido.apisvc.exception.*;
 import raido.apisvc.spring.RedactingExceptionResolver;
 import raido.apisvc.spring.security.ApiSafeException;
 import raido.apisvc.util.Log;
@@ -140,6 +133,24 @@ public class RaidExceptionHandler extends ResponseEntityExceptionHandler {
     return ResponseEntity
       .badRequest()
       .body(errorJson);
+  }
+
+  @ExceptionHandler(InvalidAccessException.class)
+  public ResponseEntity<FailureResponse> handleInvalidAccessException(final Exception e) {
+    final var exception = (InvalidAccessException) e;
+    log.warnEx(exception.getTitle(), e);
+
+    final var body = new FailureResponse()
+      .type(exception.getType())
+      .title(exception.getTitle())
+      .status(exception.getStatus())
+      .detail(exception.getDetail())
+      .instance(exception.getInstance());
+
+    return ResponseEntity
+      .status(HttpStatus.FORBIDDEN)
+      .contentType(MediaType.APPLICATION_JSON)
+      .body(body);
   }
 
   @Override

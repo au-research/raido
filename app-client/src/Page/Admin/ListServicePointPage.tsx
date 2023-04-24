@@ -1,30 +1,23 @@
-import { isPagePath, NavTransition } from "Design/NavigationProvider";
-import { raidoTitle } from "Component/Util";
-import { LargeContentMain } from "Design/LayoutMain";
-import { ContainerCard } from "Design/ContainerCard";
-import { TextSpan } from "Component/TextSpan";
+import {isPagePath, NavTransition} from "Design/NavigationProvider";
+import {raidoTitle} from "Component/Util";
+import {LargeContentMain} from "Design/LayoutMain";
+import {ContainerCard} from "Design/ContainerCard";
+import {TextSpan} from "Component/TextSpan";
 import React from "react";
-import { normalisePath } from "Util/Location";
-import { RqQuery } from "Util/ReactQueryUtil";
-import { useQuery } from "@tanstack/react-query";
-import { ServicePoint } from "Generated/Raidv2";
-import { useAuthApi } from "Api/AuthApi";
-import { CompactErrorPanel } from "Error/CompactErrorPanel";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow
-} from "@mui/material";
-import { RefreshIconButton } from "Component/RefreshIconButton";
-import { RaidoLink } from "Component/RaidoLink";
-import { getServicePointPageLink } from "Page/Admin/ServicePointPage";
-import { Key, People, Visibility, VisibilityOff } from "@mui/icons-material";
-import { getListAppUserPageLink } from "Page/Admin/ListAppUserPage";
-import { getListApiKeyPageLink } from "Page/Admin/ListApiKeyPage";
-import { RaidoAddFab } from "Component/AppButton";
+import {normalisePath} from "Util/Location";
+import {RqQuery} from "Util/ReactQueryUtil";
+import {useQuery} from "@tanstack/react-query";
+import {ServicePoint} from "Generated/Raidv2";
+import {useAuthApi} from "Api/AuthApi";
+import {CompactErrorPanel} from "Error/CompactErrorPanel";
+import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
+import {RefreshIconButton} from "Component/RefreshIconButton";
+import {RaidoLink} from "Component/RaidoLink";
+import {getServicePointPageLink} from "Page/Admin/ServicePointPage";
+import {Key, People, Visibility, VisibilityOff} from "@mui/icons-material";
+import {getListAppUserPageLink} from "Page/Admin/ListAppUserPage";
+import {getListApiKeyPageLink} from "Page/Admin/ListApiKeyPage";
+import {RaidoAddFab} from "Component/AppButton";
 
 const log = console;
 
@@ -75,7 +68,7 @@ function ServicePointListTable(){
     action={<>
       <RefreshIconButton refreshing={query.isLoading}
         onClick={() => query.refetch()}/>
-      <RaidoAddFab href={getServicePointPageLink(undefined)}/>
+      <RaidoAddFab disabled={false} href={getServicePointPageLink(undefined)}/>
     </>}
   >
     <TableContainer>

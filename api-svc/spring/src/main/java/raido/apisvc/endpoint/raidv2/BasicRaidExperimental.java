@@ -6,6 +6,7 @@ import org.jooq.impl.DSL;
 import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
+import raido.apisvc.exception.InvalidAccessException;
 import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.service.raid.ValidationFailureException;
 import raido.apisvc.service.raid.id.IdentifierParser;
@@ -15,22 +16,14 @@ import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.idl.raidv2.api.BasicRaidExperimentalApi;
-import raido.idl.raidv2.model.MintRaidoSchemaV1Request;
-import raido.idl.raidv2.model.MintResponse;
-import raido.idl.raidv2.model.RaidListItemV2;
-import raido.idl.raidv2.model.RaidListRequestV2;
-import raido.idl.raidv2.model.ReadRaidResponseV2;
-import raido.idl.raidv2.model.ReadRaidV2Request;
-import raido.idl.raidv2.model.UpdateRaidoSchemaV1Request;
+import raido.idl.raidv2.model.*;
 
 import java.util.List;
 
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 import static org.springframework.transaction.annotation.Propagation.NEVER;
 import static raido.apisvc.endpoint.Constant.MAX_EXPERIMENTAL_RECORDS;
-import static raido.apisvc.endpoint.message.ValidationMessage.CANNOT_UPDATE_LEGACY_SCHEMA;
-import static raido.apisvc.endpoint.message.ValidationMessage.ID_BLOCK_NOT_SET;
-import static raido.apisvc.endpoint.message.ValidationMessage.METADATA_NOT_SET;
+import static raido.apisvc.endpoint.message.ValidationMessage.*;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.getAuthzPayload;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
 import static raido.apisvc.service.raid.MetadataService.mapDb2Api;
@@ -110,6 +103,10 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     var user = getAuthzPayload();
     guardOperatorOrAssociated(user, mint.getServicePointId());
 
+    if (!raidSvc.isEditable(user, req.getMintRequest().getServicePointId())) {
+      throw new InvalidAccessException("This service point does not allow Raids to be edited in the app.");
+    }
+
     var failures = validSvc.validateRaidoSchemaV1(req.getMetadata());
     
     if( !failures.isEmpty() ){
@@ -172,7 +169,12 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
   @Override
   public MintResponse updateRaidoSchemaV1(UpdateRaidoSchemaV1Request req) {
     var user = getAuthzPayload();
-    var newData = req.getMetadata(); 
+    var newData = req.getMetadata();
+
+    if (!raidSvc.isEditable(user, req.getMetadata().getId().getIdentifierServicePoint())) {
+      throw new InvalidAccessException("This service point does not allow Raids to be edited in the app.");
+    }
+
     if( newData == null ){
       return mintFailed(METADATA_NOT_SET);
     }
@@ -247,6 +249,4 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
       return mintFailed(failures);
     }
   }
-
-
 }

@@ -15,7 +15,6 @@ import raido.apisvc.exception.ResourceNotFoundException;
 import raido.apisvc.exception.UnknownServicePointException;
 import raido.apisvc.factory.RaidRecordFactory;
 import raido.apisvc.repository.RaidRepository;
-import raido.apisvc.repository.RelatedRaidTypeRepository;
 import raido.apisvc.repository.ServicePointRepository;
 import raido.apisvc.service.apids.ApidsService;
 import raido.apisvc.service.apids.model.ApidsMintResponse;
@@ -24,18 +23,12 @@ import raido.apisvc.service.raid.id.IdentifierParser;
 import raido.apisvc.service.raid.id.IdentifierParser.ParseProblems;
 import raido.apisvc.service.raid.id.IdentifierUrl;
 import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
+import raido.apisvc.spring.security.raidv2.AuthzTokenPayload;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.Metaschema;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
-import raido.idl.raidv2.model.AccessType;
-import raido.idl.raidv2.model.CreateRaidV1Request;
-import raido.idl.raidv2.model.LegacyMetadataSchemaV1;
-import raido.idl.raidv2.model.RaidSchemaV1;
-import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
-import raido.idl.raidv2.model.ReadRaidResponseV2;
-import raido.idl.raidv2.model.UpdateRaidV1Request;
-import raido.idl.raidv2.model.ValidationFailure;
+import raido.idl.raidv2.model.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -48,9 +41,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toMap;
 import static org.springframework.transaction.annotation.Propagation.NEVER;
-import static raido.apisvc.endpoint.message.ValidationMessage.CANNOT_UPGRADE_TO_OTHER_SCHEMA;
-import static raido.apisvc.endpoint.message.ValidationMessage.SCHEMA_CHANGED;
-import static raido.apisvc.endpoint.message.ValidationMessage.UPGRADE_LEGACY_SCHEMA_ONLY;
+import static raido.apisvc.endpoint.message.ValidationMessage.*;
 import static raido.apisvc.service.raid.MetadataService.mapApi2Db;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitle;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitles;
@@ -492,5 +483,12 @@ public class RaidService {
     return db.select().from(SERVICE_POINT).
       where(SERVICE_POINT.NAME.eq(name)).
       fetchSingleInto(SERVICE_POINT);
+  }
+
+  public boolean isEditable(final AuthzTokenPayload user, final long servicePointId) {
+    final var servicePoint = servicePointRepository.findById(servicePointId)
+      .orElseThrow(() -> new UnknownServicePointException(servicePointId));
+
+    return user.getClientId().equals("RAIDO_API") || servicePoint.getAppWritesEnabled();
   }
 }

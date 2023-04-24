@@ -44,18 +44,13 @@ import static raido.apisvc.util.FileUtil.resourceContent;
 
 @ExtendWith(MockitoExtension.class)
 class BasicRaidStableTest {
-
   private MockMvc mockMvc;
-
   @Mock
   private RaidService raidService;
-
   @Mock
   private RaidSchemaV1ValidationService validationService;
-
   @InjectMocks
   private BasicRaidStable controller;
-
   final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule()).setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
 
   @BeforeEach
@@ -76,6 +71,7 @@ class BasicRaidStableTest {
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
       authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
+      when(raidService.isEditable(any(AuthzTokenPayload.class), anyLong())).thenReturn(true);
 
       doThrow(DataAccessException.class)
         .when(raidService).mintRaidSchemaV1(any(CreateRaidV1Request.class), eq(servicePointId));
@@ -91,6 +87,46 @@ class BasicRaidStableTest {
     }
   }
 
+  @Test
+  void mintRaidV1_ReturnsForbiddenWhenEditingInAppAndDisabledInServicePoint() throws Exception {
+    final Long servicePointId = 999L;
+    final var title = "test-title";
+    final var startDate = LocalDate.now();
+    final var handle = new IdentifierHandle("10378.1", "1696639");
+    final var id = new IdentifierUrl("https://raid.org.au", handle);
+
+    final var raidForPost = createRaidForPost();
+
+    try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
+      final var user = AuthzTokenPayload.AuthzTokenPayloadBuilder
+        .anAuthzTokenPayload()
+        .withAppUserId(0L)
+        .withEmail("user-email")
+        .withRole("user-role")
+        .withSubject("user-subject")
+        .withAppUserId(1L)
+        .withServicePointId(servicePointId)
+        .withClientId("user-client-id")
+        .build();
+
+      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(user);
+
+      when(raidService.isEditable(user, servicePointId)).thenReturn(false);
+
+      mockMvc.perform(post("/raid/v1")
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(raidForPost))
+          .characterEncoding("utf-8"))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(jsonPath("$.type", Matchers.is("https://raid.org.au/errors#InvalidAccessException")))
+        .andExpect(jsonPath("$.title", Matchers.is("Forbidden")))
+        .andExpect(jsonPath("$.status", Matchers.is(403)))
+        .andExpect(jsonPath("$.detail", Matchers.is("This service point does not allow Raids to be edited in the app.")))
+        .andExpect(jsonPath("$.instance", Matchers.is("https://raid.org.au")))
+      ;
+    }
+  }
 
   @Test
   void mintRaidV1_ReturnsBadRequest() throws Exception {
@@ -110,6 +146,8 @@ class BasicRaidStableTest {
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
       authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
+      when(raidService.isEditable(any(AuthzTokenPayload.class), anyLong())).thenReturn(true);
+
 
       when(validationService.validateForCreate(any(CreateRaidV1Request.class)))
         .thenReturn(List.of(validationFailure));
@@ -162,6 +200,8 @@ class BasicRaidStableTest {
         .build();
 
       authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(user);
+      when(raidService.isEditable(any(AuthzTokenPayload.class), anyLong())).thenReturn(true);
+
 
       when(validationService.validateForCreate(any(CreateRaidV1Request.class))).thenReturn(Collections.emptyList());
 
@@ -226,6 +266,8 @@ class BasicRaidStableTest {
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
       final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
       authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
+      when(raidService.isEditable(any(AuthzTokenPayload.class), anyLong())).thenReturn(true);
+
 
       when(validationService.validateForUpdate(eq(handle), any(UpdateRaidV1Request.class))).thenReturn(List.of(validationFailure));
 
@@ -253,6 +295,34 @@ class BasicRaidStableTest {
   }
 
   @Test
+  void updateRaidV1_ReturnsForbiddenWhenEditingInAppAndDisabledInServicePoint() throws Exception {
+    final var prefix = "10378.1";
+    final var suffix = "1696639";
+    final var servicePointId = 20000001L;
+    final var handle = new IdentifierHandle(prefix, suffix);
+
+    final var input = createRaidForPut();
+
+    try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
+      final AuthzTokenPayload user = mock(AuthzTokenPayload.class);
+      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(user);
+
+      when(raidService.isEditable(user, servicePointId)).thenReturn(false);
+
+      mockMvc.perform(put(String.format("/raid/v1/%s/%s", prefix, suffix))
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(objectMapper.writeValueAsString(input))
+          .characterEncoding("utf-8"))
+        .andDo(print())
+        .andExpect(status().isForbidden())
+        .andExpect(jsonPath("$.type", Matchers.is("https://raid.org.au/errors#InvalidAccessException")))
+        .andExpect(jsonPath("$.title", Matchers.is("Forbidden")))
+        .andExpect(jsonPath("$.status", Matchers.is(403)))
+        .andExpect(jsonPath("$.detail", Matchers.is("This service point does not allow Raids to be edited in the app.")))
+        .andExpect(jsonPath("$.instance", Matchers.is("https://raid.org.au")));
+    }
+  }
+  @Test
   void updateRaidV1_ReturnsOk() throws Exception {
     final var prefix = "10378.1";
     final var suffix = "1696639";
@@ -269,6 +339,8 @@ class BasicRaidStableTest {
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
       final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
       authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
+      when(raidService.isEditable(any(AuthzTokenPayload.class), anyLong())).thenReturn(true);
+
       when(validationService.validateForUpdate(String.join("/", prefix, suffix), input))
         .thenReturn(Collections.emptyList());
 
@@ -322,6 +394,7 @@ class BasicRaidStableTest {
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
       final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
       authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
+      when(raidService.isEditable(any(AuthzTokenPayload.class), anyLong())).thenReturn(true);
 
       when(validationService.validateForUpdate(eq(handle), any(UpdateRaidV1Request.class))).thenReturn(Collections.emptyList());
 

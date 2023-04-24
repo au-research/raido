@@ -6,30 +6,20 @@ import {
   parsePageSuffixParams,
   useNavigation
 } from "Design/NavigationProvider";
-import { DateTimeDisplay, raidoTitle, RoleDisplay } from "Component/Util";
-import { LargeContentMain } from "Design/LayoutMain";
-import { ContainerCard } from "Design/ContainerCard";
-import { TextSpan } from "Component/TextSpan";
+import {DateTimeDisplay, raidoTitle, RoleDisplay} from "Component/Util";
+import {LargeContentMain} from "Design/LayoutMain";
+import {ContainerCard} from "Design/ContainerCard";
+import {TextSpan} from "Component/TextSpan";
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
-import { useAuthApi } from "Api/AuthApi";
-import { CompactErrorPanel } from "Error/CompactErrorPanel";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow
-} from "@mui/material";
-import { RefreshIconButton } from "Component/RefreshIconButton";
-import { RaidoLink } from "Component/RaidoLink";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import {
-  getCreateApiKeyPageLink,
-  getViewApiKeyPageLink
-} from "Page/Admin/ApiKeyPage";
-import { RaidoAddFab } from "Component/AppButton";
+import {useQuery} from "@tanstack/react-query";
+import {useAuthApi} from "Api/AuthApi";
+import {CompactErrorPanel} from "Error/CompactErrorPanel";
+import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
+import {RefreshIconButton} from "Component/RefreshIconButton";
+import {RaidoLink} from "Component/RaidoLink";
+import {Visibility, VisibilityOff} from "@mui/icons-material";
+import {getCreateApiKeyPageLink, getViewApiKeyPageLink} from "Page/Admin/ApiKeyPage";
+import {RaidoAddFab} from "Component/AppButton";
 
 const log = console;
 
@@ -89,7 +79,7 @@ function AppUserListTable({servicePointId}: {
     action={<>
       <RefreshIconButton refreshing={apiKeysQuery.isLoading} 
         onClick={()=>apiKeysQuery.refetch()} />
-      <RaidoAddFab href={getCreateApiKeyPageLink(servicePointId)}/>
+      <RaidoAddFab disabled={false} href={getCreateApiKeyPageLink(servicePointId)}/>
     </>}
   >
     <TableContainer>

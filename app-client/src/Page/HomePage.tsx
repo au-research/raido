@@ -1,12 +1,8 @@
-import {
-  isPagePath,
-  NavPathResult,
-  NavTransition
-} from "Design/NavigationProvider";
-import React, { SyntheticEvent } from "react";
-import { ContainerCard } from "Design/ContainerCard";
-import { LargeContentMain } from "Design/LayoutMain";
-import { DateDisplay, raidoTitle, RoleDisplay } from "Component/Util";
+import {isPagePath, NavPathResult, NavTransition} from "Design/NavigationProvider";
+import React, {SyntheticEvent} from "react";
+import {ContainerCard} from "Design/ContainerCard";
+import {LargeContentMain} from "Design/LayoutMain";
+import {DateDisplay, raidoTitle, RoleDisplay} from "Component/Util";
 import {
   Alert,
   IconButton,
@@ -20,34 +16,33 @@ import {
   TableHead,
   TableRow
 } from "@mui/material";
-import { useAuthApi } from "Api/AuthApi";
-import { useQuery } from "@tanstack/react-query";
-import { CompactErrorPanel } from "Error/CompactErrorPanel";
-import { TextSpan } from "Component/TextSpan";
-import { useAuth } from "Auth/AuthProvider";
-import { RqQuery } from "Util/ReactQueryUtil";
-import { RaidListItemV2 } from "Generated/Raidv2";
-import { InfoField, InfoFieldList } from "Component/InfoField";
-import { RefreshIconButton } from "Component/RefreshIconButton";
-import { CompactLinearProgress } from "Component/SmallPageSpinner";
-import { RaidoLink } from "Component/RaidoLink";
-import { RaidoAddFab } from "Component/AppButton";
-import { getEditRaidPageLink } from "Page/EditRaidPage";
-import { getMintRaidPageLink } from "Page/MintRaidPage";
-import { IdProviderDisplay } from "Component/IdProviderDisplay";
-import { ContentCopy, FileDownload, Settings } from "@mui/icons-material";
-import { toastDuration } from "Design/RaidoTheme";
-import { assert } from "Util/TypeUtil";
+import {useAuthApi} from "Api/AuthApi";
+import {useQuery} from "@tanstack/react-query";
+import {CompactErrorPanel} from "Error/CompactErrorPanel";
+import {TextSpan} from "Component/TextSpan";
+import {useAuth} from "Auth/AuthProvider";
+import {RqQuery} from "Util/ReactQueryUtil";
+import {RaidListItemV2} from "Generated/Raidv2";
+import {InfoField, InfoFieldList} from "Component/InfoField";
+import {RefreshIconButton} from "Component/RefreshIconButton";
+import {CompactLinearProgress} from "Component/SmallPageSpinner";
+import {RaidoLink} from "Component/RaidoLink";
+import {RaidoAddFab} from "Component/AppButton";
+import {getEditRaidPageLink} from "Page/EditRaidPage";
+import {getMintRaidPageLink} from "Page/MintRaidPage";
+import {IdProviderDisplay} from "Component/IdProviderDisplay";
+import {ContentCopy, FileDownload, Settings} from "@mui/icons-material";
+import {toastDuration} from "Design/RaidoTheme";
+import {assert} from "Util/TypeUtil";
 import Typography from "@mui/material/Typography";
-import {
-  formatLocalDateAsFileSafeIsoShortDateTime,
-  formatLocalDateAsIso
-} from "Util/DateUtil";
-import { escapeCsvField } from "Util/DownloadUtil";
+import {formatLocalDateAsFileSafeIsoShortDateTime, formatLocalDateAsIso} from "Util/DateUtil";
+import {escapeCsvField} from "Util/DownloadUtil";
 
 const log = console;
 
 const pageUrl = "/home";
+
+
 
 export function getHomePageLink(): string{
   return pageUrl;
@@ -122,12 +117,19 @@ export function RaidTableContainerV2({servicePointId}: {servicePointId: number})
     undefined as undefined | string);
 
   const api = useAuthApi();
+  const {session: {payload: user}} = useAuth();
+
   const raidQuery: RqQuery<RaidListItemV2[]> =
     useQuery(['listRaids', servicePointId], async () => {
       return await api.basicRaid.listRaidV2({
         raidListRequestV2: {servicePointId: servicePointId}
       });
     });
+  const spQuery = useQuery(['readServicePoint', user.servicePointId],
+    async () => await api.admin.readServicePoint({
+      servicePointId: user.servicePointId }));
+
+  const appWritesEnabled = spQuery.data?.appWritesEnabled;
 
   if( raidQuery.error ){
     return <CompactErrorPanel error={raidQuery.error}/>
@@ -149,12 +151,14 @@ export function RaidTableContainerV2({servicePointId}: {servicePointId: number})
     setHandleCopied(undefined);
   };
   
-  return <ContainerCard title={"Recently minted RAiD data"} 
+  return<>
+    { appWritesEnabled ?  <></> : <Alert severity="warning">Editing is disabled for this service point.</Alert> }
+  <ContainerCard title={"Recently minted RAiD data"}
     action={<>
       <SettingsMenu raidData={raidQuery.data} />
       <RefreshIconButton onClick={() => raidQuery.refetch()}
         refreshing={raidQuery.isLoading || raidQuery.isRefetching} />
-      <RaidoAddFab href={getMintRaidPageLink(servicePointId)}/>
+       <RaidoAddFab disabled={!appWritesEnabled} href={getMintRaidPageLink(servicePointId)}/>
     </>}
   >
     <TableContainer>
@@ -244,6 +248,7 @@ export function RaidTableContainerV2({servicePointId}: {servicePointId: number})
       </Alert>
     </Snackbar>
   </ContainerCard>
+  </>
 }
 
 function RaidoHandle({handle, onCopyHandleClicked}:{
