@@ -245,7 +245,8 @@ public class ApiConfig implements WebMvcConfigurer {
     if( stubProps.apidsInMemoryStub ){
       Guard.isTrue("Cannot use InMemoryApidsServiceStub in a PROD env",
         !envConfig.isProd);
-      log.warn("using the in-memory ORCID service");
+      log.with("apidsInMemoryStubDelay", stubProps.apidsInMemoryStubDelay).
+        warn("using the in-memory ORCID service");
       return new InMemoryApidsServiceStub(stubProps, envConfig);
     }
 
@@ -265,7 +266,8 @@ public class ApiConfig implements WebMvcConfigurer {
     if( stubProps.orcidInMemoryStub ){
       Guard.isTrue("Cannot use InMemoryOrcidServiceStub in a PROD env",
         !envConfig.isProd);
-      log.warn("using the in-memory ORCID service");
+      log.with("orcidInMemoryStubDelay", stubProps.orcidInMemoryStubDelay).
+        warn("using the in-memory ORCID service");
       return new InMemoryOrcidServiceStub(stubProps);
     }
     
@@ -281,7 +283,8 @@ public class ApiConfig implements WebMvcConfigurer {
     if( stubProps.rorInMemoryStub ){
       Guard.isTrue("Cannot use InMemoryRorServiceStub in a PROD env",
         !envConfig.isProd);
-      log.warn("using the in-memory ROR service");
+      log.with("rorInMemoryStubDelay", stubProps.rorInMemoryStubDelay).
+        warn("using the in-memory ROR service");
       return new InMemoryRorServiceStub(stubProps);
     }
     
