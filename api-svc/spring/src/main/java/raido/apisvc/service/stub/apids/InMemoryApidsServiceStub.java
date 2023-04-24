@@ -73,14 +73,14 @@ public class InMemoryApidsServiceStub extends ApidsService {
 
     log.with("delay", stubProps.apidsInMemoryStubDelay).
       with("handle", resp.identifier.handle).
-      info("simulate APIDS mint request");
+      debug("simulate APIDS mint request");
     infoLogExecutionTime(httpLog, MetricBean.APIDS_MINT_WITH_DESC, ()->{
       sleep(stubProps.apidsInMemoryStubDelay);
       return null;
     });
 
     log.with("delay", stubProps.apidsInMemoryStubDelay).
-      info("simulate APIDS add request");
+      debug("simulate APIDS add request");
     infoLogExecutionTime(httpLog, MetricBean.APIDS_ADD_URL_VALUE, ()->{
       sleep(stubProps.apidsInMemoryStubDelay);
       return null;

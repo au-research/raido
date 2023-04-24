@@ -27,7 +27,7 @@ public class InMemoryOrcidServiceStub extends OrcidService {
   @Override
   public List<String> validateOrcidExists(String orcid) {
     log.with("delay", stubProps.orcidInMemoryStubDelay).
-      info("simulate ORCID validation check");
+      debug("simulate ORCID validation check");
     infoLogExecutionTime(httpLog, VALIDATE_ORCID_EXISTS, ()->{
       sleep(stubProps.orcidInMemoryStubDelay);
       return null;
