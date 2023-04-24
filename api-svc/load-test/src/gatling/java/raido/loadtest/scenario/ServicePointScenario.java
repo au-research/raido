@@ -10,10 +10,10 @@ import raido.idl.raidv2.model.PublicServicePoint;
 import raido.idl.raidv2.model.ServicePoint;
 import raido.loadtest.util.Gatling.Var;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.IntStream;
@@ -36,7 +36,7 @@ import static raido.loadtest.util.Gatling.sessionDebug;
 import static raido.loadtest.util.Gatling.setOrRemove;
 import static raido.loadtest.util.Json.formatJson;
 import static raido.loadtest.util.Json.parseJson;
-import static raido.loadtest.util.RaidoApi.Endpoint.listServicePoint;
+import static raido.loadtest.util.RaidoApi.Endpoint.publicListServicePoint;
 import static raido.loadtest.util.RaidoApi.Endpoint.servicePoint;
 import static raido.loadtest.util.RaidoApi.ROR_ID;
 import static raido.loadtest.util.RaidoApi.authzApiHeaders;
@@ -48,14 +48,10 @@ public class ServicePointScenario {
   private static final Log log = to(ServicePointScenario.class);
 
   public static ScenarioBuilder prepareServicePoints(
-    String servicePointFilePath,
+    Path servicePointFilePath,
     int maxServicePoints
   ) throws IOException {
-    var outFile = new File(servicePointFilePath);
-    var pw = new PrintWriter(new FileWriter(outFile), true);
-    //header row
-    pw.println(join(of(I_SP_ID, I_SP_NAME), ","));
-    pw.flush();
+    var outFile = servicePointFilePath.toFile();
 
     var existingServicePointsVar = new Var<>("existingServicePoints",
       new TypeReference<List<PublicServicePoint>>(){}) {};
@@ -64,22 +60,29 @@ public class ServicePointScenario {
       rangeClosed(1, maxServicePoints).
       mapToObj(i->"loadTest service point " + i).
       toList();
-
+    
     // logged during scenario creation, not execution
-    log.with("servicePointFile", outFile.getAbsoluteFile()).
+    log.with("servicePointFile", outFile).
       info("prepareServicePoints()");
+
+    var servicePointWriter = 
+      new PrintWriter(new FileWriter(outFile), true);
+    //header row
+    servicePointWriter.println(join(of(I_SP_ID, I_SP_NAME), ","));
+    servicePointWriter.flush();
     
     String bootstrapApiToken = bootstrapApiToken();
 
     return scenario("prepare service-points").exitBlockOnFail(
       exec(sessionDebug(sess->
-        log.with("servicePointNames(first 5)", first(servicePointNames, 5)).
-          with("size", servicePointNames.size()).
+        log.with("size", servicePointNames.size()).
+          with("maxServicePoints", maxServicePoints).
+          with("servicePointNames(first 5)", first(servicePointNames, 5)).
           info("prepareServicePoints()"))
       ).
       exec(
         http("list existing service points").
-          get(listServicePoint.url).
+          get(publicListServicePoint.url).
           check(status().is(200)).
           check(existingServicePointsVar.saveBody())
       ).
@@ -94,11 +97,11 @@ public class ServicePointScenario {
               info("service-point exists") 
           ))).
         exec(sess->{
-          pw.println(join(of(
+          servicePointWriter.println(join(of(
             blankToDefault(sess.getString(I_SP_ID), ""), 
             blankToDefault(sess.getString(I_SP_NAME), "") 
           ), "," ));
-          pw.flush();
+          servicePointWriter.flush();
           return sess;
         })
       )
@@ -155,18 +158,3 @@ public class ServicePointScenario {
 
 }
 
-
-/*
-  public static final Var<List<LoadTestData>> loadTestVar =
-    new Var<>("loadTestData",
-      new TypeReference<List<LoadTestData>>(){}) {};
-
-record LoadTestData(
-  String servicePointName,
-  Long servicePointId,
-  Long apiKeyId,
-  String apiToken
-){}
-
- */
-  

@@ -2,7 +2,6 @@ package raido.apisvc.service.apids;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import raido.apisvc.service.apids.model.ApidsMintResponse;
 import raido.apisvc.service.apids.model.RawXml;
@@ -15,11 +14,13 @@ import java.util.function.Function;
 
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.MediaType.APPLICATION_XML;
+import static raido.apisvc.spring.bean.MetricBean.APIDS_ADD_URL_VALUE;
+import static raido.apisvc.spring.bean.MetricBean.APIDS_MINT_WITH_DESC;
 import static raido.apisvc.util.ExceptionUtil.re;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.RestUtil.urlDecode;
-import static raido.apisvc.util.RestUtil.urlEncode;
-import static raido.apisvc.util.StringUtil.*;
+import static raido.apisvc.util.StringUtil.areEqual;
+import static raido.apisvc.util.StringUtil.equalsIgnoreCase;
 
 /**
  Confirmed by DevOps (Leo) on 2022-08-09:
@@ -33,12 +34,16 @@ import static raido.apisvc.util.StringUtil.*;
  <p/>
  Consider replacing RestTemplate with feign client, to avoid silly string ops.
  And for consistency with other services, when we have them.
+ <p/>
+ IMPROVE: I don't want to put a unit test back for ApidsService; instead, 
+ implement a regular (nightly?) CI test that runs against the real (TEST) APIDs  
+ service.
  */
-@Service
 public class ApidsService {
   private static final Log log = to(ApidsService.class);
-  private static final Log httpLog = to(ApidsService.class, "http");
+  protected static final Log httpLog = to(ApidsService.class, "http");
   public static final String RAID_HANDLE_DESC = "RAID+handle";
+
 
   private ApidsProps props;
   private RestTemplate rest;
@@ -48,37 +53,6 @@ public class ApidsService {
     this.rest = rest;
   }
 
-  public ApidsMintResponse mintApidsHandle(String contentUrl) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(APPLICATION_XML);
-    headers.setBasicAuth(props.appId, props.secret);
-
-    var mintEntity = new HttpEntity<>(
-      buildBasicAuthorizedMintBody(), headers);
-
-    String requestUrl = props.serviceUrl + "/mint?" + 
-      formatMintParams(contentUrl);
-    var mintResponse = RestUtil.logExchange( httpLog, "APIDS mint with url",
-      mintEntity,
-      e->rest.exchange(
-        requestUrl, POST, mintEntity, ApidsMintResponse.class ));
-
-    guardApidsResponse(mintResponse);
-    Guard.notNull(mintResponse.identifier.property);
-    Guard.areEqual(mintResponse.identifier.property.index, 1);
-    Guard.areEqual(mintResponse.identifier.property.type, "URL");
-    Guard.hasValue(mintResponse.identifier.property.value);
-    if( !areEqual(contentUrl, mintResponse.identifier.property.value) ){
-      throw re("APIDS mint returned different URL, sent=%s recieved=%s",
-        contentUrl, mintResponse.identifier.property.value );
-    }
-
-    log.with("handle", mintResponse.identifier.handle).
-      info("RAID minted with APIDS handle");
-    
-    return mintResponse;
-  }
-  
   public ApidsMintResponse mintApidsHandleContentPrefix(
     Function<String, String> raidLandingPageUrl
   ) {
@@ -94,7 +68,8 @@ public class ApidsService {
     String mintRequest = props.serviceUrl + "/mint" + 
       "?type=DESC" +
       "&value=" + RAID_HANDLE_DESC;
-    var mintResponse = RestUtil.logExchange( httpLog, "APIDS mint with desc",
+    var mintResponse = RestUtil.logExchange( httpLog,
+      APIDS_MINT_WITH_DESC,
       mintEntity,
       e->rest.exchange(
         mintRequest, POST, mintEntity, ApidsMintResponse.class ));
@@ -121,7 +96,7 @@ public class ApidsService {
       "type=URL&value=%s&handle=%s".formatted( 
         url, mintResponse.identifier.handle );
 
-    var addResponse = RestUtil.logExchange( httpLog, "APIDS addValue",
+    var addResponse = RestUtil.logExchange( httpLog, APIDS_ADD_URL_VALUE,
       addValueEntity,
       e->rest.exchange(
         addValueRequest, POST, addValueEntity, ApidsMintResponse.class ));

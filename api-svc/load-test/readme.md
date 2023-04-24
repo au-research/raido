@@ -1,4 +1,10 @@
-# Load tests for the api-svc
+# Load test pre-requisites
+
+Read the [load-testing-prerequisites.md](./doc/load-testing-prerequisites.md) 
+before running a load-test, even locally.
+
+
+# Scenarios
 
 ## Warm up
 
@@ -11,7 +17,7 @@ the symptom is probably an error looking something like:
 `session not found url=/public/status`.
 
 
-# Trouble shooting
+# Troubleshooting
 
 ## Diagnosis
 

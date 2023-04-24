@@ -6,7 +6,7 @@ import raido.apisvc.service.raid.ValidationFailureException;
 import raido.apisvc.service.raid.id.IdentifierParser;
 import raido.idl.raidv2.model.*;
 import raido.inttest.IntegrationTestCase;
-import raido.inttest.util.IdFactory;
+import raido.apisvc.service.stub.util.IdFactory;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -38,7 +38,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
   {
     var raidApi = super.basicRaidExperimentalClient();
     String initialTitle = getClass().getSimpleName() + "." + getName() + 
-      IdFactory.generateUniqueId();
+      idFactory.generateUniqueId();
     var today = LocalDate.now();
     var idParser = new IdentifierParser();
 

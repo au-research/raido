@@ -21,3 +21,31 @@ The intTests assume they are the only thing running on that DB:
   but violates out intTest assumption
 * but it does mean that intTests can't be run in parallel
 
+
+### Configuration
+
+Remember, there are two completely separate Spring application contexts:
+
+#### int-test Spring context
+* `./java/inttest.properties`
+  * default values for various int-test config items
+  * only values that are allowed to be committed (i.e. not secrets)
+* `~/.config/raido/api-svc-inttest.properties`
+  * env specific config that inttests need that we do not want to commit
+  * e.g. `raidoArdcLiveToken` value 
+* `~/.config/raido/api-svc-env.properties`
+  * the standard api-svc "local dev environment" config file
+  * int-tests read this so they can connect to the same DB service used by
+  the api-svc being tested against (to bootstrap API tokens)
+
+
+#### api-svc Spring context
+
+* `./java/env.properties`
+  * override api-svc values used by default in int-tests
+  * used where it's expected that int-tests want to override these values in 
+  most environments
+  * only values that are allowed to be committed (i.e. not secrets)
+* `~/.config/raido/api-svc-env.properties`
+  * the standard api-svc "local dev environment" config file
+

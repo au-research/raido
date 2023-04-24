@@ -1,8 +1,11 @@
 package raido.loadtest.config;
 
 import raido.apisvc.util.Guard;
+import raido.apisvc.util.Log;
 
+import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.hasValue;
+import static raido.apisvc.util.StringUtil.mask;
 
 /*
  Use the word "gatling" in the class name so that it's more obvious to the  
@@ -10,6 +13,7 @@ import static raido.apisvc.util.StringUtil.hasValue;
  gatling test config.
 */
 public class GatlingRaidoServerConfig {
+  private static final Log log = to(GatlingRaidoServerConfig.class);
   
   public static final GatlingRaidoServerConfig serverConfig =
     new GatlingRaidoServerConfig();
@@ -19,17 +23,22 @@ public class GatlingRaidoServerConfig {
   public String apiKeyJwtSecret = "";
 
   // usually the same as the apiSvcUrl, but configurable in case I need it
-  public String apiTokenIssuer = apiSvcUrl;
+  public String apiTokenIssuer;
 
 
   public GatlingRaidoServerConfig() {
     apiSvcUrl = getConfig("apiSvcUrl", apiSvcUrl);
     apiKeyJwtSecret = getConfig("apiKeyJwtSecret", apiKeyJwtSecret);
-    apiTokenIssuer = getConfig("apiTokenIssuer", apiTokenIssuer);
+    apiTokenIssuer = getConfig("apiTokenIssuer", apiSvcUrl);
 
     Guard.hasValue("apiSvcUrl", apiSvcUrl);
     Guard.hasValue("apiKeyJwtSecret", apiKeyJwtSecret);
     Guard.hasValue("apiTokenIssuer", apiTokenIssuer);
+    
+    log.with("apiSvcUrl", apiSvcUrl).
+      with("apiTokenIssuer", apiTokenIssuer).
+      with("apiKeyJwtSecret", mask(apiKeyJwtSecret, 5)).
+      info("raidoServer");
   }
 
   public static String getConfig(String name, String defaultValue) {

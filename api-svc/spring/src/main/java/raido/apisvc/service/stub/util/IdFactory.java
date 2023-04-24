@@ -1,4 +1,6 @@
-package raido.inttest.util;
+package raido.apisvc.service.stub.util;
+
+import raido.apisvc.util.ThreadUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,33 +31,25 @@ import java.util.TimeZone;
 
  @see AlphaEncoder */
 public class IdFactory {
-  private static final Object generatorLock = new Object();
   public static final String SEPARATOR = "u";
 
-  volatile static String lastGeneratedTimeSuffix = "start";
-  volatile static int lastUniqueSuffix = 1;
+  private final Object generatorLock = new Object();
+  private final String nodePrefix;
 
-  static String nodePrefix;
+  private volatile String lastGeneratedTimeSuffix = "start";
+  private volatile int lastUniqueSuffix = 1;
 
-  static {
-    nodePrefix = System.getProperty("IdFactory.nodePrefix", "");
+  public IdFactory(String nodePrefix) {
+    this.nodePrefix = nodePrefix;
   }
 
-  private static Date now() {
-    return new Date();
-  }
+  public String generateUniqueId(String prefix, boolean separator) {
 
-  public static String generateUniqueId() {
-    return generateUniqueId(true);
-  }
-
-  public static String generateUniqueId(boolean separator) {
-
-    // questionable, might be better to use a proper java 8 locking structure
+    // questionable, might be better to use a proper modern-java lock structure
     synchronized( generatorLock ){
       StringBuilder buf = new StringBuilder();
-      if( nodePrefix != null ){
-        buf.append(nodePrefix);
+      if( prefix != null ){
+        buf.append(prefix);
         if( separator ){
           buf.append(SEPARATOR);
         }
@@ -69,9 +63,26 @@ public class IdFactory {
       if( lastGeneratedTimeSuffix.equals(thisTimeSuffix) ){
         buf.append(SEPARATOR).append(lastUniqueSuffix++);
       }
+      else {
+        lastUniqueSuffix=1;
+      }
 
+      lastGeneratedTimeSuffix = thisTimeSuffix;
+      
       return buf.toString();
     }
+  }
+
+  public String generateUniqueId() {
+    return generateUniqueId(true);
+  }
+
+  public String generateUniqueId(boolean separator) {
+    return generateUniqueId(nodePrefix, separator);
+  }
+
+  private static Date now() {
+    return new Date();
   }
 
   private static String COMPACT_MIILLISECOND_DATETIME_FORMAT =
@@ -80,7 +91,7 @@ public class IdFactory {
   private static String FILESAFE_MIILLISECOND_DATETIME_FORMAT =
     "yyyyMMdd-HHmmss-SSS";
 
-  static String formatMillisecondFileSafe(Date date) {
+  private static String formatMillisecondFileSafe(Date date) {
 
     SimpleDateFormat fmt = new SimpleDateFormat(
       FILESAFE_MIILLISECOND_DATETIME_FORMAT);
@@ -89,7 +100,7 @@ public class IdFactory {
     return fmt.format(date);
   }
 
-  static String formatCompactMillisecond(Date date) {
+  private static String formatCompactMillisecond(Date date) {
     SimpleDateFormat fmt = new SimpleDateFormat(
       COMPACT_MIILLISECOND_DATETIME_FORMAT);
     fmt.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -97,4 +108,5 @@ public class IdFactory {
     return fmt.format(date);
   }
 
+  
 }

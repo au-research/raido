@@ -1,9 +1,7 @@
 package raido.apisvc.spring.config.environment;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 
 import static raido.apisvc.util.Log.to;
@@ -21,9 +19,4 @@ public class ApidsProps {
   @Value("${Apids.serviceUrl:https://demo.identifiers.ardc.edu.au/pids}")
   public String serviceUrl;
   
-  @PostConstruct
-  public void guardValues(){
-    Guard.allHaveValue("must set ApidsProps values", 
-      secret, appId, serviceUrl);
-  }
 }

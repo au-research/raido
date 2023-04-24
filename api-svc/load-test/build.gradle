@@ -31,10 +31,6 @@ ext{
   homeDir = System.properties['user.home']
 }
 
-repositories{
-  mavenCentral()
-}
-
 version = rootProject.version
 
 dependencies{
@@ -105,20 +101,22 @@ compileJava {
     "-Xlint:deprecation"
 }
 
-// look for resources in the source tree, resources folder is pointless 
-sourceSets.gatling.resources.srcDirs(sourceSets.gatling.java.srcDirs)
-
 // logLevel doesn't work - see logback.xml
 gatling {
   simulations = {
     include "todo"
   }
-  
+
   jvmArgs = defaultJvmArgs
   systemProperties = defaultSysProps
 }
 
 task gatlingRunPrepareServicePoints(type: GatlingRunTask) {
+  group "load-test"
+  description "creates the service-points, api-keys, api-tokens used by load-tests"
+  /* I don't see why this is needed, but it wasn't recompiling when I was 
+  frobbing the maxServicePoints constant */
+  dependsOn compileGatlingJava
   simulations = {
     include "raido/loadtest/simulation/PrepareServicePoints.java"
   }
@@ -130,13 +128,16 @@ task gatlingRunPrepareServicePoints(type: GatlingRunTask) {
 }
 
 task gatlingRunCreateViewRaids(type: GatlingRunTask) {
+  group "load-test"
+  description "runs a simple listCreateView raid scenario"
   dependsOn gatlingRunPrepareServicePoints
+  dependsOn compileGatlingJava
   simulations = {
     include "raido/loadtest/simulation/SimpleCreateViewRaids.java"
   }
 
   outputs.upToDateWhen { false }
-  
+
   jvmArgs = defaultJvmArgs
   systemProperties = defaultSysProps
 }

@@ -19,6 +19,8 @@ RUN yum update -y \
   java-17-amazon-corretto-devel-1:17.0.5+8-1.amzn2.1.x86_64 \
   # for `adduser`  
   shadow-utils \
+  # for getting the task-arn from the ECS metadata 
+  jq \
   && yum clean all 
       
 # don't need it for running, I was just debugging 
@@ -37,6 +39,9 @@ USER appuser
 WORKDIR app
 
 EXPOSE 8080
+
+# set this if you want to run the container outside of ECS
+ENV EnvironmentConfig.nodeId=""
 
 # not sure if should use ENTRYPOINT / CMD.  Internet says use ENTRYPOINT.
 ENTRYPOINT ["/app/ecs-api-svc-start.sh"]

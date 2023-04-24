@@ -207,6 +207,14 @@ public final class ObjectUtil {
     
     return list.subList(0, Integer.min(list.size(), first));
   }
+
+  public static <T> List<T> last(@Nullable List<T> list, int last){
+    if( list == null || list.isEmpty() ){
+      return list;
+    }
+    
+    return list.subList(list.size()-last, list.size()-1);
+  }
   
   /**
    Use with Stream.collect() to iterate over a stream with an index, 

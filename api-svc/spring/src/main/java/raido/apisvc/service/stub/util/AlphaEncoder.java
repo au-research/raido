@@ -1,4 +1,4 @@
-package raido.inttest.util;
+package raido.apisvc.service.stub.util;
 
 import raido.apisvc.util.Guard;
 
@@ -28,8 +28,8 @@ public enum AlphaEncoder {
     Arrays.sort(this.alphabet);
   }
 
-  private char[] alphabet;
-  private int alphabetLength;
+  private final char[] alphabet;
+  private final int alphabetLength;
 
   public String encode(long victim) {
     final List<Character> list = new ArrayList<>();

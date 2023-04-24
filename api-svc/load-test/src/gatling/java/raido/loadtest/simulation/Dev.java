@@ -16,6 +16,7 @@ import static io.gatling.javaapi.core.CoreDsl.atOnceUsers;
 import static io.gatling.javaapi.http.HttpDsl.http;
 import static raido.apisvc.util.Log.to;
 import static raido.loadtest.config.GatlingRaidoServerConfig.serverConfig;
+import static raido.loadtest.config.SimulationConfig.simConfig;
 import static raido.loadtest.scenario.Anonymous.warmUp;
 import static raido.loadtest.scenario.ApiKeyScenario.prepareApiKeys;
 import static raido.loadtest.scenario.ServicePointScenario.prepareServicePoints;
@@ -34,8 +35,8 @@ public class Dev extends Simulation {
     log.info("initializer{}");
 
     try {
-      String spFile = "build/service-points.csv";
-      String apiKeyFile = "build/api-keys.csv";
+      var spFile = simConfig.getDataPath("service-points.csv");
+      var apiKeyFile = simConfig.getDataPath("api-keys.csv");
       
       setUp(
         warmUp().injectOpen(atOnceUsers(1)).

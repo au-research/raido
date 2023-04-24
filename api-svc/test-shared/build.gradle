@@ -2,10 +2,6 @@ plugins{
   id 'java'
 }
 
-repositories{
-  mavenCentral()
-}
-
 dependencies{
   // it's ok for test-shared to depend on prod, just not the other way around
   implementation project(':api-svc:spring')

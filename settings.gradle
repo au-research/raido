@@ -14,6 +14,10 @@ include ":api-svc:load-test"
 include ":app-client"
 
 dependencyResolutionManagement{
+  repositories {
+    mavenCentral()
+  }
+
   versionCatalogs{
     libs{
       /* https://www.jooq.org/learn/ 
@@ -41,7 +45,7 @@ dependencyResolutionManagement{
       
       library('jooq', 'org.jooq', 'jooq').versionRef('jooq')
       // https://jdbc.postgresql.org/changelogs/
-      library('pgjdbc', 'org.postgresql:postgresql:42.6.0')
+      library('pgjdbc', 'org.postgresql:postgresql:42.5.4')
       // https://assertj.github.io/doc/#assertj-core-release-notes
       library('assertj', 'org.assertj:assertj-core:3.24.2')
 

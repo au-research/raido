@@ -28,7 +28,7 @@ import raido.idl.raidv2.model.*;
 import raido.inttest.config.IntTestProps;
 import raido.inttest.config.IntegrationTestConfig;
 import raido.inttest.service.auth.BootstrapAuthTokenService;
-import raido.inttest.util.IdFactory;
+import raido.apisvc.service.stub.util.IdFactory;
 
 import java.time.LocalDateTime;
 
@@ -37,7 +37,6 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static raido.apisvc.spring.config.RaidWebSecurityConfig.RAID_V1_API;
 import static raido.apisvc.util.Log.to;
-import static raido.apisvc.util.StringUtil.areEqual;
 import static raido.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
 import static raido.db.jooq.api_svc.enums.UserRole.OPERATOR;
 import static raido.inttest.config.IntegrationTestConfig.REST_TEMPLATE_VALUES_ONLY_ENCODING;
@@ -50,6 +49,7 @@ public abstract class IntegrationTestCase {
   public static final String INT_TEST_ROR = "https://ror.org/int-test";
 
   private static final Log log = to(IntegrationTestCase.class);
+  protected static final IdFactory idFactory = new IdFactory("inttest");
 
   @Autowired protected RestTemplate rest;
   @Autowired @Qualifier(REST_TEMPLATE_VALUES_ONLY_ENCODING) 
@@ -66,7 +66,7 @@ public abstract class IntegrationTestCase {
   protected RaidoApiUtil raidoApi;
 
   private TestInfo testInfo;
-
+  
   @RegisterExtension
   protected static JettyTestServer jettyTestServer = new JettyTestServer();
 
@@ -205,7 +205,7 @@ public abstract class IntegrationTestCase {
     var spName = name != null ? name : 
       "%s-%s".formatted(
         this.getClass().getSimpleName(),
-        IdFactory.generateUniqueId() ); 
+        idFactory.generateUniqueId() ); 
 
     var adminApiAsOp = adminExperimentalClientAs(operatorToken);
     

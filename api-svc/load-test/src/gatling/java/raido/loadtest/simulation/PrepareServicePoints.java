@@ -10,6 +10,7 @@ import static io.gatling.javaapi.core.CoreDsl.atOnceUsers;
 import static io.gatling.javaapi.http.HttpDsl.http;
 import static raido.apisvc.util.Log.to;
 import static raido.loadtest.config.GatlingRaidoServerConfig.serverConfig;
+import static raido.loadtest.config.SimulationConfig.simConfig;
 import static raido.loadtest.scenario.Anonymous.warmUp;
 import static raido.loadtest.scenario.ApiKeyScenario.prepareApiKeys;
 import static raido.loadtest.scenario.ServicePointScenario.prepareServicePoints;
@@ -17,27 +18,29 @@ import static raido.loadtest.simulation.Dev.runSim;
 
 /** Intended for development testing, not a real load test */
 public class PrepareServicePoints extends Simulation {
-  public static final String SERVICE_POINTS_PATH = "build/service-points.csv";
-  public static final String API_KEYS_PATH = "build/api-keys.csv";
+  public static final String API_KEYS_FILENAME = "api-keys.csv";
 
   private static final Log log = to(PrepareServicePoints.class);
 
-  int maxServicePoints = 2;
+  int maxServicePoints = 40;
   
   HttpProtocolBuilder httpProtocol = http.
     baseUrl(serverConfig.apiSvcUrl);
-  
+
   {
+    var servicePointsPath = simConfig.getDataPath("service-points.csv");
+    var apiKeysPath = simConfig.getDataPath(API_KEYS_FILENAME);
+    
     try {
       
       setUp(
         warmUp().injectOpen(atOnceUsers(1)).
           andThen(
-            prepareServicePoints(SERVICE_POINTS_PATH, maxServicePoints).
+            prepareServicePoints(servicePointsPath, maxServicePoints).
               injectOpen(atOnceUsers(1))
           ).
           andThen(
-            prepareApiKeys(SERVICE_POINTS_PATH, API_KEYS_PATH).
+            prepareApiKeys(servicePointsPath, apiKeysPath).
               injectOpen(atOnceUsers(1))
           )
       ).protocols(httpProtocol);

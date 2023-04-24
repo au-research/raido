@@ -37,7 +37,7 @@ and suppressing various startup logs.
   <!-- debug logs request/response data, usually don't want it -->
   <logger name="raido.apisvc.service.apids.ApidsService" level="info"/>
 
-  <!-- debug logs endpoint reqeust payload, usually don't want it -->
+  <!-- debug logs endpoint request payload, usually don't want it -->
   <logger name="raido.apisvc.spring.RequestLoggingFilter" level="info"/>
   
   <!-- These log at info because we want them enabled by default in most 
@@ -60,7 +60,8 @@ and suppressing various startup logs.
    good, doesn't show you what actually goes across the wire. -->
   <logger name="org.springframework.http.HttpLogging" level="info"/>
 
-  <!-- Not sure when this started happening in local dev, but it's annoying -->
+  <!-- Not sure when this started generating noise in local dev; 
+  but it's annoying, info level to disable it -->
   <logger name="okhttp3" level="info"/>
 
   <!-- from our custom P6SpyLogger, configured in spy.props. 
@@ -83,6 +84,18 @@ and suppressing various startup logs.
   <logger name="sun" level="info"/>
 
   <!-- end JUL stuff -->
-  
-  
+
+  <!-- local dev load-test config, need to factory out to separate file -->
+<!--  <logger name="raido.apisvc.spring.RequestLoggingFilter" level="info"/>-->
+<!--  <logger name="p6spy" level="info"/>-->
+<!--  <logger name="p6spy.tx" level="info"/>-->
+<!--  <logger name="p6spy.cxnTest" level="info"/>-->
+<!--  <logger name="raido.apisvc.service.stub" level="warn"/>-->
+<!--  &lt;!&ndash; these intentionally use the prod logger, but we still want them quiet &ndash;&gt;-->
+<!--  <logger name="raido.apisvc.service.orcid.OrcidService.http" level="warn"/>-->
+<!--  <logger name="raido.apisvc.service.ror.RorService.http" level="warn"/>-->
+<!--  <logger name="raido.apisvc.service.apids.ApidsService.http" level="warn"/>-->
+<!--  &lt;!&ndash; for debugging duplicate handle generation &ndash;&gt;-->
+<!--  <logger name="raido.apisvc.service.stub.apids.InMemoryApidsServiceStub" level="info"/>-->
+
 </configuration>
