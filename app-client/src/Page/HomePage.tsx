@@ -129,7 +129,7 @@ export function RaidTableContainerV2({servicePointId}: {servicePointId: number})
     async () => await api.admin.readServicePoint({
       servicePointId: user.servicePointId }));
 
-  const servicePoint = spQuery.data;
+  const appWritesEnabled = spQuery.data?.appWritesEnabled;
 
   if( raidQuery.error ){
     return <CompactErrorPanel error={raidQuery.error}/>
@@ -152,13 +152,13 @@ export function RaidTableContainerV2({servicePointId}: {servicePointId: number})
   };
   
   return<>
-    { !servicePoint?.appWritesEnabled ? <Alert severity="warning">Editing is disabled for this service point.</Alert> : <></> }
+    { appWritesEnabled ?  <></> : <Alert severity="warning">Editing is disabled for this service point.</Alert> }
   <ContainerCard title={"Recently minted RAiD data"}
     action={<>
       <SettingsMenu raidData={raidQuery.data} />
       <RefreshIconButton onClick={() => raidQuery.refetch()}
         refreshing={raidQuery.isLoading || raidQuery.isRefetching} />
-       <RaidoAddFab disabled={!servicePoint?.appWritesEnabled} href={getMintRaidPageLink(servicePointId)}/>
+       <RaidoAddFab disabled={!appWritesEnabled} href={getMintRaidPageLink(servicePointId)}/>
     </>}
   >
     <TableContainer>

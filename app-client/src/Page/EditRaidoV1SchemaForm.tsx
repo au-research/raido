@@ -373,9 +373,9 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
     async () => await api.admin.readServicePoint({
       servicePointId: metadata.id.identifierServicePoint }));
 
-  const servicePoint = spQuery.data;
+  const appWritesEnabled = spQuery.data?.appWritesEnabled;
 
-  const canSubmit = servicePoint?.appWritesEnabled && isTitleValid && isAccessStatementValid &&
+  const canSubmit = appWritesEnabled && isTitleValid && isAccessStatementValid &&
     isStartDateValid && !contribProblem && 
     !leadOrganisationProblem && !subjectProblem && !relatedRaidProblem && !relatedRaidTypeProblem &&
     !alternateIdentifierProblem && !alternateIdentifierTypeProblem && !spatialCoverageProblem && hasChanged;
@@ -393,7 +393,7 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
         oldMetadata: metadata
       });
     }}>
-      { !servicePoint?.appWritesEnabled ? <Alert severity="warning">Editing is disabled for this RAiD's service point.</Alert> : <></> }
+      { appWritesEnabled ? <></> : <Alert severity="warning">Editing is disabled for this RAiD's service point.</Alert> }
       <Stack spacing={2}>
         <TextField id="primaryTitle" label="Primary title" variant="outlined"
           autoFocus autoCorrect="off" autoCapitalize="on"
