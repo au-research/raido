@@ -1,11 +1,11 @@
 import {ErrorInfo} from "Error/ErrorUtil";
-import { ButtonProps, Fab } from "@mui/material";
+import {ButtonProps, Fab} from "@mui/material";
 import React, {CSSProperties} from "react";
 import Button from "@mui/material/Button";
 import LinearProgress from "@mui/material/LinearProgress";
 import {CompactErrorPanel} from "Error/CompactErrorPanel";
-import { useNavigation } from "Design/NavigationProvider";
-import { Add } from "@mui/icons-material";
+import {useNavigation} from "Design/NavigationProvider";
+import {Add} from "@mui/icons-material";
 
 
 export const primaryButtonProps: ButtonProps = {
@@ -91,12 +91,14 @@ export function SecondaryButton({isLoading, error, children, ...buttonProps}:
   </>
 }
 
-export function RaidoAddFab({href}: {href: string}){
+export function RaidoAddFab({href, disabled=false}: {href: string, disabled: boolean}){
   const nav = useNavigation();
-  return <Fab href={href} color="primary"
+  return <Fab disabled={disabled} href={href} color="primary"
     onClick={e=>{
       nav.navigateTo(href, e);
     }}
     size="small"
-  ><Add/></Fab>
+  >
+    <Add/>
+  </Fab>
 }

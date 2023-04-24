@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import {useMutation, useQuery} from "@tanstack/react-query";
 import {
   AccessType,
   AlternateIdentifierBlock,
@@ -14,15 +14,15 @@ import {
   TraditionalKnowledgeLabelBlock,
   ValidationFailure
 } from "Generated/Raidv2";
-import { assert, WithRequired } from "Util/TypeUtil";
-import { isValidDate } from "Util/DateUtil";
-import { CompactErrorPanel } from "Error/CompactErrorPanel";
-import { Alert, ListItemText, Stack, TextField } from "@mui/material";
-import { DesktopDatePicker } from "@mui/x-date-pickers";
-import { Dayjs } from "dayjs";
-import { PrimaryActionButton, SecondaryButton } from "Component/AppButton";
-import { navBrowserBack } from "Util/WindowUtil";
-import { ValidationFailureDisplay } from "Component/Util";
+import {assert, WithRequired} from "Util/TypeUtil";
+import {isValidDate} from "Util/DateUtil";
+import {CompactErrorPanel} from "Error/CompactErrorPanel";
+import {Alert, ListItemText, Stack, TextField} from "@mui/material";
+import {DesktopDatePicker} from "@mui/x-date-pickers";
+import {Dayjs} from "dayjs";
+import {PrimaryActionButton, SecondaryButton} from "Component/AppButton";
+import {navBrowserBack} from "Util/WindowUtil";
+import {ValidationFailureDisplay} from "Component/Util";
 import {
   getFirstAlternateIdentifier,
   getFirstLeader,
@@ -35,8 +35,8 @@ import {
   getLeadOrganisation,
   getPrimaryTitle
 } from "Component/MetaDataContainer";
-import React, { useState } from "react";
-import { useAuthApi } from "Api/AuthApi";
+import React, {useState} from "react";
+import {useAuthApi} from "Api/AuthApi";
 import {
   findAlternateIdentifierProblem,
   findAlternateIdentifierTypeProblem,
@@ -49,20 +49,21 @@ import {
   findSpatialCoverageProblem,
   findSubjectProblem,
 } from "Page/MintRaidPage";
-import { createLeadOrganisation } from "./UpgradeLegacySchemaForm";
-import { findOrcidProblem, OrcidField } from "Component/OrcidField";
+import {createLeadOrganisation} from "./UpgradeLegacySchemaForm";
+import {findOrcidProblem, OrcidField} from "Component/OrcidField";
 import List from "@mui/material/List";
-import { SupportMailLink } from "Component/ExternalLink";
-import { InputFieldGroup } from "Component/InputFieldGroup";
+import {SupportMailLink} from "Component/ExternalLink";
+import {InputFieldGroup} from "Component/InputFieldGroup";
 import {
   accessTypes,
   ListFormControl,
   mapAccessType,
-  traditionalKnowledgeLabelSchemeUris,
   relatedObjectCategories,
   relatedObjectTypes,
-  relatedRaidTypes
+  relatedRaidTypes,
+  traditionalKnowledgeLabelSchemeUris
 } from "Api/ReferenceData";
+import {useAuth} from "../Auth/AuthProvider";
 
 function isDifferent(formData: FormData, original: FormData){
   return formData.primaryTitle !== original.primaryTitle ||
@@ -367,7 +368,14 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
   const spatialCoverageProblem =
     findSpatialCoverageProblem(formData.spatialCoverage, formData.spatialCoveragePlace);
 
-  const canSubmit = isTitleValid && isAccessStatementValid && 
+  const {session: {payload: user}} = useAuth();
+  const spQuery = useQuery(['readServicePoint', user.servicePointId],
+    async () => await api.admin.readServicePoint({
+      servicePointId: metadata.id.identifierServicePoint }));
+
+  const servicePoint = spQuery.data;
+
+  const canSubmit = servicePoint?.appWritesEnabled && isTitleValid && isAccessStatementValid &&
     isStartDateValid && !contribProblem && 
     !leadOrganisationProblem && !subjectProblem && !relatedRaidProblem && !relatedRaidTypeProblem &&
     !alternateIdentifierProblem && !alternateIdentifierTypeProblem && !spatialCoverageProblem && hasChanged;
@@ -385,6 +393,7 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
         oldMetadata: metadata
       });
     }}>
+      { !servicePoint?.appWritesEnabled ? <Alert severity="warning">Editing is disabled for this RAiD's service point.</Alert> : <></> }
       <Stack spacing={2}>
         <TextField id="primaryTitle" label="Primary title" variant="outlined"
           autoFocus autoCorrect="off" autoCapitalize="on"
@@ -635,7 +644,7 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
         <ValidationFailureDisplay failures={serverValidations} />
       </Stack>
     </form>
-  </>  
+  </>
 }
 
 export function ComplicatedMetadataWarning(
