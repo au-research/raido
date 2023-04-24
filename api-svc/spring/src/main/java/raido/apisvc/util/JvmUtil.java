@@ -1,10 +1,19 @@
 package raido.apisvc.util;
 
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+import java.io.IOException;
 import java.io.InputStream;
+import java.lang.management.GarbageCollectorMXBean;
+import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
 import java.util.Locale;
+import java.util.Set;
 import java.util.TimeZone;
 
+import static java.lang.Runtime.getRuntime;
+import static org.springframework.util.unit.DataSize.ofBytes;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.areDifferent;
 
@@ -56,6 +65,65 @@ public class JvmUtil {
       "user.timezone", "file.encoding", 
       "user.language", "user.country", "user.variant");
     logBuildInfo();
+    logMemoryInfo("startup");
+    log.with("availableProcessors", getRuntime().availableProcessors()).
+      info("JVM info");
+  }
+
+  public static void logMemoryInfo(String from) {
+    if( !log.isInfoEnabled() ){
+      return;
+    }
+    
+    Runtime runtime = getRuntime();
+    
+    log.with("from", from).
+      with("totalMemory", ofBytes(runtime.totalMemory()).toMegabytes()).
+      with("maxMemory", ofBytes(runtime.maxMemory()).toMegabytes()).
+      with("freeMemory", ofBytes(runtime.freeMemory()).toMegabytes()).
+      info("memory stats (MB)");
+    
+    logGcInfo();
+  }
+  
+  public static void logGcInfo(){
+    MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+    listGcMxBeans(mBeanServer).forEach(iName->{
+      GarbageCollectorMXBean iGcBean = getGcMxBean(mBeanServer, iName);
+      log.with("name", iName).
+        with("collectionCount", iGcBean.getCollectionCount()).
+        with("collectionTime", iGcBean.getCollectionTime()).
+        info("GC info");
+    });
+
+  }
+
+  private static Set<ObjectName> listGcMxBeans(MBeanServer mBeanServer) {
+    try {
+      return mBeanServer.queryNames(new ObjectName(
+        ManagementFactory.GARBAGE_COLLECTOR_MXBEAN_DOMAIN_TYPE + ",*"), 
+        null );
+    }
+    catch( MalformedObjectNameException e ){
+      throw new RuntimeException(e);
+    }
+  }
+
+  private static GarbageCollectorMXBean getGcMxBean(
+    MBeanServer mBeanServer,
+    ObjectName gcBeanName
+  ) {
+    GarbageCollectorMXBean gcBean;
+    try {
+      gcBean = ManagementFactory.newPlatformMXBeanProxy(
+        mBeanServer, 
+        gcBeanName.getCanonicalName(), 
+        GarbageCollectorMXBean.class );
+    }
+    catch( IOException e ){
+      throw new RuntimeException(e);
+    }
+    return gcBean;
   }
 
   private static void infoLogSysProp(String... names) {
