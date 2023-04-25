@@ -27,7 +27,7 @@ public class InMemoryRorServiceStub extends RorService {
   @Override
   public List<String> validateRorExists(String ror) {
     log.with("delay", stubProps.rorInMemoryStubDelay).
-      info("simulate ROR validation check");
+      debug("simulate ROR validation check");
     infoLogExecutionTime(httpLog, VALIDATE_ROR_EXISTS, ()->{
       sleep(stubProps.rorInMemoryStubDelay);
       return null;
