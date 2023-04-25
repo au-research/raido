@@ -9,6 +9,7 @@ _Not yet scheduled_
 * Additions to mint/edit page:
   * Spatial coverage field
   * Traditional knowledge label field
+* Option to disabled editing by service point
 
 ## API 
 * Validation to check ORCID exists for contributor
