@@ -7,7 +7,7 @@ import raido.apisvc.util.Log;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
-import static raido.apisvc.spring.bean.MetricBean.VALIDATE_ROR_EXISTS;
+import static raido.apisvc.spring.bean.LogMetric.VALIDATE_ROR_EXISTS;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.infoLogExecutionTime;
 import static raido.apisvc.util.ThreadUtil.sleep;
