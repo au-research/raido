@@ -154,7 +154,7 @@ public class ApiConfig implements WebMvcConfigurer {
   
   @Bean
   @Primary
-  public RestTemplate restTemplate(ClientHttpRequestFactory factory){
+  public static RestTemplate restTemplate(ClientHttpRequestFactory factory){
     MappingJackson2XmlHttpMessageConverter xmlConverter =
       new MappingJackson2XmlHttpMessageConverter();
     xmlConverter.setSupportedMediaTypes(
@@ -176,7 +176,7 @@ public class ApiConfig implements WebMvcConfigurer {
   }
 
   @Bean
-  public RestTemplate nonRedirectingRestTemplate(){
+  public static RestTemplate nonRedirectingRestTemplate(){
     MappingJackson2XmlHttpMessageConverter xmlConverter =
       new MappingJackson2XmlHttpMessageConverter();
     xmlConverter.setSupportedMediaTypes(
