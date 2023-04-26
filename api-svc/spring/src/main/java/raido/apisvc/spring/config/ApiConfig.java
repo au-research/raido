@@ -5,12 +5,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -23,9 +19,11 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import raido.apisvc.service.apids.ApidsService;
+import raido.apisvc.service.doi.DoiService;
 import raido.apisvc.service.orcid.OrcidService;
 import raido.apisvc.service.ror.RorService;
 import raido.apisvc.service.stub.apids.InMemoryApidsServiceStub;
+import raido.apisvc.service.stub.doi.InMemoryDoiServiceStub;
 import raido.apisvc.service.stub.orcid.InMemoryOrcidServiceStub;
 import raido.apisvc.service.stub.ror.InMemoryRorServiceStub;
 import raido.apisvc.spring.config.environment.ApidsProps;
@@ -155,6 +153,7 @@ public class ApiConfig implements WebMvcConfigurer {
   }
   
   @Bean
+  @Primary
   public static RestTemplate restTemplate(ClientHttpRequestFactory factory){
     MappingJackson2XmlHttpMessageConverter xmlConverter =
       new MappingJackson2XmlHttpMessageConverter();
@@ -172,6 +171,28 @@ public class ApiConfig implements WebMvcConfigurer {
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.setMessageConverters(messageConverters);
     restTemplate.setRequestFactory(factory);
+
+    return restTemplate;
+  }
+
+  @Bean
+  public static RestTemplate nonRedirectingRestTemplate(){
+    MappingJackson2XmlHttpMessageConverter xmlConverter =
+      new MappingJackson2XmlHttpMessageConverter();
+    xmlConverter.setSupportedMediaTypes(
+      singletonList(MediaType.APPLICATION_XML) );
+
+    MappingJackson2HttpMessageConverter jsonConverter =
+      new MappingJackson2HttpMessageConverter();
+
+    List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
+    messageConverters.add(xmlConverter);
+    messageConverters.add(jsonConverter);
+    messageConverters.add(new FormHttpMessageConverter());
+
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.setMessageConverters(messageConverters);
+    restTemplate.setRequestFactory(clientHttpRequestFactory(false));
 
     return restTemplate;
   }
@@ -289,6 +310,24 @@ public class ApiConfig implements WebMvcConfigurer {
     }
     
     return new RorService(rest);
+  }
+
+
+  @Bean @Primary
+  public DoiService doiService(
+    EnvironmentProps envConfig,
+    InMemoryStubProps stubProps,
+    @Qualifier("nonRedirectingRestTemplate")
+    RestTemplate rest
+  ){
+    if( stubProps.rorInMemoryStub ){
+      Guard.isTrue("Cannot use InMemoryDoiServiceStub in a PROD env",
+        !envConfig.isProd);
+      log.warn("using the in-memory ROR service");
+      return new InMemoryDoiServiceStub(stubProps);
+    }
+
+    return new DoiService(rest);
   }
 }
 

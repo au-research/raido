@@ -22,4 +22,10 @@ public class InMemoryStubProps {
 
   @Value("${Ror.inMemoryStubDelay:150}")
   public long rorInMemoryStubDelay;
+
+  @Value("${Doi.inMemoryStub:false}")
+  public boolean doiInMemoryStub;
+
+  @Value("${Doi.inMemoryStubDelay:150}")
+  public long doiInMemoryStubDelay;
 }
