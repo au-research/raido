@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.support.TransactionTemplate;
+import raido.apisvc.spring.bean.MetricRegistry;
 import raido.apisvc.spring.config.environment.DataSourceProps;
 import raido.apisvc.util.Log;
 
@@ -39,13 +40,22 @@ annotation instead of the Spring one.
 public class PrimaryDataSource {
   private static final Log log = to(PrimaryDataSource.class);
   
+  public static final String MAIN_POOL_NAME = "MainPool";
+  
   @Bean
   public static DataSource hikariDataSource(
-    @Autowired DataSourceProps config
+    @Autowired DataSourceProps dsProps,
+    @Autowired MetricRegistry metricReg
   ) {
-    log.debug("initialising HikariCP / PostgreSQL datasource");
-    Properties hikariProps = config.createHikariDatasourceProps();
-    return new HikariDataSource(new HikariConfig(hikariProps));
+    log.debug("initialising HikariCP / Postgres datasource");
+    Properties hikariProps = dsProps.createHikariDatasourceProps();
+    HikariConfig hikariConfig = new HikariConfig(hikariProps);
+    hikariConfig.setPoolName(MAIN_POOL_NAME);
+   
+    HikariDataSource dataSource = new HikariDataSource(hikariConfig);
+    metricReg.registerDataSource(dataSource);
+    
+    return dataSource;
   }
 
   @Bean
@@ -54,19 +64,19 @@ public class PrimaryDataSource {
   ) {
     DataSourceConnectionProvider connectionProvider =
       new DataSourceConnectionProvider(
-      new TransactionAwareDataSourceProxy(dataSource));
+        new TransactionAwareDataSourceProxy(dataSource));
     log.with("dataSource", dataSource).
       with("connectionProvider", connectionProvider).
       debug("connectionProvider()");
     return connectionProvider;
   }
 
+  /** PlatformTransactionManager */
   @Bean
   public DataSourceTransactionManager transactionManager(
     @Autowired DataSource dataSource
   ) {
     log.with("dataSource", dataSource).debug("transactionManager()");
-    // DSTM is a PlatformTransactionManager
     return new DataSourceTransactionManager(dataSource);
   }
   
