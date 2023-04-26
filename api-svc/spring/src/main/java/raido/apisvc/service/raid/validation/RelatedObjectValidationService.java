@@ -2,12 +2,15 @@ package raido.apisvc.service.raid.validation;
 
 import org.springframework.stereotype.Service;
 import raido.apisvc.repository.RelatedObjectTypeRepository;
+import raido.apisvc.service.doi.DoiService;
 import raido.idl.raidv2.model.RelatedObjectBlock;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
+
+import static raido.apisvc.endpoint.message.ValidationMessage.INVALID_VALUE_TYPE;
 
 @Service
 public class RelatedObjectValidationService {
@@ -22,8 +25,11 @@ public class RelatedObjectValidationService {
     List.of("Input", "Output", "Internal process document or artefact");
   private final RelatedObjectTypeRepository relatedObjectTypeRepository;
 
-  public RelatedObjectValidationService(final RelatedObjectTypeRepository relatedObjectTypeRepository) {
+  private final DoiService doiService;
+
+  public RelatedObjectValidationService(final RelatedObjectTypeRepository relatedObjectTypeRepository, final DoiService doiService) {
     this.relatedObjectTypeRepository = relatedObjectTypeRepository;
+    this.doiService = doiService;
   }
 
   public List<ValidationFailure> validateRelatedObjects(final List<RelatedObjectBlock> relatedObjects) {
@@ -52,6 +58,15 @@ public class RelatedObjectValidationService {
             .fieldId(String.format("relatedObjects[%d].relatedObject", i))
             .errorType("invalid")
             .message("The related object has an invalid pid."));
+        }
+        else {
+          failures.addAll(doiService.validateDoiExists(relatedObject.getRelatedObject()).stream().map(message ->
+            new ValidationFailure()
+              .fieldId(String.format("relatedObjects[%d].id", i))
+              .errorType(INVALID_VALUE_TYPE)
+              .message(message)
+          ).toList());
+
         }
 
         if (relatedObject.getRelatedObjectSchemeUri() == null) {

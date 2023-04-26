@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import raido.apisvc.repository.RelatedObjectTypeRepository;
+import raido.apisvc.service.doi.DoiService;
 import raido.db.jooq.api_svc.tables.records.RelatedObjectTypeRecord;
 import raido.idl.raidv2.model.RelatedObjectBlock;
 
@@ -22,6 +23,10 @@ import static org.mockito.Mockito.when;
 class RelatedObjectValidationServiceTest {
   @Mock
   private RelatedObjectTypeRepository relatedObjectTypeRepository;
+
+  @Mock
+  private DoiService doiService;
+
   @InjectMocks
   private RelatedObjectValidationService validationService;
 
@@ -334,4 +339,35 @@ class RelatedObjectValidationServiceTest {
     assertThat(failure.getMessage(), is("Should be one of 'Input', 'Output', 'Internal process document or artefact'."));
   }
 
+
+  @Test
+  void addsFailureIfDoiDoesNotExist() {
+    final var doi = "https://doi.org/10.000/00000";
+    final var relatedObjectType =
+      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book-chapter.json";
+    final var errorMessage = "doi does not exist";
+
+    final var relatedObject = new RelatedObjectBlock()
+      .relatedObject(doi)
+      .relatedObjectSchemeUri("https://doi.org/")
+      .relatedObjectType(relatedObjectType)
+      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/related-object-type/")
+      .relatedObjectCategory("No a category")
+      .relatedObjectCategory("Input");
+
+    when(relatedObjectTypeRepository.findByUrl(relatedObjectType))
+      .thenReturn(Optional.of(new RelatedObjectTypeRecord()));
+
+    when(doiService.validateDoiExists(doi)).thenReturn(Collections.singletonList(errorMessage));
+
+    final var failures =
+      validationService.validateRelatedObjects(Collections.singletonList(relatedObject));
+
+    var failure = failures.get(0);
+    assertThat(failures.size(), is(1));
+
+    assertThat(failure.getFieldId(), is("relatedObjects[0].id"));
+    assertThat(failure.getErrorType(), is("invalidValue"));
+    assertThat(failure.getMessage(), is(errorMessage));
+  }
 }
