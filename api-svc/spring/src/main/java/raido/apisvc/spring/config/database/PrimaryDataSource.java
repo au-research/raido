@@ -40,7 +40,7 @@ annotation instead of the Spring one.
 public class PrimaryDataSource {
   private static final Log log = to(PrimaryDataSource.class);
   
-  public static final String MAIN_POOL_NAME = "MainPool";
+  public static final String MAIN_POOL_NAME = "MainJdbcPool";
   
   @Bean
   public static DataSource hikariDataSource(
@@ -53,7 +53,7 @@ public class PrimaryDataSource {
     hikariConfig.setPoolName(MAIN_POOL_NAME);
    
     HikariDataSource dataSource = new HikariDataSource(hikariConfig);
-    metricReg.registerDataSource(dataSource);
+    metricReg.registerDataSourceMetrics(dataSource);
     
     return dataSource;
   }

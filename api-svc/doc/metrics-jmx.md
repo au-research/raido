@@ -31,16 +31,6 @@ There's no way to make a dashboard of the metrics or anything, in either
 VisualVM or JConsole.  You just have to eyeball the metrics by hand - no, it's 
 really not all that useful.
 
+See [metrics-naming.md](./metrics-naming.md) for details on finding individual 
+metrics.
 
-To map a VisualVM MBean name to a Micrometer name, follow these general steps:
-
-* Identify the Micrometer base name (e.g., `hikaricp.connections.pending`).
-* Convert the base name to camelCase by removing the periods and capitalizing 
-  the first letter of each subsequent word (e.g., "hikaricpConnectionsPending").
-* Identify the tags used in the Micrometer metric. In this case, the tag is 
-  `pool`, with a value of `HikariPool-1`.
-* Append the tag name and value to the camelCase name, separated by periods 
-  (e.g., `hikaricpConnectionsPending.pool.HikariPool-1`).
-  Keep in mind that this mapping is specific to the JmxMeterRegistry in 
-  Micrometer. Other registry implementations may have different formats for 
-  their metric names. 

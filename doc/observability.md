@@ -1,17 +1,32 @@
 
 # api-svc
 
+## Log aggregation
+
+The ARDC RAiD service uses AWS CloudWatch, Metrics and log insights.
+
+
 Raido has a specific logging strategy to keep our logs manageable and readable,
 see [logging.md](../api-svc/doc/logging.md).
 
 
-## configuring metrics
+## Configuring metrics
 
 See [MetricProps](../api-svc/spring/src/main/java/raido/apisvc/spring/config/environment/MetricProps.java)
 
-## Log aggregation
 
-The ARDC RAiD service uses AWS CloudWatch, Metrics and log insights. 
+## Publishing metrics
+
+We use [Micrometer](https://micrometer.io/) as an abstraction layer over 
+various metric implementations.
+
+* JMX for local-dev: [metrics-jmx.md](../api-svc/doc/metrics-jmx.md) 
+* CloudWatch for AWS environments: 
+  [metrics-cloudwatch.md](../api-svc/doc/metrics-cloudwatch.md)
+* see [metrics-naming.md](../api-svc/doc/metrics-naming.md) for an overview 
+  of metric naming and namespaces
+* Micrometer supports a bunch of other metrics tools if that's your jam:
+  
 
 
 # app-client
