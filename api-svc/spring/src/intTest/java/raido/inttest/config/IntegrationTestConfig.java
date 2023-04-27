@@ -15,6 +15,7 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import raido.apisvc.spring.StartupListener;
+import raido.apisvc.spring.bean.MetricRegistry;
 import raido.apisvc.spring.config.ApiConfig;
 import raido.apisvc.spring.config.environment.DataSourceProps;
 import raido.apisvc.spring.config.environment.EnvironmentProps;
@@ -29,10 +30,18 @@ import static raido.apisvc.util.Log.to;
   
   // services used by tests and infra
   "raido.inttest.service", 
+  "raido.inttest.service", 
   
   // leverage prod configuration for inttest
   "raido.apisvc.spring.config.database", 
-  "raido.apisvc.spring.config.environment"
+  "raido.apisvc.spring.config.environment",
+
+  /* DB config depends on MetricRegistry, so I just threw this package in there 
+  might want to factor things out if bean package gets too messy.
+  By default, metrics are enabled for api-svc context, disabled for int-test.
+  I wonder if there's a way to make use of metrics from int-tests somehow? 
+  */
+  "raido.apisvc.spring.bean"
 })
 /** reading from api-svc-env.props allows us to pick up the same props as used
  by the actual api-server, so we don't have to configure stuff like env specific 
@@ -114,8 +123,9 @@ public class IntegrationTestConfig {
   config. */
   @Bean public StartupListener startupListener(
     DataSourceProps dsProps,
-    EnvironmentProps envProps
+    EnvironmentProps envProps,
+    MetricRegistry metricReg
   ){
-    return new StartupListener(dsProps, envProps);
+    return new StartupListener(dsProps, envProps, metricReg);
   }
 }

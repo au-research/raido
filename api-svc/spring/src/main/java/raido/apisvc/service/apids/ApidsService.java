@@ -14,8 +14,8 @@ import java.util.function.Function;
 
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.MediaType.APPLICATION_XML;
-import static raido.apisvc.spring.bean.MetricBean.APIDS_ADD_URL_VALUE;
-import static raido.apisvc.spring.bean.MetricBean.APIDS_MINT_WITH_DESC;
+import static raido.apisvc.spring.bean.LogMetric.APIDS_ADD_URL_VALUE;
+import static raido.apisvc.spring.bean.LogMetric.APIDS_MINT_WITH_DESC;
 import static raido.apisvc.util.ExceptionUtil.re;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.RestUtil.urlDecode;

@@ -3,7 +3,7 @@ package raido.apisvc.service.stub.apids;
 import raido.apisvc.service.apids.ApidsService;
 import raido.apisvc.service.apids.model.ApidsMintResponse;
 import raido.apisvc.service.stub.util.IdFactory;
-import raido.apisvc.spring.bean.MetricBean;
+import raido.apisvc.spring.bean.LogMetric;
 import raido.apisvc.spring.config.environment.EnvironmentProps;
 import raido.apisvc.spring.config.environment.InMemoryStubProps;
 import raido.apisvc.util.Log;
@@ -74,14 +74,14 @@ public class InMemoryApidsServiceStub extends ApidsService {
     log.with("delay", stubProps.apidsInMemoryStubDelay).
       with("handle", resp.identifier.handle).
       debug("simulate APIDS mint request");
-    infoLogExecutionTime(httpLog, MetricBean.APIDS_MINT_WITH_DESC, ()->{
+    infoLogExecutionTime(httpLog, LogMetric.APIDS_MINT_WITH_DESC, ()->{
       sleep(stubProps.apidsInMemoryStubDelay);
       return null;
     });
 
     log.with("delay", stubProps.apidsInMemoryStubDelay).
       debug("simulate APIDS add request");
-    infoLogExecutionTime(httpLog, MetricBean.APIDS_ADD_URL_VALUE, ()->{
+    infoLogExecutionTime(httpLog, LogMetric.APIDS_ADD_URL_VALUE, ()->{
       sleep(stubProps.apidsInMemoryStubDelay);
       return null;
     });

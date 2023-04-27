@@ -2,14 +2,27 @@ package raido.apisvc.endpoint.anonymous;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import raido.apisvc.spring.bean.MetricRegistry;
 import raido.apisvc.util.JvmUtil;
+import raido.apisvc.util.Log;
 
 import java.util.Map;
 
+import static raido.apisvc.util.Log.to;
+
 @RestController
 public class PublicEndpoint {
+  private static final Log log = to(PublicEndpoint.class);
+  
   public static final String STATUS_PATH = "/public/status";
   public static final Map<String, String> STATUS = Map.of("status", "UP");
+
+  private MetricRegistry metricReg;
+
+
+  public PublicEndpoint(MetricRegistry metricReg) {
+    this.metricReg = metricReg;
+  }
 
   /** Be careful with changes to this, it is used by the Auto-scaling group 
   health-check.
@@ -19,6 +32,7 @@ public class PublicEndpoint {
   @GetMapping(STATUS_PATH)
   public Map<String, String> warmUp(){
     JvmUtil.logMemoryInfo(STATUS_PATH);
+    metricReg.logConnectionPoolMetrics();
     return STATUS;
   }
 

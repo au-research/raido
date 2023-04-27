@@ -8,7 +8,7 @@ import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.support.ResourcePropertySource;
 import org.springframework.stereotype.Component;
-import raido.apisvc.service.stub.util.IdFactory;
+import raido.apisvc.spring.bean.MetricRegistry;
 import raido.apisvc.spring.config.environment.DataSourceProps;
 import raido.apisvc.spring.config.environment.EnvironmentProps;
 import raido.apisvc.util.JvmUtil;
@@ -32,13 +32,16 @@ public class StartupListener implements
 
   private DataSourceProps dsProps;
   private EnvironmentProps envProps;
+  private MetricRegistry metricReg;
 
   public StartupListener(
     DataSourceProps dsProps, 
-    EnvironmentProps envProps
+    EnvironmentProps envProps,
+    MetricRegistry metricReg
   ) {
     this.dsProps = dsProps;
     this.envProps = envProps;
+    this.metricReg = metricReg;
   }
 
   @Override public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -67,6 +70,7 @@ public class StartupListener implements
         info("non-configurable environment");
     }
 
+    metricReg.logMetricNames();
   }
 
   /**

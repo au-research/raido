@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
  - Avoid binding Raido into AWS metrics stuff
  */
 @Component
-public class MetricBean {
+public class LogMetric {
 
   public static final String APIDS_ADD_URL_VALUE = "APIDS addValue";
   public static final String APIDS_MINT_WITH_DESC = "APIDS mint with desc";

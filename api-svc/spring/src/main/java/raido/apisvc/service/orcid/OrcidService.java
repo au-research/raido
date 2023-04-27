@@ -9,7 +9,7 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 import static java.util.List.of;
-import static raido.apisvc.spring.bean.MetricBean.VALIDATE_ORCID_EXISTS;
+import static raido.apisvc.spring.bean.LogMetric.VALIDATE_ORCID_EXISTS;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.infoLogExecutionTime;
 
