@@ -58,18 +58,18 @@ public class JvmUtil {
     }
   }
 
-  public static void logStartupInfo() {
+  public static void logSysProps() {
     infoLogSysProp("java.vendor", "java.vm.vendor", "java.vm.name",
       "java.version", "java.runtime.version", "java.runtime.name");
     infoLogSysProp("user.dir", "user.name", "os.name", 
       "user.timezone", "file.encoding", 
       "user.language", "user.country", "user.variant");
-    logBuildInfo();
-    logMemoryInfo("startup");
-    log.with("availableProcessors", getRuntime().availableProcessors()).
-      info("JVM info");
   }
 
+  /** Memory and GC logging was implemented before Micrometer metrics were 
+   implemented.  I like seeing them logged on startup as I understand the 
+   meaning of the basic built-in stats and how they relate to the JVM - as 
+   opposed to he Micrometer metrics, which I find difficult to interpret. */
   public static void logMemoryInfo(String from) {
     if( !log.isInfoEnabled() ){
       return;
@@ -95,7 +95,6 @@ public class JvmUtil {
         with("collectionTime", iGcBean.getCollectionTime()).
         info("GC info");
     });
-
   }
 
   private static Set<ObjectName> listGcMxBeans(MBeanServer mBeanServer) {
