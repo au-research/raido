@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.MediaType;
@@ -153,7 +152,6 @@ public class ApiConfig implements WebMvcConfigurer {
   }
   
   @Bean
-  @Primary
   public static RestTemplate restTemplate(ClientHttpRequestFactory factory){
     MappingJackson2XmlHttpMessageConverter xmlConverter =
       new MappingJackson2XmlHttpMessageConverter();
@@ -171,28 +169,6 @@ public class ApiConfig implements WebMvcConfigurer {
     RestTemplate restTemplate = new RestTemplate();
     restTemplate.setMessageConverters(messageConverters);
     restTemplate.setRequestFactory(factory);
-
-    return restTemplate;
-  }
-
-  @Bean
-  public static RestTemplate nonRedirectingRestTemplate(){
-    MappingJackson2XmlHttpMessageConverter xmlConverter =
-      new MappingJackson2XmlHttpMessageConverter();
-    xmlConverter.setSupportedMediaTypes(
-      singletonList(MediaType.APPLICATION_XML) );
-
-    MappingJackson2HttpMessageConverter jsonConverter =
-      new MappingJackson2HttpMessageConverter();
-
-    List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
-    messageConverters.add(xmlConverter);
-    messageConverters.add(jsonConverter);
-    messageConverters.add(new FormHttpMessageConverter());
-
-    RestTemplate restTemplate = new RestTemplate();
-    restTemplate.setMessageConverters(messageConverters);
-    restTemplate.setRequestFactory(clientHttpRequestFactory(false));
 
     return restTemplate;
   }
@@ -314,7 +290,6 @@ public class ApiConfig implements WebMvcConfigurer {
   public DoiService doiService(
     EnvironmentProps envConfig,
     InMemoryStubProps stubProps,
-    @Qualifier("nonRedirectingRestTemplate")
     RestTemplate rest
   ){
     if( stubProps.rorInMemoryStub ){
