@@ -29,7 +29,9 @@ import static java.time.Duration.ofSeconds;
 import static raido.apisvc.spring.bean.LogMetric.HIKARI_ACQUIRE_TIMER_NAME;
 import static raido.apisvc.spring.bean.LogMetric.HIKARI_CREATE_TIMER_NAME;
 import static raido.apisvc.spring.bean.LogMetric.HIKARI_PENDING_GAUGE_NAME;
+import static raido.apisvc.spring.config.environment.EnvironmentProps.ENV_NAME_DEFAULT;
 import static raido.apisvc.util.Log.to;
+import static raido.apisvc.util.StringUtil.areEqual;
 import static raido.apisvc.util.StringUtil.hasValue;
 
 @Component
@@ -67,6 +69,8 @@ public class MetricRegistry {
 
     log.warn("AWS CloudWatch metrics publishing enabled");
 
+    Guard.isTrue("envName must be set if awsEnabled=true", 
+      !areEqual(env.envName, ENV_NAME_DEFAULT));
     CloudWatchMeterRegistry cloudWatchMeterRegistry =
       new CloudWatchMeterRegistry(
         setupCloudWatchConfig(),
@@ -119,11 +123,10 @@ public class MetricRegistry {
   }
 
   public void logMetricNames() {
-    if( registry.getMeters().isEmpty() ){
-      log.info("Mo metrics are registered");
-    }
+    log.with("size", registry.getMeters().size()).
+      info("Metrics registered");
     registry.getMeters().forEach(i->
-      log.with("id", i.getId().toString()).info("Registered metric"));
+      log.with("id", i.getId().toString()).debug("Registered metric"));
   }
 
   public void logConnectionPoolMetrics() {
