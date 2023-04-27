@@ -295,10 +295,10 @@ public class ApiConfig implements WebMvcConfigurer {
     InMemoryStubProps stubProps,
     RestTemplate rest
   ){
-    if( stubProps.rorInMemoryStub ){
+    if( stubProps.doiInMemoryStub ){
       Guard.isTrue("Cannot use InMemoryDoiServiceStub in a PROD env",
         !envConfig.isProd);
-      log.warn("using the in-memory ROR service");
+      log.warn("using the in-memory DOI service");
       return new InMemoryDoiServiceStub(stubProps);
     }
 
