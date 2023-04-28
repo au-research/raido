@@ -175,15 +175,19 @@ public class MetricRegistry {
   public CloudWatchAsyncClient cloudWatchAsyncClient() {
     CloudWatchAsyncClientBuilder builder = CloudWatchAsyncClient.builder();
 
+    // even when running inside AWS it can't figure this out?
+    Guard.hasValue("awsRegion must be set if awsEnabled=true", 
+      metricProps.awsRegion);
+    Region region = Region.of(metricProps.awsRegion);
+    builder = builder.region(region);
+
     if( hasValue(metricProps.awsProfile) ){
       log.with("awsProfile", metricProps.awsProfile).
         info("Metrics will be published to AWS via profile credentials");
       Guard.hasValue(
         "must set region if awsProfile is set",
         metricProps.awsRegion);
-      Region region = Region.of(metricProps.awsRegion);
       builder = builder.
-        region(region).
         credentialsProvider(
           ProfileCredentialsProvider.create(metricProps.awsProfile));
     }
