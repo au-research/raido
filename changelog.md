@@ -27,6 +27,8 @@ _Not yet scheduled_
       in-memory handles in production
 * Metrics publishing to AWS CloudWatch introduced
   * must be enabled in config
+  * remember to add the permissions to the ECS task role (not the ASG 
+    cluster role), see DEMO `ApiSvcEcs`
 
 ---
 
