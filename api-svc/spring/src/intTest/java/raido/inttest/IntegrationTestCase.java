@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.RestTemplate;
+import raido.apisvc.service.stub.util.IdFactory;
 import raido.apisvc.spring.config.environment.EnvironmentProps;
 import raido.apisvc.util.Log;
 import raido.apisvc.util.Nullable;
@@ -28,7 +29,6 @@ import raido.idl.raidv2.model.*;
 import raido.inttest.config.IntTestProps;
 import raido.inttest.config.IntegrationTestConfig;
 import raido.inttest.service.auth.BootstrapAuthTokenService;
-import raido.apisvc.service.stub.util.IdFactory;
 
 import java.time.LocalDateTime;
 
@@ -46,7 +46,7 @@ import static raido.inttest.config.IntegrationTestConfig.REST_TEMPLATE_VALUES_ON
   value=IntegrationTestConfig.class )
 public abstract class IntegrationTestCase {
   // be careful, 25 char max column length
-  public static final String INT_TEST_ROR = "https://ror.org/int-test";
+  public static final String INT_TEST_ROR = "https://ror.org/038sjwq14";
 
   private static final Log log = to(IntegrationTestCase.class);
   protected static final IdFactory idFactory = new IdFactory("inttest");
