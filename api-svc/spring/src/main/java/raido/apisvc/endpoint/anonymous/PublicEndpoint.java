@@ -15,6 +15,7 @@ public class PublicEndpoint {
   private static final Log log = to(PublicEndpoint.class);
   
   public static final String STATUS_PATH = "/public/status";
+  public static final String STATISTICS_PATH = "/public/statistics";
   public static final Map<String, String> STATUS = Map.of("status", "UP");
 
   private MetricRegistry metricReg;
@@ -31,9 +32,15 @@ public class PublicEndpoint {
   to resolve the DB issue. */ 
   @GetMapping(STATUS_PATH)
   public Map<String, String> warmUp(){
+    return STATUS;
+  }
+
+  /** pretty sure returning any data like this to caller would be a Bad Idea,
+   so just send it to the logs. */ 
+  @GetMapping(STATISTICS_PATH)
+  public void logStats(){
     JvmUtil.logMemoryInfo(STATUS_PATH);
     metricReg.logConnectionPoolMetrics();
-    return STATUS;
   }
 
 }

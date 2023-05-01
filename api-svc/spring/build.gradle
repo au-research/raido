@@ -108,6 +108,10 @@ dependencies{
   // for local dev viewing of metrics - no plan to use JMX in AWS
   implementation 'io.micrometer:micrometer-registry-jmx:1.10.6'
 
+  // for pushing metrics to AWS cloudwatch
+  implementation 'software.amazon.awssdk:cloudwatch:2.20.52'
+  implementation 'io.micrometer:micrometer-registry-cloudwatch2:1.10.6'
+
   testImplementation project(':api-svc:test-shared')
   testImplementation libs.bundles.spring6.test
 

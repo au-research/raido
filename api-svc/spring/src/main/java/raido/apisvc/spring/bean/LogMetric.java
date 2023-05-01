@@ -28,4 +28,13 @@ public class LogMetric {
   public static final String VALIDATE_ROR_EXISTS = "validate ROR exists";
   public static final String VALIDATE_DOI_EXISTS = "validate DOI exists";
 
+  /* These are controlled by Micrometer, in MicrometerMetricsTracker.
+  We can probably change them, but I think only be registering the meters 
+  ourselves, which is probably the right long-term play.*/
+  public static final String HIKARI_ACQUIRE_TIMER_NAME = 
+    "hikaricp.connections.acquire";
+  public static final String HIKARI_CREATE_TIMER_NAME = 
+    "hikaricp.connections.creation";
+  public static final String HIKARI_PENDING_GAUGE_NAME = 
+    "hikaricp.connections.pending";
 }

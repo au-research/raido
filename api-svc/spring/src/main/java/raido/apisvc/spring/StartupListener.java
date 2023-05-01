@@ -16,6 +16,7 @@ import raido.apisvc.util.Log;
 
 import java.time.LocalDateTime;
 
+import static java.lang.Runtime.getRuntime;
 import static raido.apisvc.util.Log.to;
 
 @Component
@@ -54,7 +55,12 @@ public class StartupListener implements
     log.with("url", dsProps.getUrl()).
       with("username", dsProps.getUsername()).
       info("DataSource");
-    JvmUtil.logStartupInfo();
+    JvmUtil.logSysProps();
+    JvmUtil.logBuildInfo();
+    JvmUtil.logMemoryInfo("startup");
+    log.with("availableProcessors", getRuntime().availableProcessors()).
+      info("JVM info");
+    metricReg.logMetricNames();
 
     this.startTime = LocalDateTime.now();
 
@@ -70,7 +76,6 @@ public class StartupListener implements
         info("non-configurable environment");
     }
 
-    metricReg.logMetricNames();
   }
 
   /**

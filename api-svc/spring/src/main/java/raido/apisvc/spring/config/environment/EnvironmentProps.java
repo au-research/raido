@@ -8,17 +8,19 @@ import static raido.apisvc.util.Log.to;
 
 @Component
 public class EnvironmentProps {
+  public static final String ENV_NAME_DEFAULT = "unknown";
+  
   private static final Log log = to(EnvironmentProps.class);
 
   /** avoid comparing the envName with a value, use isProd or make a proper
    config parameter for the feature you want to control. */
-  @Value("${EnvironmentConfig.envName:unknown}")
+  @Value("${EnvironmentConfig.envName:" + ENV_NAME_DEFAULT + "}")
   public String envName;
 
   @Value("${EnvironmentConfig.isProd:false}")
   public boolean isProd;
 
-  @Value("${EnvironmentConfig.nodeId:unknown}")
+  @Value("${EnvironmentConfig.nodeId:" + ENV_NAME_DEFAULT + "}")
   public String nodeId;
 
   @Value("${EnvironmentConfig.startTaskDelaySeconds:2}")

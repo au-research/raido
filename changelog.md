@@ -19,12 +19,14 @@ _Not yet scheduled_
   * traditional knowledge labels
 
 ## Infrastructure
-* introduced the InMemoryApidsServiceStub
+* introduced the InMemory stubs for APIDS, ORCID, ROR and DOI
   * this is noted in changelog not because it changes anything, but the 
     deployment plan should take it into account, specifically: 
     * attention should be paid to env config (shouldn't need changing)
     * post-deploy tests should verify that we didn't accidentally start using 
       in-memory handles in production
+* Metrics publishing to AWS CloudWatch introduced
+  * must be enabled in config
 
 ---
 
