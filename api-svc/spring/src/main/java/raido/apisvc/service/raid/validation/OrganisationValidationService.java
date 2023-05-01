@@ -44,9 +44,9 @@ public class OrganisationValidationService {
     List<OrganisationBlock> organisations
   ) {
 
-//  Optional for now
+    /* organisations has been confirmed as optional in the metadata schema,
+    rationale: an ORCID is quick to create (minutes), RORs can take months. */
     if( organisations == null ) {
-//       return of(ORGANISATION_NOT_SET);
       return Collections.emptyList();
     }
 
