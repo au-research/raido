@@ -1,7 +1,7 @@
 See the [Changelog audience](#changelog-audience) section for info about 
  the expected audience and content of the changelog.
 
-# Not released
+# 1.2
 
 _Not yet scheduled_
 
@@ -25,6 +25,9 @@ _Not yet scheduled_
     * attention should be paid to env config (shouldn't need changing)
     * post-deploy tests should verify that we didn't accidentally start using 
       in-memory handles in production
+* DB changes 
+  * bumped width of `raid.handle` column
+  * edit service point new column
 * Metrics publishing to AWS CloudWatch introduced
   * must be enabled in config
   * remember to add the permissions to the ECS task role (not the ASG 
