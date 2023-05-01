@@ -21,8 +21,8 @@ out that it wasn't something I was doing wrong.
 
 Twice now, I've taken something like `VX__something.sql` and named it 
 `VX_Y_something-else.sql` - but that won't work.
-Needs to be `VX_Y__something-else.sql` - not the two underbar chars that
+Needs to be `VX_Y__something-else.sql` - note the two under-bar chars that
 separate the versin from the description.  Each time I've done this, I've 
-assumed the minor version number goes between the two underbars, then I get
+assumed the minor version number goes between the two under-bars, then I get
 selective blindness and can't see that the difference between the files that
-do get run and my new file is that final underbar char. 
+do get run and my new file is that final under-bar char. 
