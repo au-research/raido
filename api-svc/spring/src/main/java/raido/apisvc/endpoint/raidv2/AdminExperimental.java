@@ -1,7 +1,6 @@
 package raido.apisvc.endpoint.raidv2;
 
 import org.jooq.DSLContext;
-import org.jooq.impl.DSL;
 import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +13,7 @@ import raido.apisvc.service.raid.ValidationFailureException;
 import raido.apisvc.service.raid.id.IdentifierParser;
 import raido.apisvc.service.raid.id.IdentifierUrl;
 import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
+import raido.apisvc.service.ror.RorService;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.tables.records.AppUserRecord;
@@ -26,6 +26,7 @@ import java.util.List;
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 import static raido.apisvc.endpoint.message.ValidationMessage.fieldNotSet;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.*;
+import static raido.apisvc.service.raid.validation.OrganisationValidationService.ROR_REGEX;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.JooqUtil.valueFits;
 import static raido.apisvc.util.Log.to;
@@ -50,6 +51,9 @@ public class AdminExperimental implements AdminExperimentalApi {
   private DSLContext db;
   private IdentifierParser idParser;
 
+  private final RorService rorService;
+
+
   public AdminExperimental(
     AuthzRequestService authzRequestSvc,
     ServicePointService servicePointSvc,
@@ -58,8 +62,8 @@ public class AdminExperimental implements AdminExperimentalApi {
     RaidService raidSvc,
     BasicRaidExperimental basicRaid, 
     DSLContext db,
-    IdentifierParser idParser
-  ) {
+    IdentifierParser idParser,
+    final RorService rorService) {
     this.authzRequestSvc = authzRequestSvc;
     this.servicePointSvc = servicePointSvc;
     this.appUserSvc = appUserSvc;
@@ -68,6 +72,7 @@ public class AdminExperimental implements AdminExperimentalApi {
     this.basicRaid = basicRaid;
     this.db = db;
     this.idParser = idParser;
+    this.rorService = rorService;
   }
 
   @Override
@@ -141,7 +146,15 @@ public class AdminExperimental implements AdminExperimentalApi {
     Guard.isTrue(
       ()->"identifierOwner is too long: %s".formatted(req.getIdentifierOwner()),
       valueFits(SERVICE_POINT.IDENTIFIER_OWNER, req.getIdentifierOwner()));
-    
+
+    Guard.isTrue("Identifier owner is not a valid ROR %s".formatted(req.getIdentifierOwner()),
+      ROR_REGEX.matcher(req.getIdentifierOwner()).matches());
+
+    final var errorMessages = rorService.validateRorExists(req.getIdentifierOwner());
+    if (!errorMessages.isEmpty()) {
+      throw new IllegalArgumentException(errorMessages.get(0));
+    }
+
     return servicePointSvc.updateServicePoint(req);
   }
 
