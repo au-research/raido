@@ -1,17 +1,14 @@
 package raido.inttest.util;
 
-import raido.idl.raidv2.model.AccessBlock;
-import raido.idl.raidv2.model.DatesBlock;
-import raido.idl.raidv2.model.DescriptionBlock;
-import raido.idl.raidv2.model.MintRaidoSchemaV1Request;
-import raido.idl.raidv2.model.MintRaidoSchemaV1RequestMintRequest;
-import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
-import raido.idl.raidv2.model.TitleBlock;
+import raido.idl.raidv2.model.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static raido.idl.raidv2.model.AccessType.OPEN;
+import static raido.idl.raidv2.model.ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_;
+import static raido.idl.raidv2.model.ContributorPositionSchemeType.HTTPS_RAID_ORG_;
+import static raido.idl.raidv2.model.ContributorRoleSchemeType.HTTPS_CREDIT_NISO_ORG_;
 import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
@@ -51,4 +48,37 @@ public class MinimalRaidTestData {
       metadata(metadata);
   }
 
+  public static ContributorBlock createContributor(
+    String orcid,
+    ContributorPositionRaidMetadataSchemaType position,
+    ContributorRoleCreditNisoOrgType role,
+    LocalDate today
+  ) {
+    return new ContributorBlock().
+      id(orcid).
+      identifierSchemeUri(HTTPS_ORCID_ORG_).
+      positions(List.of(new ContributorPosition().
+        positionSchemaUri(HTTPS_RAID_ORG_).
+        position(position).
+        startDate(today))).
+      roles(List.of(
+        new ContributorRole().
+          roleSchemeUri(HTTPS_CREDIT_NISO_ORG_).
+          role(role)));
+  }
+
+  public static OrganisationBlock createOrganisation(
+    String ror,
+    OrganisationRoleType role,
+    LocalDate today
+  ) {
+    return new OrganisationBlock().
+      id(ror).
+      identifierSchemeUri(OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_).
+      roles(List.of(
+        new OrganisationRole().
+          roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_).
+          role(role)
+          .startDate(today)));
+  }
 }

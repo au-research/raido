@@ -6,21 +6,33 @@ import raido.apisvc.service.raid.ValidationFailureException;
 import raido.apisvc.service.raid.id.IdentifierHandle;
 import raido.apisvc.service.raid.id.IdentifierParser;
 import raido.apisvc.service.raid.id.IdentifierUrl;
-import raido.idl.raidv2.model.*;
+import raido.apisvc.util.Log;
+import raido.idl.raidv2.model.AccessBlock;
+import raido.idl.raidv2.model.AccessType;
+import raido.idl.raidv2.model.AlternateUrlBlock;
+import raido.idl.raidv2.model.CreateRaidV1Request;
+import raido.idl.raidv2.model.DatesBlock;
+import raido.idl.raidv2.model.IdBlock;
+import raido.idl.raidv2.model.UpdateRaidV1Request;
+import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static java.util.List.of;
+import static raido.apisvc.endpoint.message.ValidationMessage.HANDLE_DOES_NOT_MATCH_MESSAGE;
 import static raido.apisvc.endpoint.message.ValidationMessage.handlesDoNotMatch;
+import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.RestUtil.urlDecode;
-import static raido.apisvc.util.StringUtil.areEqual;
+import static raido.apisvc.util.StringUtil.areDifferent;
 import static raido.apisvc.util.StringUtil.isBlank;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 
 @Component
 public class RaidSchemaV1ValidationService {
+  private static final Log log = to(RaidSchemaV1ValidationService.class);
+  
   private final TitleValidationService titleSvc;
   private final DescriptionValidationService descSvc;
   private final ContributorValidationService contribSvc;
@@ -74,7 +86,10 @@ public class RaidSchemaV1ValidationService {
     }
 
     if( updateId != null && pathHandle != null ){
-      if( areEqual(pathHandle.format(), updateId.handle().format()) ){
+      if( areDifferent(pathHandle.format(), updateId.handle().format()) ){
+        log.with("pathHandle", pathHandle.format()).
+          with("updateId", updateId.handle().format()).
+          error(HANDLE_DOES_NOT_MATCH_MESSAGE);
         failures.add(handlesDoNotMatch());
       }
     }

@@ -197,7 +197,7 @@ public class RaidService {
     final CreateRaidV1Request request,
     final long servicePoint
   ) {
-    /* this is the part where we want to make sure no TX is help open.
+    /* this is the part where we want to make sure no TX is held open.
      * Maybe *this* should be marked tx.prop=never? */
     final var servicePointRecord =
       servicePointRepository.findById(servicePoint).orElseThrow(() -> 
