@@ -6,14 +6,20 @@ import org.springframework.web.client.RestTemplate;
 import raido.apisvc.util.Log;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static java.util.Collections.emptyList;
 import static java.util.List.of;
+import static java.util.regex.Pattern.compile;
 import static raido.apisvc.spring.bean.LogMetric.VALIDATE_ROR_EXISTS;
+import static raido.apisvc.util.ExceptionUtil.illegalArgException;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.infoLogExecutionTime;
 
 public class RorService {
+  public static final Pattern ROR_REGEX =
+    compile("^https://ror\\.org/[0-9a-z]{9}$");
+  
   private static final Log log = to(RorService.class);
   protected static final Log httpLog = to(RorService.class, "http");
 
@@ -25,6 +31,12 @@ public class RorService {
 
   public List<String> validateRorExists(String ror) {
 
+    /* SSRF prevention - keep this "near" the actual HTTP call so 
+    that static analysis tools understand it's protected */
+    if( !ROR_REGEX.matcher(ror).matches() ){
+      throw illegalArgException("ROR failed SSRF prevention");
+    }
+    
     final var requestEntity = RequestEntity.head(ror).build();
 
     try {

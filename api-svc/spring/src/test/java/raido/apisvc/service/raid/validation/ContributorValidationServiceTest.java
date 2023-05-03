@@ -68,7 +68,7 @@ class ContributorValidationServiceTest {
 
     assertThat(failure.getFieldId(), is("contributors[1].id"));
     assertThat(failure.getErrorType(), is("invalid"));
-    assertThat(failure.getMessage(), is("ORCID should have the format https://orcid.org/0000-0000-0000-0000."));
+    assertThat(failure.getMessage(), is("Contributor ORCID should have the format https://orcid.org/0000-0000-0000-0000."));
 
     verifyNoInteractions(restTemplate);
   }

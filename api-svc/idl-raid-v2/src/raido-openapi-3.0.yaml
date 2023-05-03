@@ -134,8 +134,8 @@ components:
       scheme: bearer
       bearerFormat: JWT
       description: >
-        An api-token for integration is generated manually in the app-client 
-        (on the "API key" page). See 
-        https://github.com/au-research/raido/blob/main/doc/security/api-key.md
+        An "api-token" for integration is generated manually via the app-client 
+        (on the "API key" page, from the /generate-api-token endpoint). See 
+        https://github.com/au-research/raido/blob/main/doc/security/readme.md
         The app-client UI uses an ephemeral api-token returned from the 
         `/idpresponse` URL as part of the OIDC sign-in process.

@@ -11,15 +11,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.regex.Pattern;
 
-import static java.util.regex.Pattern.compile;
 import static raido.apisvc.endpoint.message.ValidationMessage.FIELD_MUST_BE_SET_MESSAGE;
 import static raido.apisvc.endpoint.message.ValidationMessage.INVALID_VALUE_TYPE;
 import static raido.apisvc.endpoint.message.ValidationMessage.NOT_SET_TYPE;
 import static raido.apisvc.endpoint.message.ValidationMessage.organisationIdNotSet;
 import static raido.apisvc.endpoint.message.ValidationMessage.organisationIdSchemeNotSet;
 import static raido.apisvc.endpoint.message.ValidationMessage.organisationInvalidIdScheme;
+import static raido.apisvc.service.ror.RorService.ROR_REGEX;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.indexed;
 import static raido.apisvc.util.StringUtil.isBlank;
@@ -27,10 +26,9 @@ import static raido.idl.raidv2.model.OrganisationIdentifierSchemeType.HTTPS_ROR_
 
 @Component
 public class OrganisationValidationService {
+
   private static final Log log = to(OrganisationValidationService.class);
   private static final int ROR_LENGTH = 25;
-  public static final Pattern ROR_REGEX = 
-    compile("^https://ror\\.org/[0-9a-z]{9}$");
 
   private final RorService rorService;
 

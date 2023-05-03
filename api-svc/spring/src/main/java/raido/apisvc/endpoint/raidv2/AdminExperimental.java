@@ -26,7 +26,7 @@ import java.util.List;
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 import static raido.apisvc.endpoint.message.ValidationMessage.fieldNotSet;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.*;
-import static raido.apisvc.service.raid.validation.OrganisationValidationService.ROR_REGEX;
+import static raido.apisvc.service.ror.RorService.ROR_REGEX;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.JooqUtil.valueFits;
 import static raido.apisvc.util.Log.to;

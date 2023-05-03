@@ -23,6 +23,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class DoiServiceTest {
+  public static final String TEST_DOI = "https://doi.org/10.a/test-doi";
   @Mock
   private RestTemplate restTemplate;
 
@@ -31,12 +32,10 @@ class DoiServiceTest {
 
   @Test
   void returnsListOfMessagesIfRequestFails() {
-    final var doi = "test-doi";
-
     doThrow(new HttpClientErrorException(HttpStatusCode.valueOf(404))).
       when(restTemplate).exchange(any(RequestEntity.class), eq(Void.class));
 
-    final List<String> messages = doiService.validateDoiExists(doi);
+    final List<String> messages = doiService.validateDoiExists(TEST_DOI);
 
     assertThat(messages.size(), is(1));
     assertThat(messages.get(0), is("The DOI does not exist."));
@@ -44,11 +43,10 @@ class DoiServiceTest {
 
   @Test
   void returnsEmptyListOfMessagesIfRequestSucceeds() {
-    final var doi = "test-doi";
 
     when(restTemplate.exchange(any(RequestEntity.class), eq(Void.class))).thenReturn(ResponseEntity.ok().build());
 
-    final List<String> messages = doiService.validateDoiExists(doi);
+    final List<String> messages = doiService.validateDoiExists(TEST_DOI);
 
     assertThat(messages, is(empty()));
   }
