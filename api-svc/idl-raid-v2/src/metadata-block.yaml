@@ -12,7 +12,7 @@ components:
     IdBlock:
       type: object
       required: [ identifier, identifierSchemeUri,
-        identifierRegistrationAgency, identifierOwner, identifierServicePoint ]
+        identifierRegistrationAgency, identifierOwner, identifierServicePoint, version ]
       properties:
         identifier: 
           type: string
@@ -47,6 +47,9 @@ components:
           description: >
             The URL for the raid via the minting raid agency system, e.g 
             https://raid.org.au/10378.1/1695863
+        version:
+          type: integer
+          description: The version of the resource. Read-only. Increments automatically on update.
       example:
         identifier: https://raid.org/xxx.yyy/zzz
         identifierSchemeUri: https://raid.org
