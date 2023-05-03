@@ -207,7 +207,7 @@ class RelatedObjectValidationServiceTest {
 
     assertThat(failure.getFieldId(), is("relatedObjects[0].relatedObject"));
     assertThat(failure.getErrorType(), is("invalid"));
-    assertThat(failure.getMessage(), is("The related object does not appear to be a DOI."));
+    assertThat(failure.getMessage(), is("The related object does not match the expected DOI pattern."));
   }
 
   @Test

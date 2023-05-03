@@ -3,6 +3,7 @@ package raido.inttest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Contract;
 import feign.Feign;
+import feign.Logger;
 import feign.Logger.Level;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
@@ -24,8 +25,13 @@ import raido.db.jooq.api_svc.enums.UserRole;
 import raido.idl.raidv1.api.RaidV1Api;
 import raido.idl.raidv2.api.AdminExperimentalApi;
 import raido.idl.raidv2.api.BasicRaidExperimentalApi;
+import raido.idl.raidv2.api.BasicRaidStableApi;
 import raido.idl.raidv2.api.PublicExperimentalApi;
-import raido.idl.raidv2.model.*;
+import raido.idl.raidv2.model.ApiKey;
+import raido.idl.raidv2.model.GenerateApiTokenRequest;
+import raido.idl.raidv2.model.GenerateApiTokenResponse;
+import raido.idl.raidv2.model.PublicServicePoint;
+import raido.idl.raidv2.model.ServicePoint;
 import raido.inttest.config.IntTestProps;
 import raido.inttest.config.IntegrationTestConfig;
 import raido.inttest.service.auth.BootstrapAuthTokenService;
@@ -217,4 +223,23 @@ public abstract class IntegrationTestCase {
       enabled(true) );
     
   }
+
+  public BasicRaidStableApi basicRaidStableClient(String token){
+    return Feign.builder().
+      client(new OkHttpClient()).
+      encoder(new JacksonEncoder(mapper)).
+      decoder(new JacksonDecoder(mapper)).
+      errorDecoder(new RaidApiExceptionDecoder(mapper)).
+      contract(feignContract).
+      requestInterceptor(request->
+        request.header(AUTHORIZATION, "Bearer " + token) ).
+      logger(new Slf4jLogger(BasicRaidStableApi.class)).
+      logLevel(Logger.Level.FULL).
+      target(BasicRaidStableApi.class, props.getRaidoServerUrl());
+  }
+
+  public BasicRaidStableApi basicRaidStableClient(){
+    return basicRaidStableClient(operatorToken);
+  }
+
 }

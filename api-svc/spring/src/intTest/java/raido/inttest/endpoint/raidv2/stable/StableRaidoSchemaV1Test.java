@@ -1,14 +1,7 @@
 package raido.inttest.endpoint.raidv2.stable;
 
-import feign.Feign;
-import feign.Logger;
-import feign.jackson.JacksonDecoder;
-import feign.jackson.JacksonEncoder;
-import feign.okhttp.OkHttpClient;
-import feign.slf4j.Slf4jLogger;
 import org.junit.jupiter.api.Test;
 import raido.apisvc.service.raid.id.IdentifierParser;
-import raido.idl.raidv2.api.BasicRaidStableApi;
 import raido.idl.raidv2.model.AccessBlock;
 import raido.idl.raidv2.model.CreateRaidV1Request;
 import raido.idl.raidv2.model.DatesBlock;
@@ -24,7 +17,6 @@ import java.time.LocalDate;
 
 import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
 import static raido.apisvc.util.test.BddUtil.THEN;
@@ -37,30 +29,13 @@ import static raido.idl.raidv2.model.OrganisationRoleType.LEAD_RESEARCH_ORGANISA
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 import static raido.inttest.endpoint.raidv1.LegacyRaidV1MintTest.INT_TEST_ID_URL;
-import static raido.inttest.util.MinimalRaidTestData.DUMMY_ORCID;
-import static raido.inttest.util.MinimalRaidTestData.DUMMY_ROR;
-import static raido.inttest.util.MinimalRaidTestData.createContributor;
-import static raido.inttest.util.MinimalRaidTestData.createOrganisation;
+import static raido.inttest.util.MinimalRaidTestData.REAL_TEST_ORCID;
+import static raido.inttest.util.MinimalRaidTestData.REAL_TEST_ROR;
+import static raido.inttest.util.MinimalRaidTestData.contributor;
+import static raido.inttest.util.MinimalRaidTestData.organisation;
 
 public class StableRaidoSchemaV1Test extends IntegrationTestCase {
 
-  public BasicRaidStableApi basicRaidStableClient(String token){
-    return Feign.builder().
-      client(new OkHttpClient()).
-      encoder(new JacksonEncoder(mapper)).
-      decoder(new JacksonDecoder(mapper)).
-      contract(feignContract).
-      requestInterceptor(request->
-        request.header(AUTHORIZATION, "Bearer " + token) ).
-      logger(new Slf4jLogger(BasicRaidStableApi.class)).
-      logLevel(Logger.Level.FULL).
-      target(BasicRaidStableApi.class, props.getRaidoServerUrl());
-  }
-  
-  public BasicRaidStableApi basicRaidStableClient(){
-    return basicRaidStableClient(operatorToken);
-  }
-  
   @Test
   void happyDayScenario() {
     var raidApi = basicRaidStableClient();
@@ -80,10 +55,10 @@ public class StableRaidoSchemaV1Test extends IntegrationTestCase {
       descriptions(of(new DescriptionBlock().
         type(PRIMARY_DESCRIPTION).
         description("stuff about the int test raid"))).
-      contributors(of(createContributor(
-        DUMMY_ORCID, LEADER, SOFTWARE, today))).
-      organisations(of(createOrganisation(
-        DUMMY_ROR, LEAD_RESEARCH_ORGANISATION, today))).
+      contributors(of(contributor(
+        REAL_TEST_ORCID, LEADER, SOFTWARE, today))).
+      organisations(of(organisation(
+        REAL_TEST_ROR, LEAD_RESEARCH_ORGANISATION, today))).
       access(new AccessBlock().type(OPEN))
     );
     

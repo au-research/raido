@@ -136,6 +136,15 @@ public class Log {
     log.debug(String.format(msg, args));
   }
 
+  /**
+   Uses {@link String#format} - %s
+   */
+  public void debugEx(String msg, Throwable t, Object... args) {
+    if( log.isDebugEnabled() ){
+      log.debug(String.format(msg, args), t);
+    }
+  }
+  
   public boolean isInfoEnabled() {
     return log.isInfoEnabled();
   }

@@ -57,7 +57,7 @@ public class RelatedObjectValidationService {
           failures.add(new ValidationFailure()
             .fieldId(String.format("relatedObjects[%d].relatedObject", i))
             .errorType("invalid")
-            .message("The related object does not appear to be a DOI."));
+            .message("The related object does not match the expected DOI pattern."));
         }
         else {
           failures.addAll(doiService.validateDoiExists(relatedObject.getRelatedObject()).stream().map(message ->

@@ -90,6 +90,13 @@ jobs:
           GoogleOidc.clientSecret=notTheRealSecret
           OrcidOidc.clientSecret=notTheRealSecret
 
+          # Codebase default to in-mem for local development, but we want the 
+          # CI tests to be run against real systems 
+          Apids.inMemoryStub=false
+          Orcid.inMemoryStub=false
+          Ror.inMemoryStub=false
+          Doi.inMemoryStub=false
+
           Apids.secret=$APIDS_JWT_SECRET
           EOF
 

@@ -4,6 +4,7 @@ import org.springframework.http.RequestEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import raido.apisvc.util.Log;
+import raido.apisvc.util.Security;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import static raido.apisvc.util.ObjectUtil.infoLogExecutionTime;
 public class OrcidService {
   public static final Pattern ORCID_REGEX =
     compile("^https://orcid\\.org/[\\d]{4}-[\\d]{4}-[\\d]{4}-[\\d]{4}$");
+  public static final String NOT_FOUND_MESSAGE = "The ORCID does not exist.";
 
   private static final Log log = to(OrcidService.class);
   protected static final Log httpLog = to(OrcidService.class, "http");
@@ -31,7 +33,7 @@ public class OrcidService {
   }
 
   public List<String> validateOrcidExists(String orcid) {
-
+    guardSsrf(orcid);
     /* SSRF prevention - keep this "near" the actual HTTP call so 
     that static analysis tools understand it's protected */
     if( !ORCID_REGEX.matcher(orcid).matches() ){
@@ -46,11 +48,17 @@ public class OrcidService {
       );
     }
     catch( HttpClientErrorException e ){
-      log.warnEx("Problem retrieving ORCID", e);
-      return of("The ORCID does not exist.");
+      log.with("message", e.getMessage()).
+        with("status", e.getStatusCode()).
+        warn("Problem retrieving ORCID");
+      return of(NOT_FOUND_MESSAGE);
     }
 
     return emptyList();
   }
 
+  public static void guardSsrf(String orcid){
+    Security.guardSsrf("ORCID", ORCID_REGEX, orcid);
+  }
+  
 }

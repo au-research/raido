@@ -15,6 +15,7 @@ import raido.idl.raidv2.model.FailureResponse;
 import raido.idl.raidv2.model.ValidationFailureResponse;
 
 import static raido.apisvc.util.Log.to;
+import static raido.apisvc.util.ObjectUtil.first;
 
 @ControllerAdvice
 public class RaidExceptionHandler extends ResponseEntityExceptionHandler {
@@ -23,7 +24,13 @@ public class RaidExceptionHandler extends ResponseEntityExceptionHandler {
   @ExceptionHandler(ValidationException.class)
   public ResponseEntity<ValidationFailureResponse> handleValidationException(final Exception e) {
     final var exception = (ValidationException) e;
-    log.warnEx(exception.getTitle(), e);
+    /* we expect validation errors to be frequent, and they're not useful for
+    detecting vulnerability probes/scanning - no need to see them in the logs
+    for a real environment (logging the stack seems like overkill too) */
+    log.with("failures.size", exception.getFailures().size()).
+      with("failures[0..2]", first(exception.getFailures(), 2)).
+      info("validation exception");
+    log.debugEx(exception.getTitle(), e);
 
     final var body = new ValidationFailureResponse()
       .type(exception.getType())

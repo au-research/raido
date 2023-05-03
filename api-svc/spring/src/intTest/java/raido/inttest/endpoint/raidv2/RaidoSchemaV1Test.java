@@ -6,7 +6,6 @@ import raido.apisvc.service.raid.ValidationFailureException;
 import raido.apisvc.service.raid.id.IdentifierParser;
 import raido.idl.raidv2.model.*;
 import raido.inttest.IntegrationTestCase;
-import raido.apisvc.service.stub.util.IdFactory;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,8 +26,8 @@ import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 import static raido.inttest.endpoint.raidv1.LegacyRaidV1MintTest.INT_TEST_ID_URL;
-import static raido.inttest.util.MinimalRaidTestData.DUMMY_ORCID;
-import static raido.inttest.util.MinimalRaidTestData.DUMMY_ROR;
+import static raido.inttest.util.MinimalRaidTestData.REAL_TEST_ORCID;
+import static raido.inttest.util.MinimalRaidTestData.REAL_TEST_ROR;
 
 public class RaidoSchemaV1Test extends IntegrationTestCase {
 
@@ -174,7 +173,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
 
   public static ContributorBlock createDummyLeaderContributor(LocalDate today) {
     return new ContributorBlock().
-      id(DUMMY_ORCID).
+      id(REAL_TEST_ORCID).
       identifierSchemeUri(HTTPS_ORCID_ORG_).
       positions(List.of(new ContributorPosition().
         positionSchemaUri(HTTPS_RAID_ORG_).
@@ -188,7 +187,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
 
   public static OrganisationBlock createDummyOrganisation(LocalDate today) {
     return new OrganisationBlock().
-      id(DUMMY_ROR).
+      id(REAL_TEST_ROR).
       identifierSchemeUri(OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_).
       roles(List.of(
         new OrganisationRole().
