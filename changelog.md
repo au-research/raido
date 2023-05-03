@@ -14,6 +14,7 @@ _Not yet scheduled_
 ## API 
 * Validation to check ORCID exists for contributor
 * Validation to check ROR exists for organisation
+* Validation to check ROR exists for service point
 * New metadata blocks:
   * spatial coverages
   * traditional knowledge labels
