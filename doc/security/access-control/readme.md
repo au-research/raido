@@ -73,7 +73,7 @@ identified as "a RedBox user @ UNDA".
 ## Auditing of data access
 
 Raido does no auditing of view actions and there is no plan to implement 
-any - this includes "closed" and "embargoes" data.
+any - this includes "closed" and "embargoed" data.
 
 
 
