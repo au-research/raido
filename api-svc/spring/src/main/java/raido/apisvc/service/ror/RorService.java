@@ -33,7 +33,9 @@ public class RorService {
 
     /* SSRF prevention - keep this "near" the actual HTTP call so 
     that static analysis tools understand it's protected */
-    if( ROR_REGEX.matcher(ror).matches() ){
+    // does it have to be in-line?
+    var regex = "^https://ror\\.org/[0-9a-z]{9}$";
+    if( regex.matches(ror) ){
       final var requestEntity = RequestEntity.head(ror).build();
 
       try {
