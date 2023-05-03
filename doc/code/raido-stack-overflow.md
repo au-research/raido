@@ -1,3 +1,4 @@
+
 Any time you get stuck for _more than a few minutes_ 
 trying to figure out a _strange error message_, _multiple times_ - you should
 add it to this list.
@@ -20,7 +21,8 @@ out that it wasn't something I was doing wrong.
 # Flyway new migration file not being run
 
 Twice now, I've taken something like `VX__something.sql` and named it 
-`VX_Y_something-else.sql` - but that won't work.
+`VX_Y_something-else.sql` - but that's not how it works.
+
 Needs to be `VX_Y__something-else.sql` - note the two under-bar chars that
 separate the versin from the description.  Each time I've done this, I've 
 assumed the minor version number goes between the two under-bars, then I get

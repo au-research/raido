@@ -70,6 +70,9 @@ see [app-client/build.gradle](../app-client/build.gradle).
   * JDK 17 - Corretto
 * Spring
   * Not spring-boot
+* Gatling
+  * load testing
+  * we use the Java API bindings for this, no Scala
 
 
 # Frontend
@@ -101,9 +104,6 @@ Little bits of scripting stuff, the usual glue code.
 * Shell scripts
   * for booting up EC2 instances,
   * `codebuild` definitions
-* Scala
-  * load testing
-  * doesn't exist yet, will use Gatling
 * Javascript
   * little bits of glue, like in NPM scripts, etc.
 
