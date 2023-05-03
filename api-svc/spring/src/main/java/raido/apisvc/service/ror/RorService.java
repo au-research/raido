@@ -33,22 +33,25 @@ public class RorService {
 
     /* SSRF prevention - keep this "near" the actual HTTP call so 
     that static analysis tools understand it's protected */
-    if( !ROR_REGEX.matcher(ror).matches() ){
+    if( ROR_REGEX.matcher(ror).matches() ){
+      final var requestEntity = RequestEntity.head(ror).build();
+
+      try {
+        infoLogExecutionTime(log, VALIDATE_ROR_EXISTS, ()->
+          rest.exchange(requestEntity, Void.class)
+        );
+      }
+      catch( HttpClientErrorException e ){
+        log.warnEx("Problem retrieving ROR", e);
+        return of("The ROR does not exist.");
+      }
+
+      return emptyList();
+    }
+    else {
       throw illegalArgException("ROR failed SSRF prevention");
     }
-    
-    final var requestEntity = RequestEntity.head(ror).build();
 
-    try {
-      infoLogExecutionTime(log, VALIDATE_ROR_EXISTS, ()->
-        rest.exchange(requestEntity, Void.class)
-      );
-    } catch (HttpClientErrorException e) {
-      log.warnEx("Problem retrieving ROR", e);
-      return of("The ROR does not exist.");
-    }
-    
-    return emptyList();
   }
   
 }
