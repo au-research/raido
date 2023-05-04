@@ -35,7 +35,7 @@ public class RorService {
     that static analysis tools understand it's protected */
     // does it have to be in-line?
     var regex = "^https://ror\\.org/[0-9a-z]{9}$";
-    if( regex.matches(ror) ){
+    if( ror.matches(regex) ){
       final var requestEntity = RequestEntity.head(ror).build();
 
       try {
