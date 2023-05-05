@@ -31,7 +31,7 @@ public class RorService {
   }
 
   public List<String> validateRorExists(String ror) {
-    guardSsrf(ror);
+    ror = guardSsrf(ror);
     
     final var requestEntity = RequestEntity.head(ror).build();
 
@@ -50,7 +50,8 @@ public class RorService {
     return emptyList();
   }
 
-  public static void guardSsrf(String ror){
+  public static String guardSsrf(String ror){
     Security.guardSsrf("ROR", ROR_REGEX, ror);
+    return ror;
   }
 }
