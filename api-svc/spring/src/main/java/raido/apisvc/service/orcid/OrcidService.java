@@ -34,11 +34,6 @@ public class OrcidService {
 
   public List<String> validateOrcidExists(String orcid) {
     guardSsrf(orcid);
-    /* SSRF prevention - keep this "near" the actual HTTP call so 
-    that static analysis tools understand it's protected */
-    if( !ORCID_REGEX.matcher(orcid).matches() ){
-      throw illegalArgException("ORCID failed SSRF prevention");
-    }
 
     final var requestEntity = RequestEntity.head(orcid).build();
 
@@ -57,8 +52,8 @@ public class OrcidService {
     return emptyList();
   }
 
-  public static void guardSsrf(String orcid){
-    Security.guardSsrf("ORCID", ORCID_REGEX, orcid);
+  public static void guardSsrf(String doi){
+    Security.guardSsrf("ORCID", ORCID_REGEX, doi);
   }
   
 }
