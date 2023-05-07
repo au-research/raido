@@ -31,9 +31,9 @@ public class RorService {
   }
 
   public List<String> validateRorExists(String ror) {
-    ror = guardSsrf(ror);
+    String protectedRor = guardSsrf(ror);
     
-    final var requestEntity = RequestEntity.head(ror).build();
+    final var requestEntity = RequestEntity.head(protectedRor).build();
 
     try {
       infoLogExecutionTime(log, VALIDATE_ROR_EXISTS, ()->
@@ -52,6 +52,6 @@ public class RorService {
 
   public static String guardSsrf(String ror){
     Security.guardSsrf("ROR", ROR_REGEX, ror);
-    return ror;
+    return "" + ror;
   }
 }
