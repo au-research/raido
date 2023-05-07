@@ -116,8 +116,8 @@ public class RaidExceptionHandler extends ResponseEntityExceptionHandler {
       if (response != null) {
         return response;
       }
-    } catch (Exception ex) {
-      log.errorEx("Exception thrown in exception handler", e);
+    } catch (Exception handlerEx) {
+      log.errorEx("Exception thrown in exception handler", handlerEx);
     }
     log.errorEx("Unhandled exception", e);
 
