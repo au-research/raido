@@ -63,5 +63,5 @@ components:
       properties:
         # Rather than "string" this should be a "constant" with value `PublicClosedMetadataSchemaV1`
         metadataSchema: { type: string }
-        id: {$ref: 'metadata-block.yaml#/components/schemas/IdBlock'}
+        id: {$ref: 'metadata-block.yaml#/components/schemas/IdBlockV1'}
         access: {$ref: 'metadata-block.yaml#/components/schemas/AccessBlock'}      

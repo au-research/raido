@@ -7,14 +7,7 @@ import raido.apisvc.service.raid.id.IdentifierHandle;
 import raido.apisvc.service.raid.id.IdentifierParser;
 import raido.apisvc.service.raid.id.IdentifierUrl;
 import raido.apisvc.util.Log;
-import raido.idl.raidv2.model.AccessBlock;
-import raido.idl.raidv2.model.AccessType;
-import raido.idl.raidv2.model.AlternateUrlBlock;
-import raido.idl.raidv2.model.CreateRaidV1Request;
-import raido.idl.raidv2.model.DatesBlock;
-import raido.idl.raidv2.model.IdBlock;
-import raido.idl.raidv2.model.UpdateRaidV1Request;
-import raido.idl.raidv2.model.ValidationFailure;
+import raido.idl.raidv2.model.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,7 +20,7 @@ import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.RestUtil.urlDecode;
 import static raido.apisvc.util.StringUtil.areDifferent;
 import static raido.apisvc.util.StringUtil.isBlank;
-import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
+import static raido.idl.raidv2.model.RaidoMetaschemaV1.RAIDOMETADATASCHEMAV1;
 
 @Component
 public class RaidSchemaV1ValidationService {
@@ -66,7 +59,7 @@ public class RaidSchemaV1ValidationService {
     this.traditionalKnowledgeLabelSvc = traditionalKnowledgeLabelSvc;
   }
 
-  private List<ValidationFailure> validateUpdateHandle(final String decodedHandleFromPath, final IdBlock updateIdBlock) {
+  private List<ValidationFailure> validateUpdateHandle(final String decodedHandleFromPath, final IdBlockV1 updateIdBlock) {
     final var failures = new ArrayList<ValidationFailure>();
 
     IdentifierUrl updateId = null;

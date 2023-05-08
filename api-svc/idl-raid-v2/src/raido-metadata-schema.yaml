@@ -178,8 +178,8 @@ components:
       type: object
       required: [ metadataSchema, id, titles, dates, contributors, access ]
       properties:
-        metadataSchema: {$ref: 'shared.yaml#/components/schemas/RaidoMetaschema'}
-        id: {$ref: 'metadata-block.yaml#/components/schemas/IdBlock'}
+        metadataSchema: {$ref: 'shared.yaml#/components/schemas/RaidoMetaschemaV1'}
+        id: {$ref: 'metadata-block.yaml#/components/schemas/IdBlockV1'}
         titles: 
           type: array
           items: {$ref: 'metadata-block.yaml#/components/schemas/TitleBlock'}
@@ -228,8 +228,8 @@ components:
       type: object
       required: [ metadataSchema, id, titles, dates, access]
       properties:
-        metadataSchema: {$ref: 'shared.yaml#/components/schemas/RaidoMetaschema'}
-        id: {$ref: 'metadata-block.yaml#/components/schemas/IdBlock'}
+        metadataSchema: {$ref: 'shared.yaml#/components/schemas/RaidoMetaschemaV1'}
+        id: {$ref: 'metadata-block.yaml#/components/schemas/IdBlockV1'}
         titles: 
           type: array
           items: {$ref: 'metadata-block.yaml#/components/schemas/TitleBlock'}
@@ -256,7 +256,7 @@ components:
         primaryTitle: {type: string}
         startDate: { type: string, format: date }
         createDate: { type: string, format: date-time }
-        metadataSchema: {$ref: 'shared.yaml#/components/schemas/RaidoMetaschema'}
+        metadataSchema: {$ref: 'shared.yaml#/components/schemas/RaidoMetaschemaV1'}
     ReadRaidResponseV2:
       type: object
       required: [

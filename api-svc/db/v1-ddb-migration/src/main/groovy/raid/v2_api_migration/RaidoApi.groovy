@@ -72,8 +72,8 @@ class RaidoApi {
     }
 
     return new LegacyMetadataSchemaV1().
-      metadataSchema(RaidoMetaschema.LEGACYMETADATASCHEMAV1).
-      id(new IdBlock().
+      metadataSchema(RaidoMetaschemaV1.LEGACYMETADATASCHEMAV1).
+      id(new IdBlockV1().
         identifier("https://raid.org.au/"+raid.get(RAID.HANDLE)).
         identifierSchemeURI("https://raid.org").
         globalUrl(contentPath)).
@@ -89,7 +89,6 @@ class RaidoApi {
         type(DescriptionType.PRIMARY_DESCRIPTION).
         description(raid.get(RAID.DESCRIPTION))]).
       alternateUrls(urls)
-
   }
 }
   

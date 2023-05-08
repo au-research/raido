@@ -17,8 +17,8 @@ import static raido.apisvc.service.raid.id.IdentifierParser.mapProblemsToValidat
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.areEqual;
 import static raido.apisvc.util.StringUtil.isBlank;
-import static raido.idl.raidv2.model.RaidoMetaschema.LEGACYMETADATASCHEMAV1;
-import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
+import static raido.idl.raidv2.model.RaidoMetaschemaV1.LEGACYMETADATASCHEMAV1;
+import static raido.idl.raidv2.model.RaidoMetaschemaV1.RAIDOMETADATASCHEMAV1;
 
 @Component
 public class RaidoSchemaV1ValidationService {
@@ -155,7 +155,7 @@ public class RaidoSchemaV1ValidationService {
   }
 
 
-  public List<ValidationFailure> validateIdBlockForMigration(IdBlock id) {
+  public List<ValidationFailure> validateIdBlockForMigration(IdBlockV1 id) {
     var failures = new ArrayList<ValidationFailure>();
     if( id == null ){
       failures.add(ValidationMessage.ID_BLOCK_NOT_SET);
@@ -182,8 +182,8 @@ public class RaidoSchemaV1ValidationService {
   }
 
   public List<ValidationFailure> validateIdBlockNotChanged(
-    IdBlock newId,
-    IdBlock oldId
+    IdBlockV1 newId,
+    IdBlockV1 oldId
   ) {
     List<ValidationFailure> failures = new ArrayList<>();
 

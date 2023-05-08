@@ -2,30 +2,19 @@ package raido.inttest.endpoint.raidv2;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Test;
-import raido.idl.raidv2.model.AccessBlock;
-import raido.idl.raidv2.model.DatesBlock;
-import raido.idl.raidv2.model.DescriptionBlock;
-import raido.idl.raidv2.model.MintRaidoSchemaV1Request;
-import raido.idl.raidv2.model.MintRaidoSchemaV1RequestMintRequest;
-import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
-import raido.idl.raidv2.model.ReadRaidV2Request;
-import raido.idl.raidv2.model.TitleBlock;
-import raido.idl.raidv2.model.UpdateRaidoSchemaV1Request;
+import raido.idl.raidv2.model.*;
 import raido.inttest.IntegrationTestCase;
-import raido.apisvc.service.stub.util.IdFactory;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
-import static raido.apisvc.util.test.BddUtil.EXPECT;
-import static raido.apisvc.util.test.BddUtil.THEN;
-import static raido.apisvc.util.test.BddUtil.WHEN;
+import static raido.apisvc.util.test.BddUtil.*;
 import static raido.idl.raidv2.model.AccessType.OPEN;
 import static raido.idl.raidv2.model.DescriptionType.ALTERNATIVE_DESCRIPTION;
 import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
-import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
+import static raido.idl.raidv2.model.RaidoMetaschemaV1.RAIDOMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.TitleType.ALTERNATIVE_TITLE;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 import static raido.inttest.endpoint.raidv2.RaidoSchemaV1Test.createDummyLeaderContributor;

@@ -12,7 +12,7 @@ paths:
   /raid/v1:
     post:
       tags:
-        - basic-raid-stable
+        - raido-stable-v1
       operationId: create-raid-v1
       summary: mint a raid
       requestBody:
@@ -38,7 +38,7 @@ paths:
                 $ref: 'components.yaml#/components/schemas/ValidationFailureResponse'
     get:
       tags:
-        - basic-raid-stable
+        - raido-stable-v1
       operationId: list-raids-v1
       summary: list raids
       parameters:
@@ -73,7 +73,7 @@ paths:
           type: string
     get:
       tags:
-        - basic-raid-stable
+        - raido-stable-v1
       operationId: read-raid-v1
       summary: read a raid, caller must be authorized
       responses:
@@ -85,7 +85,7 @@ paths:
                 $ref: 'components.yaml#/components/schemas/RaidSchemaV1'
     put:
       tags:
-        - basic-raid-stable
+        - raido-stable-v1
       operationId: update-raid-v1
       requestBody:
         required: true

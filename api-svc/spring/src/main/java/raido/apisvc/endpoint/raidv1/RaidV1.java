@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import raido.apisvc.service.raid.id.IdentifierUrl;
 import raido.apisvc.service.raid.MetadataService;
 import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.service.raid.ValidationFailureException;
+import raido.apisvc.service.raid.id.IdentifierUrl;
 import raido.apisvc.spring.config.RaidWebSecurityConfig;
 import raido.apisvc.spring.security.raidv1.Raid1PostAuthenicationJsonWebToken;
 import raido.apisvc.util.Guard;
@@ -21,13 +21,7 @@ import raido.idl.raidv1.model.RaidCreateModel;
 import raido.idl.raidv1.model.RaidModel;
 import raido.idl.raidv1.model.RaidModelMeta;
 import raido.idl.raidv1.model.RaidPublicModel;
-import raido.idl.raidv2.model.AccessBlock;
-import raido.idl.raidv2.model.DatesBlock;
-import raido.idl.raidv2.model.DescriptionBlock;
-import raido.idl.raidv2.model.LegacyMetadataSchemaV1;
-import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
-import raido.idl.raidv2.model.RaidoMetaschema;
-import raido.idl.raidv2.model.TitleBlock;
+import raido.idl.raidv2.model.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -41,18 +35,11 @@ import static org.eclipse.jetty.http.HttpStatus.NOT_FOUND_404;
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 import static org.springframework.transaction.annotation.Propagation.NEVER;
-import static raido.apisvc.endpoint.message.RaidApiMessage.DEMO_NOT_SUPPPORTED;
-import static raido.apisvc.endpoint.message.RaidApiMessage.HANDLE_NOT_FOUND;
-import static raido.apisvc.endpoint.message.RaidApiMessage.RAID_V1_ACCESS_STATEMENT;
-import static raido.apisvc.endpoint.message.RaidApiMessage.RAID_V1_MINT_DATA_ERROR;
+import static raido.apisvc.endpoint.message.RaidApiMessage.*;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.getFirstPrimaryDescription;
 import static raido.apisvc.spring.config.RaidWebSecurityConfig.RAID_V1_API;
 import static raido.apisvc.spring.security.ApiSafeException.apiSafe;
-import static raido.apisvc.util.DateUtil.formatDynamoDateTime;
-import static raido.apisvc.util.DateUtil.formatIsoDate;
-import static raido.apisvc.util.DateUtil.formatIsoDateTime;
-import static raido.apisvc.util.DateUtil.formatRaidV1DateTime;
-import static raido.apisvc.util.DateUtil.parseDynamoDateTime;
+import static raido.apisvc.util.DateUtil.*;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.isTrue;
@@ -245,7 +232,7 @@ public class RaidV1 implements RaidV1Api {
     LocalDate startDate
   ) {
     var metadataToMint = new LegacyMetadataSchemaV1().
-      metadataSchema(RaidoMetaschema.LEGACYMETADATASCHEMAV1).
+      metadataSchema(RaidoMetaschemaV1.LEGACYMETADATASCHEMAV1).
       titles(List.of(new TitleBlock().
         type(PRIMARY_TITLE).
         title(req.getMeta().getName()).

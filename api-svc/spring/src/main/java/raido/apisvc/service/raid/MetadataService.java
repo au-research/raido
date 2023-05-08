@@ -14,15 +14,7 @@ import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.Metaschema;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
-import raido.idl.raidv2.model.AccessBlock;
-import raido.idl.raidv2.model.AccessType;
-import raido.idl.raidv2.model.IdBlock;
-import raido.idl.raidv2.model.LegacyMetadataSchemaV1;
-import raido.idl.raidv2.model.PublicClosedMetadataSchemaV1;
-import raido.idl.raidv2.model.PublicRaidMetadataSchemaV1;
-import raido.idl.raidv2.model.PublicReadRaidResponseV3;
-import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
-import raido.idl.raidv2.model.ValidationFailure;
+import raido.idl.raidv2.model.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,8 +29,8 @@ import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.areEqual;
 import static raido.db.jooq.api_svc.enums.Metaschema.legacy_metadata_schema_v1;
 import static raido.db.jooq.api_svc.enums.Metaschema.raido_metadata_schema_v1;
-import static raido.idl.raidv2.model.RaidoMetaschema.LEGACYMETADATASCHEMAV1;
-import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
+import static raido.idl.raidv2.model.RaidoMetaschemaV1.LEGACYMETADATASCHEMAV1;
+import static raido.idl.raidv2.model.RaidoMetaschemaV1.RAIDOMETADATASCHEMAV1;
 
 @Component
 public class MetadataService {
@@ -143,7 +135,7 @@ public class MetadataService {
   }
 
   public static Metaschema mapApi2Db(
-    raido.idl.raidv2.model.RaidoMetaschema schema
+    raido.idl.raidv2.model.RaidoMetaschemaV1 schema
   ){
     if( areEqual(schema.getValue(), RAIDOMETADATASCHEMAV1.getValue()) ){
       return raido_metadata_schema_v1;
@@ -158,7 +150,7 @@ public class MetadataService {
     throw ex;
   }
 
-  public static raido.idl.raidv2.model.RaidoMetaschema mapDb2Api(
+  public static raido.idl.raidv2.model.RaidoMetaschemaV1 mapDb2Api(
     Metaschema schema
   ){
     if( areEqual(schema.getLiteral(), raido_metadata_schema_v1.getLiteral()) ){
@@ -178,10 +170,10 @@ public class MetadataService {
     return "%s/%s".formatted(metaProps.raidoLandingPrefix, handle);
   }
 
-  public IdBlock createIdBlock(final IdentifierUrl id,
+  public IdBlockV1 createIdBlock(final IdentifierUrl id,
                                final ServicePointRecord servicePointRecord
   ) {
-    return new IdBlock().
+    return new IdBlockV1().
       identifier(id.formatUrl()).
       identifierSchemeURI(RAID_ID_TYPE_URI).
       identifierRegistrationAgency(metaProps.identifierRegistrationAgency).
@@ -241,7 +233,7 @@ public class MetadataService {
   
   public PublicReadRaidResponseV3 mapToPublicClosed(
     RaidRecord raid,
-    IdBlock id, 
+    IdBlockV1 id,
     AccessBlock access
   ){
     if( access.getType() == AccessType.OPEN ){

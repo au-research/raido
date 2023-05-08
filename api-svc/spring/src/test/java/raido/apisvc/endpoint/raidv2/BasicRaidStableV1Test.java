@@ -43,14 +43,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static raido.apisvc.util.FileUtil.resourceContent;
 
 @ExtendWith(MockitoExtension.class)
-class BasicRaidStableTest {
+class BasicRaidStableV1Test {
   private MockMvc mockMvc;
   @Mock
   private RaidService raidService;
   @Mock
   private RaidSchemaV1ValidationService validationService;
   @InjectMocks
-  private BasicRaidStable controller;
+  private BasicRaidStableV1 controller;
   final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule()).setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
 
   @BeforeEach

@@ -276,7 +276,7 @@ public class AdminExperimental implements AdminExperimentalApi {
     * that the key is admin role and is for the raido SP. */
     guardRaidoAdminApiKey(user);
 
-    IdBlock idBlock = req.getMetadata().getId();
+    IdBlockV1 idBlock = req.getMetadata().getId();
 
     var failures = new ArrayList<ValidationFailure>();
     failures.addAll(validSvc.validateIdBlockForMigration(idBlock));

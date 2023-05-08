@@ -8,16 +8,8 @@ import feign.okhttp.OkHttpClient;
 import feign.slf4j.Slf4jLogger;
 import org.junit.jupiter.api.Test;
 import raido.apisvc.service.raid.id.IdentifierParser;
-import raido.idl.raidv2.api.BasicRaidStableApi;
-import raido.idl.raidv2.model.AccessBlock;
-import raido.idl.raidv2.model.CreateRaidV1Request;
-import raido.idl.raidv2.model.DatesBlock;
-import raido.idl.raidv2.model.DescriptionBlock;
-import raido.idl.raidv2.model.PublicRaidMetadataSchemaV1;
-import raido.idl.raidv2.model.PublicReadRaidMetadataResponseV1;
-import raido.idl.raidv2.model.RaidSchemaV1;
-import raido.idl.raidv2.model.TitleBlock;
-import raido.idl.raidv2.model.UpdateRaidV1Request;
+import raido.idl.raidv2.api.RaidoStableV1Api;
+import raido.idl.raidv2.model.*;
 import raido.inttest.IntegrationTestCase;
 
 import java.time.LocalDate;
@@ -26,25 +18,20 @@ import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
-import static raido.apisvc.util.test.BddUtil.EXPECT;
-import static raido.apisvc.util.test.BddUtil.THEN;
-import static raido.apisvc.util.test.BddUtil.WHEN;
+import static raido.apisvc.util.test.BddUtil.*;
 import static raido.idl.raidv2.model.AccessType.OPEN;
 import static raido.idl.raidv2.model.ContributorPositionRaidMetadataSchemaType.LEADER;
 import static raido.idl.raidv2.model.ContributorRoleCreditNisoOrgType.SOFTWARE;
 import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
 import static raido.idl.raidv2.model.OrganisationRoleType.LEAD_RESEARCH_ORGANISATION;
-import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
+import static raido.idl.raidv2.model.RaidoMetaschemaV1.RAIDOMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 import static raido.inttest.endpoint.raidv1.LegacyRaidV1MintTest.INT_TEST_ID_URL;
-import static raido.inttest.util.MinimalRaidTestData.DUMMY_ORCID;
-import static raido.inttest.util.MinimalRaidTestData.DUMMY_ROR;
-import static raido.inttest.util.MinimalRaidTestData.createContributor;
-import static raido.inttest.util.MinimalRaidTestData.createOrganisation;
+import static raido.inttest.util.MinimalRaidTestData.*;
 
 public class StableRaidoSchemaV1Test extends IntegrationTestCase {
 
-  public BasicRaidStableApi basicRaidStableClient(String token){
+  public RaidoStableV1Api basicRaidStableClient(String token){
     return Feign.builder().
       client(new OkHttpClient()).
       encoder(new JacksonEncoder(mapper)).
@@ -52,12 +39,12 @@ public class StableRaidoSchemaV1Test extends IntegrationTestCase {
       contract(feignContract).
       requestInterceptor(request->
         request.header(AUTHORIZATION, "Bearer " + token) ).
-      logger(new Slf4jLogger(BasicRaidStableApi.class)).
+      logger(new Slf4jLogger(RaidoStableV1Api.class)).
       logLevel(Logger.Level.FULL).
-      target(BasicRaidStableApi.class, props.getRaidoServerUrl());
+      target(RaidoStableV1Api.class, props.getRaidoServerUrl());
   }
   
-  public BasicRaidStableApi basicRaidStableClient(){
+  public RaidoStableV1Api basicRaidStableClient(){
     return basicRaidStableClient(operatorToken);
   }
   

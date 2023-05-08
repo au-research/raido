@@ -34,7 +34,7 @@ import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.hasValue;
 import static raido.db.jooq.api_svc.tables.Raid.RAID;
-import static raido.idl.raidv2.model.RaidoMetaschema.LEGACYMETADATASCHEMAV1;
+import static raido.idl.raidv2.model.RaidoMetaschemaV1.LEGACYMETADATASCHEMAV1;
 
 @Scope(proxyMode = TARGET_CLASS)
 @RestController

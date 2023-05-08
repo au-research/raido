@@ -56,7 +56,7 @@ class RaidSchemaV1ValidationServiceTest {
     final var subjects = Collections.singletonList(new SubjectBlock());
 
     final var raid = new UpdateRaidV1Request()
-      .id(new IdBlock())
+      .id(new IdBlockV1())
       .subjects(subjects);
 
     validationService.validateForUpdate(handle, raid);
@@ -88,7 +88,7 @@ class RaidSchemaV1ValidationServiceTest {
     final var relatedRaids = Collections.singletonList(new RelatedRaidBlock());
 
     final var raid = new UpdateRaidV1Request()
-      .id(new IdBlock())
+      .id(new IdBlockV1())
       .relatedRaids(relatedRaids);
 
     validationService.validateForUpdate(handle, raid);
@@ -101,7 +101,7 @@ class RaidSchemaV1ValidationServiceTest {
     final var relatedObjects = Collections.singletonList(new RelatedObjectBlock());
 
     final var raid = new UpdateRaidV1Request()
-      .id(new IdBlock())
+      .id(new IdBlockV1())
       .relatedObjects(relatedObjects);
 
     validationService.validateForUpdate(handle, raid);
@@ -114,7 +114,7 @@ class RaidSchemaV1ValidationServiceTest {
     final var alternateIdentifiers = Collections.singletonList(new AlternateIdentifierBlock());
 
     final var raid = new CreateRaidV1Request()
-      .id(new IdBlock())
+      .id(new IdBlockV1())
       .alternateIdentifiers(alternateIdentifiers);
 
     validationService.validateForCreate(raid);
@@ -127,7 +127,7 @@ class RaidSchemaV1ValidationServiceTest {
     final var alternateIdentifiers = Collections.singletonList(new AlternateIdentifierBlock());
 
     final var raid = new UpdateRaidV1Request()
-      .id(new IdBlock())
+      .id(new IdBlockV1())
       .alternateIdentifiers(alternateIdentifiers);
 
     validationService.validateForUpdate(handle, raid);
@@ -141,7 +141,7 @@ class RaidSchemaV1ValidationServiceTest {
       Collections.singletonList(new SpatialCoverageBlock());
 
     final var raid = new CreateRaidV1Request()
-      .id(new IdBlock())
+      .id(new IdBlockV1())
       .spatialCoverages(spatialCoverages);
 
     validationService.validateForCreate(raid);
@@ -155,7 +155,7 @@ class RaidSchemaV1ValidationServiceTest {
       Collections.singletonList(new SpatialCoverageBlock());
 
     final var raid = new UpdateRaidV1Request()
-      .id(new IdBlock())
+      .id(new IdBlockV1())
       .spatialCoverages(spatialCoverages);
 
     validationService.validateForUpdate(handle, raid);
@@ -169,7 +169,7 @@ class RaidSchemaV1ValidationServiceTest {
       Collections.singletonList(new TraditionalKnowledgeLabelBlock());
 
     final var raid = new CreateRaidV1Request()
-      .id(new IdBlock())
+      .id(new IdBlockV1())
       .traditionalKnowledgeLabels(traditionalKnowledgeLabels);
 
     validationService.validateForCreate(raid);
@@ -183,7 +183,7 @@ class RaidSchemaV1ValidationServiceTest {
       Collections.singletonList(new TraditionalKnowledgeLabelBlock());
 
     final var raid = new UpdateRaidV1Request()
-      .id(new IdBlock())
+      .id(new IdBlockV1())
       .traditionalKnowledgeLabels(traditionalKnowledgeLabels);
 
     validationService.validateForUpdate(handle, raid);
