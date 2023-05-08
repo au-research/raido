@@ -41,11 +41,14 @@ and suppressing various startup logs.
   <logger name="raido.apisvc.spring.RequestLoggingFilter" level="info"/>
   
   <!-- These log at info because we want them enabled by default in most 
-  deploy environments.  When personal dev logging is implemented - move these 
-  overrides there. -->
+  deploy environments.  I filter them out because most of the time I don't need
+  to see that stuff in my local dev environment. When personal dev logging is 
+  implemented - move these overrides there. -->
   <logger name="raido.apisvc.util.JvmUtil" level="warn"/>
   <logger name="raido.apisvc.spring.config.environment.DataSourceProps" level="warn"/>
-
+  <!-- set to debug to see full list of metrics on start -->
+  <logger name="raido.apisvc.spring.bean.MetricRegistry" level="info"/>
+  
   <!-- Almost never want to see any of these logs, either dev or deployed --> 
   <logger name="org.springframework" level="info"/>
   <logger name="org.eclipse.jetty" level="info"/>
@@ -85,17 +88,26 @@ and suppressing various startup logs.
 
   <!-- end JUL stuff -->
 
-  <!-- local dev load-test config, need to factory out to separate file -->
-<!--  <logger name="raido.apisvc.spring.RequestLoggingFilter" level="info"/>-->
-<!--  <logger name="p6spy" level="info"/>-->
-<!--  <logger name="p6spy.tx" level="info"/>-->
-<!--  <logger name="p6spy.cxnTest" level="info"/>-->
-<!--  <logger name="raido.apisvc.service.stub" level="warn"/>-->
-<!--  &lt;!&ndash; these intentionally use the prod logger, but we still want them quiet &ndash;&gt;-->
-<!--  <logger name="raido.apisvc.service.orcid.OrcidService.http" level="warn"/>-->
-<!--  <logger name="raido.apisvc.service.ror.RorService.http" level="warn"/>-->
-<!--  <logger name="raido.apisvc.service.apids.ApidsService.http" level="warn"/>-->
-<!--  &lt;!&ndash; for debugging duplicate handle generation &ndash;&gt;-->
+  <!-- local dev load-test config, need to factor out to separate file -->
+  <logger name="raido.apisvc.spring.RequestLoggingFilter" level="warn"/>
+  <logger name="p6spy" level="info"/>
+  <logger name="p6spy.tx" level="info"/>
+  <logger name="p6spy.cxnTest" level="info"/>
+  <logger name="raido.apisvc.service.stub" level="info"/>
+  <!-- these intentionally use the prod logger, but we still want them quiet -->
+  <logger name="raido.apisvc.service.orcid.OrcidService.http" level="warn"/>
+  <logger name="raido.apisvc.service.ror.RorService.http" level="warn"/>
+  <logger name="raido.apisvc.service.apids.ApidsService.http" level="warn"/>
+  <!-- for debugging duplicate handle generation -->
 <!--  <logger name="raido.apisvc.service.stub.apids.InMemoryApidsServiceStub" level="info"/>-->
 
+  <!-- JMX spams out a lot of debug info if connecting to JMX (RMI stuff too)
+  via JConsole or VisualVM -->
+  <logger name="javax.management.remote" level="info"/>
+  
+  <!-- pushing aws metrics makes a lot of noise too -->
+  <logger name="io.netty" level="info"/>
+  <logger name="software.amazon.awssdk" level="info"/>
+  <logger name="io.micrometer" level="info"/>
+  
 </configuration>
