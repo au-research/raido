@@ -15,7 +15,7 @@ _Tentative deployment date: 2023-05-16_
 * PID validation
   * check ORCID exists for contributor
   * check ROR exists for organisation
-  * check ROR exists for service point
+  * check DOI exists for service point
   * note that the service-level-guide has been updated to allow that API 
     requests maybe rejected if they have too many PIDs associated
 * New metadata blocks:
