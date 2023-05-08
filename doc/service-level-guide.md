@@ -78,6 +78,14 @@ customers of the system, the API service has limits for various things.
 
 * 5 mint requests per second, per service-point
   * requests in excess of the limit may be rejected with a HTTP 429 error
+  * requests that try to associate too many PIDS (> 10) with a raid in a single 
+    request may be rejected with a HTTP 400 error
+    * because we validate every PID's existence with the relevant external 
+      system (ORCIRD, DOI, etc.) - validating many PIDs in a single request
+      may be deemed too expensive
+    * when this happens, we ask that you break the request into multiple 
+      separate update requests
+    calls
 * 25 general API requests per second, per service-point
   * requests in excess of the limit may be rejected with a HTTP 429 error
 * RAID Metadata is limited to 200 KB maximum size
