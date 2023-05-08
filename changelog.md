@@ -3,7 +3,7 @@ See the [Changelog audience](#changelog-audience) section for info about
 
 # 1.2
 
-_Not yet scheduled_
+_Tentative deployment date: 2023-05-16_
 
 ## App-client UI
 * Additions to mint/edit page:
