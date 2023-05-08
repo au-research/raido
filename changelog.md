@@ -12,9 +12,12 @@ _Tentative deployment date: 2023-05-16_
 * Option to disabled editing by service point
 
 ## API 
-* Validation to check ORCID exists for contributor
-* Validation to check ROR exists for organisation
-* Validation to check ROR exists for service point
+* PID validation
+  * check ORCID exists for contributor
+  * check ROR exists for organisation
+  * check ROR exists for service point
+  * note that the service-level-guide has been updated to allow that API 
+    requests maybe rejected if they have too many PIDs associated
 * New metadata blocks:
   * spatial coverages
   * traditional knowledge labels
