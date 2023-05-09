@@ -41,7 +41,7 @@ import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 public class PublicExperimental implements PublicExperimentalApi {
   public static final String HANDLE_V3_CATCHALL_PREFIX =
     RAID_V2_API + "/public/handle/v3" + "/";
-  public static final String HANDLE_SEPERATOR = "/";
+  public static final String HANDLE_SEPARATOR = "/";
   private static final Log log = to(PublicExperimental.class);
   
   private DSLContext db;
@@ -134,7 +134,7 @@ public class PublicExperimental implements PublicExperimentalApi {
     }
 
     String handle = path.substring(HANDLE_V3_CATCHALL_PREFIX.length());
-    if( !handle.contains(HANDLE_SEPERATOR) ){
+    if( !handle.contains(HANDLE_SEPARATOR) ){
       throw apiSafe("handle did not contain a slash character",
         BAD_REQUEST_400, of(handle));
     }
