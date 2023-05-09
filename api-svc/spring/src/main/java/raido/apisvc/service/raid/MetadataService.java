@@ -235,7 +235,13 @@ public class MetadataService {
         access(metadata.getAccess()).
         alternateUrls(metadata.getAlternateUrls()).
         contributors(metadata.getContributors()).
-        organisations((metadata.getOrganisations()))
+        organisations((metadata.getOrganisations())).
+        subjects(metadata.getSubjects()).
+        relatedRaids(metadata.getRelatedRaids()).
+        relatedObjects(metadata.getRelatedObjects()).
+        alternateIdentifiers(metadata.getAlternateIdentifiers()).
+        spatialCoverages(metadata.getSpatialCoverages()).
+        traditionalKnowledgeLabels(metadata.getTraditionalKnowledgeLabels())
       );
   }
   
