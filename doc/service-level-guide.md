@@ -81,7 +81,7 @@ customers of the system, the API service has limits for various things.
   * requests that try to associate too many PIDS (> 10) with a raid in a single 
     request may be rejected with a HTTP 400 error
     * because we validate every PID's existence with the relevant external 
-      system (ORCIRD, DOI, etc.) - validating many PIDs in a single request
+      system (ORCID, DOI, etc.) - validating many PIDs in a single request
       may be deemed too expensive
     * when this happens, we ask that you break the request into multiple 
       separate update requests
