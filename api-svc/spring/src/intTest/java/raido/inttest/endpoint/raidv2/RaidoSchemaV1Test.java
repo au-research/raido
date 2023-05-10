@@ -21,7 +21,7 @@ import static raido.idl.raidv2.model.ContributorPositionSchemeType.HTTPS_RAID_OR
 import static raido.idl.raidv2.model.ContributorRoleCreditNisoOrgType.PROJECT_ADMINISTRATION;
 import static raido.idl.raidv2.model.ContributorRoleSchemeType.HTTPS_CREDIT_NISO_ORG_;
 import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
-import static raido.idl.raidv2.model.RaidoMetaschemaV1.RAIDOMETADATASCHEMAV1;
+import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 import static raido.inttest.endpoint.raidv1.LegacyRaidV1MintTest.INT_TEST_ID_URL;
 import static raido.inttest.util.MinimalRaidTestData.DUMMY_ORCID;

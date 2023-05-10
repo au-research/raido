@@ -16,8 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static raido.apisvc.service.raid.MetadataService.RAID_ID_TYPE_URI;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
-import static raido.idl.raidv2.model.RaidoMetaschemaV1.LEGACYMETADATASCHEMAV1;
-import static raido.idl.raidv2.model.RaidoMetaschemaV1.RAIDOMETADATASCHEMAV1;
+import static raido.idl.raidv2.model.RaidoMetaschema.LEGACYMETADATASCHEMAV1;
+import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 import static raido.inttest.endpoint.raidv1.LegacyRaidV1MintTest.INT_TEST_ID_URL;
 import static raido.inttest.endpoint.raidv2.RaidoSchemaV1Test.createDummyLeaderContributor;
@@ -53,7 +53,7 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
     String initialTitle = "migration integration test " + handle;
     var initMetadata = new LegacyMetadataSchemaV1().
       metadataSchema(LEGACYMETADATASCHEMAV1).
-      id(new IdBlockV1().
+      id(new IdBlock().
         identifier(INT_TEST_ID_URL + "/" + handle).
         identifierSchemeURI(RAID_ID_TYPE_URI).
         globalUrl("https://something.example.com")).

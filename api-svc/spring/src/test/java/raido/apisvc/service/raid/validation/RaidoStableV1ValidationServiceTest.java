@@ -13,7 +13,7 @@ import java.util.Collections;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class RaidSchemaV1ValidationServiceTest {
+class RaidoStableV1ValidationServiceTest {
   @Mock
   private SubjectValidationService subjectValidationService;
   @Mock
@@ -38,7 +38,7 @@ class RaidSchemaV1ValidationServiceTest {
   @Mock
   private TraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelValidatorService;
   @InjectMocks
-  private RaidSchemaV1ValidationService validationService;
+  private RaidoStableV1ValidationService validationService;
 
   @Test
   void validatesSubjectsOnCreate() {
@@ -56,7 +56,7 @@ class RaidSchemaV1ValidationServiceTest {
     final var subjects = Collections.singletonList(new SubjectBlock());
 
     final var raid = new UpdateRaidV1Request()
-      .id(new IdBlockV1())
+      .id(new IdBlock())
       .subjects(subjects);
 
     validationService.validateForUpdate(handle, raid);
@@ -88,7 +88,7 @@ class RaidSchemaV1ValidationServiceTest {
     final var relatedRaids = Collections.singletonList(new RelatedRaidBlock());
 
     final var raid = new UpdateRaidV1Request()
-      .id(new IdBlockV1())
+      .id(new IdBlock())
       .relatedRaids(relatedRaids);
 
     validationService.validateForUpdate(handle, raid);
@@ -101,7 +101,7 @@ class RaidSchemaV1ValidationServiceTest {
     final var relatedObjects = Collections.singletonList(new RelatedObjectBlock());
 
     final var raid = new UpdateRaidV1Request()
-      .id(new IdBlockV1())
+      .id(new IdBlock())
       .relatedObjects(relatedObjects);
 
     validationService.validateForUpdate(handle, raid);
@@ -114,7 +114,7 @@ class RaidSchemaV1ValidationServiceTest {
     final var alternateIdentifiers = Collections.singletonList(new AlternateIdentifierBlock());
 
     final var raid = new CreateRaidV1Request()
-      .id(new IdBlockV1())
+      .id(new IdBlock())
       .alternateIdentifiers(alternateIdentifiers);
 
     validationService.validateForCreate(raid);
@@ -127,7 +127,7 @@ class RaidSchemaV1ValidationServiceTest {
     final var alternateIdentifiers = Collections.singletonList(new AlternateIdentifierBlock());
 
     final var raid = new UpdateRaidV1Request()
-      .id(new IdBlockV1())
+      .id(new IdBlock())
       .alternateIdentifiers(alternateIdentifiers);
 
     validationService.validateForUpdate(handle, raid);
@@ -141,7 +141,7 @@ class RaidSchemaV1ValidationServiceTest {
       Collections.singletonList(new SpatialCoverageBlock());
 
     final var raid = new CreateRaidV1Request()
-      .id(new IdBlockV1())
+      .id(new IdBlock())
       .spatialCoverages(spatialCoverages);
 
     validationService.validateForCreate(raid);
@@ -155,7 +155,7 @@ class RaidSchemaV1ValidationServiceTest {
       Collections.singletonList(new SpatialCoverageBlock());
 
     final var raid = new UpdateRaidV1Request()
-      .id(new IdBlockV1())
+      .id(new IdBlock())
       .spatialCoverages(spatialCoverages);
 
     validationService.validateForUpdate(handle, raid);
@@ -169,7 +169,7 @@ class RaidSchemaV1ValidationServiceTest {
       Collections.singletonList(new TraditionalKnowledgeLabelBlock());
 
     final var raid = new CreateRaidV1Request()
-      .id(new IdBlockV1())
+      .id(new IdBlock())
       .traditionalKnowledgeLabels(traditionalKnowledgeLabels);
 
     validationService.validateForCreate(raid);
@@ -183,7 +183,7 @@ class RaidSchemaV1ValidationServiceTest {
       Collections.singletonList(new TraditionalKnowledgeLabelBlock());
 
     final var raid = new UpdateRaidV1Request()
-      .id(new IdBlockV1())
+      .id(new IdBlock())
       .traditionalKnowledgeLabels(traditionalKnowledgeLabels);
 
     validationService.validateForUpdate(handle, raid);

@@ -14,7 +14,7 @@ import static raido.apisvc.util.test.BddUtil.*;
 import static raido.idl.raidv2.model.AccessType.OPEN;
 import static raido.idl.raidv2.model.DescriptionType.ALTERNATIVE_DESCRIPTION;
 import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
-import static raido.idl.raidv2.model.RaidoMetaschemaV1.RAIDOMETADATASCHEMAV1;
+import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.TitleType.ALTERNATIVE_TITLE;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 import static raido.inttest.endpoint.raidv2.RaidoSchemaV1Test.createDummyLeaderContributor;

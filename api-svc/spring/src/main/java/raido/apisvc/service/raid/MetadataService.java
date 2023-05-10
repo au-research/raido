@@ -29,8 +29,8 @@ import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.areEqual;
 import static raido.db.jooq.api_svc.enums.Metaschema.legacy_metadata_schema_v1;
 import static raido.db.jooq.api_svc.enums.Metaschema.raido_metadata_schema_v1;
-import static raido.idl.raidv2.model.RaidoMetaschemaV1.LEGACYMETADATASCHEMAV1;
-import static raido.idl.raidv2.model.RaidoMetaschemaV1.RAIDOMETADATASCHEMAV1;
+import static raido.idl.raidv2.model.RaidoMetaschema.LEGACYMETADATASCHEMAV1;
+import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 
 @Component
 public class MetadataService {
@@ -135,7 +135,7 @@ public class MetadataService {
   }
 
   public static Metaschema mapApi2Db(
-    raido.idl.raidv2.model.RaidoMetaschemaV1 schema
+    raido.idl.raidv2.model.RaidoMetaschema schema
   ){
     if( areEqual(schema.getValue(), RAIDOMETADATASCHEMAV1.getValue()) ){
       return raido_metadata_schema_v1;
@@ -150,7 +150,7 @@ public class MetadataService {
     throw ex;
   }
 
-  public static raido.idl.raidv2.model.RaidoMetaschemaV1 mapDb2Api(
+  public static raido.idl.raidv2.model.RaidoMetaschema mapDb2Api(
     Metaschema schema
   ){
     if( areEqual(schema.getLiteral(), raido_metadata_schema_v1.getLiteral()) ){
@@ -170,10 +170,10 @@ public class MetadataService {
     return "%s/%s".formatted(metaProps.raidoLandingPrefix, handle);
   }
 
-  public IdBlockV1 createIdBlock(final IdentifierUrl id,
+  public IdBlock createIdBlock(final IdentifierUrl id,
                                final ServicePointRecord servicePointRecord
   ) {
-    return new IdBlockV1().
+    return new IdBlock().
       identifier(id.formatUrl()).
       identifierSchemeURI(RAID_ID_TYPE_URI).
       identifierRegistrationAgency(metaProps.identifierRegistrationAgency).
@@ -233,7 +233,7 @@ public class MetadataService {
   
   public PublicReadRaidResponseV3 mapToPublicClosed(
     RaidRecord raid,
-    IdBlockV1 id,
+    IdBlock id,
     AccessBlock access
   ){
     if( access.getType() == AccessType.OPEN ){

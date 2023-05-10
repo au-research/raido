@@ -9,7 +9,7 @@ paths:
   
 components:
   schemas:
-    IdBlockV1:
+    IdBlock:
       type: object
       required: [ identifier, identifierSchemeUri,
         identifierRegistrationAgency, identifierOwner, identifierServicePoint, version ]
@@ -61,7 +61,7 @@ components:
         raidAgencyIdentifier: demo.raido-infra.com
     IdBlockV2:
       allOf:
-        - $ref: 'metadata-block.yaml#/components/schemas/IdBlockV1'
+        - $ref: 'metadata-block.yaml#/components/schemas/IdBlock'
       type: object
       required: [ version ]
       properties:

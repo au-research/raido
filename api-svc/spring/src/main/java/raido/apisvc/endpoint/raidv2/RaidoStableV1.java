@@ -7,7 +7,7 @@ import raido.apisvc.exception.InvalidAccessException;
 import raido.apisvc.exception.ValidationException;
 import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.service.raid.id.IdentifierUrl;
-import raido.apisvc.service.raid.validation.RaidSchemaV1ValidationService;
+import raido.apisvc.service.raid.validation.RaidoStableV1ValidationService;
 import raido.idl.raidv2.api.RaidoStableV1Api;
 import raido.idl.raidv2.model.CreateRaidV1Request;
 import raido.idl.raidv2.model.RaidSchemaV1;
@@ -24,11 +24,11 @@ import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
 @Transactional
-public class BasicRaidStableV1 implements RaidoStableV1Api {
-  private final RaidSchemaV1ValidationService validationService;
+public class RaidoStableV1 implements RaidoStableV1Api {
+  private final RaidoStableV1ValidationService validationService;
   private final RaidService raidService;
 
-  public BasicRaidStableV1(final RaidSchemaV1ValidationService validationService, final RaidService raidService) {
+  public RaidoStableV1(final RaidoStableV1ValidationService validationService, final RaidService raidService) {
     this.validationService = validationService;
     this.raidService = raidService;
   }

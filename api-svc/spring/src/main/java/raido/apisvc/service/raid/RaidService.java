@@ -53,7 +53,7 @@ import static raido.db.jooq.api_svc.enums.Metaschema.legacy_metadata_schema_v1;
 import static raido.db.jooq.api_svc.enums.Metaschema.raido_metadata_schema_v1;
 import static raido.db.jooq.api_svc.tables.Raid.RAID;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
-import static raido.idl.raidv2.model.RaidoMetaschemaV1.RAIDOMETADATASCHEMAV1;
+import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 
 @Component
 public class RaidService {

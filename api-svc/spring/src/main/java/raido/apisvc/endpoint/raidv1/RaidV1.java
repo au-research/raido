@@ -232,7 +232,7 @@ public class RaidV1 implements RaidV1Api {
     LocalDate startDate
   ) {
     var metadataToMint = new LegacyMetadataSchemaV1().
-      metadataSchema(RaidoMetaschemaV1.LEGACYMETADATASCHEMAV1).
+      metadataSchema(RaidoMetaschema.LEGACYMETADATASCHEMAV1).
       titles(List.of(new TitleBlock().
         type(PRIMARY_TITLE).
         title(req.getMeta().getName()).

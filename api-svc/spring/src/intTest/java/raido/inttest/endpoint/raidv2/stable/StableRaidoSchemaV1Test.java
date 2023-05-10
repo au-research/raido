@@ -24,7 +24,7 @@ import static raido.idl.raidv2.model.ContributorPositionRaidMetadataSchemaType.L
 import static raido.idl.raidv2.model.ContributorRoleCreditNisoOrgType.SOFTWARE;
 import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
 import static raido.idl.raidv2.model.OrganisationRoleType.LEAD_RESEARCH_ORGANISATION;
-import static raido.idl.raidv2.model.RaidoMetaschemaV1.RAIDOMETADATASCHEMAV1;
+import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 import static raido.inttest.endpoint.raidv1.LegacyRaidV1MintTest.INT_TEST_ID_URL;
 import static raido.inttest.util.MinimalRaidTestData.*;

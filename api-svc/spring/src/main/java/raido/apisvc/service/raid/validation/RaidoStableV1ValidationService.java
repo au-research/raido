@@ -20,11 +20,11 @@ import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.RestUtil.urlDecode;
 import static raido.apisvc.util.StringUtil.areDifferent;
 import static raido.apisvc.util.StringUtil.isBlank;
-import static raido.idl.raidv2.model.RaidoMetaschemaV1.RAIDOMETADATASCHEMAV1;
+import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 
 @Component
-public class RaidSchemaV1ValidationService {
-  private static final Log log = to(RaidSchemaV1ValidationService.class);
+public class RaidoStableV1ValidationService {
+  private static final Log log = to(RaidoStableV1ValidationService.class);
   
   private final TitleValidationService titleSvc;
   private final DescriptionValidationService descSvc;
@@ -38,7 +38,7 @@ public class RaidSchemaV1ValidationService {
   private final SpatialCoverageValidationService spatialCoverageSvc;
   private final TraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelSvc;
 
-  public RaidSchemaV1ValidationService(
+  public RaidoStableV1ValidationService(
     final TitleValidationService titleSvc,
     final DescriptionValidationService descSvc,
     final ContributorValidationService contribSvc,
@@ -59,7 +59,7 @@ public class RaidSchemaV1ValidationService {
     this.traditionalKnowledgeLabelSvc = traditionalKnowledgeLabelSvc;
   }
 
-  private List<ValidationFailure> validateUpdateHandle(final String decodedHandleFromPath, final IdBlockV1 updateIdBlock) {
+  private List<ValidationFailure> validateUpdateHandle(final String decodedHandleFromPath, final IdBlock updateIdBlock) {
     final var failures = new ArrayList<ValidationFailure>();
 
     IdentifierUrl updateId = null;

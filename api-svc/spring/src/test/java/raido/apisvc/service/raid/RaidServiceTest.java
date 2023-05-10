@@ -27,7 +27,7 @@ import raido.apisvc.util.FileUtil;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
 import raido.idl.raidv2.model.CreateRaidV1Request;
-import raido.idl.raidv2.model.IdBlockV1;
+import raido.idl.raidv2.model.IdBlock;
 import raido.idl.raidv2.model.RaidSchemaV1;
 import raido.idl.raidv2.model.UpdateRaidV1Request;
 
@@ -98,7 +98,7 @@ class RaidServiceTest {
     final var raidRecord = new RaidRecord();
 
     
-    final var idBlock = new IdBlockV1()
+    final var idBlock = new IdBlock()
       .identifier(id.formatUrl())
       .identifierSchemeURI(RAID_ID_TYPE_URI)
       .identifierRegistrationAgency(registrationAgency)

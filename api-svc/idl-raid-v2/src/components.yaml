@@ -12,8 +12,8 @@ components:
     RaidSchemaV1:
       type: object
       properties:
-        id: { $ref: 'metadata-block.yaml#/components/schemas/IdBlockV1' }
-        metadataSchema: { $ref: 'shared.yaml#/components/schemas/RaidoMetaschemaV1' }
+        id: { $ref: 'metadata-block.yaml#/components/schemas/IdBlock' }
+        metadataSchema: { $ref: 'shared.yaml#/components/schemas/RaidoMetaschema' }
         titles:
           type: array
           items: { $ref: 'metadata-block.yaml#/components/schemas/TitleBlock' }

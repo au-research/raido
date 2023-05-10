@@ -22,7 +22,7 @@ import raido.apisvc.exception.ResourceNotFoundException;
 import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.service.raid.id.IdentifierHandle;
 import raido.apisvc.service.raid.id.IdentifierUrl;
-import raido.apisvc.service.raid.validation.RaidSchemaV1ValidationService;
+import raido.apisvc.service.raid.validation.RaidoStableV1ValidationService;
 import raido.apisvc.spring.security.raidv2.AuthzTokenPayload;
 import raido.apisvc.util.FileUtil;
 import raido.idl.raidv2.model.*;
@@ -48,9 +48,9 @@ class BasicRaidStableV1Test {
   @Mock
   private RaidService raidService;
   @Mock
-  private RaidSchemaV1ValidationService validationService;
+  private RaidoStableV1ValidationService validationService;
   @InjectMocks
-  private BasicRaidStableV1 controller;
+  private RaidoStableV1 controller;
   final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule()).setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
 
   @BeforeEach

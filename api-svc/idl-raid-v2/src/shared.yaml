@@ -17,7 +17,7 @@ components:
         fieldId: { type: string }
         errorType: { type: string }
         message: { type: string }
-    RaidoMetaschemaV1:
+    RaidoMetaschema:
       description: >
         "Metaschema" is the enumeration of different "Metadata schema" 
         that Raido supports.
