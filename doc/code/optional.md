@@ -23,7 +23,7 @@ it's an X coordinate or something).
 The same applies to type variables.
 
 `T` and `R` are fine when they're used in the canonical way, just like 
-`i` and `j` for loop counters.  But the rest of the time - user proper names.
+`i` and `j` for loop counters.  But the rest of the time - use proper names.
 
 Consider pre-prepending `T` to type-names and using init-caps: 
 like `TInput`  and `TResult`.
@@ -62,7 +62,7 @@ if( x ){
   }
 }
 ```
-Better yet, use guard clause functions
+Better yet, use guard clause functions for stuff that should fail:
 
 ```
 guardHasValue(x)
@@ -70,7 +70,13 @@ guardHasValue(y)
 x.y.doSomething()
 ```
 
-Or don't have any conditionals at all - remember: not null by default.  
+And of course, optional chaining is fine if it's available:
+```
+x?.y?.doSomething()
+```
+
+The best solution is to not need the conditionals in the first place - 
+remember: not null by default.  
 The guard conditionals are nice, they definitely aid diagnosability of the 
 system, but if you're talking about internal code, they're optional.
 
