@@ -49,7 +49,7 @@ to make sure it's dealt with before a release - acknowledged as an accepted
 risk, mitigated or removed
 
 
-## UTF-8 encoding for all non-ASCII content
+## Use UTF-8 encoding for all non-ASCII content
 
 Any time you serialise text data: across the wire, into a html attribute,
 to disk, to a local store, to a DB column.
