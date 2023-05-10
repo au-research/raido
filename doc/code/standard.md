@@ -65,7 +65,7 @@ Emojis are a crucial documentation tool 🤠 ❤️‍🔥
 
 
 ### Postgres
-The actually encoding of `TEXT`/`VARCHAR` values depends on the encoding config
+The actual encoding of `TEXT`/`VARCHAR` values depends on the encoding config
 of the DB.
 
 Raido database has these config values:
@@ -146,13 +146,16 @@ storing a Time Zone, consider modelling the TZ separately (yes, literally -
 as a separate column, e.g. "local_client_entry_tz", "required_target_tz", etc.)
 Make it explicitly clear which TZ it stores and why you care about that TZ so
 much  - if you care about the TZ for some reason, I guarantee there's at least
-two TZs involved.
+two actual timezones involved that you should be storing.
 
 The rest of the time, push TZ stuff as high as possible - above the
 business/application logic, all the way into into the
 presentation/view/controller logic (if that's how you roll).
 
-Postgres columns should generally be modelled as timestamp without time zone.
+Postgres columns should _generally_ be modelled as timestamp without time zone.
+Yes, I'm aware of the Postgres 
+["don't do this"](https://wiki.postgresql.org/wiki/Don't_Do_This#Don.27t_use_timestamp_.28without_time_zone.29) 
+advice. Raido falls squarely in the "When should you?" camp.
 
 All APIs values should be UTC.
 
