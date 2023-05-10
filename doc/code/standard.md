@@ -7,7 +7,7 @@ If a tool/library can't support these standards - that's a stronger argument
 for discarding the tool than it is for making an exception.
 
 
-## No credentials in source repositories
+## Do not put credentials in source repositories
 
 This isn't about whether credentials are hard-coded or not.
 It's about minimising risk, given we're using a public hosting service and
@@ -36,7 +36,7 @@ If you're practicing good hygiene for your encryption key, then just do that
 with the credentials directly and spare us the crypto security theatre
 
 
-### Don't log sensitive data
+## Don't log sensitive data
 
 Be careful of logging headers, they may contain an Authorization header,
 which contains the authn/authz token.
@@ -49,7 +49,7 @@ to make sure it's dealt with before a release - acknowledged as an accepted
 risk, mitigated or removed
 
 
-### UTF-8 encoding for all non-ASCII content
+## UTF-8 encoding for all non-ASCII content
 
 Any time you serialise text data: across the wire, into a html attribute,
 to disk, to a local store, to a DB column.
@@ -64,7 +64,7 @@ This includes source, markdown and other resources.
 Emojis are a crucial documentation tool 🤠 ❤️‍🔥
 
 
-#### Postgres
+### Postgres
 The actually encoding of `TEXT`/`VARCHAR` values depends on the encoding config
 of the DB.
 
@@ -86,7 +86,7 @@ select length('👩‍❤️‍💋‍👩') -- length = 8
 ```
 
 
-### ASCII for non-content (URLs, filenames)
+## Use ASCII for non-content (URLs, filenames)
 
 "ASCII" means 7-bit clean US-ASCII - not the endless swamp of integration
 issues that is extended ASCII.
@@ -136,7 +136,7 @@ unrepresentable characters).
 [mojibake](https://en.wikipedia.org/wiki/Mojibake)
 
 
-### UTC everywhere
+## Use UTC everywhere
 
 Any time you serialise a date: across the wire, into a html attribute, to disk,
 to a local store, to a DB column.
@@ -182,7 +182,7 @@ This won't solve all our Timezone issues - but it'll gets us surprisingly far,
 and provides a significant amount of predictability along the way.
 
 
-### Unix file endings
+## Use Unix file endings
 
 Everywhere else we have a need to store or generate files (e.g. statically
 generated server files, text area content, etc.) - use unix line endings.
@@ -193,7 +193,7 @@ committed, transferred to a server, etc.)
 
 Most repos should have a `.gitattributes` file with `text=lf`.
 
-#### Why not "auto"?
+### Why not "auto"?
 
 * Docker images
   * don't want to be copying CR/LF files into the Docker images.
@@ -228,4 +228,16 @@ a UI control anyway so that Windows users can generate files with Unix line
 endings, because reasons. Seriously, you can't win. All you can do is
 have a sensible default so both developers and users can predict what your 
 system will probably do, most of the time.
+
+
+## Always explain deprecations 
+
+When marking an API endpoint or data structure deprecated - always provide some 
+explanation of what the intended upgrade path is (i.e. what they should do 
+instead). Don't just mark stuff deprecated. 
+
+This goes double for when you're intentionally sunsetting actual functionality, 
+not just the API. Don't make customers figure that out on their own.
+
+
 
