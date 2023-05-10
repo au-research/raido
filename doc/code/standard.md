@@ -188,8 +188,13 @@ Everywhere else we have a need to store or generate files (e.g. statically
 generated server files, text area content, etc.) - use unix line endings.
 
 Windows developers: learn to use tools that can deal with that, or make sure
-you're software supports both (and defaults to unix for anything that gets
+your software supports both (and defaults to unix for anything that gets
 committed, transferred to a server, etc.)
+
+Leo wins the inaugural "someone actually reviewed the code standards" award.
+The prize is this emoji - 🦁.
+Whenever someone demonstrates actually reading the documentation, the 
+Leo the Lion emoji will be awarded in slack.
 
 Most repos should have a `.gitattributes` file with `text=lf`.
 
