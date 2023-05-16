@@ -157,7 +157,7 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
         { requested && <>
           <Alert severity="success">
             <Typography>
-              Your authorisation reqeust has been submitted.
+              Your authorisation request has been submitted.
             </Typography>
             <Typography> 
               After your Service Point support team informs you that your 
