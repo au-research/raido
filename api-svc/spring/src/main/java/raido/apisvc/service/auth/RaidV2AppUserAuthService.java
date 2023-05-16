@@ -108,7 +108,6 @@ public class RaidV2AppUserAuthService {
   public Optional<Authentication> verifyAndAuthorize(DecodedJWT decodedJwt){
     var verifiedJwt = verify(decodedJwt);
     
-    // security:sto check claims and expiry and stuff
     String clientId = verifiedJwt.
       getClaim(RaidoClaim.CLIENT_ID.getId()).asString();
     String email = verifiedJwt.getClaim(RaidoClaim.EMAIL.getId()).asString();
