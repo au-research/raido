@@ -26,7 +26,7 @@ import static raido.inttest.util.MinimalRaidTestData.titles;
 public class InvalidPidTest extends IntegrationTestCase {
 
   @Test
-  void nonExistentPidsShouldFail() {
+  void mintWithNonExistentPidsShouldFail() {
     var raidApi = basicRaidStableClient();
     String initialTitle = getClass().getSimpleName() + "." + getName() +
       idFactory.generateUniqueId();
