@@ -86,11 +86,6 @@ public class GoogleOidc {
     Guard.areEqual(jwt.getAlgorithm(), "RS256");
     Guard.areEqual(jwt.getType(), "JWT");
 
-    /* Probably overkill and unnecessary. If the attacker can intercept calls
-    between api-svc and google to feed us a fake JWT, then they can intercept 
-    the JWKS url call too.
-    Keep an eye out for this when load testing; if measurably visible, 
-    consider getting rid of this. */
     verifyGoogleJwksSignature(jwt);
 
     Guard.hasValue(jwt.getSubject());
