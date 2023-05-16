@@ -88,11 +88,6 @@ public class AafOidc {
     Guard.areEqual(jwt.getAlgorithm(), "RS256");
     Guard.areEqual(jwt.getType(), "JWT");
 
-    /* Probably overkill and unnecessary. If the attacker can intercept calls
-    between api-svc and AAF to feed us a fake JWT, then they can intercept 
-    the JWKS url call too.
-    Keep an eye out for this when load testing; if measurably visible, 
-    consider getting rid of this. */
     verifyAafJwksSignature(jwt);
 
     Guard.hasValue(jwt.getSubject());
@@ -118,12 +113,10 @@ public class AafOidc {
   private void verifyAafJwksSignature(DecodedJWT jwt) {
     JwkProvider provider = null;
     try {
-      /* Must use URL because google certs aren't at the well-known location.
-      Note sure if can/should make provider static.  */
       provider = new UrlJwkProvider(new URL(aaf.jwks));
     }
     catch( MalformedURLException e ){
-      throw idpException("google props.jwks is malformed %s - %s",
+      throw idpException("AAF props.jwks is malformed %s - %s",
         aaf.jwks, e.getMessage());
     }
 
