@@ -4,7 +4,7 @@
 * Node.js 16
 * Java 17
   * so that the generated code can be built from the IDL via openapi-generator 
-  * see [build-troubleshooting.md](../doc/build-troubleshooting.md)
+  * see [build-troubleshooting.md](../doc/development/build-troubleshooting.md)
   for any errors (e.g. "java not found")
   * see [openapi-typescript.md](./doc/openapi-typescript.md) for some notes
   about this tech and possible alternatives
@@ -26,8 +26,8 @@ raido gradle build.
   
 # Developing 
 
-Look in [build-troubleshooting](../doc/build-troubleshooting.md) if having
-Node/Java problems.
+Look in [build-troubleshooting](../doc/development/build-troubleshooting.md) if 
+having Node/Java problems.
 
 ## Running a local Node.js server in IDEA
 
