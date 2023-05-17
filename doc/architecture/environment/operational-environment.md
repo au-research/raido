@@ -20,12 +20,13 @@ The following descriptions were mapped directly from the
 
 ## app-client - front-end web server
 
-The app-client is a React "Single Page App".  It doesn't need much from the web
-server beyond just serving the files and taking care of TLS.
+The app-client is a React "Single Page App", built as a purely static set of 
+files to be loaded by the web browser.  It doesn't need much from the web
+server beyond just serving the static files and taking care of TLS.
 
 * [AWS CloudFront](https://docs.aws.amazon.com/cloudfront/index.html)
 * https://github.com/au-research/raido-v2-aws-private/blob/main/raido-root/lib/prod/app-client/AppClientCloudFront.ts
-* [architecture decision log](/app-client/doc/adr/readme.md)
+* [architecture decision log](/app-client/doc/adr)
 
 
 ###  load balancing
@@ -48,8 +49,8 @@ Raido is a Java/Spring API server.
 It is stateless (we do not use session state) and designed for 
 horizontal scalability. 
 
-* [AWS ECS](https://aws.amazon.com/ecs/) running 
-* docker containers stored in [AWS ECR](https://aws.amazon.com/ecr/)
+* [AWS ECS](https://aws.amazon.com/ecs/) running docker containers stored in 
+  [AWS ECR](https://aws.amazon.com/ecr/)
 * https://github.com/au-research/raido-v2-aws-private/blob/main/raido-root/lib/prod/api-svc/ApiSvcEcs.ts
 * [Dockerfile](/api-svc/docker/src/main/docker/Ecs.Dockerfile)
 * [architecture decision log](/api-svc/doc/adr/readme.md)
