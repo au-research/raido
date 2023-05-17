@@ -1,12 +1,14 @@
 
 # Operational Environment 
 
-To run the Raido codebase in a non-AWS environment, you would need at least the 
-following.  
+To run the Raido codebase in a non-AWS environment, you would need to consider 
+how to provide equivalent services for each of the sections outlined below. 
 
-The following descriptions were mapped directly from the  
+The below sections were mapped directly from the  
 [raid-architecture.md](/doc/architecture/raid-architecture.md).
 
+
+# ARDC RAiD Service environment in AWS
 
 ## DNS
 * [AWS Route53](https://aws.amazon.com/route53/)
@@ -16,6 +18,23 @@ The following descriptions were mapped directly from the
 ## TLS certificates
 * [AWS Certificate Manager](https://aws.amazon.com/certificate-manager/)
 * https://github.com/au-research/raido-v2-aws-private/blob/main/raido-root/lib/prod/Us1Certificate.ts
+
+
+## External sign-in services
+
+Raido uses [Single sign-on](https://en.wikipedia.org/wiki/Single_sign-on).
+Raido is designed to use identity services OAuth2 / OIDC to allow users to 
+sign-in with pre-existing credentials.  
+Note that Raido currently implements no direct sign-in method 
+(i.e. storing username/email/password data in our DB).
+
+Currently, we authenticate uses with the following providers:
+* [Google](https://developers.google.com/identity/openid-connect/openid-connect)
+* [AAF](https://support.aaf.edu.au/support/solutions/articles/19000096640-openid-connect-)
+* [ORCID](https://info.orcid.org/documentation/features/public-api/orcid-as-a-sign-in-option-to-your-system/)
+
+Each of these authentication methods requires an agreement between the Relying 
+Party (i.e. ARDC) and the Identity Provider.
 
 
 ## app-client - front-end web server
@@ -29,7 +48,7 @@ server beyond just serving the static files and taking care of TLS.
 * [architecture decision log](/app-client/doc/adr)
 
 
-###  load balancing
+###  Load balancing
 
 Front-end Load balancing is completely encapsulated by the CloudFront service.
 CloudFront handles caching of files local to the end-user (if configured) and 
@@ -58,7 +77,7 @@ It is completely stateless, designed for horizontal scalability.
 * [architecture decision log](/api-svc/doc/adr/readme.md)
 
 
-### load balancing
+### Load balancing
 
 We use [AWS ALB](https://aws.amazon.com/elasticloadbalancing/application-load-balancer/) 
 in combination with ECS for routing API traffic to api-svc containers running 
@@ -66,6 +85,19 @@ in ECS.
 
 * https://github.com/au-research/raido-v2-aws-private/blob/main/raido-root/lib/prod/raido/ProdRaidOrgAuAlb.ts
 * https://github.com/au-research/raido-v2-aws-private/blob/fd26c55ab476533e6c3d9c2cd6f712046b101ba1/raido-root/lib/prod/api-svc/ApiSvcEcs.ts#L244
+
+
+### External PID services
+
+Currently, the api-svc validates PIDs (ORCID, ROR, DOI) with external services, 
+but it does so using only publicly available HTTP endpoints that do not require
+authentication.
+
+There are currently no API keys or other accounts/credentials that need to be
+set up to allow this.  
+
+Though the api-svc does requires network access to the internet so that 
+http/https requests can be made.
 
 
 ## Local Handle Service

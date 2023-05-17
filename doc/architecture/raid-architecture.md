@@ -6,7 +6,7 @@ The Raid stuff does not exist yet; in the medium to long term, the components
 of the "Raid system" will likely be managed in a separate repository to this
 one. 
 
-See the [project readme](../../readme.md#raid-vs-raido) for a description of 
+See the [raid-vs-raido.md](/doc/raid-vs-raido.md) for a description of 
 the difference between Raid and Raido.
 
 
@@ -14,7 +14,7 @@ the difference between Raid and Raido.
 <!--- Note the `?cache=no` param --->
 ![PlantUML model](https://www.plantuml.com/plantuml/png/9Sl13G8n34JHErL00OaldEZ6E1Qnb3WhPopQPrTSvyr_cCl8fXdZte5ZluY2l_LZwFdEhI7BeOugQn9d2TtA8VryMLiqsPpQ4hesWmeoz6_bAa_MAFAins17pd7x0G00?cache=no)
 
-**Note**: There is no short-term plan to implement a global RAiD "mint" 
+**Note**: There is no current plan to implement a global RAiD "mint" 
 endpoint.
 
 The only "central RAiD API" exists for the convenience of _readers_ who do not 
@@ -46,6 +46,19 @@ Major architectural decisions are documented in the Architecture Decision Log:
 More info about individual technology choices can be found in 
 [technology-stack.md](../technology-stack.md).
 
+
+# Operational environment
+
+The ARDC acts as a registration-agency for the Oceania region.  
+
+The ARDC runs the Raido software as the "ARDC RAiD Service", intended for use
+by organisations in the Oceania region.
+
+https://ardc.edu.au/services/ardc-identifier-services/raid-research-activity-identifier-service/
+
+This service is operated mostly in AWS, see 
+[operational-environment.md](./environment/operational-environment.md)
+for a description of how we map the architecture as shown onto AWS services.
 
 ----
 
