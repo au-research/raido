@@ -27,7 +27,7 @@ import static raido.apisvc.util.Log.to;
 
 /** In prod, this should be configured that the resolver will make
  sure we don't send any exception details to callers of the API (to avoid
- accidentall leakage of information). 
+ accidental leakage of information). 
  
  IMPROVE:  Exception hierarchy + resolver implementation is getting messy.
  There's no clear definition of how to use the various exceptions and what a 
@@ -36,10 +36,10 @@ import static raido.apisvc.util.Log.to;
  of this and define a formal exception handling strategy in the coding standard. 
  Streamline the API and document so a dev can easily know what kind
  of exception to throw  and what will happen (what code returned, what 
- message/deatil returned if any, what message is logged at what level and if
+ message/detail returned if any, what message is logged at what level and if
  stack trace is logged).
  If we don't do this it will cause security issues, inconsistent logging and
- accidetnal info leakage.
+ accidental info leakage.
  
  @see ValidationFailureException
  */
