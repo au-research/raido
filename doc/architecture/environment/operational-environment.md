@@ -46,8 +46,10 @@ See https://github.com/au-research/raido-v2-aws-private/blob/fd26c55ab476533e6c3
 ## api-svc - back-end API service
 
 Raido is a Java/Spring API server.
-It is stateless (we do not use session state) and designed for 
-horizontal scalability. 
+It is completely stateless, designed for horizontal scalability.
+* no 2nd level caching or similar
+* no use of HTTP session state
+* load balancing can be completely "un-sticky"
 
 * [AWS ECS](https://aws.amazon.com/ecs/) running docker containers stored in 
   [AWS ECR](https://aws.amazon.com/ecr/)
