@@ -1,12 +1,12 @@
 
 # [access-control](./access-control/readme.md)
+* authentication
+  * how OIDC authentication works and the transition from OAuth/OIDC
+    id_tokens to non-standard Raido api-tokens.
   * authorization
     * api-key
     * api-token
     * app-user
-  * authentication
-    * how OIDC authentication works and the transition from OAuth/OIDC 
-      id_tokens to non-standard Raido api-tokens.
 
 # [api-svc](./api-svc)
   * info about security vulnerability prevention, approaches, limitations

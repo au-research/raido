@@ -35,6 +35,9 @@ team (an `OPERATOR`) or of the service-point (an `SP_ADMIN`).
   person can then use the system to mint/edit/view raids associated with 
   that service-point
 
+See [app-user-authz-request-flow.md](./authorization/app-user-authz-request-flow.md).
+
+
 ## Machines
 
 * an `SP_ADMIN` or `OPERATOR` creates an api-key
@@ -47,6 +50,11 @@ team (an `OPERATOR`) or of the service-point (an `SP_ADMIN`).
 * the client integrator must then send the api-token in the `Authorization` 
   header of each API request (api-token value must be prepended with "Bearer ")
 
+See [api-client-onboarding-guide.md](../../api-integration/api-client-onboarding-guide.md)
+for details about setting up and api-key, api-token and making API requests.
+
+See the [authorization](./authorization/readme.md) section for details about how
+api-keys, roles and other authorization mechanisms work.
 
 # `access auditing`
 
