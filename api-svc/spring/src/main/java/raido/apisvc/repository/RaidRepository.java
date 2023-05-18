@@ -50,7 +50,20 @@ public class RaidRepository {
       .set(RAID.CONFIDENTIAL, raidRecord.getConfidential())
       .where(RAID.HANDLE.eq(raidRecord.getHandle()))
       .execute());
-      }
+  }
+
+  public int updateByHandleAndVersion(final RaidRecord raidRecord) {
+    return dslContext.update(RAID)
+      .set(RAID.PRIMARY_TITLE, raidRecord.getPrimaryTitle())
+      .set(RAID.METADATA, raidRecord.getMetadata())
+      .set(RAID.METADATA_SCHEMA, raidRecord.getMetadataSchema())
+      .set(RAID.START_DATE, raidRecord.getStartDate())
+      .set(RAID.CONFIDENTIAL, raidRecord.getConfidential())
+      .set(RAID.VERSION, raidRecord.getVersion() + 1)
+      .where(RAID.HANDLE.eq(raidRecord.getHandle()))
+      .and(RAID.VERSION.eq(raidRecord.getVersion()))
+      .execute();
+  }
 
   public Optional<RaidRecord> findByHandle(final String handle) {
     return dslContext.select(RAID.fields())

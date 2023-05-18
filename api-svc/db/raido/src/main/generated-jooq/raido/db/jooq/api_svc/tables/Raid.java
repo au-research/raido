@@ -4,34 +4,21 @@
 package raido.db.jooq.api_svc.tables;
 
 
+import org.jooq.Record;
+import org.jooq.*;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
+import raido.db.jooq.api_svc.ApiSvc;
+import raido.db.jooq.api_svc.Keys;
+import raido.db.jooq.api_svc.enums.Metaschema;
+import raido.db.jooq.api_svc.tables.records.RaidRecord;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Function10;
-import org.jooq.JSONB;
-import org.jooq.Name;
-import org.jooq.Record;
-import org.jooq.Records;
-import org.jooq.Row10;
-import org.jooq.Schema;
-import org.jooq.SelectField;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
-
-import raido.db.jooq.api_svc.ApiSvc;
-import raido.db.jooq.api_svc.Keys;
-import raido.db.jooq.api_svc.enums.Metaschema;
-import raido.db.jooq.api_svc.tables.records.RaidRecord;
 
 
 /**
@@ -114,6 +101,11 @@ public class Raid extends TableImpl<RaidRecord> {
      * The column <code>api_svc.raid.date_created</code>.
      */
     public final TableField<RaidRecord, LocalDateTime> DATE_CREATED = createField(DSL.name("date_created"), SQLDataType.LOCALDATETIME(6).nullable(false).defaultValue(DSL.field(DSL.raw("transaction_timestamp()"), SQLDataType.LOCALDATETIME)), this, "");
+
+    /**
+     * The column <code>api_svc.raid.version</code>.
+     */
+    public final TableField<RaidRecord, Integer> VERSION = createField(DSL.name("version"), SQLDataType.INTEGER.defaultValue(DSL.field(DSL.raw("1"), SQLDataType.INTEGER)), this, "");
 
     private Raid(Name alias, Table<RaidRecord> aliased) {
         this(alias, aliased, null);
@@ -216,18 +208,18 @@ public class Raid extends TableImpl<RaidRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row10 type methods
+    // Row11 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row10<String, Long, String, Integer, String, Boolean, Metaschema, JSONB, LocalDate, LocalDateTime> fieldsRow() {
-        return (Row10) super.fieldsRow();
+    public Row11<String, Long, String, Integer, String, Boolean, Metaschema, JSONB, LocalDate, LocalDateTime, Integer> fieldsRow() {
+        return (Row11) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function10<? super String, ? super Long, ? super String, ? super Integer, ? super String, ? super Boolean, ? super Metaschema, ? super JSONB, ? super LocalDate, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function11<? super String, ? super Long, ? super String, ? super Integer, ? super String, ? super Boolean, ? super Metaschema, ? super JSONB, ? super LocalDate, ? super LocalDateTime, ? super Integer, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -235,7 +227,7 @@ public class Raid extends TableImpl<RaidRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function10<? super String, ? super Long, ? super String, ? super Integer, ? super String, ? super Boolean, ? super Metaschema, ? super JSONB, ? super LocalDate, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function11<? super String, ? super Long, ? super String, ? super Integer, ? super String, ? super Boolean, ? super Metaschema, ? super JSONB, ? super LocalDate, ? super LocalDateTime, ? super Integer, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

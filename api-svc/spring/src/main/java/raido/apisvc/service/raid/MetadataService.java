@@ -180,7 +180,8 @@ public class MetadataService {
       identifierOwner(servicePointRecord.getIdentifierOwner()).
       identifierServicePoint(servicePointRecord.getId()).
       globalUrl(id.handle().format(metaProps.globalUrlPrefix)).
-      raidAgencyUrl(id.handle().format(metaProps.handleUrlPrefix));
+      raidAgencyUrl(id.handle().format(metaProps.handleUrlPrefix)).
+      version(1);
   }
 
   /**

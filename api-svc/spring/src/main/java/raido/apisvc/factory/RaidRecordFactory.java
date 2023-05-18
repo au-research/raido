@@ -10,10 +10,7 @@ import raido.apisvc.service.apids.model.ApidsMintResponse;
 import raido.db.jooq.api_svc.enums.Metaschema;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
-import raido.idl.raidv2.model.AccessType;
-import raido.idl.raidv2.model.CreateRaidV1Request;
-import raido.idl.raidv2.model.TitleType;
-import raido.idl.raidv2.model.UpdateRaidV1Request;
+import raido.idl.raidv2.model.*;
 
 import java.time.LocalDateTime;
 
@@ -79,6 +76,36 @@ public class RaidRecordFactory {
       .setPrimaryTitle(primaryTitle)
       .setMetadata(JSONB.valueOf(raidJson))
       .setMetadataSchema(Metaschema.raido_metadata_schema_v1)
+      .setStartDate(raid.getDates().getStartDate())
+      .setConfidential(raid.getAccess().getType() == AccessType.CLOSED);
+  }
+
+  public RaidRecord merge(final UpdateRaidStableV2Request raid, final RaidRecord existing) {
+
+    final var primaryTitle = raid.getTitles().stream()
+      .filter(title -> title.getType() == TitleType.PRIMARY_TITLE)
+      .findFirst()
+      .orElseThrow(() -> new InvalidTitleException("One title with a titleType of 'Primary' should be specified."))
+      .getTitle();
+
+    raid.getId().setVersion(raid.getId().getVersion() + 1);
+
+    final String raidJson;
+    try {
+      raidJson = objectMapper.writeValueAsString(raid);
+    } catch (JsonProcessingException e) {
+      throw new InvalidJsonException();
+    }
+
+    return new RaidRecord()
+      .setVersion(raid.getId().getVersion())
+      .setHandle(existing.getHandle())
+      .setServicePointId(existing.getServicePointId())
+      .setUrl(existing.getUrl())
+      .setUrlIndex(existing.getUrlIndex())
+      .setPrimaryTitle(primaryTitle)
+      .setMetadata(JSONB.valueOf(raidJson))
+      .setMetadataSchema(Metaschema.raido_metadata_schema_v2)
       .setStartDate(raid.getDates().getStartDate())
       .setConfidential(raid.getAccess().getType() == AccessType.CLOSED);
   }

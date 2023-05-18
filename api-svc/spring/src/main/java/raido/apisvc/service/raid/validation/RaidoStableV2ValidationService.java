@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import raido.apisvc.endpoint.message.ValidationMessage;
 import raido.apisvc.util.Log;
 import raido.idl.raidv2.model.RaidoMetaschemaV2;
-import raido.idl.raidv2.model.UpdateRaidV2Request;
+import raido.idl.raidv2.model.UpdateRaidStableV2Request;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.ArrayList;
@@ -63,7 +63,7 @@ public class RaidoStableV2ValidationService {
     this.datesBlockValidationService = datesBlockValidationService;
   }
 
-  public List<ValidationFailure> validateForUpdate(final String handle, final UpdateRaidV2Request request) {
+  public List<ValidationFailure> validateForUpdate(final String handle, final UpdateRaidStableV2Request request) {
     if( request == null ){
       return of(ValidationMessage.METADATA_NOT_SET);
     }

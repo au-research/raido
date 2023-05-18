@@ -66,8 +66,7 @@ components:
       required: [ version ]
       properties:
         version: {
-          type: integer,
-          format: int64
+          type: integer
         }
     AccessBlock:
       type: object

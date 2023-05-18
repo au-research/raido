@@ -4,13 +4,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.exception.InvalidAccessException;
+import raido.apisvc.exception.ResourceNotFoundException;
 import raido.apisvc.exception.ValidationException;
 import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.service.raid.RaidoStableV2Service;
 import raido.apisvc.service.raid.validation.RaidoStableV2ValidationService;
 import raido.idl.raidv2.api.RaidoStableV2Api;
 import raido.idl.raidv2.model.RaidSchemaV2;
-import raido.idl.raidv2.model.UpdateRaidV2Request;
+import raido.idl.raidv2.model.UpdateRaidStableV2Request;
 
 import java.util.ArrayList;
 
@@ -26,6 +27,7 @@ public class RaidoStableV2 implements RaidoStableV2Api {
   private final RaidoStableV2ValidationService validationService;
   private final RaidoStableV2Service raidoStableV2Service;
 
+
   private final RaidService raidService;
 
   public RaidoStableV2(final RaidoStableV2ValidationService validationService, final RaidoStableV2Service raidoStableV2Service, final RaidService raidService) {
@@ -35,12 +37,14 @@ public class RaidoStableV2 implements RaidoStableV2Api {
   }
 
   @Override
-  public RaidSchemaV2 readRaidV2(final String prefix, final String suffix) {
-    return null;
+  public RaidSchemaV2 readRaidStableV2(final String prefix, final String suffix) {
+    final var handle = String.join("/", prefix, suffix);
+    return raidoStableV2Service.findByHandle(handle)
+      .orElseThrow(() -> new ResourceNotFoundException(handle));
   }
 
   @Override
-  public RaidSchemaV2 updateRaidV2(final String prefix, final String suffix, final UpdateRaidV2Request request) {
+  public RaidSchemaV2 updateRaidStableV2(final String prefix, final String suffix, final UpdateRaidStableV2Request request) {
     final var handle = String.join("/", prefix, suffix);
     var user = getAuthzPayload();
     guardOperatorOrAssociated(user, request.getId().getIdentifierServicePoint());
@@ -55,5 +59,6 @@ public class RaidoStableV2 implements RaidoStableV2Api {
       throw new ValidationException(failures);
     }
 
-    return raidoStableV2Service.updateRaid(request);  }
+    return raidoStableV2Service.updateRaid(request);
+  }
 }
