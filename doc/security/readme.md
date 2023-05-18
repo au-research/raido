@@ -5,9 +5,8 @@
     * api-token
     * app-user
   * authentication
-    * how OIDC authentication works
-    * boundary transition from OAuth/OIDC tokens to non-standard bearer tokens
-      (i.e. api-token) for API calls
+    * how OIDC authentication works and the transition from OAuth/OIDC 
+      id_tokens to non-standard Raido api-tokens.
 
 # [api-svc](./api-svc)
   * info about security vulnerability prevention, approaches, limitations

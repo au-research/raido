@@ -15,7 +15,7 @@ https://en.wikipedia.org/wiki/Computer_access_control
 
 * refers to "the function of specifying access rights/privileges to  
   resources"
-  * see [authorization](./authorizaton)
+  * see [authorization](./authorization)
 * older documentation sometimes refers to the concept of an "authz-token"
   which is used interchangeably with the concept of an "api-token"
 
