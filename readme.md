@@ -15,13 +15,14 @@ See [raid-vs-raido.md](/doc/raid-vs-raido.md) for more explanation.
 
 # Environments
 
-The PROD environment is available at https://app.prod.raid.org.au.
+The production (`PROD`) environment is available at 
+https://app.prod.raid.org.au.
 
-There is also a DEMO environment for the RAiD service available at 
+There is also a `DEMO` environment for the RAiD service available at 
 https://app.demo.raid.org.au.
 
 Note that:
-* you will not be approved to use the DEMO or PROD environments without prior
+* you will not be approved to use either environment without prior
   agreement - send email to `contact@raid.org`
 * the demo environment is under active development and is unstable 
   * the data gets reset frequently  
@@ -63,5 +64,5 @@ There is also a guide to the
 # Development
 
 Documentation about running locally, building and releasing can all be found
-in the [/doc/development](/doc/development). 
+in [/doc/development](/doc/development). 
 
