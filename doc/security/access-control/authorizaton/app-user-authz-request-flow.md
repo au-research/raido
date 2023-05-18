@@ -14,8 +14,8 @@ At the end of this flow, the user is fully authenticated via their ID Provider,
 but we don't consider them "signed in", because they are not approved to use 
 the system and their is no `app_user` record in the DB for them.
 
-If they refresh/close the browser and sign-in again, the user will still only 
-ever be shown the authz-request page (`NotAuthorizedContent.tsx`).
+If the user refreshes/closes the browser and signs in again, they will still 
+only ever be shown the authz-request page (`NotAuthorizedContent.tsx`).
 They can re-submit their authz-request to add a comment, or to change the 
 selected service-point for which they're requesting authorization.
 
