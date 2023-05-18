@@ -10,6 +10,15 @@ for details about how the OAuth2 / OIDC flow works.
 In the below a "NonAuthzToken" might also be though of as an "UnapprovedToken", 
 it identifies a person who has not been approved to use the system.
 
+At the end of this flow, the user is fully authenticated via their ID Provider,
+but we don't consider them "signed in", because they are not approved to use 
+the system and their is no `app_user` record in the DB for them.
+
+If they refresh/close the browser and sign-in again, the user will still only 
+ever be shown the authz-request page (`NotAuthorizedContent.tsx`).
+They can re-submit their authz-request to add a comment, or to change the 
+selected service-point for which they're requesting authorization.
+
 ```mermaid
 sequenceDiagram
 autonumber
@@ -29,7 +38,7 @@ opt OAuth2 / OIDC
 end
 
 opt Raido custom api-token generation
-  api-->>api: _
+  api-->>api: 
     note right of api: no app-user exists in DB for<br/>the identity in id_token
 
   api-->>api: _
