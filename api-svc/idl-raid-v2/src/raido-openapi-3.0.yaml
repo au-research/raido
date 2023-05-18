@@ -96,7 +96,9 @@ paths:
   # endregion
 
   # region Admin endpoints
-                
+            
+  # IMPROVE: `/v2/public/` is wrong, this is an authorised endpoint  
+  # Should be under /v2/experimental/              
   /v2/public/request-authz/v1/{authzRequestId}:
     $ref: "admin-experimental.yaml#/paths/~1read-request-authz"
   /v2/experimental/update-authz-request-status/v1:
