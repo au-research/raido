@@ -36,6 +36,9 @@ Currently, we authenticate uses with the following providers:
 Each of these authentication methods requires an agreement between the Relying 
 Party (i.e. ARDC) and the Identity Provider.
 
+See [/doc/security/access-control/authentication](/doc/security/access-control/authentication)
+for more detail about how sign-in and acess-control works.
+
 
 ## app-client - front-end web server
 
