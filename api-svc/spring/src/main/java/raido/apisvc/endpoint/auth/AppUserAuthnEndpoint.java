@@ -79,7 +79,7 @@ public class AppUserAuthnEndpoint {
     }
 
     String decodedState = RestUtil.base64Decode(stateValue);
-    log.with("decodeState", decodedState).debug("");
+    log.with("decodeState", decodedState).debug();
     
     var state = map.readValue(decodedState, AuthState.class);
     
@@ -99,7 +99,7 @@ public class AppUserAuthnEndpoint {
       exchangeCodeForVerifiedJwt(state.clientId, idpResponseCode);
 
     /* "email" isn't really email any more, going to rename it to 
-    "description" or something. 
+    "identity" or something. 
     Orcid may not have an email, user doesn't have to make it public.
     Google always provides email.
     AAF, not sure if it's always there - can only say it's been there for 
