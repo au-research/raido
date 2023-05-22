@@ -24,7 +24,7 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 import static org.springframework.transaction.annotation.Propagation.NEVER;
 import static raido.apisvc.endpoint.Constant.MAX_EXPERIMENTAL_RECORDS;
 import static raido.apisvc.endpoint.message.ValidationMessage.*;
-import static raido.apisvc.endpoint.raidv2.AuthzUtil.getAuthzPayload;
+import static raido.apisvc.endpoint.raidv2.AuthzUtil.getApiToken;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
 import static raido.apisvc.service.raid.MetadataService.mapDb2Api;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.mintFailed;
@@ -62,7 +62,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
   @Override
   public ReadRaidResponseV2 readRaidV2(ReadRaidV2Request req) {
     Guard.hasValue("must pass a handle", req.getHandle());
-    var user = getAuthzPayload();
+    var user = getApiToken();
     var data = raidSvc.readRaidResponseV2(req.getHandle());
     guardOperatorOrAssociated(user, data.getServicePointId());
     return data;
@@ -100,7 +100,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     Guard.notNull("request param may not be null", req);
     Guard.notNull("mintRequest field may not be null", mint);
     
-    var user = getAuthzPayload();
+    var user = getApiToken();
     guardOperatorOrAssociated(user, mint.getServicePointId());
 
     if (!raidSvc.isEditable(user, req.getMintRequest().getServicePointId())) {
@@ -129,7 +129,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
 
   @Override
   public List<RaidListItemV2> listRaidV2(RaidListRequestV2 req) {
-    var user = getAuthzPayload();
+    var user = getApiToken();
     guardOperatorOrAssociated(user, req.getServicePointId());
 
     return db.select(RAID.HANDLE, RAID.PRIMARY_TITLE, RAID.START_DATE,
@@ -168,7 +168,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
 
   @Override
   public MintResponse updateRaidoSchemaV1(UpdateRaidoSchemaV1Request req) {
-    var user = getAuthzPayload();
+    var user = getApiToken();
     var newData = req.getMetadata();
 
     if (!raidSvc.isEditable(user, req.getMetadata().getId().getIdentifierServicePoint())) {
@@ -213,7 +213,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
   public MintResponse upgradeLegacyToRaidoSchema(
     UpdateRaidoSchemaV1Request req
   ) {
-    var user = getAuthzPayload();
+    var user = getApiToken();
     var newData = req.getMetadata();
     if( newData == null ){
       return mintFailed(METADATA_NOT_SET);

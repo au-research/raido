@@ -54,7 +54,7 @@ public class OrcidOidc {
     return trimEqualsIgnoreCase(clientId, orcid.clientId);    
   }
   
-  public DecodedJWT exchangeCodeForVerifiedJwt(String idpResponseCode){
+  public DecodedJWT exchangeOAuthCodeForVerifiedIdToken(String idpResponseCode){
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 

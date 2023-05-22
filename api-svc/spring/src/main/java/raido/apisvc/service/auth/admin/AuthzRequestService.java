@@ -4,9 +4,9 @@ import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.springframework.stereotype.Component;
 import raido.apisvc.endpoint.Constant;
-import raido.apisvc.spring.security.raidv2.AuthzTokenPayload;
-import raido.apisvc.service.auth.NonAuthzTokenPayload;
-import raido.apisvc.service.auth.RaidV2AppUserAuthService;
+import raido.apisvc.spring.security.raidv2.ApiToken;
+import raido.apisvc.service.auth.UnapprovedUserApiToken;
+import raido.apisvc.service.auth.RaidV2AppUserOidcService;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.AuthRequestStatus;
@@ -50,12 +50,12 @@ public class AuthzRequestService {
   private static final Log log = to(AuthzRequestService.class);
 
   private DSLContext db;
-  private RaidV2AppUserAuthService userAuthSvc;
+  private RaidV2AppUserOidcService userAuthSvc;
 
 
   public AuthzRequestService(
     DSLContext db, 
-    RaidV2AppUserAuthService userAuthSvc
+    RaidV2AppUserOidcService userAuthSvc
   ) {
     this.db = db;
     this.userAuthSvc = userAuthSvc;
@@ -144,7 +144,7 @@ public class AuthzRequestService {
   }
 
   public UpdateAuthzResponse updateRequestAuthz(
-    NonAuthzTokenPayload user, UpdateAuthzRequest req
+    UnapprovedUserApiToken user, UpdateAuthzRequest req
   ) {
     String email = user.getEmail().toLowerCase().trim();
 
@@ -205,7 +205,7 @@ public class AuthzRequestService {
   }
 
   public void updateAuthzRequestStatus(
-    AuthzTokenPayload respondingUser,
+    ApiToken respondingUser,
     UpdateAuthzRequestStatus req,
     UserAuthzRequestRecord authzRecord
   ) {

@@ -2,8 +2,8 @@ package raido.apisvc.service.auth.admin;
 
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Component;
-import raido.apisvc.spring.security.raidv2.AuthzTokenPayload;
-import raido.apisvc.service.auth.RaidV2ApiKeyAuthService;
+import raido.apisvc.spring.security.raidv2.ApiToken;
+import raido.apisvc.service.auth.RaidV2ApiKeyApiTokenService;
 import raido.apisvc.util.DateUtil;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
@@ -18,7 +18,7 @@ import java.util.List;
 import static raido.apisvc.endpoint.Constant.MAX_EXPERIMENTAL_RECORDS;
 import static raido.apisvc.endpoint.message.RaidApiMessage.CANT_GENERATE_DISABLED_KEY;
 import static raido.apisvc.endpoint.message.RaidApiMessage.NO_APP_USER_WITH_API_KEY_ENDPOINT;
-import static raido.apisvc.spring.security.raidv2.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
+import static raido.apisvc.spring.security.raidv2.ApiToken.ApiTokenBuilder.anApiToken;
 import static raido.apisvc.util.DateUtil.local2Instant;
 import static raido.apisvc.util.DateUtil.offset2Local;
 import static raido.apisvc.util.ExceptionUtil.iae;
@@ -38,11 +38,11 @@ public class AppUserService {
   private static final Log log = to(AppUserService.class);
 
   private DSLContext db;
-  RaidV2ApiKeyAuthService apiAuthSvc;
+  RaidV2ApiKeyApiTokenService apiAuthSvc;
 
   public AppUserService(
     DSLContext db,
-    RaidV2ApiKeyAuthService apiAuthSvc
+    RaidV2ApiKeyApiTokenService apiAuthSvc
   ) {
     this.db = db;
     this.apiAuthSvc = apiAuthSvc;
@@ -51,7 +51,7 @@ public class AppUserService {
 
   public void updateAppUser(
     AppUser req,
-    AuthzTokenPayload invokingUser,
+    ApiToken invokingUser,
     AppUserRecord targetUser
   ) {
     Guard.isTrue("RAIDO_API values should use the api-key endpoints", 
@@ -144,7 +144,7 @@ public class AppUserService {
 
   public long updateApiKey(
     ApiKey req,
-    AuthzTokenPayload invokingUser
+    ApiToken invokingUser
   ) {
     Guard.hasValue("idProvider must be set", req.getIdProvider());
     Guard.areEqual("API key idProvider can only be RAIDO_API", 
@@ -222,7 +222,7 @@ public class AppUserService {
 
 
     var apiToken = apiAuthSvc.sign(
-      anAuthzTokenPayload().
+      anApiToken().
         withAppUserId(apiKey.getId()).
         withServicePointId(apiKey.getServicePointId()).
         withSubject(apiKey.getSubject()).

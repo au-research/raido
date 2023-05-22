@@ -6,7 +6,7 @@ import org.jooq.JSONB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import raido.apisvc.service.auth.RaidV2ApiKeyAuthService;
+import raido.apisvc.service.auth.RaidV2ApiKeyApiTokenService;
 import raido.apisvc.service.raidv1.RaidV1AuthService;
 import raido.apisvc.spring.config.environment.EnvironmentProps;
 import raido.apisvc.spring.config.environment.RaidV1AuthProps;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 import static org.jooq.impl.DSL.inline;
-import static raido.apisvc.spring.security.raidv2.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
+import static raido.apisvc.spring.security.raidv2.ApiToken.ApiTokenBuilder.anApiToken;
 import static raido.apisvc.util.Log.to;
 import static raido.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
 import static raido.db.jooq.api_svc.tables.AppUser.APP_USER;
@@ -85,9 +85,9 @@ public class BootstrapAuthTokenService {
     LocalDateTime expiry = LocalDateTime.now().plusDays(30);
     var apiKeyId = insertApiKey(svcPointId, subject, role); 
 
-    var apiToken = RaidV2ApiKeyAuthService.sign(
+    var apiToken = RaidV2ApiKeyApiTokenService.sign(
        authApiKeyProps.signingAlgo,
-        anAuthzTokenPayload().
+        anApiToken().
           withAppUserId(apiKeyId).
           withServicePointId(svcPointId).
           withSubject(subject).

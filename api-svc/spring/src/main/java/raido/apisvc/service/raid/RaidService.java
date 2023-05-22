@@ -23,7 +23,7 @@ import raido.apisvc.service.raid.id.IdentifierParser;
 import raido.apisvc.service.raid.id.IdentifierParser.ParseProblems;
 import raido.apisvc.service.raid.id.IdentifierUrl;
 import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
-import raido.apisvc.spring.security.raidv2.AuthzTokenPayload;
+import raido.apisvc.spring.security.raidv2.ApiToken;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.Metaschema;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
@@ -485,7 +485,7 @@ public class RaidService {
       fetchSingleInto(SERVICE_POINT);
   }
 
-  public boolean isEditable(final AuthzTokenPayload user, final long servicePointId) {
+  public boolean isEditable(final ApiToken user, final long servicePointId) {
     final var servicePoint = servicePointRepository.findById(servicePointId)
       .orElseThrow(() -> new UnknownServicePointException(servicePointId));
 

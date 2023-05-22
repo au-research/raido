@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.StringJoiner;
 
-public class AuthzTokenPayload implements Authentication {
+public class ApiToken implements Authentication {
   private Long appUserId;
   private Long servicePointId;
   private String clientId;
@@ -24,7 +24,7 @@ public class AuthzTokenPayload implements Authentication {
   public String toString() {
     return new StringJoiner(
       ", ",
-      AuthzTokenPayload.class.getSimpleName() + "[",
+      ApiToken.class.getSimpleName() + "[",
       "]")
       .add("appUserId='" + appUserId + "'")
       .add("servicePointId='" + servicePointId + "'")
@@ -95,7 +95,7 @@ public class AuthzTokenPayload implements Authentication {
     return role;
   }
 
-  public static final class AuthzTokenPayloadBuilder {
+  public static final class ApiTokenBuilder {
     private Long appUserId;
     private Long servicePointId;
     private String clientId;
@@ -103,44 +103,44 @@ public class AuthzTokenPayload implements Authentication {
     private String email;
     private String role;
 
-    private AuthzTokenPayloadBuilder() {
+    private ApiTokenBuilder() {
     }
 
-    public static AuthzTokenPayloadBuilder anAuthzTokenPayload() {
-      return new AuthzTokenPayloadBuilder();
+    public static ApiTokenBuilder anApiToken() {
+      return new ApiTokenBuilder();
     }
 
-    public AuthzTokenPayloadBuilder withAppUserId(Long appUserId) {
+    public ApiTokenBuilder withAppUserId(Long appUserId) {
       this.appUserId = appUserId;
       return this;
     }
     
-    public AuthzTokenPayloadBuilder withServicePointId(Long servicePointId) {
+    public ApiTokenBuilder withServicePointId(Long servicePointId) {
       this.servicePointId = servicePointId;
       return this;
     }
     
-    public AuthzTokenPayloadBuilder withClientId(String clientId) {
+    public ApiTokenBuilder withClientId(String clientId) {
       this.clientId = clientId;
       return this;
     }
 
-    public AuthzTokenPayloadBuilder withSubject(String subject) {
+    public ApiTokenBuilder withSubject(String subject) {
       this.subject = subject;
       return this;
     }
 
-    public AuthzTokenPayloadBuilder withEmail(String email) {
+    public ApiTokenBuilder withEmail(String email) {
       this.email = email;
       return this;
     }
 
-    public AuthzTokenPayloadBuilder withRole(String role) {
+    public ApiTokenBuilder withRole(String role) {
       this.role = role;
       return this;
     }
 
-    public AuthzTokenPayload build() {
+    public ApiToken build() {
       Guard.notNull(appUserId);
       Guard.notNull(servicePointId);
       Guard.hasValue(clientId);
@@ -148,7 +148,7 @@ public class AuthzTokenPayload implements Authentication {
       Guard.hasValue(email);
       Guard.hasValue(role);
       
-      AuthzTokenPayload payload = new AuthzTokenPayload();
+      ApiToken payload = new ApiToken();
       payload.appUserId = this.appUserId;
       payload.servicePointId = this.servicePointId;
       payload.email = this.email;

@@ -1,8 +1,8 @@
 package raido.apisvc.endpoint.raidv2;
 
 import raido.apisvc.exception.CrossAccountAccessException;
-import raido.apisvc.spring.security.raidv2.AuthzTokenPayload;
-import raido.apisvc.service.auth.NonAuthzTokenPayload;
+import raido.apisvc.spring.security.raidv2.ApiToken;
+import raido.apisvc.service.auth.UnapprovedUserApiToken;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.IdProvider;
@@ -25,16 +25,16 @@ public class AuthzUtil {
   private static final Log log = to(AuthzUtil.class);
   
   /** This will fail if the authentication is not a AuthzTokenPayload */
-  public static AuthzTokenPayload getAuthzPayload() {
+  public static ApiToken getApiToken() {
     return Guard.isInstance(
-      AuthzTokenPayload.class,
+      ApiToken.class,
       getContext().getAuthentication());
   }
 
   /** This will fail if the authentication is not a NonAuthzTokenPayload */
-  public static NonAuthzTokenPayload getNonAuthzPayload() {
+  public static UnapprovedUserApiToken getNonAuthzPayload() {
     return Guard.isInstance(
-      NonAuthzTokenPayload.class,
+      UnapprovedUserApiToken.class,
       getContext().getAuthentication());
   }
 
@@ -42,7 +42,7 @@ public class AuthzUtil {
   Originially implemented so I could write the migration endpoint that can 
   insert raids across service points (i.e. migrating RDM and NotreDame raids,
   etc.) - without having to allow api-keys to have an "operator" role. */
-  public static void guardRaidoAdminApiKey(AuthzTokenPayload user){
+  public static void guardRaidoAdminApiKey(ApiToken user){
     if( !areEqual(user.getClientId(), IdProvider.RAIDO_API.getLiteral()) ){
       /* IMPROVE: there really ought to be a better/more explicit way to tell 
       if a given user is an api-key or a real user. */
@@ -73,7 +73,7 @@ public class AuthzUtil {
    later might mean a more indirect association.
    */
   public static void guardOperatorOrAssociated(
-    AuthzTokenPayload user,
+    ApiToken user,
     Long servicePointId
   ) {
     Guard.notNull("user must be set", user);
@@ -92,7 +92,7 @@ public class AuthzUtil {
   }
 
   public static void guardOperatorOrAssociatedSpAdmin(
-    AuthzTokenPayload user,
+    ApiToken user,
     Long servicePointId
   ) {
     if( areEqual(user.getRole(), OPERATOR.getLiteral()) ){
@@ -119,7 +119,7 @@ public class AuthzUtil {
   }
 
   public static void guardOperatorOrAssociatedSpUser(
-    AuthzTokenPayload user,
+    ApiToken user,
     Long servicePointId
   ) {
     if( areEqual(user.getRole(), OPERATOR.getLiteral()) ){
@@ -140,14 +140,14 @@ public class AuthzUtil {
   }
 
   public static boolean isOperatorOrSpAdmin(
-    AuthzTokenPayload user
+    ApiToken user
   ) {
     return areEqual(user.getRole(), OPERATOR.getLiteral()) ||
       areEqual(user.getRole(), SP_ADMIN.getLiteral() );
   }
   
   public static void guardOperatorOrSpAdmin(
-    AuthzTokenPayload user
+    ApiToken user
   ) {
     if( isOperatorOrSpAdmin(user) ){
       return;
