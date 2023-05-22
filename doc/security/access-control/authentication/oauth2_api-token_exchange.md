@@ -67,3 +67,21 @@ app-->>app: _
 * (3) `SignInContainer.tsx googleSignIn()`
 * (9) `AppUserAuthnEndpoint.java authenticate()`
 * (17) `AuthProvider.tsx checkLoginState`
+
+---
+
+Once the app-user is identified and the client has obtained an api-token, 
+the api-token must be added to the HTTP headers for every request to an 
+endpoint that requires authorization.
+
+```mermaid
+sequenceDiagram
+autonumber
+actor client as HTTP client<br/>(app-client, redbox, etc.)
+participant api as api-svc
+
+client->>api: GET /raid/v1/{prefix}/{suffix}<br/>{Authorization: Bearer api-token}
+```
+
+See [api-token-authorization-flow.md](../authorization/api-token-authorization-flow.md) 
+for details of how the endpoint is secured by spring.  
