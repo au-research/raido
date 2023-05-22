@@ -63,6 +63,9 @@ user->>app: select service-point and<br/>submit authz-request
 app->>api: POST /request-authz/v1
 
 api-->>api: _
+note right of api: verify `api-token`<br/>unapproved user is allowed <br/>to save an authz-request
+
+api-->>api: _
   note right of api: store in table user_authz_request
 
 api->>app: {status: REQUESTED}
