@@ -12,16 +12,8 @@
 
 # Gradle build
 
-The gradle build in this project is standalone, not a part of the overall
-raido gradle build.
-* because the `git-version` plugin was dying when run inside the codepipeline
-* because the source artifact just brings the code, not the `.git` dir
-* improvements to sort this out
-  * I want to change the codepipeline to use the newer codestar connection stuff
-  * And get rid of the git-version plugin, requiring Git to be present isn't very
-    "pipeline" friendly.
-  * Consider converting the build to a simple "codebuild", rather than a 
-    "codepipeline"
+The gradle build in this project is a sub-project of the overall build. It's 
+needed for generating the typescript mappings for the OpenAPI definitions. 
 
   
 # Developing 

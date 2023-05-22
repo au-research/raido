@@ -1,10 +1,12 @@
 Context: generating TypeScript code from the Raido openapi YAML spec.
 
-I reckon react-query is the right tool for our needs with regard to calling the 
 server.
+We use [react-query](https://tanstack.com/query/v3/) to wrap the actual calls
+to the api-svc. 
 
-Would be nice if it generated react-query stuff for us. OTOH, any tool that
-does that might be too opinionated.
+Would be nice if openapi generated react-query specific stuff for us, but it's
+pretty simple to use them together. OTOH, any tool that directly binds openapi
+and react-query together might be too opinionated.
 
 # Current tech selected 
 
@@ -25,19 +27,16 @@ Actually has a few generators that might be suitable:
   * I've never really felt the need for IoC on client
     * but it does 600K weekly downloads?
 
-Probably going to do the ts-fetch library to begin.  Then try to integrate it
-manually into react-query to see if that's worth doing (I don't actually have
-experience withe react-query, so probably better to start simples).  Maybe once
-start learning react-query, look at generating with Orval, just to see what's 
+We're just using the simple `typescript-fetch` generator to generate code based
+directly on OpenAPI.  Then we wrap that in react-query calls because it's 
+convenient (re-query on window focus, solid error and wait logic, etc. 
+Maybe in the future, look at generating with Orval, just to see what's 
 possible.
-
-Given that it's the same as our Java library, it probably doesn't support 3.1
-Again, poorly documented 😒
 
 Very open to finding a better library / way.
 
 Doco implies it doesn't support unions, but it does seem to work Ok. See the
-various enum types in [metadata-schema-v1.yaml](../../api-svc/idl-raid-v2/src/metadata-schema-v1.yaml),
+various enum types in [metadata-block.yaml](../../api-svc/idl-raid-v2/src/metadata-block.yaml),
 the code generated for both TS and Java is fine.
 
 
@@ -58,11 +57,11 @@ I got `Error: 'java' is not recognized as an internal or external command`.
 
 https://orval.dev/
 
-NPM libary.
+NPM library.
 
 Not super popular, about 20K weeklies: https://www.npmjs.com/package/orval
 Active, but sort of low: https://github.com/anymaniax/orval/pulse
-Relase history seems ok, a bit on the rapid side: https://github.com/anymaniax/orval/releases
+Release history seems ok, a bit on the rapid side: https://github.com/anymaniax/orval/releases
 Supports OpenAPI 3.1.0: https://github.com/anymaniax/orval/issues/386
 React-query support.
 
