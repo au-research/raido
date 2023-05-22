@@ -44,6 +44,9 @@ apiTokenSvc->>provider: ApiToken
 provider->>resolver: ApiToken
 
 resolver->>spring: ApiToken
+
+spring->>spring: .
+  note right of spring: store ApiToken in SecurityContext
   
 spring->>endpoint: listRaidsV1(Long servicePointId)
 
