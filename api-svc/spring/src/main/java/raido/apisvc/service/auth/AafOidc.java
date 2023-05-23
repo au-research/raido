@@ -28,7 +28,6 @@ import java.time.Instant;
 
 import static raido.apisvc.spring.security.IdProviderException.idpException;
 import static raido.apisvc.util.Log.to;
-import static raido.apisvc.util.StringUtil.mask;
 import static raido.apisvc.util.StringUtil.trimEqualsIgnoreCase;
 
 @Component
@@ -54,7 +53,9 @@ public class AafOidc {
     return trimEqualsIgnoreCase(clientId, aaf.clientId);
   }
 
-  public DecodedJWT exchangeOAuthCodeForVerifiedIdToken(String idpResponseCode) {
+  public DecodedJWT exchangeOAuthCodeForVerifiedIdToken(
+    String idpResponseCode
+  ) {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -79,6 +80,7 @@ public class AafOidc {
     Guard.notNull(response.getBody());
 
     DecodedJWT jwt = JWT.decode(response.getBody().id_token);
+    
     verify(jwt);
 
     return jwt;
@@ -86,7 +88,9 @@ public class AafOidc {
 
   public void verify(DecodedJWT jwt) {
     Guard.areEqual(jwt.getAlgorithm(), "RS256");
-    Guard.areEqual(jwt.getType(), "JWT");
+    /* https://aaf.freshdesk.com/support/tickets/10432
+    AAF test system stopped returning this field on 2023-05-23 ish. */
+    // Guard.areEqual(jwt.getType(), "JWT");
 
     verifyAafJwksSignature(jwt);
 
@@ -150,6 +154,3 @@ public class AafOidc {
   }
 }
 
-/*
- Example id_token payload:
- */
