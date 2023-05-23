@@ -35,7 +35,7 @@ team (an `OPERATOR`) or of the service-point (an `SP_ADMIN`).
   person can then use the system to mint/edit/view raids associated with 
   that service-point
 
-See [app-user-authz-request-flow.md](./authorization/app-user-authz-request-flow.md).
+See [unapproved-user-authz-request-flow.md](./authorization/unapproved-user-authz-request-flow.md).
 
 
 ## Machines

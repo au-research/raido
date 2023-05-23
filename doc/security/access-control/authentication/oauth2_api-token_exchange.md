@@ -83,5 +83,5 @@ participant api as api-svc
 client->>api: GET /raid/v1/{prefix}/{suffix}<br/>{Authorization: Bearer api-token}
 ```
 
-See [api-token-authorization-flow.md](../authorization/api-token-authorization-flow.md) 
+See [api-token-spring-authorization.md](../authorization/api-token-spring-authorization.md) 
 for details of how the endpoint is secured by spring.  

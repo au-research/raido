@@ -68,7 +68,7 @@ api-->>api: _
 api->>user: signed in successfully
 ```
 
-See [app-user-authz-request-flow.md](./app-user-authz-request-flow.md) for a 
+See [unapproved-user-authz-request-flow.md](./unapproved-user-authz-request-flow.md) for a 
 more detailed technical explanation of this process.
 
 
