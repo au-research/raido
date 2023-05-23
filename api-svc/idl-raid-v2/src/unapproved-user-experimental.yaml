@@ -1,16 +1,23 @@
 openapi: 3.0.3
 info:
-  title: >
-    Endpoints that are expected to be called after authn, but before authz.
-    Must be passed a `NonAuthzTokenPayload` see RaidV2AppUserAuthService.
+  title: unapproved-experimental 
+  description: >
+    Endpoints that are expected to be called after authenticating via OAuth2, 
+    but before the user has been approved to use the system.
+    The client must provide a bearer token of type `UnapprovedUserApiToken`, 
+    which is returned from the authentication process for users who have not
+    been approved.
+    See https://github.com/au-research/raido/tree/6fe43e756c3f91eb75a0f2b208cbcd67dfbfd1e0/api-svc/spring/src/main/java/raido/apisvc/endpoint/auth
+    See https://github.com/au-research/raido/blob/main/doc/security/access-control/authorization/unapproved-user-authz-request-flow.md
   version: 1.0.0
+  termsOfService: https://github.com/au-research/raido/blob/main/doc/service-level-guide.md
 paths:
-  /update-request-authz:
+  /update-authz-request:
     post:
       tags:
-        - unauthz-experimental
-      operationId: update-request-authz
-      summary: create or update an authz request
+        - unapproved-experimental
+      operationId: update-authz-request
+      summary: create or update an authz-request
       requestBody:
         required: true
         content:

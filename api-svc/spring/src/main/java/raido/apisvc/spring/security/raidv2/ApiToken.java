@@ -9,6 +9,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.StringJoiner;
 
+/** ApiToken for an approved user (app-user) of the system.
+ Could be named "Approved User API token", in contrast with the 
+ "UnapprovedUserApiToken", but ApiToken is used broadly throughout the system
+ so I think the short version is better.
+ */
 public class ApiToken implements Authentication {
   private Long appUserId;
   private Long servicePointId;

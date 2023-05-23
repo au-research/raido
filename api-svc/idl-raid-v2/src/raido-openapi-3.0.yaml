@@ -62,10 +62,10 @@ paths:
   # endregion
   
   
-  # region Unauthorized user endpoints 
+  # region unapproved-user endpoints 
   
-  /v2/public/request-authz/v1:
-    $ref: "unauthz-experimental.yaml#/paths/~1update-request-authz"
+  /v2/public/authz-request/v1:
+    $ref: "unapproved-user-experimental.yaml#/paths/~1update-authz-request"
 
   # endregion
 

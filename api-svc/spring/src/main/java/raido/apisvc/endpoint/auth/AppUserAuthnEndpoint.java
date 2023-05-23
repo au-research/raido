@@ -24,7 +24,7 @@ import java.util.Optional;
 
 import static org.eclipse.jetty.util.TypeUtil.isFalse;
 import static raido.apisvc.spring.security.raidv2.ApiToken.ApiTokenBuilder.anApiToken;
-import static raido.apisvc.service.auth.UnapprovedUserApiToken.UnapprovedUserApiTokenBuilder.anUnapprovedUserApiToken;
+import static raido.apisvc.spring.security.raidv2.UnapprovedUserApiToken.UnapprovedUserApiTokenBuilder.anUnapprovedUserApiToken;
 import static raido.apisvc.spring.security.IdProviderException.idpException;
 import static raido.apisvc.util.ExceptionUtil.authFailed;
 import static raido.apisvc.util.Log.to;

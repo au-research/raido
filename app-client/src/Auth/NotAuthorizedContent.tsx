@@ -6,7 +6,6 @@ import {
   useMutation,
   useQuery
 } from "@tanstack/react-query";
-import { UpdateRequestAuthzRequest } from "Generated/Raidv2";
 import { LargeContentMain } from "Design/LayoutMain";
 import { ContainerCard } from "Design/ContainerCard";
 import {
@@ -26,9 +25,10 @@ import { TextSpan } from "Component/TextSpan";
 import jwtDecode from "jwt-decode";
 import { signOutUser } from "Auth/Authz";
 import { assert } from "Util/TypeUtil";
-import { publicApi, unauthzApi } from "Api/SimpleApi";
+import { publicApi, unapprovedApi } from "Api/SimpleApi";
 import { mapClientIdToIdProvider } from "Component/IdProviderDisplay";
 import { SupportMailLink } from "Component/ExternalLink";
+import { UpdateAuthzRequestRequest } from "Generated/Raidv2/apis/UnapprovedExperimentalApi";
 
 export function NotAuthorizedContent({accessToken}: {accessToken: string}){
   const queryClient = new QueryClient({
@@ -78,7 +78,7 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
   const inst = React.useState(null as InstData | null);
   const [institution] = inst;
   const [comments, setComments] = React.useState("");
-  const unauthz = unauthzApi(accessToken);
+  const unAppApi = unapprovedApi(accessToken);
   const pubApi = publicApi();
   const jwt = jwtDecode(accessToken) as any;
   
@@ -95,9 +95,9 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
     })
   });
 
-  const submitRequest = useMutation((data: UpdateRequestAuthzRequest) => {
+  const submitRequest = useMutation((data: UpdateAuthzRequestRequest) => {
       //throw new Error("intended error");
-      return unauthz.updateRequestAuthz(data);
+      return unAppApi.updateAuthzRequest(data);
     }
   );
 

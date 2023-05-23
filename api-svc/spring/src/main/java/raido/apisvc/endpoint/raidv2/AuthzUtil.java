@@ -2,7 +2,7 @@ package raido.apisvc.endpoint.raidv2;
 
 import raido.apisvc.exception.CrossAccountAccessException;
 import raido.apisvc.spring.security.raidv2.ApiToken;
-import raido.apisvc.service.auth.UnapprovedUserApiToken;
+import raido.apisvc.spring.security.raidv2.UnapprovedUserApiToken;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.IdProvider;

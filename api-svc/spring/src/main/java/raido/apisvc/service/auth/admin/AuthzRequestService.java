@@ -4,9 +4,8 @@ import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.springframework.stereotype.Component;
 import raido.apisvc.endpoint.Constant;
-import raido.apisvc.spring.security.raidv2.ApiToken;
-import raido.apisvc.service.auth.UnapprovedUserApiToken;
 import raido.apisvc.service.auth.RaidV2AppUserOidcService;
+import raido.apisvc.spring.security.raidv2.ApiToken;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.AuthRequestStatus;
@@ -144,11 +143,16 @@ public class AuthzRequestService {
   }
 
   public UpdateAuthzResponse updateRequestAuthz(
-    UnapprovedUserApiToken user, UpdateAuthzRequest req
+    String clientId,
+    String email,
+    String subject,
+    UpdateAuthzRequest req
   ) {
-    String email = user.getEmail().toLowerCase().trim();
-
-    IdProvider idProvider = userAuthSvc.mapIdProvider(user.getClientId());
+    Guard.allHaveValue("must have values", clientId, email, subject);
+    
+    email = email.toLowerCase().trim();
+    
+    IdProvider idProvider = userAuthSvc.mapIdProvider(clientId);
     if(
       // we only promote raido SP users to operator
       req.getServicePointId() == RAIDO_SP_ID &&
@@ -159,13 +163,16 @@ public class AuthzRequestService {
     ){
       /* this will fail if operator already exists as a user of a different SP 
       I don't want to add the complexity to deal with that right now.*/
-      log.with("user", user).info("adding raido operator");
+      log.with("clientId", clientId).
+        with("subject", subject).
+        with("email", email).
+        info("adding raido operator");
       db.insertInto(APP_USER).
         set(APP_USER.SERVICE_POINT_ID, req.getServicePointId()).
         set(APP_USER.EMAIL, email).
-        set(APP_USER.CLIENT_ID, user.getClientId()).
+        set(APP_USER.CLIENT_ID, clientId).
         set(APP_USER.ID_PROVIDER, idProvider).
-        set(APP_USER.SUBJECT, user.getSubject()).
+        set(APP_USER.SUBJECT, subject).
         set(APP_USER.ROLE, UserRole.OPERATOR).
         returningResult(APP_USER.ID).
         fetchOne();
@@ -180,9 +187,9 @@ public class AuthzRequestService {
       set(USER_AUTHZ_REQUEST.SERVICE_POINT_ID, req.getServicePointId()).
       set(USER_AUTHZ_REQUEST.STATUS, REQUESTED).
       set(USER_AUTHZ_REQUEST.EMAIL, email).
-      set(USER_AUTHZ_REQUEST.CLIENT_ID, user.getClientId()).
+      set(USER_AUTHZ_REQUEST.CLIENT_ID, clientId).
       set(USER_AUTHZ_REQUEST.ID_PROVIDER, idProvider).
-      set(USER_AUTHZ_REQUEST.SUBJECT, user.getSubject()).
+      set(USER_AUTHZ_REQUEST.SUBJECT, subject).
       set(USER_AUTHZ_REQUEST.DESCRIPTION, req.getComments()).
       onConflict(
         USER_AUTHZ_REQUEST.SERVICE_POINT_ID,

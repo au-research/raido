@@ -1,9 +1,26 @@
 See the [Changelog audience](#changelog-audience) section for info about 
  the expected audience and content of the changelog.
 
+# Next version
+
+_Not yet scheduled_
+
+## App-client UI
+* none
+ 
+## API
+* updates to experimental API to align terminology
+  * unapproved-user-experimental.yaml renamed from "unauthz"
+
+## Infrastructure
+* none
+
+
+---
+
 # 1.2
 
-_Tentative deployment date: 2023-05-16_
+_2023-05-15_
 
 ## App-client UI
 * Additions to mint/edit page:
