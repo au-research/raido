@@ -28,6 +28,7 @@ import java.time.Instant;
 
 import static raido.apisvc.spring.security.IdProviderException.idpException;
 import static raido.apisvc.util.Log.to;
+import static raido.apisvc.util.StringUtil.hasValue;
 import static raido.apisvc.util.StringUtil.trimEqualsIgnoreCase;
 
 @Component
@@ -89,8 +90,11 @@ public class AafOidc {
   public void verify(DecodedJWT jwt) {
     Guard.areEqual(jwt.getAlgorithm(), "RS256");
     /* https://aaf.freshdesk.com/support/tickets/10432
-    AAF test system stopped returning this field on 2023-05-23 ish. */
-    // Guard.areEqual(jwt.getType(), "JWT");
+    AAF test system stopped returning this field on 2023-05-23-ish, 
+    the field is optional according to the standard. */
+    if( hasValue(jwt.getType()) ){
+      Guard.areEqual(jwt.getType(), "JWT");
+    }
 
     verifyAafJwksSignature(jwt);
 
