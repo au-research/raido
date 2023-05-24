@@ -58,3 +58,39 @@ id_token for the Raido concept of an api-token.
 
 See [authorization](../authorization) for details about these terms and how 
 the Raido authorization scheme works.
+
+## Generic cryptography terms
+
+This is more a list of things you should understand before diving into doing any
+serious identity work:
+
+### JWTs / bearer tokens
+* HMAC 
+  * https://en.wikipedia.org/wiki/HMAC
+* JWTs and bearer tokens
+  * https://jwt.io/introduction
+* the raido api-token is a JWT, with custom claims (whatever we need)
+* the OIDC id_token is a JWT, with standard claims as defined by the OIDC 
+  standard
+  * the OAUth2 standard defines how we go about securely obtaining an id_token
+  from various ID Providers
+* Encryption vs Signature verification
+  * JWT, OAuth2, OIDC, and api-tokens are all secured via _signature_, neither
+  the the Raido api-token nor the OIDC id_token are encrypted
+  * the bearer tokens are protected _in transit_ via encryption, provided at the 
+  protocol level by TLS (HTTPS)
+
+
+### Symmetric and Asymmetric crypto
+* https://en.wikipedia.org/wiki/Symmetric-key_algorithm
+* https://en.wikipedia.org/wiki/Public-key_cryptography
+* Raido uses _symmetric_ cryptographic signatures  
+  * (i.e. a key we never share with anyone outside of our own system 
+  * we sign and verify our api-tokens using this secret, using the HS256
+  algorithm
+* Raido uses _asymmetric_ cryptographic signatures
+  * the ID Provider signs the id_tokens with their private key and we verify
+  the JWT signature on our side via the RS256 algorithm
+    * we use the JWKS standard to retrieve the public certificate from each
+    ID provider (certificate retrieval is secured via TLS)
+  
