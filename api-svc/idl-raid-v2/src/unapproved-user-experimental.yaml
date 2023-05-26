@@ -35,7 +35,6 @@ paths:
 components:
   schemas:
     UpdateAuthzRequest:
-      description: authorization request
       type: object
       required: [servicePointId, name]
       properties:
@@ -48,3 +47,12 @@ components:
         status: {
           $ref: 'admin-experimental.yaml#/components/schemas/AuthzRequestStatus'
         }
+        authzRequestId:
+          allOf:
+            - $ref: 'shared.yaml#/components/schemas/SurrogateKey'
+            - description: > 
+                May be empty if the authz-request is "auto-approved", in which
+                case no authz-request was created because the the app-user has 
+                already been approved and added to the system.  When the 
+                auto-approved user logs in again, they will be able
+                to use the system.
