@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.time.ZoneOffset.UTC;
-import static org.jooq.impl.DSL.asterisk;
 import static org.jooq.impl.DSL.inline;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static raido.apisvc.service.auth.admin.AppUserService.mapRestRole2Jq;
@@ -61,8 +60,7 @@ public class AuthzRequestService {
   }
 
   public List<AuthzRequestExtraV1> listAllRecentAuthzRequest() {
-    return db.
-      select(asterisk()).
+    return db.select().
       from(USER_AUTHZ_REQUEST).
         leftJoin(SERVICE_POINT).onKey(USER_AUTHZ_REQUEST.SERVICE_POINT_ID).
         leftJoin(APP_USER).onKey(USER_AUTHZ_REQUEST.RESPONDING_USER).
@@ -72,8 +70,7 @@ public class AuthzRequestService {
   }
   
   public AuthzRequestExtraV1 readAuthzRequest(Long authzRequestId) {
-    return db.
-      select(asterisk()).
+    return db.select().
       from(USER_AUTHZ_REQUEST).
         leftJoin(SERVICE_POINT).onKey(USER_AUTHZ_REQUEST.SERVICE_POINT_ID).
         leftJoin(APP_USER).onKey(USER_AUTHZ_REQUEST.RESPONDING_USER).
@@ -84,8 +81,7 @@ public class AuthzRequestService {
   public Optional<AuthzRequestExtraV1> readAuthzRequestForUser(
     AppUser appUser
   ) {
-    return db.
-      select(asterisk()).
+    return db.select().
       from(USER_AUTHZ_REQUEST).
       leftJoin(SERVICE_POINT).onKey(USER_AUTHZ_REQUEST.SERVICE_POINT_ID).
       leftJoin(APP_USER).onKey(USER_AUTHZ_REQUEST.RESPONDING_USER).
@@ -183,7 +179,7 @@ public class AuthzRequestService {
       return new UpdateAuthzResponse().status(APPROVED);
     }
 
-    db.insertInto(USER_AUTHZ_REQUEST).
+    var id = db.insertInto(USER_AUTHZ_REQUEST).
       set(USER_AUTHZ_REQUEST.SERVICE_POINT_ID, req.getServicePointId()).
       set(USER_AUTHZ_REQUEST.STATUS, REQUESTED).
       set(USER_AUTHZ_REQUEST.EMAIL, email).
@@ -201,8 +197,11 @@ public class AuthzRequestService {
       doUpdate().
       set(USER_AUTHZ_REQUEST.DESCRIPTION, req.getComments()).
       set(USER_AUTHZ_REQUEST.DATE_REQUESTED, LocalDateTime.now()).
-      execute();
-    return new UpdateAuthzResponse().status(AuthzRequestStatus.REQUESTED);
+      returningResult(USER_AUTHZ_REQUEST.ID).
+      fetchOneInto(Long.class);
+    return new UpdateAuthzResponse().
+      status(AuthzRequestStatus.REQUESTED).
+      authzRequestId(id);
   }
 
   public boolean isRaidoOperator(String email) {
@@ -218,6 +217,7 @@ public class AuthzRequestService {
   ) {
     if( req.getStatus() == APPROVED ){
       Guard.isTrue(authzRecord.getStatus() == REQUESTED);
+      Guard.hasValue("must provide role", req.getRole());
 
       var approvedRole = mapRestRole2Jq(req.getRole());
       if( approvedRole == OPERATOR ){

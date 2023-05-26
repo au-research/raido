@@ -32,42 +32,35 @@ public class UnapprovedExperimental implements UnapprovedExperimentalApi {
     this.authzRequestSvc = authzRequestSvc;
   }
 
+  /* inline authz code because there's only on endpoint, if you end up creating
+  more "unapproved user" endpoints (what for?) factor out the SecurityContext 
+  code to AuthzUtil or somewhere. */
   @Override
   public UpdateAuthzResponse updateAuthzRequest(UpdateAuthzRequest req) {
     Guard.notNull(req);
     Guard.notNull(req.getServicePointId());
-    
+    Guard.notNull("comments may be empty, but not null", req.getComments());
+
     var apiToken = getContext().getAuthentication();
 
     if( apiToken == null ){
       log.error("SecurityContext is empty)");
       throw authFailed();
     }
-    
-    if( apiToken instanceof ApiToken approvedUserToken ){
-      /* Going to allow OPERATOR to do this to make int-testing easier. 
-      Alternative is to have a whole different sign-in mechanism that we know 
-      how to use in an automated fashion, but I don't know how to do that, yet.
-      A proper automated mechanism is the right idea long-term, this is a 
-      short-term workaround. */
-      Guard.areEqual(approvedUserToken.getRole(), OPERATOR.getLiteral());
-      return authzRequestSvc.updateRequestAuthz(
-        approvedUserToken.getClientId(),
-        approvedUserToken.getEmail(),
-        approvedUserToken.getSubject(),
-        req);
-    }
-    else if( apiToken instanceof UnapprovedUserApiToken unapprovedUserToken ){
-      return authzRequestSvc.updateRequestAuthz(
-        unapprovedUserToken.getClientId(),
-        unapprovedUserToken.getEmail(),
-        unapprovedUserToken.getSubject(),
-        req);
-    }
 
-    log.with("tokenType", apiToken.getClass().getName()).
-      error("authentication type is not an api-token)");
-    throw authFailed();
+    if( !(apiToken instanceof UnapprovedUserApiToken unapprovedUserToken) ){
+      log.with("tokenType", apiToken.getClass().getName()).
+        // this is a decoded structure, no signature - ok to log it
+        with("apiToken", apiToken).
+        error("authentication type is not an unapproved user api-token)");
+      throw authFailed();
+    }
+    
+    return authzRequestSvc.updateRequestAuthz(
+      unapprovedUserToken.getClientId(),
+      unapprovedUserToken.getEmail(),
+      unapprovedUserToken.getSubject(),
+      req);
   }
 
 }

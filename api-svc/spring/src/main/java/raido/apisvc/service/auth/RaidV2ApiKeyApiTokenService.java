@@ -64,11 +64,11 @@ public class RaidV2ApiKeyApiTokenService {
   ){
     try {
       String token = JWT.create().
-        // remember the standard claim for subject is "sub"
-        withSubject(payload.getSubject()).
         withIssuer(issuer).
         withIssuedAt(Instant.now()).
         withExpiresAt(expiresAt).
+        // remember the standard claim for subject is "sub"
+        withSubject(payload.getSubject()).
         withClaim(RaidoClaim.IS_AUTHORIZED_APP_USER.getId(), true).
         withClaim(RaidoClaim.APP_USER_ID.getId(), payload.getAppUserId()).
         withClaim(RaidoClaim.SERVICE_POINT_ID.getId(), payload.getServicePointId()).

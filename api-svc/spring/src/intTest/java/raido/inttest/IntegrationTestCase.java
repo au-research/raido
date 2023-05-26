@@ -27,6 +27,7 @@ import raido.idl.raidv2.api.AdminExperimentalApi;
 import raido.idl.raidv2.api.BasicRaidExperimentalApi;
 import raido.idl.raidv2.api.BasicRaidStableApi;
 import raido.idl.raidv2.api.PublicExperimentalApi;
+import raido.idl.raidv2.api.UnapprovedExperimentalApi;
 import raido.idl.raidv2.model.ApiKey;
 import raido.idl.raidv2.model.GenerateApiTokenRequest;
 import raido.idl.raidv2.model.GenerateApiTokenResponse;
@@ -178,6 +179,19 @@ public abstract class IntegrationTestCase {
       target(PublicExperimentalApi.class, props.getRaidoServerUrl());
   }
 
+  public UnapprovedExperimentalApi unapprovedClient(String token){
+    return Feign.builder().
+      client(new OkHttpClient()).
+      encoder(new JacksonEncoder(mapper)).
+      decoder(new JacksonDecoder(mapper)).
+      contract(feignContract).
+      requestInterceptor(request->
+        request.header(AUTHORIZATION, "Bearer " + token) ).
+      logger(new Slf4jLogger(UnapprovedExperimentalApi.class)).
+      logLevel(Level.FULL).
+      target(UnapprovedExperimentalApi.class, props.getRaidoServerUrl());
+  }
+
   public AdminExperimentalApi adminExperimentalClientAs(String token){
     return Feign.builder().
       client(new OkHttpClient()).
@@ -203,6 +217,13 @@ public abstract class IntegrationTestCase {
   public PublicServicePoint findPublicServicePoint(String name){
     return publicExperimentalClient().publicListServicePoint().stream().
       filter(i->i.getName().contains(name)).
+      findFirst().orElseThrow();
+  }
+  
+  /** Ok, I'm just being a crazy-person at this point. */
+  public PublicServicePoint findOtherPublicServicePoint(Long anySpExceptThis){
+    return publicExperimentalClient().publicListServicePoint().stream().
+      filter(i->!i.getId().equals(anySpExceptThis)).
       findFirst().orElseThrow();
   }
   

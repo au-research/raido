@@ -22,6 +22,8 @@ public class UnapprovedUserApiToken implements Authentication {
       ", ",
       UnapprovedUserApiToken.class.getSimpleName() + "[",
       "]")
+      .add("clientId='" + clientId + "'")
+      .add("subject='" + subject + "'")
       .add("email='" + email + "'")
       .toString();
   }

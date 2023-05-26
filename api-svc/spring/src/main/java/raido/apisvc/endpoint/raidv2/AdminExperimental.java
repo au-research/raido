@@ -95,6 +95,9 @@ public class AdminExperimental implements AdminExperimentalApi {
 
   @Override
   public Void updateAuthzRequestStatus(UpdateAuthzRequestStatus req) {
+    Guard.notNull("must provide authzRequestId", req.getAuthzRequestId());
+    Guard.notNull("must provide status", req.getStatus());
+    
     var user = AuthzUtil.getApiToken();
     
     var authzRecord = db.fetchSingle(

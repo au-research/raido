@@ -2,7 +2,6 @@ package raido.apisvc.endpoint.raidv2;
 
 import raido.apisvc.exception.CrossAccountAccessException;
 import raido.apisvc.spring.security.raidv2.ApiToken;
-import raido.apisvc.spring.security.raidv2.UnapprovedUserApiToken;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.IdProvider;
@@ -11,6 +10,7 @@ import static org.springframework.security.core.context.SecurityContextHolder.ge
 import static raido.apisvc.endpoint.message.RaidApiMessage.DISALLOWED_X_SVC_CALL;
 import static raido.apisvc.endpoint.message.RaidApiMessage.ONLY_OP_OR_SP_ADMIN;
 import static raido.apisvc.endpoint.message.RaidApiMessage.ONLY_RAIDO_ADMIN;
+import static raido.apisvc.util.ExceptionUtil.authFailed;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.areEqual;
@@ -26,20 +26,18 @@ public class AuthzUtil {
   
   /** This will fail if the authentication is not a AuthzTokenPayload */
   public static ApiToken getApiToken() {
-    return Guard.isInstance(
-      ApiToken.class,
-      getContext().getAuthentication());
-  }
-
-  /** This will fail if the authentication is not a NonAuthzTokenPayload */
-  public static UnapprovedUserApiToken getNonAuthzPayload() {
-    return Guard.isInstance(
-      UnapprovedUserApiToken.class,
-      getContext().getAuthentication());
+    var authentication = getContext().getAuthentication();
+    if( authentication instanceof ApiToken apiToken){
+      return apiToken;
+    }
+    
+    log.with("authentication", authentication).
+      error("user provided a bearer-token that is not an api-token");
+    throw authFailed();
   }
 
   /** User must be an admin associated specifically with the raido SP.
-  Originially implemented so I could write the migration endpoint that can 
+  Originally implemented so I could write the migration endpoint that can 
   insert raids across service points (i.e. migrating RDM and NotreDame raids,
   etc.) - without having to allow api-keys to have an "operator" role. */
   public static void guardRaidoAdminApiKey(ApiToken user){

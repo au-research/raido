@@ -1,6 +1,7 @@
 package raido.apisvc.service.auth;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -77,17 +78,30 @@ public class RaidV2AppUserApiTokenService {
   }
 
   public String sign(UnapprovedUserApiToken payload){
+    return sign(
+      userAuthProps.signingAlgo, 
+      userAuthProps.issuer, 
+      calculateExpiresAt(), 
+      payload);
+  }
+
+  public static String sign(
+    Algorithm algo, 
+    String issuer, 
+    Instant expiresAt, 
+    UnapprovedUserApiToken payload
+  ){
     try {
       String token = JWT.create().
         // remember the standard claim for subject is "sub"
         withSubject(payload.getSubject()).
-        withIssuer(userAuthProps.issuer).
+        withIssuer(issuer).
         withIssuedAt(Instant.now()).
-        withExpiresAt(calculateExpiresAt()).
+        withExpiresAt(expiresAt).
         withClaim(IS_AUTHORIZED_APP_USER, false).
         withClaim(RaidoClaim.CLIENT_ID.getId(), payload.getClientId()).
         withClaim(RaidoClaim.EMAIL.getId(), payload.getEmail()).
-        sign(userAuthProps.signingAlgo);
+        sign(algo);
 
       return token;
     } catch ( JWTCreationException ex){
