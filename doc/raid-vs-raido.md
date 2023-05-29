@@ -18,7 +18,7 @@ When you see these terms in this codebase:
 
 * `RAiD`, `RAID`, `Raid`, `raid` - refers to the "global" RAiD ISO standard and
   supporting global infrastructure (i.e. `raid.org`), being operated and
-  maintained by ARDC in our capacity as the ISo standard "registration
+  maintained by ARDC in our capacity as the ISO standard "registration
   authority".
   * note that `raid.org` does not exist yet, and when it does, the software will
     live in a separate repository
