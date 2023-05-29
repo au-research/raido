@@ -3,16 +3,31 @@
 Note that this page documents the _**current**_ permission model of Raido, as at 
 2023-05-29. 
 
+## Limitations of current permission model 
+
+The current permission model does not support the concept of users
+from multiple organisations collaborating on a shared raid.
+
+This is planned to be implemented with the new ORCID ID based permission model -  
+which will included the concept of users editing raids across the boundaries 
+between organisations and between regions (i.e. different registration-agents).  
+That is, a user in one region: say a SURF-associated
+University in the EU; editing a raid associated with a University managed in a
+different region, say an ARDC-associated University in Australia.
+
+
 ## service-point
 
 Currently every "user" of Raido, human or machine, is associated directly
-to a service-point.
+to a service-point.  A service-point is a logical grouping of users and the 
+raids that they maintain.  It does not correspond directly to the concept of 
+"institution" or "organisation".  It is expected that a large university might
+have many service-points, depending on how their staff is organised. 
 
 Human users sign-in and request authorization for a service-point (which must
-then be 
-[manually approved](../security/access-control/authorization/unapproved-user-authz-request-flow.md)).
+then be [manually approved](../security/access-control/authorization/unapproved-user-authz-request-flow.md)).
 
-The "approval" process for machine users is implied by the creation of the 
+The "approval" for machine users is implied by the creation of the 
 api-key - only `OPERATOR` or `SP_ADMIN` 
 [role users](../security/access-control/authorization/role.md) can create/view 
 api-keys.  Each api-key is associated with a service-point.
@@ -23,7 +38,9 @@ Each service-point has an `identifier_owner`, which is a
 University or other research organisation).
 
 The `identifier_owner` of the service-point is used to to populate the 
-`identifier_owner` field in the raid metadata when it is minted. 
+`identifier_owner` field in the raid metadata when it is minted.  All 
+service-points that are created for an organisation (e.g. a specific 
+University) will be associated with the same RoR.
 
 
 ## raid
@@ -86,7 +103,7 @@ erDiagram
   api-key {
     string name PK
   }
-  api-key o|--o{ api-token: has
+  api-key o|..o{ api-token: has
   api-token {
     string appUserId
     string servicePointId
