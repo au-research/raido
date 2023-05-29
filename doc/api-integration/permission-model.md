@@ -15,6 +15,12 @@ The "approval" process for machine users is implied by the creation of the
 api-key - only OPERATOR or SP_ADMIN role users can create/view api-keys.  Each
 api-key is associated with a service-point.
 
+There is no "institution" entity in this model, each service-point has an
+`identifier_owner`, which is a [RoR](https://ror.org/) that identifies an 
+institution (e.g. a specific University or other research organisation).
+
+The `identifier_owner` is used to to populate the `identifier_owner` in the 
+
 
 ## raid
 
@@ -24,9 +30,8 @@ of the user (human or machine) that minted it.
 A user can only mint/edit or view closed raid data for the service-point they
 are associated with.
 
-Anybody in the work (no authorization required) can see the metadata for an
-"open" raid by visiting the landing page - i.e. no need to sign in to the Raido
-app-client.
+Anybody in the world can see the metadata for an "open" raid by visiting the 
+landing page - i.e. no authorization required, no need to sign in.
 
 
 ## api-key 
@@ -62,13 +67,18 @@ erDiagram
   authz-request ||--|| app-user: approved
   service-point ||--o{ app-user: associated
   app-user {
-    string client_id
-    string subject
-    string identity
+    string client_id PK
+    string subject PK
+    string identity PK
   }
   service-point o|--o{ api-key: has
-  api-key {
+  service-point {
+    long id PK
     string name
+    string identifier_owner
+  }
+  api-key {
+    string name PK
   }
   api-key o|--o{ api-token: has
   api-token {
@@ -79,4 +89,8 @@ erDiagram
     string role
   }
   service-point ||--o{ raid: owns
+  raid {
+    string handle PK
+    json metadata "contains metadata, including identifier_owner"
+  }
 ```
