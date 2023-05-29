@@ -91,6 +91,6 @@ erDiagram
   service-point ||--o{ raid: owns
   raid {
     string handle PK
-    json metadata "contains metadata, including identifier_owner"
+    json metadata "all fields, including identifier_owner"
   }
 ```
