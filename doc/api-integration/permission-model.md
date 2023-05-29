@@ -8,11 +8,12 @@ Note that this page documents the _**current**_ permission model of Raido, as at
 The current permission model does not support the concept of users
 from multiple organisations collaborating on a shared raid.
 
-This is planned to be implemented with the new ORCID ID based permission model -  
-which will included the concept of users editing raids across the boundaries 
-between organisations and between regions (i.e. different registration-agents).  
-That is, a user in one region: say a SURF-associated
-University in the EU; editing a raid associated with a University managed in a
+This is planned to be implemented with the new ORCID ID based permission model - 
+which will include the concept of users editing raids across the ownership 
+boundaries between organisations and between regions 
+(i.e. different registration-agents).  
+That is, a user in one region: say a SURF-associated University in the EU; 
+editing a raid associated with a University managed in a 
 different region, say an ARDC-associated University in Australia.
 
 ```mermaid
