@@ -15,6 +15,41 @@ That is, a user in one region: say a SURF-associated
 University in the EU; editing a raid associated with a University managed in a
 different region, say an ARDC-associated University in Australia.
 
+```mermaid
+---
+title: Raido
+---
+erDiagram
+  authz-request ||--|| app-user: approved
+  service-point ||--o{ app-user: associated
+  app-user {
+    string client_id PK
+    string subject PK
+    string identity PK
+  }
+  service-point o|--o{ api-key: has
+  service-point {
+    long id PK
+    string name
+    string identifier_owner
+  }
+  api-key {
+    string name PK
+  }
+  api-key o|..o{ api-token: has
+  api-token {
+    string appUserId
+    string servicePointId
+    string clientId
+    string identity
+    string role
+  }
+  service-point ||--o{ raid: owns
+  raid {
+    string handle PK
+    json metadata "all fields, including identifier_owner"
+  }
+```
 
 ## service-point
 
@@ -82,38 +117,3 @@ with the same service-point that the request is trying to read, thus maintaining
 the confidentiality of "closed" raids.
 
 
-```mermaid
----
-title: Raido
----
-erDiagram
-  authz-request ||--|| app-user: approved
-  service-point ||--o{ app-user: associated
-  app-user {
-    string client_id PK
-    string subject PK
-    string identity PK
-  }
-  service-point o|--o{ api-key: has
-  service-point {
-    long id PK
-    string name
-    string identifier_owner
-  }
-  api-key {
-    string name PK
-  }
-  api-key o|..o{ api-token: has
-  api-token {
-    string appUserId
-    string servicePointId
-    string clientId
-    string identity
-    string role
-  }
-  service-point ||--o{ raid: owns
-  raid {
-    string handle PK
-    json metadata "all fields, including identifier_owner"
-  }
-```
