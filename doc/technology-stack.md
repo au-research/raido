@@ -1,7 +1,7 @@
 
 # The main stack
 
-* Typescript
+* TypeScript
 * Java 
 * SQL 
 
@@ -56,7 +56,7 @@ We define the API as a `yaml` file, then the Java interfaces for serving
 the API from the api-svc (Spring) are generated via the openap-generator,
 see [idl-raid-v2/build.gradle](../api-svc/idl-raid-v2/build.gradle).
 
-The client-side Typescript mappings are also generated via openapi-generator,
+The client-side TypeScript mappings are also generated via openapi-generator,
 see [app-client/build.gradle](../app-client/build.gradle).
 
 # Backend
@@ -77,7 +77,7 @@ see [app-client/build.gradle](../app-client/build.gradle).
 
 # Frontend
 
-* Typescript
+* TypeScript
 * React
   * With `react-query`, but no Redux or similar Flux implementation
 * Material UI
@@ -85,7 +85,7 @@ see [app-client/build.gradle](../app-client/build.gradle).
 
 # REST
 
-We use OpenApi with an “API first” approach, Java and Typescript code is 
+We use OpenApi with an “API first” approach, Java and TypeScript code is 
 generated from the OpenApi definition.
 
 * [/api-svc/idl-raid-v2](/api-svc/idl-raid-v2)
@@ -104,7 +104,7 @@ Little bits of scripting stuff, the usual glue code.
 * Shell scripts
   * for booting up EC2 instances,
   * `codebuild` definitions
-* Javascript
+* JavaScript
   * little bits of glue, like in NPM scripts, etc.
 
 

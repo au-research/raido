@@ -1,8 +1,6 @@
-This service level guide will be published by linking to it from the 
-[ARDC Product Service Versioning standard(https://confluence.ardc.edu.au/display/DPST/ARDC+Online+Services%3A+Introduction+of+Maintenance+Windows+and+Product+Versions)
+This service level guide is considered published, is it linked to from the  
+[ARDC Product Service Versioning standard](https://confluence.ardc.edu.au/display/DPST/ARDC+Online+Services%3A+Introduction+of+Maintenance+Windows+and+Product+Versions)
  
-The link above will be updated when the standard is published.
-
 ----
 
 The ARDC RAiD service is just one possible implementation of the RAiD ISO 
@@ -84,8 +82,7 @@ customers of the system, the API service has limits for various things.
       system (ORCID, DOI, etc.) - validating many PIDs in a single request
       may be deemed too expensive
     * when this happens, we ask that you break the request into multiple 
-      separate update requests
-    calls
+      separate update request calls
 * 25 general API requests per second, per service-point
   * requests in excess of the limit may be rejected with a HTTP 429 error
 * RAID Metadata is limited to 200 KB maximum size
@@ -94,8 +91,8 @@ customers of the system, the API service has limits for various things.
 
 Note that these limits may not initially be enforced, and when they are 
 enforced it's likely the limits will be set with some leeway.  Being able to 
-achieve a higher throughput than those documented should be taken as evidence
-that the higher throughput level will always be available.
+achieve a higher usage than the above limits should not be taken as evidence
+that the higher usage level will always be available.
 
 Furthermore, the documented throughput limits are "best effort" - if the 
 service comes under usage pressure, the endpoints may begin returning 429 
@@ -132,7 +129,7 @@ soon as possible.
 When developing new UI and other features, new endpoint versions will be 
 added to the API without notice.  These endpoints are marked as `experimental`.
 
-Experiment endpoints are intended to enable rapid prototyping and evolution of
+Experimental endpoints are intended to enable rapid prototyping and evolution of
 new RAID features.  Experimental features are not supported for use by 
 institutions - they may change shape, change behaviour or be deleted without 
 notice.
