@@ -1,5 +1,4 @@
 
-TODO:STO To be completed.
 
 Intended to by a quick-start guide, focused on what a client needs to do to 
 get up and running with the Raido API and minting raids.
@@ -10,10 +9,12 @@ get up and running with the Raido API and minting raids.
 * you will be required to make an agreement with the ARDC about your usage 
   of RAiD
 * as part of onboarding
-  * we will create a service-point that identifies your usage of RAiD within 
+  * we will create a service-point that identifies your usage of RAiD for  
     your institution
-  * their may be multiple service-points for a single institution
-  
+
+A description of the relationship between raids, service-points and api-keys
+can be found in the [permission-model](./permission-model.md).
+
 
 # Technical onboarding
 
