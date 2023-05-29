@@ -22,8 +22,8 @@ Each service-point has an `identifier_owner`, which is a
 [RoR](https://ror.org/) that identifies an organization (e.g. a specific 
 University or other research organisation).
 
-The `identifier_owner` is of the service-point is used to to populate the 
-`identifier_owner` in the raid metadata. 
+The `identifier_owner` of the service-point is used to to populate the 
+`identifier_owner` field in the raid metadata when it is minted. 
 
 
 ## raid
