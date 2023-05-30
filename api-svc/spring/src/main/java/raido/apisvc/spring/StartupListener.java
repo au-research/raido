@@ -47,7 +47,7 @@ public class StartupListener implements
 
   @Override public void onApplicationEvent(ContextRefreshedEvent event) {
     log.with("eventSource", event.getSource()).
-      info("Greeting - %s", greeting );
+      info("Greeting STO-test - %s", greeting );
     log.with("envName", envProps.envName).
       with("nodeId", envProps.nodeId).
       with("isProd", envProps.isProd).
