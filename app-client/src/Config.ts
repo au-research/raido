@@ -181,7 +181,7 @@ const devConfig: EnvironmentConfig = {
 
 const demoConfig: EnvironmentConfig = {
   environmentName: "demo",
-  signInWarning: `The DEMO environment has been reset as of 2023-04-03.
+  signInWarning: `STO-test. The DEMO environment has been reset as of 2023-04-03.
     You may need to submit a new authorisation request to use the system.
     The sign-in expiry time has been set to 30 minutes for testing.
     Please send an email to contact@raid.org to let us know you need approval.`,
