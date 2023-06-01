@@ -99,10 +99,6 @@ public class RaidWebSecurityConfig {
       Added to avoid arguments and false-positives on security scans. */
       contentSecurityPolicy("script-src 'self'");
 
-    // supposed to be implied by @EnableWebSecurity
-    // put it back or remove the code after the big error handling refactor
-    // http.exceptionHandling();
-
     return http.build();
   }
 
