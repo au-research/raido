@@ -20,8 +20,8 @@ import java.util.Optional;
 
 import static java.util.Optional.of;
 import static org.eclipse.jetty.util.TypeUtil.isFalse;
-import static raido.apisvc.spring.security.raidv2.UnapprovedUserApiToken.UnapprovedUserApiTokenBuilder.anUnapprovedUserApiToken;
 import static raido.apisvc.spring.security.raidv2.ApiToken.ApiTokenBuilder.anApiToken;
+import static raido.apisvc.spring.security.raidv2.UnapprovedUserApiToken.UnapprovedUserApiTokenBuilder.anUnapprovedUserApiToken;
 import static raido.apisvc.util.ExceptionUtil.authFailed;
 import static raido.apisvc.util.ExceptionUtil.wrapException;
 import static raido.apisvc.util.Log.to;
@@ -118,7 +118,7 @@ public class RaidV2AppUserApiTokenService {
     String clientId = verifiedJwt.
       getClaim(RaidoClaim.CLIENT_ID.getId()).asString();
     String email = verifiedJwt.getClaim(RaidoClaim.EMAIL.getId()).asString();
-    Boolean isAuthzAppUser = verifiedJwt.getClaim(
+    Boolean isApprovedAppUser = verifiedJwt.getClaim(
       RaidoClaim.IS_AUTHORIZED_APP_USER.getId() ).asBoolean();
     
     var issuedAt = verifiedJwt.getIssuedAtAsInstant();
@@ -127,8 +127,12 @@ public class RaidV2AppUserApiTokenService {
     Guard.hasValue(verifiedJwt.getSubject());
     Guard.hasValue(clientId);
     Guard.hasValue(email);
-    
-    if( !isAuthzAppUser ){
+
+    /* Only ever happens just after the user signs-in and the /idpresponse 
+    endpoint returns UnapprovedUserApiToken, user then creates an authz-request, 
+    we have to do this logic to map to this for that one endpoint to check that 
+    only unapproved users can use that endpoint. */
+    if( !isApprovedAppUser ){
       return of(anUnapprovedUserApiToken().
         withSubject(verifiedJwt.getSubject()).
         withEmail(email).
