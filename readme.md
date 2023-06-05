@@ -13,6 +13,12 @@ ARDC for the Oceania region.
 See [raid-vs-raido.md](/doc/raid-vs-raido.md) for more explanation.
 
 
+# Client API integrations
+
+Folks looking to get started quickly integrating with the Raido API should
+look at the [api-integration](/doc/api-integration/readme.md) guide.
+
+
 # Environments
 
 The production (`PROD`) environment is available at 
