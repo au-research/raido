@@ -2,7 +2,7 @@
 
 # Pre-requisites
 
-As outlined in the [onboarding-guide](./api-client-onboarding-guide.md);  
+As outlined in the [onboarding-guide](./api-client-onboarding-guide.md); 
 before you can mint a raid, you must have an agreement with the ARDC and have 
 had a service-point created for your usage.
 
@@ -13,8 +13,6 @@ of service-points and other important concepts.
 # Get your api-token
 
 In order for your client to talk to the Raido API, you need an api-token.
-
-Guide:
 
 ## Create a user authz-request to use the system 
 * sign-in via your chosen ID Provider
@@ -29,6 +27,7 @@ Guide:
   that you can manage api-keys and generate api-tokens
 * the raid support team will contact you when you can sign-in
 
+
 ## Create an api-token
 
 * sign-in using the same ID provider you used before
@@ -36,7 +35,6 @@ Guide:
 * use the menu to navigate to the api-keys list page and create an api-key
   * give your api-key a name that identifies your client application
 * click the `Generate token` button to generate your api-token
-  *
 
 ### Example
 
@@ -51,6 +49,7 @@ export DEMO_TOKEN="xxx.yyy.zzz"
 
 Note that we _don't_ prepend the `Bearer ` prefix, since we do that below in
 the header specification of the example commands.
+
 
 ### api-token security
 
@@ -78,9 +77,9 @@ prefix with `Bearer ` in the value)
 * use the OpenAPI definitions as a guide to what fields are required
   * the metadata schema guide to the intended content of the fields is 
   only currently available as a document available by emailing to 
-  `contact@raid.org
+  `contact@raid.org`
   * eventually, this document will be available as a public 
-  * "[read-the-docs](https://readthedocs.org/)" website
+  "[read-the-docs](https://readthedocs.org/)" website
 
 ### Example
 ```
