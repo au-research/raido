@@ -11,10 +11,9 @@ import static raido.apisvc.util.Log.to;
 
 public class RaidoApi {
   private static final Log log = to(RaidoApi.class);
-  
-  /* hardcoded values to use from the load-test, helps us identify logs
-  and database records that were created by load testing */
-  public static final String ROR_ID = "https://ror.org/load-test";
+
+  // needs to be a real ror if you don't run against the in-mem stub
+  public static final String ROR_ID = "https://ror.org/015w2mp89";
   public static final String API_KEY_SUBJECT = "load-test-api-key";
 
   
