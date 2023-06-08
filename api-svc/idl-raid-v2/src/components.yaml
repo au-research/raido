@@ -53,7 +53,7 @@ components:
       type: object
       properties:
         id: { $ref: 'metadata-block.yaml#/components/schemas/IdBlockV2' }
-        metadataSchema: { $ref: 'shared.yaml#/components/schemas/RaidoMetaschemaV2' }
+        schemaVersion: { $ref: 'shared.yaml#/components/schemas/SchemaVersion' }
         titles:
           type: array
           items: { $ref: 'metadata-block.yaml#/components/schemas/TitleBlock' }

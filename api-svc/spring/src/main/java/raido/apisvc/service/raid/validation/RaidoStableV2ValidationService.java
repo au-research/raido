@@ -3,7 +3,6 @@ package raido.apisvc.service.raid.validation;
 import org.springframework.stereotype.Component;
 import raido.apisvc.endpoint.message.ValidationMessage;
 import raido.apisvc.util.Log;
-import raido.idl.raidv2.model.RaidoMetaschemaV2;
 import raido.idl.raidv2.model.UpdateRaidStableV2Request;
 import raido.idl.raidv2.model.ValidationFailure;
 
@@ -72,7 +71,7 @@ public class RaidoStableV2ValidationService {
 
     final var failures = new ArrayList<>(idBlockV2ValidationService.validateUpdateHandle(decodedHandle, request.getId()));
 
-    if( request.getMetadataSchema() != RaidoMetaschemaV2.RAIDOMETADATASCHEMAV2 ){
+    if (request.getSchemaVersion() == null) {
       failures.add(ValidationMessage.INVALID_METADATA_SCHEMA);
     }
 
