@@ -44,4 +44,4 @@ not in use, if configured appropriately.
 
 Running on my local machine, with PG 15 running in a docker container: 100.
 
-As at 2023-06-08, PG 15 running on an AWS RDS `t2.small` instance: 81
+As at 2023-06-08, PG 15 running on an AWS RDS `db.t4g.micro` instance: 81
