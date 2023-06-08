@@ -4,7 +4,6 @@ import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.context.annotation.Scope;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.exception.InvalidAccessException;
 import raido.apisvc.service.raid.RaidService;
@@ -16,14 +15,21 @@ import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.idl.raidv2.api.BasicRaidExperimentalApi;
-import raido.idl.raidv2.model.*;
+import raido.idl.raidv2.model.MintRaidoSchemaV1Request;
+import raido.idl.raidv2.model.MintResponse;
+import raido.idl.raidv2.model.RaidListItemV2;
+import raido.idl.raidv2.model.RaidListRequestV2;
+import raido.idl.raidv2.model.ReadRaidResponseV2;
+import raido.idl.raidv2.model.ReadRaidV2Request;
+import raido.idl.raidv2.model.UpdateRaidoSchemaV1Request;
 
 import java.util.List;
 
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
-import static org.springframework.transaction.annotation.Propagation.NEVER;
 import static raido.apisvc.endpoint.Constant.MAX_EXPERIMENTAL_RECORDS;
-import static raido.apisvc.endpoint.message.ValidationMessage.*;
+import static raido.apisvc.endpoint.message.ValidationMessage.CANNOT_UPDATE_LEGACY_SCHEMA;
+import static raido.apisvc.endpoint.message.ValidationMessage.ID_BLOCK_NOT_SET;
+import static raido.apisvc.endpoint.message.ValidationMessage.METADATA_NOT_SET;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.getApiToken;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
 import static raido.apisvc.service.raid.MetadataService.mapDb2Api;
@@ -36,9 +42,9 @@ import static raido.apisvc.util.StringUtil.hasValue;
 import static raido.db.jooq.api_svc.tables.Raid.RAID;
 import static raido.idl.raidv2.model.RaidoMetaschema.LEGACYMETADATASCHEMAV1;
 
+/* Be careful with usage of @Transactional, see db-transaction-guideline.md */
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
-@Transactional
 public class BasicRaidExperimental implements BasicRaidExperimentalApi {
   private static final Log log = to(BasicRaidExperimental.class);
 
@@ -75,7 +81,6 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     the payload) back into json
   - save it to the DB
   - then turn the whole thing back into json, but now with a handle!
-  And we're not even doing any validation of ORCID/ROR, etc. yet.
   That is a *lot* of heap garbage. Large raids are gonna wreck our memory usage.
   Especially if every update to single field is done by re-sending the full
   raid. 
@@ -86,10 +91,11 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
   return the raid, just the handle (or maybe IdBlock).  
   A lot of API clients may just be dumping
   raids into the system (i.e. RDM) they don't care to display anything.
+  Transaction notes: this method does external service calls (APIDs, DOI, etc.)
+  be careful not to create a DB transaction that spans across those calls.
+  See db-transaction-guideline.md.
   */
   @Override
-  // See the RaidSvc.mint() method for an explanation of Transaction stuff
-  @Transactional(propagation = NEVER)
   public MintResponse mintRaidoSchemaV1(
     MintRaidoSchemaV1Request req
   ) {
@@ -166,6 +172,9 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     return searchCondition;
   }
 
+  /* Non-transactional, so that TX does not span the point when we talk
+  to the external systems to validate (ROR, ORCID, DOI, etc.) 
+  See db-transaction-guideline.md. */
   @Override
   public MintResponse updateRaidoSchemaV1(UpdateRaidoSchemaV1Request req) {
     var user = getApiToken();
