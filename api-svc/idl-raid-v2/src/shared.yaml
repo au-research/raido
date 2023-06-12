@@ -25,6 +25,14 @@ components:
         returning metadata, but they don't have to. 
       type: string
       enum: ['RaidoMetadataSchemaV1', 'LegacyMetadataSchemaV1']
+    RaidoMetaschemaV2:
+      description: >
+        "Metaschema" is the enumeration of different "Metadata schema" 
+        that Raido supports.
+        The values are currently match the discriminator type names used for
+        returning metadata, but they don't have to.
+      type: string
+      enum: ['RaidoMetadataSchemaV2', 'RaidoMetadataSchemaV1', 'LegacyMetadataSchemaV1']
     SchemaVersion:
       description: >
         "Metaschema" is the enumeration of different "Metadata schema" 

@@ -91,6 +91,39 @@ public class RaidoSchemaV1ValidationService {
     return failures;
   }
 
+  /**
+   Does not currently validate the ID block.
+   */
+  public List<ValidationFailure> validateRaidoSchemaV2(
+          RaidoMetadataSchemaV2 metadata
+  ) {
+    if( metadata == null ){
+      return of(ValidationMessage.METADATA_NOT_SET);
+    }
+
+    var failures = new ArrayList<ValidationFailure>();
+    if( metadata.getMetadataSchema() != raido.idl.raidv2.model.RaidoMetaschemaV2.RAIDOMETADATASCHEMAV2 ){
+      failures.add(ValidationMessage.INVALID_METADATA_SCHEMA);
+    }
+
+    failures.addAll(validateDates(metadata.getDates()));
+    failures.addAll(validateAccess(metadata.getAccess()));
+    failures.addAll(titleSvc.validateTitles(metadata.getTitles()));
+    failures.addAll(descSvc.validateDescriptions(metadata.getDescriptions()));
+    failures.addAll(validateAlternateUrls(metadata.getAlternateUrls()));
+    failures.addAll(contribSvc.validateContributors(metadata.getContributors()));
+    failures.addAll(orgSvc.validateOrganisations(metadata.getOrganisations()));
+    failures.addAll(subjectSvc.validateSubjects(metadata.getSubjects()));
+    failures.addAll(relatedRaidSvc.validateRelatedRaids(metadata.getRelatedRaids()));
+    failures.addAll(relatedObjectSvc.validateRelatedObjects(metadata.getRelatedObjects()));
+    failures.addAll(alternateIdentifierSvc.validateAlternateIdentifiers(metadata.getAlternateIdentifiers()));
+    failures.addAll(spatialCoverageSvc.validateSpatialCoverages(metadata.getSpatialCoverages()));
+    failures.addAll(traditionalKnowledgeLabelValidatorSvc.validateTraditionalKnowledgeLabels(
+            metadata.getTraditionalKnowledgeLabels()));
+
+    return failures;
+  }
+
   public List<ValidationFailure> validateLegacySchemaV1(
     LegacyMetadataSchemaV1 metadata
   ) {

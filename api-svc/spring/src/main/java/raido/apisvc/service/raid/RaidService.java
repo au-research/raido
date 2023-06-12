@@ -112,6 +112,17 @@ public class RaidService {
 
   /** Expects the passed metadata is valid. */
   public DenormalisedRaidData getDenormalisedRaidData(
+          RaidoMetadataSchemaV2 metadata
+  ){
+    return new DenormalisedRaidData(
+            getPrimaryTitle(metadata.getTitles()).getTitle(),
+            metadata.getDates().getStartDate(),
+            metadata.getAccess().getType() != AccessType.OPEN
+    );
+  }
+
+  /** Expects the passed metadata is valid. */
+  public DenormalisedRaidData getDenormalisedRaidData(
     RaidoMetadataSchemaV1 metadata
   ){
     return new DenormalisedRaidData(
@@ -386,6 +397,50 @@ public class RaidService {
       execute();
   }
 
+  public List<ValidationFailure> updateRaidoSchemaV2(
+          RaidoMetadataSchemaV2 newData,
+          RaidRecord oldRaid
+  ) {
+    Metaschema newMetadataSchema = mapApi2Db(newData.getMetadataSchema());
+    if( newMetadataSchema != oldRaid.getMetadataSchema() ){
+      return singletonList(SCHEMA_CHANGED);
+    }
+
+    var oldData = metaSvc.mapV1SchemaMetadata(oldRaid);
+
+    List<ValidationFailure> failures = new ArrayList<>();
+
+    failures.addAll(
+            validSvc.validateIdBlockNotChanged(newData.getId(), oldData.getId()) );
+    failures.addAll(validSvc.validateRaidoSchemaV2(newData));
+
+    // validation failure possible (conversion error or maxSize of json)
+    String metadataAsJson = null;
+    try {
+      metadataAsJson = metaSvc.mapToJson(newData);
+    }
+    catch( ValidationFailureException e ){
+      failures.addAll(e.getFailures());
+    }
+
+    if( !failures.isEmpty() ){
+      return failures;
+    }
+
+    var raidData = getDenormalisedRaidData(newData);
+
+    db.update(RAID).
+            set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
+            set(RAID.METADATA, JSONB.valueOf(metadataAsJson)).
+            set(RAID.START_DATE, raidData.startDate()).
+            set(RAID.CONFIDENTIAL, raidData.confidential()).
+            where(RAID.HANDLE.eq(oldRaid.getHandle())).
+            execute();
+
+    return emptyList();
+  }
+
+
   /* improve: after it's working, try to factor this so that validation can be
    separated out and called from the endpoint and this is just "do work".
    Might not be possible though, think validation is too intertwined with the
@@ -478,7 +533,7 @@ public class RaidService {
 
     return emptyList();
   }
-  
+
   public ServicePointRecord findServicePoint(String name){
     return db.select().from(SERVICE_POINT).
       where(SERVICE_POINT.NAME.eq(name)).

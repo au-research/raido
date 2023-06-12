@@ -150,6 +150,22 @@ public class MetadataService {
     throw ex;
   }
 
+  public static Metaschema mapApi2Db(
+          raido.idl.raidv2.model.RaidoMetaschemaV2 schema
+  ){
+    if( areEqual(schema.getValue(), RAIDOMETADATASCHEMAV1.getValue()) ){
+      return raido_metadata_schema_v1;
+    }
+
+    if( areEqual(schema.getValue(), LEGACYMETADATASCHEMAV1.getValue()) ){
+      return legacy_metadata_schema_v1;
+    }
+
+    var ex = iae("unknown json metaschema value");
+    log.with("schema", schema).error(ex.getMessage());
+    throw ex;
+  }
+
   public static raido.idl.raidv2.model.RaidoMetaschema mapDb2Api(
     Metaschema schema
   ){

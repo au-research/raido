@@ -74,6 +74,8 @@ paths:
   
   /v2/experimental/mint-raido-schema/v1:
     $ref: "raido-metadata-schema.yaml#/paths/~1mint-raido-schema-v1"
+  /v2/experimental/update-raido-schema/v2:
+    $ref: "raido-metadata-schema.yaml#/paths/~1update-raido-schema-v2"
   /v2/experimental/update-raido-schema/v1:
     $ref: "raido-metadata-schema.yaml#/paths/~1update-raido-schema-v1"
   /v2/experimental/read-raid/v2:

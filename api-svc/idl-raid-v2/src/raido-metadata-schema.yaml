@@ -116,6 +116,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MintResponse'
+  /update-raido-schema-v2:
+    post:
+      tags:
+        - basic-raid-experimental
+      operationId: update-raido-schema-v2
+      summary: update a raido-metadata-schema-v2 raid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [metadata]
+              properties:
+                # could just pass this in directly, but think we might need to
+                # extend it with extra out-of-band stuff later.  Though maybe
+                # we'll use a separate endpoint when that need arises.
+                metadata: {$ref: '#/components/schemas/RaidoMetadataSchemaV2'}
+      responses:
+        '200':
+          description: data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MintResponse'
   /update-raido-schema-v1:
     post:
       tags:
@@ -169,6 +194,52 @@ paths:
 
 components:
   schemas:
+    RaidoMetadataSchemaV2:
+      description: >
+        This type is expected to be used for Raido endpoint stuff.
+        It can diverge from the "raid standard", if needed.  
+        There is a companion `PublicRaidMetadataSchemaV1` type that's intended
+        to stick more closely to the standard.
+      type: object
+      required: [ metadataSchema, id, titles, dates, contributors, access ]
+      properties:
+        metadataSchema: {$ref: 'shared.yaml#/components/schemas/RaidoMetaschemaV2'}
+        id: {$ref: 'metadata-block.yaml#/components/schemas/IdBlock'}
+        titles:
+          type: array
+          items: {$ref: 'metadata-block.yaml#/components/schemas/TitleBlock'}
+        dates: {$ref: 'metadata-block.yaml#/components/schemas/DatesBlock'}
+        descriptions:
+          type: array
+          items: {$ref: 'metadata-block.yaml#/components/schemas/DescriptionBlock'}
+        access: {$ref: 'metadata-block.yaml#/components/schemas/AccessBlock'}
+        alternateUrls:
+          type: array
+          items: {$ref: 'metadata-block.yaml#/components/schemas/AlternateUrlBlock'}
+        contributors:
+          type: array
+          items: {$ref: 'metadata-contributor-block.yaml#/components/schemas/ContributorBlock'}
+        organisations:
+          type: array
+          items: {$ref: 'metadata-organisation-block.yaml#/components/schemas/OrganisationBlock'}
+        subjects:
+          type: array
+          items: {$ref: 'metadata-block.yaml#/components/schemas/SubjectBlock'}
+        relatedRaids:
+          type: array
+          items: {$ref: 'metadata-block.yaml#/components/schemas/RelatedRaidBlock'}
+        relatedObjects:
+          type: array
+          items: {$ref: 'metadata-block.yaml#/components/schemas/RelatedObjectBlock'}
+        alternateIdentifiers:
+          type: array
+          items: {$ref: 'metadata-block.yaml#/components/schemas/AlternateIdentifierBlock'}
+        spatialCoverages:
+          type: array
+          items: {$ref: 'metadata-block.yaml#/components/schemas/SpatialCoverageBlock'}
+        traditionalKnowledgeLabels:
+          type: array
+          items: { $ref: 'metadata-block.yaml#/components/schemas/TraditionalKnowledgeLabelBlock' }
     RaidoMetadataSchemaV1:
       description: >
         This type is expected to be used for Raido endpoint stuff.
@@ -180,7 +251,7 @@ components:
       properties:
         metadataSchema: {$ref: 'shared.yaml#/components/schemas/RaidoMetaschema'}
         id: {$ref: 'metadata-block.yaml#/components/schemas/IdBlock'}
-        titles: 
+        titles:
           type: array
           items: {$ref: 'metadata-block.yaml#/components/schemas/TitleBlock'}
         dates: {$ref: 'metadata-block.yaml#/components/schemas/DatesBlock'}

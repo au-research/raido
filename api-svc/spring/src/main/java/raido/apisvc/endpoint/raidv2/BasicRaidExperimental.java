@@ -68,25 +68,27 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     return data;
   }
 
+
+
   /* Performance notes:
-  - client sends json
-  - Spring parses it out into all these different objects 
-  - we validate it then immediately and turn the metadata (which is most of 
-    the payload) back into json
-  - save it to the DB
-  - then turn the whole thing back into json, but now with a handle!
-  And we're not even doing any validation of ORCID/ROR, etc. yet.
-  That is a *lot* of heap garbage. Large raids are gonna wreck our memory usage.
-  Especially if every update to single field is done by re-sending the full
-  raid. 
-  Also, sending the full 200K raid data, just to update the startDate - the 
-  bandwidth bills will be monstrous.  BUT only on the way in - if we 
-  don't return the full raid from mint/update - that won't cost us.  But we'll
-  need more read calls - which will cost. I'm thinking stable API should not
-  return the raid, just the handle (or maybe IdBlock).  
-  A lot of API clients may just be dumping
-  raids into the system (i.e. RDM) they don't care to display anything.
-  */
+    - client sends json
+    - Spring parses it out into all these different objects
+    - we validate it then immediately and turn the metadata (which is most of
+      the payload) back into json
+    - save it to the DB
+    - then turn the whole thing back into json, but now with a handle!
+    And we're not even doing any validation of ORCID/ROR, etc. yet.
+    That is a *lot* of heap garbage. Large raids are gonna wreck our memory usage.
+    Especially if every update to single field is done by re-sending the full
+    raid.
+    Also, sending the full 200K raid data, just to update the startDate - the
+    bandwidth bills will be monstrous.  BUT only on the way in - if we
+    don't return the full raid from mint/update - that won't cost us.  But we'll
+    need more read calls - which will cost. I'm thinking stable API should not
+    return the raid, just the handle (or maybe IdBlock).
+    A lot of API clients may just be dumping
+    raids into the system (i.e. RDM) they don't care to display anything.
+    */
   @Override
   // See the RaidSvc.mint() method for an explanation of Transaction stuff
   @Transactional(propagation = NEVER)
@@ -203,6 +205,49 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     if( failures.isEmpty() ){
       return new MintResponse().success(true).raid( 
         readRaidV2(new ReadRaidV2Request().handle(handle)) );
+    }
+    else {
+      return mintFailed(failures);
+    }
+  }
+
+  @Override
+  public MintResponse updateRaidoSchemaV2(UpdateRaidoSchemaV2Request request) {
+    var user = getAuthzPayload();
+    var newData = request.getMetadata();
+
+    if (!raidSvc.isEditable(user, request.getMetadata().getId().getIdentifierServicePoint())) {
+      throw new InvalidAccessException("This service point does not allow Raids to be edited in the app.");
+    }
+
+    if( newData == null ){
+      return mintFailed(METADATA_NOT_SET);
+    }
+
+    var newIdBlock = newData.getId();
+    if( newIdBlock == null ){
+      return mintFailed(ID_BLOCK_NOT_SET);
+    }
+
+    var idParse = idParser.parseUrl(newIdBlock.getIdentifier());
+    if( idParse instanceof ParseProblems idProblems ){
+      return mintFailed(mapProblemsToValidationFailures(idProblems));
+    }
+    var id = (IdentifierUrl) idParse;
+    var handle = id.handle().format();
+
+    if( request.getMetadata().getMetadataSchema() == raido.idl.raidv2.model.RaidoMetaschemaV2.LEGACYMETADATASCHEMAV1 ){
+      return mintFailed(CANNOT_UPDATE_LEGACY_SCHEMA);
+    }
+
+    // improve: don't need the svcPoint, wasteful to read it here
+    var oldRaid = raidSvc.readRaidV2Data(handle).raid();
+    guardOperatorOrAssociated(user, oldRaid.getServicePointId());
+
+    var failures = raidSvc.updateRaidoSchemaV2(request.getMetadata(), oldRaid);
+    if( failures.isEmpty() ){
+      return new MintResponse().success(true).raid(
+              readRaidV2(new ReadRaidV2Request().handle(handle)) );
     }
     else {
       return mintFailed(failures);
