@@ -5,7 +5,7 @@ import {
   ContributorBlock,
   DescriptionBlock,
   OrganisationBlock,
-  RaidoMetadataSchemaV1,
+  RaidoMetadataSchemaV1, RaidoMetadataSchemaV2,
   ReadRaidResponseV2,
   RelatedObjectBlock,
   RelatedRaidBlock,
@@ -111,7 +111,7 @@ type ValidFormData = WithRequired<FormData, 'startDate'>;
 
 function mapReadQueryDataToFormData(
   raid: ReadRaidResponseV2, 
-  metadata: RaidoMetadataSchemaV1
+  metadata: RaidoMetadataSchemaV2
 ): { primaryTitle: string; relatedRaid: string; leadOrganisation: string; accessStatement: string; subject: string; relatedObject: string; primaryDescription: string; relatedObjectCategory: string; accessType: "Closed" | "Open"; leadContributor: string; alternateIdentifier: string; relatedRaidType: string; relatedObjectType: string; startDate?: Date; alternateIdentifierType: string, spatialCoverage: string, spatialCoveragePlace: string, traditionalKnowledgeLabel: string }{
   return {
     primaryTitle: raid.primaryTitle,
@@ -148,7 +148,7 @@ function mapReadQueryDataToFormData(
  UI from corrupting the metadata.
  */
 export function findMetadataUpdateProblems(
-  metadata: RaidoMetadataSchemaV1
+  metadata: RaidoMetadataSchemaV2
 ): string[]{
   const problems = [];
   if( metadata.titles.length > 1 ){
@@ -197,8 +197,8 @@ export function findMetadataUpdateProblems(
 
 function createUpdateMetadata(
   formData: ValidFormData,
-  oldMetadata: RaidoMetadataSchemaV1
-): RaidoMetadataSchemaV1{
+  oldMetadata: RaidoMetadataSchemaV2
+): RaidoMetadataSchemaV2{
   const oldTitle = getPrimaryTitle(oldMetadata);
 
   const newDescriptions: DescriptionBlock[] = [];
@@ -287,6 +287,7 @@ function createUpdateMetadata(
   scenarios where this logic would stomp complicated raid data. */
   return {
     ...oldMetadata,
+    metadataSchema: "RaidoMetadataSchemaV2",
     titles: [{
       ...oldTitle,
       title: formData.primaryTitle,
@@ -314,7 +315,7 @@ function createUpdateMetadata(
 export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
   onUpdateSuccess: ()=>void,
   raid: ReadRaidResponseV2,
-  metadata: RaidoMetadataSchemaV1,
+  metadata: RaidoMetadataSchemaV1|RaidoMetadataSchemaV2,
 }){
   const [serverValidations, setServerValidations] = useState(
     [] as ValidationFailure[] );
@@ -323,10 +324,10 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
     mapReadQueryDataToFormData(raid, metadata) );
 
   const updateRequest = useMutation(
-    async (props: {formData: ValidFormData, oldMetadata: RaidoMetadataSchemaV1}) => {
+    async (props: {formData: ValidFormData, oldMetadata: RaidoMetadataSchemaV2}) => {
       setServerValidations([]);
-      return await api.basicRaid.updateRaidoSchemaV1({
-        updateRaidoSchemaV1Request: {metadata:
+      return await api.basicRaid.updateRaidoSchemaV2({
+        updateRaidoSchemaV2Request: {metadata:
             createUpdateMetadata(props.formData, props.oldMetadata)
         }
       });
@@ -648,7 +649,7 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
 }
 
 export function ComplicatedMetadataWarning(
-  {metadata, problems}:{metadata: RaidoMetadataSchemaV1, problems: string[]}
+  {metadata, problems}:{metadata: RaidoMetadataSchemaV1|RaidoMetadataSchemaV2, problems: string[]}
 ){
   return <>
     <Alert severity="warning">

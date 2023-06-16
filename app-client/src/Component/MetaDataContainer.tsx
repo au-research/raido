@@ -7,12 +7,24 @@ import {
   instanceOfLegacyMetadataSchemaV1,
   instanceOfRaidoMetadataSchemaV1,
   LegacyMetadataSchemaV1,
-  LegacyMetadataSchemaV1FromJSON, OrganisationBlock, PublicRaidMetadataSchemaV1,
+  LegacyMetadataSchemaV1FromJSON,
+  OrganisationBlock,
+  PublicRaidMetadataSchemaV1,
   RaidoMetadataSchemaV1,
+  RaidoMetadataSchemaV2,
   RaidoMetadataSchemaV1FromJSON,
-  RaidoMetaschema, RelatedObjectBlock, RelatedRaidBlock, SpatialCoverageBlock, SubjectBlock,
-  TitleBlock, TraditionalKnowledgeLabelBlock
+  RaidoMetaschema,
+  RelatedObjectBlock,
+  RelatedRaidBlock,
+  SpatialCoverageBlock,
+  SubjectBlock,
+  TitleBlock,
+  TraditionalKnowledgeLabelBlock,
+  RaidoMetaschemaV2,
+  RaidoMetadataSchemaV2ToJSON,
+  RaidoMetadataSchemaV2FromJSON
 } from "Generated/Raidv2";
+import {parse} from "json5";
 
 export function MetaDataContainer({metadata}: {metadata: any}){
   return <ContainerCard title={"Metadata"}>
@@ -22,16 +34,18 @@ export function MetaDataContainer({metadata}: {metadata: any}){
   </ContainerCard>
 }
 
-export function convertMetadata(value: any): 
-RaidoMetadataSchemaV1|LegacyMetadataSchemaV1 {
+export function convertMetadata(value: any): RaidoMetadataSchemaV1|RaidoMetadataSchemaV2|LegacyMetadataSchemaV1 {
   if( typeof value === 'string' ){
     const parsed = JSON.parse(value);
-    
+
     if( parsed.metadataSchema === RaidoMetaschema.LegacyMetadataSchemaV1 ){
       return LegacyMetadataSchemaV1FromJSON(parsed);
     }
     else if( parsed.metadataSchema === RaidoMetaschema.RaidoMetadataSchemaV1 ){
       return RaidoMetadataSchemaV1FromJSON(parsed);
+    }
+    else if( parsed.metadataSchema === RaidoMetaschemaV2.RaidoMetadataSchemaV2 ){
+      return RaidoMetadataSchemaV2FromJSON(parsed);
     }
   }
 
@@ -66,14 +80,14 @@ export function nullFieldReplacer(key: any, value: any): any{
 }
 
 export function getFirstPrimaryDescription(
-  metadata: RaidoMetadataSchemaV1
+  metadata: RaidoMetadataSchemaV2
 ): undefined | DescriptionBlock {
   return metadata.descriptions?.
     find(i=> i.type === "Primary Description");
 }
 
 export function getFirstLeader(
-  metadata: RaidoMetadataSchemaV1
+  metadata: RaidoMetadataSchemaV2
 ): undefined | ContributorBlock {
   return metadata.contributors.find(i=> {
     return i.positions?.find(j => {
@@ -83,7 +97,7 @@ export function getFirstLeader(
 }
 
 export function getLeadOrganisation(
-  metadata: RaidoMetadataSchemaV1
+  metadata: RaidoMetadataSchemaV2
 ): undefined | OrganisationBlock {
   return metadata.organisations?.find(i=> { // not nullable?
     return i.roles.find(j => {
@@ -92,7 +106,7 @@ export function getLeadOrganisation(
   });
 }
 export function getPrimaryTitle(
-  metadata: RaidoMetadataSchemaV1|PublicRaidMetadataSchemaV1
+  metadata: RaidoMetadataSchemaV2|PublicRaidMetadataSchemaV1
 ): TitleBlock {
   let primary = metadata.titles.find(i=> i.type === "Primary Title");
   if( !primary ){
@@ -102,7 +116,7 @@ export function getPrimaryTitle(
 }
 
 export function getFirstSubject(
-  metadata: RaidoMetadataSchemaV1
+  metadata: RaidoMetadataSchemaV2
 ): undefined | SubjectBlock {
   if (metadata.subjects?.length) {
     return metadata.subjects[0]
@@ -110,7 +124,7 @@ export function getFirstSubject(
 }
 
 export function getFirstRelatedRaid(
-  metadata: RaidoMetadataSchemaV1
+  metadata: RaidoMetadataSchemaV2
 ): undefined | RelatedRaidBlock {
   if (metadata.relatedRaids?.length) {
     return metadata.relatedRaids[0]
@@ -118,7 +132,7 @@ export function getFirstRelatedRaid(
 }
 
 export function getFirstRelatedObject(
-  metadata: RaidoMetadataSchemaV1
+  metadata: RaidoMetadataSchemaV2
 ): undefined | RelatedObjectBlock {
   if (metadata.relatedObjects?.length) {
     return metadata.relatedObjects[0]
@@ -126,7 +140,7 @@ export function getFirstRelatedObject(
 }
 
 export function getFirstAlternateIdentifier(
-  metadata: RaidoMetadataSchemaV1
+  metadata: RaidoMetadataSchemaV2
 ): undefined | AlternateIdentifierBlock {
   if (metadata.alternateIdentifiers?.length) {
     return metadata.alternateIdentifiers[0]
@@ -134,7 +148,7 @@ export function getFirstAlternateIdentifier(
 }
 
 export function getFirstSpatialCoverage(
-  metadata: RaidoMetadataSchemaV1
+  metadata: RaidoMetadataSchemaV2
 ): undefined | SpatialCoverageBlock {
   if (metadata.spatialCoverages?.length) {
     return metadata.spatialCoverages[0]
@@ -142,7 +156,7 @@ export function getFirstSpatialCoverage(
 }
 
 export function getFirstTraditionalKnowledgeLabel(
-  metadata: RaidoMetadataSchemaV1
+  metadata: RaidoMetadataSchemaV2
 ): undefined | TraditionalKnowledgeLabelBlock {
   if (metadata.traditionalKnowledgeLabels?.length) {
     return metadata.traditionalKnowledgeLabels[0]

@@ -7,6 +7,7 @@ package raido.db.jooq.api_svc.enums;
 import org.jooq.Catalog;
 import org.jooq.EnumType;
 import org.jooq.Schema;
+
 import raido.db.jooq.api_svc.ApiSvc;
 
 

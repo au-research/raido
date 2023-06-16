@@ -6,17 +6,23 @@ import org.springframework.stereotype.Component;
 import raido.apisvc.exception.InvalidJsonException;
 import raido.apisvc.exception.InvalidVersionException;
 import raido.apisvc.exception.ResourceNotFoundException;
+import raido.apisvc.exception.ValidationException;
 import raido.apisvc.factory.RaidRecordFactory;
 import raido.apisvc.repository.RaidRepository;
 import raido.apisvc.service.raid.id.IdentifierParser;
 import raido.apisvc.service.raid.id.IdentifierUrl;
+import raido.apisvc.util.Log;
 import raido.idl.raidv2.model.RaidSchemaV2;
 import raido.idl.raidv2.model.UpdateRaidStableV2Request;
 
 import java.util.Optional;
 
+import static raido.apisvc.util.Log.to;
+
 @Component
 public class RaidoStableV2Service {
+  private static final Log log = to(RaidService.class);
+
   private final IdentifierParser idParser;
   private final RaidRepository raidRepository;
   private final RaidRecordFactory raidRecordFactory;
@@ -35,7 +41,8 @@ public class RaidoStableV2Service {
         try {
           return objectMapper.readValue(raidRecord.getMetadata().data(), RaidSchemaV2.class);
         } catch (JsonProcessingException e) {
-          throw new RuntimeException(e);
+          log.errorEx("Error processing json: ", e);
+          throw new InvalidJsonException();
         }
       });
   }
@@ -46,8 +53,8 @@ public class RaidoStableV2Service {
       id = idParser.parseUrlWithException(raid.getId().getIdentifier());
     }
     catch( ValidationFailureException e ){
-      // it was already validated, so this shouldn't happen
-      throw new RuntimeException(e);
+      log.errorEx("Error parsing handle", e);
+      throw new ValidationException(e.getFailures());
     }
     String handle = id.handle().format();
 

@@ -49,8 +49,7 @@ import static raido.apisvc.util.DateUtil.local2Offset;
 import static raido.apisvc.util.DateUtil.offset2Local;
 import static raido.apisvc.util.ExceptionUtil.runtimeException;
 import static raido.apisvc.util.Log.to;
-import static raido.db.jooq.api_svc.enums.Metaschema.legacy_metadata_schema_v1;
-import static raido.db.jooq.api_svc.enums.Metaschema.raido_metadata_schema_v1;
+import static raido.db.jooq.api_svc.enums.Metaschema.*;
 import static raido.db.jooq.api_svc.tables.Raid.RAID;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
@@ -401,18 +400,17 @@ public class RaidService {
           RaidoMetadataSchemaV2 newData,
           RaidRecord oldRaid
   ) {
-    Metaschema newMetadataSchema = mapApi2Db(newData.getMetadataSchema());
-    if( newMetadataSchema != oldRaid.getMetadataSchema() ){
-      return singletonList(SCHEMA_CHANGED);
-    }
-
-    var oldData = metaSvc.mapV1SchemaMetadata(oldRaid);
+    var oldData = metaSvc.mapV2SchemaMetadata(oldRaid);
 
     List<ValidationFailure> failures = new ArrayList<>();
 
     failures.addAll(
             validSvc.validateIdBlockNotChanged(newData.getId(), oldData.getId()) );
     failures.addAll(validSvc.validateRaidoSchemaV2(newData));
+
+
+    var version = newData.getId().getVersion();
+    newData.getId().version(version + 1);
 
     // validation failure possible (conversion error or maxSize of json)
     String metadataAsJson = null;
@@ -434,7 +432,10 @@ public class RaidService {
             set(RAID.METADATA, JSONB.valueOf(metadataAsJson)).
             set(RAID.START_DATE, raidData.startDate()).
             set(RAID.CONFIDENTIAL, raidData.confidential()).
+            set(RAID.METADATA_SCHEMA, raido_metadata_schema_v2).
+            set(RAID.VERSION, version + 1).
             where(RAID.HANDLE.eq(oldRaid.getHandle())).
+            and(RAID.VERSION.eq(version)).
             execute();
 
     return emptyList();

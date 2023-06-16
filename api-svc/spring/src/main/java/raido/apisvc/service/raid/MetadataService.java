@@ -27,10 +27,10 @@ import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.ExceptionUtil.ise;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.areEqual;
-import static raido.db.jooq.api_svc.enums.Metaschema.legacy_metadata_schema_v1;
-import static raido.db.jooq.api_svc.enums.Metaschema.raido_metadata_schema_v1;
+import static raido.db.jooq.api_svc.enums.Metaschema.*;
 import static raido.idl.raidv2.model.RaidoMetaschema.LEGACYMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
+import static raido.idl.raidv2.model.RaidoMetaschemaV2.RAIDOMETADATASCHEMAV2;
 
 @Component
 public class MetadataService {
@@ -93,7 +93,26 @@ public class MetadataService {
       throw new RuntimeException(e);
     }
   }
-  
+
+  public RaidoMetadataSchemaV2 mapV2SchemaMetadata(RaidRecord raid){
+    var result = mapObject(raid.getMetadata(), RaidoMetadataSchemaV2.class);
+//    if( !(
+//            areEqual(
+//                    result.getMetadataSchema().getValue(),
+//                    RAIDOMETADATASCHEMAV2.getValue()
+//            ) &&
+//                    raid.getMetadataSchema() == raido_metadata_schema_v2
+//    )){
+//      var ex = ise("DB column / JSON field mismatched schema");
+//      log.with("handle", raid.getHandle()).
+//              with("columnSchema", raid.getMetadataSchema()).
+//              with("jsonSchema", result.getMetadataSchema()).
+//              error(ex.getMessage());
+//      throw ise("mismatch between column and json: %s",
+//              raid.getMetadataSchema());
+//    }
+    return result;
+  }
   public RaidoMetadataSchemaV1 mapV1SchemaMetadata(RaidRecord raid){
     var result = mapObject(raid.getMetadata(), RaidoMetadataSchemaV1.class);
     if( !(
@@ -153,6 +172,10 @@ public class MetadataService {
   public static Metaschema mapApi2Db(
           raido.idl.raidv2.model.RaidoMetaschemaV2 schema
   ){
+    if( areEqual(schema.getValue(), RAIDOMETADATASCHEMAV2.getValue()) ){
+      return raido_metadata_schema_v2;
+    }
+
     if( areEqual(schema.getValue(), RAIDOMETADATASCHEMAV1.getValue()) ){
       return raido_metadata_schema_v1;
     }
@@ -247,7 +270,7 @@ public class MetadataService {
         organisations((metadata.getOrganisations()))
       );
   }
-  
+
   public PublicReadRaidResponseV3 mapToPublicClosed(
     RaidRecord raid,
     IdBlock id,

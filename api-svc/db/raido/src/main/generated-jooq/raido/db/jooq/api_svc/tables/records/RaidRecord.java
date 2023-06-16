@@ -4,13 +4,18 @@
 package raido.db.jooq.api_svc.tables.records;
 
 
-import org.jooq.*;
-import org.jooq.impl.UpdatableRecordImpl;
-import raido.db.jooq.api_svc.enums.Metaschema;
-import raido.db.jooq.api_svc.tables.Raid;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import org.jooq.Field;
+import org.jooq.JSONB;
+import org.jooq.Record1;
+import org.jooq.Record11;
+import org.jooq.Row11;
+import org.jooq.impl.UpdatableRecordImpl;
+
+import raido.db.jooq.api_svc.enums.Metaschema;
+import raido.db.jooq.api_svc.tables.Raid;
 
 
 /**

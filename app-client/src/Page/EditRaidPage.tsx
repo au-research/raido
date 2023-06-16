@@ -13,7 +13,7 @@ import React, { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   LegacyMetadataSchemaV1,
-  RaidoMetadataSchemaV1,
+  RaidoMetadataSchemaV1, RaidoMetadataSchemaV2,
   ReadRaidResponseV2,
   ServicePoint
 } from "Generated/Raidv2";
@@ -77,7 +77,7 @@ function Content(){
 
 interface ReadData {
   readonly raid: ReadRaidResponseV2,
-  readonly metadata: RaidoMetadataSchemaV1|LegacyMetadataSchemaV1,
+  readonly metadata: RaidoMetadataSchemaV1|RaidoMetadataSchemaV2|LegacyMetadataSchemaV1,
 }
 
 function EditRaidContainer({handle}: {
@@ -156,11 +156,26 @@ function RaidDataForm({readQuery, onUpdateSuccess}: {
       onUpdateSuccess={onUpdateSuccess}
     />
   }
+
+  if( readQuery.data.metadata.metadataSchema === "RaidoMetadataSchemaV2" ){
+    const metadata = readQuery.data.metadata as RaidoMetadataSchemaV2
+    const problems = findMetadataUpdateProblems(metadata);
+
+    if( problems.length > 0 ){
+      return <ComplicatedMetadataWarning
+          metadata={metadata} problems={problems}/>
+    }
+
+    return <EditRaidoV1SchemaForm raid={readQuery.data.raid}
+                                  metadata={metadata}
+                                  onUpdateSuccess={onUpdateSuccess}
+    />
+  }
   
   if( readQuery.data.metadata.metadataSchema === "LegacyMetadataSchemaV1" ){
     return <UpgradeLegacySchemaForm onUpgradeSuccess={onUpdateSuccess} 
       raid={readQuery.data.raid} 
-      metadata={readQuery.data.metadata}/>
+      metadata={readQuery.data.metadata as LegacyMetadataSchemaV1}/>
   }
   
   return <CompactErrorPanel error={{

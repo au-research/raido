@@ -4,19 +4,33 @@
 package raido.db.jooq.api_svc.tables;
 
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
+
+import org.jooq.Check;
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Function9;
+import org.jooq.Identity;
+import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.*;
+import org.jooq.Records;
+import org.jooq.Row9;
+import org.jooq.Schema;
+import org.jooq.SelectField;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.Internal;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
 import raido.db.jooq.api_svc.ApiSvc;
 import raido.db.jooq.api_svc.Keys;
 import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Function;
 
 
 /**
