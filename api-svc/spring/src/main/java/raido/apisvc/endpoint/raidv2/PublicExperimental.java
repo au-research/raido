@@ -31,8 +31,7 @@ import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.ExceptionUtil.ise;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.RestUtil.urlDecode;
-import static raido.db.jooq.api_svc.enums.Metaschema.legacy_metadata_schema_v1;
-import static raido.db.jooq.api_svc.enums.Metaschema.raido_metadata_schema_v1;
+import static raido.db.jooq.api_svc.enums.Metaschema.*;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 
 @Scope(proxyMode = TARGET_CLASS)
@@ -101,6 +100,10 @@ public class PublicExperimental implements PublicExperimentalApi {
     
     if( schema == raido_metadata_schema_v1 ){
       return metaSvc.mapRaidoV1SchemaToPublic(data);
+    }
+
+    if( schema == raido_metadata_schema_v2 ){
+      return metaSvc.mapRaidoV2SchemaToPublic(data);
     }
 
     var ex = ise("unknown raid schema");

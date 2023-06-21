@@ -1,14 +1,16 @@
 package raido.apisvc.exception;
 
 public class InvalidVersionException extends RaidApiException {
+  private final Integer version;
+
   public InvalidVersionException(final Integer version) {
     super();
-
+    this.version = version;
   }
 
   @Override
   public String getTitle() {
-    return null;
+    return "Invalid version";
   }
 
   @Override
@@ -18,6 +20,6 @@ public class InvalidVersionException extends RaidApiException {
 
   @Override
   public String getDetail() {
-    return null;
+    return String.format("Update failed with stale version: %d", version);
   }
 }

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Contract;
 import feign.Feign;
 import feign.Logger.Level;
+import feign.Response;
+import feign.codec.ErrorDecoder;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
@@ -215,6 +217,5 @@ public abstract class IntegrationTestCase {
       adminEmail("").
       techEmail("").
       enabled(true) );
-    
   }
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 import raido.apisvc.exception.InvalidJsonException;
+import raido.apisvc.exception.InvalidVersionException;
 import raido.apisvc.exception.ResourceNotFoundException;
 import raido.apisvc.exception.UnknownServicePointException;
 import raido.apisvc.factory.RaidRecordFactory;
@@ -427,7 +428,7 @@ public class RaidService {
 
     var raidData = getDenormalisedRaidData(newData);
 
-    db.update(RAID).
+    var rowsUpdated =  db.update(RAID).
             set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
             set(RAID.METADATA, JSONB.valueOf(metadataAsJson)).
             set(RAID.START_DATE, raidData.startDate()).
@@ -437,6 +438,10 @@ public class RaidService {
             where(RAID.HANDLE.eq(oldRaid.getHandle())).
             and(RAID.VERSION.eq(version)).
             execute();
+
+    if (rowsUpdated != 1) {
+      throw new InvalidVersionException(version);
+    }
 
     return emptyList();
   }

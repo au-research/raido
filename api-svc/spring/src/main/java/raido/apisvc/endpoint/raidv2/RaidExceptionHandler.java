@@ -153,6 +153,24 @@ public class RaidExceptionHandler extends ResponseEntityExceptionHandler {
       .body(body);
   }
 
+  @ExceptionHandler(InvalidVersionException.class)
+  public ResponseEntity<FailureResponse> handleInvalidVersionException(final Exception e) {
+    final var exception = (InvalidVersionException) e;
+    log.warnEx(exception.getTitle(), e);
+
+    final var body = new FailureResponse()
+            .type(exception.getType())
+            .title(exception.getTitle())
+            .status(exception.getStatus())
+            .detail(exception.getDetail())
+            .instance(exception.getInstance());
+
+    return ResponseEntity
+            .status(exception.getStatus())
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(body);
+  }
+
   @Override
   protected ResponseEntity<Object> handleHttpMessageNotReadable(
     HttpMessageNotReadableException ex,
