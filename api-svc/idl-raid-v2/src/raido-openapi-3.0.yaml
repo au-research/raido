@@ -28,6 +28,7 @@ info:
   contact:
     name: ARDC RAiD team
     email: contact@raid.org
+  termsOfService: https://github.com/au-research/raido/blob/main/doc/service-level-guide.md
 tags:
   - name: public-experimental
     description: The APIs are not stable, they may change at any time.  
@@ -62,10 +63,10 @@ paths:
   # endregion
   
   
-  # region Unauthorized user endpoints 
+  # region unapproved-user endpoints 
   
-  /v2/public/request-authz/v1:
-    $ref: "unauthz-experimental.yaml#/paths/~1update-request-authz"
+  /v2/public/authz-request/v1:
+    $ref: "unapproved-user-experimental.yaml#/paths/~1update-authz-request"
 
   # endregion
 
@@ -100,7 +101,9 @@ paths:
   # endregion
 
   # region Admin endpoints
-                
+            
+  # IMPROVE: `/v2/public/` is wrong, this is an authorised endpoint  
+  # Should be under /v2/experimental/              
   /v2/public/request-authz/v1/{authzRequestId}:
     $ref: "admin-experimental.yaml#/paths/~1read-request-authz"
   /v2/experimental/update-authz-request-status/v1:
@@ -138,8 +141,8 @@ components:
       scheme: bearer
       bearerFormat: JWT
       description: >
-        An api-token for integration is generated manually in the app-client 
-        (on the "API key" page). See 
-        https://github.com/au-research/raido/blob/main/doc/security/api-key.md
+        An "api-token" for integration is generated manually via the app-client 
+        (on the "API key" page, from the /generate-api-token endpoint). See 
+        https://github.com/au-research/raido/blob/main/doc/security/readme.md
         The app-client UI uses an ephemeral api-token returned from the 
         `/idpresponse` URL as part of the OIDC sign-in process.

@@ -1,3 +1,25 @@
+select * from pg_stat_activity
+;
+
+
+select api_svc.raid.handle, api_svc.raid.primary_title, api_svc.raid.start_date,
+  api_svc.raid.confidential, api_svc.raid.metadata_schema,
+  api_svc.raid.date_created
+from api_svc.raid
+where (api_svc.raid.service_point_id = 20000007 and true)
+order by api_svc.raid.date_created desc fetch next 500 rows only
+;
+
+select count(*) from raid
+;
+
+drop index if exists idx_raid_service_point_id_date_created;
+
+CREATE INDEX CONCURRENTLY idx_raid_service_point_id_date_created
+ON api_svc.raid (service_point_id, date_created DESC);
+
+ANALYZE api_svc.raid;
+
 select count(1) from raid
 ;
 

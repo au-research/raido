@@ -13,6 +13,7 @@ import java.util.function.Function;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Function11;
+import org.jooq.Index;
 import org.jooq.JSONB;
 import org.jooq.Name;
 import org.jooq.Record;
@@ -29,6 +30,7 @@ import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
 import raido.db.jooq.api_svc.ApiSvc;
+import raido.db.jooq.api_svc.Indexes;
 import raido.db.jooq.api_svc.Keys;
 import raido.db.jooq.api_svc.enums.Metaschema;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
@@ -156,6 +158,11 @@ public class Raid extends TableImpl<RaidRecord> {
     @Override
     public Schema getSchema() {
         return aliased() ? null : ApiSvc.API_SVC;
+    }
+
+    @Override
+    public List<Index> getIndexes() {
+        return Arrays.asList(Indexes.IDX_RAID_SERVICE_POINT_ID_DATE_CREATED);
     }
 
     @Override

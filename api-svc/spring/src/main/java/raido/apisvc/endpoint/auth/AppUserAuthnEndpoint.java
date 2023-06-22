@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.repository.AppUserRepository;
-import raido.apisvc.service.auth.RaidV2AppUserAuthService;
+import raido.apisvc.service.auth.RaidV2AppUserApiTokenService;
+import raido.apisvc.service.auth.RaidV2AppUserOidcService;
 import raido.apisvc.spring.config.environment.RaidoAuthnProps;
 import raido.apisvc.spring.security.ApiSafeException;
 import raido.apisvc.util.Guard;
@@ -22,8 +23,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.eclipse.jetty.util.TypeUtil.isFalse;
-import static raido.apisvc.spring.security.raidv2.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
-import static raido.apisvc.service.auth.NonAuthzTokenPayload.NonAuthzTokenPayloadBuilder.aNonAuthzTokenPayload;
+import static raido.apisvc.spring.security.raidv2.ApiToken.ApiTokenBuilder.anApiToken;
+import static raido.apisvc.spring.security.raidv2.UnapprovedUserApiToken.UnapprovedUserApiTokenBuilder.anUnapprovedUserApiToken;
 import static raido.apisvc.spring.security.IdProviderException.idpException;
 import static raido.apisvc.util.ExceptionUtil.authFailed;
 import static raido.apisvc.util.Log.to;
@@ -43,18 +44,21 @@ public class AppUserAuthnEndpoint {
 
   private ObjectMapper map;
   
-  private RaidV2AppUserAuthService raidV2UserAuthSvc;
+  private RaidV2AppUserOidcService userOidcSvc;
+  private RaidV2AppUserApiTokenService userAuthzSvc;
   private RaidoAuthnProps authnProps;
   private AppUserRepository appUserRepo;
 
   public AppUserAuthnEndpoint(
     ObjectMapper map,
-    RaidV2AppUserAuthService raidV2UserAuthSvc,
+    RaidV2AppUserOidcService userOidcSvc,
+    RaidV2AppUserApiTokenService userAuthzSvc, 
     RaidoAuthnProps authnProps,
     AppUserRepository appUserRepo
   ) {
     this.map = map;
-    this.raidV2UserAuthSvc = raidV2UserAuthSvc;
+    this.userOidcSvc = userOidcSvc;
+    this.userAuthzSvc = userAuthzSvc;
     this.authnProps = authnProps;
     this.appUserRepo = appUserRepo;
   }
@@ -79,7 +83,7 @@ public class AppUserAuthnEndpoint {
     }
 
     String decodedState = RestUtil.base64Decode(stateValue);
-    log.with("decodeState", decodedState).debug("");
+    log.with("decodeState", decodedState).debug();
     
     var state = map.readValue(decodedState, AuthState.class);
     
@@ -95,11 +99,11 @@ public class AppUserAuthnEndpoint {
       throw authFailed();
     }
 
-    DecodedJWT idProviderJwt = raidV2UserAuthSvc.
-      exchangeCodeForVerifiedJwt(state.clientId, idpResponseCode);
+    DecodedJWT idProviderJwt = userOidcSvc.
+      exchangeOAuthCodeForIdToken(state.clientId, idpResponseCode);
 
     /* "email" isn't really email any more, going to rename it to 
-    "description" or something. 
+    "identity" or something. 
     Orcid may not have an email, user doesn't have to make it public.
     Google always provides email.
     AAF, not sure if it's always there - can only say it's been there for 
@@ -116,7 +120,7 @@ public class AppUserAuthnEndpoint {
     I think we're going to have to just use subject.
     This new approach would align with our usage of app_user table for api-keys
     too. */
-    if( raidV2UserAuthSvc.mapIdProvider(state.clientId) == ORCID ){
+    if( userOidcSvc.mapIdProvider(state.clientId) == ORCID ){
       // try name fields, but that's also allowed to be private
       email = formatOrcidName(idProviderJwt).
         // otherwise, fallback to the subject
@@ -137,7 +141,7 @@ public class AppUserAuthnEndpoint {
       // valid: authenticated via an IdP but not authorized/approved as a user
       res.sendRedirect( "%s#id_token=%s".formatted(
         state.redirectUri,
-        raidV2UserAuthSvc.sign( aNonAuthzTokenPayload().
+        userAuthzSvc.sign( anUnapprovedUserApiToken().
           withSubject(idProviderJwt.getSubject()).
           withClientId(state.clientId).
           withEmail(email).
@@ -163,9 +167,11 @@ public class AppUserAuthnEndpoint {
       throw authFailed();
     }
 
+    /* At this point, we transition from using the OAuth2/OIDC standard flow 
+    and terminology, to the concept of `api-token`*/
     res.sendRedirect("%s#id_token=%s".formatted(
       state.redirectUri,
-      raidV2UserAuthSvc.sign(anAuthzTokenPayload().
+      userAuthzSvc.sign(anApiToken().
         withAppUserId(user.getId()).
         withServicePointId(user.getServicePointId()).
         withSubject(idProviderJwt.getSubject()).

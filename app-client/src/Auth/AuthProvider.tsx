@@ -36,7 +36,7 @@ export interface AuthorizedSession {
   payload: AuthzTokenPayload,
   accessTokenExpiry: Date,
   accessTokenIssuedAt: Date,
-  /* security:sto this should not be saved in globally accessible memory in the 
+  /* IMPROVE: this should not be saved in globally accessible memory in the 
   current browser context.  Either use a Service Worker or closure variable to
   protect it from malicious JS running on the page.
   https://blog.ropnop.com/storing-tokens-in-browser/#global-variable */
@@ -163,7 +163,7 @@ export function AuthProvider({unauthenticatedPaths = [], children}: {
       return;
     }
     
-    /* security:sto this is highly questionable.
+    /* IMPROVE: this is questionable from a security standpoint.
      Better to just save what clientId the user logged in through last time and 
      use that to redirect to the IDP to authenticate again.
      Proper OAuth2 Id Providers remember that the user has previously 

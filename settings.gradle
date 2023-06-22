@@ -40,7 +40,7 @@ dependencyResolutionManagement{
 
 
       // https://documentation.red-gate.com/fd/release-notes-for-flyway-engine-179732572.html
-      plugin('flyway', 'org.flywaydb.flyway').version('9.16.0')      
+      plugin('flyway', 'org.flywaydb.flyway').version('9.19.3')      
       plugin('jooq', 'nu.studer.jooq').version('8.1')      
       
       library('jooq', 'org.jooq', 'jooq').versionRef('jooq')

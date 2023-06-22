@@ -6,11 +6,14 @@ import org.jooq.ExecuteContext;
 import org.jooq.ExecuteListener;
 import org.jooq.SQLDialect;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLStateSQLExceptionTranslator;
 
 import java.sql.SQLException;
+
+import static raido.apisvc.util.Log.to;
 
 /**
  * Transforms {@link SQLException} into a Spring-specific
@@ -42,7 +45,7 @@ public class JooqExceptionTranslator implements ExecuteListener {
     if (dialect != null && dialect.thirdParty() != null) {
       String dbName = dialect.thirdParty().springDbName();
       if (dbName != null) {
-        return new SQLErrorCodeSQLExceptionTranslator(dbName);
+        return new RaidoSQLErrorCodeSQLExceptionTranslator(dbName);
       }
     }
     return new SQLStateSQLExceptionTranslator();
@@ -72,5 +75,33 @@ public class JooqExceptionTranslator implements ExecuteListener {
     return translator.translate("jOOQ", context.sql(), exception);
   }
 
+  /**
+   I have a feeling this is not a great implementation of this.
+   see https://stackoverflow.com/a/66283045/924597
+   Try to find out if there's not a better implementation of this somewhere in 
+   the jooq codebase that I can use.
+   */
+  private static class RaidoSQLErrorCodeSQLExceptionTranslator 
+  extends SQLErrorCodeSQLExceptionTranslator {
+    private static final raido.apisvc.util.Log log = to(
+      RaidoSQLErrorCodeSQLExceptionTranslator.class);
+
+    public RaidoSQLErrorCodeSQLExceptionTranslator(String dbName) {
+      super(dbName);
+    }
+
+    @Override
+    protected DataAccessException customTranslate(
+      String task, String sql, SQLException sqlEx
+    ) {
+      // super of this just returns null which stomps the sqlEx
+      var translated = super.customTranslate(task, sql, sqlEx);
+      if( translated != null ){
+        return translated;
+      }
+
+      return new UncategorizedSQLException(task, sql, sqlEx);
+    }
+  }
 }
 

@@ -6,6 +6,8 @@ Makes a good starting point for "how much work to port Raido to a different DB".
 # Current PG features used
 
 * Jsonb for storing raid metadata envelope
+* Custom enum types, specifically enums like: `user_role`
+  * see [V4__sign_in_tables.sql](../db/raido/src/main/resources/db/migration/V4__sign_in_tables.sql)
 
 
 # Future PG features to use

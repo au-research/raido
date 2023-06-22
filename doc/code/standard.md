@@ -7,7 +7,7 @@ If a tool/library can't support these standards - that's a stronger argument
 for discarding the tool than it is for making an exception.
 
 
-## No credentials in source repositories
+## Do not put credentials in source repositories
 
 This isn't about whether credentials are hard-coded or not.
 It's about minimising risk, given we're using a public hosting service and
@@ -36,7 +36,7 @@ If you're practicing good hygiene for your encryption key, then just do that
 with the credentials directly and spare us the crypto security theatre
 
 
-### Don't log sensitive data
+## Don't log sensitive data
 
 Be careful of logging headers, they may contain an Authorization header,
 which contains the authn/authz token.
@@ -49,7 +49,7 @@ to make sure it's dealt with before a release - acknowledged as an accepted
 risk, mitigated or removed
 
 
-### UTF-8 encoding for all non-ASCII content
+## Use UTF-8 encoding for all non-ASCII content
 
 Any time you serialise text data: across the wire, into a html attribute,
 to disk, to a local store, to a DB column.
@@ -64,8 +64,8 @@ This includes source, markdown and other resources.
 Emojis are a crucial documentation tool 🤠 ❤️‍🔥
 
 
-#### Postgres
-The actually encoding of `TEXT`/`VARCHAR` values depends on the encoding config
+### Postgres
+The actual encoding of `TEXT`/`VARCHAR` values depends on the encoding config
 of the DB.
 
 Raido database has these config values:
@@ -86,7 +86,7 @@ select length('👩‍❤️‍💋‍👩') -- length = 8
 ```
 
 
-### ASCII for non-content (URLs, filenames)
+## Use ASCII for non-content (URLs, filenames)
 
 "ASCII" means 7-bit clean US-ASCII - not the endless swamp of integration
 issues that is extended ASCII.
@@ -136,7 +136,7 @@ unrepresentable characters).
 [mojibake](https://en.wikipedia.org/wiki/Mojibake)
 
 
-### UTC everywhere
+## Use UTC everywhere
 
 Any time you serialise a date: across the wire, into a html attribute, to disk,
 to a local store, to a DB column.
@@ -146,13 +146,16 @@ storing a Time Zone, consider modelling the TZ separately (yes, literally -
 as a separate column, e.g. "local_client_entry_tz", "required_target_tz", etc.)
 Make it explicitly clear which TZ it stores and why you care about that TZ so
 much  - if you care about the TZ for some reason, I guarantee there's at least
-two TZs involved.
+two actual timezones involved that you should be storing.
 
 The rest of the time, push TZ stuff as high as possible - above the
 business/application logic, all the way into into the
 presentation/view/controller logic (if that's how you roll).
 
-Postgres columns should generally be modelled as timestamp without time zone.
+Postgres columns should _generally_ be modelled as timestamp without time zone.
+Yes, I'm aware of the Postgres 
+["don't do this"](https://wiki.postgresql.org/wiki/Don't_Do_This#Don.27t_use_timestamp_.28without_time_zone.29) 
+advice. Raido falls squarely in the "When should you?" camp.
 
 All APIs values should be UTC.
 
@@ -182,18 +185,23 @@ This won't solve all our Timezone issues - but it'll gets us surprisingly far,
 and provides a significant amount of predictability along the way.
 
 
-### Unix file endings
+## Use Unix file endings
 
 Everywhere else we have a need to store or generate files (e.g. statically
 generated server files, text area content, etc.) - use unix line endings.
 
 Windows developers: learn to use tools that can deal with that, or make sure
-you're software supports both (and defaults to unix for anything that gets
+your software supports both (and defaults to unix for anything that gets
 committed, transferred to a server, etc.)
+
+Leo wins the inaugural "someone actually reviewed the code standards" award.
+The prize is this emoji - 🦁.
+Whenever someone demonstrates actually reading the documentation, the 
+Leo the Lion emoji will be awarded in slack.
 
 Most repos should have a `.gitattributes` file with `text=lf`.
 
-#### Why not "auto"?
+### Why not "auto"?
 
 * Docker images
   * don't want to be copying CR/LF files into the Docker images.
@@ -228,4 +236,16 @@ a UI control anyway so that Windows users can generate files with Unix line
 endings, because reasons. Seriously, you can't win. All you can do is
 have a sensible default so both developers and users can predict what your 
 system will probably do, most of the time.
+
+
+## Always explain deprecations 
+
+When marking an API endpoint or data structure deprecated - always provide some 
+explanation of what the intended upgrade path is (i.e. what they should do 
+instead). Don't just mark stuff deprecated. 
+
+This goes double for when you're intentionally sunsetting actual functionality, 
+not just the API. Don't make customers figure that out on their own.
+
+
 

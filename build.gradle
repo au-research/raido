@@ -27,7 +27,7 @@ the .zip file instead of doing a clone).
 If you're working without Git and don't know what version you're building and 
 just really want to get Gradle running, set the value to "unknown" or something.  
 
-See /doc/release-process.md for example git commands.
+See release-process.md for example git commands.
 */
 version = GitUtil.describe("raido-v-", ext.versionEnvName)
 println "Project version: $version"

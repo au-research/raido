@@ -4,7 +4,6 @@ import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.context.annotation.Scope;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.exception.InvalidAccessException;
 import raido.apisvc.service.raid.RaidService;
@@ -21,10 +20,11 @@ import raido.idl.raidv2.model.*;
 import java.util.List;
 
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
-import static org.springframework.transaction.annotation.Propagation.NEVER;
 import static raido.apisvc.endpoint.Constant.MAX_EXPERIMENTAL_RECORDS;
-import static raido.apisvc.endpoint.message.ValidationMessage.*;
-import static raido.apisvc.endpoint.raidv2.AuthzUtil.getAuthzPayload;
+import static raido.apisvc.endpoint.message.ValidationMessage.CANNOT_UPDATE_LEGACY_SCHEMA;
+import static raido.apisvc.endpoint.message.ValidationMessage.ID_BLOCK_NOT_SET;
+import static raido.apisvc.endpoint.message.ValidationMessage.METADATA_NOT_SET;
+import static raido.apisvc.endpoint.raidv2.AuthzUtil.getApiToken;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
 import static raido.apisvc.service.raid.MetadataService.mapDb2Api;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.mintFailed;
@@ -36,9 +36,9 @@ import static raido.apisvc.util.StringUtil.hasValue;
 import static raido.db.jooq.api_svc.tables.Raid.RAID;
 import static raido.idl.raidv2.model.RaidoMetaschema.LEGACYMETADATASCHEMAV1;
 
+/* Be careful with usage of @Transactional, see db-transaction-guideline.md */
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
-@Transactional
 public class BasicRaidExperimental implements BasicRaidExperimentalApi {
   private static final Log log = to(BasicRaidExperimental.class);
 
@@ -62,7 +62,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
   @Override
   public ReadRaidResponseV2 readRaidV2(ReadRaidV2Request req) {
     Guard.hasValue("must pass a handle", req.getHandle());
-    var user = getAuthzPayload();
+    var user = getApiToken();
     var data = raidSvc.readRaidResponseV2(req.getHandle());
     guardOperatorOrAssociated(user, data.getServicePointId());
     return data;
@@ -89,9 +89,8 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     A lot of API clients may just be dumping
     raids into the system (i.e. RDM) they don't care to display anything.
     */
+
   @Override
-  // See the RaidSvc.mint() method for an explanation of Transaction stuff
-  @Transactional(propagation = NEVER)
   public MintResponse mintRaidoSchemaV1(
     MintRaidoSchemaV1Request req
   ) {
@@ -102,7 +101,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     Guard.notNull("request param may not be null", req);
     Guard.notNull("mintRequest field may not be null", mint);
     
-    var user = getAuthzPayload();
+    var user = getApiToken();
     guardOperatorOrAssociated(user, mint.getServicePointId());
 
     if (!raidSvc.isEditable(user, req.getMintRequest().getServicePointId())) {
@@ -131,7 +130,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
 
   @Override
   public List<RaidListItemV2> listRaidV2(RaidListRequestV2 req) {
-    var user = getAuthzPayload();
+    var user = getApiToken();
     guardOperatorOrAssociated(user, req.getServicePointId());
 
     return db.select(RAID.HANDLE, RAID.PRIMARY_TITLE, RAID.START_DATE,
@@ -168,9 +167,12 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     return searchCondition;
   }
 
+  /* Non-transactional, so that TX does not span the point when we talk
+  to the external systems to validate (ROR, ORCID, DOI, etc.) 
+  See db-transaction-guideline.md. */
   @Override
   public MintResponse updateRaidoSchemaV1(UpdateRaidoSchemaV1Request req) {
-    var user = getAuthzPayload();
+    var user = getApiToken();
     var newData = req.getMetadata();
 
     if (!raidSvc.isEditable(user, req.getMetadata().getId().getIdentifierServicePoint())) {
@@ -213,7 +215,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
 
   @Override
   public MintResponse updateRaidoSchemaV2(UpdateRaidoSchemaV2Request request) {
-    var user = getAuthzPayload();
+    var user = getApiToken();
     var newData = request.getMetadata();
 
     if (!raidSvc.isEditable(user, request.getMetadata().getId().getIdentifierServicePoint())) {
@@ -258,7 +260,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
   public MintResponse upgradeLegacyToRaidoSchema(
     UpdateRaidoSchemaV1Request req
   ) {
-    var user = getAuthzPayload();
+    var user = getApiToken();
     var newData = req.getMetadata();
     if( newData == null ){
       return mintFailed(METADATA_NOT_SET);

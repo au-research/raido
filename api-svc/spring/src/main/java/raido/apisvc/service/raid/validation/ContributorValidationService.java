@@ -11,11 +11,9 @@ import raido.idl.raidv2.model.ValidationFailure;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.regex.Pattern;
 
 import static java.util.Collections.emptyList;
 import static java.util.List.of;
-import static java.util.regex.Pattern.compile;
 import static raido.apisvc.endpoint.message.ValidationMessage.CONTRIB_NOT_SET;
 import static raido.apisvc.endpoint.message.ValidationMessage.FIELD_MUST_BE_SET_MESSAGE;
 import static raido.apisvc.endpoint.message.ValidationMessage.INVALID_VALUE_MESSAGE;
@@ -24,6 +22,7 @@ import static raido.apisvc.endpoint.message.ValidationMessage.NOT_SET_TYPE;
 import static raido.apisvc.endpoint.message.ValidationMessage.contribIdNotSet;
 import static raido.apisvc.endpoint.message.ValidationMessage.contribIdSchemeNotSet;
 import static raido.apisvc.endpoint.message.ValidationMessage.contribInvalidIdScheme;
+import static raido.apisvc.service.orcid.OrcidService.ORCID_REGEX;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.indexed;
 import static raido.apisvc.util.StringUtil.isBlank;
@@ -34,8 +33,6 @@ import static raido.idl.raidv2.model.ContributorPositionSchemeType.HTTPS_RAID_OR
 @Component
 public class ContributorValidationService {
   private static final Log log = to(ContributorValidationService.class);
-  public static final Pattern ORCID_REGEX = 
-    compile("^https://orcid\\.org/[\\d]{4}-[\\d]{4}-[\\d]{4}-[\\d]{4}$");
 
   private final OrcidService orcidSvc;
 
@@ -253,28 +250,21 @@ public class ContributorValidationService {
     final ContributorBlock contributor
   ) {
 
-    final var failures = new ArrayList<ValidationFailure>();
-
-    if (!ORCID_REGEX.matcher(contributor.getId()).matches()) {
-      failures.add(new ValidationFailure()
+    if (!ORCID_REGEX.matcher(contributor.getId()).matches()){
+      return of(new ValidationFailure()
         .fieldId(String.format("contributors[%d].id", index))
         .errorType("invalid")
-        .message("ORCID should have the format https://orcid.org/0000-0000-0000-0000.")
-      );
-    }
-    else {
-      failures.addAll(
-        orcidSvc.validateOrcidExists(contributor.getId()).stream().map(i->
-          new ValidationFailure()
-            .fieldId(String.format("contributors[%d].id", index))
-            .errorType("invalid")
-            .message("The contributor ORCID does not exist.")          
-        ).toList()
-          
+        .message(
+          "Contributor ORCID should have the format https://orcid.org/0000-0000-0000-0000.")
       );
     }
 
-    return failures;
+    return orcidSvc.validateOrcidExists(contributor.getId()).stream().map(i->
+        new ValidationFailure()
+          .fieldId(String.format("contributors[%d].id", index))
+          .errorType("invalid")
+          .message("The contributor ORCID does not exist.")          
+      ).toList();
   }
 }
 

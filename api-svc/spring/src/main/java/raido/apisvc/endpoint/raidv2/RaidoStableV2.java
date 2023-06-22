@@ -16,7 +16,7 @@ import raido.idl.raidv2.model.UpdateRaidStableV2Request;
 import java.util.ArrayList;
 
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
-import static raido.apisvc.endpoint.raidv2.AuthzUtil.getAuthzPayload;
+import static raido.apisvc.endpoint.raidv2.AuthzUtil.getApiToken;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
 
 @Scope(proxyMode = TARGET_CLASS)
@@ -46,7 +46,7 @@ public class RaidoStableV2 implements RaidoStableV2Api {
   @Override
   public RaidSchemaV2 updateRaidStableV2(final String prefix, final String suffix, final UpdateRaidStableV2Request request) {
     final var handle = String.join("/", prefix, suffix);
-    var user = getAuthzPayload();
+    var user = getApiToken();
     guardOperatorOrAssociated(user, request.getId().getIdentifierServicePoint());
 
     if (!raidService.isEditable(user, request.getId().getIdentifierServicePoint())) {

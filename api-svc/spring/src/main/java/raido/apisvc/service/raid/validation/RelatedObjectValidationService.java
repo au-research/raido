@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static raido.apisvc.endpoint.message.ValidationMessage.INVALID_VALUE_TYPE;
+import static raido.apisvc.service.doi.DoiService.DOI_REGEX;
 
 @Service
 public class RelatedObjectValidationService {
@@ -43,7 +44,6 @@ public class RelatedObjectValidationService {
       .forEach(i -> {
         final var relatedObject = relatedObjects.get(i);
 
-        final var relatedObjectPattern = "^http[s]?://doi.org/10\\..*";
         final var relatedObjectTypePattern =
           String.format("^%s[a-z\\-]+\\.json$", RELATED_OBJECT_TYPE_URL_PREFIX);
 
@@ -53,11 +53,11 @@ public class RelatedObjectValidationService {
             .errorType("required")
             .message("This is a required field."));
         }
-        else if (!relatedObject.getRelatedObject().matches(relatedObjectPattern)) {
+        else if (!DOI_REGEX.matcher(relatedObject.getRelatedObject()).matches()) {
           failures.add(new ValidationFailure()
             .fieldId(String.format("relatedObjects[%d].relatedObject", i))
             .errorType("invalid")
-            .message("The related object has an invalid pid."));
+            .message("The related object does not match the expected DOI pattern."));
         }
         else {
           failures.addAll(doiService.validateDoiExists(relatedObject.getRelatedObject()).stream().map(message ->

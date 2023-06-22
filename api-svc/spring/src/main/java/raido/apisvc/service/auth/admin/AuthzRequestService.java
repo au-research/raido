@@ -4,9 +4,8 @@ import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.springframework.stereotype.Component;
 import raido.apisvc.endpoint.Constant;
-import raido.apisvc.spring.security.raidv2.AuthzTokenPayload;
-import raido.apisvc.service.auth.NonAuthzTokenPayload;
-import raido.apisvc.service.auth.RaidV2AppUserAuthService;
+import raido.apisvc.service.auth.RaidV2AppUserOidcService;
+import raido.apisvc.spring.security.raidv2.ApiToken;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.AuthRequestStatus;
@@ -26,7 +25,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.time.ZoneOffset.UTC;
-import static org.jooq.impl.DSL.asterisk;
 import static org.jooq.impl.DSL.inline;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static raido.apisvc.service.auth.admin.AppUserService.mapRestRole2Jq;
@@ -50,20 +48,19 @@ public class AuthzRequestService {
   private static final Log log = to(AuthzRequestService.class);
 
   private DSLContext db;
-  private RaidV2AppUserAuthService userAuthSvc;
+  private RaidV2AppUserOidcService userAuthSvc;
 
 
   public AuthzRequestService(
     DSLContext db, 
-    RaidV2AppUserAuthService userAuthSvc
+    RaidV2AppUserOidcService userAuthSvc
   ) {
     this.db = db;
     this.userAuthSvc = userAuthSvc;
   }
 
   public List<AuthzRequestExtraV1> listAllRecentAuthzRequest() {
-    return db.
-      select(asterisk()).
+    return db.select().
       from(USER_AUTHZ_REQUEST).
         leftJoin(SERVICE_POINT).onKey(USER_AUTHZ_REQUEST.SERVICE_POINT_ID).
         leftJoin(APP_USER).onKey(USER_AUTHZ_REQUEST.RESPONDING_USER).
@@ -73,8 +70,7 @@ public class AuthzRequestService {
   }
   
   public AuthzRequestExtraV1 readAuthzRequest(Long authzRequestId) {
-    return db.
-      select(asterisk()).
+    return db.select().
       from(USER_AUTHZ_REQUEST).
         leftJoin(SERVICE_POINT).onKey(USER_AUTHZ_REQUEST.SERVICE_POINT_ID).
         leftJoin(APP_USER).onKey(USER_AUTHZ_REQUEST.RESPONDING_USER).
@@ -85,8 +81,7 @@ public class AuthzRequestService {
   public Optional<AuthzRequestExtraV1> readAuthzRequestForUser(
     AppUser appUser
   ) {
-    return db.
-      select(asterisk()).
+    return db.select().
       from(USER_AUTHZ_REQUEST).
       leftJoin(SERVICE_POINT).onKey(USER_AUTHZ_REQUEST.SERVICE_POINT_ID).
       leftJoin(APP_USER).onKey(USER_AUTHZ_REQUEST.RESPONDING_USER).
@@ -144,11 +139,16 @@ public class AuthzRequestService {
   }
 
   public UpdateAuthzResponse updateRequestAuthz(
-    NonAuthzTokenPayload user, UpdateAuthzRequest req
+    String clientId,
+    String email,
+    String subject,
+    UpdateAuthzRequest req
   ) {
-    String email = user.getEmail().toLowerCase().trim();
-
-    IdProvider idProvider = userAuthSvc.mapIdProvider(user.getClientId());
+    Guard.allHaveValue("must have values", clientId, email, subject);
+    
+    email = email.toLowerCase().trim();
+    
+    IdProvider idProvider = userAuthSvc.mapIdProvider(clientId);
     if(
       // we only promote raido SP users to operator
       req.getServicePointId() == RAIDO_SP_ID &&
@@ -159,13 +159,16 @@ public class AuthzRequestService {
     ){
       /* this will fail if operator already exists as a user of a different SP 
       I don't want to add the complexity to deal with that right now.*/
-      log.with("user", user).info("adding raido operator");
+      log.with("clientId", clientId).
+        with("subject", subject).
+        with("email", email).
+        info("adding raido operator");
       db.insertInto(APP_USER).
         set(APP_USER.SERVICE_POINT_ID, req.getServicePointId()).
         set(APP_USER.EMAIL, email).
-        set(APP_USER.CLIENT_ID, user.getClientId()).
+        set(APP_USER.CLIENT_ID, clientId).
         set(APP_USER.ID_PROVIDER, idProvider).
-        set(APP_USER.SUBJECT, user.getSubject()).
+        set(APP_USER.SUBJECT, subject).
         set(APP_USER.ROLE, UserRole.OPERATOR).
         returningResult(APP_USER.ID).
         fetchOne();
@@ -176,13 +179,13 @@ public class AuthzRequestService {
       return new UpdateAuthzResponse().status(APPROVED);
     }
 
-    db.insertInto(USER_AUTHZ_REQUEST).
+    var id = db.insertInto(USER_AUTHZ_REQUEST).
       set(USER_AUTHZ_REQUEST.SERVICE_POINT_ID, req.getServicePointId()).
       set(USER_AUTHZ_REQUEST.STATUS, REQUESTED).
       set(USER_AUTHZ_REQUEST.EMAIL, email).
-      set(USER_AUTHZ_REQUEST.CLIENT_ID, user.getClientId()).
+      set(USER_AUTHZ_REQUEST.CLIENT_ID, clientId).
       set(USER_AUTHZ_REQUEST.ID_PROVIDER, idProvider).
-      set(USER_AUTHZ_REQUEST.SUBJECT, user.getSubject()).
+      set(USER_AUTHZ_REQUEST.SUBJECT, subject).
       set(USER_AUTHZ_REQUEST.DESCRIPTION, req.getComments()).
       onConflict(
         USER_AUTHZ_REQUEST.SERVICE_POINT_ID,
@@ -194,8 +197,11 @@ public class AuthzRequestService {
       doUpdate().
       set(USER_AUTHZ_REQUEST.DESCRIPTION, req.getComments()).
       set(USER_AUTHZ_REQUEST.DATE_REQUESTED, LocalDateTime.now()).
-      execute();
-    return new UpdateAuthzResponse().status(AuthzRequestStatus.REQUESTED);
+      returningResult(USER_AUTHZ_REQUEST.ID).
+      fetchOneInto(Long.class);
+    return new UpdateAuthzResponse().
+      status(AuthzRequestStatus.REQUESTED).
+      authzRequestId(id);
   }
 
   public boolean isRaidoOperator(String email) {
@@ -205,12 +211,13 @@ public class AuthzRequestService {
   }
 
   public void updateAuthzRequestStatus(
-    AuthzTokenPayload respondingUser,
+    ApiToken respondingUser,
     UpdateAuthzRequestStatus req,
     UserAuthzRequestRecord authzRecord
   ) {
     if( req.getStatus() == APPROVED ){
       Guard.isTrue(authzRecord.getStatus() == REQUESTED);
+      Guard.hasValue("must provide role", req.getRole());
 
       var approvedRole = mapRestRole2Jq(req.getRole());
       if( approvedRole == OPERATOR ){

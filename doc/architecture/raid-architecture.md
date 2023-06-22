@@ -6,7 +6,7 @@ The Raid stuff does not exist yet; in the medium to long term, the components
 of the "Raid system" will likely be managed in a separate repository to this
 one. 
 
-See the [project readme](../../readme.md#raid-vs-raido) for a description of 
+See the [raid-vs-raido.md](/doc/raid-vs-raido.md) for a description of 
 the difference between Raid and Raido.
 
 
@@ -14,7 +14,7 @@ the difference between Raid and Raido.
 <!--- Note the `?cache=no` param --->
 ![PlantUML model](https://www.plantuml.com/plantuml/png/9Sl13G8n34JHErL00OaldEZ6E1Qnb3WhPopQPrTSvyr_cCl8fXdZte5ZluY2l_LZwFdEhI7BeOugQn9d2TtA8VryMLiqsPpQ4hesWmeoz6_bAa_MAFAins17pd7x0G00?cache=no)
 
-**Note**: There is no short-term plan to implement a global RAiD "mint" 
+**Note**: There is no current plan to implement a global RAiD "mint" 
 endpoint.
 
 The only "central RAiD API" exists for the convenience of _readers_ who do not 
@@ -44,8 +44,47 @@ Major architectural decisions are documented in the Architecture Decision Log:
 # Technology
 
 More info about individual technology choices can be found in 
-[technology-stack.md](../technology-stack.md).
+[technology-stack.md](../code/technol## How to mint a raid in DEMO environment
+* sign-in via your chosen ID Provider
+  * Google, AAF or ORCID
+* request authorization for a service-point
+  * Raid team creates service-point as part of biz onboarding
+  * but you should send an email to `contact@raid.org` or otherwise notify
+    us that you have submitted an authorization-request
+  * add a comment that you would like admin access so that you can manage
+    api-keys and generate api-tokens
+* we will let you know when you can sign-in
+* sign-in using the same ID provider you used before
+  * authorization is linked to your ID Provider
+* create an api-key
+* generating an api-token
+  * the api-token is to be considered sensitive, non-public information
+    * it must be kept secret and should never be accessible to end-users
+      * that is, do not embed the api-token in front-end applications or web-sites
+    * the api-token is the only thing necessary to use the API and can be used
+      to mint/edit raids and see closed raid data
+  * save this somewhere safe, we do not store it in our system
+    * but new ones can be generated at any time by just clicking the button
+      again
+* listing recent raids
+  * call list raid with your api-token, that's it
+* mint raid
+* read a raid
+  ogy-stack.md).
 
+
+# Operational environment
+
+The ARDC acts as a registration-agency for the Oceania region.  
+
+The ARDC runs the Raido software as the "ARDC RAiD Service", intended for use
+by organisations in the Oceania region.
+
+https://ardc.edu.au/services/ardc-identifier-services/raid-research-activity-identifier-service/
+
+This service is operated mostly in AWS, see 
+[operational-environment.md](./environment/operational-environment.md)
+for a description of how we map the architecture as shown onto AWS services.
 
 ----
 

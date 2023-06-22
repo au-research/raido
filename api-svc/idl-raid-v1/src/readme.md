@@ -1,9 +1,10 @@
-`raid-v1-1-.yaml` is copied from the original stored in the 
+`raid-v1-1-0.yaml` is copied from the original stored in the 
 [doc](../doc/readme.md) area and then manually chopped down to be only what
 Raido needs to implement to keep the UQ@RDM API calls working (nobody else
-seems to use the API). 
+was using the legacy API). 
 
-As well as removing unwanted endpoints, the model names were normalised from
-`RAiD` to `Raid` - because that casing is wildly annoying in code.
+This entire API is **deprecated**.  Only RDM@UQ are able to use it and they 
+are expected to upgrade to some version of the stable API at some point 
+(defined in  
+[raido-openapi-3.0.yaml](../../idl-raid-v2/src/raido-openapi-3.0.yaml).
 
-Also planning to remove unused model definitions at some point.

@@ -9,7 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import raido.apisvc.repository.AppUserRepository;
 import raido.apisvc.spring.config.environment.RaidV2ApiKeyAuthProps;
-import raido.apisvc.spring.security.raidv2.AuthzTokenPayload;
+import raido.apisvc.spring.security.raidv2.ApiToken;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 
@@ -19,7 +19,7 @@ import java.util.Optional;
 
 import static java.util.Optional.of;
 import static org.eclipse.jetty.util.TypeUtil.isFalse;
-import static raido.apisvc.spring.security.raidv2.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
+import static raido.apisvc.spring.security.raidv2.ApiToken.ApiTokenBuilder.anApiToken;
 import static raido.apisvc.util.ExceptionUtil.authFailed;
 import static raido.apisvc.util.ExceptionUtil.wrapException;
 import static raido.apisvc.util.JwtUtil.JWT_TOKEN_TYPE;
@@ -31,13 +31,13 @@ import static raido.apisvc.util.StringUtil.mask;
  Handles signing and verifying JWTs for signing in (does not handle api-keys).
  */
 @Component
-public class RaidV2ApiKeyAuthService {
-  private static final Log log = to(RaidV2ApiKeyAuthService.class);
+public class RaidV2ApiKeyApiTokenService {
+  private static final Log log = to(RaidV2ApiKeyApiTokenService.class);
 
   private RaidV2ApiKeyAuthProps apiAuthProps;
   private AppUserRepository appUserRepo;
   
-  public RaidV2ApiKeyAuthService(
+  public RaidV2ApiKeyApiTokenService(
     RaidV2ApiKeyAuthProps apiAuthProps,
     AppUserRepository appUserRepo
   ) {
@@ -46,7 +46,7 @@ public class RaidV2ApiKeyAuthService {
   }
 
   public String sign(
-    AuthzTokenPayload payload,
+    ApiToken payload,
     Instant expiresAt
   ) {
     return sign(
@@ -58,17 +58,17 @@ public class RaidV2ApiKeyAuthService {
   
   public static String sign(
     Algorithm algorithm,
-    AuthzTokenPayload payload, 
+    ApiToken payload, 
     Instant expiresAt,
     String issuer
   ){
     try {
       String token = JWT.create().
-        // remember the standard claim for subject is "sub"
-        withSubject(payload.getSubject()).
         withIssuer(issuer).
         withIssuedAt(Instant.now()).
         withExpiresAt(expiresAt).
+        // remember the standard claim for subject is "sub"
+        withSubject(payload.getSubject()).
         withClaim(RaidoClaim.IS_AUTHORIZED_APP_USER.getId(), true).
         withClaim(RaidoClaim.APP_USER_ID.getId(), payload.getAppUserId()).
         withClaim(RaidoClaim.SERVICE_POINT_ID.getId(), payload.getServicePointId()).
@@ -83,7 +83,9 @@ public class RaidV2ApiKeyAuthService {
     }
   }
 
-  public Optional<Authentication> verifyAndAuthorize(DecodedJWT decodedJwt){
+  public Optional<Authentication> verifyAndAuthorizeApiToken(
+    DecodedJWT decodedJwt
+  ){
     
     // avoid dodgy stuff like someone crafting a JWT with alg = "none"
     if( !areEqual(
@@ -106,7 +108,7 @@ public class RaidV2ApiKeyAuthService {
 
     /* verify will fail if JWT is expired, the iat claim is driven by the 
     tokenCutoff field. */
-    var verifiedJwt = verify(decodedJwt);
+    var verifiedJwt = verifyJwtSignature(decodedJwt);
 
     String clientId = verifiedJwt.
       getClaim(RaidoClaim.CLIENT_ID.getId()).asString();
@@ -190,7 +192,7 @@ public class RaidV2ApiKeyAuthService {
       throw authFailed();
     }
     
-    return of(anAuthzTokenPayload().
+    return of(anApiToken().
       withAppUserId(appUserId).
       withServicePointId(servicePointId).
       withSubject(subject).
@@ -200,7 +202,7 @@ public class RaidV2ApiKeyAuthService {
       build() );
   }
 
-  public DecodedJWT verify(DecodedJWT decodedJwt) {
+  public DecodedJWT verifyJwtSignature(DecodedJWT decodedJwt) {
     DecodedJWT verifiedJwt = null;
     JWTVerificationException firstEx = null;
     for( int i = 0; i < apiAuthProps.verifiers.length; i++ ){

@@ -54,7 +54,7 @@ public class OrcidOidc {
     return trimEqualsIgnoreCase(clientId, orcid.clientId);    
   }
   
-  public DecodedJWT exchangeCodeForVerifiedJwt(String idpResponseCode){
+  public DecodedJWT exchangeOAuthCodeForVerifiedIdToken(String idpResponseCode){
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -93,11 +93,6 @@ public class OrcidOidc {
     // orcid id_token does not have a type, see comment at end of file
     // Guard.areEqual(jwt.getType(), "bearer");
 
-    /* Probably overkill and unnecessary. If the attacker can intercept calls
-    between api-svc and orcid to feed us a fake JWT, then they can intercept 
-    the JWKS url call too.
-    Keep an eye out for this when load testing; if measurably visible, 
-    consider getting rid of this. */
     verifyOrcidJwksSignature(jwt);
 
     Guard.hasValue(jwt.getSubject());
@@ -162,7 +157,7 @@ public class OrcidOidc {
 
 /*
 - orcid uses the orcid id as the sub, seems dangerous
-- no email because I didn not have it public
+- no email because I did not have it public
 - name fields were returned because I had it public
 id_token: jwt={
   at_hash="UDS4BWIO0XKVVnJAr36Q1w", 

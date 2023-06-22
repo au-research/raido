@@ -16,6 +16,9 @@ Person(SpUser, "Raido\nServicePoint User", "[SSO sign-in via OpenID Connect]")
 System_Ext(SpInt, "Raido\nServicePoint Integrator", "[api-key authenticated]")
 System_Ext(IdProvider, "ID Provider", "[Google / AAF / ORCiD]")
 System_Ext(LocalHdlSvc, "Local Handle Service", "[ARDC DevOps]")
+System_Ext(OrcidSvc, "ORCID Service", "[ORCID]")
+System_Ext(RorSvc, "ROR Service", "[ROR]")
+System_Ext(DoiSvc, "DOI Service", "[DOI]")
 
 
 System_Boundary(raidC1, "Raid") {
@@ -47,5 +50,8 @@ Rel(RaidApiSvc, RaidoApiSvc, "read", "HTTPS")
 Rel(SpInt, RaidoWebServer, "Uses", "HTTPS")
 Rel(RaidoApiSvc, db, "read/write", "postgres:5432")
 Rel(RaidoApiSvc, LocalHdlSvc, "mint", "HTTPS")
+Rel(RaidoApiSvc, OrcidSvc, "exists?", "HTTPS")
+Rel(RaidoApiSvc, RorSvc, "exists?", "HTTPS")
+Rel(RaidoApiSvc, DoiSvc, "exists?", "HTTPS")
 @enduml
 

@@ -21,7 +21,7 @@ are likely to be detected early.
 Don't have do it if you don't want to.
 
 
-## Specify max legth for text columns
+## Specify max length for text columns
 
 It's easy to bump it up when you need to.
 Hard to reduced it down once people abuse it and put giant things

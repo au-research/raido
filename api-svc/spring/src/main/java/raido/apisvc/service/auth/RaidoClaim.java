@@ -1,6 +1,12 @@
 package raido.apisvc.service.auth;
 
 public enum RaidoClaim {
+  /** IMPROVE: "isAuthorizedAppUser" claim should be changed to 
+   "isApprovedUser", we only ever use this claim on the client-side to 
+   differentiate the "approval" status of user during the sign-in flow.
+   On the server side, we map the api-token to separate Authentication objects,
+   either an ApiToken (i.e. ApprovedUserApiTokenPayload) or an 
+   UnapprovedUserApiToken (payload). */
   IS_AUTHORIZED_APP_USER("isAuthorizedAppUser"),
   APP_USER_ID("appUserId"),
   SERVICE_POINT_ID("servicePointId"),

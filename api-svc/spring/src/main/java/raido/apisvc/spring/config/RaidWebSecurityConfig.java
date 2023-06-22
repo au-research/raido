@@ -14,8 +14,8 @@ import org.springframework.security.web.firewall.RequestRejectedException;
 import org.springframework.security.web.firewall.RequestRejectedHandler;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
 import raido.apisvc.endpoint.anonymous.RootPathController;
-import raido.apisvc.service.auth.RaidV2ApiKeyAuthService;
-import raido.apisvc.service.auth.RaidV2AppUserAuthService;
+import raido.apisvc.service.auth.RaidV2ApiKeyApiTokenService;
+import raido.apisvc.service.auth.RaidV2AppUserApiTokenService;
 import raido.apisvc.service.raidv1.RaidV1AuthService;
 import raido.apisvc.spring.security.raidv1.RaidV1AuthenticationProvider;
 import raido.apisvc.spring.security.raidv2.RaidV2AuthenticationProvider;
@@ -99,10 +99,6 @@ public class RaidWebSecurityConfig {
       Added to avoid arguments and false-positives on security scans. */
       contentSecurityPolicy("script-src 'self'");
 
-    // supposed to be implied by @EnableWebSecurity
-    // put it back or remove the code after the big error handling refactor
-    // http.exceptionHandling();
-
     return http.build();
   }
 
@@ -136,11 +132,11 @@ public class RaidWebSecurityConfig {
   // maybe AuthnProvider can just be @Components now instead of explicit beans?
   @Bean
   public RaidV2AuthenticationProvider raidV2AuthProvider(
-    RaidV2AppUserAuthService appUserAuthSvc,
-    RaidV2ApiKeyAuthService apiKeyAuthSvc
+    RaidV2AppUserApiTokenService appUserApiTokenSvc,
+    RaidV2ApiKeyApiTokenService apiKeyApiTokenSvc
   ){
     return new RaidV2AuthenticationProvider(
-      appUserAuthSvc, apiKeyAuthSvc);
+      appUserApiTokenSvc, apiKeyApiTokenSvc);
   }
   
   @Bean

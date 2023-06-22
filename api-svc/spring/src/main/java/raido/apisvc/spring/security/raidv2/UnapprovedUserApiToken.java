@@ -1,16 +1,14 @@
-package raido.apisvc.service.auth;
+package raido.apisvc.spring.security.raidv2;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import raido.apisvc.util.Guard;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.StringJoiner;
 
-public class NonAuthzTokenPayload implements Authentication {
+public class UnapprovedUserApiToken implements Authentication {
   private String clientId;
   /** `sub` claim in a standard jwt */
   private String subject;
@@ -22,8 +20,10 @@ public class NonAuthzTokenPayload implements Authentication {
   public String toString() {
     return new StringJoiner(
       ", ",
-      NonAuthzTokenPayload.class.getSimpleName() + "[",
+      UnapprovedUserApiToken.class.getSimpleName() + "[",
       "]")
+      .add("clientId='" + clientId + "'")
+      .add("subject='" + subject + "'")
       .add("email='" + email + "'")
       .toString();
   }
@@ -78,39 +78,39 @@ public class NonAuthzTokenPayload implements Authentication {
     return email;
   }
 
-  public static final class NonAuthzTokenPayloadBuilder {
+  public static final class UnapprovedUserApiTokenBuilder {
     private String clientId;
     private String subject;
     private String email;
 
-    private NonAuthzTokenPayloadBuilder() {
+    private UnapprovedUserApiTokenBuilder() {
     }
 
-    public static NonAuthzTokenPayloadBuilder aNonAuthzTokenPayload() {
-      return new NonAuthzTokenPayloadBuilder();
+    public static UnapprovedUserApiTokenBuilder anUnapprovedUserApiToken() {
+      return new UnapprovedUserApiTokenBuilder();
     }
 
-    public NonAuthzTokenPayloadBuilder withClientId(String clientId) {
+    public UnapprovedUserApiTokenBuilder withClientId(String clientId) {
       this.clientId = clientId;
       return this;
     }
 
-    public NonAuthzTokenPayloadBuilder withSubject(String subject) {
+    public UnapprovedUserApiTokenBuilder withSubject(String subject) {
       this.subject = subject;
       return this;
     }
 
-    public NonAuthzTokenPayloadBuilder withEmail(String email) {
+    public UnapprovedUserApiTokenBuilder withEmail(String email) {
       this.email = email;
       return this;
     }
 
-    public NonAuthzTokenPayload build() {
+    public UnapprovedUserApiToken build() {
       Guard.hasValue(clientId);
       Guard.hasValue(subject);
       Guard.hasValue(email);
       
-      NonAuthzTokenPayload payload = new NonAuthzTokenPayload();
+      UnapprovedUserApiToken payload = new UnapprovedUserApiToken();
       payload.email = this.email;
       payload.clientId = this.clientId;
       payload.subject = this.subject;

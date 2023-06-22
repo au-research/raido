@@ -26,7 +26,7 @@ import java.util.List;
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 import static raido.apisvc.endpoint.message.ValidationMessage.fieldNotSet;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.*;
-import static raido.apisvc.service.raid.validation.OrganisationValidationService.ROR_REGEX;
+import static raido.apisvc.service.ror.RorService.ROR_REGEX;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.JooqUtil.valueFits;
 import static raido.apisvc.util.Log.to;
@@ -77,7 +77,7 @@ public class AdminExperimental implements AdminExperimentalApi {
 
   @Override
   public List<AuthzRequestExtraV1> listAuthzRequest() {
-    var user = AuthzUtil.getAuthzPayload();
+    var user = AuthzUtil.getApiToken();
     // this is the authz check, will be moved to a role annotation soon
     Guard.areEqual(user.getRole(), OPERATOR.getLiteral());
 
@@ -88,14 +88,17 @@ public class AdminExperimental implements AdminExperimentalApi {
   public AuthzRequestExtraV1 readRequestAuthz(Long authzRequestId) {
     // have to read it before we can see if user is allowed for servicePoint 
     var authRequest = authzRequestSvc.readAuthzRequest(authzRequestId);
-    var user = AuthzUtil.getAuthzPayload();
+    var user = AuthzUtil.getApiToken();
     guardOperatorOrAssociatedSpAdmin(user, authRequest.getServicePointId());
     return authRequest;
   }
 
   @Override
   public Void updateAuthzRequestStatus(UpdateAuthzRequestStatus req) {
-    var user = AuthzUtil.getAuthzPayload();
+    Guard.notNull("must provide authzRequestId", req.getAuthzRequestId());
+    Guard.notNull("must provide status", req.getStatus());
+    
+    var user = AuthzUtil.getApiToken();
     
     var authzRecord = db.fetchSingle(
       USER_AUTHZ_REQUEST, 
@@ -110,7 +113,7 @@ public class AdminExperimental implements AdminExperimentalApi {
 
   @Override
   public List<ServicePoint> listServicePoint() {
-    var user = AuthzUtil.getAuthzPayload();
+    var user = AuthzUtil.getApiToken();
     guardOperatorOrSpAdmin(user);
     
     return db.select().from(SERVICE_POINT).
@@ -122,7 +125,7 @@ public class AdminExperimental implements AdminExperimentalApi {
   /** IMPROVE: Currently gives a 500 error if not found, 404 might be better? */
   @Override
   public ServicePoint readServicePoint(Long servicePointId) {
-    var user = AuthzUtil.getAuthzPayload();
+    var user = AuthzUtil.getApiToken();
     guardOperatorOrAssociated(user, servicePointId);
     
     return db.select().from(SERVICE_POINT).
@@ -132,7 +135,7 @@ public class AdminExperimental implements AdminExperimentalApi {
 
   @Override
   public ServicePoint updateServicePoint(ServicePoint req) {
-    var user = AuthzUtil.getAuthzPayload();
+    var user = AuthzUtil.getApiToken();
     guardOperatorOrAssociatedSpAdmin(user, req.getId());
     
     // IMPROVE: probably time to start doing proper validation 
@@ -160,7 +163,7 @@ public class AdminExperimental implements AdminExperimentalApi {
 
   @Override
   public AppUser readAppUser(Long appUserId) {
-    var user = AuthzUtil.getAuthzPayload();
+    var user = AuthzUtil.getApiToken();
     if( areEqual(user.getAppUserId(), appUserId) ){
       // user is allowed to read their own record
     }
@@ -181,7 +184,7 @@ public class AdminExperimental implements AdminExperimentalApi {
 
   @Override
   public AppUserExtraV1 readAppUserExtra(Long appUserId) {
-    var user = AuthzUtil.getAuthzPayload();
+    var user = AuthzUtil.getApiToken();
     guardOperatorOrSpAdmin(user);
 
     var appUser = readAppUser(appUserId);
@@ -205,7 +208,7 @@ public class AdminExperimental implements AdminExperimentalApi {
 
   @Override
   public List<AppUser> listAppUser(Long servicePointId) {
-    var user = AuthzUtil.getAuthzPayload();
+    var user = AuthzUtil.getApiToken();
     guardOperatorOrAssociatedSpAdmin(user, servicePointId);
 
     return appUserSvc.listAppUser(servicePointId);
@@ -213,7 +216,7 @@ public class AdminExperimental implements AdminExperimentalApi {
 
   @Override
   public AppUser updateAppUser(AppUser req) {
-    var invokingUser = AuthzUtil.getAuthzPayload();
+    var invokingUser = AuthzUtil.getApiToken();
 
     var targetUser = db.fetchSingle(APP_USER, APP_USER.ID.eq(req.getId()) );
 
@@ -228,7 +231,7 @@ public class AdminExperimental implements AdminExperimentalApi {
 
   @Override
   public List<ApiKey> listApiKey(Long servicePointId) {
-    var user = AuthzUtil.getAuthzPayload();
+    var user = AuthzUtil.getApiToken();
     guardOperatorOrAssociatedSpAdmin(user, servicePointId);
 
     return appUserSvc.listApiKey(servicePointId);
@@ -236,7 +239,7 @@ public class AdminExperimental implements AdminExperimentalApi {
 
   @Override
   public ApiKey updateApiKey(ApiKey req) {
-    var invokingUser = AuthzUtil.getAuthzPayload();
+    var invokingUser = AuthzUtil.getApiToken();
     guardOperatorOrAssociatedSpAdmin(invokingUser, req.getServicePointId());
     
     long id = appUserSvc.updateApiKey(req, invokingUser);
@@ -246,7 +249,7 @@ public class AdminExperimental implements AdminExperimentalApi {
 
   @Override
   public ApiKey readApiKey(Long apiKeyId) {
-    var invokingUser = AuthzUtil.getAuthzPayload();
+    var invokingUser = AuthzUtil.getApiToken();
     ApiKey apiKey = appUserSvc.readApiKey(apiKeyId);
     guardOperatorOrAssociatedSpAdmin(invokingUser, apiKey.getServicePointId());
     return apiKey;
@@ -256,7 +259,7 @@ public class AdminExperimental implements AdminExperimentalApi {
   public GenerateApiTokenResponse generateApiToken(
     GenerateApiTokenRequest req
   ) {
-    var invokingUser = AuthzUtil.getAuthzPayload();
+    var invokingUser = AuthzUtil.getApiToken();
     AppUserRecord apiKey = db.
       fetchSingle(APP_USER, APP_USER.ID.eq(req.getApiKeyId()));
     guardOperatorOrAssociatedSpAdmin(invokingUser, apiKey.getServicePointId());
@@ -271,7 +274,7 @@ public class AdminExperimental implements AdminExperimentalApi {
   @Override
   public MintResponse migrateLegacyRaid(MigrateLegacyRaidRequest req) {
     var mint = req.getMintRequest();
-    var user = getAuthzPayload();
+    var user = getApiToken();
     /* instead of allowing api-keys to have operator role, we just enforce
     * that the key is admin role and is for the raido SP. */
     guardRaidoAdminApiKey(user);

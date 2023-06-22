@@ -1,12 +1,21 @@
-Eventually, this directory will contain full explanations and diagrams of 
-how all aspects of Raido security works:
-* OIDC
-* authorization tokens
-  * an "authz token" is similar to an OIDC "access token" but it's specific 
-    to Raido
-  * the "access token" concept still exists in Raido, but the "access token" 
-    and the "id token" are both thrown away after the user is authenticated 
-    through the OIDC process
-* app-user
-* api-key
-  * api token
+
+# [access-control](./access-control/readme.md)
+* authentication
+  * how OIDC authentication works and the transition from OAuth/OIDC
+    id_tokens to non-standard Raido api-tokens.
+  * authorization
+    * api-key
+    * api-token
+    * app-user
+
+# [api-svc](./api-svc)
+  * info about security vulnerability prevention, approaches, limitations
+
+# [app-client](./app-client)
+  * information about security relating to the default UI client provided
+  by the RAiD team, intended for customers in the Oceania region 
+
+# [api-integration](./api-integration)
+  * documentation intended for teams that are implementing integration with
+  Raido via the API
+

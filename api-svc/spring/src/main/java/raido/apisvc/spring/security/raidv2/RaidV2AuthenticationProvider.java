@@ -7,8 +7,8 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken;
-import raido.apisvc.service.auth.RaidV2ApiKeyAuthService;
-import raido.apisvc.service.auth.RaidV2AppUserAuthService;
+import raido.apisvc.service.auth.RaidV2ApiKeyApiTokenService;
+import raido.apisvc.service.auth.RaidV2AppUserApiTokenService;
 import raido.apisvc.service.auth.RaidoClaim;
 import raido.apisvc.util.ExceptionUtil;
 import raido.apisvc.util.Log;
@@ -19,16 +19,16 @@ import static raido.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
 
 public class RaidV2AuthenticationProvider implements AuthenticationProvider {
   private static final Log log = to(RaidV2AuthenticationProvider.class);
-  
-  private RaidV2AppUserAuthService appUserAuthSvc;
-  private RaidV2ApiKeyAuthService apiKeyAuthSvc;
+
+  private RaidV2AppUserApiTokenService userApiTokenSvc;
+  private RaidV2ApiKeyApiTokenService apiKeyApiTokenSvc;
 
   public RaidV2AuthenticationProvider(
-    RaidV2AppUserAuthService appUserAuthSvc,
-    RaidV2ApiKeyAuthService apiKeyAuthSvc
+    RaidV2AppUserApiTokenService userApiTokenSvc, 
+    RaidV2ApiKeyApiTokenService apiKeyApiTokenSvc
   ) {
-    this.appUserAuthSvc = appUserAuthSvc;
-    this.apiKeyAuthSvc = apiKeyAuthSvc;
+    this.userApiTokenSvc = userApiTokenSvc;
+    this.apiKeyApiTokenSvc = apiKeyApiTokenSvc;
   }
 
   /* IMPROVE: this needs unit tests that prove
@@ -63,10 +63,10 @@ public class RaidV2AuthenticationProvider implements AuthenticationProvider {
      Note: we can't move the switch logic from the resolver to here, because
      we don't have access to the HttpRequest. */
     if( isApiKey(jwt) ){
-      return apiKeyAuthSvc.verifyAndAuthorize(jwt).orElse(null);
+      return apiKeyApiTokenSvc.verifyAndAuthorizeApiToken(jwt).orElse(null);
     }
     else {
-      return appUserAuthSvc.verifyAndAuthorize(jwt).orElse(null);
+      return userApiTokenSvc.verifyAndAuthorizeApiToken(jwt).orElse(null);
     }
   }
 

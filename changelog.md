@@ -1,9 +1,26 @@
 See the [Changelog audience](#changelog-audience) section for info about 
  the expected audience and content of the changelog.
 
-# 1.2
+# Next version
 
 _Not yet scheduled_
+
+## App-client UI
+* none
+ 
+## API
+* updates to experimental API to align terminology
+  * unapproved-user-experimental.yaml renamed from "unauthz"
+
+## Infrastructure
+* none
+
+
+---
+
+# 1.2
+
+_2023-05-15_
 
 ## App-client UI
 * Additions to mint/edit page:
@@ -12,8 +29,12 @@ _Not yet scheduled_
 * Option to disabled editing by service point
 
 ## API 
-* Validation to check ORCID exists for contributor
-* Validation to check ROR exists for organisation
+* PID validation
+  * check ORCID exists for contributor
+  * check ROR exists for organisation
+  * check DOI exists for service point
+  * note that the service-level-guide has been updated to allow that API 
+    requests maybe rejected if they have too many PIDs associated
 * New metadata blocks:
   * spatial coverages
   * traditional knowledge labels

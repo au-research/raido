@@ -18,6 +18,21 @@ No tokens or any kind of sensitive data in the repo
 Not even as "debug".
 
 
+## Avoid SSRF issues - don't use un-validated data in external requests
+
+See [ssrf.md](/doc/security/api-svc/ssrf.md).
+
+
+## Avoid XSS issues - don't use  `dangerouslySetInnerHTML` in app-client
+
+See [xss.md](/doc/security/api-svc/xss.md)
+
+
+## Avoid SQL injection issues - don't create SQL strings dynamically
+
+See [sql-injection.md](/doc/security/api-svc/sql-injection.md)
+
+
 # Performance
 
 ## API Pagination
@@ -69,7 +84,7 @@ so that a "zig zag" deployment flow can be implemented.
 
 Example: if creating a list, don't just return that list.
 Return the list inside an object with a "list" field, so that other fields
-can be added (like pagingation).
+can be added later (like pagination).
 
 
 # Configuration

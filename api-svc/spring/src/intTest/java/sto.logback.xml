@@ -29,4 +29,6 @@
   <logger name="raido.apisvc.spring.RequestLoggingFilter" level="info"/>
   <logger name="org.springframework.web.servlet.PageNotFound" level="error"/>
 
+<!--  <logger name="raido.inttest.RaidApiExceptionDecoder" level="debug"/>-->
+  
 </configuration>

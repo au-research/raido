@@ -13,6 +13,9 @@ paths:
   /RAiD:
     post:
       summary: "Generate a raid with a unique URL handle"
+      deprecated: true
+      description: >
+        Upgrade by using the appropriate endpoint defined in idl-raid-v2.
       tags:
         - "Raid V1"
       consumes:
@@ -36,6 +39,9 @@ paths:
   /handle/{raidId}:
     get:
       summary: "Return the public information for RAiD"
+      deprecated: true
+      description: >
+        Upgrade by using the appropriate endpoint defined in idl-raid-v2.
       tags:
         - "Raid V1"
       produces:

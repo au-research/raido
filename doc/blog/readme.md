@@ -41,9 +41,10 @@ data-export archives that RAiD will publish (for all "open" raid data).
 These public RAiD archives will have DOI references and supporting 
 information to support modern data provenance practices for research.
 
-If researchers want to perform analysis on "closed" or "embargoes" RAiD data,
+If researchers want to perform analysis on "closed" or "embargoed" RAiD data,
 they will need to approach each service-point individually.  RAiD will support
 this by providing service-points with the ability to securely export all their 
 data, including non-public data, in a format similar to the public data 
 archives.  It will then be up to the service-point and research to agree and
-co-ordinate privacy and technical issues related to the exported data. 
+co-ordinate privacy, technical and security issues related to the exported data.
+

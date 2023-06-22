@@ -121,7 +121,9 @@ public class ServicePointScenario {
           new ServicePoint().
             name(sess.getString(I_SP_NAME)).
             identifierOwner(ROR_ID).
-            adminEmail("").techEmail("").enabled(true));
+            adminEmail("").techEmail("").
+            appWritesEnabled(true).
+            enabled(true));
       })).
       check(status().is(200)).
       check(

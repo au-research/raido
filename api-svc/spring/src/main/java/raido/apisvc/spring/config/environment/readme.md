@@ -15,7 +15,11 @@ Default values for environment configuration properties should be set for
 local development.  So minimal config is necessary to get a developer up and
 running.
 
-Real enviornments (TEST, DEMO / PROD) will have all their environment related 
+Real environments (TEST, DEMO / PROD) will have all their environment related 
 properties set explicitly.  One reason for this is to make reviewing config
 changes more self-contained - c.f. reading a PR diff and also having to reason
-about or look up what the default values are. 
+about or look up what the default values are.
+
+Without this, what look like simple changes to the default value of 
+some random property can easily cause a deployment failure if code review is 
+not rigorous.

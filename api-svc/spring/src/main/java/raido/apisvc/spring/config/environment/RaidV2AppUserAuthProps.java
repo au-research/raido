@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 
-import java.time.Duration;
 import java.util.Arrays;
 
 import static raido.apisvc.util.Log.to;
@@ -29,7 +28,7 @@ public class RaidV2AppUserAuthProps {
   public String issuer;
 
   /** Amount of time an authzToken is valid for.
-   Default 9 hours, approximately a work day. */
+   Default 9 hours, so an 8-hour work day plus some extra time. */
   @Value("${RaidV2AppUserAuth.authzTokenExpirySeconds:32400}")
   public int authzTokenExpirySeconds;
 

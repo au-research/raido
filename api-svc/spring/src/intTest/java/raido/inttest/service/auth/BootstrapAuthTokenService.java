@@ -6,11 +6,14 @@ import org.jooq.JSONB;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import raido.apisvc.service.auth.RaidV2ApiKeyAuthService;
+import raido.apisvc.service.auth.RaidV2ApiKeyApiTokenService;
+import raido.apisvc.service.auth.RaidV2AppUserApiTokenService;
 import raido.apisvc.service.raidv1.RaidV1AuthService;
 import raido.apisvc.spring.config.environment.EnvironmentProps;
+import raido.apisvc.spring.config.environment.GoogleOidcProps;
 import raido.apisvc.spring.config.environment.RaidV1AuthProps;
 import raido.apisvc.spring.config.environment.RaidV2ApiKeyAuthProps;
+import raido.apisvc.spring.config.environment.RaidV2AppUserAuthProps;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.UserRole;
 import raido.db.jooq.raid_v1_import.tables.records.TokenRecord;
@@ -19,7 +22,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 import static org.jooq.impl.DSL.inline;
-import static raido.apisvc.spring.security.raidv2.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
+import static raido.apisvc.spring.security.raidv2.ApiToken.ApiTokenBuilder.anApiToken;
+import static raido.apisvc.spring.security.raidv2.UnapprovedUserApiToken.UnapprovedUserApiTokenBuilder.anUnapprovedUserApiToken;
 import static raido.apisvc.util.Log.to;
 import static raido.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
 import static raido.db.jooq.api_svc.tables.AppUser.APP_USER;
@@ -46,6 +50,8 @@ public class BootstrapAuthTokenService {
   @Autowired protected DSLContext db;
   @Autowired protected RaidV1AuthProps authProps;
   @Autowired protected RaidV2ApiKeyAuthProps authApiKeyProps;
+  @Autowired protected RaidV2AppUserAuthProps authAppUserKeyProps;
+  @Autowired protected GoogleOidcProps googleOidcProps;
   @Autowired protected EnvironmentProps env;
 
   /* v1TestOwner is only used for minting via raidV1 endpoint, which is 
@@ -85,9 +91,9 @@ public class BootstrapAuthTokenService {
     LocalDateTime expiry = LocalDateTime.now().plusDays(30);
     var apiKeyId = insertApiKey(svcPointId, subject, role); 
 
-    var apiToken = RaidV2ApiKeyAuthService.sign(
+    var apiToken = RaidV2ApiKeyApiTokenService.sign(
        authApiKeyProps.signingAlgo,
-        anAuthzTokenPayload().
+        anApiToken().
           withAppUserId(apiKeyId).
           withServicePointId(svcPointId).
           withSubject(subject).
@@ -98,6 +104,31 @@ public class BootstrapAuthTokenService {
         expiry.toInstant(ZoneOffset.UTC),
       authApiKeyProps.issuer );
     
+    return apiToken;
+  }
+
+  /** Initially implemented for testing the authz-request creation 
+   functionality.
+   Note that the api-token created is obviously not really for a properly 
+   signed user id_token attested by Google, the creation of this api-token 
+   basically "fakes" the whole OIDC->/idpresponse->api-token flow.
+   */
+  @Transactional
+  public String fakeUnapprovedGoogle(String subject) {
+    LocalDateTime expiry = LocalDateTime.now().plusDays(30);
+    
+    var unapprovedPayload = anUnapprovedUserApiToken().
+      withClientId(googleOidcProps.clientId).
+      withEmail("intTestEmail@example.com").
+      withSubject(subject).build();
+
+    var apiToken = RaidV2AppUserApiTokenService.sign(
+      authAppUserKeyProps.signingAlgo,
+      authAppUserKeyProps.issuer,
+      expiry.toInstant(ZoneOffset.UTC),
+      unapprovedPayload
+    );
+
     return apiToken;
   }
 

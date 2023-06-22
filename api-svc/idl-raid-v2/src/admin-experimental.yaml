@@ -349,7 +349,9 @@ components:
       properties:
         authzRequestId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
         status: {$ref: '#/components/schemas/AuthzRequestStatus' }
-        role: {type: string}
+        role: 
+          type: string
+          description: role is required if status == APPROVED
     ServicePoint:
       description: data that any member of service-point and operators can see
       type: object

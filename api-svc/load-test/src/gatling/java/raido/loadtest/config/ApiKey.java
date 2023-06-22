@@ -2,14 +2,14 @@ package raido.loadtest.config;
 
 import com.auth0.jwt.algorithms.Algorithm;
 import raido.apisvc.endpoint.raidv2.AuthzUtil;
-import raido.apisvc.service.auth.RaidV2ApiKeyAuthService;
+import raido.apisvc.service.auth.RaidV2ApiKeyApiTokenService;
 import raido.db.jooq.api_svc.enums.UserRole;
 import raido.apisvc.service.stub.util.IdFactory;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-import static raido.apisvc.spring.security.raidv2.AuthzTokenPayload.AuthzTokenPayloadBuilder.anAuthzTokenPayload;
+import static raido.apisvc.spring.security.raidv2.ApiToken.ApiTokenBuilder.anApiToken;
 import static raido.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
 import static raido.loadtest.config.GatlingRaidoServerConfig.serverConfig;
 
@@ -31,9 +31,9 @@ public class ApiKey {
   ) {
     LocalDateTime expiry = LocalDateTime.now().plusDays(30);
 
-    var apiToken = RaidV2ApiKeyAuthService.sign(
+    var apiToken = RaidV2ApiKeyApiTokenService.sign(
       signingAlgo,
-      anAuthzTokenPayload().
+      anApiToken().
         withAppUserId(API_KEY_ID).
         withServicePointId(svcPointId).
         withSubject(subject).

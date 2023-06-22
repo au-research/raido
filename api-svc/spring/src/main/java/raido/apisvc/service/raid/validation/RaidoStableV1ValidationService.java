@@ -45,13 +45,18 @@ public class RaidoStableV1ValidationService {
     final OrganisationValidationService orgSvc,
     final SubjectValidationService subjectSvc,
     final IdentifierParser idParser,
-    final RelatedObjectValidationService relatedObjectSvc, final AlternateIdentifierValidationService alternateIdentifierSvc, final RelatedRaidValidationService relatedRaidSvc, final SpatialCoverageValidationService spatialCoverageSvc, final TraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelSvc) {
-      this.titleSvc = titleSvc;
-      this.descSvc = descSvc;
-      this.contribSvc = contribSvc;
-      this.orgSvc = orgSvc;
-      this.subjectSvc = subjectSvc;
-      this.idParser = idParser;
+    final RelatedObjectValidationService relatedObjectSvc,
+    final AlternateIdentifierValidationService alternateIdentifierSvc,
+    final RelatedRaidValidationService relatedRaidSvc,
+    final SpatialCoverageValidationService spatialCoverageSvc,
+    final TraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelSvc
+  ) {
+    this.titleSvc = titleSvc;
+    this.descSvc = descSvc;
+    this.contribSvc = contribSvc;
+    this.orgSvc = orgSvc;
+    this.subjectSvc = subjectSvc;
+    this.idParser = idParser;
     this.relatedObjectSvc = relatedObjectSvc;
     this.alternateIdentifierSvc = alternateIdentifierSvc;
     this.relatedRaidSvc = relatedRaidSvc;

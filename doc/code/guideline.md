@@ -32,14 +32,14 @@ them.
 * security comments are used for serious security-related stuff.
 * They must be investigated and either fixed or downgraded before any public 
 release (if if demo or test is public, then must fix)
-* used for security holes, or potential security holes - they're not "fix soon" 
-they're "do not release without fixing"
+* used for security holes, or potential security holes - they're not "fix 
+  soon", they're "do not release without fixing"
 * examples
   * an unsecured endpoint
   * usage of a known insecure algo
   * code with a suspected injection vulnerability
   * something security related that you're not sure about
-    * raise the decision, then document and downgrade to an 
+    * raise the issue, make a decision, then document and downgrade to an 
     IMPROVE: or NOTE:
 
 #### `TODO:XXX`
@@ -78,20 +78,24 @@ config/credentials are missing or malformed - the node won't start.
 i.e. less need to run around trying to exercise functionality to verify that 
 the node is functional (which people always shortcut or skip entirely).
 
+This also helps with container-orchestration tool deployments (i.e. AWS ECS or 
+Kubernetes) - if the node fails on startup, then the orchestrator knows not to 
+consider the deployment a success and can roll-back.
+
 Also, the code isn't doing pointless validation on every invocation that only 
-needs to be done once.
+needs to be done once at startup.
 
 
 ## Configure for development by default
 
-See [api-svc/.../config/environment/readme.md](/api-svc/spring/src/main/java/raido/spring/config/environment/readme.md)
+See 
+[api-svc/.../config/environment/readme.md](/api-svc/spring/src/main/java/raido/apisvc/spring/config/environment/readme.md)
 
 
 ## MTTS > MTBF
 
 mean-time-to-start over mean-time-between-failure.
 
-IMPROVE:STO a little more explanation might be in order. 
 Really more of an architectural guideline than coding guideline.
 
 
@@ -103,7 +107,7 @@ Favour not null columns, use empty string or 0 where it makes sense
 instead of null.
 
 Make null mean something, document what it means.
-Add Postgres comments to nullable columns at in your flyway scripts explaining 
+Add Postgres comments to nullable columns in your flyway scripts explaining 
 what's the what - the comments will be propagated into the Jooq types and thus 
 will be easily available to devs from within their IDE.
 
@@ -118,7 +122,7 @@ document that it might be null.  You don't need to document anything
 as being nullable is assumed not-nullable.  Configure your IDE with this 
 expectation.
 
-You can rely on this default assumption may be help all the way down to the DB.
+This default not-null approach can be assumed all the way down to the database.
 
 Remember that external APIs don't necessarily obey this guideline though.
 
@@ -155,10 +159,10 @@ Note that "what if it's null" for a normal internal field is invalid feedback
 given our guidelines (not-null by default) - respond that way to a comment, 
 don't just add a null check you know is not necessary just to respond to an 
 offhand comment in a PR. If its an external value, but you know it can't be 
-null, consider adding a comment to that effect (why you're sure it can't be 
-null, not that you're sure).  If someone is asking the question in a review, 
+null, consider adding a comment to that effect (_why_ you're sure it can't be 
+null, not _that_ you're sure).  If someone is asking the question in a review, 
 it's likely anyone without your context (or you yourself in a few months) will 
-be asking that question when reading the code.
+be asking that same question when reading the code.
 
 
 ## Use dev scratch area for non-prod code
@@ -168,7 +172,7 @@ a test. Don't put it in the standard test areas (unit, integration, etc.)
 with an ignore tag - put it in the scratch area.
 
 Most quality standards don't apply to the scratch area (except - you still 
-don't commit credentials in here!).  You can use libraries that would 
+can't commit credentials in here!).  You can use libraries that would 
 otherwise not be suitable for prod, etc.
 
 Be prepared for dev scratch code to get deleted if it's causing 
@@ -179,9 +183,7 @@ restore it and re-commit when it's not getting in other people's way).
 ## Test guidelines
 Probably needs its own page.
 
-IMPROVE:STO
-
-Self-checking, re-runnable, etc.
+Add stuff about self-checking, re-runnable, etc.
 Difference between unit, integration, functional, load, etc.
 
 

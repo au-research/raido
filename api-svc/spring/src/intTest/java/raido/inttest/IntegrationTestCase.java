@@ -3,6 +3,7 @@ package raido.inttest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Contract;
 import feign.Feign;
+import feign.Logger;
 import feign.Logger.Level;
 import feign.Response;
 import feign.codec.ErrorDecoder;
@@ -24,9 +25,7 @@ import raido.apisvc.util.Log;
 import raido.apisvc.util.Nullable;
 import raido.db.jooq.api_svc.enums.UserRole;
 import raido.idl.raidv1.api.RaidV1Api;
-import raido.idl.raidv2.api.AdminExperimentalApi;
-import raido.idl.raidv2.api.BasicRaidExperimentalApi;
-import raido.idl.raidv2.api.PublicExperimentalApi;
+import raido.idl.raidv2.api.*;
 import raido.idl.raidv2.model.*;
 import raido.inttest.config.IntTestProps;
 import raido.inttest.config.IntegrationTestConfig;
@@ -174,6 +173,19 @@ public abstract class IntegrationTestCase {
       target(PublicExperimentalApi.class, props.getRaidoServerUrl());
   }
 
+  public UnapprovedExperimentalApi unapprovedClient(String token){
+    return Feign.builder().
+      client(new OkHttpClient()).
+      encoder(new JacksonEncoder(mapper)).
+      decoder(new JacksonDecoder(mapper)).
+      contract(feignContract).
+      requestInterceptor(request->
+        request.header(AUTHORIZATION, "Bearer " + token) ).
+      logger(new Slf4jLogger(UnapprovedExperimentalApi.class)).
+      logLevel(Level.FULL).
+      target(UnapprovedExperimentalApi.class, props.getRaidoServerUrl());
+  }
+
   public AdminExperimentalApi adminExperimentalClientAs(String token){
     return Feign.builder().
       client(new OkHttpClient()).
@@ -202,6 +214,13 @@ public abstract class IntegrationTestCase {
       findFirst().orElseThrow();
   }
   
+  /** Ok, I'm just being a crazy-person at this point. */
+  public PublicServicePoint findOtherPublicServicePoint(Long anySpExceptThis){
+    return publicExperimentalClient().publicListServicePoint().stream().
+      filter(i->!i.getId().equals(anySpExceptThis)).
+      findFirst().orElseThrow();
+  }
+  
   public ServicePoint createServicePoint(@Nullable String name){
     
     var spName = name != null ? name : 
@@ -216,6 +235,26 @@ public abstract class IntegrationTestCase {
       name(spName).
       adminEmail("").
       techEmail("").
-      enabled(true) );
+      enabled(true).
+      appWritesEnabled(true));
   }
+
+  public RaidoStableV1Api basicRaidStableClient(String token){
+    return Feign.builder().
+      client(new OkHttpClient()).
+      encoder(new JacksonEncoder(mapper)).
+      decoder(new JacksonDecoder(mapper)).
+      errorDecoder(new RaidApiExceptionDecoder(mapper)).
+      contract(feignContract).
+      requestInterceptor(request->
+        request.header(AUTHORIZATION, "Bearer " + token) ).
+      logger(new Slf4jLogger(RaidoStableV1Api.class)).
+      logLevel(Logger.Level.FULL).
+      target(RaidoStableV1Api.class, props.getRaidoServerUrl());
+  }
+
+  public RaidoStableV1Api basicRaidStableClient(){
+    return basicRaidStableClient(operatorToken);
+  }
+
 }

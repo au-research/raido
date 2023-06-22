@@ -23,7 +23,7 @@ import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.service.raid.id.IdentifierHandle;
 import raido.apisvc.service.raid.id.IdentifierUrl;
 import raido.apisvc.service.raid.validation.RaidoStableV1ValidationService;
-import raido.apisvc.spring.security.raidv2.AuthzTokenPayload;
+import raido.apisvc.spring.security.raidv2.ApiToken;
 import raido.apisvc.util.FileUtil;
 import raido.idl.raidv2.model.*;
 
@@ -66,12 +66,12 @@ class BasicRaidStableV1Test {
     final var servicePointId = 999L;
     final var raid = createRaidForPost();
 
-    final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
-    when(authzTokenPayload.getServicePointId()).thenReturn(servicePointId);
+    final ApiToken apiToken = mock(ApiToken.class);
+    when(apiToken.getServicePointId()).thenReturn(servicePointId);
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
-      when(raidService.isEditable(any(AuthzTokenPayload.class), anyLong())).thenReturn(true);
+      authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
+      when(raidService.isEditable(any(ApiToken.class), anyLong())).thenReturn(true);
 
       doThrow(DataAccessException.class)
         .when(raidService).mintRaidSchemaV1(any(CreateRaidV1Request.class), eq(servicePointId));
@@ -98,8 +98,8 @@ class BasicRaidStableV1Test {
     final var raidForPost = createRaidForPost();
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-      final var user = AuthzTokenPayload.AuthzTokenPayloadBuilder
-        .anAuthzTokenPayload()
+      final var user = ApiToken.ApiTokenBuilder
+        .anApiToken()
         .withAppUserId(0L)
         .withEmail("user-email")
         .withRole("user-role")
@@ -109,7 +109,7 @@ class BasicRaidStableV1Test {
         .withClientId("user-client-id")
         .build();
 
-      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(user);
+      authzUtil.when(AuthzUtil::getApiToken).thenReturn(user);
 
       when(raidService.isEditable(user, servicePointId)).thenReturn(false);
 
@@ -142,11 +142,11 @@ class BasicRaidStableV1Test {
     validationFailure.setMessage(validationFailureMessage);
     validationFailure.setErrorType(validationFailureType);
 
-    final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
+    final ApiToken apiToken = mock(ApiToken.class);
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
-      when(raidService.isEditable(any(AuthzTokenPayload.class), anyLong())).thenReturn(true);
+      authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
+      when(raidService.isEditable(any(ApiToken.class), anyLong())).thenReturn(true);
 
 
       when(validationService.validateForCreate(any(CreateRaidV1Request.class)))
@@ -188,8 +188,8 @@ class BasicRaidStableV1Test {
     final var raidForGet = createRaidForGet(id, servicePointId, title, startDate);
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-      final var user = AuthzTokenPayload.AuthzTokenPayloadBuilder
-        .anAuthzTokenPayload()
+      final var user = ApiToken.ApiTokenBuilder
+        .anApiToken()
         .withAppUserId(0L)
         .withEmail("user-email")
         .withRole("user-role")
@@ -199,8 +199,8 @@ class BasicRaidStableV1Test {
         .withClientId("user-client-id")
         .build();
 
-      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(user);
-      when(raidService.isEditable(any(AuthzTokenPayload.class), anyLong())).thenReturn(true);
+      authzUtil.when(AuthzUtil::getApiToken).thenReturn(user);
+      when(raidService.isEditable(any(ApiToken.class), anyLong())).thenReturn(true);
 
 
       when(validationService.validateForCreate(any(CreateRaidV1Request.class))).thenReturn(Collections.emptyList());
@@ -264,9 +264,9 @@ class BasicRaidStableV1Test {
     validationFailure.setErrorType(validationFailureType);
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-      final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
-      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
-      when(raidService.isEditable(any(AuthzTokenPayload.class), anyLong())).thenReturn(true);
+      final ApiToken apiToken = mock(ApiToken.class);
+      authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
+      when(raidService.isEditable(any(ApiToken.class), anyLong())).thenReturn(true);
 
 
       when(validationService.validateForUpdate(eq(handle), any(UpdateRaidV1Request.class))).thenReturn(List.of(validationFailure));
@@ -304,8 +304,8 @@ class BasicRaidStableV1Test {
     final var input = createRaidForPut();
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-      final AuthzTokenPayload user = mock(AuthzTokenPayload.class);
-      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(user);
+      final ApiToken user = mock(ApiToken.class);
+      authzUtil.when(AuthzUtil::getApiToken).thenReturn(user);
 
       when(raidService.isEditable(user, servicePointId)).thenReturn(false);
 
@@ -337,9 +337,9 @@ class BasicRaidStableV1Test {
     final var output = createRaidForGet(id, servicePointId, title, startDate);
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-      final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
-      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
-      when(raidService.isEditable(any(AuthzTokenPayload.class), anyLong())).thenReturn(true);
+      final ApiToken apiToken = mock(ApiToken.class);
+      authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
+      when(raidService.isEditable(any(ApiToken.class), anyLong())).thenReturn(true);
 
       when(validationService.validateForUpdate(String.join("/", prefix, suffix), input))
         .thenReturn(Collections.emptyList());
@@ -392,9 +392,9 @@ class BasicRaidStableV1Test {
     final var input = createRaidForPut();
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-      final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
-      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
-      when(raidService.isEditable(any(AuthzTokenPayload.class), anyLong())).thenReturn(true);
+      final ApiToken apiToken = mock(ApiToken.class);
+      authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
+      when(raidService.isEditable(any(ApiToken.class), anyLong())).thenReturn(true);
 
       when(validationService.validateForUpdate(eq(handle), any(UpdateRaidV1Request.class))).thenReturn(Collections.emptyList());
 
@@ -429,10 +429,10 @@ class BasicRaidStableV1Test {
     final var input = createRaidForGet(id, servicePointId, "", LocalDate.now());
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-      final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
-      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
+      final ApiToken apiToken = mock(ApiToken.class);
+      authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
 
-      authzUtil.when(() -> AuthzUtil.guardOperatorOrAssociated(authzTokenPayload, servicePointId))
+      authzUtil.when(() -> AuthzUtil.guardOperatorOrAssociated(apiToken, servicePointId))
         .thenThrow(new CrossAccountAccessException(servicePointId));
 
       final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/v1/%s/%s", prefix, suffix))
@@ -467,8 +467,8 @@ class BasicRaidStableV1Test {
     final var raid = createRaidForGet(id, servicePointId, title, startDate);
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-      final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
-      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
+      final ApiToken apiToken = mock(ApiToken.class);
+      authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
 
       when(raidService.readRaidV1(String.join("/", prefix, suffix))).thenReturn(raid);
 
@@ -492,8 +492,8 @@ class BasicRaidStableV1Test {
     final var handle = String.join("/", prefix, suffix);
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-      final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
-      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
+      final ApiToken apiToken = mock(ApiToken.class);
+      authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
 
       doThrow(new ResourceNotFoundException(handle)).when(raidService).readRaidV1(handle);
 
@@ -524,12 +524,12 @@ class BasicRaidStableV1Test {
     final var raid = createRaidForGet(id, servicePointId, "", LocalDate.now());
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-      final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
-      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
+      final ApiToken apiToken = mock(ApiToken.class);
+      authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
 
       when(raidService.readRaidV1(String.join("/", prefix, suffix))).thenReturn(raid);
 
-      authzUtil.when(() -> AuthzUtil.guardOperatorOrAssociated(authzTokenPayload, servicePointId))
+      authzUtil.when(() -> AuthzUtil.guardOperatorOrAssociated(apiToken, servicePointId))
         .thenThrow(new CrossAccountAccessException(servicePointId));
 
       final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/v1/%s/%s", prefix, suffix))
@@ -561,8 +561,8 @@ class BasicRaidStableV1Test {
     final var output = createRaidForGet(id, servicePointId, title, startDate);
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-      final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
-      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
+      final ApiToken apiToken = mock(ApiToken.class);
+      authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
 
       when(raidService.listRaidsV1(servicePointId)).thenReturn(Collections.singletonList(output));
 
@@ -608,10 +608,10 @@ class BasicRaidStableV1Test {
     final Long servicePointId = 999L;
 
     try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-      final AuthzTokenPayload authzTokenPayload = mock(AuthzTokenPayload.class);
-      authzUtil.when(AuthzUtil::getAuthzPayload).thenReturn(authzTokenPayload);
+      final ApiToken apiToken = mock(ApiToken.class);
+      authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
 
-      authzUtil.when(() -> AuthzUtil.guardOperatorOrAssociated(authzTokenPayload, servicePointId))
+      authzUtil.when(() -> AuthzUtil.guardOperatorOrAssociated(apiToken, servicePointId))
         .thenThrow(new CrossAccountAccessException(servicePointId));
 
       final MvcResult mvcResult = mockMvc.perform(get("/raid/v1")

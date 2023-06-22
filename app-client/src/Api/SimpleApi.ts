@@ -1,7 +1,7 @@
 import {
   Configuration,
   PublicExperimentalApi,
-  UnauthzExperimentalApi
+  UnapprovedExperimentalApi
 } from "Generated/Raidv2";
 import { Config } from "Config";
 
@@ -12,12 +12,12 @@ export function publicApi(): PublicExperimentalApi{
   return new PublicExperimentalApi(config);
 }
 
-export function unauthzApi(accessToken: string){
+export function unapprovedApi(accessToken: string){
   const config = new Configuration({
     basePath: Config.raidoApiSvc,
     // If we end up "refreshing" accessTokens, this is how it'll be hooked in 
     accessToken: () => accessToken,
   });
-  return new UnauthzExperimentalApi(config);
+  return new UnapprovedExperimentalApi(config);
 }
 

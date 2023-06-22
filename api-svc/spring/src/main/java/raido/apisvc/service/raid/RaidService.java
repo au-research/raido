@@ -8,7 +8,9 @@ import org.jooq.JSONB;
 import org.jooq.exception.NoDataFoundException;
 import org.jooq.impl.DSL;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 import raido.apisvc.exception.InvalidJsonException;
 import raido.apisvc.exception.InvalidVersionException;
@@ -24,7 +26,7 @@ import raido.apisvc.service.raid.id.IdentifierParser;
 import raido.apisvc.service.raid.id.IdentifierParser.ParseProblems;
 import raido.apisvc.service.raid.id.IdentifierUrl;
 import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
-import raido.apisvc.spring.security.raidv2.AuthzTokenPayload;
+import raido.apisvc.spring.security.raidv2.ApiToken;
 import raido.apisvc.util.Log;
 import raido.db.jooq.api_svc.enums.Metaschema;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
@@ -41,8 +43,9 @@ import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toMap;
-import static org.springframework.transaction.annotation.Propagation.NEVER;
-import static raido.apisvc.endpoint.message.ValidationMessage.*;
+import static raido.apisvc.endpoint.message.ValidationMessage.CANNOT_UPGRADE_TO_OTHER_SCHEMA;
+import static raido.apisvc.endpoint.message.ValidationMessage.SCHEMA_CHANGED;
+import static raido.apisvc.endpoint.message.ValidationMessage.UPGRADE_LEGACY_SCHEMA_ONLY;
 import static raido.apisvc.service.raid.MetadataService.mapApi2Db;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitle;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.getPrimaryTitles;
@@ -55,6 +58,7 @@ import static raido.db.jooq.api_svc.tables.Raid.RAID;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 
+/* Be careful with usage of @Transactional, see db-transaction-guideline.md */
 @Component
 public class RaidService {
   private static final Log log = to(RaidService.class);
@@ -63,7 +67,7 @@ public class RaidService {
   private final ApidsService apidsSvc;
   private final MetadataService metaSvc;
   private final RaidoSchemaV1ValidationService validSvc;
-  private  final TransactionTemplate tx;
+  private final TransactionTemplate tx;
   private final RaidRepository raidRepository;
 
   private final ServicePointRepository servicePointRepository;
@@ -142,12 +146,6 @@ public class RaidService {
     );
   }
 
-  /**
-   Note propagation=NEVER causes this to fail if called when a TX is 
-   currently active. The method does manual TX handling internally, 
-   to avoid holding an open TX while talking to the APIDS service.
-   */
-  @Transactional(propagation = NEVER)
   public IdentifierUrl mintRaidoSchemaV1(
     long servicePointId,
     RaidoMetadataSchemaV1 metadata
@@ -186,7 +184,7 @@ public class RaidService {
     
     return id;
   }
-
+  
   private IdentifierHandle parseHandleFromApids(
     ApidsMintResponse apidsResponse
   ) {
@@ -203,7 +201,6 @@ public class RaidService {
     return (IdentifierHandle) parseResult; 
   }
 
-  @Transactional(propagation = NEVER)
   public IdentifierUrl mintRaidSchemaV1(
     final CreateRaidV1Request request,
     final long servicePoint
@@ -258,7 +255,6 @@ public class RaidService {
     }
   }
 
-  @Transactional(propagation = NEVER)
   public IdentifierUrl mintLegacySchemaV1(
     long servicePointId,
     LegacyMetadataSchemaV1 metadata
@@ -397,6 +393,7 @@ public class RaidService {
       execute();
   }
 
+  @Transactional
   public List<ValidationFailure> updateRaidoSchemaV2(
           RaidoMetadataSchemaV2 newData,
           RaidRecord oldRaid
@@ -428,16 +425,18 @@ public class RaidService {
 
     var raidData = getDenormalisedRaidData(newData);
 
-    var rowsUpdated =  db.update(RAID).
+    final var metadata = metadataAsJson;
+
+    var rowsUpdated =  tx.execute(status -> db.update(RAID).
             set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
-            set(RAID.METADATA, JSONB.valueOf(metadataAsJson)).
+            set(RAID.METADATA, JSONB.valueOf(metadata)).
             set(RAID.START_DATE, raidData.startDate()).
             set(RAID.CONFIDENTIAL, raidData.confidential()).
             set(RAID.METADATA_SCHEMA, raido_metadata_schema_v2).
             set(RAID.VERSION, version + 1).
             where(RAID.HANDLE.eq(oldRaid.getHandle())).
             and(RAID.VERSION.eq(version)).
-            execute();
+            execute());
 
     if (rowsUpdated != 1) {
       throw new InvalidVersionException(version);
@@ -452,9 +451,9 @@ public class RaidService {
    Might not be possible though, think validation is too intertwined with the
    work that this method actually does. */
   public List<ValidationFailure> updateRaidoSchemaV1(
-    RaidoMetadataSchemaV1 newData,
+    RaidoMetadataSchemaV1 newData, 
     RaidRecord oldRaid
-  ) {
+  ){
     Metaschema newMetadataSchema = mapApi2Db(newData.getMetadataSchema());
     if( newMetadataSchema != oldRaid.getMetadataSchema() ){
       return singletonList(SCHEMA_CHANGED);
@@ -476,20 +475,22 @@ public class RaidService {
     catch( ValidationFailureException e ){
       failures.addAll(e.getFailures());
     }
-    
+    JSONB json = JSONB.valueOf(metadataAsJson);
+
     if( !failures.isEmpty() ){
       return failures;
     }
 
     var raidData = getDenormalisedRaidData(newData);
-
-    db.update(RAID).
-      set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
-      set(RAID.METADATA, JSONB.valueOf(metadataAsJson)).
-      set(RAID.START_DATE, raidData.startDate()).
-      set(RAID.CONFIDENTIAL, raidData.confidential()).
-      where(RAID.HANDLE.eq(oldRaid.getHandle())).
-      execute();
+    tx.executeWithoutResult((status)->{
+      db.update(RAID).
+        set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
+        set(RAID.METADATA, json).
+        set(RAID.START_DATE, raidData.startDate()).
+        set(RAID.CONFIDENTIAL, raidData.confidential()).
+        where(RAID.HANDLE.eq(oldRaid.getHandle())).
+        execute();
+    });
     
     return emptyList();
   }
@@ -526,16 +527,19 @@ public class RaidService {
       return failures;
     }
 
+    JSONB json = JSONB.valueOf(metadataAsJson);
     var raidData = getDenormalisedRaidData(newData);
 
-    db.update(RAID).
-      set(RAID.METADATA_SCHEMA, raido_metadata_schema_v1).
-      set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
-      set(RAID.METADATA, JSONB.valueOf(metadataAsJson)).
-      set(RAID.START_DATE, raidData.startDate()).
-      set(RAID.CONFIDENTIAL, raidData.confidential()).
-      where(RAID.HANDLE.eq(oldRaid.getHandle())).
-      execute();
+    tx.executeWithoutResult((status)->{
+      db.update(RAID).
+        set(RAID.METADATA_SCHEMA, raido_metadata_schema_v1).
+        set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
+        set(RAID.METADATA, json).
+        set(RAID.START_DATE, raidData.startDate()).
+        set(RAID.CONFIDENTIAL, raidData.confidential()).
+        where(RAID.HANDLE.eq(oldRaid.getHandle())).
+        execute();
+    });
 
     return emptyList();
   }
@@ -546,7 +550,7 @@ public class RaidService {
       fetchSingleInto(SERVICE_POINT);
   }
 
-  public boolean isEditable(final AuthzTokenPayload user, final long servicePointId) {
+  public boolean isEditable(final ApiToken user, final long servicePointId) {
     final var servicePoint = servicePointRepository.findById(servicePointId)
       .orElseThrow(() -> new UnknownServicePointException(servicePointId));
 

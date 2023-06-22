@@ -28,7 +28,7 @@ import java.time.Instant;
 
 import static raido.apisvc.spring.security.IdProviderException.idpException;
 import static raido.apisvc.util.Log.to;
-import static raido.apisvc.util.StringUtil.mask;
+import static raido.apisvc.util.StringUtil.hasValue;
 import static raido.apisvc.util.StringUtil.trimEqualsIgnoreCase;
 
 @Component
@@ -54,7 +54,9 @@ public class AafOidc {
     return trimEqualsIgnoreCase(clientId, aaf.clientId);
   }
 
-  public DecodedJWT exchangeCodeForVerifiedJwt(String idpResponseCode) {
+  public DecodedJWT exchangeOAuthCodeForVerifiedIdToken(
+    String idpResponseCode
+  ) {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -79,6 +81,7 @@ public class AafOidc {
     Guard.notNull(response.getBody());
 
     DecodedJWT jwt = JWT.decode(response.getBody().id_token);
+    
     verify(jwt);
 
     return jwt;
@@ -86,13 +89,13 @@ public class AafOidc {
 
   public void verify(DecodedJWT jwt) {
     Guard.areEqual(jwt.getAlgorithm(), "RS256");
-    Guard.areEqual(jwt.getType(), "JWT");
+    /* https://aaf.freshdesk.com/support/tickets/10432
+    AAF test system stopped returning this field on 2023-05-23-ish, 
+    the field is optional according to the standard. */
+    if( hasValue(jwt.getType()) ){
+      Guard.areEqual(jwt.getType(), "JWT");
+    }
 
-    /* Probably overkill and unnecessary. If the attacker can intercept calls
-    between api-svc and AAF to feed us a fake JWT, then they can intercept 
-    the JWKS url call too.
-    Keep an eye out for this when load testing; if measurably visible, 
-    consider getting rid of this. */
     verifyAafJwksSignature(jwt);
 
     Guard.hasValue(jwt.getSubject());
@@ -118,12 +121,10 @@ public class AafOidc {
   private void verifyAafJwksSignature(DecodedJWT jwt) {
     JwkProvider provider = null;
     try {
-      /* Must use URL because google certs aren't at the well-known location.
-      Note sure if can/should make provider static.  */
       provider = new UrlJwkProvider(new URL(aaf.jwks));
     }
     catch( MalformedURLException e ){
-      throw idpException("google props.jwks is malformed %s - %s",
+      throw idpException("AAF props.jwks is malformed %s - %s",
         aaf.jwks, e.getMessage());
     }
 
@@ -157,6 +158,3 @@ public class AafOidc {
   }
 }
 
-/*
- Example id_token payload:
- */

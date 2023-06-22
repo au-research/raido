@@ -48,7 +48,11 @@ public class SimpleCreateViewRaids extends Simulation {
             about 4 RPS (because of initial rampUp phase).
             */
             constantUsersPerSec(simConfig.userCount).
-              during(simConfig.steadyStateSeconds)
+              during(simConfig.steadyStateSeconds).
+              /* distribute the new users randomly across the whole second, 
+              otherwise gatling will inject all userCount users at exactly the 
+              same instant. */
+              randomized()
 
             /* Should throw a `.randomized()` in here too, otherwise all the 
             users get chunked into the test at exactly the same time, which 

@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import static raido.apisvc.util.StringUtil.BRACKET_JOINER;
-import static raido.apisvc.util.StringUtil.blankToDefault;
 import static raido.apisvc.util.StringUtil.nullToString;
 
 /**
@@ -136,6 +135,15 @@ public class Log {
     log.debug(String.format(msg, args));
   }
 
+  /**
+   Uses {@link String#format} - %s
+   */
+  public void debugEx(String msg, Throwable t, Object... args) {
+    if( log.isDebugEnabled() ){
+      log.debug(String.format(msg, args), t);
+    }
+  }
+  
   public boolean isInfoEnabled() {
     return log.isInfoEnabled();
   }
@@ -238,8 +246,22 @@ public class Log {
   }
 
   /* world's dodgiest structured logging API - seriously, no thought went into
-   this at all */
+   this at all.
+   At the moment, this is focused on printing the messages in a way that's 
+   easy for a human to read particularly in console messages during 
+   development.  Eventually want to swap to something more log parser friendly. 
+   */
   public static class LogMessageBuilder {
+
+    /**
+     marker to indicate the end of the unstructured message and the beginning
+     of the structured parameters
+     */
+    public static final String MESSAGE_SEPARATOR = "-";
+    /** mark end of structured key and beginning of value */
+    public static final String KEY_VALUE_SEPARATOR = "=";
+    /** mark end of structure param and beginning of next */
+    public static final String PARAMETER_SEPARATOR = " ";
 
     private final Log log;
     private final Map<String, Object> structuredArgs;
@@ -346,10 +368,18 @@ public class Log {
     infrastructure (Splunk, etc.) */
     @Override
     public String toString() {
-      String message = String.format(blankToDefault(msg, ""), messageArgs);
-      StringBuilder sb = new StringBuilder(message).append(" - ");
+      StringBuilder sb = new StringBuilder();
+
+      if( msg != null && msg.length() != 0 ){
+        sb.append(String.format(msg, messageArgs)).append(" ");
+      }
+      sb.append(MESSAGE_SEPARATOR).append(" ");
+      
       structuredArgs.forEach((key, value)->
-        sb.append(key).append("=").append(nullToString(value)).append(" "));
+        sb.append(key).
+          append(KEY_VALUE_SEPARATOR).
+          append(nullToString(value)).
+          append(PARAMETER_SEPARATOR));
       return sb.toString();
     }
   }
