@@ -85,6 +85,27 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RaidListItemV2'
+  /list-raid-v3:
+    post:
+      tags:
+        - basic-raid-experimental
+      operationId: list-raid-v3
+      summary: list raids
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RaidListRequestV2'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RaidListItemV3'
   /migrate-legacy-raid:
     post:
       tags:
@@ -190,8 +211,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MintResponse'
-
-
 components:
   schemas:
     RaidoMetadataSchemaV2:
@@ -328,6 +347,15 @@ components:
         startDate: { type: string, format: date }
         createDate: { type: string, format: date-time }
         metadataSchema: {$ref: 'shared.yaml#/components/schemas/RaidoMetaschema'}
+    RaidListItemV3:
+      type: object
+      required: [handle, confidential, createdDateTime]
+      properties:
+        handle: {type: string}
+        primaryTitle: {type: string}
+        startDate: { type: string, format: date }
+        createDate: { type: string, format: date-time }
+        metadataSchema: {$ref: 'shared.yaml#/components/schemas/RaidoMetaschemaV2'}
     ReadRaidResponseV2:
       type: object
       required: [

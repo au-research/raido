@@ -121,7 +121,7 @@ export function RaidTableContainerV2({servicePointId}: {servicePointId: number})
 
   const raidQuery: RqQuery<RaidListItemV2[]> =
     useQuery(['listRaids', servicePointId], async () => {
-      return await api.basicRaid.listRaidV2({
+      return await api.basicRaid.listRaidV3({
         raidListRequestV2: {servicePointId: servicePointId}
       });
     });

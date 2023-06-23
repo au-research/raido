@@ -192,6 +192,27 @@ public class MetadataService {
     throw ex;
   }
 
+  public static raido.idl.raidv2.model.RaidoMetaschemaV2 mapDb2ApiV2(
+          Metaschema schema
+  ){
+    if( areEqual(schema.getLiteral(), raido_metadata_schema_v2.getLiteral()) ){
+      return RaidoMetaschemaV2.RAIDOMETADATASCHEMAV2;
+    }
+
+    if( areEqual(schema.getLiteral(), raido_metadata_schema_v1.getLiteral()) ){
+      return RaidoMetaschemaV2.RAIDOMETADATASCHEMAV1;
+    }
+
+    if( areEqual(schema.getLiteral(), legacy_metadata_schema_v1.getLiteral()) ){
+      return RaidoMetaschemaV2.LEGACYMETADATASCHEMAV1;
+    }
+
+    var ex = iae("unknown json metaschema value");
+    log.with("schema", schema).error(ex.getMessage());
+    throw ex;
+  }
+
+
   public String formatRaidoLandingPageUrl(String handle){
     return "%s/%s".formatted(metaProps.raidoLandingPrefix, handle);
   }
