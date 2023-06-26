@@ -65,7 +65,7 @@ There is also a guide to the
   * [/api-svc/load-test](./api-svc/load-test/readme.md)
     * the load-tests and their results 
 * [/app-client](/app-client)
-  * The Raido UI that calls uses api-svc 
+  * The default Raido UI that uses api-svc 
 
 
 # Development
