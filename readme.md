@@ -36,9 +36,6 @@ Note that:
 The [service-level-guide.md](/doc/service-level-guide.md) page provides guidance
 to the expected level of Service provided by the RAiD team.
 
-More information about the operation of the environments can be found in 
-[/doc/architecture/environment](/doc/architecture/environment).
-
 
 # Technology / Architecture
 
