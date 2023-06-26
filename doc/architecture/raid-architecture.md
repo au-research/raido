@@ -44,7 +44,7 @@ Major architectural decisions are documented in the Architecture Decision Log:
 # Technology
 
 More info about individual technology choices can be found in 
-[technology-stack.md](../code/technology-stack.md).
+[technology-stack.md](../architecture/technology-stack.md).
 
 ## How to use the DEMO environment
 

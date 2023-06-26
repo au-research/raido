@@ -55,7 +55,7 @@ There is also a guide to the
   * the root project contains no production code, it's just the container that
   holds all the other sub-projects
   * it does contain some build code though, see: [/buildSrc](./buildSrc)
-* [/api-svc](/api-svc)
+* `/api-svc`
   * [/api-svc/db](/api-svc/db)
     * database schema definition, implemented as a series of Flyway migrations
   * [/api-svc/spring](/api-svc/spring) 
@@ -64,9 +64,24 @@ There is also a guide to the
     * the OpenAPI definition of the API that the api-svc serves
   * [/api-svc/load-test](./api-svc/load-test/readme.md)
     * the load-tests and their results 
-* [/app-client](/app-client)
+* [/app-client](/app-client/readme.md)
   * The default Raido UI that uses api-svc 
-
+* `/doc`
+  * Various high-level technical documentation topics for Raido
+  * [/doc/adr](/doc/adr/readme.md) 
+    * Architecture decision log
+  * [/doc/api-integration](/doc/api-integration/readme.md)
+    * introductory documentation for folks who want to integrate directly with
+    the Raido API
+  * [/doc/architecture](/doc/architecture/raid-architecture.md)
+    * an overview of the Raido architecture and our implementation in AWS
+  * [/doc/code](/doc/code/readme.md)
+    * coding standards/guidelines, etc.
+  * [/doc/development](/doc/development/readme.md)
+    * details and guides for local development
+  * [/doc/security](/doc/security/readme.md)
+    * documentation and overview of the authentication and authorization 
+    processes
 
 # Development
 
