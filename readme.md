@@ -43,7 +43,8 @@ See [raid-architecture.md](./doc/architecture/raid-architecture.md) for a
 high-level view of the system.
 
 There is also a guide to the 
-[operational environment](/doc/architecture/environment/operational-environment.md).
+[operational environment](/doc/architecture/environment/operational-environment.md) 
+which outlines how we use AWS services for the operation of Raido.
 
 
 ## Project structure
