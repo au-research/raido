@@ -54,8 +54,7 @@ There is also a guide to the
 * /
   * the root project contains no production code, it's just the container that
   holds all the other sub-projects
-  * it does contain some build code though, 
-  see: [/buildSrc](./buildSrc)
+  * it does contain some build code though, see: [/buildSrc](./buildSrc)
 * [/api-svc](/api-svc)
   * [/api-svc/db](/api-svc/db)
     * database schema definition, implemented as a series of Flyway migrations
@@ -63,6 +62,8 @@ There is also a guide to the
     * the main API server, implemented as a Spring application
   * [/api-svc/idl-raid-v2](./api-svc/idl-raid-v2/src/readme.md)
     * the OpenAPI definition of the API that the api-svc serves
+  * [/api-svc/load-test](./api-svc/load-test/readme.md)
+    * the load-tests and their results 
 * [/app-client](/app-client)
   * The Raido UI that calls uses api-svc 
 

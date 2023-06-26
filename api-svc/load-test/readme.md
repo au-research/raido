@@ -61,3 +61,8 @@ wrong with Gatling and the tool will try to do the load testing anyway.
 * Does the place you're running the test have a working connection to the
 service?
   * i.e. are there network rules/connectivity getting in the way?
+
+
+# Load test results
+
+See [load-test/doc/log](./doc/log) for a log of load-test runs and their results
