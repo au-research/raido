@@ -49,7 +49,7 @@ which outlines how we use AWS services for the operation of Raido.
 
 ## Project structure
 
-* /
+* `/`
   * the root project contains no production code, it's just the container that
   holds all the other sub-projects
   * it does contain some build code though, see: [/buildSrc](./buildSrc)
