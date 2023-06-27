@@ -14,6 +14,9 @@ bootstrap an api-token that we can then use to generate service-points and
 api-keys for the load test, for example:
 `-DGatlingRaidoServerConfig.apiKeyJwtSecret=$API_KEY_JWT_SECRETS`.
 
+The load-tests use this secret to prepare and sign a fake "boostrap" api-token 
+for an app-user associated with the raido service-point with an OPERATOR role.
+
 The [PrepareServicePoints](/src/gatling/java/raido/loadtest/simulation/PrepareServicePoints.java)
 simulation uses the bootstrapped api-token to set-up the service-points and 
 api-keys that the test will use.
