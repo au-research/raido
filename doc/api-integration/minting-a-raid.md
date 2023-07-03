@@ -85,6 +85,7 @@ prefix with `Bearer ` in the value)
 ```
 curl -v -X POST https://api.demo.raid.org.au/raid/v1 \
   -H "Authorization: Bearer $DEMO_TOKEN" \
+  -H 'Content-Type: application/json' \
   -H 'Accept: application/json' \
   -d '{
   "metadataSchema": "RaidoMetadataSchemaV1",
