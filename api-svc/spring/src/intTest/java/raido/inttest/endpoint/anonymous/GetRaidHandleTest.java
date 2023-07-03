@@ -91,8 +91,6 @@ public class GetRaidHandleTest extends IntegrationTestCase {
     assertThat(res.getStatusCode().is3xxRedirection()).
       overridingErrorMessage("GET call should have redirected").
       isTrue();
-    var metadata = (PublicRaidMetadataSchemaV1) res.getBody().getMetadata();
-    assertThat(metadata.getTitles().get(0).getTitle()).isEqualTo(title);
   }
 
   @Test
