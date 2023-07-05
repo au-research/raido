@@ -1,8 +1,8 @@
 This package is about doing data-exports.
 
-* open-data-export 
+* [open-data-export](#open-data-export) 
   * export public raid data for an entire raid-agency so it can be published
-* closed-data-export
+* [closed-data-export](#closed-data-export)
   * export all raid for for a single service-point so it can be downloaded/used
   directly by the service-point themselves
 
