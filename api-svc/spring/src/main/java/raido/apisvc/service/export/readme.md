@@ -1,13 +1,13 @@
 This package is about doing data-exports.
 
-* [open-data-export](#open-data-export) 
+* [agency-public-data-export](#agency-public-data-export) 
   * export public raid data for an entire raid-agency so it can be published
-* [closed-data-export](#closed-data-export)
+* [sp-private-data-export](#sp-private-data-export)
   * export all raid for for a single service-point so it can be downloaded/used
   directly by the service-point themselves
 
 
-# open-data-export
+# agency-public-data-export
 
 Initiated by a raid-agency to export all data for "open" raids and the 
 publicly available data for "closed" raids (i.e handle, create-date, 
@@ -53,7 +53,7 @@ i.e. indexing the data in a product/service like elastic-search and building
 our own search functionality.
 
   
-# closed-data-export
+# sp-private-data-export
 
 Initiated by a service-point to export all data for raids associated with their
 service-point.

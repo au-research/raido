@@ -4,7 +4,7 @@ package raido.apisvc.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.client.ClientHttpRequestFactory;
-import raido.apisvc.spring.config.ApiConfig;
+import raido.apisvc.spring.bean.Shared;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,6 +77,16 @@ public final class ObjectUtil {
     return result;
   }
 
+  public static void infoLogExecutionTime(
+    Log log, String description, Runnable r
+  ) {
+    infoLogExecutionTime(log, description, ()->{
+      r.run();
+      // hack to adapt our "no return value" wrapper to the real method 
+      return null;
+    });
+  }
+  
   public static <T> List<T> filterType(
     List<?> raw, Class<T> type
   ) {
@@ -152,7 +162,7 @@ public final class ObjectUtil {
    logic could also get fancy with this too, as long as we use `with()`). 
    This is just for usage in the context of `toString()` - wire serialisation 
    for these objects is handled by Spring, 
-   see {@link ApiConfig#restTemplate(ClientHttpRequestFactory)}.
+   see {@link Shared#restTemplate(ClientHttpRequestFactory)}.
    */
   private static ObjectMapper jsonToStringMapper = new ObjectMapper().
     // so it can do LocalDateTime, etc.

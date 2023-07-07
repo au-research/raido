@@ -17,6 +17,7 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import raido.apisvc.spring.StartupListener;
 import raido.apisvc.spring.bean.MetricRegistry;
 import raido.apisvc.spring.config.ApiConfig;
+import raido.apisvc.spring.bean.Shared;
 import raido.apisvc.spring.config.environment.DataSourceProps;
 import raido.apisvc.spring.config.environment.EnvironmentProps;
 import raido.apisvc.util.Log;
@@ -75,12 +76,12 @@ public class IntegrationTestConfig {
 
   @Bean
   public static ClientHttpRequestFactory clientHttpRequestFactory(){
-    return ApiConfig.clientHttpRequestFactory(false);
+    return Shared.clientHttpRequestFactory(false);
   }
 
   @Bean @Primary
   public RestTemplate restTemplate(ClientHttpRequestFactory factory){
-    RestTemplate restTemplate = ApiConfig.restTemplate(factory);
+    RestTemplate restTemplate = Shared.restTemplate(factory);
     restTemplate.setRequestFactory(factory);
     return restTemplate;
   }

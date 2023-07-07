@@ -153,4 +153,8 @@ public class JvmUtil {
     log.info("build-info:\n%s", IoUtil.linesAsString(buildInfo));
   }
 
+  public static boolean isWindowsPlatform() {
+    String os = System.getProperty("os.name").toLowerCase();
+    return os.contains("win");
+  }
 }

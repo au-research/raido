@@ -96,7 +96,9 @@ public abstract class IntegrationTestCase {
   }
   
   public String getName(){
-    return testInfo.getDisplayName();
+    return testInfo.getDisplayName().
+      // the brackets aren't filename safe
+      replaceAll("[()]", "");
   }
   
   /**

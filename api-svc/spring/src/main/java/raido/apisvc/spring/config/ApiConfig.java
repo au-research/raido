@@ -1,43 +1,20 @@
 package raido.apisvc.spring.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import okhttp3.Cache;
-import okhttp3.OkHttpClient;
-import org.springframework.context.annotation.*;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.http.MediaType;
-import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
-import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import raido.apisvc.service.apids.ApidsService;
-import raido.apisvc.service.doi.DoiService;
-import raido.apisvc.service.orcid.OrcidService;
-import raido.apisvc.service.ror.RorService;
-import raido.apisvc.service.stub.apids.InMemoryApidsServiceStub;
-import raido.apisvc.service.stub.doi.InMemoryDoiServiceStub;
-import raido.apisvc.service.stub.orcid.InMemoryOrcidServiceStub;
-import raido.apisvc.service.stub.ror.InMemoryRorServiceStub;
-import raido.apisvc.spring.config.environment.ApidsProps;
-import raido.apisvc.spring.config.environment.EnvironmentProps;
-import raido.apisvc.spring.config.environment.InMemoryStubProps;
 import raido.apisvc.spring.config.http.converter.FormProblemDetailConverter;
 import raido.apisvc.spring.config.http.converter.XmlProblemDetailConverter;
-import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Collections.singletonList;
 import static raido.apisvc.util.Log.to;
 
 @Configuration
@@ -115,91 +92,6 @@ public class ApiConfig implements WebMvcConfigurer {
   private static final Log log = to(ApiConfig.class);
   
   
-
-
-  /**
-   This replaces the default resolver, I was having trouble with ordering and
-   besides - no reason to have the default if it shouldn't be invoked.
-   */
-//  @Bean
-//  public HandlerExceptionResolver handlerExceptionResolver(
-//    @Value("${redactErrorDetails:true}") boolean redactErrorDetails
-//  ) {
-//    return new RedactingExceptionResolver(redactErrorDetails);
-//  }
-
-  /** Without this, @Value annotation don't resolve ${} placeholders */
-  @Bean
-  public static PropertySourcesPlaceholderConfigurer
-  propertySourcesPlaceholderConfigurer() {
-    return new PropertySourcesPlaceholderConfigurer();
-  }
-
-  /*
-   Given that we added WRITE_DATES_AS_TIMESTAMPS for this (which I think was 
-   for the REST API endpoints - I don't understand why we haven't needed to 
-   register JavaTimeModule for this? Like the raidMetadata mapper and the 
-   mapper used by the feign client for integration tests - we had to register
-   the module for those usages, why not here?
-  */
-  @Bean
-  public ObjectMapper objectMapper() {
-    return new ObjectMapper().
-      /* from memory, this was to get the Spring REST API endpoints writing 
-      datetime the way I wanted. */
-      disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).
-      registerModule(new JavaTimeModule());
-  }
-  
-  @Bean
-  public static RestTemplate restTemplate(ClientHttpRequestFactory factory){
-    MappingJackson2XmlHttpMessageConverter xmlConverter =
-      new MappingJackson2XmlHttpMessageConverter();
-    xmlConverter.setSupportedMediaTypes(
-      singletonList(MediaType.APPLICATION_XML) );
-
-    MappingJackson2HttpMessageConverter jsonConverter =
-      new MappingJackson2HttpMessageConverter();
-
-    List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
-    messageConverters.add(xmlConverter);
-    messageConverters.add(jsonConverter);
-    messageConverters.add(new FormHttpMessageConverter());
-
-    RestTemplate restTemplate = new RestTemplate();
-    restTemplate.setMessageConverters(messageConverters);
-    restTemplate.setRequestFactory(factory);
-
-    return restTemplate;
-  }
-
-  @Bean 
-  public static ClientHttpRequestFactory clientHttpRequestFactory(){
-    return clientHttpRequestFactory(true);
-  }
-
-  public static ClientHttpRequestFactory clientHttpRequestFactory(
-    boolean followRedirects
-  ) {
-    OkHttpClient client = new OkHttpClient.Builder().
-      followRedirects(followRedirects).
-      build();
-
-    return new OkHttp3ClientHttpRequestFactory(client) {
-      @Override
-      public void destroy() throws IOException {
-        /* copy pasted from the spring impl, because it won't do this for a 
-        provide client. */
-        Cache cache = client.cache();
-        if( cache != null ){
-          cache.close();
-        }
-        client.dispatcher().executorService().shutdown();
-        client.connectionPool().evictAll();
-      }
-    };
-  }
-  
   /* Not sure if we should be using "configure" or "extend".  AFAIK, this here
   is resetting the default converters, so this converter is the only one.
   Does this mean our server doesn't support other content types?
@@ -231,79 +123,7 @@ public class ApiConfig implements WebMvcConfigurer {
 //    converters.add(PublicExperimental.getHtmlStringConverter());
   }
   
-  @Bean @Primary
-  public ApidsService apidsService(
-    EnvironmentProps envConfig,
-    InMemoryStubProps stubProps,
-    ApidsProps apidsConfig,
-    RestTemplate rest
-  ){
-    /* IMPROVE: I'm fairly sure I'm not doing this the "spring way" */
-    if( stubProps.apidsInMemoryStub ){
-      Guard.isTrue("Cannot use InMemoryApidsServiceStub in a PROD env",
-        !envConfig.isProd);
-      log.with("apidsInMemoryStubDelay", stubProps.apidsInMemoryStubDelay).
-        warn("using the in-memory ORCID service");
-      return new InMemoryApidsServiceStub(stubProps, envConfig);
-    }
 
-    /* now we aren't forced to set the secret if we're not using the real 
-    APIDS service - unexpected benefit! */
-    Guard.allHaveValue("must set ApidsProps values",
-      apidsConfig.secret, apidsConfig.appId, apidsConfig.serviceUrl);
-    return new ApidsService(apidsConfig, rest);
-  }
-    
-  @Bean @Primary
-  public OrcidService orcidService(
-    EnvironmentProps envConfig,
-    InMemoryStubProps stubProps,
-    RestTemplate rest
-  ){
-    if( stubProps.orcidInMemoryStub ){
-      Guard.isTrue("Cannot use InMemoryOrcidServiceStub in a PROD env",
-        !envConfig.isProd);
-      log.with("orcidInMemoryStubDelay", stubProps.orcidInMemoryStubDelay).
-        warn("using the in-memory ORCID service");
-      return new InMemoryOrcidServiceStub(stubProps);
-    }
-    
-    return new OrcidService(rest);
-  }
-  
-  @Bean @Primary
-  public RorService rorService(
-    EnvironmentProps envConfig,
-    InMemoryStubProps stubProps,
-    RestTemplate rest
-  ){
-    if( stubProps.rorInMemoryStub ){
-      Guard.isTrue("Cannot use InMemoryRorServiceStub in a PROD env",
-        !envConfig.isProd);
-      log.with("rorInMemoryStubDelay", stubProps.rorInMemoryStubDelay).
-        warn("using the in-memory ROR service");
-      return new InMemoryRorServiceStub(stubProps);
-    }
-    
-    return new RorService(rest);
-  }
-
-
-  @Bean @Primary
-  public DoiService doiService(
-    EnvironmentProps envConfig,
-    InMemoryStubProps stubProps,
-    RestTemplate rest
-  ){
-    if( stubProps.doiInMemoryStub ){
-      Guard.isTrue("Cannot use InMemoryDoiServiceStub in a PROD env",
-        !envConfig.isProd);
-      log.warn("using the in-memory DOI service");
-      return new InMemoryDoiServiceStub(stubProps);
-    }
-
-    return new DoiService(rest);
-  }
 }
 
 

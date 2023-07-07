@@ -11,3 +11,7 @@ build/
 
 # output from checking import files
 *.error.json
+
+# data exports just drop files in the CWD if you run them via IDE
+# IDEA defaults the CWD to project root
+all-raids.ndjson

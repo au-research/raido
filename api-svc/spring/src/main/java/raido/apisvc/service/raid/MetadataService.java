@@ -27,7 +27,9 @@ import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.ExceptionUtil.ise;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.areEqual;
-import static raido.db.jooq.api_svc.enums.Metaschema.*;
+import static raido.db.jooq.api_svc.enums.Metaschema.legacy_metadata_schema_v1;
+import static raido.db.jooq.api_svc.enums.Metaschema.raido_metadata_schema_v1;
+import static raido.db.jooq.api_svc.enums.Metaschema.raido_metadata_schema_v2;
 import static raido.idl.raidv2.model.RaidoMetaschema.LEGACYMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.RaidoMetaschemaV2.RAIDOMETADATASCHEMAV2;
@@ -254,67 +256,61 @@ public class MetadataService {
     return metaProps;
   }
   
-  public PublicReadRaidResponseV3 mapRaidoV1SchemaToPublic(ReadRaidV2Data data){
-    var metadata = mapV1SchemaMetadata(data.raid());
+  public PublicReadRaidMetadataResponseV1 mapRaidoV1SchemaToPublicMetadata(
+    RaidRecord raid
+  ){
+    var metadata = mapV1SchemaMetadata(raid);
     if( metadata.getAccess().getType() != AccessType.OPEN ){
-      return mapToPublicClosed(
-        data.raid(), metadata.getId(), metadata.getAccess());
+      return mapToPublicClosedMetadata(
+        raid, metadata.getId(), metadata.getAccess());
     }
 
-    return new PublicReadRaidResponseV3().
-      handle(data.raid().getHandle()).
-      createDate(local2Offset(data.raid().getDateCreated())).
-      servicePointId(data.servicePoint().getId()).
-      servicePointName(data.servicePoint().getName()).
-      metadata(new PublicRaidMetadataSchemaV1().
-        // metadataSchema set by OpenAPI from the class type
-        id(metadata.getId()).
-        titles(metadata.getTitles()).
-        dates(metadata.getDates()).
-        descriptions(metadata.getDescriptions()).
-        access(metadata.getAccess()).
-        alternateUrls(metadata.getAlternateUrls()).
-        contributors(metadata.getContributors()).
-        organisations((metadata.getOrganisations())).
-        subjects(metadata.getSubjects()).
-        relatedRaids(metadata.getRelatedRaids()).
-        relatedObjects(metadata.getRelatedObjects()).
-        alternateIdentifiers(metadata.getAlternateIdentifiers()).
-        spatialCoverages(metadata.getSpatialCoverages()).
-        traditionalKnowledgeLabels(metadata.getTraditionalKnowledgeLabels())
-      );
+    return new PublicRaidMetadataSchemaV1().
+      // metadataSchema set by OpenAPI from the class type
+      id(metadata.getId()).
+      titles(metadata.getTitles()).
+      dates(metadata.getDates()).
+      descriptions(metadata.getDescriptions()).
+      access(metadata.getAccess()).
+      alternateUrls(metadata.getAlternateUrls()).
+      contributors(metadata.getContributors()).
+      organisations((metadata.getOrganisations())).
+      subjects(metadata.getSubjects()).
+      relatedRaids(metadata.getRelatedRaids()).
+      relatedObjects(metadata.getRelatedObjects()).
+      alternateIdentifiers(metadata.getAlternateIdentifiers()).
+      spatialCoverages(metadata.getSpatialCoverages()).
+      traditionalKnowledgeLabels(metadata.getTraditionalKnowledgeLabels())
+    ;
   }
 
-  public PublicReadRaidResponseV3 mapRaidoV2SchemaToPublic(ReadRaidV2Data data){
-    var metadata = mapV2SchemaMetadata(data.raid());
+  public PublicReadRaidMetadataResponseV1 mapRaidoV2SchemaToPublicMetadata(
+    RaidRecord raid
+  ){
+    var metadata = mapV2SchemaMetadata(raid);
     if( metadata.getAccess().getType() != AccessType.OPEN ){
-      return mapToPublicClosed(
-              data.raid(), metadata.getId(), metadata.getAccess());
+      return mapToPublicClosedMetadata(
+        raid, metadata.getId(), metadata.getAccess() );
     }
 
-    return new PublicReadRaidResponseV3().
-            handle(data.raid().getHandle()).
-            createDate(local2Offset(data.raid().getDateCreated())).
-            servicePointId(data.servicePoint().getId()).
-            servicePointName(data.servicePoint().getName()).
-            metadata(new PublicRaidMetadataSchemaV1().
-                    // metadataSchema set by OpenAPI from the class type
-                            id(metadata.getId()).
-                    titles(metadata.getTitles()).
-                    dates(metadata.getDates()).
-                    descriptions(metadata.getDescriptions()).
-                    access(metadata.getAccess()).
-                    alternateUrls(metadata.getAlternateUrls()).
-                    contributors(metadata.getContributors()).
-                    organisations((metadata.getOrganisations()))
-            );
+    return new PublicRaidMetadataSchemaV1().
+      // metadataSchema set by OpenAPI from the class type
+      id(metadata.getId()).
+      titles(metadata.getTitles()).
+      dates(metadata.getDates()).
+      descriptions(metadata.getDescriptions()).
+      access(metadata.getAccess()).
+      alternateUrls(metadata.getAlternateUrls()).
+      contributors(metadata.getContributors()).
+      organisations((metadata.getOrganisations()))
+    ;
   }
 
-  public PublicReadRaidResponseV3 mapToPublicClosed(
+  public PublicReadRaidMetadataResponseV1 mapToPublicClosedMetadata(
     RaidRecord raid,
     IdBlock id,
     AccessBlock access
-  ){
+  ) {
     if( access.getType() == AccessType.OPEN ){
       var ex = ise("attempted to map open raid to ClosedSchema");
       log.with("handle", raid.getHandle()).
@@ -323,43 +319,81 @@ public class MetadataService {
         error(ex.getMessage());
       throw ise("access type mismatch between column and json");
     }
-    
-    return new PublicReadRaidResponseV3().
-      handle(raid.getHandle()).
-      createDate(local2Offset(raid.getDateCreated())).
-      metadata(new PublicClosedMetadataSchemaV1().
-        /* metadataSchema ignored because of the `@JsonIgnoreProperties` on 
-        `PublicReadRaidMetadataResponseV1`.  The value sent down the wire 
-        comes from the `@JsonSubTypes` depending on the class type. */
-        id(id).
-        access(access) 
-      );
 
+    return new PublicClosedMetadataSchemaV1().
+      /* metadataSchema ignored because of the `@JsonIgnoreProperties` on 
+      `PublicReadRaidMetadataResponseV1`.  The value sent down the wire 
+      comes from the `@JsonSubTypes` depending on the class type. */
+        id(id).
+      access(access);
   }
   
-  public PublicReadRaidResponseV3 mapLegacySchemaToPublic(ReadRaidV2Data data){
-    var metadata = mapLegacyMetadata(data.raid());
+  public PublicReadRaidMetadataResponseV1 mapLegacySchemaToPublicMetadata(
+    RaidRecord raid
+  ) {
+    var metadata = mapLegacyMetadata(raid);
 
     if( metadata.getAccess().getType() != AccessType.OPEN ){
-      return mapToPublicClosed(
-        data.raid(), metadata.getId(), metadata.getAccess());
+      return mapToPublicClosedMetadata(
+        raid, metadata.getId(), metadata.getAccess());
     }
 
+    return new PublicRaidMetadataSchemaV1().
+      // metadataSchema set by OpenAPI from the class type
+      id(metadata.getId()).
+      titles(metadata.getTitles()).
+      dates(metadata.getDates()).
+      descriptions(metadata.getDescriptions()).
+      access(metadata.getAccess()).
+      alternateUrls(metadata.getAlternateUrls())
+      // invalid because no contrib
+    ;
+  }
+
+  public PublicReadRaidResponseV3 mapPublicReadResponse(
+    ReadRaidV2Data data
+  ) {
+    var metadata = mapPublicReadMetadataResponse(data.raid());
+    
+    if( data.raid().getConfidential() ){
+      return new PublicReadRaidResponseV3().
+        handle(data.raid().getHandle()).
+        createDate(local2Offset(data.raid().getDateCreated())).
+        // we don't populate the service-point data for closed
+        metadata(metadata);
+    }
+    
     return new PublicReadRaidResponseV3().
       handle(data.raid().getHandle()).
       createDate(local2Offset(data.raid().getDateCreated())).
       servicePointId(data.servicePoint().getId()).
       servicePointName(data.servicePoint().getName()).
-      metadata(new PublicRaidMetadataSchemaV1().
-        // metadataSchema set by OpenAPI from the class type
-        id(metadata.getId()).
-        titles(metadata.getTitles()).
-        dates(metadata.getDates()).
-        descriptions(metadata.getDescriptions()).
-        access(metadata.getAccess()).
-        alternateUrls(metadata.getAlternateUrls())
-        // invalid because no contrib
-      );
+      metadata(metadata);
   }
+
+  public PublicReadRaidMetadataResponseV1 mapPublicReadMetadataResponse(
+    RaidRecord raid
+  ) {
+    Metaschema schema = raid.getMetadataSchema();
+
+    if( schema == legacy_metadata_schema_v1 ){
+      return mapLegacySchemaToPublicMetadata(raid);
+    }
+
+    if( schema == raido_metadata_schema_v1 ){
+      return mapRaidoV1SchemaToPublicMetadata(raid);
+    }
+
+    if( schema == raido_metadata_schema_v2 ){
+      return mapRaidoV2SchemaToPublicMetadata(raid);
+    }
+
+    var ex = ise("unknown raid schema");
+    log.with("schema", schema).
+      with("handle", raid.getHandle()).
+      error(ex.getMessage());
+    throw ex;
+  }
+  
 }
 
