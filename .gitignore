@@ -14,4 +14,4 @@ build/
 
 # data exports just drop files in the CWD if you run them via IDE
 # IDEA defaults the CWD to project root
-all-raids.ndjson
+public-export-all-raids.ndjson

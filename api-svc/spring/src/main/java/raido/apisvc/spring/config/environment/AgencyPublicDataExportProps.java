@@ -5,7 +5,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AgencyPublicDataExportProps {
-  @Value("${AgencyPublicDataExport.allRaidsFilename:all-raids.ndjson}")
+  @Value("${AgencyPublicDataExport.allRaidsFilename:" +
+    "public-export-all-raids.ndjson}")
   public String allRaidsFilename;
 
   @Value("${AgencyPublicDataExport.fetchSize:500}")

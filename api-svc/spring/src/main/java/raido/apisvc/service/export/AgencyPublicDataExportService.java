@@ -55,6 +55,11 @@ public class AgencyPublicDataExportService {
   */
   @Transactional
   /**
+   IMPROVE: rather than passing in before/after and other conditions, might
+   makes sense to factor out a Condition param, callers can then setup 
+   whatever conditions they want and this method can just focus on iteration
+   and writing the data.
+   
    @param after may be null, in which case no restriction
    @param before may be null, in which case no restriction
    @param maxRows may be null, in which case all rows are exported

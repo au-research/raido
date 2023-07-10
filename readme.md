@@ -75,6 +75,8 @@ which outlines how we use AWS services for the operation of Raido.
     * an overview of the Raido architecture and our implementation in AWS
   * [/doc/code](/doc/code/readme.md)
     * coding standards/guidelines, etc.
+  * [/doc/data-export](/doc/data-export/)
+    * details about data exports
   * [/doc/development](/doc/development/readme.md)
     * details and guides for local development
   * [/doc/security](/doc/security/readme.md)
