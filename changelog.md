@@ -14,7 +14,8 @@ _Not yet scheduled_
 
 ## Infrastructure
 * AgencyPublicDataExport - see [/doc/data-export](/doc/data-export).
-
+* moved docker build project from api-svc/docker to api-svc/docker/ecs
+** DEMO env is updated and deployed, but PROD infra must be updated
 
 ---
 
