@@ -10,7 +10,7 @@
 
 ## Build the container image
 
-* run Gradle task `raido:api-svc:docker:dockerBuild`
+* run Gradle task `raido:api-svc:docker:ecs:ecsDockerBuild`
 * note the image name
   * e.g. "#12 naming to docker.io/library/raido-api-svc:f353110.dirty done"
     * "raido-api-svc:f353110.dirty"
@@ -31,7 +31,7 @@
   * add a path mapping so the container can find your local config files
     * VM path = `~/.config/raido`
       * this matches the Spring config in 
-      [ApiConfig.java](../spring/src/main/java/raido/apisvc/spring/config/ApiConfig.java)
+      [ApiConfig.java](../../spring/src/main/java/raido/apisvc/spring/config/ApiConfig.java)
     * local path = `c:\Users\username\.config\raido`
       * i.e your local dir that contains config files like 
       `api-svc-env.properties` 
@@ -63,5 +63,5 @@ docker rm --force sto-test-raido; \
 
 * to see logs from the container
   * `docker logs sto-test-raido`
-* to hit the verison url
+* to hit the version url
   * `curl localhost:8042/v2/public/version`
