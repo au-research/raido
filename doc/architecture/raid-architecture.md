@@ -1,9 +1,19 @@
 This is a high-level view of the architecture.
 
-The Raido stuff exists and is "current state".
+The Raido system is operated by the ARDC (as the "ARDC RAiD Service") in our 
+role as one of many regional registration-agencies for the RAiD standard.
 
-The Raid stuff is in "prototype" stage, it is managed out of a separate 
+The Raid system is operated by the ARDC in our role as the singular 
+registration-authority for the RAiD standard. 
+
+The Raid system is currently in "prototype" stage, it is managed out of a separate 
 repository: https://github.com/au-research/raid-aws-private
+
+The Lambda implementation for the redirect functionality is a stop-gap measure, 
+it was the simplest way to get something up and running.  It is envisioned that
+in the future, as the global raid infrastructure becomes more complicated - it 
+will likely be re-written in a technology stack similar to raido so that it 
+is suitable for operation, maintenance and support by the ARDC.
 
 At the moment, the raid infrastructure supports resolving a raid:
 * if using a browser, it will redirect to the anonymous landing page of the 

@@ -22,10 +22,8 @@ System_Ext(DoiSvc, "DOI Service", "[DOI]")
 
 
 System_Boundary(raidC1, "Raid") {
-  Container(PubClient, "pub-client", "any web tech\ncurrently uses app-client") 
-  
   Container(RaidWebServer, "web server", "Cloudfront") 
-  Container(RaidApiSvc, "raid-api-svc", "Spring REST API") 
+  Container(RaidApiSvc, "raid-api-svc", "AWS Lambda") 
 }
 
 
@@ -39,14 +37,13 @@ System_Boundary(raidoC1, "Raido") {
 
  
 
-Rel(PublicUser, PubClient, "Uses", "in browser")
+Rel(PublicUser, RaidWebServer, "Uses", "in browser")
 Rel(SpUser, AppClient, "Uses", "in browser")
 Rel(SpUser, IdProvider, "Identifies with", "HTTPS/OAuth2")
 Rel(AppClient, RaidoWebServer, "Uses", "HTTPS")
-Rel(PubClient, RaidWebServer, "Uses", "HTTPS")
 Rel(RaidoWebServer, RaidoApiSvc, "Uses", "HTTPS")
 Rel(RaidWebServer, RaidApiSvc, "Uses", "HTTPS")
-Rel(RaidApiSvc, RaidoApiSvc, "read", "HTTPS")
+Rel(RaidApiSvc, RaidoWebServer, "redirect", "HTTPS")
 Rel(SpInt, RaidoWebServer, "Uses", "HTTPS")
 Rel(RaidoApiSvc, db, "read/write", "postgres:5432")
 Rel(RaidoApiSvc, LocalHdlSvc, "mint", "HTTPS")
