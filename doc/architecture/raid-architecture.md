@@ -1,10 +1,17 @@
 This is a high-level view of the architecture.
-The diagram is a a mix of "current state" and "future state" as at 2023-02-06.
 
 The Raido stuff exists and is "current state".
-The Raid stuff does not exist yet; in the medium to long term, the components
-of the "Raid system" will likely be managed in a separate repository to this
-one. 
+
+The Raid stuff is in "prototype" stage, it is managed out of a separate 
+repository: https://github.com/au-research/raid-aws-private
+
+At the moment, the raid infrastructure supports resolving a raid:
+* if using a browser, it will redirect to the anonymous landing page of the 
+  registration-agency for that raid
+* if using an API (e.g. curl request) it will redirect to the anonymous resolve 
+  endpoint of the raid-agency for that raid
+* the logic to choose the registration-agency landing page is based on the raid 
+  handle prefix
 
 See the [raid-vs-raido.md](/doc/raid-vs-raido.md) for a description of 
 the difference between Raid and Raido.
