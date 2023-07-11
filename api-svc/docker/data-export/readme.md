@@ -20,3 +20,6 @@ docker run --rm --name raido-public-data-export \
   -e "API_USER_PASSWORD=xxx" \
   raido-public-data-export:latest
 ```
+
+I ran the above using git bash - hence the strange windows path with forward 
+slashes. 
