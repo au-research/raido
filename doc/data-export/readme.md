@@ -1,4 +1,10 @@
-To run, invoke the main method from
+The export is run as a docker container via  CodeBuild project, see:
+* [/api-svc/docker/data-export](/api-svc/docker/data-export)
+* [AgencyPublicDataExport](https://github.com/au-research/raido-v2-aws-private/blob/main/raido-root/lib/demo/raido/RaidoDbCodeBuild.ts)
+
+---
+
+To run locally via IDE or similar, invoke the main method from
 [AgencyPublicDataExport](/api-svc/spring/src/main/java/raido/export/AgencyPublicDataExport.java).
 
 To configure general spring properties, set env variables or config
@@ -7,13 +13,5 @@ defined by the various beans in the
 [environment](/api-svc/spring/src/main/java/raido/apisvc/spring/config/environment/)
 package.
 
-Unfortunately, because we're booting most of our spring beans except the web
-stuff - it means some of the configuration checks will required you to set
-values for "mandatory" properties, even though the export may not currently use
-that functionality.
-
 When running in a local dev environment, the export will just pick up your usual
 config from your `~/.config/raido` files - assuming you run that way.
-
-When running as a codebuild, we provide fake values for config that is not
-currently used, see codebuild project in DEMO for an example.
