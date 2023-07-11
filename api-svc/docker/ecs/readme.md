@@ -1,6 +1,8 @@
 This project is for building a container that runs the api-svc as web server.
 It also contains gradle tasks for tagging/pushing the container image to ECR. 
 
+---
+
 # Running container locally
 
 
