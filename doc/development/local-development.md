@@ -2,15 +2,15 @@
 # Local build/development pre-requisites
 
 
-* [JDK 17](./doc/adr/2022-07-21_jdk-platform.md)
+* [JDK 17](../adr/2022-07-21_jdk-platform.md)
   * The specific version we use for deployment is declared in the api-svc
-  [dockerfile](https://github.com/au-research/raido/blob/main/api-svc/docker/src/main/docker/Dockerfile#L9)
+  [dockerfile](https://github.com/au-research/raido/blob/main/api-svc/docker/ecs/src/main/docker/Dockerfile#L19)
   * We use the Amazon Corretto JDK, but any version 17+ JDK should work
   * There are many ways to install JDK's depending on your environment
     * one simple way is to download a simple zip file and keep it local to your
     environment.  You can also download installation packages, or use your 
     local system's package deployment method.
-* [Node.js 16](./doc/adr/2022-07-21_nodejs-platform.md)
+* [Node.js 16](../adr/2022-07-21_nodejs-platform.md)
   * https://nodejs.org/en/download/
 
 
@@ -36,32 +36,32 @@
 
 ## Create database
 
-Database [readme](../api-svc/db/readme.md) section "Running a local DB for 
+Database [readme](/api-svc/db/readme.md) section "Running a local DB for 
 development".
 
 ## Configure build scripts to know about your database
 
-Database [readme](../api-svc/db/readme.md) section "Configuring 
+Database [readme](/api-svc/db/readme.md) section "Configuring 
 `api-svc-db.gradle`".
 
 ## Create Database schema
 
-Follow the api-svc [readme](../api-svc/readme.md) section "Running for local 
+Follow the api-svc [readme](/api-svc/readme.md) section "Running for local 
 development".
 
 ## Configure api-svc
 
-Follow the spring [readme](../api-svc/spring/readme.md) section "Configuring 
+Follow the spring [readme](/api-svc/spring/readme.md) section "Configuring 
 `api-svc-env.properties`".
 
 ## Run the api-svc
 
-Follow the spring [readme](../api-svc/spring/readme.md) sections 
+Follow the spring [readme](/api-svc/spring/readme.md) sections 
 "Running `Api.main()` from IDE" or "Running `Api.main()` from command line".
 
 ## Run the development Node.js web server
 
-Follow the app-client [readme](../app-client/readme.md) sections
+Follow the app-client [readme](/app-client/readme.md) sections
 "Running a local Node.js server in IDEA" or 
 "Running a local Node.js server from command line".
 
