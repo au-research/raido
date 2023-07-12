@@ -10,27 +10,10 @@ Look at the multiple url stuff for supporting creating and editing on
 ApiKeyPage.
 
 
-## app-client error handling needs work
-
-The error display page (ErrorDialog, not CompactErrorPanel) needs to provide
-better user instructions and components for users to get out of error states
-caused by stuff like:
-* token being expired - the authContext picks this up when loading the page,
-  but we're not dealing with the page being open for N hours.
-  * need token refresh logic
-  * or at least a sign-out/refresh button
-* some change in server data causing unexpected issues
-  * user is currently on an SP_ADMIN page, but has been demoted to SP_USER
-causing data synch issue)
-
-Might be a good idea to do this in concert with fixing up the api-svc error
-handling.
-
-
 ## should not use the main app-client for presenting the raid landing page
 
-It's way bigger than necessary.  I think it would be better to have that 
-specific page generated using a completely different technology. 
+It's way bigger (200+ KB) than necessary.  I think it would be better to have 
+that specific page generated using a completely different technology. 
 The page should be mostly static, it doesn't need interactivity.
 
 I think the page should be pre-generated, or maybe we should serve it through
@@ -106,7 +89,7 @@ awkwardness with `Void` may not turn out to be much of an issue.
 ## Current API is very "un-REST-ful"
 
 We need a "REST API" guidelines policy, similar to the 
-[DB schema guidelines](../api-svc/db/raido/doc/schema-guideline.md).
+[DB schema guidelines](/api-svc/db/raido/doc/schema-guideline.md).
 
 Randomly structured endpoints for experimental stuff is fine - but we need to 
 be more rigorous for the stable endpoints.
@@ -153,25 +136,6 @@ But do we want to add CORS headers in case people want to call from browser?
 Like I want to do for orcid?
 Do we really want to enable this?  Our API will get abused like hell (just like
 I want to abuse the orcid API).
-
-## CodeBuild projects pull from Docker anonymously
-
-That means we sometimes see errors from docker about:
-`Step 1/11 : FROM amazonlinux:2.0.20220218.1
-toomanyrequests: You have reached your pull rate limit. You may increase the limit by authenticating and upgrading: https://www.docker.com/increase-rate-limit`
-
-There's a few different ways to address it:
-https://cloudkatha.com/too-many-requests-you-reached-pull-rate-limit/
-
-Reckon the easiest would be to make another codebuild project whose job it
-is to push the image to our ECR.
-
-## Get rid of old api-svc/docker stuff
-
-We're not pulling back from ECS at this point.
-Rename the Ecs.Dockerfile to just Docker file and clean up old 
-"container-on-instance" support scripts.
-
 
 # AWS / Infra
 
