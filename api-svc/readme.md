@@ -50,11 +50,13 @@ AWS RDS maintenance window:
 * setup the postgres DB as described in [db/readme.md](./db/readme.md)
 * create the database schemas
   * in the root directory of the git repo 
-  * run `./gradlew :api-svc:db:raido:flywayMigrate`
-  * the migration will create the `api_user`, but the user is disabled 
-because it has no password
-* connect to your local database and run the following to set a password
-  * `alter user api_user password ''` (supply your own password)
+  * run `./gradlew flywayMigrate`
+    * this command will create the schema for two schemata: 
+    `api_svc` and `raid_v1_import`
+    * the schema creation will also have created a user named `api_user`, using 
+    the password being set from the value you previously configured in 
+    `api-svc-db.gradle` as `apiSvcRolePassword`
+  * run `./gradlew flywayInfo` to see the results of the migration tasks
 * see [spring/readme.md](./spring/readme.md) for instructions on running the
   actual server, including configuring the password for the `api_user`
 
@@ -74,17 +76,27 @@ service point.
 The list of "auto-approved" users is stored in the `raido_operator` table:
 * rows are inserted for all environments (including PROD) via standard flyway
   migration (e.g. [V4__sign_in_tables.sql](./db/raido/src/main/resources/db/migration/V4__sign_in_tables.sql) 
-* DEMO environment: [V4_1__surf_operators.sql](./db/raido/src/main/resources/db/env/demo/V4_1__surf_operators.sql)
+* DEMO environment: [V8_1__DEMO_surf_operators.sql](./db/raido/src/main/resources/db/env/demo/V8_1__DEMO_surf_operators.sql)
 
-If you've done it right, you should get an alert dialog telling you you've been
-auto-approved immediately after hitting the submit button.
+For new devs, add a file like `env/demo/V16_2__DEMO_first_last.sql`: 
+```
+insert into raido_operator
+values ('first.last@ardc.edu.au')
+on conflict do nothing;
+```
+
+For the flyway version number, set it based off whatever the main flyway 
+migration is up to or you'll get an "out of order" execution error.  
+
+If you've done it right; when you sign-in to Google and then create an 
+authz-request using that email address - you should get a browser alert dialog 
+saying that you've been auto-approved after hitting the submit button.
 
 
 # Importing legacy data for use in local environment
 This is optional (and the data files are not publicly available) - it's not 
 necessary for just running Raido. 
 
-Import the raid V1 data
-  * run `./gradlew :api-svc:db:v1-ddb-migration:flywayMigrate`
+Import the raid V1 data into the `raid_v1_import` schema:
   * see [v1-ddb-migration/readme.md](./db/v1-ddb-migration/readme.md)
 
