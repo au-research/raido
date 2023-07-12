@@ -88,9 +88,10 @@ on conflict do nothing;
 For the flyway version number, set it based off whatever the main flyway 
 migration is up to or you'll get an "out of order" execution error.  
 
-If you've done it right; when you sign-in to Google and then create an 
-authz-request using that email address - you should get a browser alert dialog 
-saying that you've been auto-approved after hitting the submit button.
+If you've done it right; when you sign-in (currently must be using Google IDP 
+and `raido` service-point) then create an authz-request using that email 
+address - you should get a browser alert dialog saying that you've been 
+auto-approved after hitting the submit button.
 
 
 # Importing legacy data for use in local environment
