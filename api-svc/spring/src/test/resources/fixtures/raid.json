@@ -35,18 +35,18 @@
   "contributors": [
     {
       "id": "0000-0002-4368-8058",
-      "identifierSchemeUri": "https://orcid.org/",
+      "schemeUri": "https://orcid.org/",
       "positions": [
         {
-          "positionSchemaUri": "https://raid.org/",
-          "position": "Leader",
+          "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1",
+          "position": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
           "startDate": "2020-10-07"
         }
       ],
       "roles": [
         {
-          "roleSchemeUri": "https://credit.niso.org/",
-          "role": "project-administration"
+          "schemeUri": "https://credit.niso.org",
+          "role": "https://credit.niso.org/contributor-roles/project-administration/"
         }
       ]
     }

@@ -45,9 +45,9 @@ public class DescriptionType extends TableImpl<DescriptionTypeRecord> {
     public final TableField<DescriptionTypeRecord, Integer> SCHEME_ID = createField(DSL.name("scheme_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
-     * The column <code>api_svc.description_type.name</code>.
+     * The column <code>api_svc.description_type.uri</code>.
      */
-    public final TableField<DescriptionTypeRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<DescriptionTypeRecord, String> URI = createField(DSL.name("uri"), SQLDataType.VARCHAR.nullable(false), this, "");
 
     private DescriptionType(Name alias, Table<DescriptionTypeRecord> aliased) {
         this(alias, aliased, null);

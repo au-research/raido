@@ -8,7 +8,6 @@ import org.jooq.Field;
 import org.jooq.Record2;
 import org.jooq.Row2;
 import org.jooq.impl.UpdatableRecordImpl;
-
 import raido.db.jooq.api_svc.tables.AccessType;
 
 
@@ -36,17 +35,17 @@ public class AccessTypeRecord extends UpdatableRecordImpl<AccessTypeRecord> impl
     }
 
     /**
-     * Setter for <code>api_svc.access_type.name</code>.
+     * Setter for <code>api_svc.access_type.uri</code>.
      */
-    public AccessTypeRecord setName(String value) {
+    public AccessTypeRecord setUri(String value) {
         set(1, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.access_type.name</code>.
+     * Getter for <code>api_svc.access_type.uri</code>.
      */
-    public String getName() {
+    public String getUri() {
         return (String) get(1);
     }
 
@@ -80,7 +79,7 @@ public class AccessTypeRecord extends UpdatableRecordImpl<AccessTypeRecord> impl
 
     @Override
     public Field<String> field2() {
-        return AccessType.ACCESS_TYPE.NAME;
+        return AccessType.ACCESS_TYPE.URI;
     }
 
     @Override
@@ -90,7 +89,7 @@ public class AccessTypeRecord extends UpdatableRecordImpl<AccessTypeRecord> impl
 
     @Override
     public String component2() {
-        return getName();
+        return getUri();
     }
 
     @Override
@@ -100,7 +99,7 @@ public class AccessTypeRecord extends UpdatableRecordImpl<AccessTypeRecord> impl
 
     @Override
     public String value2() {
-        return getName();
+        return getUri();
     }
 
     @Override
@@ -111,7 +110,7 @@ public class AccessTypeRecord extends UpdatableRecordImpl<AccessTypeRecord> impl
 
     @Override
     public AccessTypeRecord value2(String value) {
-        setName(value);
+        setUri(value);
         return this;
     }
 
@@ -136,10 +135,10 @@ public class AccessTypeRecord extends UpdatableRecordImpl<AccessTypeRecord> impl
     /**
      * Create a detached, initialised AccessTypeRecord
      */
-    public AccessTypeRecord(Integer schemeId, String name) {
+    public AccessTypeRecord(Integer schemeId, String uri) {
         super(AccessType.ACCESS_TYPE);
 
         setSchemeId(schemeId);
-        setName(name);
+        setUri(uri);
     }
 }

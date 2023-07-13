@@ -35,17 +35,17 @@ public class TitleTypeRecord extends UpdatableRecordImpl<TitleTypeRecord> implem
     }
 
     /**
-     * Setter for <code>api_svc.title_type.name</code>.
+     * Setter for <code>api_svc.title_type.uri</code>.
      */
-    public TitleTypeRecord setName(String value) {
+    public TitleTypeRecord setUri(String value) {
         set(1, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.title_type.name</code>.
+     * Getter for <code>api_svc.title_type.uri</code>.
      */
-    public String getName() {
+    public String getUri() {
         return (String) get(1);
     }
 
@@ -79,7 +79,7 @@ public class TitleTypeRecord extends UpdatableRecordImpl<TitleTypeRecord> implem
 
     @Override
     public Field<String> field2() {
-        return TitleType.TITLE_TYPE.NAME;
+        return TitleType.TITLE_TYPE.URI;
     }
 
     @Override
@@ -89,7 +89,7 @@ public class TitleTypeRecord extends UpdatableRecordImpl<TitleTypeRecord> implem
 
     @Override
     public String component2() {
-        return getName();
+        return getUri();
     }
 
     @Override
@@ -99,7 +99,7 @@ public class TitleTypeRecord extends UpdatableRecordImpl<TitleTypeRecord> implem
 
     @Override
     public String value2() {
-        return getName();
+        return getUri();
     }
 
     @Override
@@ -110,7 +110,7 @@ public class TitleTypeRecord extends UpdatableRecordImpl<TitleTypeRecord> implem
 
     @Override
     public TitleTypeRecord value2(String value) {
-        setName(value);
+        setUri(value);
         return this;
     }
 
@@ -135,10 +135,10 @@ public class TitleTypeRecord extends UpdatableRecordImpl<TitleTypeRecord> implem
     /**
      * Create a detached, initialised TitleTypeRecord
      */
-    public TitleTypeRecord(Integer schemeId, String name) {
+    public TitleTypeRecord(Integer schemeId, String uri) {
         super(TitleType.TITLE_TYPE);
 
         setSchemeId(schemeId);
-        setName(name);
+        setUri(uri);
     }
 }

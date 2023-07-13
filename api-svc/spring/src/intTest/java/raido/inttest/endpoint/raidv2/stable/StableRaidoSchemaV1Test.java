@@ -6,12 +6,11 @@ import raido.idl.raidv2.model.*;
 import raido.inttest.IntegrationTestCase;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
-import static raido.idl.raidv2.model.ContributorPositionRaidMetadataSchemaType.LEADER;
-import static raido.idl.raidv2.model.ContributorRoleCreditNisoOrgType.SOFTWARE;
 import static raido.idl.raidv2.model.OrganisationRoleType.LEAD_RESEARCH_ORGANISATION;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 import static raido.inttest.util.MinimalRaidTestData.*;
@@ -34,6 +33,18 @@ public class StableRaidoSchemaV1Test extends IntegrationTestCase {
   private static final String DESCRIPTION_TYPE_SCHEME_URI =
     "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1";
 
+  private static final String CONTRIBUTOR_SCHEME_URI = "https://orcid.org/";
+
+  private static final String CONTRIBUTOR_POSITION_SCHEME_URI =
+    "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1";
+
+  private static final String LEADER_POSITION =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json";
+
+  private static final String CONTRIBUTOR_ROLE_SCHEME_URI = "https://credit.niso.org/";
+
+  private static final String SOFTWARE_ROLE =
+    "https://credit.niso.org/contributor-roles/software/";
 
   @Test
   void happyDayScenario() {
@@ -57,7 +68,7 @@ public class StableRaidoSchemaV1Test extends IntegrationTestCase {
         .schemeUri(DESCRIPTION_TYPE_SCHEME_URI)
         .description("stuff about the int test raid")))
       .contributors(of(contributor(
-        REAL_TEST_ORCID, LEADER, SOFTWARE, today)))
+        REAL_TEST_ORCID, LEADER_POSITION, SOFTWARE_ROLE, today)))
       .organisations(of(organisation(
         REAL_TEST_ROR, LEAD_RESEARCH_ORGANISATION, today)))
       .access(new Access()
@@ -148,5 +159,24 @@ public class StableRaidoSchemaV1Test extends IntegrationTestCase {
       alternateIdentifiers(read.getAlternateIdentifiers()).
       spatialCoverages(read.getSpatialCoverages()).
       traditionalKnowledgeLabels(read.getTraditionalKnowledgeLabels());
+  }
+
+  public Contributor contributor(
+    final String orcid,
+    final String position,
+    String role,
+    LocalDate startDate
+  ) {
+    return new Contributor()
+      .id(orcid)
+      .schemeUri(CONTRIBUTOR_SCHEME_URI)
+      .positions(List.of(new ContribPosition()
+        .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+        .position(position)
+        .startDate(startDate)))
+      .roles(List.of(
+        new ContribRole()
+          .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+          .role(role)));
   }
 }

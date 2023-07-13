@@ -30,7 +30,7 @@ public class RaidoStableV1ValidationService {
   
   private final StableTitleValidationService titleSvc;
   private final StableDescriptionValidationService descSvc;
-  private final ContributorValidationService contribSvc;
+  private final StableContributorValidationService contribSvc;
   private final OrganisationValidationService orgSvc;
   private final SubjectValidationService subjectSvc;
   private final IdentifierParser idParser;
@@ -43,7 +43,7 @@ public class RaidoStableV1ValidationService {
   public RaidoStableV1ValidationService(
     final StableTitleValidationService titleSvc,
     final StableDescriptionValidationService descSvc,
-    final ContributorValidationService contribSvc,
+    final StableContributorValidationService contribSvc,
     final OrganisationValidationService orgSvc,
     final SubjectValidationService subjectSvc,
     final IdentifierParser idParser,

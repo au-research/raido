@@ -128,7 +128,7 @@ components:
           items: { $ref: 'metadata-block.yaml#/components/schemas/AlternateUrlBlock' }
         contributors:
           type: array
-          items: { $ref: 'metadata-contributor-block.yaml#/components/schemas/ContributorBlock' }
+          items: { $ref: '#/components/schemas/Contributor' }
         organisations:
           type: array
           items: { $ref: 'metadata-organisation-block.yaml#/components/schemas/OrganisationBlock' }
@@ -191,3 +191,54 @@ components:
           example: 'https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1'
         }
         accessStatement: { type: string }
+    Contributor:
+      type: object
+      required: [id, schemeUri, positions, roles]
+      properties:
+        id: { type: string }
+        schemeUri: {
+          type: string,
+          example: 'https://orcid.org/'
+        }
+        positions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContribPosition'
+
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContribRole'
+    ContribPosition:
+      type: object
+      required: [ schemeUri, position, startDate ]
+      properties:
+        schemeUri: {
+          type: string,
+          example: 'https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1'
+        }
+        position: {
+          type: string,
+          example: 'https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json'
+        }
+        startDate: {
+          type: string,
+          format: date
+        }
+        endDate: {
+          type: string,
+          format: date
+        }
+    ContribRole:
+      type: object
+      required: [ role, schemeUri ]
+      properties:
+        schemeUri: {
+          type: string,
+          example: 'https://credit.niso.org/'
+        }
+        role: {
+          type: string,
+          example: 'https://credit.niso.org/contributor-roles/writing-review-editing/'
+        }
+

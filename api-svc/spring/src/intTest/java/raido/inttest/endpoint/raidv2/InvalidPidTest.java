@@ -14,7 +14,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static raido.apisvc.service.stub.InMemoryStubTestData.*;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
-import static raido.inttest.util.MinimalRaidTestData.*;
+import static raido.inttest.util.MinimalRaidTestData.organisations;
+import static raido.inttest.util.MinimalRaidTestData.relatedObjects;
 
 public class InvalidPidTest extends IntegrationTestCase {
   private static final String ACCESS_TYPE_OPEN =
@@ -33,6 +34,19 @@ public class InvalidPidTest extends IntegrationTestCase {
 
   private static final String DESCRIPTION_TYPE_SCHEME_URI =
     "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1";
+
+  private static final String CONTRIBUTOR_SCHEME_URI =
+    "https://orcid.org/";
+
+  private static final String CONTRIBUTOR_POSITION_SCHEME_URI =
+    "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1";
+
+  private static final String LEADER_POSITION =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json";
+
+  private static final String SUPERVISION_ROLE = "https://credit.niso.org/contributor-roles/supervision/";
+
+  private static final String CONTRIBUTOR_ROLE_SCHEME_URI = "https://credit.niso.org/";
 
   @Test
   void mintWithNonExistentPidsShouldFail() {
@@ -86,5 +100,22 @@ public class InvalidPidTest extends IntegrationTestCase {
       .schemeUri(DESCRIPTION_TYPE_SCHEME_URI)
       .description(description)
     );
+  }
+
+  public List<Contributor> contributors(
+    String orcid
+  ) {
+    var today = LocalDate.now();
+    return of(new Contributor()
+      .id(orcid)
+      .schemeUri(CONTRIBUTOR_SCHEME_URI)
+      .positions(List.of(new ContribPosition()
+        .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+        .position(LEADER_POSITION)
+        .startDate(today)))
+      .roles(List.of(
+        new ContribRole()
+          .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+          .role(SUPERVISION_ROLE))));
   }
 }

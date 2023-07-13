@@ -45,9 +45,9 @@ public class TitleType extends TableImpl<TitleTypeRecord> {
     public final TableField<TitleTypeRecord, Integer> SCHEME_ID = createField(DSL.name("scheme_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
-     * The column <code>api_svc.title_type.name</code>.
+     * The column <code>api_svc.title_type.uri</code>.
      */
-    public final TableField<TitleTypeRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<TitleTypeRecord, String> URI = createField(DSL.name("uri"), SQLDataType.VARCHAR.nullable(false), this, "");
 
     private TitleType(Name alias, Table<TitleTypeRecord> aliased) {
         this(alias, aliased, null);

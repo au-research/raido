@@ -4,30 +4,18 @@
 package raido.db.jooq.api_svc.tables;
 
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Function;
-
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Function2;
-import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Records;
-import org.jooq.Row2;
-import org.jooq.Schema;
-import org.jooq.SelectField;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
 import raido.db.jooq.api_svc.ApiSvc;
 import raido.db.jooq.api_svc.Keys;
 import raido.db.jooq.api_svc.tables.records.AccessTypeRecord;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Function;
 
 
 /**
@@ -57,9 +45,9 @@ public class AccessType extends TableImpl<AccessTypeRecord> {
     public final TableField<AccessTypeRecord, Integer> SCHEME_ID = createField(DSL.name("scheme_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
-     * The column <code>api_svc.access_type.name</code>.
+     * The column <code>api_svc.access_type.uri</code>.
      */
-    public final TableField<AccessTypeRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<AccessTypeRecord, String> URI = createField(DSL.name("uri"), SQLDataType.VARCHAR.nullable(false), this, "");
 
     private AccessType(Name alias, Table<AccessTypeRecord> aliased) {
         this(alias, aliased, null);
