@@ -14,23 +14,22 @@
   * https://nodejs.org/en/download/
 
 
-* Postgres 14
+* Postgres 15
   * The database doesn't *have* to be installed locally, if you already have a
-  postgres DB instance somewhere - you could use that if you wanted.
-  * For Windows dev environments, we generally run Postgres in a Docker 
-    container because it's just easier to install Docker-desktop and then 
-  run a container. 
- 
+    postgres DB instance somewhere - you could use that if you wanted.
+  * For Windows dev environments, we generally run Postgres in a Docker
+    container because it's just easier to install Docker-desktop and then
+    run a container.
+
 
 * Docker (optional)
   * To do basic development, you might not need Docker.
-  * On Windows, the simplest approach is to use Docker-desktop: 
-  https://www.docker.com/products/docker-desktop/
+  * On Windows, the simplest approach is to use Docker-desktop:
+    https://www.docker.com/products/docker-desktop/
   * It's often installed on dev environments for convenience though, e.g.
-  running a postgres container.
+    running a postgres container.
   * It is necessary to have a local docker installation if you're developing
-  /deploying Dockerfile scripts (api-svc, etc.)
-
+    /deploying Dockerfile scripts (api-svc, etc.)
 
 # Local development setup
 
