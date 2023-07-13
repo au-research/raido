@@ -1,5 +1,6 @@
 package raido.apisvc.service.raid;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.jooq.DSLContext;
@@ -9,7 +10,9 @@ import org.jooq.impl.DSL;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
+import raido.apisvc.exception.InvalidJsonException;
 import raido.apisvc.exception.InvalidVersionException;
+import raido.apisvc.exception.ResourceNotFoundException;
 import raido.apisvc.exception.UnknownServicePointException;
 import raido.apisvc.factory.RaidRecordFactory;
 import raido.apisvc.repository.RaidRepository;
@@ -53,9 +56,9 @@ import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 
 /* Be careful with usage of @Transactional, see db-transaction-guideline.md */
 @Component
-public class RaidService {
-  private static final Log log = to(RaidService.class);
-  
+public class RaidStableV1Service {
+  private static final Log log = to(RaidStableV1Service.class);
+
   private final DSLContext db;
   private final ApidsService apidsSvc;
   private final MetadataService metaSvc;
@@ -68,7 +71,7 @@ public class RaidService {
   private final IdentifierParser idParser;
   private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
-  public RaidService(
+  public RaidStableV1Service(
     final DSLContext db,
     final ApidsService apidsSvc,
     final MetadataService metaSvc,
@@ -88,6 +91,17 @@ public class RaidService {
     this.servicePointRepository = servicePointRepository;
     this.raidRecordFactory = raidRecordFactory;
     this.idParser = idParser;
+  }
+
+  public List<RaidDto> listRaidsV1(final Long servicePointId) {
+    return raidRepository.findAllByServicePointId(servicePointId).stream().
+      map(raid -> {
+        try {
+          return objectMapper.readValue(raid.raid().getMetadata().data(), RaidDto.class);
+        } catch (JsonProcessingException e) {
+          throw new RuntimeException(e);
+        }
+      }).toList();
   }
 
   record DenormalisedRaidData(
@@ -209,6 +223,34 @@ public class RaidService {
     return id;
   }
 
+  public RaidDto updateRaidV1(
+    final UpdateRaidV1Request raid
+  ) {
+    final IdentifierUrl id;
+    try {
+      id = idParser.parseUrlWithException(raid.getId().getIdentifier());
+    }
+    catch( ValidationFailureException e ){
+      // it was already validated, so this shouldn't happen
+      throw new RuntimeException(e);
+    }
+    String handle = id.handle().format();
+    
+    final var existing = raidRepository.findByHandle(handle)
+      .orElseThrow(() -> new ResourceNotFoundException(handle));
+
+    final var raidRecord = raidRecordFactory.merge(raid, existing);
+
+    raidRepository.update(raidRecord);
+
+    try {
+      return objectMapper.readValue(
+        raidRecord.getMetadata().data(), RaidDto.class );
+    } catch (JsonProcessingException e) {
+      throw new InvalidJsonException();
+    }
+  }
+
   public IdentifierUrl mintLegacySchemaV1(
     long servicePointId,
     LegacyMetadataSchemaV1 metadata
@@ -284,6 +326,17 @@ public class RaidService {
       createDate(local2Offset(data.raid().getDateCreated())).
       url(data.raid().getUrl()).
       metadata(data.raid().getMetadata().data());
+  }
+
+  public RaidDto readRaidV1(String handle){
+    final var raid = raidRepository.findByHandle(handle).
+      orElseThrow(() -> new ResourceNotFoundException(handle));
+
+    try {
+      return objectMapper.readValue(raid.getMetadata().data(), RaidDto.class);
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public void migrateRaidoSchemaV1(

@@ -21,7 +21,7 @@ paths:
           application/json:
             schema:
               allOf:
-                - { $ref: 'components.yaml#/components/schemas/RaidSchemaV1' }
+                - { $ref: '#/components/schemas/RaidDto' }
               required: [ metadataSchema, titles, dates, contributors, access ]
       responses:
         200:
@@ -29,7 +29,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'components.yaml#/components/schemas/RaidSchemaV1'
+                $ref: '#/components/schemas/RaidDto'
         400:
           description: There was a problem with the message sent to the server.
           content:
@@ -56,7 +56,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: 'components.yaml#/components/schemas/RaidSchemaV1'
+                  $ref: '#/components/schemas/RaidDto'
   /raid/v1/{prefix}/{suffix}:
     parameters:
       - name: prefix
@@ -82,7 +82,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'components.yaml#/components/schemas/RaidSchemaV1'
+                $ref: '#/components/schemas/RaidDto'
     put:
       tags:
         - raido-stable-v1
@@ -93,7 +93,7 @@ paths:
           application/json:
             schema:
               allOf:
-                - { $ref: 'components.yaml#/components/schemas/RaidSchemaV1' }
+                - { $ref: '#/components/schemas/RaidDto' }
               required: [ id, metadataSchema, titles, dates, contributors, access ]
       responses:
         200:
@@ -101,10 +101,67 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'components.yaml#/components/schemas/RaidSchemaV1'
+                $ref: '#/components/schemas/RaidDto'
         400:
           description: Bad request. There was a problem with the message sent to the server.
           content:
             application/json:
               schema:
                 $ref: 'components.yaml#/components/schemas/ValidationFailureResponse'
+components:
+  schemas:
+    RaidDto:
+      type: object
+      properties:
+        id: { $ref: 'metadata-block.yaml#/components/schemas/IdBlock' }
+        metadataSchema: { $ref: 'shared.yaml#/components/schemas/RaidoMetaschema' }
+        titles:
+          type: array
+          items: { $ref: '#/components/schemas/Title' }
+        dates: { $ref: 'metadata-block.yaml#/components/schemas/DatesBlock' }
+        descriptions:
+          type: array
+          items: { $ref: 'metadata-block.yaml#/components/schemas/DescriptionBlock' }
+        access: { $ref: 'metadata-block.yaml#/components/schemas/AccessBlock' }
+        alternateUrls:
+          type: array
+          items: { $ref: 'metadata-block.yaml#/components/schemas/AlternateUrlBlock' }
+        contributors:
+          type: array
+          items: { $ref: 'metadata-contributor-block.yaml#/components/schemas/ContributorBlock' }
+        organisations:
+          type: array
+          items: { $ref: 'metadata-organisation-block.yaml#/components/schemas/OrganisationBlock' }
+        subjects:
+          type: array
+          items: { $ref: 'metadata-block.yaml#/components/schemas/SubjectBlock' }
+        relatedRaids:
+          type: array
+          items: { $ref: 'metadata-block.yaml#/components/schemas/RelatedRaidBlock' }
+        relatedObjects:
+          type: array
+          items: { $ref: 'metadata-block.yaml#/components/schemas/RelatedObjectBlock' }
+        alternateIdentifiers:
+          type: array
+          items: { $ref: 'metadata-block.yaml#/components/schemas/AlternateIdentifierBlock' }
+        spatialCoverages:
+          type: array
+          items: { $ref: 'metadata-block.yaml#/components/schemas/SpatialCoverageBlock' }
+        traditionalKnowledgeLabels:
+          type: array
+          items: { $ref: 'metadata-block.yaml#/components/schemas/TraditionalKnowledgeLabelBlock' }
+    Title:
+      type: object
+      required: [title, type, startDate]
+      properties:
+        title: {type: string}
+        type: {
+          type: string,
+          example: 'https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json'
+        }
+        schemeUri: {
+          type: string,
+          example: 'https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1'
+        }
+        startDate: { type: string, format: date }
+        endDate: { type: string, format: date }

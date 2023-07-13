@@ -26,7 +26,7 @@ import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 public class RaidoStableV1ValidationService {
   private static final Log log = to(RaidoStableV1ValidationService.class);
   
-  private final TitleValidationService titleSvc;
+  private final StableTitleValidationService titleSvc;
   private final DescriptionValidationService descSvc;
   private final ContributorValidationService contribSvc;
   private final OrganisationValidationService orgSvc;
@@ -39,7 +39,7 @@ public class RaidoStableV1ValidationService {
   private final TraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelSvc;
 
   public RaidoStableV1ValidationService(
-    final TitleValidationService titleSvc,
+    final StableTitleValidationService titleSvc,
     final DescriptionValidationService descSvc,
     final ContributorValidationService contribSvc,
     final OrganisationValidationService orgSvc,

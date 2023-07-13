@@ -12,7 +12,8 @@
   "titles": [
     {
       "title": "C. Japonicum Genome",
-      "type": "Primary Title",
+      "type": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+      "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1",
       "startDate": "2020-10-07"
     }
   ],

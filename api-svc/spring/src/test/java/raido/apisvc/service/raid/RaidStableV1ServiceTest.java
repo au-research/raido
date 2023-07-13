@@ -28,7 +28,7 @@ import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
 import raido.idl.raidv2.model.CreateRaidV1Request;
 import raido.idl.raidv2.model.IdBlock;
-import raido.idl.raidv2.model.RaidSchemaV1;
+import raido.idl.raidv2.model.RaidDto;
 import raido.idl.raidv2.model.UpdateRaidV1Request;
 
 import java.io.IOException;
@@ -45,7 +45,7 @@ import static org.mockito.Mockito.when;
 import static raido.apisvc.service.raid.MetadataService.RAID_ID_TYPE_URI;
 
 @ExtendWith(MockitoExtension.class)
-class RaidServiceTest {
+class RaidStableV1ServiceTest {
   @Mock
   private ApidsService apidsService;
 
@@ -68,7 +68,7 @@ class RaidServiceTest {
   private MetadataProps metaProps;
 
   @InjectMocks
-  private RaidService raidService;
+  private RaidStableV1Service raidService;
 
   private final ObjectMapper objectMapper = new ObjectMapper()
     .registerModule(new JavaTimeModule())
@@ -130,9 +130,9 @@ class RaidServiceTest {
 
     when(raidRepository.findByHandle(handle)).thenReturn(Optional.of(raidRecord));
 
-    final var expected = objectMapper.readValue(raidJson(), RaidSchemaV1.class);
+    final var expected = objectMapper.readValue(raidJson(), RaidDto.class);
 
-    RaidSchemaV1 result = raidService.readRaidV1(handle);
+    RaidDto result = raidService.readRaidV1(handle);
     assertThat(result, Matchers.is(expected));
   }
 
@@ -148,8 +148,8 @@ class RaidServiceTest {
 
     when(raidRepository.findAllByServicePointId(servicePointId)).thenReturn(data);
 
-    List<RaidSchemaV1> results = raidService.listRaidsV1(servicePointId);
-    assertThat(results.get(0), Matchers.is(objectMapper.readValue(raidJson(), RaidSchemaV1.class)));
+    List<RaidDto> results = raidService.listRaidsV1(servicePointId);
+    assertThat(results.get(0), Matchers.is(objectMapper.readValue(raidJson(), RaidDto.class)));
   }
 
   @Test
@@ -168,7 +168,7 @@ class RaidServiceTest {
   void updateRaidSchemaV1() throws JsonProcessingException, ValidationFailureException {
     final var servicePointId = 999L;
     final var metadata = objectMapper.readValue(raidJson(), UpdateRaidV1Request.class);
-    final var expected = objectMapper.readValue(raidJson(), RaidSchemaV1.class);
+    final var expected = objectMapper.readValue(raidJson(), RaidDto.class);
 
     final var existingRaid = new RaidRecord();
     final var updatedRaid = new RaidRecord()

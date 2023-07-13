@@ -1,11 +1,6 @@
 package raido.apisvc.service.raid;
 
-import raido.idl.raidv2.model.DescriptionBlock;
-import raido.idl.raidv2.model.DescriptionType;
-import raido.idl.raidv2.model.MintResponse;
-import raido.idl.raidv2.model.TitleBlock;
-import raido.idl.raidv2.model.TitleType;
-import raido.idl.raidv2.model.ValidationFailure;
+import raido.idl.raidv2.model.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +8,8 @@ import java.util.Optional;
 import static java.util.Collections.singletonList;
 
 public class RaidoSchemaV1Util {
+  private static final String PRIMARY_TITLE_TYPE =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
 
   public static List<TitleBlock> getPrimaryTitles(List<TitleBlock> titles) {
     return titles.stream().

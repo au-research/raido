@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import raido.apisvc.exception.CrossAccountAccessException;
 import raido.apisvc.exception.ResourceNotFoundException;
-import raido.apisvc.service.raid.RaidService;
+import raido.apisvc.service.raid.RaidStableV1Service;
 import raido.apisvc.service.raid.id.IdentifierHandle;
 import raido.apisvc.service.raid.id.IdentifierUrl;
 import raido.apisvc.service.raid.validation.RaidoStableV1ValidationService;
@@ -44,9 +44,15 @@ import static raido.apisvc.util.FileUtil.resourceContent;
 
 @ExtendWith(MockitoExtension.class)
 class BasicRaidStableV1Test {
+  private static final String PRIMARY_TITLE_TYPE =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
+
+  private static final String TITLE_TYPE_SCHEME_URI =
+    "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1";
+
   private MockMvc mockMvc;
   @Mock
-  private RaidService raidService;
+  private RaidStableV1Service raidService;
   @Mock
   private RaidoStableV1ValidationService validationService;
   @InjectMocks
@@ -222,7 +228,8 @@ class BasicRaidStableV1Test {
         .andExpect(jsonPath("$.id.globalUrl", Matchers.is("https://hdl.handle.net/" + handle.format())))
         .andExpect(jsonPath("$.id.raidAgencyUrl", Matchers.is(id.formatUrl())))
         .andExpect(jsonPath("$.titles[0].title", Matchers.is(title)))
-        .andExpect(jsonPath("$.titles[0].type", Matchers.is(TitleType.PRIMARY_TITLE.getValue())))
+        .andExpect(jsonPath("$.titles[0].type", Matchers.is("https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json")))
+        .andExpect(jsonPath("$.titles[0].schemeUri", Matchers.is("https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1")))
         .andExpect(jsonPath("$.titles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.titles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.dates.startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
@@ -358,7 +365,8 @@ class BasicRaidStableV1Test {
         .andExpect(jsonPath("$.id.identifierOwner", Matchers.is("https://ror.org/02stey378")))
         .andExpect(jsonPath("$.id.identifierServicePoint", Matchers.is(servicePointId.intValue())))
         .andExpect(jsonPath("$.titles[0].title", Matchers.is(title)))
-        .andExpect(jsonPath("$.titles[0].type", Matchers.is(TitleType.PRIMARY_TITLE.getValue())))
+        .andExpect(jsonPath("$.titles[0].type", Matchers.is(PRIMARY_TITLE_TYPE)))
+        .andExpect(jsonPath("$.titles[0].schemeUri", Matchers.is(TITLE_TYPE_SCHEME_URI)))
         .andExpect(jsonPath("$.titles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.titles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.dates.startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
@@ -479,7 +487,7 @@ class BasicRaidStableV1Test {
         .andExpect(status().isOk())
         .andReturn();
 
-      final RaidSchemaV1 result = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), RaidSchemaV1.class);
+      final RaidDto result = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), RaidDto.class);
 
       assertThat(result, Matchers.is(raid));
     }
@@ -577,7 +585,8 @@ class BasicRaidStableV1Test {
         .andExpect(jsonPath("$[0].id.identifierOwner", Matchers.is("https://ror.org/02stey378")))
         .andExpect(jsonPath("$[0].id.identifierServicePoint", Matchers.is(999)))
         .andExpect(jsonPath("$[0].titles[0].title", Matchers.is(title)))
-        .andExpect(jsonPath("$[0].titles[0].type", Matchers.is(TitleType.PRIMARY_TITLE.getValue())))
+        .andExpect(jsonPath("$[0].titles[0].type", Matchers.is(PRIMARY_TITLE_TYPE)))
+        .andExpect(jsonPath("$[0].titles[0].schemeUri", Matchers.is(TITLE_TYPE_SCHEME_URI)))
         .andExpect(jsonPath("$[0].titles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$[0].titles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$[0].dates.startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
@@ -633,15 +642,18 @@ class BasicRaidStableV1Test {
     }
   }
 
-  private RaidSchemaV1 createRaidForGet(final IdentifierUrl id, final long servicePointId, final String title, final LocalDate startDate) throws IOException {
+  private RaidDto createRaidForGet(final IdentifierUrl id, final long servicePointId, final String title, final LocalDate startDate) throws IOException {
     final String json = FileUtil.resourceContent("/fixtures/raid.json");
 
-    var raid = objectMapper.readValue(json, RaidSchemaV1.class);
+    var raid = objectMapper.readValue(json, RaidDto.class);
 
     raid.getTitles().get(0)
       .startDate(startDate)
       .endDate(startDate.plusMonths(6))
-      .setTitle(title);
+      .title(title)
+      .type(PRIMARY_TITLE_TYPE)
+      .schemeUri(TITLE_TYPE_SCHEME_URI)
+      ;
 
     raid.getId()
       .identifier(id.formatUrl())

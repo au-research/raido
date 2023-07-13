@@ -21,7 +21,8 @@ public class MinimalRaidTestData {
   public static String REAL_TEST_ORCID = "https://orcid.org/0000-0003-0635-1998";
   public static String REAL_TEST_ROR = "https://ror.org/015w2mp89";
   public static String REAL_TEST_DOI = "http://doi.org/10.47366/sabia.v5n1a3";
-  
+
+
   public static RaidoMetadataSchemaV1 createMinimalSchemaV1(String title) {
     var today = LocalDate.now();
 

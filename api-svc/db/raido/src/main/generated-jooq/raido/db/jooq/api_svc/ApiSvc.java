@@ -4,23 +4,14 @@
 package raido.db.jooq.api_svc;
 
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.jooq.Catalog;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
-
 import raido.db.jooq.DefaultCatalog;
-import raido.db.jooq.api_svc.tables.AppUser;
-import raido.db.jooq.api_svc.tables.FlywaySchemaHistory;
-import raido.db.jooq.api_svc.tables.Raid;
-import raido.db.jooq.api_svc.tables.RaidoOperator;
-import raido.db.jooq.api_svc.tables.RelatedObjectType;
-import raido.db.jooq.api_svc.tables.RelatedRaidType;
-import raido.db.jooq.api_svc.tables.ServicePoint;
-import raido.db.jooq.api_svc.tables.Subject;
-import raido.db.jooq.api_svc.tables.UserAuthzRequest;
+import raido.db.jooq.api_svc.tables.*;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -60,6 +51,8 @@ public class ApiSvc extends SchemaImpl {
             RelatedRaidType.RELATED_RAID_TYPE,
             ServicePoint.SERVICE_POINT,
             Subject.SUBJECT,
+            TitleType.TITLE_TYPE,
+            TitleTypeScheme.TITLE_TYPE_SCHEME,
             UserAuthzRequest.USER_AUTHZ_REQUEST
         );
     }

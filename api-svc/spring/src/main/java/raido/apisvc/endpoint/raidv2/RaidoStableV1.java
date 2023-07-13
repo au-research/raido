@@ -5,12 +5,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.exception.InvalidAccessException;
 import raido.apisvc.exception.ValidationException;
-import raido.apisvc.service.raid.RaidService;
+import raido.apisvc.service.raid.RaidStableV1Service;
 import raido.apisvc.service.raid.id.IdentifierUrl;
 import raido.apisvc.service.raid.validation.RaidoStableV1ValidationService;
 import raido.idl.raidv2.api.RaidoStableV1Api;
 import raido.idl.raidv2.model.CreateRaidV1Request;
-import raido.idl.raidv2.model.RaidSchemaV1;
+import raido.idl.raidv2.model.RaidDto;
 import raido.idl.raidv2.model.UpdateRaidV1Request;
 
 import java.util.ArrayList;
@@ -23,18 +23,17 @@ import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
 
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
-@Transactional
 public class RaidoStableV1 implements RaidoStableV1Api {
   private final RaidoStableV1ValidationService validationService;
-  private final RaidService raidService;
+  private final RaidStableV1Service raidService;
 
-  public RaidoStableV1(final RaidoStableV1ValidationService validationService, final RaidService raidService) {
+  public RaidoStableV1(final RaidoStableV1ValidationService validationService, final RaidStableV1Service raidService) {
     this.validationService = validationService;
     this.raidService = raidService;
   }
 
   @Override
-  public RaidSchemaV1 readRaidV1(final String prefix, final String suffix) {
+  public RaidDto readRaidV1(final String prefix, final String suffix) {
     final var handle = String.join("/", prefix, suffix);
     var user = getApiToken();
     var data = raidService.readRaidV1(handle);
@@ -44,7 +43,7 @@ public class RaidoStableV1 implements RaidoStableV1Api {
 
   @Override
   @Transactional(propagation = NEVER)
-  public RaidSchemaV1 createRaidV1(CreateRaidV1Request request) {
+  public RaidDto createRaidV1(CreateRaidV1Request request) {
     final var user = getApiToken();
 
     if (!raidService.isEditable(user, user.getServicePointId())) {
@@ -64,7 +63,7 @@ public class RaidoStableV1 implements RaidoStableV1Api {
   }
 
   @Override
-  public List<RaidSchemaV1> listRaidsV1(Long servicePointId) {
+  public List<RaidDto> listRaidsV1(Long servicePointId) {
     var user = getApiToken();
     guardOperatorOrAssociated(user, servicePointId);
 
@@ -72,7 +71,7 @@ public class RaidoStableV1 implements RaidoStableV1Api {
   }
 
   @Override
-  public RaidSchemaV1 updateRaidV1(final String prefix, final String suffix, UpdateRaidV1Request request) {
+  public RaidDto updateRaidV1(final String prefix, final String suffix, UpdateRaidV1Request request) {
     final var handle = String.join("/", prefix, suffix);
     var user = getApiToken();
     guardOperatorOrAssociated(user, request.getId().getIdentifierServicePoint());

@@ -4,26 +4,28 @@ import org.junit.jupiter.api.Test;
 import raido.idl.raidv2.model.AccessBlock;
 import raido.idl.raidv2.model.CreateRaidV1Request;
 import raido.idl.raidv2.model.DatesBlock;
+import raido.idl.raidv2.model.Title;
 import raido.inttest.IntegrationTestCase;
 import raido.inttest.RaidApiValidationException;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static raido.apisvc.service.stub.InMemoryStubTestData.NONEXISTENT_TEST_DOI;
-import static raido.apisvc.service.stub.InMemoryStubTestData.NONEXISTENT_TEST_ORCID;
-import static raido.apisvc.service.stub.InMemoryStubTestData.NONEXISTENT_TEST_ROR;
+import static raido.apisvc.service.stub.InMemoryStubTestData.*;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
 import static raido.idl.raidv2.model.AccessType.OPEN;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
-import static raido.inttest.util.MinimalRaidTestData.contributors;
-import static raido.inttest.util.MinimalRaidTestData.descriptions;
-import static raido.inttest.util.MinimalRaidTestData.organisations;
-import static raido.inttest.util.MinimalRaidTestData.relatedObjects;
-import static raido.inttest.util.MinimalRaidTestData.titles;
+import static raido.inttest.util.MinimalRaidTestData.*;
 
 public class InvalidPidTest extends IntegrationTestCase {
+  private static final String PRIMARY_TITLE_TYPE =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
+
+  private static final String TITLE_TYPE_SCHEME_URI =
+    "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1";
 
   @Test
   void mintWithNonExistentPidsShouldFail() {
@@ -57,5 +59,15 @@ public class InvalidPidTest extends IntegrationTestCase {
        }); 
     });
 
+  }
+
+  public List<Title> titles(
+    String title
+  ){
+    return of(new Title()
+      .type(PRIMARY_TITLE_TYPE)
+      .schemeUri(TITLE_TYPE_SCHEME_URI)
+      .title(title)
+      .startDate(LocalDate.now()));
   }
 }

@@ -17,7 +17,7 @@ class RaidoStableV1ValidationServiceTest {
   @Mock
   private SubjectValidationService subjectValidationService;
   @Mock
-  private TitleValidationService titleValidationService;
+  private StableTitleValidationService titleValidationService;
   @Mock
   private DescriptionValidationService descSvc;
   @Mock

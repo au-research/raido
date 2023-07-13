@@ -16,6 +16,9 @@ import java.time.LocalDateTime;
 
 @Component
 public class RaidRecordFactory {
+
+  private static final String PRIMARY_TITLE_TYPE =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
   private final ObjectMapper objectMapper;
 
   public RaidRecordFactory(final ObjectMapper objectMapper) {
@@ -28,7 +31,7 @@ public class RaidRecordFactory {
     final ServicePointRecord servicePointRecord) {
 
     final var primaryTitle = raid.getTitles().stream()
-      .filter(title -> title.getType() == TitleType.PRIMARY_TITLE)
+      .filter(title -> title.getType().equals(PRIMARY_TITLE_TYPE))
       .findFirst()
       .orElseThrow(() -> new InvalidTitleException("One title with a titleType of 'Primary' should be specified."))
       .getTitle();
@@ -56,7 +59,7 @@ public class RaidRecordFactory {
   public RaidRecord merge(final UpdateRaidV1Request raid, final RaidRecord existing) {
 
     final var primaryTitle = raid.getTitles().stream()
-      .filter(title -> title.getType() == TitleType.PRIMARY_TITLE)
+      .filter(title -> title.getType().equals(PRIMARY_TITLE_TYPE))
       .findFirst()
       .orElseThrow(() -> new InvalidTitleException("One title with a titleType of 'Primary' should be specified."))
       .getTitle();
