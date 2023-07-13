@@ -5,7 +5,7 @@ The export is run as a docker container via  CodeBuild project, see:
 ---
 
 To run locally via IDE or similar, invoke the main method from
-[AgencyPublicDataExport](/api-svc/spring/src/main/java/raido/export/AgencyPublicDataExport.java).
+[AgencyPublicDataExport](/api-svc/spring/src/main/java/raido/cmdline/AgencyPublicDataExport.java).
 
 To configure general spring properties, set env variables or config
 properties in `~/.config/raido/api-svc-env.properties`,

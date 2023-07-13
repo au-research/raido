@@ -1,4 +1,4 @@
-package raido.export.spring.config;
+package raido.cmdline.spring.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -11,11 +11,16 @@ import raido.apisvc.util.Log;
 import static org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE;
 import static raido.apisvc.util.Log.to;
 
-@Configuration("DataExportConfig")
+/**
+ Plays the same role as ApiConfig, but for a non-web context (maybe 
+ "NonWebConfig" would be a better name?).
+ 
+ */
+@Configuration("CommandLineConfig")
 @ComponentScan(
   basePackages = {
     // spring boot-up and config
-    "raido.export.spring",
+    "raido.cmdline.spring",
     "raido.apisvc.spring",
 
     // services etc    
@@ -45,7 +50,7 @@ import static raido.apisvc.util.Log.to;
   @PropertySource(name = "user_config_secret2",
     value = ApiConfig.SECRET_PROPERTIES2, ignoreResourceNotFound = true),
 })
-public class DataExportConfig {
-  private static final Log log = to(DataExportConfig.class);
+public class CommandLineConfig {
+  private static final Log log = to(CommandLineConfig.class);
 
 }

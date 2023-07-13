@@ -1,4 +1,4 @@
-package raido.export;
+package raido.cmdline;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
@@ -6,7 +6,7 @@ import raido.apisvc.service.export.AgencyPublicDataExportService;
 import raido.apisvc.spring.config.environment.AgencyPublicDataExportProps;
 import raido.apisvc.util.Log;
 import raido.apisvc.util.Nullable;
-import raido.export.spring.config.DataExportConfig;
+import raido.cmdline.spring.config.CommandLineConfig;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -57,7 +57,7 @@ public class AgencyPublicDataExport {
   
   public static GenericApplicationContext configureSpring(){
     return new AnnotationConfigApplicationContext(
-      DataExportConfig.class );
+      CommandLineConfig.class );
   }
 
   public static BufferedWriter newWriter(String filePath) {

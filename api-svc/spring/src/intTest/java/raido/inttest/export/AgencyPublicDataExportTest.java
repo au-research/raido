@@ -2,7 +2,7 @@ package raido.inttest.export;
 
 import org.junit.jupiter.api.Test;
 import raido.apisvc.util.Log;
-import raido.export.AgencyPublicDataExport;
+import raido.cmdline.AgencyPublicDataExport;
 import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
 import raido.inttest.IntegrationTestCase;
 

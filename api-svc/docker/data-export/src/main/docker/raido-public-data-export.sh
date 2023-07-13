@@ -37,7 +37,7 @@ java \
   -Duser.language= -Duser.country= -Duser.variant= \
   -Dlogback.configurationFile=docker-logback.xml \
   -cp raido-api-svc.jar \
-  raido.export.AgencyPublicDataExport 
+  raido.cmdline.AgencyPublicDataExport 
 
 echo "export process finished "
 

@@ -1,5 +1,5 @@
 This project is for building a container that can run the 
-[AgencyPublicDataExport](../../spring/src/main/java/raido/export/AgencyPublicDataExport.java)
+[AgencyPublicDataExport](../../spring/src/main/java/raido/cmdline/AgencyPublicDataExport.java)
 data export.
 
 It just builds a docker image (tagged with `latest`), we build the image each 

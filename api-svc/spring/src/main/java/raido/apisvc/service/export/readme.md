@@ -1,1 +1,1 @@
-See [export package](../../../export/readme.md).
+See [export package](../../../cmdline/readme.md).
