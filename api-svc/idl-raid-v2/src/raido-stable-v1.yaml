@@ -121,8 +121,8 @@ components:
         dates: { $ref: 'metadata-block.yaml#/components/schemas/DatesBlock' }
         descriptions:
           type: array
-          items: { $ref: 'metadata-block.yaml#/components/schemas/DescriptionBlock' }
-        access: { $ref: 'metadata-block.yaml#/components/schemas/AccessBlock' }
+          items: { $ref: '#/components/schemas/Description' }
+        access: { $ref: '#/components/schemas/Access' }
         alternateUrls:
           type: array
           items: { $ref: 'metadata-block.yaml#/components/schemas/AlternateUrlBlock' }
@@ -165,3 +165,29 @@ components:
         }
         startDate: { type: string, format: date }
         endDate: { type: string, format: date }
+    Description:
+      type: object
+      required: ["description", "type"]
+      properties:
+        description: {type: string}
+        type: {
+          type: string,
+          example: 'https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json'
+        }
+        schemeUri: {
+          type: string,
+          example: 'https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1'
+        }
+    Access:
+      type: object
+      required: ["type", ]
+      properties:
+        type: {
+          type: string,
+          example: 'https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json'
+        }
+        schemeUri: {
+          type: string,
+          example: 'https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1'
+        }
+        accessStatement: { type: string }

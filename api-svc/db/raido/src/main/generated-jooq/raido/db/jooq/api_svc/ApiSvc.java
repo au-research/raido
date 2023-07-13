@@ -43,7 +43,11 @@ public class ApiSvc extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
+            AccessType.ACCESS_TYPE,
+            AccessTypeScheme.ACCESS_TYPE_SCHEME,
             AppUser.APP_USER,
+            DescriptionType.DESCRIPTION_TYPE,
+            DescriptionTypeScheme.DESCRIPTION_TYPE_SCHEME,
             FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
             Raid.RAID,
             RaidoOperator.RAIDO_OPERATOR,

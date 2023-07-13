@@ -10,20 +10,30 @@ import java.time.LocalDate;
 import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
-import static raido.idl.raidv2.model.AccessType.OPEN;
 import static raido.idl.raidv2.model.ContributorPositionRaidMetadataSchemaType.LEADER;
 import static raido.idl.raidv2.model.ContributorRoleCreditNisoOrgType.SOFTWARE;
-import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
 import static raido.idl.raidv2.model.OrganisationRoleType.LEAD_RESEARCH_ORGANISATION;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 import static raido.inttest.util.MinimalRaidTestData.*;
 
 public class StableRaidoSchemaV1Test extends IntegrationTestCase {
+  private static final String ACCESS_TYPE_OPEN =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json";
+
+  private static final String ACCESS_TYPE_SCHEME_URI =
+    "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1";
   private static final String PRIMARY_TITLE_TYPE =
     "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
 
   private static final String TITLE_TYPE_SCHEME_URI =
     "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1";
+
+  private static final String PRIMARY_DESCRIPTION_TYPE =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json";
+
+  private static final String DESCRIPTION_TYPE_SCHEME_URI =
+    "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1";
+
 
   @Test
   void happyDayScenario() {
@@ -42,14 +52,18 @@ public class StableRaidoSchemaV1Test extends IntegrationTestCase {
         .title(initialTitle)
         .startDate(today)))
       .dates(new DatesBlock().startDate(today))
-      .descriptions(of(new DescriptionBlock()
-        .type(PRIMARY_DESCRIPTION)
+      .descriptions(of(new Description()
+        .type(PRIMARY_DESCRIPTION_TYPE)
+        .schemeUri(DESCRIPTION_TYPE_SCHEME_URI)
         .description("stuff about the int test raid")))
       .contributors(of(contributor(
         REAL_TEST_ORCID, LEADER, SOFTWARE, today)))
       .organisations(of(organisation(
         REAL_TEST_ROR, LEAD_RESEARCH_ORGANISATION, today)))
-      .access(new AccessBlock().type(OPEN))
+      .access(new Access()
+        .type(ACCESS_TYPE_OPEN)
+        .schemeUri(ACCESS_TYPE_SCHEME_URI)
+      )
     );
     
     assertThat(mintResult).isNotNull();

@@ -24,10 +24,12 @@ import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 
 @Component
 public class RaidoStableV1ValidationService {
+  private static final String ACCESS_TYPE_CLOSED =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json";
   private static final Log log = to(RaidoStableV1ValidationService.class);
   
   private final StableTitleValidationService titleSvc;
-  private final DescriptionValidationService descSvc;
+  private final StableDescriptionValidationService descSvc;
   private final ContributorValidationService contribSvc;
   private final OrganisationValidationService orgSvc;
   private final SubjectValidationService subjectSvc;
@@ -40,7 +42,7 @@ public class RaidoStableV1ValidationService {
 
   public RaidoStableV1ValidationService(
     final StableTitleValidationService titleSvc,
-    final DescriptionValidationService descSvc,
+    final StableDescriptionValidationService descSvc,
     final ContributorValidationService contribSvc,
     final OrganisationValidationService orgSvc,
     final SubjectValidationService subjectSvc,
@@ -111,7 +113,7 @@ public class RaidoStableV1ValidationService {
   }
 
   private static List<ValidationFailure> validateAccess(
-    AccessBlock access
+    Access access
   ) {
     var failures = new ArrayList<ValidationFailure>();
 
@@ -124,7 +126,7 @@ public class RaidoStableV1ValidationService {
       }
       else {
         if(
-          access.getType() == AccessType.CLOSED &&
+          access.getType().equals(ACCESS_TYPE_CLOSED) &&
             access.getAccessStatement() == null
         ){
           failures.add(ValidationMessage.ACCESS_STATEMENT_NOT_SET);

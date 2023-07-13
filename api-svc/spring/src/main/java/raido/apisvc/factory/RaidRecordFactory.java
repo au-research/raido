@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 
 @Component
 public class RaidRecordFactory {
+  private static final String ACCESS_TYPE_CLOSED =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json";
 
   private static final String PRIMARY_TITLE_TYPE =
     "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
@@ -53,7 +55,7 @@ public class RaidRecordFactory {
       .setMetadataSchema(Metaschema.raido_metadata_schema_v1)
       .setStartDate(raid.getDates().getStartDate())
       .setDateCreated(LocalDateTime.now())
-      .setConfidential(raid.getAccess().getType() == AccessType.CLOSED);
+      .setConfidential(raid.getAccess().getType().equals(ACCESS_TYPE_CLOSED));
   }
 
   public RaidRecord merge(final UpdateRaidV1Request raid, final RaidRecord existing) {
@@ -80,7 +82,7 @@ public class RaidRecordFactory {
       .setMetadata(JSONB.valueOf(raidJson))
       .setMetadataSchema(Metaschema.raido_metadata_schema_v1)
       .setStartDate(raid.getDates().getStartDate())
-      .setConfidential(raid.getAccess().getType() == AccessType.CLOSED);
+      .setConfidential(raid.getAccess().getType().equals(ACCESS_TYPE_CLOSED));
   }
 
   public RaidRecord merge(final UpdateRaidStableV2Request raid, final RaidRecord existing) {

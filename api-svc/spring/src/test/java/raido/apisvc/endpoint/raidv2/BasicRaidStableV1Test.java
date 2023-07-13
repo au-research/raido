@@ -44,11 +44,23 @@ import static raido.apisvc.util.FileUtil.resourceContent;
 
 @ExtendWith(MockitoExtension.class)
 class BasicRaidStableV1Test {
+  private static final String ACCESS_SCHEME_URI =
+    "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1";
+
+  private static final String ACCESS_TYPE_CLOSED =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json";
+
   private static final String PRIMARY_TITLE_TYPE =
     "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
 
   private static final String TITLE_TYPE_SCHEME_URI =
     "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1";
+
+  private static final String PRIMARY_DESCRIPTION_TYPE =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json";
+
+  private static final String DESCRIPTION_TYPE_SCHEME_URI =
+    "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1";
 
   private MockMvc mockMvc;
   @Mock
@@ -235,8 +247,10 @@ class BasicRaidStableV1Test {
         .andExpect(jsonPath("$.dates.startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.dates.endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.descriptions[0].description", Matchers.is("Genome sequencing and assembly project at WUR of the C. Japonicum. ")))
-        .andExpect(jsonPath("$.descriptions[0].type", Matchers.is("Primary Description")))
-        .andExpect(jsonPath("$.access.type", Matchers.is("Closed")))
+        .andExpect(jsonPath("$.descriptions[0].type", Matchers.is(PRIMARY_DESCRIPTION_TYPE)))
+        .andExpect(jsonPath("$.descriptions[0].schemeUri", Matchers.is(DESCRIPTION_TYPE_SCHEME_URI)))
+        .andExpect(jsonPath("$.access.type", Matchers.is(ACCESS_TYPE_CLOSED)))
+        .andExpect(jsonPath("$.access.schemeUri", Matchers.is(ACCESS_SCHEME_URI)))
         .andExpect(jsonPath("$.access.accessStatement", Matchers.is("This RAiD is closed")))
         .andExpect(jsonPath("$.contributors[0].id", Matchers.is("0000-0002-4368-8058")))
         .andExpect(jsonPath("$.contributors[0].identifierSchemeUri", Matchers.is("https://orcid.org/")))
@@ -372,8 +386,10 @@ class BasicRaidStableV1Test {
         .andExpect(jsonPath("$.dates.startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.dates.endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.descriptions[0].description", Matchers.is("Genome sequencing and assembly project at WUR of the C. Japonicum. ")))
-        .andExpect(jsonPath("$.descriptions[0].type", Matchers.is("Primary Description")))
-        .andExpect(jsonPath("$.access.type", Matchers.is("Closed")))
+        .andExpect(jsonPath("$.descriptions[0].type", Matchers.is(PRIMARY_DESCRIPTION_TYPE)))
+        .andExpect(jsonPath("$.descriptions[0].schemeUri", Matchers.is(DESCRIPTION_TYPE_SCHEME_URI)))
+        .andExpect(jsonPath("$.access.type", Matchers.is(ACCESS_TYPE_CLOSED)))
+        .andExpect(jsonPath("$.access.schemeUri", Matchers.is(ACCESS_SCHEME_URI)))
         .andExpect(jsonPath("$.access.accessStatement", Matchers.is("This RAiD is closed")))
         .andExpect(jsonPath("$.contributors[0].id", Matchers.is("0000-0002-4368-8058")))
         .andExpect(jsonPath("$.contributors[0].identifierSchemeUri", Matchers.is("https://orcid.org/")))
@@ -592,8 +608,10 @@ class BasicRaidStableV1Test {
         .andExpect(jsonPath("$[0].dates.startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$[0].dates.endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$[0].descriptions[0].description", Matchers.is("Genome sequencing and assembly project at WUR of the C. Japonicum. ")))
-        .andExpect(jsonPath("$[0].descriptions[0].type", Matchers.is("Primary Description")))
-        .andExpect(jsonPath("$[0].access.type", Matchers.is("Closed")))
+        .andExpect(jsonPath("$[0].descriptions[0].type", Matchers.is(PRIMARY_DESCRIPTION_TYPE)))
+        .andExpect(jsonPath("$[0].descriptions[0].schemeUri", Matchers.is(DESCRIPTION_TYPE_SCHEME_URI)))
+        .andExpect(jsonPath("$[0].access.type", Matchers.is(ACCESS_TYPE_CLOSED)))
+        .andExpect(jsonPath("$[0].access.schemeUri", Matchers.is(ACCESS_SCHEME_URI)))
         .andExpect(jsonPath("$[0].access.accessStatement", Matchers.is("This RAiD is closed")))
         .andExpect(jsonPath("$[0].contributors[0].id", Matchers.is("0000-0002-4368-8058")))
         .andExpect(jsonPath("$[0].contributors[0].identifierSchemeUri", Matchers.is("https://orcid.org/")))

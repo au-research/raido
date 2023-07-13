@@ -14,11 +14,13 @@
   "descriptions": [
     {
       "description": "Genome sequencing and assembly project at WUR of the C. Japonicum. ",
-      "type": "Primary Description"
+      "type": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+      "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1"
     }
   ],
   "access": {
-    "type": "Closed",
+    "type": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json",
+    "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1",
     "accessStatement": "This RAiD is closed"
   },
   "contributors": [

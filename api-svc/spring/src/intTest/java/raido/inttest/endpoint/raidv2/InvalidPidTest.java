@@ -1,10 +1,7 @@
 package raido.inttest.endpoint.raidv2;
 
 import org.junit.jupiter.api.Test;
-import raido.idl.raidv2.model.AccessBlock;
-import raido.idl.raidv2.model.CreateRaidV1Request;
-import raido.idl.raidv2.model.DatesBlock;
-import raido.idl.raidv2.model.Title;
+import raido.idl.raidv2.model.*;
 import raido.inttest.IntegrationTestCase;
 import raido.inttest.RaidApiValidationException;
 
@@ -16,16 +13,26 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static raido.apisvc.service.stub.InMemoryStubTestData.*;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
-import static raido.idl.raidv2.model.AccessType.OPEN;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 import static raido.inttest.util.MinimalRaidTestData.*;
 
 public class InvalidPidTest extends IntegrationTestCase {
+  private static final String ACCESS_TYPE_OPEN =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json";
+
+  private static final String ACCESS_TYPE_SCHEME_URI =
+    "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1";
   private static final String PRIMARY_TITLE_TYPE =
     "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
 
   private static final String TITLE_TYPE_SCHEME_URI =
     "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1";
+
+  private static final String PRIMARY_DESCRIPTION_TYPE =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json";
+
+  private static final String DESCRIPTION_TYPE_SCHEME_URI =
+    "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1";
 
   @Test
   void mintWithNonExistentPidsShouldFail() {
@@ -43,7 +50,9 @@ public class InvalidPidTest extends IntegrationTestCase {
       contributors(contributors(NONEXISTENT_TEST_ORCID)).
       organisations(organisations(NONEXISTENT_TEST_ROR)).
       relatedObjects(relatedObjects(NONEXISTENT_TEST_DOI)).
-      access(new AccessBlock().type(OPEN))
+      access(new Access()
+        .type(ACCESS_TYPE_OPEN)
+        .schemeUri(ACCESS_TYPE_SCHEME_URI))
     )).isInstanceOfSatisfying(RaidApiValidationException.class, ex->{
        assertThat(ex.getFailures()).anySatisfy(iFail->{
          assertThat(iFail.getFieldId()).isEqualTo("contributors[0].id");
@@ -69,5 +78,13 @@ public class InvalidPidTest extends IntegrationTestCase {
       .schemeUri(TITLE_TYPE_SCHEME_URI)
       .title(title)
       .startDate(LocalDate.now()));
+  }
+
+  public static List<Description> descriptions(String description){
+    return List.of(new Description()
+      .type(PRIMARY_DESCRIPTION_TYPE)
+      .schemeUri(DESCRIPTION_TYPE_SCHEME_URI)
+      .description(description)
+    );
   }
 }
