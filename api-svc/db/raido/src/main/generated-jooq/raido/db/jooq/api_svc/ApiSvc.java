@@ -53,6 +53,8 @@ public class ApiSvc extends SchemaImpl {
             DescriptionType.DESCRIPTION_TYPE,
             DescriptionTypeScheme.DESCRIPTION_TYPE_SCHEME,
             FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
+            OrganisationRoleType.ORGANISATION_ROLE_TYPE,
+            OrganisationRoleTypeScheme.ORGANISATION_ROLE_TYPE_SCHEME,
             Raid.RAID,
             RaidoOperator.RAIDO_OPERATOR,
             RelatedObjectType.RELATED_OBJECT_TYPE,

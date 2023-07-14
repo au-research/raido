@@ -14,10 +14,18 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static raido.apisvc.service.stub.InMemoryStubTestData.*;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
-import static raido.inttest.util.MinimalRaidTestData.organisations;
 import static raido.inttest.util.MinimalRaidTestData.relatedObjects;
 
 public class InvalidPidTest extends IntegrationTestCase {
+  private static final String LEAD_RESEARCH_ORGANISATION =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json";
+
+  private static final String ORGANISATION_ROLE_SCHEME_URI =
+    "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1";
+
+  private static final String ORGANISATION_SCHEME_URI =
+    "https://ror.org/";
+
   private static final String ACCESS_TYPE_OPEN =
     "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json";
 
@@ -117,5 +125,24 @@ public class InvalidPidTest extends IntegrationTestCase {
         new ContribRole()
           .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
           .role(SUPERVISION_ROLE))));
+  }
+
+  public List<Organisation> organisations(String ror){
+    return of(organisation(ror, LEAD_RESEARCH_ORGANISATION, LocalDate.now()));
+  }
+
+  public Organisation organisation(
+    String ror,
+    String role,
+    LocalDate today
+  ) {
+    return new Organisation()
+      .id(ror)
+      .schemeUri(ORGANISATION_SCHEME_URI)
+      .roles(List.of(
+        new OrgRole()
+          .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
+          .role(role)
+          .startDate(today)));
   }
 }

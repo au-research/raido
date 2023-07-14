@@ -31,7 +31,7 @@ public class RaidoStableV1ValidationService {
   private final StableTitleValidationService titleSvc;
   private final StableDescriptionValidationService descSvc;
   private final StableContributorValidationService contribSvc;
-  private final OrganisationValidationService orgSvc;
+  private final StableOrganisationValidationService orgSvc;
   private final SubjectValidationService subjectSvc;
   private final IdentifierParser idParser;
   private final RelatedObjectValidationService relatedObjectSvc;
@@ -44,7 +44,7 @@ public class RaidoStableV1ValidationService {
     final StableTitleValidationService titleSvc,
     final StableDescriptionValidationService descSvc,
     final StableContributorValidationService contribSvc,
-    final OrganisationValidationService orgSvc,
+    final StableOrganisationValidationService orgSvc,
     final SubjectValidationService subjectSvc,
     final IdentifierParser idParser,
     final RelatedObjectValidationService relatedObjectSvc,

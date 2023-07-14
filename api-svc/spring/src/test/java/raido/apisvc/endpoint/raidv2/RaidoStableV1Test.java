@@ -260,12 +260,13 @@ class RaidoStableV1Test {
         .andExpect(jsonPath("$.contributors[0].positions[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.contributors[0].roles[0].schemeUri", Matchers.is("https://credit.niso.org")))
         .andExpect(jsonPath("$.contributors[0].roles[0].role", Matchers.is("https://credit.niso.org/contributor-roles/project-administration/")))
-        .andExpect(jsonPath("$.organisations[0].roles[0].role", Matchers.is("Lead Research Organisation")))
-        .andExpect(jsonPath("$.organisations[0].roles[0].roleSchemeUri", Matchers.is("https://raid.org/")))
+
+        .andExpect(jsonPath("$.organisations[0].roles[0].role", Matchers.is("https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json")))
+        .andExpect(jsonPath("$.organisations[0].roles[0].schemeUri", Matchers.is("https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1")))
         .andExpect(jsonPath("$.organisations[0].roles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.organisations[0].roles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.organisations[0].id", Matchers.is("https://ror.org/04qw24q55")))
-        .andExpect(jsonPath("$.organisations[0].identifierSchemeUri", Matchers.is("https://ror.org/")));
+        .andExpect(jsonPath("$.organisations[0].schemeUri", Matchers.is("https://ror.org/")));
     }
   }
 
@@ -399,12 +400,12 @@ class RaidoStableV1Test {
         .andExpect(jsonPath("$.contributors[0].positions[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.contributors[0].roles[0].schemeUri", Matchers.is("https://credit.niso.org")))
         .andExpect(jsonPath("$.contributors[0].roles[0].role", Matchers.is("https://credit.niso.org/contributor-roles/project-administration/")))
-        .andExpect(jsonPath("$.organisations[0].roles[0].role", Matchers.is("Lead Research Organisation")))
-        .andExpect(jsonPath("$.organisations[0].roles[0].roleSchemeUri", Matchers.is("https://raid.org/")))
+        .andExpect(jsonPath("$.organisations[0].roles[0].role", Matchers.is("https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json")))
+        .andExpect(jsonPath("$.organisations[0].roles[0].schemeUri", Matchers.is("https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1")))
         .andExpect(jsonPath("$.organisations[0].roles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.organisations[0].roles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.organisations[0].id", Matchers.is("https://ror.org/04qw24q55")))
-        .andExpect(jsonPath("$.organisations[0].identifierSchemeUri", Matchers.is("https://ror.org/")));
+        .andExpect(jsonPath("$.organisations[0].schemeUri", Matchers.is("https://ror.org/")));
     }
   }
 
@@ -621,12 +622,12 @@ class RaidoStableV1Test {
         .andExpect(jsonPath("$[0].contributors[0].positions[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$[0].contributors[0].roles[0].schemeUri", Matchers.is("https://credit.niso.org")))
         .andExpect(jsonPath("$[0].contributors[0].roles[0].role", Matchers.is("https://credit.niso.org/contributor-roles/project-administration/")))
-        .andExpect(jsonPath("$[0].organisations[0].roles[0].role", Matchers.is("Lead Research Organisation")))
-        .andExpect(jsonPath("$[0].organisations[0].roles[0].roleSchemeUri", Matchers.is("https://raid.org/")))
+        .andExpect(jsonPath("$[0].organisations[0].roles[0].role", Matchers.is("https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json")))
+        .andExpect(jsonPath("$[0].organisations[0].roles[0].schemeUri", Matchers.is("https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1")))
         .andExpect(jsonPath("$[0].organisations[0].roles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$[0].organisations[0].roles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$[0].organisations[0].id", Matchers.is("https://ror.org/04qw24q55")))
-        .andExpect(jsonPath("$[0].organisations[0].identifierSchemeUri", Matchers.is("https://ror.org/")));
+        .andExpect(jsonPath("$[0].organisations[0].schemeUri", Matchers.is("https://ror.org/")));
     }
   }
 

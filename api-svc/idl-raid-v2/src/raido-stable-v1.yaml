@@ -131,7 +131,7 @@ components:
           items: { $ref: '#/components/schemas/Contributor' }
         organisations:
           type: array
-          items: { $ref: 'metadata-organisation-block.yaml#/components/schemas/OrganisationBlock' }
+          items: { $ref: '#/components/schemas/Organisation' }
         subjects:
           type: array
           items: { $ref: 'metadata-block.yaml#/components/schemas/SubjectBlock' }
@@ -241,4 +241,30 @@ components:
           type: string,
           example: 'https://credit.niso.org/contributor-roles/writing-review-editing/'
         }
-
+    Organisation:
+      type: object
+      required: [id, identifierSchemeUri, roles]
+      properties:
+        id: { type: string }
+        schemeUri: {
+          type: string,
+          example: 'https://ror.org/'
+        }
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrgRole'
+    OrgRole:
+      type: object
+      required: [role, roleSchemeUri, startDate]
+      properties:
+        schemeUri: {
+          type: string,
+          example: 'https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1'
+        }
+        role: {
+          type: string,
+          example: 'https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json'
+        }
+        startDate: { type: string, format: date }
+        endDate: { type: string, format: date }

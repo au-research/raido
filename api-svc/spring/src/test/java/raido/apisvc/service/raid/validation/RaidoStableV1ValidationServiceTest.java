@@ -23,7 +23,7 @@ class RaidoStableV1ValidationServiceTest {
   @Mock
   private StableContributorValidationService contribSvc;
   @Mock
-  private OrganisationValidationService orgSvc;
+  private StableOrganisationValidationService orgSvc;
   @Mock
   private IdentifierParser identifierParser;
   @Mock

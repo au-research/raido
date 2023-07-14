@@ -86,7 +86,7 @@ create table raido.api_svc.contributor_position_type
 insert into raido.api_svc.contributor_position_type_scheme (uri) values
     ('https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1');
 
-insert into raido.api_svc.access_type (scheme_id, uri) values
+insert into raido.api_svc.contributor_position_type (scheme_id, uri) values
     (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/co-investigator.json'),
     (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/contact-person.json'),
     (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json'),
@@ -100,18 +100,17 @@ create table raido.api_svc.contributor_role_type_scheme (
 );
 
 drop table if exists raido.api_svc.contributor_role_type;
-create table raido.api_svc.contributor_role_type
-(
+create table raido.api_svc.contributor_role_type (
     scheme_id int     not null,
     uri      varchar not null,
     primary key (scheme_id, uri),
-    constraint fk_access_type_scheme_id foreign key (scheme_id) references raido.api_svc.access_type_scheme (id)
+    constraint fk_contributor_role_type_scheme_id foreign key (scheme_id) references raido.api_svc.contributor_role_type_scheme (id)
 );
 
 insert into raido.api_svc.contributor_role_type_scheme (uri) values
-    ('https://credit.niso.org');
+    ('https://credit.niso.org/');
 
-insert into raido.api_svc.access_type (scheme_id, uri) values
+insert into raido.api_svc.contributor_role_type (scheme_id, uri) values
     (1, 'https://credit.niso.org/contributor-roles/conceptualization/'),
     (1, 'https://credit.niso.org/contributor-roles/data-curation/'),
     (1, 'https://credit.niso.org/contributor-roles/formal-analysis/'),
@@ -126,5 +125,30 @@ insert into raido.api_svc.access_type (scheme_id, uri) values
     (1, 'https://credit.niso.org/contributor-roles/visualization/'),
     (1, 'https://credit.niso.org/contributor-roles/writing-original-draft/'),
     (1, 'https://credit.niso.org/contributor-roles/writing-review-editing/');
+
+drop table if exists raido.api_svc.organisation_role_type_scheme;
+create table raido.api_svc.organisation_role_type_scheme (
+    id serial primary key,
+    uri varchar not null
+);
+
+drop table if exists raido.api_svc.organisation_role_type;
+create table raido.api_svc.organisation_role_type
+(
+    scheme_id int     not null,
+    uri      varchar not null,
+    primary key (scheme_id, uri),
+    constraint fk_organisation_role_type_scheme_id foreign key (scheme_id) references raido.api_svc.organisation_role_type_scheme (id)
+);
+
+insert into raido.api_svc.organisation_role_type_scheme (uri) values
+    ('https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1');
+
+insert into raido.api_svc.organisation_role_type (scheme_id, uri) values
+    (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json'),
+    (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json'),
+    (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/other-organisation.json'),
+    (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/other-research-organisation.json'),
+    (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/partner-organisation.json');
 
 end transaction;

@@ -96,20 +96,20 @@ public class ContributorRoleType extends TableImpl<ContributorRoleTypeRecord> {
 
     @Override
     public List<ForeignKey<ContributorRoleTypeRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.CONTRIBUTOR_ROLE_TYPE__FK_ACCESS_TYPE_SCHEME_ID);
+        return Arrays.asList(Keys.CONTRIBUTOR_ROLE_TYPE__FK_CONTRIBUTOR_ROLE_TYPE_SCHEME_ID);
     }
 
-    private transient AccessTypeScheme _accessTypeScheme;
+    private transient ContributorRoleTypeScheme _contributorRoleTypeScheme;
 
     /**
-     * Get the implicit join path to the <code>api_svc.access_type_scheme</code>
-     * table.
+     * Get the implicit join path to the
+     * <code>api_svc.contributor_role_type_scheme</code> table.
      */
-    public AccessTypeScheme accessTypeScheme() {
-        if (_accessTypeScheme == null)
-            _accessTypeScheme = new AccessTypeScheme(this, Keys.CONTRIBUTOR_ROLE_TYPE__FK_ACCESS_TYPE_SCHEME_ID);
+    public ContributorRoleTypeScheme contributorRoleTypeScheme() {
+        if (_contributorRoleTypeScheme == null)
+            _contributorRoleTypeScheme = new ContributorRoleTypeScheme(this, Keys.CONTRIBUTOR_ROLE_TYPE__FK_CONTRIBUTOR_ROLE_TYPE_SCHEME_ID);
 
-        return _accessTypeScheme;
+        return _contributorRoleTypeScheme;
     }
 
     @Override

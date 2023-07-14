@@ -54,11 +54,11 @@
   "organisations": [
     {
       "id": "https://ror.org/04qw24q55",
-      "identifierSchemeUri": "https://ror.org/",
+      "schemeUri": "https://ror.org/",
       "roles": [
         {
-          "roleSchemeUri": "https://raid.org/",
-          "role": "Lead Research Organisation",
+          "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1",
+          "role": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json",
           "startDate": "2020-10-07"
         }
       ]
