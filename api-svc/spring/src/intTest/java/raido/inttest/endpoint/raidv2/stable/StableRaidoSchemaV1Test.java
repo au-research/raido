@@ -30,8 +30,12 @@ public class StableRaidoSchemaV1Test extends IntegrationTestCase {
 
   private static final String ACCESS_TYPE_SCHEME_URI =
     "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1";
+
   private static final String PRIMARY_TITLE_TYPE =
     "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
+
+  private static final String ALTERNATIVE_TITLE_TYPE =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json";
 
   private static final String TITLE_TYPE_SCHEME_URI =
     "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1";
@@ -100,6 +104,25 @@ public class StableRaidoSchemaV1Test extends IntegrationTestCase {
     var readResult = raidApi.readRaidV1(
       mintedId.handle().prefix(), mintedId.handle().suffix());
     assertThat(readResult).isNotNull();
+
+    var updateRequest = mapReadToUpdate(readResult);
+    updateRequest.addTitlesItem(new Title()
+      .schemeUri(TITLE_TYPE_SCHEME_URI)
+      .type(ALTERNATIVE_TITLE_TYPE)
+      .startDate(LocalDate.now())
+      .title("added title for update")
+    );
+
+    var updateResult =
+      raidApi.updateRaidV1(mintedId.handle().prefix(), mintedId.handle().suffix(), updateRequest);
+
+    assertThat(updateResult.getTitles().size()).isEqualTo(2);
+
+
+
+
+
+
 
     
 //    EXPECT("should be able to read the minted raid via public api (v3)");
