@@ -46,7 +46,7 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
 
     try {
       raidApi.createRaidV1(createRequest);
-      fail("No exception thrown with missing title");
+      fail("No exception thrown with missing primary title");
     } catch (RaidApiValidationException e) {
       final var failures = e.getFailures();
       assertThat(failures).hasSize(1);
@@ -68,7 +68,7 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
 
     try {
       raidApi.createRaidV1(createRequest);
-      fail("No exception thrown with missing title scheme");
+      fail("No exception thrown with missing schemeUri");
     } catch (RaidApiValidationException e) {
       final var failures = e.getFailures();
       assertThat(failures).hasSize(1);
@@ -91,7 +91,7 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
 
     try {
       raidApi.createRaidV1(createRequest);
-      fail("No exception thrown with missing title scheme");
+      fail("No exception thrown with invalid schemeUri");
     } catch (RaidApiValidationException e) {
       final var failures = e.getFailures();
       assertThat(failures).hasSize(1);
@@ -121,7 +121,7 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
 
     try {
       raidApi.createRaidV1(createRequest);
-      fail("No exception thrown with missing title scheme");
+      fail("No exception thrown with missing title type");
     } catch (RaidApiValidationException e) {
       final var failures = e.getFailures();
       assertThat(failures).hasSize(1);
@@ -155,7 +155,7 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
 
     try {
       raidApi.createRaidV1(createRequest);
-      fail("No exception thrown with missing title scheme");
+      fail("No exception thrown with missing invalid title type");
     } catch (RaidApiValidationException e) {
       final var failures = e.getFailures();
       assertThat(failures).hasSize(1);
@@ -180,7 +180,7 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
 
     try {
       raidApi.createRaidV1(createRequest);
-      fail("No exception thrown with missing title");
+      fail("No exception thrown with missing startDate");
     } catch (RaidApiValidationException e) {
       final var failures = e.getFailures();
       assertThat(failures).hasSize(1);

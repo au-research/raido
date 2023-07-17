@@ -11,11 +11,13 @@ import raido.apisvc.repository.TitleTypeSchemeRepository;
 import raido.db.jooq.api_svc.tables.records.TitleTypeRecord;
 import raido.db.jooq.api_svc.tables.records.TitleTypeSchemeRecord;
 import raido.idl.raidv2.model.Title;
+import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
 import static raido.apisvc.util.TestConstants.*;
@@ -64,6 +66,34 @@ class StableTitleValidationServiceTest {
   }
 
   @Test
+  @DisplayName("Validation fails if type is missing")
+  void missingType() {
+    final var title = new Title()
+      .schemeUri(TITLE_TYPE_SCHEME_URI)
+      .title(TITLE)
+      .startDate(START_DATE)
+      .endDate(END_DATE);
+
+    when(titleTypeSchemeRepository.findByUri(TITLE_TYPE_SCHEME_URI))
+      .thenReturn(Optional.of(TITLE_TYPE_SCHEME_RECORD));
+
+    final var failures = validationService.validateTitles(List.of(title));
+
+    assertThat(failures.size(), is(2));
+
+    assertThat(failures, hasItems(
+      new ValidationFailure()
+        .errorType("notSet")
+        .fieldId("titles[0].type")
+        .message("field must be set"),
+      new ValidationFailure()
+        .errorType("missingPrimaryTitle")
+        .fieldId("titles.type")
+        .message("at least one primaryTitle entry must be provided")
+    ));
+  }
+
+  @Test
   @DisplayName("Validation fails if schemeUri is missing")
   void missingSchemeUri() {
     final var title = new Title()
@@ -83,8 +113,28 @@ class StableTitleValidationServiceTest {
   }
 
   @Test
-  @DisplayName("Validation fails if title is missing")
-  void missingTitle() {
+  @DisplayName("Validation fails if schemeUri is blank")
+  void blankSchemeUri() {
+    final var title = new Title()
+      .schemeUri("")
+      .type(PRIMARY_TITLE_TYPE)
+      .title(TITLE)
+      .startDate(START_DATE)
+      .endDate(END_DATE);
+
+    final var failures = validationService.validateTitles(List.of(title));
+
+    assertThat(failures.size(), is(1));
+
+    final var failure = failures.get(0);
+    assertThat(failure.getErrorType(), is("notSet"));
+    assertThat(failure.getFieldId(), is("titles[0].schemeUri"));
+    assertThat(failure.getMessage(), is("field must be set"));
+  }
+
+  @Test
+  @DisplayName("Validation fails if title is null")
+  void nullTitle() {
     final var title = new Title()
       .schemeUri(TITLE_TYPE_SCHEME_URI)
       .type(PRIMARY_TITLE_TYPE)
@@ -106,6 +156,33 @@ class StableTitleValidationServiceTest {
     assertThat(failure.getFieldId(), is("titles[0].title"));
     assertThat(failure.getMessage(), is("field must be set"));
   }
+
+  @Test
+  @DisplayName("Validation fails if title is blank")
+  void blankTitle() {
+    final var title = new Title()
+      .schemeUri(TITLE_TYPE_SCHEME_URI)
+      .type(PRIMARY_TITLE_TYPE)
+      .startDate(START_DATE)
+      .endDate(END_DATE)
+      .title("");
+
+    when(titleTypeSchemeRepository.findByUri(TITLE_TYPE_SCHEME_URI))
+      .thenReturn(Optional.of(TITLE_TYPE_SCHEME_RECORD));
+
+    when(titleTypeRepository.findByUriAndSchemeId(PRIMARY_TITLE_TYPE, TITLE_TYPE_SCHEME_ID))
+      .thenReturn(Optional.of(TITLE_TYPE_RECORD));
+
+    final var failures = validationService.validateTitles(List.of(title));
+
+    assertThat(failures.size(), is(1));
+
+    final var failure = failures.get(0);
+    assertThat(failure.getErrorType(), is("notSet"));
+    assertThat(failure.getFieldId(), is("titles[0].title"));
+    assertThat(failure.getMessage(), is("field must be set"));
+  }
+
 
   @Test
   @DisplayName("Validation fails if schemeUri does not exist")
@@ -131,7 +208,7 @@ class StableTitleValidationServiceTest {
   }
 
   @Test
-  @DisplayName("Validation fails if title type does not exist in scheme")
+  @DisplayName("Validation fails if type does not exist in scheme")
   void invalidTitleType() {
     final var title = new Title()
       .schemeUri(TITLE_TYPE_SCHEME_URI)
@@ -157,7 +234,7 @@ class StableTitleValidationServiceTest {
   }
 
   @Test
-  @DisplayName("Validation failes if start date is missing")
+  @DisplayName("Validation fails if start date is missing")
   void missingStartDate() {
     final var title = new Title()
       .type(PRIMARY_TITLE_TYPE)

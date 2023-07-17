@@ -208,7 +208,7 @@ public class ValidationMessage {
 
   public static ValidationFailure descriptionTypeNotSet(int i) {
     return new ValidationFailure().
-      fieldId("descriptions[%s].description".formatted(i)).
+      fieldId("descriptions[%s].type".formatted(i)).
       errorType(NOT_SET_TYPE).
       message(FIELD_MUST_BE_SET_MESSAGE);
   }

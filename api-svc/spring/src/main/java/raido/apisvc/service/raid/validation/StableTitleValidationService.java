@@ -62,7 +62,7 @@ public class StableTitleValidationService {
     for (int i = 0; i < titles.size(); i++) {
       var title = titles.get(i);
 
-      if (title.getSchemeUri() == null) {
+      if (isBlank(title.getSchemeUri())) {
         failures.add(new ValidationFailure()
           .fieldId("titles[%s].schemeUri".formatted(i))
           .errorType(NOT_SET_TYPE)
@@ -89,7 +89,7 @@ public class StableTitleValidationService {
       if (!valueFits(RAID.PRIMARY_TITLE, title.getTitle())) {
         failures.add(primaryTitleTooLong(i));
       }
-      if (title.getType() == null) {
+      if (isBlank(title.getType())) {
         failures.add(titlesTypeNotSet(i));
       }
       if (title.getStartDate() == null) {
