@@ -1,4 +1,4 @@
-This page is a list of the stuff we talked about in the Rect handover.
+This page is a list of the stuff we talked about in the React handover.
 
 Use it as a guide for where to start and the major things to touch on when 
 onboarding a new developer.

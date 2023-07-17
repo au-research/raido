@@ -15,5 +15,5 @@ analyse the usage and implement a shared interface that can be configured
 with the correct implmentation at startup time (either a a customisation 
 property for 
 [ApiConfig.java](../spring/src/main/java/raido/apisvc/spring/config/ApiConfig.java)
-or prehaps each registration agency could inherit from ApiConfig to customise
+or perhaps each registration agency could inherit from ApiConfig to customise
 their own setup (RaidoApiConfig, SurfApiConfig, etc.)
