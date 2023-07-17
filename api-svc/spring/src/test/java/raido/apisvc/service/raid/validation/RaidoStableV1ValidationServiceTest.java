@@ -37,8 +37,34 @@ class RaidoStableV1ValidationServiceTest {
   private SpatialCoverageValidationService spatialCoverageValidationService;
   @Mock
   private TraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelValidatorService;
+  @Mock
+  private StableAccessValidationService accessValidationService;
   @InjectMocks
   private RaidoStableV1ValidationService validationService;
+
+  @Test
+  void validatesAccessOnCreate() {
+    final var access = new Access();
+    final var raid = new CreateRaidV1Request().access(access);
+
+    validationService.validateForCreate(raid);
+
+    verify(accessValidationService).validateAccess(access);
+  }
+
+  @Test
+  void validatesAccessOnUpdate() {
+    final var handle = "test-handle";
+    final var access = new Access();
+
+    final var raid = new UpdateRaidV1Request()
+      .id(new IdBlock())
+      .access(access);
+
+    validationService.validateForUpdate(handle, raid);
+
+    verify(accessValidationService).validateAccess(access);
+  }
 
   @Test
   void validatesSubjectsOnCreate() {

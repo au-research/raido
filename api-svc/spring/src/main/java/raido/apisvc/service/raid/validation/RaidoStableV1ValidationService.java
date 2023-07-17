@@ -40,6 +40,8 @@ public class RaidoStableV1ValidationService {
   private final SpatialCoverageValidationService spatialCoverageSvc;
   private final TraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelSvc;
 
+  private final StableAccessValidationService accessValidationService;
+
   public RaidoStableV1ValidationService(
     final StableTitleValidationService titleSvc,
     final StableDescriptionValidationService descSvc,
@@ -51,8 +53,8 @@ public class RaidoStableV1ValidationService {
     final AlternateIdentifierValidationService alternateIdentifierSvc,
     final RelatedRaidValidationService relatedRaidSvc,
     final SpatialCoverageValidationService spatialCoverageSvc,
-    final TraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelSvc
-  ) {
+    final TraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelSvc,
+    final StableAccessValidationService accessValidationService) {
     this.titleSvc = titleSvc;
     this.descSvc = descSvc;
     this.contribSvc = contribSvc;
@@ -64,6 +66,7 @@ public class RaidoStableV1ValidationService {
     this.relatedRaidSvc = relatedRaidSvc;
     this.spatialCoverageSvc = spatialCoverageSvc;
     this.traditionalKnowledgeLabelSvc = traditionalKnowledgeLabelSvc;
+    this.accessValidationService = accessValidationService;
   }
 
   private List<ValidationFailure> validateUpdateHandle(final String decodedHandleFromPath, final IdBlock updateIdBlock) {
@@ -112,30 +115,30 @@ public class RaidoStableV1ValidationService {
     return failures;
   }
 
-  private static List<ValidationFailure> validateAccess(
-    Access access
-  ) {
-    var failures = new ArrayList<ValidationFailure>();
+//  private List<ValidationFailure> validateAccess(
+//    Access access
+//  ) {
+//    var failures = new ArrayList<ValidationFailure>();
+//
+//    if( access == null ){
+//      failures.add(ValidationMessage.ACCESS_NOT_SET);
+//    }
+//    else {
+//      if( access.getType() == null ){
+//        failures.add(ValidationMessage.ACCESS_TYPE_NOT_SET);
+//      }
+//      else {
+//        if(
+//          access.getType().equals(ACCESS_TYPE_CLOSED) &&
+//            access.getAccessStatement() == null
+//        ){
+//          failures.add(ValidationMessage.ACCESS_STATEMENT_NOT_SET);
+//        }
+//      }
+//    }
 
-    if( access == null ){
-      failures.add(ValidationMessage.ACCESS_NOT_SET);
-    }
-    else {
-      if( access.getType() == null ){
-        failures.add(ValidationMessage.ACCESS_TYPE_NOT_SET);
-      }
-      else {
-        if(
-          access.getType().equals(ACCESS_TYPE_CLOSED) &&
-            access.getAccessStatement() == null
-        ){
-          failures.add(ValidationMessage.ACCESS_STATEMENT_NOT_SET);
-        }
-      }
-    }
-
-    return failures;
-  }
+//    return failures;
+//  }
   public List<ValidationFailure> validateAlternateUrls(
     List<AlternateUrlBlock> urls
   ) {
@@ -171,7 +174,7 @@ public class RaidoStableV1ValidationService {
     }
 
     failures.addAll(validateDates(request.getDates()));
-    failures.addAll(validateAccess(request.getAccess()));
+    failures.addAll(accessValidationService.validateAccess(request.getAccess()));
     failures.addAll(titleSvc.validateTitles(request.getTitles()));
     failures.addAll(descSvc.validateDescriptions(request.getDescriptions()));
     failures.addAll(validateAlternateUrls(request.getAlternateUrls()));
@@ -202,7 +205,7 @@ public class RaidoStableV1ValidationService {
     }
 
     failures.addAll(validateDates(request.getDates()));
-    failures.addAll(validateAccess(request.getAccess()));
+    failures.addAll(accessValidationService.validateAccess(request.getAccess()));
     failures.addAll(titleSvc.validateTitles(request.getTitles()));
     failures.addAll(descSvc.validateDescriptions(request.getDescriptions()));
     failures.addAll(validateAlternateUrls(request.getAlternateUrls()));

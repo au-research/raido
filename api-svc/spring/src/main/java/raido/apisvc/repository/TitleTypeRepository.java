@@ -20,8 +20,8 @@ public class TitleTypeRepository {
     return dslContext.select(TITLE_TYPE.fields())
       .from(TITLE_TYPE)
       .where(TITLE_TYPE.URI.eq(uri)
-        .and(TITLE_TYPE.SCHEME_ID.eq(schemeId))).
-      fetchOptional(record -> new TitleTypeRecord()
+        .and(TITLE_TYPE.SCHEME_ID.eq(schemeId)))
+      .fetchOptional(record -> new TitleTypeRecord()
         .setSchemeId(TITLE_TYPE.SCHEME_ID.getValue(record))
         .setUri(TITLE_TYPE.URI.getValue(record))
       );

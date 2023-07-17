@@ -64,8 +64,9 @@ insert into raido.api_svc.access_type_scheme (uri) values
     ('https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1');
 
 insert into raido.api_svc.access_type (scheme_id, uri) values
-    (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json'),
-    (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json');
+    (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json'),
+    (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json'),
+    (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json');
 
 
 drop table if exists raido.api_svc.contributor_position_type_scheme;

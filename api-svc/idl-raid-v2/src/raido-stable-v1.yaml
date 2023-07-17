@@ -191,6 +191,10 @@ components:
           example: 'https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1'
         }
         accessStatement: { type: string }
+        embargoExpiry: {
+          type: string,
+          format: date
+        }
     Contributor:
       type: object
       required: [id, schemeUri, positions, roles]

@@ -17,10 +17,10 @@ public class TitleTypeSchemeRepository {
   }
 
   public Optional<TitleTypeSchemeRecord> findByUri(final String uri) {
-    return dslContext.select(TITLE_TYPE_SCHEME.fields()).
-      from(TITLE_TYPE_SCHEME).
-      where(TITLE_TYPE_SCHEME.URI.eq(uri)).
-      fetchOptional(record -> new TitleTypeSchemeRecord()
+    return dslContext.select(TITLE_TYPE_SCHEME.fields())
+      .from(TITLE_TYPE_SCHEME)
+      .where(TITLE_TYPE_SCHEME.URI.eq(uri))
+      .fetchOptional(record -> new TitleTypeSchemeRecord()
         .setId(TITLE_TYPE_SCHEME.ID.getValue(record))
         .setUri(TITLE_TYPE_SCHEME.URI.getValue(record))
       );
