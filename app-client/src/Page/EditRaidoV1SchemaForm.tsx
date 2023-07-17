@@ -394,7 +394,12 @@ export function EditRaidoV1SchemaForm({onUpdateSuccess, raid, metadata}:{
         oldMetadata: metadata
       });
     }}>
-      { appWritesEnabled ? <></> : <Alert severity="warning">Editing is disabled for this RAiD's service point.</Alert> }
+      
+      {/* Ensure the `readServicePoint` data has completely loaded before evaluating `spQuery`.
+          This prevents a flash of the warning message when the page first loads.
+      */}
+      { !appWritesEnabled && !spQuery.isLoading ? <Alert severity="warning">Editing is disabled for this RAiD's service point.</Alert> : <></> }
+      
       <Stack spacing={2}>
         <TextField id="primaryTitle" label="Primary title" variant="outlined"
           autoFocus autoCorrect="off" autoCapitalize="on"
