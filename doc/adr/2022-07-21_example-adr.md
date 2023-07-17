@@ -3,7 +3,7 @@
 * Status: request-for-comment | proposed | final                                     
 * Who:  proposed by <initials>, finalised by <initials>, etc.                               
 * When: proposed on 2022-07-21, finalised on 2022-07-21, etc.
-* Related: subsequent, previous, superceeds, superceded-by, etc. 
+* Related: subsequent, previous, supersedes, superseded-by, etc. 
 
 
 # Decision
