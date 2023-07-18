@@ -37,7 +37,6 @@ import {assert} from "Util/TypeUtil";
 import Typography from "@mui/material/Typography";
 import {formatLocalDateAsFileSafeIsoShortDateTime, formatLocalDateAsIso} from "Util/DateUtil";
 import {escapeCsvField} from "Util/DownloadUtil";
-import { delay } from "Util/EventUtil";
 
 const log = console;
 
