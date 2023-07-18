@@ -26,10 +26,10 @@ public class StableContributorRoleValidationService {
     final ContribRole role, final int contributorIndex, final int roleIndex) {
     final var failures = new ArrayList<ValidationFailure>();
 
-    if (isBlank(role.getRole())) {
+    if (isBlank(role.getType())) {
       failures.add(
         new ValidationFailure()
-          .fieldId("contributors[%d].roles[%d].role".formatted(contributorIndex, roleIndex))
+          .fieldId("contributors[%d].roles[%d].type".formatted(contributorIndex, roleIndex))
           .errorType(NOT_SET_TYPE)
           .message(FIELD_MUST_BE_SET_MESSAGE));
     }
@@ -52,11 +52,11 @@ public class StableContributorRoleValidationService {
             .errorType(INVALID_VALUE_TYPE)
             .message(INVALID_VALUE_MESSAGE)
         );
-      } else if (!isBlank(role.getRole()) &&
-        contributorRoleTypeRepository.findByUriAndSchemeId(role.getRole(), roleScheme.get().getId()).isEmpty()) {
+      } else if (!isBlank(role.getType()) &&
+        contributorRoleTypeRepository.findByUriAndSchemeId(role.getType(), roleScheme.get().getId()).isEmpty()) {
         failures.add(
           new ValidationFailure()
-            .fieldId("contributors[%d].roles[%d].role".formatted(contributorIndex, roleIndex))
+            .fieldId("contributors[%d].roles[%d].type".formatted(contributorIndex, roleIndex))
             .errorType(INVALID_VALUE_TYPE)
             .message(INVALID_VALUE_MESSAGE)
         );

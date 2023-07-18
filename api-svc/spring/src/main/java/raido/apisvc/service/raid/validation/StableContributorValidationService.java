@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static raido.apisvc.endpoint.message.ValidationMessage.CONTRIB_NOT_SET;
-import static raido.apisvc.endpoint.message.ValidationMessage.INVALID_VALUE_TYPE;
+import static raido.apisvc.endpoint.message.ValidationMessage.*;
+import static raido.apisvc.util.StringUtil.isBlank;
 
 @Component
 public class StableContributorValidationService {
@@ -41,6 +41,15 @@ public class StableContributorValidationService {
       .forEach(contributorIndex -> {
         final var contributor = contributors.get(contributorIndex);
 
+        if (isBlank(contributor.getSchemeUri())) {
+          failures.add(
+            new ValidationFailure()
+              .fieldId("contributors[%d].schemeUri".formatted(contributorIndex))
+              .errorType(NOT_SET_TYPE)
+              .message(FIELD_MUST_BE_SET_MESSAGE)
+          );
+        }
+
         failures.addAll(orcidValidationService.validate(contributor.getId(), contributorIndex));
 
         IntStream.range(0, contributor.getRoles().size())
@@ -68,7 +77,7 @@ public class StableContributorValidationService {
     return contributors.stream()
       .filter(i -> i.getPositions()
         .stream()
-        .anyMatch(j -> j.getPosition().equals(LEADER_POSITION))
+        .anyMatch(j -> j.getType().equals(LEADER_POSITION))
       ).toList();
   }
 

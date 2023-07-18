@@ -204,12 +204,12 @@ public class StableRaidoSchemaV1Test extends IntegrationTestCase {
       .schemeUri(CONTRIBUTOR_SCHEME_URI)
       .positions(List.of(new ContribPosition()
         .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-        .position(position)
+        .type(position)
         .startDate(startDate)))
       .roles(List.of(
         new ContribRole()
           .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-          .role(role)));
+          .type(role)));
   }
 
   public Organisation organisation(

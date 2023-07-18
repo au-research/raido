@@ -51,7 +51,7 @@ class StableContributorPositionValidationServiceTest {
   @DisplayName("Validation passes with valid ContributorPosition")
   void validContributorPosition() {
     final var position = new ContribPosition()
-      .position(LEADER_CONTRIBUTOR_POSITION_TYPE)
+      .type(LEADER_CONTRIBUTOR_POSITION_TYPE)
       .schemeUri(CONTRIBUTOR_POSITION_TYPE_SCHEME_URI)
       .startDate(LocalDate.now().minusYears(1))
       .endDate(LocalDate.now());
@@ -72,7 +72,7 @@ class StableContributorPositionValidationServiceTest {
   @DisplayName("Validation fails with null schemeUri")
   void nullSchemeUri() {
     final var position = new ContribPosition()
-      .position(LEADER_CONTRIBUTOR_POSITION_TYPE)
+      .type(LEADER_CONTRIBUTOR_POSITION_TYPE)
       .startDate(LocalDate.now().minusYears(1))
       .endDate(LocalDate.now());
 
@@ -95,7 +95,7 @@ class StableContributorPositionValidationServiceTest {
   void emptySchemeUri() {
     final var position = new ContribPosition()
       .schemeUri("")
-      .position(LEADER_CONTRIBUTOR_POSITION_TYPE)
+      .type(LEADER_CONTRIBUTOR_POSITION_TYPE)
       .startDate(LocalDate.now().minusYears(1))
       .endDate(LocalDate.now());
 
@@ -118,7 +118,7 @@ class StableContributorPositionValidationServiceTest {
   void invalidSchemeUri() {
     final var position = new ContribPosition()
       .schemeUri(CONTRIBUTOR_POSITION_TYPE_SCHEME_URI)
-      .position(LEADER_CONTRIBUTOR_POSITION_TYPE)
+      .type(LEADER_CONTRIBUTOR_POSITION_TYPE)
       .startDate(LocalDate.now().minusYears(1))
       .endDate(LocalDate.now());
 
@@ -167,7 +167,7 @@ class StableContributorPositionValidationServiceTest {
   void emptyPosition() {
     final var position = new ContribPosition()
       .schemeUri(CONTRIBUTOR_POSITION_TYPE_SCHEME_URI)
-      .position("")
+      .type("")
       .startDate(LocalDate.now().minusYears(1))
       .endDate(LocalDate.now());
 
@@ -192,7 +192,7 @@ class StableContributorPositionValidationServiceTest {
   void invalidPosition() {
     final var position = new ContribPosition()
       .schemeUri(CONTRIBUTOR_POSITION_TYPE_SCHEME_URI)
-      .position(LEADER_CONTRIBUTOR_POSITION_TYPE)
+      .type(LEADER_CONTRIBUTOR_POSITION_TYPE)
       .startDate(LocalDate.now().minusYears(1))
       .endDate(LocalDate.now());
 
@@ -219,7 +219,7 @@ class StableContributorPositionValidationServiceTest {
   void nullstartDate() {
     final var position = new ContribPosition()
       .schemeUri(CONTRIBUTOR_POSITION_TYPE_SCHEME_URI)
-      .position(LEADER_CONTRIBUTOR_POSITION_TYPE)
+      .type(LEADER_CONTRIBUTOR_POSITION_TYPE)
       .endDate(LocalDate.now());
 
     when(contributorPositionTypeSchemeRepository.findByUri(CONTRIBUTOR_POSITION_TYPE_SCHEME_URI))

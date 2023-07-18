@@ -45,6 +45,9 @@ public class TestConstants {
   protected static final String LEADER_POSITION =
     "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json";
 
+  protected static final String OTHER_PARTICIPANT_POSITION =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/other-participant.json";
+
   protected static final String CONTRIBUTOR_ROLE_SCHEME_URI = "https://credit.niso.org/";
 
   protected static final String SOFTWARE_ROLE =

@@ -119,12 +119,12 @@ public class InvalidPidTest extends IntegrationTestCase {
       .schemeUri(CONTRIBUTOR_SCHEME_URI)
       .positions(List.of(new ContribPosition()
         .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-        .position(LEADER_POSITION)
+        .type(LEADER_POSITION)
         .startDate(today)))
       .roles(List.of(
         new ContribRole()
           .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-          .role(SUPERVISION_ROLE))));
+          .type(SUPERVISION_ROLE))));
   }
 
   public List<Organisation> organisations(String ror){

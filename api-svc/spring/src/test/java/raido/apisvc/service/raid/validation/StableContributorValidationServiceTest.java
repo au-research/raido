@@ -41,7 +41,7 @@ class StableContributorValidationServiceTest {
   void missingPositions() {
     final var role = new ContribRole()
       .schemeUri(CONTRIBUTOR_ROLE_TYPE_SCHEME_URI)
-      .role(SUPERVISION_CONTRIBUTOR_ROLE);
+      .type(SUPERVISION_CONTRIBUTOR_ROLE);
 
     final var contributor = new Contributor()
       .schemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
@@ -67,11 +67,11 @@ class StableContributorValidationServiceTest {
   void missingLeadPositions() {
     final var role = new ContribRole()
       .schemeUri(CONTRIBUTOR_ROLE_TYPE_SCHEME_URI)
-      .role(SUPERVISION_CONTRIBUTOR_ROLE);
+      .type(SUPERVISION_CONTRIBUTOR_ROLE);
 
     final var position = new ContribPosition()
       .schemeUri(CONTRIBUTOR_POSITION_TYPE_SCHEME_URI)
-      .position("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/other-participant.json")
+      .type("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/other-participant.json")
       .startDate(LocalDate.now());
 
     final var contributor = new Contributor()
@@ -133,11 +133,11 @@ class StableContributorValidationServiceTest {
   void validContributor() {
     final var role = new ContribRole()
       .schemeUri(CONTRIBUTOR_ROLE_TYPE_SCHEME_URI)
-      .role(SUPERVISION_CONTRIBUTOR_ROLE);
+      .type(SUPERVISION_CONTRIBUTOR_ROLE);
 
     final var position = new ContribPosition()
       .schemeUri(CONTRIBUTOR_POSITION_TYPE_SCHEME_URI)
-      .position(LEADER_CONTRIBUTOR_POSITION_TYPE)
+      .type(LEADER_CONTRIBUTOR_POSITION_TYPE)
       .startDate(LocalDate.now());
 
     final var contributor = new Contributor()
@@ -155,15 +155,78 @@ class StableContributorValidationServiceTest {
   }
 
   @Test
+  @DisplayName("Validation passes with missing schemeUri")
+  void missingSchemeUri() {
+    final var role = new ContribRole()
+      .schemeUri(CONTRIBUTOR_ROLE_TYPE_SCHEME_URI)
+      .type(SUPERVISION_CONTRIBUTOR_ROLE);
+
+    final var position = new ContribPosition()
+      .schemeUri(CONTRIBUTOR_POSITION_TYPE_SCHEME_URI)
+      .type(LEADER_CONTRIBUTOR_POSITION_TYPE)
+      .startDate(LocalDate.now());
+
+    final var contributor = new Contributor()
+      .id(VALID_ORCID)
+      .roles(List.of(role))
+      .positions(List.of(position));
+
+    final var failures = validationService.validate(List.of(contributor));
+
+    assertThat(failures, hasSize(1));
+    assertThat(failures, hasItem(
+      new ValidationFailure()
+        .fieldId("contributors[0].schemeUri")
+        .errorType("notSet")
+        .message("field must be set")
+    ));
+
+    verify(roleValidationService).validate(role, 0, 0);
+    verify(positionValidationService).validate(position, 0, 0);
+  }
+
+  @Test
+  @DisplayName("Validation passes with empty schemeUri")
+  void emptySchemeUri() {
+    final var role = new ContribRole()
+      .schemeUri(CONTRIBUTOR_ROLE_TYPE_SCHEME_URI)
+      .type(SUPERVISION_CONTRIBUTOR_ROLE);
+
+    final var position = new ContribPosition()
+      .schemeUri(CONTRIBUTOR_POSITION_TYPE_SCHEME_URI)
+      .type(LEADER_CONTRIBUTOR_POSITION_TYPE)
+      .startDate(LocalDate.now());
+
+    final var contributor = new Contributor()
+      .schemeUri("")
+      .id(VALID_ORCID)
+      .roles(List.of(role))
+      .positions(List.of(position));
+
+    final var failures = validationService.validate(List.of(contributor));
+
+    assertThat(failures, hasSize(1));
+    assertThat(failures, hasItem(
+      new ValidationFailure()
+        .fieldId("contributors[0].schemeUri")
+        .errorType("notSet")
+        .message("field must be set")
+    ));
+
+    verify(roleValidationService).validate(role, 0, 0);
+    verify(positionValidationService).validate(position, 0, 0);
+  }
+
+  @Test
   @DisplayName("Failures validation services are added to return value")
   void roleValidationFailures() {
     final var role = new ContribRole()
       .schemeUri(CONTRIBUTOR_ROLE_TYPE_SCHEME_URI)
-      .role(SUPERVISION_CONTRIBUTOR_ROLE);
+      .type(SUPERVISION_CONTRIBUTOR_ROLE);
 
     final var position = new ContribPosition()
       .schemeUri(CONTRIBUTOR_POSITION_TYPE_SCHEME_URI)
-      .position(LEADER_CONTRIBUTOR_POSITION_TYPE)
+      .type(LEADER_CONTRIBUTOR_POSITION_TYPE)
       .startDate(LocalDate.now());
 
     final var contributor = new Contributor()
@@ -206,11 +269,11 @@ class StableContributorValidationServiceTest {
   void multipleLeadPositions() {
     final var role = new ContribRole()
       .schemeUri(CONTRIBUTOR_ROLE_TYPE_SCHEME_URI)
-      .role(SUPERVISION_CONTRIBUTOR_ROLE);
+      .type(SUPERVISION_CONTRIBUTOR_ROLE);
 
     final var position = new ContribPosition()
       .schemeUri(CONTRIBUTOR_POSITION_TYPE_SCHEME_URI)
-      .position(LEADER_CONTRIBUTOR_POSITION_TYPE)
+      .type(LEADER_CONTRIBUTOR_POSITION_TYPE)
       .startDate(LocalDate.now());
 
     final var contributor = new Contributor()
