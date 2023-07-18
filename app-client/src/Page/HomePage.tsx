@@ -125,6 +125,7 @@ export function RaidTableContainerV2({servicePointId}: {servicePointId: number})
         raidListRequestV2: {servicePointId: servicePointId}
       });
     });
+    
   const spQuery = useQuery(['readServicePoint', user.servicePointId],
     async () => await api.admin.readServicePoint({
       servicePointId: user.servicePointId }));
@@ -152,7 +153,11 @@ export function RaidTableContainerV2({servicePointId}: {servicePointId: number})
   };
   
   return<>
-    { appWritesEnabled ?  <></> : <Alert severity="warning">Editing is disabled for this service point.</Alert> }
+    {/* Ensure the `readServicePoint` data has completely loaded before evaluating `spQuery`.
+        This prevents a flash of the warning message when the page first loads.
+    */}
+    { !appWritesEnabled && !spQuery.isLoading ? <Alert severity="warning">Editing is disabled for this service point.</Alert> : <></> }
+  
   <ContainerCard title={"Recently minted RAiD data"}
     action={<>
       <SettingsMenu raidData={raidQuery.data} />
