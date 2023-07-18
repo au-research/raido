@@ -178,7 +178,7 @@ public class RaidoStableV1ValidationService {
     failures.addAll(titleSvc.validateTitles(request.getTitles()));
     failures.addAll(descSvc.validateDescriptions(request.getDescriptions()));
     failures.addAll(validateAlternateUrls(request.getAlternateUrls()));
-    failures.addAll(contribSvc.validateContributors(request.getContributors()));
+    failures.addAll(contribSvc.validate(request.getContributors()));
     failures.addAll(orgSvc.validateOrganisations(request.getOrganisations()));
     failures.addAll(subjectSvc.validateSubjects(request.getSubjects()));
     failures.addAll(relatedRaidSvc.validateRelatedRaids(request.getRelatedRaids()));
@@ -209,7 +209,7 @@ public class RaidoStableV1ValidationService {
     failures.addAll(titleSvc.validateTitles(request.getTitles()));
     failures.addAll(descSvc.validateDescriptions(request.getDescriptions()));
     failures.addAll(validateAlternateUrls(request.getAlternateUrls()));
-    failures.addAll(contribSvc.validateContributors(request.getContributors()));
+    failures.addAll(contribSvc.validate(request.getContributors()));
     failures.addAll(orgSvc.validateOrganisations(request.getOrganisations()));
     failures.addAll(subjectSvc.validateSubjects(request.getSubjects()));
     failures.addAll(relatedRaidSvc.validateRelatedRaids(request.getRelatedRaids()));

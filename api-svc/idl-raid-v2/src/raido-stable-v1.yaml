@@ -199,7 +199,8 @@ components:
       type: object
       required: [id, schemeUri, positions, roles]
       properties:
-        id: { type: string }
+        id:
+          type: string
         schemeUri: {
           type: string,
           example: 'https://orcid.org/'
@@ -208,7 +209,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ContribPosition'
-
         roles:
           type: array
           items:
