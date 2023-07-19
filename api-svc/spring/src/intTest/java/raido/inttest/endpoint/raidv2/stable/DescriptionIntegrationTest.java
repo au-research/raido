@@ -13,9 +13,6 @@ public class DescriptionIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with missing description block succeeds")
   void missingTitle() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.setDescriptions(Collections.emptyList());
 
     try {
@@ -28,9 +25,6 @@ public class DescriptionIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Validation fails with missing schemeUri")
   void missingSchemeUri() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.getDescriptions().get(0).schemeUri(null);
 
     try {
@@ -50,9 +44,6 @@ public class DescriptionIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Validation fails with invalid schemeUri")
   void invalidSchemeUri() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.getDescriptions().get(0)
       .schemeUri("https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v2");
 
@@ -73,9 +64,6 @@ public class DescriptionIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Validation fails with blank schemeUri")
   void blankSchemeUri() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.getDescriptions().get(0).schemeUri("");
 
     try {
@@ -95,9 +83,6 @@ public class DescriptionIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Validation fails with missing description")
   void missingDescription() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.getDescriptions().get(0).description(null);
 
     try {
@@ -117,9 +102,6 @@ public class DescriptionIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Validation fails with blank description")
   void blankDescription() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.getDescriptions().get(0).description("");
 
     try {
@@ -139,9 +121,6 @@ public class DescriptionIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Validation fails with missing type")
   void missingType() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.getDescriptions().get(0).type(null);
 
     try {
@@ -161,9 +140,6 @@ public class DescriptionIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Validation fails with blank type")
   void blankType() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.getDescriptions().get(0).type("");
 
     try {
@@ -183,9 +159,6 @@ public class DescriptionIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Validation fails if type is not found within scheme")
   void invalidType() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.getDescriptions().get(0)
       .type("https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/unknown.json");
 
@@ -202,5 +175,4 @@ public class DescriptionIntegrationTest extends AbstractStableIntegrationTest {
       fail("Expected RaidApiValidationException");
     }
   }
-
 }

@@ -20,9 +20,6 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with no organisations succeeds")
   void noOrganisations() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.setOrganisations(null);
 
     try {
@@ -37,9 +34,6 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with empty organisations succeeds")
   void emptyOrganisations() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.setOrganisations(Collections.emptyList());
 
     try {
@@ -54,9 +48,6 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with missing organisation identifierSchemeUri fails")
   void missingIdentifierSchemeUri() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.setOrganisations(List.of(
       new Organisation()
         .id(VALID_ROR)
@@ -87,9 +78,6 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with empty organisation identifierSchemeUri fails")
   void emptyIdentifierSchemeUri() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.setOrganisations(List.of(
       new Organisation()
         .schemeUri("")
@@ -122,9 +110,6 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with missing organisation id fails")
   void missingId() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.setOrganisations(List.of(
       new Organisation()
         .schemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
@@ -155,9 +140,6 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with empty organisation id fails")
   void emptyId() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.setOrganisations(List.of(
       new Organisation()
         .schemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
@@ -192,9 +174,6 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with invalid ror pattern fails")
     void invalidRorPattern() {
-      final var raidApi = basicRaidStableClient();
-      final var createRequest = newCreateRequest();
-
       createRequest.setOrganisations(List.of(
         new Organisation()
           .schemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
@@ -226,9 +205,6 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with non-existent ror fails")
     void nonExistentRor() {
-      final var raidApi = basicRaidStableClient();
-      final var createRequest = newCreateRequest();
-
       createRequest.setOrganisations(List.of(
         new Organisation()
           .schemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
@@ -264,9 +240,6 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with missing role schemeUri fails")
     void missingRoleSchemeUri() {
-      final var raidApi = basicRaidStableClient();
-      final var createRequest = newCreateRequest();
-
       createRequest.setOrganisations(List.of(
         new Organisation()
           .schemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
@@ -297,9 +270,6 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with missing role type fails")
     void missingRoleType() {
-      final var raidApi = basicRaidStableClient();
-      final var createRequest = newCreateRequest();
-
       createRequest.setOrganisations(List.of(
         new Organisation()
           .schemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
@@ -330,9 +300,6 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with empty role type fails")
     void emptyRoleType() {
-      final var raidApi = basicRaidStableClient();
-      final var createRequest = newCreateRequest();
-
       createRequest.setOrganisations(List.of(
         new Organisation()
           .schemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
@@ -364,9 +331,6 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with invalid role schemeUri fails")
     void invalidRoleSchemeUri() {
-      final var raidApi = basicRaidStableClient();
-      final var createRequest = newCreateRequest();
-
       createRequest.setOrganisations(List.of(
         new Organisation()
           .schemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
@@ -398,9 +362,6 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with invalid type for role scheme fails")
     void invalidRoleTypeForScheme() {
-      final var raidApi = basicRaidStableClient();
-      final var createRequest = newCreateRequest();
-
       createRequest.setOrganisations(List.of(
         new Organisation()
           .schemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)

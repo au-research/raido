@@ -13,6 +13,7 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import raido.apisvc.service.raid.id.IdentifierParser;
 import raido.apisvc.service.stub.util.IdFactory;
 import raido.idl.raidv2.api.RaidoStableV1Api;
 import raido.idl.raidv2.model.*;
@@ -23,10 +24,8 @@ import raido.inttest.config.IntegrationTestConfig;
 import raido.inttest.service.auth.BootstrapAuthTokenService;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 
-import static java.util.List.of;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static raido.db.jooq.api_svc.enums.UserRole.OPERATOR;
@@ -46,6 +45,12 @@ public class AbstractStableIntegrationTest {
 
   private TestInfo testInfo;
 
+  protected CreateRaidV1Request createRequest;
+
+  protected RaidoStableV1Api raidApi;
+
+  protected IdentifierParser identifierParser;
+
   @Autowired
   protected ObjectMapper mapper;
   @Autowired
@@ -58,12 +63,14 @@ public class AbstractStableIntegrationTest {
   @RegisterExtension
   protected static JettyTestServer jettyTestServer = new JettyTestServer();
 
-
   @BeforeEach
   public void setupTestToken(){
     operatorToken = bootstrapTokenSvc.bootstrapToken(
       RAIDO_SP_ID, "intTestOperatorApiToken", OPERATOR);
 
+    createRequest = newCreateRequest();
+    raidApi = basicRaidStableClient();
+    identifierParser = new IdentifierParser();
   }
 
   @BeforeEach
@@ -98,19 +105,19 @@ public class AbstractStableIntegrationTest {
 
     return new CreateRaidV1Request()
       .metadataSchema(RAIDOMETADATASCHEMAV1)
-      .titles(Arrays.asList(new Title()
+      .titles(List.of(new Title()
         .type(PRIMARY_TITLE_TYPE)
         .schemeUri(TITLE_TYPE_SCHEME_URI)
         .title(initialTitle)
         .startDate(today)))
       .dates(new DatesBlock().startDate(today))
-      .descriptions(Arrays.asList(new Description()
+      .descriptions(List.of(new Description()
         .type(PRIMARY_DESCRIPTION_TYPE)
         .schemeUri(DESCRIPTION_TYPE_SCHEME_URI)
         .description("stuff about the int test raid")))
-      .contributors(of(contributor(
+      .contributors(List.of(contributor(
         REAL_TEST_ORCID, LEADER_POSITION, SOFTWARE_CONTRIBUTOR_ROLE, today)))
-      .organisations(of(organisation(
+      .organisations(List.of(organisation(
         REAL_TEST_ROR, LEAD_RESEARCH_ORGANISATION, today)))
       .access(new Access()
         .type(OPEN_ACCESS_TYPE)

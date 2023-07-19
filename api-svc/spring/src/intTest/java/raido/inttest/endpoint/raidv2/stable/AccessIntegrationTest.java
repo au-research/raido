@@ -15,9 +15,6 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Mint raid with valid open access type")
   void mintOpenAccess() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.getAccess()
       .schemeUri(ACCESS_TYPE_SCHEME_URI)
       .type(OPEN_ACCESS_TYPE);
@@ -32,9 +29,6 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Mint with valid closed access type")
   void mintClosedAccess() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.getAccess()
       .schemeUri(ACCESS_TYPE_SCHEME_URI)
       .type(CLOSED_ACCESS_TYPE)
@@ -49,9 +43,6 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Mint with valid embargoed access type")
   void mintEmbargoedAccess() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.getAccess()
       .schemeUri(ACCESS_TYPE_SCHEME_URI)
       .type(EMBARGOED_ACCESS_TYPE)
@@ -66,9 +57,6 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Mint with embargoed access type fails with missing embargoExpiry")
   void missingEmbargoExpiry() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.getAccess()
       .schemeUri(ACCESS_TYPE_SCHEME_URI)
       .type(EMBARGOED_ACCESS_TYPE);
@@ -91,9 +79,6 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Mint with closed access type fails with missing accessStatement")
   void missingAccessStatement() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.getAccess()
       .schemeUri(ACCESS_TYPE_SCHEME_URI)
       .type(CLOSED_ACCESS_TYPE);
@@ -116,9 +101,6 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Mint with closed access type fails with blank accessStatement")
   void blankAccessStatement() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.getAccess()
       .schemeUri(ACCESS_TYPE_SCHEME_URI)
       .type(CLOSED_ACCESS_TYPE)
@@ -143,9 +125,6 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Mint with open access type fails with missing schemeUri")
   void missingSchemeUri() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.getAccess()
       .type(OPEN_ACCESS_TYPE);
     try {
@@ -167,9 +146,6 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Mint with open access type fails with blank schemeUri")
   void blankSchemeUri() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.getAccess()
       .schemeUri("")
       .type(OPEN_ACCESS_TYPE);
@@ -192,9 +168,6 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Mint with open access type fails with missing type")
   void missingType() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.getAccess()
       .schemeUri(ACCESS_TYPE_SCHEME_URI);
     try {
@@ -216,9 +189,6 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Mint with open access type fails with blank type")
   void blankType() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.getAccess()
       .schemeUri(ACCESS_TYPE_SCHEME_URI)
       .type("");

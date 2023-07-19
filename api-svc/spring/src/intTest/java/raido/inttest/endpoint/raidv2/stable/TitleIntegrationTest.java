@@ -17,9 +17,6 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with missing title fails")
   void missingTitle() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.setTitles(Collections.emptyList());
 
     try {
@@ -34,14 +31,13 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
     } catch (Exception e) {
       fail("Expected RaidApiValidationException");
     }
+
+
   }
 
   @Test
   @DisplayName("Minting a RAiD with only alternative title fails")
   void alternativeTitleOnly() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.getTitles().get(0).setType(TestConstants.ALTERNATIVE_TITLE_TYPE);
 
     try {
@@ -61,9 +57,6 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with missing schemeUri fails")
   void missingTitleScheme() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.getTitles().get(0).setSchemeUri(null);
 
     try {
@@ -83,9 +76,6 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with invalid schemeUri fails")
   void invalidTitleScheme() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.getTitles().get(0)
       .setSchemeUri("https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v2");
 
@@ -106,9 +96,6 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with missing title type fails")
   void missingTitleType() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     final var titles = new ArrayList<>(createRequest.getTitles());
 
     titles.add(new Title()
@@ -139,9 +126,6 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with invalid title type fails")
   void invalidTitleType() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     final var titles = new ArrayList<>(createRequest.getTitles());
 
     titles.add(new Title()
@@ -173,9 +157,6 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with missing startDate fails")
   void missingStartDate() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.getTitles().get(0).setStartDate(null);
 
     try {
@@ -191,6 +172,4 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
       fail("Expected RaidApiValidationException");
     }
   }
-
-
 }

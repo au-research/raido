@@ -21,9 +21,6 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with no contributors fails")
   void noContributors() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.setContributors(null);
 
     try {
@@ -46,9 +43,6 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with empty contributors fails")
   void emptyContributors() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.setContributors(Collections.emptyList());
 
     try {
@@ -71,9 +65,6 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with missing identifierSchemeUri fails")
   void missingIdentifierSchemeUri() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.setContributors(List.of(
       new Contributor()
         .id("https://orcid.org/0000-0000-0000-0001")
@@ -110,9 +101,6 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with empty identifierSchemeUri fails")
   void emptyIdentifierSchemeUri() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.setContributors(List.of(
       new Contributor()
         .schemeUri("")
@@ -150,9 +138,6 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with missing contributor id fails")
   void missingId() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.setContributors(List.of(
       new Contributor()
         .schemeUri(CONTRIBUTOR_SCHEME_URI)
@@ -189,9 +174,6 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with empty contributor id fails")
   void emptyId() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.setContributors(List.of(
       new Contributor()
         .schemeUri(CONTRIBUTOR_SCHEME_URI)
@@ -232,9 +214,6 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with invalid orcid pattern fails")
     void invalidOrcidPattern() {
-      final var raidApi = basicRaidStableClient();
-      final var createRequest = newCreateRequest();
-
       createRequest.setContributors(List.of(
         new Contributor()
           .schemeUri(CONTRIBUTOR_SCHEME_URI)
@@ -272,9 +251,6 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with invalid orcid checksum fails")
     void invalidOrcidChecksum() {
-      final var raidApi = basicRaidStableClient();
-      final var createRequest = newCreateRequest();
-
       createRequest.setContributors(List.of(
         new Contributor()
           .schemeUri(CONTRIBUTOR_SCHEME_URI)
@@ -312,9 +288,6 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with non-existent orcid fails")
     void nonExistentOrcid() {
-      final var raidApi = basicRaidStableClient();
-      final var createRequest = newCreateRequest();
-
       createRequest.setContributors(List.of(
         new Contributor()
           .schemeUri(CONTRIBUTOR_SCHEME_URI)
@@ -349,15 +322,9 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
       }
     }
   }
-
-
-
   @Test
   @DisplayName("Minting a RAiD with null positions fails")
   void nullPositions() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.setContributors(List.of(
       new Contributor()
         .schemeUri(CONTRIBUTOR_SCHEME_URI)
@@ -389,9 +356,6 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with empty positions fails")
   void emptyPositions() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.setContributors(List.of(
       new Contributor()
         .schemeUri(CONTRIBUTOR_SCHEME_URI)
@@ -424,9 +388,6 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with missing leader position fails")
   void missingLeader() {
-    final var raidApi = basicRaidStableClient();
-    final var createRequest = newCreateRequest();
-
     createRequest.setContributors(List.of(
       new Contributor()
         .schemeUri(CONTRIBUTOR_SCHEME_URI)
@@ -466,9 +427,6 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with missing position schemeUri fails")
     void missingPositionSchemeUri() {
-      final var raidApi = basicRaidStableClient();
-      final var createRequest = newCreateRequest();
-
       createRequest.setContributors(List.of(
         new Contributor()
           .schemeUri(CONTRIBUTOR_SCHEME_URI)
@@ -504,9 +462,6 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with missing position type fails")
     void missingPositionType() {
-      final var raidApi = basicRaidStableClient();
-      final var createRequest = newCreateRequest();
-
       createRequest.setContributors(List.of(
         new Contributor()
           .schemeUri(CONTRIBUTOR_SCHEME_URI)
@@ -547,9 +502,6 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with invalid position schemeUri fails")
     void invalidPositionSchemeUri() {
-      final var raidApi = basicRaidStableClient();
-      final var createRequest = newCreateRequest();
-
       createRequest.setContributors(List.of(
         new Contributor()
           .schemeUri(CONTRIBUTOR_SCHEME_URI)
@@ -591,9 +543,6 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with invalid position type for scheme fails")
     void invalidPositionTypeForScheme() {
-      final var raidApi = basicRaidStableClient();
-      final var createRequest = newCreateRequest();
-
       createRequest.setContributors(List.of(
         new Contributor()
           .schemeUri(CONTRIBUTOR_SCHEME_URI)
@@ -639,9 +588,6 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with missing role schemeUri fails")
     void missingRoleSchemeUri() {
-      final var raidApi = basicRaidStableClient();
-      final var createRequest = newCreateRequest();
-
       createRequest.setContributors(List.of(
         new Contributor()
           .schemeUri(CONTRIBUTOR_SCHEME_URI)
@@ -679,9 +625,6 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with missing role type fails")
     void missingPositionType() {
-      final var raidApi = basicRaidStableClient();
-      final var createRequest = newCreateRequest();
-
       createRequest.setContributors(List.of(
         new Contributor()
           .schemeUri(CONTRIBUTOR_SCHEME_URI)
@@ -699,7 +642,6 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           .roles(List.of(
             new ContribRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-//              .type(SOFTWARE_ROLE)
           ))
       ));
 
@@ -723,9 +665,6 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with invalid role schemeUri fails")
     void invalidPositionSchemeUri() {
-      final var raidApi = basicRaidStableClient();
-      final var createRequest = newCreateRequest();
-
       createRequest.setContributors(List.of(
         new Contributor()
           .schemeUri(CONTRIBUTOR_SCHEME_URI)
@@ -767,9 +706,6 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with invalid type for role scheme fails")
     void invalidPositionTypeForScheme() {
-      final var raidApi = basicRaidStableClient();
-      final var createRequest = newCreateRequest();
-
       createRequest.setContributors(List.of(
         new Contributor()
           .schemeUri(CONTRIBUTOR_SCHEME_URI)
