@@ -70,7 +70,7 @@ public class GoogleOidc {
     ResponseEntity<OAuthTokenResponse> response = rest.postForEntity(
       google.tokenUrl, request, OAuthTokenResponse.class);
 
-
+    // OAuthTokenResponse has a custom toString() to mask sensitive values 
     log.with("response", response).
       with("response.body", response.getBody()).
       debug("google response");
