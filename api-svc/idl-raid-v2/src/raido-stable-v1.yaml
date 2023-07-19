@@ -266,7 +266,7 @@ components:
           type: string,
           example: 'https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1'
         }
-        role: {
+        type: {
           type: string,
           example: 'https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json'
         }

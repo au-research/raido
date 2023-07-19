@@ -86,7 +86,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
         .roles(List.of(
           new ContribRole()
             .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-            .type(SOFTWARE_ROLE)
+            .type(SOFTWARE_CONTRIBUTOR_ROLE)
         ))
     ));
 
@@ -126,7 +126,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
         .roles(List.of(
           new ContribRole()
             .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-            .type(SOFTWARE_ROLE)
+            .type(SOFTWARE_CONTRIBUTOR_ROLE)
         ))
     ));
 
@@ -165,7 +165,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
         .roles(List.of(
           new ContribRole()
             .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-            .type(SOFTWARE_ROLE)
+            .type(SOFTWARE_CONTRIBUTOR_ROLE)
         ))
     ));
 
@@ -205,7 +205,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
         .roles(List.of(
           new ContribRole()
             .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-            .type(SOFTWARE_ROLE)
+            .type(SOFTWARE_CONTRIBUTOR_ROLE)
         ))
     ));
 
@@ -248,7 +248,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           .roles(List.of(
             new ContribRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-              .type(SOFTWARE_ROLE)
+              .type(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
       ));
 
@@ -288,7 +288,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           .roles(List.of(
             new ContribRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-              .type(SOFTWARE_ROLE)
+              .type(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
       ));
 
@@ -328,7 +328,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           .roles(List.of(
             new ContribRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-              .type(SOFTWARE_ROLE)
+              .type(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
       ));
 
@@ -365,7 +365,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
         .roles(List.of(
           new ContribRole()
             .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-            .type(SOFTWARE_ROLE)
+            .type(SOFTWARE_CONTRIBUTOR_ROLE)
         ))
     ));
 
@@ -400,7 +400,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
         .roles(List.of(
           new ContribRole()
             .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-            .type(SOFTWARE_ROLE)
+            .type(SOFTWARE_CONTRIBUTOR_ROLE)
         ))
     ));
 
@@ -439,7 +439,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
         ))        .roles(List.of(
           new ContribRole()
             .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-            .type(SOFTWARE_ROLE)
+            .type(SOFTWARE_CONTRIBUTOR_ROLE)
         ))
     ));
 
@@ -480,7 +480,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           ))        .roles(List.of(
             new ContribRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-              .type(SOFTWARE_ROLE)
+              .type(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
       ));
 
@@ -523,7 +523,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           .roles(List.of(
             new ContribRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-              .type(SOFTWARE_ROLE)
+              .type(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
       ));
 
@@ -567,7 +567,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           .roles(List.of(
             new ContribRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-              .type(SOFTWARE_ROLE)
+              .type(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
       ));
 
@@ -611,7 +611,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           .roles(List.of(
             new ContribRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-              .type(SOFTWARE_ROLE)
+              .type(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
       ));
 
@@ -655,7 +655,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           .roles(List.of(
             new ContribRole()
 //              .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-              .type(SOFTWARE_ROLE)
+              .type(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
       ));
 
@@ -743,7 +743,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           .roles(List.of(
             new ContribRole()
               .schemeUri("unknown")
-              .type(SOFTWARE_ROLE)
+              .type(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
       ));
 

@@ -142,7 +142,7 @@ public class InvalidPidTest extends IntegrationTestCase {
       .roles(List.of(
         new OrgRole()
           .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
-          .role(role)
+          .type(role)
           .startDate(today)));
   }
 }

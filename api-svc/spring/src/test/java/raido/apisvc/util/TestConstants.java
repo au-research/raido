@@ -32,19 +32,29 @@ public class TestConstants {
 
   public static final String CONTRIBUTOR_IDENTIFIER_SCHEME_URI = "https://orcid.org/";
 
-  public static final String CONTRIBUTOR_ROLE_TYPE_SCHEME_URI =
+  public static final String CONTRIBUTOR_ROLE_SCHEME_URI =
     "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/role/v1";
 
   public static final String SUPERVISION_CONTRIBUTOR_ROLE =
     "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/role/v1/supervision.json";
 
-  public static final String CONTRIBUTOR_POSITION_TYPE_SCHEME_URI =
+  public static final String CONTRIBUTOR_POSITION_SCHEME_URI =
     "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1";
 
-  public static final String LEADER_CONTRIBUTOR_POSITION_TYPE =
+  public static final String LEADER_CONTRIBUTOR_POSITION =
     "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json";
 
   public static final String VALID_ORCID = "https://orcid.org/0000-0000-0000-0001";
+
+  public static final String ORGANISATION_ROLE_SCHEME_URI =
+    "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1";
+
+  public static final String LEAD_RESEARCH_ORGANISATION_ROLE =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json";
+
+  public static final String VALID_ROR = "https://ror.org/038sjwq14";
+
+  public static final String ORGANISATION_IDENTIFIER_SCHEME_URI = "https://ror.org/";
 
   public static final LocalDate START_DATE = LocalDate.now().minusMonths(1);
   public static final LocalDate END_DATE = LocalDate.now();

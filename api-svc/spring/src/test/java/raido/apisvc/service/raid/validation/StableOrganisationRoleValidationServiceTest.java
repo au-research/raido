@@ -6,11 +6,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import raido.apisvc.repository.ContributorRoleRepository;
-import raido.apisvc.repository.ContributorRoleSchemeRepository;
-import raido.db.jooq.api_svc.tables.records.ContributorRoleRecord;
-import raido.db.jooq.api_svc.tables.records.ContributorRoleSchemeRecord;
-import raido.idl.raidv2.model.ContribRole;
+import raido.apisvc.repository.OrganisationRoleRepository;
+import raido.apisvc.repository.OrganisationRoleSchemeRepository;
+import raido.db.jooq.api_svc.tables.records.OrganisationRoleRecord;
+import raido.db.jooq.api_svc.tables.records.OrganisationRoleSchemeRecord;
+import raido.idl.raidv2.model.OrgRole;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.Optional;
@@ -19,45 +19,45 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
-import static raido.apisvc.util.TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI;
-import static raido.apisvc.util.TestConstants.SUPERVISION_CONTRIBUTOR_ROLE;
+import static raido.apisvc.util.TestConstants.LEAD_RESEARCH_ORGANISATION_ROLE;
+import static raido.apisvc.util.TestConstants.ORGANISATION_ROLE_SCHEME_URI;
 
 @ExtendWith(MockitoExtension.class)
-class StableContributorRoleValidationServiceTest {
-  private static final int CONTRIBUTOR_ROLE_TYPE_SCHEME_ID = 1;
+class StableOrganisationRoleValidationServiceTest {
+  private static final int ORGANISATION_ROLE_SCHEME_ID = 1;
 
-  private static final ContributorRoleSchemeRecord CONTRIBUTOR_ROLE_TYPE_SCHEME_RECORD =
-    new ContributorRoleSchemeRecord()
-      .setId(CONTRIBUTOR_ROLE_TYPE_SCHEME_ID)
-      .setUri(CONTRIBUTOR_ROLE_SCHEME_URI);
+  private static final OrganisationRoleSchemeRecord ORGANISATION_ROLE_SCHEME_RECORD =
+    new OrganisationRoleSchemeRecord()
+      .setId(ORGANISATION_ROLE_SCHEME_ID)
+      .setUri(ORGANISATION_ROLE_SCHEME_URI);
 
-  private static final ContributorRoleRecord CONTRIBUTOR_ROLE_TYPE_RECORD =
-    new ContributorRoleRecord()
-      .setSchemeId(CONTRIBUTOR_ROLE_TYPE_SCHEME_ID)
-      .setUri(SUPERVISION_CONTRIBUTOR_ROLE);
-
-  @Mock
-  private ContributorRoleSchemeRepository contributorRoleSchemeRepository;
+  private static final OrganisationRoleRecord ORGANISATION_ROLE_RECORD =
+    new OrganisationRoleRecord()
+      .setSchemeId(ORGANISATION_ROLE_SCHEME_ID)
+      .setUri(LEAD_RESEARCH_ORGANISATION_ROLE);
 
   @Mock
-  private ContributorRoleRepository contributorRoleRepository;
+  private OrganisationRoleSchemeRepository contributorRoleSchemeRepository;
+
+  @Mock
+  private OrganisationRoleRepository contributorRoleRepository;
 
   @InjectMocks
-  private StableContributorRoleValidationService validationService;
+  private StableOrganisationRoleValidationService validationService;
 
   @Test
-  @DisplayName("Validation passes with valid ContributorRole")
-  void validContributorRole() {
-    final var role = new ContribRole()
-      .type(SUPERVISION_CONTRIBUTOR_ROLE)
-      .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI);
+  @DisplayName("Validation passes with valid OrganisationRole")
+  void validOrganisationRole() {
+    final var role = new OrgRole()
+      .type(LEAD_RESEARCH_ORGANISATION_ROLE)
+      .schemeUri(ORGANISATION_ROLE_SCHEME_URI);
 
-    when(contributorRoleSchemeRepository.findByUri(CONTRIBUTOR_ROLE_SCHEME_URI))
-      .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_SCHEME_RECORD));
+    when(contributorRoleSchemeRepository.findByUri(ORGANISATION_ROLE_SCHEME_URI))
+      .thenReturn(Optional.of(ORGANISATION_ROLE_SCHEME_RECORD));
 
     when(contributorRoleRepository
-      .findByUriAndSchemeId(SUPERVISION_CONTRIBUTOR_ROLE, CONTRIBUTOR_ROLE_TYPE_SCHEME_ID))
-      .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_RECORD));
+      .findByUriAndSchemeId(LEAD_RESEARCH_ORGANISATION_ROLE, ORGANISATION_ROLE_SCHEME_ID))
+      .thenReturn(Optional.of(ORGANISATION_ROLE_RECORD));
 
     final var failures = validationService.validate(role, 2, 3);
 
@@ -67,15 +67,15 @@ class StableContributorRoleValidationServiceTest {
   @Test
   @DisplayName("Validation fails with null schemeUri")
   void nullSchemeUri() {
-    final var role = new ContribRole()
-      .type(SUPERVISION_CONTRIBUTOR_ROLE);
+    final var role = new OrgRole()
+      .type(LEAD_RESEARCH_ORGANISATION_ROLE);
 
     final var failures = validationService.validate(role, 2, 3);
 
     assertThat(failures, hasSize(1));
     assertThat(failures, hasItem(
       new ValidationFailure()
-        .fieldId("contributors[2].roles[3].schemeUri")
+        .fieldId("organisations[2].roles[3].schemeUri")
         .errorType("notSet")
         .message("field must be set")
     ));
@@ -87,16 +87,16 @@ class StableContributorRoleValidationServiceTest {
   @Test
   @DisplayName("Validation fails with empty schemeUri")
   void emptySchemeUri() {
-    final var role = new ContribRole()
+    final var role = new OrgRole()
       .schemeUri("")
-      .type(SUPERVISION_CONTRIBUTOR_ROLE);
+      .type(LEAD_RESEARCH_ORGANISATION_ROLE);
 
     final var failures = validationService.validate(role, 2, 3);
 
     assertThat(failures, hasSize(1));
     assertThat(failures, hasItem(
       new ValidationFailure()
-        .fieldId("contributors[2].roles[3].schemeUri")
+        .fieldId("organisations[2].roles[3].schemeUri")
         .errorType("notSet")
         .message("field must be set")
     ));
@@ -108,11 +108,11 @@ class StableContributorRoleValidationServiceTest {
   @Test
   @DisplayName("Validation fails with invalid schemeUri")
   void invalidSchemeUri() {
-    final var role = new ContribRole()
-      .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-      .type(SUPERVISION_CONTRIBUTOR_ROLE);
+    final var role = new OrgRole()
+      .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
+      .type(LEAD_RESEARCH_ORGANISATION_ROLE);
 
-    when(contributorRoleSchemeRepository.findByUri(CONTRIBUTOR_ROLE_SCHEME_URI))
+    when(contributorRoleSchemeRepository.findByUri(ORGANISATION_ROLE_SCHEME_URI))
       .thenReturn(Optional.empty());
 
     final var failures = validationService.validate(role, 2, 3);
@@ -120,7 +120,7 @@ class StableContributorRoleValidationServiceTest {
     assertThat(failures, hasSize(1));
     assertThat(failures, hasItem(
       new ValidationFailure()
-        .fieldId("contributors[2].roles[3].schemeUri")
+        .fieldId("organisations[2].roles[3].schemeUri")
         .errorType("invalidValue")
         .message("has invalid/unsupported value")
     ));
@@ -131,18 +131,18 @@ class StableContributorRoleValidationServiceTest {
   @Test
   @DisplayName("Validation fails with null role")
   void nullRole() {
-    final var role = new ContribRole()
-      .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI);
+    final var role = new OrgRole()
+      .schemeUri(ORGANISATION_ROLE_SCHEME_URI);
 
-    when(contributorRoleSchemeRepository.findByUri(CONTRIBUTOR_ROLE_SCHEME_URI))
-      .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_SCHEME_RECORD));
+    when(contributorRoleSchemeRepository.findByUri(ORGANISATION_ROLE_SCHEME_URI))
+      .thenReturn(Optional.of(ORGANISATION_ROLE_SCHEME_RECORD));
 
     final var failures = validationService.validate(role, 2, 3);
 
     assertThat(failures, hasSize(1));
     assertThat(failures, hasItem(
       new ValidationFailure()
-        .fieldId("contributors[2].roles[3].type")
+        .fieldId("organisations[2].roles[3].type")
         .errorType("notSet")
         .message("field must be set")
     ));
@@ -153,19 +153,19 @@ class StableContributorRoleValidationServiceTest {
   @Test
   @DisplayName("Validation fails with empty role")
   void emptyRole() {
-    final var role = new ContribRole()
-      .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+    final var role = new OrgRole()
+      .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
       .type("");
 
-    when(contributorRoleSchemeRepository.findByUri(CONTRIBUTOR_ROLE_SCHEME_URI))
-      .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_SCHEME_RECORD));
+    when(contributorRoleSchemeRepository.findByUri(ORGANISATION_ROLE_SCHEME_URI))
+      .thenReturn(Optional.of(ORGANISATION_ROLE_SCHEME_RECORD));
 
     final var failures = validationService.validate(role, 2, 3);
 
     assertThat(failures, hasSize(1));
     assertThat(failures, hasItem(
       new ValidationFailure()
-        .fieldId("contributors[2].roles[3].type")
+        .fieldId("organisations[2].roles[3].type")
         .errorType("notSet")
         .message("field must be set")
     ));
@@ -176,15 +176,15 @@ class StableContributorRoleValidationServiceTest {
   @Test
   @DisplayName("Validation fails with invalid role")
   void invalidRole() {
-    final var role = new ContribRole()
-      .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-      .type(SUPERVISION_CONTRIBUTOR_ROLE);
+    final var role = new OrgRole()
+      .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
+      .type(LEAD_RESEARCH_ORGANISATION_ROLE);
 
-    when(contributorRoleSchemeRepository.findByUri(CONTRIBUTOR_ROLE_SCHEME_URI))
-      .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_SCHEME_RECORD));
+    when(contributorRoleSchemeRepository.findByUri(ORGANISATION_ROLE_SCHEME_URI))
+      .thenReturn(Optional.of(ORGANISATION_ROLE_SCHEME_RECORD));
 
     when(contributorRoleRepository
-      .findByUriAndSchemeId(SUPERVISION_CONTRIBUTOR_ROLE, CONTRIBUTOR_ROLE_TYPE_SCHEME_ID))
+      .findByUriAndSchemeId(LEAD_RESEARCH_ORGANISATION_ROLE, ORGANISATION_ROLE_SCHEME_ID))
       .thenReturn(Optional.empty());
 
     final var failures = validationService.validate(role, 2, 3);
@@ -192,7 +192,7 @@ class StableContributorRoleValidationServiceTest {
     assertThat(failures, hasSize(1));
     assertThat(failures, hasItem(
       new ValidationFailure()
-        .fieldId("contributors[2].roles[3].type")
+        .fieldId("organisations[2].roles[3].type")
         .errorType("invalidValue")
         .message("has invalid/unsupported value")
     ));

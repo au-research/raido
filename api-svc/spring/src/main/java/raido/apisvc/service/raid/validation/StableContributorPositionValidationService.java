@@ -1,8 +1,8 @@
 package raido.apisvc.service.raid.validation;
 
 import org.springframework.stereotype.Component;
-import raido.apisvc.repository.ContributorPositionTypeRepository;
-import raido.apisvc.repository.ContributorPositionTypeSchemeRepository;
+import raido.apisvc.repository.ContributorPositionRepository;
+import raido.apisvc.repository.ContributorPositionSchemeRepository;
 import raido.idl.raidv2.model.ContribPosition;
 import raido.idl.raidv2.model.ValidationFailure;
 
@@ -14,12 +14,12 @@ import static raido.apisvc.util.StringUtil.isBlank;
 
 @Component
 public class StableContributorPositionValidationService {
-  private final ContributorPositionTypeSchemeRepository contributorPositionTypeSchemeRepository;
-  private final ContributorPositionTypeRepository contributorPositionTypeRepository;
+  private final ContributorPositionSchemeRepository contributorPositionSchemeRepository;
+  private final ContributorPositionRepository contributorPositionRepository;
 
-  public StableContributorPositionValidationService(final ContributorPositionTypeSchemeRepository contributorPositionTypeSchemeRepository, final ContributorPositionTypeRepository contributorPositionTypeRepository) {
-    this.contributorPositionTypeSchemeRepository = contributorPositionTypeSchemeRepository;
-    this.contributorPositionTypeRepository = contributorPositionTypeRepository;
+  public StableContributorPositionValidationService(final ContributorPositionSchemeRepository contributorPositionSchemeRepository, final ContributorPositionRepository contributorPositionRepository) {
+    this.contributorPositionSchemeRepository = contributorPositionSchemeRepository;
+    this.contributorPositionRepository = contributorPositionRepository;
   }
 
   public List<ValidationFailure> validate(
@@ -51,7 +51,7 @@ public class StableContributorPositionValidationService {
       );
     } else {
       final var positionScheme =
-        contributorPositionTypeSchemeRepository.findByUri(position.getSchemeUri());
+        contributorPositionSchemeRepository.findByUri(position.getSchemeUri());
 
       if (positionScheme.isEmpty()) {
         failures.add(
@@ -61,7 +61,7 @@ public class StableContributorPositionValidationService {
             .message(INVALID_VALUE_MESSAGE)
         );
       } else if (!isBlank(position.getType()) &&
-        contributorPositionTypeRepository.findByUriAndSchemeId(position.getType(), positionScheme.get().getId()).isEmpty()) {
+        contributorPositionRepository.findByUriAndSchemeId(position.getType(), positionScheme.get().getId()).isEmpty()) {
         failures.add(
           new ValidationFailure()
             .fieldId("contributors[%d].positions[%d].type".formatted(contributorIndex, positionIndex))

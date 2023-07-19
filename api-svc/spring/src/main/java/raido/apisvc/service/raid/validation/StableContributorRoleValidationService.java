@@ -1,8 +1,8 @@
 package raido.apisvc.service.raid.validation;
 
 import org.springframework.stereotype.Component;
-import raido.apisvc.repository.ContributorRoleTypeRepository;
-import raido.apisvc.repository.ContributorRoleTypeSchemeRepository;
+import raido.apisvc.repository.ContributorRoleRepository;
+import raido.apisvc.repository.ContributorRoleSchemeRepository;
 import raido.idl.raidv2.model.ContribRole;
 import raido.idl.raidv2.model.ValidationFailure;
 
@@ -14,12 +14,12 @@ import static raido.apisvc.util.StringUtil.isBlank;
 
 @Component
 public class StableContributorRoleValidationService {
-  private final ContributorRoleTypeSchemeRepository contributorRoleTypeSchemeRepository;
-  private final ContributorRoleTypeRepository contributorRoleTypeRepository;
+  private final ContributorRoleSchemeRepository contributorRoleSchemeRepository;
+  private final ContributorRoleRepository contributorRoleRepository;
 
-  public StableContributorRoleValidationService(final ContributorRoleTypeSchemeRepository contributorRoleTypeSchemeRepository, final ContributorRoleTypeRepository contributorRoleTypeRepository) {
-    this.contributorRoleTypeSchemeRepository = contributorRoleTypeSchemeRepository;
-    this.contributorRoleTypeRepository = contributorRoleTypeRepository;
+  public StableContributorRoleValidationService(final ContributorRoleSchemeRepository contributorRoleSchemeRepository, final ContributorRoleRepository contributorRoleRepository) {
+    this.contributorRoleSchemeRepository = contributorRoleSchemeRepository;
+    this.contributorRoleRepository = contributorRoleRepository;
   }
 
   public List<ValidationFailure> validate(
@@ -43,7 +43,7 @@ public class StableContributorRoleValidationService {
       );
     } else {
       final var roleScheme =
-        contributorRoleTypeSchemeRepository.findByUri(role.getSchemeUri());
+        contributorRoleSchemeRepository.findByUri(role.getSchemeUri());
 
       if (roleScheme.isEmpty()) {
         failures.add(
@@ -53,7 +53,7 @@ public class StableContributorRoleValidationService {
             .message(INVALID_VALUE_MESSAGE)
         );
       } else if (!isBlank(role.getType()) &&
-        contributorRoleTypeRepository.findByUriAndSchemeId(role.getType(), roleScheme.get().getId()).isEmpty()) {
+        contributorRoleRepository.findByUriAndSchemeId(role.getType(), roleScheme.get().getId()).isEmpty()) {
         failures.add(
           new ValidationFailure()
             .fieldId("contributors[%d].roles[%d].type".formatted(contributorIndex, roleIndex))

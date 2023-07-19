@@ -109,7 +109,7 @@ public class AbstractStableIntegrationTest {
         .schemeUri(DESCRIPTION_TYPE_SCHEME_URI)
         .description("stuff about the int test raid")))
       .contributors(of(contributor(
-        REAL_TEST_ORCID, LEADER_POSITION, SOFTWARE_ROLE, today)))
+        REAL_TEST_ORCID, LEADER_POSITION, SOFTWARE_CONTRIBUTOR_ROLE, today)))
       .organisations(of(organisation(
         REAL_TEST_ROR, LEAD_RESEARCH_ORGANISATION, today)))
       .access(new Access()
@@ -163,11 +163,11 @@ public class AbstractStableIntegrationTest {
   ) {
     return new Organisation()
       .id(ror)
-      .schemeUri(ORGANISATION_SCHEME_URI).
+      .schemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI).
       roles(List.of(
         new OrgRole()
           .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
-          .role(role)
+          .type(role)
           .startDate(today)));
   }
 }

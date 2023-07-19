@@ -7,7 +7,7 @@ public class TestConstants {
   protected static final String ORGANISATION_ROLE_SCHEME_URI =
     "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1";
 
-  protected static final String ORGANISATION_SCHEME_URI =
+  protected static final String ORGANISATION_IDENTIFIER_SCHEME_URI =
     "https://ror.org/";
 
   protected static final String OPEN_ACCESS_TYPE =
@@ -50,6 +50,11 @@ public class TestConstants {
 
   protected static final String CONTRIBUTOR_ROLE_SCHEME_URI = "https://credit.niso.org/";
 
-  protected static final String SOFTWARE_ROLE =
+  protected static final String SOFTWARE_CONTRIBUTOR_ROLE =
     "https://credit.niso.org/contributor-roles/software/";
+
+  protected static final String LEAD_RESEARCH_ORGANISATION_ROLE =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json";
+
+  protected static final String VALID_ROR = "https://ror.org/038sjwq14";
 }
