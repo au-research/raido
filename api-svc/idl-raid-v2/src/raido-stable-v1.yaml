@@ -149,7 +149,7 @@ components:
           items: { $ref: '#/components/schemas/SpatialCoverage' }
         traditionalKnowledgeLabels:
           type: array
-          items: { $ref: 'metadata-block.yaml#/components/schemas/TraditionalKnowledgeLabelBlock' }
+          items: { $ref: '#/components/schemas/TraditionalKnowledgeLabel' }
     Title:
       type: object
       required: [title, type, startDate]
@@ -331,3 +331,7 @@ components:
         id: { type: string }
         schemeUri: { type: string }
         place: { type: string }
+    TraditionalKnowledgeLabel:
+      type: object
+      properties:
+        schemeUri: { type: string }

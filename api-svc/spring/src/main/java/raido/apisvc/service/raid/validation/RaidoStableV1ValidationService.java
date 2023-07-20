@@ -39,7 +39,7 @@ public class RaidoStableV1ValidationService {
   private final StableAlternateIdentifierValidationService alternateIdentifierSvc;
   private final StableRelatedRaidValidationService relatedRaidSvc;
   private final StableSpatialCoverageValidationService spatialCoverageSvc;
-  private final TraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelSvc;
+  private final StableTraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelSvc;
 
   public RaidoStableV1ValidationService(
     final StableTitleValidationService titleSvc,
@@ -52,7 +52,7 @@ public class RaidoStableV1ValidationService {
     final StableAlternateIdentifierValidationService alternateIdentifierSvc,
     final StableRelatedRaidValidationService relatedRaidSvc,
     final StableSpatialCoverageValidationService spatialCoverageSvc,
-    final TraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelSvc,
+    final StableTraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelSvc,
     final StableAccessValidationService accessValidationService) {
     this.titleSvc = titleSvc;
     this.descSvc = descSvc;

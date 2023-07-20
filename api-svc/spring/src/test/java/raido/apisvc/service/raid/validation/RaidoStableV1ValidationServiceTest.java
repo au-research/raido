@@ -36,7 +36,7 @@ class RaidoStableV1ValidationServiceTest {
   @Mock
   private StableSpatialCoverageValidationService spatialCoverageValidationService;
   @Mock
-  private TraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelValidatorService;
+  private StableTraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelValidatorService;
   @Mock
   private StableAccessValidationService accessValidationService;
   @InjectMocks
@@ -192,7 +192,7 @@ class RaidoStableV1ValidationServiceTest {
   void validatesTraditionalKnowledgeLabelsOnCreate() {
     final var handle = "test-handle";
     final var traditionalKnowledgeLabels =
-      Collections.singletonList(new TraditionalKnowledgeLabelBlock());
+      Collections.singletonList(new TraditionalKnowledgeLabel ());
 
     final var raid = new CreateRaidV1Request()
       .id(new IdBlock())
@@ -206,7 +206,7 @@ class RaidoStableV1ValidationServiceTest {
   void validatesTraditionalKnowledgeLabelsOnUpdate() {
     final var handle = "test-handle";
     final var traditionalKnowledgeLabels =
-      Collections.singletonList(new TraditionalKnowledgeLabelBlock());
+      Collections.singletonList(new TraditionalKnowledgeLabel());
 
     final var raid = new UpdateRaidV1Request()
       .id(new IdBlock())
