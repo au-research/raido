@@ -77,7 +77,7 @@ public class StableContributorValidationService {
     return contributors.stream()
       .filter(i -> i.getPositions()
         .stream()
-        .anyMatch(j -> j.getType().equals(LEADER_POSITION))
+        .anyMatch(j -> j.getId().equals(LEADER_POSITION))
       ).toList();
   }
 

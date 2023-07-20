@@ -41,7 +41,7 @@ class StableContributorValidationServiceTest {
   void missingPositions() {
     final var role = new ContribRole()
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-      .type(SUPERVISION_CONTRIBUTOR_ROLE);
+      .id(SUPERVISION_CONTRIBUTOR_ROLE);
 
     final var contributor = new Contributor()
       .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
@@ -67,11 +67,11 @@ class StableContributorValidationServiceTest {
   void missingLeadPositions() {
     final var role = new ContribRole()
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-      .type(SUPERVISION_CONTRIBUTOR_ROLE);
+      .id(SUPERVISION_CONTRIBUTOR_ROLE);
 
     final var position = new ContribPosition()
       .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-      .type("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/other-participant.json")
+      .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/other-participant.json")
       .startDate(LocalDate.now());
 
     final var contributor = new Contributor()
@@ -133,11 +133,11 @@ class StableContributorValidationServiceTest {
   void validContributor() {
     final var role = new ContribRole()
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-      .type(SUPERVISION_CONTRIBUTOR_ROLE);
+      .id(SUPERVISION_CONTRIBUTOR_ROLE);
 
     final var position = new ContribPosition()
       .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-      .type(LEADER_CONTRIBUTOR_POSITION)
+      .id(LEADER_CONTRIBUTOR_POSITION)
       .startDate(LocalDate.now());
 
     final var contributor = new Contributor()
@@ -159,11 +159,11 @@ class StableContributorValidationServiceTest {
   void missingSchemeUri() {
     final var role = new ContribRole()
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-      .type(SUPERVISION_CONTRIBUTOR_ROLE);
+      .id(SUPERVISION_CONTRIBUTOR_ROLE);
 
     final var position = new ContribPosition()
       .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-      .type(LEADER_CONTRIBUTOR_POSITION)
+      .id(LEADER_CONTRIBUTOR_POSITION)
       .startDate(LocalDate.now());
 
     final var contributor = new Contributor()
@@ -190,11 +190,11 @@ class StableContributorValidationServiceTest {
   void emptySchemeUri() {
     final var role = new ContribRole()
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-      .type(SUPERVISION_CONTRIBUTOR_ROLE);
+      .id(SUPERVISION_CONTRIBUTOR_ROLE);
 
     final var position = new ContribPosition()
       .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-      .type(LEADER_CONTRIBUTOR_POSITION)
+      .id(LEADER_CONTRIBUTOR_POSITION)
       .startDate(LocalDate.now());
 
     final var contributor = new Contributor()
@@ -222,11 +222,11 @@ class StableContributorValidationServiceTest {
   void roleValidationFailures() {
     final var role = new ContribRole()
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-      .type(SUPERVISION_CONTRIBUTOR_ROLE);
+      .id(SUPERVISION_CONTRIBUTOR_ROLE);
 
     final var position = new ContribPosition()
       .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-      .type(LEADER_CONTRIBUTOR_POSITION)
+      .id(LEADER_CONTRIBUTOR_POSITION)
       .startDate(LocalDate.now());
 
     final var contributor = new Contributor()
@@ -269,11 +269,11 @@ class StableContributorValidationServiceTest {
   void multipleLeadPositions() {
     final var role = new ContribRole()
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-      .type(SUPERVISION_CONTRIBUTOR_ROLE);
+      .id(SUPERVISION_CONTRIBUTOR_ROLE);
 
     final var position = new ContribPosition()
       .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-      .type(LEADER_CONTRIBUTOR_POSITION)
+      .id(LEADER_CONTRIBUTOR_POSITION)
       .startDate(LocalDate.now());
 
     final var contributor = new Contributor()

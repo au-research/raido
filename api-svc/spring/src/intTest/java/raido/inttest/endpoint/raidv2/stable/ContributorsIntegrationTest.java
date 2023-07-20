@@ -72,12 +72,12 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           new ContribPosition()
             .startDate(LocalDate.now())
             .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-            .type(LEADER_POSITION)
+            .id(LEADER_POSITION)
         ))
         .roles(List.of(
           new ContribRole()
             .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-            .type(SOFTWARE_CONTRIBUTOR_ROLE)
+            .id(SOFTWARE_CONTRIBUTOR_ROLE)
         ))
     ));
 
@@ -109,12 +109,12 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           new ContribPosition()
             .startDate(LocalDate.now())
             .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-            .type(LEADER_POSITION)
+            .id(LEADER_POSITION)
         ))
         .roles(List.of(
           new ContribRole()
             .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-            .type(SOFTWARE_CONTRIBUTOR_ROLE)
+            .id(SOFTWARE_CONTRIBUTOR_ROLE)
         ))
     ));
 
@@ -145,12 +145,12 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           new ContribPosition()
             .startDate(LocalDate.now())
             .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-            .type(LEADER_POSITION)
+            .id(LEADER_POSITION)
         ))
         .roles(List.of(
           new ContribRole()
             .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-            .type(SOFTWARE_CONTRIBUTOR_ROLE)
+            .id(SOFTWARE_CONTRIBUTOR_ROLE)
         ))
     ));
 
@@ -182,12 +182,12 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           new ContribPosition()
             .startDate(LocalDate.now())
             .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-            .type(LEADER_POSITION)
+            .id(LEADER_POSITION)
         ))
         .roles(List.of(
           new ContribRole()
             .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-            .type(SOFTWARE_CONTRIBUTOR_ROLE)
+            .id(SOFTWARE_CONTRIBUTOR_ROLE)
         ))
     ));
 
@@ -222,12 +222,12 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
             new ContribPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-              .type(LEADER_POSITION)
+              .id(LEADER_POSITION)
           ))
           .roles(List.of(
             new ContribRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-              .type(SOFTWARE_CONTRIBUTOR_ROLE)
+              .id(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
       ));
 
@@ -259,12 +259,12 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
             new ContribPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-              .type(LEADER_POSITION)
+              .id(LEADER_POSITION)
           ))
           .roles(List.of(
             new ContribRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-              .type(SOFTWARE_CONTRIBUTOR_ROLE)
+              .id(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
       ));
 
@@ -296,12 +296,12 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
             new ContribPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-              .type(LEADER_POSITION)
+              .id(LEADER_POSITION)
           ))
           .roles(List.of(
             new ContribRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-              .type(SOFTWARE_CONTRIBUTOR_ROLE)
+              .id(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
       ));
 
@@ -332,7 +332,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
         .roles(List.of(
           new ContribRole()
             .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-            .type(SOFTWARE_CONTRIBUTOR_ROLE)
+            .id(SOFTWARE_CONTRIBUTOR_ROLE)
         ))
     ));
 
@@ -364,7 +364,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
         .roles(List.of(
           new ContribRole()
             .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-            .type(SOFTWARE_CONTRIBUTOR_ROLE)
+            .id(SOFTWARE_CONTRIBUTOR_ROLE)
         ))
     ));
 
@@ -396,11 +396,11 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           new ContribPosition()
             .startDate(LocalDate.now())
             .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-            .type(OTHER_PARTICIPANT_POSITION)
+            .id(OTHER_PARTICIPANT_POSITION)
         ))        .roles(List.of(
           new ContribRole()
             .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-            .type(SOFTWARE_CONTRIBUTOR_ROLE)
+            .id(SOFTWARE_CONTRIBUTOR_ROLE)
         ))
     ));
 
@@ -434,11 +434,11 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           .positions(List.of(
             new ContribPosition()
               .startDate(LocalDate.now())
-              .type(LEADER_POSITION)
+              .id(LEADER_POSITION)
           ))        .roles(List.of(
             new ContribRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-              .type(SOFTWARE_CONTRIBUTOR_ROLE)
+              .id(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
       ));
 
@@ -470,7 +470,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
             new ContribPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-              .type(LEADER_POSITION),
+              .id(LEADER_POSITION),
             new ContribPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
@@ -478,7 +478,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           .roles(List.of(
             new ContribRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-              .type(SOFTWARE_CONTRIBUTOR_ROLE)
+              .id(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
       ));
 
@@ -510,16 +510,16 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
             new ContribPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-              .type(LEADER_POSITION),
+              .id(LEADER_POSITION),
             new ContribPosition()
               .startDate(LocalDate.now())
               .schemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v2")
-              .type(OTHER_PARTICIPANT_POSITION)
+              .id(OTHER_PARTICIPANT_POSITION)
           ))
           .roles(List.of(
             new ContribRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-              .type(SOFTWARE_CONTRIBUTOR_ROLE)
+              .id(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
       ));
 
@@ -551,16 +551,16 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
             new ContribPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-              .type(LEADER_POSITION),
+              .id(LEADER_POSITION),
             new ContribPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-              .type("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/unknown.json")
+              .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/unknown.json")
           ))
           .roles(List.of(
             new ContribRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-              .type(SOFTWARE_CONTRIBUTOR_ROLE)
+              .id(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
       ));
 
@@ -596,12 +596,12 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
             new ContribPosition()
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
               .startDate(LocalDate.now())
-              .type(LEADER_POSITION)
+              .id(LEADER_POSITION)
           ))
           .roles(List.of(
             new ContribRole()
 //              .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-              .type(SOFTWARE_CONTRIBUTOR_ROLE)
+              .id(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
       ));
 
@@ -633,11 +633,11 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
             new ContribPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-              .type(LEADER_POSITION),
+              .id(LEADER_POSITION),
             new ContribPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-              .type(OTHER_PARTICIPANT_POSITION)
+              .id(OTHER_PARTICIPANT_POSITION)
           ))
           .roles(List.of(
             new ContribRole()
@@ -673,16 +673,16 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
             new ContribPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-              .type(LEADER_POSITION),
+              .id(LEADER_POSITION),
             new ContribPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-              .type(OTHER_PARTICIPANT_POSITION)
+              .id(OTHER_PARTICIPANT_POSITION)
           ))
           .roles(List.of(
             new ContribRole()
               .schemeUri("unknown")
-              .type(SOFTWARE_CONTRIBUTOR_ROLE)
+              .id(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
       ));
 
@@ -714,16 +714,16 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
             new ContribPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-              .type(LEADER_POSITION),
+              .id(LEADER_POSITION),
             new ContribPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-              .type(OTHER_PARTICIPANT_POSITION)
+              .id(OTHER_PARTICIPANT_POSITION)
           ))
           .roles(List.of(
             new ContribRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-              .type("unknown")
+              .id("unknown")
           ))
       ));
 

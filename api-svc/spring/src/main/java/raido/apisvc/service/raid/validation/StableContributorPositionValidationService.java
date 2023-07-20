@@ -34,7 +34,7 @@ public class StableContributorPositionValidationService {
           .message(FIELD_MUST_BE_SET_MESSAGE));
     }
 
-    if (isBlank(position.getType())) {
+    if (isBlank(position.getId())) {
       failures.add(
         new ValidationFailure()
           .fieldId("contributors[%d].positions[%d].type".formatted(contributorIndex, positionIndex))
@@ -60,8 +60,8 @@ public class StableContributorPositionValidationService {
             .errorType(INVALID_VALUE_TYPE)
             .message(INVALID_VALUE_MESSAGE)
         );
-      } else if (!isBlank(position.getType()) &&
-        contributorPositionRepository.findByUriAndSchemeId(position.getType(), positionScheme.get().getId()).isEmpty()) {
+      } else if (!isBlank(position.getId()) &&
+        contributorPositionRepository.findByUriAndSchemeId(position.getId(), positionScheme.get().getId()).isEmpty()) {
         failures.add(
           new ValidationFailure()
             .fieldId("contributors[%d].positions[%d].type".formatted(contributorIndex, positionIndex))

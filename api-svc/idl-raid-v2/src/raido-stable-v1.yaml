@@ -221,7 +221,7 @@ components:
           type: string,
           example: 'https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1'
         }
-        type: {
+        id: {
           type: string,
           example: 'https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json'
         }
@@ -241,7 +241,7 @@ components:
           type: string,
           example: 'https://credit.niso.org/'
         }
-        type: {
+        id: {
           type: string,
           example: 'https://credit.niso.org/contributor-roles/writing-review-editing/'
         }

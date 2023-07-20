@@ -49,7 +49,7 @@ class StableContributorRoleValidationServiceTest {
   @DisplayName("Validation passes with valid ContributorRole")
   void validContributorRole() {
     final var role = new ContribRole()
-      .type(SUPERVISION_CONTRIBUTOR_ROLE)
+      .id(SUPERVISION_CONTRIBUTOR_ROLE)
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI);
 
     when(contributorRoleSchemeRepository.findByUri(CONTRIBUTOR_ROLE_SCHEME_URI))
@@ -68,7 +68,7 @@ class StableContributorRoleValidationServiceTest {
   @DisplayName("Validation fails with null schemeUri")
   void nullSchemeUri() {
     final var role = new ContribRole()
-      .type(SUPERVISION_CONTRIBUTOR_ROLE);
+      .id(SUPERVISION_CONTRIBUTOR_ROLE);
 
     final var failures = validationService.validate(role, 2, 3);
 
@@ -89,7 +89,7 @@ class StableContributorRoleValidationServiceTest {
   void emptySchemeUri() {
     final var role = new ContribRole()
       .schemeUri("")
-      .type(SUPERVISION_CONTRIBUTOR_ROLE);
+      .id(SUPERVISION_CONTRIBUTOR_ROLE);
 
     final var failures = validationService.validate(role, 2, 3);
 
@@ -110,7 +110,7 @@ class StableContributorRoleValidationServiceTest {
   void invalidSchemeUri() {
     final var role = new ContribRole()
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-      .type(SUPERVISION_CONTRIBUTOR_ROLE);
+      .id(SUPERVISION_CONTRIBUTOR_ROLE);
 
     when(contributorRoleSchemeRepository.findByUri(CONTRIBUTOR_ROLE_SCHEME_URI))
       .thenReturn(Optional.empty());
@@ -155,7 +155,7 @@ class StableContributorRoleValidationServiceTest {
   void emptyRole() {
     final var role = new ContribRole()
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-      .type("");
+      .id("");
 
     when(contributorRoleSchemeRepository.findByUri(CONTRIBUTOR_ROLE_SCHEME_URI))
       .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_SCHEME_RECORD));
@@ -178,7 +178,7 @@ class StableContributorRoleValidationServiceTest {
   void invalidRole() {
     final var role = new ContribRole()
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-      .type(SUPERVISION_CONTRIBUTOR_ROLE);
+      .id(SUPERVISION_CONTRIBUTOR_ROLE);
 
     when(contributorRoleSchemeRepository.findByUri(CONTRIBUTOR_ROLE_SCHEME_URI))
       .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_SCHEME_RECORD));

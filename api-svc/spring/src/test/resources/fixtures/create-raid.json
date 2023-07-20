@@ -30,14 +30,14 @@
       "positions": [
         {
           "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1",
-          "type": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
           "startDate": "2020-10-07"
         }
       ],
       "roles": [
         {
           "schemeUri": "https://credit.niso.org",
-          "type": "https://credit.niso.org/contributor-roles/project-administration/"
+          "id": "https://credit.niso.org/contributor-roles/project-administration/"
         }
       ]
     }

@@ -122,12 +122,12 @@ public class StableRaidoSchemaV1Test extends AbstractStableIntegrationTest {
       .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
       .positions(List.of(new ContribPosition()
         .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-        .type(position)
+        .id(position)
         .startDate(startDate)))
       .roles(List.of(
         new ContribRole()
           .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
-          .type(role)));
+          .id(role)));
   }
 
   public Organisation organisation(
