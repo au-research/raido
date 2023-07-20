@@ -34,7 +34,7 @@ class RaidoStableV1ValidationServiceTest {
   private StableAlternateIdentifierValidationService alternateIdentifierValidationService;
 
   @Mock
-  private SpatialCoverageValidationService spatialCoverageValidationService;
+  private StableSpatialCoverageValidationService spatialCoverageValidationService;
   @Mock
   private TraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelValidatorService;
   @Mock
@@ -164,28 +164,28 @@ class RaidoStableV1ValidationServiceTest {
   void validatesSpatialCoverageOnCreate() {
     final var handle = "test-handle";
     final var spatialCoverages =
-      Collections.singletonList(new SpatialCoverageBlock());
+      Collections.singletonList(new SpatialCoverage());
 
     final var raid = new CreateRaidV1Request()
       .id(new IdBlock())
       .spatialCoverages(spatialCoverages);
 
     validationService.validateForCreate(raid);
-    verify(spatialCoverageValidationService).validateSpatialCoverages(spatialCoverages);
+    verify(spatialCoverageValidationService).validate(spatialCoverages);
   }
 
   @Test
   void validatesSpatialCoverageOnUpdate() {
     final var handle = "test-handle";
     final var spatialCoverages =
-      Collections.singletonList(new SpatialCoverageBlock());
+      Collections.singletonList(new SpatialCoverage());
 
     final var raid = new UpdateRaidV1Request()
       .id(new IdBlock())
       .spatialCoverages(spatialCoverages);
 
     validationService.validateForUpdate(handle, raid);
-    verify(spatialCoverageValidationService).validateSpatialCoverages(spatialCoverages);
+    verify(spatialCoverageValidationService).validate(spatialCoverages);
   }
 
   @Test

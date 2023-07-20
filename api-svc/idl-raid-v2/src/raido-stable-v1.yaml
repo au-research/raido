@@ -146,7 +146,7 @@ components:
           items: { $ref: '#/components/schemas/AlternateIdentifier' }
         spatialCoverages:
           type: array
-          items: { $ref: 'metadata-block.yaml#/components/schemas/SpatialCoverageBlock' }
+          items: { $ref: '#/components/schemas/SpatialCoverage' }
         traditionalKnowledgeLabels:
           type: array
           items: { $ref: 'metadata-block.yaml#/components/schemas/TraditionalKnowledgeLabelBlock' }
@@ -325,3 +325,9 @@ components:
         properties:
           id: { type: string }
           type: { type: string }
+    SpatialCoverage:
+      type: object
+      properties:
+        id: { type: string }
+        schemeUri: { type: string }
+        place: { type: string }

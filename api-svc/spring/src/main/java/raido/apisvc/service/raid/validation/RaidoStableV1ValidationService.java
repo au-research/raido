@@ -38,7 +38,7 @@ public class RaidoStableV1ValidationService {
   private final StableRelatedObjectValidationService relatedObjectSvc;
   private final StableAlternateIdentifierValidationService alternateIdentifierSvc;
   private final StableRelatedRaidValidationService relatedRaidSvc;
-  private final SpatialCoverageValidationService spatialCoverageSvc;
+  private final StableSpatialCoverageValidationService spatialCoverageSvc;
   private final TraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelSvc;
 
   public RaidoStableV1ValidationService(
@@ -51,7 +51,7 @@ public class RaidoStableV1ValidationService {
     final StableRelatedObjectValidationService relatedObjectSvc,
     final StableAlternateIdentifierValidationService alternateIdentifierSvc,
     final StableRelatedRaidValidationService relatedRaidSvc,
-    final SpatialCoverageValidationService spatialCoverageSvc,
+    final StableSpatialCoverageValidationService spatialCoverageSvc,
     final TraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelSvc,
     final StableAccessValidationService accessValidationService) {
     this.titleSvc = titleSvc;
@@ -183,7 +183,7 @@ public class RaidoStableV1ValidationService {
     failures.addAll(relatedRaidSvc.validateRelatedRaids(request.getRelatedRaids()));
     failures.addAll(relatedObjectSvc.validateRelatedObjects(request.getRelatedObjects()));
     failures.addAll(alternateIdentifierSvc.validateAlternateIdentifiers(request.getAlternateIdentifiers()));
-    failures.addAll(spatialCoverageSvc.validateSpatialCoverages(request.getSpatialCoverages()));
+    failures.addAll(spatialCoverageSvc.validate(request.getSpatialCoverages()));
     failures.addAll(traditionalKnowledgeLabelSvc.validateTraditionalKnowledgeLabels(
       request.getTraditionalKnowledgeLabels()));
 
@@ -214,7 +214,7 @@ public class RaidoStableV1ValidationService {
     failures.addAll(relatedRaidSvc.validateRelatedRaids(request.getRelatedRaids()));
     failures.addAll(relatedObjectSvc.validateRelatedObjects(request.getRelatedObjects()));
     failures.addAll(alternateIdentifierSvc.validateAlternateIdentifiers(request.getAlternateIdentifiers()));
-    failures.addAll(spatialCoverageSvc.validateSpatialCoverages(request.getSpatialCoverages()));
+    failures.addAll(spatialCoverageSvc.validate(request.getSpatialCoverages()));
     failures.addAll(traditionalKnowledgeLabelSvc.validateTraditionalKnowledgeLabels(
       request.getTraditionalKnowledgeLabels()));
 
