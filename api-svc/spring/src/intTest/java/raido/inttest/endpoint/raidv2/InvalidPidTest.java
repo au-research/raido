@@ -114,7 +114,7 @@ public class InvalidPidTest extends IntegrationTestCase {
     var today = LocalDate.now();
     return List.of(new Contributor()
       .id(orcid)
-      .schemeUri(CONTRIBUTOR_SCHEME_URI)
+      .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
       .positions(List.of(new ContribPosition()
         .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
         .type(LEADER_POSITION)

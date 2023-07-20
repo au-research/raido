@@ -201,7 +201,7 @@ components:
       properties:
         id:
           type: string
-        schemeUri: {
+        identifierSchemeUri: {
           type: string,
           example: 'https://orcid.org/'
         }

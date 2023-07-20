@@ -35,7 +35,7 @@
   "contributors": [
     {
       "id": "0000-0002-4368-8058",
-      "schemeUri": "https://orcid.org/",
+      "identifierSchemeUri": "https://orcid.org/",
       "positions": [
         {
           "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1",

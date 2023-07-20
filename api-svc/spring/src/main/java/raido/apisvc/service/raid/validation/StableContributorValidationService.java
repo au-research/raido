@@ -41,7 +41,7 @@ public class StableContributorValidationService {
       .forEach(contributorIndex -> {
         final var contributor = contributors.get(contributorIndex);
 
-        if (isBlank(contributor.getSchemeUri())) {
+        if (isBlank(contributor.getIdentifierSchemeUri())) {
           failures.add(
             new ValidationFailure()
               .fieldId("contributors[%d].schemeUri".formatted(contributorIndex))

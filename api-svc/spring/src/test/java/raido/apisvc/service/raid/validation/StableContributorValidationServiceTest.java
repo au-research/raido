@@ -44,7 +44,7 @@ class StableContributorValidationServiceTest {
       .type(SUPERVISION_CONTRIBUTOR_ROLE);
 
     final var contributor = new Contributor()
-      .schemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
+      .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
       .id(VALID_ORCID)
       .roles(List.of(role));
 
@@ -75,7 +75,7 @@ class StableContributorValidationServiceTest {
       .startDate(LocalDate.now());
 
     final var contributor = new Contributor()
-      .schemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
+      .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
       .id(VALID_ORCID)
       .roles(List.of(role))
       .positions(List.of(position));
@@ -141,7 +141,7 @@ class StableContributorValidationServiceTest {
       .startDate(LocalDate.now());
 
     final var contributor = new Contributor()
-      .schemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
+      .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
       .id(VALID_ORCID)
       .roles(List.of(role))
       .positions(List.of(position));
@@ -198,7 +198,7 @@ class StableContributorValidationServiceTest {
       .startDate(LocalDate.now());
 
     final var contributor = new Contributor()
-      .schemeUri("")
+      .identifierSchemeUri("")
       .id(VALID_ORCID)
       .roles(List.of(role))
       .positions(List.of(position));
@@ -230,7 +230,7 @@ class StableContributorValidationServiceTest {
       .startDate(LocalDate.now());
 
     final var contributor = new Contributor()
-      .schemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
+      .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
       .id(VALID_ORCID)
       .roles(List.of(role))
       .positions(List.of(position));
@@ -277,7 +277,7 @@ class StableContributorValidationServiceTest {
       .startDate(LocalDate.now());
 
     final var contributor = new Contributor()
-      .schemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
+      .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
       .id(VALID_ORCID)
       .roles(List.of(role))
       .positions(List.of(position));

@@ -152,7 +152,7 @@ public class AbstractStableIntegrationTest {
   ) {
     return new Contributor()
       .id(orcid)
-      .schemeUri(CONTRIBUTOR_SCHEME_URI)
+      .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
       .positions(List.of(new ContribPosition()
         .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
         .type(position)
