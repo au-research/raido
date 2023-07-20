@@ -32,7 +32,8 @@ public class RaidoStableV1ValidationService {
   private final StableDescriptionValidationService descSvc;
   private final StableContributorValidationService contribSvc;
   private final StableOrganisationValidationService orgSvc;
-  private final SubjectValidationService subjectSvc;
+  private final StableAccessValidationService accessValidationService;
+  private final StableSubjectValidationService subjectSvc;
   private final IdentifierParser idParser;
   private final RelatedObjectValidationService relatedObjectSvc;
   private final AlternateIdentifierValidationService alternateIdentifierSvc;
@@ -40,14 +41,12 @@ public class RaidoStableV1ValidationService {
   private final SpatialCoverageValidationService spatialCoverageSvc;
   private final TraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelSvc;
 
-  private final StableAccessValidationService accessValidationService;
-
   public RaidoStableV1ValidationService(
     final StableTitleValidationService titleSvc,
     final StableDescriptionValidationService descSvc,
     final StableContributorValidationService contribSvc,
     final StableOrganisationValidationService orgSvc,
-    final SubjectValidationService subjectSvc,
+    final StableSubjectValidationService subjectSvc,
     final IdentifierParser idParser,
     final RelatedObjectValidationService relatedObjectSvc,
     final AlternateIdentifierValidationService alternateIdentifierSvc,
@@ -140,7 +139,7 @@ public class RaidoStableV1ValidationService {
 //    return failures;
 //  }
   public List<ValidationFailure> validateAlternateUrls(
-    List<AlternateUrlBlock> urls
+    List<AlternateUrl> urls
   ) {
     if( urls == null ){
       return Collections.emptyList();

@@ -15,7 +15,7 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class RaidoStableV1ValidationServiceTest {
   @Mock
-  private SubjectValidationService subjectValidationService;
+  private StableSubjectValidationService subjectValidationService;
   @Mock
   private StableTitleValidationService titleValidationService;
   @Mock
@@ -68,7 +68,7 @@ class RaidoStableV1ValidationServiceTest {
 
   @Test
   void validatesSubjectsOnCreate() {
-    final var subjects = Collections.singletonList(new SubjectBlock());
+    final var subjects = Collections.singletonList(new Subject());
     final var raid = new CreateRaidV1Request().subjects(subjects);
 
     validationService.validateForCreate(raid);
@@ -79,7 +79,7 @@ class RaidoStableV1ValidationServiceTest {
   @Test
   void validatesSubjectsOnUpdate() {
     final var handle = "test-handle";
-    final var subjects = Collections.singletonList(new SubjectBlock());
+    final var subjects = Collections.singletonList(new Subject());
 
     final var raid = new UpdateRaidV1Request()
       .id(new IdBlock())

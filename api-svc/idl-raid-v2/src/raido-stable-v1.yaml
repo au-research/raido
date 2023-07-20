@@ -125,7 +125,7 @@ components:
         access: { $ref: '#/components/schemas/Access' }
         alternateUrls:
           type: array
-          items: { $ref: 'metadata-block.yaml#/components/schemas/AlternateUrlBlock' }
+          items: { $ref: '#/components/schemas/AlternateUrl' }
         contributors:
           type: array
           items: { $ref: '#/components/schemas/Contributor' }
@@ -134,7 +134,7 @@ components:
           items: { $ref: '#/components/schemas/Organisation' }
         subjects:
           type: array
-          items: { $ref: 'metadata-block.yaml#/components/schemas/SubjectBlock' }
+          items: { $ref: '#/components/schemas/Subject' }
         relatedRaids:
           type: array
           items: { $ref: 'metadata-block.yaml#/components/schemas/RelatedRaidBlock' }
@@ -272,3 +272,14 @@ components:
         }
         startDate: { type: string, format: date }
         endDate: { type: string, format: date }
+    AlternateUrl:
+      type: object
+      required: [ "url", ]
+      properties:
+        url: { type: string }
+    Subject:
+      type: object
+      properties:
+        id: { type: string }
+        schemeUri: { type: string }
+        keyword: { type: string }
