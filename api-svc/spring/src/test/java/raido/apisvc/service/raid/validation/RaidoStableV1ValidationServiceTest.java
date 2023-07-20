@@ -27,7 +27,7 @@ class RaidoStableV1ValidationServiceTest {
   @Mock
   private IdentifierParser identifierParser;
   @Mock
-  private RelatedRaidValidationService relatedRaidValidationService;
+  private StableRelatedRaidValidationService relatedRaidValidationService;
   @Mock
   private RelatedObjectValidationService relatedObjectValidationService;
   @Mock
@@ -92,7 +92,7 @@ class RaidoStableV1ValidationServiceTest {
 
   @Test
   void validatesRelatedRaidsOnCreate() {
-    final var relatedRaids = Collections.singletonList(new RelatedRaidBlock());
+    final var relatedRaids = Collections.singletonList(new RelatedRaid());
     final var raid = new CreateRaidV1Request().relatedRaids(relatedRaids);
 
     validationService.validateForCreate(raid);
@@ -111,7 +111,7 @@ class RaidoStableV1ValidationServiceTest {
   @Test
   void validatesRelatedRaidsOnUpdate() {
     final var handle = "test-handle";
-    final var relatedRaids = Collections.singletonList(new RelatedRaidBlock());
+    final var relatedRaids = Collections.singletonList(new RelatedRaid());
 
     final var raid = new UpdateRaidV1Request()
       .id(new IdBlock())

@@ -137,7 +137,7 @@ components:
           items: { $ref: '#/components/schemas/Subject' }
         relatedRaids:
           type: array
-          items: { $ref: 'metadata-block.yaml#/components/schemas/RelatedRaidBlock' }
+          items: { $ref: '#/components/schemas/RelatedRaid' }
         relatedObjects:
           type: array
           items: { $ref: 'metadata-block.yaml#/components/schemas/RelatedObjectBlock' }
@@ -283,3 +283,9 @@ components:
         id: { type: string }
         schemeUri: { type: string }
         keyword: { type: string }
+    RelatedRaid:
+      type: object
+      properties:
+        id: { type: string }
+        type: { type: string }
+        typeSchemeUri: { type: string }

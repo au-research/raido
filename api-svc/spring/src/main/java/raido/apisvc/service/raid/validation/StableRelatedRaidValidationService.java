@@ -1,0 +1,105 @@
+package raido.apisvc.service.raid.validation;
+
+import org.springframework.stereotype.Component;
+import raido.apisvc.repository.RaidRepository;
+import raido.apisvc.repository.RelatedRaidTypeRepository;
+import raido.apisvc.spring.config.environment.MetadataProps;
+import raido.apisvc.util.Log;
+import raido.idl.raidv2.model.RelatedRaid;
+import raido.idl.raidv2.model.ValidationFailure;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static raido.apisvc.util.Log.to;
+
+@Component
+public class StableRelatedRaidValidationService {
+  private static final Log log = to(StableRelatedRaidValidationService.class);
+  private static final String RELATED_RAID_TYPE_URL_SCHEME_URI =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type";
+
+  private final RaidRepository raidRepository;
+  private final RelatedRaidTypeRepository relatedRaidTypeRepository;
+  private final MetadataProps metadataProps;
+  public StableRelatedRaidValidationService(final RaidRepository raidRepository, final RelatedRaidTypeRepository relatedRaidTypeRepository, final MetadataProps metadataProps) {
+    this.raidRepository = raidRepository;
+    this.relatedRaidTypeRepository = relatedRaidTypeRepository;
+    this.metadataProps = metadataProps;
+  }
+
+  public List<ValidationFailure> validateRelatedRaids(final List<RelatedRaid> relatedRaids) {
+    final var failures = new ArrayList<ValidationFailure>();
+
+    if (relatedRaids == null) {
+      return failures;
+    }
+
+    final var raidUrlPattern = String.format("^%s\\/\\d+\\.\\d+\\/\\d+$", metadataProps.handleUrlPrefix);
+    final var relatedRaidTypeUrlPattern = String.format("^%s\\/[a-z\\-]+.json$", RELATED_RAID_TYPE_URL_SCHEME_URI);
+
+    for (int i = 0; i < relatedRaids.size(); i++) {
+      final var raidUrl = relatedRaids.get(i).getId();
+
+      if (!raidUrl.matches(raidUrlPattern)) {
+        failures.add(new ValidationFailure()
+          .errorType("invalid")
+          .fieldId(String.format("relatedRaids[%d].id", i))
+          .message(
+            "RelatedRaid is invalid. Does not match %s/prefix/suffix"
+              .formatted(metadataProps.handleUrlPrefix)
+          )
+        );
+      } else {
+        final var handle = raidUrl.substring(raidUrl.lastIndexOf("/", raidUrl.lastIndexOf("/") - 1) + 1);
+
+        if (raidRepository.findByHandle(handle).isEmpty()) {
+          failures.add(new ValidationFailure()
+            .errorType("invalid")
+            .fieldId(String.format("relatedRaids[%d].id", i))
+            .message("Related Raid was not found.")
+          );
+        }
+      }
+
+      final var relatedRaidTypeUrl = relatedRaids.get(i).getType();
+      if (relatedRaidTypeUrl == null) {
+        failures.add(new ValidationFailure()
+          .errorType("required")
+          .fieldId(String.format("relatedRaids[%d].type", i))
+          .message("RelatedRaidType is required.")
+        );
+      } else if (!relatedRaidTypeUrl.matches(relatedRaidTypeUrlPattern)) {
+        failures.add(new ValidationFailure()
+          .errorType("invalid")
+          .fieldId(String.format("relatedRaids[%d].type", i))
+          .message("RelatedRaidType is invalid.")
+        );
+      } else {
+        if (relatedRaidTypeRepository.findByUrl(relatedRaidTypeUrl).isEmpty()) {
+          failures.add(new ValidationFailure()
+            .errorType("invalid")
+            .fieldId(String.format("relatedRaids[%d].type", i))
+            .message("Related Raid Type was not found.")
+          );
+        }
+      }
+
+      if (relatedRaids.get(i).getTypeSchemeUri() == null) {
+        failures.add(new ValidationFailure()
+          .errorType("required")
+          .fieldId(String.format("relatedRaids[%d].typeSchemeUri", i))
+          .message("Related Raid Type Scheme URI is required.")
+        );
+      }
+      else if (!relatedRaids.get(i).getTypeSchemeUri().equals(RELATED_RAID_TYPE_URL_SCHEME_URI)) {
+        failures.add(new ValidationFailure()
+          .errorType("invalid")
+          .fieldId(String.format("relatedRaids[%d].typeSchemeUri", i))
+          .message("Related Raid Type Scheme URI is invalid.")
+        );
+      }
+    }
+    return failures;
+  }
+}
