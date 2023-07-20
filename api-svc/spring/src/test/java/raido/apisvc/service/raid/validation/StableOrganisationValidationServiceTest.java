@@ -43,7 +43,7 @@ class StableOrganisationValidationServiceTest {
 
     final var organisation = new Organisation()
       .id(VALID_ROR)
-      .schemeUri(HTTPS_ROR_ORG)
+      .identifierSchemeUri(HTTPS_ROR_ORG)
       .roles(List.of(role));
 
     final var failures = validationService.validate(List.of(organisation));
@@ -82,7 +82,7 @@ class StableOrganisationValidationServiceTest {
   void emptyIdentifierSchemeUri() {
     final var organisation = new Organisation()
       .id(VALID_ROR)
-      .schemeUri("")
+      .identifierSchemeUri("")
       .roles(List.of(
         new OrgRole()
           .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
@@ -113,7 +113,7 @@ class StableOrganisationValidationServiceTest {
 
     final var organisation = new Organisation()
       .id(VALID_ROR)
-      .schemeUri(HTTPS_ROR_ORG)
+      .identifierSchemeUri(HTTPS_ROR_ORG)
       .roles(List.of(role));
 
     final var rorError = new ValidationFailure()
@@ -144,7 +144,7 @@ class StableOrganisationValidationServiceTest {
 
     final var organisation = new Organisation()
       .id(VALID_ROR)
-      .schemeUri(HTTPS_ROR_ORG)
+      .identifierSchemeUri(HTTPS_ROR_ORG)
       .roles(List.of(role));
 
     final var roleError = new ValidationFailure()

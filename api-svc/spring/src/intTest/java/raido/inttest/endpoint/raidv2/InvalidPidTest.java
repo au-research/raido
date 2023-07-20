@@ -136,7 +136,7 @@ public class InvalidPidTest extends IntegrationTestCase {
   ) {
     return new Organisation()
       .id(ror)
-      .schemeUri(ORGANISATION_SCHEME_URI)
+      .identifierSchemeUri(ORGANISATION_SCHEME_URI)
       .roles(List.of(
         new OrgRole()
           .schemeUri(ORGANISATION_ROLE_SCHEME_URI)

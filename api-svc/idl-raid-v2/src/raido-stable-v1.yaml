@@ -250,7 +250,7 @@ components:
       required: [id, identifierSchemeUri, roles]
       properties:
         id: { type: string }
-        schemeUri: {
+        identifierSchemeUri: {
           type: string,
           example: 'https://ror.org/'
         }

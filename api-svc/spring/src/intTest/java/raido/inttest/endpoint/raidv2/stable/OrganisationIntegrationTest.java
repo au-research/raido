@@ -80,7 +80,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
   void emptyIdentifierSchemeUri() {
     createRequest.setOrganisations(List.of(
       new Organisation()
-        .schemeUri("")
+        .identifierSchemeUri("")
         .id(VALID_ROR)
         .roles(List.of(
           new OrgRole()
@@ -112,7 +112,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
   void missingId() {
     createRequest.setOrganisations(List.of(
       new Organisation()
-        .schemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
+        .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
         .roles(List.of(
           new OrgRole()
             .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
@@ -142,7 +142,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
   void emptyId() {
     createRequest.setOrganisations(List.of(
       new Organisation()
-        .schemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
+        .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
         .id("")
         .roles(List.of(
           new OrgRole()
@@ -176,7 +176,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
     void invalidRorPattern() {
       createRequest.setOrganisations(List.of(
         new Organisation()
-          .schemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
+          .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
           .id("https://ror.org/038sjwqxx")
           .roles(List.of(
             new OrgRole()
@@ -207,7 +207,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
     void nonExistentRor() {
       createRequest.setOrganisations(List.of(
         new Organisation()
-          .schemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
+          .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
           .id("https://ror.org/000000042")
           .roles(List.of(
             new OrgRole()
@@ -242,7 +242,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
     void missingRoleSchemeUri() {
       createRequest.setOrganisations(List.of(
         new Organisation()
-          .schemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
+          .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
           .id(VALID_ROR)
           .roles(List.of(
             new OrgRole()
@@ -272,7 +272,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
     void missingRoleType() {
       createRequest.setOrganisations(List.of(
         new Organisation()
-          .schemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
+          .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
           .id(VALID_ROR)
           .roles(List.of(
             new OrgRole()
@@ -302,7 +302,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
     void emptyRoleType() {
       createRequest.setOrganisations(List.of(
         new Organisation()
-          .schemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
+          .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
           .id(VALID_ROR)
           .roles(List.of(
             new OrgRole()
@@ -333,7 +333,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
     void invalidRoleSchemeUri() {
       createRequest.setOrganisations(List.of(
         new Organisation()
-          .schemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
+          .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
           .id(VALID_ROR)
           .roles(List.of(
             new OrgRole()
@@ -364,7 +364,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
     void invalidRoleTypeForScheme() {
       createRequest.setOrganisations(List.of(
         new Organisation()
-          .schemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
+          .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
           .id(VALID_ROR)
           .roles(List.of(
             new OrgRole()

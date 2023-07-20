@@ -40,13 +40,13 @@ public class StableOrganisationValidationService {
     IntStream.range(0, organisations.size()).forEach(organisationIndex -> {
       final var organisation = organisations.get(organisationIndex);
 
-      if (isBlank(organisation.getSchemeUri())) {
+      if (isBlank(organisation.getIdentifierSchemeUri())) {
         failures.add(new ValidationFailure()
           .fieldId("organisations[%d].schemeUri".formatted(organisationIndex))
           .errorType(NOT_SET_TYPE)
           .message(FIELD_MUST_BE_SET_MESSAGE)
         );
-      } else if (!organisation.getSchemeUri().equals(ROR_SCHEME_URI)) {
+      } else if (!organisation.getIdentifierSchemeUri().equals(ROR_SCHEME_URI)) {
         failures.add(new ValidationFailure()
           .fieldId("organisations[%d].schemeUri")
           .errorType(INVALID_VALUE_TYPE)

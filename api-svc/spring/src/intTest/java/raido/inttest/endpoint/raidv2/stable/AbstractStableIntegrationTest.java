@@ -170,7 +170,7 @@ public class AbstractStableIntegrationTest {
   ) {
     return new Organisation()
       .id(ror)
-      .schemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI).
+      .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI).
       roles(List.of(
         new OrgRole()
           .schemeUri(ORGANISATION_ROLE_SCHEME_URI)

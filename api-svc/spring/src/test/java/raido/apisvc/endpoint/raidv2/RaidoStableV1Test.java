@@ -266,7 +266,7 @@ class RaidoStableV1Test {
         .andExpect(jsonPath("$.organisations[0].roles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.organisations[0].roles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.organisations[0].id", Matchers.is("https://ror.org/04qw24q55")))
-        .andExpect(jsonPath("$.organisations[0].schemeUri", Matchers.is("https://ror.org/")));
+        .andExpect(jsonPath("$.organisations[0].identifierSchemeUri", Matchers.is("https://ror.org/")));
     }
   }
 
@@ -405,7 +405,7 @@ class RaidoStableV1Test {
         .andExpect(jsonPath("$.organisations[0].roles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.organisations[0].roles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.organisations[0].id", Matchers.is("https://ror.org/04qw24q55")))
-        .andExpect(jsonPath("$.organisations[0].schemeUri", Matchers.is("https://ror.org/")));
+        .andExpect(jsonPath("$.organisations[0].identifierSchemeUri", Matchers.is("https://ror.org/")));
     }
   }
 
@@ -627,7 +627,7 @@ class RaidoStableV1Test {
         .andExpect(jsonPath("$[0].organisations[0].roles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$[0].organisations[0].roles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$[0].organisations[0].id", Matchers.is("https://ror.org/04qw24q55")))
-        .andExpect(jsonPath("$[0].organisations[0].schemeUri", Matchers.is("https://ror.org/")));
+        .andExpect(jsonPath("$[0].organisations[0].identifierSchemeUri", Matchers.is("https://ror.org/")));
     }
   }
 

@@ -54,7 +54,7 @@
   "organisations": [
     {
       "id": "https://ror.org/04qw24q55",
-      "schemeUri": "https://ror.org/",
+      "identifierSchemeUri": "https://ror.org/",
       "roles": [
         {
           "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1",
