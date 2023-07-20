@@ -37,7 +37,7 @@ public class StableContributorPositionValidationService {
     if (isBlank(position.getId())) {
       failures.add(
         new ValidationFailure()
-          .fieldId("contributors[%d].positions[%d].type".formatted(contributorIndex, positionIndex))
+          .fieldId("contributors[%d].positions[%d].id".formatted(contributorIndex, positionIndex))
           .errorType(NOT_SET_TYPE)
           .message(FIELD_MUST_BE_SET_MESSAGE));
     }
@@ -64,7 +64,7 @@ public class StableContributorPositionValidationService {
         contributorPositionRepository.findByUriAndSchemeId(position.getId(), positionScheme.get().getId()).isEmpty()) {
         failures.add(
           new ValidationFailure()
-            .fieldId("contributors[%d].positions[%d].type".formatted(contributorIndex, positionIndex))
+            .fieldId("contributors[%d].positions[%d].id".formatted(contributorIndex, positionIndex))
             .errorType(INVALID_VALUE_TYPE)
             .message(INVALID_VALUE_MESSAGE)
         );

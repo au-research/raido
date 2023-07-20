@@ -174,7 +174,7 @@ public class AbstractStableIntegrationTest {
       roles(List.of(
         new OrgRole()
           .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
-          .type(role)
+          .id(role)
           .startDate(today)));
   }
 }

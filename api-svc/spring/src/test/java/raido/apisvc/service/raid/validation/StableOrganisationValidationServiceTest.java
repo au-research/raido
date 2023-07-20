@@ -37,7 +37,7 @@ class StableOrganisationValidationServiceTest {
   void validOrganisation() {
     final var role = new OrgRole()
       .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
-      .type(LEAD_RESEARCH_ORGANISATION_ROLE)
+      .id(LEAD_RESEARCH_ORGANISATION_ROLE)
       .startDate(LocalDate.now().minusYears(1))
       .endDate(LocalDate.now());
 
@@ -61,7 +61,7 @@ class StableOrganisationValidationServiceTest {
       .roles(List.of(
         new OrgRole()
           .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
-          .type(LEAD_RESEARCH_ORGANISATION_ROLE)
+          .id(LEAD_RESEARCH_ORGANISATION_ROLE)
           .startDate(LocalDate.now().minusYears(1))
           .endDate(LocalDate.now())
       ));
@@ -86,7 +86,7 @@ class StableOrganisationValidationServiceTest {
       .roles(List.of(
         new OrgRole()
           .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
-          .type(LEAD_RESEARCH_ORGANISATION_ROLE)
+          .id(LEAD_RESEARCH_ORGANISATION_ROLE)
           .startDate(LocalDate.now().minusYears(1))
           .endDate(LocalDate.now())
       ));
@@ -107,7 +107,7 @@ class StableOrganisationValidationServiceTest {
   void rorValidationFailuresReturned() {
     final var role = new OrgRole()
       .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
-      .type(LEAD_RESEARCH_ORGANISATION_ROLE)
+      .id(LEAD_RESEARCH_ORGANISATION_ROLE)
       .startDate(LocalDate.now().minusYears(1))
       .endDate(LocalDate.now());
 
@@ -138,7 +138,7 @@ class StableOrganisationValidationServiceTest {
   void roleValidationFailuresReturned() {
     final var role = new OrgRole()
       .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
-      .type(LEAD_RESEARCH_ORGANISATION_ROLE)
+      .id(LEAD_RESEARCH_ORGANISATION_ROLE)
       .startDate(LocalDate.now().minusYears(1))
       .endDate(LocalDate.now());
 

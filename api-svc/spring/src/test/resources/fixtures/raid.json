@@ -58,7 +58,7 @@
       "roles": [
         {
           "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1",
-          "type": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json",
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json",
           "startDate": "2020-10-07"
         }
       ]

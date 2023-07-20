@@ -490,7 +490,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
         assertThat(failures).hasSize(1);
         assertThat(failures).contains(
           new ValidationFailure()
-            .fieldId("contributors[0].positions[1].type")
+            .fieldId("contributors[0].positions[1].id")
             .errorType("notSet")
             .message("field must be set")
         );
@@ -572,7 +572,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
         assertThat(failures).hasSize(1);
         assertThat(failures).contains(
           new ValidationFailure()
-            .fieldId("contributors[0].positions[1].type")
+            .fieldId("contributors[0].positions[1].id")
             .errorType("invalidValue")
             .message("has invalid/unsupported value")
         );
@@ -653,7 +653,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
         assertThat(failures).hasSize(1);
         assertThat(failures).contains(
           new ValidationFailure()
-            .fieldId("contributors[0].roles[0].type")
+            .fieldId("contributors[0].roles[0].id")
             .errorType("notSet")
             .message("field must be set")
         );
@@ -735,7 +735,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
         assertThat(failures).hasSize(1);
         assertThat(failures).contains(
           new ValidationFailure()
-            .fieldId("contributors[0].roles[0].type")
+            .fieldId("contributors[0].roles[0].id")
             .errorType("invalidValue")
             .message("has invalid/unsupported value")
         );

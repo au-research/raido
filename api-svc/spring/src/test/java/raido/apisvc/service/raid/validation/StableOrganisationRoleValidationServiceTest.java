@@ -49,7 +49,7 @@ class StableOrganisationRoleValidationServiceTest {
   @DisplayName("Validation passes with valid OrganisationRole")
   void validOrganisationRole() {
     final var role = new OrgRole()
-      .type(LEAD_RESEARCH_ORGANISATION_ROLE)
+      .id(LEAD_RESEARCH_ORGANISATION_ROLE)
       .schemeUri(ORGANISATION_ROLE_SCHEME_URI);
 
     when(contributorRoleSchemeRepository.findByUri(ORGANISATION_ROLE_SCHEME_URI))
@@ -68,7 +68,7 @@ class StableOrganisationRoleValidationServiceTest {
   @DisplayName("Validation fails with null schemeUri")
   void nullSchemeUri() {
     final var role = new OrgRole()
-      .type(LEAD_RESEARCH_ORGANISATION_ROLE);
+      .id(LEAD_RESEARCH_ORGANISATION_ROLE);
 
     final var failures = validationService.validate(role, 2, 3);
 
@@ -89,7 +89,7 @@ class StableOrganisationRoleValidationServiceTest {
   void emptySchemeUri() {
     final var role = new OrgRole()
       .schemeUri("")
-      .type(LEAD_RESEARCH_ORGANISATION_ROLE);
+      .id(LEAD_RESEARCH_ORGANISATION_ROLE);
 
     final var failures = validationService.validate(role, 2, 3);
 
@@ -110,7 +110,7 @@ class StableOrganisationRoleValidationServiceTest {
   void invalidSchemeUri() {
     final var role = new OrgRole()
       .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
-      .type(LEAD_RESEARCH_ORGANISATION_ROLE);
+      .id(LEAD_RESEARCH_ORGANISATION_ROLE);
 
     when(contributorRoleSchemeRepository.findByUri(ORGANISATION_ROLE_SCHEME_URI))
       .thenReturn(Optional.empty());
@@ -142,7 +142,7 @@ class StableOrganisationRoleValidationServiceTest {
     assertThat(failures, hasSize(1));
     assertThat(failures, hasItem(
       new ValidationFailure()
-        .fieldId("organisations[2].roles[3].type")
+        .fieldId("organisations[2].roles[3].id")
         .errorType("notSet")
         .message("field must be set")
     ));
@@ -155,7 +155,7 @@ class StableOrganisationRoleValidationServiceTest {
   void emptyRole() {
     final var role = new OrgRole()
       .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
-      .type("");
+      .id("");
 
     when(contributorRoleSchemeRepository.findByUri(ORGANISATION_ROLE_SCHEME_URI))
       .thenReturn(Optional.of(ORGANISATION_ROLE_SCHEME_RECORD));
@@ -165,7 +165,7 @@ class StableOrganisationRoleValidationServiceTest {
     assertThat(failures, hasSize(1));
     assertThat(failures, hasItem(
       new ValidationFailure()
-        .fieldId("organisations[2].roles[3].type")
+        .fieldId("organisations[2].roles[3].id")
         .errorType("notSet")
         .message("field must be set")
     ));
@@ -178,7 +178,7 @@ class StableOrganisationRoleValidationServiceTest {
   void invalidRole() {
     final var role = new OrgRole()
       .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
-      .type(LEAD_RESEARCH_ORGANISATION_ROLE);
+      .id(LEAD_RESEARCH_ORGANISATION_ROLE);
 
     when(contributorRoleSchemeRepository.findByUri(ORGANISATION_ROLE_SCHEME_URI))
       .thenReturn(Optional.of(ORGANISATION_ROLE_SCHEME_RECORD));
@@ -192,7 +192,7 @@ class StableOrganisationRoleValidationServiceTest {
     assertThat(failures, hasSize(1));
     assertThat(failures, hasItem(
       new ValidationFailure()
-        .fieldId("organisations[2].roles[3].type")
+        .fieldId("organisations[2].roles[3].id")
         .errorType("invalidValue")
         .message("has invalid/unsupported value")
     ));

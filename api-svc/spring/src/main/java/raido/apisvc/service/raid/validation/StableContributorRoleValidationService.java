@@ -29,7 +29,7 @@ public class StableContributorRoleValidationService {
     if (isBlank(role.getId())) {
       failures.add(
         new ValidationFailure()
-          .fieldId("contributors[%d].roles[%d].type".formatted(contributorIndex, roleIndex))
+          .fieldId("contributors[%d].roles[%d].id".formatted(contributorIndex, roleIndex))
           .errorType(NOT_SET_TYPE)
           .message(FIELD_MUST_BE_SET_MESSAGE));
     }
@@ -56,7 +56,7 @@ public class StableContributorRoleValidationService {
         contributorRoleRepository.findByUriAndSchemeId(role.getId(), roleScheme.get().getId()).isEmpty()) {
         failures.add(
           new ValidationFailure()
-            .fieldId("contributors[%d].roles[%d].type".formatted(contributorIndex, roleIndex))
+            .fieldId("contributors[%d].roles[%d].id".formatted(contributorIndex, roleIndex))
             .errorType(INVALID_VALUE_TYPE)
             .message(INVALID_VALUE_MESSAGE)
         );

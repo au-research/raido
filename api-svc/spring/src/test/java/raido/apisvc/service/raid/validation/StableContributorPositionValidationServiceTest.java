@@ -154,7 +154,7 @@ class StableContributorPositionValidationServiceTest {
     assertThat(failures, hasSize(1));
     assertThat(failures, hasItem(
       new ValidationFailure()
-        .fieldId("contributors[2].positions[3].type")
+        .fieldId("contributors[2].positions[3].id")
         .errorType("notSet")
         .message("field must be set")
     ));
@@ -179,7 +179,7 @@ class StableContributorPositionValidationServiceTest {
     assertThat(failures, hasSize(1));
     assertThat(failures, hasItem(
       new ValidationFailure()
-        .fieldId("contributors[2].positions[3].type")
+        .fieldId("contributors[2].positions[3].id")
         .errorType("notSet")
         .message("field must be set")
     ));
@@ -208,7 +208,7 @@ class StableContributorPositionValidationServiceTest {
     assertThat(failures, hasSize(1));
     assertThat(failures, hasItem(
       new ValidationFailure()
-        .fieldId("contributors[2].positions[3].type")
+        .fieldId("contributors[2].positions[3].id")
         .errorType("invalidValue")
         .message("has invalid/unsupported value")
     ));

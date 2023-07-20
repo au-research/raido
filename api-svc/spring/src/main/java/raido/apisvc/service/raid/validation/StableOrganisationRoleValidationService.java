@@ -26,10 +26,10 @@ public class StableOrganisationRoleValidationService {
     final OrgRole role, final int organisationIndex, final int roleIndex) {
     final var failures = new ArrayList<ValidationFailure>();
 
-    if (isBlank(role.getType())) {
+    if (isBlank(role.getId())) {
       failures.add(
         new ValidationFailure()
-          .fieldId("organisations[%d].roles[%d].type".formatted(organisationIndex, roleIndex))
+          .fieldId("organisations[%d].roles[%d].id".formatted(organisationIndex, roleIndex))
           .errorType(NOT_SET_TYPE)
           .message(FIELD_MUST_BE_SET_MESSAGE));
     }
@@ -52,11 +52,11 @@ public class StableOrganisationRoleValidationService {
             .errorType(INVALID_VALUE_TYPE)
             .message(INVALID_VALUE_MESSAGE)
         );
-      } else if (!isBlank(role.getType()) &&
-        organisationRoleRepository.findByUriAndSchemeId(role.getType(), roleScheme.get().getId()).isEmpty()) {
+      } else if (!isBlank(role.getId()) &&
+        organisationRoleRepository.findByUriAndSchemeId(role.getId(), roleScheme.get().getId()).isEmpty()) {
         failures.add(
           new ValidationFailure()
-            .fieldId("organisations[%d].roles[%d].type".formatted(organisationIndex, roleIndex))
+            .fieldId("organisations[%d].roles[%d].id".formatted(organisationIndex, roleIndex))
             .errorType(INVALID_VALUE_TYPE)
             .message(INVALID_VALUE_MESSAGE)
         );

@@ -54,7 +54,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
         .roles(List.of(
           new OrgRole()
             .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
-            .type(LEAD_RESEARCH_ORGANISATION_ROLE)
+            .id(LEAD_RESEARCH_ORGANISATION_ROLE)
         ))
     ));
 
@@ -86,7 +86,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
           new OrgRole()
             .startDate(LocalDate.now())
             .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
-            .type(LEAD_RESEARCH_ORGANISATION)
+            .id(LEAD_RESEARCH_ORGANISATION)
         ))
     ));
 
@@ -116,7 +116,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
         .roles(List.of(
           new OrgRole()
             .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
-            .type(LEAD_RESEARCH_ORGANISATION_ROLE)
+            .id(LEAD_RESEARCH_ORGANISATION_ROLE)
         ))
     ));
 
@@ -147,7 +147,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
         .roles(List.of(
           new OrgRole()
             .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
-            .type(LEAD_RESEARCH_ORGANISATION_ROLE)
+            .id(LEAD_RESEARCH_ORGANISATION_ROLE)
         ))
     ));
 
@@ -181,7 +181,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
           .roles(List.of(
             new OrgRole()
               .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
-              .type(LEAD_RESEARCH_ORGANISATION_ROLE)
+              .id(LEAD_RESEARCH_ORGANISATION_ROLE)
           ))
       ));
 
@@ -212,7 +212,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
           .roles(List.of(
             new OrgRole()
               .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
-              .type(LEAD_RESEARCH_ORGANISATION_ROLE)
+              .id(LEAD_RESEARCH_ORGANISATION_ROLE)
           ))
       ));
 
@@ -246,7 +246,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
           .id(VALID_ROR)
           .roles(List.of(
             new OrgRole()
-              .type(LEAD_RESEARCH_ORGANISATION_ROLE)
+              .id(LEAD_RESEARCH_ORGANISATION_ROLE)
           ))
       ));
 
@@ -288,7 +288,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
         assertThat(failures).hasSize(1);
         assertThat(failures).contains(
           new ValidationFailure()
-            .fieldId("organisations[0].roles[0].type")
+            .fieldId("organisations[0].roles[0].id")
             .errorType("notSet")
             .message("field must be set")
         );
@@ -306,7 +306,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
           .id(VALID_ROR)
           .roles(List.of(
             new OrgRole()
-              .type("")
+              .id("")
               .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
           ))
       ));
@@ -319,7 +319,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
         assertThat(failures).hasSize(1);
         assertThat(failures).contains(
           new ValidationFailure()
-            .fieldId("organisations[0].roles[0].type")
+            .fieldId("organisations[0].roles[0].id")
             .errorType("notSet")
             .message("field must be set")
         );
@@ -338,7 +338,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
           .roles(List.of(
             new OrgRole()
               .schemeUri("unknown")
-              .type(LEAD_RESEARCH_ORGANISATION_ROLE)
+              .id(LEAD_RESEARCH_ORGANISATION_ROLE)
           ))
       ));
 
@@ -369,7 +369,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
           .roles(List.of(
             new OrgRole()
               .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
-              .type("unknown")
+              .id("unknown")
           ))
       ));
 
@@ -381,7 +381,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
         assertThat(failures).hasSize(1);
         assertThat(failures).contains(
           new ValidationFailure()
-            .fieldId("organisations[0].roles[0].type")
+            .fieldId("organisations[0].roles[0].id")
             .errorType("invalidValue")
             .message("has invalid/unsupported value")
         );
