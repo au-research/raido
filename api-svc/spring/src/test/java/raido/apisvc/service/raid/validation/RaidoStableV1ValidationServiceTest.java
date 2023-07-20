@@ -29,9 +29,9 @@ class RaidoStableV1ValidationServiceTest {
   @Mock
   private StableRelatedRaidValidationService relatedRaidValidationService;
   @Mock
-  private RelatedObjectValidationService relatedObjectValidationService;
+  private StableRelatedObjectValidationService relatedObjectValidationService;
   @Mock
-  private AlternateIdentifierValidationService alternateIdentifierValidationService;
+  private StableAlternateIdentifierValidationService alternateIdentifierValidationService;
 
   @Mock
   private SpatialCoverageValidationService spatialCoverageValidationService;
@@ -101,7 +101,7 @@ class RaidoStableV1ValidationServiceTest {
 
   @Test
   void validatesRelatedObjectsOnCreate() {
-    final var relatedObjects = Collections.singletonList(new RelatedObjectBlock());
+    final var relatedObjects = Collections.singletonList(new RelatedObject());
     final var raid = new CreateRaidV1Request().relatedObjects(relatedObjects);
 
     validationService.validateForCreate(raid);
@@ -124,7 +124,7 @@ class RaidoStableV1ValidationServiceTest {
   @Test
   void validatesRelatedObjectsOnUpdate() {
     final var handle = "test-handle";
-    final var relatedObjects = Collections.singletonList(new RelatedObjectBlock());
+    final var relatedObjects = Collections.singletonList(new RelatedObject());
 
     final var raid = new UpdateRaidV1Request()
       .id(new IdBlock())
@@ -137,7 +137,7 @@ class RaidoStableV1ValidationServiceTest {
   @Test
   void validatesAlternateIdentifiersOnCreate() {
     final var handle = "test-handle";
-    final var alternateIdentifiers = Collections.singletonList(new AlternateIdentifierBlock());
+    final var alternateIdentifiers = Collections.singletonList(new AlternateIdentifier());
 
     final var raid = new CreateRaidV1Request()
       .id(new IdBlock())
@@ -150,7 +150,7 @@ class RaidoStableV1ValidationServiceTest {
   @Test
   void validatesAlternateIdentifiersOnUpdate() {
     final var handle = "test-handle";
-    final var alternateIdentifiers = Collections.singletonList(new AlternateIdentifierBlock());
+    final var alternateIdentifiers = Collections.singletonList(new AlternateIdentifier());
 
     final var raid = new UpdateRaidV1Request()
       .id(new IdBlock())

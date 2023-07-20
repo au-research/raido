@@ -16,14 +16,15 @@ public class RelatedObjectTypeRepository {
     this.dslContext = dslContext;
   }
 
-  public Optional<RelatedObjectTypeRecord> findByUrl(final String url) {
+  public Optional<RelatedObjectTypeRecord> findByUriAndSchemeId(final String uri, final int schemeId) {
     return dslContext.select(RELATED_OBJECT_TYPE.fields())
       .from(RELATED_OBJECT_TYPE)
-      .where(RELATED_OBJECT_TYPE.URL.eq(url)).
+      .where(RELATED_OBJECT_TYPE.URI.eq(uri).and(RELATED_OBJECT_TYPE.SCHEME_ID.eq(schemeId))).
       fetchOptional(record -> new RelatedObjectTypeRecord()
+        .setSchemeId(RELATED_OBJECT_TYPE.SCHEME_ID.getValue(record))
+        .setUri(RELATED_OBJECT_TYPE.URI.getValue(record))
         .setName(RELATED_OBJECT_TYPE.NAME.getValue(record))
         .setDescription(RELATED_OBJECT_TYPE.DESCRIPTION.getValue(record))
-        .setUrl(RELATED_OBJECT_TYPE.URL.getValue(record))
       );
   }
 }

@@ -54,7 +54,24 @@ public class TestConstants {
 
   public static final String VALID_ROR = "https://ror.org/038sjwq14";
 
-  public static final String ORGANISATION_IDENTIFIER_SCHEME_URI = "https://ror.org/";
+  public static final String HTTPS_ROR_ORG = "https://ror.org/";
+
+  public static final String BOOK_CHAPTER_RELATED_OBJECT_TYPE =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book-chapter.json";
+
+  public static final String INPUT_RELATED_OBJECT_CATEGORY =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json";
+
+  public static final String RELATED_OBJECT_TYPE_SCHEME_URI =
+    "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1";
+
+  public static final String RELATED_OBJECT_CATEGORY_SCHEME_URI =
+    "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1";
+
+  public static final String VALID_DOI = "https://doi.org/10.000/00000";
+
+  public static final String HTTPS_DOI_ORG = "https://doi.org/";
+
 
   public static final LocalDate START_DATE = LocalDate.now().minusMonths(1);
   public static final LocalDate END_DATE = LocalDate.now();

@@ -8,13 +8,11 @@ import raido.inttest.RaidApiValidationException;
 import java.time.LocalDate;
 import java.util.List;
 
-import static java.util.List.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static raido.apisvc.service.stub.InMemoryStubTestData.*;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
-import static raido.inttest.util.MinimalRaidTestData.relatedObjects;
 
 public class InvalidPidTest extends IntegrationTestCase {
   private static final String LEAD_RESEARCH_ORGANISATION =
@@ -95,7 +93,7 @@ public class InvalidPidTest extends IntegrationTestCase {
   public List<Title> titles(
     String title
   ){
-    return of(new Title()
+    return List.of(new Title()
       .type(PRIMARY_TITLE_TYPE)
       .schemeUri(TITLE_TYPE_SCHEME_URI)
       .title(title)
@@ -114,7 +112,7 @@ public class InvalidPidTest extends IntegrationTestCase {
     String orcid
   ) {
     var today = LocalDate.now();
-    return of(new Contributor()
+    return List.of(new Contributor()
       .id(orcid)
       .schemeUri(CONTRIBUTOR_SCHEME_URI)
       .positions(List.of(new ContribPosition()
@@ -128,7 +126,7 @@ public class InvalidPidTest extends IntegrationTestCase {
   }
 
   public List<Organisation> organisations(String ror){
-    return of(organisation(ror, LEAD_RESEARCH_ORGANISATION, LocalDate.now()));
+    return List.of(organisation(ror, LEAD_RESEARCH_ORGANISATION, LocalDate.now()));
   }
 
   public Organisation organisation(
@@ -144,5 +142,24 @@ public class InvalidPidTest extends IntegrationTestCase {
           .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
           .type(role)
           .startDate(today)));
+  }
+
+  public List<RelatedObject> relatedObjects(String doi) {
+    return List.of(relatedObject(doi, "conference-paper.json"));
+  }
+  public RelatedObject relatedObject(String doi, String type){
+    return new RelatedObject()
+      .id(doi)
+      .identifierSchemeUri("https://doi.org/")
+      .type(
+        new RelatedObjectType()
+          .id("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/audiovisual.json")
+          .schemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1")
+      )
+      .category(
+        new RelatedObjectCategory()
+          .id("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json")
+          .schemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1")
+      );
   }
 }

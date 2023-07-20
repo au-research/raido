@@ -94,12 +94,12 @@ public class RelatedObjectValidationService {
             .errorType("invalid")
             .message("Related object type is invalid."));
         }
-        else if (relatedObjectTypeRepository.findByUrl(relatedObject.getRelatedObjectType()).isEmpty()) {
-          failures.add(new ValidationFailure()
-            .fieldId(String.format("relatedObjects[%d].relatedObjectType", i))
-            .errorType("invalid")
-            .message("Related object type was not found."));
-        }
+//        else if (relatedObjectTypeRepository.findByUriAnd(relatedObject.getRelatedObjectType()).isEmpty()) {
+//          failures.add(new ValidationFailure()
+//            .fieldId(String.format("relatedObjects[%d].relatedObjectType", i))
+//            .errorType("invalid")
+//            .message("Related object type was not found."));
+//        }
 
         if (relatedObject.getRelatedObjectTypeSchemeUri() == null) {
           failures.add(new ValidationFailure()

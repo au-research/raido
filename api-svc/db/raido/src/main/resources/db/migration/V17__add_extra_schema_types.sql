@@ -152,4 +152,55 @@ insert into raido.api_svc.organisation_role (scheme_id, uri) values
     (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/other-research-organisation.json'),
     (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/partner-organisation.json');
 
+drop table if exists raido.api_svc.related_object_category_scheme;
+create table raido.api_svc.related_object_category_scheme (
+    id serial primary key,
+    uri varchar not null
+);
+
+drop table if exists raido.api_svc.related_object_category;
+create table raido.api_svc.related_object_category
+(
+    scheme_id int     not null,
+    uri      varchar not null,
+    primary key (scheme_id, uri),
+    constraint fk_related_object_category_type_scheme_id foreign key (scheme_id) references raido.api_svc.related_object_category_scheme (id)
+);
+
+insert into raido.api_svc.related_object_category_scheme (uri) values
+    ('https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1');
+
+insert into raido.api_svc.related_object_category (scheme_id, uri) values
+    (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json'),
+    (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/internal.json'),
+    (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/output.json');
+
+drop table if exists raido.api_svc.related_object_type_scheme;
+create table raido.api_svc.related_object_type_scheme (
+    id serial primary key,
+    uri varchar not null
+);
+
+create table raido.api_svc.related_object_type_new
+(
+    scheme_id   int     not null,
+    uri         varchar not null,
+    name        varchar,
+    description varchar,
+    primary key (scheme_id, uri),
+    constraint fk_related_object_type_scheme_id foreign key (scheme_id) references raido.api_svc.related_object_type_scheme (id)
+);
+
+insert into raido.api_svc.related_object_type_scheme (uri) values
+    ('https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1');
+
+
+insert into raido.api_svc.related_object_type_new (scheme_id, uri, name, description)
+select 1, url, name, description
+from raido.api_svc.related_object_type;
+
+drop table raido.api_svc.related_object_type;
+alter table raido.api_svc.related_object_type_new
+    rename to related_object_type;
+
 end transaction;

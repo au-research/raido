@@ -35,8 +35,8 @@ public class RaidoStableV1ValidationService {
   private final StableAccessValidationService accessValidationService;
   private final StableSubjectValidationService subjectSvc;
   private final IdentifierParser idParser;
-  private final RelatedObjectValidationService relatedObjectSvc;
-  private final AlternateIdentifierValidationService alternateIdentifierSvc;
+  private final StableRelatedObjectValidationService relatedObjectSvc;
+  private final StableAlternateIdentifierValidationService alternateIdentifierSvc;
   private final StableRelatedRaidValidationService relatedRaidSvc;
   private final SpatialCoverageValidationService spatialCoverageSvc;
   private final TraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelSvc;
@@ -48,8 +48,8 @@ public class RaidoStableV1ValidationService {
     final StableOrganisationValidationService orgSvc,
     final StableSubjectValidationService subjectSvc,
     final IdentifierParser idParser,
-    final RelatedObjectValidationService relatedObjectSvc,
-    final AlternateIdentifierValidationService alternateIdentifierSvc,
+    final StableRelatedObjectValidationService relatedObjectSvc,
+    final StableAlternateIdentifierValidationService alternateIdentifierSvc,
     final StableRelatedRaidValidationService relatedRaidSvc,
     final SpatialCoverageValidationService spatialCoverageSvc,
     final TraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelSvc,

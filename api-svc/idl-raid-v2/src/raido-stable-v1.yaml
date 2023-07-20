@@ -140,10 +140,10 @@ components:
           items: { $ref: '#/components/schemas/RelatedRaid' }
         relatedObjects:
           type: array
-          items: { $ref: 'metadata-block.yaml#/components/schemas/RelatedObjectBlock' }
+          items: { $ref: '#/components/schemas/RelatedObject' }
         alternateIdentifiers:
           type: array
-          items: { $ref: 'metadata-block.yaml#/components/schemas/AlternateIdentifierBlock' }
+          items: { $ref: '#/components/schemas/AlternateIdentifier' }
         spatialCoverages:
           type: array
           items: { $ref: 'metadata-block.yaml#/components/schemas/SpatialCoverageBlock' }
@@ -289,3 +289,39 @@ components:
         id: { type: string }
         type: { type: string }
         typeSchemeUri: { type: string }
+    RelatedObject:
+      type: object
+      properties:
+        id: { type: string }
+        identifierSchemeUri: { type: string }
+        type:
+          $ref: '#/components/schemas/RelatedObjectType'
+        category:
+          $ref: '#/components/schemas/RelatedObjectCategory'
+    RelatedObjectType:
+      type: object
+      properties:
+        id: {
+          type: string,
+          example: 'https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book.json'
+        }
+        schemeUri: {
+          type: string,
+          example: 'https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1'
+        }
+    RelatedObjectCategory:
+      type: object
+      properties:
+        id: {
+          type: string,
+          example: 'https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json'
+        }
+        schemeUri: {
+          type: string,
+          example: 'https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1'
+        }
+    AlternateIdentifier:
+        type: object
+        properties:
+          id: { type: string }
+          type: { type: string }
