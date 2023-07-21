@@ -26,6 +26,11 @@ public class JvmUtil {
    on operating system, hardware, user defaults, etc.
    All TimeZone, formatting and localisation behaviours belong in client code,
    where sensible context-specific decisions can be made.
+   Note that this method is just a backup, you really want to be setting tese 
+   values from the command line, because doing this in code means there may be 
+   things in the JDK or libraries that are already with whatever the JVM 
+   defaults were before this method was called (primary example being JDK JDBC 
+   driver infrastructure).
    */
   public static void normaliseJvmDefaults() {
     setDefaultUtcTimezone();
