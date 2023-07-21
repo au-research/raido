@@ -2,6 +2,7 @@ package raido.apisvc.service.raid;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -16,6 +17,7 @@ import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
 import raido.idl.raidv2.model.*;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,8 +27,11 @@ import static raido.apisvc.endpoint.message.ValidationMessage.metadataJsonParseF
 import static raido.apisvc.util.DateUtil.local2Offset;
 import static raido.apisvc.util.ExceptionUtil.iae;
 import static raido.apisvc.util.ExceptionUtil.ise;
+import static raido.apisvc.util.ExceptionUtil.runtimeException;
+import static raido.apisvc.util.ExceptionUtil.wrapIoException;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.StringUtil.areEqual;
+import static raido.apisvc.util.StringUtil.isBlank;
 import static raido.db.jooq.api_svc.enums.Metaschema.legacy_metadata_schema_v1;
 import static raido.db.jooq.api_svc.enums.Metaschema.raido_metadata_schema_v1;
 import static raido.db.jooq.api_svc.enums.Metaschema.raido_metadata_schema_v2;
@@ -42,6 +47,12 @@ public class MetadataService {
   public static final String RAID_ID_TYPE_URI = "https://raid.org";
   
   private static final Log log = to(MetadataService.class);
+  
+  /* driven by the openapi spec, but I don't think there's any way to access
+  the property name programmatically, the open-api generator for spring is all 
+  about generating annotations, not this kind of usage (same problem as 
+  encountered when trying to reference the urls for load-testing from gatling */
+  public static final String METADATA_SCHEMA_PROP = "metadataSchema";
 
   private final ObjectMapper defaultMapper = defaultMapper();
   
@@ -88,8 +99,12 @@ public class MetadataService {
   }
 
   public <T> T mapObject(JSONB value, Class<T> type){
+    return mapObject(value.data(), type);
+  }
+
+  public <T> T mapObject(String value, Class<T> type){
     try {
-      return this.defaultMapper.readValue(value.data(), type);
+      return this.defaultMapper.readValue(value, type);
     }
     catch( JsonProcessingException e ){
       throw new RuntimeException(e);
@@ -97,7 +112,8 @@ public class MetadataService {
   }
 
   public RaidoMetadataSchemaV2 mapV2SchemaMetadata(RaidRecord raid){
-    var raidoMetadataSchemaV2 = mapObject(raid.getMetadata(), RaidoMetadataSchemaV2.class);
+    var raidoMetadataSchemaV2 = 
+      mapObject(raid.getMetadata(), RaidoMetadataSchemaV2.class);
     raidoMetadataSchemaV2.metadataSchema(RAIDOMETADATASCHEMAV2);
     return raidoMetadataSchemaV2;
 
@@ -394,6 +410,52 @@ public class MetadataService {
       error(ex.getMessage());
     throw ex;
   }
-  
+
+  public  PublicReadRaidMetadataResponseV1 parsePublicRaidMetadata(
+    String line 
+  ) {
+    try( var parser = defaultMapper.getFactory().createParser(line) ) {
+      if( parser.nextToken() != JsonToken.START_OBJECT ){
+        throw runtimeException("Expected START_OBJECT: %s", line);
+      }
+
+      String metadataSchema = null;
+      while( parser.nextToken() != JsonToken.END_OBJECT ){
+        String name = parser.getCurrentName();
+        parser.nextToken();
+
+        if( METADATA_SCHEMA_PROP.equals(name) ){
+          metadataSchema = parser.getText();
+          break;
+        }
+      }
+
+      if( isBlank(metadataSchema) ){
+        throw runtimeException("Expected a value for `%s`: %s", 
+          METADATA_SCHEMA_PROP, line);
+      }
+
+      if( areEqual(metadataSchema, 
+        PublicClosedMetadataSchemaV1.class.getSimpleName() ) 
+      ){
+        return defaultMapper.readValue(line, 
+          PublicClosedMetadataSchemaV1.class);
+      }
+      else if( areEqual(metadataSchema, 
+        PublicRaidMetadataSchemaV1.class.getSimpleName() ) 
+      ){
+        return defaultMapper.readValue(line,
+          PublicRaidMetadataSchemaV1.class);
+      }
+      else {
+        throw runtimeException("unknown raid metadataSchema `%s`: %s", 
+          metadataSchema, line);
+      }
+
+    }
+    catch( IOException e ){
+      throw wrapIoException(e, "while parsing line: ", line);
+    }
+  }
 }
 

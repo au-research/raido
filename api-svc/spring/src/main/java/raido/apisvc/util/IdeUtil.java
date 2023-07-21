@@ -12,4 +12,8 @@ public class IdeUtil {
     
     return "file://" + path.toAbsolutePath();
   }
+  
+  public static String formatClickable(String path){
+    return formatClickable(Path.of(path));
+  }
 }
