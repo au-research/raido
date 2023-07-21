@@ -12,9 +12,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
-import static raido.apisvc.util.test.BddUtil.EXPECT;
-import static raido.apisvc.util.test.BddUtil.THEN;
-import static raido.apisvc.util.test.BddUtil.WHEN;
+import static raido.apisvc.util.test.BddUtil.*;
 import static raido.idl.raidv2.model.AccessType.CLOSED;
 import static raido.idl.raidv2.model.AccessType.OPEN;
 import static raido.idl.raidv2.model.ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_;
@@ -27,7 +25,6 @@ import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 import static raido.inttest.endpoint.raidv1.LegacyRaidV1MintTest.INT_TEST_ID_URL;
 import static raido.inttest.util.MinimalRaidTestData.REAL_TEST_ORCID;
-import static raido.inttest.util.MinimalRaidTestData.REAL_TEST_ROR;
 
 public class RaidoSchemaV1Test extends IntegrationTestCase {
 
@@ -185,16 +182,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
           role(PROJECT_ADMINISTRATION)));
   }
 
-  public static OrganisationBlock createDummyOrganisation(LocalDate today) {
-    return new OrganisationBlock().
-      id(REAL_TEST_ROR).
-      identifierSchemeUri(OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_).
-      roles(List.of(
-        new OrganisationRole().
-          roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_).
-          role(OrganisationRoleType.LEAD_RESEARCH_ORGANISATION)
-          .startDate(today)));
-  }
+
 
   public static RaidoMetadataSchemaV1 mapRaidMetadataToRaido(
     PublicRaidMetadataSchemaV1 in

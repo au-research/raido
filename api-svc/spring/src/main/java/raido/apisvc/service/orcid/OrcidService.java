@@ -5,7 +5,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import raido.apisvc.util.Log;
 import raido.apisvc.util.Security;
-import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -14,13 +13,12 @@ import static java.util.Collections.emptyList;
 import static java.util.List.of;
 import static java.util.regex.Pattern.compile;
 import static raido.apisvc.spring.bean.LogMetric.VALIDATE_ORCID_EXISTS;
-import static raido.apisvc.util.ExceptionUtil.illegalArgException;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.infoLogExecutionTime;
 
 public class OrcidService {
   public static final Pattern ORCID_REGEX =
-    compile("^https://orcid\\.org/[\\d]{4}-[\\d]{4}-[\\d]{4}-[\\d]{4}$");
+    compile("^https://orcid\\.org/[\\d]{4}-[\\d]{4}-[\\d]{4}-[\\d]{3}[\\d|X]{1}$");
   public static final String NOT_FOUND_MESSAGE = "The ORCID does not exist.";
 
   private static final Log log = to(OrcidService.class);

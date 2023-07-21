@@ -1,6 +1,7 @@
 package raido.apisvc.service.raid.validation;
 
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -51,6 +52,17 @@ class ContributorValidationServiceTest {
   void passesWithValidId() {
     final var contributor = new ContributorBlock()
       .id("https://orcid.org/0000-0000-0000-0001")
+      .identifierSchemeUri(ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_);
+
+    final var failures = validationService.validateIdFields(1, contributor);
+    assertThat(failures, is(empty()));
+  }
+
+  @Test
+  @DisplayName("Validation passes with X ORCID checksum value")
+  void passesWithNonDigitChecksum() {
+    final var contributor = new ContributorBlock()
+      .id("https://orcid.org/0009-0001-8177-319X")
       .identifierSchemeUri(ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_);
 
     final var failures = validationService.validateIdFields(1, contributor);

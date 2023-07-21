@@ -27,16 +27,14 @@ import raido.idl.raidv2.api.AdminExperimentalApi;
 import raido.idl.raidv2.api.BasicRaidExperimentalApi;
 import raido.idl.raidv2.api.BasicRaidStableApi;
 import raido.idl.raidv2.api.PublicExperimentalApi;
-import raido.idl.raidv2.model.ApiKey;
-import raido.idl.raidv2.model.GenerateApiTokenRequest;
-import raido.idl.raidv2.model.GenerateApiTokenResponse;
-import raido.idl.raidv2.model.PublicServicePoint;
-import raido.idl.raidv2.model.ServicePoint;
+import raido.idl.raidv2.model.*;
 import raido.inttest.config.IntTestProps;
 import raido.inttest.config.IntegrationTestConfig;
 import raido.inttest.service.auth.BootstrapAuthTokenService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static java.time.ZoneOffset.UTC;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -46,6 +44,7 @@ import static raido.apisvc.util.Log.to;
 import static raido.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
 import static raido.db.jooq.api_svc.enums.UserRole.OPERATOR;
 import static raido.inttest.config.IntegrationTestConfig.REST_TEMPLATE_VALUES_ONLY_ENCODING;
+import static raido.inttest.util.MinimalRaidTestData.REAL_TEST_ROR;
 
 @SpringJUnitConfig(
   name="SpringJUnitConfigContext",
@@ -242,4 +241,14 @@ public abstract class IntegrationTestCase {
     return basicRaidStableClient(operatorToken);
   }
 
+  public static OrganisationBlock createDummyOrganisation(LocalDate today) {
+    return new OrganisationBlock().
+      id(REAL_TEST_ROR).
+      identifierSchemeUri(OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_).
+      roles(List.of(
+        new OrganisationRole().
+          roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_).
+          role(OrganisationRoleType.LEAD_RESEARCH_ORGANISATION)
+          .startDate(today)));
+  }
 }
