@@ -14,6 +14,10 @@ public class ValidationMessage {
   public static final String FIELD_MUST_BE_SET_MESSAGE = "field must be set";
   public static final String INVALID_VALUE_MESSAGE = 
     "has invalid/unsupported value";
+  public static final String INVALID_ID_FOR_SCHEME = "id does not exist within the given scheme";
+
+  public static final String INVALID_SCHEME = "scheme is unknown/unsupported";
+
   public static final String DISALLOWED_CHANGE_MESSAGE = 
     "value is not allowed to change";
 

@@ -72,6 +72,11 @@ public class TestConstants {
 
   public static final String HTTPS_DOI_ORG = "https://doi.org/";
 
+  public static final String PRIMARY_DESCRIPTION_TYPE =
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json";
+
+  public static final String DESCRIPTION_TYPE_SCHEME_URI =
+    "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1";
 
   public static final LocalDate START_DATE = LocalDate.now().minusMonths(1);
   public static final LocalDate END_DATE = LocalDate.now();

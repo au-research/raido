@@ -170,13 +170,18 @@ components:
       required: ["description", "type"]
       properties:
         description: {type: string}
-        type: {
+        type:
+          $ref: '#/components/schemas/DescriptionType'
+    DescriptionType:
+      type: object
+      properties:
+        id: {
           type: string,
           example: 'https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json'
         }
         schemeUri: {
-          type: string,
-          example: 'https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1'
+           type: string,
+           example: 'https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1'
         }
     Access:
       type: object

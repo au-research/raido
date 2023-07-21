@@ -74,12 +74,12 @@ public class StableTitleValidationService {
           failures.add(new ValidationFailure()
             .fieldId("titles[%s].schemeUri".formatted(i))
             .errorType(INVALID_VALUE_TYPE)
-            .message(INVALID_VALUE_MESSAGE));
+            .message(INVALID_SCHEME));
         } else if (title.getType() != null && titleTypeRepository.findByUriAndSchemeId(title.getType(), titleTypeScheme.get().getId()).isEmpty()) {
           failures.add(new ValidationFailure()
             .fieldId("titles[%s].type".formatted(i))
             .errorType(INVALID_VALUE_TYPE)
-            .message(INVALID_VALUE_MESSAGE));
+            .message(INVALID_ID_FOR_SCHEME));
         }
       }
 

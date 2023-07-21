@@ -46,14 +46,14 @@ public class StableRelatedObjectCategoryValidationService {
         failures.add(new ValidationFailure()
           .fieldId("relatedObjects[%d].category.schemeUri".formatted(index))
           .errorType(INVALID_VALUE_TYPE)
-          .message(INVALID_VALUE_MESSAGE)
+          .message(INVALID_SCHEME)
         );
       } else if (!isBlank(relatedObjectCategory.getId()) &&
         relatedObjectCategoryRepository.findByUriAndSchemeId(relatedObjectCategory.getId(), relatedObjectCategoryScheme.get().getId()).isEmpty()) {
         failures.add(new ValidationFailure()
           .fieldId("relatedObjects[%d].category.id".formatted(index))
           .errorType(INVALID_VALUE_TYPE)
-          .message(INVALID_VALUE_MESSAGE)
+          .message(INVALID_ID_FOR_SCHEME)
         );
       }
     }

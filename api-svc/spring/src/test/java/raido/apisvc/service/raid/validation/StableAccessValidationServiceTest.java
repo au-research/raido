@@ -258,7 +258,7 @@ class StableAccessValidationServiceTest {
       new ValidationFailure()
         .fieldId("access.schemeUri")
         .errorType("invalidValue")
-        .message("has invalid/unsupported value")
+        .message("scheme is unknown/unsupported")
     ));
   }
 
@@ -283,7 +283,7 @@ class StableAccessValidationServiceTest {
       new ValidationFailure()
         .fieldId("access.type")
         .errorType("invalidValue")
-        .message("has invalid/unsupported value")
+        .message("id does not exist within the given scheme")
     ));
   }
 }

@@ -132,7 +132,7 @@ class StableContributorPositionValidationServiceTest {
       new ValidationFailure()
         .fieldId("contributors[2].positions[3].schemeUri")
         .errorType("invalidValue")
-        .message("has invalid/unsupported value")
+        .message("scheme is unknown/unsupported")
     ));
 
     verifyNoInteractions(contributorPositionRepository);
@@ -210,7 +210,7 @@ class StableContributorPositionValidationServiceTest {
       new ValidationFailure()
         .fieldId("contributors[2].positions[3].id")
         .errorType("invalidValue")
-        .message("has invalid/unsupported value")
+        .message("id does not exist within the given scheme")
     ));
   }
 

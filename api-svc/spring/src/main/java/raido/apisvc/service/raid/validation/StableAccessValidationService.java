@@ -73,14 +73,14 @@ public class StableAccessValidationService {
 
         if (schemeUri.isEmpty()) {
           failures.add(new ValidationFailure()
-            .errorType(INVALID_VALUE_TYPE)
             .fieldId("access.schemeUri")
-            .message(INVALID_VALUE_MESSAGE));
+            .errorType(INVALID_VALUE_TYPE)
+            .message(INVALID_SCHEME));
         } else if (!isBlank(access.getType()) && accessTypeRepository.findByUriAndSchemeId(access.getType(), schemeUri.get().getId()).isEmpty()) {
           failures.add(new ValidationFailure()
             .errorType(INVALID_VALUE_TYPE)
             .fieldId("access.type")
-            .message(INVALID_VALUE_MESSAGE));
+            .message(INVALID_ID_FOR_SCHEME));
         }
       }
 

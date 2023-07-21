@@ -50,7 +50,7 @@ public class StableContributorRoleValidationService {
           new ValidationFailure()
             .fieldId("contributors[%d].roles[%d].schemeUri".formatted(contributorIndex, roleIndex))
             .errorType(INVALID_VALUE_TYPE)
-            .message(INVALID_VALUE_MESSAGE)
+            .message(INVALID_SCHEME)
         );
       } else if (!isBlank(role.getId()) &&
         contributorRoleRepository.findByUriAndSchemeId(role.getId(), roleScheme.get().getId()).isEmpty()) {
@@ -58,7 +58,7 @@ public class StableContributorRoleValidationService {
           new ValidationFailure()
             .fieldId("contributors[%d].roles[%d].id".formatted(contributorIndex, roleIndex))
             .errorType(INVALID_VALUE_TYPE)
-            .message(INVALID_VALUE_MESSAGE)
+            .message(INVALID_ID_FOR_SCHEME)
         );
       }
     }

@@ -47,14 +47,14 @@ public class StableRelatedObjectTypeValidationService {
         failures.add(new ValidationFailure()
           .fieldId("relatedObjects[%d].type.schemeUri".formatted(index))
           .errorType(INVALID_VALUE_TYPE)
-          .message(INVALID_VALUE_MESSAGE)
+          .message(INVALID_SCHEME)
         );
       } else if (!isBlank(relatedObjectType.getId()) &&
         relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType.getId(), relatedObjectTypeScheme.get().getId()).isEmpty()) {
         failures.add(new ValidationFailure()
           .fieldId("relatedObjects[%d].type.id".formatted(index))
           .errorType(INVALID_VALUE_TYPE)
-          .message(INVALID_VALUE_MESSAGE)
+          .message(INVALID_ID_FOR_SCHEME)
         );
       }
     }
