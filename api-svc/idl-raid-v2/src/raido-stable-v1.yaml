@@ -155,7 +155,14 @@ components:
       required: [title, type, startDate]
       properties:
         title: {type: string}
-        type: {
+        type:
+          $ref: '#/components/schemas/TitleType'
+        startDate: { type: string, format: date }
+        endDate: { type: string, format: date }
+    TitleType:
+      type: object
+      properties:
+        id: {
           type: string,
           example: 'https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json'
         }
@@ -163,16 +170,14 @@ components:
           type: string,
           example: 'https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1'
         }
-        startDate: { type: string, format: date }
-        endDate: { type: string, format: date }
     Description:
       type: object
       required: ["description", "type"]
       properties:
         description: {type: string}
         type:
-          $ref: '#/components/schemas/DescType'
-    DescType:
+          $ref: '#/components/schemas/DescriptionType'
+    DescriptionType:
       type: object
       properties:
         id: {

@@ -13,7 +13,7 @@ public class RaidoSchemaV1Util {
 
   public static List<TitleBlock> getPrimaryTitles(List<TitleBlock> titles) {
     return titles.stream().
-      filter(i->i.getType() == TitleType.PRIMARY_TITLE).toList();
+      filter(i->i.getType() == TitleType1.PRIMARY_TITLE).toList();
   }
 
   /**
@@ -22,7 +22,7 @@ public class RaidoSchemaV1Util {
    */
   public static TitleBlock getPrimaryTitle(List<TitleBlock> titles) {
     return titles.stream().
-      filter(i->i.getType() == TitleType.PRIMARY_TITLE).
+      filter(i->i.getType() == TitleType1.PRIMARY_TITLE).
       findFirst().orElseThrow();
   }
 
@@ -30,7 +30,7 @@ public class RaidoSchemaV1Util {
     List<DescriptionBlock> descriptions
   ) {
     return descriptions.stream().
-      filter(i->i.getType() == DescriptionType.PRIMARY_DESCRIPTION).
+      filter(i->i.getType() == DescriptionType1.PRIMARY_DESCRIPTION).
       findFirst();
   }
 

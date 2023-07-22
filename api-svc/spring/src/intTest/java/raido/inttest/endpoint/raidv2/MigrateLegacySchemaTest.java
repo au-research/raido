@@ -18,7 +18,7 @@ import static raido.apisvc.service.raid.MetadataService.RAID_ID_TYPE_URI;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
 import static raido.idl.raidv2.model.RaidoMetaschema.LEGACYMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
-import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
+import static raido.idl.raidv2.model.TitleType1.PRIMARY_TITLE;
 import static raido.inttest.endpoint.raidv1.LegacyRaidV1MintTest.INT_TEST_ID_URL;
 import static raido.inttest.endpoint.raidv2.RaidoSchemaV1Test.createDummyLeaderContributor;
 
@@ -58,7 +58,7 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
         identifierSchemeURI(RAID_ID_TYPE_URI).
         globalUrl("https://something.example.com")).
       descriptions(List.of(new DescriptionBlock().
-        type(DescriptionType.PRIMARY_DESCRIPTION).
+        type(DescriptionType1.PRIMARY_DESCRIPTION).
         description("some description of the thing"))).
       titles(List.of(new TitleBlock().
         type(PRIMARY_TITLE).

@@ -21,7 +21,7 @@ public class TestConstants {
 
   public static final String TITLE = "Test Title";
 
-  public static final String PRIMARY_TITLE_TYPE =
+  public static final String PRIMARY_TITLE_TYPE_ID =
     "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
 
   public static final String ALTERNATIVE_TITLE_TYPE =

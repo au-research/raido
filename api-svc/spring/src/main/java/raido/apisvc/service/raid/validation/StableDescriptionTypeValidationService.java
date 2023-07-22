@@ -3,7 +3,7 @@ package raido.apisvc.service.raid.validation;
 import org.springframework.stereotype.Component;
 import raido.apisvc.repository.DescriptionTypeRepository;
 import raido.apisvc.repository.DescriptionTypeSchemeRepository;
-import raido.idl.raidv2.model.DescType;
+import raido.idl.raidv2.model.DescriptionType;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class StableDescriptionTypeValidationService {
     this.descriptionTypeRepository = descriptionTypeRepository;
   }
 
-  public List<ValidationFailure> validate(final DescType descriptionType, final int index) {
+  public List<ValidationFailure> validate(final DescriptionType descriptionType, final int index) {
     final var failures = new ArrayList<ValidationFailure>();
 
     if (descriptionType == null) {

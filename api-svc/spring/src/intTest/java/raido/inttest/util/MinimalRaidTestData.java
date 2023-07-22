@@ -11,10 +11,10 @@ import static raido.idl.raidv2.model.ContributorIdentifierSchemeType.HTTPS_ORCID
 import static raido.idl.raidv2.model.ContributorPositionRaidMetadataSchemaType.LEADER;
 import static raido.idl.raidv2.model.ContributorPositionSchemeType.HTTPS_RAID_ORG_;
 import static raido.idl.raidv2.model.ContributorRoleSchemeType.HTTPS_CREDIT_NISO_ORG_;
-import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
+import static raido.idl.raidv2.model.DescriptionType1.PRIMARY_DESCRIPTION;
 import static raido.idl.raidv2.model.OrganisationRoleType.LEAD_RESEARCH_ORGANISATION;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
-import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
+import static raido.idl.raidv2.model.TitleType1.PRIMARY_TITLE;
 import static raido.inttest.endpoint.raidv2.RaidoSchemaV1Test.createDummyLeaderContributor;
 
 public class MinimalRaidTestData {
@@ -52,7 +52,7 @@ public class MinimalRaidTestData {
 
   public static TitleBlock title(
     String title,
-    TitleType type, 
+    TitleType1 type,
     LocalDate startDate
   ){
     return new TitleBlock().
@@ -72,7 +72,7 @@ public class MinimalRaidTestData {
   
   public static DescriptionBlock description(
     String desc, 
-    DescriptionType type
+    DescriptionType1 type
   ){
     return new DescriptionBlock().
       type(type).

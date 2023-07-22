@@ -240,8 +240,8 @@ class RaidoStableV1Test {
         .andExpect(jsonPath("$.id.globalUrl", Matchers.is("https://hdl.handle.net/" + handle.format())))
         .andExpect(jsonPath("$.id.raidAgencyUrl", Matchers.is(id.formatUrl())))
         .andExpect(jsonPath("$.titles[0].title", Matchers.is(title)))
-        .andExpect(jsonPath("$.titles[0].type", Matchers.is("https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json")))
-        .andExpect(jsonPath("$.titles[0].schemeUri", Matchers.is("https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1")))
+        .andExpect(jsonPath("$.titles[0].type.id", Matchers.is("https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json")))
+        .andExpect(jsonPath("$.titles[0].type.schemeUri", Matchers.is("https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1")))
         .andExpect(jsonPath("$.titles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.titles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.dates.startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
@@ -380,8 +380,8 @@ class RaidoStableV1Test {
         .andExpect(jsonPath("$.id.identifierOwner", Matchers.is("https://ror.org/02stey378")))
         .andExpect(jsonPath("$.id.identifierServicePoint", Matchers.is(servicePointId.intValue())))
         .andExpect(jsonPath("$.titles[0].title", Matchers.is(title)))
-        .andExpect(jsonPath("$.titles[0].type", Matchers.is(PRIMARY_TITLE_TYPE)))
-        .andExpect(jsonPath("$.titles[0].schemeUri", Matchers.is(TITLE_TYPE_SCHEME_URI)))
+        .andExpect(jsonPath("$.titles[0].type.id", Matchers.is(PRIMARY_TITLE_TYPE)))
+        .andExpect(jsonPath("$.titles[0].type.schemeUri", Matchers.is(TITLE_TYPE_SCHEME_URI)))
         .andExpect(jsonPath("$.titles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.titles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$.dates.startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
@@ -602,8 +602,8 @@ class RaidoStableV1Test {
         .andExpect(jsonPath("$[0].id.identifierOwner", Matchers.is("https://ror.org/02stey378")))
         .andExpect(jsonPath("$[0].id.identifierServicePoint", Matchers.is(999)))
         .andExpect(jsonPath("$[0].titles[0].title", Matchers.is(title)))
-        .andExpect(jsonPath("$[0].titles[0].type", Matchers.is(PRIMARY_TITLE_TYPE)))
-        .andExpect(jsonPath("$[0].titles[0].schemeUri", Matchers.is(TITLE_TYPE_SCHEME_URI)))
+        .andExpect(jsonPath("$[0].titles[0].type.id", Matchers.is(PRIMARY_TITLE_TYPE)))
+        .andExpect(jsonPath("$[0].titles[0].type.schemeUri", Matchers.is(TITLE_TYPE_SCHEME_URI)))
         .andExpect(jsonPath("$[0].titles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$[0].titles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
         .andExpect(jsonPath("$[0].dates.startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
@@ -666,13 +666,15 @@ class RaidoStableV1Test {
 
     var raid = objectMapper.readValue(json, RaidDto.class);
 
+    final var titleType = new TitleType()
+      .id(PRIMARY_TITLE_TYPE)
+      .schemeUri(TITLE_TYPE_SCHEME_URI);
+
     raid.getTitles().get(0)
       .startDate(startDate)
       .endDate(startDate.plusMonths(6))
       .title(title)
-      .type(PRIMARY_TITLE_TYPE)
-      .schemeUri(TITLE_TYPE_SCHEME_URI)
-      ;
+      .type(titleType);
 
     raid.getId()
       .identifier(id.formatUrl())

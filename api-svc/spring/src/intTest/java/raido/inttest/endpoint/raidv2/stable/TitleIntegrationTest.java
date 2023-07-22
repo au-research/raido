@@ -3,6 +3,7 @@ package raido.inttest.endpoint.raidv2.stable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import raido.idl.raidv2.model.Title;
+import raido.idl.raidv2.model.TitleType;
 import raido.idl.raidv2.model.ValidationFailure;
 import raido.inttest.RaidApiValidationException;
 
@@ -14,6 +15,31 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class TitleIntegrationTest extends AbstractStableIntegrationTest {
+
+  @Test
+  @DisplayName("Minting a RAiD with null titles fails")
+  void nullTitles() {
+    createRequest.setTitles(null);
+
+    try {
+      raidApi.createRaidV1(createRequest);
+      fail("No exception thrown with missing title");
+    } catch (RaidApiValidationException e) {
+      final var failures = e.getFailures();
+      assertThat(failures).hasSize(1);
+      assertThat(failures).contains(new ValidationFailure()
+        .fieldId("titles")
+        .errorType("notSet")
+        .message("field must be set")
+      );
+    } catch (Exception e) {
+      fail("Expected RaidApiValidationException");
+    }
+  }
+
+
+
+
   @Test
   @DisplayName("Minting a RAiD with missing title fails")
   void missingTitle() {
@@ -33,14 +59,14 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
     } catch (Exception e) {
       fail("Expected RaidApiValidationException");
     }
-
-
   }
 
   @Test
-  @DisplayName("Minting a RAiD with only alternative title fails")
+  @DisplayName("Minting a RAiD with no primary title fails")
   void alternativeTitleOnly() {
-    createRequest.getTitles().get(0).setType(TestConstants.ALTERNATIVE_TITLE_TYPE);
+    createRequest.getTitles().get(0).setType(new TitleType()
+      .id(TestConstants.ALTERNATIVE_TITLE_TYPE)
+      .schemeUri(TestConstants.TITLE_TYPE_SCHEME_URI));
 
     try {
       raidApi.createRaidV1(createRequest);
@@ -48,9 +74,12 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
     } catch (RaidApiValidationException e) {
       final var failures = e.getFailures();
       assertThat(failures).hasSize(1);
-      assertThat(failures.get(0).getFieldId()).isEqualTo("titles.type");
-      assertThat(failures.get(0).getErrorType()).isEqualTo("missingPrimaryTitle");
-      assertThat(failures.get(0).getMessage()).isEqualTo("at least one primaryTitle entry must be provided");
+      assertThat(failures).contains(
+        new ValidationFailure()
+          .fieldId("titles.type")
+          .errorType("missingPrimaryTitle")
+          .message("at least one primaryTitle entry must be provided")
+      );
     } catch (Exception e) {
       fail("Expected RaidApiValidationException");
     }
@@ -59,7 +88,9 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with missing schemeUri fails")
   void missingTitleScheme() {
-    createRequest.getTitles().get(0).setSchemeUri(null);
+    createRequest.getTitles().get(0).setType(new TitleType()
+      .id(TestConstants.PRIMARY_TITLE_TYPE)
+    );
 
     try {
       raidApi.createRaidV1(createRequest);
@@ -67,9 +98,12 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
     } catch (RaidApiValidationException e) {
       final var failures = e.getFailures();
       assertThat(failures).hasSize(1);
-      assertThat(failures.get(0).getFieldId()).isEqualTo("titles[0].schemeUri");
-      assertThat(failures.get(0).getErrorType()).isEqualTo("notSet");
-      assertThat(failures.get(0).getMessage()).isEqualTo("field must be set");
+      assertThat(failures).contains(
+        new ValidationFailure()
+          .fieldId("titles[0].type.schemeUri")
+          .errorType("notSet")
+          .message("field must be set")
+      );
     } catch (Exception e) {
       fail("Expected RaidApiValidationException");
     }
@@ -78,8 +112,9 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with invalid schemeUri fails")
   void invalidTitleScheme() {
-    createRequest.getTitles().get(0)
-      .setSchemeUri("https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v2");
+    createRequest.getTitles().get(0).setType(new TitleType()
+      .id(TestConstants.PRIMARY_TITLE_TYPE)
+      .schemeUri("https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v2"));
 
     try {
       raidApi.createRaidV1(createRequest);
@@ -87,22 +122,27 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
     } catch (RaidApiValidationException e) {
       final var failures = e.getFailures();
       assertThat(failures).hasSize(1);
-      assertThat(failures.get(0).getFieldId()).isEqualTo("titles[0].schemeUri");
-      assertThat(failures.get(0).getErrorType()).isEqualTo("invalidValue");
-      assertThat(failures.get(0).getMessage()).isEqualTo("scheme is unknown/unsupported");
+      assertThat(failures).contains(
+        new ValidationFailure()
+          .fieldId("titles[0].type.schemeUri")
+          .errorType("invalidValue")
+          .message("scheme is unknown/unsupported")
+      );
     } catch (Exception e) {
       fail("Expected RaidApiValidationException");
     }
   }
 
   @Test
-  @DisplayName("Minting a RAiD with missing title type fails")
+  @DisplayName("Minting a RAiD with missing title type id fails")
   void missingTitleType() {
     final var titles = new ArrayList<>(createRequest.getTitles());
 
     titles.add(new Title()
       .title("Test Title")
-      .schemeUri(TestConstants.TITLE_TYPE_SCHEME_URI)
+      .type(new TitleType()
+        .schemeUri(TestConstants.TITLE_TYPE_SCHEME_URI)
+      )
       .startDate(LocalDate.now())
     );
 
@@ -116,8 +156,8 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
       assertThat(failures).hasSize(1);
       assertThat(failures).contains(
         new ValidationFailure()
+          .fieldId("titles[1].type.id")
           .message("field must be set")
-          .fieldId("titles[1].type")
           .errorType("notSet")
       );
     } catch (Exception e) {
@@ -126,14 +166,16 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
   }
 
   @Test
-  @DisplayName("Minting a RAiD with invalid title type fails")
+  @DisplayName("Minting a RAiD with invalid title type id fails")
   void invalidTitleType() {
     final var titles = new ArrayList<>(createRequest.getTitles());
 
     titles.add(new Title()
+      .type(new TitleType()
+        .id("https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/invalid.json")
+        .schemeUri(TestConstants.TITLE_TYPE_SCHEME_URI)
+      )
       .title("Test Title")
-      .schemeUri(TestConstants.TITLE_TYPE_SCHEME_URI)
-      .type("https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/invalid.json")
       .startDate(LocalDate.now())
     );
 
@@ -141,14 +183,14 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
 
     try {
       raidApi.createRaidV1(createRequest);
-      fail("No exception thrown with missing invalid title type");
+      fail("No exception thrown with missing invalid title type id");
     } catch (RaidApiValidationException e) {
       final var failures = e.getFailures();
       assertThat(failures).hasSize(1);
       assertThat(failures).contains(
         new ValidationFailure()
           .message("id does not exist within the given scheme")
-          .fieldId("titles[1].type")
+          .fieldId("titles[1].type.id")
           .errorType("invalidValue")
       );
     } catch (Exception e) {

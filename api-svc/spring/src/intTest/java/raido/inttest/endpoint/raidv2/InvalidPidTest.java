@@ -94,14 +94,16 @@ public class InvalidPidTest extends IntegrationTestCase {
     String title
   ){
     return List.of(new Title()
-      .type(PRIMARY_TITLE_TYPE)
-      .schemeUri(TITLE_TYPE_SCHEME_URI)
+      .type(new TitleType()
+        .id(PRIMARY_TITLE_TYPE)
+        .schemeUri(TITLE_TYPE_SCHEME_URI)
+      )
       .title(title)
       .startDate(LocalDate.now()));
   }
 
   public static List<Description> descriptions(String description){
-    final var descriptionType = new DescType()
+    final var descriptionType = new DescriptionType()
       .id(PRIMARY_DESCRIPTION_TYPE)
       .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
 

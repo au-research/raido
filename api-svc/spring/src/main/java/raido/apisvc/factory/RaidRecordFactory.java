@@ -14,6 +14,7 @@ import raido.idl.raidv2.model.*;
 
 import java.time.LocalDateTime;
 
+//TODO: write a test for this
 @Component
 public class RaidRecordFactory {
   private static final String ACCESS_TYPE_CLOSED =
@@ -33,7 +34,7 @@ public class RaidRecordFactory {
     final ServicePointRecord servicePointRecord) {
 
     final var primaryTitle = raid.getTitles().stream()
-      .filter(title -> title.getType().equals(PRIMARY_TITLE_TYPE))
+      .filter(title -> title.getType().getId().equals(PRIMARY_TITLE_TYPE))
       .findFirst()
       .orElseThrow(() -> new InvalidTitleException("One title with a titleType of 'Primary' should be specified."))
       .getTitle();
@@ -57,11 +58,10 @@ public class RaidRecordFactory {
       .setDateCreated(LocalDateTime.now())
       .setConfidential(raid.getAccess().getType().equals(ACCESS_TYPE_CLOSED));
   }
-
   public RaidRecord merge(final UpdateRaidV1Request raid, final RaidRecord existing) {
 
     final var primaryTitle = raid.getTitles().stream()
-      .filter(title -> title.getType().equals(PRIMARY_TITLE_TYPE))
+      .filter(title -> title.getType().getId().equals(PRIMARY_TITLE_TYPE))
       .findFirst()
       .orElseThrow(() -> new InvalidTitleException("One title with a titleType of 'Primary' should be specified."))
       .getTitle();
@@ -88,7 +88,7 @@ public class RaidRecordFactory {
   public RaidRecord merge(final UpdateRaidStableV2Request raid, final RaidRecord existing) {
 
     final var primaryTitle = raid.getTitles().stream()
-      .filter(title -> title.getType() == TitleType.PRIMARY_TITLE)
+      .filter(title -> title.getType() == TitleType1.PRIMARY_TITLE)
       .findFirst()
       .orElseThrow(() -> new InvalidTitleException("One title with a titleType of 'Primary' should be specified."))
       .getTitle();

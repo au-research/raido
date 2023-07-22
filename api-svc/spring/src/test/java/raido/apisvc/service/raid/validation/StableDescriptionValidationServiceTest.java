@@ -6,8 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import raido.idl.raidv2.model.DescType;
 import raido.idl.raidv2.model.Description;
+import raido.idl.raidv2.model.DescriptionType;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.List;
@@ -33,7 +33,7 @@ class StableDescriptionValidationServiceTest {
   @Test
   @DisplayName("Validation passes with valid description")
   void validDescription() {
-    final var type = new DescType()
+    final var type = new DescriptionType()
       .id(PRIMARY_DESCRIPTION_TYPE)
       .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
 
@@ -51,7 +51,7 @@ class StableDescriptionValidationServiceTest {
   @Test
   @DisplayName("Validation fails with null description")
   void nullDescription() {
-    final var type = new DescType()
+    final var type = new DescriptionType()
       .id(PRIMARY_DESCRIPTION_TYPE)
       .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
 
@@ -75,7 +75,7 @@ class StableDescriptionValidationServiceTest {
   void emptyDescription() {
     final var description = new Description()
       .description("")
-      .type(new DescType()
+      .type(new DescriptionType()
         .id(PRIMARY_DESCRIPTION_TYPE)
         .schemeUri(DESCRIPTION_TYPE_SCHEME_URI)
       );
@@ -94,7 +94,7 @@ class StableDescriptionValidationServiceTest {
   @Test
   @DisplayName("Type validation failures are returned")
   void typeErrorAreReturned() {
-    final var type = new DescType()
+    final var type = new DescriptionType()
       .id(PRIMARY_DESCRIPTION_TYPE)
       .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
 
