@@ -5,11 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
@@ -75,7 +71,8 @@ public class IntegrationTestConfig {
 
   @Bean
   public static ClientHttpRequestFactory clientHttpRequestFactory(){
-    return ApiConfig.clientHttpRequestFactory(false);
+    return ApiConfig
+      .clientHttpRequestFactory(false);
   }
 
   @Bean @Primary

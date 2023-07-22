@@ -533,7 +533,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           new ValidationFailure()
             .fieldId("contributors[0].positions[1].schemeUri")
             .errorType("invalidValue")
-            .message("has invalid/unsupported value")
+            .message("scheme is unknown/unsupported")
         );
       } catch (Exception e) {
         fail("Expected RaidApiValidationException");
@@ -574,7 +574,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           new ValidationFailure()
             .fieldId("contributors[0].positions[1].id")
             .errorType("invalidValue")
-            .message("has invalid/unsupported value")
+            .message("id does not exist within the given scheme")
         );
       } catch (Exception e) {
         fail("Expected RaidApiValidationException");
@@ -696,7 +696,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           new ValidationFailure()
             .fieldId("contributors[0].roles[0].schemeUri")
             .errorType("invalidValue")
-            .message("has invalid/unsupported value")
+            .message("scheme is unknown/unsupported")
         );
       } catch (Exception e) {
         fail("Expected RaidApiValidationException");
@@ -737,7 +737,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           new ValidationFailure()
             .fieldId("contributors[0].roles[0].id")
             .errorType("invalidValue")
-            .message("has invalid/unsupported value")
+            .message("id does not exist within the given scheme")
         );
       } catch (Exception e) {
         fail("Expected RaidApiValidationException");

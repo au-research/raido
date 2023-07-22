@@ -23,8 +23,10 @@
   "descriptions": [
     {
       "description": "Genome sequencing and assembly project at WUR of the C. Japonicum. ",
-      "type": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
-      "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1"
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+        "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1"
+      }
     }
   ],
   "access": {

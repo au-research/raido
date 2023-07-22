@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
 import static raido.apisvc.util.TestConstants.*;
@@ -199,12 +199,13 @@ class StableTitleValidationServiceTest {
 
     final var failures = validationService.validateTitles(List.of(title));
 
-    assertThat(failures.size(), is(1));
-
-    final var failure = failures.get(0);
-    assertThat(failure.getErrorType(), is("invalidValue"));
-    assertThat(failure.getFieldId(), is("titles[0].schemeUri"));
-    assertThat(failure.getMessage(), is("has invalid/unsupported value"));
+    assertThat(failures, hasSize(1));
+    assertThat(failures, hasItem(
+      new ValidationFailure()
+        .fieldId("titles[0].schemeUri")
+        .errorType("invalidValue")
+        .message("scheme is unknown/unsupported")
+    ));
   }
 
   @Test
@@ -225,12 +226,13 @@ class StableTitleValidationServiceTest {
 
     final var failures = validationService.validateTitles(List.of(title));
 
-    assertThat(failures.size(), is(1));
-
-    final var failure = failures.get(0);
-    assertThat(failure.getErrorType(), is("invalidValue"));
-    assertThat(failure.getFieldId(), is("titles[0].type"));
-    assertThat(failure.getMessage(), is("has invalid/unsupported value"));
+    assertThat(failures, hasSize(1));
+    assertThat(failures, hasItem(
+      new ValidationFailure()
+        .fieldId("titles[0].type")
+        .errorType("invalidValue")
+        .message("id does not exist within the given scheme")
+    ));
   }
 
   @Test

@@ -171,8 +171,8 @@ components:
       properties:
         description: {type: string}
         type:
-          $ref: '#/components/schemas/DescriptionType'
-    DescriptionType:
+          $ref: '#/components/schemas/DescType'
+    DescType:
       type: object
       properties:
         id: {

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Contract;
 import feign.Feign;
 import feign.Logger;
+import feign.Request;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
@@ -25,6 +26,7 @@ import raido.inttest.service.auth.BootstrapAuthTokenService;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
@@ -79,6 +81,9 @@ public class AbstractStableIntegrationTest {
   }
   protected RaidoStableV1Api basicRaidStableClient(String token){
     return Feign.builder()
+      .options(
+        new Request.Options(2, TimeUnit.SECONDS, 2, TimeUnit.SECONDS, false)
+      )
       .client(new OkHttpClient())
       .encoder(new JacksonEncoder(mapper))
       .decoder(new JacksonDecoder(mapper))
@@ -112,8 +117,9 @@ public class AbstractStableIntegrationTest {
         .startDate(today)))
       .dates(new DatesBlock().startDate(today))
       .descriptions(List.of(new Description()
-        .type(PRIMARY_DESCRIPTION_TYPE)
-        .schemeUri(DESCRIPTION_TYPE_SCHEME_URI)
+        .type(new DescType()
+          .id(PRIMARY_DESCRIPTION_TYPE)
+          .schemeUri(DESCRIPTION_TYPE_SCHEME_URI))
         .description("stuff about the int test raid")))
       .contributors(List.of(contributor(
         REAL_TEST_ORCID, LEADER_POSITION, SOFTWARE_CONTRIBUTOR_ROLE, today)))

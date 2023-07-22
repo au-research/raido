@@ -101,9 +101,12 @@ public class InvalidPidTest extends IntegrationTestCase {
   }
 
   public static List<Description> descriptions(String description){
+    final var descriptionType = new DescType()
+      .id(PRIMARY_DESCRIPTION_TYPE)
+      .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
+
     return List.of(new Description()
-      .type(PRIMARY_DESCRIPTION_TYPE)
-      .schemeUri(DESCRIPTION_TYPE_SCHEME_URI)
+      .type(descriptionType)
       .description(description)
     );
   }

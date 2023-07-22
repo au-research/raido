@@ -41,22 +41,22 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
 
     EXPECT("minting a raid with minimal content should succeed");
     var mintResult = raidApi.mintRaidoSchemaV1(
-      new MintRaidoSchemaV1Request().
-        mintRequest(new MintRaidoSchemaV1RequestMintRequest().
-          servicePointId(RAIDO_SP_ID)).
-        metadata(new RaidoMetadataSchemaV1().
-          metadataSchema(RAIDOMETADATASCHEMAV1).
-          titles(List.of(new TitleBlock().
-            type(PRIMARY_TITLE).
-            title(initialTitle).
-            startDate(today))).
-          dates(new DatesBlock().startDate(today)).
-          descriptions(List.of(new DescriptionBlock().
-            type(PRIMARY_DESCRIPTION).
-            description("stuff about the int test raid"))).
-          contributors(List.of(createDummyLeaderContributor(today))).
-          organisations(List.of(createDummyOrganisation(today))).
-          access(new AccessBlock().type(OPEN))
+      new MintRaidoSchemaV1Request()
+        .mintRequest(new MintRaidoSchemaV1RequestMintRequest()
+          .servicePointId(RAIDO_SP_ID))
+        .metadata(new RaidoMetadataSchemaV1()
+          .metadataSchema(RAIDOMETADATASCHEMAV1)
+          .titles(List.of(new TitleBlock()
+            .type(PRIMARY_TITLE)
+            .title(initialTitle)
+            .startDate(today)))
+          .dates(new DatesBlock().startDate(today))
+          .descriptions(List.of(new DescriptionBlock()
+            .type(PRIMARY_DESCRIPTION)
+            .description("stuff about the int test raid")))
+          .contributors(List.of(createDummyLeaderContributor(today)))
+          .organisations(List.of(createDummyOrganisation(today)))
+          .access(new AccessBlock().type(OPEN))
         )
     );
     assertThat(mintResult).isNotNull();

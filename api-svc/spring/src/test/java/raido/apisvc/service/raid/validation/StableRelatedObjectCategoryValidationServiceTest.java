@@ -166,7 +166,7 @@ class StableRelatedObjectCategoryValidationServiceTest {
       new ValidationFailure()
         .fieldId("relatedObjects[3].category.schemeUri")
         .errorType("invalidValue")
-        .message("has invalid/unsupported value")
+        .message("scheme is unknown/unsupported")
     ));
   }
 
@@ -191,7 +191,7 @@ class StableRelatedObjectCategoryValidationServiceTest {
       new ValidationFailure()
         .fieldId("relatedObjects[3].category.id")
         .errorType("invalidValue")
-        .message("has invalid/unsupported value")
+        .message("id does not exist within the given scheme")
     ));
   }
 }

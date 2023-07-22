@@ -25,9 +25,11 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
     } catch (RaidApiValidationException e) {
       final var failures = e.getFailures();
       assertThat(failures).hasSize(1);
-      assertThat(failures.get(0).getFieldId()).isEqualTo("titles.type");
-      assertThat(failures.get(0).getErrorType()).isEqualTo("missingPrimaryTitle");
-      assertThat(failures.get(0).getMessage()).isEqualTo("at least one primaryTitle entry must be provided");
+      assertThat(failures).contains(new ValidationFailure()
+        .fieldId("titles.type")
+        .errorType("missingPrimaryTitle")
+        .message("at least one primaryTitle entry must be provided")
+      );
     } catch (Exception e) {
       fail("Expected RaidApiValidationException");
     }
@@ -87,7 +89,7 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
       assertThat(failures).hasSize(1);
       assertThat(failures.get(0).getFieldId()).isEqualTo("titles[0].schemeUri");
       assertThat(failures.get(0).getErrorType()).isEqualTo("invalidValue");
-      assertThat(failures.get(0).getMessage()).isEqualTo("has invalid/unsupported value");
+      assertThat(failures.get(0).getMessage()).isEqualTo("scheme is unknown/unsupported");
     } catch (Exception e) {
       fail("Expected RaidApiValidationException");
     }
@@ -145,7 +147,7 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
       assertThat(failures).hasSize(1);
       assertThat(failures).contains(
         new ValidationFailure()
-          .message("has invalid/unsupported value")
+          .message("id does not exist within the given scheme")
           .fieldId("titles[1].type")
           .errorType("invalidValue")
       );
@@ -165,9 +167,13 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
     } catch (RaidApiValidationException e) {
       final var failures = e.getFailures();
       assertThat(failures).hasSize(1);
-      assertThat(failures.get(0).getFieldId()).isEqualTo("titles[0].startDate");
-      assertThat(failures.get(0).getErrorType()).isEqualTo("notSet");
-      assertThat(failures.get(0).getMessage()).isEqualTo("field must be set");
+
+      assertThat(failures).contains(
+        new ValidationFailure()
+          .fieldId("titles[0].startDate")
+          .errorType("notSet")
+          .message("field must be set")
+      );
     } catch (Exception e) {
       fail("Expected RaidApiValidationException");
     }

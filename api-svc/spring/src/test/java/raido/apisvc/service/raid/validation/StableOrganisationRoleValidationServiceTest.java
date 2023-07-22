@@ -122,7 +122,7 @@ class StableOrganisationRoleValidationServiceTest {
       new ValidationFailure()
         .fieldId("organisations[2].roles[3].schemeUri")
         .errorType("invalidValue")
-        .message("has invalid/unsupported value")
+        .message("scheme is unknown/unsupported")
     ));
 
     verifyNoInteractions(contributorRoleRepository);
@@ -194,7 +194,7 @@ class StableOrganisationRoleValidationServiceTest {
       new ValidationFailure()
         .fieldId("organisations[2].roles[3].id")
         .errorType("invalidValue")
-        .message("has invalid/unsupported value")
+        .message("id does not exist within the given scheme")
     ));
   }
 }
