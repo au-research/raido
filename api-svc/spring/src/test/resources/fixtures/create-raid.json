@@ -23,10 +23,13 @@
     }
   ],
   "access": {
-    "type": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json",
-    "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1",
+    "type": {
+      "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json",
+      "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1"
+    },
     "accessStatement": "This RAiD is closed"
   },
+
   "contributors": [
     {
       "id": "0000-0002-4368-8058",

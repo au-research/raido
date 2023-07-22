@@ -7,13 +7,13 @@ public class TestConstants {
   public static final String ACCESS_TYPE_SCHEME_URI =
     "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1";
 
-  public static final String OPEN_ACCESS_TYPE =
+  public static final String OPEN_ACCESS_TYPE_ID =
     "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json";
 
-  public static final String EMBARGOED_ACCESS_TYPE =
+  public static final String EMBARGOED_ACCESS_TYPE_ID =
     "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json";
 
-  public static final String CLOSED_ACCESS_TYPE =
+  public static final String CLOSED_ACCESS_TYPE_ID =
     "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json";
 
   public static final String TITLE_TYPE_SCHEME_URI =

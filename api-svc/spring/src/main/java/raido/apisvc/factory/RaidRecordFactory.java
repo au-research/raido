@@ -112,6 +112,6 @@ public class RaidRecordFactory {
       .setMetadata(JSONB.valueOf(raidJson))
       .setMetadataSchema(Metaschema.raido_metadata_schema_v2)
       .setStartDate(raid.getDates().getStartDate())
-      .setConfidential(raid.getAccess().getType() == AccessType.CLOSED);
+      .setConfidential(raid.getAccess().getType() == AccessType1.CLOSED);
   }
 }

@@ -127,8 +127,10 @@ public class AbstractStableIntegrationTest {
       .organisations(List.of(organisation(
         REAL_TEST_ROR, LEAD_RESEARCH_ORGANISATION, today)))
       .access(new Access()
-        .type(OPEN_ACCESS_TYPE)
-        .schemeUri(ACCESS_TYPE_SCHEME_URI)
+        .type(new AccessType()
+          .id(OPEN_ACCESS_TYPE)
+          .schemeUri(ACCESS_TYPE_SCHEME_URI)
+        )
       );
   }
 

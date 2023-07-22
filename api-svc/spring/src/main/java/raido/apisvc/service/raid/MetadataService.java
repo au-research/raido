@@ -235,7 +235,7 @@ public class MetadataService {
   
   public PublicReadRaidResponseV3 mapRaidoV1SchemaToPublic(ReadRaidV2Data data){
     var metadata = mapV1SchemaMetadata(data.raid());
-    if( metadata.getAccess().getType() != AccessType.OPEN ){
+    if( metadata.getAccess().getType() != AccessType1.OPEN ){
       return mapToPublicClosed(
         data.raid(), metadata.getId(), metadata.getAccess());
     }
@@ -266,7 +266,7 @@ public class MetadataService {
 
   public PublicReadRaidResponseV3 mapRaidoV2SchemaToPublic(ReadRaidV2Data data){
     var metadata = mapV2SchemaMetadata(data.raid());
-    if( metadata.getAccess().getType() != AccessType.OPEN ){
+    if( metadata.getAccess().getType() != AccessType1.OPEN ){
       return mapToPublicClosed(
               data.raid(), metadata.getId(), metadata.getAccess());
     }
@@ -294,7 +294,7 @@ public class MetadataService {
     IdBlock id,
     AccessBlock access
   ){
-    if( access.getType() == AccessType.OPEN ){
+    if( access.getType() == AccessType1.OPEN ){
       var ex = ise("attempted to map open raid to ClosedSchema");
       log.with("handle", raid.getHandle()).
         with("columnSchema", raid.getMetadataSchema()).
@@ -319,7 +319,7 @@ public class MetadataService {
   public PublicReadRaidResponseV3 mapLegacySchemaToPublic(ReadRaidV2Data data){
     var metadata = mapLegacyMetadata(data.raid());
 
-    if( metadata.getAccess().getType() != AccessType.OPEN ){
+    if( metadata.getAccess().getType() != AccessType1.OPEN ){
       return mapToPublicClosed(
         data.raid(), metadata.getId(), metadata.getAccess());
     }
@@ -341,4 +341,3 @@ public class MetadataService {
       );
   }
 }
-

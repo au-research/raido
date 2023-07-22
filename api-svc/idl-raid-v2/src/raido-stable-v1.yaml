@@ -190,20 +190,26 @@ components:
         }
     Access:
       type: object
-      required: ["type", ]
+      required: ["type"]
       properties:
-        type: {
+        type:
+          $ref: '#/components/schemas/AccessType'
+        accessStatement: { type: string }
+        embargoExpiry: {
+          type: string,
+          format: date
+        }
+    AccessType:
+      type: object
+      required: ["id","type"]
+      properties:
+        id: {
           type: string,
           example: 'https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json'
         }
         schemeUri: {
           type: string,
           example: 'https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1'
-        }
-        accessStatement: { type: string }
-        embargoExpiry: {
-          type: string,
-          format: date
         }
     Contributor:
       type: object

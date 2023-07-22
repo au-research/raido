@@ -2,6 +2,7 @@ package raido.inttest.endpoint.raidv2.stable;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import raido.idl.raidv2.model.AccessType;
 import raido.idl.raidv2.model.ValidationFailure;
 import raido.inttest.RaidApiValidationException;
 
@@ -15,9 +16,12 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Mint raid with valid open access type")
   void mintOpenAccess() {
+
     createRequest.getAccess()
-      .schemeUri(ACCESS_TYPE_SCHEME_URI)
-      .type(OPEN_ACCESS_TYPE);
+      .type(new AccessType()
+        .id(OPEN_ACCESS_TYPE)
+        .schemeUri(ACCESS_TYPE_SCHEME_URI)
+      );
 
     try {
       raidApi.createRaidV1(createRequest);
@@ -30,8 +34,10 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Mint with valid closed access type")
   void mintClosedAccess() {
     createRequest.getAccess()
-      .schemeUri(ACCESS_TYPE_SCHEME_URI)
-      .type(CLOSED_ACCESS_TYPE)
+      .type(new AccessType()
+        .id(CLOSED_ACCESS_TYPE)
+        .schemeUri(ACCESS_TYPE_SCHEME_URI)
+      )
       .accessStatement("Closed");
     try {
       raidApi.createRaidV1(createRequest);
@@ -44,9 +50,12 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Mint with valid embargoed access type")
   void mintEmbargoedAccess() {
     createRequest.getAccess()
-      .schemeUri(ACCESS_TYPE_SCHEME_URI)
-      .type(EMBARGOED_ACCESS_TYPE)
-      .embargoExpiry(LocalDate.now());
+      .type(new AccessType()
+        .id(EMBARGOED_ACCESS_TYPE)
+        .schemeUri(ACCESS_TYPE_SCHEME_URI)
+      )
+      .embargoExpiry(LocalDate.now())
+      .accessStatement("Embargoed");
     try {
       raidApi.createRaidV1(createRequest);
     } catch (Exception e) {
@@ -58,8 +67,11 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Mint with embargoed access type fails with missing embargoExpiry")
   void missingEmbargoExpiry() {
     createRequest.getAccess()
-      .schemeUri(ACCESS_TYPE_SCHEME_URI)
-      .type(EMBARGOED_ACCESS_TYPE);
+      .type(new AccessType()
+        .id(EMBARGOED_ACCESS_TYPE)
+        .schemeUri(ACCESS_TYPE_SCHEME_URI)
+      )
+      .accessStatement("Embargoed");
     try {
       raidApi.createRaidV1(createRequest);
     } catch (RaidApiValidationException e) {
@@ -80,8 +92,11 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Mint with closed access type fails with missing accessStatement")
   void missingAccessStatement() {
     createRequest.getAccess()
-      .schemeUri(ACCESS_TYPE_SCHEME_URI)
-      .type(CLOSED_ACCESS_TYPE);
+      .type(new AccessType()
+        .id(CLOSED_ACCESS_TYPE)
+        .schemeUri(ACCESS_TYPE_SCHEME_URI)
+      );
+
     try {
       raidApi.createRaidV1(createRequest);
     } catch (RaidApiValidationException e) {
@@ -102,8 +117,10 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Mint with closed access type fails with blank accessStatement")
   void blankAccessStatement() {
     createRequest.getAccess()
-      .schemeUri(ACCESS_TYPE_SCHEME_URI)
-      .type(CLOSED_ACCESS_TYPE)
+      .type(new AccessType()
+        .id(CLOSED_ACCESS_TYPE)
+        .schemeUri(ACCESS_TYPE_SCHEME_URI)
+      )
       .accessStatement("");
 
     try {
@@ -126,7 +143,10 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Mint with open access type fails with missing schemeUri")
   void missingSchemeUri() {
     createRequest.getAccess()
-      .type(OPEN_ACCESS_TYPE);
+      .type(new AccessType()
+        .id(OPEN_ACCESS_TYPE)
+      );
+
     try {
       raidApi.createRaidV1(createRequest);
     } catch (RaidApiValidationException e) {
@@ -134,7 +154,7 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
       assertThat(failures).hasSize(1);
       assertThat(failures).contains(
         new ValidationFailure()
-          .fieldId("access.schemeUri")
+          .fieldId("access.type.schemeUri")
           .errorType("notSet")
           .message("field must be set")
       );
@@ -147,8 +167,10 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Mint with open access type fails with blank schemeUri")
   void blankSchemeUri() {
     createRequest.getAccess()
-      .schemeUri("")
-      .type(OPEN_ACCESS_TYPE);
+      .type(new AccessType()
+        .id(OPEN_ACCESS_TYPE)
+        .schemeUri("")
+      );
     try {
       raidApi.createRaidV1(createRequest);
     } catch (RaidApiValidationException e) {
@@ -156,7 +178,7 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
       assertThat(failures).hasSize(1);
       assertThat(failures).contains(
         new ValidationFailure()
-          .fieldId("access.schemeUri")
+          .fieldId("access.type.schemeUri")
           .errorType("notSet")
           .message("field must be set")
       );
@@ -169,7 +191,9 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Mint with open access type fails with missing type")
   void missingType() {
     createRequest.getAccess()
-      .schemeUri(ACCESS_TYPE_SCHEME_URI);
+      .type(new AccessType()
+        .schemeUri(ACCESS_TYPE_SCHEME_URI)
+      );
     try {
       raidApi.createRaidV1(createRequest);
     } catch (RaidApiValidationException e) {
@@ -177,7 +201,7 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
       assertThat(failures).hasSize(1);
       assertThat(failures).contains(
         new ValidationFailure()
-          .fieldId("access.type")
+          .fieldId("access.type.id")
           .errorType("notSet")
           .message("field must be set")
       );
@@ -190,8 +214,10 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Mint with open access type fails with blank type")
   void blankType() {
     createRequest.getAccess()
-      .schemeUri(ACCESS_TYPE_SCHEME_URI)
-      .type("");
+      .type(new AccessType()
+        .id("")
+        .schemeUri(ACCESS_TYPE_SCHEME_URI)
+      );
     try {
       raidApi.createRaidV1(createRequest);
     } catch (RaidApiValidationException e) {
@@ -199,7 +225,7 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
       assertThat(failures).hasSize(1);
       assertThat(failures).contains(
         new ValidationFailure()
-          .fieldId("access.type")
+          .fieldId("access.type.id")
           .errorType("notSet")
           .message("field must be set")
       );

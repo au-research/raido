@@ -173,7 +173,7 @@ public class RaidoStableV1ValidationService {
     }
 
     failures.addAll(validateDates(request.getDates()));
-    failures.addAll(accessValidationService.validateAccess(request.getAccess()));
+    failures.addAll(accessValidationService.validate(request.getAccess()));
     failures.addAll(titleSvc.validate(request.getTitles()));
     failures.addAll(descSvc.validate(request.getDescriptions()));
     failures.addAll(validateAlternateUrls(request.getAlternateUrls()));
@@ -204,7 +204,7 @@ public class RaidoStableV1ValidationService {
     }
 
     failures.addAll(validateDates(request.getDates()));
-    failures.addAll(accessValidationService.validateAccess(request.getAccess()));
+    failures.addAll(accessValidationService.validate(request.getAccess()));
     failures.addAll(titleSvc.validate(request.getTitles()));
     failures.addAll(descSvc.validate(request.getDescriptions()));
     failures.addAll(validateAlternateUrls(request.getAlternateUrls()));

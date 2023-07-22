@@ -49,7 +49,7 @@ class RaidoStableV1ValidationServiceTest {
 
     validationService.validateForCreate(raid);
 
-    verify(accessValidationService).validateAccess(access);
+    verify(accessValidationService).validate(access);
   }
 
   @Test
@@ -63,7 +63,7 @@ class RaidoStableV1ValidationServiceTest {
 
     validationService.validateForUpdate(handle, raid);
 
-    verify(accessValidationService).validateAccess(access);
+    verify(accessValidationService).validate(access);
   }
 
   @Test

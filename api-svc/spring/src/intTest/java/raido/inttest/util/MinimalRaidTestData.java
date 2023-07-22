@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static java.util.List.of;
-import static raido.idl.raidv2.model.AccessType.OPEN;
+import static raido.idl.raidv2.model.AccessType1.OPEN;
 import static raido.idl.raidv2.model.ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_;
 import static raido.idl.raidv2.model.ContributorPositionRaidMetadataSchemaType.LEADER;
 import static raido.idl.raidv2.model.ContributorPositionSchemeType.HTTPS_RAID_ORG_;

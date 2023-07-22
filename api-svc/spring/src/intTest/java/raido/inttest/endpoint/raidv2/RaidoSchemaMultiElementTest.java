@@ -11,7 +11,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static raido.apisvc.util.test.BddUtil.*;
-import static raido.idl.raidv2.model.AccessType.OPEN;
+import static raido.idl.raidv2.model.AccessType1.OPEN;
 import static raido.idl.raidv2.model.DescriptionType1.ALTERNATIVE_DESCRIPTION;
 import static raido.idl.raidv2.model.DescriptionType1.PRIMARY_DESCRIPTION;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;

@@ -71,8 +71,10 @@ public class InvalidPidTest extends IntegrationTestCase {
       organisations(organisations(NONEXISTENT_TEST_ROR)).
       relatedObjects(relatedObjects(NONEXISTENT_TEST_DOI)).
       access(new Access()
-        .type(ACCESS_TYPE_OPEN)
-        .schemeUri(ACCESS_TYPE_SCHEME_URI))
+        .type(new AccessType()
+          .id(ACCESS_TYPE_OPEN)
+          .schemeUri(ACCESS_TYPE_SCHEME_URI))
+        )
     )).isInstanceOfSatisfying(RaidApiValidationException.class, ex->{
        assertThat(ex.getFailures()).anySatisfy(iFail->{
          assertThat(iFail.getFieldId()).isEqualTo("contributors[0].id");

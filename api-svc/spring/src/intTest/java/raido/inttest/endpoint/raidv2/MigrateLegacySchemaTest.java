@@ -65,7 +65,7 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
         title(initialTitle).
         startDate(today))).
       dates(new DatesBlock().startDate(today)).
-      access(new AccessBlock().type(AccessType.OPEN)).
+      access(new AccessBlock().type(AccessType1.OPEN)).
       alternateUrls(List.of(new AlternateUrlBlock().
         url("https://example.com/some.url.related.to.the.raid") ));
     
