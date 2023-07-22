@@ -7,15 +7,7 @@ import io.gatling.javaapi.http.HttpRequestActionBuilder;
 import raido.apisvc.exception.ValidationException;
 import raido.apisvc.service.raid.id.IdentifierParser;
 import raido.apisvc.util.Log;
-import raido.idl.raidv2.model.DescriptionBlock;
-import raido.idl.raidv2.model.MintRaidoSchemaV1Request;
-import raido.idl.raidv2.model.MintRaidoSchemaV1RequestMintRequest;
-import raido.idl.raidv2.model.MintResponse;
-import raido.idl.raidv2.model.RaidListItemV2;
-import raido.idl.raidv2.model.RaidListRequestV2;
-import raido.idl.raidv2.model.RaidoMetadataSchemaV1;
-import raido.idl.raidv2.model.ReadRaidResponseV2;
-import raido.idl.raidv2.model.ReadRaidV2Request;
+import raido.idl.raidv2.model.*;
 import raido.loadtest.util.Gatling.Var;
 
 import java.io.File;
@@ -25,10 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import static io.gatling.javaapi.core.CoreDsl.StringBody;
-import static io.gatling.javaapi.core.CoreDsl.bodyString;
-import static io.gatling.javaapi.core.CoreDsl.csv;
-import static io.gatling.javaapi.core.CoreDsl.scenario;
+import static io.gatling.javaapi.core.CoreDsl.*;
 import static io.gatling.javaapi.http.HttpDsl.http;
 import static io.gatling.javaapi.http.HttpDsl.status;
 import static raido.apisvc.util.Log.to;
@@ -36,21 +25,16 @@ import static raido.idl.raidv2.model.ContributorPositionRaidMetadataSchemaType.C
 import static raido.idl.raidv2.model.ContributorPositionRaidMetadataSchemaType.OTHER_PARTICIPANT;
 import static raido.idl.raidv2.model.ContributorRoleCreditNisoOrgType.SOFTWARE;
 import static raido.idl.raidv2.model.ContributorRoleCreditNisoOrgType.SUPERVISION;
-import static raido.idl.raidv2.model.DescriptionType.ALTERNATIVE_DESCRIPTION;
+import static raido.idl.raidv2.model.DescriptionType1.ALTERNATIVE_DESCRIPTION;
 import static raido.loadtest.config.SimulationConfig.simConfig;
 import static raido.loadtest.scenario.ApiKeyScenario.I_API_TOKEN;
 import static raido.loadtest.scenario.ServicePointScenario.I_SP_ID;
 import static raido.loadtest.util.Gatling.sessionDebug;
 import static raido.loadtest.util.Json.formatJson;
 import static raido.loadtest.util.Json.parseJson;
-import static raido.loadtest.util.RaidoApi.Endpoint.listRaids;
-import static raido.loadtest.util.RaidoApi.Endpoint.mintRaid;
-import static raido.loadtest.util.RaidoApi.Endpoint.readRaid;
-import static raido.loadtest.util.RaidoApi.Endpoint.updateRaid;
+import static raido.loadtest.util.RaidoApi.Endpoint.*;
 import static raido.loadtest.util.RaidoApi.authzApiHeaders;
-import static raido.loadtest.util.RaidoMetadata.RAID_PRODUCT_MANAGER;
-import static raido.loadtest.util.RaidoMetadata.createContributor;
-import static raido.loadtest.util.RaidoMetadata.createRaidoMetadata;
+import static raido.loadtest.util.RaidoMetadata.*;
 
 public class User {
   private static final Log log = to(User.class);

@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import raido.apisvc.service.ror.RorService;
 import raido.apisvc.util.Log;
 import raido.idl.raidv2.model.OrganisationBlock;
-import raido.idl.raidv2.model.OrganisationRole;
+import raido.idl.raidv2.model.OrganisationRole1;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.ArrayList;
@@ -12,12 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static raido.apisvc.endpoint.message.ValidationMessage.FIELD_MUST_BE_SET_MESSAGE;
-import static raido.apisvc.endpoint.message.ValidationMessage.INVALID_VALUE_TYPE;
-import static raido.apisvc.endpoint.message.ValidationMessage.NOT_SET_TYPE;
-import static raido.apisvc.endpoint.message.ValidationMessage.organisationIdNotSet;
-import static raido.apisvc.endpoint.message.ValidationMessage.organisationIdSchemeNotSet;
-import static raido.apisvc.endpoint.message.ValidationMessage.organisationInvalidIdScheme;
+import static raido.apisvc.endpoint.message.ValidationMessage.*;
 import static raido.apisvc.service.ror.RorService.ROR_REGEX;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.indexed;
@@ -90,7 +85,7 @@ public class OrganisationValidationService {
   }
 
   public List<ValidationFailure> validateRoleFields(
-    Supplier<String> fieldPrefix, List<OrganisationRole> roles
+    Supplier<String> fieldPrefix, List<OrganisationRole1> roles
   ) {
     var failures = new ArrayList<ValidationFailure>();
 
@@ -148,4 +143,3 @@ public class OrganisationValidationService {
       message(message);
   }
 }
-

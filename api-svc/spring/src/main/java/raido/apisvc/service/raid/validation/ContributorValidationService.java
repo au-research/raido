@@ -4,8 +4,8 @@ import org.springframework.stereotype.Component;
 import raido.apisvc.service.orcid.OrcidService;
 import raido.apisvc.util.Log;
 import raido.idl.raidv2.model.ContributorBlock;
-import raido.idl.raidv2.model.ContributorPosition;
-import raido.idl.raidv2.model.ContributorRole;
+import raido.idl.raidv2.model.ContributorPosition1;
+import raido.idl.raidv2.model.ContributorRole1;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.ArrayList;
@@ -14,14 +14,7 @@ import java.util.function.Supplier;
 
 import static java.util.Collections.emptyList;
 import static java.util.List.of;
-import static raido.apisvc.endpoint.message.ValidationMessage.CONTRIB_NOT_SET;
-import static raido.apisvc.endpoint.message.ValidationMessage.FIELD_MUST_BE_SET_MESSAGE;
-import static raido.apisvc.endpoint.message.ValidationMessage.INVALID_VALUE_MESSAGE;
-import static raido.apisvc.endpoint.message.ValidationMessage.INVALID_VALUE_TYPE;
-import static raido.apisvc.endpoint.message.ValidationMessage.NOT_SET_TYPE;
-import static raido.apisvc.endpoint.message.ValidationMessage.contribIdNotSet;
-import static raido.apisvc.endpoint.message.ValidationMessage.contribIdSchemeNotSet;
-import static raido.apisvc.endpoint.message.ValidationMessage.contribInvalidIdScheme;
+import static raido.apisvc.endpoint.message.ValidationMessage.*;
 import static raido.apisvc.service.orcid.OrcidService.ORCID_REGEX;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.indexed;
@@ -95,7 +88,7 @@ public class ContributorValidationService {
   }
   
   public List<ValidationFailure> validatePositionFields(
-    Supplier<String> fieldPrefix, List<ContributorPosition> positions
+    Supplier<String> fieldPrefix, List<ContributorPosition1> positions
   ) {
     var failures = new ArrayList<ValidationFailure>();
 
@@ -139,7 +132,7 @@ public class ContributorValidationService {
   }
 
   public List<ValidationFailure> validateRoleFields(
-    Supplier<String> fieldPrefix, List<ContributorRole> roles
+    Supplier<String> fieldPrefix, List<ContributorRole1> roles
   ) {
     var failures = new ArrayList<ValidationFailure>();
 
@@ -267,4 +260,3 @@ public class ContributorValidationService {
       ).toList();
   }
 }
-

@@ -244,12 +244,12 @@ public class RaidoSchemaV2Test extends IntegrationTestCase {
     return new ContributorBlock().
       id(REAL_TEST_ORCID).
       identifierSchemeUri(HTTPS_ORCID_ORG_).
-      positions(List.of(new ContributorPosition().
+      positions(List.of(new ContributorPosition1().
         positionSchemaUri(HTTPS_RAID_ORG_).
         position(LEADER).
         startDate(today))).
       roles(List.of(
-        new ContributorRole().
+        new ContributorRole1().
           roleSchemeUri(HTTPS_CREDIT_NISO_ORG_).
           role(PROJECT_ADMINISTRATION)));
   }
@@ -259,7 +259,7 @@ public class RaidoSchemaV2Test extends IntegrationTestCase {
       id(REAL_TEST_ROR).
       identifierSchemeUri(OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_).
       roles(List.of(
-        new OrganisationRole().
+        new OrganisationRole1().
           roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_).
           role(OrganisationRoleType.LEAD_RESEARCH_ORGANISATION)
           .startDate(today)));

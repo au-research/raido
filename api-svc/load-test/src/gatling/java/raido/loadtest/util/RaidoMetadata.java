@@ -6,16 +6,16 @@ import raido.idl.raidv2.model.*;
 import java.time.LocalDate;
 import java.util.List;
 
-import static raido.idl.raidv2.model.AccessType.OPEN;
+import static raido.idl.raidv2.model.AccessType1.OPEN;
 import static raido.idl.raidv2.model.ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_;
 import static raido.idl.raidv2.model.ContributorPositionRaidMetadataSchemaType.LEADER;
 import static raido.idl.raidv2.model.ContributorPositionSchemeType.HTTPS_RAID_ORG_;
 import static raido.idl.raidv2.model.ContributorRoleCreditNisoOrgType.PROJECT_ADMINISTRATION;
 import static raido.idl.raidv2.model.ContributorRoleSchemeType.HTTPS_CREDIT_NISO_ORG_;
-import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
+import static raido.idl.raidv2.model.DescriptionType1.PRIMARY_DESCRIPTION;
 import static raido.idl.raidv2.model.OrganisationRoleType.LEAD_RESEARCH_ORGANISATION;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
-import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
+import static raido.idl.raidv2.model.TitleType1.PRIMARY_TITLE;
 
 public class RaidoMetadata {
   public static final String RAID_PRODUCT_MANAGER = 
@@ -59,12 +59,12 @@ public class RaidoMetadata {
     return new ContributorBlock().
       id(orcid).
       identifierSchemeUri(HTTPS_ORCID_ORG_).
-      positions(List.of(new ContributorPosition().
+      positions(List.of(new ContributorPosition1().
         positionSchemaUri(HTTPS_RAID_ORG_).
         position(position).
         startDate(today))).
       roles(List.of(
-        new ContributorRole().
+        new ContributorRole1().
           roleSchemeUri(HTTPS_CREDIT_NISO_ORG_).
           role(role)));
   }
@@ -78,7 +78,7 @@ public class RaidoMetadata {
       id(ror).
       identifierSchemeUri(OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_).
       roles(List.of(
-        new OrganisationRole().
+        new OrganisationRole1().
           roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_).
           role(role)
           .startDate(today)));

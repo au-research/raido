@@ -10,7 +10,7 @@ import raido.apisvc.repository.OrganisationRoleRepository;
 import raido.apisvc.repository.OrganisationRoleSchemeRepository;
 import raido.db.jooq.api_svc.tables.records.OrganisationRoleRecord;
 import raido.db.jooq.api_svc.tables.records.OrganisationRoleSchemeRecord;
-import raido.idl.raidv2.model.OrgRole;
+import raido.idl.raidv2.model.OrganisationRole;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.Optional;
@@ -48,7 +48,7 @@ class StableOrganisationRoleValidationServiceTest {
   @Test
   @DisplayName("Validation passes with valid OrganisationRole")
   void validOrganisationRole() {
-    final var role = new OrgRole()
+    final var role = new OrganisationRole()
       .id(LEAD_RESEARCH_ORGANISATION_ROLE)
       .schemeUri(ORGANISATION_ROLE_SCHEME_URI);
 
@@ -67,7 +67,7 @@ class StableOrganisationRoleValidationServiceTest {
   @Test
   @DisplayName("Validation fails with null schemeUri")
   void nullSchemeUri() {
-    final var role = new OrgRole()
+    final var role = new OrganisationRole()
       .id(LEAD_RESEARCH_ORGANISATION_ROLE);
 
     final var failures = validationService.validate(role, 2, 3);
@@ -87,7 +87,7 @@ class StableOrganisationRoleValidationServiceTest {
   @Test
   @DisplayName("Validation fails with empty schemeUri")
   void emptySchemeUri() {
-    final var role = new OrgRole()
+    final var role = new OrganisationRole()
       .schemeUri("")
       .id(LEAD_RESEARCH_ORGANISATION_ROLE);
 
@@ -108,7 +108,7 @@ class StableOrganisationRoleValidationServiceTest {
   @Test
   @DisplayName("Validation fails with invalid schemeUri")
   void invalidSchemeUri() {
-    final var role = new OrgRole()
+    final var role = new OrganisationRole()
       .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
       .id(LEAD_RESEARCH_ORGANISATION_ROLE);
 
@@ -131,7 +131,7 @@ class StableOrganisationRoleValidationServiceTest {
   @Test
   @DisplayName("Validation fails with null role")
   void nullRole() {
-    final var role = new OrgRole()
+    final var role = new OrganisationRole()
       .schemeUri(ORGANISATION_ROLE_SCHEME_URI);
 
     when(contributorRoleSchemeRepository.findByUri(ORGANISATION_ROLE_SCHEME_URI))
@@ -153,7 +153,7 @@ class StableOrganisationRoleValidationServiceTest {
   @Test
   @DisplayName("Validation fails with empty role")
   void emptyRole() {
-    final var role = new OrgRole()
+    final var role = new OrganisationRole()
       .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
       .id("");
 
@@ -176,7 +176,7 @@ class StableOrganisationRoleValidationServiceTest {
   @Test
   @DisplayName("Validation fails with invalid role")
   void invalidRole() {
-    final var role = new OrgRole()
+    final var role = new OrganisationRole()
       .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
       .id(LEAD_RESEARCH_ORGANISATION_ROLE);
 

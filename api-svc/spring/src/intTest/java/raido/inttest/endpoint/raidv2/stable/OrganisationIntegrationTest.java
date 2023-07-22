@@ -3,8 +3,8 @@ package raido.inttest.endpoint.raidv2.stable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import raido.idl.raidv2.model.OrgRole;
 import raido.idl.raidv2.model.Organisation;
+import raido.idl.raidv2.model.OrganisationRole;
 import raido.idl.raidv2.model.ValidationFailure;
 import raido.inttest.RaidApiValidationException;
 
@@ -52,7 +52,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
       new Organisation()
         .id(VALID_ROR)
         .roles(List.of(
-          new OrgRole()
+          new OrganisationRole()
             .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
             .id(LEAD_RESEARCH_ORGANISATION_ROLE)
         ))
@@ -83,7 +83,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
         .identifierSchemeUri("")
         .id(VALID_ROR)
         .roles(List.of(
-          new OrgRole()
+          new OrganisationRole()
             .startDate(LocalDate.now())
             .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
             .id(LEAD_RESEARCH_ORGANISATION)
@@ -114,7 +114,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
       new Organisation()
         .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
         .roles(List.of(
-          new OrgRole()
+          new OrganisationRole()
             .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
             .id(LEAD_RESEARCH_ORGANISATION_ROLE)
         ))
@@ -145,7 +145,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
         .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
         .id("")
         .roles(List.of(
-          new OrgRole()
+          new OrganisationRole()
             .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
             .id(LEAD_RESEARCH_ORGANISATION_ROLE)
         ))
@@ -179,7 +179,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
           .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
           .id("https://ror.org/038sjwqxx")
           .roles(List.of(
-            new OrgRole()
+            new OrganisationRole()
               .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
               .id(LEAD_RESEARCH_ORGANISATION_ROLE)
           ))
@@ -210,7 +210,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
           .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
           .id("https://ror.org/000000042")
           .roles(List.of(
-            new OrgRole()
+            new OrganisationRole()
               .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
               .id(LEAD_RESEARCH_ORGANISATION_ROLE)
           ))
@@ -245,7 +245,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
           .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
           .id(VALID_ROR)
           .roles(List.of(
-            new OrgRole()
+            new OrganisationRole()
               .id(LEAD_RESEARCH_ORGANISATION_ROLE)
           ))
       ));
@@ -275,7 +275,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
           .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
           .id(VALID_ROR)
           .roles(List.of(
-            new OrgRole()
+            new OrganisationRole()
               .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
           ))
       ));
@@ -305,7 +305,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
           .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
           .id(VALID_ROR)
           .roles(List.of(
-            new OrgRole()
+            new OrganisationRole()
               .id("")
               .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
           ))
@@ -336,7 +336,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
           .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
           .id(VALID_ROR)
           .roles(List.of(
-            new OrgRole()
+            new OrganisationRole()
               .schemeUri("unknown")
               .id(LEAD_RESEARCH_ORGANISATION_ROLE)
           ))
@@ -367,7 +367,7 @@ public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
           .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
           .id(VALID_ROR)
           .roles(List.of(
-            new OrgRole()
+            new OrganisationRole()
               .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
               .id("unknown")
           ))

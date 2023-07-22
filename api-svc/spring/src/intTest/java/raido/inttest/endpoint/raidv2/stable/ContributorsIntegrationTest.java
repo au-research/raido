@@ -3,9 +3,9 @@ package raido.inttest.endpoint.raidv2.stable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import raido.idl.raidv2.model.ContribPosition;
-import raido.idl.raidv2.model.ContribRole;
 import raido.idl.raidv2.model.Contributor;
+import raido.idl.raidv2.model.ContributorPosition;
+import raido.idl.raidv2.model.ContributorRole;
 import raido.idl.raidv2.model.ValidationFailure;
 import raido.inttest.RaidApiValidationException;
 
@@ -69,13 +69,13 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
       new Contributor()
         .id("https://orcid.org/0000-0000-0000-0001")
         .positions(List.of(
-          new ContribPosition()
+          new ContributorPosition()
             .startDate(LocalDate.now())
             .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
             .id(LEADER_POSITION)
         ))
         .roles(List.of(
-          new ContribRole()
+          new ContributorRole()
             .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
             .id(SOFTWARE_CONTRIBUTOR_ROLE)
         ))
@@ -106,13 +106,13 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
         .identifierSchemeUri("")
         .id("https://orcid.org/0000-0000-0000-0001")
         .positions(List.of(
-          new ContribPosition()
+          new ContributorPosition()
             .startDate(LocalDate.now())
             .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
             .id(LEADER_POSITION)
         ))
         .roles(List.of(
-          new ContribRole()
+          new ContributorRole()
             .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
             .id(SOFTWARE_CONTRIBUTOR_ROLE)
         ))
@@ -142,13 +142,13 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
       new Contributor()
         .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
         .positions(List.of(
-          new ContribPosition()
+          new ContributorPosition()
             .startDate(LocalDate.now())
             .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
             .id(LEADER_POSITION)
         ))
         .roles(List.of(
-          new ContribRole()
+          new ContributorRole()
             .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
             .id(SOFTWARE_CONTRIBUTOR_ROLE)
         ))
@@ -179,13 +179,13 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
         .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
         .id("")
         .positions(List.of(
-          new ContribPosition()
+          new ContributorPosition()
             .startDate(LocalDate.now())
             .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
             .id(LEADER_POSITION)
         ))
         .roles(List.of(
-          new ContribRole()
+          new ContributorRole()
             .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
             .id(SOFTWARE_CONTRIBUTOR_ROLE)
         ))
@@ -219,13 +219,13 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
           .id("https://orcid.org/0000-0c00-0000-0000")
           .positions(List.of(
-            new ContribPosition()
+            new ContributorPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
               .id(LEADER_POSITION)
           ))
           .roles(List.of(
-            new ContribRole()
+            new ContributorRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
               .id(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
@@ -256,13 +256,13 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
           .id("https://orcid.org/0000-0000-0000-0000")
           .positions(List.of(
-            new ContribPosition()
+            new ContributorPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
               .id(LEADER_POSITION)
           ))
           .roles(List.of(
-            new ContribRole()
+            new ContributorRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
               .id(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
@@ -293,13 +293,13 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
           .id("https://orcid.org/0000-0001-0000-0009")
           .positions(List.of(
-            new ContribPosition()
+            new ContributorPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
               .id(LEADER_POSITION)
           ))
           .roles(List.of(
-            new ContribRole()
+            new ContributorRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
               .id(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
@@ -330,7 +330,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
         .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
         .id("https://orcid.org/0000-0000-0000-0001")
         .roles(List.of(
-          new ContribRole()
+          new ContributorRole()
             .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
             .id(SOFTWARE_CONTRIBUTOR_ROLE)
         ))
@@ -362,7 +362,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
         .id("https://orcid.org/0000-0000-0000-0001")
         .positions(Collections.emptyList())
         .roles(List.of(
-          new ContribRole()
+          new ContributorRole()
             .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
             .id(SOFTWARE_CONTRIBUTOR_ROLE)
         ))
@@ -393,12 +393,12 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
         .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
         .id("https://orcid.org/0000-0000-0000-0001")
         .positions(List.of(
-          new ContribPosition()
+          new ContributorPosition()
             .startDate(LocalDate.now())
             .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
             .id(OTHER_PARTICIPANT_POSITION)
         ))        .roles(List.of(
-          new ContribRole()
+          new ContributorRole()
             .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
             .id(SOFTWARE_CONTRIBUTOR_ROLE)
         ))
@@ -432,11 +432,11 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
           .id("https://orcid.org/0000-0000-0000-0001")
           .positions(List.of(
-            new ContribPosition()
+            new ContributorPosition()
               .startDate(LocalDate.now())
               .id(LEADER_POSITION)
           ))        .roles(List.of(
-            new ContribRole()
+            new ContributorRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
               .id(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
@@ -467,16 +467,16 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
           .id("https://orcid.org/0000-0000-0000-0001")
           .positions(List.of(
-            new ContribPosition()
+            new ContributorPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
               .id(LEADER_POSITION),
-            new ContribPosition()
+            new ContributorPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
           ))
           .roles(List.of(
-            new ContribRole()
+            new ContributorRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
               .id(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
@@ -507,17 +507,17 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
           .id("https://orcid.org/0000-0000-0000-0001")
           .positions(List.of(
-            new ContribPosition()
+            new ContributorPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
               .id(LEADER_POSITION),
-            new ContribPosition()
+            new ContributorPosition()
               .startDate(LocalDate.now())
               .schemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v2")
               .id(OTHER_PARTICIPANT_POSITION)
           ))
           .roles(List.of(
-            new ContribRole()
+            new ContributorRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
               .id(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
@@ -548,17 +548,17 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
           .id("https://orcid.org/0000-0000-0000-0001")
           .positions(List.of(
-            new ContribPosition()
+            new ContributorPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
               .id(LEADER_POSITION),
-            new ContribPosition()
+            new ContributorPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
               .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/unknown.json")
           ))
           .roles(List.of(
-            new ContribRole()
+            new ContributorRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
               .id(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
@@ -593,13 +593,13 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
           .id("https://orcid.org/0000-0000-0000-0001")
           .positions(List.of(
-            new ContribPosition()
+            new ContributorPosition()
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
               .startDate(LocalDate.now())
               .id(LEADER_POSITION)
           ))
           .roles(List.of(
-            new ContribRole()
+            new ContributorRole()
 //              .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
               .id(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
@@ -630,17 +630,17 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
           .id("https://orcid.org/0000-0000-0000-0001")
           .positions(List.of(
-            new ContribPosition()
+            new ContributorPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
               .id(LEADER_POSITION),
-            new ContribPosition()
+            new ContributorPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
               .id(OTHER_PARTICIPANT_POSITION)
           ))
           .roles(List.of(
-            new ContribRole()
+            new ContributorRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
           ))
       ));
@@ -670,17 +670,17 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
           .id("https://orcid.org/0000-0000-0000-0001")
           .positions(List.of(
-            new ContribPosition()
+            new ContributorPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
               .id(LEADER_POSITION),
-            new ContribPosition()
+            new ContributorPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
               .id(OTHER_PARTICIPANT_POSITION)
           ))
           .roles(List.of(
-            new ContribRole()
+            new ContributorRole()
               .schemeUri("unknown")
               .id(SOFTWARE_CONTRIBUTOR_ROLE)
           ))
@@ -711,17 +711,17 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
           .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
           .id("https://orcid.org/0000-0000-0000-0001")
           .positions(List.of(
-            new ContribPosition()
+            new ContributorPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
               .id(LEADER_POSITION),
-            new ContribPosition()
+            new ContributorPosition()
               .startDate(LocalDate.now())
               .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
               .id(OTHER_PARTICIPANT_POSITION)
           ))
           .roles(List.of(
-            new ContribRole()
+            new ContributorRole()
               .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
               .id("unknown")
           ))

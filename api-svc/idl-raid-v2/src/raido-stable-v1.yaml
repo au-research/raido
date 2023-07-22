@@ -224,12 +224,12 @@ components:
         positions:
           type: array
           items:
-            $ref: '#/components/schemas/ContribPosition'
+            $ref: '#/components/schemas/ContributorPosition'
         roles:
           type: array
           items:
-            $ref: '#/components/schemas/ContribRole'
-    ContribPosition:
+            $ref: '#/components/schemas/ContributorRole'
+    ContributorPosition:
       type: object
       required: [ schemeUri, position, startDate ]
       properties:
@@ -249,7 +249,7 @@ components:
           type: string,
           format: date
         }
-    ContribRole:
+    ContributorRole:
       type: object
       required: [ role, schemeUri ]
       properties:
@@ -273,8 +273,8 @@ components:
         roles:
           type: array
           items:
-            $ref: '#/components/schemas/OrgRole'
-    OrgRole:
+            $ref: '#/components/schemas/OrganisationRole'
+    OrganisationRole:
       type: object
       required: [role, roleSchemeUri, startDate]
       properties:

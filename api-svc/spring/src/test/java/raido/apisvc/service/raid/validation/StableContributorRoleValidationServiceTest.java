@@ -10,7 +10,7 @@ import raido.apisvc.repository.ContributorRoleRepository;
 import raido.apisvc.repository.ContributorRoleSchemeRepository;
 import raido.db.jooq.api_svc.tables.records.ContributorRoleRecord;
 import raido.db.jooq.api_svc.tables.records.ContributorRoleSchemeRecord;
-import raido.idl.raidv2.model.ContribRole;
+import raido.idl.raidv2.model.ContributorRole;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.Optional;
@@ -48,7 +48,7 @@ class StableContributorRoleValidationServiceTest {
   @Test
   @DisplayName("Validation passes with valid ContributorRole")
   void validContributorRole() {
-    final var role = new ContribRole()
+    final var role = new ContributorRole()
       .id(SUPERVISION_CONTRIBUTOR_ROLE)
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI);
 
@@ -67,7 +67,7 @@ class StableContributorRoleValidationServiceTest {
   @Test
   @DisplayName("Validation fails with null schemeUri")
   void nullSchemeUri() {
-    final var role = new ContribRole()
+    final var role = new ContributorRole()
       .id(SUPERVISION_CONTRIBUTOR_ROLE);
 
     final var failures = validationService.validate(role, 2, 3);
@@ -87,7 +87,7 @@ class StableContributorRoleValidationServiceTest {
   @Test
   @DisplayName("Validation fails with empty schemeUri")
   void emptySchemeUri() {
-    final var role = new ContribRole()
+    final var role = new ContributorRole()
       .schemeUri("")
       .id(SUPERVISION_CONTRIBUTOR_ROLE);
 
@@ -108,7 +108,7 @@ class StableContributorRoleValidationServiceTest {
   @Test
   @DisplayName("Validation fails with invalid schemeUri")
   void invalidSchemeUri() {
-    final var role = new ContribRole()
+    final var role = new ContributorRole()
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
       .id(SUPERVISION_CONTRIBUTOR_ROLE);
 
@@ -131,7 +131,7 @@ class StableContributorRoleValidationServiceTest {
   @Test
   @DisplayName("Validation fails with null role")
   void nullRole() {
-    final var role = new ContribRole()
+    final var role = new ContributorRole()
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI);
 
     when(contributorRoleSchemeRepository.findByUri(CONTRIBUTOR_ROLE_SCHEME_URI))
@@ -153,7 +153,7 @@ class StableContributorRoleValidationServiceTest {
   @Test
   @DisplayName("Validation fails with empty role")
   void emptyRole() {
-    final var role = new ContribRole()
+    final var role = new ContributorRole()
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
       .id("");
 
@@ -176,7 +176,7 @@ class StableContributorRoleValidationServiceTest {
   @Test
   @DisplayName("Validation fails with invalid role")
   void invalidRole() {
-    final var role = new ContribRole()
+    final var role = new ContributorRole()
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
       .id(SUPERVISION_CONTRIBUTOR_ROLE);
 

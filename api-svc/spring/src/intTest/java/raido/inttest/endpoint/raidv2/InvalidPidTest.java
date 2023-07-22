@@ -122,12 +122,12 @@ public class InvalidPidTest extends IntegrationTestCase {
     return List.of(new Contributor()
       .id(orcid)
       .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
-      .positions(List.of(new ContribPosition()
+      .positions(List.of(new ContributorPosition()
         .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
         .id(LEADER_POSITION)
         .startDate(today)))
       .roles(List.of(
-        new ContribRole()
+        new ContributorRole()
           .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
           .id(SUPERVISION_ROLE))));
   }
@@ -145,7 +145,7 @@ public class InvalidPidTest extends IntegrationTestCase {
       .id(ror)
       .identifierSchemeUri(ORGANISATION_SCHEME_URI)
       .roles(List.of(
-        new OrgRole()
+        new OrganisationRole()
           .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
           .id(role)
           .startDate(today)));

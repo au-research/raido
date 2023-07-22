@@ -10,7 +10,7 @@ import raido.apisvc.repository.ContributorPositionRepository;
 import raido.apisvc.repository.ContributorPositionSchemeRepository;
 import raido.db.jooq.api_svc.tables.records.ContributorPositionRecord;
 import raido.db.jooq.api_svc.tables.records.ContributorPositionSchemeRecord;
-import raido.idl.raidv2.model.ContribPosition;
+import raido.idl.raidv2.model.ContributorPosition;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.time.LocalDate;
@@ -50,7 +50,7 @@ class StableContributorPositionValidationServiceTest {
   @Test
   @DisplayName("Validation passes with valid ContributorPosition")
   void validContributorPosition() {
-    final var position = new ContribPosition()
+    final var position = new ContributorPosition()
       .id(LEADER_CONTRIBUTOR_POSITION)
       .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
       .startDate(LocalDate.now().minusYears(1))
@@ -71,7 +71,7 @@ class StableContributorPositionValidationServiceTest {
   @Test
   @DisplayName("Validation fails with null schemeUri")
   void nullSchemeUri() {
-    final var position = new ContribPosition()
+    final var position = new ContributorPosition()
       .id(LEADER_CONTRIBUTOR_POSITION)
       .startDate(LocalDate.now().minusYears(1))
       .endDate(LocalDate.now());
@@ -93,7 +93,7 @@ class StableContributorPositionValidationServiceTest {
   @Test
   @DisplayName("Validation fails with empty schemeUri")
   void emptySchemeUri() {
-    final var position = new ContribPosition()
+    final var position = new ContributorPosition()
       .schemeUri("")
       .id(LEADER_CONTRIBUTOR_POSITION)
       .startDate(LocalDate.now().minusYears(1))
@@ -116,7 +116,7 @@ class StableContributorPositionValidationServiceTest {
   @Test
   @DisplayName("Validation fails with invalid schemeUri")
   void invalidSchemeUri() {
-    final var position = new ContribPosition()
+    final var position = new ContributorPosition()
       .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
       .id(LEADER_CONTRIBUTOR_POSITION)
       .startDate(LocalDate.now().minusYears(1))
@@ -141,7 +141,7 @@ class StableContributorPositionValidationServiceTest {
   @Test
   @DisplayName("Validation fails with null position")
   void nullPosition() {
-    final var position = new ContribPosition()
+    final var position = new ContributorPosition()
       .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
       .startDate(LocalDate.now().minusYears(1))
       .endDate(LocalDate.now());
@@ -165,7 +165,7 @@ class StableContributorPositionValidationServiceTest {
   @Test
   @DisplayName("Validation fails with empty position")
   void emptyPosition() {
-    final var position = new ContribPosition()
+    final var position = new ContributorPosition()
       .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
       .id("")
       .startDate(LocalDate.now().minusYears(1))
@@ -190,7 +190,7 @@ class StableContributorPositionValidationServiceTest {
   @Test
   @DisplayName("Validation fails with invalid position")
   void invalidPosition() {
-    final var position = new ContribPosition()
+    final var position = new ContributorPosition()
       .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
       .id(LEADER_CONTRIBUTOR_POSITION)
       .startDate(LocalDate.now().minusYears(1))
@@ -217,7 +217,7 @@ class StableContributorPositionValidationServiceTest {
   @Test
   @DisplayName("Validation fails with null startDate")
   void nullstartDate() {
-    final var position = new ContribPosition()
+    final var position = new ContributorPosition()
       .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
       .id(LEADER_CONTRIBUTOR_POSITION)
       .endDate(LocalDate.now());

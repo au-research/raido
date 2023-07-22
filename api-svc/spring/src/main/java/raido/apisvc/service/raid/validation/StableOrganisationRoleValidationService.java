@@ -3,7 +3,7 @@ package raido.apisvc.service.raid.validation;
 import org.springframework.stereotype.Component;
 import raido.apisvc.repository.OrganisationRoleRepository;
 import raido.apisvc.repository.OrganisationRoleSchemeRepository;
-import raido.idl.raidv2.model.OrgRole;
+import raido.idl.raidv2.model.OrganisationRole;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class StableOrganisationRoleValidationService {
   }
 
   public List<ValidationFailure> validate(
-    final OrgRole role, final int organisationIndex, final int roleIndex) {
+    final OrganisationRole role, final int organisationIndex, final int roleIndex) {
     final var failures = new ArrayList<ValidationFailure>();
 
     if (isBlank(role.getId())) {

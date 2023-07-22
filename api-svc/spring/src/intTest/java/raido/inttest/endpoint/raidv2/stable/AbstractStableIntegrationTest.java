@@ -162,12 +162,12 @@ public class AbstractStableIntegrationTest {
     return new Contributor()
       .id(orcid)
       .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
-      .positions(List.of(new ContribPosition()
+      .positions(List.of(new ContributorPosition()
         .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
         .id(position)
         .startDate(startDate)))
       .roles(List.of(
-        new ContribRole()
+        new ContributorRole()
           .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
           .id(role)));
   }
@@ -181,7 +181,7 @@ public class AbstractStableIntegrationTest {
       .id(ror)
       .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI).
       roles(List.of(
-        new OrgRole()
+        new OrganisationRole()
           .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
           .id(role)
           .startDate(today)));

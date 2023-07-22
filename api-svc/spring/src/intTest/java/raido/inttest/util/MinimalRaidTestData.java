@@ -92,12 +92,12 @@ public class MinimalRaidTestData {
     return new ContributorBlock().
       id(orcid).
       identifierSchemeUri(HTTPS_ORCID_ORG_).
-      positions(List.of(new ContributorPosition().
+      positions(List.of(new ContributorPosition1().
         positionSchemaUri(HTTPS_RAID_ORG_).
         position(position).
         startDate(startDate))).
       roles(List.of(
-        new ContributorRole().
+        new ContributorRole1().
           roleSchemeUri(HTTPS_CREDIT_NISO_ORG_).
           role(role)));
   }
@@ -109,12 +109,12 @@ public class MinimalRaidTestData {
     return of(new ContributorBlock().
       id(orcid).
       identifierSchemeUri(HTTPS_ORCID_ORG_).
-      positions(List.of(new ContributorPosition().
+      positions(List.of(new ContributorPosition1().
         positionSchemaUri(HTTPS_RAID_ORG_).
         position(LEADER).
         startDate(today))).
       roles(List.of(
-        new ContributorRole().
+        new ContributorRole1().
           roleSchemeUri(HTTPS_CREDIT_NISO_ORG_).
           role(ContributorRoleCreditNisoOrgType.SUPERVISION))));
   }
@@ -128,7 +128,7 @@ public class MinimalRaidTestData {
       id(ror).
       identifierSchemeUri(OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_).
       roles(List.of(
-        new OrganisationRole().
+        new OrganisationRole1().
           roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_).
           role(role)
           .startDate(today)));
