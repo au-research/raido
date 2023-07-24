@@ -3,9 +3,9 @@ See [BuildSearchIndex.java](/api-svc/spring/src/main/java/raido/cmdline/BuildSea
 
 ### `sitemap_index.xml`
 
-This isn't part of the "build index process", I'd probably just hardcode it 
-into the CDK infra on `raid.org`, updating it whenever we onboard a new 
-reg-agent.
+The root sitemap index file is isn't part of the "build search index" process, 
+I'd probably just hardcode it into the CDK infra on `raid.org`, updating it 
+whenever we onboard a new reg-agent.
 
 ```
 <?xml version="1.0" encoding="UTF-8"?>
