@@ -63,7 +63,7 @@ public class BuildSearchIndexService {
 
     String inputLine = readInputLine(reader, inputLineCount);
     if( inputLine == null ){
-      throw runtimeException("input reader returned no rows: %s");
+      throw runtimeException("input reader returned no rows");
     }
 
     var linkFilePath = formatLinkFilePath(
