@@ -13,9 +13,15 @@ public class BuildSearchIndexProps {
   @Value("${BuildSearchIndex.agencyPrefix:raido}")
   public String agencyPrefix;
 
-  @Value("${BuildSearchIndex.outputDirPath:./s3/raid-search-index}")
+  @Value("${BuildSearchIndex.outputDirPath:./s3/raid-search-index/raido}")
   public String outputDirPath;
 
   @Value("${BuildSearchIndex.logPeriodSeconds:10}")
   public int logPeriodSeconds;
+
+  @Value("${BuildSearchIndex.maxRaidsPerFile:10000}")
+  public long maxRaidsPerFile;
+
+  @Value("${BuildSearchIndex.linkFileFormat:%s-raid-link-index-%06d.html}")
+  public String linkFileFormat;
 }

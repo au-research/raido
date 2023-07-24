@@ -14,7 +14,7 @@ import static raido.apisvc.util.JvmUtil.normaliseJvmDefaults;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.ObjectUtil.infoLogExecutionTime;
 import static raido.cmdline.spring.config.CommandLineConfig.configureSpring;
-import static raido.cmdline.spring.config.CommandLineConfig.newWriter;
+import static raido.apisvc.util.IoUtil.newWriter;
 
 public class AgencyPublicDataExport {
   private static final Log log = to(AgencyPublicDataExport.class);

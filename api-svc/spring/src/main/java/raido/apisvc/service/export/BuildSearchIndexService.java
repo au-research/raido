@@ -3,6 +3,7 @@ package raido.apisvc.service.export;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import raido.apisvc.service.raid.MetadataService;
+import raido.apisvc.spring.config.environment.BuildSearchIndexProps;
 import raido.apisvc.util.ExceptionUtil;
 import raido.apisvc.util.Log;
 import raido.idl.raidv2.model.PublicClosedMetadataSchemaV1;
@@ -20,7 +21,7 @@ import static raido.apisvc.util.ExceptionUtil.wrapException;
 import static raido.apisvc.util.ExceptionUtil.wrapIoException;
 import static raido.apisvc.util.IdeUtil.formatClickable;
 import static raido.apisvc.util.Log.to;
-import static raido.cmdline.spring.config.CommandLineConfig.newWriter;
+import static raido.apisvc.util.IoUtil.newWriter;
 
 /*
 Writes html links to files, one link or each raid from the input reader.
@@ -38,14 +39,14 @@ public class BuildSearchIndexService {
   private static final Log log = to(BuildSearchIndexService.class);
 
   private MetadataService metaSvc;
-
-  private long maxRaidsPerFile = 10_000;
-  private String linkFileFormat = "%s-raid-link-index-%06d.html";
+  private BuildSearchIndexProps props;
 
   public BuildSearchIndexService(
-    MetadataService metaSvc
+    MetadataService metaSvc,
+    BuildSearchIndexProps props
   ) {
     this.metaSvc = metaSvc;
+    this.props = props;
   }
 
   public List<String> buildRegAgentLinkFiles(
@@ -79,7 +80,7 @@ public class BuildSearchIndexService {
         inputLineCount++;
         linkCount++;
 
-        if( linkCount >= maxRaidsPerFile ){
+        if( linkCount >= props.maxRaidsPerFile ){
           closeWriter(writer);
           linkFileCount++;
           linkCount = 1;
@@ -88,7 +89,8 @@ public class BuildSearchIndexService {
           linkFilePaths.add(linkFilePath);
           /* writing these out during the process (instead of at the end) acts
           act as a sort of progress-indicator. 
-          Consider logging only every Nth file if we start do a lot of raids. */
+          When we're writing millions of raids, consider logging only every Nth 
+          file, or do a proper "monitor" implementation.*/
           log.with("linkFile", formatClickable(linkFilePath)).
             info("writing to next link file");
           writer = createNewLinkFile(agentPrefix, linkFilePath);
@@ -117,7 +119,7 @@ public class BuildSearchIndexService {
   ) {
     return "%s/%s".formatted(
       outputDir,
-      linkFileFormat.formatted(agentPrefix, linkFileCount));
+      props.linkFileFormat.formatted(agentPrefix, linkFileCount));
   }
 
   /**
