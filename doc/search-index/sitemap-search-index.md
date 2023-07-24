@@ -26,7 +26,10 @@ registration-agent.
 
 When that starts looking like an issue, we can look at another implementation.  
 There's no rule against (and I believe Google explicitly support) nested 
-sitemap indexes. One level of that is 25 quadrillion.  
+sitemap indexes. One level of that is 25 quadrillion.
+
+10K raids per link file is just an arbitrary default, be careful of making it 
+too big or search engines may de-prioritise them.
 
 ```
 <?xml version="1.0" encoding="UTF-8"?>

@@ -19,6 +19,10 @@ public class BuildSearchIndexProps {
   @Value("${BuildSearchIndex.logPeriodSeconds:10}")
   public int logPeriodSeconds;
 
+  /**
+   10K default value is completely arbitrary, results in link files about
+   1.3MB in size
+   */
   @Value("${BuildSearchIndex.maxRaidsPerFile:10000}")
   public long maxRaidsPerFile;
 
