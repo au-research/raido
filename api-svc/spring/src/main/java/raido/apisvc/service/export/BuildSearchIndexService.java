@@ -1,5 +1,6 @@
 package raido.apisvc.service.export;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import raido.apisvc.service.raid.MetadataService;
 import raido.apisvc.util.ExceptionUtil;
@@ -11,24 +12,25 @@ import raido.idl.raidv2.model.PublicReadRaidMetadataResponseV1;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static raido.apisvc.util.ExceptionUtil.runtimeException;
 import static raido.apisvc.util.ExceptionUtil.wrapException;
 import static raido.apisvc.util.ExceptionUtil.wrapIoException;
+import static raido.apisvc.util.IdeUtil.formatClickable;
 import static raido.apisvc.util.Log.to;
 import static raido.cmdline.spring.config.CommandLineConfig.newWriter;
 
 /*
- Not sure "search" belongs in the name here.
- Indexing raids via google-search and other search-engines was the original 
- reason to implement this, but I can see we might need this index or something
- very similar for other reasons.
- 
- Currently, the code does NOT break up the raids into separate html files for
- easy indexing on the part of the search engine.
- For example, when indexing an export from the DEMO env that had 130K raids
- (from load-testing)  it generated a single 16MB html file (took about 2.5 
- seconds to generate on my developer-spec machine).
+Writes html links to files, one link or each raid from the input reader.
+Breaks the files up so there's no more than `maxRaidsPerFile` in each file.
+
+This needs unit-tests. Needs logic tests to show all input raids are written 
+and we don't lose any raids: 
+- first one, last one, etc. when all raids fit in a single file
+- first one and last one on a file transition, etc.
+- when there are exactly maxRaidsPerFile, maxRaidsPerFile+1, etc.
  */
 @Component
 public class BuildSearchIndexService {
@@ -38,6 +40,7 @@ public class BuildSearchIndexService {
   private MetadataService metaSvc;
 
   private long maxRaidsPerFile = 10_000;
+  private String linkFileFormat = "%s-raid-link-index-%06d.html";
 
   public BuildSearchIndexService(
     MetadataService metaSvc
@@ -45,65 +48,146 @@ public class BuildSearchIndexService {
     this.metaSvc = metaSvc;
   }
 
-  public void buildRegAgentLinkFiles(
+  public List<String> buildRegAgentLinkFiles(
     BufferedReader reader,
     String outputDir,
     String agentPrefix
-  ) throws RuntimeException {
-    log.info("start build index");
+  ) {
+    log.info("start build link files");
+    List<String> linkFilePaths = new ArrayList<>();
+    
+    int inputLineCount = 0;
+    int linkCount = 0;
+    int linkFileCount = 1;
 
-    var indexPath = "%s/%s-index.html".
-      formatted(outputDir, agentPrefix);
+    String inputLine = readInputLine(reader, inputLineCount);
+    if( inputLine == null ){
+      throw runtimeException("input reader returned no rows: %s");
+    }
 
+    var linkFilePath = formatLinkFilePath(
+      outputDir, agentPrefix, linkFileCount );
+    linkFilePaths.add(linkFilePath);
+    log.with("linkFile", formatClickable(linkFilePath)).
+      info("writing to first link file");
+
+    BufferedWriter writer = createNewLinkFile(agentPrefix, linkFilePath);
+
+    try {
+      while( inputLine != null ){
+        
+        inputLineCount++;
+        linkCount++;
+
+        if( linkCount >= maxRaidsPerFile ){
+          closeWriter(writer);
+          linkFileCount++;
+          linkCount = 1;
+          linkFilePath = formatLinkFilePath(
+            outputDir, agentPrefix, linkFileCount);
+          linkFilePaths.add(linkFilePath);
+          /* writing these out during the process (instead of at the end) acts
+          act as a sort of progress-indicator. 
+          Consider logging only every Nth file if we start do a lot of raids. */
+          log.with("linkFile", formatClickable(linkFilePath)).
+            info("writing to next link file");
+          writer = createNewLinkFile(agentPrefix, linkFilePath);
+        }
+
+        PublicReadRaidMetadataResponseV1 raid =
+          parseRaid(inputLineCount, inputLine);
+
+        writeHtmlLink(writer, inputLineCount, inputLine, raid);
+
+        inputLine = readInputLine(reader, inputLineCount);
+
+      } // while( inputLine != null ){
+    } // try
+    finally {
+      closeWriter(writer);
+    }
+
+    return linkFilePaths;
+  }
+
+  private String formatLinkFilePath(
+    String outputDir,
+    String agentPrefix,
+    int linkFileCount
+  ) {
+    return "%s/%s".formatted(
+      outputDir,
+      linkFileFormat.formatted(agentPrefix, linkFileCount));
+  }
+
+  /**
+   wraps {@link BufferedReader#readLine()}
+   */
+  private static String readInputLine(BufferedReader reader, int lineCount) {
+    try { 
+      return reader.readLine();
+    }
+    catch( IOException e ){
+      throw wrapIoException(e, "while reading next after line %s", lineCount);
+    }
+  }
+
+  private static void writeHtmlLink(
+    BufferedWriter writer,
+    int lineCount,
+    String line,
+    PublicReadRaidMetadataResponseV1 raid
+  ) {
+    try {
+      writer.write("<br/>");
+      writeRaidAnchorHtml(writer, raid);
+      writer.newLine();
+    }
+    catch( IOException e ){
+      throw wrapIoException(e, "while writing link for input line %s: %s",
+        lineCount, line);
+    }
+  }
+
+  private static void closeWriter(BufferedWriter writer) {
+    try {
+      writer.write("</body></html>");
+      writer.flush();
+      writer.close();
+    }
+    catch( IOException e ){
+      throw wrapIoException(e, "while writing tail info and closing file");
+    }
+  }
+
+  @NotNull
+  private static BufferedWriter createNewLinkFile(
+    String agentPrefix,
+    String indexPath
+  ) {
     var writer = newWriter(indexPath);
     try {
       writer.write(
         "<html><head>List of raids for %s</head><body>".formatted(
-          agentPrefix )
+          agentPrefix)
       );
     }
     catch( IOException e ){
       throw wrapIoException(e, "while writing head info");
     }
+    return writer;
+  }
 
+  private PublicReadRaidMetadataResponseV1 parseRaid(
+    int lineCount,
+    String line
+  ) {
     try {
-      int lineCount = 0;
-      String line = reader.readLine();
-
-      while( line != null ){
-        lineCount++;
-
-        PublicReadRaidMetadataResponseV1 raid;
-        try {
-          raid = metaSvc.parsePublicRaidMetadata(line);
-        }
-        catch( Exception e ){
-          throw wrapException(e, "on line %s", lineCount); 
-        }
-
-        writer.write("<br/>");
-        writeRaidAnchorHtml(writer, raid);
-        writer.newLine();
-
-        line = reader.readLine();
-      }
-
+      return metaSvc.parsePublicRaidMetadata(line);
     }
-    catch( IOException e ){
-      throw wrapIoException(e, "while building index");
+    catch( Exception e ){
+      throw wrapException(e, "on line %s", lineCount); 
     }
-    finally {
-      uncheckedFlush(writer);
-    }
-
-    try {
-      writer.write("</body></html>");
-      writer.flush();
-    }
-    catch( IOException e ){
-      throw wrapIoException(e, "while writing tail info");
-    }
-    
   }
 
   private static void writeRaidAnchorHtml(

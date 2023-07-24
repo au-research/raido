@@ -4,6 +4,8 @@ import raido.apisvc.service.export.BuildSearchIndexService;
 import raido.apisvc.spring.config.environment.BuildSearchIndexProps;
 import raido.apisvc.util.Log;
 
+import java.util.List;
+
 import static raido.apisvc.util.ExceptionUtil.wrapException;
 import static raido.apisvc.util.IdeUtil.formatClickable;
 import static raido.apisvc.util.JvmUtil.normaliseJvmDefaults;
@@ -34,10 +36,11 @@ public class BuildSearchIndex {
     log.with("publicExportPath", formatClickable(publicExportPath)).
       info("starting index build process");
 
+    List<String> indexLinkFiles;
     try(
       var reader = newReader(publicExportPath);
     ) {
-      infoLogExecutionTime(log, 
+      indexLinkFiles = infoLogExecutionTime(log, 
         "building index for %s".formatted(props.agencyPrefix), 
         ()-> indexSvc.buildRegAgentLinkFiles(
           reader, props.outputDirPath, props.agencyPrefix)
@@ -47,7 +50,7 @@ public class BuildSearchIndex {
       throw wrapException(e, "while indexing");
     }
 
-    log.info("finished build index process");
+    log.with("linkFiles", indexLinkFiles).info("finished build index process");
   }
 
 }
