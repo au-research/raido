@@ -88,7 +88,7 @@ public class BuildSearchIndexService {
             outputDir, agentPrefix, linkFileCount);
           linkFilePaths.add(linkFilePath);
           /* writing these out during the process (instead of at the end) acts
-          act as a sort of progress-indicator. 
+          as a sort of progress-indicator. 
           When we're writing millions of raids, consider logging only every Nth 
           file, or do a proper "monitor" implementation.*/
           log.with("linkFile", formatClickable(linkFilePath)).
