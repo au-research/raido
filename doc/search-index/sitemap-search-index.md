@@ -4,7 +4,8 @@ See [BuildSearchIndex.java](/api-svc/spring/src/main/java/raido/cmdline/BuildSea
 ### `sitemap_index.xml`
 
 This isn't part of the "build index process", I'd probably just hardcode it 
-into the CDK infra on `raid.org`.
+into the CDK infra on `raid.org`, updating it whenever we onboard a new 
+reg-agent.
 
 ```
 <?xml version="1.0" encoding="UTF-8"?>
@@ -20,7 +21,7 @@ into the CDK infra on `raid.org`.
 
 ### `raido/raido_sitemap.xml`
 
-10K raids per file * 50K link files per index is half a billion raids, per 
+50K link files per index * 10K raid links per file is half a billion raids, per 
 registration-agent.
 
 When that starts looking like an issue, we can look at another implementation.  
