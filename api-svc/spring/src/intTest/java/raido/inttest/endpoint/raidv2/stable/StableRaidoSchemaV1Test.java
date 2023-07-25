@@ -95,7 +95,6 @@ public class StableRaidoSchemaV1Test extends AbstractStableIntegrationTest {
   private UpdateRaidV1Request mapReadToUpdate(RaidDto read){
     return new UpdateRaidV1Request().
       id(read.getId()).
-      metadataSchema(read.getMetadataSchema()).
       titles(read.getTitles()).
       dates(read.getDates()).
       descriptions(read.getDescriptions()).

@@ -1,5 +1,4 @@
 {
-  "metadataSchema": "RaidoMetadataSchemaV1",
   "id": {
     "identifier": "https://raid.org.au/10378.1/1696639",
     "identifierSchemeURI": "https://raid.org",
@@ -7,7 +6,8 @@
     "identifierOwner": "https://ror.org/02stey378",
     "identifierServicePoint": 20000001,
     "globalUrl": "https://hdl.handle.net/10378.1/1696639",
-    "raidAgencyUrl": "https://raid.org.au/10378.1/1696639"
+    "raidAgencyUrl": "https://raid.org.au/10378.1/1696639",
+    "version": 1
   },
   "titles": [
     {

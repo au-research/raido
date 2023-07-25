@@ -6,13 +6,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.hamcrest.Matchers;
 import org.jooq.JSONB;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.transaction.support.TransactionCallback;
+import org.springframework.transaction.support.TransactionTemplate;
 import raido.apisvc.exception.ResourceNotFoundException;
+import raido.apisvc.factory.IdFactory;
 import raido.apisvc.factory.RaidRecordFactory;
 import raido.apisvc.repository.RaidRepository;
 import raido.apisvc.repository.ServicePointRepository;
@@ -27,7 +31,7 @@ import raido.apisvc.util.FileUtil;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
 import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
 import raido.idl.raidv2.model.CreateRaidV1Request;
-import raido.idl.raidv2.model.IdBlock;
+import raido.idl.raidv2.model.Id;
 import raido.idl.raidv2.model.RaidDto;
 import raido.idl.raidv2.model.UpdateRaidV1Request;
 
@@ -35,6 +39,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -67,6 +72,15 @@ class RaidStableV1ServiceTest {
   @Mock
   private MetadataProps metaProps;
 
+  @Mock
+  private TransactionTemplate transactionTemplate;
+
+  @Mock
+  private ObjectMapper mapper;
+
+  @Mock
+  private IdFactory idFactory;
+
   @InjectMocks
   private RaidStableV1Service raidService;
 
@@ -79,7 +93,7 @@ class RaidStableV1ServiceTest {
   void mintRaidV1() throws IOException {
     final long servicePointId = 123;
     final var handle = new IdentifierHandle("10378.1", "1696639");
-    final var id = new IdentifierUrl("https://raid.org.au", handle);
+    final var identifierUrl = new IdentifierUrl("https://raid.org.au", handle);
     final var urlIndex = 456;
     final var createRaidRequest = createRaidRequest();
     final var registrationAgency = "registration-agency";
@@ -90,7 +104,7 @@ class RaidStableV1ServiceTest {
     final var apidsIdentifierProperty = new ApidsMintResponse.Identifier.Property();
     apidsIdentifier.handle = handle.format();
     apidsIdentifierProperty.index = urlIndex;
-    apidsIdentifierProperty.value = id.formatUrl();
+    apidsIdentifierProperty.value = identifierUrl.formatUrl();
     apidsIdentifier.property = apidsIdentifierProperty;
     apidsResponse.identifier = apidsIdentifier;
 
@@ -98,61 +112,70 @@ class RaidStableV1ServiceTest {
     final var raidRecord = new RaidRecord();
 
     
-    final var idBlock = new IdBlock()
-      .identifier(id.formatUrl())
+    final var id = new Id()
+      .identifier(identifierUrl.formatUrl())
       .identifierSchemeURI(RAID_ID_TYPE_URI)
       .identifierRegistrationAgency(registrationAgency)
       .identifierOwner(identifierOwner)
       .identifierServicePoint(servicePointId);
 
-    ReflectionTestUtils.setField(metaProps, "handleUrlPrefix", id.urlPrefix());
+    ReflectionTestUtils.setField(metaProps, "handleUrlPrefix", identifierUrl.urlPrefix());
     when(servicePointRepository.findById(servicePointId)).thenReturn(Optional.of(servicePointRecord));
     when(apidsService.mintApidsHandleContentPrefix(any(Function.class))).thenReturn(apidsResponse);
     when(idParser.parseHandle(handle.format())).thenReturn(handle);
-    when(metadataService.createIdBlock(id, servicePointRecord)).thenReturn(idBlock);
+    when(idFactory.create(identifierUrl, servicePointRecord)).thenReturn(id);
     when(metadataService.getMetaProps()).thenReturn(metaProps);
     when(raidRecordFactory.create(createRaidRequest, apidsResponse, servicePointRecord)).thenReturn(raidRecord);
 
     raidService.mintRaidSchemaV1(createRaidRequest, servicePointId);
 
-    verify(raidRepository).insert(raidRecord);
+    verify(transactionTemplate).executeWithoutResult(any(Consumer.class));
   }
 
   @Test
   void readRaidV1() throws IOException {
+    final var raidJson = raidJson();
     final String handle = "test-handle";
     final Long servicePointId = 999L;
     final RaidRecord raidRecord = new RaidRecord();
     final ServicePointRecord servicePointRecord = new ServicePointRecord();
     servicePointRecord.setId(servicePointId);
 
-    raidRecord.setMetadata(JSONB.valueOf(raidJson()));
+    raidRecord.setMetadata(JSONB.valueOf(raidJson));
 
     when(raidRepository.findByHandle(handle)).thenReturn(Optional.of(raidRecord));
 
     final var expected = objectMapper.readValue(raidJson(), RaidDto.class);
 
-    RaidDto result = raidService.readRaidV1(handle);
+    when(mapper.readValue(raidJson, RaidDto.class)).thenReturn(expected);
+
+    RaidDto result = raidService.read(handle);
     assertThat(result, Matchers.is(expected));
   }
 
   @Test
   void listRaidsV1() throws JsonProcessingException {
+    final var raidJson = raidJson();
     final Long servicePointId = 999L;
     final ServicePointRecord servicePointRecord = new ServicePointRecord();
     servicePointRecord.setId(servicePointId);
 
     List<Raid> data = List.of(
-      new Raid(new RaidRecord().setMetadata(JSONB.valueOf(raidJson())), new ServicePointRecord().setId(servicePointId))
+      new Raid(new RaidRecord().setMetadata(JSONB.valueOf(raidJson)), new ServicePointRecord().setId(servicePointId))
     );
 
     when(raidRepository.findAllByServicePointId(servicePointId)).thenReturn(data);
 
-    List<RaidDto> results = raidService.listRaidsV1(servicePointId);
-    assertThat(results.get(0), Matchers.is(objectMapper.readValue(raidJson(), RaidDto.class)));
+    final var expected = objectMapper.readValue(raidJson, RaidDto.class);
+
+    when(mapper.readValue(raidJson, RaidDto.class)).thenReturn(expected);
+
+    List<RaidDto> results = raidService.list(servicePointId);
+    assertThat(results.get(0), Matchers.is(expected));
   }
 
   @Test
+  @DisplayName("ResourceNotFoundException is thrown when RAiD not found")
   void readRaidV1_throwsResourceNoFoundException() {
     final String handle = "test-handle";
     final Long servicePointId = 999L;
@@ -161,18 +184,21 @@ class RaidStableV1ServiceTest {
 
     when(raidRepository.findByHandle(handle)).thenReturn(Optional.empty());
 
-    assertThrows(ResourceNotFoundException.class, () -> raidService.readRaidV1(handle));
+    assertThrows(ResourceNotFoundException.class, () -> raidService.read(handle));
   }
 
   @Test
-  void updateRaidSchemaV1() throws JsonProcessingException, ValidationFailureException {
+  @DisplayName("Updating a RAiD saves changes and returns updated RAiD")
+  void update() throws JsonProcessingException, ValidationFailureException {
     final var servicePointId = 999L;
-    final var metadata = objectMapper.readValue(raidJson(), UpdateRaidV1Request.class);
-    final var expected = objectMapper.readValue(raidJson(), RaidDto.class);
+    final var raidJson = raidJson();
+
+    final var metadata = objectMapper.readValue(raidJson, UpdateRaidV1Request.class);
+    final var expected = objectMapper.readValue(raidJson, RaidDto.class);
 
     final var existingRaid = new RaidRecord();
     final var updatedRaid = new RaidRecord()
-      .setMetadata(JSONB.valueOf(raidJson()));
+      .setMetadata(JSONB.valueOf(raidJson));
 
     final var id = new IdentifierParser().parseUrlWithException(metadata.getId().getIdentifier());
     final var handle = id.handle().format();
@@ -183,11 +209,12 @@ class RaidStableV1ServiceTest {
     when(raidRepository.findByHandle(handle)).thenReturn(Optional.of(existingRaid));
     when(raidRecordFactory.merge(metadata, existingRaid)).thenReturn(updatedRaid);
     when(idParser.parseUrlWithException(id.formatUrl())).thenReturn(id);
+    when(mapper.readValue(raidJson, RaidDto.class)).thenReturn(expected);
 
-    final var result = raidService.updateRaidV1(metadata);
+    final var result = raidService.update(metadata);
 
     verify(raidRepository).findByHandle(handle);
-    verify(raidRepository).update(updatedRaid);
+    verify(transactionTemplate).execute(any(TransactionCallback.class));
 
     assertThat(result, Matchers.is(expected));
   }

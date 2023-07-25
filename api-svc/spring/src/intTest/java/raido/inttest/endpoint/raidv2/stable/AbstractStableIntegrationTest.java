@@ -31,7 +31,6 @@ import java.util.concurrent.TimeUnit;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static raido.db.jooq.api_svc.enums.UserRole.OPERATOR;
-import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 import static raido.inttest.endpoint.raidv2.stable.TestConstants.*;
 import static raido.inttest.util.MinimalRaidTestData.REAL_TEST_ORCID;
 import static raido.inttest.util.MinimalRaidTestData.REAL_TEST_ROR;
@@ -109,7 +108,6 @@ public class AbstractStableIntegrationTest {
       idFactory.generateUniqueId();
 
     return new CreateRaidV1Request()
-      .metadataSchema(RAIDOMETADATASCHEMAV1)
       .titles(List.of(new Title()
         .type(new TitleType()
           .id(PRIMARY_TITLE_TYPE)
@@ -137,7 +135,6 @@ public class AbstractStableIntegrationTest {
   private UpdateRaidV1Request mapReadToUpdate(RaidDto read){
     return new UpdateRaidV1Request().
       id(read.getId()).
-      metadataSchema(read.getMetadataSchema()).
       titles(read.getTitles()).
       dates(read.getDates()).
       descriptions(read.getDescriptions()).

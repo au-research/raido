@@ -1,7 +1,5 @@
 package raido.apisvc.service.raid;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.jooq.DSLContext;
 import org.jooq.JSONB;
 import org.jooq.exception.NoDataFoundException;
@@ -61,12 +59,9 @@ public class RaidService {
   private final MetadataService metaSvc;
   private final RaidoSchemaV1ValidationService validSvc;
   private final TransactionTemplate tx;
-  private final RaidRepository raidRepository;
 
   private final ServicePointRepository servicePointRepository;
-  private final RaidRecordFactory raidRecordFactory;
   private final IdentifierParser idParser;
-  private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
   public RaidService(
     final DSLContext db,
@@ -84,9 +79,7 @@ public class RaidService {
     this.metaSvc = metaSvc;
     this.validSvc = validSvc;
     this.tx = tx;
-    this.raidRepository = raidRepository;
     this.servicePointRepository = servicePointRepository;
-    this.raidRecordFactory = raidRecordFactory;
     this.idParser = idParser;
   }
 
@@ -181,32 +174,6 @@ public class RaidService {
     }
    
     return (IdentifierHandle) parseResult; 
-  }
-
-  public IdentifierUrl mintRaidSchemaV1(
-    final CreateRaidV1Request request,
-    final long servicePoint
-  ) {
-    /* this is the part where we want to make sure no TX is held open.
-     * Maybe *this* should be marked tx.prop=never? */
-    final var servicePointRecord =
-      servicePointRepository.findById(servicePoint).orElseThrow(() -> 
-        new UnknownServicePointException(servicePoint) );
-
-    final var apidsResponse = apidsSvc.mintApidsHandleContentPrefix(
-      metaSvc::formatRaidoLandingPageUrl);
-
-
-    IdentifierHandle handle = parseHandleFromApids(apidsResponse);
-    var id = new IdentifierUrl(metaSvc.getMetaProps().handleUrlPrefix, handle);
-    request.setId(metaSvc.createIdBlock(id, servicePointRecord));
-
-    final var raidRecord = raidRecordFactory.create(
-      request, apidsResponse, servicePointRecord );
-
-    raidRepository.insert(raidRecord);
-
-    return id;
   }
 
   public IdentifierUrl mintLegacySchemaV1(

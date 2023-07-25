@@ -19,37 +19,36 @@ import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 @Repository
 public class RaidRepository {
   private final DSLContext dslContext;
-  private final TransactionTemplate transactionTemplate;
 
   public RaidRepository(final DSLContext dslContext, final TransactionTemplate transactionTemplate, final MetadataService metadataService) {
     this.dslContext = dslContext;
-    this.transactionTemplate = transactionTemplate;
   }
 
   public void insert(final RaidRecord raid) {
-    transactionTemplate.executeWithoutResult((status) -> dslContext.insertInto(RAID).
-      set(RAID.HANDLE, raid.getHandle()).
-      set(RAID.SERVICE_POINT_ID, raid.getServicePointId()).
-      set(RAID.URL, raid.getUrl()).
-      set(RAID.URL_INDEX, raid.getUrlIndex()).
-      set(RAID.PRIMARY_TITLE, raid.getPrimaryTitle()).
-      set(RAID.METADATA, raid.getMetadata()).
-      set(RAID.METADATA_SCHEMA, raid.getMetadataSchema()).
-      set(RAID.START_DATE, raid.getStartDate()).
-      set(RAID.DATE_CREATED, LocalDateTime.now()).
-      set(RAID.CONFIDENTIAL, raid.getConfidential()).
-      execute());
+    dslContext.insertInto(RAID)
+      .set(RAID.HANDLE, raid.getHandle())
+      .set(RAID.SERVICE_POINT_ID, raid.getServicePointId())
+      .set(RAID.URL, raid.getUrl())
+      .set(RAID.URL_INDEX, raid.getUrlIndex())
+      .set(RAID.PRIMARY_TITLE, raid.getPrimaryTitle())
+      .set(RAID.METADATA, raid.getMetadata())
+      .set(RAID.METADATA_SCHEMA, raid.getMetadataSchema())
+      .set(RAID.START_DATE, raid.getStartDate())
+      .set(RAID.DATE_CREATED, LocalDateTime.now())
+      .set(RAID.CONFIDENTIAL, raid.getConfidential())
+      .set(RAID.VERSION, raid.getVersion())
+      .execute();
   }
 
-  public void update(final RaidRecord raidRecord) {
-    transactionTemplate.executeWithoutResult((status) -> dslContext.update(RAID)
+  public int update(final RaidRecord raidRecord) {
+    return dslContext.update(RAID)
       .set(RAID.PRIMARY_TITLE, raidRecord.getPrimaryTitle())
       .set(RAID.METADATA, raidRecord.getMetadata())
       .set(RAID.METADATA_SCHEMA, raidRecord.getMetadataSchema())
       .set(RAID.START_DATE, raidRecord.getStartDate())
       .set(RAID.CONFIDENTIAL, raidRecord.getConfidential())
       .where(RAID.HANDLE.eq(raidRecord.getHandle()))
-      .execute());
+      .execute();
   }
 
   public int updateByHandleAndVersion(final RaidRecord raidRecord) {

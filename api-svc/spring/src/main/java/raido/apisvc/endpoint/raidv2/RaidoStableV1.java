@@ -36,7 +36,7 @@ public class RaidoStableV1 implements RaidoStableV1Api {
   public RaidDto readRaidV1(final String prefix, final String suffix) {
     final var handle = String.join("/", prefix, suffix);
     var user = getApiToken();
-    var data = raidService.readRaidV1(handle);
+    var data = raidService.read(handle);
     guardOperatorOrAssociated(user, data.getId().getIdentifierServicePoint());
     return data;
   }
@@ -59,7 +59,7 @@ public class RaidoStableV1 implements RaidoStableV1Api {
     IdentifierUrl id = raidService.mintRaidSchemaV1(
       request, user.getServicePointId() );
 
-    return raidService.readRaidV1(id.handle().format());
+    return raidService.read(id.handle().format());
   }
 
   @Override
@@ -67,7 +67,7 @@ public class RaidoStableV1 implements RaidoStableV1Api {
     var user = getApiToken();
     guardOperatorOrAssociated(user, servicePointId);
 
-    return raidService.listRaidsV1(servicePointId);
+    return raidService.list(servicePointId);
   }
 
   @Override
@@ -86,6 +86,6 @@ public class RaidoStableV1 implements RaidoStableV1Api {
       throw new ValidationException(failures);
     }
 
-    return raidService.updateRaidV1(request);
+    return raidService.update(request);
   }
 }

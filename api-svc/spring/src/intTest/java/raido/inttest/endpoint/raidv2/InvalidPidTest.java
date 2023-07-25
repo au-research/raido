@@ -12,7 +12,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static raido.apisvc.service.stub.InMemoryStubTestData.*;
 import static raido.apisvc.util.test.BddUtil.EXPECT;
-import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 
 public class InvalidPidTest extends IntegrationTestCase {
   private static final String LEAD_RESEARCH_ORGANISATION =
@@ -63,7 +62,6 @@ public class InvalidPidTest extends IntegrationTestCase {
 
     EXPECT("minting a raid with non-existent PIDs should fail");
     assertThatThrownBy(()->raidApi.createRaidV1(new CreateRaidV1Request().
-      metadataSchema(RAIDOMETADATASCHEMAV1).
       titles(titles(initialTitle)).
       dates(new DatesBlock().startDate(today)).
       descriptions(descriptions("used for testing non-existent pids")).

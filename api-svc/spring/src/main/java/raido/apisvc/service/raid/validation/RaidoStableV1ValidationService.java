@@ -20,7 +20,6 @@ import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.RestUtil.urlDecode;
 import static raido.apisvc.util.StringUtil.areDifferent;
 import static raido.apisvc.util.StringUtil.isBlank;
-import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 
 @Component
 public class RaidoStableV1ValidationService {
@@ -68,12 +67,12 @@ public class RaidoStableV1ValidationService {
     this.accessValidationService = accessValidationService;
   }
 
-  private List<ValidationFailure> validateUpdateHandle(final String decodedHandleFromPath, final IdBlock updateIdBlock) {
+  private List<ValidationFailure> validateUpdateHandle(final String decodedHandleFromPath, final Id id) {
     final var failures = new ArrayList<ValidationFailure>();
 
     IdentifierUrl updateId = null;
     try {
-      updateId = idParser.parseUrlWithException(updateIdBlock.getIdentifier());
+      updateId = idParser.parseUrlWithException(id.getIdentifier());
     }
     catch( ValidationFailureException e ){
       failures.addAll(e.getFailures());
@@ -168,9 +167,6 @@ public class RaidoStableV1ValidationService {
     }
 
     var failures = new ArrayList<ValidationFailure>();
-    if( request.getMetadataSchema() != RAIDOMETADATASCHEMAV1 ){
-      failures.add(ValidationMessage.INVALID_METADATA_SCHEMA);
-    }
 
     failures.addAll(validateDates(request.getDates()));
     failures.addAll(accessValidationService.validate(request.getAccess()));
@@ -198,10 +194,6 @@ public class RaidoStableV1ValidationService {
     String decodedHandle = urlDecode(handle);
 
     final var failures = new ArrayList<>(validateUpdateHandle(decodedHandle, request.getId()));
-
-    if( request.getMetadataSchema() != RAIDOMETADATASCHEMAV1 ){
-      failures.add(ValidationMessage.INVALID_METADATA_SCHEMA);
-    }
 
     failures.addAll(validateDates(request.getDates()));
     failures.addAll(accessValidationService.validate(request.getAccess()));
