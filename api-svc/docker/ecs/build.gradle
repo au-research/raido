@@ -23,7 +23,7 @@ ext{
   /* decided not to default these to demo any more, when run via 
   codebuild/codepipeline or locally via dev, you need to decide what env 
   your trying to push to (demo/prod, etc.) and set the values in 
-  api-svc-docker.gradle
+  api-svc-ecs-docker.gradle
   Don't forget to login to the ECR if you want to do a push. */
   ecsEcrHost = ""
   ecsEcrRepo = ""
@@ -156,4 +156,3 @@ task dockerEcrLogin(type: Exec) {
     ecrHost
   )
 }
-
