@@ -2,10 +2,12 @@ package raido.apisvc.service.raid;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jooq.DSLContext;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
 import raido.apisvc.exception.InvalidJsonException;
+import raido.apisvc.exception.InvalidVersionException;
 import raido.apisvc.exception.ResourceNotFoundException;
 import raido.apisvc.exception.UnknownServicePointException;
 import raido.apisvc.factory.IdFactory;
@@ -18,7 +20,6 @@ import raido.apisvc.service.raid.id.IdentifierHandle;
 import raido.apisvc.service.raid.id.IdentifierParser;
 import raido.apisvc.service.raid.id.IdentifierParser.ParseProblems;
 import raido.apisvc.service.raid.id.IdentifierUrl;
-import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
 import raido.apisvc.spring.security.raidv2.ApiToken;
 import raido.apisvc.util.Log;
 import raido.idl.raidv2.model.CreateRaidV1Request;
@@ -32,6 +33,7 @@ import static raido.apisvc.util.Log.to;
 
 /* Be careful with usage of @Transactional, see db-transaction-guideline.md */
 @Component
+@RequiredArgsConstructor
 public class RaidStableV1Service {
   private static final Log log = to(RaidStableV1Service.class);
   private final ApidsService apidsSvc;
@@ -42,30 +44,8 @@ public class RaidStableV1Service {
   private final RaidRecordFactory raidRecordFactory;
   private final IdentifierParser idParser;
   private final ObjectMapper objectMapper;
-
   private final IdFactory idFactory;
-
-  public RaidStableV1Service(
-    final DSLContext db,
-    final ApidsService apidsSvc,
-    final MetadataService metaSvc,
-    final RaidoSchemaV1ValidationService validSvc,
-    final TransactionTemplate tx,
-    final RaidRepository raidRepository,
-    final ServicePointRepository servicePointRepository,
-    final RaidRecordFactory raidRecordFactory,
-    IdentifierParser idParser,
-    final ObjectMapper objectMapper, final IdFactory idFactory) {
-    this.apidsSvc = apidsSvc;
-    this.metaSvc = metaSvc;
-    this.tx = tx;
-    this.raidRepository = raidRepository;
-    this.servicePointRepository = servicePointRepository;
-    this.raidRecordFactory = raidRecordFactory;
-    this.idParser = idParser;
-    this.objectMapper = objectMapper;
-    this.idFactory = idFactory;
-  }
+  private final RaidChecksumService checksumService;
 
   public List<RaidDto> list(final Long servicePointId) {
     return raidRepository.findAllByServicePointId(servicePointId).stream().
@@ -120,27 +100,43 @@ public class RaidStableV1Service {
     return id;
   }
 
+  @SneakyThrows
   public RaidDto update(
     final UpdateRaidV1Request raid
   ) {
-    final IdentifierUrl id;
+    final Integer version = raid.getId().getVersion();
+    if (version == null) {
+      throw new InvalidVersionException(version);
+    }
+
+    final IdentifierUrl identifierUrl;
     try {
-      id = idParser.parseUrlWithException(raid.getId().getIdentifier());
+      identifierUrl = idParser.parseUrlWithException(raid.getId().getIdentifier());
     }
     catch( ValidationFailureException e ){
       // it was already validated, so this shouldn't happen
       throw new RuntimeException(e);
     }
-    String handle = id.handle().format();
+    String handle = identifierUrl.handle().format();
     
-    final var existing = raidRepository.findByHandle(handle)
+    final var existing = raidRepository.findByHandleAndVersion(handle, version)
       .orElseThrow(() -> new ResourceNotFoundException(handle));
 
     final var raidRecord = raidRecordFactory.merge(raid, existing);
 
-    //TODO: Check for changes before executing update
+    final var existingChecksum = checksumService.create(existing);
+    final var updateChecksum = checksumService.create(raid);
 
-    tx.execute(status -> raidRepository.updateByHandleAndVersion(raidRecord));
+    if (existingChecksum.equals(updateChecksum)) {
+      return objectMapper.readValue(
+        raidRecord.getMetadata().data(), RaidDto.class );
+    }
+
+    final Integer numRowsChanged = tx.execute(status -> raidRepository.updateByHandleAndVersion(raidRecord));
+
+    if (numRowsChanged == null || numRowsChanged != 1) {
+      throw new InvalidVersionException(version);
+    }
 
     try {
       return objectMapper.readValue(

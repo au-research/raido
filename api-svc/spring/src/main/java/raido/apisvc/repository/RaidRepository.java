@@ -82,6 +82,25 @@ public class RaidRepository {
       );
   }
 
+  public Optional<RaidRecord> findByHandleAndVersion(final String handle, final int version) {
+    return dslContext.select(RAID.fields())
+      .from(RAID)
+      .where(RAID.HANDLE.eq(handle)
+        .and(RAID.VERSION.eq(version))).
+      fetchOptional(record -> new RaidRecord()
+        .setHandle(RAID.HANDLE.getValue(record))
+        .setServicePointId(RAID.SERVICE_POINT_ID.getValue(record))
+        .setUrl(RAID.URL.getValue(record))
+        .setUrlIndex(RAID.URL_INDEX.getValue(record))
+        .setMetadataSchema(RAID.METADATA_SCHEMA.getValue(record))
+        .setMetadata(RAID.METADATA.getValue(record))
+        .setDateCreated(RAID.DATE_CREATED.getValue(record))
+        .setStartDate(RAID.START_DATE.getValue(record))
+        .setConfidential(RAID.CONFIDENTIAL.getValue(record))
+        .setPrimaryTitle(RAID.PRIMARY_TITLE.getValue(record))
+      );
+  }
+
   public List<Raid> findAllByServicePointId(final Long servicePointId) {
     return dslContext.select(RAID.fields()).
       select(SERVICE_POINT.fields()).
