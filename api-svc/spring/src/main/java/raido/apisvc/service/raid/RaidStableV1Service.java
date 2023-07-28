@@ -122,15 +122,15 @@ public class RaidStableV1Service {
     final var existing = raidRepository.findByHandleAndVersion(handle, version)
       .orElseThrow(() -> new ResourceNotFoundException(handle));
 
-    final var raidRecord = raidRecordFactory.merge(raid, existing);
 
     final var existingChecksum = checksumService.create(existing);
     final var updateChecksum = checksumService.create(raid);
 
     if (existingChecksum.equals(updateChecksum)) {
       return objectMapper.readValue(
-        raidRecord.getMetadata().data(), RaidDto.class );
+        existing.getMetadata().data(), RaidDto.class );
     }
+    final var raidRecord = raidRecordFactory.merge(raid, existing);
 
     final Integer numRowsChanged = tx.execute(status -> raidRepository.updateByHandleAndVersion(raidRecord));
 
@@ -138,9 +138,12 @@ public class RaidStableV1Service {
       throw new InvalidVersionException(version);
     }
 
+    final var result = raidRepository.findByHandle(handle)
+      .orElseThrow(() -> new ResourceNotFoundException(handle));
+
     try {
       return objectMapper.readValue(
-        raidRecord.getMetadata().data(), RaidDto.class );
+        result.getMetadata().data(), RaidDto.class );
     } catch (JsonProcessingException e) {
       throw new InvalidJsonException();
     }

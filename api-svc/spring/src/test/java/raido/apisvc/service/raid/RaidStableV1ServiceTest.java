@@ -193,7 +193,7 @@ class RaidStableV1ServiceTest {
   }
 
   @Test
-  @DisplayName("Updating a RAiD saves changes and returns updated RAiD")
+  @DisplayName("Updating a raid saves changes and returns updated raid")
   void update() throws JsonProcessingException, ValidationFailureException {
     final var servicePointId = 999L;
     final var raidJson = raidJson();
@@ -219,7 +219,7 @@ class RaidStableV1ServiceTest {
     when(idParser.parseUrlWithException(id.formatUrl())).thenReturn(id);
     when(mapper.readValue(raidJson, RaidDto.class)).thenReturn(expected);
     when(transactionTemplate.execute(any(TransactionCallback.class))).thenReturn(1);
-
+    when(raidRepository.findByHandle(handle)).thenReturn(Optional.of(updatedRaid));
 
     final var result = raidService.update(updateRequest);
 
@@ -238,7 +238,7 @@ class RaidStableV1ServiceTest {
     final var updateRequest = objectMapper.readValue(raidJson, UpdateRaidV1Request.class);
     final var expected = objectMapper.readValue(raidJson, RaidDto.class);
 
-    final var existingRaid = new RaidRecord();
+    final var existingRaid = new RaidRecord().setMetadata(JSONB.valueOf(raidJson));
     final var updatedRaid = new RaidRecord()
       .setMetadata(JSONB.valueOf(raidJson));
 
@@ -252,14 +252,14 @@ class RaidStableV1ServiceTest {
     when(checksumService.create(updateRequest)).thenReturn("1");
 
     when(raidRepository.findByHandleAndVersion(handle, 1)).thenReturn(Optional.of(existingRaid));
-    when(raidRecordFactory.merge(updateRequest, existingRaid)).thenReturn(updatedRaid);
     when(idParser.parseUrlWithException(id.formatUrl())).thenReturn(id);
     when(mapper.readValue(raidJson, RaidDto.class)).thenReturn(expected);
 
     final var result = raidService.update(updateRequest);
 
+    verifyNoInteractions(raidRecordFactory);
     verify(raidRepository).findByHandleAndVersion(handle, 1);
-    verify(transactionTemplate, never()).execute(any(TransactionCallback.class));
+    verifyNoInteractions(transactionTemplate);
 
     assertThat(result, Matchers.is(expected));
   }

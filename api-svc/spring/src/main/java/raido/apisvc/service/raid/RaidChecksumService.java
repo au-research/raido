@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
+import raido.idl.raidv2.model.RaidDto;
 import raido.idl.raidv2.model.UpdateRaidV1Request;
 
 @Component
@@ -13,8 +14,17 @@ import raido.idl.raidv2.model.UpdateRaidV1Request;
 public class RaidChecksumService {
   private final ObjectMapper objectMapper;
 
+  @SneakyThrows
   public String create(final RaidRecord raid) {
-    return DigestUtils.md5DigestAsHex(raid.getMetadata().data().getBytes());
+    final var metadata = raid.getMetadata().data();
+    // A bit nasty to turn a string into an object and then back into a string but the json needs to be in the
+    // same order for the checksums to be identical. This relies on MapperFeature.SORT_PROPERTIES_ALPHABETICALLY
+    // property set on the ObjectMapper bean
+
+    final var raidDto = objectMapper.readValue(metadata, RaidDto.class);
+    final var json = objectMapper.writeValueAsString(raidDto);
+
+    return DigestUtils.md5DigestAsHex(json.getBytes());
   }
 
   @SneakyThrows

@@ -88,6 +88,7 @@ public class RaidRepository {
       .where(RAID.HANDLE.eq(handle)
         .and(RAID.VERSION.eq(version))).
       fetchOptional(record -> new RaidRecord()
+        .setVersion(RAID.VERSION.getValue(record))
         .setHandle(RAID.HANDLE.getValue(record))
         .setServicePointId(RAID.SERVICE_POINT_ID.getValue(record))
         .setUrl(RAID.URL.getValue(record))

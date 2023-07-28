@@ -1,5 +1,6 @@
 package raido.apisvc.spring.config;
 
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -144,11 +145,17 @@ public class ApiConfig implements WebMvcConfigurer {
   */
   @Bean
   public ObjectMapper objectMapper() {
-    return new ObjectMapper().
+    final ObjectMapper mapper = new ObjectMapper()
+
       /* from memory, this was to get the Spring REST API endpoints writing 
       datetime the way I wanted. */
-      disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).
-      registerModule(new JavaTimeModule());
+      .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+      .registerModule(new JavaTimeModule());
+
+    mapper.setConfig(mapper.getSerializationConfig()
+      .with(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY));
+
+    return mapper;
   }
   
   @Bean
@@ -305,5 +312,3 @@ public class ApiConfig implements WebMvcConfigurer {
     return new DoiService(rest);
   }
 }
-
-
