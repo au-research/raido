@@ -59,15 +59,6 @@ components:
         globalUrl: https://hdl.handle.net/xxx.yyy/zzz
         raidAgencyUrl: https://demo.raido-infra.com/handle/10378.1/1695863
         raidAgencyIdentifier: demo.raido-infra.com
-    IdBlockV2:
-      allOf:
-        - $ref: 'metadata-block.yaml#/components/schemas/IdBlock'
-      type: object
-      required: [ version ]
-      properties:
-        version: {
-          type: integer
-        }
     AccessBlock:
       type: object
       required: ["type", ]
