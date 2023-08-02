@@ -9,7 +9,7 @@ info:
     This is what all raids imported from the legacy application were imported
     as.
 paths:
-  /raid/v1:
+  /raid:
     post:
       tags:
         - raido-stable-v1
@@ -57,7 +57,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RaidDto'
-  /raid/v1/{prefix}/{suffix}:
+  /raid/{prefix}/{suffix}:
     parameters:
       - name: prefix
         in: path

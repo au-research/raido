@@ -94,7 +94,7 @@ class RaidoStableV1Test {
       doThrow(DataAccessException.class)
         .when(raidService).mintRaidSchemaV1(any(CreateRaidV1Request.class), eq(servicePointId));
 
-      mockMvc.perform(post("/raid/v1")
+      mockMvc.perform(post("/raid")
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(raid))
           .characterEncoding("utf-8"))
@@ -131,7 +131,7 @@ class RaidoStableV1Test {
 
       when(raidService.isEditable(user, servicePointId)).thenReturn(false);
 
-      mockMvc.perform(post("/raid/v1")
+      mockMvc.perform(post("/raid")
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(raidForPost))
           .characterEncoding("utf-8"))
@@ -170,7 +170,7 @@ class RaidoStableV1Test {
       when(validationService.validateForCreate(any(CreateRaidV1Request.class)))
         .thenReturn(List.of(validationFailure));
 
-      final MvcResult mvcResult = mockMvc.perform(post("/raid/v1")
+      final MvcResult mvcResult = mockMvc.perform(post("/raid")
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(raid))
           .characterEncoding("utf-8"))
@@ -226,7 +226,7 @@ class RaidoStableV1Test {
       when(raidService.mintRaidSchemaV1(any(CreateRaidV1Request.class), eq(servicePointId))).thenReturn(id);
       when(raidService.read(handle.format())).thenReturn(raidForGet);
 
-      mockMvc.perform(post("/raid/v1")
+      mockMvc.perform(post("/raid")
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(raidForPost))
           .characterEncoding("utf-8"))
@@ -293,7 +293,7 @@ class RaidoStableV1Test {
 
       when(validationService.validateForUpdate(eq(handle), any(UpdateRaidV1Request.class))).thenReturn(List.of(validationFailure));
 
-      final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/v1/%s/%s", prefix, suffix))
+      final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/%s/%s", prefix, suffix))
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(input))
           .characterEncoding("utf-8"))
@@ -331,7 +331,7 @@ class RaidoStableV1Test {
 
       when(raidService.isEditable(user, servicePointId)).thenReturn(false);
 
-      mockMvc.perform(put(String.format("/raid/v1/%s/%s", prefix, suffix))
+      mockMvc.perform(put(String.format("/raid/%s/%s", prefix, suffix))
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(input))
           .characterEncoding("utf-8"))
@@ -368,7 +368,7 @@ class RaidoStableV1Test {
 
       when(raidService.update(input)).thenReturn(output);
 
-      mockMvc.perform(put(String.format("/raid/v1/%s/%s", prefix, suffix))
+      mockMvc.perform(put(String.format("/raid/%s/%s", prefix, suffix))
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(input))
           .characterEncoding("utf-8"))
@@ -426,7 +426,7 @@ class RaidoStableV1Test {
       doThrow(new ResourceNotFoundException(handle))
         .when(raidService).update(input);
 
-      final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/v1/%s/%s", prefix, suffix))
+      final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/%s/%s", prefix, suffix))
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(input))
           .characterEncoding("utf-8"))
@@ -460,7 +460,7 @@ class RaidoStableV1Test {
       authzUtil.when(() -> AuthzUtil.guardOperatorOrAssociated(apiToken, servicePointId))
         .thenThrow(new CrossAccountAccessException(servicePointId));
 
-      final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/v1/%s/%s", prefix, suffix))
+      final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/%s/%s", prefix, suffix))
           .contentType(MediaType.APPLICATION_JSON)
           .content(objectMapper.writeValueAsString(input))
           .characterEncoding("utf-8"))
@@ -497,7 +497,7 @@ class RaidoStableV1Test {
 
       when(raidService.read(String.join("/", prefix, suffix))).thenReturn(raid);
 
-      final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/v1/%s/%s", prefix, suffix))
+      final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
           .characterEncoding("utf-8")
           .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
@@ -522,7 +522,7 @@ class RaidoStableV1Test {
 
       doThrow(new ResourceNotFoundException(handle)).when(raidService).read(handle);
 
-      final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/v1/%s/%s", prefix, suffix))
+      final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
           .characterEncoding("utf-8")
           .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
@@ -557,7 +557,7 @@ class RaidoStableV1Test {
       authzUtil.when(() -> AuthzUtil.guardOperatorOrAssociated(apiToken, servicePointId))
         .thenThrow(new CrossAccountAccessException(servicePointId));
 
-      final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/v1/%s/%s", prefix, suffix))
+      final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
           .characterEncoding("utf-8"))
         .andDo(print())
         .andExpect(status().isForbidden())
@@ -591,7 +591,7 @@ class RaidoStableV1Test {
 
       when(raidService.list(servicePointId)).thenReturn(Collections.singletonList(output));
 
-      mockMvc.perform(get("/raid/v1", handle)
+      mockMvc.perform(get("/raid", handle)
           .queryParam("servicePointId", servicePointId.toString())
           .characterEncoding("utf-8"))
         .andDo(print())
@@ -642,7 +642,7 @@ class RaidoStableV1Test {
       authzUtil.when(() -> AuthzUtil.guardOperatorOrAssociated(apiToken, servicePointId))
         .thenThrow(new CrossAccountAccessException(servicePointId));
 
-      final MvcResult mvcResult = mockMvc.perform(get("/raid/v1")
+      final MvcResult mvcResult = mockMvc.perform(get("/raid")
           .queryParam("servicePointId", servicePointId.toString())
           .characterEncoding("utf-8"))
         .andDo(print())
