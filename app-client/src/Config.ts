@@ -107,6 +107,9 @@ function chooseEnvironmentConfig(env: string | undefined){
   else if( env === 'demo' ){
     return demoConfig;
   }
+  else if( env === 'test' ){
+    return testConfig;
+  }
   else if( env === 'ci' ){
     return ciConfig;
   }
