@@ -29,7 +29,7 @@
 const log = console;
 
 /** Defines what the known environments are. */
-type EnvironmentName = "prod" | "demo" | "ci" | "dev";
+type EnvironmentName = "prod" | "demo" | "test" | "ci" | "dev";
 
 export interface AuthnConfig {
   clientId: string,
@@ -179,6 +179,46 @@ const devConfig: EnvironmentConfig = {
   },
 };
 
+const testConfig: EnvironmentConfig = {
+  environmentName: "test",
+  signInWarning: ``,
+  isProd: false,
+  raidoIssuer: "https://api.test.raid.org.au",
+  raidoLandingPage: "https://test.raid.org.au",
+  raidoApiSvc: "",
+  aaf: {
+    clientId: "205290b0-8bd6-4d53-8605-d0237636b235",
+    authorizeUrl: "https://central.aaf.edu.au/providers/op/authorize",
+    authnScope: "openid email profile",
+  },
+  google: {
+    // OAuth client: raid.service@ardc.edu.au / ardc.edu.au / Raido production / Raido PROD
+    clientId: "1098145486319-1ppc9atsres2qa6lpb7luv6sn7gmctf0.apps.googleusercontent.com",
+    authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
+    authnScope: "openid email profile",
+  },
+  orcid: {
+    // sandbox test client from orcid
+    //clientId: "APP-207226CSNVZ1ZSQM",
+    //authorizeUrl: "https://sandbox.orcid.org/oauth/authorize",
+
+    // OAuth client: orcid "raido" account
+    clientId: "APP-89ARS7MGN01HGYUO",
+    authorizeUrl: "https://orcid.org/oauth/authorize",
+
+    authnScope: "openid",
+  },
+  authApiQuery: {
+    retry: 1,
+    refetchOnWindowFocus: true,
+  },
+  publicApiQuery: {
+    retry: false,
+    refetchOnWindowFocus: false,
+  },
+};
+
+
 const demoConfig: EnvironmentConfig = {
   environmentName: "demo",
   signInWarning: `The DEMO environment has been reset as of 2023-04-03.
@@ -258,4 +298,3 @@ const prodConfig: EnvironmentConfig = {
 
 
 export const Config: EnvironmentConfig & typeof buildConfig = initConfig();
-

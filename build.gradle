@@ -29,7 +29,7 @@ just really want to get Gradle running, set the value to "unknown" or something.
 
 See release-process.md for example git commands.
 */
-version = GitUtil.describe("raido-v-", ext.versionEnvName)
+version = GitUtil.describe(ext.versionEnvName)
 println "Project version: $version"
 
 // to upgrade the wrapper, change the version and run this task
@@ -62,4 +62,3 @@ task showVersion{
     println project.ext.gitCommitHash as String
   }
 }
-

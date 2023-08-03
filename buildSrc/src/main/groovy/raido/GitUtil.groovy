@@ -5,7 +5,7 @@ import static raido.OsUtil.osCmd
 class GitUtil {
   static long describeTimeout = 5000
 
-  static String describe(String tagPrefix, Object overrideEnvName){
+  static String describe(Object overrideEnvName){
     
     String environmentVersion = System.getenv(overrideEnvName.toString())
     
@@ -25,7 +25,7 @@ class GitUtil {
     • `--match` param is a glob pattern, not a regex
     */
     var args = osCmd(
-      "git", "describe", "--always", "--dirty", "--match", "$tagPrefix*"
+      "git", "describe", "--always", "--dirty"
     )
 
     var stdOut = new StringBuilder()
