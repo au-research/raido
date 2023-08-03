@@ -2,7 +2,7 @@ package raido.inttest.endpoint.raidv2.stable;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import raido.idl.raidv2.model.AccessType;
+import raido.idl.raidv2.model.AccessTypeWithSchemeUri;
 import raido.idl.raidv2.model.ValidationFailure;
 import raido.inttest.RaidApiValidationException;
 
@@ -18,7 +18,7 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   void mintOpenAccess() {
 
     createRequest.getAccess()
-      .type(new AccessType()
+      .type(new AccessTypeWithSchemeUri()
         .id(OPEN_ACCESS_TYPE)
         .schemeUri(ACCESS_TYPE_SCHEME_URI)
       );
@@ -34,7 +34,7 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Mint with valid closed access type")
   void mintClosedAccess() {
     createRequest.getAccess()
-      .type(new AccessType()
+      .type(new AccessTypeWithSchemeUri()
         .id(CLOSED_ACCESS_TYPE)
         .schemeUri(ACCESS_TYPE_SCHEME_URI)
       )
@@ -50,7 +50,7 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Mint with valid embargoed access type")
   void mintEmbargoedAccess() {
     createRequest.getAccess()
-      .type(new AccessType()
+      .type(new AccessTypeWithSchemeUri()
         .id(EMBARGOED_ACCESS_TYPE)
         .schemeUri(ACCESS_TYPE_SCHEME_URI)
       )
@@ -67,7 +67,7 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Mint with embargoed access type fails with missing embargoExpiry")
   void missingEmbargoExpiry() {
     createRequest.getAccess()
-      .type(new AccessType()
+      .type(new AccessTypeWithSchemeUri()
         .id(EMBARGOED_ACCESS_TYPE)
         .schemeUri(ACCESS_TYPE_SCHEME_URI)
       )
@@ -92,7 +92,7 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Mint with closed access type fails with missing accessStatement")
   void missingAccessStatement() {
     createRequest.getAccess()
-      .type(new AccessType()
+      .type(new AccessTypeWithSchemeUri()
         .id(CLOSED_ACCESS_TYPE)
         .schemeUri(ACCESS_TYPE_SCHEME_URI)
       );
@@ -117,7 +117,7 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Mint with closed access type fails with blank accessStatement")
   void blankAccessStatement() {
     createRequest.getAccess()
-      .type(new AccessType()
+      .type(new AccessTypeWithSchemeUri()
         .id(CLOSED_ACCESS_TYPE)
         .schemeUri(ACCESS_TYPE_SCHEME_URI)
       )
@@ -143,7 +143,7 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Mint with open access type fails with missing schemeUri")
   void missingSchemeUri() {
     createRequest.getAccess()
-      .type(new AccessType()
+      .type(new AccessTypeWithSchemeUri()
         .id(OPEN_ACCESS_TYPE)
       );
 
@@ -167,7 +167,7 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Mint with open access type fails with blank schemeUri")
   void blankSchemeUri() {
     createRequest.getAccess()
-      .type(new AccessType()
+      .type(new AccessTypeWithSchemeUri()
         .id(OPEN_ACCESS_TYPE)
         .schemeUri("")
       );
@@ -191,7 +191,7 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Mint with open access type fails with missing type")
   void missingType() {
     createRequest.getAccess()
-      .type(new AccessType()
+      .type(new AccessTypeWithSchemeUri()
         .schemeUri(ACCESS_TYPE_SCHEME_URI)
       );
     try {
@@ -214,7 +214,7 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Mint with open access type fails with blank type")
   void blankType() {
     createRequest.getAccess()
-      .type(new AccessType()
+      .type(new AccessTypeWithSchemeUri()
         .id("")
         .schemeUri(ACCESS_TYPE_SCHEME_URI)
       );

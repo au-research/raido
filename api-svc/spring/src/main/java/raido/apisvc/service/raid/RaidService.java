@@ -96,7 +96,7 @@ public class RaidService {
     return new DenormalisedRaidData(
             getPrimaryTitle(metadata.getTitles()).getTitle(),
             metadata.getDates().getStartDate(),
-            metadata.getAccess().getType() != AccessType1.OPEN
+            metadata.getAccess().getType() != AccessType.OPEN
     );
   }
 
@@ -107,7 +107,7 @@ public class RaidService {
     return new DenormalisedRaidData(
       getPrimaryTitle(metadata.getTitles()).getTitle(),
       metadata.getDates().getStartDate(),
-      metadata.getAccess().getType() != AccessType1.OPEN
+      metadata.getAccess().getType() != AccessType.OPEN
     );
   }
 
@@ -117,7 +117,7 @@ public class RaidService {
     return new DenormalisedRaidData(
       getPrimaryTitle(metadata.getTitles()).getTitle(),
       metadata.getDates().getStartDate(),
-      metadata.getAccess().getType() != AccessType1.OPEN
+      metadata.getAccess().getType() != AccessType.OPEN
     );
   }
 
@@ -262,7 +262,7 @@ public class RaidService {
     String primaryTitle = getPrimaryTitles(metadata.getTitles()).
       get(0).getTitle();
     LocalDate startDate = metadata.getDates().getStartDate();
-    boolean confidential = metadata.getAccess().getType() != AccessType1.OPEN;
+    boolean confidential = metadata.getAccess().getType() != AccessType.OPEN;
 
     // migrated raids already have handles
     String identifier = metadata.getId().getIdentifier();

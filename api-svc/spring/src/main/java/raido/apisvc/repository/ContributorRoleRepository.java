@@ -1,5 +1,6 @@
 package raido.apisvc.repository;
 
+import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 import raido.db.jooq.api_svc.tables.records.ContributorRoleRecord;
@@ -9,12 +10,9 @@ import java.util.Optional;
 import static raido.db.jooq.api_svc.tables.ContributorRole.CONTRIBUTOR_ROLE;
 
 @Repository
+@RequiredArgsConstructor
 public class ContributorRoleRepository {
   private final DSLContext dslContext;
-
-  public ContributorRoleRepository(final DSLContext dslContext) {
-    this.dslContext = dslContext;
-  }
 
   public Optional<ContributorRoleRecord> findByUriAndSchemeId(final String uri, final int schemeId) {
     return dslContext.select(CONTRIBUTOR_ROLE.fields())

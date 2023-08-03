@@ -3,7 +3,7 @@ package raido.inttest.endpoint.raidv2.stable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import raido.idl.raidv2.model.Title;
-import raido.idl.raidv2.model.TitleType;
+import raido.idl.raidv2.model.TitleTypeWithSchemeUri;
 import raido.idl.raidv2.model.ValidationFailure;
 import raido.inttest.RaidApiValidationException;
 
@@ -37,9 +37,6 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
     }
   }
 
-
-
-
   @Test
   @DisplayName("Minting a RAiD with missing title fails")
   void missingTitle() {
@@ -64,7 +61,7 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with no primary title fails")
   void alternativeTitleOnly() {
-    createRequest.getTitles().get(0).setType(new TitleType()
+    createRequest.getTitles().get(0).setType(new TitleTypeWithSchemeUri()
       .id(TestConstants.ALTERNATIVE_TITLE_TYPE)
       .schemeUri(TestConstants.TITLE_TYPE_SCHEME_URI));
 
@@ -88,7 +85,7 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with missing schemeUri fails")
   void missingTitleScheme() {
-    createRequest.getTitles().get(0).setType(new TitleType()
+    createRequest.getTitles().get(0).setType(new TitleTypeWithSchemeUri()
       .id(TestConstants.PRIMARY_TITLE_TYPE)
     );
 
@@ -112,7 +109,7 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with invalid schemeUri fails")
   void invalidTitleScheme() {
-    createRequest.getTitles().get(0).setType(new TitleType()
+    createRequest.getTitles().get(0).setType(new TitleTypeWithSchemeUri()
       .id(TestConstants.PRIMARY_TITLE_TYPE)
       .schemeUri("https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v2"));
 
@@ -140,7 +137,7 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
 
     titles.add(new Title()
       .title("Test Title")
-      .type(new TitleType()
+      .type(new TitleTypeWithSchemeUri()
         .schemeUri(TestConstants.TITLE_TYPE_SCHEME_URI)
       )
       .startDate(LocalDate.now())
@@ -171,7 +168,7 @@ public class TitleIntegrationTest extends AbstractStableIntegrationTest {
     final var titles = new ArrayList<>(createRequest.getTitles());
 
     titles.add(new Title()
-      .type(new TitleType()
+      .type(new TitleTypeWithSchemeUri()
         .id("https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/invalid.json")
         .schemeUri(TestConstants.TITLE_TYPE_SCHEME_URI)
       )

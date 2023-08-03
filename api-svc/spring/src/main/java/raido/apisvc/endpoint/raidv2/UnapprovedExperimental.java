@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import raido.apisvc.service.auth.admin.AuthzRequestService;
-import raido.apisvc.spring.security.raidv2.ApiToken;
 import raido.apisvc.spring.security.raidv2.UnapprovedUserApiToken;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
@@ -16,8 +15,12 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 import static raido.apisvc.util.ExceptionUtil.authFailed;
 import static raido.apisvc.util.Log.to;
-import static raido.db.jooq.api_svc.enums.UserRole.OPERATOR;
 
+/**
+ "Unapproved" in that this class is about dealing with users who have been 
+ authenticated by an IdProvider (google, etc.) but have yet been approved to
+ use the system for a particular service-point.
+ */
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
 @Transactional

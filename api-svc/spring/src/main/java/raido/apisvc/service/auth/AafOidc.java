@@ -75,6 +75,7 @@ public class AafOidc {
     ResponseEntity<OAuthTokenResponse> response = rest.postForEntity(
       aaf.tokenUrl, request, OAuthTokenResponse.class);
 
+    // OAuthTokenResponse has a custom toString() to mask sensitive values 
     log.with("response", response).
       with("response.body", response.getBody()).
       debug("aaf response");

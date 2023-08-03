@@ -20,11 +20,11 @@ redactErrorDetails=false
 # connection details for your local DB
 DatasourceConfig.url=jdbc:postgresql://localhost:7432/raido
 DatasourceConfig.username=api_user
-DatasourceConfig.password=<dbpassword>
+DatasourceConfig.password=<same value as you put in apiSvcRolePassword>
 
 # For legacy V1 endpoints
 # just set it to any value
-# Secret can be found in the shared keepass entry `/raid-v1/JWT secret`
+# Secret can be found in BitWarden under /legacy-raid-v1/Raid legacy JWT secret
 RaidV1Auth.jwtSecret=<JWT secret>
 
 # used for signing and verifying authz tokens
@@ -34,17 +34,19 @@ RaidV2Auth.jwtSecrets=<authz secrets>
 
 # the secret for your AAF OIDC client
 # If you want to use your own client: https://support.aaf.edu.au/support/solutions/articles/19000099312-how-to-connect-your-services-to-the-aaf-
-# Secret can be found in the shared keepass entry `/id-services/AAF OIDC Relying Party`
+# Secret can be found in BitWarden under /oauth-services/AAF DEMO OAuth client
 AafOidc.clientSecret=<AAF client secret>
 
 # the secret for your Google OIDC client
 # If you want to use your own client: https://developers.google.com/identity/openid-connect/openid-connect
-# Secret can be found in the shared keepass entry `/id-services/Google OAuth Client`
+# Secret can be found in the google credentials console 
+# Google account details are in BitWarden under: 
+# /Shared RAiD & Services Credentials/RAID Services Google Account
 GoogleOidc.clientSecret=<Google client secret>
 
 # The secret for the APIDS service (for minting handles).
 # If you want to use your own account: https://ardc.edu.au/services/ardc-identifier-services/ardc-handle-service
-# Secret can be found in the shared keepass entry 
+# Secret can be found in BitWarden under:
 # `/ardc-services/APIDS demo API secret`
 Apids.secret=<APIDS API secret>
 
@@ -76,7 +78,7 @@ opposed to integration or functional test) are loaded from
   -Duser.language= -Duser.country= -Duser.variant= \
   -Dlogback.configurationFile=docker-logback.xml \
   -jar raido-api-svc.jar`
-  * this was taken from [api-svc-start.sh](../docker/src/main/docker/script/api-svc-start.sh)
+  * this was taken from [api-svc-start.sh](../docker/ecs/src/main/docker/script/api-svc-start.sh)
 
 ## Running integration tests
 

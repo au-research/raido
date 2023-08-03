@@ -6,7 +6,7 @@
 See [db-transaction-guidleline.md](./db-transaction-guidleline.md)
 
 
-## Avoid usage of joow `DSL.asterisk()`
+## Avoid usage of jooq `DSL.asterisk()`
 
 See [jooq-guideline.md](./jooq-guideline.md)
 

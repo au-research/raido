@@ -15,7 +15,7 @@
   * information about security relating to the default UI client provided
   by the RAiD team, intended for customers in the Oceania region 
 
-# [api-integration](./api-integration)
+# [api-integration](../api-integration)
   * documentation intended for teams that are implementing integration with
   Raido via the API
 

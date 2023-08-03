@@ -64,7 +64,7 @@ same password you gave to create the database:
 
 `~/.config/raido/api-svc-db.gradle`:
 ```
-apiSvcPgPassword="the password you specified"
+apiSvcPgPassword="the password you specified in the `docker run` command"
 apiSvcExtraLocations=["classpath:db/env/api_user","classpath:db/env/demo"]
 apiSvcRolePassword="password you want for api_user"
 ```

@@ -11,6 +11,7 @@ import raido.apisvc.repository.DescriptionTypeSchemeRepository;
 import raido.db.jooq.api_svc.tables.records.DescriptionTypeRecord;
 import raido.db.jooq.api_svc.tables.records.DescriptionTypeSchemeRecord;
 import raido.idl.raidv2.model.DescriptionType;
+import raido.idl.raidv2.model.DescriptionTypeWithSchemeUri;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.Optional;
@@ -45,7 +46,7 @@ class StableDescriptionTypeValidationServiceTest {
   @Test
   @DisplayName("Validation passes with valid description type")
   void validDescriptionType() {
-    final var descriptionType = new DescriptionType()
+    final var descriptionType = new DescriptionTypeWithSchemeUri()
       .id(PRIMARY_DESCRIPTION_TYPE)
       .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
 
@@ -65,7 +66,7 @@ class StableDescriptionTypeValidationServiceTest {
   @Test
   @DisplayName("Validation fails when id is null")
   void nullId() {
-    final var descriptionType = new DescriptionType()
+    final var descriptionType = new DescriptionTypeWithSchemeUri()
       .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
 
     when(descriptionTypeSchemeRepository.findByUri(DESCRIPTION_TYPE_SCHEME_URI))
@@ -85,7 +86,7 @@ class StableDescriptionTypeValidationServiceTest {
   @Test
   @DisplayName("Validation fails when id is empty string")
   void emptyId() {
-    final var descriptionType = new DescriptionType()
+    final var descriptionType = new DescriptionTypeWithSchemeUri()
       .id("")
       .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
 
@@ -106,7 +107,7 @@ class StableDescriptionTypeValidationServiceTest {
   @Test
   @DisplayName("Validation fails when schemeUri is null")
   void nullSchemeUri() {
-    final var descriptionType = new DescriptionType()
+    final var descriptionType = new DescriptionTypeWithSchemeUri()
       .id(PRIMARY_DESCRIPTION_TYPE);
 
     final var failures = validationService.validate(descriptionType, INDEX);
@@ -123,7 +124,7 @@ class StableDescriptionTypeValidationServiceTest {
   @Test
   @DisplayName("Validation fails when schemeUri is empty")
   void emptySchemeUri() {
-    final var descriptionType = new DescriptionType()
+    final var descriptionType = new DescriptionTypeWithSchemeUri()
       .id(PRIMARY_DESCRIPTION_TYPE)
       .schemeUri("");
 
@@ -141,7 +142,7 @@ class StableDescriptionTypeValidationServiceTest {
   @Test
   @DisplayName("Validation fails when schemeUri is invalid")
   void invalidSchemeUri() {
-    final var descriptionType = new DescriptionType()
+    final var descriptionType = new DescriptionTypeWithSchemeUri()
       .id(PRIMARY_DESCRIPTION_TYPE)
       .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
 
@@ -179,7 +180,7 @@ class StableDescriptionTypeValidationServiceTest {
   @Test
   @DisplayName("Validation fails when id not found in scheme")
   void invalidTypeForScheme() {
-    final var descriptionType = new DescriptionType()
+    final var descriptionType = new DescriptionTypeWithSchemeUri()
       .id(PRIMARY_DESCRIPTION_TYPE)
       .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
 

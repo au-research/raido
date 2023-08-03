@@ -176,7 +176,7 @@ public class RaidoSchemaV1ValidationService {
       }
       else {
         if(
-          access.getType() == AccessType1.CLOSED &&
+          access.getType() == AccessType.CLOSED &&
             access.getAccessStatement() == null
         ){
           failures.add(ValidationMessage.ACCESS_STATEMENT_NOT_SET);

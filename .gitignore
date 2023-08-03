@@ -1,13 +1,18 @@
+# committing IDEA config files is awkward, messy and sometimes leads to people 
+# accidetnally committing sensitive data to the repo (secrets, API keys, etc.)
 .idea
 
+# temp directory that Gradle dumps in the repo root
 .gradle
 
 # gradle build artifacts
 build/
 
-# input for the import of legacy raids from DDB to v1 schema
-# used to dump it in the `build` dir, but then I ran `clean` by accident 😭 
+# Default location for us to put files for input/output purposes.  
+# Avoids polluting the root of the repo, but not under the /build dir so
+# that it doesn't get deleted when people run the clean task. 
 /s3/
 
-# output from checking import files
+# output from checking legacy import files (which I should've written out to 
+# /s3/, but the code should go away soon, since import was a one time thing).
 *.error.json

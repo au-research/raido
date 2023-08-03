@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import raido.apisvc.repository.TitleTypeRepository;
 import raido.apisvc.repository.TitleTypeSchemeRepository;
 import raido.idl.raidv2.model.TitleType;
+import raido.idl.raidv2.model.TitleTypeWithSchemeUri;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class StableTitleTypeValidationService {
     this.titleTypeRepository = titleTypeRepository;
   }
 
-  public List<ValidationFailure> validate(final TitleType titleType, final int index) {
+  public List<ValidationFailure> validate(final TitleTypeWithSchemeUri titleType, final int index) {
     final var failures = new ArrayList<ValidationFailure>();
 
     if (titleType == null) {

@@ -35,8 +35,10 @@ LocationSearchState<T>{
  against the search params (i.e. tracking changes to filter logic, where the 
  browser stays on the "current page" and we don't do nav transitions.
  The NavigationProvider doesn't understand this component (or search params at 
- all), so you can't really use search params for declaring parmeters that work 
+ all), so you can't really use search params for declaring parameters that work 
  with page transitions. 
+ 
+ Note that at the moment, I believe this is unused.
  */
 export function LocationSearchProvider({children}: {
   children: React.ReactNode

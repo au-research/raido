@@ -9,6 +9,7 @@ import org.jooq.Record2;
 import org.jooq.Record4;
 import org.jooq.Row4;
 import org.jooq.impl.UpdatableRecordImpl;
+
 import raido.db.jooq.api_svc.tables.RelatedObjectType;
 
 

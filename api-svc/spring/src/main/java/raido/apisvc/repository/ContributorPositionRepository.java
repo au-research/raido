@@ -1,5 +1,6 @@
 package raido.apisvc.repository;
 
+import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 import raido.db.jooq.api_svc.tables.records.ContributorPositionRecord;
@@ -9,12 +10,9 @@ import java.util.Optional;
 import static raido.db.jooq.api_svc.tables.ContributorPosition.CONTRIBUTOR_POSITION;
 
 @Repository
+@RequiredArgsConstructor
 public class ContributorPositionRepository {
   private final DSLContext dslContext;
-
-  public ContributorPositionRepository(final DSLContext dslContext) {
-    this.dslContext = dslContext;
-  }
 
   public Optional<ContributorPositionRecord> findByUriAndSchemeId(final String uri, final int schemeId) {
     return dslContext.select(CONTRIBUTOR_POSITION.fields())

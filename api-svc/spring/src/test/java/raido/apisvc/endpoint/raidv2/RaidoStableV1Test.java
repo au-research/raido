@@ -666,7 +666,7 @@ class RaidoStableV1Test {
 
     var raid = objectMapper.readValue(json, RaidDto.class);
 
-    final var titleType = new TitleType()
+    final var titleType = new TitleTypeWithSchemeUri()
       .id(PRIMARY_TITLE_TYPE)
       .schemeUri(TITLE_TYPE_SCHEME_URI);
 

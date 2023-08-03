@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import raido.apisvc.repository.ContributorRoleRepository;
 import raido.apisvc.repository.ContributorRoleSchemeRepository;
 import raido.idl.raidv2.model.ContributorRole;
+import raido.idl.raidv2.model.ContributorRoleWithSchemeUri;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class StableContributorRoleValidationService {
   }
 
   public List<ValidationFailure> validate(
-    final ContributorRole role, final int contributorIndex, final int roleIndex) {
+      final ContributorRoleWithSchemeUri role, final int contributorIndex, final int roleIndex) {
     final var failures = new ArrayList<ValidationFailure>();
 
     if (isBlank(role.getId())) {

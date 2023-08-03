@@ -6,15 +6,15 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static java.util.List.of;
-import static raido.idl.raidv2.model.AccessType1.OPEN;
+import static raido.idl.raidv2.model.AccessType.OPEN;
 import static raido.idl.raidv2.model.ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_;
 import static raido.idl.raidv2.model.ContributorPositionRaidMetadataSchemaType.LEADER;
 import static raido.idl.raidv2.model.ContributorPositionSchemeType.HTTPS_RAID_ORG_;
 import static raido.idl.raidv2.model.ContributorRoleSchemeType.HTTPS_CREDIT_NISO_ORG_;
-import static raido.idl.raidv2.model.DescriptionType1.PRIMARY_DESCRIPTION;
+import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
 import static raido.idl.raidv2.model.OrganisationRoleType.LEAD_RESEARCH_ORGANISATION;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
-import static raido.idl.raidv2.model.TitleType1.PRIMARY_TITLE;
+import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 import static raido.inttest.endpoint.raidv2.RaidoSchemaV1Test.createDummyLeaderContributor;
 
 public class MinimalRaidTestData {
@@ -52,7 +52,7 @@ public class MinimalRaidTestData {
 
   public static TitleBlock title(
     String title,
-    TitleType1 type,
+    TitleType type,
     LocalDate startDate
   ){
     return new TitleBlock().
@@ -72,7 +72,7 @@ public class MinimalRaidTestData {
   
   public static DescriptionBlock description(
     String desc, 
-    DescriptionType1 type
+    DescriptionType type
   ){
     return new DescriptionBlock().
       type(type).
@@ -92,12 +92,12 @@ public class MinimalRaidTestData {
     return new ContributorBlock().
       id(orcid).
       identifierSchemeUri(HTTPS_ORCID_ORG_).
-      positions(List.of(new ContributorPosition1().
+      positions(List.of(new ContributorPosition().
         positionSchemaUri(HTTPS_RAID_ORG_).
         position(position).
         startDate(startDate))).
       roles(List.of(
-        new ContributorRole1().
+        new ContributorRole().
           roleSchemeUri(HTTPS_CREDIT_NISO_ORG_).
           role(role)));
   }
@@ -109,12 +109,12 @@ public class MinimalRaidTestData {
     return of(new ContributorBlock().
       id(orcid).
       identifierSchemeUri(HTTPS_ORCID_ORG_).
-      positions(List.of(new ContributorPosition1().
+      positions(List.of(new ContributorPosition().
         positionSchemaUri(HTTPS_RAID_ORG_).
         position(LEADER).
         startDate(today))).
       roles(List.of(
-        new ContributorRole1().
+        new ContributorRole().
           roleSchemeUri(HTTPS_CREDIT_NISO_ORG_).
           role(ContributorRoleCreditNisoOrgType.SUPERVISION))));
   }
@@ -128,7 +128,7 @@ public class MinimalRaidTestData {
       id(ror).
       identifierSchemeUri(OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_).
       roles(List.of(
-        new OrganisationRole1().
+        new OrganisationRole().
           roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_).
           role(role)
           .startDate(today)));

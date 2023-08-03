@@ -7,11 +7,11 @@ So if you want to test stuff in Github without pushing to `main`;
 work in your own branch, create a PR and it will run the build and tests.
 Note that changes consisting solely of `*.md` files are intended to be ignored.
 
-* [api-svc-ci.yml](.github/workflows/api-svc-ci.yml)
+* [api-svc-ci.yml](/.github/workflows/api-svc-ci.yml)
   * builds and runs unit and integration tests
-* [app-client-ci.yml](.github/workflows/app-client-ci.yml)
+* [app-client-ci.yml](/.github/workflows/app-client-ci.yml)
   * does a production build of the app-client
-* [codeql-analysis.yml](.github/workflows/codeql-analysis.yml)
+* [codeql-analysis.yml](/.github/workflows/codeql-analysis.yml)
   * runs an api-svc build in the context of Github
     [codeql](https://github.com/github/codeql-action)
 

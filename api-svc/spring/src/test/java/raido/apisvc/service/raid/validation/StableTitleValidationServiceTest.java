@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import raido.idl.raidv2.model.Title;
 import raido.idl.raidv2.model.TitleType;
+import raido.idl.raidv2.model.TitleTypeWithSchemeUri;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.List;
@@ -29,7 +30,7 @@ class StableTitleValidationServiceTest {
   @Test
   @DisplayName("Validation passes")
   void validationPasses() {
-    final var type = new TitleType()
+    final var type = new TitleTypeWithSchemeUri()
       .id(PRIMARY_TITLE_TYPE_ID)
       .schemeUri(TITLE_TYPE_SCHEME_URI);
 
@@ -48,7 +49,7 @@ class StableTitleValidationServiceTest {
   @Test
   @DisplayName("Validation fails if primary title is missing")
   void missingPrimaryTitle() {
-    final var type = new TitleType()
+    final var type = new TitleTypeWithSchemeUri()
       .id(ALTERNATIVE_TITLE_TYPE)
       .schemeUri(TITLE_TYPE_SCHEME_URI);
 
@@ -71,7 +72,7 @@ class StableTitleValidationServiceTest {
   @Test
   @DisplayName("Validation fails if more than one primary title")
   void multiplePrimaryTitles() {
-    final var type = new TitleType()
+    final var type = new TitleTypeWithSchemeUri()
       .id(PRIMARY_TITLE_TYPE_ID)
       .schemeUri(TITLE_TYPE_SCHEME_URI);
 
@@ -109,7 +110,7 @@ class StableTitleValidationServiceTest {
   @DisplayName("Validation fails if title is null")
   void nullTitle() {
     final var title = new Title()
-      .type(new TitleType()
+      .type(new TitleTypeWithSchemeUri()
         .id(PRIMARY_TITLE_TYPE_ID)
         .schemeUri(TITLE_TYPE_SCHEME_URI))
       .startDate(START_DATE)
@@ -131,7 +132,7 @@ class StableTitleValidationServiceTest {
   @DisplayName("Validation fails if title is blank")
   void blankTitle() {
     final var title = new Title()
-      .type(new TitleType()
+      .type(new TitleTypeWithSchemeUri()
         .id(PRIMARY_TITLE_TYPE_ID)
         .schemeUri(TITLE_TYPE_SCHEME_URI))
       .startDate(START_DATE)
@@ -153,7 +154,7 @@ class StableTitleValidationServiceTest {
   @DisplayName("Validation fails if start date is missing")
   void missingStartDate() {
     final var title = new Title()
-      .type(new TitleType()
+      .type(new TitleTypeWithSchemeUri()
         .id(PRIMARY_TITLE_TYPE_ID)
         .schemeUri(TITLE_TYPE_SCHEME_URI))
       .title(TITLE)

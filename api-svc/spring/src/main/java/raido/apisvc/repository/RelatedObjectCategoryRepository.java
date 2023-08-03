@@ -1,5 +1,6 @@
 package raido.apisvc.repository;
 
+import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 import raido.db.jooq.api_svc.tables.records.RelatedObjectCategoryRecord;
@@ -9,12 +10,9 @@ import java.util.Optional;
 import static raido.db.jooq.api_svc.tables.RelatedObjectCategory.RELATED_OBJECT_CATEGORY;
 
 @Repository
+@RequiredArgsConstructor
 public class RelatedObjectCategoryRepository {
   private final DSLContext dslContext;
-
-  public RelatedObjectCategoryRepository(final DSLContext dslContext) {
-    this.dslContext = dslContext;
-  }
 
   public Optional<RelatedObjectCategoryRecord> findByUriAndSchemeId(final String uri, final int schemeId) {
     return dslContext.select(RELATED_OBJECT_CATEGORY.fields())

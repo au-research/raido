@@ -3,7 +3,7 @@ package raido.apisvc.service.raid.validation;
 import org.springframework.stereotype.Component;
 import raido.apisvc.repository.AccessTypeRepository;
 import raido.apisvc.repository.AccessTypeSchemeRepository;
-import raido.idl.raidv2.model.AccessType;
+import raido.idl.raidv2.model.AccessTypeWithSchemeUri;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class StableAccessTypeValidationService {
     this.accessTypeRepository = accessTypeRepository;
   }
 
-  public List<ValidationFailure> validate(final AccessType accessType) {
+  public List<ValidationFailure> validate(final AccessTypeWithSchemeUri accessType) {
     final var failures = new ArrayList<ValidationFailure>();
 
     if (accessType == null) {

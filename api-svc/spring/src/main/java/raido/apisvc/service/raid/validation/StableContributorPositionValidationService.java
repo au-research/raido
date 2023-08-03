@@ -3,7 +3,7 @@ package raido.apisvc.service.raid.validation;
 import org.springframework.stereotype.Component;
 import raido.apisvc.repository.ContributorPositionRepository;
 import raido.apisvc.repository.ContributorPositionSchemeRepository;
-import raido.idl.raidv2.model.ContributorPosition;
+import raido.idl.raidv2.model.ContributorPositionWithSchemeUri;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class StableContributorPositionValidationService {
   }
 
   public List<ValidationFailure> validate(
-    final ContributorPosition position, final int contributorIndex, final int positionIndex) {
+      final ContributorPositionWithSchemeUri position, final int contributorIndex, final int positionIndex) {
     final var failures = new ArrayList<ValidationFailure>();
 
     if (position.getStartDate() == null) {

@@ -84,8 +84,14 @@ type ProviderState =
 
   // terminal states
   {current: "not-signed-in"} |
-  {current: "signed-in", authSession: AuthorizedSession} |
-  {current: "error", error: ErrorInfo};
+  {current: "error", error: ErrorInfo} |
+  
+  /* This is the state represents "user is fully authenticated and authorised",
+  and results in the rest of the app (the children components of the 
+  AuthProvider) being rendered.
+  All the other states are edge-case/error-condition states that this component
+  will render a UI for. */
+  {current: "signed-in", authSession: AuthorizedSession}; 
 
 /**
  * Handles both Authentication and Authorization.
@@ -231,6 +237,7 @@ export function AuthProvider({unauthenticatedPaths = [], children}: {
   if( state.current === "not-authorized" ){
     return <NotAuthorizedContent accessToken={state.accessToken}/>
   }
+  
   // avoid unnecessary re-renders based on creating a new context value
   if( stateCache.current.signOut !== onSignOutClicked ||
     stateCache.current.session !== state.authSession 

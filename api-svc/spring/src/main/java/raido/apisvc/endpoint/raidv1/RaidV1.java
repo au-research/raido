@@ -47,9 +47,9 @@ import static raido.apisvc.util.RestUtil.urlDecode;
 import static raido.apisvc.util.StringUtil.hasValue;
 import static raido.apisvc.util.StringUtil.isBlank;
 import static raido.db.jooq.api_svc.tables.Raid.RAID;
-import static raido.idl.raidv2.model.AccessType1.CLOSED;
-import static raido.idl.raidv2.model.DescriptionType1.PRIMARY_DESCRIPTION;
-import static raido.idl.raidv2.model.TitleType1.PRIMARY_TITLE;
+import static raido.idl.raidv2.model.AccessType.CLOSED;
+import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
+import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 
 /* without the proxy mode setting, Spring doesn't see the RequestMappings from 
 the interface and so won't define our RaidV1 endpoints */

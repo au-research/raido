@@ -1,9 +1,11 @@
 package raido.apisvc.service.raid.validation;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import raido.apisvc.repository.DescriptionTypeRepository;
 import raido.apisvc.repository.DescriptionTypeSchemeRepository;
 import raido.idl.raidv2.model.DescriptionType;
+import raido.idl.raidv2.model.DescriptionTypeWithSchemeUri;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.ArrayList;
@@ -13,16 +15,12 @@ import static raido.apisvc.endpoint.message.ValidationMessage.*;
 import static raido.apisvc.util.StringUtil.isBlank;
 
 @Component
+@RequiredArgsConstructor
 public class StableDescriptionTypeValidationService {
   private final DescriptionTypeSchemeRepository descriptionTypeSchemeRepository;
   private final DescriptionTypeRepository descriptionTypeRepository;
 
-  public StableDescriptionTypeValidationService(final DescriptionTypeSchemeRepository descriptionTypeSchemeRepository, final DescriptionTypeRepository descriptionTypeRepository) {
-    this.descriptionTypeSchemeRepository = descriptionTypeSchemeRepository;
-    this.descriptionTypeRepository = descriptionTypeRepository;
-  }
-
-  public List<ValidationFailure> validate(final DescriptionType descriptionType, final int index) {
+  public List<ValidationFailure> validate(final DescriptionTypeWithSchemeUri descriptionType, final int index) {
     final var failures = new ArrayList<ValidationFailure>();
 
     if (descriptionType == null) {

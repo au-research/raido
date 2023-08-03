@@ -11,6 +11,7 @@ import raido.apisvc.repository.TitleTypeSchemeRepository;
 import raido.db.jooq.api_svc.tables.records.TitleTypeRecord;
 import raido.db.jooq.api_svc.tables.records.TitleTypeSchemeRecord;
 import raido.idl.raidv2.model.TitleType;
+import raido.idl.raidv2.model.TitleTypeWithSchemeUri;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.Optional;
@@ -45,7 +46,7 @@ class StableTitleTypeValidationServiceTest {
   @Test
   @DisplayName("Validation passes with valid title type")
   void validTitleType() {
-    final var titleType = new TitleType()
+    final var titleType = new TitleTypeWithSchemeUri()
       .id(PRIMARY_TITLE_TYPE_ID)
       .schemeUri(TITLE_TYPE_SCHEME_URI);
 
@@ -65,7 +66,7 @@ class StableTitleTypeValidationServiceTest {
   @Test
   @DisplayName("Validation fails when id is null")
   void nullId() {
-    final var titleType = new TitleType()
+    final var titleType = new TitleTypeWithSchemeUri()
       .schemeUri(TITLE_TYPE_SCHEME_URI);
 
     when(titleTypeSchemeRepository.findByUri(TITLE_TYPE_SCHEME_URI))
@@ -85,7 +86,7 @@ class StableTitleTypeValidationServiceTest {
   @Test
   @DisplayName("Validation fails when id is empty string")
   void emptyId() {
-    final var titleType = new TitleType()
+    final var titleType = new TitleTypeWithSchemeUri()
       .id("")
       .schemeUri(TITLE_TYPE_SCHEME_URI);
 
@@ -106,7 +107,7 @@ class StableTitleTypeValidationServiceTest {
   @Test
   @DisplayName("Validation fails when schemeUri is null")
   void nullSchemeUri() {
-    final var titleType = new TitleType()
+    final var titleType = new TitleTypeWithSchemeUri()
       .id(PRIMARY_TITLE_TYPE_ID);
 
     final var failures = validationService.validate(titleType, INDEX);
@@ -123,7 +124,7 @@ class StableTitleTypeValidationServiceTest {
   @Test
   @DisplayName("Validation fails when schemeUri is empty")
   void emptySchemeUri() {
-    final var titleType = new TitleType()
+    final var titleType = new TitleTypeWithSchemeUri()
       .id(PRIMARY_TITLE_TYPE_ID)
       .schemeUri("");
 
@@ -141,7 +142,7 @@ class StableTitleTypeValidationServiceTest {
   @Test
   @DisplayName("Validation fails when schemeUri is invalid")
   void invalidSchemeUri() {
-    final var titleType = new TitleType()
+    final var titleType = new TitleTypeWithSchemeUri()
       .id(PRIMARY_TITLE_TYPE_ID)
       .schemeUri(TITLE_TYPE_SCHEME_URI);
 
@@ -179,7 +180,7 @@ class StableTitleTypeValidationServiceTest {
   @Test
   @DisplayName("Validation fails when id not found in scheme")
   void invalidTypeForScheme() {
-    final var titleType = new TitleType()
+    final var titleType = new TitleTypeWithSchemeUri()
       .id(PRIMARY_TITLE_TYPE_ID)
       .schemeUri(TITLE_TYPE_SCHEME_URI);
 

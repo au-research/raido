@@ -13,7 +13,6 @@ import raido.apisvc.service.raid.RaidService;
 import raido.apisvc.spring.StartupListener;
 import raido.apisvc.spring.bean.AppInfoBean;
 import raido.apisvc.util.Log;
-import raido.db.jooq.api_svc.enums.Metaschema;
 import raido.idl.raidv2.api.PublicExperimentalApi;
 import raido.idl.raidv2.model.PublicReadRaidResponseV3;
 import raido.idl.raidv2.model.PublicServicePoint;
@@ -28,10 +27,8 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 import static raido.apisvc.spring.config.RaidWebSecurityConfig.RAID_V2_API;
 import static raido.apisvc.spring.security.ApiSafeException.apiSafe;
 import static raido.apisvc.util.ExceptionUtil.iae;
-import static raido.apisvc.util.ExceptionUtil.ise;
 import static raido.apisvc.util.Log.to;
 import static raido.apisvc.util.RestUtil.urlDecode;
-import static raido.db.jooq.api_svc.enums.Metaschema.*;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 
 @Scope(proxyMode = TARGET_CLASS)
@@ -92,23 +89,7 @@ public class PublicExperimental implements PublicExperimentalApi {
   @Override
   public PublicReadRaidResponseV3 publicReadRaidV3(String handle) {
     var data = raidSvc.readRaidV2Data(handle);
-    Metaschema schema = data.raid().getMetadataSchema();
-    
-    if( schema == legacy_metadata_schema_v1 ){
-      return metaSvc.mapLegacySchemaToPublic(data);
-    }
-    
-    if( schema == raido_metadata_schema_v1 ){
-      return metaSvc.mapRaidoV1SchemaToPublic(data);
-    }
-
-    if( schema == raido_metadata_schema_v2 ){
-      return metaSvc.mapRaidoV2SchemaToPublic(data);
-    }
-
-    var ex = ise("unknown raid schema");
-    log.with("schema", schema).with("handle", handle).error(ex.getMessage());
-    throw ex;
+    return metaSvc.mapPublicReadResponse(data);
   }
 
   /**

@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import raido.apisvc.service.ror.RorService;
 import raido.apisvc.util.Log;
 import raido.idl.raidv2.model.OrganisationBlock;
-import raido.idl.raidv2.model.OrganisationRole1;
+import raido.idl.raidv2.model.OrganisationRole;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.ArrayList;
@@ -85,7 +85,7 @@ public class OrganisationValidationService {
   }
 
   public List<ValidationFailure> validateRoleFields(
-    Supplier<String> fieldPrefix, List<OrganisationRole1> roles
+    Supplier<String> fieldPrefix, List<OrganisationRole> roles
   ) {
     var failures = new ArrayList<ValidationFailure>();
 

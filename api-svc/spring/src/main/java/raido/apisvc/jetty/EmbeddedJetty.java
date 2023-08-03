@@ -22,6 +22,10 @@ import raido.apisvc.util.Log;
 import static java.util.Collections.emptySet;
 import static raido.apisvc.util.Log.to;
 
+/*
+IMPROVE: enable compression at HTTP level, I think it's something like:
+contextHandler.insertHandler(new GzipHandler());
+ */
 public class EmbeddedJetty {
 
   public static final String DISPATCHER_NAME = "raido_dispatcher";

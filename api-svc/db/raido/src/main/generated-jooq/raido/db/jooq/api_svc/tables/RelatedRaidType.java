@@ -4,15 +4,17 @@
 package raido.db.jooq.api_svc.tables;
 
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function3;
+import org.jooq.Function4;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row3;
+import org.jooq.Row4;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -50,19 +52,24 @@ public class RelatedRaidType extends TableImpl<RelatedRaidTypeRecord> {
     }
 
     /**
+     * The column <code>api_svc.related_raid_type.scheme_id</code>.
+     */
+    public final TableField<RelatedRaidTypeRecord, Integer> SCHEME_ID = createField(DSL.name("scheme_id"), SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>api_svc.related_raid_type.uri</code>.
+     */
+    public final TableField<RelatedRaidTypeRecord, String> URI = createField(DSL.name("uri"), SQLDataType.VARCHAR.nullable(false), this, "");
+
+    /**
      * The column <code>api_svc.related_raid_type.name</code>.
      */
-    public final TableField<RelatedRaidTypeRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<RelatedRaidTypeRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR, this, "");
 
     /**
      * The column <code>api_svc.related_raid_type.description</code>.
      */
-    public final TableField<RelatedRaidTypeRecord, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.VARCHAR(255).nullable(false), this, "");
-
-    /**
-     * The column <code>api_svc.related_raid_type.url</code>.
-     */
-    public final TableField<RelatedRaidTypeRecord, String> URL = createField(DSL.name("url"), SQLDataType.VARCHAR(255).nullable(false), this, "");
+    public final TableField<RelatedRaidTypeRecord, String> DESCRIPTION = createField(DSL.name("description"), SQLDataType.VARCHAR, this, "");
 
     private RelatedRaidType(Name alias, Table<RelatedRaidTypeRecord> aliased) {
         this(alias, aliased, null);
@@ -104,7 +111,25 @@ public class RelatedRaidType extends TableImpl<RelatedRaidTypeRecord> {
 
     @Override
     public UniqueKey<RelatedRaidTypeRecord> getPrimaryKey() {
-        return Keys.RELATED_RAID_TYPE_PKEY;
+        return Keys.RELATED_RAID_TYPE_NEW_PKEY;
+    }
+
+    @Override
+    public List<ForeignKey<RelatedRaidTypeRecord, ?>> getReferences() {
+        return Arrays.asList(Keys.RELATED_RAID_TYPE__FK_RELATED_RAID_TYPE_SCHEME_ID);
+    }
+
+    private transient RelatedRaidTypeScheme _relatedRaidTypeScheme;
+
+    /**
+     * Get the implicit join path to the
+     * <code>api_svc.related_raid_type_scheme</code> table.
+     */
+    public RelatedRaidTypeScheme relatedRaidTypeScheme() {
+        if (_relatedRaidTypeScheme == null)
+            _relatedRaidTypeScheme = new RelatedRaidTypeScheme(this, Keys.RELATED_RAID_TYPE__FK_RELATED_RAID_TYPE_SCHEME_ID);
+
+        return _relatedRaidTypeScheme;
     }
 
     @Override
@@ -147,18 +172,18 @@ public class RelatedRaidType extends TableImpl<RelatedRaidTypeRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row3 type methods
+    // Row4 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row3<String, String, String> fieldsRow() {
-        return (Row3) super.fieldsRow();
+    public Row4<Integer, String, String, String> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function3<? super String, ? super String, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function4<? super Integer, ? super String, ? super String, ? super String, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -166,7 +191,7 @@ public class RelatedRaidType extends TableImpl<RelatedRaidTypeRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function3<? super String, ? super String, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function4<? super Integer, ? super String, ? super String, ? super String, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

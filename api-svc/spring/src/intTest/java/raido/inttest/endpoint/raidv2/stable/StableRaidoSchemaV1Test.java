@@ -13,48 +13,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 public class StableRaidoSchemaV1Test extends AbstractStableIntegrationTest {
-  private static final String LEAD_RESEARCH_ORGANISATION =
-    "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json";
-
   private static final String ORGANISATION_ROLE_SCHEME_URI =
     "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1";
 
   private static final String ORGANISATION_SCHEME_URI =
     "https://ror.org/";
 
-  private static final String ACCESS_TYPE_OPEN =
-    "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json";
-
-  private static final String ACCESS_TYPE_SCHEME_URI =
-    "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1";
-
-  private static final String PRIMARY_TITLE_TYPE =
-    "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
-
-  private static final String ALTERNATIVE_TITLE_TYPE =
-    "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json";
-
-  private static final String TITLE_TYPE_SCHEME_URI =
-    "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1";
-
-  private static final String PRIMARY_DESCRIPTION_TYPE =
-    "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json";
-
-  private static final String DESCRIPTION_TYPE_SCHEME_URI =
-    "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1";
-
   private static final String CONTRIBUTOR_SCHEME_URI = "https://orcid.org/";
 
   private static final String CONTRIBUTOR_POSITION_SCHEME_URI =
     "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1";
 
-  private static final String LEADER_POSITION =
-    "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json";
-
   private static final String CONTRIBUTOR_ROLE_SCHEME_URI = "https://credit.niso.org/";
-
-  private static final String SOFTWARE_ROLE =
-    "https://credit.niso.org/contributor-roles/software/";
 
   @Test
   @DisplayName("Mint a raid")
@@ -177,12 +147,12 @@ public class StableRaidoSchemaV1Test extends AbstractStableIntegrationTest {
     return new Contributor()
       .id(orcid)
       .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
-      .positions(List.of(new ContributorPosition()
+      .positions(List.of(new ContributorPositionWithSchemeUri()
         .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
         .id(position)
         .startDate(startDate)))
       .roles(List.of(
-        new ContributorRole()
+        new ContributorRoleWithSchemeUri()
           .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
           .id(role)));
   }
@@ -196,7 +166,7 @@ public class StableRaidoSchemaV1Test extends AbstractStableIntegrationTest {
       .id(ror)
       .identifierSchemeUri(ORGANISATION_SCHEME_URI).
       roles(List.of(
-        new OrganisationRole()
+        new OrganisationRoleWithSchemeUri()
           .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
           .id(role)
           .startDate(today)));

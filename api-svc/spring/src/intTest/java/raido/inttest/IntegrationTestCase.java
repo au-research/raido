@@ -5,8 +5,6 @@ import feign.Contract;
 import feign.Feign;
 import feign.Logger;
 import feign.Logger.Level;
-import feign.Response;
-import feign.codec.ErrorDecoder;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
@@ -31,7 +29,9 @@ import raido.inttest.config.IntTestProps;
 import raido.inttest.config.IntegrationTestConfig;
 import raido.inttest.service.auth.BootstrapAuthTokenService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static java.time.ZoneOffset.UTC;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -41,6 +41,7 @@ import static raido.apisvc.util.Log.to;
 import static raido.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
 import static raido.db.jooq.api_svc.enums.UserRole.OPERATOR;
 import static raido.inttest.config.IntegrationTestConfig.REST_TEMPLATE_VALUES_ONLY_ENCODING;
+import static raido.inttest.util.MinimalRaidTestData.REAL_TEST_ROR;
 
 @SpringJUnitConfig(
   name="SpringJUnitConfigContext",
@@ -96,7 +97,9 @@ public abstract class IntegrationTestCase {
   }
   
   public String getName(){
-    return testInfo.getDisplayName();
+    return testInfo.getDisplayName().
+      // the brackets aren't filename safe
+      replaceAll("[()]", "");
   }
   
   /**
@@ -257,4 +260,14 @@ public abstract class IntegrationTestCase {
     return basicRaidStableClient(operatorToken);
   }
 
+  public static OrganisationBlock createDummyOrganisation(LocalDate today) {
+    return new OrganisationBlock().
+      id(REAL_TEST_ROR).
+      identifierSchemeUri(OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_).
+      roles(List.of(
+        new OrganisationRole().
+          roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_).
+          role(OrganisationRoleType.LEAD_RESEARCH_ORGANISATION)
+          .startDate(today)));
+  }
 }

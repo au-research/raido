@@ -1,5 +1,6 @@
 package raido.apisvc.repository;
 
+import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -10,12 +11,10 @@ import java.util.Optional;
 import static raido.db.jooq.api_svc.tables.Subject.SUBJECT;
 
 @Repository
+@RequiredArgsConstructor
 public class SubjectRepository {
   private final DSLContext dslContext;
 
-  public SubjectRepository(final DSLContext dslContext, final TransactionTemplate transactionTemplate) {
-    this.dslContext = dslContext;
-  }
   public Optional<SubjectRecord> findById(final String subjectId) {
     return dslContext.select(SUBJECT.fields()).
       from(SUBJECT).

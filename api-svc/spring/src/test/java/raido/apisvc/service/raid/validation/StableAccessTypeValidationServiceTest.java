@@ -11,6 +11,7 @@ import raido.apisvc.repository.AccessTypeSchemeRepository;
 import raido.db.jooq.api_svc.tables.records.AccessTypeRecord;
 import raido.db.jooq.api_svc.tables.records.AccessTypeSchemeRecord;
 import raido.idl.raidv2.model.AccessType;
+import raido.idl.raidv2.model.AccessTypeWithSchemeUri;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.Optional;
@@ -44,7 +45,7 @@ class StableAccessTypeValidationServiceTest {
   @Test
   @DisplayName("Validation passes with valid access type")
   void validAccessType() {
-    final var accessType = new AccessType()
+    final var accessType = new AccessTypeWithSchemeUri()
       .id(OPEN_ACCESS_TYPE_ID)
       .schemeUri(ACCESS_TYPE_SCHEME_URI);
 
@@ -64,7 +65,7 @@ class StableAccessTypeValidationServiceTest {
   @Test
   @DisplayName("Validation fails when id is null")
   void nullId() {
-    final var accessType = new AccessType()
+    final var accessType = new AccessTypeWithSchemeUri()
       .schemeUri(ACCESS_TYPE_SCHEME_URI);
 
     when(accessTypeSchemeRepository.findByUri(ACCESS_TYPE_SCHEME_URI))
@@ -84,7 +85,7 @@ class StableAccessTypeValidationServiceTest {
   @Test
   @DisplayName("Validation fails when id is empty string")
   void emptyId() {
-    final var accessType = new AccessType()
+    final var accessType = new AccessTypeWithSchemeUri()
       .id("")
       .schemeUri(ACCESS_TYPE_SCHEME_URI);
 
@@ -105,7 +106,7 @@ class StableAccessTypeValidationServiceTest {
   @Test
   @DisplayName("Validation fails when schemeUri is null")
   void nullSchemeUri() {
-    final var accessType = new AccessType()
+    final var accessType = new AccessTypeWithSchemeUri()
       .id(OPEN_ACCESS_TYPE_ID);
 
     final var failures = validationService.validate(accessType);
@@ -122,7 +123,7 @@ class StableAccessTypeValidationServiceTest {
   @Test
   @DisplayName("Validation fails when schemeUri is empty")
   void emptySchemeUri() {
-    final var accessType = new AccessType()
+    final var accessType = new AccessTypeWithSchemeUri()
       .id(OPEN_ACCESS_TYPE_ID)
       .schemeUri("");
 
@@ -140,7 +141,7 @@ class StableAccessTypeValidationServiceTest {
   @Test
   @DisplayName("Validation fails when schemeUri is invalid")
   void invalidSchemeUri() {
-    final var accessType = new AccessType()
+    final var accessType = new AccessTypeWithSchemeUri()
       .id(OPEN_ACCESS_TYPE_ID)
       .schemeUri(ACCESS_TYPE_SCHEME_URI);
 
@@ -178,7 +179,7 @@ class StableAccessTypeValidationServiceTest {
   @Test
   @DisplayName("Validation fails when id not found in scheme")
   void invalidTypeForScheme() {
-    final var accessType = new AccessType()
+    final var accessType = new AccessTypeWithSchemeUri()
       .id(OPEN_ACCESS_TYPE_ID)
       .schemeUri(ACCESS_TYPE_SCHEME_URI);
 

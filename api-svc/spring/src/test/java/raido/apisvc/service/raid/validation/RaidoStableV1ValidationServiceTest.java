@@ -96,7 +96,7 @@ class RaidoStableV1ValidationServiceTest {
     final var raid = new CreateRaidV1Request().relatedRaids(relatedRaids);
 
     validationService.validateForCreate(raid);
-    verify(relatedRaidValidationService).validateRelatedRaids(relatedRaids);
+    verify(relatedRaidValidationService).validate(relatedRaids);
   }
 
   @Test
@@ -118,7 +118,7 @@ class RaidoStableV1ValidationServiceTest {
       .relatedRaids(relatedRaids);
 
     validationService.validateForUpdate(handle, raid);
-    verify(relatedRaidValidationService).validateRelatedRaids(relatedRaids);
+    verify(relatedRaidValidationService).validate(relatedRaids);
   }
 
   @Test

@@ -83,6 +83,8 @@ paths:
     $ref: "raido-metadata-schema.yaml#/paths/~1read-raid-v2"
   /v2/experimental/list-raid/v2:
     $ref: "raido-metadata-schema.yaml#/paths/~1list-raid-v2"
+  /v2/experimental/list-raid/v3:
+    $ref: "raido-metadata-schema.yaml#/paths/~1list-raid-v3"
   /v2/experimental/migrate-legacy-raid/v1:
     $ref: "raido-metadata-schema.yaml#/paths/~1migrate-legacy-raid"
   /v2/experimental/upgrade-legacy-to-raido-schema/v1:

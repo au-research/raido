@@ -6,10 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import raido.idl.raidv2.model.Contributor;
-import raido.idl.raidv2.model.ContributorPosition;
-import raido.idl.raidv2.model.ContributorRole;
-import raido.idl.raidv2.model.ValidationFailure;
+import raido.idl.raidv2.model.*;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -39,7 +36,7 @@ class StableContributorValidationServiceTest {
   @Test
   @DisplayName("Validation fails with missing positions")
   void missingPositions() {
-    final var role = new ContributorRole()
+    final var role = new ContributorRoleWithSchemeUri()
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
       .id(SUPERVISION_CONTRIBUTOR_ROLE);
 
@@ -65,11 +62,11 @@ class StableContributorValidationServiceTest {
   @Test
   @DisplayName("Validation fails with missing lead position")
   void missingLeadPositions() {
-    final var role = new ContributorRole()
+    final var role = new ContributorRoleWithSchemeUri()
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
       .id(SUPERVISION_CONTRIBUTOR_ROLE);
 
-    final var position = new ContributorPosition()
+    final var position = new ContributorPositionWithSchemeUri()
       .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
       .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/other-participant.json")
       .startDate(LocalDate.now());
@@ -131,11 +128,11 @@ class StableContributorValidationServiceTest {
   @Test
   @DisplayName("Validation passes with valid contributor")
   void validContributor() {
-    final var role = new ContributorRole()
+    final var role = new ContributorRoleWithSchemeUri()
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
       .id(SUPERVISION_CONTRIBUTOR_ROLE);
 
-    final var position = new ContributorPosition()
+    final var position = new ContributorPositionWithSchemeUri()
       .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
       .id(LEADER_CONTRIBUTOR_POSITION)
       .startDate(LocalDate.now());
@@ -157,11 +154,11 @@ class StableContributorValidationServiceTest {
   @Test
   @DisplayName("Validation passes with missing schemeUri")
   void missingSchemeUri() {
-    final var role = new ContributorRole()
+    final var role = new ContributorRoleWithSchemeUri()
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
       .id(SUPERVISION_CONTRIBUTOR_ROLE);
 
-    final var position = new ContributorPosition()
+    final var position = new ContributorPositionWithSchemeUri()
       .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
       .id(LEADER_CONTRIBUTOR_POSITION)
       .startDate(LocalDate.now());
@@ -188,11 +185,11 @@ class StableContributorValidationServiceTest {
   @Test
   @DisplayName("Validation passes with empty schemeUri")
   void emptySchemeUri() {
-    final var role = new ContributorRole()
+    final var role = new ContributorRoleWithSchemeUri()
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
       .id(SUPERVISION_CONTRIBUTOR_ROLE);
 
-    final var position = new ContributorPosition()
+    final var position = new ContributorPositionWithSchemeUri()
       .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
       .id(LEADER_CONTRIBUTOR_POSITION)
       .startDate(LocalDate.now());
@@ -220,11 +217,11 @@ class StableContributorValidationServiceTest {
   @Test
   @DisplayName("Failures validation services are added to return value")
   void roleValidationFailures() {
-    final var role = new ContributorRole()
+    final var role = new ContributorRoleWithSchemeUri()
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
       .id(SUPERVISION_CONTRIBUTOR_ROLE);
 
-    final var position = new ContributorPosition()
+    final var position = new ContributorPositionWithSchemeUri()
       .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
       .id(LEADER_CONTRIBUTOR_POSITION)
       .startDate(LocalDate.now());
@@ -267,11 +264,11 @@ class StableContributorValidationServiceTest {
   @Test
   @DisplayName("Validation fails with more than one lead position")
   void multipleLeadPositions() {
-    final var role = new ContributorRole()
+    final var role = new ContributorRoleWithSchemeUri()
       .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
       .id(SUPERVISION_CONTRIBUTOR_ROLE);
 
-    final var position = new ContributorPosition()
+    final var position = new ContributorPositionWithSchemeUri()
       .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
       .id(LEADER_CONTRIBUTOR_POSITION)
       .startDate(LocalDate.now());

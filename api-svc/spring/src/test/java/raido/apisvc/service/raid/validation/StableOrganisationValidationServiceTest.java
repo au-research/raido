@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import raido.idl.raidv2.model.Organisation;
 import raido.idl.raidv2.model.OrganisationRole;
+import raido.idl.raidv2.model.OrganisationRoleWithSchemeUri;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.time.LocalDate;
@@ -35,7 +36,7 @@ class StableOrganisationValidationServiceTest {
   @Test
   @DisplayName("Validation passes with valid organisation")
   void validOrganisation() {
-    final var role = new OrganisationRole()
+    final var role = new OrganisationRoleWithSchemeUri()
       .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
       .id(LEAD_RESEARCH_ORGANISATION_ROLE)
       .startDate(LocalDate.now().minusYears(1))
@@ -59,7 +60,7 @@ class StableOrganisationValidationServiceTest {
     final var organisation = new Organisation()
       .id(VALID_ROR)
       .roles(List.of(
-        new OrganisationRole()
+        new OrganisationRoleWithSchemeUri()
           .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
           .id(LEAD_RESEARCH_ORGANISATION_ROLE)
           .startDate(LocalDate.now().minusYears(1))
@@ -84,7 +85,7 @@ class StableOrganisationValidationServiceTest {
       .id(VALID_ROR)
       .identifierSchemeUri("")
       .roles(List.of(
-        new OrganisationRole()
+        new OrganisationRoleWithSchemeUri()
           .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
           .id(LEAD_RESEARCH_ORGANISATION_ROLE)
           .startDate(LocalDate.now().minusYears(1))
@@ -105,7 +106,7 @@ class StableOrganisationValidationServiceTest {
   @Test
   @DisplayName("ROR validation failures are returned")
   void rorValidationFailuresReturned() {
-    final var role = new OrganisationRole()
+    final var role = new OrganisationRoleWithSchemeUri()
       .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
       .id(LEAD_RESEARCH_ORGANISATION_ROLE)
       .startDate(LocalDate.now().minusYears(1))
@@ -136,7 +137,7 @@ class StableOrganisationValidationServiceTest {
   @Test
   @DisplayName("Role validation failures are returned")
   void roleValidationFailuresReturned() {
-    final var role = new OrganisationRole()
+    final var role = new OrganisationRoleWithSchemeUri()
       .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
       .id(LEAD_RESEARCH_ORGANISATION_ROLE)
       .startDate(LocalDate.now().minusYears(1))

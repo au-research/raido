@@ -109,14 +109,14 @@ public class AbstractStableIntegrationTest {
 
     return new CreateRaidV1Request()
       .titles(List.of(new Title()
-        .type(new TitleType()
+        .type(new TitleTypeWithSchemeUri()
           .id(PRIMARY_TITLE_TYPE)
           .schemeUri(TITLE_TYPE_SCHEME_URI))
         .title(initialTitle)
         .startDate(today)))
       .dates(new DatesBlock().startDate(today))
       .descriptions(List.of(new Description()
-        .type(new DescriptionType()
+        .type(new DescriptionTypeWithSchemeUri()
           .id(PRIMARY_DESCRIPTION_TYPE)
           .schemeUri(DESCRIPTION_TYPE_SCHEME_URI))
         .description("stuff about the int test raid")))
@@ -125,7 +125,7 @@ public class AbstractStableIntegrationTest {
       .organisations(List.of(organisation(
         REAL_TEST_ROR, LEAD_RESEARCH_ORGANISATION, today)))
       .access(new Access()
-        .type(new AccessType()
+        .type(new AccessTypeWithSchemeUri()
           .id(OPEN_ACCESS_TYPE)
           .schemeUri(ACCESS_TYPE_SCHEME_URI)
         )
@@ -159,12 +159,12 @@ public class AbstractStableIntegrationTest {
     return new Contributor()
       .id(orcid)
       .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
-      .positions(List.of(new ContributorPosition()
+      .positions(List.of(new ContributorPositionWithSchemeUri()
         .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
         .id(position)
         .startDate(startDate)))
       .roles(List.of(
-        new ContributorRole()
+        new ContributorRoleWithSchemeUri()
           .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
           .id(role)));
   }
@@ -178,7 +178,7 @@ public class AbstractStableIntegrationTest {
       .id(ror)
       .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI).
       roles(List.of(
-        new OrganisationRole()
+        new OrganisationRoleWithSchemeUri()
           .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
           .id(role)
           .startDate(today)));

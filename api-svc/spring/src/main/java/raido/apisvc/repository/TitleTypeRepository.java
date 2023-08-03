@@ -1,5 +1,6 @@
 package raido.apisvc.repository;
 
+import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 import raido.db.jooq.api_svc.tables.records.TitleTypeRecord;
@@ -9,12 +10,9 @@ import java.util.Optional;
 import static raido.db.jooq.api_svc.tables.TitleType.TITLE_TYPE;
 
 @Repository
+@RequiredArgsConstructor
 public class TitleTypeRepository {
   private final DSLContext dslContext;
-
-  public TitleTypeRepository(final DSLContext dslContext) {
-    this.dslContext = dslContext;
-  }
 
   public Optional<TitleTypeRecord> findByUriAndSchemeId(final String uri, final int schemeId) {
     return dslContext.select(TITLE_TYPE.fields())

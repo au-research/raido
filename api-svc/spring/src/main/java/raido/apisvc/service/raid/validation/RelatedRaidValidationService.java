@@ -76,7 +76,7 @@ public class RelatedRaidValidationService {
           .message("RelatedRaidType is invalid.")
         );
       } else {
-        if (relatedRaidTypeRepository.findByUrl(relatedRaidTypeUrl).isEmpty()) {
+        if (relatedRaidTypeRepository.findByUri(relatedRaidTypeUrl).isEmpty()) {
           failures.add(new ValidationFailure()
             .errorType("invalid")
             .fieldId(String.format("relatedRaids[%d].relatedRaidType", i))

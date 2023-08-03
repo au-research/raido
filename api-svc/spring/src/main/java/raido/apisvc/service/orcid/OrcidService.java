@@ -17,7 +17,7 @@ import static raido.apisvc.util.ObjectUtil.infoLogExecutionTime;
 
 public class OrcidService {
   public static final Pattern ORCID_REGEX =
-    compile("^https://orcid\\.org/[\\d]{4}-[\\d]{4}-[\\d]{4}-[\\d]{4}$");
+    compile("^https://orcid\\.org/[\\d]{4}-[\\d]{4}-[\\d]{4}-[\\d]{3}[\\d|X]{1}$");
   public static final String NOT_FOUND_MESSAGE = "The ORCID does not exist.";
 
   private static final Log log = to(OrcidService.class);

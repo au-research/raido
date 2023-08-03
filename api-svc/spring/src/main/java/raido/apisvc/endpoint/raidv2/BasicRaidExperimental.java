@@ -27,6 +27,7 @@ import static raido.apisvc.endpoint.message.ValidationMessage.METADATA_NOT_SET;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.getApiToken;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
 import static raido.apisvc.service.raid.MetadataService.mapDb2Api;
+import static raido.apisvc.service.raid.MetadataService.mapDb2ApiV2;
 import static raido.apisvc.service.raid.RaidoSchemaV1Util.mintFailed;
 import static raido.apisvc.service.raid.id.IdentifierParser.mapProblemsToValidationFailures;
 import static raido.apisvc.util.DateUtil.local2Offset;
@@ -148,6 +149,28 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
         startDate(r.get(RAID.START_DATE)).
         createDate(local2Offset(r.get(RAID.DATE_CREATED))).
         metadataSchema(mapDb2Api(r.get(RAID.METADATA_SCHEMA))) );
+  }
+
+  @Override
+  public List<RaidListItemV3> listRaidV3(RaidListRequestV2 request) {
+    var user = getApiToken();
+    guardOperatorOrAssociated(user, request.getServicePointId());
+
+    return db.select(RAID.HANDLE, RAID.PRIMARY_TITLE, RAID.START_DATE,
+                    RAID.CONFIDENTIAL, RAID.METADATA_SCHEMA, RAID.DATE_CREATED).
+            from(RAID).
+            where(
+                    RAID.SERVICE_POINT_ID.eq(request.getServicePointId()).
+                            and(createV2SearchCondition(request))
+            ).
+            orderBy(RAID.DATE_CREATED.desc()).
+            limit(MAX_EXPERIMENTAL_RECORDS).
+            fetch(r-> new RaidListItemV3().
+                    handle(r.get(RAID.HANDLE)).
+                    primaryTitle(r.get(RAID.PRIMARY_TITLE)).
+                    startDate(r.get(RAID.START_DATE)).
+                    createDate(local2Offset(r.get(RAID.DATE_CREATED))).
+                    metadataSchema(mapDb2ApiV2(r.get(RAID.METADATA_SCHEMA))) );
   }
 
   private static Condition createV2SearchCondition(RaidListRequestV2 req) {

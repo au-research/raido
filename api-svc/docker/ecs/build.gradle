@@ -23,7 +23,7 @@ ext{
   /* decided not to default these to demo any more, when run via 
   codebuild/codepipeline or locally via dev, you need to decide what env 
   your trying to push to (demo/prod, etc.) and set the values in 
-  api-svc-docker.gradle
+  api-svc-ecs-docker.gradle
   Don't forget to login to the ECR if you want to do a push. */
   ecsEcrHost = ""
   ecsEcrRepo = ""
@@ -36,7 +36,7 @@ ext{
   // the config loading config :/
   homeDir = System.properties['user.home']
   configPath = System.getProperty("RAIDO_APISVC_DOCKER_CONFIG_PATH",
-    "${homeDir}/.config/raido/api-svc-docker.gradle")
+    "${homeDir}/.config/raido/api-svc-ecs-docker.gradle")
   
 }
 
@@ -75,18 +75,6 @@ task dockerStage(type: Copy) {
   from(apiSvcJarPath)
 }
 
-task dockerBuild(type: Exec){
-  group = 'docker.build'
-  dependsOn dockerStage
-  description = "build the docker image $containerName:[project version]"
-  
-  doFirst{
-    println "building $localImagePath ..."
-  }
-  workingDir = project.ext.stagingDir
-  commandLine osCmd('docker', 'build', '-t', localImagePath, '.')
-}
-
 task ecsDockerBuild(type: Exec){
   group = 'docker.build'
   dependsOn dockerStage
@@ -99,7 +87,7 @@ task ecsDockerBuild(type: Exec){
   
   commandLine osCmd('docker', 'build', 
     '-t', localImagePath, 
-    '-f', 'Ecs.Dockerfile', 
+    '-f', 'Dockerfile', 
     '.'
   )
 }
@@ -140,34 +128,6 @@ task ecsDockerPush(type: Exec){
 }
 
 
-task dockerTagDemo(type: Exec){
-  group = 'docker.build'
-  dependsOn dockerBuild
-  description = "tag local image so that it can be pushed to ECR as 'DEMO'"
-  
-  doFirst {
-    // add a check that makes sure we're not tagging a dirty version as a 
-    // release image
-    println "tagging $localImagePath as $ecrImagePath ..."
-  }
-  
-  workingDir = project.ext.stagingDir
-  commandLine osCmd('docker', 'tag', localImagePath, ecrImagePath)
-}
-
-/* generally devs don't want run this on their machine, should be run from 
-within AWS via a codebuild project (eventually from a pipeline).  
-If you do want to run it, must login first.
-*/
-task dockerPushDemo(type: Exec){
-  group = 'docker.build'
-  dependsOn dockerTagDemo
-  description = "push DEMO tagged image to ECR"
-
-  workingDir = project.ext.stagingDir
-  commandLine osCmd('docker', 'push', ecrImagePath)
-}
-
 /* 
 You can do the login actions by hand on your dev machine for the moment:
 aws --profile raido-demo ecr get-login-password | docker login --username AWS --password-stdin 954053438637.dkr.ecr.ap-southeast-2.amazonaws.com
@@ -180,7 +140,7 @@ allows access to the ECR.
 I don't like taking dependencies on the `aws` command line client (outside of
 controlled environments like codebuild, containers, github, etc.)
 
-I will implment the getEcrLoginPassword() method to use the AWS Java SDK, so 
+I will implement the getEcrLoginPassword() method to use the AWS Java SDK, so 
 there's no CLI dependency to run this task.
 Also, probably move this task up to the root project or somewhere, it's not
 specific to api-svc.
@@ -196,4 +156,3 @@ task dockerEcrLogin(type: Exec) {
     ecrHost
   )
 }
-

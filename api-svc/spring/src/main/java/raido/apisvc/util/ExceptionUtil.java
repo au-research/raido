@@ -3,10 +3,10 @@ package raido.apisvc.util;
 
 import raido.apisvc.spring.security.ApiSvcAuthenticationException;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ForkJoinPool;
 
 import static raido.apisvc.util.StringUtil.isBlank;
 
@@ -105,6 +105,14 @@ public class ExceptionUtil {
     Object... args
   ) {
     return new RuntimeException(String.format(format, args), t);
+  }
+
+  public static RuntimeException wrapIoException(
+    IOException cause,
+    String format,
+    Object... args
+  ) {
+    return new UncheckedIOException(String.format(format, args), cause);
   }
 
   /**

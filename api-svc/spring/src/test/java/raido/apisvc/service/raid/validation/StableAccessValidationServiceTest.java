@@ -7,7 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import raido.idl.raidv2.model.Access;
-import raido.idl.raidv2.model.AccessType;
+import raido.idl.raidv2.model.AccessTypeWithSchemeUri;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.time.LocalDate;
@@ -31,7 +31,7 @@ class StableAccessValidationServiceTest {
   @Test
   @DisplayName("Validation passes on closed raid with correct fields")
   void closedValidationSucceeds() {
-    final var type = new AccessType()
+    final var type = new AccessTypeWithSchemeUri()
       .id(CLOSED_ACCESS_TYPE_ID)
       .schemeUri(ACCESS_TYPE_SCHEME_URI);
 
@@ -48,7 +48,7 @@ class StableAccessValidationServiceTest {
   @Test
   @DisplayName("Validation passes on embargoed raid with correct fields")
   void embargoedValidationSucceeds() {
-    final var type = new AccessType()
+    final var type = new AccessTypeWithSchemeUri()
       .id(CLOSED_ACCESS_TYPE_ID)
       .schemeUri(ACCESS_TYPE_SCHEME_URI);
 
@@ -66,7 +66,7 @@ class StableAccessValidationServiceTest {
   @Test
   @DisplayName("Validation fails with missing accessStatement on closed raid")
   void missingAccessStatement() {
-    final var type = new AccessType()
+    final var type = new AccessTypeWithSchemeUri()
       .id(CLOSED_ACCESS_TYPE_ID)
       .schemeUri(ACCESS_TYPE_SCHEME_URI);
 
@@ -87,7 +87,7 @@ class StableAccessValidationServiceTest {
   @Test
   @DisplayName("Validation fails with blank accessStatement on closed raid")
   void blankStatementClosed() {
-    final var type = new AccessType()
+    final var type = new AccessTypeWithSchemeUri()
       .id(CLOSED_ACCESS_TYPE_ID)
       .schemeUri(ACCESS_TYPE_SCHEME_URI);
 
@@ -109,7 +109,7 @@ class StableAccessValidationServiceTest {
   @Test
   @DisplayName("Validation fails with blank accessStatement on embargoed raid")
   void blankStatementEmbargoed() {
-    final var type = new AccessType()
+    final var type = new AccessTypeWithSchemeUri()
       .id(EMBARGOED_ACCESS_TYPE_ID)
       .schemeUri(ACCESS_TYPE_SCHEME_URI);
 
@@ -148,7 +148,7 @@ class StableAccessValidationServiceTest {
   @Test
   @DisplayName("Validation fails with missing embargoExpiry on embargoed raid")
   void missingEmbargoExpiry() {
-    final var type = new AccessType()
+    final var type = new AccessTypeWithSchemeUri()
       .id(EMBARGOED_ACCESS_TYPE_ID)
       .schemeUri(ACCESS_TYPE_SCHEME_URI);
 

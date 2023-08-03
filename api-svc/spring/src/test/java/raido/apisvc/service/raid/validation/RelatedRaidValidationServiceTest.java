@@ -1,7 +1,5 @@
 package raido.apisvc.service.raid.validation;
 
-import org.hamcrest.Matchers;
-import org.hamcrest.core.StringContains;
 import org.junit.jupiter.api.Test;
 import raido.apisvc.repository.RaidRepository;
 import raido.apisvc.repository.RelatedRaidTypeRepository;
@@ -42,7 +40,7 @@ class RelatedRaidValidationServiceTest {
     final var relatedRaidUrl = "example.com";
     final var relatedRaidType = RELATED_RAID_TYPE_SCHEME_URI + "/" + "continues.json";
 
-    when(relatedRaidTypeRepository.findByUrl(relatedRaidType)).thenReturn(Optional.of(mock(RelatedRaidTypeRecord.class)));
+    when(relatedRaidTypeRepository.findByUri(relatedRaidType)).thenReturn(Optional.of(mock(RelatedRaidTypeRecord.class)));
 
     final var relatedRaid = new RelatedRaidBlock()
       .relatedRaid(relatedRaidUrl)
@@ -68,7 +66,7 @@ class RelatedRaidValidationServiceTest {
     final var relatedRaidType = RELATED_RAID_TYPE_SCHEME_URI + "/" + "continues.json";
 
     when(raidRepository.findByHandle(handle)).thenReturn(Optional.empty());
-    when(relatedRaidTypeRepository.findByUrl(relatedRaidType)).thenReturn(Optional.of(mock(RelatedRaidTypeRecord.class)));
+    when(relatedRaidTypeRepository.findByUri(relatedRaidType)).thenReturn(Optional.of(mock(RelatedRaidTypeRecord.class)));
 
     final var relatedRaid = new RelatedRaidBlock()
       .relatedRaid(relatedRaidUrl)
@@ -92,7 +90,7 @@ class RelatedRaidValidationServiceTest {
     final var relatedRaidType = RELATED_RAID_TYPE_SCHEME_URI + "/" + "continues.json";
 
     when(raidRepository.findByHandle(handle)).thenReturn(Optional.of(mock(RaidRecord.class)));
-    when(relatedRaidTypeRepository.findByUrl(relatedRaidType)).thenReturn(Optional.of(mock(RelatedRaidTypeRecord.class)));
+    when(relatedRaidTypeRepository.findByUri(relatedRaidType)).thenReturn(Optional.of(mock(RelatedRaidTypeRecord.class)));
 
     final var relatedRaid = new RelatedRaidBlock()
       .relatedRaid(relatedRaidUrl)
@@ -155,7 +153,7 @@ class RelatedRaidValidationServiceTest {
     final var relatedRaidType = RELATED_RAID_TYPE_SCHEME_URI + "/" + "continues.json";
 
     when(raidRepository.findByHandle(handle)).thenReturn(Optional.of(mock(RaidRecord.class)));
-    when(relatedRaidTypeRepository.findByUrl(relatedRaidType)).thenReturn(Optional.empty());
+    when(relatedRaidTypeRepository.findByUri(relatedRaidType)).thenReturn(Optional.empty());
 
     final var relatedRaid = new RelatedRaidBlock()
       .relatedRaid(relatedRaidUrl)
@@ -179,7 +177,7 @@ class RelatedRaidValidationServiceTest {
     final var relatedRaidType = RELATED_RAID_TYPE_SCHEME_URI + "/" + "continues.json";
 
     when(raidRepository.findByHandle(handle)).thenReturn(Optional.empty());
-    when(relatedRaidTypeRepository.findByUrl(relatedRaidType)).thenReturn(Optional.empty());
+    when(relatedRaidTypeRepository.findByUri(relatedRaidType)).thenReturn(Optional.empty());
 
     final var relatedRaid = new RelatedRaidBlock()
       .relatedRaid(relatedRaidUrl)
@@ -206,7 +204,7 @@ class RelatedRaidValidationServiceTest {
     final var relatedRaidType = RELATED_RAID_TYPE_SCHEME_URI + "/" + "continues.json";
 
     when(raidRepository.findByHandle(handle)).thenReturn(Optional.of(mock(RaidRecord.class)));
-    when(relatedRaidTypeRepository.findByUrl(relatedRaidType)).thenReturn(Optional.of(mock(RelatedRaidTypeRecord.class)));
+    when(relatedRaidTypeRepository.findByUri(relatedRaidType)).thenReturn(Optional.of(mock(RelatedRaidTypeRecord.class)));
 
     final var relatedRaid = new RelatedRaidBlock()
       .relatedRaid(relatedRaidUrl)
@@ -228,7 +226,7 @@ class RelatedRaidValidationServiceTest {
     final var relatedRaidType = RELATED_RAID_TYPE_SCHEME_URI + "/" + "continues.json";
 
     when(raidRepository.findByHandle(handle)).thenReturn(Optional.of(mock(RaidRecord.class)));
-    when(relatedRaidTypeRepository.findByUrl(relatedRaidType)).thenReturn(Optional.of(mock(RelatedRaidTypeRecord.class)));
+    when(relatedRaidTypeRepository.findByUri(relatedRaidType)).thenReturn(Optional.of(mock(RelatedRaidTypeRecord.class)));
 
     final var relatedRaid = new RelatedRaidBlock()
       .relatedRaid(relatedRaidUrl)

@@ -15,16 +15,16 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static raido.apisvc.util.test.BddUtil.*;
-import static raido.idl.raidv2.model.AccessType1.OPEN;
+import static raido.idl.raidv2.model.AccessType.OPEN;
 import static raido.idl.raidv2.model.ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_;
 import static raido.idl.raidv2.model.ContributorPositionRaidMetadataSchemaType.LEADER;
 import static raido.idl.raidv2.model.ContributorPositionSchemeType.HTTPS_RAID_ORG_;
 import static raido.idl.raidv2.model.ContributorRoleCreditNisoOrgType.PROJECT_ADMINISTRATION;
 import static raido.idl.raidv2.model.ContributorRoleSchemeType.HTTPS_CREDIT_NISO_ORG_;
-import static raido.idl.raidv2.model.DescriptionType1.PRIMARY_DESCRIPTION;
+import static raido.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
 import static raido.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 import static raido.idl.raidv2.model.RaidoMetaschemaV2.RAIDOMETADATASCHEMAV2;
-import static raido.idl.raidv2.model.TitleType1.PRIMARY_TITLE;
+import static raido.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 import static raido.inttest.endpoint.raidv1.LegacyRaidV1MintTest.INT_TEST_ID_URL;
 import static raido.inttest.util.MinimalRaidTestData.REAL_TEST_ORCID;
 import static raido.inttest.util.MinimalRaidTestData.REAL_TEST_ROR;
@@ -244,12 +244,12 @@ public class RaidoSchemaV2Test extends IntegrationTestCase {
     return new ContributorBlock().
       id(REAL_TEST_ORCID).
       identifierSchemeUri(HTTPS_ORCID_ORG_).
-      positions(List.of(new ContributorPosition1().
+      positions(List.of(new ContributorPosition().
         positionSchemaUri(HTTPS_RAID_ORG_).
         position(LEADER).
         startDate(today))).
       roles(List.of(
-        new ContributorRole1().
+        new ContributorRole().
           roleSchemeUri(HTTPS_CREDIT_NISO_ORG_).
           role(PROJECT_ADMINISTRATION)));
   }
@@ -259,7 +259,7 @@ public class RaidoSchemaV2Test extends IntegrationTestCase {
       id(REAL_TEST_ROR).
       identifierSchemeUri(OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_).
       roles(List.of(
-        new OrganisationRole1().
+        new OrganisationRole().
           roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_).
           role(OrganisationRoleType.LEAD_RESEARCH_ORGANISATION)
           .startDate(today)));

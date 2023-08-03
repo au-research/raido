@@ -58,7 +58,7 @@ export function AppNavBar(){
           </MenuShortcutNavItem>
         </MenuShortcutBar>
 
-        {/*flexgrow pushes the icons over to the right */}
+        {/* flexgrow pushes the icons over to the right */}
         <Typography variant="h6" color="inherit" style={{flexGrow: 1}} />
         <div>
           <AccountMenu/>

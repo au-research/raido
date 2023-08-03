@@ -1,10 +1,28 @@
 This is a high-level view of the architecture.
-The diagram is a a mix of "current state" and "future state" as at 2023-02-06.
 
-The Raido stuff exists and is "current state".
-The Raid stuff does not exist yet; in the medium to long term, the components
-of the "Raid system" will likely be managed in a separate repository to this
-one. 
+The Raido system is operated by the ARDC (as the "ARDC RAiD Service") in our 
+role as one of many regional registration-agencies for the RAiD standard.
+
+The Raid system is operated by the ARDC in our role as the singular 
+registration-authority for the RAiD standard. 
+
+The Raid system is currently in "prototype" stage, it is managed out of a 
+separate repository: https://github.com/au-research/raid-aws-private
+
+The Lambda implementation for the redirect functionality is a temporary 
+implementation, it was the simplest way to get something up and running.  
+It is envisioned that in the future, as the global raid infrastructure becomes 
+more complicated - it will likely be re-written in a technology stack similar 
+to raido so that it is suitable for operation, maintenance and support by 
+the ARDC.
+
+At the moment, the raid infrastructure supports resolving a raid:
+* if using a browser, it will redirect to the anonymous landing page of the 
+  registration-agency for that raid
+* if using an API (e.g. curl request) it will redirect to the anonymous resolve 
+  endpoint of the raid-agency for that raid
+* the logic to choose the registration-agency landing page is based on the raid 
+  handle prefix
 
 See the [raid-vs-raido.md](/doc/raid-vs-raido.md) for a description of 
 the difference between Raid and Raido.
@@ -44,33 +62,12 @@ Major architectural decisions are documented in the Architecture Decision Log:
 # Technology
 
 More info about individual technology choices can be found in 
-[technology-stack.md](../code/technol## How to mint a raid in DEMO environment
-* sign-in via your chosen ID Provider
-  * Google, AAF or ORCID
-* request authorization for a service-point
-  * Raid team creates service-point as part of biz onboarding
-  * but you should send an email to `contact@raid.org` or otherwise notify
-    us that you have submitted an authorization-request
-  * add a comment that you would like admin access so that you can manage
-    api-keys and generate api-tokens
-* we will let you know when you can sign-in
-* sign-in using the same ID provider you used before
-  * authorization is linked to your ID Provider
-* create an api-key
-* generating an api-token
-  * the api-token is to be considered sensitive, non-public information
-    * it must be kept secret and should never be accessible to end-users
-      * that is, do not embed the api-token in front-end applications or web-sites
-    * the api-token is the only thing necessary to use the API and can be used
-      to mint/edit raids and see closed raid data
-  * save this somewhere safe, we do not store it in our system
-    * but new ones can be generated at any time by just clicking the button
-      again
-* listing recent raids
-  * call list raid with your api-token, that's it
-* mint raid
-* read a raid
-  ogy-stack.md).
+[technology-stack.md](../architecture/technology-stack.md).
+
+## How to use the DEMO environment
+
+See the [api-integration guide](/doc/api-integration/readme.md) for the 
+pre-requisites and a guide to using the DEMO system.
 
 
 # Operational environment

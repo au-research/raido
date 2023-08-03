@@ -78,6 +78,12 @@ public class TestConstants {
   public static final String DESCRIPTION_TYPE_SCHEME_URI =
     "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1";
 
+  public static final String RELATED_RAID_TYPE_SCHEME_URI =
+      "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1";
+
+  public static final String CONTINUES_RELATED_RAID_TYPE =
+      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/continues.json";
+
   public static final LocalDate START_DATE = LocalDate.now().minusMonths(1);
   public static final LocalDate END_DATE = LocalDate.now();
 }

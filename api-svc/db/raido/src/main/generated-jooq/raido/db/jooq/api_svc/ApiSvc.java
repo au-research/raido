@@ -4,14 +4,39 @@
 package raido.db.jooq.api_svc;
 
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.jooq.Catalog;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
-import raido.db.jooq.DefaultCatalog;
-import raido.db.jooq.api_svc.tables.*;
 
-import java.util.Arrays;
-import java.util.List;
+import raido.db.jooq.DefaultCatalog;
+import raido.db.jooq.api_svc.tables.AccessType;
+import raido.db.jooq.api_svc.tables.AccessTypeScheme;
+import raido.db.jooq.api_svc.tables.AppUser;
+import raido.db.jooq.api_svc.tables.ContributorPosition;
+import raido.db.jooq.api_svc.tables.ContributorPositionScheme;
+import raido.db.jooq.api_svc.tables.ContributorRole;
+import raido.db.jooq.api_svc.tables.ContributorRoleScheme;
+import raido.db.jooq.api_svc.tables.DescriptionType;
+import raido.db.jooq.api_svc.tables.DescriptionTypeScheme;
+import raido.db.jooq.api_svc.tables.FlywaySchemaHistory;
+import raido.db.jooq.api_svc.tables.OrganisationRole;
+import raido.db.jooq.api_svc.tables.OrganisationRoleScheme;
+import raido.db.jooq.api_svc.tables.Raid;
+import raido.db.jooq.api_svc.tables.RaidoOperator;
+import raido.db.jooq.api_svc.tables.RelatedObjectCategory;
+import raido.db.jooq.api_svc.tables.RelatedObjectCategoryScheme;
+import raido.db.jooq.api_svc.tables.RelatedObjectType;
+import raido.db.jooq.api_svc.tables.RelatedObjectTypeScheme;
+import raido.db.jooq.api_svc.tables.RelatedRaidType;
+import raido.db.jooq.api_svc.tables.RelatedRaidTypeScheme;
+import raido.db.jooq.api_svc.tables.ServicePoint;
+import raido.db.jooq.api_svc.tables.Subject;
+import raido.db.jooq.api_svc.tables.TitleType;
+import raido.db.jooq.api_svc.tables.TitleTypeScheme;
+import raido.db.jooq.api_svc.tables.UserAuthzRequest;
 
 
 /**
@@ -62,6 +87,7 @@ public class ApiSvc extends SchemaImpl {
             RelatedObjectType.RELATED_OBJECT_TYPE,
             RelatedObjectTypeScheme.RELATED_OBJECT_TYPE_SCHEME,
             RelatedRaidType.RELATED_RAID_TYPE,
+            RelatedRaidTypeScheme.RELATED_RAID_TYPE_SCHEME,
             ServicePoint.SERVICE_POINT,
             Subject.SUBJECT,
             TitleType.TITLE_TYPE,

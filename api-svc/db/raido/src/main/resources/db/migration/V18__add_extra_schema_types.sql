@@ -1,5 +1,7 @@
 begin transaction;
 
+-- title
+
 drop table if exists raido.api_svc.title_type_scheme;
 create table raido.api_svc.title_type_scheme (
    id serial primary key,
@@ -22,6 +24,8 @@ insert into raido.api_svc.title_type (scheme_id, uri) values
    (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json'),
    (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json');
 
+-- end title
+-- description
 
 drop table if exists raido.api_svc.description_type_scheme;
 create table raido.api_svc.description_type_scheme (
@@ -44,6 +48,9 @@ insert into raido.api_svc.description_type_scheme (uri) values
 insert into raido.api_svc.description_type (scheme_id, uri) values
     (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json'),
     (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json');
+
+-- end description
+-- access
 
 drop table if exists raido.api_svc.access_type_scheme;
 create table raido.api_svc.access_type_scheme (
@@ -68,6 +75,8 @@ insert into raido.api_svc.access_type (scheme_id, uri) values
     (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json'),
     (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json');
 
+-- end access
+-- contributor
 
 drop table if exists raido.api_svc.contributor_position_scheme;
 create table raido.api_svc.contributor_position_scheme (
@@ -127,6 +136,9 @@ insert into raido.api_svc.contributor_role (scheme_id, uri) values
     (1, 'https://credit.niso.org/contributor-roles/writing-original-draft/'),
     (1, 'https://credit.niso.org/contributor-roles/writing-review-editing/');
 
+-- end contributor
+-- organisation
+
 drop table if exists raido.api_svc.organisation_role_scheme;
 create table raido.api_svc.organisation_role_scheme (
     id serial primary key,
@@ -151,6 +163,9 @@ insert into raido.api_svc.organisation_role (scheme_id, uri) values
     (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/other-organisation.json'),
     (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/other-research-organisation.json'),
     (1, 'https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/partner-organisation.json');
+
+-- end organisation
+-- related object
 
 drop table if exists raido.api_svc.related_object_category_scheme;
 create table raido.api_svc.related_object_category_scheme (
@@ -202,5 +217,37 @@ from raido.api_svc.related_object_type;
 drop table raido.api_svc.related_object_type;
 alter table raido.api_svc.related_object_type_new
     rename to related_object_type;
+
+-- end related object
+-- related raid
+
+drop table if exists raido.api_svc.related_raid_type_scheme;
+create table raido.api_svc.related_raid_type_scheme (
+    id serial primary key,
+    uri varchar not null
+);
+
+create table raido.api_svc.related_raid_type_new
+(
+    scheme_id   int     not null,
+    uri         varchar not null,
+    name        varchar,
+    description varchar,
+    primary key (scheme_id, uri),
+    constraint fk_related_raid_type_scheme_id foreign key (scheme_id) references raido.api_svc.related_raid_type_scheme (id)
+);
+
+insert into raido.api_svc.related_raid_type_scheme (uri) values
+    ('https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1');
+
+insert into raido.api_svc.related_raid_type_new (scheme_id, uri, name, description)
+select 1, url, name, description
+from raido.api_svc.related_raid_type;
+
+drop table raido.api_svc.related_raid_type;
+alter table raido.api_svc.related_raid_type_new
+    rename to related_raid_type;
+
+-- end related raid
 
 end transaction;

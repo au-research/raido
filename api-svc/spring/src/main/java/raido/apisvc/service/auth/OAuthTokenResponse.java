@@ -4,6 +4,13 @@ import java.util.StringJoiner;
 
 import static raido.apisvc.util.StringUtil.mask;
 
+/**
+ The toString() of this method will mask sensitive values, be careful to 
+ maintain that functionality or we'll end up with sensitive values in log
+ files.
+ IMPROVE: refactor `toString()` like "logSafeValues()" 
+ to make it obvious what's going on.
+ */
 public class OAuthTokenResponse {
   public String access_token;
   public int expires_in;

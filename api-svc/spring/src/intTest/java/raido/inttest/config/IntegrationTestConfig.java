@@ -5,7 +5,11 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
@@ -13,6 +17,7 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import raido.apisvc.spring.StartupListener;
 import raido.apisvc.spring.bean.MetricRegistry;
 import raido.apisvc.spring.config.ApiConfig;
+import raido.apisvc.spring.bean.Shared;
 import raido.apisvc.spring.config.environment.DataSourceProps;
 import raido.apisvc.spring.config.environment.EnvironmentProps;
 import raido.apisvc.util.Log;
@@ -71,13 +76,12 @@ public class IntegrationTestConfig {
 
   @Bean
   public static ClientHttpRequestFactory clientHttpRequestFactory(){
-    return ApiConfig
-      .clientHttpRequestFactory(false);
+    return Shared.clientHttpRequestFactory(false);
   }
 
   @Bean @Primary
   public RestTemplate restTemplate(ClientHttpRequestFactory factory){
-    RestTemplate restTemplate = ApiConfig.restTemplate(factory);
+    RestTemplate restTemplate = Shared.restTemplate(factory);
     restTemplate.setRequestFactory(factory);
     return restTemplate;
   }

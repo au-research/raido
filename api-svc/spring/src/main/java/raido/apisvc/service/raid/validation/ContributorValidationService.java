@@ -4,8 +4,8 @@ import org.springframework.stereotype.Component;
 import raido.apisvc.service.orcid.OrcidService;
 import raido.apisvc.util.Log;
 import raido.idl.raidv2.model.ContributorBlock;
-import raido.idl.raidv2.model.ContributorPosition1;
-import raido.idl.raidv2.model.ContributorRole1;
+import raido.idl.raidv2.model.ContributorPosition;
+import raido.idl.raidv2.model.ContributorRole;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.ArrayList;
@@ -88,7 +88,7 @@ public class ContributorValidationService {
   }
   
   public List<ValidationFailure> validatePositionFields(
-    Supplier<String> fieldPrefix, List<ContributorPosition1> positions
+    Supplier<String> fieldPrefix, List<ContributorPosition> positions
   ) {
     var failures = new ArrayList<ValidationFailure>();
 
@@ -132,7 +132,7 @@ public class ContributorValidationService {
   }
 
   public List<ValidationFailure> validateRoleFields(
-    Supplier<String> fieldPrefix, List<ContributorRole1> roles
+    Supplier<String> fieldPrefix, List<ContributorRole> roles
   ) {
     var failures = new ArrayList<ValidationFailure>();
 

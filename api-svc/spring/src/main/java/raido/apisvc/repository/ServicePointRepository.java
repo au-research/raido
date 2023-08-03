@@ -1,5 +1,6 @@
 package raido.apisvc.repository;
 
+import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -10,12 +11,9 @@ import java.util.Optional;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 
 @Repository
+@RequiredArgsConstructor
 public class ServicePointRepository {
   private final DSLContext dslContext;
-
-  public ServicePointRepository(final DSLContext dslContext, final TransactionTemplate transactionTemplate) {
-    this.dslContext = dslContext;
-  }
 
   public Optional<ServicePointRecord> findById(final long servicePointId) {
     return dslContext.select(SERVICE_POINT.fields()).

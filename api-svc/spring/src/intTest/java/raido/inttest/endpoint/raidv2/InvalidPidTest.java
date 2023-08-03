@@ -69,7 +69,7 @@ public class InvalidPidTest extends IntegrationTestCase {
       organisations(organisations(NONEXISTENT_TEST_ROR)).
       relatedObjects(relatedObjects(NONEXISTENT_TEST_DOI)).
       access(new Access()
-        .type(new AccessType()
+        .type(new AccessTypeWithSchemeUri()
           .id(ACCESS_TYPE_OPEN)
           .schemeUri(ACCESS_TYPE_SCHEME_URI))
         )
@@ -94,7 +94,7 @@ public class InvalidPidTest extends IntegrationTestCase {
     String title
   ){
     return List.of(new Title()
-      .type(new TitleType()
+      .type(new TitleTypeWithSchemeUri()
         .id(PRIMARY_TITLE_TYPE)
         .schemeUri(TITLE_TYPE_SCHEME_URI)
       )
@@ -103,7 +103,7 @@ public class InvalidPidTest extends IntegrationTestCase {
   }
 
   public static List<Description> descriptions(String description){
-    final var descriptionType = new DescriptionType()
+    final var descriptionType = new DescriptionTypeWithSchemeUri()
       .id(PRIMARY_DESCRIPTION_TYPE)
       .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
 
@@ -120,12 +120,12 @@ public class InvalidPidTest extends IntegrationTestCase {
     return List.of(new Contributor()
       .id(orcid)
       .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
-      .positions(List.of(new ContributorPosition()
+      .positions(List.of(new ContributorPositionWithSchemeUri()
         .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
         .id(LEADER_POSITION)
         .startDate(today)))
       .roles(List.of(
-        new ContributorRole()
+        new ContributorRoleWithSchemeUri()
           .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
           .id(SUPERVISION_ROLE))));
   }
@@ -143,7 +143,7 @@ public class InvalidPidTest extends IntegrationTestCase {
       .id(ror)
       .identifierSchemeUri(ORGANISATION_SCHEME_URI)
       .roles(List.of(
-        new OrganisationRole()
+        new OrganisationRoleWithSchemeUri()
           .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
           .id(role)
           .startDate(today)));

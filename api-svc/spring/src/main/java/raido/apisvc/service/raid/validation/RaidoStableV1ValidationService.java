@@ -176,7 +176,7 @@ public class RaidoStableV1ValidationService {
     failures.addAll(contribSvc.validate(request.getContributors()));
     failures.addAll(orgSvc.validate(request.getOrganisations()));
     failures.addAll(subjectSvc.validateSubjects(request.getSubjects()));
-    failures.addAll(relatedRaidSvc.validateRelatedRaids(request.getRelatedRaids()));
+    failures.addAll(relatedRaidSvc.validate(request.getRelatedRaids()));
     failures.addAll(relatedObjectSvc.validateRelatedObjects(request.getRelatedObjects()));
     failures.addAll(alternateIdentifierSvc.validateAlternateIdentifiers(request.getAlternateIdentifiers()));
     failures.addAll(spatialCoverageSvc.validate(request.getSpatialCoverages()));
@@ -203,7 +203,7 @@ public class RaidoStableV1ValidationService {
     failures.addAll(contribSvc.validate(request.getContributors()));
     failures.addAll(orgSvc.validate(request.getOrganisations()));
     failures.addAll(subjectSvc.validateSubjects(request.getSubjects()));
-    failures.addAll(relatedRaidSvc.validateRelatedRaids(request.getRelatedRaids()));
+    failures.addAll(relatedRaidSvc.validate(request.getRelatedRaids()));
     failures.addAll(relatedObjectSvc.validateRelatedObjects(request.getRelatedObjects()));
     failures.addAll(alternateIdentifierSvc.validateAlternateIdentifiers(request.getAlternateIdentifiers()));
     failures.addAll(spatialCoverageSvc.validate(request.getSpatialCoverages()));

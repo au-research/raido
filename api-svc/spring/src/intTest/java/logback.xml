@@ -28,8 +28,4 @@
   by the api-svc, so you would only want this while actively implementing -->
   <logger name="raido.inttest.RaidApiExceptionDecoder" level="info"/>
 
-  <logger name="p6spy" level="debug"/>
-  <logger name="p6spy.tx" level="debug"/>
-  <logger name="p6spy.cxnTest" level="debug"/>
-  
 </configuration>

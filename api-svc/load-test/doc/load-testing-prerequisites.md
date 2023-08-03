@@ -1,4 +1,4 @@
-# External systems integration
+# Dependent systems integration
 
 Generally, we should avoid putting load on other people's systems without
 coordinating ahead of time.

@@ -203,19 +203,19 @@ components:
       properties:
         title: {type: string}
         type:
-          $ref: '#/components/schemas/TitleType'
+          $ref: '#/components/schemas/TitleTypeWithSchemeUri'
         startDate: { type: string, format: date }
         endDate: { type: string, format: date }
-    TitleType:
+    TitleTypeWithSchemeUri:
       type: object
       properties:
         id: {
           type: string,
-          example: 'https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json'
+          example: https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json
         }
         schemeUri: {
           type: string,
-          example: 'https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1'
+          example: https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1
         }
     Description:
       type: object
@@ -223,40 +223,40 @@ components:
       properties:
         description: {type: string}
         type:
-          $ref: '#/components/schemas/DescriptionType'
-    DescriptionType:
+          $ref: '#/components/schemas/DescriptionTypeWithSchemeUri'
+    DescriptionTypeWithSchemeUri:
       type: object
       properties:
         id: {
           type: string,
-          example: 'https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json'
+          example: https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json
         }
         schemeUri: {
            type: string,
-           example: 'https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1'
+           example: https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1
         }
     Access:
       type: object
       required: ["type"]
       properties:
         type:
-          $ref: '#/components/schemas/AccessType'
+          $ref: '#/components/schemas/AccessTypeWithSchemeUri'
         accessStatement: { type: string }
         embargoExpiry: {
           type: string,
           format: date
         }
-    AccessType:
+    AccessTypeWithSchemeUri:
       type: object
-      required: ["id","type"]
+      required: [ id, schemeUri ]
       properties:
         id: {
           type: string,
-          example: 'https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json'
+          example: https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json
         }
         schemeUri: {
           type: string,
-          example: 'https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1'
+          example: https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1
         }
     Contributor:
       type: object
@@ -266,27 +266,27 @@ components:
           type: string
         identifierSchemeUri: {
           type: string,
-          example: 'https://orcid.org/'
+          example: https://orcid.org/
         }
         positions:
           type: array
           items:
-            $ref: '#/components/schemas/ContributorPosition'
+            $ref: '#/components/schemas/ContributorPositionWithSchemeUri'
         roles:
           type: array
           items:
-            $ref: '#/components/schemas/ContributorRole'
-    ContributorPosition:
+            $ref: '#/components/schemas/ContributorRoleWithSchemeUri'
+    ContributorPositionWithSchemeUri:
       type: object
-      required: [ schemeUri, position, startDate ]
+      required: [ schemeUri, id, startDate ]
       properties:
         schemeUri: {
           type: string,
-          example: 'https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1'
+          example: https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1
         }
         id: {
           type: string,
-          example: 'https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json'
+          example: https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json
         }
         startDate: {
           type: string,
@@ -296,17 +296,17 @@ components:
           type: string,
           format: date
         }
-    ContributorRole:
+    ContributorRoleWithSchemeUri:
       type: object
-      required: [ role, schemeUri ]
+      required: [ id, schemeUri ]
       properties:
         schemeUri: {
           type: string,
-          example: 'https://credit.niso.org/'
+          example: https://credit.niso.org/
         }
         id: {
           type: string,
-          example: 'https://credit.niso.org/contributor-roles/writing-review-editing/'
+          example: https://credit.niso.org/contributor-roles/writing-review-editing/
         }
     Organisation:
       type: object
@@ -315,23 +315,23 @@ components:
         id: { type: string }
         identifierSchemeUri: {
           type: string,
-          example: 'https://ror.org/'
+          example: https://ror.org/
         }
         roles:
           type: array
           items:
-            $ref: '#/components/schemas/OrganisationRole'
-    OrganisationRole:
+            $ref: '#/components/schemas/OrganisationRoleWithSchemeUri'
+    OrganisationRoleWithSchemeUri:
       type: object
-      required: [role, roleSchemeUri, startDate]
+      required: [id, schemeUri, startDate]
       properties:
         schemeUri: {
           type: string,
-          example: 'https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1'
+          example: https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1
         }
         id: {
           type: string,
-          example: 'https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json'
+          example: https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json
         }
         startDate: { type: string, format: date }
         endDate: { type: string, format: date }
@@ -342,6 +342,7 @@ components:
         url: { type: string }
     Subject:
       type: object
+      required: [ id, schemeUri ]
       properties:
         id: { type: string }
         schemeUri: { type: string }
@@ -350,8 +351,20 @@ components:
       type: object
       properties:
         id: { type: string }
-        type: { type: string }
-        typeSchemeUri: { type: string }
+        type:
+          $ref: '#/components/schemas/RelatedRaidType'
+    RelatedRaidType:
+      type: object
+      required: [ id, schemeUri ]
+      properties:
+        id: {
+          type: string,
+          example: https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/continues.json
+        }
+        schemeUri: {
+          type: string,
+          example: https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1
+        }
     RelatedObject:
       type: object
       properties:
@@ -366,22 +379,22 @@ components:
       properties:
         id: {
           type: string,
-          example: 'https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book.json'
+          example: https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book.json
         }
         schemeUri: {
           type: string,
-          example: 'https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1'
+          example: https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1
         }
     RelatedObjectCategory:
       type: object
       properties:
         id: {
           type: string,
-          example: 'https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json'
+          example: https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json
         }
         schemeUri: {
           type: string,
-          example: 'https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1'
+          example: https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1
         }
     AlternateIdentifier:
         type: object

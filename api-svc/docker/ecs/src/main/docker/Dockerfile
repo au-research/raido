@@ -30,8 +30,8 @@ RUN useradd appuser
 
 COPY raido-api-svc.jar app/raido-api-svc.jar
 
-COPY script/ecs-api-svc-start.sh app/ecs-api-svc-start.sh
-RUN chmod +x app/ecs-api-svc-start.sh
+COPY script/api-svc-start.sh app/api-svc-start.sh
+RUN chmod +x app/api-svc-start.sh
 
 USER appuser
 
@@ -44,5 +44,5 @@ EXPOSE 8080
 ENV EnvironmentConfig.nodeId=""
 
 # not sure if should use ENTRYPOINT / CMD.  Internet says use ENTRYPOINT.
-ENTRYPOINT ["/app/ecs-api-svc-start.sh"]
+ENTRYPOINT ["/app/api-svc-start.sh"]
 

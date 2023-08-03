@@ -1,5 +1,6 @@
 package raido.apisvc.repository;
 
+import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 import raido.db.jooq.api_svc.tables.records.AccessTypeSchemeRecord;
@@ -9,12 +10,9 @@ import java.util.Optional;
 import static raido.db.jooq.api_svc.tables.AccessTypeScheme.ACCESS_TYPE_SCHEME;
 
 @Repository
+@RequiredArgsConstructor
 public class AccessTypeSchemeRepository {
   private final DSLContext dslContext;
-
-  public AccessTypeSchemeRepository(final DSLContext dslContext) {
-    this.dslContext = dslContext;
-  }
 
   public Optional<AccessTypeSchemeRecord> findByUri(final String uri) {
     return dslContext.select(ACCESS_TYPE_SCHEME.fields())

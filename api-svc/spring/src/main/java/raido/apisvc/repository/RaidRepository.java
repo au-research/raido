@@ -1,5 +1,6 @@
 package raido.apisvc.repository;
 
+import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -17,12 +18,9 @@ import static raido.db.jooq.api_svc.tables.Raid.RAID;
 import static raido.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 
 @Repository
+@RequiredArgsConstructor
 public class RaidRepository {
   private final DSLContext dslContext;
-
-  public RaidRepository(final DSLContext dslContext, final TransactionTemplate transactionTemplate, final MetadataService metadataService) {
-    this.dslContext = dslContext;
-  }
 
   public void insert(final RaidRecord raid) {
     dslContext.insertInto(RAID)

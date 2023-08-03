@@ -6,7 +6,7 @@ import raido.idl.raidv2.api.PublicExperimentalApi;
 /**
  convenience stuff for doing common stuff with the Raido API.
  Normally would be all static methods, but I don't think it's a good idea 
- to be constantly making new API client instantions (currently OpenFeign).
+ to be constantly making new API client instantiations (currently OpenFeign).
  
  Do the wrappers really matter?
  */

@@ -2,7 +2,7 @@ package raido.inttest.endpoint.raidv2.stable;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import raido.idl.raidv2.model.DescriptionType;
+import raido.idl.raidv2.model.DescriptionTypeWithSchemeUri;
 import raido.idl.raidv2.model.ValidationFailure;
 import raido.inttest.RaidApiValidationException;
 
@@ -158,7 +158,7 @@ public class DescriptionIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Validation fails with missing type id")
   void missingId() {
     createRequest.getDescriptions().get(0).type(
-      new DescriptionType()
+      new DescriptionTypeWithSchemeUri()
         .schemeUri(DESCRIPTION_TYPE_SCHEME_URI)
     );
 
@@ -182,7 +182,7 @@ public class DescriptionIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Validation fails with empty id")
   void emptyId() {
     createRequest.getDescriptions().get(0).type(
-      new DescriptionType()
+      new DescriptionTypeWithSchemeUri()
         .id("")
         .schemeUri(DESCRIPTION_TYPE_SCHEME_URI)
     );
