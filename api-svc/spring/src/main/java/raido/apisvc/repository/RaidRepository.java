@@ -3,11 +3,7 @@ package raido.apisvc.repository;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.support.TransactionTemplate;
-import raido.apisvc.repository.dto.Raid;
-import raido.apisvc.service.raid.MetadataService;
 import raido.db.jooq.api_svc.tables.records.RaidRecord;
-import raido.db.jooq.api_svc.tables.records.ServicePointRecord;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -100,7 +96,7 @@ public class RaidRepository {
       );
   }
 
-  public List<Raid> findAllByServicePointId(final Long servicePointId) {
+  public List<RaidRecord> findAllByServicePointId(final Long servicePointId) {
     return dslContext.select(RAID.fields()).
       select(SERVICE_POINT.fields()).
       from(RAID).join(SERVICE_POINT).onKey().
@@ -109,8 +105,18 @@ public class RaidRepository {
       ).
       orderBy(RAID.DATE_CREATED.desc()).
       limit(MAX_EXPERIMENTAL_RECORDS).
-      fetch(record -> new Raid(
-        record.into(RaidRecord.class), record.into(ServicePointRecord.class)
-      ));
+      fetch(record -> new RaidRecord()
+          .setVersion(RAID.VERSION.getValue(record))
+          .setHandle(RAID.HANDLE.getValue(record))
+          .setServicePointId(RAID.SERVICE_POINT_ID.getValue(record))
+          .setUrl(RAID.URL.getValue(record))
+          .setUrlIndex(RAID.URL_INDEX.getValue(record))
+          .setMetadataSchema(RAID.METADATA_SCHEMA.getValue(record))
+          .setMetadata(RAID.METADATA.getValue(record))
+          .setDateCreated(RAID.DATE_CREATED.getValue(record))
+          .setStartDate(RAID.START_DATE.getValue(record))
+          .setConfidential(RAID.CONFIDENTIAL.getValue(record))
+          .setPrimaryTitle(RAID.PRIMARY_TITLE.getValue(record))
+      );
   }
 }

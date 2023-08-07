@@ -11,6 +11,7 @@ import raido.apisvc.exception.InvalidVersionException;
 import raido.apisvc.exception.ResourceNotFoundException;
 import raido.apisvc.exception.UnknownServicePointException;
 import raido.apisvc.factory.IdFactory;
+import raido.apisvc.factory.RaidDtoFactory;
 import raido.apisvc.factory.RaidRecordFactory;
 import raido.apisvc.repository.RaidRepository;
 import raido.apisvc.repository.ServicePointRepository;
@@ -46,16 +47,13 @@ public class RaidStableV1Service {
   private final ObjectMapper objectMapper;
   private final IdFactory idFactory;
   private final RaidChecksumService checksumService;
+  private final RaidDtoFactory raidDtoFactory;
+
 
   public List<RaidDto> list(final Long servicePointId) {
-    return raidRepository.findAllByServicePointId(servicePointId).stream().
-      map(raid -> {
-        try {
-          return objectMapper.readValue(raid.raid().getMetadata().data(), RaidDto.class);
-        } catch (JsonProcessingException e) {
-          throw new RuntimeException(e);
-        }
-      }).toList();
+    return raidRepository.findAllByServicePointId(servicePointId).stream()
+        .map(raidDtoFactory::create)
+        .toList();
   }
 
   private IdentifierHandle parseHandleFromApids(
@@ -150,14 +148,10 @@ public class RaidStableV1Service {
   }
 
   public RaidDto read(String handle){
-    final var raid = raidRepository.findByHandle(handle).
+    final var raidRecord = raidRepository.findByHandle(handle).
       orElseThrow(() -> new ResourceNotFoundException(handle));
 
-    try {
-      return objectMapper.readValue(raid.getMetadata().data(), RaidDto.class);
-    } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
-    }
+    return raidDtoFactory.create(raidRecord);
   }
 
   public boolean isEditable(final ApiToken user, final long servicePointId) {

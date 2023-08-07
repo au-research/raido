@@ -63,7 +63,7 @@ public class InvalidPidTest extends IntegrationTestCase {
     EXPECT("minting a raid with non-existent PIDs should fail");
     assertThatThrownBy(()->raidApi.createRaidV1(new CreateRaidV1Request().
       titles(titles(initialTitle)).
-      dates(new DatesBlock().startDate(today)).
+      dates(new Dates().startDate(today)).
       descriptions(descriptions("used for testing non-existent pids")).
       contributors(contributors(NONEXISTENT_TEST_ORCID)).
       organisations(organisations(NONEXISTENT_TEST_ROR)).

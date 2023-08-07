@@ -114,7 +114,7 @@ public class AbstractStableIntegrationTest {
           .schemeUri(TITLE_TYPE_SCHEME_URI))
         .title(initialTitle)
         .startDate(today)))
-      .dates(new DatesBlock().startDate(today))
+      .dates(new Dates().startDate(today))
       .descriptions(List.of(new Description()
         .type(new DescriptionTypeWithSchemeUri()
           .id(PRIMARY_DESCRIPTION_TYPE)
