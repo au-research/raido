@@ -5,10 +5,9 @@ public class TestConstants {
     "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json";
 
   protected static final String ORGANISATION_ROLE_SCHEME_URI =
-    "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1";
+    "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/";
 
-  protected static final String ORGANISATION_IDENTIFIER_SCHEME_URI =
-    "https://ror.org/";
+  protected static final String ORGANISATION_IDENTIFIER_SCHEME_URI = "https://ror.org/";
 
   protected static final String OPEN_ACCESS_TYPE =
     "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json";
@@ -20,7 +19,7 @@ public class TestConstants {
     "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json";
 
   protected static final String ACCESS_TYPE_SCHEME_URI =
-    "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1";
+    "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/";
 
   protected static final String PRIMARY_TITLE_TYPE =
     "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
@@ -29,18 +28,18 @@ public class TestConstants {
     "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json";
 
   protected static final String TITLE_TYPE_SCHEME_URI =
-    "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1";
+    "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/";
 
   protected static final String PRIMARY_DESCRIPTION_TYPE =
     "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json";
 
   protected static final String DESCRIPTION_TYPE_SCHEME_URI =
-    "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1";
+    "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/";
 
   protected static final String CONTRIBUTOR_SCHEME_URI = "https://orcid.org/";
 
   protected static final String CONTRIBUTOR_POSITION_SCHEME_URI =
-    "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1";
+    "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/";
 
   protected static final String LEADER_POSITION =
     "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json";

@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class StableSubjectValidationServiceTest {
-  private static final String SUBJECT_SCHEME_URI = "https://linked.data.gov.au/def/anzsrc-for/2020";
+  private static final String SUBJECT_SCHEME_URI = "https://linked.data.gov.au/def/anzsrc-for/2020/";
 
   @Mock
   private SubjectRepository subjectRepository;
@@ -117,7 +117,7 @@ class StableSubjectValidationServiceTest {
     final List<ValidationFailure> validationFailures = validationService.validateSubjects(Collections.singletonList(subject));
 
     assertThat(validationFailures.size(), is(1));
-    assertThat(validationFailures.get(0).getMessage(), is("must be https://linked.data.gov.au/def/anzsrc-for/2020."));
+    assertThat(validationFailures.get(0).getMessage(), is("must be https://linked.data.gov.au/def/anzsrc-for/2020/."));
     assertThat(validationFailures.get(0).getErrorType(), is("invalid"));
     assertThat(validationFailures.get(0).getFieldId(), is("subjects[0].subjectSchemeUri"));
   }
@@ -135,7 +135,7 @@ class StableSubjectValidationServiceTest {
     final List<ValidationFailure> validationFailures = validationService.validateSubjects(Collections.singletonList(subject));
 
     assertThat(validationFailures.size(), is(1));
-    assertThat(validationFailures.get(0).getMessage(), is("must be https://linked.data.gov.au/def/anzsrc-for/2020."));
+    assertThat(validationFailures.get(0).getMessage(), is("must be https://linked.data.gov.au/def/anzsrc-for/2020/."));
     assertThat(validationFailures.get(0).getErrorType(), is("invalid"));
     assertThat(validationFailures.get(0).getFieldId(), is("subjects[0].subjectSchemeUri"));
   }
@@ -152,7 +152,7 @@ class StableSubjectValidationServiceTest {
     final List<ValidationFailure> validationFailures = validationService.validateSubjects(Collections.singletonList(subject));
 
     assertThat(validationFailures.size(), is(2));
-    assertThat(validationFailures.get(0).getMessage(), is("must be https://linked.data.gov.au/def/anzsrc-for/2020."));
+    assertThat(validationFailures.get(0).getMessage(), is("must be https://linked.data.gov.au/def/anzsrc-for/2020/."));
     assertThat(validationFailures.get(0).getErrorType(), is("invalid"));
     assertThat(validationFailures.get(0).getFieldId(), is("subjects[0].subjectSchemeUri"));
     assertThat(validationFailures.get(1).getMessage(), is("https://linked.data.gov.au/def/anzsrc-for/2020/222222 is not a standard FoR code"));
@@ -160,4 +160,3 @@ class StableSubjectValidationServiceTest {
     assertThat(validationFailures.get(1).getFieldId(), is("subjects[0].id"));
   }
 }
-

@@ -152,4 +152,32 @@ UPDATE raido.api_svc.related_object_type
 SET uri = 'https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/workflow.json'
 WHERE name = 'Workflow';
 
+UPDATE raido.api_svc.related_object_type_scheme
+SET uri = 'https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/'
+WHERE id = 1;
+
+UPDATE raido.api_svc.related_object_category_scheme
+SET uri = 'https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/'
+WHERE id = 1;
+
+UPDATE raido.api_svc.organisation_role_scheme
+SET uri = 'https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/'
+WHERE id = 1;
+
+UPDATE raido.api_svc.contributor_position_scheme
+SET uri = 'https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/'
+WHERE id = 1;
+
+UPDATE raido.api_svc.access_type_scheme
+SET uri = 'https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/'
+WHERE id = 1;
+
+UPDATE raido.api_svc.description_type_scheme
+SET uri = 'https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/'
+WHERE id = 1;
+
+UPDATE raido.api_svc.title_type_scheme
+SET uri = 'https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/'
+WHERE id = 1;
+
 END TRANSACTION;
