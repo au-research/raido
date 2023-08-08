@@ -11,9 +11,9 @@ import java.util.Map;
 @Component
 public class RelatedObjectFactory {
     private static final String CATEGORY_SCHEME_URI =
-        "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1";
+        "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/";
     private static final String TYPE_SCHEME_URI =
-        "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1";
+        "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/";
 
     private static final Map<String, String> CATEGORY_MAP = Map.of(
         "input", "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json",
@@ -32,7 +32,7 @@ public class RelatedObjectFactory {
             .category(new RelatedObjectCategory()
                 .schemeUri(CATEGORY_SCHEME_URI)
                 .id(relatedObjectBlock.getRelatedObjectCategory() != null ?
-                    CATEGORY_MAP.get(relatedObjectBlock.getRelatedObjectCategory()) : null)
+                    CATEGORY_MAP.get(relatedObjectBlock.getRelatedObjectCategory().toLowerCase()) : null)
             )
             .type(new RelatedObjectType()
                 .schemeUri(TYPE_SCHEME_URI)

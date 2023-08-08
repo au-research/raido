@@ -13,7 +13,7 @@ import static org.hamcrest.Matchers.nullValue;
 
 class OrganisationRoleFactoryTest {
     private static final String SCHEME_URI =
-        "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1";
+        "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/";
 
     private final OrganisationRoleFactory roleFactory = new OrganisationRoleFactory();
 

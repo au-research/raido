@@ -17,7 +17,7 @@ class DescriptionFactoryTest {
     private static final String ALTERNATIVE_ID =
         "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json";
     private static final String DESCRIPTION_TYPE_SCHEME_URI =
-        "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1";
+        "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/";
     private static final String DESCRIPTION = "Test Description";
 
     private final DescriptionFactory descriptionFactory = new DescriptionFactory();

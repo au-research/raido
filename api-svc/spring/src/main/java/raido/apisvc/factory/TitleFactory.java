@@ -11,7 +11,7 @@ import java.util.Map;
 @Component
 public class TitleFactory {
     private static final String TITLE_TYPE_SCHEME_URI =
-        "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1";
+        "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/";
     private static final Map<TitleType, String> TITLE_TYPE_MAP = Map.of(
         TitleType.PRIMARY_TITLE, "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
         TitleType.ALTERNATIVE_TITLE, "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json"

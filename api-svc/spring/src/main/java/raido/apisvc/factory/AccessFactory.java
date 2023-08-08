@@ -11,7 +11,7 @@ import java.util.Map;
 @Component
 public class AccessFactory {
     private static final String ACCESS_SCHEME_URI =
-        "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1";
+        "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/";
 
     private static final Map<AccessType, String> ACCESS_TYPE_MAP = Map.of(
         AccessType.CLOSED, "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json",

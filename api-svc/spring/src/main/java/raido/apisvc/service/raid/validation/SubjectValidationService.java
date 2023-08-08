@@ -15,7 +15,7 @@ import static raido.apisvc.util.ObjectUtil.indexed;
 @Component
 public class SubjectValidationService {
 
-  private static final String SUBJECT_SCHEME_URI = "https://linked.data.gov.au/def/anzsrc-for/2020";
+  private static final String SUBJECT_SCHEME_URI = "https://linked.data.gov.au/def/anzsrc-for/2020/";
   private final SubjectRepository subjectRepository;
 
   public SubjectValidationService(final SubjectRepository subjectRepository) {
@@ -36,7 +36,7 @@ public class SubjectValidationService {
         if (subject.getSubjectSchemeUri() == null || !subject.getSubjectSchemeUri().equals(SUBJECT_SCHEME_URI)) {
           final var failure = new ValidationFailure();
           failure.setFieldId(String.format("subjects[%d].subjectSchemeUri", i));
-          failure.setMessage(String.format("must be %s.", SUBJECT_SCHEME_URI));
+          failure.setMessage(String.format("must be %s", SUBJECT_SCHEME_URI));
           failure.setErrorType("invalid");
 
           failures.add(failure);

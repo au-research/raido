@@ -10,7 +10,7 @@ import java.util.Map;
 @Component
 public class OrganisationRoleFactory {
     private static final String SCHEME_URI =
-        "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1";
+        "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/";
 
     private static final Map<OrganisationRoleType, String> ROLE_MAP =
         Map.of(OrganisationRoleType.CONTRACTOR,

@@ -124,7 +124,7 @@ public class RaidStableV1Service {
     final var existingChecksum = checksumService.create(existing);
     final var updateChecksum = checksumService.create(raid);
 
-    if (existingChecksum.equals(updateChecksum)) {
+    if (updateChecksum.equals(existingChecksum)) {
       return objectMapper.readValue(
         existing.getMetadata().data(), RaidDto.class );
     }

@@ -23,7 +23,7 @@ public class ContributorPositionFactory {
         );
 
     private static final String SCHEME_URI =
-        "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1";
+        "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/";
 
     public ContributorPositionWithSchemeUri create(final ContributorPosition position) {
         if (position == null) {

@@ -11,7 +11,7 @@ import java.util.Map;
 @Component
 public class DescriptionFactory {
     private final String DESCRIPTION_TYPE_SCHEME_URI =
-        "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1";
+        "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/";
 
     private final Map<DescriptionType, String> DESCRIPTION_TYPE_MAP = Map.of(
         DescriptionType.PRIMARY_DESCRIPTION, "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",

@@ -18,7 +18,7 @@ class ContributorPositionFactoryTest {
     private static final LocalDate END_DATE = LocalDate.now().minusYears(1);
 
     private static final String SCHEME_URI =
-        "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1";
+        "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/";
 
     private final ContributorPositionFactory positionFactory = new ContributorPositionFactory();
 

@@ -17,7 +17,7 @@ class AccessFactoryTest {
     private static final String OPEN_ID =
         "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json";
     private static final String ACCESS_TYPE_SCHEME_URI =
-        "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1";
+        "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/";
 
     private final AccessFactory accessFactory = new AccessFactory();
 
