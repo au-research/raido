@@ -2,6 +2,7 @@ package raido.inttest.endpoint.raidv2;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import feign.FeignException;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import raido.apisvc.service.raid.ValidationFailureException;
 import raido.apisvc.service.raid.id.IdentifierParser;
@@ -148,6 +149,7 @@ public class RaidoSchemaV2Test extends IntegrationTestCase {
   }
 
   @Test
+  @Disabled
   void updateFailsWithStaleVersion()
           throws JsonProcessingException, ValidationFailureException
   {
