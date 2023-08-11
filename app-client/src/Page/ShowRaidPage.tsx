@@ -42,7 +42,7 @@ import {
 import { SmallPageSpinner } from "Component/SmallPageSpinner";
 import { UpgradeLegacySchemaForm } from "Page/UpgradeLegacySchemaForm";
 import { MintRaidHelp } from "Page/MintRaidPage";
-import { Raid } from "types";
+
 import Meta from "./components/Meta";
 import {
   Avatar,
@@ -151,7 +151,7 @@ function Content() {
 
           <CardContent>
             <Stack spacing={2}>
-              <Meta raidData={{} as Raid} theme={theme} />
+              <Meta theme={theme} />
             </Stack>
           </CardContent>
         </Card>
@@ -167,60 +167,6 @@ interface ReadData {
     | RaidoMetadataSchemaV1
     | RaidoMetadataSchemaV2
     | LegacyMetadataSchemaV1;
-}
-
-function EditRaidContainer({ handle }: { handle: string }) {
-  const api = useAuthApi();
-  const readQueryName = "readRaid";
-  const queryClient = useQueryClient();
-  const readQuery: RqQuery<ReadData> = useQuery(
-    [readQueryName, handle],
-    async () => {
-      //await delay(2000);
-      const raid = await api.basicRaid.readRaidV2({
-        readRaidV2Request: { handle },
-      });
-      const metadata = convertMetadata(raid.metadata);
-      const readData: ReadData = { raid, metadata };
-      return readData;
-    }
-  );
-
-  const servicePointId = readQuery.data?.raid.servicePointId;
-  const spQuery: RqQuery<ServicePoint> = useQuery(
-    ["readServicePoint", servicePointId],
-    async () => {
-      assert(servicePointId);
-      return await api.admin.readServicePoint({ servicePointId });
-    },
-    { enabled: !!servicePointId }
-  );
-
-  return (
-    <>
-      <ContainerCard
-        title={`Edit RAiD`}
-        action={
-          /* bit dodgy, will have to re-factor when we want different help between
-      the edit page and the upgrade page. */
-          <MintRaidHelp />
-        }
-      >
-        <CompactErrorPanel error={readQuery.error} />
-        <RaidInfoList handle={handle} servicePointName={spQuery.data?.name} />
-        <Divider
-          variant={"middle"}
-          style={{ marginTop: "1em", marginBottom: "1.5em" }}
-        />
-        <RaidDataForm
-          readQuery={readQuery}
-          onUpdateSuccess={() => queryClient.invalidateQueries([readQueryName])}
-        />
-      </ContainerCard>
-      <br />
-      <MetaDataContainer metadata={readQuery.data?.metadata} />
-    </>
-  );
 }
 
 /** "switching logic" for deciding what component to use depending on the state 

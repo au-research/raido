@@ -5,15 +5,8 @@ import Grid from "@mui/material/Grid";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import CategoryHeadingBox from "./category-heading-box";
-import type { Raid } from "../../types";
 
-export default function Meta({
-  raidData,
-  theme,
-}: {
-  raidData: any;
-  theme: any;
-}) {
+export default function Meta({ theme }: { theme: any }) {
   return (
     <Grid container alignItems="stretch">
       <Grid item xs={12} sm={3} md={3}>
@@ -49,7 +42,7 @@ export default function Meta({
             <Box>
               <Typography variant="body2">Agency URL</Typography>
               <Typography color="text.secondary" variant="body1">
-              10378.1/1724446
+                10378.1/1724446
               </Typography>
             </Box>
           </Grid>
