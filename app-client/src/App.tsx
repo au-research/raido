@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import './App.css';
 import { RaidoTheme } from "Design/RaidoTheme";
-import { CssBaseline } from "@mui/material";
+import { createTheme, CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material";
 import { ReactErrorBoundary } from "Error/ReactErrorBoundary";
 import { ErrorDialogProvider } from "Error/ErrorDialog";
 import { LocationPathnameProvider } from "Util/Hook/LocationPathname";
@@ -34,10 +34,37 @@ import {
 } from "Page/Public/RaidLandingPage";
 import { MintRaidPage } from "Page/MintRaidPage";
 import { EditRaidPage } from "Page/EditRaidPage";
+import { ShowRaidPage } from "Page/ShowRaidPage";
 
 export function App(){
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          // mode: prefersDarkMode ? "dark" : "light",
+          mode:"light",
+          primary: {
+            // main: "#F8B20E", // RAiD yellow
+            // main: "#8E489B", // RAiD magenta
+            main: "#E51875", // RAiD pink
+          },
+          secondary: {
+            main: "#008CCF", // RAiD blue
+          },
+          background: {
+            default: prefersDarkMode ? "#303030" : "#FAFAFA",
+          },
+        },
+      }),
+    [prefersDarkMode]
+  );
+
+  
   /* theme defines the basic color palette and styling, etc. */
   return <RaidoTheme>
+          {/* <ThemeProvider theme={theme}> */}
+
     {/* force browser defaults for consistent display behaviour */}
     <CssBaseline/>
     {/* deal with "unhandled" errors from bad rendering logic */}
@@ -83,6 +110,7 @@ export function App(){
                       <ListApiKeyPage/>
                       <ApiKeyPage/>
                       <EditRaidPage/>
+                      <ShowRaidPage/>
                       <MintRaidPage/>
   
                     </NavigationProvider>
@@ -101,5 +129,6 @@ export function App(){
         </LocalizationProvider>
       </ErrorDialogProvider>
     </ReactErrorBoundary>
+    {/* </ThemeProvider> */}
   </RaidoTheme>;
 }

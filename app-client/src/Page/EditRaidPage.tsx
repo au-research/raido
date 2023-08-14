@@ -1,3 +1,4 @@
+import LaunchIcon from "@mui/icons-material/Launch";
 import {
   isPagePath,
   NavigationState,
@@ -40,6 +41,7 @@ import {
 import { SmallPageSpinner } from "Component/SmallPageSpinner";
 import { UpgradeLegacySchemaForm } from "Page/UpgradeLegacySchemaForm";
 import { MintRaidHelp } from "Page/MintRaidPage";
+import { IconButton } from "@mui/material";
 
 const log = console;
 
@@ -113,7 +115,14 @@ function EditRaidContainer({handle}: {
     <ContainerCard title={`Edit RAiD`} action={
       /* bit dodgy, will have to re-factor when we want different help between
       the edit page and the upgrade page. */
-      <MintRaidHelp/>}
+      <>
+        <IconButton aria-label="show raid" href={`/show-raid/${handle}`}>
+          <LaunchIcon />
+        </IconButton>
+        <MintRaidHelp/>
+      </>
+      
+    }
     >
       <CompactErrorPanel error={readQuery.error}/>
       <RaidInfoList handle={handle} servicePointName={spQuery.data?.name} />
