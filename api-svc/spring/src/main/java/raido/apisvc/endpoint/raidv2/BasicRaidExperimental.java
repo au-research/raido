@@ -14,6 +14,7 @@ import raido.apisvc.service.raid.id.IdentifierUrl;
 import raido.apisvc.service.raid.validation.RaidoSchemaV1ValidationService;
 import raido.apisvc.util.Guard;
 import raido.apisvc.util.Log;
+import raido.db.jooq.api_svc.enums.Metaschema;
 import raido.idl.raidv2.api.BasicRaidExperimentalApi;
 import raido.idl.raidv2.model.*;
 
@@ -135,20 +136,21 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     guardOperatorOrAssociated(user, req.getServicePointId());
 
     return db.select(RAID.HANDLE, RAID.PRIMARY_TITLE, RAID.START_DATE,
-        RAID.CONFIDENTIAL, RAID.METADATA_SCHEMA, RAID.DATE_CREATED).
-      from(RAID).
-      where(
-        RAID.SERVICE_POINT_ID.eq(req.getServicePointId()).
-          and(createV2SearchCondition(req))
-      ).
-      orderBy(RAID.DATE_CREATED.desc()).
-      limit(MAX_EXPERIMENTAL_RECORDS).
-      fetch(r-> new RaidListItemV2().
-        handle(r.get(RAID.HANDLE)).
-        primaryTitle(r.get(RAID.PRIMARY_TITLE)).
-        startDate(r.get(RAID.START_DATE)).
-        createDate(local2Offset(r.get(RAID.DATE_CREATED))).
-        metadataSchema(mapDb2Api(r.get(RAID.METADATA_SCHEMA))) );
+                    RAID.CONFIDENTIAL, RAID.METADATA_SCHEMA, RAID.DATE_CREATED).
+            from(RAID)
+            .where(
+                    RAID.SERVICE_POINT_ID.eq(req.getServicePointId())
+                            .and(RAID.METADATA_SCHEMA.in(Metaschema.raido_metadata_schema_v1, Metaschema.legacy_metadata_schema_v1))
+                            .and(createV2SearchCondition(req))
+            )
+            .orderBy(RAID.DATE_CREATED.desc())
+            .limit(MAX_EXPERIMENTAL_RECORDS)
+            .fetch(r -> new RaidListItemV2()
+                    .handle(r.get(RAID.HANDLE))
+                    .primaryTitle(r.get(RAID.PRIMARY_TITLE))
+                    .startDate(r.get(RAID.START_DATE))
+                    .createDate(local2Offset(r.get(RAID.DATE_CREATED)))
+                    .metadataSchema(mapDb2Api(r.get(RAID.METADATA_SCHEMA))));
   }
 
   @Override
@@ -157,20 +159,21 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     guardOperatorOrAssociated(user, request.getServicePointId());
 
     return db.select(RAID.HANDLE, RAID.PRIMARY_TITLE, RAID.START_DATE,
-                    RAID.CONFIDENTIAL, RAID.METADATA_SCHEMA, RAID.DATE_CREATED).
-            from(RAID).
-            where(
-                    RAID.SERVICE_POINT_ID.eq(request.getServicePointId()).
-                            and(createV2SearchCondition(request))
+                    RAID.CONFIDENTIAL, RAID.METADATA_SCHEMA, RAID.DATE_CREATED)
+            .from(RAID)
+            .where(
+                    RAID.SERVICE_POINT_ID.eq(request.getServicePointId())
+                            .and(RAID.METADATA_SCHEMA.in(Metaschema.raido_metadata_schema_v1, Metaschema.legacy_metadata_schema_v1))
+                            .and(createV2SearchCondition(request))
             ).
-            orderBy(RAID.DATE_CREATED.desc()).
-            limit(MAX_EXPERIMENTAL_RECORDS).
-            fetch(r-> new RaidListItemV3().
-                    handle(r.get(RAID.HANDLE)).
-                    primaryTitle(r.get(RAID.PRIMARY_TITLE)).
-                    startDate(r.get(RAID.START_DATE)).
-                    createDate(local2Offset(r.get(RAID.DATE_CREATED))).
-                    metadataSchema(mapDb2ApiV2(r.get(RAID.METADATA_SCHEMA))) );
+            orderBy(RAID.DATE_CREATED.desc())
+            .limit(MAX_EXPERIMENTAL_RECORDS)
+            .fetch(r -> new RaidListItemV3()
+                    .handle(r.get(RAID.HANDLE))
+                    .primaryTitle(r.get(RAID.PRIMARY_TITLE))
+                    .startDate(r.get(RAID.START_DATE))
+                    .createDate(local2Offset(r.get(RAID.DATE_CREATED)))
+                    .metadataSchema(mapDb2ApiV2(r.get(RAID.METADATA_SCHEMA))));
   }
 
   private static Condition createV2SearchCondition(RaidListRequestV2 req) {
