@@ -156,6 +156,10 @@ UPDATE raido.api_svc.related_object_type_scheme
 SET uri = 'https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/'
 WHERE id = 1;
 
+UPDATE raido.api_svc.related_raid_type_scheme
+SET uri = 'https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/'
+WHERE id = 1;
+
 UPDATE raido.api_svc.related_object_category_scheme
 SET uri = 'https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/'
 WHERE id = 1;
