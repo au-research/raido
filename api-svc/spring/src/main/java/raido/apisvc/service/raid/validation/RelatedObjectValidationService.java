@@ -17,10 +17,10 @@ import static raido.apisvc.service.doi.DoiService.DOI_REGEX;
 public class RelatedObjectValidationService {
   private static final String RELATED_OBJECT_SCHEME_URI = "https://doi.org/";
   private static final String RELATED_OBJECT_TYPE_SCHEME_URI =
-    "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/related-object-type/";
+    "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/";
 
   private static final String RELATED_OBJECT_TYPE_URL_PREFIX =
-    "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/";
+    "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/";
 
   private static final List<String> VALID_CATEGORY_TYPES =
     List.of("Input", "Output", "Internal process document or artefact");

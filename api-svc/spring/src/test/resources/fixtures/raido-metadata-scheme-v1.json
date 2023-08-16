@@ -1,0 +1,205 @@
+{
+  "metadataSchema": "RaidoMetadataSchemaV1",
+  "id": {
+    "identifier": "https://test.raid.org.au/10378.1/1725916",
+    "identifierSchemeURI": "https://raid.org",
+    "identifierRegistrationAgency": "https://ror.org/038sjwq14",
+    "identifierOwner": "https://ror.org/038sjwq14",
+    "identifierServicePoint": 20000000,
+    "globalUrl": "https://hdl.handle.net/10378.1/1725916",
+    "raidAgencyUrl": "https://test.raid.org.au/10378.1/1725916",
+    "version": 1
+  },
+  "titles": [
+    {
+      "title": "Lorem Ipsum",
+      "type": "Primary Title",
+      "startDate": "2021-08-04",
+      "endDate": "2022-08-04"
+    },
+    {
+      "title": "Nam cursus varius",
+      "type": "Alternative Title",
+      "startDate": "2022-08-04",
+      "endDate": "2023-08-04"
+    }
+  ],
+  "dates": {
+    "startDate": "2021-08-04",
+    "endDate": "2022-08-04"
+  },
+  "descriptions": [
+    {
+      "description": "Genome sequencing and assembly project at WUR of the C. Japonicum.",
+      "type": "Primary Description"
+    },    {
+      "description": "Nam cursus varius tincidunt. Nulla ac nisl sit amet tortor interdum consequat nec quis purus.",
+      "type": "Alternative Description"
+    }
+  ],
+  "access": {
+    "type": "Open",
+    "accessStatement": ""
+  },
+  "contributors": [
+    {
+      "id": "https://orcid.org/0000-0002-6492-9025",
+      "identifierSchemeUri": "https://orcid.org/",
+      "positions": [
+        {
+          "positionSchemaUri": "https://raid.org/",
+          "position": "Leader",
+          "startDate": "2021-08-04",
+          "endDate": "2022-08-04"
+        },
+        {
+          "positionSchemaUri": "https://raid.org/",
+          "position": "Other Participant",
+          "startDate": "2022-08-05",
+          "endDate": "2023-08-05"
+        }
+      ],
+      "roles": [
+        {
+          "roleSchemeUri": "https://credit.niso.org/",
+          "role": "project-administration"
+        },
+        {
+          "roleSchemeUri": "https://credit.niso.org/",
+          "role": "supervision"
+        }
+      ]
+    },
+    {
+      "id": "https://orcid.org/0000-0003-0635-1998",
+      "identifierSchemeUri": "https://orcid.org/",
+      "positions": [
+        {
+          "positionSchemaUri": "https://raid.org/",
+          "position": "Contact Person",
+          "startDate": "2020-07-14",
+          "endDate": "2022-08-04"
+        },
+        {
+          "positionSchemaUri": "https://raid.org/",
+          "position": "Principal Investigator",
+          "startDate": "2019-08-05",
+          "endDate": "2020-08-05"
+        }
+      ],
+      "roles": [
+        {
+          "roleSchemeUri": "https://credit.niso.org/",
+          "role": "conceptualization"
+        },
+        {
+          "roleSchemeUri": "https://credit.niso.org/",
+          "role": "validation"
+        }
+      ]
+    }
+  ],
+  "organisations": [
+    {
+      "id": "https://ror.org/038sjwq14",
+      "identifierSchemeUri": "https://ror.org/",
+      "roles": [
+        {
+          "roleSchemeUri": "https://raid.org/",
+          "role": "Lead Research Organisation",
+          "startDate": "2021-08-04",
+          "endDate": "2022-08-04"
+        }
+      ]
+    },    {
+      "id": "https://ror.org/035zntx80",
+      "identifierSchemeUri": "https://ror.org/",
+      "roles": [
+        {
+          "roleSchemeUri": "https://raid.org/",
+          "role": "Other Organisation",
+          "startDate": "2022-08-05",
+          "endDate": "2023-08-05"
+        }
+      ]
+    }
+  ],
+  "subjects": [
+    {
+      "subject": "https://linked.data.gov.au/def/anzsrc-for/2020/430106",
+      "subjectSchemeUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+      "subjectKeyword": "Digital Archeology"
+    },
+    {
+      "subject": "https://linked.data.gov.au/def/anzsrc-for/2020/4301",
+      "subjectSchemeUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+      "subjectKeyword": "Archeology"
+    }
+  ],
+  "relatedObjects": [
+    {
+      "relatedObject": "https://doi.org/10.47366/sabia.v5n1a3",
+      "relatedObjectSchemeUri": "https://doi.org/",
+      "relatedObjectType": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book.json",
+      "relatedObjectTypeSchemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1",
+      "relatedObjectCategory": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json"
+    },
+    {
+      "relatedObject": "https://doi.org/10.47366/sabia.v5n1a3",
+      "relatedObjectSchemeUri": "https://doi.org/",
+      "relatedObjectType": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book.json",
+      "relatedObjectTypeSchemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1",
+      "relatedObjectCategory": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json"
+    }
+  ],
+  "alternateIdentifiers": [
+    {
+      "alternateIdentifier": "123456",
+      "alternateIdentifierType": "Other"
+    },
+    {
+      "alternateIdentifier": "7891011",
+      "alternateIdentifierType": "Alternative"
+    }
+  ],
+  "alternateUrls": [
+    {
+      "url": "https://example.org/"
+    },
+    {
+      "url": "https://blah.com/"
+    }
+  ],
+  "relatedRaids": [
+    {
+      "relatedRaid": "https://test.raid.org.au/10378.1/1725916",
+      "relatedRaidType": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/continues.json",
+      "relatedRaidTypeSchemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1"
+    },
+    {
+      "relatedRaid": "https://test.raid.org.au/10378.1/3847387",
+      "relatedRaidType": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/is-continued-by.json",
+      "relatedRaidTypeSchemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1"
+    }
+  ],
+  "spatialCoverages": [
+    {
+      "spatialCoverage": "https://www.geonames.org/264371/athens.html",
+      "spatialCoverageSchemeUri": "https://www.geonames.org/",
+      "spatialCoveragePlace": "Athens"
+    },
+    {
+      "spatialCoverage": "https://www.geonames.org/2147714/sydney.html",
+      "spatialCoverageSchemeUri": "https://www.geonames.org/",
+      "spatialCoveragePlace": "Sydney"
+    }
+  ],
+  "traditionalKnowledgeLabels": [
+    {
+      "traditionalKnowledgeLabelSchemeUri": "https://localcontexts.org/labels/traditional-knowledge-labels/"
+    },
+    {
+      "traditionalKnowledgeLabelSchemeUri": "https://localcontexts.org/labels/biocultural-labels/"
+    }
+  ]
+}

@@ -11,20 +11,9 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
+import static raido.inttest.endpoint.raidv2.stable.TestConstants.*;
 
 public class StableRaidoSchemaV1Test extends AbstractStableIntegrationTest {
-  private static final String ORGANISATION_ROLE_SCHEME_URI =
-    "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1";
-
-  private static final String ORGANISATION_SCHEME_URI =
-    "https://ror.org/";
-
-  private static final String CONTRIBUTOR_SCHEME_URI = "https://orcid.org/";
-
-  private static final String CONTRIBUTOR_POSITION_SCHEME_URI =
-    "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1";
-
-  private static final String CONTRIBUTOR_ROLE_SCHEME_URI = "https://credit.niso.org/";
 
   @Test
   @DisplayName("Mint a raid")
@@ -98,7 +87,7 @@ public class StableRaidoSchemaV1Test extends AbstractStableIntegrationTest {
 
 
   @Test
-  @DisplayName("Resource not found error returned when raid not founf on update")
+  @DisplayName("Resource not found error returned when raid not found on update")
   void notFound() {
     final var mintedRaid = raidApi.createRaidV1(createRequest);
 
@@ -146,7 +135,7 @@ public class StableRaidoSchemaV1Test extends AbstractStableIntegrationTest {
   ) {
     return new Contributor()
       .id(orcid)
-      .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
+      .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
       .positions(List.of(new ContributorPositionWithSchemeUri()
         .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
         .id(position)
@@ -164,7 +153,7 @@ public class StableRaidoSchemaV1Test extends AbstractStableIntegrationTest {
   ) {
     return new Organisation()
       .id(ror)
-      .identifierSchemeUri(ORGANISATION_SCHEME_URI).
+      .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI).
       roles(List.of(
         new OrganisationRoleWithSchemeUri()
           .schemeUri(ORGANISATION_ROLE_SCHEME_URI)

@@ -23,7 +23,9 @@ import static org.mockito.Mockito.*;
 class RelatedRaidValidationServiceTest {
 
   private static final String RELATED_RAID_TYPE_SCHEME_URI =
-    "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type";
+      "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/";
+  private static final String RELATED_RAID_TYPE_URI_PREFIX =
+      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/";
 
   private final RelatedRaidTypeRepository relatedRaidTypeRepository = mock(RelatedRaidTypeRepository.class);
 
@@ -38,7 +40,7 @@ class RelatedRaidValidationServiceTest {
   void addsValidationFailureIfRelatedRaidUrlIsIncorrect() {
     metadataProps.handleUrlPrefix = "handle-url-prefix";
     final var relatedRaidUrl = "example.com";
-    final var relatedRaidType = RELATED_RAID_TYPE_SCHEME_URI + "/" + "continues.json";
+    final var relatedRaidType = RELATED_RAID_TYPE_URI_PREFIX + "/" + "continues.json";
 
     when(relatedRaidTypeRepository.findByUri(relatedRaidType)).thenReturn(Optional.of(mock(RelatedRaidTypeRecord.class)));
 
@@ -63,7 +65,7 @@ class RelatedRaidValidationServiceTest {
     metadataProps.handleUrlPrefix = "handle-url-prefix";
     final var handle = "123.45/67890";
     final var relatedRaidUrl = metadataProps.handleUrlPrefix + "/" + handle;
-    final var relatedRaidType = RELATED_RAID_TYPE_SCHEME_URI + "/" + "continues.json";
+    final var relatedRaidType = RELATED_RAID_TYPE_URI_PREFIX + "/" + "continues.json";
 
     when(raidRepository.findByHandle(handle)).thenReturn(Optional.empty());
     when(relatedRaidTypeRepository.findByUri(relatedRaidType)).thenReturn(Optional.of(mock(RelatedRaidTypeRecord.class)));
@@ -87,7 +89,7 @@ class RelatedRaidValidationServiceTest {
     metadataProps.handleUrlPrefix = "handle-url-prefix";
     final var handle = "123.45/67890";
     final var relatedRaidUrl = metadataProps.handleUrlPrefix + "/" + handle;
-    final var relatedRaidType = RELATED_RAID_TYPE_SCHEME_URI + "/" + "continues.json";
+    final var relatedRaidType = RELATED_RAID_TYPE_URI_PREFIX + "/" + "continues.json";
 
     when(raidRepository.findByHandle(handle)).thenReturn(Optional.of(mock(RaidRecord.class)));
     when(relatedRaidTypeRepository.findByUri(relatedRaidType)).thenReturn(Optional.of(mock(RelatedRaidTypeRecord.class)));
@@ -150,7 +152,7 @@ class RelatedRaidValidationServiceTest {
     metadataProps.handleUrlPrefix = "handle-url-prefix";
     final var handle = "123.45/67890";
     final var relatedRaidUrl = metadataProps.handleUrlPrefix + "/" + handle;
-    final var relatedRaidType = RELATED_RAID_TYPE_SCHEME_URI + "/" + "continues.json";
+    final var relatedRaidType = RELATED_RAID_TYPE_URI_PREFIX + "/" + "continues.json";
 
     when(raidRepository.findByHandle(handle)).thenReturn(Optional.of(mock(RaidRecord.class)));
     when(relatedRaidTypeRepository.findByUri(relatedRaidType)).thenReturn(Optional.empty());
@@ -174,7 +176,7 @@ class RelatedRaidValidationServiceTest {
     metadataProps.handleUrlPrefix = "handle-url-prefix";
     final var handle = "123.45/67890";
     final var relatedRaidUrl = metadataProps.handleUrlPrefix + "/" + handle;
-    final var relatedRaidType = RELATED_RAID_TYPE_SCHEME_URI + "/" + "continues.json";
+    final var relatedRaidType = RELATED_RAID_TYPE_URI_PREFIX + "/" + "continues.json";
 
     when(raidRepository.findByHandle(handle)).thenReturn(Optional.empty());
     when(relatedRaidTypeRepository.findByUri(relatedRaidType)).thenReturn(Optional.empty());
@@ -201,7 +203,7 @@ class RelatedRaidValidationServiceTest {
     metadataProps.handleUrlPrefix = "handle-url-prefix";
     final var handle = "123.45/67890";
     final var relatedRaidUrl = metadataProps.handleUrlPrefix + "/" + handle;
-    final var relatedRaidType = RELATED_RAID_TYPE_SCHEME_URI + "/" + "continues.json";
+    final var relatedRaidType = RELATED_RAID_TYPE_URI_PREFIX + "/" + "continues.json";
 
     when(raidRepository.findByHandle(handle)).thenReturn(Optional.of(mock(RaidRecord.class)));
     when(relatedRaidTypeRepository.findByUri(relatedRaidType)).thenReturn(Optional.of(mock(RelatedRaidTypeRecord.class)));
@@ -223,7 +225,7 @@ class RelatedRaidValidationServiceTest {
     metadataProps.handleUrlPrefix = "handle-url-prefix";
     final var handle = "123.45/67890";
     final var relatedRaidUrl = metadataProps.handleUrlPrefix + "/" + handle;
-    final var relatedRaidType = RELATED_RAID_TYPE_SCHEME_URI + "/" + "continues.json";
+    final var relatedRaidType = RELATED_RAID_TYPE_URI_PREFIX + "/" + "continues.json";
 
     when(raidRepository.findByHandle(handle)).thenReturn(Optional.of(mock(RaidRecord.class)));
     when(relatedRaidTypeRepository.findByUri(relatedRaidType)).thenReturn(Optional.of(mock(RelatedRaidTypeRecord.class)));

@@ -13,10 +13,10 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static raido.inttest.endpoint.raidv2.stable.TestConstants.*;
 
 public class AccessIntegrationTest extends AbstractStableIntegrationTest {
+
   @Test
   @DisplayName("Mint raid with valid open access type")
   void mintOpenAccess() {
-
     createRequest.getAccess()
       .type(new AccessTypeWithSchemeUri()
         .id(OPEN_ACCESS_TYPE)

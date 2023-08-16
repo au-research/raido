@@ -185,9 +185,9 @@ public class RaidExceptionHandler extends ResponseEntityExceptionHandler {
     HttpStatusCode status,
     WebRequest request
   ) {
-    /* I wanted to log the input message that caused the error here too, but 
-    I couldn't figure out how to actually print the content of 
-    ex.httpInputMessage.  So it's logged from the RequestLoggingFilter. 
+    /* I wanted to log the input message that caused the error here too, but
+    I couldn't figure out how to actually print the content of
+    ex.httpInputMessage.  So it's logged from the RequestLoggingFilter.
     */
     log.with("problem", ex.getMessage()).
       warn("bad request - http message not readable");

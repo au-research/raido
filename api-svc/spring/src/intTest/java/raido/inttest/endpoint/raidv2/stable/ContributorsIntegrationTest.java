@@ -140,7 +140,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
   void missingId() {
     createRequest.setContributors(List.of(
       new Contributor()
-        .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
+        .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
         .positions(List.of(
           new ContributorPositionWithSchemeUri()
             .startDate(LocalDate.now())
@@ -176,7 +176,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
   void emptyId() {
     createRequest.setContributors(List.of(
       new Contributor()
-        .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
+        .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
         .id("")
         .positions(List.of(
           new ContributorPositionWithSchemeUri()
@@ -216,7 +216,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
     void invalidOrcidPattern() {
       createRequest.setContributors(List.of(
         new Contributor()
-          .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
+          .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
           .id("https://orcid.org/0000-0c00-0000-0000")
           .positions(List.of(
             new ContributorPositionWithSchemeUri()
@@ -253,7 +253,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
     void invalidOrcidChecksum() {
       createRequest.setContributors(List.of(
         new Contributor()
-          .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
+          .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
           .id("https://orcid.org/0000-0000-0000-0000")
           .positions(List.of(
             new ContributorPositionWithSchemeUri()
@@ -290,7 +290,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
     void nonExistentOrcid() {
       createRequest.setContributors(List.of(
         new Contributor()
-          .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
+          .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
           .id("https://orcid.org/0000-0001-0000-0009")
           .positions(List.of(
             new ContributorPositionWithSchemeUri()
@@ -327,7 +327,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
   void nullPositions() {
     createRequest.setContributors(List.of(
       new Contributor()
-        .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
+        .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
         .id("https://orcid.org/0000-0000-0000-0001")
         .roles(List.of(
           new ContributorRoleWithSchemeUri()
@@ -358,7 +358,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
   void emptyPositions() {
     createRequest.setContributors(List.of(
       new Contributor()
-        .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
+        .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
         .id("https://orcid.org/0000-0000-0000-0001")
         .positions(Collections.emptyList())
         .roles(List.of(
@@ -390,7 +390,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
   void missingLeader() {
     createRequest.setContributors(List.of(
       new Contributor()
-        .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
+        .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
         .id("https://orcid.org/0000-0000-0000-0001")
         .positions(List.of(
           new ContributorPositionWithSchemeUri()
@@ -429,7 +429,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
     void missingPositionSchemeUri() {
       createRequest.setContributors(List.of(
         new Contributor()
-          .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
+          .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
           .id("https://orcid.org/0000-0000-0000-0001")
           .positions(List.of(
             new ContributorPositionWithSchemeUri()
@@ -464,7 +464,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
     void missingPositionType() {
       createRequest.setContributors(List.of(
         new Contributor()
-          .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
+          .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
           .id("https://orcid.org/0000-0000-0000-0001")
           .positions(List.of(
             new ContributorPositionWithSchemeUri()
@@ -504,7 +504,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
     void invalidPositionSchemeUri() {
       createRequest.setContributors(List.of(
         new Contributor()
-          .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
+          .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
           .id("https://orcid.org/0000-0000-0000-0001")
           .positions(List.of(
             new ContributorPositionWithSchemeUri()
@@ -545,7 +545,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
     void invalidPositionTypeForScheme() {
       createRequest.setContributors(List.of(
         new Contributor()
-          .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
+          .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
           .id("https://orcid.org/0000-0000-0000-0001")
           .positions(List.of(
             new ContributorPositionWithSchemeUri()
@@ -590,7 +590,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
     void missingRoleSchemeUri() {
       createRequest.setContributors(List.of(
         new Contributor()
-          .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
+          .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
           .id("https://orcid.org/0000-0000-0000-0001")
           .positions(List.of(
             new ContributorPositionWithSchemeUri()
@@ -627,7 +627,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
     void missingPositionType() {
       createRequest.setContributors(List.of(
         new Contributor()
-          .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
+          .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
           .id("https://orcid.org/0000-0000-0000-0001")
           .positions(List.of(
             new ContributorPositionWithSchemeUri()
@@ -667,7 +667,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
     void invalidPositionSchemeUri() {
       createRequest.setContributors(List.of(
         new Contributor()
-          .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
+          .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
           .id("https://orcid.org/0000-0000-0000-0001")
           .positions(List.of(
             new ContributorPositionWithSchemeUri()
@@ -708,7 +708,7 @@ public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
     void invalidPositionTypeForScheme() {
       createRequest.setContributors(List.of(
         new Contributor()
-          .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
+          .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
           .id("https://orcid.org/0000-0000-0000-0001")
           .positions(List.of(
             new ContributorPositionWithSchemeUri()

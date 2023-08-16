@@ -1,7 +1,7 @@
 {
   "id": {
     "identifier": "https://raid.org.au/10378.1/1696639",
-    "identifierSchemeURI": "https://raid.org",
+    "identifierSchemeUri": "https://raid.org",
     "identifierRegistrationAgency": "https://ror.org/038sjwq14",
     "identifierOwner": "https://ror.org/02stey378",
     "identifierServicePoint": 20000001,
@@ -16,8 +16,19 @@
         "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
         "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1"
       },
-      "startDate": "2020-10-07"
+      "startDate": "2020-10-07",
+      "endDate": "2021-10-07"
+    },
+    {
+      "title": "Lorem ipsum dolor sit amet",
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
+        "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1"
+      },
+      "startDate": "2020-03-01",
+      "endDate": "2021-03-01"
     }
+
   ],
   "dates": {
     "startDate": "2020-11-01"
@@ -27,6 +38,12 @@
       "description": "Genome sequencing and assembly project at WUR of the C. Japonicum. ",
       "type": {
         "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+        "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1"
+      }
+    },    {
+      "description": "Nam cursus varius tincidunt. Nulla ac nisl sit amet tortor interdum consequat nec quis purus.",
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
         "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1"
       }
     }
@@ -40,13 +57,40 @@
   },
   "contributors": [
     {
-      "id": "0000-0002-4368-8058",
+      "id": "https://orcid.org/0000-0002-4368-8058",
       "identifierSchemeUri": "https://orcid.org/",
       "positions": [
         {
           "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1",
           "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+          "startDate": "2020-10-07",
+          "endDate": "2021-10-07"
+        },
+        {
+          "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1",
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/contact-person.json",
           "startDate": "2020-10-07"
+        }
+      ],
+      "roles": [
+        {
+          "schemeUri": "https://credit.niso.org",
+          "id": "https://credit.niso.org/contributor-roles/formal-analysis/"
+        },
+        {
+          "schemeUri": "https://credit.niso.org",
+          "id": "https://credit.niso.org/contributor-roles/investigation/"
+        }
+      ]
+    },
+    {
+      "id": "https://orcid.org/0000-0002-6492-9025",
+      "identifierSchemeUri": "https://orcid.org/",
+      "positions": [
+        {
+          "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1",
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+          "startDate": "2021-10-08"
         }
       ],
       "roles": [
@@ -65,9 +109,97 @@
         {
           "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1",
           "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json",
+          "startDate": "2020-09-12",
+          "endDate": "2021-10-07"
+        }
+      ]
+    },
+    {
+      "id": "https://ror.org/038sjwq14",
+      "identifierSchemeUri": "https://ror.org/",
+      "roles": [
+        {
+          "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1",
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/other-organisation.json",
           "startDate": "2020-10-07"
         }
       ]
+    }
+  ],
+  "relatedObjects": [
+    {
+      "id": "https://doi.org/10.47366/sabia.v5n1a3",
+      "identifierSchemeUri": "https://doi.org/",
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book.json",
+        "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1"
+      },
+      "category": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json",
+        "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1"
+      }
+    },
+    {
+      "id": "https://doi.org/10.47366/sabia.v5n1a3",
+      "identifierSchemeUri": "https://doi.org/",
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book.json",
+        "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1"
+      },
+      "category": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json",
+        "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1"
+      }
+    }
+  ],
+  "alternateIdentifiers": [
+    {
+      "id": "123456",
+      "type": "Other"
+    },
+    {
+      "id": "7891011",
+      "type": "Alternative"
+    }
+  ],
+  "alternateUrls": [
+    {
+      "url": "https://example.org/"
+    },
+    {
+      "url": "https://example.com/"
+    }
+  ],
+  "subjects": [
+    {
+      "id": "https://linked.data.gov.au/def/anzsrc-for/2020/430106",
+      "schemeUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+      "keyword": "Digital Archeology"
+    },
+    {
+      "id": "https://linked.data.gov.au/def/anzsrc-for/2020/4301",
+      "schemeUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+      "keyword": "Archeology"
+    }
+  ],
+  "traditionalKnowledgeLabels": [
+    {
+      "schemeUri": "https://localcontexts.org/labels/traditional-knowledge-labels/"
+    },
+    {
+      "schemeUri": "https://localcontexts.org/labels/biocultural-labels/"
+    }
+  ],
+  "spatialCoverages": [
+    {
+      "id": "https://www.geonames.org/264371/athens.html",
+      "schemeUri": "https://www.geonames.org/",
+      "place": "Athens"
+    },
+    {
+      "id": "https://www.geonames.org/2147714/sydney.html",
+      "schemeUri": "https://www.geonames.org/",
+      "place": "Sydney"
     }
   ]
 }

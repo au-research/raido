@@ -33,13 +33,13 @@ class RelatedObjectValidationServiceTest {
   @Test
   void noFailuresWithValidRelatedObject() {
     final var relatedObjectType =
-      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book-chapter.json";
+      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book-chapter.json";
 
     final var relatedObject = new RelatedObjectBlock()
       .relatedObject("https://doi.org/10.000/00000")
       .relatedObjectSchemeUri("https://doi.org/")
       .relatedObjectType(relatedObjectType)
-      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/related-object-type/")
+      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/")
       .relatedObjectCategory("Input");
 
     when(relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType, 1))
@@ -68,12 +68,12 @@ class RelatedObjectValidationServiceTest {
   @Test
   void addsFailuresIfRelatedObjectIsNull() {
     final var relatedObjectType =
-      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book-chapter.json";
+      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book-chapter.json";
 
     final var relatedObject = new RelatedObjectBlock()
       .relatedObjectSchemeUri("https://doi.org/")
       .relatedObjectType(relatedObjectType)
-      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/related-object-type/")
+      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/")
       .relatedObjectCategory("Input");
 
     when(relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType, 1))
@@ -93,12 +93,12 @@ class RelatedObjectValidationServiceTest {
   @Test
   void addsFailureIfRelatedObjectSchemeUriIsNull() {
     final var relatedObjectType =
-      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book-chapter.json";
+      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book-chapter.json";
 
     final var relatedObject = new RelatedObjectBlock()
       .relatedObject("https://doi.org/10.000/00000")
       .relatedObjectType(relatedObjectType)
-      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/related-object-type/")
+      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/")
       .relatedObjectCategory("Input");
 
     when(relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType, 1))
@@ -120,7 +120,7 @@ class RelatedObjectValidationServiceTest {
     final var relatedObject = new RelatedObjectBlock()
       .relatedObject("https://doi.org/10.000/00000")
       .relatedObjectSchemeUri("https://doi.org/")
-      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/related-object-type/")
+      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/")
       .relatedObjectCategory("Input");
 
     final var failures =
@@ -137,7 +137,7 @@ class RelatedObjectValidationServiceTest {
   @Test
   void addsFailureIfRelatedObjectTypeSchemeUriIsNull() {
     final var relatedObjectType =
-      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book-chapter.json";
+      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book-chapter.json";
 
     final var relatedObject = new RelatedObjectBlock()
       .relatedObject("https://doi.org/10.000/00000")
@@ -162,13 +162,13 @@ class RelatedObjectValidationServiceTest {
   @Test
   void addsFailureIfRelatedObjectCategoryIsNull() {
     final var relatedObjectType =
-      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book-chapter.json";
+      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book-chapter.json";
 
     final var relatedObject = new RelatedObjectBlock()
       .relatedObject("https://doi.org/10.000/00000")
       .relatedObjectSchemeUri("https://doi.org/")
       .relatedObjectType(relatedObjectType)
-      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/related-object-type/");
+      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/");
 
     when(relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType, 1))
       .thenReturn(Optional.of(new RelatedObjectTypeRecord()));
@@ -187,13 +187,13 @@ class RelatedObjectValidationServiceTest {
   @Test
   void addFailureIfRelatedObjectDoesNotMatchPattern() {
     final var relatedObjectType =
-      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book-chapter.json";
+      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book-chapter.json";
 
     final var relatedObject = new RelatedObjectBlock()
       .relatedObject("https://doi.org/99.abc/00000")
       .relatedObjectSchemeUri("https://doi.org/")
       .relatedObjectType(relatedObjectType)
-      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/related-object-type/")
+      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/")
       .relatedObjectCategory("Input");
 
     when(relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType, 1))
@@ -213,13 +213,13 @@ class RelatedObjectValidationServiceTest {
   @Test
   void addsFailuresIfRelatedObjectSchemeUriIsIncorrect() {
     final var relatedObjectType =
-      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book-chapter.json";
+      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book-chapter.json";
 
     final var relatedObject = new RelatedObjectBlock()
       .relatedObject("https://doi.org/10.000/00000")
       .relatedObjectSchemeUri("https://blah.org/")
       .relatedObjectType(relatedObjectType)
-      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/related-object-type/")
+      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/")
       .relatedObjectCategory("Input");
 
     when(relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType, 1))
@@ -239,13 +239,13 @@ class RelatedObjectValidationServiceTest {
   @Test
   void addsFailureIfRelatedObjectTypeSchemeUriIsIncorrect() {
     final var relatedObjectType =
-      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book-chapter.json";
+      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book-chapter.json";
 
     final var relatedObject = new RelatedObjectBlock()
       .relatedObject("https://doi.org/10.000/00000")
       .relatedObjectSchemeUri("https://doi.org/")
       .relatedObjectType(relatedObjectType)
-      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/")
+      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/")
       .relatedObjectCategory("Input");
 
     when(relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType, 1))
@@ -259,19 +259,19 @@ class RelatedObjectValidationServiceTest {
 
     assertThat(failure.getFieldId(), is("relatedObjects[0].relatedObjectTypeSchemeUri"));
     assertThat(failure.getErrorType(), is("invalid"));
-    assertThat(failure.getMessage(), is("Only https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/related-object-type/ is supported."));
+    assertThat(failure.getMessage(), is("Only https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/ is supported."));
   }
 
   @Test
   void addsFailureIfRelatedObjectTypeIsNotFound() {
     final var relatedObjectType =
-      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book-chapter.json";
+      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book-chapter.json";
 
     final var relatedObject = new RelatedObjectBlock()
       .relatedObject("https://doi.org/10.000/00000")
       .relatedObjectSchemeUri("https://doi.org/")
       .relatedObjectType(relatedObjectType)
-      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/related-object-type/")
+      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/")
       .relatedObjectCategory("Input");
 
     when(relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType, 1))
@@ -291,13 +291,13 @@ class RelatedObjectValidationServiceTest {
   @Test
   void addsFailureIfRelatedObjectTypeHasInvalidUrl() {
     final var relatedObjectType =
-      "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/related-object-type/book-chapter.json";
+      "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/book-chapter.json";
 
     final var relatedObject = new RelatedObjectBlock()
       .relatedObject("https://doi.org/10.000/00000")
       .relatedObjectSchemeUri("https://doi.org/")
       .relatedObjectType(relatedObjectType)
-      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/related-object-type/")
+      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/")
       .relatedObjectCategory("Input");
 
     final var failures =
@@ -316,13 +316,13 @@ class RelatedObjectValidationServiceTest {
   @Test
   void addsFailureIfRelatedObjectCategoryIsInvalid() {
     final var relatedObjectType =
-      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book-chapter.json";
+      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book-chapter.json";
 
     final var relatedObject = new RelatedObjectBlock()
       .relatedObject("https://doi.org/10.000/00000")
       .relatedObjectSchemeUri("https://doi.org/")
       .relatedObjectType(relatedObjectType)
-      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/related-object-type/")
+      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/")
       .relatedObjectCategory("No a category");
 
     when(relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType, 1))
@@ -344,14 +344,14 @@ class RelatedObjectValidationServiceTest {
   void addsFailureIfDoiDoesNotExist() {
     final var doi = "https://doi.org/10.000/00000";
     final var relatedObjectType =
-      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book-chapter.json";
+      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book-chapter.json";
     final var errorMessage = "doi does not exist";
 
     final var relatedObject = new RelatedObjectBlock()
       .relatedObject(doi)
       .relatedObjectSchemeUri("https://doi.org/")
       .relatedObjectType(relatedObjectType)
-      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/related-object-type/")
+      .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/")
       .relatedObjectCategory("No a category")
       .relatedObjectCategory("Input");
 

@@ -55,7 +55,7 @@ public class RaidRecordFactory {
       .setUrlIndex(apidsMintResponse.identifier.property.index)
       .setPrimaryTitle(primaryTitle)
       .setMetadata(JSONB.valueOf(raidJson))
-      .setMetadataSchema(Metaschema.raido_metadata_schema_v1)
+      .setMetadataSchema(Metaschema.raido_metadata_schema_v2)
       .setStartDate(raid.getDates().getStartDate())
       .setDateCreated(LocalDateTime.now())
       .setConfidential(raid.getAccess().getType().equals(ACCESS_TYPE_CLOSED));
@@ -86,7 +86,7 @@ public class RaidRecordFactory {
       .setUrlIndex(existing.getUrlIndex())
       .setPrimaryTitle(primaryTitle)
       .setMetadata(JSONB.valueOf(raidJson))
-      .setMetadataSchema(Metaschema.raido_metadata_schema_v1)
+      .setMetadataSchema(Metaschema.raido_metadata_schema_v2)
       .setStartDate(raid.getDates().getStartDate())
       .setConfidential(raid.getAccess().getType().equals(ACCESS_TYPE_CLOSED));
   }

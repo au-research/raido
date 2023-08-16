@@ -13,7 +13,7 @@ import React, {useState} from "react";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import {
   AccessType,
-  AlternateIdentifierBlock, ContributorBlock,
+  AlternateIdentifierBlock,
   DescriptionBlock,
   OrganisationBlock,
   RaidoMetadataSchemaV1,
@@ -21,42 +21,36 @@ import {
   RelatedRaidBlock,
   ServicePoint,
   SpatialCoverageBlock,
-  SubjectBlock, TraditionalKnowledgeLabelBlock,
+  SubjectBlock,
+  TraditionalKnowledgeLabelBlock,
   ValidationFailure
 } from "Generated/Raidv2";
-import { useAuthApi } from "Api/AuthApi";
-import { CompactErrorPanel } from "Error/CompactErrorPanel";
-import { Stack, TextField, TextFieldProps } from "@mui/material";
-import { PrimaryActionButton, SecondaryButton } from "Component/AppButton";
-import { navBrowserBack } from "Util/WindowUtil";
-import { HelpChip, HelpPopover } from "Component/HelpPopover";
-import { DesktopDatePicker } from "@mui/x-date-pickers";
-import { Dayjs } from "dayjs";
-import { assert, WithRequired } from "Util/TypeUtil";
-import { isValidDate } from "Util/DateUtil";
-import { getEditRaidPageLink } from "Page/EditRaidPage";
-import {
-  createLeadContributor,
-  createLeadOrganisation
-} from "Page/UpgradeLegacySchemaForm";
-import { findOrcidProblem, OrcidField } from "Component/OrcidField";
-import { InputFieldGroup } from "Component/InputFieldGroup";
-import { labelWithProblem } from "Component/InputLabelWithProblem";
-import { RqQuery } from "Util/ReactQueryUtil";
+import {useAuthApi} from "Api/AuthApi";
+import {CompactErrorPanel} from "Error/CompactErrorPanel";
+import {Stack, TextField, TextFieldProps} from "@mui/material";
+import {PrimaryActionButton, SecondaryButton} from "Component/AppButton";
+import {navBrowserBack} from "Util/WindowUtil";
+import {HelpChip, HelpPopover} from "Component/HelpPopover";
+import {DesktopDatePicker} from "@mui/x-date-pickers";
+import {Dayjs} from "dayjs";
+import {assert, WithRequired} from "Util/TypeUtil";
+import {isValidDate} from "Util/DateUtil";
+import {getEditRaidPageLink} from "Page/EditRaidPage";
+import {createLeadContributor, createLeadOrganisation} from "Page/UpgradeLegacySchemaForm";
+import {findOrcidProblem, OrcidField} from "Component/OrcidField";
+import {InputFieldGroup} from "Component/InputFieldGroup";
+import {labelWithProblem} from "Component/InputLabelWithProblem";
+import {RqQuery} from "Util/ReactQueryUtil";
 import {
   accessTypes,
   ListFormControl,
   mapAccessType,
   relatedObjectCategories,
   relatedObjectTypes,
-  relatedRaidTypes, traditionalKnowledgeLabelSchemeUris
+  relatedRaidTypes,
+  traditionalKnowledgeLabelSchemeUris
 } from "Api/ReferenceData";
-import {
-  doiUrl,
-  fieldOfResearchUrl,
-  NewWindowLink,
-  rorUrl
-} from "Component/ExternalLink";
+import {doiUrl, fieldOfResearchUrl, NewWindowLink, rorUrl} from "Component/ExternalLink";
 
 
 const pageUrl = "/mint-raid-v2";
@@ -139,7 +133,7 @@ function mapFormDataToMetadata(
   if (form.subject) {
     subjects.push({
       subject: form.subject,
-      subjectSchemeUri: "https://linked.data.gov.au/def/anzsrc-for/2020",
+      subjectSchemeUri: "https://linked.data.gov.au/def/anzsrc-for/2020/",
     })
   }
 
@@ -148,7 +142,7 @@ function mapFormDataToMetadata(
     relatedRaids.push({
       relatedRaid: form.relatedRaid,
       relatedRaidType: form.relatedRaidType,
-      relatedRaidTypeSchemeUri: "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type",
+      relatedRaidTypeSchemeUri: "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/",
     })
   }
 
@@ -158,7 +152,7 @@ function mapFormDataToMetadata(
       relatedObject: form.relatedObject,
       relatedObjectSchemeUri: "https://doi.org/",
       relatedObjectType: form.relatedObjectType,
-      relatedObjectTypeSchemeUri: "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/related-object-type/",
+      relatedObjectTypeSchemeUri: "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/",
       relatedObjectCategory: form.relatedObjectCategory,
     })
   }

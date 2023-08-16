@@ -23,8 +23,6 @@ import static raido.apisvc.util.StringUtil.isBlank;
 
 @Component
 public class RaidoStableV1ValidationService {
-  private static final String ACCESS_TYPE_CLOSED =
-    "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json";
   private static final Log log = to(RaidoStableV1ValidationService.class);
   
   private final StableTitleValidationService titleSvc;
@@ -98,8 +96,8 @@ public class RaidoStableV1ValidationService {
     return failures;
   }
 
-  private static List<ValidationFailure> validateDates(
-    DatesBlock dates
+  private static List<ValidationFailure> validate(
+    Dates dates
   ) {
     var failures = new ArrayList<ValidationFailure>();
     if( dates == null ){
@@ -168,7 +166,7 @@ public class RaidoStableV1ValidationService {
 
     var failures = new ArrayList<ValidationFailure>();
 
-    failures.addAll(validateDates(request.getDates()));
+    failures.addAll(validate(request.getDates()));
     failures.addAll(accessValidationService.validate(request.getAccess()));
     failures.addAll(titleSvc.validate(request.getTitles()));
     failures.addAll(descSvc.validate(request.getDescriptions()));
@@ -195,7 +193,7 @@ public class RaidoStableV1ValidationService {
 
     final var failures = new ArrayList<>(validateUpdateHandle(decodedHandle, request.getId()));
 
-    failures.addAll(validateDates(request.getDates()));
+    failures.addAll(validate(request.getDates()));
     failures.addAll(accessValidationService.validate(request.getAccess()));
     failures.addAll(titleSvc.validate(request.getTitles()));
     failures.addAll(descSvc.validate(request.getDescriptions()));
