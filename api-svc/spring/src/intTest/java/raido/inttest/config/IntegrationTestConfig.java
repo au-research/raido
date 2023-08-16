@@ -5,22 +5,19 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import raido.apisvc.spring.StartupListener;
 import raido.apisvc.spring.bean.MetricRegistry;
-import raido.apisvc.spring.config.ApiConfig;
 import raido.apisvc.spring.bean.Shared;
+import raido.apisvc.spring.config.ApiConfig;
 import raido.apisvc.spring.config.environment.DataSourceProps;
 import raido.apisvc.spring.config.environment.EnvironmentProps;
 import raido.apisvc.util.Log;
+import raido.inttest.TestClient;
 
 import static raido.apisvc.util.Log.to;
 
@@ -94,7 +91,7 @@ public class IntegrationTestConfig {
     /* this is because of the silly "handles contain a slash" problem.
     If I manually url encode the handle so that the slash is replaced, then
     when RestTemplate sees the `%2F` (for slash) in the path, it will 
-    re-urlencode the percent symbol so we we end up with "%252F" in the path.
+    re-urlencode the percent symbol so we end up with "%252F" in the path.
     */
     var defaultUriBuilderFactory = new DefaultUriBuilderFactory();
     defaultUriBuilderFactory.setEncodingMode(
@@ -128,5 +125,11 @@ public class IntegrationTestConfig {
     MetricRegistry metricReg
   ){
     return new StartupListener(dsProps, envProps, metricReg);
+  }
+
+
+  @Bean
+  public TestClient testClient(final ObjectMapper objectMapper, final SpringMvcContract contract, final IntTestProps props) {
+    return new TestClient(objectMapper, contract, props);
   }
 }

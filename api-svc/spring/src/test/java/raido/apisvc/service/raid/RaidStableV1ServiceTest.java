@@ -17,10 +17,10 @@ import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 import raido.apisvc.exception.ResourceNotFoundException;
 import raido.apisvc.factory.IdFactory;
+import raido.apisvc.factory.RaidDtoFactory;
 import raido.apisvc.factory.RaidRecordFactory;
 import raido.apisvc.repository.RaidRepository;
 import raido.apisvc.repository.ServicePointRepository;
-import raido.apisvc.repository.dto.Raid;
 import raido.apisvc.service.apids.ApidsService;
 import raido.apisvc.service.apids.model.ApidsMintResponse;
 import raido.apisvc.service.raid.id.IdentifierHandle;
@@ -52,36 +52,28 @@ import static raido.apisvc.service.raid.MetadataService.RAID_ID_TYPE_URI;
 class RaidStableV1ServiceTest {
   @Mock
   private ApidsService apidsService;
-
   @Mock
   private MetadataService metadataService;
-
   @Mock
   private RaidRepository raidRepository;
-
   @Mock
   private ServicePointRepository servicePointRepository;
-
   @Mock
   private RaidRecordFactory raidRecordFactory;
-
   @Mock
   private IdentifierParser idParser;
-
   @Mock
   private MetadataProps metaProps;
-
   @Mock
   private TransactionTemplate transactionTemplate;
-
   @Mock
   private ObjectMapper mapper;
-
   @Mock
   private IdFactory idFactory;
-
   @Mock
   private RaidChecksumService checksumService;
+  @Mock
+  private RaidDtoFactory raidDtoFactory;
 
   @InjectMocks
   private RaidStableV1Service raidService;
@@ -117,7 +109,7 @@ class RaidStableV1ServiceTest {
     
     final var id = new Id()
       .identifier(identifierUrl.formatUrl())
-      .identifierSchemeURI(RAID_ID_TYPE_URI)
+      .identifierSchemeUri(RAID_ID_TYPE_URI)
       .identifierRegistrationAgency(registrationAgency)
       .identifierOwner(identifierOwner)
       .identifierServicePoint(servicePointId);
@@ -151,7 +143,7 @@ class RaidStableV1ServiceTest {
 
     final var expected = objectMapper.readValue(raidJson(), RaidDto.class);
 
-    when(mapper.readValue(raidJson, RaidDto.class)).thenReturn(expected);
+    when(raidDtoFactory.create(raidRecord)).thenReturn(expected);
 
     RaidDto result = raidService.read(handle);
     assertThat(result, Matchers.is(expected));
@@ -162,18 +154,14 @@ class RaidStableV1ServiceTest {
   void listRaidsV1() throws JsonProcessingException {
     final var raidJson = raidJson();
     final Long servicePointId = 999L;
-    final ServicePointRecord servicePointRecord = new ServicePointRecord();
-    servicePointRecord.setId(servicePointId);
 
-    List<Raid> data = List.of(
-      new Raid(new RaidRecord().setMetadata(JSONB.valueOf(raidJson)), new ServicePointRecord().setId(servicePointId))
-    );
+    final var raidRecord = new RaidRecord().setMetadata(JSONB.valueOf(raidJson));
 
-    when(raidRepository.findAllByServicePointId(servicePointId)).thenReturn(data);
+    when(raidRepository.findAllByServicePointId(servicePointId)).thenReturn(List.of(raidRecord));
 
     final var expected = objectMapper.readValue(raidJson, RaidDto.class);
 
-    when(mapper.readValue(raidJson, RaidDto.class)).thenReturn(expected);
+    when(raidDtoFactory.create(raidRecord)).thenReturn(expected);
 
     List<RaidDto> results = raidService.list(servicePointId);
     assertThat(results.get(0), Matchers.is(expected));

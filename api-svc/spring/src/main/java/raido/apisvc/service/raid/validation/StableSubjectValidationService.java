@@ -15,7 +15,7 @@ import static raido.apisvc.util.ObjectUtil.indexed;
 @Component
 public class StableSubjectValidationService {
 
-  private static final String SUBJECT_SCHEME_URI = "https://linked.data.gov.au/def/anzsrc-for/2020";
+  private static final String SUBJECT_SCHEME_URI = "https://linked.data.gov.au/def/anzsrc-for/2020/";
   private final SubjectRepository subjectRepository;
 
   public StableSubjectValidationService(final SubjectRepository subjectRepository) {

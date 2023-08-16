@@ -2,13 +2,6 @@ package raido.inttest.endpoint.raidv2.stable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Contract;
-import feign.Feign;
-import feign.Logger;
-import feign.Request;
-import feign.jackson.JacksonDecoder;
-import feign.jackson.JacksonEncoder;
-import feign.okhttp.OkHttpClient;
-import feign.slf4j.Slf4jLogger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -16,19 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import raido.apisvc.service.raid.id.IdentifierParser;
 import raido.apisvc.service.stub.util.IdFactory;
+import raido.idl.raidv1.api.RaidV1Api;
+import raido.idl.raidv2.api.BasicRaidExperimentalApi;
 import raido.idl.raidv2.api.RaidoStableV1Api;
 import raido.idl.raidv2.model.*;
 import raido.inttest.JettyTestServer;
-import raido.inttest.RaidApiExceptionDecoder;
+import raido.inttest.TestClient;
 import raido.inttest.config.IntTestProps;
 import raido.inttest.config.IntegrationTestConfig;
 import raido.inttest.service.auth.BootstrapAuthTokenService;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static raido.db.jooq.api_svc.enums.UserRole.OPERATOR;
 import static raido.inttest.endpoint.raidv2.stable.TestConstants.*;
@@ -40,6 +33,7 @@ import static raido.inttest.util.MinimalRaidTestData.REAL_TEST_ROR;
   value= IntegrationTestConfig.class )
 public class AbstractStableIntegrationTest {
   protected String operatorToken;
+  protected String raidV1TestToken;
 
   protected final IdFactory idFactory = new IdFactory("inttest");
   protected LocalDate today = LocalDate.now();
@@ -49,9 +43,14 @@ public class AbstractStableIntegrationTest {
   protected CreateRaidV1Request createRequest;
 
   protected RaidoStableV1Api raidApi;
+  protected BasicRaidExperimentalApi experimentalApi;
+
+  protected RaidV1Api legacyApi;
 
   protected IdentifierParser identifierParser;
 
+  @Autowired
+  protected TestClient testClient;
   @Autowired
   protected ObjectMapper mapper;
   @Autowired
@@ -66,11 +65,15 @@ public class AbstractStableIntegrationTest {
 
   @BeforeEach
   public void setupTestToken(){
+    raidV1TestToken = bootstrapTokenSvc.initRaidV1TestToken();
+
     operatorToken = bootstrapTokenSvc.bootstrapToken(
       RAIDO_SP_ID, "intTestOperatorApiToken", OPERATOR);
 
     createRequest = newCreateRequest();
-    raidApi = basicRaidStableClient();
+    raidApi = testClient.raidApi(operatorToken);
+    experimentalApi = testClient.basicRaidExperimentalClient((operatorToken));
+    legacyApi = testClient.legacyApi(raidV1TestToken);
     identifierParser = new IdentifierParser();
   }
 
@@ -78,27 +81,6 @@ public class AbstractStableIntegrationTest {
   public void init(TestInfo testInfo) {
     this.testInfo = testInfo;
   }
-  protected RaidoStableV1Api basicRaidStableClient(String token){
-    return Feign.builder()
-      .options(
-        new Request.Options(2, TimeUnit.SECONDS, 2, TimeUnit.SECONDS, false)
-      )
-      .client(new OkHttpClient())
-      .encoder(new JacksonEncoder(mapper))
-      .decoder(new JacksonDecoder(mapper))
-      .errorDecoder(new RaidApiExceptionDecoder(mapper))
-      .contract(feignContract)
-      .requestInterceptor(request -> request.header(AUTHORIZATION, "Bearer " + token))
-      .logger(new Slf4jLogger(RaidoStableV1Api.class))
-      .logLevel(Logger.Level.FULL)
-      .target(RaidoStableV1Api.class, props.getRaidoServerUrl());
-  }
-
-
-  protected RaidoStableV1Api basicRaidStableClient(){
-    return basicRaidStableClient(operatorToken);
-  }
-
   protected String getName(){
     return testInfo.getDisplayName();
   }
@@ -114,7 +96,7 @@ public class AbstractStableIntegrationTest {
           .schemeUri(TITLE_TYPE_SCHEME_URI))
         .title(initialTitle)
         .startDate(today)))
-      .dates(new DatesBlock().startDate(today))
+      .dates(new Dates().startDate(today))
       .descriptions(List.of(new Description()
         .type(new DescriptionTypeWithSchemeUri()
           .id(PRIMARY_DESCRIPTION_TYPE)
@@ -158,7 +140,7 @@ public class AbstractStableIntegrationTest {
   ) {
     return new Contributor()
       .id(orcid)
-      .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
+      .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
       .positions(List.of(new ContributorPositionWithSchemeUri()
         .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
         .id(position)

@@ -1,17 +1,9 @@
-import {
-  FormControl,
-  MenuItem,
-  Select,
-  SelectChangeEvent
-} from "@mui/material";
-import {
-  InputLabelWithProblem,
-  labelWithProblem
-} from "Component/InputLabelWithProblem";
+import {FormControl, MenuItem, Select, SelectChangeEvent} from "@mui/material";
+import {InputLabelWithProblem, labelWithProblem} from "Component/InputLabelWithProblem";
 import React from "react";
-import { SelectProps } from "@mui/material/Select/Select";
-import { AccessType } from "Generated/Raidv2";
-import { WithStringKey } from "Util/TypeUtil";
+import {SelectProps} from "@mui/material/Select/Select";
+import {AccessType} from "Generated/Raidv2";
+import {WithStringKey} from "Util/TypeUtil";
 
 export interface ControlledListItem{
   value: string,
@@ -138,47 +130,46 @@ function ListFormControlRecord<
 
 export const relatedRaidTypes: ControlledListItem[] = [
   {"value": "", "description": ""},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/continues.json", "description": "Continues"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/has-part.json", "description": "HasPart"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-continued-by.json", "description": "IsContinuedBy"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-derived-from.json", "description": "IsDerivedFrom"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-identical-to.json", "description": "IsIdenticalTo"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-obsoleted-by.json", "description": "IsObsoletedBy"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-part-of.json", "description": "IsPartOf"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-source-of.json", "description": "IsSourceOf"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/obsoletes.json", "description": "Obsoletes"}
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/continues.json", "description": "Continues"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/has-part.json", "description": "HasPart"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/is-continued-by.json", "description": "IsContinuedBy"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/is-derived-from.json", "description": "IsDerivedFrom"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/is-identical-to.json", "description": "IsIdenticalTo"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/is-obsoleted-by.json", "description": "IsObsoletedBy"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/is-part-of.json", "description": "IsPartOf"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/is-source-of.json", "description": "IsSourceOf"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/obsoletes.json", "description": "Obsoletes"}
 ];
 
 
 export const relatedObjectTypes: ControlledListItem[] = [
   {"value": "", "description": ""},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/audiovisual.json", "description": "Audiovisual"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book-chapter.json", "description": "Book Chapter"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/book.json", "description": "Book"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/computational-notebook.json", "description": "Computational Notebook"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/conference-paper.json", "description": "Conference Paper"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/conference-poster.json", "description": "Conference Poster"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/conference-proceeding.json", "description": "Conference Proceeding"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/data-paper.json", "description": "Data Paper"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/dataset.json", "description": "Dataset"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/dissertation.json", "description": "Dissertation"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/educational-material.json", "description": "Educational Material"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/event.json", "description": "Event"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/funding.json", "description": "Funding"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/image.json", "description": "Image"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/instrument.json", "description": "Instrument"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/journal-article.json", "description": "Journal Article"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/model.json", "description": "Model"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/output-management-plan.json", "description": "Output Management Plan"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/physical-object.json", "description": "Physical Object"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/preprint.json", "description": "Preprint"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/prize.json", "description": "Prize"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/report.json", "description": "Report"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/service.json", "description": "Service"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/software.json", "description": "Software"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/sound.json", "description": "Sound"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/standard.json", "description": "Standard"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/text.json", "description": "Text"},
-  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/related-object-type/workflow.json", "description": "Workflow"}
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/audiovisual.json", "description": "Audiovisual"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book-chapter.json", "description": "Book Chapter"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book.json", "description": "Book"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/computational-notebook.json", "description": "Computational Notebook"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/conference-paper.json", "description": "Conference Paper"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/conference-poster.json", "description": "Conference Poster"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/conference-proceeding.json", "description": "Conference Proceeding"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/data-paper.json", "description": "Data Paper"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/dataset.json", "description": "Dataset"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/dissertation.json", "description": "Dissertation"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/educational-material.json", "description": "Educational Material"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/event.json", "description": "Event"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/funding.json", "description": "Funding"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/image.json", "description": "Image"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/instrument.json", "description": "Instrument"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/journal-article.json", "description": "Journal Article"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/model.json", "description": "Model"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/output-management-plan.json", "description": "Output Management Plan"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/physical-object.json", "description": "Physical Object"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/preprint.json", "description": "Preprint"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/prize.json", "description": "Prize"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/report.json", "description": "Report"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/service.json", "description": "Service"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/software.json", "description": "Software"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/sound.json", "description": "Sound"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/standard.json", "description": "Standard"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/text.json", "description": "Text"},
+  {"value": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/workflow.json", "description": "Workflow"}
 ];
-

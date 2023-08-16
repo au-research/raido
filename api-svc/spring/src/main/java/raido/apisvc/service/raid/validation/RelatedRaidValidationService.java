@@ -16,8 +16,10 @@ import static raido.apisvc.util.Log.to;
 @Component
 public class RelatedRaidValidationService {
   private static final Log log = to(RelatedRaidValidationService.class);
-  private static final String RELATED_RAID_TYPE_URL_SCHEME_URI =
-    "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type";
+  private static final String RELATED_RAID_TYPE_SCHEME_URI =
+      "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/";
+  private static final String RELATED_RAID_TYPE_URI_PREFIX =
+      "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/";
 
   private final RaidRepository raidRepository;
   private final RelatedRaidTypeRepository relatedRaidTypeRepository;
@@ -36,7 +38,7 @@ public class RelatedRaidValidationService {
     }
 
     final var raidUrlPattern = String.format("^%s\\/\\d+\\.\\d+\\/\\d+$", metadataProps.handleUrlPrefix);
-    final var relatedRaidTypeUrlPattern = String.format("^%s\\/[a-z\\-]+.json$", RELATED_RAID_TYPE_URL_SCHEME_URI);
+    final var relatedRaidTypeUrlPattern = String.format("^%s\\/[a-z\\-]+.json$", RELATED_RAID_TYPE_URI_PREFIX);
 
     for (int i = 0; i < relatedRaids.size(); i++) {
       final var raidUrl = relatedRaids.get(i).getRelatedRaid();
@@ -92,7 +94,7 @@ public class RelatedRaidValidationService {
           .message("Related Raid Type Scheme URI is required.")
         );
       }
-      else if (!relatedRaids.get(i).getRelatedRaidTypeSchemeUri().equals(RELATED_RAID_TYPE_URL_SCHEME_URI)) {
+      else if (!relatedRaids.get(i).getRelatedRaidTypeSchemeUri().equals(RELATED_RAID_TYPE_SCHEME_URI)) {
         failures.add(new ValidationFailure()
           .errorType("invalid")
           .fieldId(String.format("relatedRaids[%d].relatedRaidTypeSchemeUri", i))
