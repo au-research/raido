@@ -18,7 +18,7 @@ _Not yet scheduled_
 ** DEMO env is updated and deployed, but PROD infra must be updated
 
 ---
-1.2.1
+# 1.2.1
 * Fix to validation of ORCID to allow x in checksum
 ---
 
