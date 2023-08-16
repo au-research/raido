@@ -1,9 +1,13 @@
 package raido.inttest;
 
 import net.bytebuddy.utility.RandomString;
+import raido.idl.raidv1.model.RaidCreateModel;
+import raido.idl.raidv1.model.RaidCreateModelMeta;
 import raido.idl.raidv2.model.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static raido.idl.raidv2.model.AccessType.OPEN;
@@ -107,11 +111,13 @@ public class TestData {
                             new OrganisationRole()
                                 .startDate(today.minusYears(4))
                                 .endDate(today.minusYears(3))
-                                .role(OrganisationRoleType.LEAD_RESEARCH_ORGANISATION),
+                                .role(OrganisationRoleType.LEAD_RESEARCH_ORGANISATION)
+                                .roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_),
                             new OrganisationRole()
                                 .startDate(today.minusYears(4))
                                 .endDate(today.minusYears(3))
                                 .role(OrganisationRoleType.PARTNER_ORGANISATION)
+                                .roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_)
                         )),
                 new OrganisationBlock()
                     .id("https://ror.org/04d4fer41")
@@ -121,12 +127,14 @@ public class TestData {
                             new OrganisationRole()
                                 .startDate(today.minusYears(4))
                                 .endDate(today.minusYears(3))
-                                .role(OrganisationRoleType.OTHER_ORGANISATION),
+                                .role(OrganisationRoleType.OTHER_ORGANISATION)
+                                .roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_),
                             new OrganisationRole()
                                 .startDate(today.minusYears(4))
                                 .endDate(today.minusYears(3))
                                 .role(OrganisationRoleType.CONTRACTOR)
-                        ))
+                                .roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_)
+                                ))
             ))
             .subjects(List.of(
                 new SubjectBlock()
@@ -150,7 +158,7 @@ public class TestData {
                     .relatedObjectSchemeUri("https://doi.org/")
                     .relatedObjectType("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/audiovisual.json")
                     .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/")
-                    .relatedObjectCategory("output")
+                    .relatedObjectCategory("Output")
             ))
             .alternateIdentifiers(List.of(
                 new AlternateIdentifierBlock()
@@ -195,5 +203,14 @@ public class TestData {
             mintRequest(new MintRaidoSchemaV1RequestMintRequest().
                 servicePointId(servicePointId)).
             metadata(raidoMetadataSchemaV1());
+    }
+
+    public static RaidCreateModel raidCreateModel() {
+        return new RaidCreateModel()
+                .contentPath("http://localhost/" + RandomString.make())
+                .startDate(LocalDateTime.now().minusYears(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
+                .meta(new RaidCreateModelMeta()
+                        .name(RandomString.make()))
+                ;
     }
 }

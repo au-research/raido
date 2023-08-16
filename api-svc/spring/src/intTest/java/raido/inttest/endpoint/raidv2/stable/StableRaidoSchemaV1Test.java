@@ -135,7 +135,7 @@ public class StableRaidoSchemaV1Test extends AbstractStableIntegrationTest {
   ) {
     return new Contributor()
       .id(orcid)
-      .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
+      .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
       .positions(List.of(new ContributorPositionWithSchemeUri()
         .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
         .id(position)

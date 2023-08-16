@@ -36,7 +36,7 @@ public class RaidDtoFactory {
         }
         if (raidRecord.getMetadataSchema() == Metaschema.raido_metadata_schema_v2) {
             return objectMapper.readValue(raidRecord.getMetadata().data(), RaidDto.class);
-        } else if (raidRecord.getMetadataSchema() == Metaschema.raido_metadata_schema_v1) {
+        } else {
             if (raidRecord.getMetadata() == null) {
                 return null;
             }
@@ -136,6 +136,5 @@ public class RaidDtoFactory {
                 .spatialCoverages(spatialCoverages)
                 .access(accessFactory.create(metadata.getAccess()));
         }
-        return null;
     }
 }

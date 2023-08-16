@@ -9,6 +9,7 @@ import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
 import feign.slf4j.Slf4jLogger;
+import raido.idl.raidv1.api.RaidV1Api;
 import raido.idl.raidv2.api.BasicRaidExperimentalApi;
 import raido.idl.raidv2.api.RaidoStableV1Api;
 import raido.inttest.config.IntTestProps;
@@ -16,6 +17,7 @@ import raido.inttest.config.IntTestProps;
 import java.util.concurrent.TimeUnit;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static raido.apisvc.spring.config.RaidWebSecurityConfig.RAID_V1_API;
 
 public class TestClient {
     private final ObjectMapper objectMapper;
@@ -44,7 +46,7 @@ public class TestClient {
             target(BasicRaidExperimentalApi.class, props.getRaidoServerUrl());
     }
 
-    public RaidoStableV1Api basicRaidStableClient(
+    public RaidoStableV1Api raidApi(
         final String token
     ){
         return Feign.builder()
@@ -60,5 +62,18 @@ public class TestClient {
             .logger(new Slf4jLogger(RaidoStableV1Api.class))
             .logLevel(Logger.Level.FULL)
             .target(RaidoStableV1Api.class, props.getRaidoServerUrl());
+    }
+
+    public RaidV1Api legacyApi(final String token){
+        return Feign.builder().
+                client(new OkHttpClient()).
+                encoder(new JacksonEncoder(objectMapper)).
+                decoder(new JacksonDecoder(objectMapper)).
+                contract(contract).
+                requestInterceptor(request->
+                        request.header(AUTHORIZATION, "Bearer " + token) ).
+                logger(new Slf4jLogger(RaidV1Api.class)).
+                logLevel(Logger.Level.FULL).
+                target(RaidV1Api.class, props.getRaidoServerUrl() + RAID_V1_API);
     }
 }

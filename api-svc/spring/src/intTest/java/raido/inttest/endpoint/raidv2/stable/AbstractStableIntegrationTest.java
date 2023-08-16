@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import raido.apisvc.service.raid.id.IdentifierParser;
 import raido.apisvc.service.stub.util.IdFactory;
+import raido.idl.raidv1.api.RaidV1Api;
 import raido.idl.raidv2.api.BasicRaidExperimentalApi;
 import raido.idl.raidv2.api.RaidoStableV1Api;
 import raido.idl.raidv2.model.*;
@@ -32,6 +33,7 @@ import static raido.inttest.util.MinimalRaidTestData.REAL_TEST_ROR;
   value= IntegrationTestConfig.class )
 public class AbstractStableIntegrationTest {
   protected String operatorToken;
+  protected String raidV1TestToken;
 
   protected final IdFactory idFactory = new IdFactory("inttest");
   protected LocalDate today = LocalDate.now();
@@ -42,6 +44,8 @@ public class AbstractStableIntegrationTest {
 
   protected RaidoStableV1Api raidApi;
   protected BasicRaidExperimentalApi experimentalApi;
+
+  protected RaidV1Api legacyApi;
 
   protected IdentifierParser identifierParser;
 
@@ -61,12 +65,15 @@ public class AbstractStableIntegrationTest {
 
   @BeforeEach
   public void setupTestToken(){
+    raidV1TestToken = bootstrapTokenSvc.initRaidV1TestToken();
+
     operatorToken = bootstrapTokenSvc.bootstrapToken(
       RAIDO_SP_ID, "intTestOperatorApiToken", OPERATOR);
 
     createRequest = newCreateRequest();
-    raidApi = testClient.basicRaidStableClient(operatorToken);
+    raidApi = testClient.raidApi(operatorToken);
     experimentalApi = testClient.basicRaidExperimentalClient((operatorToken));
+    legacyApi = testClient.legacyApi(raidV1TestToken);
     identifierParser = new IdentifierParser();
   }
 
@@ -133,7 +140,7 @@ public class AbstractStableIntegrationTest {
   ) {
     return new Contributor()
       .id(orcid)
-      .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
+      .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
       .positions(List.of(new ContributorPositionWithSchemeUri()
         .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
         .id(position)
