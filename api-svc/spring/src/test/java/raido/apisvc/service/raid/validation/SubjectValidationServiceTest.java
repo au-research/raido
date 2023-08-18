@@ -5,8 +5,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import raido.apisvc.repository.SubjectRepository;
-import raido.db.jooq.api_svc.tables.records.SubjectRecord;
+import raido.apisvc.repository.SubjectTypeRepository;
+import raido.db.jooq.api_svc.tables.records.SubjectTypeRecord;
 import raido.idl.raidv2.model.SubjectBlock;
 import raido.idl.raidv2.model.ValidationFailure;
 
@@ -25,7 +25,7 @@ class SubjectValidationServiceTest {
   private static final String SUBJECT_SCHEME_URI = "https://linked.data.gov.au/def/anzsrc-for/2020/";
 
   @Mock
-  private SubjectRepository subjectRepository;
+  private SubjectTypeRepository subjectTypeRepository;
 
   @InjectMocks
   private SubjectValidationService validationService;
@@ -38,7 +38,7 @@ class SubjectValidationServiceTest {
       .subject(id)
       .subjectSchemeUri(SUBJECT_SCHEME_URI);
 
-    when(subjectRepository.findById("222222")).thenReturn(Optional.of(new SubjectRecord()));
+    when(subjectTypeRepository.findById("222222")).thenReturn(Optional.of(new SubjectTypeRecord()));
 
     final List<ValidationFailure> validationFailures = validationService.validateSubjects(Collections.singletonList(subject));
 
@@ -66,7 +66,7 @@ class SubjectValidationServiceTest {
     assertThat(validationFailures.get(0).getErrorType(), is("invalid"));
     assertThat(validationFailures.get(0).getFieldId(), is("subjects[0].subject"));
 
-    verifyNoInteractions(subjectRepository);
+    verifyNoInteractions(subjectTypeRepository);
   }
 
   @Test
@@ -84,7 +84,7 @@ class SubjectValidationServiceTest {
     assertThat(validationFailures.get(0).getErrorType(), is("invalid"));
     assertThat(validationFailures.get(0).getFieldId(), is("subjects[0].subject"));
 
-    verifyNoInteractions(subjectRepository);
+    verifyNoInteractions(subjectTypeRepository);
   }
 
   @Test
@@ -95,7 +95,7 @@ class SubjectValidationServiceTest {
       .subject(id)
       .subjectSchemeUri(SUBJECT_SCHEME_URI);
 
-    when(subjectRepository.findById("222222")).thenReturn(Optional.empty());
+    when(subjectTypeRepository.findById("222222")).thenReturn(Optional.empty());
 
     final List<ValidationFailure> validationFailures = validationService.validateSubjects(Collections.singletonList(subject));
 
@@ -112,7 +112,7 @@ class SubjectValidationServiceTest {
     final var subject = new SubjectBlock()
       .subject(id);
 
-    when(subjectRepository.findById("222222")).thenReturn(Optional.of(new SubjectRecord()));
+    when(subjectTypeRepository.findById("222222")).thenReturn(Optional.of(new SubjectTypeRecord()));
 
     final List<ValidationFailure> validationFailures = validationService.validateSubjects(Collections.singletonList(subject));
 
@@ -130,7 +130,7 @@ class SubjectValidationServiceTest {
       .subject(id)
       .subjectSchemeUri("invalid");
 
-    when(subjectRepository.findById("222222")).thenReturn(Optional.of(new SubjectRecord()));
+    when(subjectTypeRepository.findById("222222")).thenReturn(Optional.of(new SubjectTypeRecord()));
 
     final List<ValidationFailure> validationFailures = validationService.validateSubjects(Collections.singletonList(subject));
 
@@ -147,7 +147,7 @@ class SubjectValidationServiceTest {
     final var subject = new SubjectBlock()
       .subject(id);
 
-    when(subjectRepository.findById("222222")).thenReturn(Optional.empty());
+    when(subjectTypeRepository.findById("222222")).thenReturn(Optional.empty());
 
     final List<ValidationFailure> validationFailures = validationService.validateSubjects(Collections.singletonList(subject));
 
