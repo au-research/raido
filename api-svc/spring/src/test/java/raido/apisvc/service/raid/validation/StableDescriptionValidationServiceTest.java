@@ -7,8 +7,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import raido.idl.raidv2.model.Description;
-import raido.idl.raidv2.model.DescriptionType;
 import raido.idl.raidv2.model.DescriptionTypeWithSchemeUri;
+import raido.idl.raidv2.model.Language;
 import raido.idl.raidv2.model.ValidationFailure;
 
 import java.util.List;
@@ -17,8 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static raido.apisvc.util.TestConstants.DESCRIPTION_TYPE_SCHEME_URI;
-import static raido.apisvc.util.TestConstants.PRIMARY_DESCRIPTION_TYPE;
+import static raido.apisvc.util.TestConstants.*;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -27,7 +26,8 @@ class StableDescriptionValidationServiceTest {
 
   @Mock
   private StableDescriptionTypeValidationService typeValidationService;
-
+  @Mock
+  private LanguageValidationService languageValidationService;
   @InjectMocks
   private StableDescriptionValidationService validationService;
 
@@ -38,15 +38,22 @@ class StableDescriptionValidationServiceTest {
       .id(PRIMARY_DESCRIPTION_TYPE)
       .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
 
+    final var language = new Language()
+            .id(LANGUAGE_ID)
+            .schemeUri(LANGUAGE_SCHEME_URI);
+
     final var description = new Description()
       .description(DESCRIPTION_VALUE)
-      .type(type);
+      .type(type)
+      .language(language);
 
     final var failures = validationService.validate(List.of(description));
 
     assertThat(failures, empty());
 
     verify(typeValidationService).validate(type, 0);
+    verify(languageValidationService).validate(language, "descriptions[0]");
+
   }
 
   @Test
@@ -56,8 +63,13 @@ class StableDescriptionValidationServiceTest {
       .id(PRIMARY_DESCRIPTION_TYPE)
       .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
 
+    final var language = new Language()
+            .id(LANGUAGE_ID)
+            .schemeUri(LANGUAGE_SCHEME_URI);
+
     final var description = new Description()
-      .type(type);
+            .type(type)
+            .language(language);
 
     final var failures = validationService.validate(List.of(description));
 
@@ -69,6 +81,7 @@ class StableDescriptionValidationServiceTest {
         .message("field must be set")
     ));
     verify(typeValidationService).validate(type, 0);
+    verify(languageValidationService).validate(language, "descriptions[0]");
   }
 
   @Test

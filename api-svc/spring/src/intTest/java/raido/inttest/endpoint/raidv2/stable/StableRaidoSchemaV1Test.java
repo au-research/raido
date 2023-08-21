@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static raido.inttest.endpoint.raidv2.stable.TestConstants.*;
 
-public class StableRaidoSchemaV1Test extends AbstractStableIntegrationTest {
+public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
 
   @Test
   @DisplayName("Mint a raid")

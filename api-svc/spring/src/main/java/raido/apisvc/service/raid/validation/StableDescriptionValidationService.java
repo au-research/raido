@@ -1,5 +1,6 @@
 package raido.apisvc.service.raid.validation;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import raido.idl.raidv2.model.Description;
 import raido.idl.raidv2.model.ValidationFailure;
@@ -14,13 +15,11 @@ import static raido.apisvc.endpoint.message.ValidationMessage.NOT_SET_TYPE;
 import static raido.apisvc.util.StringUtil.isBlank;
 
 @Component
+@RequiredArgsConstructor
 public class StableDescriptionValidationService {
 
   private final StableDescriptionTypeValidationService typeValidationService;
-
-  public StableDescriptionValidationService(final StableDescriptionTypeValidationService typeValidationService) {
-    this.typeValidationService = typeValidationService;
-  }
+  private final LanguageValidationService languageValidationService;
 
   public List<ValidationFailure> validate(
     List<Description> descriptions
@@ -45,6 +44,9 @@ public class StableDescriptionValidationService {
       }
 
       failures.addAll(typeValidationService.validate(description.getType(), index));
+      failures.addAll(
+          languageValidationService.validate(description.getLanguage(), "descriptions[%d]".formatted(index))
+      );
     });
 
     return failures;

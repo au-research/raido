@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import raido.idl.raidv1.model.RaidCreateModel;
-import raido.idl.raidv1.model.RaidModel;
 import raido.idl.raidv2.model.*;
 import raido.inttest.TestData;
 
@@ -16,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 import static raido.apisvc.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 
-public class BackwardsCompatabilityIntegrationTest extends AbstractStableIntegrationTest {
+public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -240,7 +238,7 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractStableIntegra
                         .id(TestConstants.CLOSED_ACCESS_TYPE)
                         .schemeUri(TestConstants.ACCESS_TYPE_SCHEME_URI)
                 )
-                .accessStatement("RAiD minted via legacy V1 endpoint is closed by default"));
+                .accessStatement(new AccessStatement().statement("RAiD minted via legacy V1 endpoint is closed by default")));
 
         assertThat(raidDto.getDates()).isEqualTo(new Dates()
                 .startDate(LocalDate.parse(raidModel.getStartDate())));

@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 import static raido.inttest.endpoint.raidv2.stable.TestConstants.*;
 
-public class OrganisationIntegrationTest extends AbstractStableIntegrationTest {
+public class OrganisationIntegrationTest extends AbstractIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with no organisations succeeds")
   void noOrganisations() {

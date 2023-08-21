@@ -1,5 +1,6 @@
 package raido.apisvc.service.raid.validation;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import raido.idl.raidv2.model.SpatialCoverage;
 import raido.idl.raidv2.model.ValidationFailure;
@@ -12,7 +13,9 @@ import static raido.apisvc.endpoint.message.ValidationMessage.*;
 import static raido.apisvc.util.StringUtil.isBlank;
 
 @Component
+@RequiredArgsConstructor
 public class StableSpatialCoverageValidationService {
+    private final LanguageValidationService languageValidationService;
   private static final String URI_PATTERN =
     "^https://www\\.geonames\\.org/[\\d]+/[\\w]+\\.html";
 
@@ -52,6 +55,9 @@ public class StableSpatialCoverageValidationService {
             .errorType(INVALID_VALUE_TYPE)
             .message(String.format("Spatial coverage scheme uri should be %s", SPATIAL_COVERAGE_SCHEME_URI)));
         }
+          failures.addAll(
+                  languageValidationService.validate(spatialCoverage.getLanguage(), "spatialCoverages[%d]".formatted(i))
+          );
       });
 
     return failures;

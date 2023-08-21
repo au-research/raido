@@ -6,8 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import raido.idl.raidv2.model.Language;
 import raido.idl.raidv2.model.Title;
-import raido.idl.raidv2.model.TitleType;
 import raido.idl.raidv2.model.TitleTypeWithSchemeUri;
 import raido.idl.raidv2.model.ValidationFailure;
 
@@ -24,6 +24,8 @@ import static raido.apisvc.util.TestConstants.*;
 class StableTitleValidationServiceTest {
   @Mock
   private StableTitleTypeValidationService typeValidationService;
+  @Mock
+  private LanguageValidationService languageValidationService;
   @InjectMocks
   private StableTitleValidationService validationService;
 
@@ -34,16 +36,22 @@ class StableTitleValidationServiceTest {
       .id(PRIMARY_TITLE_TYPE_ID)
       .schemeUri(TITLE_TYPE_SCHEME_URI);
 
+    final var language = new Language()
+            .id(LANGUAGE_ID)
+            .schemeUri(LANGUAGE_SCHEME_URI);
+
     final var title = new Title()
-      .type(type)
-      .title(TITLE)
-      .startDate(START_DATE)
-      .endDate(END_DATE);
+            .type(type)
+            .title(TITLE)
+            .startDate(START_DATE)
+            .endDate(END_DATE)
+            .language(language);
 
     final var failures = validationService.validate(List.of(title));
 
     assertThat(failures.size(), is(0));
     verify(typeValidationService).validate(type, 0);
+    verify(languageValidationService).validate(language, "titles[0]");
   }
 
   @Test

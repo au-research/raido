@@ -2,6 +2,7 @@ package raido.inttest.endpoint.raidv2.stable;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import raido.idl.raidv2.model.AccessStatement;
 import raido.idl.raidv2.model.AccessTypeWithSchemeUri;
 import raido.idl.raidv2.model.ValidationFailure;
 import raido.inttest.RaidApiValidationException;
@@ -12,7 +13,132 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 import static raido.inttest.endpoint.raidv2.stable.TestConstants.*;
 
-public class AccessIntegrationTest extends AbstractStableIntegrationTest {
+public class AccessIntegrationTest extends AbstractIntegrationTest {
+
+  @Test
+  @DisplayName("Mint with invalid language id fails")
+  void invalidLanguageId() {
+    createRequest.getAccess().getAccessStatement().getLanguage().setId("xxx");
+
+    try {
+      raidApi.createRaidV1(createRequest);
+    } catch (RaidApiValidationException e) {
+      final var failures = e.getFailures();
+      assertThat(failures).hasSize(1);
+      assertThat(failures).contains(
+              new ValidationFailure()
+                      .fieldId("access.accessStatement.language.id")
+                      .errorType("invalidValue")
+                      .message("id does not exist within the given scheme")
+      );
+    } catch (Exception e) {
+      fail("Mint should be successful");
+    }
+  }
+
+  @Test
+  @DisplayName("Mint with invalid language schemeUri fails")
+  void invalidLanguageSchemeUri() {
+    createRequest.getAccess().getAccessStatement().getLanguage().setSchemeUri("http://localhost");
+
+    try {
+      raidApi.createRaidV1(createRequest);
+    } catch (RaidApiValidationException e) {
+      final var failures = e.getFailures();
+      assertThat(failures).hasSize(1);
+      assertThat(failures).contains(
+              new ValidationFailure()
+                      .fieldId("access.accessStatement.language.schemeUri")
+                      .errorType("invalidValue")
+                      .message("scheme is unknown/unsupported")
+      );
+    } catch (Exception e) {
+      fail("Mint should be successful");
+    }
+  }
+  @Test
+  @DisplayName("Mint with empty language schemeUri fails")
+  void nullLanguageSchemeUri() {
+    createRequest.getAccess().getAccessStatement().getLanguage().setSchemeUri(null);
+
+    try {
+      raidApi.createRaidV1(createRequest);
+    } catch (RaidApiValidationException e) {
+      final var failures = e.getFailures();
+      assertThat(failures).hasSize(1);
+      assertThat(failures).contains(
+              new ValidationFailure()
+                      .fieldId("access.accessStatement.language.schemeUri")
+                      .errorType("notSet")
+                      .message("field must be set")
+      );
+    } catch (Exception e) {
+      fail("Mint should be successful");
+    }
+  }
+
+  @Test
+  @DisplayName("Mint with empty language schemeUri fails")
+  void emptyLanguageSchemeUri() {
+    createRequest.getAccess().getAccessStatement().getLanguage().setSchemeUri("");
+
+    try {
+      raidApi.createRaidV1(createRequest);
+    } catch (RaidApiValidationException e) {
+      final var failures = e.getFailures();
+      assertThat(failures).hasSize(1);
+      assertThat(failures).contains(
+              new ValidationFailure()
+                      .fieldId("access.accessStatement.language.schemeUri")
+                      .errorType("notSet")
+                      .message("field must be set")
+      );
+    } catch (Exception e) {
+      fail("Mint should be successful");
+    }
+  }
+
+  @Test
+  @DisplayName("Mint with empty language id fails")
+  void emptyLanguageId() {
+    createRequest.getAccess().getAccessStatement().getLanguage().setId("");
+
+    try {
+      raidApi.createRaidV1(createRequest);
+    } catch (RaidApiValidationException e) {
+      final var failures = e.getFailures();
+      assertThat(failures).hasSize(1);
+      assertThat(failures).contains(
+              new ValidationFailure()
+                      .fieldId("access.accessStatement.language.id")
+                      .errorType("notSet")
+                      .message("field must be set")
+      );
+    } catch (Exception e) {
+      fail("Mint should be successful");
+    }
+  }
+
+  @Test
+  @DisplayName("Mint with null language id fails")
+  void nullLanguageId() {
+    createRequest.getAccess().getAccessStatement().getLanguage().setId(null);
+
+    try {
+      raidApi.createRaidV1(createRequest);
+    } catch (RaidApiValidationException e) {
+      final var failures = e.getFailures();
+      assertThat(failures).hasSize(1);
+      assertThat(failures).contains(
+              new ValidationFailure()
+                      .fieldId("access.accessStatement.language.id")
+                      .errorType("notSet")
+                      .message("field must be set")
+      );
+    } catch (Exception e) {
+      fail("Mint should be successful");
+    }
+  }
 
   @Test
   @DisplayName("Mint raid with valid open access type")
@@ -34,11 +160,11 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Mint with valid closed access type")
   void mintClosedAccess() {
     createRequest.getAccess()
-      .type(new AccessTypeWithSchemeUri()
-        .id(CLOSED_ACCESS_TYPE)
-        .schemeUri(ACCESS_TYPE_SCHEME_URI)
-      )
-      .accessStatement("Closed");
+            .type(new AccessTypeWithSchemeUri()
+                    .id(CLOSED_ACCESS_TYPE)
+                    .schemeUri(ACCESS_TYPE_SCHEME_URI)
+            )
+            .accessStatement(new AccessStatement().statement("Closed"));
     try {
       raidApi.createRaidV1(createRequest);
     } catch (Exception e) {
@@ -50,12 +176,12 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Mint with valid embargoed access type")
   void mintEmbargoedAccess() {
     createRequest.getAccess()
-      .type(new AccessTypeWithSchemeUri()
-        .id(EMBARGOED_ACCESS_TYPE)
-        .schemeUri(ACCESS_TYPE_SCHEME_URI)
-      )
-      .embargoExpiry(LocalDate.now())
-      .accessStatement("Embargoed");
+            .type(new AccessTypeWithSchemeUri()
+                    .id(EMBARGOED_ACCESS_TYPE)
+                    .schemeUri(ACCESS_TYPE_SCHEME_URI)
+            )
+            .embargoExpiry(LocalDate.now())
+            .accessStatement(new AccessStatement().statement("Embargoed"));
     try {
       raidApi.createRaidV1(createRequest);
     } catch (Exception e) {
@@ -67,11 +193,11 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
   @DisplayName("Mint with embargoed access type fails with missing embargoExpiry")
   void missingEmbargoExpiry() {
     createRequest.getAccess()
-      .type(new AccessTypeWithSchemeUri()
-        .id(EMBARGOED_ACCESS_TYPE)
-        .schemeUri(ACCESS_TYPE_SCHEME_URI)
-      )
-      .accessStatement("Embargoed");
+            .type(new AccessTypeWithSchemeUri()
+                    .id(EMBARGOED_ACCESS_TYPE)
+                    .schemeUri(ACCESS_TYPE_SCHEME_URI)
+            )
+            .accessStatement(new AccessStatement().statement("Embargoed"));
     try {
       raidApi.createRaidV1(createRequest);
     } catch (RaidApiValidationException e) {
@@ -121,7 +247,7 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
         .id(CLOSED_ACCESS_TYPE)
         .schemeUri(ACCESS_TYPE_SCHEME_URI)
       )
-      .accessStatement("");
+      .accessStatement(new AccessStatement().statement(""));
 
     try {
       raidApi.createRaidV1(createRequest);
@@ -130,7 +256,7 @@ public class AccessIntegrationTest extends AbstractStableIntegrationTest {
       assertThat(failures).hasSize(1);
       assertThat(failures).contains(
         new ValidationFailure()
-          .fieldId("access.accessStatement")
+          .fieldId("access.accessStatement.statement")
           .errorType("notSet")
           .message("field must be set")
       );

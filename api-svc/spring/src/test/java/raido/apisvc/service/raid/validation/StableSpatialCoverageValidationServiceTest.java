@@ -2,6 +2,11 @@ package raido.apisvc.service.raid.validation;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import raido.idl.raidv2.model.Language;
 import raido.idl.raidv2.model.SpatialCoverage;
 import raido.idl.raidv2.model.ValidationFailure;
 
@@ -9,21 +14,59 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static raido.apisvc.util.TestConstants.LANGUAGE_ID;
+import static raido.apisvc.util.TestConstants.LANGUAGE_SCHEME_URI;
 
+@ExtendWith(MockitoExtension.class)
 class StableSpatialCoverageValidationServiceTest {
-  private final StableSpatialCoverageValidationService validationService =
-    new StableSpatialCoverageValidationService();
+  @Mock
+  private LanguageValidationService languageValidationService;
+  @InjectMocks
+  private StableSpatialCoverageValidationService validationService;
 
   @Test
   @DisplayName("Validation passes with valid spatial coverage")
   void validSpatialCoverage() {
+    final var language = new Language()
+            .id(LANGUAGE_ID)
+            .schemeUri(LANGUAGE_SCHEME_URI);
+
     final var spatialCoverage = new SpatialCoverage()
-      .id("https://www.geonames.org/2643743/london.html")
-      .schemeUri("https://www.geonames.org/")
-      .place("London");
+            .id("https://www.geonames.org/2643743/london.html")
+            .schemeUri("https://www.geonames.org/")
+            .place("London")
+            .language(language);
 
     final var failures = validationService.validate(List.of(spatialCoverage));
     assertThat(failures, empty());
+    verify(languageValidationService).validate(language, "spatialCoverages[0]");
+  }
+
+  @Test
+  @DisplayName("Adds language validation failures")
+  void addLanguageValidationFailures() {
+    final var language = new Language()
+            .id(LANGUAGE_ID)
+            .schemeUri(LANGUAGE_SCHEME_URI);
+
+    final var spatialCoverage = new SpatialCoverage()
+            .id("https://www.geonames.org/2643743/london.html")
+            .schemeUri("https://www.geonames.org/")
+            .place("London")
+            .language(language);
+
+    final var failure = new ValidationFailure()
+            .fieldId("field-id")
+            .errorType("error-type")
+            .message("_message");
+
+    when(languageValidationService.validate(language, "spatialCoverages[0]")).thenReturn(List.of(failure));
+
+    final var failures = validationService.validate(List.of(spatialCoverage));
+    assertThat(failures, is(List.of(failure)));
+    verify(languageValidationService).validate(language, "spatialCoverages[0]");
   }
 
   @Test

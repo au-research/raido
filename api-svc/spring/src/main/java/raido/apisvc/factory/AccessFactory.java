@@ -1,14 +1,13 @@
 package raido.apisvc.factory;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import raido.idl.raidv2.model.Access;
-import raido.idl.raidv2.model.AccessBlock;
-import raido.idl.raidv2.model.AccessType;
-import raido.idl.raidv2.model.AccessTypeWithSchemeUri;
+import raido.idl.raidv2.model.*;
 
 import java.util.Map;
 
 @Component
+@RequiredArgsConstructor
 public class AccessFactory {
     private static final String ACCESS_SCHEME_URI =
         "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/";
@@ -23,8 +22,13 @@ public class AccessFactory {
             return null;
         }
 
+        AccessStatement accessStatement = null;
+        if (accessBlock.getType() != null && accessBlock.getType() != AccessType.OPEN) {
+            accessStatement = new AccessStatement().statement(accessBlock.getAccessStatement());
+        }
+
         return new Access()
-            .accessStatement(accessBlock.getAccessStatement())
+            .accessStatement(accessStatement)
             .type(new AccessTypeWithSchemeUri()
                 .id(accessBlock.getType() != null ? ACCESS_TYPE_MAP.get(accessBlock.getType()) : null)
                 .schemeUri(ACCESS_SCHEME_URI)

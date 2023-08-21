@@ -86,4 +86,8 @@ public class TestConstants {
 
   public static final LocalDate START_DATE = LocalDate.now().minusMonths(1);
   public static final LocalDate END_DATE = LocalDate.now();
+
+  public static final String LANGUAGE_ID = "eng";
+
+  public static final String LANGUAGE_SCHEME_URI = "https://www.iso.org/standard/39534.html";
 }

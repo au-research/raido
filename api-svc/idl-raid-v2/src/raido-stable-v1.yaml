@@ -212,6 +212,8 @@ components:
           $ref: '#/components/schemas/TitleTypeWithSchemeUri'
         startDate: { type: string, format: date }
         endDate: { type: string, format: date }
+        language:
+          $ref: '#/components/schemas/Language'
     TitleTypeWithSchemeUri:
       type: object
       properties:
@@ -230,8 +232,11 @@ components:
         description: {type: string}
         type:
           $ref: '#/components/schemas/DescriptionTypeWithSchemeUri'
+        language:
+          $ref: '#/components/schemas/Language'
     DescriptionTypeWithSchemeUri:
       type: object
+      required: [id, schemeUri]
       properties:
         id: {
           type: string,
@@ -241,17 +246,27 @@ components:
            type: string,
            example: https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1
         }
+        language:
+          $ref: '#/components/schemas/Language'
     Access:
       type: object
       required: ["type"]
       properties:
         type:
           $ref: '#/components/schemas/AccessTypeWithSchemeUri'
-        accessStatement: { type: string }
+        accessStatement:
+          $ref: '#/components/schemas/AccessStatement'
         embargoExpiry: {
           type: string,
           format: date
         }
+    AccessStatement:
+      type: object
+      required: [statement]
+      properties:
+        statement: { type: string }
+        language:
+          $ref: '#/components/schemas/Language'
     AccessTypeWithSchemeUri:
       type: object
       required: [ id, schemeUri ]
@@ -413,7 +428,21 @@ components:
         id: { type: string }
         schemeUri: { type: string }
         place: { type: string }
+        language:
+          $ref: '#/components/schemas/Language'
     TraditionalKnowledgeLabel:
       type: object
       properties:
         schemeUri: { type: string }
+    Language:
+      type: object
+      required: [ code, schemeUri]
+      properties:
+        id: {
+          type: string,
+          example: eng
+        }
+        schemeUri: {
+          type: string,
+          example: https://iso639-3.sil.org/
+        }
