@@ -1,17 +1,18 @@
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { Launch as LaunchIcon } from "@mui/icons-material";
 import ScatterPlotIcon from "@mui/icons-material/ScatterPlot";
-import { Box } from "@mui/material";
+import { Box, Link } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import CategoryHeadingBox from "./category-heading-box";
+import CategoryHeadingBox from "../../../components/category-heading-box";
+import { ReadData } from "types";
 
-export default function Meta({ theme }: { theme: any }) {
+export default function Meta({ data }: { data: ReadData | undefined }) {
   return (
     <Grid container alignItems="stretch">
       <Grid item xs={12} sm={3} md={3}>
         <CategoryHeadingBox
-          theme={theme}
           title="Meta"
           subtitle="RAiD meta data"
           IconComponent={ScatterPlotIcon}
@@ -26,31 +27,57 @@ export default function Meta({ theme }: { theme: any }) {
                 <Tooltip title="More info about this field..." placement="top">
                   <InfoOutlinedIcon
                     sx={{
-                      color: theme.palette.text.secondary,
+                      color: "text.secondary",
                       fontSize: "0.8rem",
                       mb: 1,
                     }}
                   />
                 </Tooltip>
               </Typography>
-              <Typography color="text.secondary" variant="body1">
-                10378.1/1724446
+              <Typography
+                color="text.secondary"
+                variant="body1"
+                component={Link}
+                href={`https://hdl.handle.net/${data?.raid?.handle}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {data?.raid?.handle} <LaunchIcon sx={{ fontSize: 12 }} />
               </Typography>
             </Box>
           </Grid>
           <Grid item sm={12} md={4} xs={12} px={2} py={1}>
             <Box>
-              <Typography variant="body2">Agency URL</Typography>
-              <Typography color="text.secondary" variant="body1">
-                10378.1/1724446
+              <Typography variant="body2">
+                Agency URL
+                <Tooltip title="More info about this field..." placement="top">
+                  <InfoOutlinedIcon
+                    sx={{
+                      color: "text.secondary",
+                      fontSize: "0.8rem",
+                      mb: 1,
+                    }}
+                  />
+                </Tooltip>
+              </Typography>
+              <Typography
+                color="text.secondary"
+                variant="body1"
+                component={Link}
+                href={`http://localhost:8080/${data?.raid?.handle}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {data?.raid?.handle} <LaunchIcon sx={{ fontSize: 12 }} />
               </Typography>
             </Box>
           </Grid>
+
           <Grid item sm={12} md={4} xs={12} px={2} py={1}>
             <Box>
               <Typography variant="body2">Service point</Typography>
               <Typography color="text.secondary" variant="body1">
-                raido
+                {data?.raid?.servicePointName}
               </Typography>
             </Box>
           </Grid>
