@@ -2,12 +2,10 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
 export default function CategoryHeadingBox({
-  theme,
   title,
   subtitle,
   IconComponent,
 }: {
-  theme: any;
   title: string;
   subtitle: string;
   IconComponent: any;
@@ -15,7 +13,7 @@ export default function CategoryHeadingBox({
   return (
     <Box
       sx={{
-        bgcolor: theme.palette.background.default,
+        bgcolor: "background.default",
         p: 2,
         borderRadius: 2,
         height: "100%",
@@ -24,7 +22,7 @@ export default function CategoryHeadingBox({
       <Typography variant="h6" gutterBottom>
         <IconComponent
           sx={{
-            color: theme.palette.text.secondary,
+            color: "text.secondary",
             opacity: 0.8,
             fontSize: "1.2rem",
             mt: 0.8,
