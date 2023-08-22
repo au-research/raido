@@ -2,10 +2,7 @@ package raido.apisvc.factory;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import raido.idl.raidv2.model.Access;
-import raido.idl.raidv2.model.AccessBlock;
-import raido.idl.raidv2.model.AccessType;
-import raido.idl.raidv2.model.AccessTypeWithSchemeUri;
+import raido.idl.raidv2.model.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -36,7 +33,7 @@ class AccessFactoryTest {
             .type(new AccessTypeWithSchemeUri()
                 .id(CLOSED_ID)
                 .schemeUri(ACCESS_TYPE_SCHEME_URI))
-            .accessStatement(accessStatement);
+            .accessStatement(new AccessStatement().statement(accessStatement));
 
         assertThat(result, is(expected));
     }

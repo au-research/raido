@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import raido.idl.raidv2.model.Access;
+import raido.idl.raidv2.model.AccessStatement;
 import raido.idl.raidv2.model.AccessTypeWithSchemeUri;
 import raido.idl.raidv2.model.ValidationFailure;
 
@@ -18,10 +19,14 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static raido.apisvc.util.TestConstants.*;
 
 @ExtendWith(MockitoExtension.class)
 class StableAccessValidationServiceTest {
+  @Mock
+  private AccessStatementValidationService accessStatementValidationService;
+
   @Mock
   private StableAccessTypeValidationService accessTypeValidationService;
 
@@ -37,7 +42,7 @@ class StableAccessValidationServiceTest {
 
     final var access = new Access()
       .type(type)
-      .accessStatement("Closed");
+      .accessStatement(new AccessStatement().statement("Closed"));
 
     final List<ValidationFailure> failures = validationService.validate(access);
 
@@ -54,7 +59,7 @@ class StableAccessValidationServiceTest {
 
     final var access = new Access()
       .type(type)
-      .accessStatement("Embargoed")
+      .accessStatement(new AccessStatement().statement("Embargoed"))
       .embargoExpiry(LocalDate.now());
 
     final List<ValidationFailure> failures = validationService.validate(access);
@@ -73,15 +78,17 @@ class StableAccessValidationServiceTest {
     final var access = new Access()
       .type(type);
 
+    final var failure = new ValidationFailure()
+            .fieldId("access.accessStatement")
+            .errorType("notSet")
+            .message("field must be set");
+
+    when(accessStatementValidationService.validate(null)).thenReturn(List.of(failure));
+
     final List<ValidationFailure> failures = validationService.validate(access);
 
     assertThat(failures.size(), is(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("access.accessStatement")
-        .errorType("notSet")
-        .message("field must be set")
-    ));
+    assertThat(failures, hasItem(failure));
   }
 
   @Test
@@ -91,19 +98,23 @@ class StableAccessValidationServiceTest {
       .id(CLOSED_ACCESS_TYPE_ID)
       .schemeUri(ACCESS_TYPE_SCHEME_URI);
 
+    final var accessStatement = new AccessStatement().statement("");
+
     final var access = new Access()
-      .type(type)
-      .accessStatement("");
+            .type(type)
+            .accessStatement(accessStatement);
+
+    final var failure = new ValidationFailure()
+            .fieldId("access.accessStatement")
+            .errorType("notSet")
+            .message("field must be set");
+
+    when(accessStatementValidationService.validate(accessStatement)).thenReturn(List.of(failure));
 
     final List<ValidationFailure> failures = validationService.validate(access);
 
     assertThat(failures.size(), is(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("access.accessStatement")
-        .errorType("notSet")
-        .message("field must be set")
-    ));
+    assertThat(failures, hasItem(failure));
   }
 
   @Test
@@ -113,20 +124,24 @@ class StableAccessValidationServiceTest {
       .id(EMBARGOED_ACCESS_TYPE_ID)
       .schemeUri(ACCESS_TYPE_SCHEME_URI);
 
+    final var accessStatement = new AccessStatement().statement("");
+
     final var access = new Access()
-      .type(type)
-      .accessStatement("")
-      .embargoExpiry(LocalDate.now());
+            .type(type)
+            .accessStatement(accessStatement)
+            .embargoExpiry(LocalDate.now());
+
+    final var failure = new ValidationFailure()
+            .fieldId("access.accessStatement")
+            .errorType("notSet")
+            .message("field must be set");
+
+    when(accessStatementValidationService.validate(accessStatement)).thenReturn(List.of(failure));
 
     final List<ValidationFailure> failures = validationService.validate(access);
 
     assertThat(failures.size(), is(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("access.accessStatement")
-        .errorType("notSet")
-        .message("field must be set")
-    ));
+    assertThat(failures, hasItem(failure));
   }
 
   @Test
@@ -153,8 +168,8 @@ class StableAccessValidationServiceTest {
       .schemeUri(ACCESS_TYPE_SCHEME_URI);
 
     final var access = new Access()
-      .type(type)
-      .accessStatement("access statement");
+            .type(type)
+            .accessStatement(new AccessStatement().statement("access statement"));
 
     final List<ValidationFailure> failures = validationService.validate(access);
 

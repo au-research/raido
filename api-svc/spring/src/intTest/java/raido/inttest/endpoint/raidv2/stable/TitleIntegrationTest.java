@@ -14,7 +14,133 @@ import java.util.Collections;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class TitleIntegrationTest extends AbstractStableIntegrationTest {
+public class TitleIntegrationTest extends AbstractIntegrationTest {
+
+  @Test
+  @DisplayName("Minting a RAiD with a title with an null language schemeUri fails")
+  void nullLanguageSchemeUri() {
+    createRequest.getTitles().get(0).getLanguage().setSchemeUri(null);
+
+    try {
+      raidApi.createRaidV1(createRequest);
+      fail("No exception thrown with missing title");
+    } catch (RaidApiValidationException e) {
+      final var failures = e.getFailures();
+      assertThat(failures).hasSize(1);
+      assertThat(failures).contains(new ValidationFailure()
+              .fieldId("titles[0].language.schemeUri")
+              .errorType("notSet")
+              .message("field must be set")
+      );
+    } catch (Exception e) {
+      fail("Expected RaidApiValidationException");
+    }
+  }
+
+  @Test
+  @DisplayName("Minting a RAiD with a title with an empty language schemeUri fails")
+  void emptyLanguageSchemeUri() {
+    createRequest.getTitles().get(0).getLanguage().setSchemeUri("");
+
+    try {
+      raidApi.createRaidV1(createRequest);
+      fail("No exception thrown with missing title");
+    } catch (RaidApiValidationException e) {
+      final var failures = e.getFailures();
+      assertThat(failures).hasSize(1);
+      assertThat(failures).contains(new ValidationFailure()
+              .fieldId("titles[0].language.schemeUri")
+              .errorType("notSet")
+              .message("field must be set")
+      );
+    } catch (Exception e) {
+      fail("Expected RaidApiValidationException");
+    }
+  }
+
+  @Test
+  @DisplayName("Minting a RAiD with a title with an empty language id fails")
+  void emptyLanguageId() {
+    createRequest.getTitles().get(0).getLanguage().setId("");
+
+    try {
+      raidApi.createRaidV1(createRequest);
+      fail("No exception thrown with missing title");
+    } catch (RaidApiValidationException e) {
+      final var failures = e.getFailures();
+      assertThat(failures).hasSize(1);
+      assertThat(failures).contains(new ValidationFailure()
+              .fieldId("titles[0].language.id")
+              .errorType("notSet")
+              .message("field must be set")
+      );
+    } catch (Exception e) {
+      fail("Expected RaidApiValidationException");
+    }
+  }
+
+  @Test
+  @DisplayName("Minting a RAiD with a title with an null language fails")
+  void nullLanguageId() {
+    createRequest.getTitles().get(0).getLanguage().setId(null);
+
+    try {
+      raidApi.createRaidV1(createRequest);
+      fail("No exception thrown with missing title");
+    } catch (RaidApiValidationException e) {
+      final var failures = e.getFailures();
+      assertThat(failures).hasSize(1);
+      assertThat(failures).contains(new ValidationFailure()
+              .fieldId("titles[0].language.id")
+              .errorType("notSet")
+              .message("field must be set")
+      );
+    } catch (Exception e) {
+      fail("Expected RaidApiValidationException");
+    }
+  }
+
+  @Test
+  @DisplayName("Minting a RAiD with a title with an invalid language id fails")
+  void invalidLanguageId() {
+    createRequest.getTitles().get(0).getLanguage().setId("xxx");
+
+    try {
+      raidApi.createRaidV1(createRequest);
+      fail("No exception thrown with missing title");
+    } catch (RaidApiValidationException e) {
+      final var failures = e.getFailures();
+      assertThat(failures).hasSize(1);
+      assertThat(failures).contains(new ValidationFailure()
+              .fieldId("titles[0].language.id")
+              .errorType("invalidValue")
+              .message("id does not exist within the given scheme")
+      );
+    } catch (Exception e) {
+      fail("Expected RaidApiValidationException");
+    }
+  }
+
+  @Test
+  @DisplayName("Minting a RAiD with a title with an invalid language scheme fails")
+  void invalidLanguageScheme() {
+    createRequest.getTitles().get(0).getLanguage().setSchemeUri("http://localhost");
+
+    try {
+      raidApi.createRaidV1(createRequest);
+      fail("No exception thrown with missing title");
+    } catch (RaidApiValidationException e) {
+      final var failures = e.getFailures();
+      assertThat(failures).hasSize(1);
+      assertThat(failures).contains(new ValidationFailure()
+              .fieldId("titles[0].language.schemeUri")
+              .errorType("invalidValue")
+              .message("scheme is unknown/unsupported")
+      );
+    } catch (Exception e) {
+      fail("Expected RaidApiValidationException");
+    }
+  }
 
   @Test
   @DisplayName("Minting a RAiD with null titles fails")

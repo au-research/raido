@@ -22,6 +22,8 @@ import raido.db.jooq.api_svc.tables.ContributorRoleScheme;
 import raido.db.jooq.api_svc.tables.DescriptionType;
 import raido.db.jooq.api_svc.tables.DescriptionTypeScheme;
 import raido.db.jooq.api_svc.tables.FlywaySchemaHistory;
+import raido.db.jooq.api_svc.tables.Language;
+import raido.db.jooq.api_svc.tables.LanguageScheme;
 import raido.db.jooq.api_svc.tables.OrganisationRole;
 import raido.db.jooq.api_svc.tables.OrganisationRoleScheme;
 import raido.db.jooq.api_svc.tables.Raid;
@@ -33,7 +35,8 @@ import raido.db.jooq.api_svc.tables.RelatedObjectTypeScheme;
 import raido.db.jooq.api_svc.tables.RelatedRaidType;
 import raido.db.jooq.api_svc.tables.RelatedRaidTypeScheme;
 import raido.db.jooq.api_svc.tables.ServicePoint;
-import raido.db.jooq.api_svc.tables.Subject;
+import raido.db.jooq.api_svc.tables.SubjectType;
+import raido.db.jooq.api_svc.tables.SubjectTypeScheme;
 import raido.db.jooq.api_svc.tables.TitleType;
 import raido.db.jooq.api_svc.tables.TitleTypeScheme;
 import raido.db.jooq.api_svc.tables.UserAuthzRequest;
@@ -78,6 +81,8 @@ public class ApiSvc extends SchemaImpl {
             DescriptionType.DESCRIPTION_TYPE,
             DescriptionTypeScheme.DESCRIPTION_TYPE_SCHEME,
             FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
+            Language.LANGUAGE,
+            LanguageScheme.LANGUAGE_SCHEME,
             OrganisationRole.ORGANISATION_ROLE,
             OrganisationRoleScheme.ORGANISATION_ROLE_SCHEME,
             Raid.RAID,
@@ -89,7 +94,8 @@ public class ApiSvc extends SchemaImpl {
             RelatedRaidType.RELATED_RAID_TYPE,
             RelatedRaidTypeScheme.RELATED_RAID_TYPE_SCHEME,
             ServicePoint.SERVICE_POINT,
-            Subject.SUBJECT,
+            SubjectType.SUBJECT_TYPE,
+            SubjectTypeScheme.SUBJECT_TYPE_SCHEME,
             TitleType.TITLE_TYPE,
             TitleTypeScheme.TITLE_TYPE_SCHEME,
             UserAuthzRequest.USER_AUTHZ_REQUEST

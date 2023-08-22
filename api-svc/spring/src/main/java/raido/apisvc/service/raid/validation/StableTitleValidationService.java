@@ -1,5 +1,6 @@
 package raido.apisvc.service.raid.validation;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import raido.idl.raidv2.model.Title;
 import raido.idl.raidv2.model.ValidationFailure;
@@ -15,15 +16,14 @@ import static raido.apisvc.util.StringUtil.isBlank;
 import static raido.db.jooq.api_svc.tables.Raid.RAID;
 
 @Service
+@RequiredArgsConstructor
 public class StableTitleValidationService {
-  private final StableTitleTypeValidationService titleTypeValidationService;
-
-  public StableTitleValidationService(final StableTitleTypeValidationService titleTypeValidationService) {
-    this.titleTypeValidationService = titleTypeValidationService;
-  }
-
   private static final String PRIMARY_TITLE_TYPE =
-    "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
+          "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
+
+  private final StableTitleTypeValidationService titleTypeValidationService;
+  private final LanguageValidationService languageValidationService;
+
 
   public List<ValidationFailure> validatePrimaryTitle(
     List<Title> titles
@@ -65,6 +65,8 @@ public class StableTitleValidationService {
       }
 
       failures.addAll(titleTypeValidationService.validate(title.getType(), index));
+
+      failures.addAll(languageValidationService.validate(title.getLanguage(), "titles[%d]".formatted(index)));
     });
     return failures;
   }

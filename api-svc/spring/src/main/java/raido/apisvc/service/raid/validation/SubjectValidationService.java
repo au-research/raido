@@ -1,8 +1,8 @@
 package raido.apisvc.service.raid.validation;
 
 import org.springframework.stereotype.Component;
-import raido.apisvc.repository.SubjectRepository;
-import raido.db.jooq.api_svc.tables.records.SubjectRecord;
+import raido.apisvc.repository.SubjectTypeRepository;
+import raido.db.jooq.api_svc.tables.records.SubjectTypeRecord;
 import raido.idl.raidv2.model.SubjectBlock;
 import raido.idl.raidv2.model.ValidationFailure;
 
@@ -16,10 +16,10 @@ import static raido.apisvc.util.ObjectUtil.indexed;
 public class SubjectValidationService {
 
   private static final String SUBJECT_SCHEME_URI = "https://linked.data.gov.au/def/anzsrc-for/2020/";
-  private final SubjectRepository subjectRepository;
+  private final SubjectTypeRepository subjectTypeRepository;
 
-  public SubjectValidationService(final SubjectRepository subjectRepository) {
-    this.subjectRepository = subjectRepository;
+  public SubjectValidationService(final SubjectTypeRepository subjectTypeRepository) {
+    this.subjectTypeRepository = subjectTypeRepository;
   }
 
   public List<ValidationFailure> validateSubjects(List<SubjectBlock> subjects) {
@@ -60,9 +60,9 @@ public class SubjectValidationService {
 
             failures.add(failure);
           } else {
-            final Optional<SubjectRecord> subjectRecord = subjectRepository.findById(subjectId);
+            final Optional<SubjectTypeRecord> subjectTypeRecord = subjectTypeRepository.findById(subjectId);
 
-            if (subjectRecord.isEmpty()) {
+            if (subjectTypeRecord.isEmpty()) {
               final var failure = new ValidationFailure();
               failure.setFieldId(String.format("subjects[%d].subject", i));
               failure.setMessage(String.format("%s is not a standard FoR code", subject.getSubject()));

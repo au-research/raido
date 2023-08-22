@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 import static raido.inttest.endpoint.raidv2.stable.TestConstants.*;
 
-public class ContributorsIntegrationTest extends AbstractStableIntegrationTest {
+public class ContributorsIntegrationTest extends AbstractIntegrationTest {
   @Test
   @DisplayName("Minting a RAiD with no contributors fails")
   void noContributors() {

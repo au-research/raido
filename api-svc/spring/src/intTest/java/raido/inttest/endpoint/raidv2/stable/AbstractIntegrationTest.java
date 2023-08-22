@@ -31,7 +31,7 @@ import static raido.inttest.util.MinimalRaidTestData.REAL_TEST_ROR;
 @SpringJUnitConfig(
   name="SpringJUnitConfigContext",
   value= IntegrationTestConfig.class )
-public class AbstractStableIntegrationTest {
+public class AbstractIntegrationTest {
   protected String operatorToken;
   protected String raidV1TestToken;
 
@@ -90,28 +90,49 @@ public class AbstractStableIntegrationTest {
       idFactory.generateUniqueId();
 
     return new CreateRaidV1Request()
-      .titles(List.of(new Title()
-        .type(new TitleTypeWithSchemeUri()
-          .id(PRIMARY_TITLE_TYPE)
-          .schemeUri(TITLE_TYPE_SCHEME_URI))
-        .title(initialTitle)
-        .startDate(today)))
-      .dates(new Dates().startDate(today))
-      .descriptions(List.of(new Description()
-        .type(new DescriptionTypeWithSchemeUri()
-          .id(PRIMARY_DESCRIPTION_TYPE)
-          .schemeUri(DESCRIPTION_TYPE_SCHEME_URI))
-        .description("stuff about the int test raid")))
-      .contributors(List.of(contributor(
-        REAL_TEST_ORCID, LEADER_POSITION, SOFTWARE_CONTRIBUTOR_ROLE, today)))
-      .organisations(List.of(organisation(
-        REAL_TEST_ROR, LEAD_RESEARCH_ORGANISATION, today)))
-      .access(new Access()
-        .type(new AccessTypeWithSchemeUri()
-          .id(OPEN_ACCESS_TYPE)
-          .schemeUri(ACCESS_TYPE_SCHEME_URI)
-        )
-      );
+            .titles(List.of(new Title()
+                    .language(new Language()
+                            .schemeUri(LANGUAGE_SCHEME_URI)
+                            .id(LANGUAGE_ID)
+                    )
+                    .type(new TitleTypeWithSchemeUri()
+                            .id(PRIMARY_TITLE_TYPE)
+                            .schemeUri(TITLE_TYPE_SCHEME_URI))
+                    .title(initialTitle)
+                    .startDate(today)))
+            .dates(new Dates().startDate(today))
+            .descriptions(List.of(new Description()
+                    .language(new Language()
+                            .schemeUri(LANGUAGE_SCHEME_URI)
+                            .id(LANGUAGE_ID))
+                    .type(new DescriptionTypeWithSchemeUri()
+                            .language(new Language()
+                                    .schemeUri(LANGUAGE_SCHEME_URI)
+                                    .id(LANGUAGE_ID))
+                            .id(PRIMARY_DESCRIPTION_TYPE)
+                            .schemeUri(DESCRIPTION_TYPE_SCHEME_URI))
+                    .description("stuff about the int test raid")))
+            .contributors(List.of(contributor(
+                    REAL_TEST_ORCID, LEADER_POSITION, SOFTWARE_CONTRIBUTOR_ROLE, today)))
+            .organisations(List.of(organisation(
+                    REAL_TEST_ROR, LEAD_RESEARCH_ORGANISATION, today)))
+            .access(new Access()
+                    .accessStatement(new AccessStatement()
+                            .statement("Embargoed")
+                            .language(new Language()
+                                    .id(LANGUAGE_ID)
+                                    .schemeUri(LANGUAGE_SCHEME_URI)))
+                    .type(new AccessTypeWithSchemeUri()
+                            .id(EMBARGOED_ACCESS_TYPE)
+                            .schemeUri(ACCESS_TYPE_SCHEME_URI))
+                    .embargoExpiry(LocalDate.now().plusMonths(1)))
+            .spatialCoverages(List.of(new SpatialCoverage()
+                    .language(new Language()
+                            .id(LANGUAGE_ID)
+                            .schemeUri(LANGUAGE_SCHEME_URI))
+                    .id(GEONAMES_MELBOURNE)
+                    .place("Melbourne")
+                    .schemeUri(GEONAMES_SCHEMA_URI)));
   }
 
   private UpdateRaidV1Request mapReadToUpdate(RaidDto read){
