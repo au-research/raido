@@ -1,25 +1,23 @@
 package raido.cmdline;
 
-import raido.apisvc.service.export.BuildSearchIndexService;
-import raido.apisvc.spring.config.environment.BuildSearchIndexProps;
-import raido.apisvc.util.DateUtil;
-import raido.apisvc.util.Log;
+import au.org.raid.api.service.export.BuildSearchIndexService;
+import au.org.raid.api.spring.config.environment.BuildSearchIndexProps;
+import au.org.raid.api.util.DateUtil;
+import au.org.raid.api.util.Log;
 
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
 
-import static raido.apisvc.util.ExceptionUtil.wrapException;
-import static raido.apisvc.util.IdeUtil.formatClickable;
-import static raido.apisvc.util.JvmUtil.normaliseJvmDefaults;
-import static raido.apisvc.util.Log.to;
-import static raido.apisvc.util.ObjectUtil.infoLogExecutionTime;
+import static au.org.raid.api.util.ExceptionUtil.wrapException;
+import static au.org.raid.api.util.IdeUtil.formatClickable;
+import static au.org.raid.api.util.IoUtil.newReader;
+import static au.org.raid.api.util.IoUtil.newWriter;
+import static au.org.raid.api.util.JvmUtil.normaliseJvmDefaults;
+import static au.org.raid.api.util.Log.to;
+import static au.org.raid.api.util.ObjectUtil.infoLogExecutionTime;
 import static raido.cmdline.spring.config.CommandLineConfig.configureSpring;
-import static raido.apisvc.util.IoUtil.newReader;
-import static raido.apisvc.util.IoUtil.newWriter;
-import static raido.cmdline.util.SiteMapUtil.writeSitemapHeader;
-import static raido.cmdline.util.SiteMapUtil.writeSitemapTrailer;
-import static raido.cmdline.util.SiteMapUtil.writeSitemapLocation;
+import static raido.cmdline.util.SiteMapUtil.*;
 
 /**
  This is intended to be run for each reg-agency, path values are defaulted for

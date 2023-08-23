@@ -26,6 +26,6 @@
   <!-- change to debug if you want to see ALL validation failures logged on 
   client, keep in mind logs for int-tests already contain the first few logged
   by the api-svc, so you would only want this while actively implementing -->
-  <logger name="raido.inttest.RaidApiExceptionDecoder" level="info"/>
+  <logger name="au.org.raid.inttest.RaidApiExceptionDecoder" level="info"/>
 
 </configuration>

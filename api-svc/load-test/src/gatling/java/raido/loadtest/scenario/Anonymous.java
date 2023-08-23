@@ -1,13 +1,12 @@
 package raido.loadtest.scenario;
 
+import au.org.raid.api.util.Log;
 import io.gatling.javaapi.core.ScenarioBuilder;
-import raido.apisvc.util.Log;
-import raido.loadtest.util.RaidoApi.Endpoint;
 
+import static au.org.raid.api.util.Log.to;
 import static io.gatling.javaapi.core.CoreDsl.scenario;
 import static io.gatling.javaapi.http.HttpDsl.http;
 import static io.gatling.javaapi.http.HttpDsl.status;
-import static raido.apisvc.util.Log.to;
 import static raido.loadtest.util.RaidoApi.Endpoint.publicListServicePoint;
 import static raido.loadtest.util.RaidoApi.Endpoint.publicStatus;
 

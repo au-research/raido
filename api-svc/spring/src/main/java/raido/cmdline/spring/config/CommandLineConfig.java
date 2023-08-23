@@ -1,17 +1,13 @@
 package raido.cmdline.spring.config;
 
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
+import au.org.raid.api.spring.config.ApiConfig;
+import au.org.raid.api.spring.config.RaidWebSecurityConfig;
+import au.org.raid.api.util.Log;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.GenericApplicationContext;
-import raido.apisvc.spring.config.ApiConfig;
-import raido.apisvc.spring.config.RaidWebSecurityConfig;
-import raido.apisvc.util.Log;
 
+import static au.org.raid.api.util.Log.to;
 import static org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE;
-import static raido.apisvc.util.Log.to;
 
 /**
  Plays the same role as ApiConfig, but for a non-web context (maybe 

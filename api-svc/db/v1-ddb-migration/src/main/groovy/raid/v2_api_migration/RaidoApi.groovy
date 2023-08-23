@@ -1,5 +1,7 @@
 package raid.v2_api_migration
 
+import au.org.raid.idl.raidv2.api.AdminExperimentalApi
+import au.org.raid.idl.raidv2.model.*
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
@@ -11,8 +13,6 @@ import feign.okhttp.OkHttpClient
 import feign.slf4j.Slf4jLogger
 import org.jooq.Record
 import org.springframework.cloud.openfeign.support.SpringMvcContract
-import raido.idl.raidv2.api.AdminExperimentalApi
-import raido.idl.raidv2.model.*
 
 import static db.migration.jooq.tables.Raid.RAID
 import static org.springframework.http.HttpHeaders.AUTHORIZATION

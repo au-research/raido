@@ -3,7 +3,7 @@ package raido.cmdline.util;
 import java.io.BufferedWriter;
 import java.io.IOException;
 
-import static raido.apisvc.util.ExceptionUtil.wrapIoException;
+import static au.org.raid.api.util.ExceptionUtil.wrapIoException;
 
 public class SiteMapUtil {
 

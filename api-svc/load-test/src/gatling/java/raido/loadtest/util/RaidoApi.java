@@ -1,13 +1,13 @@
 package raido.loadtest.util;
 
+import au.org.raid.api.util.Guard;
+import au.org.raid.api.util.Log;
 import io.gatling.javaapi.http.HttpRequestActionBuilder;
-import raido.apisvc.util.Guard;
-import raido.apisvc.util.Log;
 
 import java.util.Map;
 
-import static raido.apisvc.endpoint.anonymous.PublicEndpoint.STATUS_PATH;
-import static raido.apisvc.util.Log.to;
+import static au.org.raid.api.endpoint.anonymous.PublicEndpoint.STATUS_PATH;
+import static au.org.raid.api.util.Log.to;
 
 public class RaidoApi {
   private static final Log log = to(RaidoApi.class);
