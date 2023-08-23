@@ -33,12 +33,29 @@ export function DateTimeDisplay({date, ...props}: {
   </TextSpan>
 }
 
-export function DateDisplay({date, ...props}: {
-  date?: Date,
-} & TypographyProps ){
-  return <TextSpan noWrap {...props}>
-    {formatLocalDateAsIso(date)}
-  </TextSpan>
+export function DateDisplay({
+  date,
+  ...props
+}: {
+  date?: Date | string;
+} & TypographyProps) {
+  let value = "";
+
+  // if input is a date, then format it as an ISO string
+  if (date && date instanceof Date) {
+    value = formatLocalDateAsIso(date);
+  }
+
+  // if input is a string, and can be parsed as a date, do so and format it as an ISO string
+  if (date && new Date(date) instanceof Date) {
+    value = formatLocalDateAsIso(new Date(date));
+  }
+
+  return (
+    <TextSpan noWrap {...props}>
+      {value}
+    </TextSpan>
+  );
 }
 
 export function BooleanDisplay({value, ...props}: {
