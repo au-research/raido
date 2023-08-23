@@ -12,34 +12,34 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class IdFactory {
-  private final MetadataProps metaProps;
+    private final MetadataProps metaProps;
 
-  public Id create(final IdentifierUrl id,
-                   final ServicePointRecord servicePointRecord
-  ) {
-    return new Id().
-      identifier(id.formatUrl()).
-      identifierSchemeUri(MetadataService.RAID_ID_TYPE_URI).
-      identifierRegistrationAgency(metaProps.identifierRegistrationAgency).
-      identifierOwner(servicePointRecord.getIdentifierOwner()).
-      identifierServicePoint(servicePointRecord.getId()).
-      globalUrl(id.handle().format(metaProps.globalUrlPrefix)).
-      raidAgencyUrl(id.handle().format(metaProps.handleUrlPrefix)).
-      version(1);
-  }
-
-  public Id create(final IdBlock idBlock) {
-    if (idBlock == null) {
-      return null;
+    public Id create(final IdentifierUrl id,
+                     final ServicePointRecord servicePointRecord
+    ) {
+        return new Id().
+                identifier(id.formatUrl()).
+                identifierSchemeUri(MetadataService.RAID_ID_TYPE_URI).
+                identifierRegistrationAgency(metaProps.identifierRegistrationAgency).
+                identifierOwner(servicePointRecord.getIdentifierOwner()).
+                identifierServicePoint(servicePointRecord.getId()).
+                globalUrl(id.handle().format(metaProps.globalUrlPrefix)).
+                raidAgencyUrl(id.handle().format(metaProps.handleUrlPrefix)).
+                version(1);
     }
-    return new Id()
-        .identifier(idBlock.getIdentifier())
-        .identifierSchemeUri(idBlock.getIdentifierSchemeURI())
-        .identifierRegistrationAgency(idBlock.getIdentifierRegistrationAgency())
-        .identifierOwner(idBlock.getIdentifierOwner())
-        .identifierServicePoint(idBlock.getIdentifierServicePoint())
-        .globalUrl(idBlock.getGlobalUrl())
-        .raidAgencyUrl(idBlock.getRaidAgencyUrl())
-        .version(idBlock.getVersion());
-  }
+
+    public Id create(final IdBlock idBlock) {
+        if (idBlock == null) {
+            return null;
+        }
+        return new Id()
+                .identifier(idBlock.getIdentifier())
+                .identifierSchemeUri(idBlock.getIdentifierSchemeURI())
+                .identifierRegistrationAgency(idBlock.getIdentifierRegistrationAgency())
+                .identifierOwner(idBlock.getIdentifierOwner())
+                .identifierServicePoint(idBlock.getIdentifierServicePoint())
+                .globalUrl(idBlock.getGlobalUrl())
+                .raidAgencyUrl(idBlock.getRaidAgencyUrl())
+                .version(idBlock.getVersion());
+    }
 }

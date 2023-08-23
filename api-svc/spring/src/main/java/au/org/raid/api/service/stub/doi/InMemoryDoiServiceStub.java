@@ -16,29 +16,29 @@ import static java.util.Collections.emptyList;
 import static java.util.List.of;
 
 public class InMemoryDoiServiceStub extends DoiService {
-  private static final Log log = to(InMemoryDoiServiceStub.class);
+    private static final Log log = to(InMemoryDoiServiceStub.class);
 
-  private InMemoryStubProps stubProps;
+    private InMemoryStubProps stubProps;
 
-  public InMemoryDoiServiceStub(
-    InMemoryStubProps stubProps
-  ) {
-    super(null);
-    this.stubProps = stubProps;
-  }
-
-  @Override
-  public List<String> validateDoiExists(String doi) {
-    log.with("delay", stubProps.doiInMemoryStubDelay).
-      debug("simulate DOI validation check");
-    infoLogExecutionTime(httpLog, VALIDATE_DOI_EXISTS, ()->{
-      sleep(stubProps.doiInMemoryStubDelay);
-      return null;
-    });
-    
-    if( areEqual(doi, NONEXISTENT_TEST_DOI) ){
-      return of(NOT_FOUND_MESSAGE);
+    public InMemoryDoiServiceStub(
+            InMemoryStubProps stubProps
+    ) {
+        super(null);
+        this.stubProps = stubProps;
     }
-    return emptyList();
-  }
+
+    @Override
+    public List<String> validateDoiExists(String doi) {
+        log.with("delay", stubProps.doiInMemoryStubDelay).
+                debug("simulate DOI validation check");
+        infoLogExecutionTime(httpLog, VALIDATE_DOI_EXISTS, () -> {
+            sleep(stubProps.doiInMemoryStubDelay);
+            return null;
+        });
+
+        if (areEqual(doi, NONEXISTENT_TEST_DOI)) {
+            return of(NOT_FOUND_MESSAGE);
+        }
+        return emptyList();
+    }
 }

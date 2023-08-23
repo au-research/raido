@@ -24,249 +24,249 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class StableRelatedObjectValidationServiceTest {
-  @Mock
-  private StableRelatedObjectTypeValidationService typeValidationService;
+    @Mock
+    private StableRelatedObjectTypeValidationService typeValidationService;
 
-  @Mock
-  private StableRelatedObjectCategoryValidationService categoryValidationService;
+    @Mock
+    private StableRelatedObjectCategoryValidationService categoryValidationService;
 
-  @Mock
-  private DoiService doiService;
+    @Mock
+    private DoiService doiService;
 
-  @InjectMocks
-  private StableRelatedObjectValidationService validationService;
+    @InjectMocks
+    private StableRelatedObjectValidationService validationService;
 
 
-  // identifierSchemeUri is empty
+    // identifierSchemeUri is empty
 
-  // identifierSchemeUri is invalid
+    // identifierSchemeUri is invalid
 
-  // type and category errors are returned
+    // type and category errors are returned
 
-  @Test
-  @DisplayName("Validation passes with valid related object")
-  void validaRelatedObject() {
-    final var type = new RelatedObjectType()
-      .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
-      .schemeUri(TestConstants.RELATED_OBJECT_TYPE_SCHEME_URI);
+    @Test
+    @DisplayName("Validation passes with valid related object")
+    void validaRelatedObject() {
+        final var type = new RelatedObjectType()
+                .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
+                .schemeUri(TestConstants.RELATED_OBJECT_TYPE_SCHEME_URI);
 
-    final var category = new RelatedObjectCategory()
-      .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-      .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
+        final var category = new RelatedObjectCategory()
+                .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
+                .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
 
-    final var relatedObject = new RelatedObject()
-      .id(TestConstants.VALID_DOI)
-      .identifierSchemeUri(TestConstants.HTTPS_DOI_ORG)
-      .type(type)
-      .category(category);
+        final var relatedObject = new RelatedObject()
+                .id(TestConstants.VALID_DOI)
+                .identifierSchemeUri(TestConstants.HTTPS_DOI_ORG)
+                .type(type)
+                .category(category);
 
-    when(typeValidationService.validate(type, 0)).thenReturn(Collections.emptyList());
-    when(categoryValidationService.validate(category, 0)).thenReturn(Collections.emptyList());
+        when(typeValidationService.validate(type, 0)).thenReturn(Collections.emptyList());
+        when(categoryValidationService.validate(category, 0)).thenReturn(Collections.emptyList());
 
-    final var failures =
-      validationService.validateRelatedObjects(Collections.singletonList(relatedObject));
+        final var failures =
+                validationService.validateRelatedObjects(Collections.singletonList(relatedObject));
 
-    assertThat(failures, empty());
-  }
+        assertThat(failures, empty());
+    }
 
-  @Test
-  @DisplayName("Passes validation with empty related objects")
-  void emptyRelatedObjects() {
-    final var failures = validationService.validateRelatedObjects(Collections.emptyList());
+    @Test
+    @DisplayName("Passes validation with empty related objects")
+    void emptyRelatedObjects() {
+        final var failures = validationService.validateRelatedObjects(Collections.emptyList());
 
-    assertThat(failures, empty());
-  }
+        assertThat(failures, empty());
+    }
 
-  @Test
-  @DisplayName("Passes validation with null related objects")
-  void nullRelatedObjects() {
-    final var failures = validationService.validateRelatedObjects(null);
+    @Test
+    @DisplayName("Passes validation with null related objects")
+    void nullRelatedObjects() {
+        final var failures = validationService.validateRelatedObjects(null);
 
-    assertThat(failures, empty());
-  }
+        assertThat(failures, empty());
+    }
 
-  @Test
-  @DisplayName("Fails validation with null related object id")
-  void nullId() {
-    final var type = new RelatedObjectType()
-      .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
-      .schemeUri(TestConstants.RELATED_OBJECT_TYPE_SCHEME_URI);
+    @Test
+    @DisplayName("Fails validation with null related object id")
+    void nullId() {
+        final var type = new RelatedObjectType()
+                .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
+                .schemeUri(TestConstants.RELATED_OBJECT_TYPE_SCHEME_URI);
 
-    final var category = new RelatedObjectCategory()
-      .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-      .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
+        final var category = new RelatedObjectCategory()
+                .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
+                .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
 
-    final var relatedObject = new RelatedObject()
-      .identifierSchemeUri(TestConstants.HTTPS_DOI_ORG)
-      .type(type)
-      .category(category);
+        final var relatedObject = new RelatedObject()
+                .identifierSchemeUri(TestConstants.HTTPS_DOI_ORG)
+                .type(type)
+                .category(category);
 
-    final var failures =
-      validationService.validateRelatedObjects(Collections.singletonList(relatedObject));
+        final var failures =
+                validationService.validateRelatedObjects(Collections.singletonList(relatedObject));
 
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-      .fieldId("relatedObjects[0].id")
-      .errorType("notSet")
-      .message("field must be set")
-    ));
-  }
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("relatedObjects[0].id")
+                        .errorType("notSet")
+                        .message("field must be set")
+        ));
+    }
 
-  @Test
-  @DisplayName("Fails validation with empty related object id")
-  void emptyId() {
-    final var type = new RelatedObjectType()
-      .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
-      .schemeUri(TestConstants.RELATED_OBJECT_TYPE_SCHEME_URI);
+    @Test
+    @DisplayName("Fails validation with empty related object id")
+    void emptyId() {
+        final var type = new RelatedObjectType()
+                .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
+                .schemeUri(TestConstants.RELATED_OBJECT_TYPE_SCHEME_URI);
 
-    final var category = new RelatedObjectCategory()
-      .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-      .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
+        final var category = new RelatedObjectCategory()
+                .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
+                .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
 
-    final var relatedObject = new RelatedObject()
-      .id("")
-      .identifierSchemeUri(TestConstants.HTTPS_DOI_ORG)
-      .type(type)
-      .category(category);
+        final var relatedObject = new RelatedObject()
+                .id("")
+                .identifierSchemeUri(TestConstants.HTTPS_DOI_ORG)
+                .type(type)
+                .category(category);
 
-    final var failures =
-      validationService.validateRelatedObjects(Collections.singletonList(relatedObject));
+        final var failures =
+                validationService.validateRelatedObjects(Collections.singletonList(relatedObject));
 
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("relatedObjects[0].id")
-        .errorType("notSet")
-        .message("field must be set")
-    ));
-  }
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("relatedObjects[0].id")
+                        .errorType("notSet")
+                        .message("field must be set")
+        ));
+    }
 
-  @Test
-  @DisplayName("Fails validation with null identifierSchemeUri")
-  void nullSchemeUri() {
-    final var type = new RelatedObjectType()
-      .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
-      .schemeUri(TestConstants.RELATED_OBJECT_TYPE_SCHEME_URI);
+    @Test
+    @DisplayName("Fails validation with null identifierSchemeUri")
+    void nullSchemeUri() {
+        final var type = new RelatedObjectType()
+                .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
+                .schemeUri(TestConstants.RELATED_OBJECT_TYPE_SCHEME_URI);
 
-    final var category = new RelatedObjectCategory()
-      .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-      .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
+        final var category = new RelatedObjectCategory()
+                .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
+                .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
 
-    final var relatedObject = new RelatedObject()
-      .id(TestConstants.VALID_DOI)
-      .type(type)
-      .category(category);
+        final var relatedObject = new RelatedObject()
+                .id(TestConstants.VALID_DOI)
+                .type(type)
+                .category(category);
 
-    final var failures =
-      validationService.validateRelatedObjects(Collections.singletonList(relatedObject));
+        final var failures =
+                validationService.validateRelatedObjects(Collections.singletonList(relatedObject));
 
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("relatedObjects[0].identifierSchemeUri")
-        .errorType("notSet")
-        .message("field must be set")
-    ));
-  }
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("relatedObjects[0].identifierSchemeUri")
+                        .errorType("notSet")
+                        .message("field must be set")
+        ));
+    }
 
-  @Test
-  @DisplayName("Fails validation with empty identifierSchemeUri")
-  void emptySchemeUri() {
-    final var type = new RelatedObjectType()
-      .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
-      .schemeUri(TestConstants.RELATED_OBJECT_TYPE_SCHEME_URI);
+    @Test
+    @DisplayName("Fails validation with empty identifierSchemeUri")
+    void emptySchemeUri() {
+        final var type = new RelatedObjectType()
+                .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
+                .schemeUri(TestConstants.RELATED_OBJECT_TYPE_SCHEME_URI);
 
-    final var category = new RelatedObjectCategory()
-      .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-      .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
+        final var category = new RelatedObjectCategory()
+                .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
+                .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
 
-    final var relatedObject = new RelatedObject()
-      .id(TestConstants.VALID_DOI)
-      .identifierSchemeUri("")
-      .type(type)
-      .category(category);
+        final var relatedObject = new RelatedObject()
+                .id(TestConstants.VALID_DOI)
+                .identifierSchemeUri("")
+                .type(type)
+                .category(category);
 
-    final var failures =
-      validationService.validateRelatedObjects(Collections.singletonList(relatedObject));
+        final var failures =
+                validationService.validateRelatedObjects(Collections.singletonList(relatedObject));
 
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("relatedObjects[0].identifierSchemeUri")
-        .errorType("notSet")
-        .message("field must be set")
-    ));
-  }
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("relatedObjects[0].identifierSchemeUri")
+                        .errorType("notSet")
+                        .message("field must be set")
+        ));
+    }
 
-  @Test
-  @DisplayName("Validation fails if DOI does not exist")
-  void addsFailureIfDoiDoesNotExist() {
-    final var errorMessage = "doi does not exist";
-    final var type = new RelatedObjectType()
-      .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
-      .schemeUri(TestConstants.RELATED_OBJECT_TYPE_SCHEME_URI);
+    @Test
+    @DisplayName("Validation fails if DOI does not exist")
+    void addsFailureIfDoiDoesNotExist() {
+        final var errorMessage = "doi does not exist";
+        final var type = new RelatedObjectType()
+                .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
+                .schemeUri(TestConstants.RELATED_OBJECT_TYPE_SCHEME_URI);
 
-    final var category = new RelatedObjectCategory()
-      .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-      .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
+        final var category = new RelatedObjectCategory()
+                .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
+                .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
 
-    final var relatedObject = new RelatedObject()
-      .id(TestConstants.VALID_DOI)
-      .identifierSchemeUri(TestConstants.HTTPS_DOI_ORG)
-      .type(type)
-      .category(category);
+        final var relatedObject = new RelatedObject()
+                .id(TestConstants.VALID_DOI)
+                .identifierSchemeUri(TestConstants.HTTPS_DOI_ORG)
+                .type(type)
+                .category(category);
 
-    when(typeValidationService.validate(type, 0)).thenReturn(Collections.emptyList());
-    when(categoryValidationService.validate(category, 0)).thenReturn(Collections.emptyList());
-    when(doiService.validateDoiExists(TestConstants.VALID_DOI)).thenReturn(Collections.singletonList(errorMessage));
+        when(typeValidationService.validate(type, 0)).thenReturn(Collections.emptyList());
+        when(categoryValidationService.validate(category, 0)).thenReturn(Collections.emptyList());
+        when(doiService.validateDoiExists(TestConstants.VALID_DOI)).thenReturn(Collections.singletonList(errorMessage));
 
-    final var failures =
-      validationService.validateRelatedObjects(Collections.singletonList(relatedObject));
+        final var failures =
+                validationService.validateRelatedObjects(Collections.singletonList(relatedObject));
 
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("relatedObjects[0].id")
-        .errorType("invalidValue")
-        .message(errorMessage)
-    ));
-  }
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("relatedObjects[0].id")
+                        .errorType("invalidValue")
+                        .message(errorMessage)
+        ));
+    }
 
-  @Test
-  @DisplayName("Validation failures in type and category are returned")
-  void typeAndCategoryFailuresAreReturned() {
-    final var type = new RelatedObjectType()
-      .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
-      .schemeUri(TestConstants.RELATED_OBJECT_TYPE_SCHEME_URI);
+    @Test
+    @DisplayName("Validation failures in type and category are returned")
+    void typeAndCategoryFailuresAreReturned() {
+        final var type = new RelatedObjectType()
+                .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
+                .schemeUri(TestConstants.RELATED_OBJECT_TYPE_SCHEME_URI);
 
-    final var category = new RelatedObjectCategory()
-      .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-      .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
+        final var category = new RelatedObjectCategory()
+                .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
+                .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
 
-    final var relatedObject = new RelatedObject()
-      .id(TestConstants.VALID_DOI)
-      .identifierSchemeUri(TestConstants.HTTPS_DOI_ORG)
-      .type(type)
-      .category(category);
+        final var relatedObject = new RelatedObject()
+                .id(TestConstants.VALID_DOI)
+                .identifierSchemeUri(TestConstants.HTTPS_DOI_ORG)
+                .type(type)
+                .category(category);
 
-    final var typeError = new ValidationFailure()
-      .fieldId("relatedObjects[0].type.id")
-      .errorType(NOT_SET_TYPE)
-      .message(FIELD_MUST_BE_SET_MESSAGE);
+        final var typeError = new ValidationFailure()
+                .fieldId("relatedObjects[0].type.id")
+                .errorType(NOT_SET_TYPE)
+                .message(FIELD_MUST_BE_SET_MESSAGE);
 
-    final var categoryError = new ValidationFailure()
-      .fieldId("relatedObjects[0].category.id")
-      .errorType(NOT_SET_TYPE)
-      .message(FIELD_MUST_BE_SET_MESSAGE);
+        final var categoryError = new ValidationFailure()
+                .fieldId("relatedObjects[0].category.id")
+                .errorType(NOT_SET_TYPE)
+                .message(FIELD_MUST_BE_SET_MESSAGE);
 
-    when(typeValidationService.validate(type, 0)).thenReturn(List.of(typeError));
-    when(categoryValidationService.validate(category, 0)).thenReturn(List.of(categoryError));
+        when(typeValidationService.validate(type, 0)).thenReturn(List.of(typeError));
+        when(categoryValidationService.validate(category, 0)).thenReturn(List.of(categoryError));
 
-    final var failures =
-      validationService.validateRelatedObjects(Collections.singletonList(relatedObject));
+        final var failures =
+                validationService.validateRelatedObjects(Collections.singletonList(relatedObject));
 
-    assertThat(failures, hasSize(2));
-    assertThat(failures, hasItems(typeError, categoryError));
-  }
+        assertThat(failures, hasSize(2));
+        assertThat(failures, hasItems(typeError, categoryError));
+    }
 }

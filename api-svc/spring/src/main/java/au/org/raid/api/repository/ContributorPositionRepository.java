@@ -12,16 +12,16 @@ import static au.org.raid.db.jooq.api_svc.tables.ContributorPosition.CONTRIBUTOR
 @Repository
 @RequiredArgsConstructor
 public class ContributorPositionRepository {
-  private final DSLContext dslContext;
+    private final DSLContext dslContext;
 
-  public Optional<ContributorPositionRecord> findByUriAndSchemeId(final String uri, final int schemeId) {
-    return dslContext.select(CONTRIBUTOR_POSITION.fields())
-      .from(CONTRIBUTOR_POSITION)
-      .where(CONTRIBUTOR_POSITION.URI.eq(uri)
-        .and(CONTRIBUTOR_POSITION.SCHEME_ID.eq(schemeId)))
-      .fetchOptional(record -> new ContributorPositionRecord()
-        .setSchemeId(CONTRIBUTOR_POSITION.SCHEME_ID.getValue(record))
-        .setUri(CONTRIBUTOR_POSITION.URI.getValue(record))
-      );
-  }
+    public Optional<ContributorPositionRecord> findByUriAndSchemeId(final String uri, final int schemeId) {
+        return dslContext.select(CONTRIBUTOR_POSITION.fields())
+                .from(CONTRIBUTOR_POSITION)
+                .where(CONTRIBUTOR_POSITION.URI.eq(uri)
+                        .and(CONTRIBUTOR_POSITION.SCHEME_ID.eq(schemeId)))
+                .fetchOptional(record -> new ContributorPositionRecord()
+                        .setSchemeId(CONTRIBUTOR_POSITION.SCHEME_ID.getValue(record))
+                        .setUri(CONTRIBUTOR_POSITION.URI.getValue(record))
+                );
+    }
 }

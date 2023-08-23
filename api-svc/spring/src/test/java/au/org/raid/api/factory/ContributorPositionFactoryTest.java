@@ -18,7 +18,7 @@ class ContributorPositionFactoryTest {
     private static final LocalDate END_DATE = LocalDate.now().minusYears(1);
 
     private static final String SCHEME_URI =
-        "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/";
+            "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/";
 
     private final ContributorPositionFactory positionFactory = new ContributorPositionFactory();
 
@@ -26,16 +26,16 @@ class ContributorPositionFactoryTest {
     @DisplayName("Leader is set")
     void leaderSet() {
         final var position = new ContributorPosition()
-            .startDate(START_DATE)
-            .endDate(END_DATE)
-            .position(ContributorPositionRaidMetadataSchemaType.LEADER)
-            .positionSchemaUri(ContributorPositionSchemeType.HTTPS_RAID_ORG_);
+                .startDate(START_DATE)
+                .endDate(END_DATE)
+                .position(ContributorPositionRaidMetadataSchemaType.LEADER)
+                .positionSchemaUri(ContributorPositionSchemeType.HTTPS_RAID_ORG_);
 
         final var expected = new ContributorPositionWithSchemeUri()
-            .startDate(START_DATE)
-            .endDate(END_DATE)
-            .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json")
-            .schemeUri(SCHEME_URI);
+                .startDate(START_DATE)
+                .endDate(END_DATE)
+                .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json")
+                .schemeUri(SCHEME_URI);
 
         final var result = positionFactory.create(position);
 
@@ -46,16 +46,16 @@ class ContributorPositionFactoryTest {
     @DisplayName("Co-investigator is set")
     void coInvestigatorSet() {
         final var position = new ContributorPosition()
-            .startDate(START_DATE)
-            .endDate(END_DATE)
-            .position(ContributorPositionRaidMetadataSchemaType.CO_INVESTIGATOR)
-            .positionSchemaUri(ContributorPositionSchemeType.HTTPS_RAID_ORG_);
+                .startDate(START_DATE)
+                .endDate(END_DATE)
+                .position(ContributorPositionRaidMetadataSchemaType.CO_INVESTIGATOR)
+                .positionSchemaUri(ContributorPositionSchemeType.HTTPS_RAID_ORG_);
 
         final var expected = new ContributorPositionWithSchemeUri()
-            .startDate(START_DATE)
-            .endDate(END_DATE)
-            .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/co-investigator.json")
-            .schemeUri(SCHEME_URI);
+                .startDate(START_DATE)
+                .endDate(END_DATE)
+                .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/co-investigator.json")
+                .schemeUri(SCHEME_URI);
 
         final var result = positionFactory.create(position);
 
@@ -66,16 +66,16 @@ class ContributorPositionFactoryTest {
     @DisplayName("Contact person is set")
     void contactPersonSet() {
         final var position = new ContributorPosition()
-            .startDate(START_DATE)
-            .endDate(END_DATE)
-            .position(ContributorPositionRaidMetadataSchemaType.CONTACT_PERSON)
-            .positionSchemaUri(ContributorPositionSchemeType.HTTPS_RAID_ORG_);
+                .startDate(START_DATE)
+                .endDate(END_DATE)
+                .position(ContributorPositionRaidMetadataSchemaType.CONTACT_PERSON)
+                .positionSchemaUri(ContributorPositionSchemeType.HTTPS_RAID_ORG_);
 
         final var expected = new ContributorPositionWithSchemeUri()
-            .startDate(START_DATE)
-            .endDate(END_DATE)
-            .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/contact-person.json")
-            .schemeUri(SCHEME_URI);
+                .startDate(START_DATE)
+                .endDate(END_DATE)
+                .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/contact-person.json")
+                .schemeUri(SCHEME_URI);
 
         final var result = positionFactory.create(position);
 
@@ -86,16 +86,16 @@ class ContributorPositionFactoryTest {
     @DisplayName("Other participant is set")
     void otherParticipantSet() {
         final var position = new ContributorPosition()
-            .startDate(START_DATE)
-            .endDate(END_DATE)
-            .position(ContributorPositionRaidMetadataSchemaType.OTHER_PARTICIPANT)
-            .positionSchemaUri(ContributorPositionSchemeType.HTTPS_RAID_ORG_);
+                .startDate(START_DATE)
+                .endDate(END_DATE)
+                .position(ContributorPositionRaidMetadataSchemaType.OTHER_PARTICIPANT)
+                .positionSchemaUri(ContributorPositionSchemeType.HTTPS_RAID_ORG_);
 
         final var expected = new ContributorPositionWithSchemeUri()
-            .startDate(START_DATE)
-            .endDate(END_DATE)
-            .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/other-participant.json")
-            .schemeUri(SCHEME_URI);
+                .startDate(START_DATE)
+                .endDate(END_DATE)
+                .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/other-participant.json")
+                .schemeUri(SCHEME_URI);
 
         final var result = positionFactory.create(position);
 
@@ -106,16 +106,16 @@ class ContributorPositionFactoryTest {
     @DisplayName("Principal investigator is set")
     void principalInvestigatorSet() {
         final var position = new ContributorPosition()
-            .startDate(START_DATE)
-            .endDate(END_DATE)
-            .position(ContributorPositionRaidMetadataSchemaType.PRINCIPAL_INVESTIGATOR)
-            .positionSchemaUri(ContributorPositionSchemeType.HTTPS_RAID_ORG_);
+                .startDate(START_DATE)
+                .endDate(END_DATE)
+                .position(ContributorPositionRaidMetadataSchemaType.PRINCIPAL_INVESTIGATOR)
+                .positionSchemaUri(ContributorPositionSchemeType.HTTPS_RAID_ORG_);
 
         final var expected = new ContributorPositionWithSchemeUri()
-            .startDate(START_DATE)
-            .endDate(END_DATE)
-            .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/principal-investigator.json")
-            .schemeUri(SCHEME_URI);
+                .startDate(START_DATE)
+                .endDate(END_DATE)
+                .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/principal-investigator.json")
+                .schemeUri(SCHEME_URI);
 
         final var result = positionFactory.create(position);
 
@@ -132,9 +132,9 @@ class ContributorPositionFactoryTest {
     @DisplayName("ContributorPosition with empty fields does not throw NullPointerException")
     void emptyFields() {
         assertThat(positionFactory.create(new ContributorPosition()), is(new ContributorPositionWithSchemeUri()
-            .startDate(null)
-            .endDate(null)
-            .id(null)
-            .schemeUri(SCHEME_URI)));
+                .startDate(null)
+                .endDate(null)
+                .id(null)
+                .schemeUri(SCHEME_URI)));
     }
 }

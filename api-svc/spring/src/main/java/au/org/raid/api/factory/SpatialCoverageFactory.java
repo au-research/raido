@@ -13,8 +13,8 @@ public class SpatialCoverageFactory {
         }
 
         return new SpatialCoverage()
-            .id(spatialCoverageBlock.getSpatialCoverage())
-            .schemeUri(spatialCoverageBlock.getSpatialCoverageSchemeUri())
-            .place(spatialCoverageBlock.getSpatialCoveragePlace());
+                .id(spatialCoverageBlock.getSpatialCoverage())
+                .schemeUri(spatialCoverageBlock.getSpatialCoverageSchemeUri())
+                .place(spatialCoverageBlock.getSpatialCoveragePlace());
     }
 }

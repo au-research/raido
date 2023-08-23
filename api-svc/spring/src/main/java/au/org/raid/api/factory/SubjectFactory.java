@@ -13,8 +13,8 @@ public class SubjectFactory {
         }
 
         return new Subject()
-            .id(subjectBlock.getSubject())
-            .schemeUri(subjectBlock.getSubjectSchemeUri())
-            .keyword(subjectBlock.getSubjectKeyword());
+                .id(subjectBlock.getSubject())
+                .schemeUri(subjectBlock.getSubjectSchemeUri())
+                .keyword(subjectBlock.getSubjectKeyword());
     }
 }

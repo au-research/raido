@@ -24,68 +24,68 @@ import static org.springframework.transaction.annotation.Propagation.NEVER;
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
 public class RaidoStableV1 implements RaidoStableV1Api {
-  private final RaidoStableV1ValidationService validationService;
-  private final RaidStableV1Service raidService;
+    private final RaidoStableV1ValidationService validationService;
+    private final RaidStableV1Service raidService;
 
-  public RaidoStableV1(final RaidoStableV1ValidationService validationService, final RaidStableV1Service raidService) {
-    this.validationService = validationService;
-    this.raidService = raidService;
-  }
-
-  @Override
-  public RaidDto readRaidV1(final String prefix, final String suffix) {
-    final var handle = String.join("/", prefix, suffix);
-    var user = getApiToken();
-    var data = raidService.read(handle);
-    guardOperatorOrAssociated(user, data.getId().getIdentifierServicePoint());
-    return data;
-  }
-
-  @Override
-  @Transactional(propagation = NEVER)
-  public RaidDto createRaidV1(CreateRaidV1Request request) {
-    final var user = getApiToken();
-
-    if (!raidService.isEditable(user, user.getServicePointId())) {
-      throw new InvalidAccessException("This service point does not allow Raids to be edited in the app.");
+    public RaidoStableV1(final RaidoStableV1ValidationService validationService, final RaidStableV1Service raidService) {
+        this.validationService = validationService;
+        this.raidService = raidService;
     }
 
-    final var failures = new ArrayList<>(validationService.validateForCreate(request));
-
-    if( !failures.isEmpty() ){
-      throw new ValidationException(failures);
+    @Override
+    public RaidDto readRaidV1(final String prefix, final String suffix) {
+        final var handle = String.join("/", prefix, suffix);
+        var user = getApiToken();
+        var data = raidService.read(handle);
+        guardOperatorOrAssociated(user, data.getId().getIdentifierServicePoint());
+        return data;
     }
 
-    IdentifierUrl id = raidService.mintRaidSchemaV1(
-      request, user.getServicePointId() );
+    @Override
+    @Transactional(propagation = NEVER)
+    public RaidDto createRaidV1(CreateRaidV1Request request) {
+        final var user = getApiToken();
 
-    return raidService.read(id.handle().format());
-  }
+        if (!raidService.isEditable(user, user.getServicePointId())) {
+            throw new InvalidAccessException("This service point does not allow Raids to be edited in the app.");
+        }
 
-  @Override
-  public List<RaidDto> listRaidsV1(Long servicePointId) {
-    var user = getApiToken();
-    guardOperatorOrAssociated(user, servicePointId);
+        final var failures = new ArrayList<>(validationService.validateForCreate(request));
 
-    return raidService.list(servicePointId);
-  }
+        if (!failures.isEmpty()) {
+            throw new ValidationException(failures);
+        }
 
-  @Override
-  public RaidDto updateRaidV1(final String prefix, final String suffix, UpdateRaidV1Request request) {
-    final var handle = String.join("/", prefix, suffix);
-    var user = getApiToken();
-    guardOperatorOrAssociated(user, request.getId().getIdentifierServicePoint());
+        IdentifierUrl id = raidService.mintRaidSchemaV1(
+                request, user.getServicePointId());
 
-    if (!raidService.isEditable(user, request.getId().getIdentifierServicePoint())) {
-      throw new InvalidAccessException("This service point does not allow Raids to be edited in the app.");
+        return raidService.read(id.handle().format());
     }
 
-    final var failures = new ArrayList<>(validationService.validateForUpdate(handle, request));
+    @Override
+    public List<RaidDto> listRaidsV1(Long servicePointId) {
+        var user = getApiToken();
+        guardOperatorOrAssociated(user, servicePointId);
 
-    if( !failures.isEmpty() ){
-      throw new ValidationException(failures);
+        return raidService.list(servicePointId);
     }
 
-    return raidService.update(request);
-  }
+    @Override
+    public RaidDto updateRaidV1(final String prefix, final String suffix, UpdateRaidV1Request request) {
+        final var handle = String.join("/", prefix, suffix);
+        var user = getApiToken();
+        guardOperatorOrAssociated(user, request.getId().getIdentifierServicePoint());
+
+        if (!raidService.isEditable(user, request.getId().getIdentifierServicePoint())) {
+            throw new InvalidAccessException("This service point does not allow Raids to be edited in the app.");
+        }
+
+        final var failures = new ArrayList<>(validationService.validateForUpdate(handle, request));
+
+        if (!failures.isEmpty()) {
+            throw new ValidationException(failures);
+        }
+
+        return raidService.update(request);
+    }
 }

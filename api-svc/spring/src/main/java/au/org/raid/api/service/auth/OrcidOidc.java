@@ -28,80 +28,80 @@ import static au.org.raid.api.util.StringUtil.trimEqualsIgnoreCase;
 
 @Component
 public class OrcidOidc {
-  private static final Log log = to(OrcidOidc.class);
-  
-  private OrcidOidcProps orcid;
-  
-  private RaidoAuthnProps raido;
+    private static final Log log = to(OrcidOidc.class);
 
-  private RestTemplate rest;
+    private OrcidOidcProps orcid;
 
-  public OrcidOidc(
-    OrcidOidcProps orcid, 
-    RaidoAuthnProps raido,
-    RestTemplate rest
-  ) {
-    this.orcid = orcid;
-    this.raido = raido;
-    this.rest = rest;
-  }
+    private RaidoAuthnProps raido;
 
-  public boolean canHandle(String clientId){
-    return trimEqualsIgnoreCase(clientId, orcid.clientId);    
-  }
-  
-  public DecodedJWT exchangeOAuthCodeForVerifiedIdToken(String idpResponseCode){
-    HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+    private RestTemplate rest;
 
-    MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-    map.add("code", idpResponseCode);
-    map.add("client_id", orcid.clientId);
-    map.add("client_secret", orcid.clientSecret);
-    map.add("grant_type", "authorization_code");
-    map.add("redirect_uri", raido.serverRedirectUri);
+    public OrcidOidc(
+            OrcidOidcProps orcid,
+            RaidoAuthnProps raido,
+            RestTemplate rest
+    ) {
+        this.orcid = orcid;
+        this.raido = raido;
+        this.rest = rest;
+    }
 
-    HttpEntity<MultiValueMap<String, String>> request =
-      new HttpEntity<>(map, headers);
-    
-    // do not log this because it contains the client_secret
-    // log.with("bod", request.getBody()).debug();
+    public boolean canHandle(String clientId) {
+        return trimEqualsIgnoreCase(clientId, orcid.clientId);
+    }
 
-    ResponseEntity<OAuthTokenResponse> response = rest.postForEntity(
-      orcid.tokenUrl, request, OAuthTokenResponse.class);
+    public DecodedJWT exchangeOAuthCodeForVerifiedIdToken(String idpResponseCode) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add("code", idpResponseCode);
+        map.add("client_id", orcid.clientId);
+        map.add("client_secret", orcid.clientSecret);
+        map.add("grant_type", "authorization_code");
+        map.add("redirect_uri", raido.serverRedirectUri);
+
+        HttpEntity<MultiValueMap<String, String>> request =
+                new HttpEntity<>(map, headers);
+
+        // do not log this because it contains the client_secret
+        // log.with("bod", request.getBody()).debug();
+
+        ResponseEntity<OAuthTokenResponse> response = rest.postForEntity(
+                orcid.tokenUrl, request, OAuthTokenResponse.class);
 
 
-    // OAuthTokenResponse has a custom toString() to mask sensitive values 
-    log.with("response", response).
-      with("response.body", response.getBody()).
-      debug("orcid response");
-    Guard.notNull(response.getBody());
+        // OAuthTokenResponse has a custom toString() to mask sensitive values
+        log.with("response", response).
+                with("response.body", response.getBody()).
+                debug("orcid response");
+        Guard.notNull(response.getBody());
 
-    DecodedJWT jwt = JWT.decode(response.getBody().id_token);
-    log.with("jwt", jwt.getClaims()).debug();
-    verify(jwt);
-    
-    return jwt;
-  }
-  
-  public void verify(DecodedJWT jwt){
-    Guard.areEqual(jwt.getAlgorithm(), "RS256");
-    
-    // orcid id_token does not have a type, see comment at end of file
-    // Guard.areEqual(jwt.getType(), "bearer");
+        DecodedJWT jwt = JWT.decode(response.getBody().id_token);
+        log.with("jwt", jwt.getClaims()).debug();
+        verify(jwt);
 
-    verifyOrcidJwksSignature(jwt);
+        return jwt;
+    }
 
-    Guard.hasValue(jwt.getSubject());
-    Guard.hasValue("id_token must have audience", jwt.getAudience());
-    Guard.areEqual(orcid.clientId, jwt.getAudience().get(0));
-    Guard.areEqual(orcid.issuer, jwt.getIssuer());
-    
-    Guard.isTrue("id_token must not be expired", 
-      jwt.getExpiresAtAsInstant().
-        // add a bit of leeway
-        plusMillis(1000).
-        isAfter(Instant.now()) );
+    public void verify(DecodedJWT jwt) {
+        Guard.areEqual(jwt.getAlgorithm(), "RS256");
+
+        // orcid id_token does not have a type, see comment at end of file
+        // Guard.areEqual(jwt.getType(), "bearer");
+
+        verifyOrcidJwksSignature(jwt);
+
+        Guard.hasValue(jwt.getSubject());
+        Guard.hasValue("id_token must have audience", jwt.getAudience());
+        Guard.areEqual(orcid.clientId, jwt.getAudience().get(0));
+        Guard.areEqual(orcid.issuer, jwt.getIssuer());
+
+        Guard.isTrue("id_token must not be expired",
+                jwt.getExpiresAtAsInstant().
+                        // add a bit of leeway
+                                plusMillis(1000).
+                        isAfter(Instant.now()));
     
     /* Orcid allows users to choose to not make their email public. 
     Guard.hasValue("email claim must have value", 
@@ -110,45 +110,42 @@ public class OrcidOidc {
     Guard.isTrue("email_verified must be true", 
       jwt.getClaim("email_verified").asBoolean());
     */
-  }
-
-  private void verifyOrcidJwksSignature(DecodedJWT jwt) {
-    JwkProvider provider = null;
-    try {
-      provider = new UrlJwkProvider( new URL(orcid.jwks) );
-    }
-    catch( MalformedURLException e ){
-      throw idpException("orcid props.jwks is malformed %s - %s",
-        orcid.jwks, e.getMessage() );
     }
 
-    Jwk jwk = null;
-    try {
-      jwk = provider.get(jwt.getKeyId());
-    }
-    catch( JwkException e ){
-      // do not log signature
-      log.with("header", jwt.getHeader()).
-        with("payload", jwt.getPayload()).
-        debug("could not get jwks key");
-      throw idpException("could not get key id %s from %s - %s", 
-        jwt.getKeyId(), orcid.jwks, e.getMessage() );
-    }
+    private void verifyOrcidJwksSignature(DecodedJWT jwt) {
+        JwkProvider provider = null;
+        try {
+            provider = new UrlJwkProvider(new URL(orcid.jwks));
+        } catch (MalformedURLException e) {
+            throw idpException("orcid props.jwks is malformed %s - %s",
+                    orcid.jwks, e.getMessage());
+        }
 
-    Algorithm algorithm = null;
-    try {
-      algorithm = Algorithm.RSA256((RSAPublicKey) jwk.getPublicKey(), null);
-    }
-    catch( InvalidPublicKeyException e ){
-      log.with("header", jwt.getHeader()).
-        with("payload", jwt.getPayload()).
-        debug("could not get jwks key");
-      throw idpException("could not create RSA256 public key - %s",
-        e.getMessage() );
-    }
+        Jwk jwk = null;
+        try {
+            jwk = provider.get(jwt.getKeyId());
+        } catch (JwkException e) {
+            // do not log signature
+            log.with("header", jwt.getHeader()).
+                    with("payload", jwt.getPayload()).
+                    debug("could not get jwks key");
+            throw idpException("could not get key id %s from %s - %s",
+                    jwt.getKeyId(), orcid.jwks, e.getMessage());
+        }
 
-    algorithm.verify(jwt);
-  }
+        Algorithm algorithm = null;
+        try {
+            algorithm = Algorithm.RSA256((RSAPublicKey) jwk.getPublicKey(), null);
+        } catch (InvalidPublicKeyException e) {
+            log.with("header", jwt.getHeader()).
+                    with("payload", jwt.getPayload()).
+                    debug("could not get jwks key");
+            throw idpException("could not create RSA256 public key - %s",
+                    e.getMessage());
+        }
+
+        algorithm.verify(jwt);
+    }
 
 }
 

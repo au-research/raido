@@ -11,10 +11,10 @@ import java.util.Map;
 @Component
 public class TitleFactory {
     private static final String TITLE_TYPE_SCHEME_URI =
-        "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/";
+            "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/";
     private static final Map<TitleType, String> TITLE_TYPE_MAP = Map.of(
-        TitleType.PRIMARY_TITLE, "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
-        TitleType.ALTERNATIVE_TITLE, "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json"
+            TitleType.PRIMARY_TITLE, "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+            TitleType.ALTERNATIVE_TITLE, "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json"
     );
 
     public Title create(final TitleBlock titleBlock) {
@@ -23,12 +23,12 @@ public class TitleFactory {
         }
 
         return new Title()
-            .title(titleBlock.getTitle())
-            .startDate(titleBlock.getStartDate())
-            .endDate(titleBlock.getEndDate())
-            .type(new TitleTypeWithSchemeUri()
-                .id(titleBlock.getType() != null ? TITLE_TYPE_MAP.get(titleBlock.getType()) : null)
-                .schemeUri(TITLE_TYPE_SCHEME_URI)
-            );
+                .title(titleBlock.getTitle())
+                .startDate(titleBlock.getStartDate())
+                .endDate(titleBlock.getEndDate())
+                .type(new TitleTypeWithSchemeUri()
+                        .id(titleBlock.getType() != null ? TITLE_TYPE_MAP.get(titleBlock.getType()) : null)
+                        .schemeUri(TITLE_TYPE_SCHEME_URI)
+                );
     }
 }

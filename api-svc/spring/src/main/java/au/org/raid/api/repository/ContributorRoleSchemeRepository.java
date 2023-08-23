@@ -12,15 +12,15 @@ import static au.org.raid.db.jooq.api_svc.tables.ContributorRoleScheme.CONTRIBUT
 @Repository
 @RequiredArgsConstructor
 public class ContributorRoleSchemeRepository {
-  private final DSLContext dslContext;
+    private final DSLContext dslContext;
 
-  public Optional<ContributorRoleSchemeRecord> findByUri(final String uri) {
-    return dslContext.select(CONTRIBUTOR_ROLE_SCHEME.fields())
-      .from(CONTRIBUTOR_ROLE_SCHEME)
-      .where(CONTRIBUTOR_ROLE_SCHEME.URI.eq(uri))
-      .fetchOptional(record -> new ContributorRoleSchemeRecord()
-        .setId(CONTRIBUTOR_ROLE_SCHEME.ID.getValue(record))
-        .setUri(CONTRIBUTOR_ROLE_SCHEME.URI.getValue(record))
-      );
-  }
+    public Optional<ContributorRoleSchemeRecord> findByUri(final String uri) {
+        return dslContext.select(CONTRIBUTOR_ROLE_SCHEME.fields())
+                .from(CONTRIBUTOR_ROLE_SCHEME)
+                .where(CONTRIBUTOR_ROLE_SCHEME.URI.eq(uri))
+                .fetchOptional(record -> new ContributorRoleSchemeRecord()
+                        .setId(CONTRIBUTOR_ROLE_SCHEME.ID.getValue(record))
+                        .setUri(CONTRIBUTOR_ROLE_SCHEME.URI.getValue(record))
+                );
+    }
 }

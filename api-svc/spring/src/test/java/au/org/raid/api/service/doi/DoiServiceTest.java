@@ -24,62 +24,62 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class DoiServiceTest {
-  // well-formed, but not real
-  public static final String NONEXISTENT_TEST_DOI = 
-    "https://doi.org/10.a/test-doi";
-  
-  @Mock
-  private RestTemplate restTemplate;
+    // well-formed, but not real
+    public static final String NONEXISTENT_TEST_DOI =
+            "https://doi.org/10.a/test-doi";
 
-  @InjectMocks
-  private DoiService doiService;
+    @Mock
+    private RestTemplate restTemplate;
 
-  @Test
-  void returnsListOfMessagesIfRequestFails() {
-    doThrow(new HttpClientErrorException(HttpStatusCode.valueOf(404))).
-      when(restTemplate).exchange(any(RequestEntity.class), eq(Void.class));
+    @InjectMocks
+    private DoiService doiService;
 
-    final List<String> messages = doiService.validateDoiExists(NONEXISTENT_TEST_DOI);
+    @Test
+    void returnsListOfMessagesIfRequestFails() {
+        doThrow(new HttpClientErrorException(HttpStatusCode.valueOf(404))).
+                when(restTemplate).exchange(any(RequestEntity.class), eq(Void.class));
 
-    assertThat(messages.size(), is(1));
-    assertThat(messages.get(0), is("The DOI does not exist."));
-  }
+        final List<String> messages = doiService.validateDoiExists(NONEXISTENT_TEST_DOI);
 
-  @Test
-  void returnsEmptyListOfMessagesIfRequestSucceeds() {
+        assertThat(messages.size(), is(1));
+        assertThat(messages.get(0), is("The DOI does not exist."));
+    }
 
-    when(restTemplate.exchange(any(RequestEntity.class), eq(Void.class))).thenReturn(ResponseEntity.ok().build());
+    @Test
+    void returnsEmptyListOfMessagesIfRequestSucceeds() {
 
-    final List<String> messages = doiService.validateDoiExists(NONEXISTENT_TEST_DOI);
+        when(restTemplate.exchange(any(RequestEntity.class), eq(Void.class))).thenReturn(ResponseEntity.ok().build());
 
-    assertThat(messages, is(empty()));
-  }
+        final List<String> messages = doiService.validateDoiExists(NONEXISTENT_TEST_DOI);
 
-  /**
-   Not an int-test because real calls currently get rejected at the "client 
-   validation" logic and don't even get to the SSRF prevention logic.
-   */
-  @Test
-  void shouldOnlyValidateDoiUrls() {
-    assertThatThrownBy(()->
-        doiService.validateDoiExists("https://example.com/10.a/test-doi"),
-      "DOI failed SSRF prevention");
-  }
-  
-  @Test
-  void guardSsrfEdgeCases(){
-    DoiService.guardSsrf(NONEXISTENT_TEST_DOI);
-    //noinspection HttpUrlsUsage
-    DoiService.guardSsrf("http://doi.org/10.a/test-doi");
-    
-    assertThatThrownBy(()->
-      doiService.validateDoiExists("https://example.com/10.a/test-doi"),
-      "DOI failed SSRF prevention" );
-    assertThatThrownBy(()->
-      doiService.validateDoiExists("ftp://doi.org/10.a/test-doi"),
-      "DOI failed SSRF prevention" );
-    assertThatThrownBy(()->
-      doiService.validateDoiExists("https://doixorg/10.a/test-doi"),
-      "DOI failed SSRF prevention" );
-  }
+        assertThat(messages, is(empty()));
+    }
+
+    /**
+     * Not an int-test because real calls currently get rejected at the "client
+     * validation" logic and don't even get to the SSRF prevention logic.
+     */
+    @Test
+    void shouldOnlyValidateDoiUrls() {
+        assertThatThrownBy(() ->
+                        doiService.validateDoiExists("https://example.com/10.a/test-doi"),
+                "DOI failed SSRF prevention");
+    }
+
+    @Test
+    void guardSsrfEdgeCases() {
+        DoiService.guardSsrf(NONEXISTENT_TEST_DOI);
+        //noinspection HttpUrlsUsage
+        DoiService.guardSsrf("http://doi.org/10.a/test-doi");
+
+        assertThatThrownBy(() ->
+                        doiService.validateDoiExists("https://example.com/10.a/test-doi"),
+                "DOI failed SSRF prevention");
+        assertThatThrownBy(() ->
+                        doiService.validateDoiExists("ftp://doi.org/10.a/test-doi"),
+                "DOI failed SSRF prevention");
+        assertThatThrownBy(() ->
+                        doiService.validateDoiExists("https://doixorg/10.a/test-doi"),
+                "DOI failed SSRF prevention");
+    }
 }

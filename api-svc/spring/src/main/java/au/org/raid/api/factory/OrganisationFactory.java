@@ -22,16 +22,16 @@ public class OrganisationFactory {
 
         if (organisationBlock.getRoles() != null) {
             roles = organisationBlock.getRoles().stream()
-                .map(roleFactory::create)
-                .toList();
+                    .map(roleFactory::create)
+                    .toList();
         }
 
         final var identifierSchemeUri = (organisationBlock.getIdentifierSchemeUri() != null) ?
-            organisationBlock.getIdentifierSchemeUri().getValue() : null;
+                organisationBlock.getIdentifierSchemeUri().getValue() : null;
 
         return new Organisation()
-            .id(organisationBlock.getId())
-            .identifierSchemeUri(identifierSchemeUri)
-            .roles(roles);
+                .id(organisationBlock.getId())
+                .identifierSchemeUri(identifierSchemeUri)
+                .roles(roles);
     }
 }

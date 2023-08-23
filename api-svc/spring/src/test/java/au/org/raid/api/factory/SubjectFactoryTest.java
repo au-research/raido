@@ -32,14 +32,14 @@ class SubjectFactoryTest {
         final var keyword = "_keyword";
 
         final var subject = new SubjectBlock()
-            .subject(id)
-            .subjectKeyword(keyword)
-            .subjectSchemeUri(schemeUri);
+                .subject(id)
+                .subjectKeyword(keyword)
+                .subjectSchemeUri(schemeUri);
 
         final var expected = new Subject()
-            .id(id)
-            .schemeUri(schemeUri)
-            .keyword(keyword);
+                .id(id)
+                .schemeUri(schemeUri)
+                .keyword(keyword);
 
         assertThat(subjectFactory.create(subject), is(expected));
 

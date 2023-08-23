@@ -19,51 +19,51 @@ import static java.util.List.of;
 public class TitleValidationService {
 
 
-  public List<ValidationFailure> validatePrimaryTitle(
-    List<TitleBlock> titles
-  ) {
+    public List<ValidationFailure> validatePrimaryTitle(
+            List<TitleBlock> titles
+    ) {
 
-    var primaryTitles = RaidoSchemaV1Util.getPrimaryTitles(titles);
+        var primaryTitles = RaidoSchemaV1Util.getPrimaryTitles(titles);
 
-    if( primaryTitles.size() == 0 ){
-      return of(AT_LEAST_ONE_PRIMARY_TITLE);
+        if (primaryTitles.size() == 0) {
+            return of(AT_LEAST_ONE_PRIMARY_TITLE);
+        }
+
+        if (primaryTitles.size() > 1) {
+            return of(TOO_MANY_PRIMARY_TITLE);
+        }
+
+        return emptyList();
     }
 
-    if( primaryTitles.size() > 1 ){
-      return of(TOO_MANY_PRIMARY_TITLE);
+    public List<ValidationFailure> validateTitles(List<TitleBlock> titles) {
+        if (titles == null) {
+            return of(TITLES_NOT_SET);
+        }
+
+        var failures = new ArrayList<ValidationFailure>();
+
+        failures.addAll(validatePrimaryTitle(titles));
+
+        for (int i = 0; i < titles.size(); i++) {
+            var iTitle = titles.get(i);
+
+            if (isBlank(iTitle.getTitle())) {
+                failures.add(titleNotSet(i));
+            }
+            if (!valueFits(RAID.PRIMARY_TITLE, iTitle.getTitle())) {
+                failures.add(primaryTitleTooLong(i));
+            }
+            if (iTitle.getType() == null) {
+                failures.add(titlesTypeNotSet(i));
+            }
+            if (iTitle.getStartDate() == null) {
+                failures.add(titleStartDateNotSet(i));
+            }
+
+        }
+        return failures;
     }
-
-    return emptyList();
-  }
-
-  public List<ValidationFailure> validateTitles(List<TitleBlock> titles) {
-    if( titles == null ) {
-      return of(TITLES_NOT_SET);
-    }
-
-    var failures = new ArrayList<ValidationFailure>();
-
-    failures.addAll(validatePrimaryTitle(titles));
-
-    for( int i = 0; i < titles.size(); i++ ){
-      var iTitle = titles.get(i);
-
-      if( isBlank(iTitle.getTitle()) ){
-        failures.add(titleNotSet(i));
-      }
-      if( !valueFits(RAID.PRIMARY_TITLE, iTitle.getTitle()) ){
-        failures.add(primaryTitleTooLong(i));
-      }
-      if( iTitle.getType() == null ){
-        failures.add(titlesTypeNotSet(i));
-      }
-      if( iTitle.getStartDate() == null ){
-        failures.add(titleStartDateNotSet(i));
-      }
-
-    }
-    return failures;
-  }
 
 
 }

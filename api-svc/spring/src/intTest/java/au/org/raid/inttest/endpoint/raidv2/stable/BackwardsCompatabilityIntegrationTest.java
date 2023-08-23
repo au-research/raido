@@ -26,7 +26,7 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
         try {
             final MintResponse mintResponse = experimentalApi.mintRaidoSchemaV1(TestData.mintRaidoSchemaV1Request(RAIDO_SP_ID));
 
-            final var metadata = objectMapper.readValue((String)mintResponse.getRaid().getMetadata(), RaidoMetadataSchemaV1.class);
+            final var metadata = objectMapper.readValue((String) mintResponse.getRaid().getMetadata(), RaidoMetadataSchemaV1.class);
 
             final String[] split = mintResponse.getRaid().getHandle().split("/");
             final var prefix = split[0];
@@ -74,9 +74,9 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
                                             .id(TestConstants.ALTERNATIVE_DESCRIPTION_TYPE)
                                             .schemeUri(TestConstants.DESCRIPTION_TYPE_SCHEME_URI))))
                     .access(new Access()
-                                    .type(new AccessTypeWithSchemeUri()
-                                            .id(TestConstants.OPEN_ACCESS_TYPE)
-                                            .schemeUri(TestConstants.ACCESS_TYPE_SCHEME_URI)))
+                            .type(new AccessTypeWithSchemeUri()
+                                    .id(TestConstants.OPEN_ACCESS_TYPE)
+                                    .schemeUri(TestConstants.ACCESS_TYPE_SCHEME_URI)))
                     .alternateUrls(List.of(
                             new AlternateUrl().url(metadata.getAlternateUrls().get(0).getUrl()),
                             new AlternateUrl().url(metadata.getAlternateUrls().get(1).getUrl()),
@@ -252,10 +252,10 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
                         .title(raidModel.getMeta().getName())));
 
         assertThat(raidDto.getDescriptions()).isEqualTo(List.of(
-            new Description()
-                    .type(new DescriptionTypeWithSchemeUri()
-                            .id(TestConstants.PRIMARY_DESCRIPTION_TYPE)
-                            .schemeUri(TestConstants.DESCRIPTION_TYPE_SCHEME_URI))
-                    .description(String.format("RAiD created by '%s' at '%s'", raidModel.getOwner(), raidModel.getCreationDate()))));
+                new Description()
+                        .type(new DescriptionTypeWithSchemeUri()
+                                .id(TestConstants.PRIMARY_DESCRIPTION_TYPE)
+                                .schemeUri(TestConstants.DESCRIPTION_TYPE_SCHEME_URI))
+                        .description(String.format("RAiD created by '%s' at '%s'", raidModel.getOwner(), raidModel.getCreationDate()))));
     }
 }

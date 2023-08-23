@@ -24,41 +24,41 @@ public class StableRelatedRaidTypeValidationService {
 
         if (relatedRaidType == null) {
             return List.of(new ValidationFailure()
-                .fieldId("relatedRaids[%d].type".formatted(index))
-                .errorType(NOT_SET_TYPE)
-                .message(FIELD_MUST_BE_SET_MESSAGE)
+                    .fieldId("relatedRaids[%d].type".formatted(index))
+                    .errorType(NOT_SET_TYPE)
+                    .message(FIELD_MUST_BE_SET_MESSAGE)
             );
         }
 
         if (isBlank(relatedRaidType.getId())) {
             failures.add(new ValidationFailure()
-                .fieldId("relatedRaids[%d].type.id".formatted(index))
-                .errorType(NOT_SET_TYPE)
-                .message(FIELD_MUST_BE_SET_MESSAGE)
+                    .fieldId("relatedRaids[%d].type.id".formatted(index))
+                    .errorType(NOT_SET_TYPE)
+                    .message(FIELD_MUST_BE_SET_MESSAGE)
             );
         }
 
         if (isBlank(relatedRaidType.getSchemeUri())) {
             failures.add(new ValidationFailure()
-                .fieldId("relatedRaids[%d].type.schemeUri".formatted(index))
-                .errorType(NOT_SET_TYPE)
-                .message(FIELD_MUST_BE_SET_MESSAGE)
+                    .fieldId("relatedRaids[%d].type.schemeUri".formatted(index))
+                    .errorType(NOT_SET_TYPE)
+                    .message(FIELD_MUST_BE_SET_MESSAGE)
             );
         } else {
             final var relatedRaidTypeScheme =
-                relatedRaidTypeSchemeRepository.findByUri(relatedRaidType.getSchemeUri());
+                    relatedRaidTypeSchemeRepository.findByUri(relatedRaidType.getSchemeUri());
 
             if (relatedRaidTypeScheme.isEmpty()) {
                 failures.add(new ValidationFailure()
-                    .fieldId("relatedRaids[%d].type.schemeUri".formatted(index))
-                    .errorType(INVALID_VALUE_TYPE)
-                    .message(INVALID_SCHEME));
+                        .fieldId("relatedRaids[%d].type.schemeUri".formatted(index))
+                        .errorType(INVALID_VALUE_TYPE)
+                        .message(INVALID_SCHEME));
             } else if (!isBlank(relatedRaidType.getId()) &&
-                relatedRaidTypeRepository.findByUriAndSchemeId(relatedRaidType.getId(), relatedRaidTypeScheme.get().getId()).isEmpty()) {
+                    relatedRaidTypeRepository.findByUriAndSchemeId(relatedRaidType.getId(), relatedRaidTypeScheme.get().getId()).isEmpty()) {
                 failures.add(new ValidationFailure()
-                    .fieldId("relatedRaids[%d].type.id".formatted(index))
-                    .errorType(INVALID_VALUE_TYPE)
-                    .message(INVALID_ID_FOR_SCHEME));
+                        .fieldId("relatedRaids[%d].type.id".formatted(index))
+                        .errorType(INVALID_VALUE_TYPE)
+                        .message(INVALID_ID_FOR_SCHEME));
             }
         }
 

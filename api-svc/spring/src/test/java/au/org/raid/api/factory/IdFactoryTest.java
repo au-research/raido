@@ -34,13 +34,13 @@ class IdFactoryTest {
         final var raidAgencyUrl = "raid-agency-url";
 
         final var idBlock = new IdBlock()
-            .identifier(identifier)
-            .identifierSchemeURI(identifierSchemeUri)
-            .identifierRegistrationAgency(identifierRegistrationAgency)
-            .identifierOwner(identifierOwner)
-            .identifierServicePoint(identifierServicePoint)
-            .globalUrl(globalUrl)
-            .raidAgencyUrl(raidAgencyUrl);
+                .identifier(identifier)
+                .identifierSchemeURI(identifierSchemeUri)
+                .identifierRegistrationAgency(identifierRegistrationAgency)
+                .identifierOwner(identifierOwner)
+                .identifierServicePoint(identifierServicePoint)
+                .globalUrl(globalUrl)
+                .raidAgencyUrl(raidAgencyUrl);
 
         final var result = idFactory.create(idBlock);
 

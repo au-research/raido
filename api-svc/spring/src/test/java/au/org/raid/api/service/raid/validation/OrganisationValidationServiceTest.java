@@ -18,38 +18,38 @@ import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
 class OrganisationValidationServiceTest {
-  @Mock
-  private RorService rorService;
+    @Mock
+    private RorService rorService;
 
-  @InjectMocks
-  private OrganisationValidationService validationService;
+    @InjectMocks
+    private OrganisationValidationService validationService;
 
-  @Test
-  void addFailureIfOrganisationDoesNotExist() {
-    final var contributor = new OrganisationBlock()
-      .id("https://ror.org/015w2mp89")
-      .identifierSchemeUri(OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_);
+    @Test
+    void addFailureIfOrganisationDoesNotExist() {
+        final var contributor = new OrganisationBlock()
+                .id("https://ror.org/015w2mp89")
+                .identifierSchemeUri(OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_);
 
-    doReturn(of("The ROR does not exist.")).
-      when(rorService).validateRorExists(any());
-    
+        doReturn(of("The ROR does not exist.")).
+                when(rorService).validateRorExists(any());
 
-    final var failures = validationService.validateRorExists(1, contributor);
-    final var failure = failures.get(0);
 
-    assertThat(failure.getFieldId(), is("organisations[1].id"));
-    assertThat(failure.getErrorType(), is("invalidValue"));
-    assertThat(failure.getMessage(), is("The organisation ROR does not exist."));
-  }
+        final var failures = validationService.validateRorExists(1, contributor);
+        final var failure = failures.get(0);
 
-  @Test
-  void NoFailuresIfOrganisationExists() {
-    final var contributor = new OrganisationBlock()
-      .id("https://ror.org/015w2mp89")
-      .identifierSchemeUri(OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_);
+        assertThat(failure.getFieldId(), is("organisations[1].id"));
+        assertThat(failure.getErrorType(), is("invalidValue"));
+        assertThat(failure.getMessage(), is("The organisation ROR does not exist."));
+    }
 
-    final var failures = validationService.validateRorExists(1, contributor);
+    @Test
+    void NoFailuresIfOrganisationExists() {
+        final var contributor = new OrganisationBlock()
+                .id("https://ror.org/015w2mp89")
+                .identifierSchemeUri(OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_);
 
-    assertThat(failures, is(empty()));
-  }
+        final var failures = validationService.validateRorExists(1, contributor);
+
+        assertThat(failures, is(empty()));
+    }
 }

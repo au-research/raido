@@ -22,80 +22,83 @@ import static au.org.raid.api.util.Log.to;
 
 @Component
 public class ExternalPidService {
-  private static final Log log = to(ExternalPidService.class);
-  
-  @Bean
-  @Primary
-  public ApidsService apidsService(
-    EnvironmentProps envConfig,
-    InMemoryStubProps stubProps,
-    ApidsProps apidsConfig,
-    RestTemplate rest
-  ){
-    /* IMPROVE: I'm fairly sure I'm not doing this the "spring way" */
-    if( stubProps.apidsInMemoryStub ){
-      Guard.isTrue("Cannot use InMemoryApidsServiceStub in a PROD env",
-        !envConfig.isProd);
-      log.with("apidsInMemoryStubDelay", stubProps.apidsInMemoryStubDelay).
-        warn("using the in-memory ORCID service");
-      return new InMemoryApidsServiceStub(stubProps, envConfig);
-    }
+    private static final Log log = to(ExternalPidService.class);
+
+    @Bean
+    @Primary
+    public ApidsService apidsService(
+            EnvironmentProps envConfig,
+            InMemoryStubProps stubProps,
+            ApidsProps apidsConfig,
+            RestTemplate rest
+    ) {
+        /* IMPROVE: I'm fairly sure I'm not doing this the "spring way" */
+        if (stubProps.apidsInMemoryStub) {
+            Guard.isTrue("Cannot use InMemoryApidsServiceStub in a PROD env",
+                    !envConfig.isProd);
+            log.with("apidsInMemoryStubDelay", stubProps.apidsInMemoryStubDelay).
+                    warn("using the in-memory ORCID service");
+            return new InMemoryApidsServiceStub(stubProps, envConfig);
+        }
 
     /* now we aren't forced to set the secret if we're not using the real 
     APIDS service - unexpected benefit! */
-    Guard.allHaveValue("must set ApidsProps values",
-      apidsConfig.secret, apidsConfig.appId, apidsConfig.serviceUrl);
-    return new ApidsService(apidsConfig, rest);
-  }
-
-  @Bean @Primary
-  public OrcidService orcidService(
-    EnvironmentProps envConfig,
-    InMemoryStubProps stubProps,
-    RestTemplate rest
-  ){
-    if( stubProps.orcidInMemoryStub ){
-      Guard.isTrue("Cannot use InMemoryOrcidServiceStub in a PROD env",
-        !envConfig.isProd);
-      log.with("orcidInMemoryStubDelay", stubProps.orcidInMemoryStubDelay).
-        warn("using the in-memory ORCID service");
-      return new InMemoryOrcidServiceStub(stubProps);
+        Guard.allHaveValue("must set ApidsProps values",
+                apidsConfig.secret, apidsConfig.appId, apidsConfig.serviceUrl);
+        return new ApidsService(apidsConfig, rest);
     }
 
-    return new OrcidService(rest);
-  }
+    @Bean
+    @Primary
+    public OrcidService orcidService(
+            EnvironmentProps envConfig,
+            InMemoryStubProps stubProps,
+            RestTemplate rest
+    ) {
+        if (stubProps.orcidInMemoryStub) {
+            Guard.isTrue("Cannot use InMemoryOrcidServiceStub in a PROD env",
+                    !envConfig.isProd);
+            log.with("orcidInMemoryStubDelay", stubProps.orcidInMemoryStubDelay).
+                    warn("using the in-memory ORCID service");
+            return new InMemoryOrcidServiceStub(stubProps);
+        }
 
-  @Bean @Primary
-  public RorService rorService(
-    EnvironmentProps envConfig,
-    InMemoryStubProps stubProps,
-    RestTemplate rest
-  ){
-    if( stubProps.rorInMemoryStub ){
-      Guard.isTrue("Cannot use InMemoryRorServiceStub in a PROD env",
-        !envConfig.isProd);
-      log.with("rorInMemoryStubDelay", stubProps.rorInMemoryStubDelay).
-        warn("using the in-memory ROR service");
-      return new InMemoryRorServiceStub(stubProps);
+        return new OrcidService(rest);
     }
 
-    return new RorService(rest);
-  }
+    @Bean
+    @Primary
+    public RorService rorService(
+            EnvironmentProps envConfig,
+            InMemoryStubProps stubProps,
+            RestTemplate rest
+    ) {
+        if (stubProps.rorInMemoryStub) {
+            Guard.isTrue("Cannot use InMemoryRorServiceStub in a PROD env",
+                    !envConfig.isProd);
+            log.with("rorInMemoryStubDelay", stubProps.rorInMemoryStubDelay).
+                    warn("using the in-memory ROR service");
+            return new InMemoryRorServiceStub(stubProps);
+        }
 
-
-  @Bean @Primary
-  public DoiService doiService(
-    EnvironmentProps envConfig,
-    InMemoryStubProps stubProps,
-    RestTemplate rest
-  ){
-    if( stubProps.doiInMemoryStub ){
-      Guard.isTrue("Cannot use InMemoryDoiServiceStub in a PROD env",
-        !envConfig.isProd);
-      log.warn("using the in-memory DOI service");
-      return new InMemoryDoiServiceStub(stubProps);
+        return new RorService(rest);
     }
 
-    return new DoiService(rest);
-  }  
+
+    @Bean
+    @Primary
+    public DoiService doiService(
+            EnvironmentProps envConfig,
+            InMemoryStubProps stubProps,
+            RestTemplate rest
+    ) {
+        if (stubProps.doiInMemoryStub) {
+            Guard.isTrue("Cannot use InMemoryDoiServiceStub in a PROD env",
+                    !envConfig.isProd);
+            log.warn("using the in-memory DOI service");
+            return new InMemoryDoiServiceStub(stubProps);
+        }
+
+        return new DoiService(rest);
+    }
 }

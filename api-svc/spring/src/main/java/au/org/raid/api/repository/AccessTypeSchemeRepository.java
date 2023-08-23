@@ -12,15 +12,15 @@ import static au.org.raid.db.jooq.api_svc.tables.AccessTypeScheme.ACCESS_TYPE_SC
 @Repository
 @RequiredArgsConstructor
 public class AccessTypeSchemeRepository {
-  private final DSLContext dslContext;
+    private final DSLContext dslContext;
 
-  public Optional<AccessTypeSchemeRecord> findByUri(final String uri) {
-    return dslContext.select(ACCESS_TYPE_SCHEME.fields())
-      .from(ACCESS_TYPE_SCHEME)
-      .where(ACCESS_TYPE_SCHEME.URI.eq(uri))
-      .fetchOptional(record -> new AccessTypeSchemeRecord()
-        .setId(ACCESS_TYPE_SCHEME.ID.getValue(record))
-        .setUri(ACCESS_TYPE_SCHEME.URI.getValue(record))
-      );
-  }
+    public Optional<AccessTypeSchemeRecord> findByUri(final String uri) {
+        return dslContext.select(ACCESS_TYPE_SCHEME.fields())
+                .from(ACCESS_TYPE_SCHEME)
+                .where(ACCESS_TYPE_SCHEME.URI.eq(uri))
+                .fetchOptional(record -> new AccessTypeSchemeRecord()
+                        .setId(ACCESS_TYPE_SCHEME.ID.getValue(record))
+                        .setUri(ACCESS_TYPE_SCHEME.URI.getValue(record))
+                );
+    }
 }

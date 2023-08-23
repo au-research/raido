@@ -11,79 +11,79 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 
 class AlternateIdentifierValidationServiceTest {
-  private final AlternateIdentifierValidationService validationService =
-    new AlternateIdentifierValidationService();
+    private final AlternateIdentifierValidationService validationService =
+            new AlternateIdentifierValidationService();
 
-  @Test
-  void noFailuresIfAlternateIdentifiersIsNull() {
-    final var failures = validationService.validateAlternateIdentifiers(null);
-    assertThat(failures, is(empty()));
-  }
+    @Test
+    void noFailuresIfAlternateIdentifiersIsNull() {
+        final var failures = validationService.validateAlternateIdentifiers(null);
+        assertThat(failures, is(empty()));
+    }
 
-  @Test
-  void noFailuresIfAlternateIdentifiersIsEmptyList() {
-    final var failures = validationService.validateAlternateIdentifiers(Collections.emptyList());
-    assertThat(failures, is(empty()));
-  }
+    @Test
+    void noFailuresIfAlternateIdentifiersIsEmptyList() {
+        final var failures = validationService.validateAlternateIdentifiers(Collections.emptyList());
+        assertThat(failures, is(empty()));
+    }
 
-  @Test
-  void noFailuresIfAlternateIdentifierIsValid() {
-    final var alternateIdentifier = "alternate-identifier";
-    final var alternateIdentifierType = "alternate-identifier-type";
+    @Test
+    void noFailuresIfAlternateIdentifierIsValid() {
+        final var alternateIdentifier = "alternate-identifier";
+        final var alternateIdentifierType = "alternate-identifier-type";
 
-    final var failures = validationService.validateAlternateIdentifiers(List.of(
-      new AlternateIdentifierBlock()
-        .alternateIdentifier(alternateIdentifier)
-        .alternateIdentifierType(alternateIdentifierType)
-    ));
+        final var failures = validationService.validateAlternateIdentifiers(List.of(
+                new AlternateIdentifierBlock()
+                        .alternateIdentifier(alternateIdentifier)
+                        .alternateIdentifierType(alternateIdentifierType)
+        ));
 
-    assertThat(failures, is(empty()));
-  }
+        assertThat(failures, is(empty()));
+    }
 
-  @Test
-  void addsFailureIfAlternateIdentifierIsNull() {
-    final var alternateIdentifierType = "alternate-identifier-type";
+    @Test
+    void addsFailureIfAlternateIdentifierIsNull() {
+        final var alternateIdentifierType = "alternate-identifier-type";
 
-    final var failures = validationService.validateAlternateIdentifiers(List.of(
-      new AlternateIdentifierBlock()
-        .alternateIdentifierType(alternateIdentifierType)
-    ));
+        final var failures = validationService.validateAlternateIdentifiers(List.of(
+                new AlternateIdentifierBlock()
+                        .alternateIdentifierType(alternateIdentifierType)
+        ));
 
-    final var failure = failures.get(0);
-    assertThat(failures.size(), is(1));
-    assertThat(failure.getFieldId(), is("alternateIdentifiers[0].alternateIdentifier"));
-    assertThat(failure.getErrorType(), is("required"));
-    assertThat(failure.getMessage(), is("This is a required field."));
-  }
+        final var failure = failures.get(0);
+        assertThat(failures.size(), is(1));
+        assertThat(failure.getFieldId(), is("alternateIdentifiers[0].alternateIdentifier"));
+        assertThat(failure.getErrorType(), is("required"));
+        assertThat(failure.getMessage(), is("This is a required field."));
+    }
 
-  @Test
-  void addsFailureIfAlternateIdentifierTypeIsNull() {
-    final var alternateIdentifier = "alternate-identifier";
+    @Test
+    void addsFailureIfAlternateIdentifierTypeIsNull() {
+        final var alternateIdentifier = "alternate-identifier";
 
-    final var failures = validationService.validateAlternateIdentifiers(List.of(
-      new AlternateIdentifierBlock()
-        .alternateIdentifier(alternateIdentifier)
-    ));
+        final var failures = validationService.validateAlternateIdentifiers(List.of(
+                new AlternateIdentifierBlock()
+                        .alternateIdentifier(alternateIdentifier)
+        ));
 
-    final var failure = failures.get(0);
-    assertThat(failures.size(), is(1));
-    assertThat(failure.getFieldId(), is("alternateIdentifiers[0].alternateIdentifierType"));
-    assertThat(failure.getErrorType(), is("required"));
-    assertThat(failure.getMessage(), is("This is a required field."));
-  }
+        final var failure = failures.get(0);
+        assertThat(failures.size(), is(1));
+        assertThat(failure.getFieldId(), is("alternateIdentifiers[0].alternateIdentifierType"));
+        assertThat(failure.getErrorType(), is("required"));
+        assertThat(failure.getMessage(), is("This is a required field."));
+    }
 
-  @Test
-  void addsFailureIfAllFieldsAreNull() {
-    final var failures = validationService.validateAlternateIdentifiers(List.of(
-      new AlternateIdentifierBlock()
-    ));
+    @Test
+    void addsFailureIfAllFieldsAreNull() {
+        final var failures = validationService.validateAlternateIdentifiers(List.of(
+                new AlternateIdentifierBlock()
+        ));
 
-    assertThat(failures.size(), is(2));
-    assertThat(failures.get(0).getFieldId(), is("alternateIdentifiers[0].alternateIdentifier"));
-    assertThat(failures.get(0).getErrorType(), is("required"));
-    assertThat(failures.get(0).getMessage(), is("This is a required field."));
-    assertThat(failures.get(1).getFieldId(), is("alternateIdentifiers[0].alternateIdentifierType"));
-    assertThat(failures.get(1).getErrorType(), is("required"));
-    assertThat(failures.get(1).getMessage(), is("This is a required field."));
-  }
+        assertThat(failures.size(), is(2));
+        assertThat(failures.get(0).getFieldId(), is("alternateIdentifiers[0].alternateIdentifier"));
+        assertThat(failures.get(0).getErrorType(), is("required"));
+        assertThat(failures.get(0).getMessage(), is("This is a required field."));
+        assertThat(failures.get(1).getFieldId(), is("alternateIdentifiers[0].alternateIdentifierType"));
+        assertThat(failures.get(1).getErrorType(), is("required"));
+        assertThat(failures.get(1).getMessage(), is("This is a required field."));
+    }
 }

@@ -24,8 +24,8 @@ class RelatedRaidFactoryTest {
     @DisplayName("If RelatedRaidBlock has empty fields returns empty fields")
     void returnsEmptyFields() {
         final var expected = new RelatedRaid()
-            .type(new RelatedRaidType()
-                .schemeUri(TYPE_SCHEME_URI));
+                .type(new RelatedRaidType()
+                        .schemeUri(TYPE_SCHEME_URI));
 
         assertThat(relatedRaidFactory.create(new RelatedRaidBlock()), is(expected));
     }
@@ -37,15 +37,15 @@ class RelatedRaidFactoryTest {
         final var typeId = "type-id";
 
         final var relatedRaid = new RelatedRaidBlock()
-            .relatedRaid(id)
-            .relatedRaidType(typeId);
+                .relatedRaid(id)
+                .relatedRaidType(typeId);
 
         final var expected = new RelatedRaid()
-            .id(id)
-            .type(new RelatedRaidType()
-                .id(typeId)
-                .schemeUri(TYPE_SCHEME_URI)
-            );
+                .id(id)
+                .type(new RelatedRaidType()
+                        .id(typeId)
+                        .schemeUri(TYPE_SCHEME_URI)
+                );
 
         assertThat(relatedRaidFactory.create(relatedRaid), is(expected));
     }

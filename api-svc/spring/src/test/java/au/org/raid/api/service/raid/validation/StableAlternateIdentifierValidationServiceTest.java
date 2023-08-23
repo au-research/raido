@@ -12,94 +12,94 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 class StableAlternateIdentifierValidationServiceTest {
-  private final StableAlternateIdentifierValidationService validationService =
-    new StableAlternateIdentifierValidationService();
+    private final StableAlternateIdentifierValidationService validationService =
+            new StableAlternateIdentifierValidationService();
 
-  @Test
-  @DisplayName("Validation passes if alternateIdentifiers is null")
-  void noFailuresIfAlternateIdentifiersIsNull() {
-    final var failures = validationService.validateAlternateIdentifiers(null);
-    assertThat(failures, is(empty()));
-  }
+    @Test
+    @DisplayName("Validation passes if alternateIdentifiers is null")
+    void noFailuresIfAlternateIdentifiersIsNull() {
+        final var failures = validationService.validateAlternateIdentifiers(null);
+        assertThat(failures, is(empty()));
+    }
 
-  @Test
-  @DisplayName("Validation passes if alternateIdentifiers is empty list")
-  void noFailuresIfAlternateIdentifiersIsEmptyList() {
-    final var failures = validationService.validateAlternateIdentifiers(Collections.emptyList());
-    assertThat(failures, is(empty()));
-  }
+    @Test
+    @DisplayName("Validation passes if alternateIdentifiers is empty list")
+    void noFailuresIfAlternateIdentifiersIsEmptyList() {
+        final var failures = validationService.validateAlternateIdentifiers(Collections.emptyList());
+        assertThat(failures, is(empty()));
+    }
 
-  @Test
-  @DisplayName("Validation passes with valid alternate identifiers")
-  void noFailuresIfAlternateIdentifierIsValid() {
-    final var id = "alternate-identifier";
-    final var type = "alternate-identifier-type";
+    @Test
+    @DisplayName("Validation passes with valid alternate identifiers")
+    void noFailuresIfAlternateIdentifierIsValid() {
+        final var id = "alternate-identifier";
+        final var type = "alternate-identifier-type";
 
-    final var failures = validationService.validateAlternateIdentifiers(List.of(
-      new AlternateIdentifier()
-        .id(id)
-        .type(type)
-    ));
+        final var failures = validationService.validateAlternateIdentifiers(List.of(
+                new AlternateIdentifier()
+                        .id(id)
+                        .type(type)
+        ));
 
-    assertThat(failures, is(empty()));
-  }
+        assertThat(failures, is(empty()));
+    }
 
-  @Test
-  @DisplayName("Validation fails if id is null")
-  void addsFailureIfIdIsNull() {
-    final var type = "alternate-identifier-type";
+    @Test
+    @DisplayName("Validation fails if id is null")
+    void addsFailureIfIdIsNull() {
+        final var type = "alternate-identifier-type";
 
-    final var failures = validationService.validateAlternateIdentifiers(List.of(
-      new AlternateIdentifier()
-        .type(type)
-    ));
+        final var failures = validationService.validateAlternateIdentifiers(List.of(
+                new AlternateIdentifier()
+                        .type(type)
+        ));
 
-    final var failure = failures.get(0);
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("alternateIdentifiers[0].id")
-        .errorType("notSet")
-        .message("field must be set")
-    ));
-  }
+        final var failure = failures.get(0);
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("alternateIdentifiers[0].id")
+                        .errorType("notSet")
+                        .message("field must be set")
+        ));
+    }
 
-  @Test
-  @DisplayName("Validation fails if type is null")
-  void addsFailureIfAlternateIdentifierTypeIsNull() {
-    final var alternateIdentifier = "alternate-identifier";
+    @Test
+    @DisplayName("Validation fails if type is null")
+    void addsFailureIfAlternateIdentifierTypeIsNull() {
+        final var alternateIdentifier = "alternate-identifier";
 
-    final var failures = validationService.validateAlternateIdentifiers(List.of(
-      new AlternateIdentifier()
-        .id(alternateIdentifier)
-    ));
+        final var failures = validationService.validateAlternateIdentifiers(List.of(
+                new AlternateIdentifier()
+                        .id(alternateIdentifier)
+        ));
 
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("alternateIdentifiers[0].type")
-        .errorType("notSet")
-        .message("field must be set")
-    ));
-  }
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("alternateIdentifiers[0].type")
+                        .errorType("notSet")
+                        .message("field must be set")
+        ));
+    }
 
-  @Test
-  @DisplayName("Validation fails and all failures are returned if id and type are null")
-  void addsFailuresIfAllFieldsAreNull() {
-    final var failures = validationService.validateAlternateIdentifiers(List.of(
-      new AlternateIdentifier()
-    ));
+    @Test
+    @DisplayName("Validation fails and all failures are returned if id and type are null")
+    void addsFailuresIfAllFieldsAreNull() {
+        final var failures = validationService.validateAlternateIdentifiers(List.of(
+                new AlternateIdentifier()
+        ));
 
-    assertThat(failures, hasSize(2));
-    assertThat(failures, hasItems(
-      new ValidationFailure()
-        .fieldId("alternateIdentifiers[0].id")
-        .errorType("notSet")
-        .message("field must be set"),
-      new ValidationFailure()
-        .fieldId("alternateIdentifiers[0].type")
-        .errorType("notSet")
-        .message("field must be set")
-    ));
-  }
+        assertThat(failures, hasSize(2));
+        assertThat(failures, hasItems(
+                new ValidationFailure()
+                        .fieldId("alternateIdentifiers[0].id")
+                        .errorType("notSet")
+                        .message("field must be set"),
+                new ValidationFailure()
+                        .fieldId("alternateIdentifiers[0].type")
+                        .errorType("notSet")
+                        .message("field must be set")
+        ));
+    }
 }

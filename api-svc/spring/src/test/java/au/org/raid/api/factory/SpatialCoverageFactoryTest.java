@@ -32,14 +32,14 @@ class SpatialCoverageFactoryTest {
         final var place = "_place";
 
         final var spatialCoverage = new SpatialCoverageBlock()
-            .spatialCoverage(id)
-            .spatialCoverageSchemeUri(schemeUri)
-            .spatialCoveragePlace(place);
+                .spatialCoverage(id)
+                .spatialCoverageSchemeUri(schemeUri)
+                .spatialCoveragePlace(place);
 
         final var expected = new SpatialCoverage()
-            .id(id)
-            .schemeUri(schemeUri)
-            .place(place);
+                .id(id)
+                .schemeUri(schemeUri)
+                .place(place);
 
         assertThat(spatialCoverageFactory.create(spatialCoverage), is(expected));
     }

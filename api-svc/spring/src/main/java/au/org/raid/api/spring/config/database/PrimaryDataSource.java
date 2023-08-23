@@ -38,60 +38,61 @@ annotation instead of the Spring one.
  connections and possibly separate queue-service connections.
  */
 public class PrimaryDataSource {
-  private static final Log log = to(PrimaryDataSource.class);
-  
-  public static final String MAIN_POOL_NAME = "MainJdbcPool";
-  
-  @Bean
-  public static DataSource hikariDataSource(
-    @Autowired DataSourceProps dsProps,
-    @Autowired MetricRegistry metricReg
-  ) {
-    log.debug("initialising HikariCP / Postgres datasource");
-    Properties hikariProps = dsProps.createHikariDatasourceProps();
-    HikariConfig hikariConfig = new HikariConfig(hikariProps);
-    hikariConfig.setPoolName(MAIN_POOL_NAME);
-   
-    HikariDataSource dataSource = new HikariDataSource(hikariConfig);
-    metricReg.registerDataSourceMetrics(dataSource);
-    
-    return dataSource;
-  }
+    public static final String MAIN_POOL_NAME = "MainJdbcPool";
+    private static final Log log = to(PrimaryDataSource.class);
 
-  @Bean
-  public DataSourceConnectionProvider connectionProvider(
-    @Autowired DataSource dataSource
-  ) {
-    DataSourceConnectionProvider connectionProvider =
-      new DataSourceConnectionProvider(
-        new TransactionAwareDataSourceProxy(dataSource));
-    log.with("dataSource", dataSource).
-      with("connectionProvider", connectionProvider).
-      debug("connectionProvider()");
-    return connectionProvider;
-  }
+    @Bean
+    public static DataSource hikariDataSource(
+            @Autowired DataSourceProps dsProps,
+            @Autowired MetricRegistry metricReg
+    ) {
+        log.debug("initialising HikariCP / Postgres datasource");
+        Properties hikariProps = dsProps.createHikariDatasourceProps();
+        HikariConfig hikariConfig = new HikariConfig(hikariProps);
+        hikariConfig.setPoolName(MAIN_POOL_NAME);
 
-  /** PlatformTransactionManager */
-  @Bean
-  public DataSourceTransactionManager transactionManager(
-    @Autowired DataSource dataSource
-  ) {
-    log.with("dataSource", dataSource).debug("transactionManager()");
-    return new DataSourceTransactionManager(dataSource);
-  }
-  
-  @Bean
-  TransactionTemplate transactionTemplate(
-    @Autowired PlatformTransactionManager tm
-  ) {
-    log.with("transactionManager", tm).info("transactionTemplate()");
-    return new TransactionTemplate(tm);
-  }
+        HikariDataSource dataSource = new HikariDataSource(hikariConfig);
+        metricReg.registerDataSourceMetrics(dataSource);
 
-  @Bean
-  public JdbcTemplate jdbcTemplate(
-    @Autowired DataSource dataSource
-  ) {
-    return new JdbcTemplate(dataSource);
-  }
+        return dataSource;
+    }
+
+    @Bean
+    public DataSourceConnectionProvider connectionProvider(
+            @Autowired DataSource dataSource
+    ) {
+        DataSourceConnectionProvider connectionProvider =
+                new DataSourceConnectionProvider(
+                        new TransactionAwareDataSourceProxy(dataSource));
+        log.with("dataSource", dataSource).
+                with("connectionProvider", connectionProvider).
+                debug("connectionProvider()");
+        return connectionProvider;
+    }
+
+    /**
+     * PlatformTransactionManager
+     */
+    @Bean
+    public DataSourceTransactionManager transactionManager(
+            @Autowired DataSource dataSource
+    ) {
+        log.with("dataSource", dataSource).debug("transactionManager()");
+        return new DataSourceTransactionManager(dataSource);
+    }
+
+    @Bean
+    TransactionTemplate transactionTemplate(
+            @Autowired PlatformTransactionManager tm
+    ) {
+        log.with("transactionManager", tm).info("transactionTemplate()");
+        return new TransactionTemplate(tm);
+    }
+
+    @Bean
+    public JdbcTemplate jdbcTemplate(
+            @Autowired DataSource dataSource
+    ) {
+        return new JdbcTemplate(dataSource);
+    }
 }

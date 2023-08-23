@@ -34,201 +34,191 @@ and we don't lose any raids:
 @Component
 public class BuildSearchIndexService {
 
-  private static final Log log = to(BuildSearchIndexService.class);
+    private static final Log log = to(BuildSearchIndexService.class);
 
-  private MetadataService metaSvc;
-  private BuildSearchIndexProps props;
+    private MetadataService metaSvc;
+    private BuildSearchIndexProps props;
 
-  public BuildSearchIndexService(
-    MetadataService metaSvc,
-    BuildSearchIndexProps props
-  ) {
-    this.metaSvc = metaSvc;
-    this.props = props;
-  }
-
-  public List<String> buildRegAgentLinkFiles(
-    BufferedReader reader,
-    String outputDir,
-    String agentPrefix
-  ) {
-    log.info("start build link files");
-    List<String> linkFilePaths = new ArrayList<>();
-    
-    int inputLineCount = 0;
-    int linkCount = 0;
-    int linkFileCount = 1;
-
-    String inputLine = readInputLine(reader, inputLineCount);
-    if( inputLine == null ){
-      throw runtimeException("input reader returned no rows");
+    public BuildSearchIndexService(
+            MetadataService metaSvc,
+            BuildSearchIndexProps props
+    ) {
+        this.metaSvc = metaSvc;
+        this.props = props;
     }
 
-    var linkFilePath = formatLinkFilePath(
-      outputDir, agentPrefix, linkFileCount );
-    linkFilePaths.add(linkFilePath);
-    log.with("linkFile", formatClickable(linkFilePath)).
-      info("writing to first link file");
+    /**
+     * wraps {@link BufferedReader#readLine()}
+     */
+    private static String readInputLine(BufferedReader reader, int lineCount) {
+        try {
+            return reader.readLine();
+        } catch (IOException e) {
+            throw wrapIoException(e, "while reading next after line %s", lineCount);
+        }
+    }
 
-    BufferedWriter writer = createNewLinkFile(agentPrefix, linkFilePath);
+    private static void writeHtmlLink(
+            BufferedWriter writer,
+            int lineCount,
+            String line,
+            PublicReadRaidMetadataResponseV1 raid
+    ) {
+        try {
+            writer.write("<br/>");
+            writeRaidAnchorHtml(writer, raid);
+            writer.newLine();
+        } catch (IOException e) {
+            throw wrapIoException(e, "while writing link for input line %s: %s",
+                    lineCount, line);
+        }
+    }
 
-    try {
-      while( inputLine != null ){
-        
-        inputLineCount++;
-        linkCount++;
+    private static void closeWriter(BufferedWriter writer) {
+        try {
+            writer.write("</body></html>");
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            throw wrapIoException(e, "while writing tail info and closing file");
+        }
+    }
 
-        if( linkCount >= props.maxRaidsPerFile ){
-          closeWriter(writer);
-          linkFileCount++;
-          linkCount = 1;
-          linkFilePath = formatLinkFilePath(
-            outputDir, agentPrefix, linkFileCount);
-          linkFilePaths.add(linkFilePath);
-          /* writing these out during the process (instead of at the end) acts
-          as a sort of progress-indicator. 
-          When we're writing millions of raids, consider logging only every Nth 
-          file, or do a proper "monitor" implementation.*/
-          log.with("linkFile", formatClickable(linkFilePath)).
-            info("writing to next link file");
-          writer = createNewLinkFile(agentPrefix, linkFilePath);
+    @NotNull
+    private static BufferedWriter createNewLinkFile(
+            String agentPrefix,
+            String indexPath
+    ) {
+        var writer = newWriter(indexPath);
+        try {
+            writer.write(
+                    "<html><head>List of raids for %s</head><body>".formatted(
+                            agentPrefix)
+            );
+        } catch (IOException e) {
+            throw wrapIoException(e, "while writing head info");
+        }
+        return writer;
+    }
+
+    private static void writeRaidAnchorHtml(
+            BufferedWriter writer,
+            PublicReadRaidMetadataResponseV1 raid
+    ) {
+        try {
+            if (raid instanceof PublicClosedMetadataSchemaV1 closed) {
+                writer.write(
+                        "<a href=\"%s\">%s</a>".formatted(
+                                closed.getId().getRaidAgencyUrl(),
+                                closed.getId().getIdentifier()
+                        )
+                );
+            } else if (raid instanceof PublicRaidMetadataSchemaV1 open) {
+                writer.write(
+                        "<a href=\"%s\">%s</a>".formatted(
+                                open.getId().getRaidAgencyUrl(),
+                                open.getId().getIdentifier()
+                        )
+                );
+            } else {
+                throw runtimeException("unknown raid type: %s",
+                        raid.getClass().getName());
+            }
+        } catch (IOException e) {
+            throw ExceptionUtil.wrapIoException(e, "while writing raid: %s", raid);
+        }
+    }
+
+    private static void uncheckedFlush(BufferedWriter writer) {
+        try {
+            writer.flush();
+        } catch (IOException e) {
+            throw wrapIoException(e, "while flushing the writer");
+        }
+    }
+
+    public List<String> buildRegAgentLinkFiles(
+            BufferedReader reader,
+            String outputDir,
+            String agentPrefix
+    ) {
+        log.info("start build link files");
+        List<String> linkFilePaths = new ArrayList<>();
+
+        int inputLineCount = 0;
+        int linkCount = 0;
+        int linkFileCount = 1;
+
+        String inputLine = readInputLine(reader, inputLineCount);
+        if (inputLine == null) {
+            throw runtimeException("input reader returned no rows");
         }
 
-        PublicReadRaidMetadataResponseV1 raid =
-          parseRaid(inputLineCount, inputLine);
+        var linkFilePath = formatLinkFilePath(
+                outputDir, agentPrefix, linkFileCount);
+        linkFilePaths.add(linkFilePath);
+        log.with("linkFile", formatClickable(linkFilePath)).
+                info("writing to first link file");
 
-        writeHtmlLink(writer, inputLineCount, inputLine, raid);
+        BufferedWriter writer = createNewLinkFile(agentPrefix, linkFilePath);
 
-        inputLine = readInputLine(reader, inputLineCount);
+        try {
+            while (inputLine != null) {
 
-      } // while( inputLine != null ){
-    } // try
-    finally {
-      closeWriter(writer);
+                inputLineCount++;
+                linkCount++;
+
+                if (linkCount >= props.maxRaidsPerFile) {
+                    closeWriter(writer);
+                    linkFileCount++;
+                    linkCount = 1;
+                    linkFilePath = formatLinkFilePath(
+                            outputDir, agentPrefix, linkFileCount);
+                    linkFilePaths.add(linkFilePath);
+          /* writing these out during the process (instead of at the end) acts
+          as a sort of progress-indicator.
+          When we're writing millions of raids, consider logging only every Nth
+          file, or do a proper "monitor" implementation.*/
+                    log.with("linkFile", formatClickable(linkFilePath)).
+                            info("writing to next link file");
+                    writer = createNewLinkFile(agentPrefix, linkFilePath);
+                }
+
+                PublicReadRaidMetadataResponseV1 raid =
+                        parseRaid(inputLineCount, inputLine);
+
+                writeHtmlLink(writer, inputLineCount, inputLine, raid);
+
+                inputLine = readInputLine(reader, inputLineCount);
+
+            } // while( inputLine != null ){
+        } // try
+        finally {
+            closeWriter(writer);
+        }
+
+        return linkFilePaths;
     }
 
-    return linkFilePaths;
-  }
+    private String formatLinkFilePath(
+            String outputDir,
+            String agentPrefix,
+            int linkFileCount
+    ) {
+        return "%s/%s".formatted(
+                outputDir,
+                props.linkFileFormat.formatted(agentPrefix, linkFileCount));
+    }
 
-  private String formatLinkFilePath(
-    String outputDir,
-    String agentPrefix,
-    int linkFileCount
-  ) {
-    return "%s/%s".formatted(
-      outputDir,
-      props.linkFileFormat.formatted(agentPrefix, linkFileCount));
-  }
-
-  /**
-   wraps {@link BufferedReader#readLine()}
-   */
-  private static String readInputLine(BufferedReader reader, int lineCount) {
-    try { 
-      return reader.readLine();
+    private PublicReadRaidMetadataResponseV1 parseRaid(
+            int lineCount,
+            String line
+    ) {
+        try {
+            return metaSvc.parsePublicRaidMetadata(line);
+        } catch (Exception e) {
+            throw wrapException(e, "on line %s", lineCount);
+        }
     }
-    catch( IOException e ){
-      throw wrapIoException(e, "while reading next after line %s", lineCount);
-    }
-  }
-
-  private static void writeHtmlLink(
-    BufferedWriter writer,
-    int lineCount,
-    String line,
-    PublicReadRaidMetadataResponseV1 raid
-  ) {
-    try {
-      writer.write("<br/>");
-      writeRaidAnchorHtml(writer, raid);
-      writer.newLine();
-    }
-    catch( IOException e ){
-      throw wrapIoException(e, "while writing link for input line %s: %s",
-        lineCount, line);
-    }
-  }
-
-  private static void closeWriter(BufferedWriter writer) {
-    try {
-      writer.write("</body></html>");
-      writer.flush();
-      writer.close();
-    }
-    catch( IOException e ){
-      throw wrapIoException(e, "while writing tail info and closing file");
-    }
-  }
-
-  @NotNull
-  private static BufferedWriter createNewLinkFile(
-    String agentPrefix,
-    String indexPath
-  ) {
-    var writer = newWriter(indexPath);
-    try {
-      writer.write(
-        "<html><head>List of raids for %s</head><body>".formatted(
-          agentPrefix)
-      );
-    }
-    catch( IOException e ){
-      throw wrapIoException(e, "while writing head info");
-    }
-    return writer;
-  }
-
-  private PublicReadRaidMetadataResponseV1 parseRaid(
-    int lineCount,
-    String line
-  ) {
-    try {
-      return metaSvc.parsePublicRaidMetadata(line);
-    }
-    catch( Exception e ){
-      throw wrapException(e, "on line %s", lineCount); 
-    }
-  }
-
-  private static void writeRaidAnchorHtml(
-    BufferedWriter writer,
-    PublicReadRaidMetadataResponseV1 raid
-  ) {
-    try {
-      if( raid instanceof PublicClosedMetadataSchemaV1 closed ){
-        writer.write(
-          "<a href=\"%s\">%s</a>".formatted(
-            closed.getId().getRaidAgencyUrl(),
-            closed.getId().getIdentifier()
-          )
-        );
-      }
-      else if( raid instanceof PublicRaidMetadataSchemaV1 open ){
-        writer.write(
-          "<a href=\"%s\">%s</a>".formatted(
-            open.getId().getRaidAgencyUrl(),
-            open.getId().getIdentifier()
-          )
-        );
-      }
-      else {
-        throw runtimeException("unknown raid type: %s", 
-          raid.getClass().getName());
-      }
-    }
-    catch( IOException e ){
-      throw ExceptionUtil.wrapIoException(e, "while writing raid: %s", raid);
-    }
-  }
-
-
-  private static void uncheckedFlush(BufferedWriter writer) {
-    try {
-      writer.flush();
-    }
-    catch( IOException e ){
-      throw wrapIoException(e, "while flushing the writer");
-    }
-  }
 
 }

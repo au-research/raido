@@ -15,29 +15,29 @@ import static au.org.raid.api.util.StringUtil.isBlank;
 @Component
 public class DescriptionValidationService {
 
-  public List<ValidationFailure> validateDescriptions(
-    List<DescriptionBlock> desc
-  ) {
-    if( desc == null ) {
-      // allowed to have no desc, not sure if parser will pass through null
-      // or empty if property is not set at all - either way, it's allowed
-      return Collections.emptyList();
+    public List<ValidationFailure> validateDescriptions(
+            List<DescriptionBlock> desc
+    ) {
+        if (desc == null) {
+            // allowed to have no desc, not sure if parser will pass through null
+            // or empty if property is not set at all - either way, it's allowed
+            return Collections.emptyList();
+        }
+
+        var failures = new ArrayList<ValidationFailure>();
+
+        for (int i = 0; i < desc.size(); i++) {
+            var iDesc = desc.get(i);
+
+            if (isBlank(iDesc.getDescription())) {
+                failures.add(ValidationMessage.descriptionNotSet(i));
+            }
+            if (iDesc.getType() == null) {
+                failures.add(descriptionTypeNotSet(i));
+            }
+        }
+        return failures;
     }
-
-    var failures = new ArrayList<ValidationFailure>();
-
-    for( int i = 0; i < desc.size(); i++ ){
-      var iDesc = desc.get(i);
-
-      if( isBlank(iDesc.getDescription()) ){
-        failures.add(ValidationMessage.descriptionNotSet(i));
-      }
-      if( iDesc.getType() == null ){
-        failures.add(descriptionTypeNotSet(i));
-      }
-    }
-    return failures;
-  }
 
 
 }

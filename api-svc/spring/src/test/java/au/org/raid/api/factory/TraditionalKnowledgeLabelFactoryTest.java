@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.nullValue;
 
 class TraditionalKnowledgeLabelFactoryTest {
     private final TraditionalKnowledgeLabelFactory traditionalKnowledgeLabelFactory
-        = new TraditionalKnowledgeLabelFactory();
+            = new TraditionalKnowledgeLabelFactory();
 
     @Test
     @DisplayName("If TraditionalKnowledgeLabelBlock is null return null")
@@ -23,7 +23,7 @@ class TraditionalKnowledgeLabelFactoryTest {
     @DisplayName("If TraditionalKnowledgeLabelBlock has empty fields return empty fields")
     void returnsEmptyFields() {
         assertThat(traditionalKnowledgeLabelFactory.create(new TraditionalKnowledgeLabelBlock()),
-            is(new TraditionalKnowledgeLabel()));
+                is(new TraditionalKnowledgeLabel()));
     }
 
     @Test
@@ -31,10 +31,10 @@ class TraditionalKnowledgeLabelFactoryTest {
     void setsAllFields() {
         final var schemeUri = "scheme-uri";
         final var traditionalKnowledgeLabel = new TraditionalKnowledgeLabelBlock()
-            .traditionalKnowledgeLabelSchemeUri(schemeUri);
+                .traditionalKnowledgeLabelSchemeUri(schemeUri);
 
         final var expected = new TraditionalKnowledgeLabel()
-            .schemeUri(schemeUri);
+                .schemeUri(schemeUri);
 
         assertThat(traditionalKnowledgeLabelFactory.create(traditionalKnowledgeLabel), is(expected));
     }

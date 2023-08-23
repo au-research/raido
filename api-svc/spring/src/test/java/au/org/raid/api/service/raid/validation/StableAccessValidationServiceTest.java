@@ -24,161 +24,161 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class StableAccessValidationServiceTest {
-  @Mock
-  private AccessStatementValidationService accessStatementValidationService;
+    @Mock
+    private AccessStatementValidationService accessStatementValidationService;
 
-  @Mock
-  private StableAccessTypeValidationService accessTypeValidationService;
+    @Mock
+    private StableAccessTypeValidationService accessTypeValidationService;
 
-  @InjectMocks
-  private StableAccessValidationService validationService;
+    @InjectMocks
+    private StableAccessValidationService validationService;
 
-  @Test
-  @DisplayName("Validation passes on closed raid with correct fields")
-  void closedValidationSucceeds() {
-    final var type = new AccessTypeWithSchemeUri()
-      .id(TestConstants.CLOSED_ACCESS_TYPE_ID)
-      .schemeUri(TestConstants.ACCESS_TYPE_SCHEME_URI);
+    @Test
+    @DisplayName("Validation passes on closed raid with correct fields")
+    void closedValidationSucceeds() {
+        final var type = new AccessTypeWithSchemeUri()
+                .id(TestConstants.CLOSED_ACCESS_TYPE_ID)
+                .schemeUri(TestConstants.ACCESS_TYPE_SCHEME_URI);
 
-    final var access = new Access()
-      .type(type)
-      .accessStatement(new AccessStatement().statement("Closed"));
+        final var access = new Access()
+                .type(type)
+                .accessStatement(new AccessStatement().statement("Closed"));
 
-    final List<ValidationFailure> failures = validationService.validate(access);
+        final List<ValidationFailure> failures = validationService.validate(access);
 
-    assertThat(failures, empty());
-    verify(accessTypeValidationService).validate(type);
-  }
+        assertThat(failures, empty());
+        verify(accessTypeValidationService).validate(type);
+    }
 
-  @Test
-  @DisplayName("Validation passes on embargoed raid with correct fields")
-  void embargoedValidationSucceeds() {
-    final var type = new AccessTypeWithSchemeUri()
-      .id(TestConstants.CLOSED_ACCESS_TYPE_ID)
-      .schemeUri(TestConstants.ACCESS_TYPE_SCHEME_URI);
+    @Test
+    @DisplayName("Validation passes on embargoed raid with correct fields")
+    void embargoedValidationSucceeds() {
+        final var type = new AccessTypeWithSchemeUri()
+                .id(TestConstants.CLOSED_ACCESS_TYPE_ID)
+                .schemeUri(TestConstants.ACCESS_TYPE_SCHEME_URI);
 
-    final var access = new Access()
-      .type(type)
-      .accessStatement(new AccessStatement().statement("Embargoed"))
-      .embargoExpiry(LocalDate.now());
+        final var access = new Access()
+                .type(type)
+                .accessStatement(new AccessStatement().statement("Embargoed"))
+                .embargoExpiry(LocalDate.now());
 
-    final List<ValidationFailure> failures = validationService.validate(access);
+        final List<ValidationFailure> failures = validationService.validate(access);
 
-    assertThat(failures, empty());
-  }
+        assertThat(failures, empty());
+    }
 
 
-  @Test
-  @DisplayName("Validation fails with missing accessStatement on closed raid")
-  void missingAccessStatement() {
-    final var type = new AccessTypeWithSchemeUri()
-      .id(TestConstants.CLOSED_ACCESS_TYPE_ID)
-      .schemeUri(TestConstants.ACCESS_TYPE_SCHEME_URI);
+    @Test
+    @DisplayName("Validation fails with missing accessStatement on closed raid")
+    void missingAccessStatement() {
+        final var type = new AccessTypeWithSchemeUri()
+                .id(TestConstants.CLOSED_ACCESS_TYPE_ID)
+                .schemeUri(TestConstants.ACCESS_TYPE_SCHEME_URI);
 
-    final var access = new Access()
-      .type(type);
+        final var access = new Access()
+                .type(type);
 
-    final var failure = new ValidationFailure()
-            .fieldId("access.accessStatement")
-            .errorType("notSet")
-            .message("field must be set");
+        final var failure = new ValidationFailure()
+                .fieldId("access.accessStatement")
+                .errorType("notSet")
+                .message("field must be set");
 
-    when(accessStatementValidationService.validate(null)).thenReturn(List.of(failure));
+        when(accessStatementValidationService.validate(null)).thenReturn(List.of(failure));
 
-    final List<ValidationFailure> failures = validationService.validate(access);
+        final List<ValidationFailure> failures = validationService.validate(access);
 
-    assertThat(failures.size(), is(1));
-    assertThat(failures, hasItem(failure));
-  }
+        assertThat(failures.size(), is(1));
+        assertThat(failures, hasItem(failure));
+    }
 
-  @Test
-  @DisplayName("Validation fails with blank accessStatement on closed raid")
-  void blankStatementClosed() {
-    final var type = new AccessTypeWithSchemeUri()
-      .id(TestConstants.CLOSED_ACCESS_TYPE_ID)
-      .schemeUri(TestConstants.ACCESS_TYPE_SCHEME_URI);
+    @Test
+    @DisplayName("Validation fails with blank accessStatement on closed raid")
+    void blankStatementClosed() {
+        final var type = new AccessTypeWithSchemeUri()
+                .id(TestConstants.CLOSED_ACCESS_TYPE_ID)
+                .schemeUri(TestConstants.ACCESS_TYPE_SCHEME_URI);
 
-    final var accessStatement = new AccessStatement().statement("");
+        final var accessStatement = new AccessStatement().statement("");
 
-    final var access = new Access()
-            .type(type)
-            .accessStatement(accessStatement);
+        final var access = new Access()
+                .type(type)
+                .accessStatement(accessStatement);
 
-    final var failure = new ValidationFailure()
-            .fieldId("access.accessStatement")
-            .errorType("notSet")
-            .message("field must be set");
+        final var failure = new ValidationFailure()
+                .fieldId("access.accessStatement")
+                .errorType("notSet")
+                .message("field must be set");
 
-    when(accessStatementValidationService.validate(accessStatement)).thenReturn(List.of(failure));
+        when(accessStatementValidationService.validate(accessStatement)).thenReturn(List.of(failure));
 
-    final List<ValidationFailure> failures = validationService.validate(access);
+        final List<ValidationFailure> failures = validationService.validate(access);
 
-    assertThat(failures.size(), is(1));
-    assertThat(failures, hasItem(failure));
-  }
+        assertThat(failures.size(), is(1));
+        assertThat(failures, hasItem(failure));
+    }
 
-  @Test
-  @DisplayName("Validation fails with blank accessStatement on embargoed raid")
-  void blankStatementEmbargoed() {
-    final var type = new AccessTypeWithSchemeUri()
-      .id(TestConstants.EMBARGOED_ACCESS_TYPE_ID)
-      .schemeUri(TestConstants.ACCESS_TYPE_SCHEME_URI);
+    @Test
+    @DisplayName("Validation fails with blank accessStatement on embargoed raid")
+    void blankStatementEmbargoed() {
+        final var type = new AccessTypeWithSchemeUri()
+                .id(TestConstants.EMBARGOED_ACCESS_TYPE_ID)
+                .schemeUri(TestConstants.ACCESS_TYPE_SCHEME_URI);
 
-    final var accessStatement = new AccessStatement().statement("");
+        final var accessStatement = new AccessStatement().statement("");
 
-    final var access = new Access()
-            .type(type)
-            .accessStatement(accessStatement)
-            .embargoExpiry(LocalDate.now());
+        final var access = new Access()
+                .type(type)
+                .accessStatement(accessStatement)
+                .embargoExpiry(LocalDate.now());
 
-    final var failure = new ValidationFailure()
-            .fieldId("access.accessStatement")
-            .errorType("notSet")
-            .message("field must be set");
+        final var failure = new ValidationFailure()
+                .fieldId("access.accessStatement")
+                .errorType("notSet")
+                .message("field must be set");
 
-    when(accessStatementValidationService.validate(accessStatement)).thenReturn(List.of(failure));
+        when(accessStatementValidationService.validate(accessStatement)).thenReturn(List.of(failure));
 
-    final List<ValidationFailure> failures = validationService.validate(access);
+        final List<ValidationFailure> failures = validationService.validate(access);
 
-    assertThat(failures.size(), is(1));
-    assertThat(failures, hasItem(failure));
-  }
+        assertThat(failures.size(), is(1));
+        assertThat(failures, hasItem(failure));
+    }
 
-  @Test
-  @DisplayName("Validation fails with missing type")
-  void missingType() {
-    final var access = new Access();
+    @Test
+    @DisplayName("Validation fails with missing type")
+    void missingType() {
+        final var access = new Access();
 
-    final List<ValidationFailure> failures = validationService.validate(access);
+        final List<ValidationFailure> failures = validationService.validate(access);
 
-    assertThat(failures.size(), is(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("access.type")
-        .errorType("notSet")
-        .message("field must be set")
-    ));
-  }
+        assertThat(failures.size(), is(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("access.type")
+                        .errorType("notSet")
+                        .message("field must be set")
+        ));
+    }
 
-  @Test
-  @DisplayName("Validation fails with missing embargoExpiry on embargoed raid")
-  void missingEmbargoExpiry() {
-    final var type = new AccessTypeWithSchemeUri()
-      .id(TestConstants.EMBARGOED_ACCESS_TYPE_ID)
-      .schemeUri(TestConstants.ACCESS_TYPE_SCHEME_URI);
+    @Test
+    @DisplayName("Validation fails with missing embargoExpiry on embargoed raid")
+    void missingEmbargoExpiry() {
+        final var type = new AccessTypeWithSchemeUri()
+                .id(TestConstants.EMBARGOED_ACCESS_TYPE_ID)
+                .schemeUri(TestConstants.ACCESS_TYPE_SCHEME_URI);
 
-    final var access = new Access()
-            .type(type)
-            .accessStatement(new AccessStatement().statement("access statement"));
+        final var access = new Access()
+                .type(type)
+                .accessStatement(new AccessStatement().statement("access statement"));
 
-    final List<ValidationFailure> failures = validationService.validate(access);
+        final List<ValidationFailure> failures = validationService.validate(access);
 
-    assertThat(failures.size(), is(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("access.embargoExpiry")
-        .errorType("notSet")
-        .message("field must be set")
-    ));
-  }
+        assertThat(failures.size(), is(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("access.embargoExpiry")
+                        .errorType("notSet")
+                        .message("field must be set")
+        ));
+    }
 }

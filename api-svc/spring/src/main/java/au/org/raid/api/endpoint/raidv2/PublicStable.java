@@ -18,31 +18,30 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RestController
 @Transactional
 public class PublicStable implements PublicStableApi {
-  private static final Log log = to(PublicStable.class);
-  
-  private PublicExperimental experimentalApi;
+    private static final Log log = to(PublicStable.class);
 
-  public PublicStable(PublicExperimental experimentalApi) {
-    this.experimentalApi = experimentalApi;
-  }
+    private PublicExperimental experimentalApi;
 
-  @Override
-  public PublicReadRaidResponseV3 publicApiGetRaid(
-    String prefix,
-    String suffix
-  ) {
-    if( !hasValue(prefix) || !hasValue(suffix) ){
-      /* Not sure about this yet, might want it to redirect to website? */
-      throw new ResponseStatusException(NOT_FOUND);
+    public PublicStable(PublicExperimental experimentalApi) {
+        this.experimentalApi = experimentalApi;
     }
 
-    try {
-      return experimentalApi.publicReadRaidV3(prefix + "/" + suffix);
+    @Override
+    public PublicReadRaidResponseV3 publicApiGetRaid(
+            String prefix,
+            String suffix
+    ) {
+        if (!hasValue(prefix) || !hasValue(suffix)) {
+            /* Not sure about this yet, might want it to redirect to website? */
+            throw new ResponseStatusException(NOT_FOUND);
+        }
+
+        try {
+            return experimentalApi.publicReadRaidV3(prefix + "/" + suffix);
+        } catch (NoDataFoundException ex) {
+            // Don't need to log it, it's visible from the RequestLoggingFilter
+            throw new ResponseStatusException(NOT_FOUND);
+        }
     }
-    catch( NoDataFoundException ex ){
-      // Don't need to log it, it's visible from the RequestLoggingFilter
-      throw new ResponseStatusException(NOT_FOUND);
-    }
-  }
 
 }

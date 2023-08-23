@@ -49,16 +49,16 @@ class OrganisationFactoryTest {
         when(roleFactory.create(role2)).thenReturn(role4);
 
         final var organisation = new OrganisationBlock()
-            .id(ror)
-            .identifierSchemeUri(OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_)
-            .roles(List.of(role1, role2));
+                .id(ror)
+                .identifierSchemeUri(OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_)
+                .roles(List.of(role1, role2));
 
         final var result = organisationFactory.create(organisation);
 
         assertThat(result, is(new Organisation()
-            .id(ror)
-            .identifierSchemeUri("https://ror.org/")
-            .roles(List.of(role3, role4))
+                .id(ror)
+                .identifierSchemeUri("https://ror.org/")
+                .roles(List.of(role3, role4))
         ));
     }
 }

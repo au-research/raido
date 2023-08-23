@@ -22,93 +22,93 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class StableRelatedRaidValidationServiceTest {
-  private static final String ID = "https://raid.org/10.121221/73864387";
+    private static final String ID = "https://raid.org/10.121221/73864387";
 
-  @Mock
-  private StableRelatedRaidTypeValidationService typeValidationService;
+    @Mock
+    private StableRelatedRaidTypeValidationService typeValidationService;
 
-  @InjectMocks
-  private StableRelatedRaidValidationService validationService;
+    @InjectMocks
+    private StableRelatedRaidValidationService validationService;
 
-  @Test
-  @DisplayName("Validation passes with valid related raid")
-  void validRelatedRaid() {
-    final var type = new RelatedRaidType()
-        .id(PRIMARY_DESCRIPTION_TYPE)
-        .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
+    @Test
+    @DisplayName("Validation passes with valid related raid")
+    void validRelatedRaid() {
+        final var type = new RelatedRaidType()
+                .id(PRIMARY_DESCRIPTION_TYPE)
+                .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
 
-    final var relatedRaid = new RelatedRaid()
-        .id(ID)
-        .type(type);
+        final var relatedRaid = new RelatedRaid()
+                .id(ID)
+                .type(type);
 
-    final var failures = validationService.validate(List.of(relatedRaid));
+        final var failures = validationService.validate(List.of(relatedRaid));
 
-    assertThat(failures, empty());
+        assertThat(failures, empty());
 
-    verify(typeValidationService).validate(type, 0);
-  }
+        verify(typeValidationService).validate(type, 0);
+    }
 
-  @Test
-  @DisplayName("Validation fails with null id")
-  void nullRelatedRaid() {
-    final var type = new RelatedRaidType()
-        .id(PRIMARY_DESCRIPTION_TYPE)
-        .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
+    @Test
+    @DisplayName("Validation fails with null id")
+    void nullRelatedRaid() {
+        final var type = new RelatedRaidType()
+                .id(PRIMARY_DESCRIPTION_TYPE)
+                .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
 
-    final var relatedRaid = new RelatedRaid()
-        .type(type);
+        final var relatedRaid = new RelatedRaid()
+                .type(type);
 
-    final var failures = validationService.validate(List.of(relatedRaid));
+        final var failures = validationService.validate(List.of(relatedRaid));
 
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(
-        new ValidationFailure()
-            .fieldId("relatedRaids[0].id")
-            .errorType("notSet")
-            .message("field must be set")
-    ));
-    verify(typeValidationService).validate(type, 0);
-  }
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("relatedRaids[0].id")
+                        .errorType("notSet")
+                        .message("field must be set")
+        ));
+        verify(typeValidationService).validate(type, 0);
+    }
 
-  @Test
-  @DisplayName("Validation fails with empty id")
-  void emptyRelatedRaid() {
-    final var relatedRaid = new RelatedRaid()
-        .id("")
-        .type(new RelatedRaidType()
-            .id(PRIMARY_DESCRIPTION_TYPE)
-            .schemeUri(DESCRIPTION_TYPE_SCHEME_URI)
-        );
+    @Test
+    @DisplayName("Validation fails with empty id")
+    void emptyRelatedRaid() {
+        final var relatedRaid = new RelatedRaid()
+                .id("")
+                .type(new RelatedRaidType()
+                        .id(PRIMARY_DESCRIPTION_TYPE)
+                        .schemeUri(DESCRIPTION_TYPE_SCHEME_URI)
+                );
 
-    final var failures = validationService.validate(List.of(relatedRaid));
+        final var failures = validationService.validate(List.of(relatedRaid));
 
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(
-        new ValidationFailure()
-            .fieldId("relatedRaids[0].id")
-            .errorType("notSet")
-            .message("field must be set")
-    ));
-  }
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("relatedRaids[0].id")
+                        .errorType("notSet")
+                        .message("field must be set")
+        ));
+    }
 
-  @Test
-  @DisplayName("Type validation failures are returned")
-  void typeErrorAreReturned() {
-    final var type = new RelatedRaidType()
-        .id(PRIMARY_DESCRIPTION_TYPE)
-        .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
+    @Test
+    @DisplayName("Type validation failures are returned")
+    void typeErrorAreReturned() {
+        final var type = new RelatedRaidType()
+                .id(PRIMARY_DESCRIPTION_TYPE)
+                .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
 
-    final var relatedRaid = new RelatedRaid()
-        .id(ID)
-        .type(type);
+        final var relatedRaid = new RelatedRaid()
+                .id(ID)
+                .type(type);
 
-    final var typeError = new ValidationFailure();
+        final var typeError = new ValidationFailure();
 
-    when(typeValidationService.validate(type, 0)).thenReturn(List.of(typeError));
+        when(typeValidationService.validate(type, 0)).thenReturn(List.of(typeError));
 
-    final var failures = validationService.validate(List.of(relatedRaid));
+        final var failures = validationService.validate(List.of(relatedRaid));
 
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(typeError));
-  }
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(typeError));
+    }
 }

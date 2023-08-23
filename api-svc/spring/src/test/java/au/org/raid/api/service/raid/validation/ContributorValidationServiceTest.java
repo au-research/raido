@@ -22,94 +22,94 @@ import static org.mockito.Mockito.verifyNoInteractions;
 
 @ExtendWith(MockitoExtension.class)
 class ContributorValidationServiceTest {
-  
-  @Mock
-  private RestTemplate restTemplate;
 
-  @InjectMocks
-  private ContributorValidationService validationService;
+    @Mock
+    private RestTemplate restTemplate;
 
-  @Mock
-  private OrcidService orcidService;
+    @InjectMocks
+    private ContributorValidationService validationService;
 
-  @Test
-  void failsWithInvalidId() {
-    final var contributor = new ContributorBlock()
-      .id("0000-0000-0000-0001")
-      .identifierSchemeUri(ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_);
+    @Mock
+    private OrcidService orcidService;
 
-    final var failures = validationService.validateIdFields(1, contributor);
+    @Test
+    void failsWithInvalidId() {
+        final var contributor = new ContributorBlock()
+                .id("0000-0000-0000-0001")
+                .identifierSchemeUri(ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_);
 
-    final var failure = failures.get(0);
+        final var failures = validationService.validateIdFields(1, contributor);
 
-    assertThat(failure.getFieldId(), Matchers.is("contributors[1].id"));
-    assertThat(failure.getErrorType(), Matchers.is("invalidValue"));
-    assertThat(failure.getMessage(), Matchers.is("should start with https://orcid.org/"));
-    assertThat(failures.size(), Matchers.is(1));
-  }
+        final var failure = failures.get(0);
 
-  @Test
-  void passesWithValidId() {
-    final var contributor = new ContributorBlock()
-      .id("https://orcid.org/0000-0000-0000-0001")
-      .identifierSchemeUri(ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_);
+        assertThat(failure.getFieldId(), Matchers.is("contributors[1].id"));
+        assertThat(failure.getErrorType(), Matchers.is("invalidValue"));
+        assertThat(failure.getMessage(), Matchers.is("should start with https://orcid.org/"));
+        assertThat(failures.size(), Matchers.is(1));
+    }
 
-    final var failures = validationService.validateIdFields(1, contributor);
-    assertThat(failures, is(empty()));
-  }
+    @Test
+    void passesWithValidId() {
+        final var contributor = new ContributorBlock()
+                .id("https://orcid.org/0000-0000-0000-0001")
+                .identifierSchemeUri(ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_);
 
-  @Test
-  @DisplayName("Validation passes with X ORCID checksum value")
-  void passesWithNonDigitChecksum() {
-    final var contributor = new ContributorBlock()
-      .id("https://orcid.org/0009-0001-8177-319X")
-      .identifierSchemeUri(ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_);
+        final var failures = validationService.validateIdFields(1, contributor);
+        assertThat(failures, is(empty()));
+    }
 
-    final var failures = validationService.validateIdFields(1, contributor);
-    assertThat(failures, is(empty()));
-  }
+    @Test
+    @DisplayName("Validation passes with X ORCID checksum value")
+    void passesWithNonDigitChecksum() {
+        final var contributor = new ContributorBlock()
+                .id("https://orcid.org/0009-0001-8177-319X")
+                .identifierSchemeUri(ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_);
 
-  @Test
-  void addFailureIfContributorOrcidIsInvalid() {
-    final var contributor = new ContributorBlock()
-      .id("https://orcid.org/0000-00-000000-0001")
-      .identifierSchemeUri(ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_);
+        final var failures = validationService.validateIdFields(1, contributor);
+        assertThat(failures, is(empty()));
+    }
 
-    final var failures = validationService.validateOrcidExists(1, contributor);
-    final var failure = failures.get(0);
+    @Test
+    void addFailureIfContributorOrcidIsInvalid() {
+        final var contributor = new ContributorBlock()
+                .id("https://orcid.org/0000-00-000000-0001")
+                .identifierSchemeUri(ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_);
 
-    assertThat(failure.getFieldId(), is("contributors[1].id"));
-    assertThat(failure.getErrorType(), is("invalid"));
-    assertThat(failure.getMessage(), is("Contributor ORCID should have the format https://orcid.org/0000-0000-0000-0000."));
+        final var failures = validationService.validateOrcidExists(1, contributor);
+        final var failure = failures.get(0);
 
-    verifyNoInteractions(restTemplate);
-  }
+        assertThat(failure.getFieldId(), is("contributors[1].id"));
+        assertThat(failure.getErrorType(), is("invalid"));
+        assertThat(failure.getMessage(), is("Contributor ORCID should have the format https://orcid.org/0000-0000-0000-0000."));
 
-  @Test
-  void addFailureIfContributorDoesNotExist() {
-    final var contributor = new ContributorBlock()
-      .id("https://orcid.org/0000-0000-0000-0001")
-      .identifierSchemeUri(ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_);
+        verifyNoInteractions(restTemplate);
+    }
 
-    doReturn(of("The ORCID does not exist.")).
-      when(orcidService).validateOrcidExists(any());
+    @Test
+    void addFailureIfContributorDoesNotExist() {
+        final var contributor = new ContributorBlock()
+                .id("https://orcid.org/0000-0000-0000-0001")
+                .identifierSchemeUri(ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_);
 
-    final var failures = validationService.validateOrcidExists(1, contributor);
-    final var failure = failures.get(0);
+        doReturn(of("The ORCID does not exist.")).
+                when(orcidService).validateOrcidExists(any());
 
-    assertThat(failure.getFieldId(), is("contributors[1].id"));
-    assertThat(failure.getErrorType(), is("invalid"));
-    assertThat(failure.getMessage(), is("The contributor ORCID does not exist."));
-  }
+        final var failures = validationService.validateOrcidExists(1, contributor);
+        final var failure = failures.get(0);
 
-  @Test
-  void NoFailuresIfContributorExists() {
-    final var contributor = new ContributorBlock()
-      .id("https://orcid.org/0000-0000-0000-0001")
-      .identifierSchemeUri(ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_);
+        assertThat(failure.getFieldId(), is("contributors[1].id"));
+        assertThat(failure.getErrorType(), is("invalid"));
+        assertThat(failure.getMessage(), is("The contributor ORCID does not exist."));
+    }
 
-    final var failures = validationService.validateOrcidExists(1, contributor);
+    @Test
+    void NoFailuresIfContributorExists() {
+        final var contributor = new ContributorBlock()
+                .id("https://orcid.org/0000-0000-0000-0001")
+                .identifierSchemeUri(ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_);
 
-    assertThat(failures, is(empty()));
-  }
+        final var failures = validationService.validateOrcidExists(1, contributor);
+
+        assertThat(failures, is(empty()));
+    }
 }

@@ -19,42 +19,40 @@ import static au.org.raid.api.util.StringUtil.areDifferent;
 
 @Component
 public class IdBlockValidationService {
-  private static final Log log = to(IdBlockValidationService.class);
+    private static final Log log = to(IdBlockValidationService.class);
 
-  private final IdentifierParser idParser;
+    private final IdentifierParser idParser;
 
-  public IdBlockValidationService(final IdentifierParser idParser) {
-    this.idParser = idParser;
-  }
-
-  public List<ValidationFailure> validateUpdateHandle(final String decodedHandleFromPath, final IdBlock updateIdBlock) {
-    final var failures = new ArrayList<ValidationFailure>();
-
-    IdentifierUrl updateId = null;
-    try {
-      updateId = idParser.parseUrlWithException(updateIdBlock.getIdentifier());
-    }
-    catch( ValidationFailureException e ){
-      failures.addAll(e.getFailures());
+    public IdBlockValidationService(final IdentifierParser idParser) {
+        this.idParser = idParser;
     }
 
-    IdentifierHandle pathHandle = null;
-    try {
-      pathHandle = idParser.parseHandleWithException(decodedHandleFromPath);
-    }
-    catch( ValidationFailureException e ){
-      failures.addAll(e.getFailures());
-    }
+    public List<ValidationFailure> validateUpdateHandle(final String decodedHandleFromPath, final IdBlock updateIdBlock) {
+        final var failures = new ArrayList<ValidationFailure>();
 
-    if( updateId != null && pathHandle != null ){
-      if( areDifferent(pathHandle.format(), updateId.handle().format()) ){
-        log.with("pathHandle", pathHandle.format()).
-          with("updateId", updateId.handle().format()).
-          error(HANDLE_DOES_NOT_MATCH_MESSAGE);
-        failures.add(handlesDoNotMatch());
-      }
-    }
+        IdentifierUrl updateId = null;
+        try {
+            updateId = idParser.parseUrlWithException(updateIdBlock.getIdentifier());
+        } catch (ValidationFailureException e) {
+            failures.addAll(e.getFailures());
+        }
 
-    return failures;
-  }
+        IdentifierHandle pathHandle = null;
+        try {
+            pathHandle = idParser.parseHandleWithException(decodedHandleFromPath);
+        } catch (ValidationFailureException e) {
+            failures.addAll(e.getFailures());
+        }
+
+        if (updateId != null && pathHandle != null) {
+            if (areDifferent(pathHandle.format(), updateId.handle().format())) {
+                log.with("pathHandle", pathHandle.format()).
+                        with("updateId", updateId.handle().format()).
+                        error(HANDLE_DOES_NOT_MATCH_MESSAGE);
+                failures.add(handlesDoNotMatch());
+            }
+        }
+
+        return failures;
+    }
 }

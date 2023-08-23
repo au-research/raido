@@ -22,179 +22,179 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class StableRelatedRaidTypeValidationServiceTest {
-  private static final int INDEX = 3;
-  private static final int RELATED_RAID_TYPE_SCHEME_ID = 1;
+    private static final int INDEX = 3;
+    private static final int RELATED_RAID_TYPE_SCHEME_ID = 1;
 
-  private static final RelatedRaidTypeSchemeRecord RELATED_RAID_TYPE_SCHEME_RECORD = new RelatedRaidTypeSchemeRecord()
-    .setId(RELATED_RAID_TYPE_SCHEME_ID)
-    .setUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI);
+    private static final RelatedRaidTypeSchemeRecord RELATED_RAID_TYPE_SCHEME_RECORD = new RelatedRaidTypeSchemeRecord()
+            .setId(RELATED_RAID_TYPE_SCHEME_ID)
+            .setUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI);
 
-  private static final RelatedRaidTypeRecord RELATED_RAID_TYPE_RECORD = new RelatedRaidTypeRecord()
-    .setSchemeId(RELATED_RAID_TYPE_SCHEME_ID)
-    .setUri(TestConstants.CONTINUES_RELATED_RAID_TYPE);
+    private static final RelatedRaidTypeRecord RELATED_RAID_TYPE_RECORD = new RelatedRaidTypeRecord()
+            .setSchemeId(RELATED_RAID_TYPE_SCHEME_ID)
+            .setUri(TestConstants.CONTINUES_RELATED_RAID_TYPE);
 
-  @Mock
-  private RelatedRaidTypeSchemeRepository relatedRaidTypeSchemeRepository;
-  @Mock
-  private RelatedRaidTypeRepository relatedRaidTypeRepository;
-  @InjectMocks
-  private StableRelatedRaidTypeValidationService validationService;
+    @Mock
+    private RelatedRaidTypeSchemeRepository relatedRaidTypeSchemeRepository;
+    @Mock
+    private RelatedRaidTypeRepository relatedRaidTypeRepository;
+    @InjectMocks
+    private StableRelatedRaidTypeValidationService validationService;
 
-  @Test
-  @DisplayName("Validation passes with valid related raid type")
-  void validRelatedRaidType() {
-    final var relatedRaidType = new RelatedRaidType()
-      .id(TestConstants.CONTINUES_RELATED_RAID_TYPE)
-      .schemeUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI);
+    @Test
+    @DisplayName("Validation passes with valid related raid type")
+    void validRelatedRaidType() {
+        final var relatedRaidType = new RelatedRaidType()
+                .id(TestConstants.CONTINUES_RELATED_RAID_TYPE)
+                .schemeUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI);
 
-    when(relatedRaidTypeSchemeRepository.findByUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI))
-      .thenReturn(Optional.of(RELATED_RAID_TYPE_SCHEME_RECORD));
-    when(relatedRaidTypeRepository.findByUriAndSchemeId(TestConstants.CONTINUES_RELATED_RAID_TYPE, RELATED_RAID_TYPE_SCHEME_ID))
-      .thenReturn(Optional.of(RELATED_RAID_TYPE_RECORD));
+        when(relatedRaidTypeSchemeRepository.findByUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI))
+                .thenReturn(Optional.of(RELATED_RAID_TYPE_SCHEME_RECORD));
+        when(relatedRaidTypeRepository.findByUriAndSchemeId(TestConstants.CONTINUES_RELATED_RAID_TYPE, RELATED_RAID_TYPE_SCHEME_ID))
+                .thenReturn(Optional.of(RELATED_RAID_TYPE_RECORD));
 
-    final var failures = validationService.validate(relatedRaidType, INDEX);
+        final var failures = validationService.validate(relatedRaidType, INDEX);
 
-    assertThat(failures, empty());
+        assertThat(failures, empty());
 
-    verify(relatedRaidTypeSchemeRepository).findByUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI);
-    verify(relatedRaidTypeRepository).findByUriAndSchemeId(TestConstants.CONTINUES_RELATED_RAID_TYPE, RELATED_RAID_TYPE_SCHEME_ID);
-  }
+        verify(relatedRaidTypeSchemeRepository).findByUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI);
+        verify(relatedRaidTypeRepository).findByUriAndSchemeId(TestConstants.CONTINUES_RELATED_RAID_TYPE, RELATED_RAID_TYPE_SCHEME_ID);
+    }
 
-  @Test
-  @DisplayName("Validation fails when id is null")
-  void nullId() {
-    final var relatedRaidType = new RelatedRaidType()
-      .schemeUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI);
+    @Test
+    @DisplayName("Validation fails when id is null")
+    void nullId() {
+        final var relatedRaidType = new RelatedRaidType()
+                .schemeUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI);
 
-    when(relatedRaidTypeSchemeRepository.findByUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI))
-      .thenReturn(Optional.of(RELATED_RAID_TYPE_SCHEME_RECORD));
+        when(relatedRaidTypeSchemeRepository.findByUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI))
+                .thenReturn(Optional.of(RELATED_RAID_TYPE_SCHEME_RECORD));
 
-    final var failures = validationService.validate(relatedRaidType, INDEX);
+        final var failures = validationService.validate(relatedRaidType, INDEX);
 
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("relatedRaids[3].type.id")
-        .errorType("notSet")
-        .message("field must be set")
-    ));
-  }
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("relatedRaids[3].type.id")
+                        .errorType("notSet")
+                        .message("field must be set")
+        ));
+    }
 
-  @Test
-  @DisplayName("Validation fails when id is empty string")
-  void emptyId() {
-    final var relatedRaidType = new RelatedRaidType()
-      .id("")
-      .schemeUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI);
+    @Test
+    @DisplayName("Validation fails when id is empty string")
+    void emptyId() {
+        final var relatedRaidType = new RelatedRaidType()
+                .id("")
+                .schemeUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI);
 
-    when(relatedRaidTypeSchemeRepository.findByUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI))
-      .thenReturn(Optional.of(RELATED_RAID_TYPE_SCHEME_RECORD));
+        when(relatedRaidTypeSchemeRepository.findByUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI))
+                .thenReturn(Optional.of(RELATED_RAID_TYPE_SCHEME_RECORD));
 
-    final var failures = validationService.validate(relatedRaidType, INDEX);
+        final var failures = validationService.validate(relatedRaidType, INDEX);
 
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("relatedRaids[3].type.id")
-        .errorType("notSet")
-        .message("field must be set")
-    ));
-  }
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("relatedRaids[3].type.id")
+                        .errorType("notSet")
+                        .message("field must be set")
+        ));
+    }
 
-  @Test
-  @DisplayName("Validation fails when schemeUri is null")
-  void nullSchemeUri() {
-    final var relatedRaidType = new RelatedRaidType()
-      .id(TestConstants.CONTINUES_RELATED_RAID_TYPE);
+    @Test
+    @DisplayName("Validation fails when schemeUri is null")
+    void nullSchemeUri() {
+        final var relatedRaidType = new RelatedRaidType()
+                .id(TestConstants.CONTINUES_RELATED_RAID_TYPE);
 
-    final var failures = validationService.validate(relatedRaidType, INDEX);
+        final var failures = validationService.validate(relatedRaidType, INDEX);
 
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("relatedRaids[3].type.schemeUri")
-        .errorType("notSet")
-        .message("field must be set")
-    ));
-  }
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("relatedRaids[3].type.schemeUri")
+                        .errorType("notSet")
+                        .message("field must be set")
+        ));
+    }
 
-  @Test
-  @DisplayName("Validation fails when schemeUri is empty")
-  void emptySchemeUri() {
-    final var relatedRaidType = new RelatedRaidType()
-      .id(TestConstants.CONTINUES_RELATED_RAID_TYPE)
-      .schemeUri("");
+    @Test
+    @DisplayName("Validation fails when schemeUri is empty")
+    void emptySchemeUri() {
+        final var relatedRaidType = new RelatedRaidType()
+                .id(TestConstants.CONTINUES_RELATED_RAID_TYPE)
+                .schemeUri("");
 
-    final var failures = validationService.validate(relatedRaidType, INDEX);
+        final var failures = validationService.validate(relatedRaidType, INDEX);
 
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("relatedRaids[3].type.schemeUri")
-        .errorType("notSet")
-        .message("field must be set")
-    ));
-  }
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("relatedRaids[3].type.schemeUri")
+                        .errorType("notSet")
+                        .message("field must be set")
+        ));
+    }
 
-  @Test
-  @DisplayName("Validation fails when schemeUri is invalid")
-  void invalidSchemeUri() {
-    final var relatedRaidType = new RelatedRaidType()
-      .id(TestConstants.CONTINUES_RELATED_RAID_TYPE)
-      .schemeUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI);
+    @Test
+    @DisplayName("Validation fails when schemeUri is invalid")
+    void invalidSchemeUri() {
+        final var relatedRaidType = new RelatedRaidType()
+                .id(TestConstants.CONTINUES_RELATED_RAID_TYPE)
+                .schemeUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI);
 
-    when(relatedRaidTypeSchemeRepository.findByUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI))
-      .thenReturn(Optional.empty());
+        when(relatedRaidTypeSchemeRepository.findByUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI))
+                .thenReturn(Optional.empty());
 
-    final var failures = validationService.validate(relatedRaidType, INDEX);
+        final var failures = validationService.validate(relatedRaidType, INDEX);
 
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("relatedRaids[3].type.schemeUri")
-        .errorType("invalidValue")
-        .message("scheme is unknown/unsupported")
-    ));
-  }
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("relatedRaids[3].type.schemeUri")
+                        .errorType("invalidValue")
+                        .message("scheme is unknown/unsupported")
+        ));
+    }
 
-  @Test
-  @DisplayName("Validation fails when type is null")
-  void nullType() {
-    final var failures = validationService.validate(null, INDEX);
+    @Test
+    @DisplayName("Validation fails when type is null")
+    void nullType() {
+        final var failures = validationService.validate(null, INDEX);
 
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("relatedRaids[3].type")
-        .errorType("notSet")
-        .message("field must be set")
-    ));
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("relatedRaids[3].type")
+                        .errorType("notSet")
+                        .message("field must be set")
+        ));
 
-    verifyNoInteractions(relatedRaidTypeSchemeRepository);
-    verifyNoInteractions(relatedRaidTypeRepository);
-  }
+        verifyNoInteractions(relatedRaidTypeSchemeRepository);
+        verifyNoInteractions(relatedRaidTypeRepository);
+    }
 
-  @Test
-  @DisplayName("Validation fails when id not found in scheme")
-  void invalidTypeForScheme() {
-    final var relatedRaidType = new RelatedRaidType()
-      .id(TestConstants.CONTINUES_RELATED_RAID_TYPE)
-      .schemeUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI);
+    @Test
+    @DisplayName("Validation fails when id not found in scheme")
+    void invalidTypeForScheme() {
+        final var relatedRaidType = new RelatedRaidType()
+                .id(TestConstants.CONTINUES_RELATED_RAID_TYPE)
+                .schemeUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI);
 
-    when(relatedRaidTypeSchemeRepository.findByUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI))
-      .thenReturn(Optional.of(RELATED_RAID_TYPE_SCHEME_RECORD));
+        when(relatedRaidTypeSchemeRepository.findByUri(TestConstants.RELATED_RAID_TYPE_SCHEME_URI))
+                .thenReturn(Optional.of(RELATED_RAID_TYPE_SCHEME_RECORD));
 
-    when(relatedRaidTypeRepository.findByUriAndSchemeId(TestConstants.CONTINUES_RELATED_RAID_TYPE, RELATED_RAID_TYPE_SCHEME_ID))
-      .thenReturn(Optional.empty());
+        when(relatedRaidTypeRepository.findByUriAndSchemeId(TestConstants.CONTINUES_RELATED_RAID_TYPE, RELATED_RAID_TYPE_SCHEME_ID))
+                .thenReturn(Optional.empty());
 
-    final var failures = validationService.validate(relatedRaidType, INDEX);
+        final var failures = validationService.validate(relatedRaidType, INDEX);
 
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("relatedRaids[3].type.id")
-        .errorType("invalidValue")
-        .message("id does not exist within the given scheme")
-    ));
-  }
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("relatedRaids[3].type.id")
+                        .errorType("invalidValue")
+                        .message("id does not exist within the given scheme")
+        ));
+    }
 }

@@ -12,6 +12,6 @@ public class AlternateUrlFactory {
         }
 
         return new AlternateUrl()
-            .url(alternateUrlBlock.getUrl());
+                .url(alternateUrlBlock.getUrl());
     }
 }

@@ -14,205 +14,205 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class RaidoStableV1ValidationServiceTest {
-  @Mock
-  private StableSubjectValidationService subjectValidationService;
-  @Mock
-  private StableTitleValidationService titleValidationService;
-  @Mock
-  private StableDescriptionValidationService descSvc;
-  @Mock
-  private StableContributorValidationService contribSvc;
-  @Mock
-  private StableOrganisationValidationService orgSvc;
-  @Mock
-  private IdentifierParser identifierParser;
-  @Mock
-  private StableRelatedRaidValidationService relatedRaidValidationService;
-  @Mock
-  private StableRelatedObjectValidationService relatedObjectValidationService;
-  @Mock
-  private StableAlternateIdentifierValidationService alternateIdentifierValidationService;
+    @Mock
+    private StableSubjectValidationService subjectValidationService;
+    @Mock
+    private StableTitleValidationService titleValidationService;
+    @Mock
+    private StableDescriptionValidationService descSvc;
+    @Mock
+    private StableContributorValidationService contribSvc;
+    @Mock
+    private StableOrganisationValidationService orgSvc;
+    @Mock
+    private IdentifierParser identifierParser;
+    @Mock
+    private StableRelatedRaidValidationService relatedRaidValidationService;
+    @Mock
+    private StableRelatedObjectValidationService relatedObjectValidationService;
+    @Mock
+    private StableAlternateIdentifierValidationService alternateIdentifierValidationService;
 
-  @Mock
-  private StableSpatialCoverageValidationService spatialCoverageValidationService;
-  @Mock
-  private StableTraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelValidatorService;
-  @Mock
-  private StableAccessValidationService accessValidationService;
-  @InjectMocks
-  private RaidoStableV1ValidationService validationService;
+    @Mock
+    private StableSpatialCoverageValidationService spatialCoverageValidationService;
+    @Mock
+    private StableTraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelValidatorService;
+    @Mock
+    private StableAccessValidationService accessValidationService;
+    @InjectMocks
+    private RaidoStableV1ValidationService validationService;
 
-  @Test
-  void validatesAccessOnCreate() {
-    final var access = new Access();
-    final var raid = new CreateRaidV1Request().access(access);
+    @Test
+    void validatesAccessOnCreate() {
+        final var access = new Access();
+        final var raid = new CreateRaidV1Request().access(access);
 
-    validationService.validateForCreate(raid);
+        validationService.validateForCreate(raid);
 
-    verify(accessValidationService).validate(access);
-  }
+        verify(accessValidationService).validate(access);
+    }
 
-  @Test
-  void validatesAccessOnUpdate() {
-    final var handle = "test-handle";
-    final var access = new Access();
+    @Test
+    void validatesAccessOnUpdate() {
+        final var handle = "test-handle";
+        final var access = new Access();
 
-    final var raid = new UpdateRaidV1Request()
-      .id(new Id())
-      .access(access);
+        final var raid = new UpdateRaidV1Request()
+                .id(new Id())
+                .access(access);
 
-    validationService.validateForUpdate(handle, raid);
+        validationService.validateForUpdate(handle, raid);
 
-    verify(accessValidationService).validate(access);
-  }
+        verify(accessValidationService).validate(access);
+    }
 
-  @Test
-  void validatesSubjectsOnCreate() {
-    final var subjects = Collections.singletonList(new Subject());
-    final var raid = new CreateRaidV1Request().subjects(subjects);
+    @Test
+    void validatesSubjectsOnCreate() {
+        final var subjects = Collections.singletonList(new Subject());
+        final var raid = new CreateRaidV1Request().subjects(subjects);
 
-    validationService.validateForCreate(raid);
+        validationService.validateForCreate(raid);
 
-    verify(subjectValidationService).validateSubjects(subjects);
-  }
+        verify(subjectValidationService).validateSubjects(subjects);
+    }
 
-  @Test
-  void validatesSubjectsOnUpdate() {
-    final var handle = "test-handle";
-    final var subjects = Collections.singletonList(new Subject());
+    @Test
+    void validatesSubjectsOnUpdate() {
+        final var handle = "test-handle";
+        final var subjects = Collections.singletonList(new Subject());
 
-    final var raid = new UpdateRaidV1Request()
-      .id(new Id())
-      .subjects(subjects);
+        final var raid = new UpdateRaidV1Request()
+                .id(new Id())
+                .subjects(subjects);
 
-    validationService.validateForUpdate(handle, raid);
+        validationService.validateForUpdate(handle, raid);
 
-    verify(subjectValidationService).validateSubjects(subjects);
-  }
+        verify(subjectValidationService).validateSubjects(subjects);
+    }
 
-  @Test
-  void validatesRelatedRaidsOnCreate() {
-    final var relatedRaids = Collections.singletonList(new RelatedRaid());
-    final var raid = new CreateRaidV1Request().relatedRaids(relatedRaids);
+    @Test
+    void validatesRelatedRaidsOnCreate() {
+        final var relatedRaids = Collections.singletonList(new RelatedRaid());
+        final var raid = new CreateRaidV1Request().relatedRaids(relatedRaids);
 
-    validationService.validateForCreate(raid);
-    verify(relatedRaidValidationService).validate(relatedRaids);
-  }
+        validationService.validateForCreate(raid);
+        verify(relatedRaidValidationService).validate(relatedRaids);
+    }
 
-  @Test
-  void validatesRelatedObjectsOnCreate() {
-    final var relatedObjects = Collections.singletonList(new RelatedObject());
-    final var raid = new CreateRaidV1Request().relatedObjects(relatedObjects);
+    @Test
+    void validatesRelatedObjectsOnCreate() {
+        final var relatedObjects = Collections.singletonList(new RelatedObject());
+        final var raid = new CreateRaidV1Request().relatedObjects(relatedObjects);
 
-    validationService.validateForCreate(raid);
-    verify(relatedObjectValidationService).validateRelatedObjects(relatedObjects);
-  }
+        validationService.validateForCreate(raid);
+        verify(relatedObjectValidationService).validateRelatedObjects(relatedObjects);
+    }
 
-  @Test
-  void validatesRelatedRaidsOnUpdate() {
-    final var handle = "test-handle";
-    final var relatedRaids = Collections.singletonList(new RelatedRaid());
+    @Test
+    void validatesRelatedRaidsOnUpdate() {
+        final var handle = "test-handle";
+        final var relatedRaids = Collections.singletonList(new RelatedRaid());
 
-    final var raid = new UpdateRaidV1Request()
-      .id(new Id())
-      .relatedRaids(relatedRaids);
+        final var raid = new UpdateRaidV1Request()
+                .id(new Id())
+                .relatedRaids(relatedRaids);
 
-    validationService.validateForUpdate(handle, raid);
-    verify(relatedRaidValidationService).validate(relatedRaids);
-  }
+        validationService.validateForUpdate(handle, raid);
+        verify(relatedRaidValidationService).validate(relatedRaids);
+    }
 
-  @Test
-  void validatesRelatedObjectsOnUpdate() {
-    final var handle = "test-handle";
-    final var relatedObjects = Collections.singletonList(new RelatedObject());
+    @Test
+    void validatesRelatedObjectsOnUpdate() {
+        final var handle = "test-handle";
+        final var relatedObjects = Collections.singletonList(new RelatedObject());
 
-    final var raid = new UpdateRaidV1Request()
-      .id(new Id())
-      .relatedObjects(relatedObjects);
+        final var raid = new UpdateRaidV1Request()
+                .id(new Id())
+                .relatedObjects(relatedObjects);
 
-    validationService.validateForUpdate(handle, raid);
-    verify(relatedObjectValidationService).validateRelatedObjects(relatedObjects);
-  }
+        validationService.validateForUpdate(handle, raid);
+        verify(relatedObjectValidationService).validateRelatedObjects(relatedObjects);
+    }
 
-  @Test
-  void validatesAlternateIdentifiersOnCreate() {
-    final var handle = "test-handle";
-    final var alternateIdentifiers = Collections.singletonList(new AlternateIdentifier());
+    @Test
+    void validatesAlternateIdentifiersOnCreate() {
+        final var handle = "test-handle";
+        final var alternateIdentifiers = Collections.singletonList(new AlternateIdentifier());
 
-    final var raid = new CreateRaidV1Request()
-      .id(new Id())
-      .alternateIdentifiers(alternateIdentifiers);
+        final var raid = new CreateRaidV1Request()
+                .id(new Id())
+                .alternateIdentifiers(alternateIdentifiers);
 
-    validationService.validateForCreate(raid);
-    verify(alternateIdentifierValidationService).validateAlternateIdentifiers(alternateIdentifiers);
-  }
+        validationService.validateForCreate(raid);
+        verify(alternateIdentifierValidationService).validateAlternateIdentifiers(alternateIdentifiers);
+    }
 
-  @Test
-  void validatesAlternateIdentifiersOnUpdate() {
-    final var handle = "test-handle";
-    final var alternateIdentifiers = Collections.singletonList(new AlternateIdentifier());
+    @Test
+    void validatesAlternateIdentifiersOnUpdate() {
+        final var handle = "test-handle";
+        final var alternateIdentifiers = Collections.singletonList(new AlternateIdentifier());
 
-    final var raid = new UpdateRaidV1Request()
-      .id(new Id())
-      .alternateIdentifiers(alternateIdentifiers);
+        final var raid = new UpdateRaidV1Request()
+                .id(new Id())
+                .alternateIdentifiers(alternateIdentifiers);
 
-    validationService.validateForUpdate(handle, raid);
-    verify(alternateIdentifierValidationService).validateAlternateIdentifiers(alternateIdentifiers);
-  }
+        validationService.validateForUpdate(handle, raid);
+        verify(alternateIdentifierValidationService).validateAlternateIdentifiers(alternateIdentifiers);
+    }
 
-  @Test
-  void validatesSpatialCoverageOnCreate() {
-    final var handle = "test-handle";
-    final var spatialCoverages =
-      Collections.singletonList(new SpatialCoverage());
+    @Test
+    void validatesSpatialCoverageOnCreate() {
+        final var handle = "test-handle";
+        final var spatialCoverages =
+                Collections.singletonList(new SpatialCoverage());
 
-    final var raid = new CreateRaidV1Request()
-      .id(new Id())
-      .spatialCoverages(spatialCoverages);
+        final var raid = new CreateRaidV1Request()
+                .id(new Id())
+                .spatialCoverages(spatialCoverages);
 
-    validationService.validateForCreate(raid);
-    verify(spatialCoverageValidationService).validate(spatialCoverages);
-  }
+        validationService.validateForCreate(raid);
+        verify(spatialCoverageValidationService).validate(spatialCoverages);
+    }
 
-  @Test
-  void validatesSpatialCoverageOnUpdate() {
-    final var handle = "test-handle";
-    final var spatialCoverages =
-      Collections.singletonList(new SpatialCoverage());
+    @Test
+    void validatesSpatialCoverageOnUpdate() {
+        final var handle = "test-handle";
+        final var spatialCoverages =
+                Collections.singletonList(new SpatialCoverage());
 
-    final var raid = new UpdateRaidV1Request()
-      .id(new Id())
-      .spatialCoverages(spatialCoverages);
+        final var raid = new UpdateRaidV1Request()
+                .id(new Id())
+                .spatialCoverages(spatialCoverages);
 
-    validationService.validateForUpdate(handle, raid);
-    verify(spatialCoverageValidationService).validate(spatialCoverages);
-  }
+        validationService.validateForUpdate(handle, raid);
+        verify(spatialCoverageValidationService).validate(spatialCoverages);
+    }
 
-  @Test
-  void validatesTraditionalKnowledgeLabelsOnCreate() {
-    final var handle = "test-handle";
-    final var traditionalKnowledgeLabels =
-      Collections.singletonList(new TraditionalKnowledgeLabel ());
+    @Test
+    void validatesTraditionalKnowledgeLabelsOnCreate() {
+        final var handle = "test-handle";
+        final var traditionalKnowledgeLabels =
+                Collections.singletonList(new TraditionalKnowledgeLabel());
 
-    final var raid = new CreateRaidV1Request()
-      .id(new Id())
-      .traditionalKnowledgeLabels(traditionalKnowledgeLabels);
+        final var raid = new CreateRaidV1Request()
+                .id(new Id())
+                .traditionalKnowledgeLabels(traditionalKnowledgeLabels);
 
-    validationService.validateForCreate(raid);
-    verify(traditionalKnowledgeLabelValidatorService).validateTraditionalKnowledgeLabels(traditionalKnowledgeLabels);
-  }
+        validationService.validateForCreate(raid);
+        verify(traditionalKnowledgeLabelValidatorService).validateTraditionalKnowledgeLabels(traditionalKnowledgeLabels);
+    }
 
-  @Test
-  void validatesTraditionalKnowledgeLabelsOnUpdate() {
-    final var handle = "test-handle";
-    final var traditionalKnowledgeLabels =
-      Collections.singletonList(new TraditionalKnowledgeLabel());
+    @Test
+    void validatesTraditionalKnowledgeLabelsOnUpdate() {
+        final var handle = "test-handle";
+        final var traditionalKnowledgeLabels =
+                Collections.singletonList(new TraditionalKnowledgeLabel());
 
-    final var raid = new UpdateRaidV1Request()
-      .id(new Id())
-      .traditionalKnowledgeLabels(traditionalKnowledgeLabels);
+        final var raid = new UpdateRaidV1Request()
+                .id(new Id())
+                .traditionalKnowledgeLabels(traditionalKnowledgeLabels);
 
-    validationService.validateForUpdate(handle, raid);
-    verify(traditionalKnowledgeLabelValidatorService).validateTraditionalKnowledgeLabels(traditionalKnowledgeLabels);
-  }
+        validationService.validateForUpdate(handle, raid);
+        verify(traditionalKnowledgeLabelValidatorService).validateTraditionalKnowledgeLabels(traditionalKnowledgeLabels);
+    }
 }

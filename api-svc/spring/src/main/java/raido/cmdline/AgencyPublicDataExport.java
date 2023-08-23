@@ -17,38 +17,37 @@ import static au.org.raid.api.util.ObjectUtil.infoLogExecutionTime;
 import static raido.cmdline.spring.config.CommandLineConfig.configureSpring;
 
 public class AgencyPublicDataExport {
-  private static final Log log = to(AgencyPublicDataExport.class);
-  
-  public static void main(String... args) throws Exception {
-    normaliseJvmDefaults();
-    export(null, null);
-  }
-  
-  public static void export(
-    @Nullable String filePath, 
-    @Nullable Integer maxRows
-  ){
-    var ctx = configureSpring();
-    var exportSvc = ctx.getBean(AgencyPublicDataExportService.class);
-    var props = ctx.getBean(AgencyPublicDataExportProps.class);
-    
-    if( filePath == null ){
-      filePath = props.allRaidsFilename;
-    }
-    
-    log.with("file", formatClickable(Path.of(filePath))).
-      info("starting export data process");
+    private static final Log log = to(AgencyPublicDataExport.class);
 
-    try( var writer = newWriter(filePath) ){
-      infoLogExecutionTime(log, "export data process", ()->
-        exportSvc.exportData(writer, null, null, maxRows)
-      );
+    public static void main(String... args) throws Exception {
+        normaliseJvmDefaults();
+        export(null, null);
     }
-    catch( IOException e ){
-      throw wrapException(e, "while opening writer");
+
+    public static void export(
+            @Nullable String filePath,
+            @Nullable Integer maxRows
+    ) {
+        var ctx = configureSpring();
+        var exportSvc = ctx.getBean(AgencyPublicDataExportService.class);
+        var props = ctx.getBean(AgencyPublicDataExportProps.class);
+
+        if (filePath == null) {
+            filePath = props.allRaidsFilename;
+        }
+
+        log.with("file", formatClickable(Path.of(filePath))).
+                info("starting export data process");
+
+        try (var writer = newWriter(filePath)) {
+            infoLogExecutionTime(log, "export data process", () ->
+                    exportSvc.exportData(writer, null, null, maxRows)
+            );
+        } catch (IOException e) {
+            throw wrapException(e, "while opening writer");
+        }
+
+        log.info("finished export data process");
     }
-    
-    log.info("finished export data process");
-  }
 
 }

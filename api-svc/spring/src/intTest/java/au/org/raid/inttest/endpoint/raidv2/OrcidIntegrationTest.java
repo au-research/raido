@@ -24,50 +24,50 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class OrcidIntegrationTest extends IntegrationTestCase {
 
-  @Test
-  @DisplayName("Create a RAiD with X as the checksum in the ORCID")
-  void xChecksumOrcid() {
-    var raidApi = super.basicRaidExperimentalClient();
+    @Test
+    @DisplayName("Create a RAiD with X as the checksum in the ORCID")
+    void xChecksumOrcid() {
+        var raidApi = super.basicRaidExperimentalClient();
 
-    String initialTitle = getClass().getSimpleName() + "." + getName() +
-      idFactory.generateUniqueId();
-    var today = LocalDate.now();
-    var idParser = new IdentifierParser();
+        String initialTitle = getClass().getSimpleName() + "." + getName() +
+                idFactory.generateUniqueId();
+        var today = LocalDate.now();
+        var idParser = new IdentifierParser();
 
-    EXPECT("minting a raid with minimal content should succeed");
-    var mintResult = raidApi.mintRaidoSchemaV1(
-      new MintRaidoSchemaV1Request()
-        .mintRequest(new MintRaidoSchemaV1RequestMintRequest()
-          .servicePointId(RAIDO_SP_ID))
-        .metadata(new RaidoMetadataSchemaV1()
-          .metadataSchema(RAIDOMETADATASCHEMAV1)
-          .titles(List.of(new TitleBlock()
-            .type(PRIMARY_TITLE)
-            .title(initialTitle)
-            .startDate(today)))
-          .dates(new DatesBlock().startDate(today))
-          .descriptions(List.of(new DescriptionBlock()
-            .type(PRIMARY_DESCRIPTION)
-            .description("stuff about the int test raid")))
-          .contributors(List.of(
-            new ContributorBlock()
-              .id("https://orcid.org/0009-0001-8177-319X")
-              .identifierSchemeUri(HTTPS_ORCID_ORG_)
-              .positions(List.of(new ContributorPosition()
-                .positionSchemaUri(HTTPS_RAID_ORG_)
-                .position(LEADER)
-                .startDate(today)))
-              .roles(List.of(
-                new ContributorRole().
-                  roleSchemeUri(HTTPS_CREDIT_NISO_ORG_).
-                  role(PROJECT_ADMINISTRATION)))
+        EXPECT("minting a raid with minimal content should succeed");
+        var mintResult = raidApi.mintRaidoSchemaV1(
+                new MintRaidoSchemaV1Request()
+                        .mintRequest(new MintRaidoSchemaV1RequestMintRequest()
+                                .servicePointId(RAIDO_SP_ID))
+                        .metadata(new RaidoMetadataSchemaV1()
+                                .metadataSchema(RAIDOMETADATASCHEMAV1)
+                                .titles(List.of(new TitleBlock()
+                                        .type(PRIMARY_TITLE)
+                                        .title(initialTitle)
+                                        .startDate(today)))
+                                .dates(new DatesBlock().startDate(today))
+                                .descriptions(List.of(new DescriptionBlock()
+                                        .type(PRIMARY_DESCRIPTION)
+                                        .description("stuff about the int test raid")))
+                                .contributors(List.of(
+                                        new ContributorBlock()
+                                                .id("https://orcid.org/0009-0001-8177-319X")
+                                                .identifierSchemeUri(HTTPS_ORCID_ORG_)
+                                                .positions(List.of(new ContributorPosition()
+                                                        .positionSchemaUri(HTTPS_RAID_ORG_)
+                                                        .position(LEADER)
+                                                        .startDate(today)))
+                                                .roles(List.of(
+                                                        new ContributorRole().
+                                                                roleSchemeUri(HTTPS_CREDIT_NISO_ORG_).
+                                                                role(PROJECT_ADMINISTRATION)))
 
 
-          )).organisations(List.of(createDummyOrganisation(today)))
-          .access(new AccessBlock().type(OPEN))
-        )
-    );
+                                )).organisations(List.of(createDummyOrganisation(today)))
+                                .access(new AccessBlock().type(OPEN))
+                        )
+        );
 
-    assertThat(mintResult.getSuccess()).isTrue();
-  }
+        assertThat(mintResult.getSuccess()).isTrue();
+    }
 }

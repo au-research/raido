@@ -12,7 +12,7 @@ public class AlternateIdentifierFactory {
         }
 
         return new AlternateIdentifier()
-            .id(alternateIdentifierBlock.getAlternateIdentifier())
-            .type(alternateIdentifierBlock.getAlternateIdentifierType());
+                .id(alternateIdentifierBlock.getAlternateIdentifier())
+                .type(alternateIdentifierBlock.getAlternateIdentifierType());
     }
 }

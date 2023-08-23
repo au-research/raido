@@ -16,31 +16,31 @@ import static java.util.Collections.emptyList;
 import static java.util.List.of;
 
 public class InMemoryRorServiceStub extends RorService {
-  private static final Log log = to(InMemoryRorServiceStub.class);
-  
-  private InMemoryStubProps stubProps;
-  
-  public InMemoryRorServiceStub(
-    InMemoryStubProps stubProps
-  ) {
-    super(null);
-    this.stubProps = stubProps;
-  }
+    private static final Log log = to(InMemoryRorServiceStub.class);
 
-  @Override
-  public List<String> validateRorExists(String ror) {
-    log.with("delay", stubProps.rorInMemoryStubDelay).
-      debug("simulate ROR validation check");
-    infoLogExecutionTime(httpLog, VALIDATE_ROR_EXISTS, ()->{
-      sleep(stubProps.rorInMemoryStubDelay);
-      return null;
-    });
+    private InMemoryStubProps stubProps;
 
-    if( areEqual(ror, NONEXISTENT_TEST_ROR) ){
-      return of(NOT_FOUND_MESSAGE);
+    public InMemoryRorServiceStub(
+            InMemoryStubProps stubProps
+    ) {
+        super(null);
+        this.stubProps = stubProps;
     }
-    
-    return emptyList();
-  }
+
+    @Override
+    public List<String> validateRorExists(String ror) {
+        log.with("delay", stubProps.rorInMemoryStubDelay).
+                debug("simulate ROR validation check");
+        infoLogExecutionTime(httpLog, VALIDATE_ROR_EXISTS, () -> {
+            sleep(stubProps.rorInMemoryStubDelay);
+            return null;
+        });
+
+        if (areEqual(ror, NONEXISTENT_TEST_ROR)) {
+            return of(NOT_FOUND_MESSAGE);
+        }
+
+        return emptyList();
+    }
 
 }

@@ -25,23 +25,23 @@ public class ContributorFactory {
 
         if (contributorBlock.getPositions() != null) {
             positions = contributorBlock.getPositions().stream()
-                .map(positionFactory::create)
-                .toList();
+                    .map(positionFactory::create)
+                    .toList();
         }
         if (contributorBlock.getRoles() != null) {
             roles = contributorBlock.getRoles().stream()
-                .map(roleFactory::create)
-                .toList();
+                    .map(roleFactory::create)
+                    .toList();
         }
 
         final var identifierSchemeUri = (contributorBlock.getIdentifierSchemeUri() != null) ?
-            contributorBlock.getIdentifierSchemeUri().getValue() : null;
+                contributorBlock.getIdentifierSchemeUri().getValue() : null;
 
         return new Contributor()
-            .id(contributorBlock.getId())
-            .identifierSchemeUri(identifierSchemeUri)
-            .positions(positions)
-            .roles(roles);
+                .id(contributorBlock.getId())
+                .identifierSchemeUri(identifierSchemeUri)
+                .positions(positions)
+                .roles(roles);
 
 
     }

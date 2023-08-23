@@ -17,40 +17,37 @@ import static java.util.List.of;
 import static java.util.regex.Pattern.compile;
 
 public class RorService {
-  public static final Pattern ROR_REGEX =
-    compile("^https://ror\\.org/[0-9a-z]{9}$");
+    public static final Pattern ROR_REGEX =
+            compile("^https://ror\\.org/[0-9a-z]{9}$");
+    public static final String NOT_FOUND_MESSAGE = "The ROR does not exist.";
+    protected static final Log httpLog = to(RorService.class, "http");
+    private static final Log log = to(RorService.class);
+    private RestTemplate rest;
 
-  private static final Log log = to(RorService.class);
-  protected static final Log httpLog = to(RorService.class, "http");
-  public static final String NOT_FOUND_MESSAGE = "The ROR does not exist.";
-
-  private RestTemplate rest;
-
-  public RorService(RestTemplate rest) {
-    this.rest = rest;
-  }
-
-  public List<String> validateRorExists(String ror) {
-    guardSsrf(ror);
-    
-    final var requestEntity = RequestEntity.head(ror).build();
-
-    try {
-      infoLogExecutionTime(log, VALIDATE_ROR_EXISTS, ()->
-        rest.exchange(requestEntity, Void.class)
-      );
-    }
-    catch( HttpClientErrorException e ){
-      log.with("message", e.getMessage()).
-        with("status", e.getStatusCode()).
-        warn("Problem retrieving ROR");
-      return of(NOT_FOUND_MESSAGE);
+    public RorService(RestTemplate rest) {
+        this.rest = rest;
     }
 
-    return emptyList();
-  }
+    public static void guardSsrf(String ror) {
+        Security.guardSsrf("ROR", ROR_REGEX, ror);
+    }
 
-  public static void guardSsrf(String ror){
-    Security.guardSsrf("ROR", ROR_REGEX, ror);
-  }
+    public List<String> validateRorExists(String ror) {
+        guardSsrf(ror);
+
+        final var requestEntity = RequestEntity.head(ror).build();
+
+        try {
+            infoLogExecutionTime(log, VALIDATE_ROR_EXISTS, () ->
+                    rest.exchange(requestEntity, Void.class)
+            );
+        } catch (HttpClientErrorException e) {
+            log.with("message", e.getMessage()).
+                    with("status", e.getStatusCode()).
+                    warn("Problem retrieving ROR");
+            return of(NOT_FOUND_MESSAGE);
+        }
+
+        return emptyList();
+    }
 }

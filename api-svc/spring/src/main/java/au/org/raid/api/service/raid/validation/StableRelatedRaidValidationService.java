@@ -17,30 +17,30 @@ import static au.org.raid.api.util.StringUtil.isBlank;
 @RequiredArgsConstructor
 public class StableRelatedRaidValidationService {
 
-  private final StableRelatedRaidTypeValidationService typeValidationService;
+    private final StableRelatedRaidTypeValidationService typeValidationService;
 
-  public List<ValidationFailure> validate(final List<RelatedRaid> relatedRaids) {
-    final var failures = new ArrayList<ValidationFailure>();
+    public List<ValidationFailure> validate(final List<RelatedRaid> relatedRaids) {
+        final var failures = new ArrayList<ValidationFailure>();
 
-    if (relatedRaids == null) {
-      return failures;
+        if (relatedRaids == null) {
+            return failures;
+        }
+
+        IntStream.range(0, relatedRaids.size())
+                .forEach(index -> {
+                    final var relatedRaid = relatedRaids.get(index);
+
+                    if (isBlank(relatedRaid.getId())) {
+                        failures.add(new ValidationFailure()
+                                .fieldId(String.format("relatedRaids[%d].id", index))
+                                .errorType(NOT_SET_TYPE)
+                                .message(FIELD_MUST_BE_SET_MESSAGE));
+                    }
+                    // TODO: Validate Raid exists
+
+                    failures.addAll(typeValidationService.validate(relatedRaid.getType(), index));
+                });
+
+        return failures;
     }
-
-    IntStream.range(0, relatedRaids.size())
-        .forEach(index -> {
-          final var relatedRaid = relatedRaids.get(index);
-
-          if (isBlank(relatedRaid.getId())) {
-            failures.add(new ValidationFailure()
-                .fieldId(String.format("relatedRaids[%d].id", index))
-                .errorType(NOT_SET_TYPE)
-                .message(FIELD_MUST_BE_SET_MESSAGE));
-          }
-          // TODO: Validate Raid exists
-
-          failures.addAll(typeValidationService.validate(relatedRaid.getType(), index));
-        });
-
-    return failures;
-  }
 }

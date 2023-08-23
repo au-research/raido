@@ -10,11 +10,11 @@ import static org.hamcrest.Matchers.nullValue;
 
 class AccessFactoryTest {
     private static final String CLOSED_ID =
-        "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json";
+            "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json";
     private static final String OPEN_ID =
-        "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json";
+            "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json";
     private static final String ACCESS_TYPE_SCHEME_URI =
-        "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/";
+            "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/";
 
     private final AccessFactory accessFactory = new AccessFactory();
 
@@ -24,16 +24,16 @@ class AccessFactoryTest {
         final var accessStatement = "This is closed";
 
         final var access = new AccessBlock()
-            .type(AccessType.CLOSED)
-            .accessStatement(accessStatement);
+                .type(AccessType.CLOSED)
+                .accessStatement(accessStatement);
 
         final var result = accessFactory.create(access);
 
         final var expected = new Access()
-            .type(new AccessTypeWithSchemeUri()
-                .id(CLOSED_ID)
-                .schemeUri(ACCESS_TYPE_SCHEME_URI))
-            .accessStatement(new AccessStatement().statement(accessStatement));
+                .type(new AccessTypeWithSchemeUri()
+                        .id(CLOSED_ID)
+                        .schemeUri(ACCESS_TYPE_SCHEME_URI))
+                .accessStatement(new AccessStatement().statement(accessStatement));
 
         assertThat(result, is(expected));
     }
@@ -42,14 +42,14 @@ class AccessFactoryTest {
     @DisplayName("Sets alternative access type")
     void setsAlternativeType() {
         final var access = new AccessBlock()
-            .type(AccessType.OPEN);
+                .type(AccessType.OPEN);
 
         final var result = accessFactory.create(access);
 
         final var expected = new Access()
-            .type(new AccessTypeWithSchemeUri()
-                .id(OPEN_ID)
-                .schemeUri(ACCESS_TYPE_SCHEME_URI));
+                .type(new AccessTypeWithSchemeUri()
+                        .id(OPEN_ID)
+                        .schemeUri(ACCESS_TYPE_SCHEME_URI));
 
         assertThat(result, is(expected));
     }
@@ -68,8 +68,8 @@ class AccessFactoryTest {
         final var result = accessFactory.create(access);
 
         final var expected = new Access()
-            .type(new AccessTypeWithSchemeUri()
-                .schemeUri(ACCESS_TYPE_SCHEME_URI));
+                .type(new AccessTypeWithSchemeUri()
+                        .schemeUri(ACCESS_TYPE_SCHEME_URI));
 
         assertThat(result, is(expected));
     }

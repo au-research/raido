@@ -17,93 +17,90 @@ import static java.util.Collections.singletonList;
 import static org.springframework.http.MediaType.APPLICATION_XML;
 
 /**
- Written because the statusMapping integration tests were causing stack traces:
- `No converter for [class org.springframework.http.ProblemDetail] with preset Content-Type 'application/xml;charset=ISO-8859-1'`
- The problem was that the tests weren't setting any contentType or charset, so 
- the RestTemplate uses defaults that don't make sense to me, but they might be 
- used by other people too, so better make sure they work.
- Had to write our own ProblemDetail converter because the default spring XML
- convert only matches UTF encodings (which makes sense for modern XML, I guess).
- Beware that the XmlMapper uses UTF encoding by default, so if a ProblemDetail
- contains a non-ascii string - it's going to be encoded as UTF-8, even though 
- the caller specified ISO-8859-1.  This is far enough in the weeds that I'm 
- not too concerned by that and don't want to spend any more time on it.
- */ 
-public class XmlProblemDetailConverter implements 
-  HttpMessageConverter<ProblemDetail>
-{
-  private List<MediaType> supportedMediaTypes = 
-    singletonList(APPLICATION_XML);
-  
-  private XmlMapper mapper = new XmlMapper();
-  
-  @Override
-  public boolean canRead(Class<?> clazz, MediaType mediaType) {
-    return false;
-  }
+ * Written because the statusMapping integration tests were causing stack traces:
+ * `No converter for [class org.springframework.http.ProblemDetail] with preset Content-Type 'application/xml;charset=ISO-8859-1'`
+ * The problem was that the tests weren't setting any contentType or charset, so
+ * the RestTemplate uses defaults that don't make sense to me, but they might be
+ * used by other people too, so better make sure they work.
+ * Had to write our own ProblemDetail converter because the default spring XML
+ * convert only matches UTF encodings (which makes sense for modern XML, I guess).
+ * Beware that the XmlMapper uses UTF encoding by default, so if a ProblemDetail
+ * contains a non-ascii string - it's going to be encoded as UTF-8, even though
+ * the caller specified ISO-8859-1.  This is far enough in the weeds that I'm
+ * not too concerned by that and don't want to spend any more time on it.
+ */
+public class XmlProblemDetailConverter implements
+        HttpMessageConverter<ProblemDetail> {
+    private List<MediaType> supportedMediaTypes =
+            singletonList(APPLICATION_XML);
 
-  @Override
-  public boolean canWrite(Class<?> clazz, MediaType mediaType) {
-    if( !APPLICATION_XML.isCompatibleWith(mediaType) ){
-      return false;
-    }
-    
-    return clazz.isAssignableFrom(ProblemDetail.class);
-  }
+    private XmlMapper mapper = new XmlMapper();
 
-  @Override
-  public List<MediaType> getSupportedMediaTypes() {
-    return supportedMediaTypes;
-  }
+    private static Charset getCharset(MediaType contentType) {
+        if (contentType == null) {
+            return StandardCharsets.UTF_8;
+        }
+        if (contentType.getCharset() == null) {
+            return StandardCharsets.UTF_8;
+        }
+        return contentType.getCharset();
+    }
 
-  @Override
-  public ProblemDetail read(
-    Class<? extends ProblemDetail> clazz,
-    HttpInputMessage inputMessage
-  ) throws IOException, HttpMessageNotReadableException {
-    throw new UnsupportedOperationException(
-      getClass().getName() + " doesn't know how to read" );
-  }
+    @Override
+    public boolean canRead(Class<?> clazz, MediaType mediaType) {
+        return false;
+    }
 
-  @Override
-  public void write(
-    ProblemDetail problemDetail,
-    MediaType contentType,
-    HttpOutputMessage outputMessage
-  ) throws IOException, HttpMessageNotWritableException {
-    Charset charset = getCharset(contentType);
-    byte[] bytes = serializeAsXml(problemDetail, charset).getBytes(charset);
-    outputMessage.getHeaders().setContentLength(bytes.length);
+    @Override
+    public boolean canWrite(Class<?> clazz, MediaType mediaType) {
+        if (!APPLICATION_XML.isCompatibleWith(mediaType)) {
+            return false;
+        }
 
-    if (
-      outputMessage instanceof StreamingHttpOutputMessage streamingOutputMessage
-    ) {
-      streamingOutputMessage.setBody(outputStream -> 
-        StreamUtils.copy(bytes, outputStream)
-      );
+        return clazz.isAssignableFrom(ProblemDetail.class);
     }
-    else {
-      StreamUtils.copy(bytes, outputMessage.getBody());
-    }
-  }
 
-  private static Charset getCharset(MediaType contentType) {
-    if( contentType == null ){
-      return StandardCharsets.UTF_8;
+    @Override
+    public List<MediaType> getSupportedMediaTypes() {
+        return supportedMediaTypes;
     }
-    if( contentType.getCharset() == null ){
-      return StandardCharsets.UTF_8;
-    }
-    return contentType.getCharset();
-  }
 
-  protected String serializeAsXml(ProblemDetail problem, Charset charset) {
-    try {
-      return mapper.writeValueAsString(problem);
+    @Override
+    public ProblemDetail read(
+            Class<? extends ProblemDetail> clazz,
+            HttpInputMessage inputMessage
+    ) throws IOException, HttpMessageNotReadableException {
+        throw new UnsupportedOperationException(
+                getClass().getName() + " doesn't know how to read");
     }
-    catch( JsonProcessingException e ){
-      throw new HttpMessageNotWritableException(e.getMessage(), e);
+
+    @Override
+    public void write(
+            ProblemDetail problemDetail,
+            MediaType contentType,
+            HttpOutputMessage outputMessage
+    ) throws IOException, HttpMessageNotWritableException {
+        Charset charset = getCharset(contentType);
+        byte[] bytes = serializeAsXml(problemDetail, charset).getBytes(charset);
+        outputMessage.getHeaders().setContentLength(bytes.length);
+
+        if (
+                outputMessage instanceof StreamingHttpOutputMessage streamingOutputMessage
+        ) {
+            streamingOutputMessage.setBody(outputStream ->
+                    StreamUtils.copy(bytes, outputStream)
+            );
+        } else {
+            StreamUtils.copy(bytes, outputMessage.getBody());
+        }
     }
-  }
-  
+
+    protected String serializeAsXml(ProblemDetail problem, Charset charset) {
+        try {
+            return mapper.writeValueAsString(problem);
+        } catch (JsonProcessingException e) {
+            throw new HttpMessageNotWritableException(e.getMessage(), e);
+        }
+    }
+
 }

@@ -75,13 +75,13 @@ class RaidDtoFactoryTest {
     @DisplayName("If RaidRecord has empty fields returns empty fields")
     void returnsEmptyFields() throws JsonProcessingException {
         final var raidRecord = new RaidRecord()
-            .setMetadataSchema(Metaschema.raido_metadata_schema_v1)
-            .setMetadata(JSONB.valueOf(""));
+                .setMetadataSchema(Metaschema.raido_metadata_schema_v1)
+                .setMetadata(JSONB.valueOf(""));
 
         // not sure why some fields are empty lists and others are null
         final var expected = new RaidDto()
-            .titles(new ArrayList<>())
-            .contributors(new ArrayList<>());
+                .titles(new ArrayList<>())
+                .contributors(new ArrayList<>());
 
         when(objectMapper.readValue("", RaidoMetadataSchemaV1.class)).thenReturn(new RaidoMetadataSchemaV1());
 
@@ -92,8 +92,8 @@ class RaidDtoFactoryTest {
     @DisplayName("If metadata is schema v2 return metadata")
     void schemav2() throws IOException {
         final var raidRecord = new RaidRecord()
-            .setMetadataSchema(Metaschema.raido_metadata_schema_v2)
-            .setMetadata(JSONB.valueOf(""));
+                .setMetadataSchema(Metaschema.raido_metadata_schema_v2)
+                .setMetadata(JSONB.valueOf(""));
         final var raidDto = new RaidDto();
 
         when(objectMapper.readValue("", RaidDto.class)).thenReturn(raidDto);
@@ -103,23 +103,29 @@ class RaidDtoFactoryTest {
         assertThat(result, is(raidDto));
     }
 
+    @Test
+    @DisplayName("If record metadata is null returns null")
+    void returnsNullWhenNullMetadata() {
+        assertThat(raidDtoFactory.create(new RaidRecord().setMetadataSchema(Metaschema.raido_metadata_schema_v1)), nullValue());
+    }
+
     @Nested
     @DisplayName("RaidoMetadataSchemaV1 tests...")
     class RaidoMetadataSchemaV1Tests {
         @BeforeEach
         void setUp() throws IOException {
             final var mapper = new ObjectMapper()
-                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-                .registerModule(new JavaTimeModule());
+                    .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                    .registerModule(new JavaTimeModule());
 
             final var metadata =
-                Files.readString(Path.of(Objects.requireNonNull(RaidDtoFactoryTest.class.getResource("/fixtures/raido-metadata-scheme-v1.json")).getPath()));
+                    Files.readString(Path.of(Objects.requireNonNull(RaidDtoFactoryTest.class.getResource("/fixtures/raido-metadata-scheme-v1.json")).getPath()));
 
             raidoMetadataSchemaV1 = mapper.readValue(metadata, RaidoMetadataSchemaV1.class);
 
             raidRecord = new RaidRecord()
-                .setMetadata(JSONB.valueOf(metadata))
-                .setMetadataSchema(Metaschema.raido_metadata_schema_v1);
+                    .setMetadata(JSONB.valueOf(metadata))
+                    .setMetadataSchema(Metaschema.raido_metadata_schema_v1);
 
             when(objectMapper.readValue(metadata, RaidoMetadataSchemaV1.class)).thenReturn(raidoMetadataSchemaV1);
         }
@@ -312,11 +318,5 @@ class RaidDtoFactoryTest {
 
             assertThat(result.getDates(), is(dates));
         }
-    }
-
-    @Test
-    @DisplayName("If record metadata is null returns null")
-    void returnsNullWhenNullMetadata() {
-        assertThat(raidDtoFactory.create(new RaidRecord().setMetadataSchema(Metaschema.raido_metadata_schema_v1)), nullValue());
     }
 }

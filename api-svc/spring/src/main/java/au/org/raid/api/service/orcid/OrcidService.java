@@ -16,41 +16,38 @@ import static java.util.Collections.emptyList;
 import static java.util.regex.Pattern.compile;
 
 public class OrcidService {
-  public static final Pattern ORCID_REGEX =
-    compile("^https://orcid\\.org/[\\d]{4}-[\\d]{4}-[\\d]{4}-[\\d]{3}[\\d|X]{1}$");
-  public static final String NOT_FOUND_MESSAGE = "The ORCID does not exist.";
+    public static final Pattern ORCID_REGEX =
+            compile("^https://orcid\\.org/[\\d]{4}-[\\d]{4}-[\\d]{4}-[\\d]{3}[\\d|X]{1}$");
+    public static final String NOT_FOUND_MESSAGE = "The ORCID does not exist.";
+    protected static final Log httpLog = to(OrcidService.class, "http");
+    private static final Log log = to(OrcidService.class);
+    private RestTemplate rest;
 
-  private static final Log log = to(OrcidService.class);
-  protected static final Log httpLog = to(OrcidService.class, "http");
-
-  private RestTemplate rest;
-
-  public OrcidService(RestTemplate rest) {
-    this.rest = rest;
-  }
-
-  public List<String> validateOrcidExists(String orcid) {
-    guardSsrf(orcid);
-
-    final var requestEntity = RequestEntity.head(orcid).build();
-
-    try {
-      infoLogExecutionTime(log, VALIDATE_ORCID_EXISTS, ()->
-        rest.exchange(requestEntity, Void.class)
-      );
-    }
-    catch( HttpClientErrorException e ){
-      log.with("message", e.getMessage()).
-        with("status", e.getStatusCode()).
-        warn("Problem retrieving ORCID");
-      return List.of(NOT_FOUND_MESSAGE);
+    public OrcidService(RestTemplate rest) {
+        this.rest = rest;
     }
 
-    return emptyList();
-  }
+    public static void guardSsrf(String doi) {
+        Security.guardSsrf("ORCID", ORCID_REGEX, doi);
+    }
 
-  public static void guardSsrf(String doi){
-    Security.guardSsrf("ORCID", ORCID_REGEX, doi);
-  }
-  
+    public List<String> validateOrcidExists(String orcid) {
+        guardSsrf(orcid);
+
+        final var requestEntity = RequestEntity.head(orcid).build();
+
+        try {
+            infoLogExecutionTime(log, VALIDATE_ORCID_EXISTS, () ->
+                    rest.exchange(requestEntity, Void.class)
+            );
+        } catch (HttpClientErrorException e) {
+            log.with("message", e.getMessage()).
+                    with("status", e.getStatusCode()).
+                    warn("Problem retrieving ORCID");
+            return List.of(NOT_FOUND_MESSAGE);
+        }
+
+        return emptyList();
+    }
+
 }

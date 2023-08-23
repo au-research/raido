@@ -12,15 +12,15 @@ import static au.org.raid.db.jooq.api_svc.tables.RelatedObjectCategoryScheme.REL
 @Repository
 @RequiredArgsConstructor
 public class RelatedObjectCategorySchemeRepository {
-  private final DSLContext dslContext;
+    private final DSLContext dslContext;
 
-  public Optional<RelatedObjectCategorySchemeRecord> findByUri(final String uri) {
-    return dslContext.select(RELATED_OBJECT_CATEGORY_SCHEME.fields())
-      .from(RELATED_OBJECT_CATEGORY_SCHEME)
-      .where(RELATED_OBJECT_CATEGORY_SCHEME.URI.eq(uri))
-      .fetchOptional(record -> new RelatedObjectCategorySchemeRecord()
-        .setId(RELATED_OBJECT_CATEGORY_SCHEME.ID.getValue(record))
-        .setUri(RELATED_OBJECT_CATEGORY_SCHEME.URI.getValue(record))
-      );
-  }
+    public Optional<RelatedObjectCategorySchemeRecord> findByUri(final String uri) {
+        return dslContext.select(RELATED_OBJECT_CATEGORY_SCHEME.fields())
+                .from(RELATED_OBJECT_CATEGORY_SCHEME)
+                .where(RELATED_OBJECT_CATEGORY_SCHEME.URI.eq(uri))
+                .fetchOptional(record -> new RelatedObjectCategorySchemeRecord()
+                        .setId(RELATED_OBJECT_CATEGORY_SCHEME.ID.getValue(record))
+                        .setUri(RELATED_OBJECT_CATEGORY_SCHEME.URI.getValue(record))
+                );
+    }
 }

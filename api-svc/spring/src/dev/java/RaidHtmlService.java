@@ -8,38 +8,38 @@ import java.util.List;
 import java.util.Map;
 
 /**
- A prototype endpoint for returning static HTML as the raid landing page.
+ * A prototype endpoint for returning static HTML as the raid landing page.
  */
 @Component
 public class RaidHtmlService {
 
-  /**
-   used for handleRaidV2CatchAllAsHtml()
-   */
-  public static StringHttpMessageConverter getHtmlStringConverter(){
-    var stringHtml = new StringHttpMessageConverter();
-    stringHtml.setSupportedMediaTypes(List.of(MediaType.TEXT_HTML));
-    return stringHtml;
-  }
-
-  /**
-   This is awful, of course - replace with sutiable HTML tech if we actually
-   were to do server side generation of HTML.
-   - no XSS protection
-   - no escaping (i.e what if `{handle}` is actually in your content)? 
-   */
-  public static String inject(String template, String variable, String value){
-    return template.replaceAll("\\{%s\\}".formatted(variable), value);
-  }
-
-  public static String injectAll(String template, Map<String, String> entries){
-    String result = template;
-    for( String iVariable : entries.keySet() ){
-      result = inject(result, iVariable, entries.get(iVariable));
+    /**
+     * used for handleRaidV2CatchAllAsHtml()
+     */
+    public static StringHttpMessageConverter getHtmlStringConverter() {
+        var stringHtml = new StringHttpMessageConverter();
+        stringHtml.setSupportedMediaTypes(List.of(MediaType.TEXT_HTML));
+        return stringHtml;
     }
 
-    return result;
-  }
+    /**
+     * This is awful, of course - replace with sutiable HTML tech if we actually
+     * were to do server side generation of HTML.
+     * - no XSS protection
+     * - no escaping (i.e what if `{handle}` is actually in your content)?
+     */
+    public static String inject(String template, String variable, String value) {
+        return template.replaceAll("\\{%s\\}".formatted(variable), value);
+    }
+
+    public static String injectAll(String template, Map<String, String> entries) {
+        String result = template;
+        for (String iVariable : entries.keySet()) {
+            result = inject(result, iVariable, entries.get(iVariable));
+        }
+
+        return result;
+    }
 
 //  @RequestMapping(
 //    method = RequestMethod.GET,

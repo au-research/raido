@@ -12,7 +12,7 @@ public class DatesFactory {
         }
 
         return new Dates()
-            .startDate(datesBlock.getStartDate())
-            .endDate(datesBlock.getEndDate());
+                .startDate(datesBlock.getStartDate())
+                .endDate(datesBlock.getEndDate());
     }
 }

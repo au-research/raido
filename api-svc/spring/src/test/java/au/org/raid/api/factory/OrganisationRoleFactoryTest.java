@@ -13,7 +13,7 @@ import static org.hamcrest.Matchers.nullValue;
 
 class OrganisationRoleFactoryTest {
     private static final String SCHEME_URI =
-        "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/";
+            "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/";
 
     private final OrganisationRoleFactory roleFactory = new OrganisationRoleFactory();
 
@@ -21,12 +21,12 @@ class OrganisationRoleFactoryTest {
     @DisplayName("Contrator is set")
     void leaderSet() {
         final var role = new OrganisationRole()
-            .role(OrganisationRoleType.CONTRACTOR)
-            .roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_);
+                .role(OrganisationRoleType.CONTRACTOR)
+                .roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_);
 
         final var expected = new OrganisationRoleWithSchemeUri()
-            .id("https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json")
-            .schemeUri(SCHEME_URI);
+                .id("https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json")
+                .schemeUri(SCHEME_URI);
 
         final var result = roleFactory.create(role);
 
@@ -37,12 +37,12 @@ class OrganisationRoleFactoryTest {
     @DisplayName("Lead research organisation is set")
     void leadResearchOrganisationSet() {
         final var role = new OrganisationRole()
-            .role(OrganisationRoleType.LEAD_RESEARCH_ORGANISATION)
-            .roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_);
+                .role(OrganisationRoleType.LEAD_RESEARCH_ORGANISATION)
+                .roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_);
 
         final var expected = new OrganisationRoleWithSchemeUri()
-            .id("https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json")
-            .schemeUri(SCHEME_URI);
+                .id("https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json")
+                .schemeUri(SCHEME_URI);
 
         final var result = roleFactory.create(role);
 
@@ -53,12 +53,12 @@ class OrganisationRoleFactoryTest {
     @DisplayName("Other organisation is set")
     void otherOrganisationSet() {
         final var role = new OrganisationRole()
-            .role(OrganisationRoleType.OTHER_ORGANISATION)
-            .roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_);
+                .role(OrganisationRoleType.OTHER_ORGANISATION)
+                .roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_);
 
         final var expected = new OrganisationRoleWithSchemeUri()
-            .id("https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/other-organisation.json")
-            .schemeUri(SCHEME_URI);
+                .id("https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/other-organisation.json")
+                .schemeUri(SCHEME_URI);
 
         final var result = roleFactory.create(role);
 
@@ -69,12 +69,12 @@ class OrganisationRoleFactoryTest {
     @DisplayName("Other research organisation is set")
     void otherResearchOrganisationSet() {
         final var role = new OrganisationRole()
-            .role(OrganisationRoleType.OTHER_RESEARCH_ORGANISATION)
-            .roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_);
+                .role(OrganisationRoleType.OTHER_RESEARCH_ORGANISATION)
+                .roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_);
 
         final var expected = new OrganisationRoleWithSchemeUri()
-            .id("https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/other-research-organisation.json")
-            .schemeUri(SCHEME_URI);
+                .id("https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/other-research-organisation.json")
+                .schemeUri(SCHEME_URI);
 
         final var result = roleFactory.create(role);
 
@@ -85,12 +85,12 @@ class OrganisationRoleFactoryTest {
     @DisplayName("Partner organisation is set")
     void partnerOrganisationSet() {
         final var role = new OrganisationRole()
-            .role(OrganisationRoleType.PARTNER_ORGANISATION)
-            .roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_);
+                .role(OrganisationRoleType.PARTNER_ORGANISATION)
+                .roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_);
 
         final var expected = new OrganisationRoleWithSchemeUri()
-            .id("https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/partner-organisation.json")
-            .schemeUri(SCHEME_URI);
+                .id("https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/partner-organisation.json")
+                .schemeUri(SCHEME_URI);
 
         final var result = roleFactory.create(role);
 
@@ -107,7 +107,7 @@ class OrganisationRoleFactoryTest {
     @DisplayName("OrganisationRole with empty fields does not throw NullPointerException")
     void emptyFields() {
         assertThat(roleFactory.create(new OrganisationRole()), is(new OrganisationRoleWithSchemeUri()
-            .id(null)
-            .schemeUri(SCHEME_URI)));
+                .id(null)
+                .schemeUri(SCHEME_URI)));
     }
 }

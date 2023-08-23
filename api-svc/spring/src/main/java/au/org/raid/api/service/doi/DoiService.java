@@ -17,41 +17,38 @@ import static java.util.List.of;
 import static java.util.regex.Pattern.compile;
 
 public class DoiService {
-  public static final Pattern DOI_REGEX = 
-    compile("^http[s]?://doi\\.org/10\\..*");
-  public static final String NOT_FOUND_MESSAGE = "The DOI does not exist.";
+    public static final Pattern DOI_REGEX =
+            compile("^http[s]?://doi\\.org/10\\..*");
+    public static final String NOT_FOUND_MESSAGE = "The DOI does not exist.";
+    protected static final Log httpLog = to(DoiService.class, "http");
+    private static final Log log = to(DoiService.class);
+    private RestTemplate rest;
 
-  private static final Log log = to(DoiService.class);
-  protected static final Log httpLog = to(DoiService.class, "http");
-
-  private RestTemplate rest;
-
-  public DoiService(RestTemplate rest) {
-    this.rest = rest;
-  }
-
-  public List<String> validateDoiExists(String doi) {
-    guardSsrf(doi);
-    
-    final var requestEntity = RequestEntity.head(doi).build();
-
-    try {
-      infoLogExecutionTime(log, VALIDATE_DOI_EXISTS, ()->
-        rest.exchange(requestEntity, Void.class)
-      );
-    }
-    catch( HttpClientErrorException e ){
-      log.with("message", e.getMessage()).
-        with("status", e.getStatusCode()).
-        warn("Problem retrieving DOI");
-      return of(NOT_FOUND_MESSAGE);
+    public DoiService(RestTemplate rest) {
+        this.rest = rest;
     }
 
-    return emptyList();
-  }
+    public static void guardSsrf(String doi) {
+        Security.guardSsrf("DOI", DOI_REGEX, doi);
+    }
 
-  public static void guardSsrf(String doi){
-    Security.guardSsrf("DOI", DOI_REGEX, doi);
-  }
+    public List<String> validateDoiExists(String doi) {
+        guardSsrf(doi);
+
+        final var requestEntity = RequestEntity.head(doi).build();
+
+        try {
+            infoLogExecutionTime(log, VALIDATE_DOI_EXISTS, () ->
+                    rest.exchange(requestEntity, Void.class)
+            );
+        } catch (HttpClientErrorException e) {
+            log.with("message", e.getMessage()).
+                    with("status", e.getStatusCode()).
+                    warn("Problem retrieving DOI");
+            return of(NOT_FOUND_MESSAGE);
+        }
+
+        return emptyList();
+    }
 
 }

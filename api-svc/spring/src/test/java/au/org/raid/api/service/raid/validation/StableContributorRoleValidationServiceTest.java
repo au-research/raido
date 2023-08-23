@@ -23,177 +23,177 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class StableContributorRoleValidationServiceTest {
-  private static final int CONTRIBUTOR_ROLE_TYPE_SCHEME_ID = 1;
+    private static final int CONTRIBUTOR_ROLE_TYPE_SCHEME_ID = 1;
 
-  private static final ContributorRoleSchemeRecord CONTRIBUTOR_ROLE_TYPE_SCHEME_RECORD =
-    new ContributorRoleSchemeRecord()
-      .setId(CONTRIBUTOR_ROLE_TYPE_SCHEME_ID)
-      .setUri(TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI);
+    private static final ContributorRoleSchemeRecord CONTRIBUTOR_ROLE_TYPE_SCHEME_RECORD =
+            new ContributorRoleSchemeRecord()
+                    .setId(CONTRIBUTOR_ROLE_TYPE_SCHEME_ID)
+                    .setUri(TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI);
 
-  private static final ContributorRoleRecord CONTRIBUTOR_ROLE_TYPE_RECORD =
-    new ContributorRoleRecord()
-      .setSchemeId(CONTRIBUTOR_ROLE_TYPE_SCHEME_ID)
-      .setUri(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
+    private static final ContributorRoleRecord CONTRIBUTOR_ROLE_TYPE_RECORD =
+            new ContributorRoleRecord()
+                    .setSchemeId(CONTRIBUTOR_ROLE_TYPE_SCHEME_ID)
+                    .setUri(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-  @Mock
-  private ContributorRoleSchemeRepository contributorRoleSchemeRepository;
+    @Mock
+    private ContributorRoleSchemeRepository contributorRoleSchemeRepository;
 
-  @Mock
-  private ContributorRoleRepository contributorRoleRepository;
+    @Mock
+    private ContributorRoleRepository contributorRoleRepository;
 
-  @InjectMocks
-  private StableContributorRoleValidationService validationService;
+    @InjectMocks
+    private StableContributorRoleValidationService validationService;
 
-  @Test
-  @DisplayName("Validation passes with valid ContributorRole")
-  void validContributorRoleWithSchemeUri() {
-    final var role = new ContributorRoleWithSchemeUri()
-      .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE)
-      .schemeUri(TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI);
+    @Test
+    @DisplayName("Validation passes with valid ContributorRole")
+    void validContributorRoleWithSchemeUri() {
+        final var role = new ContributorRoleWithSchemeUri()
+                .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE)
+                .schemeUri(TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI);
 
-    when(contributorRoleSchemeRepository.findByUri(TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI))
-      .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_SCHEME_RECORD));
+        when(contributorRoleSchemeRepository.findByUri(TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI))
+                .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_SCHEME_RECORD));
 
-    when(contributorRoleRepository
-      .findByUriAndSchemeId(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE, CONTRIBUTOR_ROLE_TYPE_SCHEME_ID))
-      .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_RECORD));
+        when(contributorRoleRepository
+                .findByUriAndSchemeId(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE, CONTRIBUTOR_ROLE_TYPE_SCHEME_ID))
+                .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_RECORD));
 
-    final var failures = validationService.validate(role, 2, 3);
+        final var failures = validationService.validate(role, 2, 3);
 
-    assertThat(failures, empty());
-  }
+        assertThat(failures, empty());
+    }
 
-  @Test
-  @DisplayName("Validation fails with null schemeUri")
-  void nullSchemeUri() {
-    final var role = new ContributorRoleWithSchemeUri()
-      .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
+    @Test
+    @DisplayName("Validation fails with null schemeUri")
+    void nullSchemeUri() {
+        final var role = new ContributorRoleWithSchemeUri()
+                .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-    final var failures = validationService.validate(role, 2, 3);
+        final var failures = validationService.validate(role, 2, 3);
 
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("contributors[2].roles[3].schemeUri")
-        .errorType("notSet")
-        .message("field must be set")
-    ));
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("contributors[2].roles[3].schemeUri")
+                        .errorType("notSet")
+                        .message("field must be set")
+        ));
 
-    verifyNoInteractions(contributorRoleSchemeRepository);
-    verifyNoInteractions(contributorRoleRepository);
-  }
+        verifyNoInteractions(contributorRoleSchemeRepository);
+        verifyNoInteractions(contributorRoleRepository);
+    }
 
-  @Test
-  @DisplayName("Validation fails with empty schemeUri")
-  void emptySchemeUri() {
-    final var role = new ContributorRoleWithSchemeUri()
-      .schemeUri("")
-      .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
+    @Test
+    @DisplayName("Validation fails with empty schemeUri")
+    void emptySchemeUri() {
+        final var role = new ContributorRoleWithSchemeUri()
+                .schemeUri("")
+                .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-    final var failures = validationService.validate(role, 2, 3);
+        final var failures = validationService.validate(role, 2, 3);
 
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("contributors[2].roles[3].schemeUri")
-        .errorType("notSet")
-        .message("field must be set")
-    ));
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("contributors[2].roles[3].schemeUri")
+                        .errorType("notSet")
+                        .message("field must be set")
+        ));
 
-    verifyNoInteractions(contributorRoleSchemeRepository);
-    verifyNoInteractions(contributorRoleRepository);
-  }
+        verifyNoInteractions(contributorRoleSchemeRepository);
+        verifyNoInteractions(contributorRoleRepository);
+    }
 
-  @Test
-  @DisplayName("Validation fails with invalid schemeUri")
-  void invalidSchemeUri() {
-    final var role = new ContributorRoleWithSchemeUri()
-      .schemeUri(TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI)
-      .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
+    @Test
+    @DisplayName("Validation fails with invalid schemeUri")
+    void invalidSchemeUri() {
+        final var role = new ContributorRoleWithSchemeUri()
+                .schemeUri(TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI)
+                .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-    when(contributorRoleSchemeRepository.findByUri(TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI))
-      .thenReturn(Optional.empty());
+        when(contributorRoleSchemeRepository.findByUri(TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI))
+                .thenReturn(Optional.empty());
 
-    final var failures = validationService.validate(role, 2, 3);
+        final var failures = validationService.validate(role, 2, 3);
 
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("contributors[2].roles[3].schemeUri")
-        .errorType("invalidValue")
-        .message("scheme is unknown/unsupported")
-    ));
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("contributors[2].roles[3].schemeUri")
+                        .errorType("invalidValue")
+                        .message("scheme is unknown/unsupported")
+        ));
 
-    verifyNoInteractions(contributorRoleRepository);
-  }
+        verifyNoInteractions(contributorRoleRepository);
+    }
 
-  @Test
-  @DisplayName("Validation fails with null role")
-  void nullRole() {
-    final var role = new ContributorRoleWithSchemeUri()
-      .schemeUri(TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI);
+    @Test
+    @DisplayName("Validation fails with null role")
+    void nullRole() {
+        final var role = new ContributorRoleWithSchemeUri()
+                .schemeUri(TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI);
 
-    when(contributorRoleSchemeRepository.findByUri(TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI))
-      .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_SCHEME_RECORD));
+        when(contributorRoleSchemeRepository.findByUri(TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI))
+                .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_SCHEME_RECORD));
 
-    final var failures = validationService.validate(role, 2, 3);
+        final var failures = validationService.validate(role, 2, 3);
 
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("contributors[2].roles[3].id")
-        .errorType("notSet")
-        .message("field must be set")
-    ));
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("contributors[2].roles[3].id")
+                        .errorType("notSet")
+                        .message("field must be set")
+        ));
 
-    verifyNoInteractions(contributorRoleRepository);
-  }
+        verifyNoInteractions(contributorRoleRepository);
+    }
 
-  @Test
-  @DisplayName("Validation fails with empty role")
-  void emptyRole() {
-    final var role = new ContributorRoleWithSchemeUri()
-      .schemeUri(TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI)
-      .id("");
+    @Test
+    @DisplayName("Validation fails with empty role")
+    void emptyRole() {
+        final var role = new ContributorRoleWithSchemeUri()
+                .schemeUri(TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI)
+                .id("");
 
-    when(contributorRoleSchemeRepository.findByUri(TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI))
-      .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_SCHEME_RECORD));
+        when(contributorRoleSchemeRepository.findByUri(TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI))
+                .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_SCHEME_RECORD));
 
-    final var failures = validationService.validate(role, 2, 3);
+        final var failures = validationService.validate(role, 2, 3);
 
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("contributors[2].roles[3].id")
-        .errorType("notSet")
-        .message("field must be set")
-    ));
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("contributors[2].roles[3].id")
+                        .errorType("notSet")
+                        .message("field must be set")
+        ));
 
-    verifyNoInteractions(contributorRoleRepository);
-  }
+        verifyNoInteractions(contributorRoleRepository);
+    }
 
-  @Test
-  @DisplayName("Validation fails with invalid role")
-  void invalidRole() {
-    final var role = new ContributorRoleWithSchemeUri()
-      .schemeUri(TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI)
-      .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
+    @Test
+    @DisplayName("Validation fails with invalid role")
+    void invalidRole() {
+        final var role = new ContributorRoleWithSchemeUri()
+                .schemeUri(TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI)
+                .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-    when(contributorRoleSchemeRepository.findByUri(TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI))
-      .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_SCHEME_RECORD));
+        when(contributorRoleSchemeRepository.findByUri(TestConstants.CONTRIBUTOR_ROLE_SCHEME_URI))
+                .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_SCHEME_RECORD));
 
-    when(contributorRoleRepository
-      .findByUriAndSchemeId(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE, CONTRIBUTOR_ROLE_TYPE_SCHEME_ID))
-      .thenReturn(Optional.empty());
+        when(contributorRoleRepository
+                .findByUriAndSchemeId(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE, CONTRIBUTOR_ROLE_TYPE_SCHEME_ID))
+                .thenReturn(Optional.empty());
 
-    final var failures = validationService.validate(role, 2, 3);
+        final var failures = validationService.validate(role, 2, 3);
 
-    assertThat(failures, hasSize(1));
-    assertThat(failures, hasItem(
-      new ValidationFailure()
-        .fieldId("contributors[2].roles[3].id")
-        .errorType("invalidValue")
-        .message("id does not exist within the given scheme")
-    ));
-  }
+        assertThat(failures, hasSize(1));
+        assertThat(failures, hasItem(
+                new ValidationFailure()
+                        .fieldId("contributors[2].roles[3].id")
+                        .errorType("invalidValue")
+                        .message("id does not exist within the given scheme")
+        ));
+    }
 }

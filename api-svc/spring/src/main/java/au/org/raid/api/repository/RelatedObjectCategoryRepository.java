@@ -12,16 +12,16 @@ import static au.org.raid.db.jooq.api_svc.tables.RelatedObjectCategory.RELATED_O
 @Repository
 @RequiredArgsConstructor
 public class RelatedObjectCategoryRepository {
-  private final DSLContext dslContext;
+    private final DSLContext dslContext;
 
-  public Optional<RelatedObjectCategoryRecord> findByUriAndSchemeId(final String uri, final int schemeId) {
-    return dslContext.select(RELATED_OBJECT_CATEGORY.fields())
-      .from(RELATED_OBJECT_CATEGORY)
-      .where(RELATED_OBJECT_CATEGORY.URI.eq(uri)
-        .and(RELATED_OBJECT_CATEGORY.SCHEME_ID.eq(schemeId)))
-      .fetchOptional(record -> new RelatedObjectCategoryRecord()
-        .setSchemeId(RELATED_OBJECT_CATEGORY.SCHEME_ID.getValue(record))
-        .setUri(RELATED_OBJECT_CATEGORY.URI.getValue(record))
-      );
-  }
+    public Optional<RelatedObjectCategoryRecord> findByUriAndSchemeId(final String uri, final int schemeId) {
+        return dslContext.select(RELATED_OBJECT_CATEGORY.fields())
+                .from(RELATED_OBJECT_CATEGORY)
+                .where(RELATED_OBJECT_CATEGORY.URI.eq(uri)
+                        .and(RELATED_OBJECT_CATEGORY.SCHEME_ID.eq(schemeId)))
+                .fetchOptional(record -> new RelatedObjectCategoryRecord()
+                        .setSchemeId(RELATED_OBJECT_CATEGORY.SCHEME_ID.getValue(record))
+                        .setUri(RELATED_OBJECT_CATEGORY.URI.getValue(record))
+                );
+    }
 }

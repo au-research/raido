@@ -14,55 +14,55 @@ import static au.org.raid.api.util.StringUtil.isBlank;
 
 @Component
 public class StableOrganisationRoleValidationService {
-  private final OrganisationRoleSchemeRepository organisationRoleSchemeRepository;
-  private final OrganisationRoleRepository organisationRoleRepository;
+    private final OrganisationRoleSchemeRepository organisationRoleSchemeRepository;
+    private final OrganisationRoleRepository organisationRoleRepository;
 
-  public StableOrganisationRoleValidationService(final OrganisationRoleSchemeRepository organisationRoleSchemeRepository, final OrganisationRoleRepository organisationRoleRepository) {
-    this.organisationRoleSchemeRepository = organisationRoleSchemeRepository;
-    this.organisationRoleRepository = organisationRoleRepository;
-  }
-
-  public List<ValidationFailure> validate(
-      final OrganisationRoleWithSchemeUri role, final int organisationIndex, final int roleIndex) {
-    final var failures = new ArrayList<ValidationFailure>();
-
-    if (isBlank(role.getId())) {
-      failures.add(
-        new ValidationFailure()
-          .fieldId("organisations[%d].roles[%d].id".formatted(organisationIndex, roleIndex))
-          .errorType(NOT_SET_TYPE)
-          .message(FIELD_MUST_BE_SET_MESSAGE));
+    public StableOrganisationRoleValidationService(final OrganisationRoleSchemeRepository organisationRoleSchemeRepository, final OrganisationRoleRepository organisationRoleRepository) {
+        this.organisationRoleSchemeRepository = organisationRoleSchemeRepository;
+        this.organisationRoleRepository = organisationRoleRepository;
     }
 
-    if (isBlank(role.getSchemeUri())) {
-      failures.add(
-        new ValidationFailure()
-          .fieldId("organisations[%d].roles[%d].schemeUri".formatted(organisationIndex, roleIndex))
-          .errorType(NOT_SET_TYPE)
-          .message(FIELD_MUST_BE_SET_MESSAGE)
-      );
-    } else {
-      final var roleScheme =
-        organisationRoleSchemeRepository.findByUri(role.getSchemeUri());
+    public List<ValidationFailure> validate(
+            final OrganisationRoleWithSchemeUri role, final int organisationIndex, final int roleIndex) {
+        final var failures = new ArrayList<ValidationFailure>();
 
-      if (roleScheme.isEmpty()) {
-        failures.add(
-          new ValidationFailure()
-            .fieldId("organisations[%d].roles[%d].schemeUri".formatted(organisationIndex, roleIndex))
-            .errorType(INVALID_VALUE_TYPE)
-            .message(INVALID_SCHEME)
-        );
-      } else if (!isBlank(role.getId()) &&
-        organisationRoleRepository.findByUriAndSchemeId(role.getId(), roleScheme.get().getId()).isEmpty()) {
-        failures.add(
-          new ValidationFailure()
-            .fieldId("organisations[%d].roles[%d].id".formatted(organisationIndex, roleIndex))
-            .errorType(INVALID_VALUE_TYPE)
-            .message(INVALID_ID_FOR_SCHEME)
-        );
-      }
+        if (isBlank(role.getId())) {
+            failures.add(
+                    new ValidationFailure()
+                            .fieldId("organisations[%d].roles[%d].id".formatted(organisationIndex, roleIndex))
+                            .errorType(NOT_SET_TYPE)
+                            .message(FIELD_MUST_BE_SET_MESSAGE));
+        }
+
+        if (isBlank(role.getSchemeUri())) {
+            failures.add(
+                    new ValidationFailure()
+                            .fieldId("organisations[%d].roles[%d].schemeUri".formatted(organisationIndex, roleIndex))
+                            .errorType(NOT_SET_TYPE)
+                            .message(FIELD_MUST_BE_SET_MESSAGE)
+            );
+        } else {
+            final var roleScheme =
+                    organisationRoleSchemeRepository.findByUri(role.getSchemeUri());
+
+            if (roleScheme.isEmpty()) {
+                failures.add(
+                        new ValidationFailure()
+                                .fieldId("organisations[%d].roles[%d].schemeUri".formatted(organisationIndex, roleIndex))
+                                .errorType(INVALID_VALUE_TYPE)
+                                .message(INVALID_SCHEME)
+                );
+            } else if (!isBlank(role.getId()) &&
+                    organisationRoleRepository.findByUriAndSchemeId(role.getId(), roleScheme.get().getId()).isEmpty()) {
+                failures.add(
+                        new ValidationFailure()
+                                .fieldId("organisations[%d].roles[%d].id".formatted(organisationIndex, roleIndex))
+                                .errorType(INVALID_VALUE_TYPE)
+                                .message(INVALID_ID_FOR_SCHEME)
+                );
+            }
+        }
+
+        return failures;
     }
-
-    return failures;
-  }
 }

@@ -15,11 +15,11 @@ import static org.hamcrest.Matchers.nullValue;
 
 class TitleFactoryTest {
     private static final String PRIMARY_ID =
-        "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
+            "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
     private static final String ALTERNATIVE_ID =
-        "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json";
+            "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json";
     private static final String TITLE_TYPE_SCHEME_URI =
-        "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/";
+            "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/";
 
     private static final LocalDate START_DATE = LocalDate.now().minusYears(2);
     private static final LocalDate END_DATE = LocalDate.now().minusYears(1);
@@ -31,20 +31,20 @@ class TitleFactoryTest {
     @DisplayName("Sets primary title type")
     void setsPrimaryType() {
         final var title = new TitleBlock()
-            .startDate(START_DATE)
-            .endDate(END_DATE)
-            .title(TITLE)
-            .type(TitleType.PRIMARY_TITLE);
+                .startDate(START_DATE)
+                .endDate(END_DATE)
+                .title(TITLE)
+                .type(TitleType.PRIMARY_TITLE);
 
         final var result = titleFactory.create(title);
 
         final var expected = new Title()
-            .title(TITLE)
-            .startDate(START_DATE)
-            .endDate(END_DATE)
-            .type(new TitleTypeWithSchemeUri()
-                .id(PRIMARY_ID)
-                .schemeUri(TITLE_TYPE_SCHEME_URI));
+                .title(TITLE)
+                .startDate(START_DATE)
+                .endDate(END_DATE)
+                .type(new TitleTypeWithSchemeUri()
+                        .id(PRIMARY_ID)
+                        .schemeUri(TITLE_TYPE_SCHEME_URI));
 
         assertThat(result, is(expected));
     }
@@ -53,20 +53,20 @@ class TitleFactoryTest {
     @DisplayName("Sets alternative title type")
     void setsAlternativeType() {
         final var title = new TitleBlock()
-            .startDate(START_DATE)
-            .endDate(END_DATE)
-            .title(TITLE)
-            .type(TitleType.ALTERNATIVE_TITLE);
+                .startDate(START_DATE)
+                .endDate(END_DATE)
+                .title(TITLE)
+                .type(TitleType.ALTERNATIVE_TITLE);
 
         final var result = titleFactory.create(title);
 
         final var expected = new Title()
-            .title(TITLE)
-            .startDate(START_DATE)
-            .endDate(END_DATE)
-            .type(new TitleTypeWithSchemeUri()
-                .id(ALTERNATIVE_ID)
-                .schemeUri(TITLE_TYPE_SCHEME_URI));
+                .title(TITLE)
+                .startDate(START_DATE)
+                .endDate(END_DATE)
+                .type(new TitleTypeWithSchemeUri()
+                        .id(ALTERNATIVE_ID)
+                        .schemeUri(TITLE_TYPE_SCHEME_URI));
 
         assertThat(result, is(expected));
     }
@@ -85,8 +85,8 @@ class TitleFactoryTest {
         final var result = titleFactory.create(title);
 
         final var expected = new Title()
-            .type(new TitleTypeWithSchemeUri()
-                .schemeUri(TITLE_TYPE_SCHEME_URI));
+                .type(new TitleTypeWithSchemeUri()
+                        .schemeUri(TITLE_TYPE_SCHEME_URI));
 
         assertThat(result, is(expected));
     }

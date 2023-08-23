@@ -5,27 +5,27 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class InMemoryStubProps {
-  @Value("${Apids.inMemoryStub:false}")
-  public boolean apidsInMemoryStub;
+    @Value("${Apids.inMemoryStub:false}")
+    public boolean apidsInMemoryStub;
 
-  @Value("${Apids.inMemoryStubDelay:150}")
-  public long apidsInMemoryStubDelay;
+    @Value("${Apids.inMemoryStubDelay:150}")
+    public long apidsInMemoryStubDelay;
 
-  @Value("${Orcid.inMemoryStub:false}")
-  public boolean orcidInMemoryStub;
+    @Value("${Orcid.inMemoryStub:false}")
+    public boolean orcidInMemoryStub;
 
-  @Value("${Orcid.inMemoryStubDelay:150}")
-  public long orcidInMemoryStubDelay;
+    @Value("${Orcid.inMemoryStubDelay:150}")
+    public long orcidInMemoryStubDelay;
 
-  @Value("${Ror.inMemoryStub:false}")
-  public boolean rorInMemoryStub;
+    @Value("${Ror.inMemoryStub:false}")
+    public boolean rorInMemoryStub;
 
-  @Value("${Ror.inMemoryStubDelay:150}")
-  public long rorInMemoryStubDelay;
+    @Value("${Ror.inMemoryStubDelay:150}")
+    public long rorInMemoryStubDelay;
 
-  @Value("${Doi.inMemoryStub:false}")
-  public boolean doiInMemoryStub;
+    @Value("${Doi.inMemoryStub:false}")
+    public boolean doiInMemoryStub;
 
-  @Value("${Doi.inMemoryStubDelay:150}")
-  public long doiInMemoryStubDelay;
+    @Value("${Doi.inMemoryStubDelay:150}")
+    public long doiInMemoryStubDelay;
 }

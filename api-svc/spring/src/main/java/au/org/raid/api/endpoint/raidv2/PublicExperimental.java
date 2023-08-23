@@ -35,95 +35,97 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 @RestController
 @Transactional
 public class PublicExperimental implements PublicExperimentalApi {
-  public static final String HANDLE_V3_CATCHALL_PREFIX =
-    RAID_V2_API + "/public/handle/v3" + "/";
-  public static final String HANDLE_SEPARATOR = "/";
-  private static final Log log = to(PublicExperimental.class);
-  
-  private DSLContext db;
-  private AppInfoBean appInfo;
-  private StartupListener startup;
-  private RaidService raidSvc;
-  private MetadataService metaSvc;
+    public static final String HANDLE_V3_CATCHALL_PREFIX =
+            RAID_V2_API + "/public/handle/v3" + "/";
+    public static final String HANDLE_SEPARATOR = "/";
+    private static final Log log = to(PublicExperimental.class);
 
-  public PublicExperimental(
-    DSLContext db,
-    AppInfoBean appInfo,
-    StartupListener startup,
-    RaidService raidSvc,
-    MetadataService metaSvc
-  ) {
-    this.db = db;
-    this.appInfo = appInfo;
-    this.startup = startup;
-    this.raidSvc = raidSvc;
-    this.metaSvc = metaSvc;
-  }
+    private DSLContext db;
+    private AppInfoBean appInfo;
+    private StartupListener startup;
+    private RaidService raidSvc;
+    private MetadataService metaSvc;
 
-  /** Transactional=SUPPORTS because when testing this out in AWS and I had 
-   bad DB config, found out this method was creating a TX.  Doesn't need to do
-   that, so I added supports so that it would not create a TX if called at
-   top level. */
-  @Transactional(propagation = Propagation.SUPPORTS)
-  @Override
-  public VersionResult version() {
-    return new VersionResult().
-      buildVersion(appInfo.getBuildVersion()).
-      buildCommitId(appInfo.getBuildCommitId()).
-      buildDate(appInfo.getBuildDate()).
-      startDate(startup.getStartTime().atOffset(UTC));
- 
-  }
-
-  @Override
-  public List<PublicServicePoint> publicListServicePoint() {
-    return db.
-      select(
-        SERVICE_POINT.ID,
-        SERVICE_POINT.NAME).
-      from(SERVICE_POINT).
-      where(SERVICE_POINT.ENABLED.isTrue()).
-      fetchInto(PublicServicePoint.class);
-  }
-
-  @Override
-  public PublicReadRaidResponseV3 publicReadRaidV3(String handle) {
-    var data = raidSvc.readRaidV2Data(handle);
-    return metaSvc.mapPublicReadResponse(data);
-  }
-
-  /**
-   This method catches all prefixes with path prefix `/v3/raid` and attempts
-   to parse the parameter manually, so that we can receive handles that are
-   just formatted with simple slashes.
-   The openapi spec is defined with the "{raidId}' path param because it makes
-   it more clear to the reader/caller what the url is expected to look like.
-   <p>
-   IMPROVE: factor out parsing logic and write detailed/edge-case unit tests 
-   */
-  @RequestMapping(
-    method = RequestMethod.GET,
-    value = HANDLE_V3_CATCHALL_PREFIX + "**")
-  public PublicReadRaidResponseV3 handleRaidV3CatchAll(
-    HttpServletRequest req
-  ) {
-    String path = urlDecode(req.getServletPath().trim());
-    log.with("path", req.getServletPath()).
-      with("decodedPath", path).
-      with("params", req.getParameterMap()).
-      info("handleRaidV2CatchAllAsHtml() called");
-
-    if( !path.startsWith(HANDLE_V3_CATCHALL_PREFIX) ){
-      throw iae("unexpected path: %s", path);
+    public PublicExperimental(
+            DSLContext db,
+            AppInfoBean appInfo,
+            StartupListener startup,
+            RaidService raidSvc,
+            MetadataService metaSvc
+    ) {
+        this.db = db;
+        this.appInfo = appInfo;
+        this.startup = startup;
+        this.raidSvc = raidSvc;
+        this.metaSvc = metaSvc;
     }
 
-    String handle = path.substring(HANDLE_V3_CATCHALL_PREFIX.length());
-    if( !handle.contains(HANDLE_SEPARATOR) ){
-      throw apiSafe("handle did not contain a slash character",
-        BAD_REQUEST_400, of(handle));
+    /**
+     * Transactional=SUPPORTS because when testing this out in AWS and I had
+     * bad DB config, found out this method was creating a TX.  Doesn't need to do
+     * that, so I added supports so that it would not create a TX if called at
+     * top level.
+     */
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Override
+    public VersionResult version() {
+        return new VersionResult().
+                buildVersion(appInfo.getBuildVersion()).
+                buildCommitId(appInfo.getBuildCommitId()).
+                buildDate(appInfo.getBuildDate()).
+                startDate(startup.getStartTime().atOffset(UTC));
+
     }
 
-    return publicReadRaidV3(handle);
-  }
+    @Override
+    public List<PublicServicePoint> publicListServicePoint() {
+        return db.
+                select(
+                        SERVICE_POINT.ID,
+                        SERVICE_POINT.NAME).
+                from(SERVICE_POINT).
+                where(SERVICE_POINT.ENABLED.isTrue()).
+                fetchInto(PublicServicePoint.class);
+    }
+
+    @Override
+    public PublicReadRaidResponseV3 publicReadRaidV3(String handle) {
+        var data = raidSvc.readRaidV2Data(handle);
+        return metaSvc.mapPublicReadResponse(data);
+    }
+
+    /**
+     * This method catches all prefixes with path prefix `/v3/raid` and attempts
+     * to parse the parameter manually, so that we can receive handles that are
+     * just formatted with simple slashes.
+     * The openapi spec is defined with the "{raidId}' path param because it makes
+     * it more clear to the reader/caller what the url is expected to look like.
+     * <p>
+     * IMPROVE: factor out parsing logic and write detailed/edge-case unit tests
+     */
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = HANDLE_V3_CATCHALL_PREFIX + "**")
+    public PublicReadRaidResponseV3 handleRaidV3CatchAll(
+            HttpServletRequest req
+    ) {
+        String path = urlDecode(req.getServletPath().trim());
+        log.with("path", req.getServletPath()).
+                with("decodedPath", path).
+                with("params", req.getParameterMap()).
+                info("handleRaidV2CatchAllAsHtml() called");
+
+        if (!path.startsWith(HANDLE_V3_CATCHALL_PREFIX)) {
+            throw iae("unexpected path: %s", path);
+        }
+
+        String handle = path.substring(HANDLE_V3_CATCHALL_PREFIX.length());
+        if (!handle.contains(HANDLE_SEPARATOR)) {
+            throw apiSafe("handle did not contain a slash character",
+                    BAD_REQUEST_400, of(handle));
+        }
+
+        return publicReadRaidV3(handle);
+    }
 
 }

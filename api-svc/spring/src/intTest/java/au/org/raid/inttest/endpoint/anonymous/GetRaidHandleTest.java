@@ -25,162 +25,162 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class GetRaidHandleTest extends IntegrationTestCase {
-  private static final Log log = to(GetRaidHandleTest.class);
-  
-  @Test
-  void apiGetExistingShouldSucceedWithAcceptJson() {
-    var raidApi = super.basicRaidExperimentalClient();
-    String title = getName() + idFactory.generateUniqueId();
+    private static final Log log = to(GetRaidHandleTest.class);
 
-    
-    WHEN("a raid is minted");
-    var mintResult = raidApi.mintRaidoSchemaV1(
-      createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID) );
-
-    
-    THEN("API GET of root mapping with handle should return data");
-    HttpHeaders headers = new HttpHeaders();
-    headers.set(ACCEPT, APPLICATION_JSON_VALUE);
-    HttpEntity<String> entity = new HttpEntity<>(headers);
-    var res = rest.exchange(
-      raidoApiServerUrl(ROOT_PATH) + "/" + mintResult.getRaid().getHandle(),
-      GET, entity, PublicReadRaidResponseV3.class);
-    
-    assertThat(res.getStatusCode().is2xxSuccessful()).
-      overridingErrorMessage("GET call should have succeeded directly").
-      isTrue();
-    var metadata = (PublicRaidMetadataSchemaV1) res.getBody().getMetadata();
-    assertThat(metadata.getTitles().get(0).getTitle()).isEqualTo(title);
-  }
-
-  /**
-   This test was added because when doing a curl from the command line and 
-   specifying only the `contentType`, curl adds an "accept all" header
-   so the headers are actually:
-   Accept: *\/*
-   Content-Type: application/json
-   
-   (note the backslash added to the `Accept` header because the value is the 
-   terminating sequence marker for javadoc)
-   
-   I believe the asserted functionality is correct, because the `Content-Type`
-   header doesn't even make sense with a GET request (it doesn't have a body).
-   */
-  @Test
-  void apiGetExistingShouldRedirectWithAcceptAll() {
-    var raidApi = super.basicRaidExperimentalClient();
-    String title = getName() + idFactory.generateUniqueId();
+    @Test
+    void apiGetExistingShouldSucceedWithAcceptJson() {
+        var raidApi = super.basicRaidExperimentalClient();
+        String title = getName() + idFactory.generateUniqueId();
 
 
-    WHEN("a raid is minted");
-    var mintResult = raidApi.mintRaidoSchemaV1(
-      createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID));
+        WHEN("a raid is minted");
+        var mintResult = raidApi.mintRaidoSchemaV1(
+                createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID));
 
 
-    THEN("API GET of root mapping with handle should return data");
-    HttpHeaders headers = new HttpHeaders();
-    headers.set(ACCEPT, "*/*");
-    headers.set(CONTENT_TYPE, APPLICATION_JSON_VALUE);
-    HttpEntity<String> entity = new HttpEntity<>(headers);
-    var res = rest.exchange(
-      raidoApiServerUrl(ROOT_PATH) + "/" + mintResult.getRaid().getHandle(),
-      GET, entity, PublicReadRaidResponseV3.class);
+        THEN("API GET of root mapping with handle should return data");
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(ACCEPT, APPLICATION_JSON_VALUE);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        var res = rest.exchange(
+                raidoApiServerUrl(ROOT_PATH) + "/" + mintResult.getRaid().getHandle(),
+                GET, entity, PublicReadRaidResponseV3.class);
 
-    assertThat(res.getStatusCode().is3xxRedirection()).
-      overridingErrorMessage("GET call should have redirected").
-      isTrue();
-  }
+        assertThat(res.getStatusCode().is2xxSuccessful()).
+                overridingErrorMessage("GET call should have succeeded directly").
+                isTrue();
+        var metadata = (PublicRaidMetadataSchemaV1) res.getBody().getMetadata();
+        assertThat(metadata.getTitles().get(0).getTitle()).isEqualTo(title);
+    }
 
-  @Test
-  void apiGetExistingWithEncodingShouldSucceed() {
-    var raidApi = super.basicRaidExperimentalClient();
-    String title = getName() + idFactory.generateUniqueId();
+    /**
+     * This test was added because when doing a curl from the command line and
+     * specifying only the `contentType`, curl adds an "accept all" header
+     * so the headers are actually:
+     * Accept: *\/*
+     * Content-Type: application/json
+     * <p>
+     * (note the backslash added to the `Accept` header because the value is the
+     * terminating sequence marker for javadoc)
+     * <p>
+     * I believe the asserted functionality is correct, because the `Content-Type`
+     * header doesn't even make sense with a GET request (it doesn't have a body).
+     */
+    @Test
+    void apiGetExistingShouldRedirectWithAcceptAll() {
+        var raidApi = super.basicRaidExperimentalClient();
+        String title = getName() + idFactory.generateUniqueId();
 
-    
-    WHEN("a raid is minted");
-    var mintResult = raidApi.mintRaidoSchemaV1(
-      createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID) );
 
-    
-    THEN("API GET of root mapping with an encoded handle should return data");
-    HttpHeaders headers = new HttpHeaders();
-    headers.set(ACCEPT, APPLICATION_JSON_VALUE);
-    HttpEntity<String> entity = new HttpEntity<>(headers);
-    
-    String encodedHandle = urlEncode(mintResult.getRaid().getHandle());
-    
-    var res = valuesEncodingRest.exchange(
-      raidoApiServerUrl(ROOT_PATH) + "/" + encodedHandle,
-      GET, entity, PublicReadRaidResponseV3.class);
-    
-    assertThat(res.getStatusCode().is2xxSuccessful()).isTrue();
-    var metadata = (PublicRaidMetadataSchemaV1) res.getBody().getMetadata();
-    assertThat(metadata.getTitles().get(0).getTitle()).isEqualTo(title);
-  }
+        WHEN("a raid is minted");
+        var mintResult = raidApi.mintRaidoSchemaV1(
+                createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID));
 
-  @Test
-  public void browserViewExistingWithNoAcceptHeaderShouldRedirectToWebsite() {
-    BddUtil.EXPECT(getName());
 
-    var raidApi = super.basicRaidExperimentalClient();
-    String title = getName() + idFactory.generateUniqueId();
+        THEN("API GET of root mapping with handle should return data");
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(ACCEPT, "*/*");
+        headers.set(CONTENT_TYPE, APPLICATION_JSON_VALUE);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        var res = rest.exchange(
+                raidoApiServerUrl(ROOT_PATH) + "/" + mintResult.getRaid().getHandle(),
+                GET, entity, PublicReadRaidResponseV3.class);
 
-    WHEN("a raid is minted");
-    var mintResult = raidApi.mintRaidoSchemaV1(
-      createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID) );
-    
-    HttpHeaders headers = new HttpHeaders();
+        assertThat(res.getStatusCode().is3xxRedirection()).
+                overridingErrorMessage("GET call should have redirected").
+                isTrue();
+    }
+
+    @Test
+    void apiGetExistingWithEncodingShouldSucceed() {
+        var raidApi = super.basicRaidExperimentalClient();
+        String title = getName() + idFactory.generateUniqueId();
+
+
+        WHEN("a raid is minted");
+        var mintResult = raidApi.mintRaidoSchemaV1(
+                createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID));
+
+
+        THEN("API GET of root mapping with an encoded handle should return data");
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(ACCEPT, APPLICATION_JSON_VALUE);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        String encodedHandle = urlEncode(mintResult.getRaid().getHandle());
+
+        var res = valuesEncodingRest.exchange(
+                raidoApiServerUrl(ROOT_PATH) + "/" + encodedHandle,
+                GET, entity, PublicReadRaidResponseV3.class);
+
+        assertThat(res.getStatusCode().is2xxSuccessful()).isTrue();
+        var metadata = (PublicRaidMetadataSchemaV1) res.getBody().getMetadata();
+        assertThat(metadata.getTitles().get(0).getTitle()).isEqualTo(title);
+    }
+
+    @Test
+    public void browserViewExistingWithNoAcceptHeaderShouldRedirectToWebsite() {
+        BddUtil.EXPECT(getName());
+
+        var raidApi = super.basicRaidExperimentalClient();
+        String title = getName() + idFactory.generateUniqueId();
+
+        WHEN("a raid is minted");
+        var mintResult = raidApi.mintRaidoSchemaV1(
+                createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID));
+
+        HttpHeaders headers = new HttpHeaders();
     /* RestTemplate appears to default to 
      accept=application/xml, application/json, application/*+json */
-    headers.set(ACCEPT, "");
-    HttpEntity<String> entity = new HttpEntity<>(headers);
+        headers.set(ACCEPT, "");
+        HttpEntity<String> entity = new HttpEntity<>(headers);
 
 
-    THEN("GET handle and no Accept header should redirect to landing page");
-    var res = rest.exchange(
-      raidoApiServerUrl(ROOT_PATH)+ mintResult.getRaid().getHandle(),
-      GET, entity, Void.class);
-    assertThat(res.getStatusCode().is3xxRedirection()).
-      overridingErrorMessage("missing accept header should have redirected").
-      isTrue();
-    assertThat(res.getHeaders().getLocation().toString()).
-      isEqualTo(env.raidoLandingPage+"/"+mintResult.getRaid().getHandle());
-  }
+        THEN("GET handle and no Accept header should redirect to landing page");
+        var res = rest.exchange(
+                raidoApiServerUrl(ROOT_PATH) + mintResult.getRaid().getHandle(),
+                GET, entity, Void.class);
+        assertThat(res.getStatusCode().is3xxRedirection()).
+                overridingErrorMessage("missing accept header should have redirected").
+                isTrue();
+        assertThat(res.getHeaders().getLocation().toString()).
+                isEqualTo(env.raidoLandingPage + "/" + mintResult.getRaid().getHandle());
+    }
 
 
-  @Test
-  void apiGetNonExistentShould404() {
-    EXPECT(getName());
+    @Test
+    void apiGetNonExistentShould404() {
+        EXPECT(getName());
 
-    HttpHeaders headers = new HttpHeaders();
-    headers.set(ACCEPT, APPLICATION_JSON_VALUE);
-    HttpEntity<String> entity = new HttpEntity<>(headers);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(ACCEPT, APPLICATION_JSON_VALUE);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
 
-    
-    assertThatThrownBy(()->{
-      rest.exchange(
-        raidoApiServerUrl(ROOT_PATH) + "/102.100.100/42.42",
-        GET, entity, PublicReadRaidResponseV3.class);
-    }).
-      isInstanceOf(HttpClientErrorException.NotFound.class).
-      hasMessageContaining("404 Not Found");
-  }
-  
-  @Test
-  void apiGetInvalidPrefixShould404() {
-    EXPECT(getName());
 
-    HttpHeaders headers = new HttpHeaders();
-    headers.set(ACCEPT, APPLICATION_JSON_VALUE);
-    HttpEntity<String> entity = new HttpEntity<>(headers);
+        assertThatThrownBy(() -> {
+            rest.exchange(
+                    raidoApiServerUrl(ROOT_PATH) + "/102.100.100/42.42",
+                    GET, entity, PublicReadRaidResponseV3.class);
+        }).
+                isInstanceOf(HttpClientErrorException.NotFound.class).
+                hasMessageContaining("404 Not Found");
+    }
 
-    assertThatThrownBy(()->{
-      rest.exchange(
-        raidoApiServerUrl(ROOT_PATH) + "/42.42.42/42.42",
-        GET, entity, PublicReadRaidResponseV3.class);
-    }).
-      isInstanceOf(HttpClientErrorException.NotFound.class).
-      hasMessageContaining("404 Not Found");
-  }
-  
+    @Test
+    void apiGetInvalidPrefixShould404() {
+        EXPECT(getName());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(ACCEPT, APPLICATION_JSON_VALUE);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        assertThatThrownBy(() -> {
+            rest.exchange(
+                    raidoApiServerUrl(ROOT_PATH) + "/42.42.42/42.42",
+                    GET, entity, PublicReadRaidResponseV3.class);
+        }).
+                isInstanceOf(HttpClientErrorException.NotFound.class).
+                hasMessageContaining("404 Not Found");
+    }
+
 }

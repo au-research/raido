@@ -58,18 +58,18 @@ class ContributorFactoryTest {
         when(roleFactory.create(role2)).thenReturn(role4);
 
         final var contributor = new ContributorBlock()
-            .id(orcid)
-            .identifierSchemeUri(ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_)
-            .positions(List.of(position1, position2))
-            .roles(List.of(role1, role2));
+                .id(orcid)
+                .identifierSchemeUri(ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_)
+                .positions(List.of(position1, position2))
+                .roles(List.of(role1, role2));
 
         final var result = contributorFactory.create(contributor);
 
         assertThat(result, is(new Contributor()
-            .id(orcid)
-            .identifierSchemeUri("https://orcid.org/")
-            .positions(List.of(position3, position4))
-            .roles(List.of(role3, role4))
+                .id(orcid)
+                .identifierSchemeUri("https://orcid.org/")
+                .positions(List.of(position3, position4))
+                .roles(List.of(role3, role4))
         ));
     }
 }

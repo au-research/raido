@@ -31,12 +31,12 @@ class AlternateIdentifierFactoryTest {
         final var type = "_type";
 
         final var alternateIdentifier = new AlternateIdentifierBlock()
-            .alternateIdentifier(id)
-            .alternateIdentifierType(type);
+                .alternateIdentifier(id)
+                .alternateIdentifierType(type);
 
         final var expected = new AlternateIdentifier()
-            .id(id)
-            .type(type);
+                .id(id)
+                .type(type);
 
         assertThat(alternateIdentifierFactory.create(alternateIdentifier), is(expected));
     }

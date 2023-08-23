@@ -16,31 +16,31 @@ import static java.util.Collections.emptyList;
 import static java.util.List.of;
 
 public class InMemoryOrcidServiceStub extends OrcidService {
-  private static final Log log = to(InMemoryOrcidServiceStub.class);
-  
-  private InMemoryStubProps stubProps;
-  
-  public InMemoryOrcidServiceStub(
-    InMemoryStubProps stubProps
-  ) {
-    super(null);
-    this.stubProps = stubProps;
-  }
+    private static final Log log = to(InMemoryOrcidServiceStub.class);
 
-  @Override
-  public List<String> validateOrcidExists(String orcid) {
-    log.with("delay", stubProps.orcidInMemoryStubDelay).
-      debug("simulate ORCID validation check");
-    infoLogExecutionTime(httpLog, VALIDATE_ORCID_EXISTS, ()->{
-      sleep(stubProps.orcidInMemoryStubDelay);
-      return null;
-    });
+    private InMemoryStubProps stubProps;
 
-    if( areEqual(orcid, NONEXISTENT_TEST_ORCID) ){
-      return of(NOT_FOUND_MESSAGE);
+    public InMemoryOrcidServiceStub(
+            InMemoryStubProps stubProps
+    ) {
+        super(null);
+        this.stubProps = stubProps;
     }
-    
-    return emptyList();
-  }
+
+    @Override
+    public List<String> validateOrcidExists(String orcid) {
+        log.with("delay", stubProps.orcidInMemoryStubDelay).
+                debug("simulate ORCID validation check");
+        infoLogExecutionTime(httpLog, VALIDATE_ORCID_EXISTS, () -> {
+            sleep(stubProps.orcidInMemoryStubDelay);
+            return null;
+        });
+
+        if (areEqual(orcid, NONEXISTENT_TEST_ORCID)) {
+            return of(NOT_FOUND_MESSAGE);
+        }
+
+        return emptyList();
+    }
 
 }

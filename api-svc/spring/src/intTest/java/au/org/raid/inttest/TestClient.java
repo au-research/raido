@@ -32,46 +32,46 @@ public class TestClient {
     }
 
     public BasicRaidExperimentalApi basicRaidExperimentalClient(
-        final String token
+            final String token
     ) {
-        return Feign.builder().
-            client(new OkHttpClient()).
-            encoder(new JacksonEncoder(objectMapper)).
-            decoder(new JacksonDecoder(objectMapper)).
-            contract(contract).
-            requestInterceptor(request ->
-                request.header(AUTHORIZATION, "Bearer " + token)).
-            logger(new Slf4jLogger(BasicRaidExperimentalApi.class)).
-            logLevel(Logger.Level.FULL).
-            target(BasicRaidExperimentalApi.class, props.getRaidoServerUrl());
-    }
-
-    public RaidoStableV1Api raidApi(
-        final String token
-    ){
-        return Feign.builder()
-            .options(
-                new Request.Options(2, TimeUnit.SECONDS, 2, TimeUnit.SECONDS, false)
-            )
-            .client(new OkHttpClient())
-            .encoder(new JacksonEncoder(objectMapper))
-            .decoder(new JacksonDecoder(objectMapper))
-            .errorDecoder(new RaidApiExceptionDecoder(objectMapper))
-            .contract(contract)
-            .requestInterceptor(request -> request.header(AUTHORIZATION, "Bearer " + token))
-            .logger(new Slf4jLogger(RaidoStableV1Api.class))
-            .logLevel(Logger.Level.FULL)
-            .target(RaidoStableV1Api.class, props.getRaidoServerUrl());
-    }
-
-    public RaidV1Api legacyApi(final String token){
         return Feign.builder().
                 client(new OkHttpClient()).
                 encoder(new JacksonEncoder(objectMapper)).
                 decoder(new JacksonDecoder(objectMapper)).
                 contract(contract).
-                requestInterceptor(request->
-                        request.header(AUTHORIZATION, "Bearer " + token) ).
+                requestInterceptor(request ->
+                        request.header(AUTHORIZATION, "Bearer " + token)).
+                logger(new Slf4jLogger(BasicRaidExperimentalApi.class)).
+                logLevel(Logger.Level.FULL).
+                target(BasicRaidExperimentalApi.class, props.getRaidoServerUrl());
+    }
+
+    public RaidoStableV1Api raidApi(
+            final String token
+    ) {
+        return Feign.builder()
+                .options(
+                        new Request.Options(2, TimeUnit.SECONDS, 2, TimeUnit.SECONDS, false)
+                )
+                .client(new OkHttpClient())
+                .encoder(new JacksonEncoder(objectMapper))
+                .decoder(new JacksonDecoder(objectMapper))
+                .errorDecoder(new RaidApiExceptionDecoder(objectMapper))
+                .contract(contract)
+                .requestInterceptor(request -> request.header(AUTHORIZATION, "Bearer " + token))
+                .logger(new Slf4jLogger(RaidoStableV1Api.class))
+                .logLevel(Logger.Level.FULL)
+                .target(RaidoStableV1Api.class, props.getRaidoServerUrl());
+    }
+
+    public RaidV1Api legacyApi(final String token) {
+        return Feign.builder().
+                client(new OkHttpClient()).
+                encoder(new JacksonEncoder(objectMapper)).
+                decoder(new JacksonDecoder(objectMapper)).
+                contract(contract).
+                requestInterceptor(request ->
+                        request.header(AUTHORIZATION, "Bearer " + token)).
                 logger(new Slf4jLogger(RaidV1Api.class)).
                 logLevel(Logger.Level.FULL).
                 target(RaidV1Api.class, props.getRaidoServerUrl() + RAID_V1_API);

@@ -13,11 +13,11 @@ import static org.hamcrest.Matchers.nullValue;
 
 class DescriptionFactoryTest {
     private static final String PRIMARY_ID =
-        "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json";
+            "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json";
     private static final String ALTERNATIVE_ID =
-        "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json";
+            "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json";
     private static final String DESCRIPTION_TYPE_SCHEME_URI =
-        "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/";
+            "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/";
     private static final String DESCRIPTION = "Test Description";
 
     private final DescriptionFactory descriptionFactory = new DescriptionFactory();
@@ -26,16 +26,16 @@ class DescriptionFactoryTest {
     @DisplayName("Sets primary description type")
     void setsPrimaryType() {
         final var description = new DescriptionBlock()
-            .description(DESCRIPTION)
-            .type(DescriptionType.PRIMARY_DESCRIPTION);
+                .description(DESCRIPTION)
+                .type(DescriptionType.PRIMARY_DESCRIPTION);
 
         final var result = descriptionFactory.create(description);
 
         final var expected = new Description()
-            .description(DESCRIPTION)
-            .type(new DescriptionTypeWithSchemeUri()
-                .id(PRIMARY_ID)
-                .schemeUri(DESCRIPTION_TYPE_SCHEME_URI));
+                .description(DESCRIPTION)
+                .type(new DescriptionTypeWithSchemeUri()
+                        .id(PRIMARY_ID)
+                        .schemeUri(DESCRIPTION_TYPE_SCHEME_URI));
 
         assertThat(result, is(expected));
     }
@@ -44,16 +44,16 @@ class DescriptionFactoryTest {
     @DisplayName("Sets alternative description type")
     void setsAlternativeType() {
         final var description = new DescriptionBlock()
-            .description(DESCRIPTION)
-            .type(DescriptionType.ALTERNATIVE_DESCRIPTION);
+                .description(DESCRIPTION)
+                .type(DescriptionType.ALTERNATIVE_DESCRIPTION);
 
         final var result = descriptionFactory.create(description);
 
         final var expected = new Description()
-            .description(DESCRIPTION)
-            .type(new DescriptionTypeWithSchemeUri()
-                .id(ALTERNATIVE_ID)
-                .schemeUri(DESCRIPTION_TYPE_SCHEME_URI));
+                .description(DESCRIPTION)
+                .type(new DescriptionTypeWithSchemeUri()
+                        .id(ALTERNATIVE_ID)
+                        .schemeUri(DESCRIPTION_TYPE_SCHEME_URI));
 
         assertThat(result, is(expected));
     }
@@ -72,8 +72,8 @@ class DescriptionFactoryTest {
         final var result = descriptionFactory.create(description);
 
         final var expected = new Description()
-            .type(new DescriptionTypeWithSchemeUri()
-                .schemeUri(DESCRIPTION_TYPE_SCHEME_URI));
+                .type(new DescriptionTypeWithSchemeUri()
+                        .schemeUri(DESCRIPTION_TYPE_SCHEME_URI));
 
         assertThat(result, is(expected));
     }

@@ -10,27 +10,27 @@ import org.springframework.security.oauth2.server.resource.authentication.Bearer
 import static au.org.raid.api.util.Log.to;
 
 public class RaidV1AuthenticationProvider implements AuthenticationProvider {
-  private static final Log log = to(RaidV1AuthenticationProvider.class);
-  
-  private RaidV1AuthService raidSvc;
+    private static final Log log = to(RaidV1AuthenticationProvider.class);
 
-  public RaidV1AuthenticationProvider(RaidV1AuthService raidSvc) {
-    this.raidSvc = raidSvc;
-  }
+    private RaidV1AuthService raidSvc;
 
-  @Override
-  public Authentication authenticate(Authentication authentication) 
-  throws AuthenticationException {
-    if( !(authentication instanceof BearerTokenAuthenticationToken bearer) ){
-      return null;
+    public RaidV1AuthenticationProvider(RaidV1AuthService raidSvc) {
+        this.raidSvc = raidSvc;
     }
 
-    return raidSvc.authenticate(bearer).orElse(null);
-  }
+    @Override
+    public Authentication authenticate(Authentication authentication)
+            throws AuthenticationException {
+        if (!(authentication instanceof BearerTokenAuthenticationToken bearer)) {
+            return null;
+        }
 
-  @Override
-  public boolean supports(Class<?> authentication) {
-    return authentication.isAssignableFrom(
-      BearerTokenAuthenticationToken.class );
-  }
+        return raidSvc.authenticate(bearer).orElse(null);
+    }
+
+    @Override
+    public boolean supports(Class<?> authentication) {
+        return authentication.isAssignableFrom(
+                BearerTokenAuthenticationToken.class);
+    }
 }

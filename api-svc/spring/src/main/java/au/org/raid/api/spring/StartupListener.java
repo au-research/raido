@@ -21,92 +21,90 @@ import static java.lang.Runtime.getRuntime;
 
 @Component
 public class StartupListener implements
-  ApplicationListener<ContextRefreshedEvent> 
-{
-  
-  private static final Log log = to(StartupListener.class);
+        ApplicationListener<ContextRefreshedEvent> {
 
-  @Value("${raido.greeting:no greeting config}")
-  private String greeting;
- 
-  private LocalDateTime startTime;
+    private static final Log log = to(StartupListener.class);
 
-  private DataSourceProps dsProps;
-  private EnvironmentProps envProps;
-  private MetricRegistry metricReg;
+    @Value("${raido.greeting:no greeting config}")
+    private String greeting;
 
-  public StartupListener(
-    DataSourceProps dsProps, 
-    EnvironmentProps envProps,
-    MetricRegistry metricReg
-  ) {
-    this.dsProps = dsProps;
-    this.envProps = envProps;
-    this.metricReg = metricReg;
-  }
+    private LocalDateTime startTime;
 
-  @Override public void onApplicationEvent(ContextRefreshedEvent event) {
-    log.with("eventSource", event.getSource()).
-      info("Greeting - %s", greeting );
-    log.with("envName", envProps.envName).
-      with("nodeId", envProps.nodeId).
-      with("isProd", envProps.isProd).
-      info("Environment");
-    log.with("url", dsProps.getUrl()).
-      with("username", dsProps.getUsername()).
-      info("DataSource");
-    JvmUtil.logSysProps();
-    JvmUtil.logBuildInfo();
-    JvmUtil.logMemoryInfo("startup");
-    log.with("availableProcessors", getRuntime().availableProcessors()).
-      info("JVM info");
-    metricReg.logMetricNames();
+    private DataSourceProps dsProps;
+    private EnvironmentProps envProps;
+    private MetricRegistry metricReg;
 
-    this.startTime = LocalDateTime.now();
-
-    if( event.getApplicationContext().getEnvironment() 
-      instanceof ConfigurableEnvironment cfgEnv
-    ){
-      logPropertySources(
-        event.getApplicationContext().getDisplayName(), cfgEnv );
-    }
-    else {
-      log.with("environment",
-          event.getApplicationContext().getEnvironment().getClass().getName() ).
-        info("non-configurable environment");
+    public StartupListener(
+            DataSourceProps dsProps,
+            EnvironmentProps envProps,
+            MetricRegistry metricReg
+    ) {
+        this.dsProps = dsProps;
+        this.envProps = envProps;
+        this.metricReg = metricReg;
     }
 
-  }
+    public static void logPropertySources(
+            String displayName, ConfigurableEnvironment env
+    ) {
+        MutablePropertySources propertySources = env.getPropertySources();
 
-  /**
-   Actually "ContextRefreshed" not "Start" time, but close enough for now.
-   */
-  public LocalDateTime getStartTime() {
-    return startTime;
-  }
+        log.with("displayName", displayName).
+                with("count", propertySources.size()).
+                info("AppContext propertySources");
 
-  public static void logPropertySources(
-    String displayName, ConfigurableEnvironment env
-  ){
-    MutablePropertySources propertySources = env.getPropertySources();
-    
-    log.with("displayName", displayName).
-      with("count", propertySources.size()).
-      info("AppContext propertySources");
-    
-    for( PropertySource<?> i : propertySources){
-      String propertySourceName = i.getName().toLowerCase();
+        for (PropertySource<?> i : propertySources) {
+            String propertySourceName = i.getName().toLowerCase();
 
-      if( i instanceof ResourcePropertySource iResource ){
-        log.with("name", iResource.getName()).
-          with("resourceName", iResource.withResourceName()).
-          info("resource source");
-      }
-      else {
-        log.with("name", propertySourceName).
-          info("non-resource source");
-      }
+            if (i instanceof ResourcePropertySource iResource) {
+                log.with("name", iResource.getName()).
+                        with("resourceName", iResource.withResourceName()).
+                        info("resource source");
+            } else {
+                log.with("name", propertySourceName).
+                        info("non-resource source");
+            }
+
+        }
+    }
+
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        log.with("eventSource", event.getSource()).
+                info("Greeting - %s", greeting);
+        log.with("envName", envProps.envName).
+                with("nodeId", envProps.nodeId).
+                with("isProd", envProps.isProd).
+                info("Environment");
+        log.with("url", dsProps.getUrl()).
+                with("username", dsProps.getUsername()).
+                info("DataSource");
+        JvmUtil.logSysProps();
+        JvmUtil.logBuildInfo();
+        JvmUtil.logMemoryInfo("startup");
+        log.with("availableProcessors", getRuntime().availableProcessors()).
+                info("JVM info");
+        metricReg.logMetricNames();
+
+        this.startTime = LocalDateTime.now();
+
+        if (event.getApplicationContext().getEnvironment()
+                instanceof ConfigurableEnvironment cfgEnv
+        ) {
+            logPropertySources(
+                    event.getApplicationContext().getDisplayName(), cfgEnv);
+        } else {
+            log.with("environment",
+                            event.getApplicationContext().getEnvironment().getClass().getName()).
+                    info("non-configurable environment");
+        }
 
     }
-  }
+
+    /**
+     * Actually "ContextRefreshed" not "Start" time, but close enough for now.
+     */
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
 }

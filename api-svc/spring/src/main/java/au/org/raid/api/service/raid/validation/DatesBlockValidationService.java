@@ -10,18 +10,17 @@ import java.util.List;
 
 @Component
 public class DatesBlockValidationService {
-  public List<ValidationFailure> validateDates(
-    DatesBlock dates
-  ) {
-    var failures = new ArrayList<ValidationFailure>();
-    if( dates == null ){
-      failures.add(ValidationMessage.DATES_NOT_SET);
+    public List<ValidationFailure> validateDates(
+            DatesBlock dates
+    ) {
+        var failures = new ArrayList<ValidationFailure>();
+        if (dates == null) {
+            failures.add(ValidationMessage.DATES_NOT_SET);
+        } else {
+            if (dates.getStartDate() == null) {
+                failures.add(ValidationMessage.DATES_START_DATE_NOT_SET);
+            }
+        }
+        return failures;
     }
-    else {
-      if( dates.getStartDate() == null ){
-        failures.add(ValidationMessage.DATES_START_DATE_NOT_SET);
-      }
-    }
-    return failures;
-  }
 }
