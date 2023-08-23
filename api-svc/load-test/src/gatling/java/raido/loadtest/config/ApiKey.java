@@ -1,16 +1,16 @@
 package raido.loadtest.config;
 
+import au.org.raid.api.endpoint.raidv2.AuthzUtil;
+import au.org.raid.api.service.auth.RaidV2ApiKeyApiTokenService;
+import au.org.raid.api.service.stub.util.IdFactory;
+import au.org.raid.db.jooq.api_svc.enums.UserRole;
 import com.auth0.jwt.algorithms.Algorithm;
-import raido.apisvc.endpoint.raidv2.AuthzUtil;
-import raido.apisvc.service.auth.RaidV2ApiKeyApiTokenService;
-import raido.db.jooq.api_svc.enums.UserRole;
-import raido.apisvc.service.stub.util.IdFactory;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-import static raido.apisvc.spring.security.raidv2.ApiToken.ApiTokenBuilder.anApiToken;
-import static raido.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
+import static au.org.raid.api.spring.security.raidv2.ApiToken.ApiTokenBuilder.anApiToken;
+import static au.org.raid.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
 import static raido.loadtest.config.GatlingRaidoServerConfig.serverConfig;
 
 public class ApiKey {

@@ -1,15 +1,14 @@
 package raido.loadtest.scenario;
 
+import au.org.raid.api.util.Guard;
+import au.org.raid.api.util.Log;
+import au.org.raid.idl.raidv2.model.ApiKey;
+import au.org.raid.idl.raidv2.model.GenerateApiTokenRequest;
+import au.org.raid.idl.raidv2.model.GenerateApiTokenResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.gatling.javaapi.core.ScenarioBuilder;
 import io.gatling.javaapi.core.Session;
 import io.gatling.javaapi.http.HttpRequestActionBuilder;
-import raido.apisvc.util.Guard;
-import raido.apisvc.util.Log;
-import raido.idl.raidv2.model.ApiKey;
-import raido.idl.raidv2.model.GenerateApiTokenRequest;
-import raido.idl.raidv2.model.GenerateApiTokenResponse;
-import raido.loadtest.util.Gatling.Var;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,32 +18,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-import static io.gatling.javaapi.core.CoreDsl.StringBody;
-import static io.gatling.javaapi.core.CoreDsl.bodyString;
-import static io.gatling.javaapi.core.CoreDsl.csv;
-import static io.gatling.javaapi.core.CoreDsl.exec;
-import static io.gatling.javaapi.core.CoreDsl.scenario;
+import static au.org.raid.api.util.Log.to;
+import static au.org.raid.api.util.StringUtil.blankToDefault;
+import static au.org.raid.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
+import static au.org.raid.db.jooq.api_svc.enums.UserRole.SP_ADMIN;
+import static io.gatling.javaapi.core.CoreDsl.*;
 import static io.gatling.javaapi.http.HttpDsl.http;
 import static io.gatling.javaapi.http.HttpDsl.status;
 import static java.lang.Long.parseLong;
 import static java.util.List.of;
 import static jodd.util.StringUtil.join;
-import static raido.apisvc.util.Log.to;
-import static raido.apisvc.util.StringUtil.blankToDefault;
-import static raido.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
-import static raido.db.jooq.api_svc.enums.UserRole.SP_ADMIN;
 import static raido.loadtest.config.ApiKey.bootstrapApiToken;
 import static raido.loadtest.scenario.ServicePointScenario.I_SP_ID;
 import static raido.loadtest.scenario.ServicePointScenario.I_SP_NAME;
-import static raido.loadtest.util.Gatling.guard;
-import static raido.loadtest.util.Gatling.sessionDebug;
-import static raido.loadtest.util.Gatling.setOrRemove;
+import static raido.loadtest.util.Gatling.*;
 import static raido.loadtest.util.Json.formatJson;
 import static raido.loadtest.util.Json.parseJson;
 import static raido.loadtest.util.RaidoApi.API_KEY_SUBJECT;
-import static raido.loadtest.util.RaidoApi.Endpoint.apiKey;
-import static raido.loadtest.util.RaidoApi.Endpoint.generateToken;
-import static raido.loadtest.util.RaidoApi.Endpoint.listApiKey;
+import static raido.loadtest.util.RaidoApi.Endpoint.*;
 import static raido.loadtest.util.RaidoApi.authzApiHeaders;
 
 public class ApiKeyScenario {

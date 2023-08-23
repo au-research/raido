@@ -1,6 +1,6 @@
 package raido.loadtest.config;
 
-import raido.apisvc.util.Log;
+import au.org.raid.api.util.Log;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -8,10 +8,10 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.StringJoiner;
 
+import static au.org.raid.api.util.Log.to;
+import static au.org.raid.api.util.StringUtil.hasValue;
 import static java.lang.Integer.parseInt;
 import static java.time.Duration.ofSeconds;
-import static raido.apisvc.util.Log.to;
-import static raido.apisvc.util.StringUtil.hasValue;
 import static raido.loadtest.util.Jvm.cwd;
 
 public class SimulationConfig {

@@ -1,14 +1,13 @@
 package raido.loadtest.scenario;
 
+import au.org.raid.api.util.Guard;
+import au.org.raid.api.util.Log;
+import au.org.raid.idl.raidv2.model.PublicServicePoint;
+import au.org.raid.idl.raidv2.model.ServicePoint;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.gatling.javaapi.core.ScenarioBuilder;
 import io.gatling.javaapi.core.Session;
 import io.gatling.javaapi.http.HttpRequestActionBuilder;
-import raido.apisvc.util.Guard;
-import raido.apisvc.util.Log;
-import raido.idl.raidv2.model.PublicServicePoint;
-import raido.idl.raidv2.model.ServicePoint;
-import raido.loadtest.util.Gatling.Var;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,22 +17,17 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
-import static io.gatling.javaapi.core.CoreDsl.StringBody;
-import static io.gatling.javaapi.core.CoreDsl.bodyString;
-import static io.gatling.javaapi.core.CoreDsl.exec;
-import static io.gatling.javaapi.core.CoreDsl.scenario;
+import static au.org.raid.api.util.Guard.notNull;
+import static au.org.raid.api.util.Log.to;
+import static au.org.raid.api.util.ObjectUtil.first;
+import static au.org.raid.api.util.StringUtil.blankToDefault;
+import static io.gatling.javaapi.core.CoreDsl.*;
 import static io.gatling.javaapi.http.HttpDsl.http;
 import static io.gatling.javaapi.http.HttpDsl.status;
 import static java.util.List.of;
 import static jodd.util.StringUtil.join;
-import static raido.apisvc.util.Guard.notNull;
-import static raido.apisvc.util.Log.to;
-import static raido.apisvc.util.ObjectUtil.first;
-import static raido.apisvc.util.StringUtil.blankToDefault;
 import static raido.loadtest.config.ApiKey.bootstrapApiToken;
-import static raido.loadtest.util.Gatling.guard;
-import static raido.loadtest.util.Gatling.sessionDebug;
-import static raido.loadtest.util.Gatling.setOrRemove;
+import static raido.loadtest.util.Gatling.*;
 import static raido.loadtest.util.Json.formatJson;
 import static raido.loadtest.util.Json.parseJson;
 import static raido.loadtest.util.RaidoApi.Endpoint.publicListServicePoint;

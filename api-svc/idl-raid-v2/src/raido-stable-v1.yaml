@@ -246,8 +246,6 @@ components:
            type: string,
            example: https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1
         }
-        language:
-          $ref: '#/components/schemas/Language'
     Access:
       type: object
       required: ["type"]

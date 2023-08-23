@@ -1,12 +1,12 @@
 package raid.v2_api_migration
 
+import au.org.raid.idl.raidv2.model.MigrateLegacyRaidRequest
+import au.org.raid.idl.raidv2.model.MigrateLegacyRaidRequestMintRequest
+import au.org.raid.idl.raidv2.model.ValidationFailure
 import org.jooq.Record
 import org.jooq.Result
 import org.jooq.impl.DSL
 import raid.ddb_migration.JooqExec
-import raido.idl.raidv2.model.MigrateLegacyRaidRequest
-import raido.idl.raidv2.model.MigrateLegacyRaidRequestMintRequest
-import raido.idl.raidv2.model.ValidationFailure
 
 import static db.migration.jooq.tables.Raid.RAID
 import static java.lang.Integer.parseInt

@@ -1,5 +1,6 @@
 package raido.loadtest.simulation;
 
+import au.org.raid.api.util.Log;
 import io.gatling.app.Gatling;
 import io.gatling.core.config.GatlingConfiguration;
 import io.gatling.core.config.GatlingPropertiesBuilder;
@@ -7,14 +8,13 @@ import io.gatling.core.scenario.SimulationParams;
 import io.gatling.javaapi.core.PopulationBuilder;
 import io.gatling.javaapi.core.Simulation;
 import io.gatling.javaapi.http.HttpProtocolBuilder;
-import raido.apisvc.util.Log;
 
 import java.io.IOException;
 import java.util.List;
 
+import static au.org.raid.api.util.Log.to;
 import static io.gatling.javaapi.core.CoreDsl.atOnceUsers;
 import static io.gatling.javaapi.http.HttpDsl.http;
-import static raido.apisvc.util.Log.to;
 import static raido.loadtest.config.GatlingRaidoServerConfig.serverConfig;
 import static raido.loadtest.config.SimulationConfig.simConfig;
 import static raido.loadtest.scenario.Anonymous.warmUp;

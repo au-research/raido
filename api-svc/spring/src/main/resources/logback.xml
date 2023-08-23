@@ -35,19 +35,19 @@ and suppressing various startup logs.
   <logger name="raido" level="debug"/>
   
   <!-- debug logs request/response data, usually don't want it -->
-  <logger name="raido.apisvc.service.apids.ApidsService" level="info"/>
+  <logger name="au.org.raid.api.service.apids.ApidsService" level="info"/>
 
   <!-- debug logs endpoint request payload, usually don't want it -->
-  <logger name="raido.apisvc.spring.RequestLoggingFilter" level="info"/>
+  <logger name="au.org.raid.api.spring.RequestLoggingFilter" level="info"/>
   
   <!-- These log at info because we want them enabled by default in most 
   deploy environments.  I filter them out because most of the time I don't need
   to see that stuff in my local dev environment. When personal dev logging is 
   implemented - move these overrides there. -->
-  <logger name="raido.apisvc.util.JvmUtil" level="warn"/>
-  <logger name="raido.apisvc.spring.config.environment.DataSourceProps" level="warn"/>
+  <logger name="au.org.raid.api.util.JvmUtil" level="warn"/>
+  <logger name="au.org.raid.api.spring.config.environment.DataSourceProps" level="warn"/>
   <!-- set to debug to see full list of metrics on start -->
-  <logger name="raido.apisvc.spring.bean.MetricRegistry" level="info"/>
+  <logger name="au.org.raid.api.spring.bean.MetricRegistry" level="info"/>
   
   <!-- Almost never want to see any of these logs, either dev or deployed --> 
   <logger name="org.springframework" level="info"/>
@@ -89,15 +89,15 @@ and suppressing various startup logs.
   <!-- end JUL stuff -->
 
   <!-- local dev load-test config, need to factor out to separate file -->
-  <logger name="raido.apisvc.spring.RequestLoggingFilter" level="warn"/>
+  <logger name="au.org.raid.api.spring.RequestLoggingFilter" level="warn"/>
   <logger name="p6spy" level="info"/>
   <logger name="p6spy.tx" level="info"/>
   <logger name="p6spy.cxnTest" level="info"/>
   <logger name="raido.apisvc.service.stub" level="info"/>
   <!-- these intentionally use the prod logger, but we still want them quiet -->
-  <logger name="raido.apisvc.service.orcid.OrcidService.http" level="warn"/>
-  <logger name="raido.apisvc.service.ror.RorService.http" level="warn"/>
-  <logger name="raido.apisvc.service.apids.ApidsService.http" level="warn"/>
+  <logger name="au.org.raid.api.service.orcid.OrcidService.http" level="warn"/>
+  <logger name="au.org.raid.api.service.ror.RorService.http" level="warn"/>
+  <logger name="au.org.raid.api.service.apids.ApidsService.http" level="warn"/>
   <!-- for debugging duplicate handle generation -->
 <!--  <logger name="raido.apisvc.service.stub.apids.InMemoryApidsServiceStub" level="info"/>-->
 
