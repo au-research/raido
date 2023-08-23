@@ -3,6 +3,7 @@ import React, {SyntheticEvent} from "react";
 import {ContainerCard} from "Design/ContainerCard";
 import {LargeContentMain} from "Design/LayoutMain";
 import {DateDisplay, raidoTitle, RoleDisplay} from "Component/Util";
+import { ListRaidsV1Request } from "Generated/Raidv2/apis/RaidoStableV1Api"
 import {
   Alert,
   IconButton,
@@ -22,7 +23,7 @@ import {CompactErrorPanel} from "Error/CompactErrorPanel";
 import {TextSpan} from "Component/TextSpan";
 import {useAuth} from "Auth/AuthProvider";
 import {RqQuery} from "Util/ReactQueryUtil";
-import { RaidDto} from "Generated/Raidv2";
+import {RaidDto} from "Generated/Raidv2";
 
 import {InfoField, InfoFieldList} from "Component/InfoField";
 import {RefreshIconButton} from "Component/RefreshIconButton";
@@ -141,22 +142,22 @@ function RaidCurrentUser(){
 }
 
 
-export function RaidTableContainerV2({servicePointId}: {servicePointId: number}){
+export function RaidTableContainerV2({servicePointId}: ListRaidsV1Request){
   const [handleCopied, setHandleCopied] = React.useState(
     undefined as undefined | string);
 
   const api = useAuthApi();
   const {session: {payload: user}} = useAuth();
 
-  const listRaids = async () => {
+  const listRaids = async ({ servicePointId }: ListRaidsV1Request) => {
     return await api.raid.listRaidsV1({
-      servicePointId: servicePointId,
+      servicePointId,
     });
   };
 
   const raidQuery: RqQuery<RaidDto[]> = useQuery(
     ["listRaids", servicePointId],
-    listRaids
+    () => listRaids({ servicePointId })
   );
     
   const spQuery = useQuery(['readServicePoint', user.servicePointId],
