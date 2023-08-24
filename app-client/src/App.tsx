@@ -1,40 +1,41 @@
-import React, { useMemo } from 'react';
-import './App.css';
-import { RaidoTheme } from "Design/RaidoTheme";
-import { createTheme, CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material";
-import { ReactErrorBoundary } from "Error/ReactErrorBoundary";
-import { ErrorDialogProvider } from "Error/ErrorDialog";
-import { LocationPathnameProvider } from "Util/Hook/LocationPathname";
-import { NavigationProvider } from "Design/NavigationProvider";
-import { AppNavBar } from "Design/AppNavBar";
-import { HomePage } from "Page/HomePage";
+import { createTheme, CssBaseline, useMediaQuery } from "@mui/material";
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AuthApiProvider } from "Api/AuthApi";
 import { AuthProvider } from "Auth/AuthProvider";
+import { AppNavBar } from "Design/AppNavBar";
+import { NavigationProvider } from "Design/NavigationProvider";
+import { RaidoTheme } from "Design/RaidoTheme";
+import { ErrorDialogProvider } from "Error/ErrorDialog";
+import { ReactErrorBoundary } from "Error/ReactErrorBoundary";
+import { AdminAuthzRequestPage } from "Page/Admin/AdminAuthzRequestPage";
+import { ApiKeyPage } from "Page/Admin/ApiKeyPage";
+import { AppUserPage } from "Page/Admin/AppUserPage";
+import { AuthzRespondPage } from "Page/Admin/AuthzRespondPage";
+import { ListApiKeyPage } from "Page/Admin/ListApiKeyPage";
+import { ListAppUserPage } from "Page/Admin/ListAppUserPage";
+import { ListServicePointPage } from "Page/Admin/ListServicePointPage";
+import { ServicePointPage } from "Page/Admin/ServicePointPage";
+import { EditRaidPage } from "Page/EditRaidPage";
+import { HomePage } from "Page/HomePage";
+import { MintRaidPage } from "Page/MintRaidPage";
+import MintRaidPageNew from 'Page/MintRaidPageNew';
+import { AboutAppPage } from "Page/Public/AboutAppPage";
+import {
+  isRaidLandingPagePath,
+  RaidLandingPage
+} from "Page/Public/RaidLandingPage";
+import { ShowRaidPage } from "Page/ShowRaidPage";
+import { AboutRaidPage, isAboutRaidPagePath } from "Page/Unauth/AboutRaidPage";
 import { isPrivacyPagePath, PrivacyPage } from "Page/Unauth/PrivacyPage";
 import {
   isUsageTermsPagePath,
   UsageTermsPage
 } from "Page/Unauth/UsageTermsPage";
-import { AboutAppPage } from "Page/Public/AboutAppPage";
-import { AboutRaidPage, isAboutRaidPagePath } from "Page/Unauth/AboutRaidPage";
-import { AuthApiProvider } from "Api/AuthApi";
-import { AdminAuthzRequestPage } from "Page/Admin/AdminAuthzRequestPage";
-import { AuthzRespondPage } from "Page/Admin/AuthzRespondPage";
-import { ListServicePointPage } from "Page/Admin/ListServicePointPage";
-import { ServicePointPage } from "Page/Admin/ServicePointPage";
-import { ListAppUserPage } from "Page/Admin/ListAppUserPage";
+import { useMemo } from 'react';
+import { LocationPathnameProvider } from "Util/Hook/LocationPathname";
 import { LocationSearchProvider } from "Util/Hook/LocationSearch";
-import { AppUserPage } from "Page/Admin/AppUserPage";
-import { ListApiKeyPage } from "Page/Admin/ListApiKeyPage";
-import { ApiKeyPage } from "Page/Admin/ApiKeyPage";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import {
-  isRaidLandingPagePath,
-  RaidLandingPage
-} from "Page/Public/RaidLandingPage";
-import { MintRaidPage } from "Page/MintRaidPage";
-import { EditRaidPage } from "Page/EditRaidPage";
-import { ShowRaidPage } from "Page/ShowRaidPage";
+import './App.css';
 
 export function App(){
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -64,7 +65,7 @@ export function App(){
   /* theme defines the basic color palette and styling, etc. */
   return <RaidoTheme>
           {/* <ThemeProvider theme={theme}> */}
-
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
     {/* force browser defaults for consistent display behaviour */}
     <CssBaseline/>
     {/* deal with "unhandled" errors from bad rendering logic */}
@@ -112,6 +113,7 @@ export function App(){
                       <EditRaidPage/>
                       <ShowRaidPage/>
                       <MintRaidPage/>
+                      <MintRaidPageNew/>
   
                     </NavigationProvider>
                   </AuthApiProvider>
@@ -130,5 +132,6 @@ export function App(){
       </ErrorDialogProvider>
     </ReactErrorBoundary>
     {/* </ThemeProvider> */}
+    </LocalizationProvider>
   </RaidoTheme>;
 }
