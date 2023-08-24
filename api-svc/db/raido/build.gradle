@@ -1,6 +1,5 @@
+import au.raid.org.api.LoadSubjectsTask
 import org.flywaydb.gradle.task.AbstractFlywayTask
-
-import raido.apisvc.db.LoadSubjectsTask
 
 plugins{
   id 'java'
@@ -18,7 +17,7 @@ ext{
   raidV1Project = project(":api-svc:db:v1-ddb-migration")
 
   jooqGeneratedSrcDir = 'src/main/generated-jooq'
-  jooqGeneratedPkg = 'raido.db.jooq'
+  jooqGeneratedPkg = 'au.org.raid.db.jooq'
 
 //  defaultSysProps = apiSvcProject.defaultSysProps
 
@@ -80,6 +79,7 @@ flyway{
   ]
   /* flag to avoid accidentally running in prod */
   cleanDisabled = sharedProject.flywayCleanDisabled
+  outOfOrder = true
 }
 
 tasks.flywayMigrate.doFirst {

@@ -1,11 +1,11 @@
 package raido.loadtest.config;
 
-import raido.apisvc.util.Guard;
-import raido.apisvc.util.Log;
+import au.org.raid.api.util.Guard;
+import au.org.raid.api.util.Log;
 
-import static raido.apisvc.util.Log.to;
-import static raido.apisvc.util.StringUtil.hasValue;
-import static raido.apisvc.util.StringUtil.mask;
+import static au.org.raid.api.util.Log.to;
+import static au.org.raid.api.util.StringUtil.hasValue;
+import static au.org.raid.api.util.StringUtil.mask;
 
 /*
  Use the word "gatling" in the class name so that it's more obvious to the  

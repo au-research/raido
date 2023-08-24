@@ -1,13 +1,13 @@
 package raido.loadtest.scenario;
 
+import au.org.raid.api.exception.ValidationException;
+import au.org.raid.api.service.raid.id.IdentifierParser;
+import au.org.raid.api.util.Log;
+import au.org.raid.idl.raidv2.model.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.gatling.javaapi.core.ScenarioBuilder;
 import io.gatling.javaapi.core.Session;
 import io.gatling.javaapi.http.HttpRequestActionBuilder;
-import raido.apisvc.exception.ValidationException;
-import raido.apisvc.service.raid.id.IdentifierParser;
-import raido.apisvc.util.Log;
-import raido.idl.raidv2.model.*;
 import raido.loadtest.util.Gatling.Var;
 
 import java.io.File;
@@ -17,15 +17,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import static au.org.raid.api.util.Log.to;
+import static au.org.raid.idl.raidv2.model.ContributorPositionRaidMetadataSchemaType.CONTACT_PERSON;
+import static au.org.raid.idl.raidv2.model.ContributorPositionRaidMetadataSchemaType.OTHER_PARTICIPANT;
+import static au.org.raid.idl.raidv2.model.ContributorRoleCreditNisoOrgType.SOFTWARE;
+import static au.org.raid.idl.raidv2.model.ContributorRoleCreditNisoOrgType.SUPERVISION;
+import static au.org.raid.idl.raidv2.model.DescriptionType.ALTERNATIVE_DESCRIPTION;
 import static io.gatling.javaapi.core.CoreDsl.*;
 import static io.gatling.javaapi.http.HttpDsl.http;
 import static io.gatling.javaapi.http.HttpDsl.status;
-import static raido.apisvc.util.Log.to;
-import static raido.idl.raidv2.model.ContributorPositionRaidMetadataSchemaType.CONTACT_PERSON;
-import static raido.idl.raidv2.model.ContributorPositionRaidMetadataSchemaType.OTHER_PARTICIPANT;
-import static raido.idl.raidv2.model.ContributorRoleCreditNisoOrgType.SOFTWARE;
-import static raido.idl.raidv2.model.ContributorRoleCreditNisoOrgType.SUPERVISION;
-import static raido.idl.raidv2.model.DescriptionType1.ALTERNATIVE_DESCRIPTION;
 import static raido.loadtest.config.SimulationConfig.simConfig;
 import static raido.loadtest.scenario.ApiKeyScenario.I_API_TOKEN;
 import static raido.loadtest.scenario.ServicePointScenario.I_SP_ID;
