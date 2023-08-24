@@ -367,19 +367,23 @@ export default function CreateItemFormWithTags() {
   const newRaid: CreateRaidV1Request = {
     titles: [
       {
-        title: `${currentTimestamp} - title`,
+        title: "1692870122178 - title",
         type: {
-          id: `https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json`,
-          schemeUri: `https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1`,
+          id: "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          schemeUri:
+            "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/",
         },
         startDate: new Date(),
       },
     ],
+    dates: {
+      startDate: new Date(),
+    },
     access: {
       type: {
         id: "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
         schemeUri:
-          "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1",
+          "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/",
       },
       accessStatement: {
         statement: "This is a test statement",
@@ -389,10 +393,30 @@ export default function CreateItemFormWithTags() {
         },
       },
     },
-    dates: {
-      startDate: new Date(),
-    },
-    contributors: [],
+    contributors: [
+      {
+        id: "https://orcid.org/0009-0000-9306-3120",
+        identifierSchemeUri:
+          "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1",
+        schemeUri:
+          "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1",
+        positions: [
+          {
+            schemeUri:
+              "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            id: "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            startDate: new Date(),
+          },
+        ],
+        roles: [
+          {
+            schemeUri:
+              "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/role/v1/",
+            id: "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/role/v1/software.json",
+          },
+        ],
+      },
+    ],
   };
 
   const defaultValues = newRaid;
