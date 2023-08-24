@@ -6,6 +6,7 @@ import au.org.raid.api.service.raid.id.IdentifierHandle;
 import au.org.raid.api.service.raid.id.IdentifierParser;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.util.Log;
+import au.org.raid.api.validator.*;
 import au.org.raid.idl.raidv2.model.*;
 import org.springframework.stereotype.Component;
 
@@ -25,32 +26,32 @@ import static java.util.List.of;
 public class RaidoStableV1ValidationService {
     private static final Log log = to(RaidoStableV1ValidationService.class);
 
-    private final StableTitleValidationService titleSvc;
-    private final StableDescriptionValidationService descSvc;
-    private final StableContributorValidationService contribSvc;
-    private final StableOrganisationValidationService orgSvc;
-    private final StableAccessValidationService accessValidationService;
-    private final StableSubjectValidationService subjectSvc;
+    private final TitleValidator titleSvc;
+    private final DescriptionValidator descSvc;
+    private final ContributorValidator contribSvc;
+    private final OrganisationValidator orgSvc;
+    private final AccessValidator accessValidationService;
+    private final SubjectValidator subjectSvc;
     private final IdentifierParser idParser;
-    private final StableRelatedObjectValidationService relatedObjectSvc;
-    private final StableAlternateIdentifierValidationService alternateIdentifierSvc;
-    private final StableRelatedRaidValidationService relatedRaidSvc;
-    private final StableSpatialCoverageValidationService spatialCoverageSvc;
-    private final StableTraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelSvc;
+    private final RelatedObjectValidator relatedObjectSvc;
+    private final AlternateIdentifierValidator alternateIdentifierSvc;
+    private final RelatedRaidValidator relatedRaidSvc;
+    private final SpatialCoverageValidator spatialCoverageSvc;
+    private final TraditionalKnowledgeLabelValidator traditionalKnowledgeLabelSvc;
 
     public RaidoStableV1ValidationService(
-            final StableTitleValidationService titleSvc,
-            final StableDescriptionValidationService descSvc,
-            final StableContributorValidationService contribSvc,
-            final StableOrganisationValidationService orgSvc,
-            final StableSubjectValidationService subjectSvc,
+            final TitleValidator titleSvc,
+            final DescriptionValidator descSvc,
+            final ContributorValidator contribSvc,
+            final OrganisationValidator orgSvc,
+            final SubjectValidator subjectSvc,
             final IdentifierParser idParser,
-            final StableRelatedObjectValidationService relatedObjectSvc,
-            final StableAlternateIdentifierValidationService alternateIdentifierSvc,
-            final StableRelatedRaidValidationService relatedRaidSvc,
-            final StableSpatialCoverageValidationService spatialCoverageSvc,
-            final StableTraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelSvc,
-            final StableAccessValidationService accessValidationService) {
+            final RelatedObjectValidator relatedObjectSvc,
+            final AlternateIdentifierValidator alternateIdentifierSvc,
+            final RelatedRaidValidator relatedRaidSvc,
+            final SpatialCoverageValidator spatialCoverageSvc,
+            final TraditionalKnowledgeLabelValidator traditionalKnowledgeLabelSvc,
+            final AccessValidator accessValidationService) {
         this.titleSvc = titleSvc;
         this.descSvc = descSvc;
         this.contribSvc = contribSvc;

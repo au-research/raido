@@ -87,15 +87,15 @@ public class InvalidPidTest extends IntegrationTestCase {
         )).isInstanceOfSatisfying(RaidApiValidationException.class, ex -> {
             assertThat(ex.getFailures()).anySatisfy(iFail -> {
                 assertThat(iFail.getFieldId()).isEqualTo("contributors[0].id");
-                assertThat(iFail.getMessage()).contains("ORCID does not exist");
+                assertThat(iFail.getMessage()).contains("uri not found");
             });
             assertThat(ex.getFailures()).anySatisfy(iFail -> {
                 assertThat(iFail.getFieldId()).isEqualTo("organisations[0].id");
-                assertThat(iFail.getMessage()).contains("ROR does not exist");
+                assertThat(iFail.getMessage()).contains("uri not found");
             });
             assertThat(ex.getFailures()).anySatisfy(iFail -> {
                 assertThat(iFail.getFieldId()).isEqualTo("relatedObjects[0].id");
-                assertThat(iFail.getMessage()).contains("DOI does not exist");
+                assertThat(iFail.getMessage()).contains("uri not found");
             });
         });
 

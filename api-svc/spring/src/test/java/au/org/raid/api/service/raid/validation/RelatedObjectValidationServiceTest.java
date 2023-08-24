@@ -4,6 +4,7 @@ import au.org.raid.api.repository.RelatedObjectTypeRepository;
 import au.org.raid.api.service.doi.DoiService;
 import au.org.raid.db.jooq.api_svc.tables.records.RelatedObjectTypeRecord;
 import au.org.raid.idl.raidv2.model.RelatedObjectBlock;
+import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -185,32 +187,6 @@ class RelatedObjectValidationServiceTest {
     }
 
     @Test
-    void addFailureIfRelatedObjectDoesNotMatchPattern() {
-        final var relatedObjectType =
-                "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book-chapter.json";
-
-        final var relatedObject = new RelatedObjectBlock()
-                .relatedObject("https://doi.org/99.abc/00000")
-                .relatedObjectSchemeUri("https://doi.org/")
-                .relatedObjectType(relatedObjectType)
-                .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/")
-                .relatedObjectCategory("Input");
-
-        when(relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType, 1))
-                .thenReturn(Optional.of(new RelatedObjectTypeRecord()));
-
-        final var failures =
-                validationService.validateRelatedObjects(Collections.singletonList(relatedObject));
-
-        var failure = failures.get(0);
-        assertThat(failures.size(), is(1));
-
-        assertThat(failure.getFieldId(), is("relatedObjects[0].relatedObject"));
-        assertThat(failure.getErrorType(), is("invalid"));
-        assertThat(failure.getMessage(), is("The related object does not match the expected DOI pattern."));
-    }
-
-    @Test
     void addsFailuresIfRelatedObjectSchemeUriIsIncorrect() {
         final var relatedObjectType =
                 "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book-chapter.json";
@@ -342,6 +318,7 @@ class RelatedObjectValidationServiceTest {
 
     @Test
     void addsFailureIfDoiDoesNotExist() {
+        final var fieldId = "relatedObjects[0].relatedObject";
         final var doi = "https://doi.org/10.000/00000";
         final var relatedObjectType =
                 "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book-chapter.json";
@@ -358,16 +335,17 @@ class RelatedObjectValidationServiceTest {
         when(relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType, 1))
                 .thenReturn(Optional.of(new RelatedObjectTypeRecord()));
 
-        when(doiService.validateDoiExists(doi)).thenReturn(Collections.singletonList(errorMessage));
+        final var failure = new ValidationFailure()
+                .fieldId(fieldId)
+                .errorType("invalidValue")
+                .message("uri not found");
+
+        when(doiService.validate(doi, fieldId))
+                .thenReturn(List.of(failure));
 
         final var failures =
-                validationService.validateRelatedObjects(Collections.singletonList(relatedObject));
+                validationService.validateRelatedObjects(List.of(relatedObject));
 
-        var failure = failures.get(0);
-        assertThat(failures.size(), is(1));
-
-        assertThat(failure.getFieldId(), is("relatedObjects[0].id"));
-        assertThat(failure.getErrorType(), is("invalidValue"));
-        assertThat(failure.getMessage(), is(errorMessage));
+        assertThat(failures, is(List.of(failure)));
     }
 }
