@@ -177,7 +177,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
             createRequest.setOrganisations(List.of(
                     new Organisation()
                             .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
-                            .id("https://ror.org/038sjwqxx")
+                            .id("https://ror.org/038sjwqx@")
                             .roles(List.of(
                                     new OrganisationRoleWithSchemeUri()
                                             .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
@@ -195,7 +195,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                         new ValidationFailure()
                                 .fieldId("organisations[0].id")
                                 .errorType("invalidValue")
-                                .message("has invalid/unsupported value")
+                                .message("has invalid/unsupported value - should match ^https://ror\\.org/[0-9a-z]{9}$")
                 );
             } catch (Exception e) {
                 fail("Expected RaidApiValidationException");
@@ -226,7 +226,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                         new ValidationFailure()
                                 .fieldId("organisations[0].id")
                                 .errorType("invalidValue")
-                                .message("The organisation ROR does not exist")
+                                .message("uri not found")
                 );
             } catch (Exception e) {
                 fail("Expected RaidApiValidationException");

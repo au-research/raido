@@ -5,27 +5,33 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class InMemoryStubProps {
-    @Value("${Apids.inMemoryStub:false}")
+    @Value("${apids.in-memory-stub:false}")
     public boolean apidsInMemoryStub;
 
-    @Value("${Apids.inMemoryStubDelay:150}")
+    @Value("${apids.in-memory-stub-delay:150}")
     public long apidsInMemoryStubDelay;
 
-    @Value("${Orcid.inMemoryStub:false}")
+    @Value("${orcid.in-memory-stub:false}")
     public boolean orcidInMemoryStub;
 
-    @Value("${Orcid.inMemoryStubDelay:150}")
+    @Value("${orcid.in-memory-stub-delay:150}")
     public long orcidInMemoryStubDelay;
 
-    @Value("${Ror.inMemoryStub:false}")
+    @Value("${ror.in-memory-stub:false}")
     public boolean rorInMemoryStub;
 
-    @Value("${Ror.inMemoryStubDelay:150}")
+    @Value("${ror.in-memory-stub-delay:150}")
     public long rorInMemoryStubDelay;
 
-    @Value("${Doi.inMemoryStub:false}")
+    @Value("${doi.in-memory-stub:false}")
     public boolean doiInMemoryStub;
 
-    @Value("${Doi.inMemoryStubDelay:150}")
+    @Value("${doi.in-memory-stub-delay:150}")
     public long doiInMemoryStubDelay;
+
+    @Value("${geonames.in-memory-stub:false}")
+    public boolean geoNamesInMemoryStub;
+
+    @Value("${geonames.in-memory-stub-delay:150}")
+    public long geoNamesInMemoryStubDelay;
 }

@@ -10,9 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static au.org.raid.api.endpoint.message.ValidationMessage.INVALID_VALUE_TYPE;
-import static au.org.raid.api.service.doi.DoiService.DOI_REGEX;
-
 @Service
 public class RelatedObjectValidationService {
     private static final String RELATED_OBJECT_SCHEME_URI = "https://doi.org/";
@@ -52,19 +49,10 @@ public class RelatedObjectValidationService {
                                 .fieldId(String.format("relatedObjects[%d].relatedObject", i))
                                 .errorType("required")
                                 .message("This is a required field."));
-                    } else if (!DOI_REGEX.matcher(relatedObject.getRelatedObject()).matches()) {
-                        failures.add(new ValidationFailure()
-                                .fieldId(String.format("relatedObjects[%d].relatedObject", i))
-                                .errorType("invalid")
-                                .message("The related object does not match the expected DOI pattern."));
                     } else {
-                        failures.addAll(doiService.validateDoiExists(relatedObject.getRelatedObject()).stream().map(message ->
-                                new ValidationFailure()
-                                        .fieldId(String.format("relatedObjects[%d].id", i))
-                                        .errorType(INVALID_VALUE_TYPE)
-                                        .message(message)
-                        ).toList());
-
+                        failures.addAll(doiService.validate(
+                                relatedObject.getRelatedObject(), "relatedObjects[%d].relatedObject".formatted(i))
+                        );
                     }
 
                     if (relatedObject.getRelatedObjectSchemeUri() == null) {

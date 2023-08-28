@@ -3,6 +3,7 @@ package au.org.raid.api.service.raid.validation;
 import au.org.raid.api.service.orcid.OrcidService;
 import au.org.raid.idl.raidv2.model.ContributorBlock;
 import au.org.raid.idl.raidv2.model.ContributorIdentifierSchemeType;
+import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,21 +11,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.client.RestTemplate;
 
-import static java.util.List.of;
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ContributorValidationServiceTest {
-
-    @Mock
-    private RestTemplate restTemplate;
 
     @InjectMocks
     private ContributorValidationService validationService;
@@ -70,36 +66,24 @@ class ContributorValidationServiceTest {
     }
 
     @Test
+    @DisplayName("Adds failures from OrcidService")
     void addFailureIfContributorOrcidIsInvalid() {
+        final var fieldId = "contributors[1].id";
+        final var orcid = "https://orcid.org/0000-00-000000-0001";
         final var contributor = new ContributorBlock()
-                .id("https://orcid.org/0000-00-000000-0001")
+                .id(orcid)
                 .identifierSchemeUri(ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_);
 
-        final var failures = validationService.validateOrcidExists(1, contributor);
-        final var failure = failures.get(0);
+        final var failure = new ValidationFailure()
+                .fieldId(fieldId)
+                .errorType("invalidValue")
+                .message("Contributor ORCID should have the format https://orcid.org/0000-0000-0000-0000.");
 
-        assertThat(failure.getFieldId(), is("contributors[1].id"));
-        assertThat(failure.getErrorType(), is("invalid"));
-        assertThat(failure.getMessage(), is("Contributor ORCID should have the format https://orcid.org/0000-0000-0000-0000."));
-
-        verifyNoInteractions(restTemplate);
-    }
-
-    @Test
-    void addFailureIfContributorDoesNotExist() {
-        final var contributor = new ContributorBlock()
-                .id("https://orcid.org/0000-0000-0000-0001")
-                .identifierSchemeUri(ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_);
-
-        doReturn(of("The ORCID does not exist.")).
-                when(orcidService).validateOrcidExists(any());
+        when(orcidService.validate(orcid, fieldId)).thenReturn(List.of(failure));
 
         final var failures = validationService.validateOrcidExists(1, contributor);
-        final var failure = failures.get(0);
 
-        assertThat(failure.getFieldId(), is("contributors[1].id"));
-        assertThat(failure.getErrorType(), is("invalid"));
-        assertThat(failure.getMessage(), is("The contributor ORCID does not exist."));
+        assertThat(failures, is(List.of(failure)));
     }
 
     @Test
