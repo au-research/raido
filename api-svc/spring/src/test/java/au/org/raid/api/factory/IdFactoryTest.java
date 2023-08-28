@@ -44,11 +44,11 @@ class IdFactoryTest {
 
         final var result = idFactory.create(idBlock);
 
-        assertThat(result.getIdentifier(), is(identifier));
+        assertThat(result.getId(), is(identifier));
         assertThat(result.getSchemaUri(), is(identifierSchemeUri));
-        assertThat(result.getIdentifierRegistrationAgency(), is(identifierRegistrationAgency));
-        assertThat(result.getIdentifierOwner(), is(identifierOwner));
-        assertThat(result.getIdentifierServicePoint(), is(identifierServicePoint));
+        assertThat(result.getRegistrationAgency(), is(identifierRegistrationAgency));
+        assertThat(result.getOwner(), is(identifierOwner));
+        assertThat(result.getServicePoint(), is(identifierServicePoint));
         assertThat(result.getGlobalUrl(), is(globalUrl));
         assertThat(result.getRaidAgencyUrl(), is(raidAgencyUrl));
     }

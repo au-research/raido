@@ -154,7 +154,7 @@ components:
       required: [ identifier, schemaUri,
                   identifierRegistrationAgency, identifierOwner, identifierServicePoint, version ]
       properties:
-        identifier:
+        id:
           type: string
           description: The identifier of the raid, e.g. https://raid.org.au/102.100.100/zzz
           example: https://raid.org/xxx.yyy/zzz
@@ -163,19 +163,19 @@ components:
           description: >
             The URI of the Identifier scheme. For example, https://raid.org
           example: https://raid.org
-        identifierRegistrationAgency:
+        registrationAgency:
           type: string
           description: >
             ROR that identifies of the organisation that operates the 
             raid registration agency software that minted this raid.
           example: https://ror.org/038sjwq14
-        identifierOwner:
+        owner:
           type: string
           description: >
             The legal entity responsible for the RAiD; the ‘Owner’ of a RAiD. Analogous to a DataCite ‘Member’, has a 
             legal agreement with the Registration Agency.
           example: https://ror.org/02stey378
-        identifierServicePoint:
+        servicePoint:
           type: integer
           format: int64
           description: >

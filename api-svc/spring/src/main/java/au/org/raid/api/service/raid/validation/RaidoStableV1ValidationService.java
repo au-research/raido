@@ -85,7 +85,7 @@ public class RaidoStableV1ValidationService {
 
         IdentifierUrl updateId = null;
         try {
-            updateId = idParser.parseUrlWithException(id.getIdentifier());
+            updateId = idParser.parseUrlWithException(id.getId());
         } catch (ValidationFailureException e) {
             failures.addAll(e.getFailures());
         }

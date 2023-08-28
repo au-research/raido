@@ -18,14 +18,14 @@ public class IdFactory {
                      final ServicePointRecord servicePointRecord
     ) {
         return new Id().
-                identifier(id.formatUrl()).
-                schemaUri(MetadataService.RAID_ID_TYPE_URI).
-                identifierRegistrationAgency(metaProps.identifierRegistrationAgency).
-                identifierOwner(servicePointRecord.getIdentifierOwner()).
-                identifierServicePoint(servicePointRecord.getId()).
-                globalUrl(id.handle().format(metaProps.globalUrlPrefix)).
-                raidAgencyUrl(id.handle().format(metaProps.handleUrlPrefix)).
-                version(1);
+                id(id.formatUrl())
+                .schemaUri(MetadataService.RAID_ID_TYPE_URI)
+                .registrationAgency(metaProps.identifierRegistrationAgency)
+                .owner(servicePointRecord.getIdentifierOwner())
+                .servicePoint(servicePointRecord.getId())
+                .globalUrl(id.handle().format(metaProps.globalUrlPrefix))
+                .raidAgencyUrl(id.handle().format(metaProps.handleUrlPrefix))
+                .version(1);
     }
 
     public Id create(final IdBlock idBlock) {
@@ -33,11 +33,11 @@ public class IdFactory {
             return null;
         }
         return new Id()
-                .identifier(idBlock.getIdentifier())
+                .id(idBlock.getIdentifier())
                 .schemaUri(idBlock.getIdentifierSchemeURI())
-                .identifierRegistrationAgency(idBlock.getIdentifierRegistrationAgency())
-                .identifierOwner(idBlock.getIdentifierOwner())
-                .identifierServicePoint(idBlock.getIdentifierServicePoint())
+                .registrationAgency(idBlock.getIdentifierRegistrationAgency())
+                .owner(idBlock.getIdentifierOwner())
+                .servicePoint(idBlock.getIdentifierServicePoint())
                 .globalUrl(idBlock.getGlobalUrl())
                 .raidAgencyUrl(idBlock.getRaidAgencyUrl())
                 .version(idBlock.getVersion());

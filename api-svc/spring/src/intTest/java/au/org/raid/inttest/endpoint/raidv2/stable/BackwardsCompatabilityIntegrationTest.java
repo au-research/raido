@@ -36,14 +36,14 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
 
             final var expected = new RaidDto()
                     .id(new Id()
-                            .identifier(metadata.getId().getIdentifier())
+                            .id(metadata.getId().getIdentifier())
                             .schemaUri(metadata.getId().getIdentifierSchemeURI())
                             .globalUrl(metadata.getId().getGlobalUrl())
                             .raidAgencyUrl(metadata.getId().getRaidAgencyUrl())
-                            .identifierOwner(metadata.getId().getIdentifierOwner())
-                            .identifierRegistrationAgency(metadata.getId().getIdentifierRegistrationAgency())
+                            .owner(metadata.getId().getIdentifierOwner())
+                            .registrationAgency(metadata.getId().getIdentifierRegistrationAgency())
                             .version(metadata.getId().getVersion())
-                            .identifierServicePoint(metadata.getId().getIdentifierServicePoint()))
+                            .servicePoint(metadata.getId().getIdentifierServicePoint()))
                     .titles(List.of(
                             new Title()
                                     .title(metadata.getTitles().get(0).getTitle())
@@ -224,13 +224,13 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
         final RaidDto raidDto = raidApi.readRaidV1(prefix, suffix);
 
         assertThat(raidDto.getId()).isEqualTo(new Id()
-                .identifier("http://localhost:8080/" + raidModel.getHandle())
+                .id("http://localhost:8080/" + raidModel.getHandle())
                 .globalUrl("https://hdl.handle.net/" + raidModel.getHandle())
                 .raidAgencyUrl("http://localhost:8080/" + raidModel.getHandle())
-                .identifierServicePoint(20000002L)
+                .servicePoint(20000002L)
                 .schemaUri("https://raid.org")
-                .identifierRegistrationAgency("https://ror.org/038sjwq14")
-                .identifierOwner("https://ror.org/00rqy9422")
+                .registrationAgency("https://ror.org/038sjwq14")
+                .owner("https://ror.org/00rqy9422")
                 .version(1));
 
         assertThat(raidDto.getAccess()).isEqualTo(new Access()

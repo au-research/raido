@@ -109,7 +109,7 @@ public class RaidStableV1Service {
 
         final IdentifierUrl identifierUrl;
         try {
-            identifierUrl = idParser.parseUrlWithException(raid.getId().getIdentifier());
+            identifierUrl = idParser.parseUrlWithException(raid.getId().getId());
         } catch (ValidationFailureException e) {
             // it was already validated, so this shouldn't happen
             throw new RuntimeException(e);

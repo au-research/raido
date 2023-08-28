@@ -20,7 +20,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
     void mintRaid() {
         final var mintedRaid = raidApi.createRaidV1(createRequest);
 
-        final var path = URI.create(mintedRaid.getId().getIdentifier()).getPath();
+        final var path = URI.create(mintedRaid.getId().getId()).getPath();
 
         final var handle = (IdentifierHandle) identifierParser.parseHandle(path);
         final var result = raidApi.readRaidV1(handle.prefix(), handle.suffix());
@@ -38,7 +38,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
     void updateRaid() {
         final var mintedRaid = raidApi.createRaidV1(createRequest);
 
-        final var path = URI.create(mintedRaid.getId().getIdentifier()).getPath();
+        final var path = URI.create(mintedRaid.getId().getId()).getPath();
 
         final var handle = (IdentifierHandle) identifierParser.parseHandle(path);
         final var readResult = raidApi.readRaidV1(handle.prefix(), handle.suffix());
@@ -67,7 +67,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
     void updateRaidNoOp() {
         final var mintedRaid = raidApi.createRaidV1(createRequest);
 
-        final var path = URI.create(mintedRaid.getId().getIdentifier()).getPath();
+        final var path = URI.create(mintedRaid.getId().getId()).getPath();
 
         final var handle = (IdentifierHandle) identifierParser.parseHandle(path);
         final var readResult = raidApi.readRaidV1(handle.prefix(), handle.suffix());
@@ -91,7 +91,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
     void notFound() {
         final var mintedRaid = raidApi.createRaidV1(createRequest);
 
-        final var path = URI.create(mintedRaid.getId().getIdentifier()).getPath();
+        final var path = URI.create(mintedRaid.getId().getId()).getPath();
 
         final var handle = (IdentifierHandle) identifierParser.parseHandle(path);
         final var readResult = raidApi.readRaidV1(handle.prefix(), handle.suffix());

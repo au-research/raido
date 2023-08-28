@@ -37,7 +37,7 @@ public class RaidoStableV1 implements RaidoStableV1Api {
         final var handle = String.join("/", prefix, suffix);
         var user = getApiToken();
         var data = raidService.read(handle);
-        guardOperatorOrAssociated(user, data.getId().getIdentifierServicePoint());
+        guardOperatorOrAssociated(user, data.getId().getServicePoint());
         return data;
     }
 
@@ -74,9 +74,9 @@ public class RaidoStableV1 implements RaidoStableV1Api {
     public RaidDto updateRaidV1(final String prefix, final String suffix, UpdateRaidV1Request request) {
         final var handle = String.join("/", prefix, suffix);
         var user = getApiToken();
-        guardOperatorOrAssociated(user, request.getId().getIdentifierServicePoint());
+        guardOperatorOrAssociated(user, request.getId().getServicePoint());
 
-        if (!raidService.isEditable(user, request.getId().getIdentifierServicePoint())) {
+        if (!raidService.isEditable(user, request.getId().getServicePoint())) {
             throw new InvalidAccessException("This service point does not allow Raids to be edited in the app.");
         }
 
