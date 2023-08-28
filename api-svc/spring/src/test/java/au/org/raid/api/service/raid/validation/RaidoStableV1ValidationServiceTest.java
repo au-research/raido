@@ -74,7 +74,7 @@ class RaidoStableV1ValidationServiceTest {
 
         validationService.validateForCreate(raid);
 
-        verify(subjectValidationService).validateSubjects(subjects);
+        verify(subjectValidationService).validate(subjects);
     }
 
     @Test
@@ -88,7 +88,7 @@ class RaidoStableV1ValidationServiceTest {
 
         validationService.validateForUpdate(handle, raid);
 
-        verify(subjectValidationService).validateSubjects(subjects);
+        verify(subjectValidationService).validate(subjects);
     }
 
     @Test
@@ -200,7 +200,7 @@ class RaidoStableV1ValidationServiceTest {
                 .traditionalKnowledgeLabels(traditionalKnowledgeLabels);
 
         validationService.validateForCreate(raid);
-        verify(traditionalKnowledgeLabelValidatorService).validateTraditionalKnowledgeLabels(traditionalKnowledgeLabels);
+        verify(traditionalKnowledgeLabelValidatorService).validate(traditionalKnowledgeLabels);
     }
 
     @Test
@@ -214,6 +214,6 @@ class RaidoStableV1ValidationServiceTest {
                 .traditionalKnowledgeLabels(traditionalKnowledgeLabels);
 
         validationService.validateForUpdate(handle, raid);
-        verify(traditionalKnowledgeLabelValidatorService).validateTraditionalKnowledgeLabels(traditionalKnowledgeLabels);
+        verify(traditionalKnowledgeLabelValidatorService).validate(traditionalKnowledgeLabels);
     }
 }

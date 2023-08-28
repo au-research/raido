@@ -4,7 +4,7 @@ import au.org.raid.api.service.raid.validation.AccessStatementValidationService;
 import au.org.raid.api.util.TestConstants;
 import au.org.raid.idl.raidv2.model.Access;
 import au.org.raid.idl.raidv2.model.AccessStatement;
-import au.org.raid.idl.raidv2.model.AccessTypeWithSchemeUri;
+import au.org.raid.idl.raidv2.model.AccessTypeWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,9 +37,9 @@ class AccessValidatorTest {
     @Test
     @DisplayName("Validation passes on closed raid with correct fields")
     void closedValidationSucceeds() {
-        final var type = new AccessTypeWithSchemeUri()
+        final var type = new AccessTypeWithSchemaUri()
                 .id(TestConstants.CLOSED_ACCESS_TYPE_ID)
-                .schemeUri(TestConstants.ACCESS_TYPE_SCHEME_URI);
+                .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
         final var access = new Access()
                 .type(type)
@@ -54,9 +54,9 @@ class AccessValidatorTest {
     @Test
     @DisplayName("Validation passes on embargoed raid with correct fields")
     void embargoedValidationSucceeds() {
-        final var type = new AccessTypeWithSchemeUri()
+        final var type = new AccessTypeWithSchemaUri()
                 .id(TestConstants.CLOSED_ACCESS_TYPE_ID)
-                .schemeUri(TestConstants.ACCESS_TYPE_SCHEME_URI);
+                .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
         final var access = new Access()
                 .type(type)
@@ -72,9 +72,9 @@ class AccessValidatorTest {
     @Test
     @DisplayName("Validation fails with missing accessStatement on closed raid")
     void missingAccessStatement() {
-        final var type = new AccessTypeWithSchemeUri()
+        final var type = new AccessTypeWithSchemaUri()
                 .id(TestConstants.CLOSED_ACCESS_TYPE_ID)
-                .schemeUri(TestConstants.ACCESS_TYPE_SCHEME_URI);
+                .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
         final var access = new Access()
                 .type(type);
@@ -95,9 +95,9 @@ class AccessValidatorTest {
     @Test
     @DisplayName("Validation fails with blank accessStatement on closed raid")
     void blankStatementClosed() {
-        final var type = new AccessTypeWithSchemeUri()
+        final var type = new AccessTypeWithSchemaUri()
                 .id(TestConstants.CLOSED_ACCESS_TYPE_ID)
-                .schemeUri(TestConstants.ACCESS_TYPE_SCHEME_URI);
+                .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
         final var accessStatement = new AccessStatement().statement("");
 
@@ -121,9 +121,9 @@ class AccessValidatorTest {
     @Test
     @DisplayName("Validation fails with blank accessStatement on embargoed raid")
     void blankStatementEmbargoed() {
-        final var type = new AccessTypeWithSchemeUri()
+        final var type = new AccessTypeWithSchemaUri()
                 .id(TestConstants.EMBARGOED_ACCESS_TYPE_ID)
-                .schemeUri(TestConstants.ACCESS_TYPE_SCHEME_URI);
+                .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
         final var accessStatement = new AccessStatement().statement("");
 
@@ -164,9 +164,9 @@ class AccessValidatorTest {
     @Test
     @DisplayName("Validation fails with missing embargoExpiry on embargoed raid")
     void missingEmbargoExpiry() {
-        final var type = new AccessTypeWithSchemeUri()
+        final var type = new AccessTypeWithSchemaUri()
                 .id(TestConstants.EMBARGOED_ACCESS_TYPE_ID)
-                .schemeUri(TestConstants.ACCESS_TYPE_SCHEME_URI);
+                .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
         final var access = new Access()
                 .type(type)

@@ -1,7 +1,7 @@
 package au.org.raid.api.validator;
 
 import au.org.raid.api.repository.RelatedObjectCategoryRepository;
-import au.org.raid.api.repository.RelatedObjectCategorySchemeRepository;
+import au.org.raid.api.repository.RelatedObjectCategorySchemaRepository;
 import au.org.raid.api.util.TestConstants;
 import au.org.raid.db.jooq.api_svc.tables.records.RelatedObjectCategoryRecord;
 import au.org.raid.db.jooq.api_svc.tables.records.RelatedObjectCategorySchemeRecord;
@@ -24,23 +24,23 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class RelatedObjectCategoryValidatorTest {
     private static final int INDEX = 3;
-    private static final int RELATED_OBJECT_CATEGORY_SCHEME_ID = 1;
+    private static final int RELATED_OBJECT_CATEGORY_SCHEMA_ID = 1;
 
-    private static final RelatedObjectCategorySchemeRecord RELATED_OBJECT_CATEGORY_SCHEME_RECORD =
+    private static final RelatedObjectCategorySchemeRecord RELATED_OBJECT_CATEGORY_SCHEMA_RECORD =
             new RelatedObjectCategorySchemeRecord()
-                    .setId(RELATED_OBJECT_CATEGORY_SCHEME_ID)
-                    .setUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
+                    .setId(RELATED_OBJECT_CATEGORY_SCHEMA_ID)
+                    .setUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
 
     private static final RelatedObjectCategoryRecord RELATED_OBJECT_CATEGORY_RECORD =
             new RelatedObjectCategoryRecord()
-                    .setSchemeId(RELATED_OBJECT_CATEGORY_SCHEME_ID)
+                    .setSchemeId(RELATED_OBJECT_CATEGORY_SCHEMA_ID)
                     .setUri(TestConstants.INPUT_RELATED_OBJECT_CATEGORY);
 
     @Mock
     private RelatedObjectCategoryRepository relatedObjectCategoryRepository;
 
     @Mock
-    private RelatedObjectCategorySchemeRepository relatedObjectCategorySchemeRepository;
+    private RelatedObjectCategorySchemaRepository relatedObjectCategorySchemaRepository;
 
     @InjectMocks
     private RelatedObjectCategoryValidator validationService;
@@ -50,13 +50,13 @@ class RelatedObjectCategoryValidatorTest {
     void validRelatedObjectCategory() {
         var relatedObjectCategory = new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-                .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
 
-        when(relatedObjectCategorySchemeRepository.findByUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI))
-                .thenReturn(Optional.of(RELATED_OBJECT_CATEGORY_SCHEME_RECORD));
+        when(relatedObjectCategorySchemaRepository.findByUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI))
+                .thenReturn(Optional.of(RELATED_OBJECT_CATEGORY_SCHEMA_RECORD));
 
         when(relatedObjectCategoryRepository
-                .findByUriAndSchemeId(TestConstants.INPUT_RELATED_OBJECT_CATEGORY, RELATED_OBJECT_CATEGORY_SCHEME_ID))
+                .findByUriAndSchemeId(TestConstants.INPUT_RELATED_OBJECT_CATEGORY, RELATED_OBJECT_CATEGORY_SCHEMA_ID))
                 .thenReturn(Optional.of(RELATED_OBJECT_CATEGORY_RECORD));
 
         final var failures = validationService.validate(relatedObjectCategory, INDEX);
@@ -68,10 +68,10 @@ class RelatedObjectCategoryValidatorTest {
     @DisplayName("Validation fails with null id")
     void nullId() {
         var relatedObjectCategory = new RelatedObjectCategory()
-                .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
 
-        when(relatedObjectCategorySchemeRepository.findByUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI))
-                .thenReturn(Optional.of(RELATED_OBJECT_CATEGORY_SCHEME_RECORD));
+        when(relatedObjectCategorySchemaRepository.findByUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI))
+                .thenReturn(Optional.of(RELATED_OBJECT_CATEGORY_SCHEMA_RECORD));
 
         final var failures = validationService.validate(relatedObjectCategory, INDEX);
 
@@ -91,10 +91,10 @@ class RelatedObjectCategoryValidatorTest {
     void emptyId() {
         var relatedObjectCategory = new RelatedObjectCategory()
                 .id("")
-                .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
 
-        when(relatedObjectCategorySchemeRepository.findByUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI))
-                .thenReturn(Optional.of(RELATED_OBJECT_CATEGORY_SCHEME_RECORD));
+        when(relatedObjectCategorySchemaRepository.findByUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI))
+                .thenReturn(Optional.of(RELATED_OBJECT_CATEGORY_SCHEMA_RECORD));
 
         final var failures = validationService.validate(relatedObjectCategory, INDEX);
 
@@ -110,7 +110,7 @@ class RelatedObjectCategoryValidatorTest {
     }
 
     @Test
-    @DisplayName("Validation fails with null schemeUri")
+    @DisplayName("Validation fails with null schemaUri")
     void nullSchemeUri() {
         var relatedObjectCategory = new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY);
@@ -120,42 +120,42 @@ class RelatedObjectCategoryValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[3].category.schemeUri")
+                        .fieldId("relatedObjects[3].category.schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
-        verifyNoInteractions(relatedObjectCategorySchemeRepository);
+        verifyNoInteractions(relatedObjectCategorySchemaRepository);
         verifyNoInteractions(relatedObjectCategoryRepository);
     }
 
     @Test
-    @DisplayName("Validation fails with empty schemeUri")
+    @DisplayName("Validation fails with empty schemaUri")
     void emptySchemeUri() {
         var relatedObjectCategory = new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-                .schemeUri("");
+                .schemaUri("");
 
         final var failures = validationService.validate(relatedObjectCategory, INDEX);
 
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[3].category.schemeUri")
+                        .fieldId("relatedObjects[3].category.schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
-        verifyNoInteractions(relatedObjectCategorySchemeRepository);
+        verifyNoInteractions(relatedObjectCategorySchemaRepository);
         verifyNoInteractions(relatedObjectCategoryRepository);
     }
 
     @Test
-    @DisplayName("Validation fails if schemeUri does not exist")
+    @DisplayName("Validation fails if schemaUri does not exist")
     void nonExistentSchemeUri() {
         var relatedObjectCategory = new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-                .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
 
-        when(relatedObjectCategorySchemeRepository.findByUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI))
+        when(relatedObjectCategorySchemaRepository.findByUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI))
                 .thenReturn(Optional.empty());
 
         final var failures = validationService.validate(relatedObjectCategory, INDEX);
@@ -163,24 +163,24 @@ class RelatedObjectCategoryValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[3].category.schemeUri")
+                        .fieldId("relatedObjects[3].category.schemaUri")
                         .errorType("invalidValue")
-                        .message("scheme is unknown/unsupported")
+                        .message("schema is unknown/unsupported")
         ));
     }
 
     @Test
-    @DisplayName("Validation fails if type does not exist with scheme")
+    @DisplayName("Validation fails if type does not exist with schema")
     void invalidTypeForScheme() {
         var relatedObjectCategory = new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-                .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
 
-        when(relatedObjectCategorySchemeRepository.findByUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI))
-                .thenReturn(Optional.of(RELATED_OBJECT_CATEGORY_SCHEME_RECORD));
+        when(relatedObjectCategorySchemaRepository.findByUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI))
+                .thenReturn(Optional.of(RELATED_OBJECT_CATEGORY_SCHEMA_RECORD));
 
         when(relatedObjectCategoryRepository
-                .findByUriAndSchemeId(TestConstants.INPUT_RELATED_OBJECT_CATEGORY, RELATED_OBJECT_CATEGORY_SCHEME_ID))
+                .findByUriAndSchemeId(TestConstants.INPUT_RELATED_OBJECT_CATEGORY, RELATED_OBJECT_CATEGORY_SCHEMA_ID))
                 .thenReturn(Optional.empty());
 
         final var failures = validationService.validate(relatedObjectCategory, INDEX);
@@ -190,7 +190,7 @@ class RelatedObjectCategoryValidatorTest {
                 new ValidationFailure()
                         .fieldId("relatedObjects[3].category.id")
                         .errorType("invalidValue")
-                        .message("id does not exist within the given scheme")
+                        .message("id does not exist within the given schema")
         ));
     }
 }

@@ -41,16 +41,16 @@ public class ContributorValidator {
                 .forEach(index -> {
                     final var contributor = contributors.get(index);
 
-                    if (isBlank(contributor.getIdentifierSchemeUri())) {
+                    if (isBlank(contributor.getSchemaUri())) {
                         failures.add(
                                 new ValidationFailure()
-                                        .fieldId("contributors[%d].identifierSchemeUri".formatted(index))
+                                        .fieldId("contributors[%d].schemaUri".formatted(index))
                                         .errorType(NOT_SET_TYPE)
-                                        .message(FIELD_MUST_BE_SET_MESSAGE)
+                                        .message(NOT_SET_MESSAGE)
                         );
-                    } else if (!contributor.getIdentifierSchemeUri().equals(ORCID_ORG)) {
+                    } else if (!contributor.getSchemaUri().equals(ORCID_ORG)) {
                         failures.add(new ValidationFailure()
-                                .fieldId("contributors[%d].identifierSchemeUri".formatted(index))
+                                .fieldId("contributors[%d].schemaUri".formatted(index))
                                 .errorType(INVALID_VALUE_TYPE)
                                 .message(INVALID_VALUE_MESSAGE + " - should be " + ORCID_ORG)
                         );

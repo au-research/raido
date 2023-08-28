@@ -19,7 +19,7 @@ public class IdFactory {
     ) {
         return new Id().
                 identifier(id.formatUrl()).
-                identifierSchemeUri(MetadataService.RAID_ID_TYPE_URI).
+                schemaUri(MetadataService.RAID_ID_TYPE_URI).
                 identifierRegistrationAgency(metaProps.identifierRegistrationAgency).
                 identifierOwner(servicePointRecord.getIdentifierOwner()).
                 identifierServicePoint(servicePointRecord.getId()).
@@ -34,7 +34,7 @@ public class IdFactory {
         }
         return new Id()
                 .identifier(idBlock.getIdentifier())
-                .identifierSchemeUri(idBlock.getIdentifierSchemeURI())
+                .schemaUri(idBlock.getIdentifierSchemeURI())
                 .identifierRegistrationAgency(idBlock.getIdentifierRegistrationAgency())
                 .identifierOwner(idBlock.getIdentifierOwner())
                 .identifierServicePoint(idBlock.getIdentifierServicePoint())

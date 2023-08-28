@@ -28,17 +28,17 @@ class SubjectFactoryTest {
     @DisplayName("All fields are set")
     void setsAllFields() {
         final var id = "_id";
-        final var schemeUri = "scheme-uri";
+        final var schemaUri = "scheme-uri";
         final var keyword = "_keyword";
 
         final var subject = new SubjectBlock()
                 .subject(id)
                 .subjectKeyword(keyword)
-                .subjectSchemeUri(schemeUri);
+                .subjectSchemeUri(schemaUri);
 
         final var expected = new Subject()
                 .id(id)
-                .schemeUri(schemeUri)
+                .schemaUri(schemaUri)
                 .keyword(keyword);
 
         assertThat(subjectFactory.create(subject), is(expected));

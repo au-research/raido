@@ -11,7 +11,7 @@ import static au.org.raid.db.jooq.api_svc.tables.LanguageScheme.LANGUAGE_SCHEME;
 
 @Repository
 @RequiredArgsConstructor
-public class LanguageSchemeRepository {
+public class LanguageSchemaRepository {
     private final DSLContext dslContext;
 
     public Optional<LanguageSchemeRecord> findByUri(final String uri) {

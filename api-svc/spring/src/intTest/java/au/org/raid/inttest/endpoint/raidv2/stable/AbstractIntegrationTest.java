@@ -89,25 +89,25 @@ public class AbstractIntegrationTest {
         return new CreateRaidV1Request()
                 .titles(List.of(new Title()
                         .language(new Language()
-                                .schemeUri(LANGUAGE_SCHEME_URI)
+                                .schemaUri(LANGUAGE_SCHEMA_URI)
                                 .id(LANGUAGE_ID)
                         )
-                        .type(new TitleTypeWithSchemeUri()
+                        .type(new TitleTypeWithSchemaUri()
                                 .id(PRIMARY_TITLE_TYPE)
-                                .schemeUri(TITLE_TYPE_SCHEME_URI))
+                                .schemaUri(TITLE_TYPE_SCHEMA_URI))
                         .title(initialTitle)
                         .startDate(today)))
                 .dates(new Dates().startDate(today))
                 .descriptions(List.of(new Description()
                         .language(new Language()
-                                .schemeUri(LANGUAGE_SCHEME_URI)
+                                .schemaUri(LANGUAGE_SCHEMA_URI)
                                 .id(LANGUAGE_ID))
-                        .type(new DescriptionTypeWithSchemeUri()
+                        .type(new DescriptionTypeWithSchemaUri()
                                 .id(PRIMARY_DESCRIPTION_TYPE)
-                                .schemeUri(DESCRIPTION_TYPE_SCHEME_URI))
+                                .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI))
                         .description("stuff about the int test raid")
                         .language(new Language()
-                                .schemeUri(LANGUAGE_SCHEME_URI)
+                                .schemaUri(LANGUAGE_SCHEMA_URI)
                                 .id(LANGUAGE_ID))
                 ))
 
@@ -120,18 +120,18 @@ public class AbstractIntegrationTest {
                                 .statement("Embargoed")
                                 .language(new Language()
                                         .id(LANGUAGE_ID)
-                                        .schemeUri(LANGUAGE_SCHEME_URI)))
-                        .type(new AccessTypeWithSchemeUri()
+                                        .schemaUri(LANGUAGE_SCHEMA_URI)))
+                        .type(new AccessTypeWithSchemaUri()
                                 .id(EMBARGOED_ACCESS_TYPE)
-                                .schemeUri(ACCESS_TYPE_SCHEME_URI))
+                                .schemaUri(ACCESS_TYPE_SCHEMA_URI))
                         .embargoExpiry(LocalDate.now().plusMonths(1)))
                 .spatialCoverages(List.of(new SpatialCoverage()
                         .language(new Language()
                                 .id(LANGUAGE_ID)
-                                .schemeUri(LANGUAGE_SCHEME_URI))
+                                .schemaUri(LANGUAGE_SCHEMA_URI))
                         .id(GEONAMES_MELBOURNE)
                         .place("Melbourne")
-                        .schemeUri(GEONAMES_SCHEMA_URI)));
+                        .schemaUri(GEONAMES_SCHEMA_URI)));
     }
 
     private UpdateRaidV1Request mapReadToUpdate(RaidDto read) {
@@ -160,14 +160,14 @@ public class AbstractIntegrationTest {
     ) {
         return new Contributor()
                 .id(orcid)
-                .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
-                .positions(List.of(new ContributorPositionWithSchemeUri()
-                        .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                .positions(List.of(new ContributorPositionWithSchemaUri()
+                        .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                         .id(position)
                         .startDate(startDate)))
                 .roles(List.of(
-                        new ContributorRoleWithSchemeUri()
-                                .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+                        new ContributorRoleWithSchemaUri()
+                                .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                 .id(role)));
     }
 
@@ -178,10 +178,10 @@ public class AbstractIntegrationTest {
     ) {
         return new Organisation()
                 .id(ror)
-                .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI).
+                .schemaUri(ORGANISATION_IDENTIFIER_SCHEMA_URI).
                 roles(List.of(
-                        new OrganisationRoleWithSchemeUri()
-                                .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
+                        new OrganisationRoleWithSchemaUri()
+                                .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                 .id(role)
                                 .startDate(today)));
     }

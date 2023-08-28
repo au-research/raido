@@ -11,7 +11,7 @@ import static au.org.raid.db.jooq.api_svc.tables.OrganisationRoleScheme.ORGANISA
 
 @Repository
 @RequiredArgsConstructor
-public class OrganisationRoleSchemeRepository {
+public class OrganisationRoleSchemaRepository {
     private final DSLContext dslContext;
 
     public Optional<OrganisationRoleSchemeRecord> findByUri(final String uri) {

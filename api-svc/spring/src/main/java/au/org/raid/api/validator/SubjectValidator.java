@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static au.org.raid.api.endpoint.message.ValidationMessage.*;
 import static au.org.raid.api.util.ObjectUtil.indexed;
 
 @Component
@@ -22,7 +23,7 @@ public class SubjectValidator {
         this.subjectTypeRepository = subjectTypeRepository;
     }
 
-    public List<ValidationFailure> validateSubjects(List<Subject> subjects) {
+    public List<ValidationFailure> validate(List<Subject> subjects) {
 
         final var failures = new ArrayList<ValidationFailure>();
 
@@ -33,11 +34,11 @@ public class SubjectValidator {
         subjects.stream().
                 collect(indexed()).
                 forEach((i, subject) -> {
-                    if (subject.getSchemeUri() == null || !subject.getSchemeUri().equals(SUBJECT_SCHEME_URI)) {
+                    if (subject.getSchemaUri() == null || !subject.getSchemaUri().equals(SUBJECT_SCHEME_URI)) {
                         final var failure = new ValidationFailure();
-                        failure.setFieldId(String.format("subjects[%d].subjectSchemeUri", i));
+                        failure.setFieldId(String.format("subjects[%d].schemaUri", i));
                         failure.setMessage(String.format("must be %s.", SUBJECT_SCHEME_URI));
-                        failure.setErrorType("invalid");
+                        failure.setErrorType(INVALID_VALUE_TYPE);
 
                         failures.add(failure);
                     }
@@ -45,8 +46,8 @@ public class SubjectValidator {
                     if (subject.getId() == null) {
                         final var failure = new ValidationFailure();
                         failure.setFieldId(String.format("subjects[%d].id", i));
-                        failure.setMessage("Subject field is required");
-                        failure.setErrorType("invalid");
+                        failure.setMessage(NOT_SET_MESSAGE);
+                        failure.setErrorType(NOT_SET_TYPE);
 
                         failures.add(failure);
                     } else {
@@ -56,7 +57,7 @@ public class SubjectValidator {
                             final var failure = new ValidationFailure();
                             failure.setFieldId(String.format("subjects[%d].id", i));
                             failure.setMessage(String.format("%s is not a valid field of research", subject.getId()));
-                            failure.setErrorType("invalid");
+                            failure.setErrorType(INVALID_VALUE_TYPE);
 
                             failures.add(failure);
                         } else {
@@ -66,7 +67,7 @@ public class SubjectValidator {
                                 final var failure = new ValidationFailure();
                                 failure.setFieldId(String.format("subjects[%d].id", i));
                                 failure.setMessage(String.format("%s is not a standard FoR code", subject.getId()));
-                                failure.setErrorType("invalid");
+                                failure.setErrorType(INVALID_VALUE_TYPE);
 
                                 failures.add(failure);
                             }

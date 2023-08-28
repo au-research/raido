@@ -36,18 +36,18 @@ class SubjectValidatorTest {
 
         final var subject = new Subject()
                 .id(id)
-                .schemeUri(SUBJECT_SCHEME_URI);
+                .schemaUri(SUBJECT_SCHEME_URI);
 
         when(subjectTypeRepository.findById("222222")).thenReturn(Optional.of(new SubjectTypeRecord()));
 
-        final List<ValidationFailure> validationFailures = validationService.validateSubjects(Collections.singletonList(subject));
+        final List<ValidationFailure> validationFailures = validationService.validate(Collections.singletonList(subject));
 
         assertThat(validationFailures, empty());
     }
 
     @Test
     void noFailuresIfSubjectBlockIsNull() {
-        final List<ValidationFailure> validationFailures = validationService.validateSubjects(null);
+        final List<ValidationFailure> validationFailures = validationService.validate(null);
         assertThat(validationFailures, empty());
     }
 
@@ -57,14 +57,16 @@ class SubjectValidatorTest {
 
         final var subject = new Subject()
                 .id(id)
-                .schemeUri(SUBJECT_SCHEME_URI);
+                .schemaUri(SUBJECT_SCHEME_URI);
 
-        final List<ValidationFailure> validationFailures = validationService.validateSubjects(Collections.singletonList(subject));
+        final List<ValidationFailure> failures = validationService.validate(Collections.singletonList(subject));
 
-        assertThat(validationFailures.size(), is(1));
-        assertThat(validationFailures.get(0).getMessage(), is(String.format("%s is not a valid field of research", id)));
-        assertThat(validationFailures.get(0).getErrorType(), is("invalid"));
-        assertThat(validationFailures.get(0).getFieldId(), is("subjects[0].id"));
+        assertThat(failures, is(List.of(
+                new ValidationFailure()
+                        .fieldId("subjects[0].id")
+                        .errorType("invalidValue")
+                        .message(String.format("%s is not a valid field of research", id))
+        )));
 
         verifyNoInteractions(subjectTypeRepository);
     }
@@ -75,15 +77,16 @@ class SubjectValidatorTest {
 
         final var subject = new Subject()
                 .id(id)
-                .schemeUri(SUBJECT_SCHEME_URI);
+                .schemaUri(SUBJECT_SCHEME_URI);
 
-        final List<ValidationFailure> validationFailures = validationService.validateSubjects(Collections.singletonList(subject));
+        final List<ValidationFailure> validationFailures = validationService.validate(Collections.singletonList(subject));
 
-        assertThat(validationFailures.size(), is(1));
-        assertThat(validationFailures.get(0).getMessage(), is(String.format("%s is not a valid field of research", id)));
-        assertThat(validationFailures.get(0).getErrorType(), is("invalid"));
-        assertThat(validationFailures.get(0).getFieldId(), is("subjects[0].id"));
-
+        assertThat(validationFailures, is(List.of(
+                new ValidationFailure()
+                        .fieldId("subjects[0].id")
+                        .errorType("invalidValue")
+                        .message(String.format("%s is not a valid field of research", id))
+        )));
         verifyNoInteractions(subjectTypeRepository);
     }
 
@@ -93,16 +96,18 @@ class SubjectValidatorTest {
 
         final var subject = new Subject()
                 .id(id)
-                .schemeUri(SUBJECT_SCHEME_URI);
+                .schemaUri(SUBJECT_SCHEME_URI);
 
         when(subjectTypeRepository.findById("222222")).thenReturn(Optional.empty());
 
-        final List<ValidationFailure> validationFailures = validationService.validateSubjects(Collections.singletonList(subject));
+        final List<ValidationFailure> failures = validationService.validate(Collections.singletonList(subject));
 
-        assertThat(validationFailures.size(), is(1));
-        assertThat(validationFailures.get(0).getMessage(), is(String.format("%s is not a standard FoR code", id)));
-        assertThat(validationFailures.get(0).getErrorType(), is("invalid"));
-        assertThat(validationFailures.get(0).getFieldId(), is("subjects[0].id"));
+        assertThat(failures, is(List.of(
+                new ValidationFailure()
+                        .fieldId("subjects[0].id")
+                        .errorType("invalidValue")
+                        .message(String.format("%s is not a standard FoR code", id))
+        )));
     }
 
     @Test
@@ -114,12 +119,14 @@ class SubjectValidatorTest {
 
         when(subjectTypeRepository.findById("222222")).thenReturn(Optional.of(new SubjectTypeRecord()));
 
-        final List<ValidationFailure> validationFailures = validationService.validateSubjects(Collections.singletonList(subject));
+        final List<ValidationFailure> failures = validationService.validate(Collections.singletonList(subject));
 
-        assertThat(validationFailures.size(), is(1));
-        assertThat(validationFailures.get(0).getMessage(), is("must be https://linked.data.gov.au/def/anzsrc-for/2020/."));
-        assertThat(validationFailures.get(0).getErrorType(), is("invalid"));
-        assertThat(validationFailures.get(0).getFieldId(), is("subjects[0].subjectSchemeUri"));
+        assertThat(failures, is(List.of(
+                new ValidationFailure()
+                        .fieldId("subjects[0].schemaUri")
+                        .errorType("invalidValue")
+                        .message("must be https://linked.data.gov.au/def/anzsrc-for/2020/.")
+        )));
     }
 
     @Test
@@ -128,16 +135,16 @@ class SubjectValidatorTest {
 
         final var subject = new Subject()
                 .id(id)
-                .schemeUri("invalid");
+                .schemaUri("invalid");
 
         when(subjectTypeRepository.findById("222222")).thenReturn(Optional.of(new SubjectTypeRecord()));
 
-        final List<ValidationFailure> validationFailures = validationService.validateSubjects(Collections.singletonList(subject));
+        final List<ValidationFailure> validationFailures = validationService.validate(Collections.singletonList(subject));
 
         assertThat(validationFailures.size(), is(1));
         assertThat(validationFailures.get(0).getMessage(), is("must be https://linked.data.gov.au/def/anzsrc-for/2020/."));
-        assertThat(validationFailures.get(0).getErrorType(), is("invalid"));
-        assertThat(validationFailures.get(0).getFieldId(), is("subjects[0].subjectSchemeUri"));
+        assertThat(validationFailures.get(0).getErrorType(), is("invalidValue"));
+        assertThat(validationFailures.get(0).getFieldId(), is("subjects[0].schemaUri"));
     }
 
     @Test
@@ -149,14 +156,18 @@ class SubjectValidatorTest {
 
         when(subjectTypeRepository.findById("222222")).thenReturn(Optional.empty());
 
-        final List<ValidationFailure> validationFailures = validationService.validateSubjects(Collections.singletonList(subject));
+        final List<ValidationFailure> failures = validationService.validate(Collections.singletonList(subject));
 
-        assertThat(validationFailures.size(), is(2));
-        assertThat(validationFailures.get(0).getMessage(), is("must be https://linked.data.gov.au/def/anzsrc-for/2020/."));
-        assertThat(validationFailures.get(0).getErrorType(), is("invalid"));
-        assertThat(validationFailures.get(0).getFieldId(), is("subjects[0].subjectSchemeUri"));
-        assertThat(validationFailures.get(1).getMessage(), is("https://linked.data.gov.au/def/anzsrc-for/2020/222222 is not a standard FoR code"));
-        assertThat(validationFailures.get(1).getErrorType(), is("invalid"));
-        assertThat(validationFailures.get(1).getFieldId(), is("subjects[0].id"));
+        assertThat(failures, is(List.of(
+                new ValidationFailure()
+                        .fieldId("subjects[0].schemaUri")
+                        .errorType("invalidValue")
+                        .message("must be https://linked.data.gov.au/def/anzsrc-for/2020/."),
+                new ValidationFailure()
+                        .fieldId("subjects[0].id")
+                        .errorType("invalidValue")
+                        .message("https://linked.data.gov.au/def/anzsrc-for/2020/222222 is not a standard FoR code")
+                )
+        ));
     }
 }

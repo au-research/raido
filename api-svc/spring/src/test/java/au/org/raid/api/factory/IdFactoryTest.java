@@ -45,7 +45,7 @@ class IdFactoryTest {
         final var result = idFactory.create(idBlock);
 
         assertThat(result.getIdentifier(), is(identifier));
-        assertThat(result.getIdentifierSchemeUri(), is(identifierSchemeUri));
+        assertThat(result.getSchemaUri(), is(identifierSchemeUri));
         assertThat(result.getIdentifierRegistrationAgency(), is(identifierRegistrationAgency));
         assertThat(result.getIdentifierOwner(), is(identifierOwner));
         assertThat(result.getIdentifierServicePoint(), is(identifierServicePoint));

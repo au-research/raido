@@ -54,9 +54,9 @@ public class InvalidPidTest extends IntegrationTestCase {
     private static final String CONTRIBUTOR_ROLE_SCHEME_URI = "https://credit.niso.org/";
 
     public static List<Description> descriptions(String description) {
-        final var descriptionType = new DescriptionTypeWithSchemeUri()
+        final var descriptionType = new DescriptionTypeWithSchemaUri()
                 .id(PRIMARY_DESCRIPTION_TYPE)
-                .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
+                .schemaUri(DESCRIPTION_TYPE_SCHEME_URI);
 
         return List.of(new Description()
                 .type(descriptionType)
@@ -80,9 +80,9 @@ public class InvalidPidTest extends IntegrationTestCase {
                 organisations(organisations(NONEXISTENT_TEST_ROR)).
                 relatedObjects(relatedObjects(NONEXISTENT_TEST_DOI)).
                 access(new Access()
-                        .type(new AccessTypeWithSchemeUri()
+                        .type(new AccessTypeWithSchemaUri()
                                 .id(ACCESS_TYPE_OPEN)
-                                .schemeUri(ACCESS_TYPE_SCHEME_URI))
+                                .schemaUri(ACCESS_TYPE_SCHEME_URI))
                 )
         )).isInstanceOfSatisfying(RaidApiValidationException.class, ex -> {
             assertThat(ex.getFailures()).anySatisfy(iFail -> {
@@ -105,9 +105,9 @@ public class InvalidPidTest extends IntegrationTestCase {
             String title
     ) {
         return List.of(new Title()
-                .type(new TitleTypeWithSchemeUri()
+                .type(new TitleTypeWithSchemaUri()
                         .id(PRIMARY_TITLE_TYPE)
-                        .schemeUri(TITLE_TYPE_SCHEME_URI)
+                        .schemaUri(TITLE_TYPE_SCHEME_URI)
                 )
                 .title(title)
                 .startDate(LocalDate.now()));
@@ -119,14 +119,14 @@ public class InvalidPidTest extends IntegrationTestCase {
         var today = LocalDate.now();
         return List.of(new Contributor()
                 .id(orcid)
-                .identifierSchemeUri(CONTRIBUTOR_SCHEME_URI)
-                .positions(List.of(new ContributorPositionWithSchemeUri()
-                        .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                .schemaUri(CONTRIBUTOR_SCHEME_URI)
+                .positions(List.of(new ContributorPositionWithSchemaUri()
+                        .schemaUri(CONTRIBUTOR_POSITION_SCHEME_URI)
                         .id(LEADER_POSITION)
                         .startDate(today)))
                 .roles(List.of(
-                        new ContributorRoleWithSchemeUri()
-                                .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+                        new ContributorRoleWithSchemaUri()
+                                .schemaUri(CONTRIBUTOR_ROLE_SCHEME_URI)
                                 .id(SUPERVISION_ROLE))));
     }
 
@@ -141,10 +141,10 @@ public class InvalidPidTest extends IntegrationTestCase {
     ) {
         return new Organisation()
                 .id(ror)
-                .identifierSchemeUri(ORGANISATION_SCHEME_URI)
+                .schemaUri(ORGANISATION_SCHEME_URI)
                 .roles(List.of(
-                        new OrganisationRoleWithSchemeUri()
-                                .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
+                        new OrganisationRoleWithSchemaUri()
+                                .schemaUri(ORGANISATION_ROLE_SCHEME_URI)
                                 .id(role)
                                 .startDate(today)));
     }
@@ -156,16 +156,16 @@ public class InvalidPidTest extends IntegrationTestCase {
     public RelatedObject relatedObject(String doi, String type) {
         return new RelatedObject()
                 .id(doi)
-                .identifierSchemeUri("https://doi.org/")
+                .schemaUri("https://doi.org/")
                 .type(
                         new RelatedObjectType()
                                 .id("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/audiovisual.json")
-                                .schemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1")
+                                .schemaUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1")
                 )
                 .category(
                         new RelatedObjectCategory()
                                 .id("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json")
-                                .schemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1")
+                                .schemaUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1")
                 );
     }
 }

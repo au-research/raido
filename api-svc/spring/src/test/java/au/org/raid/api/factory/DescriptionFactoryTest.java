@@ -3,7 +3,7 @@ package au.org.raid.api.factory;
 import au.org.raid.idl.raidv2.model.Description;
 import au.org.raid.idl.raidv2.model.DescriptionBlock;
 import au.org.raid.idl.raidv2.model.DescriptionType;
-import au.org.raid.idl.raidv2.model.DescriptionTypeWithSchemeUri;
+import au.org.raid.idl.raidv2.model.DescriptionTypeWithSchemaUri;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -33,9 +33,9 @@ class DescriptionFactoryTest {
 
         final var expected = new Description()
                 .description(DESCRIPTION)
-                .type(new DescriptionTypeWithSchemeUri()
+                .type(new DescriptionTypeWithSchemaUri()
                         .id(PRIMARY_ID)
-                        .schemeUri(DESCRIPTION_TYPE_SCHEME_URI));
+                        .schemaUri(DESCRIPTION_TYPE_SCHEME_URI));
 
         assertThat(result, is(expected));
     }
@@ -51,9 +51,9 @@ class DescriptionFactoryTest {
 
         final var expected = new Description()
                 .description(DESCRIPTION)
-                .type(new DescriptionTypeWithSchemeUri()
+                .type(new DescriptionTypeWithSchemaUri()
                         .id(ALTERNATIVE_ID)
-                        .schemeUri(DESCRIPTION_TYPE_SCHEME_URI));
+                        .schemaUri(DESCRIPTION_TYPE_SCHEME_URI));
 
         assertThat(result, is(expected));
     }
@@ -72,8 +72,8 @@ class DescriptionFactoryTest {
         final var result = descriptionFactory.create(description);
 
         final var expected = new Description()
-                .type(new DescriptionTypeWithSchemeUri()
-                        .schemeUri(DESCRIPTION_TYPE_SCHEME_URI));
+                .type(new DescriptionTypeWithSchemaUri()
+                        .schemaUri(DESCRIPTION_TYPE_SCHEME_URI));
 
         assertThat(result, is(expected));
     }

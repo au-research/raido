@@ -3,7 +3,7 @@ package au.org.raid.api.factory;
 import au.org.raid.idl.raidv2.model.Description;
 import au.org.raid.idl.raidv2.model.DescriptionBlock;
 import au.org.raid.idl.raidv2.model.DescriptionType;
-import au.org.raid.idl.raidv2.model.DescriptionTypeWithSchemeUri;
+import au.org.raid.idl.raidv2.model.DescriptionTypeWithSchemaUri;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -25,9 +25,9 @@ public class DescriptionFactory {
 
         return new Description()
                 .description(descriptionBlock.getDescription())
-                .type(new DescriptionTypeWithSchemeUri()
+                .type(new DescriptionTypeWithSchemaUri()
                         .id(descriptionBlock.getType() != null ? DESCRIPTION_TYPE_MAP.get(descriptionBlock.getType()) : null)
-                        .schemeUri(DESCRIPTION_TYPE_SCHEME_URI)
+                        .schemaUri(DESCRIPTION_TYPE_SCHEME_URI)
                 );
     }
 }

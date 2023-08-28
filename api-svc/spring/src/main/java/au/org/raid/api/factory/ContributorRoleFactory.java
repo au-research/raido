@@ -2,7 +2,7 @@ package au.org.raid.api.factory;
 
 import au.org.raid.idl.raidv2.model.ContributorRole;
 import au.org.raid.idl.raidv2.model.ContributorRoleCreditNisoOrgType;
-import au.org.raid.idl.raidv2.model.ContributorRoleWithSchemeUri;
+import au.org.raid.idl.raidv2.model.ContributorRoleWithSchemaUri;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -46,13 +46,13 @@ public class ContributorRoleFactory {
     private static final String SCHEME_URI =
             "https://credit.niso.org/";
 
-    public ContributorRoleWithSchemeUri create(final ContributorRole role) {
+    public ContributorRoleWithSchemaUri create(final ContributorRole role) {
         if (role == null) {
             return null;
         }
 
-        return new ContributorRoleWithSchemeUri()
+        return new ContributorRoleWithSchemaUri()
                 .id(role.getRole() != null ? ROLE_MAP.get(role.getRole()) : null)
-                .schemeUri(SCHEME_URI);
+                .schemaUri(SCHEME_URI);
     }
 }

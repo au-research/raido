@@ -2,7 +2,7 @@ package au.org.raid.api.factory;
 
 import au.org.raid.idl.raidv2.model.ContributorPosition;
 import au.org.raid.idl.raidv2.model.ContributorPositionRaidMetadataSchemaType;
-import au.org.raid.idl.raidv2.model.ContributorPositionWithSchemeUri;
+import au.org.raid.idl.raidv2.model.ContributorPositionWithSchemaUri;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -25,14 +25,14 @@ public class ContributorPositionFactory {
     private static final String SCHEME_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/";
 
-    public ContributorPositionWithSchemeUri create(final ContributorPosition position) {
+    public ContributorPositionWithSchemaUri create(final ContributorPosition position) {
         if (position == null) {
             return null;
         }
 
-        return new ContributorPositionWithSchemeUri()
+        return new ContributorPositionWithSchemaUri()
                 .id(position.getPosition() != null ? POSITION_MAP.get(position.getPosition()) : null)
-                .schemeUri(SCHEME_URI)
+                .schemaUri(SCHEME_URI)
                 .startDate(position.getStartDate())
                 .endDate(position.getEndDate());
     }

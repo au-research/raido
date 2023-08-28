@@ -18,14 +18,14 @@ class TraditionalKnowledgeLabelValidatorTest {
     @Test
     @DisplayName("Validation passes if traditionalKnowledgeLabels is null")
     void noFailuresIfTraditionalKnowledgeLabelsIsNull() {
-        final var failures = validatorService.validateTraditionalKnowledgeLabels(null);
+        final var failures = validatorService.validate(null);
         assertThat(failures, empty());
     }
 
     @Test
     @DisplayName("Validation passes if traditionalKnowledgeLabels is empty")
     void noFailuresIfTraditionalKnowledgeLabelsIsEmpty() {
-        final var failures = validatorService.validateTraditionalKnowledgeLabels(Collections.emptyList());
+        final var failures = validatorService.validate(Collections.emptyList());
         assertThat(failures, empty());
     }
 
@@ -33,9 +33,9 @@ class TraditionalKnowledgeLabelValidatorTest {
     @DisplayName("Validation passes if traditionalKnowledgeLabels is valid")
     void noFailuresIfTraditionalKnowledgeLabelsIsValid() {
         final var traditionalKnowledgeLabel = new TraditionalKnowledgeLabel()
-                .schemeUri("https://localcontexts.org/labels/traditional-knowledge-labels/");
+                .schemaUri("https://localcontexts.org/labels/traditional-knowledge-labels/");
 
-        final var failures = validatorService.validateTraditionalKnowledgeLabels(
+        final var failures = validatorService.validate(
                 List.of(traditionalKnowledgeLabel)
         );
 
@@ -43,57 +43,57 @@ class TraditionalKnowledgeLabelValidatorTest {
     }
 
     @Test
-    @DisplayName("Validation fails if schemeUri is null")
+    @DisplayName("Validation fails if schemaUri is null")
     void addsFailureIfTraditionalKnowledgeLabelsIsNull() {
         final var traditionalKnowledgeLabel = new TraditionalKnowledgeLabel()
-                .schemeUri(null);
+                .schemaUri(null);
 
-        final var failures = validatorService.validateTraditionalKnowledgeLabels(
+        final var failures = validatorService.validate(
                 List.of(traditionalKnowledgeLabel)
         );
 
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("traditionalKnowledgeLabels[0].schemeUri")
+                        .fieldId("traditionalKnowledgeLabels[0].schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
     }
 
     @Test
-    @DisplayName("Validation fails if schemeUri is empty string")
+    @DisplayName("Validation fails if schemaUri is empty string")
     void addsFailureIfTraditionalKnowledgeLabelsIsEmptyString() {
         final var traditionalKnowledgeLabel = new TraditionalKnowledgeLabel()
-                .schemeUri("");
+                .schemaUri("");
 
-        final var failures = validatorService.validateTraditionalKnowledgeLabels(
+        final var failures = validatorService.validate(
                 List.of(traditionalKnowledgeLabel)
         );
 
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("traditionalKnowledgeLabels[0].schemeUri")
+                        .fieldId("traditionalKnowledgeLabels[0].schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
     }
 
     @Test
-    @DisplayName("Validation fails if schemeUri is invalid")
+    @DisplayName("Validation fails if schemaUri is invalid")
     void addsFailureIfTraditionalKnowledgeLabelsIsInvalid() {
         final var traditionalKnowledgeLabel = new TraditionalKnowledgeLabel()
-                .schemeUri("https://localcontexts.or/labels/traditional-knowledge-labels/");
+                .schemaUri("https://localcontexts.or/labels/traditional-knowledge-labels/");
 
-        final var failures = validatorService.validateTraditionalKnowledgeLabels(
+        final var failures = validatorService.validate(
                 List.of(traditionalKnowledgeLabel)
         );
 
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("traditionalKnowledgeLabels[0].schemeUri")
+                        .fieldId("traditionalKnowledgeLabels[0].schemaUri")
                         .errorType("invalidValue")
                         .message("URI is not a valid traditional knowledge scheme")
         ));

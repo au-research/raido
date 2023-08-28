@@ -1,6 +1,5 @@
 package au.org.raid.api.validator;
 
-import au.org.raid.api.service.raid.validation.LanguageValidationService;
 import au.org.raid.idl.raidv2.model.SpatialCoverage;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,7 @@ import static au.org.raid.api.util.StringUtil.isBlank;
 @RequiredArgsConstructor
 public class SpatialCoverageValidator {
     private static final String SPATIAL_COVERAGE_SCHEME_URI = "https://www.geonames.org/";
-    private final LanguageValidationService languageValidationService;
+    private final LanguageValidator languageValidator;
     private final GeoNamesUriValidator geoNamesUriValidator;
 
     public List<ValidationFailure> validate(final List<SpatialCoverage> spatialCoverages) {
@@ -35,21 +34,21 @@ public class SpatialCoverageValidator {
                         failures.add(new ValidationFailure()
                                 .fieldId(String.format("spatialCoverages[%d].id", i))
                                 .errorType(NOT_SET_TYPE)
-                                .message(FIELD_MUST_BE_SET_MESSAGE));
+                                .message(NOT_SET_MESSAGE));
                     }
-                    if (isBlank(spatialCoverage.getSchemeUri())) {
+                    if (isBlank(spatialCoverage.getSchemaUri())) {
                         failures.add(new ValidationFailure()
-                                .fieldId(String.format("spatialCoverages[%d].schemeUri", i))
+                                .fieldId(String.format("spatialCoverages[%d].schemaUri", i))
                                 .errorType(NOT_SET_TYPE)
-                                .message(FIELD_MUST_BE_SET_MESSAGE));
-                    } else if (!spatialCoverage.getSchemeUri().equals(SPATIAL_COVERAGE_SCHEME_URI)) {
+                                .message(NOT_SET_MESSAGE));
+                    } else if (!spatialCoverage.getSchemaUri().equals(SPATIAL_COVERAGE_SCHEME_URI)) {
                         failures.add(new ValidationFailure()
-                                .fieldId(String.format("spatialCoverages[%d].schemeUri", i))
+                                .fieldId(String.format("spatialCoverages[%d].schemaUri", i))
                                 .errorType(INVALID_VALUE_TYPE)
                                 .message(String.format("Spatial coverage scheme uri should be %s", SPATIAL_COVERAGE_SCHEME_URI)));
                     }
                     failures.addAll(
-                            languageValidationService.validate(spatialCoverage.getLanguage(), "spatialCoverages[%d]".formatted(i))
+                            languageValidator.validate(spatialCoverage.getLanguage(), "spatialCoverages[%d]".formatted(i))
                     );
                     failures.addAll(geoNamesUriValidator.validate(
                             spatialCoverage.getId(), String.format("spatialCoverages[%d].id", i)

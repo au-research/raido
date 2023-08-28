@@ -3,7 +3,7 @@ package au.org.raid.api.factory;
 import au.org.raid.idl.raidv2.model.Title;
 import au.org.raid.idl.raidv2.model.TitleBlock;
 import au.org.raid.idl.raidv2.model.TitleType;
-import au.org.raid.idl.raidv2.model.TitleTypeWithSchemeUri;
+import au.org.raid.idl.raidv2.model.TitleTypeWithSchemaUri;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -42,9 +42,9 @@ class TitleFactoryTest {
                 .title(TITLE)
                 .startDate(START_DATE)
                 .endDate(END_DATE)
-                .type(new TitleTypeWithSchemeUri()
+                .type(new TitleTypeWithSchemaUri()
                         .id(PRIMARY_ID)
-                        .schemeUri(TITLE_TYPE_SCHEME_URI));
+                        .schemaUri(TITLE_TYPE_SCHEME_URI));
 
         assertThat(result, is(expected));
     }
@@ -64,9 +64,9 @@ class TitleFactoryTest {
                 .title(TITLE)
                 .startDate(START_DATE)
                 .endDate(END_DATE)
-                .type(new TitleTypeWithSchemeUri()
+                .type(new TitleTypeWithSchemaUri()
                         .id(ALTERNATIVE_ID)
-                        .schemeUri(TITLE_TYPE_SCHEME_URI));
+                        .schemaUri(TITLE_TYPE_SCHEME_URI));
 
         assertThat(result, is(expected));
     }
@@ -85,8 +85,8 @@ class TitleFactoryTest {
         final var result = titleFactory.create(title);
 
         final var expected = new Title()
-                .type(new TitleTypeWithSchemeUri()
-                        .schemeUri(TITLE_TYPE_SCHEME_URI));
+                .type(new TitleTypeWithSchemaUri()
+                        .schemaUri(TITLE_TYPE_SCHEME_URI));
 
         assertThat(result, is(expected));
     }

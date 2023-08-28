@@ -1,6 +1,6 @@
 package au.org.raid.inttest.endpoint.raidv2.stable;
 
-import au.org.raid.idl.raidv2.model.DescriptionTypeWithSchemeUri;
+import au.org.raid.idl.raidv2.model.DescriptionTypeWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import au.org.raid.inttest.RaidApiValidationException;
 import org.junit.jupiter.api.DisplayName;
@@ -8,16 +8,16 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
-import static au.org.raid.inttest.endpoint.raidv2.stable.TestConstants.DESCRIPTION_TYPE_SCHEME_URI;
+import static au.org.raid.inttest.endpoint.raidv2.stable.TestConstants.DESCRIPTION_TYPE_SCHEMA_URI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class DescriptionIntegrationTest extends AbstractIntegrationTest {
 
     @Test
-    @DisplayName("Minting a RAiD with a description with an null language schemeUri fails")
+    @DisplayName("Minting a RAiD with a description with an null language schemaUri fails")
     void nullLanguageSchemeUri() {
-        createRequest.getDescriptions().get(0).getLanguage().setSchemeUri(null);
+        createRequest.getDescriptions().get(0).getLanguage().schemaUri(null);
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -26,7 +26,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("descriptions[0].language.schemeUri")
+                    .fieldId("descriptions[0].language.schemaUri")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -36,9 +36,9 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Minting a RAiD with a description with an empty language schemeUri fails")
+    @DisplayName("Minting a RAiD with a description with an empty language schemaUri fails")
     void emptyLanguageSchemeUri() {
-        createRequest.getDescriptions().get(0).getLanguage().setSchemeUri("");
+        createRequest.getDescriptions().get(0).getLanguage().schemaUri("");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -47,7 +47,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("descriptions[0].language.schemeUri")
+                    .fieldId("descriptions[0].language.schemaUri")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -112,7 +112,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).contains(new ValidationFailure()
                     .fieldId("descriptions[0].language.id")
                     .errorType("invalidValue")
-                    .message("id does not exist within the given scheme")
+                    .message("id does not exist within the given schema")
             );
         } catch (Exception e) {
             fail("Expected RaidApiValidationException");
@@ -120,9 +120,9 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Minting a RAiD with a description with an invalid language scheme fails")
+    @DisplayName("Minting a RAiD with a description with an invalid language schema fails")
     void invalidLanguageScheme() {
-        createRequest.getDescriptions().get(0).getLanguage().setSchemeUri("http://localhost");
+        createRequest.getDescriptions().get(0).getLanguage().schemaUri("http://localhost");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -131,9 +131,9 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("descriptions[0].language.schemeUri")
+                    .fieldId("descriptions[0].language.schemaUri")
                     .errorType("invalidValue")
-                    .message("scheme is unknown/unsupported")
+                    .message("schema is unknown/unsupported")
             );
         } catch (Exception e) {
             fail("Expected RaidApiValidationException");
@@ -154,19 +154,19 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Validation fails with missing schemeUri")
+    @DisplayName("Validation fails with missing schemaUri")
     void missingSchemeUri() {
-        createRequest.getDescriptions().get(0).getType().schemeUri(null);
+        createRequest.getDescriptions().get(0).getType().schemaUri(null);
 
         try {
             raidApi.createRaidV1(createRequest);
-            fail("No exception thrown with missing schemeUri");
+            fail("No exception thrown with missing schemaUri");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("descriptions[0].type.schemeUri")
+                            .fieldId("descriptions[0].type.schemaUri")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -176,21 +176,21 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Validation fails with invalid schemeUri")
+    @DisplayName("Validation fails with invalid schemaUri")
     void invalidSchemeUri() {
         createRequest.getDescriptions().get(0).getType()
-                .schemeUri("https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v2");
+                .schemaUri("https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v2");
 
         try {
             raidApi.createRaidV1(createRequest);
-            fail("No exception thrown with invalid schemeUri");
+            fail("No exception thrown with invalid schemaUri");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("descriptions[0].type.schemeUri")
+                    .fieldId("descriptions[0].type.schemaUri")
                     .errorType("invalidValue")
-                    .message("scheme is unknown/unsupported")
+                    .message("schema is unknown/unsupported")
             );
         } catch (Exception e) {
             fail("Expected RaidApiValidationException");
@@ -198,19 +198,19 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Validation fails with blank schemeUri")
+    @DisplayName("Validation fails with blank schemaUri")
     void blankSchemeUri() {
-        createRequest.getDescriptions().get(0).getType().schemeUri("");
+        createRequest.getDescriptions().get(0).getType().schemaUri("");
 
         try {
             raidApi.createRaidV1(createRequest);
-            fail("No exception thrown with blank schemeUri");
+            fail("No exception thrown with blank schemaUri");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("descriptions[0].type.schemeUri")
+                            .fieldId("descriptions[0].type.schemaUri")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -286,8 +286,8 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @DisplayName("Validation fails with missing type id")
     void missingId() {
         createRequest.getDescriptions().get(0).type(
-                new DescriptionTypeWithSchemeUri()
-                        .schemeUri(DESCRIPTION_TYPE_SCHEME_URI)
+                new DescriptionTypeWithSchemaUri()
+                        .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI)
         );
 
         try {
@@ -310,9 +310,9 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @DisplayName("Validation fails with empty id")
     void emptyId() {
         createRequest.getDescriptions().get(0).type(
-                new DescriptionTypeWithSchemeUri()
+                new DescriptionTypeWithSchemaUri()
                         .id("")
-                        .schemeUri(DESCRIPTION_TYPE_SCHEME_URI)
+                        .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI)
         );
 
         try {
@@ -338,7 +338,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
 
         try {
             raidApi.createRaidV1(createRequest);
-            fail("No exception thrown with missing schemeUri");
+            fail("No exception thrown with missing schemaUri");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
@@ -353,21 +353,21 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Validation fails if type is not found within scheme")
+    @DisplayName("Validation fails if type is not found within schema")
     void invalidType() {
         createRequest.getDescriptions().get(0)
                 .getType().id("https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/unknown.json");
 
         try {
             raidApi.createRaidV1(createRequest);
-            fail("No exception thrown when id not found in scheme");
+            fail("No exception thrown when id not found in schema");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
                     .fieldId("descriptions[0].type.id")
                     .errorType("invalidValue")
-                    .message("id does not exist within the given scheme")
+                    .message("id does not exist within the given schema")
             );
         } catch (Exception e) {
             fail("Expected RaidApiValidationException");

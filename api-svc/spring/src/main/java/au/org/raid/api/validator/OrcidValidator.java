@@ -25,7 +25,7 @@ public class OrcidValidator {
             failures.add(new ValidationFailure()
                     .fieldId("contributors[%d].id".formatted(index))
                     .errorType(NOT_SET_TYPE)
-                    .message(FIELD_MUST_BE_SET_MESSAGE)
+                    .message(NOT_SET_MESSAGE)
             );
         } else {
             failures.addAll(validateOrcidFormat(orcid, index));

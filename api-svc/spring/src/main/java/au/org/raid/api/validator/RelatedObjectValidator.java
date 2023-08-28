@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static au.org.raid.api.endpoint.message.ValidationMessage.FIELD_MUST_BE_SET_MESSAGE;
+import static au.org.raid.api.endpoint.message.ValidationMessage.NOT_SET_MESSAGE;
 import static au.org.raid.api.endpoint.message.ValidationMessage.NOT_SET_TYPE;
 import static au.org.raid.api.util.StringUtil.isBlank;
 
@@ -51,21 +51,21 @@ public class RelatedObjectValidator {
                         failures.add(new ValidationFailure()
                                 .fieldId(String.format("relatedObjects[%d].id", index))
                                 .errorType(NOT_SET_TYPE)
-                                .message(FIELD_MUST_BE_SET_MESSAGE));
+                                .message(NOT_SET_MESSAGE));
                     }  else {
                         failures.addAll(
                                 doiService.validate(relatedObject.getId(), String.format("relatedObjects[%d].id", index))
                         );
                     }
 
-                    if (isBlank(relatedObject.getIdentifierSchemeUri())) {
+                    if (isBlank(relatedObject.getSchemaUri())) {
                         failures.add(new ValidationFailure()
-                                .fieldId(String.format("relatedObjects[%d].identifierSchemeUri", index))
+                                .fieldId(String.format("relatedObjects[%d].schemaUri", index))
                                 .errorType(NOT_SET_TYPE)
-                                .message(FIELD_MUST_BE_SET_MESSAGE));
-                    } else if (!relatedObject.getIdentifierSchemeUri().equals(RELATED_OBJECT_SCHEME_URI)) {
+                                .message(NOT_SET_MESSAGE));
+                    } else if (!relatedObject.getSchemaUri().equals(RELATED_OBJECT_SCHEME_URI)) {
                         failures.add(new ValidationFailure()
-                                .fieldId(String.format("relatedObjects[%d].identifierSchemeUri", index))
+                                .fieldId(String.format("relatedObjects[%d].schemaUri", index))
                                 .errorType("invalid")
                                 .message(String.format("Only %s is supported.", RELATED_OBJECT_SCHEME_URI)));
                     }

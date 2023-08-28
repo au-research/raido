@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static au.org.raid.api.endpoint.message.ValidationMessage.FIELD_MUST_BE_SET_MESSAGE;
+import static au.org.raid.api.endpoint.message.ValidationMessage.NOT_SET_MESSAGE;
 import static au.org.raid.api.endpoint.message.ValidationMessage.NOT_SET_TYPE;
 import static au.org.raid.api.util.StringUtil.isBlank;
 
@@ -34,7 +34,7 @@ public class RelatedRaidValidator {
                         failures.add(new ValidationFailure()
                                 .fieldId(String.format("relatedRaids[%d].id", index))
                                 .errorType(NOT_SET_TYPE)
-                                .message(FIELD_MUST_BE_SET_MESSAGE));
+                                .message(NOT_SET_MESSAGE));
                     }
                     // TODO: Validate Raid exists
 

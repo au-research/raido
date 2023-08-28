@@ -11,7 +11,7 @@ import static au.org.raid.db.jooq.api_svc.tables.DescriptionTypeScheme.DESCRIPTI
 
 @Repository
 @RequiredArgsConstructor
-public class DescriptionTypeSchemeRepository {
+public class DescriptionTypeSchemaRepository {
     private final DSLContext dslContext;
 
     public Optional<DescriptionTypeSchemeRecord> findByUri(final String uri) {

@@ -3,7 +3,7 @@ package au.org.raid.api.factory;
 import au.org.raid.idl.raidv2.model.Title;
 import au.org.raid.idl.raidv2.model.TitleBlock;
 import au.org.raid.idl.raidv2.model.TitleType;
-import au.org.raid.idl.raidv2.model.TitleTypeWithSchemeUri;
+import au.org.raid.idl.raidv2.model.TitleTypeWithSchemaUri;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -26,9 +26,9 @@ public class TitleFactory {
                 .title(titleBlock.getTitle())
                 .startDate(titleBlock.getStartDate())
                 .endDate(titleBlock.getEndDate())
-                .type(new TitleTypeWithSchemeUri()
+                .type(new TitleTypeWithSchemaUri()
                         .id(titleBlock.getType() != null ? TITLE_TYPE_MAP.get(titleBlock.getType()) : null)
-                        .schemeUri(TITLE_TYPE_SCHEME_URI)
+                        .schemaUri(TITLE_TYPE_SCHEME_URI)
                 );
     }
 }

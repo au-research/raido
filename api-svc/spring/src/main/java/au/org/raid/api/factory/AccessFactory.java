@@ -29,9 +29,9 @@ public class AccessFactory {
 
         return new Access()
                 .accessStatement(accessStatement)
-                .type(new AccessTypeWithSchemeUri()
+                .type(new AccessTypeWithSchemaUri()
                         .id(accessBlock.getType() != null ? ACCESS_TYPE_MAP.get(accessBlock.getType()) : null)
-                        .schemeUri(ACCESS_SCHEME_URI)
+                        .schemaUri(ACCESS_SCHEME_URI)
                 );
     }
 }

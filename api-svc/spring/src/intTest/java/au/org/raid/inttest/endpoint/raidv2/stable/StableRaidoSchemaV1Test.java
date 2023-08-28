@@ -110,21 +110,21 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
     }
 
     private UpdateRaidV1Request mapReadToUpdate(RaidDto read) {
-        return new UpdateRaidV1Request().
-                id(read.getId()).
-                titles(read.getTitles()).
-                dates(read.getDates()).
-                descriptions(read.getDescriptions()).
-                access(read.getAccess()).
-                alternateUrls(read.getAlternateUrls()).
-                contributors(read.getContributors()).
-                organisations(read.getOrganisations()).
-                subjects(read.getSubjects()).
-                relatedRaids(read.getRelatedRaids()).
-                relatedObjects(read.getRelatedObjects()).
-                alternateIdentifiers(read.getAlternateIdentifiers()).
-                spatialCoverages(read.getSpatialCoverages()).
-                traditionalKnowledgeLabels(read.getTraditionalKnowledgeLabels());
+        return new UpdateRaidV1Request()
+                .id(read.getId())
+                .titles(read.getTitles())
+                .dates(read.getDates())
+                .descriptions(read.getDescriptions())
+                .access(read.getAccess())
+                .alternateUrls(read.getAlternateUrls())
+                .contributors(read.getContributors())
+                .organisations(read.getOrganisations())
+                .subjects(read.getSubjects())
+                .relatedRaids(read.getRelatedRaids())
+                .relatedObjects(read.getRelatedObjects())
+                .alternateIdentifiers(read.getAlternateIdentifiers())
+                .spatialCoverages(read.getSpatialCoverages())
+                .traditionalKnowledgeLabels(read.getTraditionalKnowledgeLabels());
     }
 
     public Contributor contributor(
@@ -135,14 +135,14 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
     ) {
         return new Contributor()
                 .id(orcid)
-                .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
-                .positions(List.of(new ContributorPositionWithSchemeUri()
-                        .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                .positions(List.of(new ContributorPositionWithSchemaUri()
+                        .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                         .id(position)
                         .startDate(startDate)))
                 .roles(List.of(
-                        new ContributorRoleWithSchemeUri()
-                                .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+                        new ContributorRoleWithSchemaUri()
+                                .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                 .id(role)));
     }
 
@@ -153,11 +153,12 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
     ) {
         return new Organisation()
                 .id(ror)
-                .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI).
-                roles(List.of(
-                        new OrganisationRoleWithSchemeUri()
-                                .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
+                .schemaUri(ORGANISATION_IDENTIFIER_SCHEMA_URI)
+                .roles(List.of(
+                        new OrganisationRoleWithSchemaUri()
+                                .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                 .id(role)
                                 .startDate(today)));
     }
+
 }

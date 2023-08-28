@@ -40,15 +40,15 @@ public class OrganisationValidator {
         IntStream.range(0, organisations.size()).forEach(organisationIndex -> {
             final var organisation = organisations.get(organisationIndex);
 
-            if (isBlank(organisation.getIdentifierSchemeUri())) {
+            if (isBlank(organisation.getSchemaUri())) {
                 failures.add(new ValidationFailure()
-                        .fieldId("organisations[%d].schemeUri".formatted(organisationIndex))
+                        .fieldId("organisations[%d].schemaUri".formatted(organisationIndex))
                         .errorType(NOT_SET_TYPE)
-                        .message(FIELD_MUST_BE_SET_MESSAGE)
+                        .message(NOT_SET_MESSAGE)
                 );
-            } else if (!organisation.getIdentifierSchemeUri().equals(ROR_SCHEME_URI)) {
+            } else if (!organisation.getSchemaUri().equals(ROR_SCHEME_URI)) {
                 failures.add(new ValidationFailure()
-                        .fieldId("organisations[%d].schemeUri")
+                        .fieldId("organisations[%d].schemaUri")
                         .errorType(INVALID_VALUE_TYPE)
                         .message(INVALID_VALUE_MESSAGE)
                 );

@@ -171,12 +171,12 @@ public class RaidoStableV1ValidationService {
         failures.addAll(validateAlternateUrls(request.getAlternateUrls()));
         failures.addAll(contribSvc.validate(request.getContributors()));
         failures.addAll(orgSvc.validate(request.getOrganisations()));
-        failures.addAll(subjectSvc.validateSubjects(request.getSubjects()));
+        failures.addAll(subjectSvc.validate(request.getSubjects()));
         failures.addAll(relatedRaidSvc.validate(request.getRelatedRaids()));
         failures.addAll(relatedObjectSvc.validateRelatedObjects(request.getRelatedObjects()));
         failures.addAll(alternateIdentifierSvc.validateAlternateIdentifiers(request.getAlternateIdentifiers()));
         failures.addAll(spatialCoverageSvc.validate(request.getSpatialCoverages()));
-        failures.addAll(traditionalKnowledgeLabelSvc.validateTraditionalKnowledgeLabels(
+        failures.addAll(traditionalKnowledgeLabelSvc.validate(
                 request.getTraditionalKnowledgeLabels()));
 
         return failures;
@@ -198,12 +198,12 @@ public class RaidoStableV1ValidationService {
         failures.addAll(validateAlternateUrls(request.getAlternateUrls()));
         failures.addAll(contribSvc.validate(request.getContributors()));
         failures.addAll(orgSvc.validate(request.getOrganisations()));
-        failures.addAll(subjectSvc.validateSubjects(request.getSubjects()));
+        failures.addAll(subjectSvc.validate(request.getSubjects()));
         failures.addAll(relatedRaidSvc.validate(request.getRelatedRaids()));
         failures.addAll(relatedObjectSvc.validateRelatedObjects(request.getRelatedObjects()));
         failures.addAll(alternateIdentifierSvc.validateAlternateIdentifiers(request.getAlternateIdentifiers()));
         failures.addAll(spatialCoverageSvc.validate(request.getSpatialCoverages()));
-        failures.addAll(traditionalKnowledgeLabelSvc.validateTraditionalKnowledgeLabels(
+        failures.addAll(traditionalKnowledgeLabelSvc.validate(
                 request.getTraditionalKnowledgeLabels()));
 
         return failures;

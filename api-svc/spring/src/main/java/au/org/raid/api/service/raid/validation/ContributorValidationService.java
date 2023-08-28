@@ -128,7 +128,7 @@ public class ContributorValidationService {
                         fieldId("%s.positions[%s].positionSchemaUri".
                                 formatted(fieldPrefix.get(), j)).
                         errorType(NOT_SET_TYPE).
-                        message(FIELD_MUST_BE_SET_MESSAGE));
+                        message(NOT_SET_MESSAGE));
             } else if (jPosition.getPositionSchemaUri() != HTTPS_RAID_ORG_) {
                 // should fail to parse at openapi/spring/jackson, why validate it?
                 failures.add(new ValidationFailure().
@@ -143,7 +143,7 @@ public class ContributorValidationService {
                         fieldId("%s.positions[%s].position".
                                 formatted(fieldPrefix.get(), j)).
                         errorType(NOT_SET_TYPE).
-                        message(FIELD_MUST_BE_SET_MESSAGE));
+                        message(NOT_SET_MESSAGE));
             }
 
             if (jPosition.getStartDate() == null) {
@@ -151,7 +151,7 @@ public class ContributorValidationService {
                         fieldId("%s.positions[%s].startDate".
                                 formatted(fieldPrefix.get(), j)).
                         errorType(NOT_SET_TYPE).
-                        message(FIELD_MUST_BE_SET_MESSAGE));
+                        message(NOT_SET_MESSAGE));
             }
 
         }
@@ -170,14 +170,14 @@ public class ContributorValidationService {
                         fieldId("%s.roles[%s].roleSchemeUri".
                                 formatted(fieldPrefix.get(), i)).
                         errorType(NOT_SET_TYPE).
-                        message(FIELD_MUST_BE_SET_MESSAGE));
+                        message(NOT_SET_MESSAGE));
             }
             if (iRole.getRole() == null) {
                 failures.add(new ValidationFailure().
                         fieldId("%s.roles[%s].role".
                                 formatted(fieldPrefix.get(), i)).
                         errorType(NOT_SET_TYPE).
-                        message(FIELD_MUST_BE_SET_MESSAGE));
+                        message(NOT_SET_MESSAGE));
             }
         });
 

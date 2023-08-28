@@ -1,8 +1,8 @@
 package au.org.raid.api.validator;
 
 import au.org.raid.api.repository.DescriptionTypeRepository;
-import au.org.raid.api.repository.DescriptionTypeSchemeRepository;
-import au.org.raid.idl.raidv2.model.DescriptionTypeWithSchemeUri;
+import au.org.raid.api.repository.DescriptionTypeSchemaRepository;
+import au.org.raid.idl.raidv2.model.DescriptionTypeWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,17 +16,17 @@ import static au.org.raid.api.util.StringUtil.isBlank;
 @Component
 @RequiredArgsConstructor
 public class DescriptionTypeValidator {
-    private final DescriptionTypeSchemeRepository descriptionTypeSchemeRepository;
+    private final DescriptionTypeSchemaRepository descriptionTypeSchemaRepository;
     private final DescriptionTypeRepository descriptionTypeRepository;
 
-    public List<ValidationFailure> validate(final DescriptionTypeWithSchemeUri descriptionType, final int index) {
+    public List<ValidationFailure> validate(final DescriptionTypeWithSchemaUri descriptionType, final int index) {
         final var failures = new ArrayList<ValidationFailure>();
 
         if (descriptionType == null) {
             return List.of(new ValidationFailure()
                     .fieldId("descriptions[%d].type".formatted(index))
                     .errorType(NOT_SET_TYPE)
-                    .message(FIELD_MUST_BE_SET_MESSAGE)
+                    .message(NOT_SET_MESSAGE)
             );
         }
 
@@ -34,31 +34,31 @@ public class DescriptionTypeValidator {
             failures.add(new ValidationFailure()
                     .fieldId("descriptions[%d].type.id".formatted(index))
                     .errorType(NOT_SET_TYPE)
-                    .message(FIELD_MUST_BE_SET_MESSAGE)
+                    .message(NOT_SET_MESSAGE)
             );
         }
 
-        if (isBlank(descriptionType.getSchemeUri())) {
+        if (isBlank(descriptionType.getSchemaUri())) {
             failures.add(new ValidationFailure()
-                    .fieldId("descriptions[%d].type.schemeUri".formatted(index))
+                    .fieldId("descriptions[%d].type.schemaUri".formatted(index))
                     .errorType(NOT_SET_TYPE)
-                    .message(FIELD_MUST_BE_SET_MESSAGE)
+                    .message(NOT_SET_MESSAGE)
             );
         } else {
             final var descriptionTypeScheme =
-                    descriptionTypeSchemeRepository.findByUri(descriptionType.getSchemeUri());
+                    descriptionTypeSchemaRepository.findByUri(descriptionType.getSchemaUri());
 
             if (descriptionTypeScheme.isEmpty()) {
                 failures.add(new ValidationFailure()
-                        .fieldId("descriptions[%d].type.schemeUri".formatted(index))
+                        .fieldId("descriptions[%d].type.schemaUri".formatted(index))
                         .errorType(INVALID_VALUE_TYPE)
-                        .message(INVALID_SCHEME));
+                        .message(INVALID_SCHEMA));
             } else if (!isBlank(descriptionType.getId()) &&
                     descriptionTypeRepository.findByUriAndSchemeId(descriptionType.getId(), descriptionTypeScheme.get().getId()).isEmpty()) {
                 failures.add(new ValidationFailure()
                         .fieldId("descriptions[%d].type.id".formatted(index))
                         .errorType(INVALID_VALUE_TYPE)
-                        .message(INVALID_ID_FOR_SCHEME));
+                        .message(INVALID_ID_FOR_SCHEMA));
             }
         }
 

@@ -151,14 +151,14 @@ components:
           items: { $ref: '#/components/schemas/TraditionalKnowledgeLabel' }
     Id:
       type: object
-      required: [ identifier, identifierSchemeUri,
+      required: [ identifier, schemaUri,
                   identifierRegistrationAgency, identifierOwner, identifierServicePoint, version ]
       properties:
         identifier:
           type: string
           description: The identifier of the raid, e.g. https://raid.org.au/102.100.100/zzz
           example: https://raid.org/xxx.yyy/zzz
-        identifierSchemeUri:
+        schemaUri:
           type: string
           description: >
             The URI of the Identifier scheme. For example, https://raid.org
@@ -209,19 +209,19 @@ components:
       properties:
         title: {type: string}
         type:
-          $ref: '#/components/schemas/TitleTypeWithSchemeUri'
+          $ref: '#/components/schemas/TitleTypeWithSchemaUri'
         startDate: { type: string, format: date }
         endDate: { type: string, format: date }
         language:
           $ref: '#/components/schemas/Language'
-    TitleTypeWithSchemeUri:
+    TitleTypeWithSchemaUri:
       type: object
       properties:
         id: {
           type: string,
           example: https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json
         }
-        schemeUri: {
+        schemaUri: {
           type: string,
           example: https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1
         }
@@ -231,18 +231,18 @@ components:
       properties:
         description: {type: string}
         type:
-          $ref: '#/components/schemas/DescriptionTypeWithSchemeUri'
+          $ref: '#/components/schemas/DescriptionTypeWithSchemaUri'
         language:
           $ref: '#/components/schemas/Language'
-    DescriptionTypeWithSchemeUri:
+    DescriptionTypeWithSchemaUri:
       type: object
-      required: [id, schemeUri]
+      required: [id, schemaUri]
       properties:
         id: {
           type: string,
           example: https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json
         }
-        schemeUri: {
+        schemaUri: {
            type: string,
            example: https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1
         }
@@ -251,7 +251,7 @@ components:
       required: ["type"]
       properties:
         type:
-          $ref: '#/components/schemas/AccessTypeWithSchemeUri'
+          $ref: '#/components/schemas/AccessTypeWithSchemaUri'
         accessStatement:
           $ref: '#/components/schemas/AccessStatement'
         embargoExpiry: {
@@ -265,41 +265,41 @@ components:
         statement: { type: string }
         language:
           $ref: '#/components/schemas/Language'
-    AccessTypeWithSchemeUri:
+    AccessTypeWithSchemaUri:
       type: object
-      required: [ id, schemeUri ]
+      required: [ id, schemaUri ]
       properties:
         id: {
           type: string,
           example: https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json
         }
-        schemeUri: {
+        schemaUri: {
           type: string,
           example: https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1
         }
     Contributor:
       type: object
-      required: [id, schemeUri, positions, roles]
+      required: [id, schemaUri, positions, roles]
       properties:
         id:
           type: string
-        identifierSchemeUri: {
+        schemaUri: {
           type: string,
           example: https://orcid.org/
         }
         positions:
           type: array
           items:
-            $ref: '#/components/schemas/ContributorPositionWithSchemeUri'
+            $ref: '#/components/schemas/ContributorPositionWithSchemaUri'
         roles:
           type: array
           items:
-            $ref: '#/components/schemas/ContributorRoleWithSchemeUri'
-    ContributorPositionWithSchemeUri:
+            $ref: '#/components/schemas/ContributorRoleWithSchemaUri'
+    ContributorPositionWithSchemaUri:
       type: object
-      required: [ schemeUri, id, startDate ]
+      required: [ schemaUri, id, startDate ]
       properties:
-        schemeUri: {
+        schemaUri: {
           type: string,
           example: https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1
         }
@@ -315,11 +315,11 @@ components:
           type: string,
           format: date
         }
-    ContributorRoleWithSchemeUri:
+    ContributorRoleWithSchemaUri:
       type: object
-      required: [ id, schemeUri ]
+      required: [ id, schemaUri ]
       properties:
-        schemeUri: {
+        schemaUri: {
           type: string,
           example: https://credit.niso.org/
         }
@@ -329,22 +329,22 @@ components:
         }
     Organisation:
       type: object
-      required: [id, identifierSchemeUri, roles]
+      required: [id, schemaUri, roles]
       properties:
         id: { type: string }
-        identifierSchemeUri: {
+        schemaUri: {
           type: string,
           example: https://ror.org/
         }
         roles:
           type: array
           items:
-            $ref: '#/components/schemas/OrganisationRoleWithSchemeUri'
-    OrganisationRoleWithSchemeUri:
+            $ref: '#/components/schemas/OrganisationRoleWithSchemaUri'
+    OrganisationRoleWithSchemaUri:
       type: object
-      required: [id, schemeUri, startDate]
+      required: [id, schemaUri, startDate]
       properties:
-        schemeUri: {
+        schemaUri: {
           type: string,
           example: https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1
         }
@@ -361,10 +361,10 @@ components:
         url: { type: string }
     Subject:
       type: object
-      required: [ id, schemeUri ]
+      required: [ id, schemaUri ]
       properties:
         id: { type: string }
-        schemeUri: { type: string }
+        schemaUri: { type: string }
         keyword: { type: string }
     RelatedRaid:
       type: object
@@ -374,13 +374,13 @@ components:
           $ref: '#/components/schemas/RelatedRaidType'
     RelatedRaidType:
       type: object
-      required: [ id, schemeUri ]
+      required: [ id, schemaUri ]
       properties:
         id: {
           type: string,
           example: https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/continues.json
         }
-        schemeUri: {
+        schemaUri: {
           type: string,
           example: https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1
         }
@@ -388,7 +388,7 @@ components:
       type: object
       properties:
         id: { type: string }
-        identifierSchemeUri: { type: string }
+        schemaUri: { type: string }
         type:
           $ref: '#/components/schemas/RelatedObjectType'
         category:
@@ -400,7 +400,7 @@ components:
           type: string,
           example: https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book.json
         }
-        schemeUri: {
+        schemaUri: {
           type: string,
           example: https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1
         }
@@ -411,7 +411,7 @@ components:
           type: string,
           example: https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json
         }
-        schemeUri: {
+        schemaUri: {
           type: string,
           example: https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1
         }
@@ -424,23 +424,23 @@ components:
       type: object
       properties:
         id: { type: string }
-        schemeUri: { type: string }
+        schemaUri: { type: string }
         place: { type: string }
         language:
           $ref: '#/components/schemas/Language'
     TraditionalKnowledgeLabel:
       type: object
       properties:
-        schemeUri: { type: string }
+        schemaUri: { type: string }
     Language:
       type: object
-      required: [ code, schemeUri]
+      required: [ code, schemaUri]
       properties:
         id: {
           type: string,
           example: eng
         }
-        schemeUri: {
+        schemaUri: {
           type: string,
           example: https://iso639-3.sil.org/
         }

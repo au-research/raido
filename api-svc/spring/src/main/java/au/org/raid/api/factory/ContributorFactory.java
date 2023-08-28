@@ -2,8 +2,8 @@ package au.org.raid.api.factory;
 
 import au.org.raid.idl.raidv2.model.Contributor;
 import au.org.raid.idl.raidv2.model.ContributorBlock;
-import au.org.raid.idl.raidv2.model.ContributorPositionWithSchemeUri;
-import au.org.raid.idl.raidv2.model.ContributorRoleWithSchemeUri;
+import au.org.raid.idl.raidv2.model.ContributorPositionWithSchemaUri;
+import au.org.raid.idl.raidv2.model.ContributorRoleWithSchemaUri;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +20,8 @@ public class ContributorFactory {
             return null;
         }
 
-        List<ContributorPositionWithSchemeUri> positions = null;
-        List<ContributorRoleWithSchemeUri> roles = null;
+        List<ContributorPositionWithSchemaUri> positions = null;
+        List<ContributorRoleWithSchemaUri> roles = null;
 
         if (contributorBlock.getPositions() != null) {
             positions = contributorBlock.getPositions().stream()
@@ -39,7 +39,7 @@ public class ContributorFactory {
 
         return new Contributor()
                 .id(contributorBlock.getId())
-                .identifierSchemeUri(identifierSchemeUri)
+                .schemaUri(identifierSchemeUri)
                 .positions(positions)
                 .roles(roles);
 

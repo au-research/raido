@@ -1,7 +1,7 @@
 package au.org.raid.api.validator;
 
 import au.org.raid.api.repository.RelatedRaidTypeRepository;
-import au.org.raid.api.repository.RelatedRaidTypeSchemeRepository;
+import au.org.raid.api.repository.RelatedRaidTypeSchemaRepository;
 import au.org.raid.idl.raidv2.model.RelatedRaidType;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import static au.org.raid.api.util.StringUtil.isBlank;
 @Component
 @RequiredArgsConstructor
 public class RelatedRaidTypeValidator {
-    private final RelatedRaidTypeSchemeRepository relatedRaidTypeSchemeRepository;
+    private final RelatedRaidTypeSchemaRepository relatedRaidTypeSchemaRepository;
     private final RelatedRaidTypeRepository relatedRaidTypeRepository;
 
     public List<ValidationFailure> validate(final RelatedRaidType relatedRaidType, final int index) {
@@ -26,7 +26,7 @@ public class RelatedRaidTypeValidator {
             return List.of(new ValidationFailure()
                     .fieldId("relatedRaids[%d].type".formatted(index))
                     .errorType(NOT_SET_TYPE)
-                    .message(FIELD_MUST_BE_SET_MESSAGE)
+                    .message(NOT_SET_MESSAGE)
             );
         }
 
@@ -34,31 +34,31 @@ public class RelatedRaidTypeValidator {
             failures.add(new ValidationFailure()
                     .fieldId("relatedRaids[%d].type.id".formatted(index))
                     .errorType(NOT_SET_TYPE)
-                    .message(FIELD_MUST_BE_SET_MESSAGE)
+                    .message(NOT_SET_MESSAGE)
             );
         }
 
-        if (isBlank(relatedRaidType.getSchemeUri())) {
+        if (isBlank(relatedRaidType.getSchemaUri())) {
             failures.add(new ValidationFailure()
-                    .fieldId("relatedRaids[%d].type.schemeUri".formatted(index))
+                    .fieldId("relatedRaids[%d].type.schemaUri".formatted(index))
                     .errorType(NOT_SET_TYPE)
-                    .message(FIELD_MUST_BE_SET_MESSAGE)
+                    .message(NOT_SET_MESSAGE)
             );
         } else {
             final var relatedRaidTypeScheme =
-                    relatedRaidTypeSchemeRepository.findByUri(relatedRaidType.getSchemeUri());
+                    relatedRaidTypeSchemaRepository.findByUri(relatedRaidType.getSchemaUri());
 
             if (relatedRaidTypeScheme.isEmpty()) {
                 failures.add(new ValidationFailure()
-                        .fieldId("relatedRaids[%d].type.schemeUri".formatted(index))
+                        .fieldId("relatedRaids[%d].type.schemaUri".formatted(index))
                         .errorType(INVALID_VALUE_TYPE)
-                        .message(INVALID_SCHEME));
+                        .message(INVALID_SCHEMA));
             } else if (!isBlank(relatedRaidType.getId()) &&
                     relatedRaidTypeRepository.findByUriAndSchemeId(relatedRaidType.getId(), relatedRaidTypeScheme.get().getId()).isEmpty()) {
                 failures.add(new ValidationFailure()
                         .fieldId("relatedRaids[%d].type.id".formatted(index))
                         .errorType(INVALID_VALUE_TYPE)
-                        .message(INVALID_ID_FOR_SCHEME));
+                        .message(INVALID_ID_FOR_SCHEMA));
             }
         }
 

@@ -14,7 +14,7 @@ public class SubjectFactory {
 
         return new Subject()
                 .id(subjectBlock.getSubject())
-                .schemeUri(subjectBlock.getSubjectSchemeUri())
+                .schemaUri(subjectBlock.getSubjectSchemeUri())
                 .keyword(subjectBlock.getSubjectKeyword());
     }
 }

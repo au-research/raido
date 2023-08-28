@@ -2,7 +2,7 @@ package au.org.raid.api.factory;
 
 import au.org.raid.idl.raidv2.model.Organisation;
 import au.org.raid.idl.raidv2.model.OrganisationBlock;
-import au.org.raid.idl.raidv2.model.OrganisationRoleWithSchemeUri;
+import au.org.raid.idl.raidv2.model.OrganisationRoleWithSchemaUri;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +18,7 @@ public class OrganisationFactory {
             return null;
         }
 
-        List<OrganisationRoleWithSchemeUri> roles = null;
+        List<OrganisationRoleWithSchemaUri> roles = null;
 
         if (organisationBlock.getRoles() != null) {
             roles = organisationBlock.getRoles().stream()
@@ -31,7 +31,7 @@ public class OrganisationFactory {
 
         return new Organisation()
                 .id(organisationBlock.getId())
-                .identifierSchemeUri(identifierSchemeUri)
+                .schemaUri(identifierSchemeUri)
                 .roles(roles);
     }
 }

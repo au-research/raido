@@ -107,7 +107,7 @@ class RaidStableV1ServiceTest {
 
         final var id = new Id()
                 .identifier(identifierUrl.formatUrl())
-                .identifierSchemeUri(RAID_ID_TYPE_URI)
+                .schemaUri(RAID_ID_TYPE_URI)
                 .identifierRegistrationAgency(registrationAgency)
                 .identifierOwner(identifierOwner)
                 .identifierServicePoint(servicePointId);

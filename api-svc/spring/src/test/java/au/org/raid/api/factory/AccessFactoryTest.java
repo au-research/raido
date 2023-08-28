@@ -30,9 +30,9 @@ class AccessFactoryTest {
         final var result = accessFactory.create(access);
 
         final var expected = new Access()
-                .type(new AccessTypeWithSchemeUri()
+                .type(new AccessTypeWithSchemaUri()
                         .id(CLOSED_ID)
-                        .schemeUri(ACCESS_TYPE_SCHEME_URI))
+                        .schemaUri(ACCESS_TYPE_SCHEME_URI))
                 .accessStatement(new AccessStatement().statement(accessStatement));
 
         assertThat(result, is(expected));
@@ -47,9 +47,9 @@ class AccessFactoryTest {
         final var result = accessFactory.create(access);
 
         final var expected = new Access()
-                .type(new AccessTypeWithSchemeUri()
+                .type(new AccessTypeWithSchemaUri()
                         .id(OPEN_ID)
-                        .schemeUri(ACCESS_TYPE_SCHEME_URI));
+                        .schemaUri(ACCESS_TYPE_SCHEME_URI));
 
         assertThat(result, is(expected));
     }
@@ -68,8 +68,8 @@ class AccessFactoryTest {
         final var result = accessFactory.create(access);
 
         final var expected = new Access()
-                .type(new AccessTypeWithSchemeUri()
-                        .schemeUri(ACCESS_TYPE_SCHEME_URI));
+                .type(new AccessTypeWithSchemaUri()
+                        .schemaUri(ACCESS_TYPE_SCHEME_URI));
 
         assertThat(result, is(expected));
     }

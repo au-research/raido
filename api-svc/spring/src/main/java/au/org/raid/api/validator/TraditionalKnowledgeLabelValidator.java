@@ -18,7 +18,7 @@ public class TraditionalKnowledgeLabelValidator {
             "https://localcontexts.org/labels/biocultural-labels/"
     );
 
-    public List<ValidationFailure> validateTraditionalKnowledgeLabels(
+    public List<ValidationFailure> validate(
             final List<TraditionalKnowledgeLabel> traditionalKnowledgeLabels) {
 
         final var failures = new ArrayList<ValidationFailure>();
@@ -31,15 +31,15 @@ public class TraditionalKnowledgeLabelValidator {
                 i -> {
                     final var label = traditionalKnowledgeLabels.get(i);
 
-                    if (isBlank(label.getSchemeUri())) {
+                    if (isBlank(label.getSchemaUri())) {
                         failures.add(new ValidationFailure()
-                                .fieldId(String.format("traditionalKnowledgeLabels[%d].schemeUri", i))
+                                .fieldId(String.format("traditionalKnowledgeLabels[%d].schemaUri", i))
                                 .errorType(NOT_SET_TYPE)
-                                .message(FIELD_MUST_BE_SET_MESSAGE));
-                    } else if (!VALID_SCHEME_URIS.contains(label.getSchemeUri())) {
+                                .message(NOT_SET_MESSAGE));
+                    } else if (!VALID_SCHEME_URIS.contains(label.getSchemaUri())) {
                         failures.add(new ValidationFailure()
                                 .errorType(INVALID_VALUE_TYPE)
-                                .fieldId(String.format("traditionalKnowledgeLabels[%d].schemeUri", i))
+                                .fieldId(String.format("traditionalKnowledgeLabels[%d].schemaUri", i))
                                 .message("URI is not a valid traditional knowledge scheme"));
                     }
                 });

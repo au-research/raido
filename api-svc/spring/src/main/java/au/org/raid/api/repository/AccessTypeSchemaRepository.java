@@ -11,7 +11,7 @@ import static au.org.raid.db.jooq.api_svc.tables.AccessTypeScheme.ACCESS_TYPE_SC
 
 @Repository
 @RequiredArgsConstructor
-public class AccessTypeSchemeRepository {
+public class AccessTypeSchemaRepository {
     private final DSLContext dslContext;
 
     public Optional<AccessTypeSchemeRecord> findByUri(final String uri) {

@@ -11,7 +11,7 @@ import static au.org.raid.db.jooq.api_svc.tables.RelatedRaidTypeScheme.RELATED_R
 
 @Repository
 @RequiredArgsConstructor
-public class RelatedRaidTypeSchemeRepository {
+public class RelatedRaidTypeSchemaRepository {
     private final DSLContext dslContext;
 
     public Optional<RelatedRaidTypeSchemeRecord> findByUri(final String uri) {

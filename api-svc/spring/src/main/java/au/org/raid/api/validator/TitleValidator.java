@@ -1,6 +1,5 @@
 package au.org.raid.api.validator;
 
-import au.org.raid.api.service.raid.validation.LanguageValidationService;
 import au.org.raid.idl.raidv2.model.Title;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,7 @@ public class TitleValidator {
             "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
 
     private final TitleTypeValidator titleTypeValidationService;
-    private final LanguageValidationService languageValidationService;
+    private final LanguageValidator languageValidator;
 
 
     public List<ValidationFailure> validatePrimaryTitle(
@@ -68,7 +67,7 @@ public class TitleValidator {
 
             failures.addAll(titleTypeValidationService.validate(title.getType(), index));
 
-            failures.addAll(languageValidationService.validate(title.getLanguage(), "titles[%d]".formatted(index)));
+            failures.addAll(languageValidator.validate(title.getLanguage(), "titles[%d]".formatted(index)));
         });
         return failures;
     }

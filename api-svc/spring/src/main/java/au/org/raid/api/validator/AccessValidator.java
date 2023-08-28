@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import static au.org.raid.api.endpoint.message.ValidationMessage.FIELD_MUST_BE_SET_MESSAGE;
+import static au.org.raid.api.endpoint.message.ValidationMessage.NOT_SET_MESSAGE;
 import static au.org.raid.api.endpoint.message.ValidationMessage.NOT_SET_TYPE;
 import static au.org.raid.api.util.StringUtil.isBlank;
 
@@ -36,7 +36,7 @@ public class AccessValidator {
                     new ValidationFailure()
                             .errorType(NOT_SET_TYPE)
                             .fieldId("access.type")
-                            .message(FIELD_MUST_BE_SET_MESSAGE)
+                            .message(NOT_SET_MESSAGE)
             );
         } else {
             failures.addAll(typeValidationService.validate(access.getType()));
@@ -54,7 +54,7 @@ public class AccessValidator {
                     failures.add(new ValidationFailure()
                             .errorType(NOT_SET_TYPE)
                             .fieldId("access.embargoExpiry")
-                            .message(FIELD_MUST_BE_SET_MESSAGE));
+                            .message(NOT_SET_MESSAGE));
                 }
             }
         }

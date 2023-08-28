@@ -14,12 +14,12 @@ public class ValidationMessage {
     public static final String INVALID_VALUE_TYPE = "invalidValue";
     public static final String DISALLOWED_CHANGE_TYPE = "disallowedChange";
 
-    public static final String FIELD_MUST_BE_SET_MESSAGE = "field must be set";
+    public static final String NOT_SET_MESSAGE = "field must be set";
     public static final String INVALID_VALUE_MESSAGE =
             "has invalid/unsupported value";
-    public static final String INVALID_ID_FOR_SCHEME = "id does not exist within the given scheme";
+    public static final String INVALID_ID_FOR_SCHEMA = "id does not exist within the given schema";
 
-    public static final String INVALID_SCHEME = "scheme is unknown/unsupported";
+    public static final String INVALID_SCHEMA = "schema is unknown/unsupported";
 
     public static final String DISALLOWED_CHANGE_MESSAGE =
             "value is not allowed to change";
@@ -106,7 +106,7 @@ public class ValidationMessage {
         return new ValidationFailure().
                 fieldId(fieldId).
                 errorType(NOT_SET_TYPE).
-                message(FIELD_MUST_BE_SET_MESSAGE);
+                message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure invalidIdentifier(String problem) {
@@ -127,14 +127,14 @@ public class ValidationMessage {
         return new ValidationFailure().
                 fieldId("titles[%s].title".formatted(i)).
                 errorType(NOT_SET_TYPE).
-                message(FIELD_MUST_BE_SET_MESSAGE);
+                message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure contribIdNotSet(int i) {
         return new ValidationFailure().
                 fieldId("contributor[%s].id".formatted(i)).
                 errorType(NOT_SET_TYPE).
-                message(FIELD_MUST_BE_SET_MESSAGE);
+                message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure contribIdInvalid(int i) {
@@ -148,35 +148,35 @@ public class ValidationMessage {
         return new ValidationFailure().
                 fieldId("organisation[%s].id".formatted(i)).
                 errorType(NOT_SET_TYPE).
-                message(FIELD_MUST_BE_SET_MESSAGE);
+                message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure titleStartDateNotSet(int i) {
         return new ValidationFailure().
                 fieldId("titles[%s].startDate".formatted(i)).
                 errorType(NOT_SET_TYPE).
-                message(FIELD_MUST_BE_SET_MESSAGE);
+                message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure titlesTypeNotSet(int i) {
         return new ValidationFailure().
                 fieldId("titles[%s].type".formatted(i)).
                 errorType(NOT_SET_TYPE).
-                message(FIELD_MUST_BE_SET_MESSAGE);
+                message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure contribIdSchemeNotSet(int i) {
         return new ValidationFailure().
                 fieldId("contributors[%s].identifierSchemeUri".formatted(i)).
                 errorType(NOT_SET_TYPE).
-                message(FIELD_MUST_BE_SET_MESSAGE);
+                message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure organisationIdSchemeNotSet(int i) {
         return new ValidationFailure().
                 fieldId("organisations[%s].identifierSchemeUri".formatted(i)).
                 errorType(NOT_SET_TYPE).
-                message(FIELD_MUST_BE_SET_MESSAGE);
+                message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure contribInvalidIdScheme(int i) {
@@ -211,21 +211,21 @@ public class ValidationMessage {
         return new ValidationFailure().
                 fieldId("descriptions[%s].description".formatted(i)).
                 errorType(NOT_SET_TYPE).
-                message(FIELD_MUST_BE_SET_MESSAGE);
+                message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure descriptionTypeNotSet(int i) {
         return new ValidationFailure().
                 fieldId("descriptions[%s].type".formatted(i)).
                 errorType(NOT_SET_TYPE).
-                message(FIELD_MUST_BE_SET_MESSAGE);
+                message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure alternateUrlNotSet(int i) {
         return new ValidationFailure().
                 fieldId("alternateUrls[%s].url".formatted(i)).
                 errorType(NOT_SET_TYPE).
-                message(FIELD_MUST_BE_SET_MESSAGE);
+                message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure handlesDoNotMatch() {

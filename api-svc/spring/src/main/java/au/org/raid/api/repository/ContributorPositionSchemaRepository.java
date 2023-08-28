@@ -11,7 +11,7 @@ import static au.org.raid.db.jooq.api_svc.tables.ContributorPositionScheme.CONTR
 
 @Repository
 @RequiredArgsConstructor
-public class ContributorPositionSchemeRepository {
+public class ContributorPositionSchemaRepository {
     private final DSLContext dslContext;
 
     public Optional<ContributorPositionSchemeRecord> findByUri(final String uri) {

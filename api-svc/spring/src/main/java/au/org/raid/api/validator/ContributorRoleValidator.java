@@ -1,8 +1,8 @@
 package au.org.raid.api.validator;
 
 import au.org.raid.api.repository.ContributorRoleRepository;
-import au.org.raid.api.repository.ContributorRoleSchemeRepository;
-import au.org.raid.idl.raidv2.model.ContributorRoleWithSchemeUri;
+import au.org.raid.api.repository.ContributorRoleSchemaRepository;
+import au.org.raid.idl.raidv2.model.ContributorRoleWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.springframework.stereotype.Component;
 
@@ -14,16 +14,16 @@ import static au.org.raid.api.util.StringUtil.isBlank;
 
 @Component
 public class ContributorRoleValidator {
-    private final ContributorRoleSchemeRepository contributorRoleSchemeRepository;
+    private final ContributorRoleSchemaRepository contributorRoleSchemaRepository;
     private final ContributorRoleRepository contributorRoleRepository;
 
-    public ContributorRoleValidator(final ContributorRoleSchemeRepository contributorRoleSchemeRepository, final ContributorRoleRepository contributorRoleRepository) {
-        this.contributorRoleSchemeRepository = contributorRoleSchemeRepository;
+    public ContributorRoleValidator(final ContributorRoleSchemaRepository contributorRoleSchemaRepository, final ContributorRoleRepository contributorRoleRepository) {
+        this.contributorRoleSchemaRepository = contributorRoleSchemaRepository;
         this.contributorRoleRepository = contributorRoleRepository;
     }
 
     public List<ValidationFailure> validate(
-            final ContributorRoleWithSchemeUri role, final int contributorIndex, final int roleIndex) {
+            final ContributorRoleWithSchemaUri role, final int contributorIndex, final int roleIndex) {
         final var failures = new ArrayList<ValidationFailure>();
 
         if (isBlank(role.getId())) {
@@ -31,26 +31,26 @@ public class ContributorRoleValidator {
                     new ValidationFailure()
                             .fieldId("contributors[%d].roles[%d].id".formatted(contributorIndex, roleIndex))
                             .errorType(NOT_SET_TYPE)
-                            .message(FIELD_MUST_BE_SET_MESSAGE));
+                            .message(NOT_SET_MESSAGE));
         }
 
-        if (isBlank(role.getSchemeUri())) {
+        if (isBlank(role.getSchemaUri())) {
             failures.add(
                     new ValidationFailure()
-                            .fieldId("contributors[%d].roles[%d].schemeUri".formatted(contributorIndex, roleIndex))
+                            .fieldId("contributors[%d].roles[%d].schemaUri".formatted(contributorIndex, roleIndex))
                             .errorType(NOT_SET_TYPE)
-                            .message(FIELD_MUST_BE_SET_MESSAGE)
+                            .message(NOT_SET_MESSAGE)
             );
         } else {
             final var roleScheme =
-                    contributorRoleSchemeRepository.findByUri(role.getSchemeUri());
+                    contributorRoleSchemaRepository.findByUri(role.getSchemaUri());
 
             if (roleScheme.isEmpty()) {
                 failures.add(
                         new ValidationFailure()
-                                .fieldId("contributors[%d].roles[%d].schemeUri".formatted(contributorIndex, roleIndex))
+                                .fieldId("contributors[%d].roles[%d].schemaUri".formatted(contributorIndex, roleIndex))
                                 .errorType(INVALID_VALUE_TYPE)
-                                .message(INVALID_SCHEME)
+                                .message(INVALID_SCHEMA)
                 );
             } else if (!isBlank(role.getId()) &&
                     contributorRoleRepository.findByUriAndSchemeId(role.getId(), roleScheme.get().getId()).isEmpty()) {
@@ -58,7 +58,7 @@ public class ContributorRoleValidator {
                         new ValidationFailure()
                                 .fieldId("contributors[%d].roles[%d].id".formatted(contributorIndex, roleIndex))
                                 .errorType(INVALID_VALUE_TYPE)
-                                .message(INVALID_ID_FOR_SCHEME)
+                                .message(INVALID_ID_FOR_SCHEMA)
                 );
             }
         }

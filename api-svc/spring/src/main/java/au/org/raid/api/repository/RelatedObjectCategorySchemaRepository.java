@@ -11,7 +11,7 @@ import static au.org.raid.db.jooq.api_svc.tables.RelatedObjectCategoryScheme.REL
 
 @Repository
 @RequiredArgsConstructor
-public class RelatedObjectCategorySchemeRepository {
+public class RelatedObjectCategorySchemaRepository {
     private final DSLContext dslContext;
 
     public Optional<RelatedObjectCategorySchemeRecord> findByUri(final String uri) {

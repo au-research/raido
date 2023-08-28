@@ -76,9 +76,9 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Minting a RAiD with a spatial coverage with a null language schemeUri fails")
+    @DisplayName("Minting a RAiD with a spatial coverage with a null language schemaUri fails")
     void nullLanguageSchemeUri() {
-        createRequest.getSpatialCoverages().get(0).getLanguage().setSchemeUri(null);
+        createRequest.getSpatialCoverages().get(0).getLanguage().schemaUri(null);
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -87,7 +87,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("spatialCoverages[0].language.schemeUri")
+                    .fieldId("spatialCoverages[0].language.schemaUri")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -97,9 +97,9 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Minting a RAiD with a spatial coverage with a empty language schemeUri fails")
+    @DisplayName("Minting a RAiD with a spatial coverage with a empty language schemaUri fails")
     void emptyLanguageSchemeUri() {
-        createRequest.getSpatialCoverages().get(0).getLanguage().setSchemeUri("");
+        createRequest.getSpatialCoverages().get(0).getLanguage().schemaUri("");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -108,7 +108,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("spatialCoverages[0].language.schemeUri")
+                    .fieldId("spatialCoverages[0].language.schemaUri")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -173,7 +173,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).contains(new ValidationFailure()
                     .fieldId("spatialCoverages[0].language.id")
                     .errorType("invalidValue")
-                    .message("id does not exist within the given scheme")
+                    .message("id does not exist within the given schema")
             );
         } catch (Exception e) {
             fail("Expected RaidApiValidationException");
@@ -182,9 +182,9 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
 
 
     @Test
-    @DisplayName("Minting a RAiD with a spatial coverage with a invalid language schemeUri fails")
+    @DisplayName("Minting a RAiD with a spatial coverage with a invalid language schemaUri fails")
     void invalidLanguageSchemeUri() {
-        createRequest.getSpatialCoverages().get(0).getLanguage().setSchemeUri("xxx");
+        createRequest.getSpatialCoverages().get(0).getLanguage().schemaUri("xxx");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -193,9 +193,9 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("spatialCoverages[0].language.schemeUri")
+                    .fieldId("spatialCoverages[0].language.schemaUri")
                     .errorType("invalidValue")
-                    .message("scheme is unknown/unsupported")
+                    .message("schema is unknown/unsupported")
             );
         } catch (Exception e) {
             fail("Expected RaidApiValidationException");

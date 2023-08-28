@@ -1,7 +1,7 @@
-package au.org.raid.api.service.raid.validation;
+package au.org.raid.api.validator;
 
 import au.org.raid.api.repository.LanguageRepository;
-import au.org.raid.api.repository.LanguageSchemeRepository;
+import au.org.raid.api.repository.LanguageSchemaRepository;
 import au.org.raid.db.jooq.api_svc.tables.records.LanguageRecord;
 import au.org.raid.db.jooq.api_svc.tables.records.LanguageSchemeRecord;
 import au.org.raid.idl.raidv2.model.Language;
@@ -23,42 +23,42 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class LanguageValidationServiceTest {
+class LanguageValidatorTest {
     private static final String LANGUAGE_ID = "eng";
-    private static final int LANGUAGE_SCHEME_ID = 1;
-    private static final String LANGUAGE_SCHEME_URI = "https://www.iso.org/standard/39534.html";
+    private static final int LANGUAGE_SCHEMA_ID = 1;
+    private static final String LANGUAGE_SCHEMA_URI = "https://www.iso.org/standard/39534.html";
 
     private static final LanguageRecord LANGUAGE_RECORD = new LanguageRecord()
             .setId(LANGUAGE_ID)
-            .setSchemeId(LANGUAGE_SCHEME_ID);
+            .setSchemeId(LANGUAGE_SCHEMA_ID);
 
     private static final LanguageSchemeRecord LANGUAGE_SCHEME_RECORD = new LanguageSchemeRecord()
-            .setId(LANGUAGE_SCHEME_ID)
-            .setUri(LANGUAGE_SCHEME_URI);
+            .setId(LANGUAGE_SCHEMA_ID)
+            .setUri(LANGUAGE_SCHEMA_URI);
 
     @Mock
     private LanguageRepository languageRepository;
 
     @Mock
-    private LanguageSchemeRepository languageSchemeRepository;
+    private LanguageSchemaRepository languageSchemaRepository;
 
     @InjectMocks
-    private LanguageValidationService languageValidationService;
+    private LanguageValidator languageValidator;
 
     @Test
     @DisplayName("Returns empty list when Language is null")
     void nullLanguage() {
-        assertThat(languageValidationService.validate(null, "parent"), is(Collections.emptyList()));
+        assertThat(languageValidator.validate(null, "parent"), is(Collections.emptyList()));
     }
 
     @Test
     @DisplayName("Returns failure if id is null")
     void nullId() {
-        final var language = new Language().id(null).schemeUri(LANGUAGE_SCHEME_URI);
+        final var language = new Language().id(null).schemaUri(LANGUAGE_SCHEMA_URI);
 
-        when(languageSchemeRepository.findByUri(LANGUAGE_SCHEME_URI)).thenReturn(Optional.of(LANGUAGE_SCHEME_RECORD));
+        when(languageSchemaRepository.findByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.of(LANGUAGE_SCHEME_RECORD));
 
-        final var failures = languageValidationService.validate(language, "parent");
+        final var failures = languageValidator.validate(language, "parent");
 
         assertThat(failures, is(List.of(
                 new ValidationFailure()
@@ -71,11 +71,11 @@ class LanguageValidationServiceTest {
     @Test
     @DisplayName("Returns failure if id is empty string")
     void emptyId() {
-        final var language = new Language().id("").schemeUri(LANGUAGE_SCHEME_URI);
+        final var language = new Language().id("").schemaUri(LANGUAGE_SCHEMA_URI);
 
-        when(languageSchemeRepository.findByUri(LANGUAGE_SCHEME_URI)).thenReturn(Optional.of(LANGUAGE_SCHEME_RECORD));
+        when(languageSchemaRepository.findByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.of(LANGUAGE_SCHEME_RECORD));
 
-        final var failures = languageValidationService.validate(language, "parent");
+        final var failures = languageValidator.validate(language, "parent");
 
         assertThat(failures, is(List.of(
                 new ValidationFailure()
@@ -86,73 +86,73 @@ class LanguageValidationServiceTest {
     }
 
     @Test
-    @DisplayName("Returns failure if schemeUri is empty string")
+    @DisplayName("Returns failure if schemaUri is empty string")
     void emptySchemeUri() {
-        final var language = new Language().id("eng").schemeUri("");
+        final var language = new Language().id("eng").schemaUri("");
 
-        final var failures = languageValidationService.validate(language, "parent");
+        final var failures = languageValidator.validate(language, "parent");
 
         assertThat(failures, is(List.of(
                 new ValidationFailure()
-                        .fieldId("parent.language.schemeUri")
+                        .fieldId("parent.language.schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         )));
     }
 
     @Test
-    @DisplayName("Returns failure if schemeUri is null")
+    @DisplayName("Returns failure if schemaUri is null")
     void nullSchemeUri() {
         final var language = new Language().id("eng");
 
-        final var failures = languageValidationService.validate(language, "parent");
+        final var failures = languageValidator.validate(language, "parent");
 
         assertThat(failures, is(List.of(
                 new ValidationFailure()
-                        .fieldId("parent.language.schemeUri")
+                        .fieldId("parent.language.schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         )));
     }
 
     @Test
-    @DisplayName("Returns failure if schemeUri is not supported")
+    @DisplayName("Returns failure if schemaUri is not supported")
     void invalidSchemeUri() {
         final var language = new Language()
                 .id("eng")
-                .schemeUri(LANGUAGE_SCHEME_URI);
+                .schemaUri(LANGUAGE_SCHEMA_URI);
 
-        when(languageSchemeRepository.findByUri(LANGUAGE_SCHEME_URI)).thenReturn(Optional.empty());
+        when(languageSchemaRepository.findByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.empty());
 
-        final var failures = languageValidationService.validate(language, "parent");
+        final var failures = languageValidator.validate(language, "parent");
 
         assertThat(failures, is(List.of(
                 new ValidationFailure()
-                        .fieldId("parent.language.schemeUri")
+                        .fieldId("parent.language.schemaUri")
                         .errorType("invalidValue")
-                        .message("scheme is unknown/unsupported")
+                        .message("schema is unknown/unsupported")
         )));
     }
 
     @Test
-    @DisplayName("Returns failure if id is not found with scheme")
+    @DisplayName("Returns failure if id is not found with schema")
     void invalidId() {
         final var language = new Language()
                 .id(LANGUAGE_ID)
-                .schemeUri(LANGUAGE_SCHEME_URI);
+                .schemaUri(LANGUAGE_SCHEMA_URI);
 
-        final var languageScheme = new LanguageSchemeRecord().setId(LANGUAGE_SCHEME_ID);
+        final var languageScheme = new LanguageSchemeRecord().setId(LANGUAGE_SCHEMA_ID);
 
-        when(languageSchemeRepository.findByUri(LANGUAGE_SCHEME_URI)).thenReturn(Optional.of(languageScheme));
-        when(languageRepository.findByIdAndSchemeId(LANGUAGE_ID, LANGUAGE_SCHEME_ID)).thenReturn(Optional.empty());
+        when(languageSchemaRepository.findByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.of(languageScheme));
+        when(languageRepository.findByIdAndSchemeId(LANGUAGE_ID, LANGUAGE_SCHEMA_ID)).thenReturn(Optional.empty());
 
-        final var failures = languageValidationService.validate(language, "parent");
+        final var failures = languageValidator.validate(language, "parent");
 
         assertThat(failures, is(List.of(
                 new ValidationFailure()
                         .fieldId("parent.language.id")
                         .errorType("invalidValue")
-                        .message("id does not exist within the given scheme")
+                        .message("id does not exist within the given schema")
         )));
     }
 
@@ -161,13 +161,13 @@ class LanguageValidationServiceTest {
     void validLanguage() {
         final var language = new Language()
                 .id(LANGUAGE_ID)
-                .schemeUri(LANGUAGE_SCHEME_URI);
+                .schemaUri(LANGUAGE_SCHEMA_URI);
 
-        when(languageSchemeRepository.findByUri(LANGUAGE_SCHEME_URI)).thenReturn(Optional.of(LANGUAGE_SCHEME_RECORD));
-        when(languageRepository.findByIdAndSchemeId(LANGUAGE_ID, LANGUAGE_SCHEME_ID))
+        when(languageSchemaRepository.findByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.of(LANGUAGE_SCHEME_RECORD));
+        when(languageRepository.findByIdAndSchemeId(LANGUAGE_ID, LANGUAGE_SCHEMA_ID))
                 .thenReturn(Optional.of(LANGUAGE_RECORD));
 
-        final var failures = languageValidationService.validate(language, "parent");
+        final var failures = languageValidator.validate(language, "parent");
 
         assertThat(failures, empty());
     }

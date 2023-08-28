@@ -1,10 +1,9 @@
 package au.org.raid.api.validator;
 
-import au.org.raid.api.service.raid.validation.LanguageValidationService;
 import au.org.raid.api.util.TestConstants;
 import au.org.raid.idl.raidv2.model.Language;
 import au.org.raid.idl.raidv2.model.Title;
-import au.org.raid.idl.raidv2.model.TitleTypeWithSchemeUri;
+import au.org.raid.idl.raidv2.model.TitleTypeWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,20 +25,20 @@ class TitleValidatorTest {
     @Mock
     private TitleTypeValidator typeValidationService;
     @Mock
-    private LanguageValidationService languageValidationService;
+    private LanguageValidator languageValidator;
     @InjectMocks
     private TitleValidator validationService;
 
     @Test
     @DisplayName("Validation passes")
     void validationPasses() {
-        final var type = new TitleTypeWithSchemeUri()
+        final var type = new TitleTypeWithSchemaUri()
                 .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
-                .schemeUri(TestConstants.TITLE_TYPE_SCHEME_URI);
+                .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
 
         final var language = new Language()
                 .id(TestConstants.LANGUAGE_ID)
-                .schemeUri(TestConstants.LANGUAGE_SCHEME_URI);
+                .schemaUri(TestConstants.LANGUAGE_SCHEMA_URI);
 
         final var title = new Title()
                 .type(type)
@@ -52,15 +51,15 @@ class TitleValidatorTest {
 
         assertThat(failures.size(), is(0));
         verify(typeValidationService).validate(type, 0);
-        verify(languageValidationService).validate(language, "titles[0]");
+        verify(languageValidator).validate(language, "titles[0]");
     }
 
     @Test
     @DisplayName("Validation fails if primary title is missing")
     void missingPrimaryTitle() {
-        final var type = new TitleTypeWithSchemeUri()
+        final var type = new TitleTypeWithSchemaUri()
                 .id(TestConstants.ALTERNATIVE_TITLE_TYPE)
-                .schemeUri(TestConstants.TITLE_TYPE_SCHEME_URI);
+                .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
 
         final var title = new Title()
                 .type(type)
@@ -81,9 +80,9 @@ class TitleValidatorTest {
     @Test
     @DisplayName("Validation fails if more than one primary title")
     void multiplePrimaryTitles() {
-        final var type = new TitleTypeWithSchemeUri()
+        final var type = new TitleTypeWithSchemaUri()
                 .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
-                .schemeUri(TestConstants.TITLE_TYPE_SCHEME_URI);
+                .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
 
         final var title = new Title()
                 .type(type)
@@ -119,9 +118,9 @@ class TitleValidatorTest {
     @DisplayName("Validation fails if title is null")
     void nullTitle() {
         final var title = new Title()
-                .type(new TitleTypeWithSchemeUri()
+                .type(new TitleTypeWithSchemaUri()
                         .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
-                        .schemeUri(TestConstants.TITLE_TYPE_SCHEME_URI))
+                        .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
                 .startDate(TestConstants.START_DATE)
                 .endDate(TestConstants.END_DATE);
 
@@ -141,9 +140,9 @@ class TitleValidatorTest {
     @DisplayName("Validation fails if title is blank")
     void blankTitle() {
         final var title = new Title()
-                .type(new TitleTypeWithSchemeUri()
+                .type(new TitleTypeWithSchemaUri()
                         .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
-                        .schemeUri(TestConstants.TITLE_TYPE_SCHEME_URI))
+                        .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
                 .startDate(TestConstants.START_DATE)
                 .endDate(TestConstants.END_DATE)
                 .title("");
@@ -163,9 +162,9 @@ class TitleValidatorTest {
     @DisplayName("Validation fails if start date is missing")
     void missingStartDate() {
         final var title = new Title()
-                .type(new TitleTypeWithSchemeUri()
+                .type(new TitleTypeWithSchemaUri()
                         .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
-                        .schemeUri(TestConstants.TITLE_TYPE_SCHEME_URI))
+                        .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
                 .title(TestConstants.TITLE)
                 .endDate(TestConstants.END_DATE);
 

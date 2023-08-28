@@ -11,7 +11,7 @@ import static au.org.raid.db.jooq.api_svc.tables.ContributorRoleScheme.CONTRIBUT
 
 @Repository
 @RequiredArgsConstructor
-public class ContributorRoleSchemeRepository {
+public class ContributorRoleSchemaRepository {
     private final DSLContext dslContext;
 
     public Optional<ContributorRoleSchemeRecord> findByUri(final String uri) {

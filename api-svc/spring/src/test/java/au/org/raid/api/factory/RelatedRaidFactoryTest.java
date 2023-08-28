@@ -25,7 +25,7 @@ class RelatedRaidFactoryTest {
     void returnsEmptyFields() {
         final var expected = new RelatedRaid()
                 .type(new RelatedRaidType()
-                        .schemeUri(TYPE_SCHEME_URI));
+                        .schemaUri(TYPE_SCHEME_URI));
 
         assertThat(relatedRaidFactory.create(new RelatedRaidBlock()), is(expected));
     }
@@ -44,7 +44,7 @@ class RelatedRaidFactoryTest {
                 .id(id)
                 .type(new RelatedRaidType()
                         .id(typeId)
-                        .schemeUri(TYPE_SCHEME_URI)
+                        .schemaUri(TYPE_SCHEME_URI)
                 );
 
         assertThat(relatedRaidFactory.create(relatedRaid), is(expected));

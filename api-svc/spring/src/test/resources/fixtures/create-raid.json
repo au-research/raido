@@ -4,7 +4,7 @@
       "title": "C. Japonicum Genome",
       "type": {
         "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
-        "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1"
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1"
       },
       "startDate": "2020-10-07"
     }
@@ -17,20 +17,20 @@
       "description": "Genome sequencing and assembly project at WUR of the C. Japonicum. ",
       "type": {
         "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
-        "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1"
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1"
       }
     }
   ],
   "access": {
     "type": {
       "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json",
-      "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1"
+      "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1"
     },
     "accessStatement": {
       "statement": "This RAiD is closed",
       "language": {
         "id": "eng",
-        "schemeUri": "https://www.iso.org/standard/39534.html"
+        "schemaUri": "https://www.iso.org/standard/39534.html"
       }
     }
   },
@@ -38,17 +38,17 @@
   "contributors": [
     {
       "id": "0000-0002-4368-8058",
-      "identifierSchemeUri": "https://orcid.org/",
+      "schemaUri": "https://orcid.org/",
       "positions": [
         {
-          "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1",
           "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
           "startDate": "2020-10-07"
         }
       ],
       "roles": [
         {
-          "schemeUri": "https://credit.niso.org",
+          "schemaUri": "https://credit.niso.org",
           "id": "https://credit.niso.org/contributor-roles/project-administration/"
         }
       ]
@@ -57,10 +57,10 @@
   "organisations": [
     {
       "id": "https://ror.org/04qw24q55",
-      "identifierSchemeUri": "https://ror.org/",
+      "schemaUri": "https://ror.org/",
       "roles": [
         {
-          "schemeUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1",
           "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json",
           "startDate": "2020-10-07"
         }

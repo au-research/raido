@@ -12,7 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static au.org.raid.api.util.TestConstants.DESCRIPTION_TYPE_SCHEME_URI;
+import static au.org.raid.api.util.TestConstants.DESCRIPTION_TYPE_SCHEMA_URI;
 import static au.org.raid.api.util.TestConstants.PRIMARY_DESCRIPTION_TYPE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -35,7 +35,7 @@ class RelatedRaidValidatorTest {
     void validRelatedRaid() {
         final var type = new RelatedRaidType()
                 .id(PRIMARY_DESCRIPTION_TYPE)
-                .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
+                .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI);
 
         final var relatedRaid = new RelatedRaid()
                 .id(ID)
@@ -53,7 +53,7 @@ class RelatedRaidValidatorTest {
     void nullRelatedRaid() {
         final var type = new RelatedRaidType()
                 .id(PRIMARY_DESCRIPTION_TYPE)
-                .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
+                .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI);
 
         final var relatedRaid = new RelatedRaid()
                 .type(type);
@@ -77,7 +77,7 @@ class RelatedRaidValidatorTest {
                 .id("")
                 .type(new RelatedRaidType()
                         .id(PRIMARY_DESCRIPTION_TYPE)
-                        .schemeUri(DESCRIPTION_TYPE_SCHEME_URI)
+                        .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI)
                 );
 
         final var failures = validationService.validate(List.of(relatedRaid));
@@ -96,7 +96,7 @@ class RelatedRaidValidatorTest {
     void typeErrorAreReturned() {
         final var type = new RelatedRaidType()
                 .id(PRIMARY_DESCRIPTION_TYPE)
-                .schemeUri(DESCRIPTION_TYPE_SCHEME_URI);
+                .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI);
 
         final var relatedRaid = new RelatedRaid()
                 .id(ID)

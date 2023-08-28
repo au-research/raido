@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class TestConstants {
 
-    public static final String ACCESS_TYPE_SCHEME_URI =
+    public static final String ACCESS_TYPE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1";
 
     public static final String OPEN_ACCESS_TYPE_ID =
@@ -16,7 +16,7 @@ public class TestConstants {
     public static final String CLOSED_ACCESS_TYPE_ID =
             "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json";
 
-    public static final String TITLE_TYPE_SCHEME_URI =
+    public static final String TITLE_TYPE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1";
 
     public static final String TITLE = "Test Title";
@@ -30,15 +30,15 @@ public class TestConstants {
     public static final String UNKNOWN_TITLE_TYPE =
             "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/unknown.json";
 
-    public static final String CONTRIBUTOR_IDENTIFIER_SCHEME_URI = "https://orcid.org/";
+    public static final String CONTRIBUTOR_IDENTIFIER_SCHEMA_URI = "https://orcid.org/";
 
-    public static final String CONTRIBUTOR_ROLE_SCHEME_URI =
+    public static final String CONTRIBUTOR_ROLE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/role/v1";
 
     public static final String SUPERVISION_CONTRIBUTOR_ROLE =
             "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/role/v1/supervision.json";
 
-    public static final String CONTRIBUTOR_POSITION_SCHEME_URI =
+    public static final String CONTRIBUTOR_POSITION_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1";
 
     public static final String LEADER_CONTRIBUTOR_POSITION =
@@ -46,7 +46,7 @@ public class TestConstants {
 
     public static final String VALID_ORCID = "https://orcid.org/0000-0000-0000-0001";
 
-    public static final String ORGANISATION_ROLE_SCHEME_URI =
+    public static final String ORGANISATION_ROLE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1";
 
     public static final String LEAD_RESEARCH_ORGANISATION_ROLE =
@@ -62,10 +62,10 @@ public class TestConstants {
     public static final String INPUT_RELATED_OBJECT_CATEGORY =
             "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json";
 
-    public static final String RELATED_OBJECT_TYPE_SCHEME_URI =
+    public static final String RELATED_OBJECT_TYPE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1";
 
-    public static final String RELATED_OBJECT_CATEGORY_SCHEME_URI =
+    public static final String RELATED_OBJECT_CATEGORY_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1";
 
     public static final String VALID_DOI = "https://doi.org/10.000/00000";
@@ -75,10 +75,10 @@ public class TestConstants {
     public static final String PRIMARY_DESCRIPTION_TYPE =
             "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json";
 
-    public static final String DESCRIPTION_TYPE_SCHEME_URI =
+    public static final String DESCRIPTION_TYPE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1";
 
-    public static final String RELATED_RAID_TYPE_SCHEME_URI =
+    public static final String RELATED_RAID_TYPE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1";
 
     public static final String CONTINUES_RELATED_RAID_TYPE =
@@ -89,5 +89,5 @@ public class TestConstants {
 
     public static final String LANGUAGE_ID = "eng";
 
-    public static final String LANGUAGE_SCHEME_URI = "https://www.iso.org/standard/39534.html";
+    public static final String LANGUAGE_SCHEMA_URI = "https://www.iso.org/standard/39534.html";
 }

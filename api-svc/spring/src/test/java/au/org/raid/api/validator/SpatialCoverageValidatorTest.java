@@ -1,6 +1,5 @@
 package au.org.raid.api.validator;
 
-import au.org.raid.api.service.raid.validation.LanguageValidationService;
 import au.org.raid.api.util.TestConstants;
 import au.org.raid.idl.raidv2.model.Language;
 import au.org.raid.idl.raidv2.model.SpatialCoverage;
@@ -23,7 +22,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class SpatialCoverageValidatorTest {
     @Mock
-    private LanguageValidationService languageValidationService;
+    private LanguageValidator languageValidator;
     @Mock
     private GeoNamesUriValidator uriValidator;
     @InjectMocks
@@ -34,17 +33,17 @@ class SpatialCoverageValidatorTest {
     void validSpatialCoverage() {
         final var language = new Language()
                 .id(TestConstants.LANGUAGE_ID)
-                .schemeUri(TestConstants.LANGUAGE_SCHEME_URI);
+                .schemaUri(TestConstants.LANGUAGE_SCHEMA_URI);
 
         final var spatialCoverage = new SpatialCoverage()
                 .id("https://www.geonames.org/2643743/london.html")
-                .schemeUri("https://www.geonames.org/")
+                .schemaUri("https://www.geonames.org/")
                 .place("London")
                 .language(language);
 
         final var failures = validationService.validate(List.of(spatialCoverage));
         assertThat(failures, empty());
-        verify(languageValidationService).validate(language, "spatialCoverages[0]");
+        verify(languageValidator).validate(language, "spatialCoverages[0]");
     }
 
     @Test
@@ -52,11 +51,11 @@ class SpatialCoverageValidatorTest {
     void addLanguageValidationFailures() {
         final var language = new Language()
                 .id(TestConstants.LANGUAGE_ID)
-                .schemeUri(TestConstants.LANGUAGE_SCHEME_URI);
+                .schemaUri(TestConstants.LANGUAGE_SCHEMA_URI);
 
         final var spatialCoverage = new SpatialCoverage()
                 .id("https://www.geonames.org/2643743/london.html")
-                .schemeUri("https://www.geonames.org/")
+                .schemaUri("https://www.geonames.org/")
                 .place("London")
                 .language(language);
 
@@ -65,11 +64,11 @@ class SpatialCoverageValidatorTest {
                 .errorType("error-type")
                 .message("_message");
 
-        when(languageValidationService.validate(language, "spatialCoverages[0]")).thenReturn(List.of(failure));
+        when(languageValidator.validate(language, "spatialCoverages[0]")).thenReturn(List.of(failure));
 
         final var failures = validationService.validate(List.of(spatialCoverage));
         assertThat(failures, is(List.of(failure)));
-        verify(languageValidationService).validate(language, "spatialCoverages[0]");
+        verify(languageValidator).validate(language, "spatialCoverages[0]");
     }
 
     @Test
@@ -78,11 +77,11 @@ class SpatialCoverageValidatorTest {
         final var uri = "https://www.geonames.org/2643743/london.html";
         final var language = new Language()
                 .id(TestConstants.LANGUAGE_ID)
-                .schemeUri(TestConstants.LANGUAGE_SCHEME_URI);
+                .schemaUri(TestConstants.LANGUAGE_SCHEMA_URI);
 
         final var spatialCoverage = new SpatialCoverage()
                 .id(uri)
-                .schemeUri("https://www.geonames.org/")
+                .schemaUri("https://www.geonames.org/")
                 .place("London")
                 .language(language);
 
@@ -91,7 +90,7 @@ class SpatialCoverageValidatorTest {
                 .errorType("error-type")
                 .message("_message");
 
-        when(languageValidationService.validate(language, "spatialCoverages[0]"))
+        when(languageValidator.validate(language, "spatialCoverages[0]"))
                 .thenReturn(Collections.emptyList());
 
         when(uriValidator.validate(uri, "spatialCoverages[0].id"))
@@ -99,14 +98,14 @@ class SpatialCoverageValidatorTest {
 
         final var failures = validationService.validate(List.of(spatialCoverage));
         assertThat(failures, is(List.of(failure)));
-        verify(languageValidationService).validate(language, "spatialCoverages[0]");
+        verify(languageValidator).validate(language, "spatialCoverages[0]");
     }
 
     @Test
     @DisplayName("Validation fails with null id")
     void nullId() {
         final var spatialCoverage = new SpatialCoverage()
-                .schemeUri("https://www.geonames.org/")
+                .schemaUri("https://www.geonames.org/")
                 .place("London");
 
         final var failures = validationService.validate(List.of(spatialCoverage));
@@ -124,7 +123,7 @@ class SpatialCoverageValidatorTest {
     void emptyId() {
         final var spatialCoverage = new SpatialCoverage()
                 .id("")
-                .schemeUri("https://www.geonames.org/")
+                .schemaUri("https://www.geonames.org/")
                 .place("London");
 
         final var failures = validationService.validate(List.of(spatialCoverage));
@@ -138,7 +137,7 @@ class SpatialCoverageValidatorTest {
     }
 
     @Test
-    @DisplayName("Validation fails with null schemeUri")
+    @DisplayName("Validation fails with null schemaUri")
     void nullSchemeUri() {
         final var spatialCoverage = new SpatialCoverage()
                 .id("https://www.geonames.org/2643743/london.html")
@@ -148,43 +147,43 @@ class SpatialCoverageValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("spatialCoverages[0].schemeUri")
+                        .fieldId("spatialCoverages[0].schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
     }
 
     @Test
-    @DisplayName("Validation fails schemeUri is empty string")
+    @DisplayName("Validation fails schemaUri is empty string")
     void emptySchemeUri() {
         final var spatialCoverage = new SpatialCoverage()
                 .id("https://www.geonames.org/2643743/london.html")
-                .schemeUri("")
+                .schemaUri("")
                 .place("London");
 
         final var failures = validationService.validate(List.of(spatialCoverage));
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("spatialCoverages[0].schemeUri")
+                        .fieldId("spatialCoverages[0].schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
     }
 
     @Test
-    @DisplayName("Validation fails with invalid schemeUri")
+    @DisplayName("Validation fails with invalid schemaUri")
     void invalidSchemeUri() {
         final var spatialCoverage = new SpatialCoverage()
                 .id("https://www.geonames.org/2643743/london.html")
-                .schemeUri("https://wwwgeonames.org/")
+                .schemaUri("https://wwwgeonames.org/")
                 .place("London");
 
         final var failures = validationService.validate(List.of(spatialCoverage));
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("spatialCoverages[0].schemeUri")
+                        .fieldId("spatialCoverages[0].schemaUri")
                         .errorType("invalidValue")
                         .message("Spatial coverage scheme uri should be https://www.geonames.org/")
         ));

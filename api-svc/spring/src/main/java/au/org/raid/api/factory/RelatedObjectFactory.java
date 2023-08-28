@@ -28,14 +28,14 @@ public class RelatedObjectFactory {
 
         return new RelatedObject()
                 .id(relatedObjectBlock.getRelatedObject())
-                .identifierSchemeUri(relatedObjectBlock.getRelatedObjectSchemeUri())
+                .schemaUri(relatedObjectBlock.getRelatedObjectSchemeUri())
                 .category(new RelatedObjectCategory()
-                        .schemeUri(CATEGORY_SCHEME_URI)
+                        .schemaUri(CATEGORY_SCHEME_URI)
                         .id(relatedObjectBlock.getRelatedObjectCategory() != null ?
                                 CATEGORY_MAP.get(relatedObjectBlock.getRelatedObjectCategory().toLowerCase()) : null)
                 )
                 .type(new RelatedObjectType()
-                        .schemeUri(TYPE_SCHEME_URI)
+                        .schemaUri(TYPE_SCHEME_URI)
                         .id(relatedObjectBlock.getRelatedObjectType())
                 );
     }

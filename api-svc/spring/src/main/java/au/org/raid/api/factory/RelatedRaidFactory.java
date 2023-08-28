@@ -19,6 +19,6 @@ public class RelatedRaidFactory {
                 .id(relatedRaidBlock.getRelatedRaid())
                 .type(new RelatedRaidType()
                         .id(relatedRaidBlock.getRelatedRaidType())
-                        .schemeUri(TYPE_SCHEME_URI));
+                        .schemaUri(TYPE_SCHEME_URI));
     }
 }
