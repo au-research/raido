@@ -40,8 +40,12 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
                             .schemaUri(metadata.getId().getIdentifierSchemeURI())
                             .globalUrl(metadata.getId().getGlobalUrl())
                             .raidAgencyUrl(metadata.getId().getRaidAgencyUrl())
-                            .owner(metadata.getId().getIdentifierOwner())
-                            .registrationAgency(metadata.getId().getIdentifierRegistrationAgency())
+                            .owner(new Owner()
+                                    .id(metadata.getId().getIdentifierOwner())
+                                    .schemaUri("https://ror.org/"))
+                            .registrationAgency(new RegistrationAgency()
+                                    .id(metadata.getId().getIdentifierRegistrationAgency())
+                                    .schemaUri("https://ror.org/"))
                             .version(metadata.getId().getVersion())
                             .servicePoint(metadata.getId().getIdentifierServicePoint()))
                     .titles(List.of(
@@ -157,11 +161,11 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
                             new Subject()
                                     .id(metadata.getSubjects().get(0).getSubject())
                                     .schemaUri(metadata.getSubjects().get(0).getSubjectSchemeUri())
-                                    .keyword(metadata.getSubjects().get(0).getSubjectKeyword()),
+                                    .keywords(List.of(new SubjectKeyword().keyword(metadata.getSubjects().get(0).getSubjectKeyword()))),
                             new Subject()
                                     .id(metadata.getSubjects().get(1).getSubject())
                                     .schemaUri(metadata.getSubjects().get(1).getSubjectSchemeUri())
-                                    .keyword(metadata.getSubjects().get(1).getSubjectKeyword())))
+                                    .keywords(List.of(new SubjectKeyword().keyword(metadata.getSubjects().get(1).getSubjectKeyword())))))
                     .relatedObjects(List.of(
                             new RelatedObject()
                                     .id(metadata.getRelatedObjects().get(0).getRelatedObject())
@@ -229,8 +233,10 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
                 .raidAgencyUrl("http://localhost:8080/" + raidModel.getHandle())
                 .servicePoint(20000002L)
                 .schemaUri("https://raid.org")
-                .registrationAgency("https://ror.org/038sjwq14")
-                .owner("https://ror.org/00rqy9422")
+                .registrationAgency(new RegistrationAgency()
+                        .id("https://ror.org/038sjwq14")
+                        .schemaUri("https://ror.org/"))
+                .owner(new Owner().id("https://ror.org/00rqy9422").schemaUri("https://ror.org/"))
                 .version(1));
 
         assertThat(raidDto.getAccess()).isEqualTo(new Access()

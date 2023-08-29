@@ -2,7 +2,10 @@ package au.org.raid.api.factory;
 
 import au.org.raid.idl.raidv2.model.Subject;
 import au.org.raid.idl.raidv2.model.SubjectBlock;
+import au.org.raid.idl.raidv2.model.SubjectKeyword;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class SubjectFactory {
@@ -12,9 +15,15 @@ public class SubjectFactory {
             return null;
         }
 
+        List<SubjectKeyword> keywords = null;
+
+        if (subjectBlock.getSubjectKeyword() != null) {
+            keywords = List.of(new SubjectKeyword().keyword(subjectBlock.getSubjectKeyword()));
+        }
+
         return new Subject()
                 .id(subjectBlock.getSubject())
                 .schemaUri(subjectBlock.getSubjectSchemeUri())
-                .keyword(subjectBlock.getSubjectKeyword());
+                .keywords(keywords);
     }
 }

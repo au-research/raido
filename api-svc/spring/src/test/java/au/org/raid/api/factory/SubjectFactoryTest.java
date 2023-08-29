@@ -2,8 +2,11 @@ package au.org.raid.api.factory;
 
 import au.org.raid.idl.raidv2.model.Subject;
 import au.org.raid.idl.raidv2.model.SubjectBlock;
+import au.org.raid.idl.raidv2.model.SubjectKeyword;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -39,7 +42,7 @@ class SubjectFactoryTest {
         final var expected = new Subject()
                 .id(id)
                 .schemaUri(schemaUri)
-                .keyword(keyword);
+                .keywords(List.of(new SubjectKeyword().keyword(keyword)));
 
         assertThat(subjectFactory.create(subject), is(expected));
 

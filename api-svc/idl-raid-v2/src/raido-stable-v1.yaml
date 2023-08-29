@@ -151,8 +151,7 @@ components:
           items: { $ref: '#/components/schemas/TraditionalKnowledgeLabel' }
     Id:
       type: object
-      required: [ identifier, schemaUri,
-                  identifierRegistrationAgency, identifierOwner, identifierServicePoint, version ]
+      required: [ id, schemaUri, registrationAgency, owner, servicePoint, version ]
       properties:
         id:
           type: string
@@ -164,17 +163,9 @@ components:
             The URI of the Identifier scheme. For example, https://raid.org
           example: https://raid.org
         registrationAgency:
-          type: string
-          description: >
-            ROR that identifies of the organisation that operates the 
-            raid registration agency software that minted this raid.
-          example: https://ror.org/038sjwq14
+          $ref: '#/components/schemas/RegistrationAgency'
         owner:
-          type: string
-          description: >
-            The legal entity responsible for the RAiD; the ‘Owner’ of a RAiD. Analogous to a DataCite ‘Member’, has a 
-            legal agreement with the Registration Agency.
-          example: https://ror.org/02stey378
+          $ref: '#/components/schemas/Owner'
         servicePoint:
           type: integer
           format: int64
@@ -197,6 +188,35 @@ components:
         version:
           type: integer
           description: The version of the resource. Read-only. Increments automatically on update.
+    RegistrationAgency:
+      type: object
+      description: >
+        ROR that identifies the organisation that operates the raid registration agency software that minted this raid.
+      required: [id, schemaUri]
+      properties:
+        id: {
+          type: string,
+          example: https://ror.org/02stey378
+        }
+        schemaUri: {
+          type: string,
+          example: https://ror.org
+        }
+    Owner:
+      type: object
+      description: >
+        The legal entity responsible for the RAiD; the ‘Owner’ of a RAiD. Analogous to a DataCite ‘Member’, has a 
+        legal agreement with the Registration Agency.
+      required: [id, schemaUri]
+      properties:
+        id: {
+          type: string,
+          example: https://ror.org/02stey378
+        }
+        schemaUri: {
+          type: string,
+          example: https://ror.org
+        }
     Dates:
       type: object
       required: [ "startDate" ]
@@ -365,7 +385,17 @@ components:
       properties:
         id: { type: string }
         schemaUri: { type: string }
+        keywords:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubjectKeyword'
+    SubjectKeyword:
+      type: object
+      required: [ keyword ]
+      properties:
         keyword: { type: string }
+        language:
+          $ref: '#/components/schemas/Language'
     RelatedRaid:
       type: object
       properties:

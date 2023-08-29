@@ -1,7 +1,10 @@
 package au.org.raid.api.factory;
 
 import au.org.raid.api.spring.config.environment.MetadataProps;
+import au.org.raid.api.util.SchemaUri;
 import au.org.raid.idl.raidv2.model.IdBlock;
+import au.org.raid.idl.raidv2.model.Owner;
+import au.org.raid.idl.raidv2.model.RegistrationAgency;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,8 +49,10 @@ class IdFactoryTest {
 
         assertThat(result.getId(), is(identifier));
         assertThat(result.getSchemaUri(), is(identifierSchemeUri));
-        assertThat(result.getRegistrationAgency(), is(identifierRegistrationAgency));
-        assertThat(result.getOwner(), is(identifierOwner));
+        assertThat(result.getRegistrationAgency(), is(new RegistrationAgency()
+                .id(identifierRegistrationAgency)
+                .schemaUri(SchemaUri.ROR.getUri())));
+        assertThat(result.getOwner(), is(new Owner().id(identifierOwner).schemaUri(SchemaUri.ROR.getUri())));
         assertThat(result.getServicePoint(), is(identifierServicePoint));
         assertThat(result.getGlobalUrl(), is(globalUrl));
         assertThat(result.getRaidAgencyUrl(), is(raidAgencyUrl));

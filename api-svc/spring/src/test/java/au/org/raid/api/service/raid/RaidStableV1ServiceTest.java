@@ -13,12 +13,10 @@ import au.org.raid.api.service.raid.id.IdentifierParser;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.spring.config.environment.MetadataProps;
 import au.org.raid.api.util.FileUtil;
+import au.org.raid.api.util.SchemaUri;
 import au.org.raid.db.jooq.api_svc.tables.records.RaidRecord;
 import au.org.raid.db.jooq.api_svc.tables.records.ServicePointRecord;
-import au.org.raid.idl.raidv2.model.CreateRaidV1Request;
-import au.org.raid.idl.raidv2.model.Id;
-import au.org.raid.idl.raidv2.model.RaidDto;
-import au.org.raid.idl.raidv2.model.UpdateRaidV1Request;
+import au.org.raid.idl.raidv2.model.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -108,8 +106,12 @@ class RaidStableV1ServiceTest {
         final var id = new Id()
                 .id(identifierUrl.formatUrl())
                 .schemaUri(RAID_ID_TYPE_URI)
-                .registrationAgency(registrationAgency)
-                .owner(identifierOwner)
+                .registrationAgency(new RegistrationAgency()
+                        .id(registrationAgency)
+                        .schemaUri(SchemaUri.ROR.getUri()))
+                .owner(new Owner()
+                        .id(identifierOwner)
+                        .schemaUri(SchemaUri.ROR.getUri()))
                 .servicePoint(servicePointId);
 
         ReflectionTestUtils.setField(metaProps, "handleUrlPrefix", identifierUrl.urlPrefix());
