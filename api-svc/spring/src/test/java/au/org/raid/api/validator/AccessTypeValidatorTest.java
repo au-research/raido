@@ -4,7 +4,7 @@ import au.org.raid.api.repository.AccessTypeRepository;
 import au.org.raid.api.repository.AccessTypeSchemaRepository;
 import au.org.raid.api.util.TestConstants;
 import au.org.raid.db.jooq.api_svc.tables.records.AccessTypeRecord;
-import au.org.raid.db.jooq.api_svc.tables.records.AccessTypeSchemeRecord;
+import au.org.raid.db.jooq.api_svc.tables.records.AccessTypeSchemaRecord;
 import au.org.raid.idl.raidv2.model.AccessTypeWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;
@@ -24,12 +24,12 @@ import static org.mockito.Mockito.*;
 class AccessTypeValidatorTest {
     private static final int ACCESS_TYPE_SCHEMA_ID = 1;
 
-    private static final AccessTypeSchemeRecord ACCESS_TYPE_SCHEMA_RECORD = new AccessTypeSchemeRecord()
+    private static final AccessTypeSchemaRecord ACCESS_TYPE_SCHEMA_RECORD = new AccessTypeSchemaRecord()
             .setId(ACCESS_TYPE_SCHEMA_ID)
             .setUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
     private static final AccessTypeRecord ACCESS_TYPE_RECORD = new AccessTypeRecord()
-            .setSchemeId(ACCESS_TYPE_SCHEMA_ID)
+            .setSchemaId(ACCESS_TYPE_SCHEMA_ID)
             .setUri(TestConstants.OPEN_ACCESS_TYPE_ID);
 
     @Mock
@@ -49,7 +49,7 @@ class AccessTypeValidatorTest {
 
         when(accessTypeSchemaRepository.findByUri(TestConstants.ACCESS_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.of(ACCESS_TYPE_SCHEMA_RECORD));
-        when(accessTypeRepository.findByUriAndSchemeId(TestConstants.OPEN_ACCESS_TYPE_ID, ACCESS_TYPE_SCHEMA_ID))
+        when(accessTypeRepository.findByUriAndSchemaId(TestConstants.OPEN_ACCESS_TYPE_ID, ACCESS_TYPE_SCHEMA_ID))
                 .thenReturn(Optional.of(ACCESS_TYPE_RECORD));
 
         final var failures = validationService.validate(accessType);
@@ -57,7 +57,7 @@ class AccessTypeValidatorTest {
         assertThat(failures, empty());
 
         verify(accessTypeSchemaRepository).findByUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
-        verify(accessTypeRepository).findByUriAndSchemeId(TestConstants.OPEN_ACCESS_TYPE_ID, ACCESS_TYPE_SCHEMA_ID);
+        verify(accessTypeRepository).findByUriAndSchemaId(TestConstants.OPEN_ACCESS_TYPE_ID, ACCESS_TYPE_SCHEMA_ID);
     }
 
     @Test
@@ -103,7 +103,7 @@ class AccessTypeValidatorTest {
 
     @Test
     @DisplayName("Validation fails when schemaUri is null")
-    void nullSchemeUri() {
+    void nullSchemaUri() {
         final var accessType = new AccessTypeWithSchemaUri()
                 .id(TestConstants.OPEN_ACCESS_TYPE_ID);
 
@@ -120,7 +120,7 @@ class AccessTypeValidatorTest {
 
     @Test
     @DisplayName("Validation fails when schemaUri is empty")
-    void emptySchemeUri() {
+    void emptySchemaUri() {
         final var accessType = new AccessTypeWithSchemaUri()
                 .id(TestConstants.OPEN_ACCESS_TYPE_ID)
                 .schemaUri("");
@@ -138,7 +138,7 @@ class AccessTypeValidatorTest {
 
     @Test
     @DisplayName("Validation fails when schemaUri is invalid")
-    void invalidSchemeUri() {
+    void invalidSchemaUri() {
         final var accessType = new AccessTypeWithSchemaUri()
                 .id(TestConstants.OPEN_ACCESS_TYPE_ID)
                 .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
@@ -176,7 +176,7 @@ class AccessTypeValidatorTest {
 
     @Test
     @DisplayName("Validation fails when id not found in schema")
-    void invalidTypeForScheme() {
+    void invalidTypeForSchema() {
         final var accessType = new AccessTypeWithSchemaUri()
                 .id(TestConstants.OPEN_ACCESS_TYPE_ID)
                 .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
@@ -184,7 +184,7 @@ class AccessTypeValidatorTest {
         when(accessTypeSchemaRepository.findByUri(TestConstants.ACCESS_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.of(ACCESS_TYPE_SCHEMA_RECORD));
 
-        when(accessTypeRepository.findByUriAndSchemeId(TestConstants.OPEN_ACCESS_TYPE_ID, ACCESS_TYPE_SCHEMA_ID))
+        when(accessTypeRepository.findByUriAndSchemaId(TestConstants.OPEN_ACCESS_TYPE_ID, ACCESS_TYPE_SCHEMA_ID))
                 .thenReturn(Optional.empty());
 
         final var failures = validationService.validate(accessType);

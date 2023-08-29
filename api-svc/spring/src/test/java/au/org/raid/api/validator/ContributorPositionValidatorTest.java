@@ -3,7 +3,7 @@ package au.org.raid.api.validator;
 import au.org.raid.api.repository.ContributorPositionRepository;
 import au.org.raid.api.repository.ContributorPositionSchemaRepository;
 import au.org.raid.db.jooq.api_svc.tables.records.ContributorPositionRecord;
-import au.org.raid.db.jooq.api_svc.tables.records.ContributorPositionSchemeRecord;
+import au.org.raid.db.jooq.api_svc.tables.records.ContributorPositionSchemaRecord;
 import au.org.raid.idl.raidv2.model.ContributorPositionWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;
@@ -27,14 +27,14 @@ import static org.mockito.Mockito.when;
 class ContributorPositionValidatorTest {
     private static final int CONTRIBUTOR_POSITION_TYPE_SCHEMA_ID = 1;
 
-    private static final ContributorPositionSchemeRecord CONTRIBUTOR_POSITION_TYPE_SCHEMA_RECORD =
-            new ContributorPositionSchemeRecord()
+    private static final ContributorPositionSchemaRecord CONTRIBUTOR_POSITION_TYPE_SCHEMA_RECORD =
+            new ContributorPositionSchemaRecord()
                     .setId(CONTRIBUTOR_POSITION_TYPE_SCHEMA_ID)
                     .setUri(CONTRIBUTOR_POSITION_SCHEMA_URI);
 
     private static final ContributorPositionRecord CONTRIBUTOR_POSITION_TYPE_RECORD =
             new ContributorPositionRecord()
-                    .setSchemeId(CONTRIBUTOR_POSITION_TYPE_SCHEMA_ID)
+                    .setSchemaId(CONTRIBUTOR_POSITION_TYPE_SCHEMA_ID)
                     .setUri(LEADER_CONTRIBUTOR_POSITION);
 
 
@@ -60,7 +60,7 @@ class ContributorPositionValidatorTest {
                 .thenReturn(Optional.of(CONTRIBUTOR_POSITION_TYPE_SCHEMA_RECORD));
 
         when(contributorPositionRepository
-                .findByUriAndSchemeId(LEADER_CONTRIBUTOR_POSITION, CONTRIBUTOR_POSITION_TYPE_SCHEMA_ID))
+                .findByUriAndSchemaId(LEADER_CONTRIBUTOR_POSITION, CONTRIBUTOR_POSITION_TYPE_SCHEMA_ID))
                 .thenReturn(Optional.of(CONTRIBUTOR_POSITION_TYPE_RECORD));
 
         final var failures = validationService.validate(position, 2, 3);
@@ -70,7 +70,7 @@ class ContributorPositionValidatorTest {
 
     @Test
     @DisplayName("Validation fails with null schemaUri")
-    void nullSchemeUri() {
+    void nullSchemaUri() {
         final var position = new ContributorPositionWithSchemaUri()
                 .id(LEADER_CONTRIBUTOR_POSITION)
                 .startDate(LocalDate.now().minusYears(1))
@@ -92,7 +92,7 @@ class ContributorPositionValidatorTest {
 
     @Test
     @DisplayName("Validation fails with empty schemaUri")
-    void emptySchemeUri() {
+    void emptySchemaUri() {
         final var position = new ContributorPositionWithSchemaUri()
                 .schemaUri("")
                 .id(LEADER_CONTRIBUTOR_POSITION)
@@ -115,7 +115,7 @@ class ContributorPositionValidatorTest {
 
     @Test
     @DisplayName("Validation fails with invalid schemaUri")
-    void invalidSchemeUri() {
+    void invalidSchemaUri() {
         final var position = new ContributorPositionWithSchemaUri()
                 .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(LEADER_CONTRIBUTOR_POSITION)
@@ -200,7 +200,7 @@ class ContributorPositionValidatorTest {
                 .thenReturn(Optional.of(CONTRIBUTOR_POSITION_TYPE_SCHEMA_RECORD));
 
         when(contributorPositionRepository
-                .findByUriAndSchemeId(LEADER_CONTRIBUTOR_POSITION, CONTRIBUTOR_POSITION_TYPE_SCHEMA_ID))
+                .findByUriAndSchemaId(LEADER_CONTRIBUTOR_POSITION, CONTRIBUTOR_POSITION_TYPE_SCHEMA_ID))
                 .thenReturn(Optional.empty());
 
         final var failures = validationService.validate(position, 2, 3);
@@ -226,7 +226,7 @@ class ContributorPositionValidatorTest {
                 .thenReturn(Optional.of(CONTRIBUTOR_POSITION_TYPE_SCHEMA_RECORD));
 
         when(contributorPositionRepository
-                .findByUriAndSchemeId(LEADER_CONTRIBUTOR_POSITION, CONTRIBUTOR_POSITION_TYPE_SCHEMA_ID))
+                .findByUriAndSchemaId(LEADER_CONTRIBUTOR_POSITION, CONTRIBUTOR_POSITION_TYPE_SCHEMA_ID))
                 .thenReturn(Optional.of(CONTRIBUTOR_POSITION_TYPE_RECORD));
 
         final var failures = validationService.validate(position, 2, 3);

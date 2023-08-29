@@ -61,7 +61,7 @@ public class ContributorPositionValidator {
                                 .message(INVALID_SCHEMA)
                 );
             } else if (!isBlank(position.getId()) &&
-                    contributorPositionRepository.findByUriAndSchemeId(position.getId(), positionScheme.get().getId()).isEmpty()) {
+                    contributorPositionRepository.findByUriAndSchemaId(position.getId(), positionScheme.get().getId()).isEmpty()) {
                 failures.add(
                         new ValidationFailure()
                                 .fieldId("contributors[%d].positions[%d].id".formatted(contributorIndex, positionIndex))

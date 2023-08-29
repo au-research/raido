@@ -77,7 +77,7 @@ public class RelatedObjectValidationService {
                                 .fieldId(String.format("relatedObjects[%d].relatedObjectType", i))
                                 .errorType("invalid")
                                 .message("Related object type is invalid."));
-                    } else if (relatedObjectTypeRepository.findByUriAndSchemeId(relatedObject.getRelatedObjectType(), 1).isEmpty()) {
+                    } else if (relatedObjectTypeRepository.findByUriAndSchemaId(relatedObject.getRelatedObjectType(), 1).isEmpty()) {
                         failures.add(new ValidationFailure()
                                 .fieldId(String.format("relatedObjects[%d].relatedObjectType", i))
                                 .errorType("invalid")

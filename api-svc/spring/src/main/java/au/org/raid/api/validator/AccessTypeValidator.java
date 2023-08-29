@@ -57,7 +57,7 @@ public class AccessTypeValidator {
                         .errorType(INVALID_VALUE_TYPE)
                         .message(INVALID_SCHEMA));
             } else if (!isBlank(accessType.getId()) &&
-                    accessTypeRepository.findByUriAndSchemeId(accessType.getId(), accessTypeScheme.get().getId()).isEmpty()) {
+                    accessTypeRepository.findByUriAndSchemaId(accessType.getId(), accessTypeScheme.get().getId()).isEmpty()) {
                 failures.add(new ValidationFailure()
                         .fieldId("access.type.id")
                         .errorType(INVALID_VALUE_TYPE)

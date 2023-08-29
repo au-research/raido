@@ -40,9 +40,9 @@ public class RelatedObjectCategory extends TableImpl<RelatedObjectCategoryRecord
     }
 
     /**
-     * The column <code>api_svc.related_object_category.scheme_id</code>.
+     * The column <code>api_svc.related_object_category.schema_id</code>.
      */
-    public final TableField<RelatedObjectCategoryRecord, Integer> SCHEME_ID = createField(DSL.name("scheme_id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<RelatedObjectCategoryRecord, Integer> SCHEMA_ID = createField(DSL.name("schema_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>api_svc.related_object_category.uri</code>.
@@ -96,20 +96,20 @@ public class RelatedObjectCategory extends TableImpl<RelatedObjectCategoryRecord
 
     @Override
     public List<ForeignKey<RelatedObjectCategoryRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RELATED_OBJECT_CATEGORY__FK_RELATED_OBJECT_CATEGORY_TYPE_SCHEME_ID);
+        return Arrays.asList(Keys.RELATED_OBJECT_CATEGORY__FK_RELATED_OBJECT_CATEGORY_SCHEMA_ID);
     }
 
-    private transient RelatedObjectCategoryScheme _relatedObjectCategoryScheme;
+    private transient RelatedObjectCategorySchema _relatedObjectCategorySchema;
 
     /**
      * Get the implicit join path to the
-     * <code>api_svc.related_object_category_scheme</code> table.
+     * <code>api_svc.related_object_category_schema</code> table.
      */
-    public RelatedObjectCategoryScheme relatedObjectCategoryScheme() {
-        if (_relatedObjectCategoryScheme == null)
-            _relatedObjectCategoryScheme = new RelatedObjectCategoryScheme(this, Keys.RELATED_OBJECT_CATEGORY__FK_RELATED_OBJECT_CATEGORY_TYPE_SCHEME_ID);
+    public RelatedObjectCategorySchema relatedObjectCategorySchema() {
+        if (_relatedObjectCategorySchema == null)
+            _relatedObjectCategorySchema = new RelatedObjectCategorySchema(this, Keys.RELATED_OBJECT_CATEGORY__FK_RELATED_OBJECT_CATEGORY_SCHEMA_ID);
 
-        return _relatedObjectCategoryScheme;
+        return _relatedObjectCategorySchema;
     }
 
     @Override

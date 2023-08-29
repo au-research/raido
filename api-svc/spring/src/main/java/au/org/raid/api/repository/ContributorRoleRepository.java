@@ -14,13 +14,13 @@ import static au.org.raid.db.jooq.api_svc.tables.ContributorRole.CONTRIBUTOR_ROL
 public class ContributorRoleRepository {
     private final DSLContext dslContext;
 
-    public Optional<ContributorRoleRecord> findByUriAndSchemeId(final String uri, final int schemeId) {
+    public Optional<ContributorRoleRecord> findByUriAndSchemaId(final String uri, final int schemeId) {
         return dslContext.select(CONTRIBUTOR_ROLE.fields())
                 .from(CONTRIBUTOR_ROLE)
                 .where(CONTRIBUTOR_ROLE.URI.eq(uri)
-                        .and(CONTRIBUTOR_ROLE.SCHEME_ID.eq(schemeId)))
+                        .and(CONTRIBUTOR_ROLE.SCHEMA_ID.eq(schemeId)))
                 .fetchOptional(record -> new ContributorRoleRecord()
-                        .setSchemeId(CONTRIBUTOR_ROLE.SCHEME_ID.getValue(record))
+                        .setSchemaId(CONTRIBUTOR_ROLE.SCHEMA_ID.getValue(record))
                         .setUri(CONTRIBUTOR_ROLE.URI.getValue(record))
                 );
     }

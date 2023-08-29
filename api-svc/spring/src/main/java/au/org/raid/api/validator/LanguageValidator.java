@@ -49,7 +49,7 @@ public class LanguageValidator {
                         .message(INVALID_SCHEMA)
                 );
             } else if (!isBlank(language.getId()) &&
-                    languageRepository.findByIdAndSchemeId(language.getId(), languageScheme.get().getId()).isEmpty()) {
+                    languageRepository.findByIdAndSchemaId(language.getId(), languageScheme.get().getId()).isEmpty()) {
                 failures.add(new ValidationFailure()
                         .fieldId("%s.language.id".formatted(parent))
                         .errorType(INVALID_VALUE_TYPE)

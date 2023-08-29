@@ -20,17 +20,17 @@ public class RelatedObjectCategoryRecord extends UpdatableRecordImpl<RelatedObje
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>api_svc.related_object_category.scheme_id</code>.
+     * Setter for <code>api_svc.related_object_category.schema_id</code>.
      */
-    public RelatedObjectCategoryRecord setSchemeId(Integer value) {
+    public RelatedObjectCategoryRecord setSchemaId(Integer value) {
         set(0, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.related_object_category.scheme_id</code>.
+     * Getter for <code>api_svc.related_object_category.schema_id</code>.
      */
-    public Integer getSchemeId() {
+    public Integer getSchemaId() {
         return (Integer) get(0);
     }
 
@@ -74,7 +74,7 @@ public class RelatedObjectCategoryRecord extends UpdatableRecordImpl<RelatedObje
 
     @Override
     public Field<Integer> field1() {
-        return RelatedObjectCategory.RELATED_OBJECT_CATEGORY.SCHEME_ID;
+        return RelatedObjectCategory.RELATED_OBJECT_CATEGORY.SCHEMA_ID;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class RelatedObjectCategoryRecord extends UpdatableRecordImpl<RelatedObje
 
     @Override
     public Integer component1() {
-        return getSchemeId();
+        return getSchemaId();
     }
 
     @Override
@@ -94,7 +94,7 @@ public class RelatedObjectCategoryRecord extends UpdatableRecordImpl<RelatedObje
 
     @Override
     public Integer value1() {
-        return getSchemeId();
+        return getSchemaId();
     }
 
     @Override
@@ -104,7 +104,7 @@ public class RelatedObjectCategoryRecord extends UpdatableRecordImpl<RelatedObje
 
     @Override
     public RelatedObjectCategoryRecord value1(Integer value) {
-        setSchemeId(value);
+        setSchemaId(value);
         return this;
     }
 
@@ -135,10 +135,10 @@ public class RelatedObjectCategoryRecord extends UpdatableRecordImpl<RelatedObje
     /**
      * Create a detached, initialised RelatedObjectCategoryRecord
      */
-    public RelatedObjectCategoryRecord(Integer schemeId, String uri) {
+    public RelatedObjectCategoryRecord(Integer schemaId, String uri) {
         super(RelatedObjectCategory.RELATED_OBJECT_CATEGORY);
 
-        setSchemeId(schemeId);
+        setSchemaId(schemaId);
         setUri(uri);
     }
 }

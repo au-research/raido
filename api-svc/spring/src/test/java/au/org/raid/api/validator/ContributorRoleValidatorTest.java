@@ -4,7 +4,7 @@ import au.org.raid.api.repository.ContributorRoleRepository;
 import au.org.raid.api.repository.ContributorRoleSchemaRepository;
 import au.org.raid.api.util.TestConstants;
 import au.org.raid.db.jooq.api_svc.tables.records.ContributorRoleRecord;
-import au.org.raid.db.jooq.api_svc.tables.records.ContributorRoleSchemeRecord;
+import au.org.raid.db.jooq.api_svc.tables.records.ContributorRoleSchemaRecord;
 import au.org.raid.idl.raidv2.model.ContributorRoleWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;
@@ -25,14 +25,14 @@ import static org.mockito.Mockito.when;
 class ContributorRoleValidatorTest {
     private static final int CONTRIBUTOR_ROLE_TYPE_SCHEMA_ID = 1;
 
-    private static final ContributorRoleSchemeRecord CONTRIBUTOR_ROLE_TYPE_SCHEMA_RECORD =
-            new ContributorRoleSchemeRecord()
+    private static final ContributorRoleSchemaRecord CONTRIBUTOR_ROLE_TYPE_SCHEMA_RECORD =
+            new ContributorRoleSchemaRecord()
                     .setId(CONTRIBUTOR_ROLE_TYPE_SCHEMA_ID)
                     .setUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI);
 
     private static final ContributorRoleRecord CONTRIBUTOR_ROLE_TYPE_RECORD =
             new ContributorRoleRecord()
-                    .setSchemeId(CONTRIBUTOR_ROLE_TYPE_SCHEMA_ID)
+                    .setSchemaId(CONTRIBUTOR_ROLE_TYPE_SCHEMA_ID)
                     .setUri(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
     @Mock
@@ -55,7 +55,7 @@ class ContributorRoleValidatorTest {
                 .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_SCHEMA_RECORD));
 
         when(contributorRoleRepository
-                .findByUriAndSchemeId(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE, CONTRIBUTOR_ROLE_TYPE_SCHEMA_ID))
+                .findByUriAndSchemaId(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE, CONTRIBUTOR_ROLE_TYPE_SCHEMA_ID))
                 .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_RECORD));
 
         final var failures = validationService.validate(role, 2, 3);
@@ -65,7 +65,7 @@ class ContributorRoleValidatorTest {
 
     @Test
     @DisplayName("Validation fails with null schemaUri")
-    void nullSchemeUri() {
+    void nullSchemaUri() {
         final var role = new ContributorRoleWithSchemaUri()
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
@@ -85,7 +85,7 @@ class ContributorRoleValidatorTest {
 
     @Test
     @DisplayName("Validation fails with empty schemaUri")
-    void emptySchemeUri() {
+    void emptySchemaUri() {
         final var role = new ContributorRoleWithSchemaUri()
                 .schemaUri("")
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
@@ -106,7 +106,7 @@ class ContributorRoleValidatorTest {
 
     @Test
     @DisplayName("Validation fails with invalid schemaUri")
-    void invalidSchemeUri() {
+    void invalidSchemaUri() {
         final var role = new ContributorRoleWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
@@ -183,7 +183,7 @@ class ContributorRoleValidatorTest {
                 .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_SCHEMA_RECORD));
 
         when(contributorRoleRepository
-                .findByUriAndSchemeId(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE, CONTRIBUTOR_ROLE_TYPE_SCHEMA_ID))
+                .findByUriAndSchemaId(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE, CONTRIBUTOR_ROLE_TYPE_SCHEMA_ID))
                 .thenReturn(Optional.empty());
 
         final var failures = validationService.validate(role, 2, 3);

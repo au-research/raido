@@ -7,6 +7,7 @@ package au.org.raid.db.jooq.api_svc;
 import au.org.raid.db.jooq.DefaultCatalog;
 import au.org.raid.db.jooq.api_svc.tables.*;
 import org.jooq.Catalog;
+import org.jooq.Sequence;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
 
@@ -41,35 +42,52 @@ public class ApiSvc extends SchemaImpl {
     }
 
     @Override
+    public final List<Sequence<?>> getSequences() {
+        return Arrays.asList(
+            Sequences.ACCESS_TYPE_SCHEME_ID_SEQ,
+            Sequences.CONTRIBUTOR_POSITION_SCHEME_ID_SEQ,
+            Sequences.CONTRIBUTOR_ROLE_SCHEME_ID_SEQ,
+            Sequences.DESCRIPTION_TYPE_SCHEME_ID_SEQ,
+            Sequences.LANGUAGE_SCHEME_ID_SEQ,
+            Sequences.ORGANISATION_ROLE_SCHEME_ID_SEQ,
+            Sequences.RELATED_OBJECT_CATEGORY_SCHEME_ID_SEQ,
+            Sequences.RELATED_OBJECT_TYPE_SCHEME_ID_SEQ,
+            Sequences.RELATED_RAID_TYPE_SCHEME_ID_SEQ,
+            Sequences.SUBJECT_TYPE_SCHEME_ID_SEQ,
+            Sequences.TITLE_TYPE_SCHEME_ID_SEQ
+        );
+    }
+
+    @Override
     public final List<Table<?>> getTables() {
         return Arrays.asList(
             AccessType.ACCESS_TYPE,
-            AccessTypeScheme.ACCESS_TYPE_SCHEME,
+            AccessTypeSchema.ACCESS_TYPE_SCHEMA,
             AppUser.APP_USER,
             ContributorPosition.CONTRIBUTOR_POSITION,
-            ContributorPositionScheme.CONTRIBUTOR_POSITION_SCHEME,
+            ContributorPositionSchema.CONTRIBUTOR_POSITION_SCHEMA,
             ContributorRole.CONTRIBUTOR_ROLE,
-            ContributorRoleScheme.CONTRIBUTOR_ROLE_SCHEME,
+            ContributorRoleSchema.CONTRIBUTOR_ROLE_SCHEMA,
             DescriptionType.DESCRIPTION_TYPE,
-            DescriptionTypeScheme.DESCRIPTION_TYPE_SCHEME,
+            DescriptionTypeSchema.DESCRIPTION_TYPE_SCHEMA,
             FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
             Language.LANGUAGE,
-            LanguageScheme.LANGUAGE_SCHEME,
+            LanguageSchema.LANGUAGE_SCHEMA,
             OrganisationRole.ORGANISATION_ROLE,
-            OrganisationRoleScheme.ORGANISATION_ROLE_SCHEME,
+            OrganisationRoleSchema.ORGANISATION_ROLE_SCHEMA,
             Raid.RAID,
             RaidoOperator.RAIDO_OPERATOR,
             RelatedObjectCategory.RELATED_OBJECT_CATEGORY,
-            RelatedObjectCategoryScheme.RELATED_OBJECT_CATEGORY_SCHEME,
+            RelatedObjectCategorySchema.RELATED_OBJECT_CATEGORY_SCHEMA,
             RelatedObjectType.RELATED_OBJECT_TYPE,
-            RelatedObjectTypeScheme.RELATED_OBJECT_TYPE_SCHEME,
+            RelatedObjectTypeSchema.RELATED_OBJECT_TYPE_SCHEMA,
             RelatedRaidType.RELATED_RAID_TYPE,
-            RelatedRaidTypeScheme.RELATED_RAID_TYPE_SCHEME,
+            RelatedRaidTypeSchema.RELATED_RAID_TYPE_SCHEMA,
             ServicePoint.SERVICE_POINT,
             SubjectType.SUBJECT_TYPE,
-            SubjectTypeScheme.SUBJECT_TYPE_SCHEME,
+            SubjectTypeSchema.SUBJECT_TYPE_SCHEMA,
             TitleType.TITLE_TYPE,
-            TitleTypeScheme.TITLE_TYPE_SCHEME,
+            TitleTypeSchema.TITLE_TYPE_SCHEMA,
             UserAuthzRequest.USER_AUTHZ_REQUEST
         );
     }

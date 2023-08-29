@@ -4,7 +4,7 @@ import au.org.raid.api.repository.TitleTypeRepository;
 import au.org.raid.api.repository.TitleTypeSchemaRepository;
 import au.org.raid.api.util.TestConstants;
 import au.org.raid.db.jooq.api_svc.tables.records.TitleTypeRecord;
-import au.org.raid.db.jooq.api_svc.tables.records.TitleTypeSchemeRecord;
+import au.org.raid.db.jooq.api_svc.tables.records.TitleTypeSchemaRecord;
 import au.org.raid.idl.raidv2.model.TitleTypeWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;
@@ -25,12 +25,12 @@ class TitleTypeValidatorTest {
     private static final int INDEX = 3;
     private static final int TITLE_TYPE_SCHEMA_ID = 1;
 
-    private static final TitleTypeSchemeRecord TITLE_TYPE_SCHEMA_RECORD = new TitleTypeSchemeRecord()
+    private static final TitleTypeSchemaRecord TITLE_TYPE_SCHEMA_RECORD = new TitleTypeSchemaRecord()
             .setId(TITLE_TYPE_SCHEMA_ID)
             .setUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
 
     private static final TitleTypeRecord TITLE_TYPE_RECORD = new TitleTypeRecord()
-            .setSchemeId(TITLE_TYPE_SCHEMA_ID)
+            .setSchemaId(TITLE_TYPE_SCHEMA_ID)
             .setUri(TestConstants.PRIMARY_TITLE_TYPE_ID);
 
     @Mock
@@ -50,7 +50,7 @@ class TitleTypeValidatorTest {
 
         when(titleTypeSchemaRepository.findByUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.of(TITLE_TYPE_SCHEMA_RECORD));
-        when(titleTypeRepository.findByUriAndSchemeId(TestConstants.PRIMARY_TITLE_TYPE_ID, TITLE_TYPE_SCHEMA_ID))
+        when(titleTypeRepository.findByUriAndSchemaId(TestConstants.PRIMARY_TITLE_TYPE_ID, TITLE_TYPE_SCHEMA_ID))
                 .thenReturn(Optional.of(TITLE_TYPE_RECORD));
 
         final var failures = validationService.validate(titleType, INDEX);
@@ -58,7 +58,7 @@ class TitleTypeValidatorTest {
         assertThat(failures, empty());
 
         verify(titleTypeSchemaRepository).findByUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
-        verify(titleTypeRepository).findByUriAndSchemeId(TestConstants.PRIMARY_TITLE_TYPE_ID, TITLE_TYPE_SCHEMA_ID);
+        verify(titleTypeRepository).findByUriAndSchemaId(TestConstants.PRIMARY_TITLE_TYPE_ID, TITLE_TYPE_SCHEMA_ID);
     }
 
     @Test
@@ -104,7 +104,7 @@ class TitleTypeValidatorTest {
 
     @Test
     @DisplayName("Validation fails when schemaUri is null")
-    void nullSchemeUri() {
+    void nullSchemaUri() {
         final var titleType = new TitleTypeWithSchemaUri()
                 .id(TestConstants.PRIMARY_TITLE_TYPE_ID);
 
@@ -121,7 +121,7 @@ class TitleTypeValidatorTest {
 
     @Test
     @DisplayName("Validation fails when schemaUri is empty")
-    void emptySchemeUri() {
+    void emptySchemaUri() {
         final var titleType = new TitleTypeWithSchemaUri()
                 .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
                 .schemaUri("");
@@ -139,7 +139,7 @@ class TitleTypeValidatorTest {
 
     @Test
     @DisplayName("Validation fails when schemaUri is invalid")
-    void invalidSchemeUri() {
+    void invalidSchemaUri() {
         final var titleType = new TitleTypeWithSchemaUri()
                 .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
                 .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
@@ -177,7 +177,7 @@ class TitleTypeValidatorTest {
 
     @Test
     @DisplayName("Validation fails when id not found in schema")
-    void invalidTypeForScheme() {
+    void invalidTypeForSchema() {
         final var titleType = new TitleTypeWithSchemaUri()
                 .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
                 .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
@@ -185,7 +185,7 @@ class TitleTypeValidatorTest {
         when(titleTypeSchemaRepository.findByUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.of(TITLE_TYPE_SCHEMA_RECORD));
 
-        when(titleTypeRepository.findByUriAndSchemeId(TestConstants.PRIMARY_TITLE_TYPE_ID, TITLE_TYPE_SCHEMA_ID))
+        when(titleTypeRepository.findByUriAndSchemaId(TestConstants.PRIMARY_TITLE_TYPE_ID, TITLE_TYPE_SCHEMA_ID))
                 .thenReturn(Optional.empty());
 
         final var failures = validationService.validate(titleType, INDEX);

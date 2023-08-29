@@ -53,7 +53,7 @@ public class OrganisationRoleValidator {
                                 .message(INVALID_SCHEMA)
                 );
             } else if (!isBlank(role.getId()) &&
-                    organisationRoleRepository.findByUriAndSchemeId(role.getId(), roleScheme.get().getId()).isEmpty()) {
+                    organisationRoleRepository.findByUriAndSchemaId(role.getId(), roleScheme.get().getId()).isEmpty()) {
                 failures.add(
                         new ValidationFailure()
                                 .fieldId("organisations[%d].roles[%d].id".formatted(organisationIndex, roleIndex))

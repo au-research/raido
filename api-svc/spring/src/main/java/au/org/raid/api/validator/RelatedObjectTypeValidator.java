@@ -50,7 +50,7 @@ public class RelatedObjectTypeValidator {
                         .message(INVALID_SCHEMA)
                 );
             } else if (!isBlank(relatedObjectType.getId()) &&
-                    relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType.getId(), relatedObjectTypeScheme.get().getId()).isEmpty()) {
+                    relatedObjectTypeRepository.findByUriAndSchemaId(relatedObjectType.getId(), relatedObjectTypeScheme.get().getId()).isEmpty()) {
                 failures.add(new ValidationFailure()
                         .fieldId("relatedObjects[%d].type.id".formatted(index))
                         .errorType(INVALID_VALUE_TYPE)

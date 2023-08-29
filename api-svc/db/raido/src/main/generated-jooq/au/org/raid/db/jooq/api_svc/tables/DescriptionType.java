@@ -40,9 +40,9 @@ public class DescriptionType extends TableImpl<DescriptionTypeRecord> {
     }
 
     /**
-     * The column <code>api_svc.description_type.scheme_id</code>.
+     * The column <code>api_svc.description_type.schema_id</code>.
      */
-    public final TableField<DescriptionTypeRecord, Integer> SCHEME_ID = createField(DSL.name("scheme_id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<DescriptionTypeRecord, Integer> SCHEMA_ID = createField(DSL.name("schema_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>api_svc.description_type.uri</code>.
@@ -94,20 +94,20 @@ public class DescriptionType extends TableImpl<DescriptionTypeRecord> {
 
     @Override
     public List<ForeignKey<DescriptionTypeRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.DESCRIPTION_TYPE__FK_DESCRIPTION_TYPE_SCHEME_ID);
+        return Arrays.asList(Keys.DESCRIPTION_TYPE__FK_DESCRIPTION_TYPE_SCHEMA_ID);
     }
 
-    private transient DescriptionTypeScheme _descriptionTypeScheme;
+    private transient DescriptionTypeSchema _descriptionTypeSchema;
 
     /**
      * Get the implicit join path to the
-     * <code>api_svc.description_type_scheme</code> table.
+     * <code>api_svc.description_type_schema</code> table.
      */
-    public DescriptionTypeScheme descriptionTypeScheme() {
-        if (_descriptionTypeScheme == null)
-            _descriptionTypeScheme = new DescriptionTypeScheme(this, Keys.DESCRIPTION_TYPE__FK_DESCRIPTION_TYPE_SCHEME_ID);
+    public DescriptionTypeSchema descriptionTypeSchema() {
+        if (_descriptionTypeSchema == null)
+            _descriptionTypeSchema = new DescriptionTypeSchema(this, Keys.DESCRIPTION_TYPE__FK_DESCRIPTION_TYPE_SCHEMA_ID);
 
-        return _descriptionTypeScheme;
+        return _descriptionTypeSchema;
     }
 
     @Override

@@ -53,7 +53,7 @@ public class ContributorRoleValidator {
                                 .message(INVALID_SCHEMA)
                 );
             } else if (!isBlank(role.getId()) &&
-                    contributorRoleRepository.findByUriAndSchemeId(role.getId(), roleScheme.get().getId()).isEmpty()) {
+                    contributorRoleRepository.findByUriAndSchemaId(role.getId(), roleScheme.get().getId()).isEmpty()) {
                 failures.add(
                         new ValidationFailure()
                                 .fieldId("contributors[%d].roles[%d].id".formatted(contributorIndex, roleIndex))

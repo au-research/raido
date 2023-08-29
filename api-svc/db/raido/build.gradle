@@ -79,7 +79,6 @@ flyway{
   ]
   /* flag to avoid accidentally running in prod */
   cleanDisabled = sharedProject.flywayCleanDisabled
-  outOfOrder = true
 }
 
 tasks.flywayMigrate.doFirst {

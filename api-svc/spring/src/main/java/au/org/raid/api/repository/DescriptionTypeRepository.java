@@ -18,9 +18,9 @@ public class DescriptionTypeRepository {
         return dslContext.select(DESCRIPTION_TYPE.fields())
                 .from(DESCRIPTION_TYPE)
                 .where(DESCRIPTION_TYPE.URI.eq(uri))
-                .and(DESCRIPTION_TYPE.SCHEME_ID.eq(schemeId))
+                .and(DESCRIPTION_TYPE.SCHEMA_ID.eq(schemeId))
                 .fetchOptional(record -> new DescriptionTypeRecord()
-                        .setSchemeId(DESCRIPTION_TYPE.SCHEME_ID.getValue(record))
+                        .setSchemaId(DESCRIPTION_TYPE.SCHEMA_ID.getValue(record))
                         .setUri(DESCRIPTION_TYPE.URI.getValue(record))
                 );
     }

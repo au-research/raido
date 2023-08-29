@@ -81,17 +81,17 @@ public class SubjectTypeRecord extends UpdatableRecordImpl<SubjectTypeRecord> im
     }
 
     /**
-     * Setter for <code>api_svc.subject_type.scheme_id</code>.
+     * Setter for <code>api_svc.subject_type.schema_id</code>.
      */
-    public SubjectTypeRecord setSchemeId(Integer value) {
+    public SubjectTypeRecord setSchemaId(Integer value) {
         set(4, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.subject_type.scheme_id</code>.
+     * Getter for <code>api_svc.subject_type.schema_id</code>.
      */
-    public Integer getSchemeId() {
+    public Integer getSchemaId() {
         return (Integer) get(4);
     }
 
@@ -140,7 +140,7 @@ public class SubjectTypeRecord extends UpdatableRecordImpl<SubjectTypeRecord> im
 
     @Override
     public Field<Integer> field5() {
-        return SubjectType.SUBJECT_TYPE.SCHEME_ID;
+        return SubjectType.SUBJECT_TYPE.SCHEMA_ID;
     }
 
     @Override
@@ -165,7 +165,7 @@ public class SubjectTypeRecord extends UpdatableRecordImpl<SubjectTypeRecord> im
 
     @Override
     public Integer component5() {
-        return getSchemeId();
+        return getSchemaId();
     }
 
     @Override
@@ -190,7 +190,7 @@ public class SubjectTypeRecord extends UpdatableRecordImpl<SubjectTypeRecord> im
 
     @Override
     public Integer value5() {
-        return getSchemeId();
+        return getSchemaId();
     }
 
     @Override
@@ -219,7 +219,7 @@ public class SubjectTypeRecord extends UpdatableRecordImpl<SubjectTypeRecord> im
 
     @Override
     public SubjectTypeRecord value5(Integer value) {
-        setSchemeId(value);
+        setSchemaId(value);
         return this;
     }
 
@@ -247,13 +247,13 @@ public class SubjectTypeRecord extends UpdatableRecordImpl<SubjectTypeRecord> im
     /**
      * Create a detached, initialised SubjectTypeRecord
      */
-    public SubjectTypeRecord(String id, String name, String description, String note, Integer schemeId) {
+    public SubjectTypeRecord(String id, String name, String description, String note, Integer schemaId) {
         super(SubjectType.SUBJECT_TYPE);
 
         setId(id);
         setName(name);
         setDescription(description);
         setNote(note);
-        setSchemeId(schemeId);
+        setSchemaId(schemaId);
     }
 }

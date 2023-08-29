@@ -40,9 +40,9 @@ public class ContributorPosition extends TableImpl<ContributorPositionRecord> {
     }
 
     /**
-     * The column <code>api_svc.contributor_position.scheme_id</code>.
+     * The column <code>api_svc.contributor_position.schema_id</code>.
      */
-    public final TableField<ContributorPositionRecord, Integer> SCHEME_ID = createField(DSL.name("scheme_id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<ContributorPositionRecord, Integer> SCHEMA_ID = createField(DSL.name("schema_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>api_svc.contributor_position.uri</code>.
@@ -96,20 +96,20 @@ public class ContributorPosition extends TableImpl<ContributorPositionRecord> {
 
     @Override
     public List<ForeignKey<ContributorPositionRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.CONTRIBUTOR_POSITION__FK_ACCESS_TYPE_SCHEME_ID);
+        return Arrays.asList(Keys.CONTRIBUTOR_POSITION__FK_CONTRIBUTOR_POSITION_SCHEMA_ID);
     }
 
-    private transient AccessTypeScheme _accessTypeScheme;
+    private transient AccessTypeSchema _accessTypeSchema;
 
     /**
-     * Get the implicit join path to the <code>api_svc.access_type_scheme</code>
+     * Get the implicit join path to the <code>api_svc.access_type_schema</code>
      * table.
      */
-    public AccessTypeScheme accessTypeScheme() {
-        if (_accessTypeScheme == null)
-            _accessTypeScheme = new AccessTypeScheme(this, Keys.CONTRIBUTOR_POSITION__FK_ACCESS_TYPE_SCHEME_ID);
+    public AccessTypeSchema accessTypeSchema() {
+        if (_accessTypeSchema == null)
+            _accessTypeSchema = new AccessTypeSchema(this, Keys.CONTRIBUTOR_POSITION__FK_CONTRIBUTOR_POSITION_SCHEMA_ID);
 
-        return _accessTypeScheme;
+        return _accessTypeSchema;
     }
 
     @Override

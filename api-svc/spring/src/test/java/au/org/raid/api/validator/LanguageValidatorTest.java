@@ -3,7 +3,7 @@ package au.org.raid.api.validator;
 import au.org.raid.api.repository.LanguageRepository;
 import au.org.raid.api.repository.LanguageSchemaRepository;
 import au.org.raid.db.jooq.api_svc.tables.records.LanguageRecord;
-import au.org.raid.db.jooq.api_svc.tables.records.LanguageSchemeRecord;
+import au.org.raid.db.jooq.api_svc.tables.records.LanguageSchemaRecord;
 import au.org.raid.idl.raidv2.model.Language;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;
@@ -30,9 +30,9 @@ class LanguageValidatorTest {
 
     private static final LanguageRecord LANGUAGE_RECORD = new LanguageRecord()
             .setId(LANGUAGE_ID)
-            .setSchemeId(LANGUAGE_SCHEMA_ID);
+            .setSchemaId(LANGUAGE_SCHEMA_ID);
 
-    private static final LanguageSchemeRecord LANGUAGE_SCHEME_RECORD = new LanguageSchemeRecord()
+    private static final LanguageSchemaRecord LANGUAGE_SCHEME_RECORD = new LanguageSchemaRecord()
             .setId(LANGUAGE_SCHEMA_ID)
             .setUri(LANGUAGE_SCHEMA_URI);
 
@@ -87,7 +87,7 @@ class LanguageValidatorTest {
 
     @Test
     @DisplayName("Returns failure if schemaUri is empty string")
-    void emptySchemeUri() {
+    void emptySchemaUri() {
         final var language = new Language().id("eng").schemaUri("");
 
         final var failures = languageValidator.validate(language, "parent");
@@ -102,7 +102,7 @@ class LanguageValidatorTest {
 
     @Test
     @DisplayName("Returns failure if schemaUri is null")
-    void nullSchemeUri() {
+    void nullSchemaUri() {
         final var language = new Language().id("eng");
 
         final var failures = languageValidator.validate(language, "parent");
@@ -117,7 +117,7 @@ class LanguageValidatorTest {
 
     @Test
     @DisplayName("Returns failure if schemaUri is not supported")
-    void invalidSchemeUri() {
+    void invalidSchemaUri() {
         final var language = new Language()
                 .id("eng")
                 .schemaUri(LANGUAGE_SCHEMA_URI);
@@ -141,10 +141,10 @@ class LanguageValidatorTest {
                 .id(LANGUAGE_ID)
                 .schemaUri(LANGUAGE_SCHEMA_URI);
 
-        final var languageScheme = new LanguageSchemeRecord().setId(LANGUAGE_SCHEMA_ID);
+        final var languageSchema = new LanguageSchemaRecord().setId(LANGUAGE_SCHEMA_ID);
 
-        when(languageSchemaRepository.findByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.of(languageScheme));
-        when(languageRepository.findByIdAndSchemeId(LANGUAGE_ID, LANGUAGE_SCHEMA_ID)).thenReturn(Optional.empty());
+        when(languageSchemaRepository.findByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.of(languageSchema));
+        when(languageRepository.findByIdAndSchemaId(LANGUAGE_ID, LANGUAGE_SCHEMA_ID)).thenReturn(Optional.empty());
 
         final var failures = languageValidator.validate(language, "parent");
 
@@ -164,7 +164,7 @@ class LanguageValidatorTest {
                 .schemaUri(LANGUAGE_SCHEMA_URI);
 
         when(languageSchemaRepository.findByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.of(LANGUAGE_SCHEME_RECORD));
-        when(languageRepository.findByIdAndSchemeId(LANGUAGE_ID, LANGUAGE_SCHEMA_ID))
+        when(languageRepository.findByIdAndSchemaId(LANGUAGE_ID, LANGUAGE_SCHEMA_ID))
                 .thenReturn(Optional.of(LANGUAGE_RECORD));
 
         final var failures = languageValidator.validate(language, "parent");

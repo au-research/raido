@@ -20,17 +20,17 @@ public class ContributorPositionRecord extends UpdatableRecordImpl<ContributorPo
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>api_svc.contributor_position.scheme_id</code>.
+     * Setter for <code>api_svc.contributor_position.schema_id</code>.
      */
-    public ContributorPositionRecord setSchemeId(Integer value) {
+    public ContributorPositionRecord setSchemaId(Integer value) {
         set(0, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.contributor_position.scheme_id</code>.
+     * Getter for <code>api_svc.contributor_position.schema_id</code>.
      */
-    public Integer getSchemeId() {
+    public Integer getSchemaId() {
         return (Integer) get(0);
     }
 
@@ -74,7 +74,7 @@ public class ContributorPositionRecord extends UpdatableRecordImpl<ContributorPo
 
     @Override
     public Field<Integer> field1() {
-        return ContributorPosition.CONTRIBUTOR_POSITION.SCHEME_ID;
+        return ContributorPosition.CONTRIBUTOR_POSITION.SCHEMA_ID;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class ContributorPositionRecord extends UpdatableRecordImpl<ContributorPo
 
     @Override
     public Integer component1() {
-        return getSchemeId();
+        return getSchemaId();
     }
 
     @Override
@@ -94,7 +94,7 @@ public class ContributorPositionRecord extends UpdatableRecordImpl<ContributorPo
 
     @Override
     public Integer value1() {
-        return getSchemeId();
+        return getSchemaId();
     }
 
     @Override
@@ -104,7 +104,7 @@ public class ContributorPositionRecord extends UpdatableRecordImpl<ContributorPo
 
     @Override
     public ContributorPositionRecord value1(Integer value) {
-        setSchemeId(value);
+        setSchemaId(value);
         return this;
     }
 
@@ -135,10 +135,10 @@ public class ContributorPositionRecord extends UpdatableRecordImpl<ContributorPo
     /**
      * Create a detached, initialised ContributorPositionRecord
      */
-    public ContributorPositionRecord(Integer schemeId, String uri) {
+    public ContributorPositionRecord(Integer schemaId, String uri) {
         super(ContributorPosition.CONTRIBUTOR_POSITION);
 
-        setSchemeId(schemeId);
+        setSchemaId(schemaId);
         setUri(uri);
     }
 }

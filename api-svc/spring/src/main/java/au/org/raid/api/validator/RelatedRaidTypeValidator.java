@@ -54,7 +54,7 @@ public class RelatedRaidTypeValidator {
                         .errorType(INVALID_VALUE_TYPE)
                         .message(INVALID_SCHEMA));
             } else if (!isBlank(relatedRaidType.getId()) &&
-                    relatedRaidTypeRepository.findByUriAndSchemeId(relatedRaidType.getId(), relatedRaidTypeScheme.get().getId()).isEmpty()) {
+                    relatedRaidTypeRepository.findByUriAndSchemaId(relatedRaidType.getId(), relatedRaidTypeScheme.get().getId()).isEmpty()) {
                 failures.add(new ValidationFailure()
                         .fieldId("relatedRaids[%d].type.id".formatted(index))
                         .errorType(INVALID_VALUE_TYPE)

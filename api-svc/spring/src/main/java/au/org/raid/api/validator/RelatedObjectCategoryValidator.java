@@ -49,7 +49,7 @@ public class RelatedObjectCategoryValidator {
                         .message(INVALID_SCHEMA)
                 );
             } else if (!isBlank(relatedObjectCategory.getId()) &&
-                    relatedObjectCategoryRepository.findByUriAndSchemeId(relatedObjectCategory.getId(), relatedObjectCategoryScheme.get().getId()).isEmpty()) {
+                    relatedObjectCategoryRepository.findByUriAndSchemaId(relatedObjectCategory.getId(), relatedObjectCategoryScheme.get().getId()).isEmpty()) {
                 failures.add(new ValidationFailure()
                         .fieldId("relatedObjects[%d].category.id".formatted(index))
                         .errorType(INVALID_VALUE_TYPE)

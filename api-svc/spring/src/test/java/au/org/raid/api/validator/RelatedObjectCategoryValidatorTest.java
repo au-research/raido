@@ -4,7 +4,7 @@ import au.org.raid.api.repository.RelatedObjectCategoryRepository;
 import au.org.raid.api.repository.RelatedObjectCategorySchemaRepository;
 import au.org.raid.api.util.TestConstants;
 import au.org.raid.db.jooq.api_svc.tables.records.RelatedObjectCategoryRecord;
-import au.org.raid.db.jooq.api_svc.tables.records.RelatedObjectCategorySchemeRecord;
+import au.org.raid.db.jooq.api_svc.tables.records.RelatedObjectCategorySchemaRecord;
 import au.org.raid.idl.raidv2.model.RelatedObjectCategory;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;
@@ -26,14 +26,14 @@ class RelatedObjectCategoryValidatorTest {
     private static final int INDEX = 3;
     private static final int RELATED_OBJECT_CATEGORY_SCHEMA_ID = 1;
 
-    private static final RelatedObjectCategorySchemeRecord RELATED_OBJECT_CATEGORY_SCHEMA_RECORD =
-            new RelatedObjectCategorySchemeRecord()
+    private static final RelatedObjectCategorySchemaRecord RELATED_OBJECT_CATEGORY_SCHEMA_RECORD =
+            new RelatedObjectCategorySchemaRecord()
                     .setId(RELATED_OBJECT_CATEGORY_SCHEMA_ID)
                     .setUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
 
     private static final RelatedObjectCategoryRecord RELATED_OBJECT_CATEGORY_RECORD =
             new RelatedObjectCategoryRecord()
-                    .setSchemeId(RELATED_OBJECT_CATEGORY_SCHEMA_ID)
+                    .setSchemaId(RELATED_OBJECT_CATEGORY_SCHEMA_ID)
                     .setUri(TestConstants.INPUT_RELATED_OBJECT_CATEGORY);
 
     @Mock
@@ -56,7 +56,7 @@ class RelatedObjectCategoryValidatorTest {
                 .thenReturn(Optional.of(RELATED_OBJECT_CATEGORY_SCHEMA_RECORD));
 
         when(relatedObjectCategoryRepository
-                .findByUriAndSchemeId(TestConstants.INPUT_RELATED_OBJECT_CATEGORY, RELATED_OBJECT_CATEGORY_SCHEMA_ID))
+                .findByUriAndSchemaId(TestConstants.INPUT_RELATED_OBJECT_CATEGORY, RELATED_OBJECT_CATEGORY_SCHEMA_ID))
                 .thenReturn(Optional.of(RELATED_OBJECT_CATEGORY_RECORD));
 
         final var failures = validationService.validate(relatedObjectCategory, INDEX);
@@ -111,7 +111,7 @@ class RelatedObjectCategoryValidatorTest {
 
     @Test
     @DisplayName("Validation fails with null schemaUri")
-    void nullSchemeUri() {
+    void nullSchemaUri() {
         var relatedObjectCategory = new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY);
 
@@ -130,7 +130,7 @@ class RelatedObjectCategoryValidatorTest {
 
     @Test
     @DisplayName("Validation fails with empty schemaUri")
-    void emptySchemeUri() {
+    void emptySchemaUri() {
         var relatedObjectCategory = new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
                 .schemaUri("");
@@ -150,7 +150,7 @@ class RelatedObjectCategoryValidatorTest {
 
     @Test
     @DisplayName("Validation fails if schemaUri does not exist")
-    void nonExistentSchemeUri() {
+    void nonExistentSchemaUri() {
         var relatedObjectCategory = new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
                 .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
@@ -171,7 +171,7 @@ class RelatedObjectCategoryValidatorTest {
 
     @Test
     @DisplayName("Validation fails if type does not exist with schema")
-    void invalidTypeForScheme() {
+    void invalidTypeForSchema() {
         var relatedObjectCategory = new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
                 .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
@@ -180,7 +180,7 @@ class RelatedObjectCategoryValidatorTest {
                 .thenReturn(Optional.of(RELATED_OBJECT_CATEGORY_SCHEMA_RECORD));
 
         when(relatedObjectCategoryRepository
-                .findByUriAndSchemeId(TestConstants.INPUT_RELATED_OBJECT_CATEGORY, RELATED_OBJECT_CATEGORY_SCHEMA_ID))
+                .findByUriAndSchemaId(TestConstants.INPUT_RELATED_OBJECT_CATEGORY, RELATED_OBJECT_CATEGORY_SCHEMA_ID))
                 .thenReturn(Optional.empty());
 
         final var failures = validationService.validate(relatedObjectCategory, INDEX);

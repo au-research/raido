@@ -4,7 +4,7 @@ import au.org.raid.api.repository.DescriptionTypeRepository;
 import au.org.raid.api.repository.DescriptionTypeSchemaRepository;
 import au.org.raid.api.util.TestConstants;
 import au.org.raid.db.jooq.api_svc.tables.records.DescriptionTypeRecord;
-import au.org.raid.db.jooq.api_svc.tables.records.DescriptionTypeSchemeRecord;
+import au.org.raid.db.jooq.api_svc.tables.records.DescriptionTypeSchemaRecord;
 import au.org.raid.idl.raidv2.model.DescriptionTypeWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;
@@ -25,12 +25,12 @@ class DescriptionTypeValidatorTest {
     private static final int INDEX = 3;
     private static final int DESCRIPTION_TYPE_SCHEMA_ID = 1;
 
-    private static final DescriptionTypeSchemeRecord DESCRIPTION_TYPE_SCHEMA_RECORD = new DescriptionTypeSchemeRecord()
+    private static final DescriptionTypeSchemaRecord DESCRIPTION_TYPE_SCHEMA_RECORD = new DescriptionTypeSchemaRecord()
             .setId(DESCRIPTION_TYPE_SCHEMA_ID)
             .setUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI);
 
     private static final DescriptionTypeRecord DESCRIPTION_TYPE_RECORD = new DescriptionTypeRecord()
-            .setSchemeId(DESCRIPTION_TYPE_SCHEMA_ID)
+            .setSchemaId(DESCRIPTION_TYPE_SCHEMA_ID)
             .setUri(TestConstants.PRIMARY_DESCRIPTION_TYPE);
 
     @Mock

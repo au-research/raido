@@ -57,7 +57,7 @@ public class TitleTypeValidator {
                         .errorType(INVALID_VALUE_TYPE)
                         .message(INVALID_SCHEMA));
             } else if (!isBlank(titleType.getId()) &&
-                    titleTypeRepository.findByUriAndSchemeId(titleType.getId(), titleTypeScheme.get().getId()).isEmpty()) {
+                    titleTypeRepository.findByUriAndSchemaId(titleType.getId(), titleTypeScheme.get().getId()).isEmpty()) {
                 failures.add(new ValidationFailure()
                         .fieldId("titles[%d].type.id".formatted(index))
                         .errorType(INVALID_VALUE_TYPE)

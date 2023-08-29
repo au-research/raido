@@ -4,7 +4,7 @@ import au.org.raid.api.repository.RelatedObjectTypeRepository;
 import au.org.raid.api.repository.RelatedObjectTypeSchemaRepository;
 import au.org.raid.api.util.TestConstants;
 import au.org.raid.db.jooq.api_svc.tables.records.RelatedObjectTypeRecord;
-import au.org.raid.db.jooq.api_svc.tables.records.RelatedObjectTypeSchemeRecord;
+import au.org.raid.db.jooq.api_svc.tables.records.RelatedObjectTypeSchemaRecord;
 import au.org.raid.idl.raidv2.model.RelatedObjectType;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;
@@ -26,14 +26,14 @@ class RelatedObjectTypeValidatorTest {
     private static final int INDEX = 3;
     private static final int RELATED_OBJECT_TYPE_SCHEMA_ID = 1;
 
-    private static final RelatedObjectTypeSchemeRecord RELATED_OBJECT_TYPE_SCHEMA_RECORD =
-            new RelatedObjectTypeSchemeRecord()
+    private static final RelatedObjectTypeSchemaRecord RELATED_OBJECT_TYPE_SCHEMA_RECORD =
+            new RelatedObjectTypeSchemaRecord()
                     .setId(RELATED_OBJECT_TYPE_SCHEMA_ID)
                     .setUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
 
     private static final RelatedObjectTypeRecord RELATED_OBJECT_TYPE_RECORD =
             new RelatedObjectTypeRecord()
-                    .setSchemeId(RELATED_OBJECT_TYPE_SCHEMA_ID)
+                    .setSchemaId(RELATED_OBJECT_TYPE_SCHEMA_ID)
                     .setUri(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE);
 
     @Mock
@@ -56,7 +56,7 @@ class RelatedObjectTypeValidatorTest {
                 .thenReturn(Optional.of(RELATED_OBJECT_TYPE_SCHEMA_RECORD));
 
         when(relatedObjectTypeRepository
-                .findByUriAndSchemeId(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE, RELATED_OBJECT_TYPE_SCHEMA_ID))
+                .findByUriAndSchemaId(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE, RELATED_OBJECT_TYPE_SCHEMA_ID))
                 .thenReturn(Optional.of(RELATED_OBJECT_TYPE_RECORD));
 
         final var failures = validationService.validate(relatedObjectType, INDEX);
@@ -110,7 +110,7 @@ class RelatedObjectTypeValidatorTest {
 
     @Test
     @DisplayName("Validation fails with null schemaUri")
-    void nullSchemeUri() {
+    void nullSchemaUri() {
         var relatedObjectType = new RelatedObjectType()
                 .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE);
 
@@ -129,7 +129,7 @@ class RelatedObjectTypeValidatorTest {
 
     @Test
     @DisplayName("Validation fails with empty schemaUri")
-    void emptySchemeUri() {
+    void emptySchemaUri() {
         var relatedObjectType = new RelatedObjectType()
                 .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
                 .schemaUri("");
@@ -149,7 +149,7 @@ class RelatedObjectTypeValidatorTest {
 
     @Test
     @DisplayName("Validation fails if schemaUri does not exist")
-    void nonExistentSchemeUri() {
+    void nonExistentSchemaUri() {
         var relatedObjectType = new RelatedObjectType()
                 .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
                 .schemaUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
@@ -170,7 +170,7 @@ class RelatedObjectTypeValidatorTest {
 
     @Test
     @DisplayName("Validation fails if type does not exist with schema")
-    void invalidTypeForScheme() {
+    void invalidTypeForSchema() {
         var relatedObjectType = new RelatedObjectType()
                 .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
                 .schemaUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
@@ -179,7 +179,7 @@ class RelatedObjectTypeValidatorTest {
                 .thenReturn(Optional.of(RELATED_OBJECT_TYPE_SCHEMA_RECORD));
 
         when(relatedObjectTypeRepository
-                .findByUriAndSchemeId(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE, RELATED_OBJECT_TYPE_SCHEMA_ID))
+                .findByUriAndSchemaId(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE, RELATED_OBJECT_TYPE_SCHEMA_ID))
                 .thenReturn(Optional.empty());
 
         final var failures = validationService.validate(relatedObjectType, INDEX);

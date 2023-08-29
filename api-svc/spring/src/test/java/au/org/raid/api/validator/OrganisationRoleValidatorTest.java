@@ -3,7 +3,7 @@ package au.org.raid.api.validator;
 import au.org.raid.api.repository.OrganisationRoleRepository;
 import au.org.raid.api.repository.OrganisationRoleSchemaRepository;
 import au.org.raid.db.jooq.api_svc.tables.records.OrganisationRoleRecord;
-import au.org.raid.db.jooq.api_svc.tables.records.OrganisationRoleSchemeRecord;
+import au.org.raid.db.jooq.api_svc.tables.records.OrganisationRoleSchemaRecord;
 import au.org.raid.idl.raidv2.model.OrganisationRoleWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;
@@ -26,18 +26,18 @@ import static org.mockito.Mockito.when;
 class OrganisationRoleValidatorTest {
     private static final int ORGANISATION_ROLE_SCHEMA_ID = 1;
 
-    private static final OrganisationRoleSchemeRecord ORGANISATION_ROLE_SCHEMA_RECORD =
-            new OrganisationRoleSchemeRecord()
+    private static final OrganisationRoleSchemaRecord ORGANISATION_ROLE_SCHEMA_RECORD =
+            new OrganisationRoleSchemaRecord()
                     .setId(ORGANISATION_ROLE_SCHEMA_ID)
                     .setUri(ORGANISATION_ROLE_SCHEMA_URI);
 
     private static final OrganisationRoleRecord ORGANISATION_ROLE_RECORD =
             new OrganisationRoleRecord()
-                    .setSchemeId(ORGANISATION_ROLE_SCHEMA_ID)
+                    .setSchemaId(ORGANISATION_ROLE_SCHEMA_ID)
                     .setUri(LEAD_RESEARCH_ORGANISATION_ROLE);
 
     @Mock
-    private OrganisationRoleSchemaRepository contributorRoleSchemeRepository;
+    private OrganisationRoleSchemaRepository contributorRoleSchemaRepository;
 
     @Mock
     private OrganisationRoleRepository contributorRoleRepository;
@@ -52,11 +52,11 @@ class OrganisationRoleValidatorTest {
                 .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                 .schemaUri(ORGANISATION_ROLE_SCHEMA_URI);
 
-        when(contributorRoleSchemeRepository.findByUri(ORGANISATION_ROLE_SCHEMA_URI))
+        when(contributorRoleSchemaRepository.findByUri(ORGANISATION_ROLE_SCHEMA_URI))
                 .thenReturn(Optional.of(ORGANISATION_ROLE_SCHEMA_RECORD));
 
         when(contributorRoleRepository
-                .findByUriAndSchemeId(LEAD_RESEARCH_ORGANISATION_ROLE, ORGANISATION_ROLE_SCHEMA_ID))
+                .findByUriAndSchemaId(LEAD_RESEARCH_ORGANISATION_ROLE, ORGANISATION_ROLE_SCHEMA_ID))
                 .thenReturn(Optional.of(ORGANISATION_ROLE_RECORD));
 
         final var failures = validationService.validate(role, 2, 3);
@@ -66,7 +66,7 @@ class OrganisationRoleValidatorTest {
 
     @Test
     @DisplayName("Validation fails with null schemaUri")
-    void nullSchemeUri() {
+    void nullSchemaUri() {
         final var role = new OrganisationRoleWithSchemaUri()
                 .id(LEAD_RESEARCH_ORGANISATION_ROLE);
 
@@ -80,13 +80,13 @@ class OrganisationRoleValidatorTest {
                         .message("field must be set")
         ));
 
-        verifyNoInteractions(contributorRoleSchemeRepository);
+        verifyNoInteractions(contributorRoleSchemaRepository);
         verifyNoInteractions(contributorRoleRepository);
     }
 
     @Test
     @DisplayName("Validation fails with empty schemaUri")
-    void emptySchemeUri() {
+    void emptySchemaUri() {
         final var role = new OrganisationRoleWithSchemaUri()
                 .schemaUri("")
                 .id(LEAD_RESEARCH_ORGANISATION_ROLE);
@@ -101,18 +101,18 @@ class OrganisationRoleValidatorTest {
                         .message("field must be set")
         ));
 
-        verifyNoInteractions(contributorRoleSchemeRepository);
+        verifyNoInteractions(contributorRoleSchemaRepository);
         verifyNoInteractions(contributorRoleRepository);
     }
 
     @Test
     @DisplayName("Validation fails with invalid schemaUri")
-    void invalidSchemeUri() {
+    void invalidSchemaUri() {
         final var role = new OrganisationRoleWithSchemaUri()
                 .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                 .id(LEAD_RESEARCH_ORGANISATION_ROLE);
 
-        when(contributorRoleSchemeRepository.findByUri(ORGANISATION_ROLE_SCHEMA_URI))
+        when(contributorRoleSchemaRepository.findByUri(ORGANISATION_ROLE_SCHEMA_URI))
                 .thenReturn(Optional.empty());
 
         final var failures = validationService.validate(role, 2, 3);
@@ -134,7 +134,7 @@ class OrganisationRoleValidatorTest {
         final var role = new OrganisationRoleWithSchemaUri()
                 .schemaUri(ORGANISATION_ROLE_SCHEMA_URI);
 
-        when(contributorRoleSchemeRepository.findByUri(ORGANISATION_ROLE_SCHEMA_URI))
+        when(contributorRoleSchemaRepository.findByUri(ORGANISATION_ROLE_SCHEMA_URI))
                 .thenReturn(Optional.of(ORGANISATION_ROLE_SCHEMA_RECORD));
 
         final var failures = validationService.validate(role, 2, 3);
@@ -157,7 +157,7 @@ class OrganisationRoleValidatorTest {
                 .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                 .id("");
 
-        when(contributorRoleSchemeRepository.findByUri(ORGANISATION_ROLE_SCHEMA_URI))
+        when(contributorRoleSchemaRepository.findByUri(ORGANISATION_ROLE_SCHEMA_URI))
                 .thenReturn(Optional.of(ORGANISATION_ROLE_SCHEMA_RECORD));
 
         final var failures = validationService.validate(role, 2, 3);
@@ -180,11 +180,11 @@ class OrganisationRoleValidatorTest {
                 .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                 .id(LEAD_RESEARCH_ORGANISATION_ROLE);
 
-        when(contributorRoleSchemeRepository.findByUri(ORGANISATION_ROLE_SCHEMA_URI))
+        when(contributorRoleSchemaRepository.findByUri(ORGANISATION_ROLE_SCHEMA_URI))
                 .thenReturn(Optional.of(ORGANISATION_ROLE_SCHEMA_RECORD));
 
         when(contributorRoleRepository
-                .findByUriAndSchemeId(LEAD_RESEARCH_ORGANISATION_ROLE, ORGANISATION_ROLE_SCHEMA_ID))
+                .findByUriAndSchemaId(LEAD_RESEARCH_ORGANISATION_ROLE, ORGANISATION_ROLE_SCHEMA_ID))
                 .thenReturn(Optional.empty());
 
         final var failures = validationService.validate(role, 2, 3);
