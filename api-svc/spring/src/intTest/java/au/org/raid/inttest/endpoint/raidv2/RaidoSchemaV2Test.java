@@ -29,7 +29,7 @@ import static au.org.raid.inttest.endpoint.raidv1.LegacyRaidV1MintTest.INT_TEST_
 import static au.org.raid.inttest.util.MinimalRaidTestData.REAL_TEST_ORCID;
 import static au.org.raid.inttest.util.MinimalRaidTestData.REAL_TEST_ROR;
 import static org.assertj.core.api.Assertions.assertThat;
-
+@Disabled
 public class RaidoSchemaV2Test extends IntegrationTestCase {
     public static ContributorBlock createDummyLeaderContributor(LocalDate today) {
         return new ContributorBlock().

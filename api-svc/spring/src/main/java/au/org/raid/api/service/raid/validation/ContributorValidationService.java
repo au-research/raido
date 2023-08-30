@@ -237,21 +237,6 @@ public class ContributorValidationService {
             final int index,
             final ContributorBlock contributor
     ) {
-
-        if (!OrcidService.ORCID_REGEX.matcher(contributor.getId()).matches()) {
-            return of(new ValidationFailure()
-                    .fieldId(String.format("contributors[%d].id", index))
-                    .errorType("invalid")
-                    .message(
-                            "Contributor ORCID should have the format https://orcid.org/0000-0000-0000-0000.")
-            );
-        }
-
-        return orcidSvc.validateOrcidExists(contributor.getId()).stream().map(i ->
-                new ValidationFailure()
-                        .fieldId(String.format("contributors[%d].id", index))
-                        .errorType("invalid")
-                        .message("The contributor ORCID does not exist.")
-        ).toList();
+        return orcidSvc.validate(contributor.getId(), "contributors[%d].id".formatted(index));
     }
 }

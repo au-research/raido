@@ -1,6 +1,7 @@
 package au.org.raid.api.service.raid.validation;
 
 import au.org.raid.api.service.raid.id.IdentifierParser;
+import au.org.raid.api.validator.*;
 import au.org.raid.idl.raidv2.model.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,30 +16,30 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class RaidoStableV1ValidationServiceTest {
     @Mock
-    private StableSubjectValidationService subjectValidationService;
+    private SubjectValidator subjectValidationService;
     @Mock
-    private StableTitleValidationService titleValidationService;
+    private TitleValidator titleValidationService;
     @Mock
-    private StableDescriptionValidationService descSvc;
+    private DescriptionValidator descSvc;
     @Mock
-    private StableContributorValidationService contribSvc;
+    private ContributorValidator contribSvc;
     @Mock
-    private StableOrganisationValidationService orgSvc;
+    private OrganisationValidator orgSvc;
     @Mock
     private IdentifierParser identifierParser;
     @Mock
-    private StableRelatedRaidValidationService relatedRaidValidationService;
+    private RelatedRaidValidator relatedRaidValidationService;
     @Mock
-    private StableRelatedObjectValidationService relatedObjectValidationService;
+    private RelatedObjectValidator relatedObjectValidationService;
     @Mock
-    private StableAlternateIdentifierValidationService alternateIdentifierValidationService;
+    private AlternateIdentifierValidator alternateIdentifierValidationService;
 
     @Mock
-    private StableSpatialCoverageValidationService spatialCoverageValidationService;
+    private SpatialCoverageValidator spatialCoverageValidationService;
     @Mock
-    private StableTraditionalKnowledgeLabelValidatorService traditionalKnowledgeLabelValidatorService;
+    private TraditionalKnowledgeLabelValidator traditionalKnowledgeLabelValidatorService;
     @Mock
-    private StableAccessValidationService accessValidationService;
+    private AccessValidator accessValidationService;
     @InjectMocks
     private RaidoStableV1ValidationService validationService;
 

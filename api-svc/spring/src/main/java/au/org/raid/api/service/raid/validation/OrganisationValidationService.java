@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static au.org.raid.api.endpoint.message.ValidationMessage.*;
-import static au.org.raid.api.service.ror.RorService.ROR_REGEX;
 import static au.org.raid.api.util.Log.to;
 import static au.org.raid.api.util.ObjectUtil.indexed;
 import static au.org.raid.api.util.StringUtil.isBlank;
@@ -128,16 +127,6 @@ public class OrganisationValidationService {
             return List.of(organisationInvalidRorFormat(index, "too short"));
         }
 
-        if (!ROR_REGEX.matcher(id).matches()) {
-            return List.of(organisationInvalidRorFormat(index,
-                    "Invalid ROR %s".formatted(id)));
-        }
-
-        return rorService.validateRorExists(id).stream().map(i ->
-                new ValidationFailure()
-                        .fieldId(String.format("organisations[%d].id", index))
-                        .errorType(INVALID_VALUE_TYPE)
-                        .message("The organisation ROR does not exist.")
-        ).toList();
+        return rorService.validate(id, String.format("organisations[%d].id", index));
     }
 }

@@ -15,6 +15,7 @@ import au.org.raid.api.util.*;
 import au.org.raid.db.jooq.api_svc.tables.records.AppUserRecord;
 import au.org.raid.idl.raidv2.api.AdminExperimentalApi;
 import au.org.raid.idl.raidv2.model.*;
+import lombok.SneakyThrows;
 import org.jooq.DSLContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.transaction.annotation.Transactional;
@@ -127,6 +128,7 @@ public class AdminExperimental implements AdminExperimentalApi {
     }
 
     @Override
+    @SneakyThrows
     public ServicePoint updateServicePoint(ServicePoint req) {
         var user = AuthzUtil.getApiToken();
         AuthzUtil.guardOperatorOrAssociatedSpAdmin(user, req.getId());
@@ -143,12 +145,9 @@ public class AdminExperimental implements AdminExperimentalApi {
                 () -> "identifierOwner is too long: %s".formatted(req.getIdentifierOwner()),
                 JooqUtil.valueFits(SERVICE_POINT.IDENTIFIER_OWNER, req.getIdentifierOwner()));
 
-        Guard.isTrue("Identifier owner is not a valid ROR %s".formatted(req.getIdentifierOwner()),
-                RorService.ROR_REGEX.matcher(req.getIdentifierOwner()).matches());
-
-        final var errorMessages = rorService.validateRorExists(req.getIdentifierOwner());
-        if (!errorMessages.isEmpty()) {
-            throw new IllegalArgumentException(errorMessages.get(0));
+        final var failures = rorService.validate(req.getIdentifierOwner(), "servicePoint.identifierOwner");
+        if (!failures.isEmpty()) {
+            throw new ValidationFailureException(failures);
         }
 
         return servicePointSvc.updateServicePoint(req);

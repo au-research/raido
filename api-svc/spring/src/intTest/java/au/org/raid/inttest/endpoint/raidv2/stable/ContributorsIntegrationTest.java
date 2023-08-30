@@ -89,7 +89,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributors[0].schemeUri")
+                            .fieldId("contributors[0].identifierSchemeUri")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -126,7 +126,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributors[0].schemeUri")
+                            .fieldId("contributors[0].identifierSchemeUri")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -334,14 +334,12 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                 raidApi.createRaidV1(createRequest);
                 fail("No exception thrown with invalid orcid pattern");
             } catch (RaidApiValidationException e) {
-                final var failures = e.getFailures();
-                assertThat(failures).hasSize(1);
-                assertThat(failures).contains(
+                assertThat(e.getFailures()).isEqualTo(List.of(
                         new ValidationFailure()
                                 .fieldId("contributors[0].id")
                                 .errorType("invalidValue")
-                                .message("Contributor ORCID should have the format https://orcid.org/0000-0000-0000-0000")
-                );
+                                .message("has invalid/unsupported value - should match ^https://orcid\\.org/[\\d]{4}-[\\d]{4}-[\\d]{4}-[\\d]{3}[\\d|X]{1}$")
+                ));
             } catch (Exception e) {
                 fail("Expected RaidApiValidationException");
             }
@@ -414,7 +412,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                         new ValidationFailure()
                                 .fieldId("contributors[0].id")
                                 .errorType("invalidValue")
-                                .message("The contributor ORCID does not exist")
+                                .message("uri not found")
                 );
             } catch (Exception e) {
                 fail("Expected RaidApiValidationException");
