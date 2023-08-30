@@ -16,3 +16,5 @@ build/
 # output from checking legacy import files (which I should've written out to 
 # /s3/, but the code should go away soon, since import was a one time thing).
 *.error.json
+
+.run/
