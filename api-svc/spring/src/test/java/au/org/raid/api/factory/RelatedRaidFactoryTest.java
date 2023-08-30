@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
 class RelatedRaidFactoryTest {
-    public static final String TYPE_SCHEME_URI = "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/";
+    public static final String TYPE_SCHEMA_URI = "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/";
     private final RelatedRaidFactory relatedRaidFactory = new RelatedRaidFactory();
 
     @Test
@@ -25,7 +25,7 @@ class RelatedRaidFactoryTest {
     void returnsEmptyFields() {
         final var expected = new RelatedRaid()
                 .type(new RelatedRaidType()
-                        .schemaUri(TYPE_SCHEME_URI));
+                        .schemaUri(TYPE_SCHEMA_URI));
 
         assertThat(relatedRaidFactory.create(new RelatedRaidBlock()), is(expected));
     }
@@ -44,7 +44,7 @@ class RelatedRaidFactoryTest {
                 .id(id)
                 .type(new RelatedRaidType()
                         .id(typeId)
-                        .schemaUri(TYPE_SCHEME_URI)
+                        .schemaUri(TYPE_SCHEMA_URI)
                 );
 
         assertThat(relatedRaidFactory.create(relatedRaid), is(expected));

@@ -16,7 +16,7 @@ class DescriptionFactoryTest {
             "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json";
     private static final String ALTERNATIVE_ID =
             "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json";
-    private static final String DESCRIPTION_TYPE_SCHEME_URI =
+    private static final String DESCRIPTION_TYPE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/";
     private static final String DESCRIPTION = "Test Description";
 
@@ -35,7 +35,7 @@ class DescriptionFactoryTest {
                 .description(DESCRIPTION)
                 .type(new DescriptionTypeWithSchemaUri()
                         .id(PRIMARY_ID)
-                        .schemaUri(DESCRIPTION_TYPE_SCHEME_URI));
+                        .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI));
 
         assertThat(result, is(expected));
     }
@@ -53,7 +53,7 @@ class DescriptionFactoryTest {
                 .description(DESCRIPTION)
                 .type(new DescriptionTypeWithSchemaUri()
                         .id(ALTERNATIVE_ID)
-                        .schemaUri(DESCRIPTION_TYPE_SCHEME_URI));
+                        .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI));
 
         assertThat(result, is(expected));
     }
@@ -73,7 +73,7 @@ class DescriptionFactoryTest {
 
         final var expected = new Description()
                 .type(new DescriptionTypeWithSchemaUri()
-                        .schemaUri(DESCRIPTION_TYPE_SCHEME_URI));
+                        .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI));
 
         assertThat(result, is(expected));
     }

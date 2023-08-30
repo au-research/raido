@@ -18,7 +18,7 @@ class TitleFactoryTest {
             "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
     private static final String ALTERNATIVE_ID =
             "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json";
-    private static final String TITLE_TYPE_SCHEME_URI =
+    private static final String TITLE_TYPE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/";
 
     private static final LocalDate START_DATE = LocalDate.now().minusYears(2);
@@ -44,7 +44,7 @@ class TitleFactoryTest {
                 .endDate(END_DATE)
                 .type(new TitleTypeWithSchemaUri()
                         .id(PRIMARY_ID)
-                        .schemaUri(TITLE_TYPE_SCHEME_URI));
+                        .schemaUri(TITLE_TYPE_SCHEMA_URI));
 
         assertThat(result, is(expected));
     }
@@ -66,7 +66,7 @@ class TitleFactoryTest {
                 .endDate(END_DATE)
                 .type(new TitleTypeWithSchemaUri()
                         .id(ALTERNATIVE_ID)
-                        .schemaUri(TITLE_TYPE_SCHEME_URI));
+                        .schemaUri(TITLE_TYPE_SCHEMA_URI));
 
         assertThat(result, is(expected));
     }
@@ -86,7 +86,7 @@ class TitleFactoryTest {
 
         final var expected = new Title()
                 .type(new TitleTypeWithSchemaUri()
-                        .schemaUri(TITLE_TYPE_SCHEME_URI));
+                        .schemaUri(TITLE_TYPE_SCHEMA_URI));
 
         assertThat(result, is(expected));
     }

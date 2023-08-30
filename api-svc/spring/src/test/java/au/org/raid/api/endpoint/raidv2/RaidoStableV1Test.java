@@ -44,7 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 class RaidoStableV1Test {
-    private static final String ACCESS_SCHEME_URI =
+    private static final String ACCESS_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1";
 
     private static final String ACCESS_TYPE_CLOSED =
@@ -53,13 +53,13 @@ class RaidoStableV1Test {
     private static final String PRIMARY_TITLE_TYPE =
             "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
 
-    private static final String TITLE_TYPE_SCHEME_URI =
+    private static final String TITLE_TYPE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1";
 
     private static final String PRIMARY_DESCRIPTION_TYPE =
             "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json";
 
-    private static final String DESCRIPTION_TYPE_SCHEME_URI =
+    private static final String DESCRIPTION_TYPE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1";
     final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule()).setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
     private MockMvc mockMvc;
@@ -249,9 +249,9 @@ class RaidoStableV1Test {
                     .andExpect(jsonPath("$.dates.endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
                     .andExpect(jsonPath("$.descriptions[0].description", Matchers.is("Genome sequencing and assembly project at WUR of the C. Japonicum. ")))
                     .andExpect(jsonPath("$.descriptions[0].type.id", Matchers.is(PRIMARY_DESCRIPTION_TYPE)))
-                    .andExpect(jsonPath("$.descriptions[0].type.schemaUri", Matchers.is(DESCRIPTION_TYPE_SCHEME_URI)))
+                    .andExpect(jsonPath("$.descriptions[0].type.schemaUri", Matchers.is(DESCRIPTION_TYPE_SCHEMA_URI)))
                     .andExpect(jsonPath("$.access.type.id", Matchers.is(ACCESS_TYPE_CLOSED)))
-                    .andExpect(jsonPath("$.access.type.schemaUri", Matchers.is(ACCESS_SCHEME_URI)))
+                    .andExpect(jsonPath("$.access.type.schemaUri", Matchers.is(ACCESS_SCHEMA_URI)))
                     .andExpect(jsonPath("$.access.accessStatement.statement", Matchers.is("This RAiD is closed")))
                     .andExpect(jsonPath("$.contributors[0].id", Matchers.is("https://orcid.org/0000-0002-4368-8058")))
                     .andExpect(jsonPath("$.contributors[0].schemaUri", Matchers.is("https://orcid.org/")))
@@ -386,16 +386,16 @@ class RaidoStableV1Test {
                     .andExpect(jsonPath("$.id.servicePoint", Matchers.is(servicePointId.intValue())))
                     .andExpect(jsonPath("$.titles[0].title", Matchers.is(title)))
                     .andExpect(jsonPath("$.titles[0].type.id", Matchers.is(PRIMARY_TITLE_TYPE)))
-                    .andExpect(jsonPath("$.titles[0].type.schemaUri", Matchers.is(TITLE_TYPE_SCHEME_URI)))
+                    .andExpect(jsonPath("$.titles[0].type.schemaUri", Matchers.is(TITLE_TYPE_SCHEMA_URI)))
                     .andExpect(jsonPath("$.titles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
                     .andExpect(jsonPath("$.titles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
                     .andExpect(jsonPath("$.dates.startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
                     .andExpect(jsonPath("$.dates.endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
                     .andExpect(jsonPath("$.descriptions[0].description", Matchers.is("Genome sequencing and assembly project at WUR of the C. Japonicum. ")))
                     .andExpect(jsonPath("$.descriptions[0].type.id", Matchers.is(PRIMARY_DESCRIPTION_TYPE)))
-                    .andExpect(jsonPath("$.descriptions[0].type.schemaUri", Matchers.is(DESCRIPTION_TYPE_SCHEME_URI)))
+                    .andExpect(jsonPath("$.descriptions[0].type.schemaUri", Matchers.is(DESCRIPTION_TYPE_SCHEMA_URI)))
                     .andExpect(jsonPath("$.access.type.id", Matchers.is(ACCESS_TYPE_CLOSED)))
-                    .andExpect(jsonPath("$.access.type.schemaUri", Matchers.is(ACCESS_SCHEME_URI)))
+                    .andExpect(jsonPath("$.access.type.schemaUri", Matchers.is(ACCESS_SCHEMA_URI)))
                     .andExpect(jsonPath("$.access.accessStatement.statement", Matchers.is("This RAiD is closed")))
                     .andExpect(jsonPath("$.contributors[0].id", Matchers.is("https://orcid.org/0000-0002-4368-8058")))
                     .andExpect(jsonPath("$.contributors[0].schemaUri", Matchers.is("https://orcid.org/")))
@@ -610,16 +610,16 @@ class RaidoStableV1Test {
                     .andExpect(jsonPath("$[0].id.servicePoint", Matchers.is(999)))
                     .andExpect(jsonPath("$[0].titles[0].title", Matchers.is(title)))
                     .andExpect(jsonPath("$[0].titles[0].type.id", Matchers.is(PRIMARY_TITLE_TYPE)))
-                    .andExpect(jsonPath("$[0].titles[0].type.schemaUri", Matchers.is(TITLE_TYPE_SCHEME_URI)))
+                    .andExpect(jsonPath("$[0].titles[0].type.schemaUri", Matchers.is(TITLE_TYPE_SCHEMA_URI)))
                     .andExpect(jsonPath("$[0].titles[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
                     .andExpect(jsonPath("$[0].titles[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
                     .andExpect(jsonPath("$[0].dates.startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
                     .andExpect(jsonPath("$[0].dates.endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
                     .andExpect(jsonPath("$[0].descriptions[0].description", Matchers.is("Genome sequencing and assembly project at WUR of the C. Japonicum. ")))
                     .andExpect(jsonPath("$[0].descriptions[0].type.id", Matchers.is(PRIMARY_DESCRIPTION_TYPE)))
-                    .andExpect(jsonPath("$[0].descriptions[0].type.schemaUri", Matchers.is(DESCRIPTION_TYPE_SCHEME_URI)))
+                    .andExpect(jsonPath("$[0].descriptions[0].type.schemaUri", Matchers.is(DESCRIPTION_TYPE_SCHEMA_URI)))
                     .andExpect(jsonPath("$[0].access.type.id", Matchers.is(ACCESS_TYPE_CLOSED)))
-                    .andExpect(jsonPath("$[0].access.type.schemaUri", Matchers.is(ACCESS_SCHEME_URI)))
+                    .andExpect(jsonPath("$[0].access.type.schemaUri", Matchers.is(ACCESS_SCHEMA_URI)))
                     .andExpect(jsonPath("$[0].access.accessStatement.statement", Matchers.is("This RAiD is closed")))
                     .andExpect(jsonPath("$[0].contributors[0].id", Matchers.is("https://orcid.org/0000-0002-4368-8058")))
                     .andExpect(jsonPath("$[0].contributors[0].schemaUri", Matchers.is("https://orcid.org/")))
@@ -675,7 +675,7 @@ class RaidoStableV1Test {
 
         final var titleType = new TitleTypeWithSchemaUri()
                 .id(PRIMARY_TITLE_TYPE)
-                .schemaUri(TITLE_TYPE_SCHEME_URI);
+                .schemaUri(TITLE_TYPE_SCHEMA_URI);
 
         raid.getTitles().get(0)
                 .startDate(startDate)

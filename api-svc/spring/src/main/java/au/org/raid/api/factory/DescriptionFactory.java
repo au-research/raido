@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Component
 public class DescriptionFactory {
-    private final String DESCRIPTION_TYPE_SCHEME_URI =
+    private final String DESCRIPTION_TYPE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/";
 
     private final Map<DescriptionType, String> DESCRIPTION_TYPE_MAP = Map.of(
@@ -27,7 +27,7 @@ public class DescriptionFactory {
                 .description(descriptionBlock.getDescription())
                 .type(new DescriptionTypeWithSchemaUri()
                         .id(descriptionBlock.getType() != null ? DESCRIPTION_TYPE_MAP.get(descriptionBlock.getType()) : null)
-                        .schemaUri(DESCRIPTION_TYPE_SCHEME_URI)
+                        .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI)
                 );
     }
 }

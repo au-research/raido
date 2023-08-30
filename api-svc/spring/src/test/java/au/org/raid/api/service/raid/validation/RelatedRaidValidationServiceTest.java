@@ -22,7 +22,7 @@ import static org.mockito.Mockito.*;
 
 class RelatedRaidValidationServiceTest {
 
-    private static final String RELATED_RAID_TYPE_SCHEME_URI =
+    private static final String RELATED_RAID_TYPE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/";
     private static final String RELATED_RAID_TYPE_URI_PREFIX =
             "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/";
@@ -47,7 +47,7 @@ class RelatedRaidValidationServiceTest {
         final var relatedRaid = new RelatedRaidBlock()
                 .relatedRaid(relatedRaidUrl)
                 .relatedRaidType(relatedRaidType)
-                .relatedRaidTypeSchemeUri(RELATED_RAID_TYPE_SCHEME_URI);
+                .relatedRaidTypeSchemeUri(RELATED_RAID_TYPE_SCHEMA_URI);
 
         final List<ValidationFailure> validationFailures = validationService.validateRelatedRaids(List.of(relatedRaid));
 
@@ -73,7 +73,7 @@ class RelatedRaidValidationServiceTest {
         final var relatedRaid = new RelatedRaidBlock()
                 .relatedRaid(relatedRaidUrl)
                 .relatedRaidType(relatedRaidType)
-                .relatedRaidTypeSchemeUri(RELATED_RAID_TYPE_SCHEME_URI);
+                .relatedRaidTypeSchemeUri(RELATED_RAID_TYPE_SCHEMA_URI);
 
         final List<ValidationFailure> validationFailures = validationService.validateRelatedRaids(List.of(relatedRaid));
 
@@ -97,7 +97,7 @@ class RelatedRaidValidationServiceTest {
         final var relatedRaid = new RelatedRaidBlock()
                 .relatedRaid(relatedRaidUrl)
                 .relatedRaidType(relatedRaidType)
-                .relatedRaidTypeSchemeUri(RELATED_RAID_TYPE_SCHEME_URI);
+                .relatedRaidTypeSchemeUri(RELATED_RAID_TYPE_SCHEMA_URI);
 
         final List<ValidationFailure> validationFailures = validationService.validateRelatedRaids(List.of(relatedRaid));
 
@@ -134,7 +134,7 @@ class RelatedRaidValidationServiceTest {
         final var relatedRaid = new RelatedRaidBlock()
                 .relatedRaid(relatedRaidUrl)
                 .relatedRaidType(relatedRaidType)
-                .relatedRaidTypeSchemeUri(RELATED_RAID_TYPE_SCHEME_URI);
+                .relatedRaidTypeSchemeUri(RELATED_RAID_TYPE_SCHEMA_URI);
 
         final List<ValidationFailure> validationFailures = validationService.validateRelatedRaids(List.of(relatedRaid));
 
@@ -160,7 +160,7 @@ class RelatedRaidValidationServiceTest {
         final var relatedRaid = new RelatedRaidBlock()
                 .relatedRaid(relatedRaidUrl)
                 .relatedRaidType(relatedRaidType)
-                .relatedRaidTypeSchemeUri(RELATED_RAID_TYPE_SCHEME_URI);
+                .relatedRaidTypeSchemeUri(RELATED_RAID_TYPE_SCHEMA_URI);
 
         final List<ValidationFailure> validationFailures = validationService.validateRelatedRaids(List.of(relatedRaid));
 
@@ -184,7 +184,7 @@ class RelatedRaidValidationServiceTest {
         final var relatedRaid = new RelatedRaidBlock()
                 .relatedRaid(relatedRaidUrl)
                 .relatedRaidType(relatedRaidType)
-                .relatedRaidTypeSchemeUri(RELATED_RAID_TYPE_SCHEME_URI);
+                .relatedRaidTypeSchemeUri(RELATED_RAID_TYPE_SCHEMA_URI);
 
         final List<ValidationFailure> validationFailures = validationService.validateRelatedRaids(List.of(relatedRaid));
 

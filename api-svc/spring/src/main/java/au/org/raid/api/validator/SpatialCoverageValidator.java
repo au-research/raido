@@ -15,7 +15,7 @@ import static au.org.raid.api.util.StringUtil.isBlank;
 @Component
 @RequiredArgsConstructor
 public class SpatialCoverageValidator {
-    private static final String SPATIAL_COVERAGE_SCHEME_URI = "https://www.geonames.org/";
+    private static final String SPATIAL_COVERAGE_SCHEMA_URI = "https://www.geonames.org/";
     private final LanguageValidator languageValidator;
     private final GeoNamesUriValidator geoNamesUriValidator;
 
@@ -41,11 +41,11 @@ public class SpatialCoverageValidator {
                                 .fieldId(String.format("spatialCoverages[%d].schemaUri", i))
                                 .errorType(NOT_SET_TYPE)
                                 .message(NOT_SET_MESSAGE));
-                    } else if (!spatialCoverage.getSchemaUri().equals(SPATIAL_COVERAGE_SCHEME_URI)) {
+                    } else if (!spatialCoverage.getSchemaUri().equals(SPATIAL_COVERAGE_SCHEMA_URI)) {
                         failures.add(new ValidationFailure()
                                 .fieldId(String.format("spatialCoverages[%d].schemaUri", i))
                                 .errorType(INVALID_VALUE_TYPE)
-                                .message(String.format("Spatial coverage scheme uri should be %s", SPATIAL_COVERAGE_SCHEME_URI)));
+                                .message(String.format("Spatial coverage scheme uri should be %s", SPATIAL_COVERAGE_SCHEMA_URI)));
                     }
                     failures.addAll(
                             languageValidator.validate(spatialCoverage.getLanguage(), "spatialCoverages[%d]".formatted(i))

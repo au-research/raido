@@ -16,7 +16,7 @@ import static au.org.raid.api.util.Log.to;
 @Component
 public class RelatedRaidValidationService {
     private static final Log log = to(RelatedRaidValidationService.class);
-    private static final String RELATED_RAID_TYPE_SCHEME_URI =
+    private static final String RELATED_RAID_TYPE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/";
     private static final String RELATED_RAID_TYPE_URI_PREFIX =
             "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/";
@@ -94,7 +94,7 @@ public class RelatedRaidValidationService {
                         .fieldId(String.format("relatedRaids[%d].relatedRaidTypeSchemeUri", i))
                         .message("Related Raid Type Scheme URI is required.")
                 );
-            } else if (!relatedRaids.get(i).getRelatedRaidTypeSchemeUri().equals(RELATED_RAID_TYPE_SCHEME_URI)) {
+            } else if (!relatedRaids.get(i).getRelatedRaidTypeSchemeUri().equals(RELATED_RAID_TYPE_SCHEMA_URI)) {
                 failures.add(new ValidationFailure()
                         .errorType("invalid")
                         .fieldId(String.format("relatedRaids[%d].relatedRaidTypeSchemeUri", i))

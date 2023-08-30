@@ -9,7 +9,7 @@ import java.util.Map;
 
 @Component
 public class OrganisationRoleFactory {
-    private static final String SCHEME_URI =
+    private static final String SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/";
 
     private static final Map<OrganisationRoleType, String> ROLE_MAP =
@@ -32,7 +32,7 @@ public class OrganisationRoleFactory {
 
         return new OrganisationRoleWithSchemaUri()
                 .id(role.getRole() != null ? ROLE_MAP.get(role.getRole()) : null)
-                .schemaUri(SCHEME_URI)
+                .schemaUri(SCHEMA_URI)
                 .startDate(role.getStartDate())
                 .endDate(role.getEndDate());
     }

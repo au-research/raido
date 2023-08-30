@@ -13,7 +13,7 @@ public class SpatialCoverageValidationService {
     private static final String URI_PATTERN =
             "^https://www\\.geonames\\.org/[\\d]+/[\\w]+\\.html";
 
-    private static final String SPATIAL_COVERAGE_SCHEME_URI = "https://www.geonames.org/";
+    private static final String SPATIAL_COVERAGE_SCHEMA_URI = "https://www.geonames.org/";
 
     public List<ValidationFailure> validateSpatialCoverages(final List<SpatialCoverageBlock> spatialCoverages) {
         final var failures = new ArrayList<ValidationFailure>();
@@ -42,11 +42,11 @@ public class SpatialCoverageValidationService {
                                 .fieldId(String.format("spatialCoverages[%d].spatialCoverageSchemeUri", i))
                                 .errorType("required")
                                 .message("This is a required field."));
-                    } else if (!spatialCoverage.getSpatialCoverageSchemeUri().equals(SPATIAL_COVERAGE_SCHEME_URI)) {
+                    } else if (!spatialCoverage.getSpatialCoverageSchemeUri().equals(SPATIAL_COVERAGE_SCHEMA_URI)) {
                         failures.add(new ValidationFailure()
                                 .fieldId(String.format("spatialCoverages[%d].spatialCoverageSchemeUri", i))
                                 .errorType("invalid")
-                                .message(String.format("Spatial coverage scheme uri should be %s.", SPATIAL_COVERAGE_SCHEME_URI)));
+                                .message(String.format("Spatial coverage scheme uri should be %s.", SPATIAL_COVERAGE_SCHEMA_URI)));
                     }
                 });
 

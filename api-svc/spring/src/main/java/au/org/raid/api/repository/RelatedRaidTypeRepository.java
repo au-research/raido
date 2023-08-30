@@ -14,10 +14,10 @@ import static au.org.raid.db.jooq.api_svc.tables.RelatedRaidType.RELATED_RAID_TY
 public class RelatedRaidTypeRepository {
     private final DSLContext dslContext;
 
-    public Optional<RelatedRaidTypeRecord> findByUriAndSchemaId(final String uri, final int schemeId) {
+    public Optional<RelatedRaidTypeRecord> findByUriAndSchemaId(final String uri, final int schemaId) {
         return dslContext.select(RELATED_RAID_TYPE.fields())
                 .from(RELATED_RAID_TYPE)
-                .where(RELATED_RAID_TYPE.URI.eq(uri).and(RELATED_RAID_TYPE.SCHEMA_ID.eq(schemeId))).
+                .where(RELATED_RAID_TYPE.URI.eq(uri).and(RELATED_RAID_TYPE.SCHEMA_ID.eq(schemaId))).
                 fetchOptional(record -> new RelatedRaidTypeRecord()
                         .setSchemaId(RELATED_RAID_TYPE.SCHEMA_ID.getValue(record))
                         .setUri(RELATED_RAID_TYPE.URI.getValue(record))

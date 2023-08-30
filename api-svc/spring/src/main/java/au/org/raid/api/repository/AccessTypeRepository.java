@@ -14,11 +14,11 @@ import static au.org.raid.db.jooq.api_svc.tables.AccessType.ACCESS_TYPE;
 public class AccessTypeRepository {
     private final DSLContext dslContext;
 
-    public Optional<AccessTypeRecord> findByUriAndSchemaId(final String uri, final int schemeId) {
+    public Optional<AccessTypeRecord> findByUriAndSchemaId(final String uri, final int schemaId) {
         return dslContext.select(ACCESS_TYPE.fields())
                 .from(ACCESS_TYPE)
                 .where(ACCESS_TYPE.URI.eq(uri)
-                        .and(ACCESS_TYPE.SCHEMA_ID.eq(schemeId)))
+                        .and(ACCESS_TYPE.SCHEMA_ID.eq(schemaId)))
                 .fetchOptional(record -> new AccessTypeRecord()
                         .setSchemaId(ACCESS_TYPE.SCHEMA_ID.getValue(record))
                         .setUri(ACCESS_TYPE.URI.getValue(record))

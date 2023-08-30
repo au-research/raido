@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 
 @Component
 public class TraditionalKnowledgeLabelValidatorService {
-    private static final List<String> VALID_SCHEME_URIS = List.of(
+    private static final List<String> VALID_SCHEMA_URIS = List.of(
             "https://localcontexts.org/labels/traditional-knowledge-labels/",
             "https://localcontexts.org/labels/biocultural-labels/"
     );
@@ -33,7 +33,7 @@ public class TraditionalKnowledgeLabelValidatorService {
                                 .errorType("required")
                                 .fieldId(String.format("traditionalKnowledgeLabels[%d].traditionalKnowledgeLabelSchemeUri", i))
                                 .message("This is a required field."));
-                    } else if (!VALID_SCHEME_URIS.contains(label.getTraditionalKnowledgeLabelSchemeUri())) {
+                    } else if (!VALID_SCHEMA_URIS.contains(label.getTraditionalKnowledgeLabelSchemeUri())) {
                         failures.add(new ValidationFailure()
                                 .errorType("invalid")
                                 .fieldId(String.format("traditionalKnowledgeLabels[%d].traditionalKnowledgeLabelSchemeUri", i))

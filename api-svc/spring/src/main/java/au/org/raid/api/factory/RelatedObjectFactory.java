@@ -10,9 +10,9 @@ import java.util.Map;
 
 @Component
 public class RelatedObjectFactory {
-    private static final String CATEGORY_SCHEME_URI =
+    private static final String CATEGORY_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/";
-    private static final String TYPE_SCHEME_URI =
+    private static final String TYPE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/";
 
     private static final Map<String, String> CATEGORY_MAP = Map.of(
@@ -30,12 +30,12 @@ public class RelatedObjectFactory {
                 .id(relatedObjectBlock.getRelatedObject())
                 .schemaUri(relatedObjectBlock.getRelatedObjectSchemeUri())
                 .category(new RelatedObjectCategory()
-                        .schemaUri(CATEGORY_SCHEME_URI)
+                        .schemaUri(CATEGORY_SCHEMA_URI)
                         .id(relatedObjectBlock.getRelatedObjectCategory() != null ?
                                 CATEGORY_MAP.get(relatedObjectBlock.getRelatedObjectCategory().toLowerCase()) : null)
                 )
                 .type(new RelatedObjectType()
-                        .schemaUri(TYPE_SCHEME_URI)
+                        .schemaUri(TYPE_SCHEMA_URI)
                         .id(relatedObjectBlock.getRelatedObjectType())
                 );
     }

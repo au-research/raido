@@ -14,7 +14,7 @@ import static au.org.raid.api.util.StringUtil.isBlank;
 
 @Component
 public class OrganisationValidator {
-    private static final String ROR_SCHEME_URI = "https://ror.org/";
+    private static final String ROR_SCHEMA_URI = "https://ror.org/";
     private final RorValidator rorValidationService;
     private final OrganisationRoleValidator roleValidationService;
 
@@ -46,7 +46,7 @@ public class OrganisationValidator {
                         .errorType(NOT_SET_TYPE)
                         .message(NOT_SET_MESSAGE)
                 );
-            } else if (!organisation.getSchemaUri().equals(ROR_SCHEME_URI)) {
+            } else if (!organisation.getSchemaUri().equals(ROR_SCHEMA_URI)) {
                 failures.add(new ValidationFailure()
                         .fieldId("organisations[%d].schemaUri")
                         .errorType(INVALID_VALUE_TYPE)

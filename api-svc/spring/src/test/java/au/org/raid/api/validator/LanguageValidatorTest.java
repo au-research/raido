@@ -32,7 +32,7 @@ class LanguageValidatorTest {
             .setId(LANGUAGE_ID)
             .setSchemaId(LANGUAGE_SCHEMA_ID);
 
-    private static final LanguageSchemaRecord LANGUAGE_SCHEME_RECORD = new LanguageSchemaRecord()
+    private static final LanguageSchemaRecord LANGUAGE_SCHEMA_RECORD = new LanguageSchemaRecord()
             .setId(LANGUAGE_SCHEMA_ID)
             .setUri(LANGUAGE_SCHEMA_URI);
 
@@ -56,7 +56,7 @@ class LanguageValidatorTest {
     void nullId() {
         final var language = new Language().id(null).schemaUri(LANGUAGE_SCHEMA_URI);
 
-        when(languageSchemaRepository.findByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.of(LANGUAGE_SCHEME_RECORD));
+        when(languageSchemaRepository.findByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.of(LANGUAGE_SCHEMA_RECORD));
 
         final var failures = languageValidator.validate(language, "parent");
 
@@ -73,7 +73,7 @@ class LanguageValidatorTest {
     void emptyId() {
         final var language = new Language().id("").schemaUri(LANGUAGE_SCHEMA_URI);
 
-        when(languageSchemaRepository.findByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.of(LANGUAGE_SCHEME_RECORD));
+        when(languageSchemaRepository.findByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.of(LANGUAGE_SCHEMA_RECORD));
 
         final var failures = languageValidator.validate(language, "parent");
 
@@ -163,7 +163,7 @@ class LanguageValidatorTest {
                 .id(LANGUAGE_ID)
                 .schemaUri(LANGUAGE_SCHEMA_URI);
 
-        when(languageSchemaRepository.findByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.of(LANGUAGE_SCHEME_RECORD));
+        when(languageSchemaRepository.findByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.of(LANGUAGE_SCHEMA_RECORD));
         when(languageRepository.findByIdAndSchemaId(LANGUAGE_ID, LANGUAGE_SCHEMA_ID))
                 .thenReturn(Optional.of(LANGUAGE_RECORD));
 

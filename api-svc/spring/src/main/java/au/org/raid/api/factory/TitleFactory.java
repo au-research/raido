@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Component
 public class TitleFactory {
-    private static final String TITLE_TYPE_SCHEME_URI =
+    private static final String TITLE_TYPE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/";
     private static final Map<TitleType, String> TITLE_TYPE_MAP = Map.of(
             TitleType.PRIMARY_TITLE, "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
@@ -28,7 +28,7 @@ public class TitleFactory {
                 .endDate(titleBlock.getEndDate())
                 .type(new TitleTypeWithSchemaUri()
                         .id(titleBlock.getType() != null ? TITLE_TYPE_MAP.get(titleBlock.getType()) : null)
-                        .schemaUri(TITLE_TYPE_SCHEME_URI)
+                        .schemaUri(TITLE_TYPE_SCHEMA_URI)
                 );
     }
 }

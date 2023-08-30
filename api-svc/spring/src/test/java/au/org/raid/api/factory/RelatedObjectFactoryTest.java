@@ -15,8 +15,8 @@ import static org.hamcrest.Matchers.nullValue;
 @Component
 class RelatedObjectFactoryTest {
 
-    public static final String TYPE_SCHEME_URI = "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/";
-    public static final String CATEGORY_SCHEME_URI = "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/";
+    public static final String TYPE_SCHEMA_URI = "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/";
+    public static final String CATEGORY_SCHEMA_URI = "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/";
     private RelatedObjectFactory relatedObjectFactory = new RelatedObjectFactory();
 
     @Test
@@ -30,10 +30,10 @@ class RelatedObjectFactoryTest {
     void emptyFields() {
         final var expected = new RelatedObject()
                 .type(new RelatedObjectType()
-                        .schemaUri(TYPE_SCHEME_URI)
+                        .schemaUri(TYPE_SCHEMA_URI)
                 )
                 .category(new RelatedObjectCategory()
-                        .schemaUri(CATEGORY_SCHEME_URI));
+                        .schemaUri(CATEGORY_SCHEMA_URI));
 
         assertThat(relatedObjectFactory.create(new RelatedObjectBlock()), is(expected));
     }
@@ -59,9 +59,9 @@ class RelatedObjectFactoryTest {
                 .schemaUri(schemaUri)
                 .type(new RelatedObjectType()
                         .id(type)
-                        .schemaUri(TYPE_SCHEME_URI))
+                        .schemaUri(TYPE_SCHEMA_URI))
                 .category(new RelatedObjectCategory()
-                        .schemaUri(CATEGORY_SCHEME_URI)
+                        .schemaUri(CATEGORY_SCHEMA_URI)
                         .id("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json")
                 );
 
@@ -89,9 +89,9 @@ class RelatedObjectFactoryTest {
                 .schemaUri(schemaUri)
                 .type(new RelatedObjectType()
                         .id(type)
-                        .schemaUri(TYPE_SCHEME_URI))
+                        .schemaUri(TYPE_SCHEMA_URI))
                 .category(new RelatedObjectCategory()
-                        .schemaUri(CATEGORY_SCHEME_URI)
+                        .schemaUri(CATEGORY_SCHEMA_URI)
                         .id("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json")
                 );
 
@@ -119,9 +119,9 @@ class RelatedObjectFactoryTest {
                 .schemaUri(schemaUri)
                 .type(new RelatedObjectType()
                         .id(type)
-                        .schemaUri(TYPE_SCHEME_URI))
+                        .schemaUri(TYPE_SCHEMA_URI))
                 .category(new RelatedObjectCategory()
-                        .schemaUri(CATEGORY_SCHEME_URI)
+                        .schemaUri(CATEGORY_SCHEMA_URI)
                         .id("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/output.json")
                 );
 
@@ -149,9 +149,9 @@ class RelatedObjectFactoryTest {
                 .schemaUri(schemaUri)
                 .type(new RelatedObjectType()
                         .id(type)
-                        .schemaUri(TYPE_SCHEME_URI))
+                        .schemaUri(TYPE_SCHEMA_URI))
                 .category(new RelatedObjectCategory()
-                        .schemaUri(CATEGORY_SCHEME_URI)
+                        .schemaUri(CATEGORY_SCHEMA_URI)
                         .id("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/internal.json")
                 );
 

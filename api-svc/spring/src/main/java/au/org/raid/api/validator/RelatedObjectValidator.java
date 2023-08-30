@@ -16,8 +16,8 @@ import static au.org.raid.api.util.StringUtil.isBlank;
 
 @Service
 public class RelatedObjectValidator {
-    private static final String RELATED_OBJECT_SCHEME_URI = "https://doi.org/";
-    private static final String RELATED_OBJECT_TYPE_SCHEME_URI =
+    private static final String RELATED_OBJECT_SCHEMA_URI = "https://doi.org/";
+    private static final String RELATED_OBJECT_TYPE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/related-object-type/";
 
     private static final String RELATED_OBJECT_TYPE_URL_PREFIX =
@@ -63,11 +63,11 @@ public class RelatedObjectValidator {
                                 .fieldId(String.format("relatedObjects[%d].schemaUri", index))
                                 .errorType(NOT_SET_TYPE)
                                 .message(NOT_SET_MESSAGE));
-                    } else if (!relatedObject.getSchemaUri().equals(RELATED_OBJECT_SCHEME_URI)) {
+                    } else if (!relatedObject.getSchemaUri().equals(RELATED_OBJECT_SCHEMA_URI)) {
                         failures.add(new ValidationFailure()
                                 .fieldId(String.format("relatedObjects[%d].schemaUri", index))
                                 .errorType("invalid")
-                                .message(String.format("Only %s is supported.", RELATED_OBJECT_SCHEME_URI)));
+                                .message(String.format("Only %s is supported.", RELATED_OBJECT_SCHEMA_URI)));
                     }
 
                     failures.addAll(typeValidationService.validate(relatedObject.getType(), index));

@@ -22,7 +22,7 @@ public class ContributorPositionFactory {
                     "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/contact-person.json"
             );
 
-    private static final String SCHEME_URI =
+    private static final String SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/";
 
     public ContributorPositionWithSchemaUri create(final ContributorPosition position) {
@@ -32,7 +32,7 @@ public class ContributorPositionFactory {
 
         return new ContributorPositionWithSchemaUri()
                 .id(position.getPosition() != null ? POSITION_MAP.get(position.getPosition()) : null)
-                .schemaUri(SCHEME_URI)
+                .schemaUri(SCHEMA_URI)
                 .startDate(position.getStartDate())
                 .endDate(position.getEndDate());
     }

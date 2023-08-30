@@ -12,8 +12,8 @@ import java.util.stream.IntStream;
 
 @Service
 public class RelatedObjectValidationService {
-    private static final String RELATED_OBJECT_SCHEME_URI = "https://doi.org/";
-    private static final String RELATED_OBJECT_TYPE_SCHEME_URI =
+    private static final String RELATED_OBJECT_SCHEMA_URI = "https://doi.org/";
+    private static final String RELATED_OBJECT_TYPE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/";
 
     private static final String RELATED_OBJECT_TYPE_URL_PREFIX =
@@ -60,11 +60,11 @@ public class RelatedObjectValidationService {
                                 .fieldId(String.format("relatedObjects[%d].relatedObjectSchemeUri", i))
                                 .errorType("required")
                                 .message("This is a required field."));
-                    } else if (!relatedObject.getRelatedObjectSchemeUri().equals(RELATED_OBJECT_SCHEME_URI)) {
+                    } else if (!relatedObject.getRelatedObjectSchemeUri().equals(RELATED_OBJECT_SCHEMA_URI)) {
                         failures.add(new ValidationFailure()
                                 .fieldId(String.format("relatedObjects[%d].relatedObjectSchemeUri", i))
                                 .errorType("invalid")
-                                .message(String.format("Only %s is supported.", RELATED_OBJECT_SCHEME_URI)));
+                                .message(String.format("Only %s is supported.", RELATED_OBJECT_SCHEMA_URI)));
                     }
 
                     if (relatedObject.getRelatedObjectType() == null) {
@@ -90,11 +90,11 @@ public class RelatedObjectValidationService {
                                 .errorType("required")
                                 .message("This is a required field."));
 
-                    } else if (!relatedObject.getRelatedObjectTypeSchemeUri().equals(RELATED_OBJECT_TYPE_SCHEME_URI)) {
+                    } else if (!relatedObject.getRelatedObjectTypeSchemeUri().equals(RELATED_OBJECT_TYPE_SCHEMA_URI)) {
                         failures.add(new ValidationFailure()
                                 .fieldId(String.format("relatedObjects[%d].relatedObjectTypeSchemeUri", i))
                                 .errorType("invalid")
-                                .message(String.format("Only %s is supported.", RELATED_OBJECT_TYPE_SCHEME_URI)));
+                                .message(String.format("Only %s is supported.", RELATED_OBJECT_TYPE_SCHEMA_URI)));
                     }
 
                     if (relatedObject.getRelatedObjectCategory() == null) {

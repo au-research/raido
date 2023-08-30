@@ -17,7 +17,7 @@ class ContributorPositionFactoryTest {
     private static final LocalDate START_DATE = LocalDate.now().minusYears(2);
     private static final LocalDate END_DATE = LocalDate.now().minusYears(1);
 
-    private static final String SCHEME_URI =
+    private static final String SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/";
 
     private final ContributorPositionFactory positionFactory = new ContributorPositionFactory();
@@ -35,7 +35,7 @@ class ContributorPositionFactoryTest {
                 .startDate(START_DATE)
                 .endDate(END_DATE)
                 .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json")
-                .schemaUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = positionFactory.create(position);
 
@@ -55,7 +55,7 @@ class ContributorPositionFactoryTest {
                 .startDate(START_DATE)
                 .endDate(END_DATE)
                 .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/co-investigator.json")
-                .schemaUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = positionFactory.create(position);
 
@@ -75,7 +75,7 @@ class ContributorPositionFactoryTest {
                 .startDate(START_DATE)
                 .endDate(END_DATE)
                 .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/contact-person.json")
-                .schemaUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = positionFactory.create(position);
 
@@ -95,7 +95,7 @@ class ContributorPositionFactoryTest {
                 .startDate(START_DATE)
                 .endDate(END_DATE)
                 .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/other-participant.json")
-                .schemaUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = positionFactory.create(position);
 
@@ -115,7 +115,7 @@ class ContributorPositionFactoryTest {
                 .startDate(START_DATE)
                 .endDate(END_DATE)
                 .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/principal-investigator.json")
-                .schemaUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = positionFactory.create(position);
 
@@ -135,6 +135,6 @@ class ContributorPositionFactoryTest {
                 .startDate(null)
                 .endDate(null)
                 .id(null)
-                .schemaUri(SCHEME_URI)));
+                .schemaUri(SCHEMA_URI)));
     }
 }

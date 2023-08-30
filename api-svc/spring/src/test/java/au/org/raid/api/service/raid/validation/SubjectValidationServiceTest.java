@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class SubjectValidationServiceTest {
-    private static final String SUBJECT_SCHEME_URI = "https://linked.data.gov.au/def/anzsrc-for/2020/";
+    private static final String SUBJECT_SCHEMA_URI = "https://linked.data.gov.au/def/anzsrc-for/2020/";
 
     @Mock
     private SubjectTypeRepository subjectTypeRepository;
@@ -36,7 +36,7 @@ class SubjectValidationServiceTest {
 
         final var subject = new SubjectBlock()
                 .subject(id)
-                .subjectSchemeUri(SUBJECT_SCHEME_URI);
+                .subjectSchemeUri(SUBJECT_SCHEMA_URI);
 
         when(subjectTypeRepository.findById("222222")).thenReturn(Optional.of(new SubjectTypeRecord()));
 
@@ -57,7 +57,7 @@ class SubjectValidationServiceTest {
 
         final var subject = new SubjectBlock()
                 .subject(id)
-                .subjectSchemeUri(SUBJECT_SCHEME_URI);
+                .subjectSchemeUri(SUBJECT_SCHEMA_URI);
 
         final List<ValidationFailure> validationFailures = validationService.validateSubjects(Collections.singletonList(subject));
 
@@ -75,7 +75,7 @@ class SubjectValidationServiceTest {
 
         final var subject = new SubjectBlock()
                 .subject(id)
-                .subjectSchemeUri(SUBJECT_SCHEME_URI);
+                .subjectSchemeUri(SUBJECT_SCHEMA_URI);
 
         final List<ValidationFailure> validationFailures = validationService.validateSubjects(Collections.singletonList(subject));
 
@@ -93,7 +93,7 @@ class SubjectValidationServiceTest {
 
         final var subject = new SubjectBlock()
                 .subject(id)
-                .subjectSchemeUri(SUBJECT_SCHEME_URI);
+                .subjectSchemeUri(SUBJECT_SCHEMA_URI);
 
         when(subjectTypeRepository.findById("222222")).thenReturn(Optional.empty());
 

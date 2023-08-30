@@ -15,7 +15,7 @@ import static au.org.raid.api.util.ObjectUtil.indexed;
 @Component
 public class SubjectValidationService {
 
-    private static final String SUBJECT_SCHEME_URI = "https://linked.data.gov.au/def/anzsrc-for/2020/";
+    private static final String SUBJECT_SCHEMA_URI = "https://linked.data.gov.au/def/anzsrc-for/2020/";
     private final SubjectTypeRepository subjectTypeRepository;
 
     public SubjectValidationService(final SubjectTypeRepository subjectTypeRepository) {
@@ -33,10 +33,10 @@ public class SubjectValidationService {
         subjects.stream().
                 collect(indexed()).
                 forEach((i, subject) -> {
-                    if (subject.getSubjectSchemeUri() == null || !subject.getSubjectSchemeUri().equals(SUBJECT_SCHEME_URI)) {
+                    if (subject.getSubjectSchemeUri() == null || !subject.getSubjectSchemeUri().equals(SUBJECT_SCHEMA_URI)) {
                         final var failure = new ValidationFailure();
                         failure.setFieldId(String.format("subjects[%d].subjectSchemeUri", i));
-                        failure.setMessage(String.format("must be %s", SUBJECT_SCHEME_URI));
+                        failure.setMessage(String.format("must be %s", SUBJECT_SCHEMA_URI));
                         failure.setErrorType("invalid");
 
                         failures.add(failure);
@@ -52,7 +52,7 @@ public class SubjectValidationService {
                     } else {
                         final var subjectId = subject.getSubject().substring(subject.getSubject().lastIndexOf('/') + 1);
 
-                        if (!subject.getSubject().startsWith(SUBJECT_SCHEME_URI) || subjectId.matches(".*\\D.*")) {
+                        if (!subject.getSubject().startsWith(SUBJECT_SCHEMA_URI) || subjectId.matches(".*\\D.*")) {
                             final var failure = new ValidationFailure();
                             failure.setFieldId(String.format("subjects[%d].subject", i));
                             failure.setMessage(String.format("%s is not a valid field of research", subject.getSubject()));

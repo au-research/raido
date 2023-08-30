@@ -43,7 +43,7 @@ public class ContributorRoleFactory {
                             "https://credit.niso.org/contributor-roles/writing-review-editing/")
             );
 
-    private static final String SCHEME_URI =
+    private static final String SCHEMA_URI =
             "https://credit.niso.org/";
 
     public ContributorRoleWithSchemaUri create(final ContributorRole role) {
@@ -53,6 +53,6 @@ public class ContributorRoleFactory {
 
         return new ContributorRoleWithSchemaUri()
                 .id(role.getRole() != null ? ROLE_MAP.get(role.getRole()) : null)
-                .schemaUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
     }
 }

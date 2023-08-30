@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
 class OrganisationRoleFactoryTest {
-    private static final String SCHEME_URI =
+    private static final String SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/";
 
     private final OrganisationRoleFactory roleFactory = new OrganisationRoleFactory();
@@ -26,7 +26,7 @@ class OrganisationRoleFactoryTest {
 
         final var expected = new OrganisationRoleWithSchemaUri()
                 .id("https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json")
-                .schemaUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = roleFactory.create(role);
 
@@ -42,7 +42,7 @@ class OrganisationRoleFactoryTest {
 
         final var expected = new OrganisationRoleWithSchemaUri()
                 .id("https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json")
-                .schemaUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = roleFactory.create(role);
 
@@ -58,7 +58,7 @@ class OrganisationRoleFactoryTest {
 
         final var expected = new OrganisationRoleWithSchemaUri()
                 .id("https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/other-organisation.json")
-                .schemaUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = roleFactory.create(role);
 
@@ -74,7 +74,7 @@ class OrganisationRoleFactoryTest {
 
         final var expected = new OrganisationRoleWithSchemaUri()
                 .id("https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/other-research-organisation.json")
-                .schemaUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = roleFactory.create(role);
 
@@ -90,7 +90,7 @@ class OrganisationRoleFactoryTest {
 
         final var expected = new OrganisationRoleWithSchemaUri()
                 .id("https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/partner-organisation.json")
-                .schemaUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = roleFactory.create(role);
 
@@ -108,6 +108,6 @@ class OrganisationRoleFactoryTest {
     void emptyFields() {
         assertThat(roleFactory.create(new OrganisationRole()), is(new OrganisationRoleWithSchemaUri()
                 .id(null)
-                .schemaUri(SCHEME_URI)));
+                .schemaUri(SCHEMA_URI)));
     }
 }

@@ -13,7 +13,7 @@ import static au.org.raid.api.util.StringUtil.isBlank;
 
 @Component
 public class TraditionalKnowledgeLabelValidator {
-    private static final List<String> VALID_SCHEME_URIS = List.of(
+    private static final List<String> VALID_SCHEMA_URIS = List.of(
             "https://localcontexts.org/labels/traditional-knowledge-labels/",
             "https://localcontexts.org/labels/biocultural-labels/"
     );
@@ -36,7 +36,7 @@ public class TraditionalKnowledgeLabelValidator {
                                 .fieldId(String.format("traditionalKnowledgeLabels[%d].schemaUri", i))
                                 .errorType(NOT_SET_TYPE)
                                 .message(NOT_SET_MESSAGE));
-                    } else if (!VALID_SCHEME_URIS.contains(label.getSchemaUri())) {
+                    } else if (!VALID_SCHEMA_URIS.contains(label.getSchemaUri())) {
                         failures.add(new ValidationFailure()
                                 .errorType(INVALID_VALUE_TYPE)
                                 .fieldId(String.format("traditionalKnowledgeLabels[%d].schemaUri", i))

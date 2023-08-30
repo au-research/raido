@@ -30,43 +30,43 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class RaidoSchemaV1Test extends IntegrationTestCase {
 
     public static ContributorBlock createDummyLeaderContributor(LocalDate today) {
-        return new ContributorBlock().
-                id(REAL_TEST_ORCID).
-                identifierSchemeUri(HTTPS_ORCID_ORG_).
-                positions(List.of(new ContributorPosition().
-                        positionSchemaUri(HTTPS_RAID_ORG_).
-                        position(LEADER).
-                        startDate(today))).
-                roles(List.of(
-                        new ContributorRole().
-                                roleSchemeUri(HTTPS_CREDIT_NISO_ORG_).
-                                role(PROJECT_ADMINISTRATION)));
+        return new ContributorBlock()
+                .id(REAL_TEST_ORCID)
+                .identifierSchemeUri(HTTPS_ORCID_ORG_)
+                .positions(List.of(new ContributorPosition()
+                        .positionSchemaUri(HTTPS_RAID_ORG_)
+                        .position(LEADER)
+                        .startDate(today)))
+                .roles(List.of(
+                        new ContributorRole()
+                                .roleSchemeUri(HTTPS_CREDIT_NISO_ORG_)
+                                .role(PROJECT_ADMINISTRATION)));
     }
 
     public static OrganisationBlock createDummyOrganisation(LocalDate today) {
-        return new OrganisationBlock().
-                id(REAL_TEST_ROR).
-                identifierSchemeUri(OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_).
-                roles(List.of(
-                        new OrganisationRole().
-                                roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_).
-                                role(OrganisationRoleType.LEAD_RESEARCH_ORGANISATION)
+        return new OrganisationBlock()
+                .id(REAL_TEST_ROR)
+                .identifierSchemeUri(OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_)
+                .roles(List.of(
+                        new OrganisationRole()
+                                .roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_)
+                                .role(OrganisationRoleType.LEAD_RESEARCH_ORGANISATION)
                                 .startDate(today)));
     }
 
     public static RaidoMetadataSchemaV1 mapRaidMetadataToRaido(
             PublicRaidMetadataSchemaV1 in
     ) {
-        return new RaidoMetadataSchemaV1().
-                metadataSchema(RAIDOMETADATASCHEMAV1).
-                id(in.getId()).
-                dates(in.getDates()).
-                titles(in.getTitles()).
-                descriptions(in.getDescriptions()).
-                alternateUrls(in.getAlternateUrls()).
-                contributors(in.getContributors()).
-                organisations(in.getOrganisations()).
-                access(in.getAccess());
+        return new RaidoMetadataSchemaV1()
+                .metadataSchema(RAIDOMETADATASCHEMAV1)
+                .id(in.getId())
+                .dates(in.getDates())
+                .titles(in.getTitles())
+                .descriptions(in.getDescriptions())
+                .alternateUrls(in.getAlternateUrls())
+                .contributors(in.getContributors())
+                .organisations(in.getOrganisations())
+                .access(in.getAccess());
     }
 
     @Test
@@ -215,19 +215,19 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
 
         WHEN("minting a raid with minimal content with empty primaryTitle");
         var mintResult = raidApi.mintRaidoSchemaV1(
-                new MintRaidoSchemaV1Request().
-                        mintRequest(new MintRaidoSchemaV1RequestMintRequest().
-                                servicePointId(RAIDO_SP_ID)).
-                        metadata(new RaidoMetadataSchemaV1().
-                                metadataSchema(RAIDOMETADATASCHEMAV1).
-                                titles(List.of(new TitleBlock().
-                                        type(PRIMARY_TITLE).
-                                        title(" ").
-                                        startDate(null))).
-                                contributors(List.of(createDummyLeaderContributor(today))).
-                                organisations(List.of(createDummyOrganisation(today))).
-                                dates(new DatesBlock().startDate(today)).
-                                access(new AccessBlock().type(OPEN))
+                new MintRaidoSchemaV1Request()
+                        .mintRequest(new MintRaidoSchemaV1RequestMintRequest()
+                                .servicePointId(RAIDO_SP_ID))
+                        .metadata(new RaidoMetadataSchemaV1()
+                                .metadataSchema(RAIDOMETADATASCHEMAV1)
+                                .titles(List.of(new TitleBlock()
+                                        .type(PRIMARY_TITLE)
+                                        .title(" ")
+                                        .startDate(null)))
+                                .contributors(List.of(createDummyLeaderContributor(today)))
+                                .organisations(List.of(createDummyOrganisation(today)))
+                                .dates(new DatesBlock().startDate(today))
+                                .access(new AccessBlock().type(OPEN))
                         )
         );
         THEN("validation failure should result");
