@@ -31,12 +31,7 @@ public class SpatialCoverageValidator {
                 .forEach(i -> {
                     final var spatialCoverage = spatialCoverages.get(i);
 
-                    if (isBlank(spatialCoverage.getId())) {
-                        failures.add(new ValidationFailure()
-                                .fieldId(String.format("spatialCoverages[%d].id", i))
-                                .errorType(NOT_SET_TYPE)
-                                .message(FIELD_MUST_BE_SET_MESSAGE));
-                    }
+
                     if (isBlank(spatialCoverage.getSchemeUri())) {
                         failures.add(new ValidationFailure()
                                 .fieldId(String.format("spatialCoverages[%d].schemeUri", i))
@@ -51,9 +46,15 @@ public class SpatialCoverageValidator {
                     failures.addAll(
                             languageValidationService.validate(spatialCoverage.getLanguage(), "spatialCoverages[%d]".formatted(i))
                     );
-                    failures.addAll(geoNamesUriValidator.validate(
-                            spatialCoverage.getId(), String.format("spatialCoverages[%d].id", i)
-                    ));
+                    if (isBlank(spatialCoverage.getId())) {
+                        failures.add(new ValidationFailure()
+                                .fieldId(String.format("spatialCoverages[%d].id", i))
+                                .errorType(NOT_SET_TYPE)
+                                .message(FIELD_MUST_BE_SET_MESSAGE));
+                    } else {
+                        failures.addAll(geoNamesUriValidator
+                                .validate(spatialCoverage.getId(), String.format("spatialCoverages[%d].id", i)));
+                    }
                 });
 
         return failures;
