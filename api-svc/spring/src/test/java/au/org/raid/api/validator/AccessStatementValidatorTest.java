@@ -1,7 +1,6 @@
-package au.org.raid.api.service.raid.validation;
+package au.org.raid.api.validator;
 
 import au.org.raid.api.util.TestConstants;
-import au.org.raid.api.validator.LanguageValidator;
 import au.org.raid.idl.raidv2.model.AccessStatement;
 import au.org.raid.idl.raidv2.model.Language;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
@@ -21,12 +20,12 @@ import static org.hamcrest.Matchers.empty;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class AccessStatementValidationServiceTest {
+class AccessStatementValidatorTest {
     @Mock
     private LanguageValidator languageValidator;
 
     @InjectMocks
-    private AccessStatementValidationService validationService;
+    private AccessStatementValidator validationService;
 
     @Test
     @DisplayName("Valid access statement returns no errors")

@@ -1,6 +1,5 @@
-package au.org.raid.api.service.raid.validation;
+package au.org.raid.api.validator;
 
-import au.org.raid.api.validator.LanguageValidator;
 import au.org.raid.idl.raidv2.model.AccessStatement;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,7 @@ import static au.org.raid.api.util.StringUtil.isBlank;
 
 @Component
 @RequiredArgsConstructor
-public class AccessStatementValidationService {
+public class AccessStatementValidator {
     private final LanguageValidator languageValidator;
 
     public List<ValidationFailure> validate(final AccessStatement accessStatement) {

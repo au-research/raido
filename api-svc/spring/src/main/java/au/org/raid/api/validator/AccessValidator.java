@@ -1,7 +1,6 @@
 package au.org.raid.api.validator;
 
 import au.org.raid.api.endpoint.message.ValidationMessage;
-import au.org.raid.api.service.raid.validation.AccessStatementValidationService;
 import au.org.raid.idl.raidv2.model.Access;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,7 @@ public class AccessValidator {
     private static final String ACCESS_TYPE_OPEN =
             "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json";
     private final AccessTypeValidator typeValidationService;
-    private final AccessStatementValidationService accessStatementValidationService;
+    private final AccessStatementValidator accessStatementValidator;
 
     public List<ValidationFailure> validate(
             Access access
@@ -45,10 +44,12 @@ public class AccessValidator {
                 final var typeId = access.getType().getId();
 
                 if (!typeId.equals(ACCESS_TYPE_OPEN)) { // TODO: needs to be validated regardless of access type
-                    failures.addAll(
-                            accessStatementValidationService.validate(access.getAccessStatement())
-                    );
-
+                    if (access.getAccessStatement() == null) {
+                        failures.add(new ValidationFailure()
+                                .fieldId("access.accessStatement")
+                                .errorType(NOT_SET_TYPE)
+                                .message(NOT_SET_MESSAGE));
+                    }
                 }
                 if (typeId.equals(ACCESS_TYPE_EMBARGOED) && access.getEmbargoExpiry() == null) {
                     failures.add(new ValidationFailure()
@@ -56,6 +57,11 @@ public class AccessValidator {
                             .fieldId("access.embargoExpiry")
                             .message(NOT_SET_MESSAGE));
                 }
+            }
+            if (access.getAccessStatement() != null) {
+                failures.addAll(
+                        accessStatementValidator.validate(access.getAccessStatement())
+                );
             }
         }
 

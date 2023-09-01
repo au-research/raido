@@ -1,11 +1,7 @@
 package au.org.raid.api.validator;
 
-import au.org.raid.api.service.raid.validation.AccessStatementValidationService;
 import au.org.raid.api.util.TestConstants;
-import au.org.raid.idl.raidv2.model.Access;
-import au.org.raid.idl.raidv2.model.AccessStatement;
-import au.org.raid.idl.raidv2.model.AccessTypeWithSchemaUri;
-import au.org.raid.idl.raidv2.model.ValidationFailure;
+import au.org.raid.idl.raidv2.model.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,19 +16,18 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class AccessValidatorTest {
     @Mock
-    private AccessStatementValidationService accessStatementValidationService;
+    private AccessStatementValidator accessStatementValidator;
 
     @Mock
-    private AccessTypeValidator accessTypeValidationService;
+    private AccessTypeValidator accessTypeValidator;
 
     @InjectMocks
-    private AccessValidator validationService;
+    private AccessValidator validator;
 
     @Test
     @DisplayName("Validation passes on closed raid with correct fields")
@@ -45,10 +40,10 @@ class AccessValidatorTest {
                 .type(type)
                 .accessStatement(new AccessStatement().statement("Closed"));
 
-        final List<ValidationFailure> failures = validationService.validate(access);
+        final List<ValidationFailure> failures = validator.validate(access);
 
         assertThat(failures, empty());
-        verify(accessTypeValidationService).validate(type);
+        verify(accessTypeValidator).validate(type);
     }
 
     @Test
@@ -63,7 +58,7 @@ class AccessValidatorTest {
                 .accessStatement(new AccessStatement().statement("Embargoed"))
                 .embargoExpiry(LocalDate.now());
 
-        final List<ValidationFailure> failures = validationService.validate(access);
+        final List<ValidationFailure> failures = validator.validate(access);
 
         assertThat(failures, empty());
     }
@@ -84,9 +79,7 @@ class AccessValidatorTest {
                 .errorType("notSet")
                 .message("field must be set");
 
-        when(accessStatementValidationService.validate(null)).thenReturn(List.of(failure));
-
-        final List<ValidationFailure> failures = validationService.validate(access);
+        final List<ValidationFailure> failures = validator.validate(access);
 
         assertThat(failures.size(), is(1));
         assertThat(failures, hasItem(failure));
@@ -110,9 +103,9 @@ class AccessValidatorTest {
                 .errorType("notSet")
                 .message("field must be set");
 
-        when(accessStatementValidationService.validate(accessStatement)).thenReturn(List.of(failure));
+        when(accessStatementValidator.validate(accessStatement)).thenReturn(List.of(failure));
 
-        final List<ValidationFailure> failures = validationService.validate(access);
+        final List<ValidationFailure> failures = validator.validate(access);
 
         assertThat(failures.size(), is(1));
         assertThat(failures, hasItem(failure));
@@ -137,9 +130,9 @@ class AccessValidatorTest {
                 .errorType("notSet")
                 .message("field must be set");
 
-        when(accessStatementValidationService.validate(accessStatement)).thenReturn(List.of(failure));
+        when(accessStatementValidator.validate(accessStatement)).thenReturn(List.of(failure));
 
-        final List<ValidationFailure> failures = validationService.validate(access);
+        final List<ValidationFailure> failures = validator.validate(access);
 
         assertThat(failures.size(), is(1));
         assertThat(failures, hasItem(failure));
@@ -150,7 +143,7 @@ class AccessValidatorTest {
     void missingType() {
         final var access = new Access();
 
-        final List<ValidationFailure> failures = validationService.validate(access);
+        final List<ValidationFailure> failures = validator.validate(access);
 
         assertThat(failures.size(), is(1));
         assertThat(failures, hasItem(
@@ -172,7 +165,7 @@ class AccessValidatorTest {
                 .type(type)
                 .accessStatement(new AccessStatement().statement("access statement"));
 
-        final List<ValidationFailure> failures = validationService.validate(access);
+        final List<ValidationFailure> failures = validator.validate(access);
 
         assertThat(failures.size(), is(1));
         assertThat(failures, hasItem(
@@ -181,5 +174,50 @@ class AccessValidatorTest {
                         .errorType("notSet")
                         .message("field must be set")
         ));
+    }
+
+    @Test
+    @DisplayName("Validation fails on open raid with invalid access statement")
+    void openRaidWithInvalidAccessStatement() {
+        final var type = new AccessTypeWithSchemaUri()
+                .id(TestConstants.OPEN_ACCESS_TYPE_ID)
+                .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
+
+        final var accessStatement = new AccessStatement()
+                .language(new Language()
+                        .id("eng")
+                        .schemaUri("blah"));
+
+        final var access = new Access()
+                .type(type)
+                .accessStatement(accessStatement);
+
+        final var failure = new ValidationFailure();
+
+        when(accessStatementValidator.validate(accessStatement)).thenReturn(List.of(failure));
+
+        final List<ValidationFailure> failures = validator.validate(access);
+
+        assertThat(failures, is(List.of(failure)));
+        verify(accessTypeValidator).validate(type);
+        verify(accessStatementValidator).validate(accessStatement);
+    }
+
+    @Test
+    @DisplayName("Validation passes on open raid without access statement")
+    void openRaidNoAccessStatement() {
+        final var type = new AccessTypeWithSchemaUri()
+                .id(TestConstants.OPEN_ACCESS_TYPE_ID)
+                .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
+
+
+        final var access = new Access()
+                .type(type);
+
+        final List<ValidationFailure> failures = validator.validate(access);
+
+        assertThat(failures, empty());
+        verify(accessTypeValidator).validate(type);
+        verifyNoInteractions(accessStatementValidator);
     }
 }
