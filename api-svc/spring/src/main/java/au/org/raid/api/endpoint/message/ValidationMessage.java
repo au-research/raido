@@ -12,11 +12,12 @@ public class ValidationMessage {
     public static final String NOT_SET_TYPE = "notSet";
     public static final String TOO_LONG_TYPE = "tooLong";
     public static final String INVALID_VALUE_TYPE = "invalidValue";
+    public static final String DUPLICATE_TYPE = "duplicateValue";
+    public static final String DUPLICATE_MESSAGE = "an object with the same values appears in the list";
     public static final String DISALLOWED_CHANGE_TYPE = "disallowedChange";
 
     public static final String NOT_SET_MESSAGE = "field must be set";
-    public static final String INVALID_VALUE_MESSAGE =
-            "has invalid/unsupported value";
+    public static final String INVALID_VALUE_MESSAGE = "has invalid/unsupported value";
     public static final String INVALID_ID_FOR_SCHEMA = "id does not exist within the given schema";
 
     public static final String INVALID_SCHEMA = "schema is unknown/unsupported";

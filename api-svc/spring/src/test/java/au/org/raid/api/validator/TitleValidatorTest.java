@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -55,6 +56,96 @@ class TitleValidatorTest {
     }
 
     @Test
+    @DisplayName("Validation fails when primary title is duplicated")
+    void duplicatePrimaryTitle() {
+        final var type = new TitleTypeWithSchemaUri()
+                .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
+                .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
+
+        final var language = new Language()
+                .id(TestConstants.LANGUAGE_ID)
+                .schemaUri(TestConstants.LANGUAGE_SCHEMA_URI);
+
+        final var title1 = new Title()
+                .type(type)
+                .title(TestConstants.TITLE)
+                .startDate(LocalDate.now().minusYears(2))
+                .language(language);
+
+        final var title2 = new Title()
+                .type(type)
+                .title(TestConstants.TITLE)
+                .startDate(LocalDate.now().minusYears(3))
+                .endDate(LocalDate.now().minusYears(2))
+                .language(language);
+
+        final var title3 = new Title()
+                .type(type)
+                .title(TestConstants.TITLE)
+                .startDate(LocalDate.now().minusYears(2))
+                .language(language);
+
+        final var failures = validationService.validate(List.of(title1, title2, title3));
+
+        assertThat(failures, is(List.of(
+                new ValidationFailure()
+                        .fieldId("titles[0]")
+                        .errorType("duplicateValue")
+                        .message("an object with the same values appears in the list")
+        )));
+        verify(typeValidationService).validate(type, 0);
+        verify(languageValidator).validate(language, "titles[0]");
+    }
+
+    @Test
+    @DisplayName("Validation fails when primary titles overlap")
+    void PrimaryTitlesOverlap() {
+        final var type = new TitleTypeWithSchemaUri()
+                .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
+                .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
+
+        final var language = new Language()
+                .id(TestConstants.LANGUAGE_ID)
+                .schemaUri(TestConstants.LANGUAGE_SCHEMA_URI);
+
+        final var title1 = new Title()
+                .type(type)
+                .title(TestConstants.TITLE)
+                .startDate(LocalDate.now().minusYears(3))
+                .endDate(LocalDate.now().minusYears(1))
+                .language(language);
+
+        final var title2 = new Title()
+                .type(type)
+                .title(TestConstants.TITLE)
+                .startDate(LocalDate.now().minusYears(3))
+                .endDate(LocalDate.now().minusYears(2))
+                .language(language);
+
+        final var title3 = new Title()
+                .type(type)
+                .title(TestConstants.TITLE)
+                .startDate(LocalDate.now().minusYears(4))
+                .endDate(LocalDate.now().minusYears(1))
+                .language(language);
+
+        final var failures = validationService.validate(List.of(title1, title2, title3));
+
+        assertThat(failures, is(List.of(
+                new ValidationFailure()
+                        .fieldId("titles[1].startDate")
+                        .errorType("invalidValue")
+                        .message("There can only be one primary title in any given period. The start date for this title overlaps with titles[2]"),
+                new ValidationFailure()
+                        .fieldId("titles[0].startDate")
+                        .errorType("invalidValue")
+                        .message("There can only be one primary title in any given period. The start date for this title overlaps with titles[1]")
+        )));
+        verify(typeValidationService).validate(type, 0);
+        verify(languageValidator).validate(language, "titles[0]");
+    }
+
+    @Test
     @DisplayName("Validation fails if primary title is missing")
     void missingPrimaryTitle() {
         final var type = new TitleTypeWithSchemaUri()
@@ -69,35 +160,11 @@ class TitleValidatorTest {
 
         final var failures = validationService.validate(List.of(title));
 
-        assertThat(failures, hasSize(1));
-        assertThat(failures, hasItem(
+        assertThat(failures, is(List.of(
                 new ValidationFailure()
                         .fieldId("titles.type")
                         .errorType("missingPrimaryTitle")
-                        .message("at least one primaryTitle entry must be provided")));
-    }
-
-    @Test
-    @DisplayName("Validation fails if more than one primary title")
-    void multiplePrimaryTitles() {
-        final var type = new TitleTypeWithSchemaUri()
-                .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
-                .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
-
-        final var title = new Title()
-                .type(type)
-                .title(TestConstants.TITLE)
-                .startDate(TestConstants.START_DATE)
-                .endDate(TestConstants.END_DATE);
-
-        final var failures = validationService.validate(List.of(title, title));
-
-        assertThat(failures, hasSize(1));
-        assertThat(failures, hasItem(
-                new ValidationFailure()
-                        .fieldId("titles.type")
-                        .errorType("tooManyPrimaryTitle")
-                        .message("too many primaryTitle entries provided")));
+                        .message("at least one primaryTitle entry must be provided"))));
     }
 
     @Test

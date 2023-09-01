@@ -5,8 +5,10 @@ import au.org.raid.idl.raidv2.model.ValidationFailure;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static au.org.raid.api.endpoint.message.ValidationMessage.*;
@@ -36,7 +38,8 @@ public class TitleValidator {
         }
 
         if (primaryTitles.size() > 1) {
-            return List.of(TOO_MANY_PRIMARY_TITLE);
+            // check dates
+            return validatePrimaryTitleDates(titles);
         }
 
         return emptyList();
@@ -76,5 +79,51 @@ public class TitleValidator {
         return titles.stream().filter(title ->
                 title.getType().getId() != null && title.getType().getId().equals(PRIMARY_TITLE_TYPE)
         ).toList();
+    }
+
+    private List<ValidationFailure> validatePrimaryTitleDates(final List<Title> titles) {
+        final var failures = new ArrayList<ValidationFailure>();
+        final var today = LocalDate.now();
+
+        var primaryTitles = titles.stream()
+                .filter(title -> title.getType().getId().equals(PRIMARY_TITLE_TYPE))
+                .sorted((o1, o2) -> {
+                            if (o1.getStartDate().equals(o2.getStartDate())) {
+                                final var o1EndDate = o1.getEndDate() == null ? LocalDate.now() : o1.getEndDate();
+                                final var o2EndDate = o2.getEndDate() == null ? LocalDate.now() : o2.getEndDate();
+
+                                return o1EndDate.compareTo(o2EndDate);
+                            }
+                            return o1.getStartDate().compareTo(o2.getStartDate());
+                        })
+                .collect(Collectors.toCollection(ArrayList::new));
+
+//        IntStream.range(1, primaryTitles.size()).forEach(i -> {
+
+        for (int i = 1; i < primaryTitles.size(); i++) {
+            final var previous = primaryTitles.get(i - 1);
+            final var title = primaryTitles.get(i);
+            final var previousIndex = titles.indexOf(previous);
+            final var index = titles.indexOf(title);
+
+            final var endDate = (previous.getEndDate() != null) ? previous.getEndDate() : today;
+
+            if (title.equals(previous)) {
+                return List.of(new ValidationFailure()
+                        .fieldId("titles[%d]".formatted(index))
+                        .errorType(DUPLICATE_TYPE)
+                        .message(DUPLICATE_MESSAGE)
+                );
+            } else if (title.getStartDate().isBefore(endDate)) {
+                failures.add(new ValidationFailure()
+                        .fieldId("titles[%d].startDate".formatted(index))
+                        .errorType(INVALID_VALUE_TYPE)
+                        .message("There can only be one primary title in any given period. The start date for this title overlaps with titles[%d]".formatted(previousIndex))
+                );
+
+            }
+        }
+
+        return failures;
     }
 }
