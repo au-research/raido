@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 
@@ -72,7 +73,7 @@ class ContributorValidatorTest {
         final var position = new ContributorPositionWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/other-participant.json")
-                .startDate(LocalDate.now());
+                .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         final var contributor = new Contributor()
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
@@ -138,7 +139,7 @@ class ContributorValidatorTest {
         final var position = new ContributorPositionWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
-                .startDate(LocalDate.now());
+                .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         final var contributor = new Contributor()
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
@@ -164,7 +165,7 @@ class ContributorValidatorTest {
         final var position = new ContributorPositionWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
-                .startDate(LocalDate.now());
+                .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         final var contributor = new Contributor()
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
@@ -202,30 +203,253 @@ class ContributorValidatorTest {
     }
 
     @Test
-    @DisplayName("Validation fails with more than one lead position")
-    void multipleLeadPositions() {
-        final var role = new ContributorRoleWithSchemaUri()
+    @DisplayName("Validation fails with conflicting lead positions - year-month-day dates")
+    void conflictingLeadPositions() {
+        final var role1 = new ContributorRoleWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-        final var position = new ContributorPositionWithSchemaUri()
+        final var position1 = new ContributorPositionWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
-                .startDate(LocalDate.now());
+                .startDate(LocalDate.now().minusYears(3).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE));
 
-        final var contributor = new Contributor()
+        final var contributor1 = new Contributor()
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
-                .roles(List.of(role))
-                .positions(List.of(position));
+                .roles(List.of(role1))
+                .positions(List.of(position1));
 
-        final var failures = validationService.validate(List.of(contributor, contributor));
+        final var role2 = new ContributorRoleWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
+                .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
+
+        final var position2 = new ContributorPositionWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
+                .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
+                .startDate(LocalDate.now().minusYears(3).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE));
+
+        final var contributor2 = new Contributor()
+                .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                .id(TestConstants.VALID_ORCID)
+                .roles(List.of(role2))
+                .positions(List.of(position2));
+
+        final var failures = validationService.validate(List.of(contributor2, contributor1));
 
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(new ValidationFailure()
-                .fieldId("contributors.positions")
+                .fieldId("contributors[1].positions[0]")
                 .errorType("invalidValue")
-                .message("only one leader can be specified")));
+                .message("There can only be one leader in any given period. The position at contributors[0].positions[0] conflicts with this position.")));
+    }
+
+    @Test
+    @DisplayName("Validation fails with conflicting lead positions - year-month dates")
+    void conflictingLeadPositionsWithYearMonthDates() {
+        final var role1 = new ContributorRoleWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
+                .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
+
+        final var position1 = new ContributorPositionWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
+                .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
+                .startDate("2021-01")
+                .endDate("2023-09");
+
+        final var contributor1 = new Contributor()
+                .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                .id(TestConstants.VALID_ORCID)
+                .roles(List.of(role1))
+                .positions(List.of(position1));
+
+        final var role2 = new ContributorRoleWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
+                .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
+
+        final var position2 = new ContributorPositionWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
+                .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
+                .startDate("2022-04")
+                .endDate("2022-12");
+
+        final var contributor2 = new Contributor()
+                .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                .id(TestConstants.VALID_ORCID)
+                .roles(List.of(role2))
+                .positions(List.of(position2));
+
+        final var failures = validationService.validate(List.of(contributor1, contributor2));
+
+        assertThat(failures, is(List.of(new ValidationFailure()
+                .fieldId("contributors[1].positions[0]")
+                .errorType("invalidValue")
+                .message("There can only be one leader in any given period. The position at contributors[0].positions[0] conflicts with this position."))));
+    }
+
+    @Test
+    @DisplayName("Validation fails with conflicting lead positions - year dates")
+    void conflictingLeadPositionsWithYearDates() {
+        final var role1 = new ContributorRoleWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
+                .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
+
+        final var position1 = new ContributorPositionWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
+                .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
+                .startDate("2021")
+                .endDate("2023");
+
+        final var contributor1 = new Contributor()
+                .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                .id(TestConstants.VALID_ORCID)
+                .roles(List.of(role1))
+                .positions(List.of(position1));
+
+        final var role2 = new ContributorRoleWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
+                .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
+
+        final var position2 = new ContributorPositionWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
+                .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
+                .startDate("2022")
+                .endDate("2022");
+
+        final var contributor2 = new Contributor()
+                .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                .id(TestConstants.VALID_ORCID)
+                .roles(List.of(role2))
+                .positions(List.of(position2));
+
+        final var failures = validationService.validate(List.of(contributor1, contributor2));
+
+        assertThat(failures, is(List.of(new ValidationFailure()
+                .fieldId("contributors[1].positions[0]")
+                .errorType("invalidValue")
+                .message("There can only be one leader in any given period. The position at contributors[0].positions[0] conflicts with this position."))));
+    }
+
+    @Test
+    @DisplayName("Validation passes with multiple lead positions - year dates")
+    void multipleLeadPositionsWithYearsAsDates() {
+        final var role1 = new ContributorRoleWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
+                .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
+
+        final var position1 = new ContributorPositionWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
+                .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
+                .startDate("2020")
+                .endDate("2021");
+
+        final var contributor1 = new Contributor()
+                .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                .id(TestConstants.VALID_ORCID)
+                .roles(List.of(role1))
+                .positions(List.of(position1));
+
+        final var role2 = new ContributorRoleWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
+                .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
+
+        final var position2 = new ContributorPositionWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
+                .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
+                .startDate("2022")
+                .endDate("2023");
+
+        final var contributor2 = new Contributor()
+                .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                .id(TestConstants.VALID_ORCID)
+                .roles(List.of(role2))
+                .positions(List.of(position2));
+
+        final var failures = validationService.validate(List.of(contributor2, contributor1));
+
+        assertThat(failures, empty());
+    }
+
+    @Test
+    @DisplayName("Validation passes with multiple lead positions - year-month dates")
+    void multipleLeadPositionsWithYearMonthDates() {
+        final var role1 = new ContributorRoleWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
+                .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
+
+        final var position1 = new ContributorPositionWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
+                .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
+                .startDate("2020-01")
+                .endDate("2021-06");
+
+        final var contributor1 = new Contributor()
+                .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                .id(TestConstants.VALID_ORCID)
+                .roles(List.of(role1))
+                .positions(List.of(position1));
+
+        final var role2 = new ContributorRoleWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
+                .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
+
+        final var position2 = new ContributorPositionWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
+                .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
+                .startDate("2021-06")
+                .endDate("2023-06");
+
+        final var contributor2 = new Contributor()
+                .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                .id(TestConstants.VALID_ORCID)
+                .roles(List.of(role2))
+                .positions(List.of(position2));
+
+        final var failures = validationService.validate(List.of(contributor2, contributor1));
+
+        assertThat(failures, empty());
+    }
+
+    @Test
+    @DisplayName("Validation passes with multiple lead positions - year-month-day dates")
+    void multipleLeadPositionsWithYearMonthDayDates() {
+        final var role1 = new ContributorRoleWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
+                .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
+
+        final var position1 = new ContributorPositionWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
+                .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
+                .startDate("2020-01-01")
+                .endDate("2021-06-01");
+
+        final var contributor1 = new Contributor()
+                .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                .id(TestConstants.VALID_ORCID)
+                .roles(List.of(role1))
+                .positions(List.of(position1));
+
+        final var role2 = new ContributorRoleWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
+                .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
+
+        final var position2 = new ContributorPositionWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
+                .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
+                .startDate("2021-06-01")
+                .endDate("2023-06-01");
+
+        final var contributor2 = new Contributor()
+                .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                .id(TestConstants.VALID_ORCID)
+                .roles(List.of(role2))
+                .positions(List.of(position2));
+
+        final var failures = validationService.validate(List.of(contributor2, contributor1));
+
+        assertThat(failures, empty());
     }
 
     @Test
@@ -238,7 +462,7 @@ class ContributorValidatorTest {
         final var position = new ContributorPositionWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
-                .startDate(LocalDate.now());
+                .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         final var contributor = new Contributor()
                 .id(TestConstants.VALID_ORCID)
@@ -268,7 +492,7 @@ class ContributorValidatorTest {
         final var position = new ContributorPositionWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
-                .startDate(LocalDate.now());
+                .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         final var contributor = new Contributor()
                 .id(TestConstants.VALID_ORCID)
@@ -299,7 +523,7 @@ class ContributorValidatorTest {
         final var position = new ContributorPositionWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
-                .startDate(LocalDate.now());
+                .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         final var contributor = new Contributor()
                 .id(TestConstants.VALID_ORCID)

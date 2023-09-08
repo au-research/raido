@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import static au.org.raid.api.util.TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI;
@@ -53,8 +54,8 @@ class ContributorPositionValidatorTest {
         final var position = new ContributorPositionWithSchemaUri()
                 .id(LEADER_CONTRIBUTOR_POSITION)
                 .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
-                .startDate(LocalDate.now().minusYears(1))
-                .endDate(LocalDate.now());
+                .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         when(contributorPositionSchemaRepository.findByUri(CONTRIBUTOR_POSITION_SCHEMA_URI))
                 .thenReturn(Optional.of(CONTRIBUTOR_POSITION_TYPE_SCHEMA_RECORD));
@@ -73,8 +74,8 @@ class ContributorPositionValidatorTest {
     void nullSchemaUri() {
         final var position = new ContributorPositionWithSchemaUri()
                 .id(LEADER_CONTRIBUTOR_POSITION)
-                .startDate(LocalDate.now().minusYears(1))
-                .endDate(LocalDate.now());
+                .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         final var failures = validationService.validate(position, 2, 3);
 
@@ -96,8 +97,8 @@ class ContributorPositionValidatorTest {
         final var position = new ContributorPositionWithSchemaUri()
                 .schemaUri("")
                 .id(LEADER_CONTRIBUTOR_POSITION)
-                .startDate(LocalDate.now().minusYears(1))
-                .endDate(LocalDate.now());
+                .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         final var failures = validationService.validate(position, 2, 3);
 
@@ -119,8 +120,8 @@ class ContributorPositionValidatorTest {
         final var position = new ContributorPositionWithSchemaUri()
                 .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(LEADER_CONTRIBUTOR_POSITION)
-                .startDate(LocalDate.now().minusYears(1))
-                .endDate(LocalDate.now());
+                .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         when(contributorPositionSchemaRepository.findByUri(CONTRIBUTOR_POSITION_SCHEMA_URI))
                 .thenReturn(Optional.empty());
@@ -143,8 +144,8 @@ class ContributorPositionValidatorTest {
     void nullPosition() {
         final var position = new ContributorPositionWithSchemaUri()
                 .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
-                .startDate(LocalDate.now().minusYears(1))
-                .endDate(LocalDate.now());
+                .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         when(contributorPositionSchemaRepository.findByUri(CONTRIBUTOR_POSITION_SCHEMA_URI))
                 .thenReturn(Optional.of(CONTRIBUTOR_POSITION_TYPE_SCHEMA_RECORD));
@@ -168,8 +169,8 @@ class ContributorPositionValidatorTest {
         final var position = new ContributorPositionWithSchemaUri()
                 .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id("")
-                .startDate(LocalDate.now().minusYears(1))
-                .endDate(LocalDate.now());
+                .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         when(contributorPositionSchemaRepository.findByUri(CONTRIBUTOR_POSITION_SCHEMA_URI))
                 .thenReturn(Optional.of(CONTRIBUTOR_POSITION_TYPE_SCHEMA_RECORD));
@@ -193,8 +194,8 @@ class ContributorPositionValidatorTest {
         final var position = new ContributorPositionWithSchemaUri()
                 .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(LEADER_CONTRIBUTOR_POSITION)
-                .startDate(LocalDate.now().minusYears(1))
-                .endDate(LocalDate.now());
+                .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         when(contributorPositionSchemaRepository.findByUri(CONTRIBUTOR_POSITION_SCHEMA_URI))
                 .thenReturn(Optional.of(CONTRIBUTOR_POSITION_TYPE_SCHEMA_RECORD));
@@ -220,7 +221,7 @@ class ContributorPositionValidatorTest {
         final var position = new ContributorPositionWithSchemaUri()
                 .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(LEADER_CONTRIBUTOR_POSITION)
-                .endDate(LocalDate.now());
+                .endDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         when(contributorPositionSchemaRepository.findByUri(CONTRIBUTOR_POSITION_SCHEMA_URI))
                 .thenReturn(Optional.of(CONTRIBUTOR_POSITION_TYPE_SCHEMA_RECORD));

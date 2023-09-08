@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
@@ -164,7 +165,7 @@ public class AbstractIntegrationTest {
                 .positions(List.of(new ContributorPositionWithSchemaUri()
                         .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                         .id(position)
-                        .startDate(startDate)))
+                        .startDate(startDate.format(DateTimeFormatter.ISO_LOCAL_DATE))))
                 .roles(List.of(
                         new ContributorRoleWithSchemaUri()
                                 .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)

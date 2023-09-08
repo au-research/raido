@@ -692,8 +692,8 @@ class RaidoStableV1Test {
                 .endDate(startDate.plusMonths(6));
 
         raid.getContributors().get(0).getPositions().get(0)
-                .startDate(startDate)
-                .endDate(startDate.plusMonths(6));
+                .startDate(startDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(startDate.plusMonths(6).format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         raid.getOrganisations().get(0).getRoles().get(0)
                 .startDate(startDate)

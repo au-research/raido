@@ -6,6 +6,7 @@ import au.org.raid.inttest.RaidApiValidationException;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static au.org.raid.api.service.stub.InMemoryStubTestData.*;
@@ -123,7 +124,7 @@ public class InvalidPidTest extends IntegrationTestCase {
                 .positions(List.of(new ContributorPositionWithSchemaUri()
                         .schemaUri(CONTRIBUTOR_POSITION_SCHEME_URI)
                         .id(LEADER_POSITION)
-                        .startDate(today)))
+                        .startDate(today.format(DateTimeFormatter.ISO_LOCAL_DATE))))
                 .roles(List.of(
                         new ContributorRoleWithSchemaUri()
                                 .schemaUri(CONTRIBUTOR_ROLE_SCHEME_URI)

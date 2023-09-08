@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
@@ -93,13 +94,13 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
                                             new ContributorPositionWithSchemaUri()
                                                     .id(TestConstants.LEADER_POSITION)
                                                     .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
-                                                    .startDate(metadata.getContributors().get(0).getPositions().get(0).getStartDate())
-                                                    .endDate(metadata.getContributors().get(0).getPositions().get(0).getEndDate()),
+                                                    .startDate(metadata.getContributors().get(0).getPositions().get(0).getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                                    .endDate(metadata.getContributors().get(0).getPositions().get(0).getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE)),
                                             new ContributorPositionWithSchemaUri()
                                                     .id(TestConstants.PRINCIPAL_INVESTIGATOR_POSITION)
                                                     .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
-                                                    .startDate(metadata.getContributors().get(0).getPositions().get(1).getStartDate())
-                                                    .endDate(metadata.getContributors().get(0).getPositions().get(1).getEndDate())))
+                                                    .startDate(metadata.getContributors().get(0).getPositions().get(1).getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                                    .endDate(metadata.getContributors().get(0).getPositions().get(1).getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE))))
                                     .roles(List.of(
                                             new ContributorRoleWithSchemaUri()
                                                     .id(TestConstants.CONCEPTUALIZATION_CONTRIBUTOR_ROLE)
@@ -114,13 +115,13 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
                                             new ContributorPositionWithSchemaUri()
                                                     .id(TestConstants.OTHER_PARTICIPANT_POSITION)
                                                     .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
-                                                    .startDate(metadata.getContributors().get(1).getPositions().get(0).getStartDate())
-                                                    .endDate(metadata.getContributors().get(1).getPositions().get(0).getEndDate()),
+                                                    .startDate(metadata.getContributors().get(1).getPositions().get(0).getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                                    .endDate(metadata.getContributors().get(1).getPositions().get(0).getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE)),
                                             new ContributorPositionWithSchemaUri()
                                                     .id(TestConstants.CONTACT_PERSON_POSITION)
                                                     .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
-                                                    .startDate(metadata.getContributors().get(1).getPositions().get(1).getStartDate())
-                                                    .endDate(metadata.getContributors().get(1).getPositions().get(1).getEndDate())))
+                                                    .startDate(metadata.getContributors().get(1).getPositions().get(1).getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                                    .endDate(metadata.getContributors().get(1).getPositions().get(1).getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE))))
                                     .roles(List.of(
                                             new ContributorRoleWithSchemaUri()
                                                     .id(TestConstants.WRITING_REVIEW_EDITING_CONTRIBUTOR_ROLE)

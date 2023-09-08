@@ -5,6 +5,7 @@ import au.org.raid.idl.raidv2.model.ContributorPositionRaidMetadataSchemaType;
 import au.org.raid.idl.raidv2.model.ContributorPositionWithSchemaUri;
 import org.springframework.stereotype.Component;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @Component
@@ -30,10 +31,16 @@ public class ContributorPositionFactory {
             return null;
         }
 
+        var startDate = (position.getStartDate() != null) ?
+                position.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE) : null;
+
+        var endDate = (position.getEndDate() != null) ?
+                position.getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE) : null;
+
         return new ContributorPositionWithSchemaUri()
                 .id(position.getPosition() != null ? POSITION_MAP.get(position.getPosition()) : null)
                 .schemaUri(SCHEMA_URI)
-                .startDate(position.getStartDate())
-                .endDate(position.getEndDate());
+                .startDate(startDate)
+                .endDate(endDate);
     }
 }

@@ -98,8 +98,6 @@ public class TitleValidator {
                         })
                 .collect(Collectors.toCollection(ArrayList::new));
 
-//        IntStream.range(1, primaryTitles.size()).forEach(i -> {
-
         for (int i = 1; i < primaryTitles.size(); i++) {
             final var previous = primaryTitles.get(i - 1);
             final var title = primaryTitles.get(i);

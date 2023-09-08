@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 
@@ -70,7 +71,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                         .id("https://orcid.org/0000-0000-0000-0001")
                         .positions(List.of(
                                 new ContributorPositionWithSchemaUri()
-                                        .startDate(LocalDate.now())
+                                        .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                         .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                         .id(LEADER_POSITION)
                         ))
@@ -107,7 +108,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                         .id("https://orcid.org/0000-0000-0000-0001")
                         .positions(List.of(
                                 new ContributorPositionWithSchemaUri()
-                                        .startDate(LocalDate.now())
+                                        .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                         .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                         .id(LEADER_POSITION)
                         ))
@@ -143,7 +144,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                         .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                         .positions(List.of(
                                 new ContributorPositionWithSchemaUri()
-                                        .startDate(LocalDate.now())
+                                        .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                         .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                         .id(LEADER_POSITION)
                         ))
@@ -180,7 +181,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                         .id("")
                         .positions(List.of(
                                 new ContributorPositionWithSchemaUri()
-                                        .startDate(LocalDate.now())
+                                        .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                         .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                         .id(LEADER_POSITION)
                         ))
@@ -280,7 +281,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                         .id("https://orcid.org/0000-0000-0000-0001")
                         .positions(List.of(
                                 new ContributorPositionWithSchemaUri()
-                                        .startDate(LocalDate.now())
+                                        .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                         .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                         .id(OTHER_PARTICIPANT_POSITION)
                         )).roles(List.of(
@@ -319,7 +320,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                             .id("https://orcid.org/0000-0c00-0000-0000")
                             .positions(List.of(
                                     new ContributorPositionWithSchemaUri()
-                                            .startDate(LocalDate.now())
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(LEADER_POSITION)
                             ))
@@ -354,7 +355,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                             .id("https://orcid.org/0000-0000-0000-0000")
                             .positions(List.of(
                                     new ContributorPositionWithSchemaUri()
-                                            .startDate(LocalDate.now())
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(LEADER_POSITION)
                             ))
@@ -391,7 +392,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                             .id("https://orcid.org/0000-0001-0000-0009")
                             .positions(List.of(
                                     new ContributorPositionWithSchemaUri()
-                                            .startDate(LocalDate.now())
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(LEADER_POSITION)
                             ))
@@ -432,7 +433,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                             .id("https://orcid.org/0000-0000-0000-0001")
                             .positions(List.of(
                                     new ContributorPositionWithSchemaUri()
-                                            .startDate(LocalDate.now())
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .id(LEADER_POSITION)
                             )).roles(List.of(
                                     new ContributorRoleWithSchemaUri()
@@ -467,11 +468,11 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                             .id("https://orcid.org/0000-0000-0000-0001")
                             .positions(List.of(
                                     new ContributorPositionWithSchemaUri()
-                                            .startDate(LocalDate.now())
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(LEADER_POSITION),
                                     new ContributorPositionWithSchemaUri()
-                                            .startDate(LocalDate.now())
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                             ))
                             .roles(List.of(
@@ -507,11 +508,11 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                             .id("https://orcid.org/0000-0000-0000-0001")
                             .positions(List.of(
                                     new ContributorPositionWithSchemaUri()
-                                            .startDate(LocalDate.now())
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(LEADER_POSITION),
                                     new ContributorPositionWithSchemaUri()
-                                            .startDate(LocalDate.now())
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri("https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v2")
                                             .id(OTHER_PARTICIPANT_POSITION)
                             ))
@@ -548,11 +549,11 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                             .id("https://orcid.org/0000-0000-0000-0001")
                             .positions(List.of(
                                     new ContributorPositionWithSchemaUri()
-                                            .startDate(LocalDate.now())
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(LEADER_POSITION),
                                     new ContributorPositionWithSchemaUri()
-                                            .startDate(LocalDate.now())
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/unknown.json")
                             ))
@@ -594,7 +595,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                             .positions(List.of(
                                     new ContributorPositionWithSchemaUri()
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
-                                            .startDate(LocalDate.now())
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .id(LEADER_POSITION)
                             ))
                             .roles(List.of(
@@ -630,11 +631,11 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                             .id("https://orcid.org/0000-0000-0000-0001")
                             .positions(List.of(
                                     new ContributorPositionWithSchemaUri()
-                                            .startDate(LocalDate.now())
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(LEADER_POSITION),
                                     new ContributorPositionWithSchemaUri()
-                                            .startDate(LocalDate.now())
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(OTHER_PARTICIPANT_POSITION)
                             ))
@@ -670,11 +671,11 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                             .id("https://orcid.org/0000-0000-0000-0001")
                             .positions(List.of(
                                     new ContributorPositionWithSchemaUri()
-                                            .startDate(LocalDate.now())
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(LEADER_POSITION),
                                     new ContributorPositionWithSchemaUri()
-                                            .startDate(LocalDate.now())
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(OTHER_PARTICIPANT_POSITION)
                             ))
@@ -711,11 +712,11 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                             .id("https://orcid.org/0000-0000-0000-0001")
                             .positions(List.of(
                                     new ContributorPositionWithSchemaUri()
-                                            .startDate(LocalDate.now())
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(LEADER_POSITION),
                                     new ContributorPositionWithSchemaUri()
-                                            .startDate(LocalDate.now())
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(OTHER_PARTICIPANT_POSITION)
                             ))

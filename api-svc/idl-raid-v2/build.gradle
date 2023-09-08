@@ -31,7 +31,7 @@ compileJava {
 
 sourceSets{
   main.java{
-    srcDirs += [generateDirName]
+    srcDirs += [generateDirName, ]
   }
 }
 

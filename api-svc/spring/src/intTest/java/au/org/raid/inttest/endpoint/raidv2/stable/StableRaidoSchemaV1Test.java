@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static au.org.raid.inttest.endpoint.raidv2.stable.TestConstants.*;
@@ -139,7 +140,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
                 .positions(List.of(new ContributorPositionWithSchemaUri()
                         .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                         .id(position)
-                        .startDate(startDate)))
+                        .startDate(startDate.format(DateTimeFormatter.ISO_LOCAL_DATE))))
                 .roles(List.of(
                         new ContributorRoleWithSchemaUri()
                                 .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)

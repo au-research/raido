@@ -1,11 +1,14 @@
 package au.org.raid.api.validator;
 
+import au.org.raid.api.exception.InvalidDateException;
 import au.org.raid.idl.raidv2.model.Contributor;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 
 import static au.org.raid.api.endpoint.message.ValidationMessage.*;
@@ -99,13 +102,93 @@ public class ContributorValidator {
                     errorType(INVALID_VALUE_TYPE).
                     message("leader must be specified"));
         } else if (leaders.size() > 1) {
-            failures.add(new ValidationFailure().
-                    fieldId("contributors.positions").
-                    errorType(INVALID_VALUE_TYPE).
-                    message("only one leader can be specified"));
+            // validate dates
+
+            failures.addAll(validateLeadContributors(contributors));
         }
 
         return failures;
     }
+
+
+
+
+
+    private List<ValidationFailure> validateLeadContributors(final List<Contributor> contributors) {
+        final var failures = new ArrayList<ValidationFailure>();
+        final var today = LocalDate.now();
+
+
+        final List<Map<String, Object>> positions = new ArrayList<>();
+
+        for (int contributorIndex = 0; contributorIndex < contributors.size(); contributorIndex++) {
+            final var contributor = contributors.get(contributorIndex);
+
+            for (int positionIndex = 0; positionIndex < contributors.get(contributorIndex).getPositions().size(); positionIndex++) {
+                final var position = contributor.getPositions().get(positionIndex);
+
+                positions.add(Map.of(
+                        "contributorIndex", contributorIndex,
+                        "positionIndex", positionIndex,
+                        "leader", position.getId().equals(LEADER_POSITION),
+                        "startDate", position.getStartDate(),
+                        "endDate", position.getEndDate()
+                ));
+            }
+        }
+
+        List<Map<String, Object>> leaders = positions.stream()
+                .filter(map -> (boolean) map.get("leader"))
+                .sorted((o1, o2) -> {
+                    if (getDate((String) o1.get("startDate")).equals(getDate((String)o2.get("startDate")))) {
+                        return getDate((String) o1.get("endDate")).compareTo(getDate((String) o2.get("endDate")));
+                    }
+                    return getDate((String) o1.get("startDate")).compareTo(getDate((String) o2.get("startDate")));
+                })
+                .toList();
+
+        for (int i = 1; i < leaders.size(); i++) {
+            var previousEntry = leaders.get(i - 1);
+            var entry = leaders.get(i);
+
+            final var start = getDate((String) entry.get("startDate"));
+            final var previousEnd = previousEntry.get("endDate") == null ?
+                    LocalDate.now() : getDate((String) previousEntry.get("endDate"));
+
+            if (start.isBefore(previousEnd)) {
+                failures.add(new ValidationFailure()
+                        .fieldId("contributors[%d].positions[%d]".formatted(
+                                (int) entry.get("contributorIndex"), (int) entry.get("positionIndex")
+                        ))
+                        .errorType(INVALID_VALUE_TYPE)
+                        .message(String.format("There can only be one leader in any given period. The position at contributors[%d].positions[%d] conflicts with this position."
+                                .formatted((int) previousEntry.get("contributorIndex"), (int) previousEntry.get("positionIndex")))
+                        )
+                );
+
+            }
+
+        }
+
+        return failures;
+    }
+
+
+    private LocalDate getDate(final String date) {
+
+        if (date.matches("\\d{4}")) {
+            return LocalDate.of(Integer.parseInt(date), 1, 1);
+        } else if (date.matches("\\d{4}-\\d{2}")) {
+            var yearMonth = date.split("-");
+            return LocalDate.of(Integer.parseInt(yearMonth[0]), Integer.parseInt(yearMonth[1]), 1);
+        } else if (date.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            var yearMonthDay = date.split("-");
+            return LocalDate.of(Integer.parseInt(yearMonthDay[0]), Integer.parseInt(yearMonthDay[1]), Integer.parseInt(yearMonthDay[2]));
+        } else {
+            throw new InvalidDateException(date);
+        }
+
+    }
+
 }
 

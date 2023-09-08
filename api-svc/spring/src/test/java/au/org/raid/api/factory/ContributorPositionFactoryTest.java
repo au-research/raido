@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -32,8 +33,8 @@ class ContributorPositionFactoryTest {
                 .positionSchemaUri(ContributorPositionSchemeType.HTTPS_RAID_ORG_);
 
         final var expected = new ContributorPositionWithSchemaUri()
-                .startDate(START_DATE)
-                .endDate(END_DATE)
+                .startDate(START_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(END_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json")
                 .schemaUri(SCHEMA_URI);
 
@@ -52,8 +53,8 @@ class ContributorPositionFactoryTest {
                 .positionSchemaUri(ContributorPositionSchemeType.HTTPS_RAID_ORG_);
 
         final var expected = new ContributorPositionWithSchemaUri()
-                .startDate(START_DATE)
-                .endDate(END_DATE)
+                .startDate(START_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(END_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/co-investigator.json")
                 .schemaUri(SCHEMA_URI);
 
@@ -72,8 +73,8 @@ class ContributorPositionFactoryTest {
                 .positionSchemaUri(ContributorPositionSchemeType.HTTPS_RAID_ORG_);
 
         final var expected = new ContributorPositionWithSchemaUri()
-                .startDate(START_DATE)
-                .endDate(END_DATE)
+                .startDate(START_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(END_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/contact-person.json")
                 .schemaUri(SCHEMA_URI);
 
@@ -92,8 +93,8 @@ class ContributorPositionFactoryTest {
                 .positionSchemaUri(ContributorPositionSchemeType.HTTPS_RAID_ORG_);
 
         final var expected = new ContributorPositionWithSchemaUri()
-                .startDate(START_DATE)
-                .endDate(END_DATE)
+                .startDate(START_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(END_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/other-participant.json")
                 .schemaUri(SCHEMA_URI);
 
@@ -112,8 +113,8 @@ class ContributorPositionFactoryTest {
                 .positionSchemaUri(ContributorPositionSchemeType.HTTPS_RAID_ORG_);
 
         final var expected = new ContributorPositionWithSchemaUri()
-                .startDate(START_DATE)
-                .endDate(END_DATE)
+                .startDate(START_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(END_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/principal-investigator.json")
                 .schemaUri(SCHEMA_URI);
 

@@ -328,12 +328,10 @@ components:
           example: https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json
         }
         startDate: {
-          type: string,
-          format: date
+          type: string
         }
         endDate: {
-          type: string,
-          format: date
+          type: string
         }
     ContributorRoleWithSchemaUri:
       type: object
