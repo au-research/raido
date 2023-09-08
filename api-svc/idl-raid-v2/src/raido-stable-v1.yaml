@@ -315,6 +315,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ContributorRoleWithSchemaUri'
+        leader:
+          type: boolean
+        contact:
+          type: boolean
     ContributorPositionWithSchemaUri:
       type: object
       required: [ schemaUri, id, startDate ]
