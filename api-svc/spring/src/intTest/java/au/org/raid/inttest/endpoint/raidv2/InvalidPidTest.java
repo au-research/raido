@@ -61,7 +61,7 @@ public class InvalidPidTest extends IntegrationTestCase {
 
         return List.of(new Description()
                 .type(descriptionType)
-                .description(description)
+                .text(description)
         );
     }
 
@@ -73,14 +73,14 @@ public class InvalidPidTest extends IntegrationTestCase {
         var today = LocalDate.now();
 
         EXPECT("minting a raid with non-existent PIDs should fail");
-        assertThatThrownBy(() -> raidApi.createRaidV1(new CreateRaidV1Request().
-                titles(titles(initialTitle)).
-                dates(new Dates().startDate(today)).
-                descriptions(descriptions("used for testing non-existent pids")).
-                contributors(contributors(NONEXISTENT_TEST_ORCID)).
-                organisations(organisations(NONEXISTENT_TEST_ROR)).
-                relatedObjects(relatedObjects(NONEXISTENT_TEST_DOI)).
-                access(new Access()
+        assertThatThrownBy(() -> raidApi.createRaidV1(new CreateRaidV1Request()
+                .title(titles(initialTitle))
+                .date(new Dates().startDate(today.format(DateTimeFormatter.ISO_LOCAL_DATE)))
+                .description(descriptions("used for testing non-existent pids"))
+                .contributor(contributors(NONEXISTENT_TEST_ORCID))
+                .organisation(organisations(NONEXISTENT_TEST_ROR))
+                .relatedObject(relatedObjects(NONEXISTENT_TEST_DOI))
+                .access(new Access()
                         .type(new AccessTypeWithSchemaUri()
                                 .id(ACCESS_TYPE_OPEN)
                                 .schemaUri(ACCESS_TYPE_SCHEME_URI))
@@ -110,8 +110,8 @@ public class InvalidPidTest extends IntegrationTestCase {
                         .id(PRIMARY_TITLE_TYPE)
                         .schemaUri(TITLE_TYPE_SCHEME_URI)
                 )
-                .title(title)
-                .startDate(LocalDate.now()));
+                .text(title)
+                .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)));
     }
 
     public List<Contributor> contributors(
@@ -121,11 +121,11 @@ public class InvalidPidTest extends IntegrationTestCase {
         return List.of(new Contributor()
                 .id(orcid)
                 .schemaUri(CONTRIBUTOR_SCHEME_URI)
-                .positions(List.of(new ContributorPositionWithSchemaUri()
+                .position(List.of(new ContributorPositionWithSchemaUri()
                         .schemaUri(CONTRIBUTOR_POSITION_SCHEME_URI)
                         .id(LEADER_POSITION)
                         .startDate(today.format(DateTimeFormatter.ISO_LOCAL_DATE))))
-                .roles(List.of(
+                .role(List.of(
                         new ContributorRoleWithSchemaUri()
                                 .schemaUri(CONTRIBUTOR_ROLE_SCHEME_URI)
                                 .id(SUPERVISION_ROLE))));
@@ -143,11 +143,11 @@ public class InvalidPidTest extends IntegrationTestCase {
         return new Organisation()
                 .id(ror)
                 .schemaUri(ORGANISATION_SCHEME_URI)
-                .roles(List.of(
+                .role(List.of(
                         new OrganisationRoleWithSchemaUri()
                                 .schemaUri(ORGANISATION_ROLE_SCHEME_URI)
                                 .id(role)
-                                .startDate(today)));
+                                .startDate(today.format(DateTimeFormatter.ISO_LOCAL_DATE))));
     }
 
     public List<RelatedObject> relatedObjects(String doi) {

@@ -40,8 +40,8 @@ public class ContributorFactory {
         return new Contributor()
                 .id(contributorBlock.getId())
                 .schemaUri(identifierSchemeUri)
-                .positions(positions)
-                .roles(roles);
+                .position(positions)
+                .role(roles);
 
 
     }

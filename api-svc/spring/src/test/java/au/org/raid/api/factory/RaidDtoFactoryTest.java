@@ -80,8 +80,8 @@ class RaidDtoFactoryTest {
 
         // not sure why some fields are empty lists and others are null
         final var expected = new RaidDto()
-                .titles(new ArrayList<>())
-                .contributors(new ArrayList<>());
+                .title(new ArrayList<>())
+                .contributor(new ArrayList<>());
 
         when(objectMapper.readValue("", RaidoMetadataSchemaV1.class)).thenReturn(new RaidoMetadataSchemaV1());
 
@@ -139,7 +139,7 @@ class RaidDtoFactoryTest {
 
             final var result = raidDtoFactory.create(raidRecord);
 
-            assertThat(result.getId(), is(id));
+            assertThat(result.getIdentifier(), is(id));
         }
 
         @Test
@@ -153,8 +153,8 @@ class RaidDtoFactoryTest {
 
             final var result = raidDtoFactory.create(raidRecord);
 
-            assertThat(result.getTitles().get(0), is(title1));
-            assertThat(result.getTitles().get(1), is(title2));
+            assertThat(result.getTitle().get(0), is(title1));
+            assertThat(result.getTitle().get(1), is(title2));
         }
 
         @Test
@@ -167,8 +167,8 @@ class RaidDtoFactoryTest {
             when(descriptionFactory.create(raidoMetadataSchemaV1.getDescriptions().get(1))).thenReturn(description2);
             final var result = raidDtoFactory.create(raidRecord);
 
-            assertThat(result.getDescriptions().get(0), is(description1));
-            assertThat(result.getDescriptions().get(1), is(description2));
+            assertThat(result.getDescription().get(0), is(description1));
+            assertThat(result.getDescription().get(1), is(description2));
         }
 
         @Test
@@ -181,8 +181,8 @@ class RaidDtoFactoryTest {
             when(contributorFactory.create(raidoMetadataSchemaV1.getContributors().get(1))).thenReturn(contributor2);
             final var result = raidDtoFactory.create(raidRecord);
 
-            assertThat(result.getContributors().get(0), is(contributor1));
-            assertThat(result.getContributors().get(1), is(contributor2));
+            assertThat(result.getContributor().get(0), is(contributor1));
+            assertThat(result.getContributor().get(1), is(contributor2));
         }
 
         @Test
@@ -195,8 +195,8 @@ class RaidDtoFactoryTest {
             when(organisationFactory.create(raidoMetadataSchemaV1.getOrganisations().get(1))).thenReturn(organisation2);
             final var result = raidDtoFactory.create(raidRecord);
 
-            assertThat(result.getOrganisations().get(0), is(organisation1));
-            assertThat(result.getOrganisations().get(1), is(organisation2));
+            assertThat(result.getOrganisation().get(0), is(organisation1));
+            assertThat(result.getOrganisation().get(1), is(organisation2));
         }
 
         @Test
@@ -209,8 +209,8 @@ class RaidDtoFactoryTest {
             when(relatedObjectFactory.create(raidoMetadataSchemaV1.getRelatedObjects().get(1))).thenReturn(relatedObject2);
             final var result = raidDtoFactory.create(raidRecord);
 
-            assertThat(result.getRelatedObjects().get(0), is(relatedObject1));
-            assertThat(result.getRelatedObjects().get(1), is(relatedObject2));
+            assertThat(result.getRelatedObject().get(0), is(relatedObject1));
+            assertThat(result.getRelatedObject().get(1), is(relatedObject2));
         }
 
         @Test
@@ -223,8 +223,8 @@ class RaidDtoFactoryTest {
             when(alternateIdentifierFactory.create(raidoMetadataSchemaV1.getAlternateIdentifiers().get(1))).thenReturn(alternateIdentifier2);
             final var result = raidDtoFactory.create(raidRecord);
 
-            assertThat(result.getAlternateIdentifiers().get(0), is(alternateIdentifier1));
-            assertThat(result.getAlternateIdentifiers().get(1), is(alternateIdentifier2));
+            assertThat(result.getAlternateIdentifier().get(0), is(alternateIdentifier1));
+            assertThat(result.getAlternateIdentifier().get(1), is(alternateIdentifier2));
         }
 
         @Test
@@ -237,8 +237,8 @@ class RaidDtoFactoryTest {
             when(alternateUrlFactory.create(raidoMetadataSchemaV1.getAlternateUrls().get(1))).thenReturn(alternateUrl2);
             final var result = raidDtoFactory.create(raidRecord);
 
-            assertThat(result.getAlternateUrls().get(0), is(alternateUrl1));
-            assertThat(result.getAlternateUrls().get(1), is(alternateUrl2));
+            assertThat(result.getAlternateUrl().get(0), is(alternateUrl1));
+            assertThat(result.getAlternateUrl().get(1), is(alternateUrl2));
         }
 
         @Test
@@ -251,8 +251,8 @@ class RaidDtoFactoryTest {
             when(relatedRaidFactory.create(raidoMetadataSchemaV1.getRelatedRaids().get(1))).thenReturn(relatedRaid2);
             final var result = raidDtoFactory.create(raidRecord);
 
-            assertThat(result.getRelatedRaids().get(0), is(relatedRaid1));
-            assertThat(result.getRelatedRaids().get(1), is(relatedRaid2));
+            assertThat(result.getRelatedRaid().get(0), is(relatedRaid1));
+            assertThat(result.getRelatedRaid().get(1), is(relatedRaid2));
         }
 
         @Test
@@ -265,8 +265,8 @@ class RaidDtoFactoryTest {
             when(subjectFactory.create(raidoMetadataSchemaV1.getSubjects().get(1))).thenReturn(subject2);
             final var result = raidDtoFactory.create(raidRecord);
 
-            assertThat(result.getSubjects().get(0), is(subject1));
-            assertThat(result.getSubjects().get(1), is(subject2));
+            assertThat(result.getSubject().get(0), is(subject1));
+            assertThat(result.getSubject().get(1), is(subject2));
         }
 
         @Test
@@ -279,8 +279,8 @@ class RaidDtoFactoryTest {
             when(traditionalKnowledgeLabelFactory.create(raidoMetadataSchemaV1.getTraditionalKnowledgeLabels().get(1))).thenReturn(traditionalKnowledgeLabel2);
             final var result = raidDtoFactory.create(raidRecord);
 
-            assertThat(result.getTraditionalKnowledgeLabels().get(0), is(traditionalKnowledgeLabel1));
-            assertThat(result.getTraditionalKnowledgeLabels().get(1), is(traditionalKnowledgeLabel2));
+            assertThat(result.getTraditionalKnowledgeLabel().get(0), is(traditionalKnowledgeLabel1));
+            assertThat(result.getTraditionalKnowledgeLabel().get(1), is(traditionalKnowledgeLabel2));
         }
 
         @Test
@@ -293,8 +293,8 @@ class RaidDtoFactoryTest {
             when(spatialCoverageFactory.create(raidoMetadataSchemaV1.getSpatialCoverages().get(1))).thenReturn(spatialCoverage2);
             final var result = raidDtoFactory.create(raidRecord);
 
-            assertThat(result.getSpatialCoverages().get(0), is(spatialCoverage1));
-            assertThat(result.getSpatialCoverages().get(1), is(spatialCoverage2));
+            assertThat(result.getSpatialCoverage().get(0), is(spatialCoverage1));
+            assertThat(result.getSpatialCoverage().get(1), is(spatialCoverage2));
         }
 
         @Test
@@ -316,7 +316,7 @@ class RaidDtoFactoryTest {
             when(datesFactory.create(raidoMetadataSchemaV1.getDates())).thenReturn(dates);
             final var result = raidDtoFactory.create(raidRecord);
 
-            assertThat(result.getDates(), is(dates));
+            assertThat(result.getDate(), is(dates));
         }
     }
 }

@@ -35,7 +35,7 @@ class SubjectKeywordValidatorTest {
         final var language = new Language();
 
         final var keyword = new SubjectKeyword()
-                .keyword("blah")
+                .text("blah")
                 .language(language);
 
         when(languageValidator.validate(language, parentField)).thenReturn(Collections.emptyList());
@@ -78,7 +78,7 @@ class SubjectKeywordValidatorTest {
         final var language = new Language();
 
         final var keyword = new SubjectKeyword()
-                .keyword("")
+                .text("")
                 .language(language);
 
         when(languageValidator.validate(language, parentField)).thenReturn(Collections.emptyList());
@@ -102,7 +102,7 @@ class SubjectKeywordValidatorTest {
         final var language = new Language();
 
         final var keyword = new SubjectKeyword()
-                .keyword("valid")
+                .text("valid")
                 .language(language);
 
         var failure = new ValidationFailure();

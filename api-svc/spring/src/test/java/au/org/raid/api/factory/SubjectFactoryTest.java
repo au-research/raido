@@ -42,7 +42,7 @@ class SubjectFactoryTest {
         final var expected = new Subject()
                 .id(id)
                 .schemaUri(schemaUri)
-                .keywords(List.of(new SubjectKeyword().keyword(keyword)));
+                .keyword(List.of(new SubjectKeyword().text(keyword)));
 
         assertThat(subjectFactory.create(subject), is(expected));
 

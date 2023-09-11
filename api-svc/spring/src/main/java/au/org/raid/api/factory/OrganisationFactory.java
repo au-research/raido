@@ -32,6 +32,6 @@ public class OrganisationFactory {
         return new Organisation()
                 .id(organisationBlock.getId())
                 .schemaUri(identifierSchemeUri)
-                .roles(roles);
+                .role(roles);
     }
 }

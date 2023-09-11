@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static au.org.raid.api.endpoint.message.ValidationMessage.NOT_SET_MESSAGE;
@@ -38,13 +39,13 @@ class OrganisationValidatorTest {
         final var role = new OrganisationRoleWithSchemaUri()
                 .schemaUri(TestConstants.ORGANISATION_ROLE_SCHEMA_URI)
                 .id(TestConstants.LEAD_RESEARCH_ORGANISATION_ROLE)
-                .startDate(LocalDate.now().minusYears(1))
-                .endDate(LocalDate.now());
+                .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         final var organisation = new Organisation()
                 .id(TestConstants.VALID_ROR)
                 .schemaUri(TestConstants.HTTPS_ROR_ORG)
-                .roles(List.of(role));
+                .role(List.of(role));
 
         final var failures = validationService.validate(List.of(organisation));
 
@@ -58,12 +59,12 @@ class OrganisationValidatorTest {
     void missingIdentifierSchemeUri() {
         final var organisation = new Organisation()
                 .id(TestConstants.VALID_ROR)
-                .roles(List.of(
+                .role(List.of(
                         new OrganisationRoleWithSchemaUri()
                                 .schemaUri(TestConstants.ORGANISATION_ROLE_SCHEMA_URI)
                                 .id(TestConstants.LEAD_RESEARCH_ORGANISATION_ROLE)
-                                .startDate(LocalDate.now().minusYears(1))
-                                .endDate(LocalDate.now())
+                                .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                .endDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                 ));
 
         final var failures = validationService.validate(List.of(organisation));
@@ -83,12 +84,12 @@ class OrganisationValidatorTest {
         final var organisation = new Organisation()
                 .id(TestConstants.VALID_ROR)
                 .schemaUri("")
-                .roles(List.of(
+                .role(List.of(
                         new OrganisationRoleWithSchemaUri()
                                 .schemaUri(TestConstants.ORGANISATION_ROLE_SCHEMA_URI)
                                 .id(TestConstants.LEAD_RESEARCH_ORGANISATION_ROLE)
-                                .startDate(LocalDate.now().minusYears(1))
-                                .endDate(LocalDate.now())
+                                .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                .endDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                 ));
 
         final var failures = validationService.validate(List.of(organisation));
@@ -108,13 +109,13 @@ class OrganisationValidatorTest {
         final var role = new OrganisationRoleWithSchemaUri()
                 .schemaUri(TestConstants.ORGANISATION_ROLE_SCHEMA_URI)
                 .id(TestConstants.LEAD_RESEARCH_ORGANISATION_ROLE)
-                .startDate(LocalDate.now().minusYears(1))
-                .endDate(LocalDate.now());
+                .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         final var organisation = new Organisation()
                 .id(TestConstants.VALID_ROR)
                 .schemaUri(TestConstants.HTTPS_ROR_ORG)
-                .roles(List.of(role));
+                .role(List.of(role));
 
         final var rorError = new ValidationFailure()
                 .fieldId("organisations[0].id")
@@ -139,13 +140,13 @@ class OrganisationValidatorTest {
         final var role = new OrganisationRoleWithSchemaUri()
                 .schemaUri(TestConstants.ORGANISATION_ROLE_SCHEMA_URI)
                 .id(TestConstants.LEAD_RESEARCH_ORGANISATION_ROLE)
-                .startDate(LocalDate.now().minusYears(1))
-                .endDate(LocalDate.now());
+                .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         final var organisation = new Organisation()
                 .id(TestConstants.VALID_ROR)
                 .schemaUri(TestConstants.HTTPS_ROR_ORG)
-                .roles(List.of(role));
+                .role(List.of(role));
 
         final var roleError = new ValidationFailure()
                 .fieldId("organisations[0].roles[0].id")

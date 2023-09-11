@@ -1,5 +1,5 @@
 {
-  "id": {
+  "identifier": {
     "id": "https://raid.org.au/10378.1/1696639",
     "schemaUri": "https://raid.org",
     "registrationAgency": {
@@ -8,16 +8,16 @@
     },
     "owner": {
       "id": "https://ror.org/02stey378",
-      "schemaUri": "https://ror.org/"
+      "schemaUri": "https://ror.org/",
+      "servicePoint": 20000001
     },
-    "servicePoint": 20000001,
     "globalUrl": "https://hdl.handle.net/10378.1/1696639",
     "raidAgencyUrl": "https://raid.org.au/10378.1/1696639",
     "version": 1
   },
-  "titles": [
+  "title": [
     {
-      "title": "C. Japonicum Genome",
+      "text": "C. Japonicum Genome",
       "type": {
         "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
         "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1"
@@ -26,7 +26,7 @@
       "endDate": "2021-10-07"
     },
     {
-      "title": "Lorem ipsum dolor sit amet",
+      "text": "Lorem ipsum dolor sit amet",
       "type": {
         "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
         "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1"
@@ -36,18 +36,18 @@
     }
 
   ],
-  "dates": {
+  "date": {
     "startDate": "2020-11-01"
   },
-  "descriptions": [
+  "description": [
     {
-      "description": "Genome sequencing and assembly project at WUR of the C. Japonicum. ",
+      "text": "Genome sequencing and assembly project at WUR of the C. Japonicum. ",
       "type": {
         "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
         "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1"
       }
     },    {
-      "description": "Nam cursus varius tincidunt. Nulla ac nisl sit amet tortor interdum consequat nec quis purus.",
+      "text": "Nam cursus varius tincidunt. Nulla ac nisl sit amet tortor interdum consequat nec quis purus.",
       "type": {
         "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
         "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1"
@@ -60,17 +60,17 @@
       "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1"
     },
     "accessStatement": {
-      "statement": "This RAiD is closed",
+      "text": "This RAiD is closed",
       "language": {
         "id": "eng",
         "schemaUri": "https://www.iso.org/standard/39534.html"
       }
     }  },
-  "contributors": [
+  "contributor": [
     {
       "id": "https://orcid.org/0000-0002-4368-8058",
       "schemaUri": "https://orcid.org/",
-      "positions": [
+      "position": [
         {
           "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1",
           "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
@@ -83,7 +83,7 @@
           "startDate": "2020-10-07"
         }
       ],
-      "roles": [
+      "role": [
         {
           "schemaUri": "https://credit.niso.org",
           "id": "https://credit.niso.org/contributor-roles/formal-analysis/"
@@ -97,14 +97,14 @@
     {
       "id": "https://orcid.org/0000-0002-6492-9025",
       "schemaUri": "https://orcid.org/",
-      "positions": [
+      "position": [
         {
           "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1",
           "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
           "startDate": "2021-10-08"
         }
       ],
-      "roles": [
+      "role": [
         {
           "schemaUri": "https://credit.niso.org",
           "id": "https://credit.niso.org/contributor-roles/project-administration/"
@@ -112,11 +112,11 @@
       ]
     }
   ],
-  "organisations": [
+  "organisation": [
     {
       "id": "https://ror.org/04qw24q55",
       "schemaUri": "https://ror.org/",
-      "roles": [
+      "role": [
         {
           "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1",
           "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json",
@@ -128,7 +128,7 @@
     {
       "id": "https://ror.org/038sjwq14",
       "schemaUri": "https://ror.org/",
-      "roles": [
+      "role": [
         {
           "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1",
           "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/other-organisation.json",
@@ -137,7 +137,7 @@
       ]
     }
   ],
-  "relatedObjects": [
+  "relatedObject": [
     {
       "id": "https://doi.org/10.47366/sabia.v5n1a3",
       "schemaUri": "https://doi.org/",
@@ -163,7 +163,7 @@
       }
     }
   ],
-  "alternateIdentifiers": [
+  "alternateIdentifier": [
     {
       "id": "123456",
       "type": "Other"
@@ -173,7 +173,7 @@
       "type": "Alternative"
     }
   ],
-  "alternateUrls": [
+  "alternateUrl": [
     {
       "url": "https://example.org/"
     },
@@ -181,27 +181,26 @@
       "url": "https://example.com/"
     }
   ],
-  "subjects": [
+  "subject": [
     {
       "id": "https://linked.data.gov.au/def/anzsrc-for/2020/430106",
       "schemaUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
-      "keywords": [
+      "keyword": [
         {
-          "keyword": "Digital Archeology",
+          "text": "Digital Archeology",
           "language": {
             "id": "eng",
             "schemaUri": "https://www.iso.org/standard/39534.html"
           }
         }
-
       ]
     },
     {
       "id": "https://linked.data.gov.au/def/anzsrc-for/2020/4301",
       "schemaUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
-      "keywords": [
+      "keyword": [
         {
-          "keyword": "Archeology",
+          "text": "Archeology",
           "language": {
             "id": "eng",
             "schemaUri": "https://www.iso.org/standard/39534.html"
@@ -210,7 +209,7 @@
       ]
     }
   ],
-  "traditionalKnowledgeLabels": [
+  "traditionalKnowledgeLabel": [
     {
       "schemaUri": "https://localcontexts.org/labels/traditional-knowledge-labels/"
     },
@@ -218,7 +217,7 @@
       "schemaUri": "https://localcontexts.org/labels/biocultural-labels/"
     }
   ],
-  "spatialCoverages": [
+  "spatialCoverage": [
     {
       "id": "https://www.geonames.org/264371/athens.html",
       "schemaUri": "https://www.geonames.org/",

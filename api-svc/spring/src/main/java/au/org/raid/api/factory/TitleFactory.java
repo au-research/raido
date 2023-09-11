@@ -6,6 +6,7 @@ import au.org.raid.idl.raidv2.model.TitleType;
 import au.org.raid.idl.raidv2.model.TitleTypeWithSchemaUri;
 import org.springframework.stereotype.Component;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @Component
@@ -22,10 +23,16 @@ public class TitleFactory {
             return null;
         }
 
+        var startDate = (titleBlock.getStartDate() != null) ?
+                titleBlock.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE) : null;
+
+        final var endDate = (titleBlock.getEndDate() != null) ?
+                titleBlock.getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE) : null;
+
         return new Title()
-                .title(titleBlock.getTitle())
-                .startDate(titleBlock.getStartDate())
-                .endDate(titleBlock.getEndDate())
+                .text(titleBlock.getTitle())
+                .startDate(startDate)
+                .endDate(endDate)
                 .type(new TitleTypeWithSchemaUri()
                         .id(titleBlock.getType() != null ? TITLE_TYPE_MAP.get(titleBlock.getType()) : null)
                         .schemaUri(TITLE_TYPE_SCHEMA_URI)

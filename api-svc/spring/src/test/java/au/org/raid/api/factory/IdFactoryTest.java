@@ -52,8 +52,11 @@ class IdFactoryTest {
         assertThat(result.getRegistrationAgency(), is(new RegistrationAgency()
                 .id(identifierRegistrationAgency)
                 .schemaUri(SchemaUri.ROR.getUri())));
-        assertThat(result.getOwner(), is(new Owner().id(identifierOwner).schemaUri(SchemaUri.ROR.getUri())));
-        assertThat(result.getServicePoint(), is(identifierServicePoint));
+        assertThat(result.getOwner(), is(new Owner()
+                .id(identifierOwner)
+                .schemaUri(SchemaUri.ROR.getUri())
+                .servicePoint(identifierServicePoint)
+        ));
         assertThat(result.getGlobalUrl(), is(globalUrl));
         assertThat(result.getRaidAgencyUrl(), is(raidAgencyUrl));
     }

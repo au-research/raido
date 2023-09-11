@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -39,9 +40,9 @@ class TitleFactoryTest {
         final var result = titleFactory.create(title);
 
         final var expected = new Title()
-                .title(TITLE)
-                .startDate(START_DATE)
-                .endDate(END_DATE)
+                .text(TITLE)
+                .startDate(START_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(END_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .type(new TitleTypeWithSchemaUri()
                         .id(PRIMARY_ID)
                         .schemaUri(TITLE_TYPE_SCHEMA_URI));
@@ -61,9 +62,9 @@ class TitleFactoryTest {
         final var result = titleFactory.create(title);
 
         final var expected = new Title()
-                .title(TITLE)
-                .startDate(START_DATE)
-                .endDate(END_DATE)
+                .text(TITLE)
+                .startDate(START_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(END_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .type(new TitleTypeWithSchemaUri()
                         .id(ALTERNATIVE_ID)
                         .schemaUri(TITLE_TYPE_SCHEMA_URI));

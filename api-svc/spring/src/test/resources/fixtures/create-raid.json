@@ -1,7 +1,7 @@
 {
-  "titles": [
+  "title": [
     {
-      "title": "C. Japonicum Genome",
+      "text": "C. Japonicum Genome",
       "type": {
         "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
         "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1"
@@ -9,12 +9,12 @@
       "startDate": "2020-10-07"
     }
   ],
-  "dates": {
+  "date": {
     "startDate": "2020-11-01"
   },
-  "descriptions": [
+  "description": [
     {
-      "description": "Genome sequencing and assembly project at WUR of the C. Japonicum. ",
+      "text": "Genome sequencing and assembly project at WUR of the C. Japonicum. ",
       "type": {
         "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
         "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1"
@@ -27,25 +27,25 @@
       "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1"
     },
     "accessStatement": {
-      "statement": "This RAiD is closed",
+      "text": "This RAiD is closed",
       "language": {
         "id": "eng",
         "schemaUri": "https://www.iso.org/standard/39534.html"
       }
     }
   },
-  "contributors": [
+  "contributor": [
     {
       "id": "0000-0002-4368-8058",
       "schemaUri": "https://orcid.org/",
-      "positions": [
+      "position": [
         {
           "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1",
           "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
           "startDate": "2020-10-07"
         }
       ],
-      "roles": [
+      "role": [
         {
           "schemaUri": "https://credit.niso.org",
           "id": "https://credit.niso.org/contributor-roles/project-administration/"
@@ -53,11 +53,11 @@
       ]
     }
   ],
-  "organisations": [
+  "organisation": [
     {
       "id": "https://ror.org/04qw24q55",
       "schemaUri": "https://ror.org/",
-      "roles": [
+      "role": [
         {
           "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1",
           "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json",

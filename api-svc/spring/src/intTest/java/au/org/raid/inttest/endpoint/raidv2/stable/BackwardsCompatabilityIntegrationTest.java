@@ -36,45 +36,46 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
             final RaidDto raidDto = raidApi.readRaidV1(prefix, suffix);
 
             final var expected = new RaidDto()
-                    .id(new Id()
+                    .identifier(new Id()
                             .id(metadata.getId().getIdentifier())
                             .schemaUri(metadata.getId().getIdentifierSchemeURI())
                             .globalUrl(metadata.getId().getGlobalUrl())
                             .raidAgencyUrl(metadata.getId().getRaidAgencyUrl())
                             .owner(new Owner()
                                     .id(metadata.getId().getIdentifierOwner())
-                                    .schemaUri("https://ror.org/"))
+                                    .schemaUri("https://ror.org/")
+                                    .servicePoint(metadata.getId().getIdentifierServicePoint())
+                            )
                             .registrationAgency(new RegistrationAgency()
                                     .id(metadata.getId().getIdentifierRegistrationAgency())
                                     .schemaUri("https://ror.org/"))
-                            .version(metadata.getId().getVersion())
-                            .servicePoint(metadata.getId().getIdentifierServicePoint()))
-                    .titles(List.of(
+                            .version(metadata.getId().getVersion()))
+                    .title(List.of(
                             new Title()
-                                    .title(metadata.getTitles().get(0).getTitle())
+                                    .text(metadata.getTitles().get(0).getTitle())
                                     .type(new TitleTypeWithSchemaUri()
                                             .id(TestConstants.PRIMARY_TITLE_TYPE)
                                             .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
-                                    .startDate(metadata.getTitles().get(0).getStartDate())
-                                    .endDate(metadata.getTitles().get(0).getEndDate()),
+                                    .startDate(metadata.getTitles().get(0).getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                    .endDate(metadata.getTitles().get(0).getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE)),
                             new Title()
-                                    .title(metadata.getTitles().get(1).getTitle())
+                                    .text(metadata.getTitles().get(1).getTitle())
                                     .type(new TitleTypeWithSchemaUri()
                                             .id(TestConstants.ALTERNATIVE_TITLE_TYPE)
                                             .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
-                                    .startDate(metadata.getTitles().get(1).getStartDate())
-                                    .endDate(metadata.getTitles().get(1).getEndDate())))
-                    .dates(new Dates()
-                            .startDate(metadata.getDates().getStartDate())
-                            .endDate(metadata.getDates().getEndDate()))
-                    .descriptions(List.of(
+                                    .startDate(metadata.getTitles().get(1).getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                    ))
+                    .date(new Dates()
+                            .startDate(metadata.getDates().getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                            .endDate(metadata.getDates().getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE)))
+                    .description(List.of(
                             new Description()
-                                    .description(metadata.getDescriptions().get(0).getDescription())
+                                    .text(metadata.getDescriptions().get(0).getDescription())
                                     .type(new DescriptionTypeWithSchemaUri()
                                             .id(TestConstants.PRIMARY_DESCRIPTION_TYPE)
                                             .schemaUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI)),
                             new Description()
-                                    .description(metadata.getDescriptions().get(1).getDescription())
+                                    .text(metadata.getDescriptions().get(1).getDescription())
                                     .type(new DescriptionTypeWithSchemaUri()
                                             .id(TestConstants.ALTERNATIVE_DESCRIPTION_TYPE)
                                             .schemaUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI))))
@@ -82,15 +83,15 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
                             .type(new AccessTypeWithSchemaUri()
                                     .id(TestConstants.OPEN_ACCESS_TYPE)
                                     .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI)))
-                    .alternateUrls(List.of(
+                    .alternateUrl(List.of(
                             new AlternateUrl().url(metadata.getAlternateUrls().get(0).getUrl()),
                             new AlternateUrl().url(metadata.getAlternateUrls().get(1).getUrl()),
                             new AlternateUrl().url(metadata.getAlternateUrls().get(2).getUrl())))
-                    .contributors(List.of(
+                    .contributor(List.of(
                             new Contributor()
                                     .id(metadata.getContributors().get(0).getId())
                                     .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
-                                    .positions(List.of(
+                                    .position(List.of(
                                             new ContributorPositionWithSchemaUri()
                                                     .id(TestConstants.LEADER_POSITION)
                                                     .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
@@ -101,7 +102,7 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
                                                     .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                                                     .startDate(metadata.getContributors().get(0).getPositions().get(1).getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                                     .endDate(metadata.getContributors().get(0).getPositions().get(1).getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE))))
-                                    .roles(List.of(
+                                    .role(List.of(
                                             new ContributorRoleWithSchemaUri()
                                                     .id(TestConstants.CONCEPTUALIZATION_CONTRIBUTOR_ROLE)
                                                     .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI),
@@ -111,7 +112,7 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
                             new Contributor()
                                     .id(metadata.getContributors().get(1).getId())
                                     .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
-                                    .positions(List.of(
+                                    .position(List.of(
                                             new ContributorPositionWithSchemaUri()
                                                     .id(TestConstants.OTHER_PARTICIPANT_POSITION)
                                                     .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
@@ -122,52 +123,52 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
                                                     .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                                                     .startDate(metadata.getContributors().get(1).getPositions().get(1).getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                                     .endDate(metadata.getContributors().get(1).getPositions().get(1).getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE))))
-                                    .roles(List.of(
+                                    .role(List.of(
                                             new ContributorRoleWithSchemaUri()
                                                     .id(TestConstants.WRITING_REVIEW_EDITING_CONTRIBUTOR_ROLE)
                                                     .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI),
                                             new ContributorRoleWithSchemaUri()
                                                     .id(TestConstants.DATA_CURATION_CONTRIBUTOR_ROLE)
                                                     .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)))))
-                    .organisations(List.of(
+                    .organisation(List.of(
                             new Organisation()
                                     .id(metadata.getOrganisations().get(0).getId())
                                     .schemaUri(TestConstants.ORGANISATION_IDENTIFIER_SCHEMA_URI)
-                                    .roles(List.of(
+                                    .role(List.of(
                                             new OrganisationRoleWithSchemaUri()
                                                     .id(TestConstants.LEAD_RESEARCH_ORGANISATION_ROLE)
                                                     .schemaUri(TestConstants.ORGANISATION_ROLE_SCHEMA_URI)
-                                                    .startDate(metadata.getOrganisations().get(0).getRoles().get(0).getStartDate())
-                                                    .endDate(metadata.getOrganisations().get(0).getRoles().get(0).getEndDate()),
+                                                    .startDate(metadata.getOrganisations().get(0).getRoles().get(0).getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                                    .endDate(metadata.getOrganisations().get(0).getRoles().get(0).getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE)),
                                             new OrganisationRoleWithSchemaUri()
                                                     .id(TestConstants.PARTNER_ORGANISATION_ROLE)
                                                     .schemaUri(TestConstants.ORGANISATION_ROLE_SCHEMA_URI)
-                                                    .startDate(metadata.getOrganisations().get(0).getRoles().get(1).getStartDate())
-                                                    .endDate(metadata.getOrganisations().get(0).getRoles().get(1).getEndDate()))),
+                                                    .startDate(metadata.getOrganisations().get(0).getRoles().get(1).getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                                    .endDate(metadata.getOrganisations().get(0).getRoles().get(1).getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE)))),
                             new Organisation()
                                     .id(metadata.getOrganisations().get(1).getId())
                                     .schemaUri(TestConstants.ORGANISATION_IDENTIFIER_SCHEMA_URI)
-                                    .roles(List.of(
+                                    .role(List.of(
                                             new OrganisationRoleWithSchemaUri()
                                                     .id(TestConstants.OTHER_ORGANISATION_ROLE)
                                                     .schemaUri(TestConstants.ORGANISATION_ROLE_SCHEMA_URI)
-                                                    .startDate(metadata.getOrganisations().get(1).getRoles().get(0).getStartDate())
-                                                    .endDate(metadata.getOrganisations().get(1).getRoles().get(0).getEndDate()),
+                                                    .startDate(metadata.getOrganisations().get(1).getRoles().get(0).getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                                    .endDate(metadata.getOrganisations().get(1).getRoles().get(0).getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE)),
                                             new OrganisationRoleWithSchemaUri()
                                                     .id(TestConstants.CONTRACTOR_ORGANISATION_ROLE)
                                                     .schemaUri(TestConstants.ORGANISATION_ROLE_SCHEMA_URI)
-                                                    .startDate(metadata.getOrganisations().get(1).getRoles().get(1).getStartDate())
-                                                    .endDate(metadata.getOrganisations().get(1).getRoles().get(1).getEndDate())))))
-                    .subjects(List.of(
+                                                    .startDate(metadata.getOrganisations().get(1).getRoles().get(1).getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                                    .endDate(metadata.getOrganisations().get(1).getRoles().get(1).getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE))))))
+                    .subject(List.of(
                             new Subject()
                                     .id(metadata.getSubjects().get(0).getSubject())
                                     .schemaUri(metadata.getSubjects().get(0).getSubjectSchemeUri())
-                                    .keywords(List.of(new SubjectKeyword().keyword(metadata.getSubjects().get(0).getSubjectKeyword()))),
+                                    .keyword(List.of(new SubjectKeyword().text(metadata.getSubjects().get(0).getSubjectKeyword()))),
                             new Subject()
                                     .id(metadata.getSubjects().get(1).getSubject())
                                     .schemaUri(metadata.getSubjects().get(1).getSubjectSchemeUri())
-                                    .keywords(List.of(new SubjectKeyword().keyword(metadata.getSubjects().get(1).getSubjectKeyword())))))
-                    .relatedObjects(List.of(
+                                    .keyword(List.of(new SubjectKeyword().text(metadata.getSubjects().get(1).getSubjectKeyword())))))
+                    .relatedObject(List.of(
                             new RelatedObject()
                                     .id(metadata.getRelatedObjects().get(0).getRelatedObject())
                                     .schemaUri(metadata.getRelatedObjects().get(0).getRelatedObjectSchemeUri())
@@ -186,14 +187,14 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
                                     .category(new RelatedObjectCategory()
                                             .id(TestConstants.OUTPUT_RELATED_OBJECT_CATEGORY)
                                             .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI))))
-                    .alternateIdentifiers(List.of(
+                    .alternateIdentifier(List.of(
                             new AlternateIdentifier()
                                     .id(metadata.getAlternateIdentifiers().get(0).getAlternateIdentifier())
                                     .type(metadata.getAlternateIdentifiers().get(0).getAlternateIdentifierType()),
                             new AlternateIdentifier()
                                     .id(metadata.getAlternateIdentifiers().get(1).getAlternateIdentifier())
                                     .type(metadata.getAlternateIdentifiers().get(1).getAlternateIdentifierType())))
-                    .spatialCoverages(List.of(
+                    .spatialCoverage(List.of(
                             new SpatialCoverage()
                                     .id(metadata.getSpatialCoverages().get(0).getSpatialCoverage())
                                     .schemaUri(metadata.getSpatialCoverages().get(0).getSpatialCoverageSchemeUri())
@@ -202,7 +203,7 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
                                     .id(metadata.getSpatialCoverages().get(1).getSpatialCoverage())
                                     .schemaUri(metadata.getSpatialCoverages().get(1).getSpatialCoverageSchemeUri())
                                     .place(metadata.getSpatialCoverages().get(1).getSpatialCoveragePlace())))
-                    .traditionalKnowledgeLabels(List.of(
+                    .traditionalKnowledgeLabel(List.of(
                             new TraditionalKnowledgeLabel()
                                     .schemaUri(metadata.getTraditionalKnowledgeLabels().get(0).getTraditionalKnowledgeLabelSchemeUri()),
                             new TraditionalKnowledgeLabel()
@@ -228,16 +229,18 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
 
         final RaidDto raidDto = raidApi.readRaidV1(prefix, suffix);
 
-        assertThat(raidDto.getId()).isEqualTo(new Id()
+        assertThat(raidDto.getIdentifier()).isEqualTo(new Id()
                 .id("http://localhost:8080/" + raidModel.getHandle())
                 .globalUrl("https://hdl.handle.net/" + raidModel.getHandle())
                 .raidAgencyUrl("http://localhost:8080/" + raidModel.getHandle())
-                .servicePoint(20000002L)
                 .schemaUri("https://raid.org")
                 .registrationAgency(new RegistrationAgency()
                         .id("https://ror.org/038sjwq14")
                         .schemaUri("https://ror.org/"))
-                .owner(new Owner().id("https://ror.org/00rqy9422").schemaUri("https://ror.org/"))
+                .owner(new Owner()
+                        .id("https://ror.org/00rqy9422")
+                        .schemaUri("https://ror.org/")
+                        .servicePoint(20000002L))
                 .version(1));
 
         assertThat(raidDto.getAccess()).isEqualTo(new Access()
@@ -245,24 +248,24 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
                         .id(TestConstants.CLOSED_ACCESS_TYPE)
                         .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI)
                 )
-                .accessStatement(new AccessStatement().statement("RAiD minted via legacy V1 endpoint is closed by default")));
+                .accessStatement(new AccessStatement().text("RAiD minted via legacy V1 endpoint is closed by default")));
 
-        assertThat(raidDto.getDates()).isEqualTo(new Dates()
-                .startDate(LocalDate.parse(raidModel.getStartDate())));
+        assertThat(raidDto.getDate()).isEqualTo(new Dates()
+                .startDate(raidModel.getStartDate()));
 
-        assertThat(raidDto.getTitles()).isEqualTo(List.of(
+        assertThat(raidDto.getTitle()).isEqualTo(List.of(
                 new Title()
-                        .startDate(LocalDate.parse(raidModel.getStartDate()))
+                        .startDate(raidModel.getStartDate())
                         .type(new TitleTypeWithSchemaUri()
                                 .id(TestConstants.PRIMARY_TITLE_TYPE)
                                 .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
-                        .title(raidModel.getMeta().getName())));
+                        .text(raidModel.getMeta().getName())));
 
-        assertThat(raidDto.getDescriptions()).isEqualTo(List.of(
+        assertThat(raidDto.getDescription()).isEqualTo(List.of(
                 new Description()
                         .type(new DescriptionTypeWithSchemaUri()
                                 .id(TestConstants.PRIMARY_DESCRIPTION_TYPE)
                                 .schemaUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI))
-                        .description(String.format("RAiD created by '%s' at '%s'", raidModel.getOwner(), raidModel.getCreationDate()))));
+                        .text(String.format("RAiD created by '%s' at '%s'", raidModel.getOwner(), raidModel.getCreationDate()))));
     }
 }

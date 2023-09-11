@@ -18,12 +18,12 @@ public class SubjectFactory {
         List<SubjectKeyword> keywords = null;
 
         if (subjectBlock.getSubjectKeyword() != null) {
-            keywords = List.of(new SubjectKeyword().keyword(subjectBlock.getSubjectKeyword()));
+            keywords = List.of(new SubjectKeyword().text(subjectBlock.getSubjectKeyword()));
         }
 
         return new Subject()
                 .id(subjectBlock.getSubject())
                 .schemaUri(subjectBlock.getSubjectSchemeUri())
-                .keywords(keywords);
+                .keyword(keywords);
     }
 }

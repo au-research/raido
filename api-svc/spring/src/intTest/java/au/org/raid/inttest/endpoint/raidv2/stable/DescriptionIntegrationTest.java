@@ -17,7 +17,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with a description with an null language schemaUri fails")
     void nullLanguageSchemeUri() {
-        createRequest.getDescriptions().get(0).getLanguage().schemaUri(null);
+        createRequest.getDescription().get(0).getLanguage().schemaUri(null);
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -38,7 +38,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with a description with an empty language schemaUri fails")
     void emptyLanguageSchemeUri() {
-        createRequest.getDescriptions().get(0).getLanguage().schemaUri("");
+        createRequest.getDescription().get(0).getLanguage().schemaUri("");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -59,7 +59,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with a description with an empty language id fails")
     void emptyLanguageId() {
-        createRequest.getDescriptions().get(0).getLanguage().setId("");
+        createRequest.getDescription().get(0).getLanguage().setId("");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -80,7 +80,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with a description with an null language fails")
     void nullLanguageId() {
-        createRequest.getDescriptions().get(0).getLanguage().setId(null);
+        createRequest.getDescription().get(0).getLanguage().setId(null);
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -101,7 +101,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with a description with an invalid language id fails")
     void invalidLanguageId() {
-        createRequest.getDescriptions().get(0).getLanguage().setId("xxx");
+        createRequest.getDescription().get(0).getLanguage().setId("xxx");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -122,7 +122,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with a description with an invalid language schema fails")
     void invalidLanguageScheme() {
-        createRequest.getDescriptions().get(0).getLanguage().schemaUri("http://localhost");
+        createRequest.getDescription().get(0).getLanguage().schemaUri("http://localhost");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -144,7 +144,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with missing description block succeeds")
     void missingTitle() {
-        createRequest.setDescriptions(Collections.emptyList());
+        createRequest.setDescription(Collections.emptyList());
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -156,7 +156,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Validation fails with missing schemaUri")
     void missingSchemeUri() {
-        createRequest.getDescriptions().get(0).getType().schemaUri(null);
+        createRequest.getDescription().get(0).getType().schemaUri(null);
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -178,7 +178,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Validation fails with invalid schemaUri")
     void invalidSchemeUri() {
-        createRequest.getDescriptions().get(0).getType()
+        createRequest.getDescription().get(0).getType()
                 .schemaUri("https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v2");
 
         try {
@@ -200,7 +200,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Validation fails with blank schemaUri")
     void blankSchemeUri() {
-        createRequest.getDescriptions().get(0).getType().schemaUri("");
+        createRequest.getDescription().get(0).getType().schemaUri("");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -222,7 +222,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Validation fails with missing description")
     void missingDescription() {
-        createRequest.getDescriptions().get(0).description(null);
+        createRequest.getDescription().get(0).text(null);
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -243,7 +243,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Validation fails with blank description")
     void blankDescription() {
-        createRequest.getDescriptions().get(0).description("");
+        createRequest.getDescription().get(0).text("");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -264,7 +264,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Validation fails with missing type")
     void nullType() {
-        createRequest.getDescriptions().get(0).type(null);
+        createRequest.getDescription().get(0).type(null);
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -285,7 +285,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Validation fails with missing type id")
     void missingId() {
-        createRequest.getDescriptions().get(0).type(
+        createRequest.getDescription().get(0).type(
                 new DescriptionTypeWithSchemaUri()
                         .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI)
         );
@@ -309,7 +309,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Validation fails with empty id")
     void emptyId() {
-        createRequest.getDescriptions().get(0).type(
+        createRequest.getDescription().get(0).type(
                 new DescriptionTypeWithSchemaUri()
                         .id("")
                         .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI)
@@ -334,7 +334,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Validation fails with blank type")
     void blankType() {
-        createRequest.getDescriptions().get(0).getType().id("");
+        createRequest.getDescription().get(0).getType().id("");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -355,7 +355,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Validation fails if type is not found within schema")
     void invalidType() {
-        createRequest.getDescriptions().get(0)
+        createRequest.getDescription().get(0)
                 .getType().id("https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/unknown.json");
 
         try {

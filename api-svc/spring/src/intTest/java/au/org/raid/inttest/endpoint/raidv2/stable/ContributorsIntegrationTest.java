@@ -22,7 +22,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with no contributors fails")
     void noContributors() {
-        createRequest.setContributors(null);
+        createRequest.setContributor(null);
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -44,7 +44,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with empty contributors fails")
     void emptyContributors() {
-        createRequest.setContributors(Collections.emptyList());
+        createRequest.setContributor(Collections.emptyList());
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -66,16 +66,16 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with missing schemaUri fails")
     void missingIdentifierSchemeUri() {
-        createRequest.setContributors(List.of(
+        createRequest.setContributor(List.of(
                 new Contributor()
                         .id("https://orcid.org/0000-0000-0000-0001")
-                        .positions(List.of(
+                        .position(List.of(
                                 new ContributorPositionWithSchemaUri()
                                         .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                         .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                         .id(LEADER_POSITION)
                         ))
-                        .roles(List.of(
+                        .role(List.of(
                                 new ContributorRoleWithSchemaUri()
                                         .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                         .id(SOFTWARE_CONTRIBUTOR_ROLE)
@@ -102,17 +102,17 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with empty schemaUri fails")
     void emptyIdentifierSchemeUri() {
-        createRequest.setContributors(List.of(
+        createRequest.setContributor(List.of(
                 new Contributor()
                         .schemaUri("")
                         .id("https://orcid.org/0000-0000-0000-0001")
-                        .positions(List.of(
+                        .position(List.of(
                                 new ContributorPositionWithSchemaUri()
                                         .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                         .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                         .id(LEADER_POSITION)
                         ))
-                        .roles(List.of(
+                        .role(List.of(
                                 new ContributorRoleWithSchemaUri()
                                         .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                         .id(SOFTWARE_CONTRIBUTOR_ROLE)
@@ -139,16 +139,16 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with missing contributor id fails")
     void missingId() {
-        createRequest.setContributors(List.of(
+        createRequest.setContributor(List.of(
                 new Contributor()
                         .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
-                        .positions(List.of(
+                        .position(List.of(
                                 new ContributorPositionWithSchemaUri()
                                         .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                         .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                         .id(LEADER_POSITION)
                         ))
-                        .roles(List.of(
+                        .role(List.of(
                                 new ContributorRoleWithSchemaUri()
                                         .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                         .id(SOFTWARE_CONTRIBUTOR_ROLE)
@@ -175,17 +175,17 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with empty contributor id fails")
     void emptyId() {
-        createRequest.setContributors(List.of(
+        createRequest.setContributor(List.of(
                 new Contributor()
                         .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                         .id("")
-                        .positions(List.of(
+                        .position(List.of(
                                 new ContributorPositionWithSchemaUri()
                                         .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                         .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                         .id(LEADER_POSITION)
                         ))
-                        .roles(List.of(
+                        .role(List.of(
                                 new ContributorRoleWithSchemaUri()
                                         .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                         .id(SOFTWARE_CONTRIBUTOR_ROLE)
@@ -212,11 +212,11 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with null positions fails")
     void nullPositions() {
-        createRequest.setContributors(List.of(
+        createRequest.setContributor(List.of(
                 new Contributor()
                         .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                         .id("https://orcid.org/0000-0000-0000-0001")
-                        .roles(List.of(
+                        .role(List.of(
                                 new ContributorRoleWithSchemaUri()
                                         .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                         .id(SOFTWARE_CONTRIBUTOR_ROLE)
@@ -243,12 +243,12 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with empty positions fails")
     void emptyPositions() {
-        createRequest.setContributors(List.of(
+        createRequest.setContributor(List.of(
                 new Contributor()
                         .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                         .id("https://orcid.org/0000-0000-0000-0001")
-                        .positions(Collections.emptyList())
-                        .roles(List.of(
+                        .position(Collections.emptyList())
+                        .role(List.of(
                                 new ContributorRoleWithSchemaUri()
                                         .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                         .id(SOFTWARE_CONTRIBUTOR_ROLE)
@@ -275,16 +275,16 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with missing leader position fails")
     void missingLeader() {
-        createRequest.setContributors(List.of(
+        createRequest.setContributor(List.of(
                 new Contributor()
                         .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                         .id("https://orcid.org/0000-0000-0000-0001")
-                        .positions(List.of(
+                        .position(List.of(
                                 new ContributorPositionWithSchemaUri()
                                         .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                         .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                         .id(OTHER_PARTICIPANT_POSITION)
-                        )).roles(List.of(
+                        )).role(List.of(
                                 new ContributorRoleWithSchemaUri()
                                         .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                         .id(SOFTWARE_CONTRIBUTOR_ROLE)
@@ -314,17 +314,17 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         @Test
         @DisplayName("Minting a RAiD with invalid orcid pattern fails")
         void invalidOrcidPattern() {
-            createRequest.setContributors(List.of(
+            createRequest.setContributor(List.of(
                     new Contributor()
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0c00-0000-0000")
-                            .positions(List.of(
+                            .position(List.of(
                                     new ContributorPositionWithSchemaUri()
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(LEADER_POSITION)
                             ))
-                            .roles(List.of(
+                            .role(List.of(
                                     new ContributorRoleWithSchemaUri()
                                             .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                             .id(SOFTWARE_CONTRIBUTOR_ROLE)
@@ -349,17 +349,17 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         @Test
         @DisplayName("Minting a RAiD with invalid orcid checksum fails")
         void invalidOrcidChecksum() {
-            createRequest.setContributors(List.of(
+            createRequest.setContributor(List.of(
                     new Contributor()
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0000")
-                            .positions(List.of(
+                            .position(List.of(
                                     new ContributorPositionWithSchemaUri()
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(LEADER_POSITION)
                             ))
-                            .roles(List.of(
+                            .role(List.of(
                                     new ContributorRoleWithSchemaUri()
                                             .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                             .id(SOFTWARE_CONTRIBUTOR_ROLE)
@@ -386,17 +386,17 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         @Test
         @DisplayName("Minting a RAiD with non-existent orcid fails")
         void nonExistentOrcid() {
-            createRequest.setContributors(List.of(
+            createRequest.setContributor(List.of(
                     new Contributor()
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0001-0000-0009")
-                            .positions(List.of(
+                            .position(List.of(
                                     new ContributorPositionWithSchemaUri()
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(LEADER_POSITION)
                             ))
-                            .roles(List.of(
+                            .role(List.of(
                                     new ContributorRoleWithSchemaUri()
                                             .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                             .id(SOFTWARE_CONTRIBUTOR_ROLE)
@@ -427,15 +427,15 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         @Test
         @DisplayName("Minting a RAiD with missing position schemaUri fails")
         void missingPositionSchemeUri() {
-            createRequest.setContributors(List.of(
+            createRequest.setContributor(List.of(
                     new Contributor()
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0001")
-                            .positions(List.of(
+                            .position(List.of(
                                     new ContributorPositionWithSchemaUri()
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .id(LEADER_POSITION)
-                            )).roles(List.of(
+                            )).role(List.of(
                                     new ContributorRoleWithSchemaUri()
                                             .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                             .id(SOFTWARE_CONTRIBUTOR_ROLE)
@@ -462,11 +462,11 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         @Test
         @DisplayName("Minting a RAiD with missing position type fails")
         void missingPositionType() {
-            createRequest.setContributors(List.of(
+            createRequest.setContributor(List.of(
                     new Contributor()
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0001")
-                            .positions(List.of(
+                            .position(List.of(
                                     new ContributorPositionWithSchemaUri()
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
@@ -475,7 +475,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                             ))
-                            .roles(List.of(
+                            .role(List.of(
                                     new ContributorRoleWithSchemaUri()
                                             .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                             .id(SOFTWARE_CONTRIBUTOR_ROLE)
@@ -502,11 +502,11 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         @Test
         @DisplayName("Minting a RAiD with invalid position schemaUri fails")
         void invalidPositionSchemeUri() {
-            createRequest.setContributors(List.of(
+            createRequest.setContributor(List.of(
                     new Contributor()
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0001")
-                            .positions(List.of(
+                            .position(List.of(
                                     new ContributorPositionWithSchemaUri()
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
@@ -516,7 +516,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                                             .schemaUri("https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v2")
                                             .id(OTHER_PARTICIPANT_POSITION)
                             ))
-                            .roles(List.of(
+                            .role(List.of(
                                     new ContributorRoleWithSchemaUri()
                                             .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                             .id(SOFTWARE_CONTRIBUTOR_ROLE)
@@ -543,11 +543,11 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         @Test
         @DisplayName("Minting a RAiD with invalid position type for schema fails")
         void invalidPositionTypeForScheme() {
-            createRequest.setContributors(List.of(
+            createRequest.setContributor(List.of(
                     new Contributor()
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0001")
-                            .positions(List.of(
+                            .position(List.of(
                                     new ContributorPositionWithSchemaUri()
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
@@ -557,7 +557,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/unknown.json")
                             ))
-                            .roles(List.of(
+                            .role(List.of(
                                     new ContributorRoleWithSchemaUri()
                                             .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                             .id(SOFTWARE_CONTRIBUTOR_ROLE)
@@ -588,17 +588,17 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         @Test
         @DisplayName("Minting a RAiD with missing role schemaUri fails")
         void missingRoleSchemeUri() {
-            createRequest.setContributors(List.of(
+            createRequest.setContributor(List.of(
                     new Contributor()
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0001")
-                            .positions(List.of(
+                            .position(List.of(
                                     new ContributorPositionWithSchemaUri()
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .id(LEADER_POSITION)
                             ))
-                            .roles(List.of(
+                            .role(List.of(
                                     new ContributorRoleWithSchemaUri()
 //              .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                             .id(SOFTWARE_CONTRIBUTOR_ROLE)
@@ -625,11 +625,11 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         @Test
         @DisplayName("Minting a RAiD with missing role type fails")
         void missingPositionType() {
-            createRequest.setContributors(List.of(
+            createRequest.setContributor(List.of(
                     new Contributor()
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0001")
-                            .positions(List.of(
+                            .position(List.of(
                                     new ContributorPositionWithSchemaUri()
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
@@ -639,7 +639,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(OTHER_PARTICIPANT_POSITION)
                             ))
-                            .roles(List.of(
+                            .role(List.of(
                                     new ContributorRoleWithSchemaUri()
                                             .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                             ))
@@ -665,11 +665,11 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         @Test
         @DisplayName("Minting a RAiD with invalid role schemaUri fails")
         void invalidPositionSchemeUri() {
-            createRequest.setContributors(List.of(
+            createRequest.setContributor(List.of(
                     new Contributor()
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0001")
-                            .positions(List.of(
+                            .position(List.of(
                                     new ContributorPositionWithSchemaUri()
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
@@ -679,7 +679,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(OTHER_PARTICIPANT_POSITION)
                             ))
-                            .roles(List.of(
+                            .role(List.of(
                                     new ContributorRoleWithSchemaUri()
                                             .schemaUri("unknown")
                                             .id(SOFTWARE_CONTRIBUTOR_ROLE)
@@ -706,11 +706,11 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         @Test
         @DisplayName("Minting a RAiD with invalid type for role schema fails")
         void invalidPositionTypeForScheme() {
-            createRequest.setContributors(List.of(
+            createRequest.setContributor(List.of(
                     new Contributor()
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0001")
-                            .positions(List.of(
+                            .position(List.of(
                                     new ContributorPositionWithSchemaUri()
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
@@ -720,7 +720,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(OTHER_PARTICIPANT_POSITION)
                             ))
-                            .roles(List.of(
+                            .role(List.of(
                                     new ContributorRoleWithSchemaUri()
                                             .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                             .id("unknown")

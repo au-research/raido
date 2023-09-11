@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -19,7 +20,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with a title with an null language schemaUri fails")
     void nullLanguageSchemeUri() {
-        createRequest.getTitles().get(0).getLanguage().schemaUri(null);
+        createRequest.getTitle().get(0).getLanguage().schemaUri(null);
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -40,7 +41,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with a title with an empty language schemaUri fails")
     void emptyLanguageSchemeUri() {
-        createRequest.getTitles().get(0).getLanguage().schemaUri("");
+        createRequest.getTitle().get(0).getLanguage().schemaUri("");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -61,7 +62,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with a title with an empty language id fails")
     void emptyLanguageId() {
-        createRequest.getTitles().get(0).getLanguage().setId("");
+        createRequest.getTitle().get(0).getLanguage().setId("");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -82,7 +83,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with a title with an null language fails")
     void nullLanguageId() {
-        createRequest.getTitles().get(0).getLanguage().setId(null);
+        createRequest.getTitle().get(0).getLanguage().setId(null);
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -103,7 +104,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with a title with an invalid language id fails")
     void invalidLanguageId() {
-        createRequest.getTitles().get(0).getLanguage().setId("xxx");
+        createRequest.getTitle().get(0).getLanguage().setId("xxx");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -124,7 +125,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with a title with an invalid language schema fails")
     void invalidLanguageScheme() {
-        createRequest.getTitles().get(0).getLanguage().schemaUri("http://localhost");
+        createRequest.getTitle().get(0).getLanguage().schemaUri("http://localhost");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -145,7 +146,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with null titles fails")
     void nullTitles() {
-        createRequest.setTitles(null);
+        createRequest.setTitle(null);
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -166,7 +167,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with missing title fails")
     void missingTitle() {
-        createRequest.setTitles(Collections.emptyList());
+        createRequest.setTitle(Collections.emptyList());
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -187,7 +188,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with no primary title fails")
     void alternativeTitleOnly() {
-        createRequest.getTitles().get(0).setType(new TitleTypeWithSchemaUri()
+        createRequest.getTitle().get(0).setType(new TitleTypeWithSchemaUri()
                 .id(TestConstants.ALTERNATIVE_TITLE_TYPE)
                 .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI));
 
@@ -211,7 +212,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with missing schemaUri fails")
     void missingTitleScheme() {
-        createRequest.getTitles().get(0).setType(new TitleTypeWithSchemaUri()
+        createRequest.getTitle().get(0).setType(new TitleTypeWithSchemaUri()
                 .id(TestConstants.PRIMARY_TITLE_TYPE)
         );
 
@@ -235,7 +236,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with invalid schemaUri fails")
     void invalidTitleScheme() {
-        createRequest.getTitles().get(0).setType(new TitleTypeWithSchemaUri()
+        createRequest.getTitle().get(0).setType(new TitleTypeWithSchemaUri()
                 .id(TestConstants.PRIMARY_TITLE_TYPE)
                 .schemaUri("https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v2"));
 
@@ -259,17 +260,17 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with missing title type id fails")
     void missingTitleType() {
-        final var titles = new ArrayList<>(createRequest.getTitles());
+        final var titles = new ArrayList<>(createRequest.getTitle());
 
         titles.add(new Title()
-                .title("Test Title")
+                .text("Test Title")
                 .type(new TitleTypeWithSchemaUri()
                         .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI)
                 )
-                .startDate(LocalDate.now())
+                .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
         );
 
-        createRequest.setTitles(titles);
+        createRequest.setTitle(titles);
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -291,18 +292,18 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with invalid title type id fails")
     void invalidTitleType() {
-        final var titles = new ArrayList<>(createRequest.getTitles());
+        final var titles = new ArrayList<>(createRequest.getTitle());
 
         titles.add(new Title()
                 .type(new TitleTypeWithSchemaUri()
                         .id("https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/invalid.json")
                         .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI)
                 )
-                .title("Test Title")
-                .startDate(LocalDate.now())
+                .text("Test Title")
+                .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
         );
 
-        createRequest.setTitles(titles);
+        createRequest.setTitle(titles);
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -324,7 +325,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with missing startDate fails")
     void missingStartDate() {
-        createRequest.getTitles().get(0).setStartDate(null);
+        createRequest.getTitle().get(0).setStartDate(null);
 
         try {
             raidApi.createRaidV1(createRequest);

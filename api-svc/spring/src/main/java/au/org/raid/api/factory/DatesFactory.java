@@ -4,6 +4,8 @@ import au.org.raid.idl.raidv2.model.Dates;
 import au.org.raid.idl.raidv2.model.DatesBlock;
 import org.springframework.stereotype.Component;
 
+import java.time.format.DateTimeFormatter;
+
 @Component
 public class DatesFactory {
     public Dates create(final DatesBlock datesBlock) {
@@ -11,8 +13,14 @@ public class DatesFactory {
             return null;
         }
 
+        var startDate = datesBlock.getStartDate() != null ?
+                datesBlock.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE) : null;
+
+        var endDate = datesBlock.getEndDate() != null ?
+                datesBlock.getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE) : null;
+
         return new Dates()
-                .startDate(datesBlock.getStartDate())
-                .endDate(datesBlock.getEndDate());
+                .startDate(startDate)
+                .endDate(endDate);
     }
 }

@@ -32,7 +32,7 @@ class DescriptionFactoryTest {
         final var result = descriptionFactory.create(description);
 
         final var expected = new Description()
-                .description(DESCRIPTION)
+                .text(DESCRIPTION)
                 .type(new DescriptionTypeWithSchemaUri()
                         .id(PRIMARY_ID)
                         .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI));
@@ -50,7 +50,7 @@ class DescriptionFactoryTest {
         final var result = descriptionFactory.create(description);
 
         final var expected = new Description()
-                .description(DESCRIPTION)
+                .text(DESCRIPTION)
                 .type(new DescriptionTypeWithSchemaUri()
                         .id(ALTERNATIVE_ID)
                         .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI));

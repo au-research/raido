@@ -24,7 +24,7 @@ public class AccessFactory {
 
         AccessStatement accessStatement = null;
         if (accessBlock.getType() != null && accessBlock.getType() != AccessType.OPEN) {
-            accessStatement = new AccessStatement().statement(accessBlock.getAccessStatement());
+            accessStatement = new AccessStatement().text(accessBlock.getAccessStatement());
         }
 
         return new Access()

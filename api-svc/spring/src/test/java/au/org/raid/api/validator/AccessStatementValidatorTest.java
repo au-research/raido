@@ -38,7 +38,7 @@ class AccessStatementValidatorTest {
                 .thenReturn(Collections.emptyList());
 
         final var accessStatement = new AccessStatement()
-                .statement("Embargoed")
+                .text("Embargoed")
                 .language(language);
 
         final var failures = validationService.validate(accessStatement);
@@ -100,7 +100,7 @@ class AccessStatementValidatorTest {
                 .thenReturn(List.of(failure));
 
         final var accessStatement = new AccessStatement()
-                .statement("Embargoed")
+                .text("Embargoed")
                 .language(language);
 
         final var failures = validationService.validate(accessStatement);

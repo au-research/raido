@@ -72,9 +72,9 @@ public class SubjectValidator {
                 }
             }
 
-            if (subject.getKeywords() != null) {
-                IntStream.range(0, subject.getKeywords().size()).forEach(keywordIndex -> {
-                    final var keyword = subject.getKeywords().get(keywordIndex);
+            if (subject.getKeyword() != null) {
+                IntStream.range(0, subject.getKeyword().size()).forEach(keywordIndex -> {
+                    final var keyword = subject.getKeyword().get(keywordIndex);
                     failures.addAll(subjectKeywordValidator.validate(keyword, subjectIndex, keywordIndex));
                 });
             }

@@ -43,7 +43,7 @@ class DescriptionValidatorTest {
                 .schemaUri(TestConstants.LANGUAGE_SCHEMA_URI);
 
         final var description = new Description()
-                .description(DESCRIPTION_VALUE)
+                .text(DESCRIPTION_VALUE)
                 .type(type)
                 .language(language);
 
@@ -88,7 +88,7 @@ class DescriptionValidatorTest {
     @DisplayName("Validation fails with empty description")
     void emptyDescription() {
         final var description = new Description()
-                .description("")
+                .text("")
                 .type(new DescriptionTypeWithSchemaUri()
                         .id(TestConstants.PRIMARY_DESCRIPTION_TYPE)
                         .schemaUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI)
@@ -113,7 +113,7 @@ class DescriptionValidatorTest {
                 .schemaUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI);
 
         final var description = new Description()
-                .description(DESCRIPTION_VALUE)
+                .text(DESCRIPTION_VALUE)
                 .type(type);
 
         final var typeError = new ValidationFailure();

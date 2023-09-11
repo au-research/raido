@@ -165,7 +165,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
                         .id(CLOSED_ACCESS_TYPE)
                         .schemaUri(ACCESS_TYPE_SCHEMA_URI)
                 )
-                .accessStatement(new AccessStatement().statement("Closed"));
+                .accessStatement(new AccessStatement().text("Closed"));
         try {
             raidApi.createRaidV1(createRequest);
         } catch (Exception e) {
@@ -182,7 +182,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
                         .schemaUri(ACCESS_TYPE_SCHEMA_URI)
                 )
                 .embargoExpiry(LocalDate.now())
-                .accessStatement(new AccessStatement().statement("Embargoed"));
+                .accessStatement(new AccessStatement().text("Embargoed"));
         try {
             raidApi.createRaidV1(createRequest);
         } catch (Exception e) {
@@ -198,7 +198,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
                         .id(EMBARGOED_ACCESS_TYPE)
                         .schemaUri(ACCESS_TYPE_SCHEMA_URI)
                 )
-                .accessStatement(new AccessStatement().statement("Embargoed"));
+                .accessStatement(new AccessStatement().text("Embargoed"));
         try {
             raidApi.createRaidV1(createRequest);
         } catch (RaidApiValidationException e) {
@@ -248,7 +248,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
                         .id(CLOSED_ACCESS_TYPE)
                         .schemaUri(ACCESS_TYPE_SCHEMA_URI)
                 )
-                .accessStatement(new AccessStatement().statement(""));
+                .accessStatement(new AccessStatement().text(""));
 
         try {
             raidApi.createRaidV1(createRequest);

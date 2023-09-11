@@ -111,8 +111,9 @@ class RaidStableV1ServiceTest {
                         .schemaUri(SchemaUri.ROR.getUri()))
                 .owner(new Owner()
                         .id(identifierOwner)
-                        .schemaUri(SchemaUri.ROR.getUri()))
-                .servicePoint(servicePointId);
+                        .schemaUri(SchemaUri.ROR.getUri())
+                        .servicePoint(servicePointId)
+                );
 
         ReflectionTestUtils.setField(metaProps, "handleUrlPrefix", identifierUrl.urlPrefix());
         when(servicePointRepository.findById(servicePointId)).thenReturn(Optional.of(servicePointRecord));
@@ -193,7 +194,7 @@ class RaidStableV1ServiceTest {
         final var updatedRaid = new RaidRecord()
                 .setMetadata(JSONB.valueOf(raidJson));
 
-        final var id = new IdentifierParser().parseUrlWithException(updateRequest.getId().getId());
+        final var id = new IdentifierParser().parseUrlWithException(updateRequest.getIdentifier().getId());
         final var handle = id.handle().format();
 
         final var servicePointRecord = new ServicePointRecord();
@@ -230,7 +231,7 @@ class RaidStableV1ServiceTest {
         final var updatedRaid = new RaidRecord()
                 .setMetadata(JSONB.valueOf(raidJson));
 
-        final var id = new IdentifierParser().parseUrlWithException(updateRequest.getId().getId());
+        final var id = new IdentifierParser().parseUrlWithException(updateRequest.getIdentifier().getId());
         final var handle = id.handle().format();
 
         final var servicePointRecord = new ServicePointRecord();
@@ -260,7 +261,7 @@ class RaidStableV1ServiceTest {
 
         final var updateRequest = objectMapper.readValue(raidJson, UpdateRaidV1Request.class);
 
-        final var id = new IdentifierParser().parseUrlWithException(updateRequest.getId().getId());
+        final var id = new IdentifierParser().parseUrlWithException(updateRequest.getIdentifier().getId());
         final var handle = id.handle().format();
 
         final var servicePointRecord = new ServicePointRecord();

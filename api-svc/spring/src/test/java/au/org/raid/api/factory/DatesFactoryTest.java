@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -25,8 +26,8 @@ class DatesFactoryTest {
 
         final var result = datesFactory.create(datesBlock);
 
-        assertThat(result.getStartDate(), is(startDate));
-        assertThat(result.getEndDate(), is(endDate));
+        assertThat(result.getStartDate(), is(startDate.format(DateTimeFormatter.ISO_LOCAL_DATE)));
+        assertThat(result.getEndDate(), is(endDate.format(DateTimeFormatter.ISO_LOCAL_DATE)));
     }
 
     @Test

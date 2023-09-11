@@ -4,7 +4,7 @@ import au.org.raid.api.exception.InvalidAccessException;
 import au.org.raid.api.exception.ValidationException;
 import au.org.raid.api.service.raid.RaidStableV1Service;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
-import au.org.raid.api.service.raid.validation.RaidoStableV1ValidationService;
+import au.org.raid.api.validator.RaidoStableV1Validator;
 import au.org.raid.idl.raidv2.api.RaidoStableV1Api;
 import au.org.raid.idl.raidv2.model.CreateRaidV1Request;
 import au.org.raid.idl.raidv2.model.RaidDto;
@@ -24,10 +24,10 @@ import static org.springframework.transaction.annotation.Propagation.NEVER;
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
 public class RaidoStableV1 implements RaidoStableV1Api {
-    private final RaidoStableV1ValidationService validationService;
+    private final RaidoStableV1Validator validationService;
     private final RaidStableV1Service raidService;
 
-    public RaidoStableV1(final RaidoStableV1ValidationService validationService, final RaidStableV1Service raidService) {
+    public RaidoStableV1(final RaidoStableV1Validator validationService, final RaidStableV1Service raidService) {
         this.validationService = validationService;
         this.raidService = raidService;
     }
@@ -37,7 +37,7 @@ public class RaidoStableV1 implements RaidoStableV1Api {
         final var handle = String.join("/", prefix, suffix);
         var user = getApiToken();
         var data = raidService.read(handle);
-        guardOperatorOrAssociated(user, data.getId().getServicePoint());
+        guardOperatorOrAssociated(user, data.getIdentifier().getOwner().getServicePoint());
         return data;
     }
 
@@ -74,9 +74,9 @@ public class RaidoStableV1 implements RaidoStableV1Api {
     public RaidDto updateRaidV1(final String prefix, final String suffix, UpdateRaidV1Request request) {
         final var handle = String.join("/", prefix, suffix);
         var user = getApiToken();
-        guardOperatorOrAssociated(user, request.getId().getServicePoint());
+        guardOperatorOrAssociated(user, request.getIdentifier().getOwner().getServicePoint());
 
-        if (!raidService.isEditable(user, request.getId().getServicePoint())) {
+        if (!raidService.isEditable(user, request.getIdentifier().getOwner().getServicePoint())) {
             throw new InvalidAccessException("This service point does not allow Raids to be edited in the app.");
         }
 

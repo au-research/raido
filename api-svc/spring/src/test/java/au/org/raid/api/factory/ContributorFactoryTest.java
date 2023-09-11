@@ -68,8 +68,8 @@ class ContributorFactoryTest {
         assertThat(result, is(new Contributor()
                 .id(orcid)
                 .schemaUri("https://orcid.org/")
-                .positions(List.of(position3, position4))
-                .roles(List.of(role3, role4))
+                .position(List.of(position3, position4))
+                .role(List.of(role3, role4))
         ));
     }
 }

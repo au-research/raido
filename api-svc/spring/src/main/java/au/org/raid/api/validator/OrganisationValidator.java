@@ -56,8 +56,8 @@ public class OrganisationValidator {
 
             failures.addAll(rorValidationService.validate(organisation.getId(), organisationIndex));
 
-            IntStream.range(0, organisation.getRoles().size()).forEach(roleIndex -> {
-                final var role = organisation.getRoles().get(roleIndex);
+            IntStream.range(0, organisation.getRole().size()).forEach(roleIndex -> {
+                final var role = organisation.getRole().get(roleIndex);
                 failures.addAll(roleValidationService.validate(role, organisationIndex, roleIndex));
             });
         });

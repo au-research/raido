@@ -30,8 +30,8 @@ public class IdFactory {
                 .owner(new Owner()
                         .id(servicePointRecord.getIdentifierOwner())
                         .schemaUri(SchemaUri.ROR.getUri())
+                        .servicePoint(servicePointRecord.getId())
                 )
-                .servicePoint(servicePointRecord.getId())
                 .globalUrl(id.handle().format(metaProps.globalUrlPrefix))
                 .raidAgencyUrl(id.handle().format(metaProps.handleUrlPrefix))
                 .version(1);
@@ -51,8 +51,8 @@ public class IdFactory {
                 .owner(new Owner()
                         .id(idBlock.getIdentifierOwner())
                         .schemaUri(SchemaUri.ROR.getUri())
+                        .servicePoint(idBlock.getIdentifierServicePoint())
                 )
-                .servicePoint(idBlock.getIdentifierServicePoint())
                 .globalUrl(idBlock.getGlobalUrl())
                 .raidAgencyUrl(idBlock.getRaidAgencyUrl())
                 .version(idBlock.getVersion());

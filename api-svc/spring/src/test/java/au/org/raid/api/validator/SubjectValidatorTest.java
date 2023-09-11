@@ -42,7 +42,7 @@ class SubjectValidatorTest {
         final var subject = new Subject()
                 .id(id)
                 .schemaUri(SchemaUri.SUBJECT.getUri())
-                .keywords(List.of(new SubjectKeyword()));
+                .keyword(List.of(new SubjectKeyword()));
 
         when(keywordValidator.validate(keyword,0,0)).thenReturn(Collections.emptyList());
         when(subjectTypeRepository.findById("222222")).thenReturn(Optional.of(new SubjectTypeRecord()));
@@ -187,7 +187,7 @@ class SubjectValidatorTest {
         final var subject = new Subject()
                 .id(id)
                 .schemaUri(SchemaUri.SUBJECT.getUri())
-                .keywords(List.of(new SubjectKeyword()));
+                .keyword(List.of(new SubjectKeyword()));
 
         final var failure = new ValidationFailure();
 

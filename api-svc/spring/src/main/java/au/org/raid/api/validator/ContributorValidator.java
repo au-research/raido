@@ -1,6 +1,6 @@
 package au.org.raid.api.validator;
 
-import au.org.raid.api.exception.InvalidDateException;
+import au.org.raid.api.util.DateUtil;
 import au.org.raid.idl.raidv2.model.Contributor;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.springframework.stereotype.Component;
@@ -61,15 +61,15 @@ public class ContributorValidator {
 
                     failures.addAll(orcidValidationService.validate(contributor.getId(), index));
 
-                    IntStream.range(0, contributor.getRoles().size())
+                    IntStream.range(0, contributor.getRole().size())
                             .forEach(roleIndex -> {
-                                final var role = contributor.getRoles().get(roleIndex);
+                                final var role = contributor.getRole().get(roleIndex);
                                 failures.addAll(roleValidationService.validate(role, index, roleIndex));
                             });
 
-                    IntStream.range(0, contributor.getPositions().size())
+                    IntStream.range(0, contributor.getPosition().size())
                             .forEach(positionIndex -> {
-                                final var position = contributor.getPositions().get(positionIndex);
+                                final var position = contributor.getPosition().get(positionIndex);
                                 failures.addAll(positionValidationService.validate(position, index, positionIndex));
                             });
 
@@ -84,7 +84,7 @@ public class ContributorValidator {
             List<Contributor> contributors
     ) {
         return contributors.stream()
-                .filter(i -> i.getPositions()
+                .filter(i -> i.getPosition()
                         .stream()
                         .anyMatch(j -> j.getId().equals(LEADER_POSITION))
                 ).toList();
@@ -124,8 +124,8 @@ public class ContributorValidator {
         for (int contributorIndex = 0; contributorIndex < contributors.size(); contributorIndex++) {
             final var contributor = contributors.get(contributorIndex);
 
-            for (int positionIndex = 0; positionIndex < contributors.get(contributorIndex).getPositions().size(); positionIndex++) {
-                final var position = contributor.getPositions().get(positionIndex);
+            for (int positionIndex = 0; positionIndex < contributors.get(contributorIndex).getPosition().size(); positionIndex++) {
+                final var position = contributor.getPosition().get(positionIndex);
 
                 positions.add(Map.of(
                         "contributorIndex", contributorIndex,
@@ -140,10 +140,10 @@ public class ContributorValidator {
         List<Map<String, Object>> leaders = positions.stream()
                 .filter(map -> (boolean) map.get("leader"))
                 .sorted((o1, o2) -> {
-                    if (getDate((String) o1.get("startDate")).equals(getDate((String)o2.get("startDate")))) {
-                        return getDate((String) o1.get("endDate")).compareTo(getDate((String) o2.get("endDate")));
+                    if (DateUtil.parseDate((String) o1.get("startDate")).equals(DateUtil.parseDate((String)o2.get("startDate")))) {
+                        return DateUtil.parseDate((String) o1.get("endDate")).compareTo(DateUtil.parseDate((String) o2.get("endDate")));
                     }
-                    return getDate((String) o1.get("startDate")).compareTo(getDate((String) o2.get("startDate")));
+                    return DateUtil.parseDate((String) o1.get("startDate")).compareTo(DateUtil.parseDate((String) o2.get("startDate")));
                 })
                 .toList();
 
@@ -151,9 +151,9 @@ public class ContributorValidator {
             var previousEntry = leaders.get(i - 1);
             var entry = leaders.get(i);
 
-            final var start = getDate((String) entry.get("startDate"));
+            final var start = DateUtil.parseDate((String) entry.get("startDate"));
             final var previousEnd = previousEntry.get("endDate") == null ?
-                    LocalDate.now() : getDate((String) previousEntry.get("endDate"));
+                    LocalDate.now() : DateUtil.parseDate((String) previousEntry.get("endDate"));
 
             if (start.isBefore(previousEnd)) {
                 failures.add(new ValidationFailure()
@@ -172,23 +172,5 @@ public class ContributorValidator {
 
         return failures;
     }
-
-
-    private LocalDate getDate(final String date) {
-
-        if (date.matches("\\d{4}")) {
-            return LocalDate.of(Integer.parseInt(date), 1, 1);
-        } else if (date.matches("\\d{4}-\\d{2}")) {
-            var yearMonth = date.split("-");
-            return LocalDate.of(Integer.parseInt(yearMonth[0]), Integer.parseInt(yearMonth[1]), 1);
-        } else if (date.matches("\\d{4}-\\d{2}-\\d{2}")) {
-            var yearMonthDay = date.split("-");
-            return LocalDate.of(Integer.parseInt(yearMonthDay[0]), Integer.parseInt(yearMonthDay[1]), Integer.parseInt(yearMonthDay[2]));
-        } else {
-            throw new InvalidDateException(date);
-        }
-
-    }
-
 }
 

@@ -47,7 +47,7 @@ class ContributorValidatorTest {
         final var contributor = new Contributor()
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
-                .roles(List.of(role));
+                .role(List.of(role));
 
         final var failures = validationService.validate(List.of(contributor));
 
@@ -78,8 +78,8 @@ class ContributorValidatorTest {
         final var contributor = new Contributor()
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
-                .roles(List.of(role))
-                .positions(List.of(position));
+                .role(List.of(role))
+                .position(List.of(position));
 
         final var failures = validationService.validate(List.of(contributor));
 
@@ -144,8 +144,8 @@ class ContributorValidatorTest {
         final var contributor = new Contributor()
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
-                .roles(List.of(role))
-                .positions(List.of(position));
+                .role(List.of(role))
+                .position(List.of(position));
 
         final var failures = validationService.validate(List.of(contributor));
 
@@ -170,8 +170,8 @@ class ContributorValidatorTest {
         final var contributor = new Contributor()
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
-                .roles(List.of(role))
-                .positions(List.of(position));
+                .role(List.of(role))
+                .position(List.of(position));
 
         final var orcidError = new ValidationFailure()
                 .fieldId("contributors[0].id")
@@ -218,8 +218,8 @@ class ContributorValidatorTest {
         final var contributor1 = new Contributor()
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
-                .roles(List.of(role1))
-                .positions(List.of(position1));
+                .role(List.of(role1))
+                .position(List.of(position1));
 
         final var role2 = new ContributorRoleWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
@@ -234,8 +234,8 @@ class ContributorValidatorTest {
         final var contributor2 = new Contributor()
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
-                .roles(List.of(role2))
-                .positions(List.of(position2));
+                .role(List.of(role2))
+                .position(List.of(position2));
 
         final var failures = validationService.validate(List.of(contributor2, contributor1));
 
@@ -262,8 +262,8 @@ class ContributorValidatorTest {
         final var contributor1 = new Contributor()
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
-                .roles(List.of(role1))
-                .positions(List.of(position1));
+                .role(List.of(role1))
+                .position(List.of(position1));
 
         final var role2 = new ContributorRoleWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
@@ -278,8 +278,8 @@ class ContributorValidatorTest {
         final var contributor2 = new Contributor()
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
-                .roles(List.of(role2))
-                .positions(List.of(position2));
+                .role(List.of(role2))
+                .position(List.of(position2));
 
         final var failures = validationService.validate(List.of(contributor1, contributor2));
 
@@ -305,8 +305,8 @@ class ContributorValidatorTest {
         final var contributor1 = new Contributor()
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
-                .roles(List.of(role1))
-                .positions(List.of(position1));
+                .role(List.of(role1))
+                .position(List.of(position1));
 
         final var role2 = new ContributorRoleWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
@@ -321,8 +321,8 @@ class ContributorValidatorTest {
         final var contributor2 = new Contributor()
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
-                .roles(List.of(role2))
-                .positions(List.of(position2));
+                .role(List.of(role2))
+                .position(List.of(position2));
 
         final var failures = validationService.validate(List.of(contributor1, contributor2));
 
@@ -348,8 +348,8 @@ class ContributorValidatorTest {
         final var contributor1 = new Contributor()
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
-                .roles(List.of(role1))
-                .positions(List.of(position1));
+                .role(List.of(role1))
+                .position(List.of(position1));
 
         final var role2 = new ContributorRoleWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
@@ -364,8 +364,8 @@ class ContributorValidatorTest {
         final var contributor2 = new Contributor()
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
-                .roles(List.of(role2))
-                .positions(List.of(position2));
+                .role(List.of(role2))
+                .position(List.of(position2));
 
         final var failures = validationService.validate(List.of(contributor2, contributor1));
 
@@ -388,8 +388,8 @@ class ContributorValidatorTest {
         final var contributor1 = new Contributor()
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
-                .roles(List.of(role1))
-                .positions(List.of(position1));
+                .role(List.of(role1))
+                .position(List.of(position1));
 
         final var role2 = new ContributorRoleWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
@@ -404,8 +404,8 @@ class ContributorValidatorTest {
         final var contributor2 = new Contributor()
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
-                .roles(List.of(role2))
-                .positions(List.of(position2));
+                .role(List.of(role2))
+                .position(List.of(position2));
 
         final var failures = validationService.validate(List.of(contributor2, contributor1));
 
@@ -428,8 +428,8 @@ class ContributorValidatorTest {
         final var contributor1 = new Contributor()
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
-                .roles(List.of(role1))
-                .positions(List.of(position1));
+                .role(List.of(role1))
+                .position(List.of(position1));
 
         final var role2 = new ContributorRoleWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
@@ -444,8 +444,8 @@ class ContributorValidatorTest {
         final var contributor2 = new Contributor()
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
-                .roles(List.of(role2))
-                .positions(List.of(position2));
+                .role(List.of(role2))
+                .position(List.of(position2));
 
         final var failures = validationService.validate(List.of(contributor2, contributor1));
 
@@ -466,8 +466,8 @@ class ContributorValidatorTest {
 
         final var contributor = new Contributor()
                 .id(TestConstants.VALID_ORCID)
-                .roles(List.of(role))
-                .positions(List.of(position));
+                .role(List.of(role))
+                .position(List.of(position));
 
         final var failures = validationService.validate(List.of(contributor));
 
@@ -497,8 +497,8 @@ class ContributorValidatorTest {
         final var contributor = new Contributor()
                 .id(TestConstants.VALID_ORCID)
                 .schemaUri("")
-                .roles(List.of(role))
-                .positions(List.of(position));
+                .role(List.of(role))
+                .position(List.of(position));
 
         final var failures = validationService.validate(List.of(contributor));
 
@@ -528,8 +528,8 @@ class ContributorValidatorTest {
         final var contributor = new Contributor()
                 .id(TestConstants.VALID_ORCID)
                 .schemaUri("https://example.org/")
-                .roles(List.of(role))
-                .positions(List.of(position));
+                .role(List.of(role))
+                .position(List.of(position));
 
         final var failures = validationService.validate(List.of(contributor));
 

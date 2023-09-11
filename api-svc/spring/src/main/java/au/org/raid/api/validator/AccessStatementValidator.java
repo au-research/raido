@@ -28,7 +28,7 @@ public class AccessStatementValidator {
             );
         }
 
-        if (isBlank(accessStatement.getStatement())) {
+        if (isBlank(accessStatement.getText())) {
             failures.add(new ValidationFailure()
                     .fieldId("access.accessStatement.statement")
                     .errorType(NOT_SET_TYPE)

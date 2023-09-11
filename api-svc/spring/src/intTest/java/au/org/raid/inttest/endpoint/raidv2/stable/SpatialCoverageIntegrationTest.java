@@ -15,7 +15,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with a spatial coverage with an invalid uri fails")
     void invalidId() {
-        createRequest.getSpatialCoverages().get(0).setId("http://localhost");
+        createRequest.getSpatialCoverage().get(0).setId("http://localhost");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -36,7 +36,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with a spatial coverage with an non-existent uri fails")
     void nonExistentUri() {
-        createRequest.getSpatialCoverages().get(0).setId(NONEXISTENT_TEST_GEONAMES_URI);
+        createRequest.getSpatialCoverage().get(0).setId(NONEXISTENT_TEST_GEONAMES_URI);
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -57,7 +57,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Server error returns validation failure")
     void serverError() {
-        createRequest.getSpatialCoverages().get(0).setId(SERVER_ERROR_TEST_GEONAMES_URI);
+        createRequest.getSpatialCoverage().get(0).setId(SERVER_ERROR_TEST_GEONAMES_URI);
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -78,7 +78,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with a spatial coverage with a null language schemaUri fails")
     void nullLanguageSchemeUri() {
-        createRequest.getSpatialCoverages().get(0).getLanguage().schemaUri(null);
+        createRequest.getSpatialCoverage().get(0).getLanguage().schemaUri(null);
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -99,7 +99,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with a spatial coverage with a empty language schemaUri fails")
     void emptyLanguageSchemeUri() {
-        createRequest.getSpatialCoverages().get(0).getLanguage().schemaUri("");
+        createRequest.getSpatialCoverage().get(0).getLanguage().schemaUri("");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -120,7 +120,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with a spatial coverage with a null language id fails")
     void nullLanguageId() {
-        createRequest.getSpatialCoverages().get(0).getLanguage().setId(null);
+        createRequest.getSpatialCoverage().get(0).getLanguage().setId(null);
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -141,7 +141,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with a spatial coverage with a empty language id fails")
     void emptyLanguageId() {
-        createRequest.getSpatialCoverages().get(0).getLanguage().setId("");
+        createRequest.getSpatialCoverage().get(0).getLanguage().setId("");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -162,7 +162,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with a spatial coverage with a invalid language id fails")
     void invalidLanguageId() {
-        createRequest.getSpatialCoverages().get(0).getLanguage().setId("xxx");
+        createRequest.getSpatialCoverage().get(0).getLanguage().setId("xxx");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -184,7 +184,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with a spatial coverage with a invalid language schemaUri fails")
     void invalidLanguageSchemeUri() {
-        createRequest.getSpatialCoverages().get(0).getLanguage().schemaUri("xxx");
+        createRequest.getSpatialCoverage().get(0).getLanguage().schemaUri("xxx");
 
         try {
             raidApi.createRaidV1(createRequest);

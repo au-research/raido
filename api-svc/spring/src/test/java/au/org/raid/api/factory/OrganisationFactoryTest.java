@@ -58,7 +58,7 @@ class OrganisationFactoryTest {
         assertThat(result, is(new Organisation()
                 .id(ror)
                 .schemaUri("https://ror.org/")
-                .roles(List.of(role3, role4))
+                .role(List.of(role3, role4))
         ));
     }
 }

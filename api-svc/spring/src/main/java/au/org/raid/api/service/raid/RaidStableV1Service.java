@@ -88,7 +88,7 @@ public class RaidStableV1Service {
 
         IdentifierHandle handle = parseHandleFromApids(apidsResponse);
         var id = new IdentifierUrl(metaSvc.getMetaProps().handleUrlPrefix, handle);
-        request.setId(idFactory.create(id, servicePointRecord));
+        request.setIdentifier(idFactory.create(id, servicePointRecord));
 
         final var raidRecord = raidRecordFactory.create(
                 request, apidsResponse, servicePointRecord);
@@ -102,14 +102,14 @@ public class RaidStableV1Service {
     public RaidDto update(
             final UpdateRaidV1Request raid
     ) {
-        final Integer version = raid.getId().getVersion();
+        final Integer version = raid.getIdentifier().getVersion();
         if (version == null) {
             throw new InvalidVersionException(version);
         }
 
         final IdentifierUrl identifierUrl;
         try {
-            identifierUrl = idParser.parseUrlWithException(raid.getId().getId());
+            identifierUrl = idParser.parseUrlWithException(raid.getIdentifier().getId());
         } catch (ValidationFailureException e) {
             // it was already validated, so this shouldn't happen
             throw new RuntimeException(e);

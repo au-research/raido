@@ -113,45 +113,45 @@ components:
     RaidDto:
       type: object
       properties:
-        id: { $ref: '#/components/schemas/Id' }
-        titles:
+        identifier: { $ref: '#/components/schemas/Id' }
+        title:
           type: array
           items: { $ref: '#/components/schemas/Title' }
-        dates: { $ref: '#/components/schemas/Dates' }
-        descriptions:
+        date: { $ref: '#/components/schemas/Dates' }
+        description:
           type: array
           items: { $ref: '#/components/schemas/Description' }
         access: { $ref: '#/components/schemas/Access' }
-        alternateUrls:
+        alternateUrl:
           type: array
           items: { $ref: '#/components/schemas/AlternateUrl' }
-        contributors:
+        contributor:
           type: array
           items: { $ref: '#/components/schemas/Contributor' }
-        organisations:
+        organisation:
           type: array
           items: { $ref: '#/components/schemas/Organisation' }
-        subjects:
+        subject:
           type: array
           items: { $ref: '#/components/schemas/Subject' }
-        relatedRaids:
+        relatedRaid:
           type: array
           items: { $ref: '#/components/schemas/RelatedRaid' }
-        relatedObjects:
+        relatedObject:
           type: array
           items: { $ref: '#/components/schemas/RelatedObject' }
-        alternateIdentifiers:
+        alternateIdentifier:
           type: array
           items: { $ref: '#/components/schemas/AlternateIdentifier' }
-        spatialCoverages:
+        spatialCoverage:
           type: array
           items: { $ref: '#/components/schemas/SpatialCoverage' }
-        traditionalKnowledgeLabels:
+        traditionalKnowledgeLabel:
           type: array
           items: { $ref: '#/components/schemas/TraditionalKnowledgeLabel' }
     Id:
       type: object
-      required: [ id, schemaUri, registrationAgency, owner, servicePoint, version ]
+      required: [ id, schemaUri, registrationAgency, owner, servicePoint, license, version ]
       properties:
         id:
           type: string
@@ -166,13 +166,6 @@ components:
           $ref: '#/components/schemas/RegistrationAgency'
         owner:
           $ref: '#/components/schemas/Owner'
-        servicePoint:
-          type: integer
-          format: int64
-          description: >
-            The Service Point that requested the RAiD. Analogous to a DataCite ‘Repository’. ‘Owners’ can have multiple
-            Service Points, and SPs do not need to be legal entities.
-          example: 20000003
         globalUrl:
           type: string
           description: >
@@ -185,6 +178,10 @@ components:
             The URL for the raid via the minting raid agency system, e.g 
             https://raid.org.au/10378.1/1695863
           example: https://demo.raido-infra.com/handle/10378.1/1695863
+        license:
+          type: string
+          description: The license under which the RAiD Metadata Record associated with this Identifier has been issued.
+          example: Creative Commons CC-0
         version:
           type: integer
           description: The version of the resource. Read-only. Increments automatically on update.
@@ -217,21 +214,40 @@ components:
           type: string,
           example: https://ror.org
         }
+        servicePoint:
+          type: integer
+          format: int64
+          description: >
+            The Service Point (SP) that requested the RAiD. Analogous to a DataCite ‘Repository’. SPs belong to an owner, RAiD owners can have multiple SPs, and SPs do not need to be legal entities.
+          example: 20000003
     Dates:
       type: object
+      description: Metadata schema block containing the start and end date of the RAiD.
       required: [ "startDate" ]
       properties:
-        startDate: { type: string, format: date }
-        endDate: { type: string, format: date }
+        startDate: {
+          type: string,
+          example: 2023-08-28; 2023-08; 2023
+        }
+        endDate: {
+          type: string,
+          example: 2023-08-28; 2023-08; 2023
+        }
     Title:
       type: object
-      required: [title, type, startDate]
+      required: [text, type, startDate]
       properties:
-        title: {type: string}
+        text: {type: string}
         type:
           $ref: '#/components/schemas/TitleTypeWithSchemaUri'
-        startDate: { type: string, format: date }
-        endDate: { type: string, format: date }
+        startDate: {
+          type: string,
+          example: 2023-08-28; 2023-08; 2023
+        }
+        endDate: {
+          type: string,
+          example: 2023-08-28; 2023-08; 2023
+        }
         language:
           $ref: '#/components/schemas/Language'
     TitleTypeWithSchemaUri:
@@ -247,9 +263,9 @@ components:
         }
     Description:
       type: object
-      required: ["description", "type"]
+      required: ["text", "type"]
       properties:
-        description: {type: string}
+        text: {type: string}
         type:
           $ref: '#/components/schemas/DescriptionTypeWithSchemaUri'
         language:
@@ -276,13 +292,14 @@ components:
           $ref: '#/components/schemas/AccessStatement'
         embargoExpiry: {
           type: string,
-          format: date
+          format: date,
+          description: Date the embargo on access to the RAiD ends. Year, month, and day required; may not be more than 18 months from the date the RAiD was registered.
         }
     AccessStatement:
       type: object
       required: [statement]
       properties:
-        statement: { type: string }
+        text: { type: string }
         language:
           $ref: '#/components/schemas/Language'
     AccessTypeWithSchemaUri:
@@ -299,7 +316,7 @@ components:
         }
     Contributor:
       type: object
-      required: [id, schemaUri, positions, roles]
+      required: [id, schemaUri, position, role]
       properties:
         id:
           type: string
@@ -307,11 +324,11 @@ components:
           type: string,
           example: https://orcid.org/
         }
-        positions:
+        position:
           type: array
           items:
             $ref: '#/components/schemas/ContributorPositionWithSchemaUri'
-        roles:
+        role:
           type: array
           items:
             $ref: '#/components/schemas/ContributorRoleWithSchemaUri'
@@ -332,10 +349,12 @@ components:
           example: https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json
         }
         startDate: {
-          type: string
+          type: string,
+          example: 2025-08-28; 2025-08; 2025
         }
         endDate: {
-          type: string
+          type: string,
+          example: 2025-08-28; 2025-08; 2025
         }
     ContributorRoleWithSchemaUri:
       type: object
@@ -351,14 +370,14 @@ components:
         }
     Organisation:
       type: object
-      required: [id, schemaUri, roles]
+      required: [id, schemaUri, role]
       properties:
         id: { type: string }
         schemaUri: {
           type: string,
           example: https://ror.org/
         }
-        roles:
+        role:
           type: array
           items:
             $ref: '#/components/schemas/OrganisationRoleWithSchemaUri'
@@ -374,11 +393,17 @@ components:
           type: string,
           example: https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json
         }
-        startDate: { type: string, format: date }
-        endDate: { type: string, format: date }
+        startDate: {
+          type: string,
+          example: 2025-08-28; 2025-08; 2025
+        }
+        endDate: {
+          type: string,
+          example: 2025-08-28; 2025-08; 2025
+        }
     AlternateUrl:
       type: object
-      required: [ "url", ]
+      required: [url]
       properties:
         url: { type: string }
     Subject:
@@ -387,15 +412,15 @@ components:
       properties:
         id: { type: string }
         schemaUri: { type: string }
-        keywords:
+        keyword:
           type: array
           items:
             $ref: '#/components/schemas/SubjectKeyword'
     SubjectKeyword:
       type: object
-      required: [ keyword ]
+      required: [ text ]
       properties:
-        keyword: { type: string }
+        text: { type: string }
         language:
           $ref: '#/components/schemas/Language'
     RelatedRaid:

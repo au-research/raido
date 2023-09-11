@@ -38,7 +38,7 @@ class AccessValidatorTest {
 
         final var access = new Access()
                 .type(type)
-                .accessStatement(new AccessStatement().statement("Closed"));
+                .accessStatement(new AccessStatement().text("Closed"));
 
         final List<ValidationFailure> failures = validator.validate(access);
 
@@ -55,7 +55,7 @@ class AccessValidatorTest {
 
         final var access = new Access()
                 .type(type)
-                .accessStatement(new AccessStatement().statement("Embargoed"))
+                .accessStatement(new AccessStatement().text("Embargoed"))
                 .embargoExpiry(LocalDate.now());
 
         final List<ValidationFailure> failures = validator.validate(access);
@@ -92,7 +92,7 @@ class AccessValidatorTest {
                 .id(TestConstants.CLOSED_ACCESS_TYPE_ID)
                 .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
-        final var accessStatement = new AccessStatement().statement("");
+        final var accessStatement = new AccessStatement().text("");
 
         final var access = new Access()
                 .type(type)
@@ -118,7 +118,7 @@ class AccessValidatorTest {
                 .id(TestConstants.EMBARGOED_ACCESS_TYPE_ID)
                 .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
-        final var accessStatement = new AccessStatement().statement("");
+        final var accessStatement = new AccessStatement().text("");
 
         final var access = new Access()
                 .type(type)
@@ -163,7 +163,7 @@ class AccessValidatorTest {
 
         final var access = new Access()
                 .type(type)
-                .accessStatement(new AccessStatement().statement("access statement"));
+                .accessStatement(new AccessStatement().text("access statement"));
 
         final List<ValidationFailure> failures = validator.validate(access);
 

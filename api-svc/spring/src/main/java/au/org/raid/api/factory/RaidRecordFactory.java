@@ -3,6 +3,7 @@ package au.org.raid.api.factory;
 import au.org.raid.api.exception.InvalidJsonException;
 import au.org.raid.api.exception.InvalidTitleException;
 import au.org.raid.api.service.apids.model.ApidsMintResponse;
+import au.org.raid.api.util.DateUtil;
 import au.org.raid.db.jooq.api_svc.enums.Metaschema;
 import au.org.raid.db.jooq.api_svc.tables.records.RaidRecord;
 import au.org.raid.db.jooq.api_svc.tables.records.ServicePointRecord;
@@ -34,11 +35,11 @@ public class RaidRecordFactory {
             final ApidsMintResponse apidsMintResponse,
             final ServicePointRecord servicePointRecord) {
 
-        final var primaryTitle = raid.getTitles().stream()
+        final var primaryTitle = raid.getTitle().stream()
                 .filter(title -> title.getType().getId().equals(PRIMARY_TITLE_TYPE))
                 .findFirst()
                 .orElseThrow(() -> new InvalidTitleException("One title with a titleType of 'Primary' should be specified."))
-                .getTitle();
+                .getText();
 
         final String raidJson;
         try {
@@ -48,7 +49,7 @@ public class RaidRecordFactory {
         }
 
         return new RaidRecord()
-                .setVersion(raid.getId().getVersion())
+                .setVersion(raid.getIdentifier().getVersion())
                 .setHandle(apidsMintResponse.identifier.handle)
                 .setServicePointId(servicePointRecord.getId())
                 .setUrl(apidsMintResponse.identifier.property.value)
@@ -56,21 +57,21 @@ public class RaidRecordFactory {
                 .setPrimaryTitle(primaryTitle)
                 .setMetadata(JSONB.valueOf(raidJson))
                 .setMetadataSchema(Metaschema.raido_metadata_schema_v2)
-                .setStartDate(raid.getDates().getStartDate())
+                .setStartDate(DateUtil.parseDate(raid.getDate().getStartDate()))
                 .setDateCreated(LocalDateTime.now())
                 .setConfidential(raid.getAccess().getType().equals(ACCESS_TYPE_CLOSED));
     }
 
     public RaidRecord merge(final UpdateRaidV1Request raid, final RaidRecord existing) {
 
-        final var primaryTitle = raid.getTitles().stream()
+        final var primaryTitle = raid.getTitle().stream()
                 .filter(title -> title.getType().getId().equals(PRIMARY_TITLE_TYPE))
                 .findFirst()
                 .orElseThrow(() -> new InvalidTitleException("One title with a titleType of 'Primary' should be specified."))
-                .getTitle();
+                .getText();
 
-        final var newVersion = raid.getId().getVersion() + 1;
-        raid.getId().version(newVersion);
+        final var newVersion = raid.getIdentifier().getVersion() + 1;
+        raid.getIdentifier().version(newVersion);
 
         final String raidJson;
         try {
@@ -88,7 +89,7 @@ public class RaidRecordFactory {
                 .setPrimaryTitle(primaryTitle)
                 .setMetadata(JSONB.valueOf(raidJson))
                 .setMetadataSchema(Metaschema.raido_metadata_schema_v2)
-                .setStartDate(raid.getDates().getStartDate())
+                .setStartDate(DateUtil.parseDate(raid.getDate().getStartDate()))
                 .setConfidential(raid.getAccess().getType().equals(ACCESS_TYPE_CLOSED));
     }
 }

@@ -24,7 +24,7 @@ public class DescriptionFactory {
         }
 
         return new Description()
-                .description(descriptionBlock.getDescription())
+                .text(descriptionBlock.getDescription())
                 .type(new DescriptionTypeWithSchemaUri()
                         .id(descriptionBlock.getType() != null ? DESCRIPTION_TYPE_MAP.get(descriptionBlock.getType()) : null)
                         .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI)

@@ -35,7 +35,7 @@ public class DescriptionValidator {
         IntStream.range(0, descriptions.size()).forEach(index -> {
             final var description = descriptions.get(index);
 
-            if (isBlank(description.getDescription())) {
+            if (isBlank(description.getText())) {
                 failures.add(new ValidationFailure()
                         .fieldId("descriptions[%d].description".formatted(index))
                         .errorType(NOT_SET_TYPE)

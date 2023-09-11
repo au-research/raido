@@ -5,6 +5,7 @@ import au.org.raid.idl.raidv2.model.OrganisationRoleType;
 import au.org.raid.idl.raidv2.model.OrganisationRoleWithSchemaUri;
 import org.springframework.stereotype.Component;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @Component
@@ -30,10 +31,15 @@ public class OrganisationRoleFactory {
             return null;
         }
 
+        final var startDate = (role.getStartDate() != null) ?
+                role.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE) : null;
+        final var endDate = (role.getEndDate() != null) ?
+                role.getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE) : null;
+
         return new OrganisationRoleWithSchemaUri()
                 .id(role.getRole() != null ? ROLE_MAP.get(role.getRole()) : null)
                 .schemaUri(SCHEMA_URI)
-                .startDate(role.getStartDate())
-                .endDate(role.getEndDate());
+                .startDate(startDate)
+                .endDate(endDate);
     }
 }

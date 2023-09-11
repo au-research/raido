@@ -1,4 +1,4 @@
-package au.org.raid.api.service.raid.validation;
+package au.org.raid.api.validator;
 
 import au.org.raid.api.endpoint.message.ValidationMessage;
 import au.org.raid.api.service.raid.ValidationFailureException;
@@ -6,8 +6,8 @@ import au.org.raid.api.service.raid.id.IdentifierHandle;
 import au.org.raid.api.service.raid.id.IdentifierParser;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.util.Log;
-import au.org.raid.api.validator.*;
 import au.org.raid.idl.raidv2.model.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -23,8 +23,9 @@ import static au.org.raid.api.util.StringUtil.isBlank;
 import static java.util.List.of;
 
 @Component
-public class RaidoStableV1ValidationService {
-    private static final Log log = to(RaidoStableV1ValidationService.class);
+@RequiredArgsConstructor
+public class RaidoStableV1Validator {
+    private static final Log log = to(RaidoStableV1Validator.class);
 
     private final TitleValidator titleSvc;
     private final DescriptionValidator descSvc;
@@ -38,47 +39,7 @@ public class RaidoStableV1ValidationService {
     private final RelatedRaidValidator relatedRaidSvc;
     private final SpatialCoverageValidator spatialCoverageSvc;
     private final TraditionalKnowledgeLabelValidator traditionalKnowledgeLabelSvc;
-
-    public RaidoStableV1ValidationService(
-            final TitleValidator titleSvc,
-            final DescriptionValidator descSvc,
-            final ContributorValidator contribSvc,
-            final OrganisationValidator orgSvc,
-            final SubjectValidator subjectSvc,
-            final IdentifierParser idParser,
-            final RelatedObjectValidator relatedObjectSvc,
-            final AlternateIdentifierValidator alternateIdentifierSvc,
-            final RelatedRaidValidator relatedRaidSvc,
-            final SpatialCoverageValidator spatialCoverageSvc,
-            final TraditionalKnowledgeLabelValidator traditionalKnowledgeLabelSvc,
-            final AccessValidator accessValidationService) {
-        this.titleSvc = titleSvc;
-        this.descSvc = descSvc;
-        this.contribSvc = contribSvc;
-        this.orgSvc = orgSvc;
-        this.subjectSvc = subjectSvc;
-        this.idParser = idParser;
-        this.relatedObjectSvc = relatedObjectSvc;
-        this.alternateIdentifierSvc = alternateIdentifierSvc;
-        this.relatedRaidSvc = relatedRaidSvc;
-        this.spatialCoverageSvc = spatialCoverageSvc;
-        this.traditionalKnowledgeLabelSvc = traditionalKnowledgeLabelSvc;
-        this.accessValidationService = accessValidationService;
-    }
-
-    private static List<ValidationFailure> validate(
-            Dates dates
-    ) {
-        var failures = new ArrayList<ValidationFailure>();
-        if (dates == null) {
-            failures.add(ValidationMessage.DATES_NOT_SET);
-        } else {
-            if (dates.getStartDate() == null) {
-                failures.add(ValidationMessage.DATES_START_DATE_NOT_SET);
-            }
-        }
-        return failures;
-    }
+    private final DatesValidator datesValidator;
 
     private List<ValidationFailure> validateUpdateHandle(final String decodedHandleFromPath, final Id id) {
         final var failures = new ArrayList<ValidationFailure>();
@@ -164,20 +125,20 @@ public class RaidoStableV1ValidationService {
 
         var failures = new ArrayList<ValidationFailure>();
 
-        failures.addAll(validate(request.getDates()));
+        failures.addAll(datesValidator.validate(request.getDate()));
         failures.addAll(accessValidationService.validate(request.getAccess()));
-        failures.addAll(titleSvc.validate(request.getTitles()));
-        failures.addAll(descSvc.validate(request.getDescriptions()));
-        failures.addAll(validateAlternateUrls(request.getAlternateUrls()));
-        failures.addAll(contribSvc.validate(request.getContributors()));
-        failures.addAll(orgSvc.validate(request.getOrganisations()));
-        failures.addAll(subjectSvc.validate(request.getSubjects()));
-        failures.addAll(relatedRaidSvc.validate(request.getRelatedRaids()));
-        failures.addAll(relatedObjectSvc.validateRelatedObjects(request.getRelatedObjects()));
-        failures.addAll(alternateIdentifierSvc.validateAlternateIdentifiers(request.getAlternateIdentifiers()));
-        failures.addAll(spatialCoverageSvc.validate(request.getSpatialCoverages()));
+        failures.addAll(titleSvc.validate(request.getTitle()));
+        failures.addAll(descSvc.validate(request.getDescription()));
+        failures.addAll(validateAlternateUrls(request.getAlternateUrl()));
+        failures.addAll(contribSvc.validate(request.getContributor()));
+        failures.addAll(orgSvc.validate(request.getOrganisation()));
+        failures.addAll(subjectSvc.validate(request.getSubject()));
+        failures.addAll(relatedRaidSvc.validate(request.getRelatedRaid()));
+        failures.addAll(relatedObjectSvc.validateRelatedObjects(request.getRelatedObject()));
+        failures.addAll(alternateIdentifierSvc.validateAlternateIdentifiers(request.getAlternateIdentifier()));
+        failures.addAll(spatialCoverageSvc.validate(request.getSpatialCoverage()));
         failures.addAll(traditionalKnowledgeLabelSvc.validate(
-                request.getTraditionalKnowledgeLabels()));
+                request.getTraditionalKnowledgeLabel()));
 
         return failures;
     }
@@ -189,22 +150,22 @@ public class RaidoStableV1ValidationService {
 
         String decodedHandle = urlDecode(handle);
 
-        final var failures = new ArrayList<>(validateUpdateHandle(decodedHandle, request.getId()));
+        final var failures = new ArrayList<>(validateUpdateHandle(decodedHandle, request.getIdentifier()));
 
-        failures.addAll(validate(request.getDates()));
+        failures.addAll(datesValidator.validate(request.getDate()));
         failures.addAll(accessValidationService.validate(request.getAccess()));
-        failures.addAll(titleSvc.validate(request.getTitles()));
-        failures.addAll(descSvc.validate(request.getDescriptions()));
-        failures.addAll(validateAlternateUrls(request.getAlternateUrls()));
-        failures.addAll(contribSvc.validate(request.getContributors()));
-        failures.addAll(orgSvc.validate(request.getOrganisations()));
-        failures.addAll(subjectSvc.validate(request.getSubjects()));
-        failures.addAll(relatedRaidSvc.validate(request.getRelatedRaids()));
-        failures.addAll(relatedObjectSvc.validateRelatedObjects(request.getRelatedObjects()));
-        failures.addAll(alternateIdentifierSvc.validateAlternateIdentifiers(request.getAlternateIdentifiers()));
-        failures.addAll(spatialCoverageSvc.validate(request.getSpatialCoverages()));
+        failures.addAll(titleSvc.validate(request.getTitle()));
+        failures.addAll(descSvc.validate(request.getDescription()));
+        failures.addAll(validateAlternateUrls(request.getAlternateUrl()));
+        failures.addAll(contribSvc.validate(request.getContributor()));
+        failures.addAll(orgSvc.validate(request.getOrganisation()));
+        failures.addAll(subjectSvc.validate(request.getSubject()));
+        failures.addAll(relatedRaidSvc.validate(request.getRelatedRaid()));
+        failures.addAll(relatedObjectSvc.validateRelatedObjects(request.getRelatedObject()));
+        failures.addAll(alternateIdentifierSvc.validateAlternateIdentifiers(request.getAlternateIdentifier()));
+        failures.addAll(spatialCoverageSvc.validate(request.getSpatialCoverage()));
         failures.addAll(traditionalKnowledgeLabelSvc.validate(
-                request.getTraditionalKnowledgeLabels()));
+                request.getTraditionalKnowledgeLabel()));
 
         return failures;
     }

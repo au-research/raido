@@ -1,5 +1,6 @@
 package au.org.raid.api.validator;
 
+import au.org.raid.api.util.DateUtil;
 import au.org.raid.idl.raidv2.model.Title;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import lombok.RequiredArgsConstructor;
@@ -58,10 +59,10 @@ public class TitleValidator {
             ;
             var title = titles.get(index);
 
-            if (isBlank(title.getTitle())) {
+            if (isBlank(title.getText())) {
                 failures.add(titleNotSet(index));
             }
-            if (!valueFits(RAID.PRIMARY_TITLE, title.getTitle())) {
+            if (!valueFits(RAID.PRIMARY_TITLE, title.getText())) {
                 failures.add(primaryTitleTooLong(index));
             }
             if (title.getStartDate() == null) {
@@ -88,14 +89,14 @@ public class TitleValidator {
         var primaryTitles = titles.stream()
                 .filter(title -> title.getType().getId().equals(PRIMARY_TITLE_TYPE))
                 .sorted((o1, o2) -> {
-                            if (o1.getStartDate().equals(o2.getStartDate())) {
-                                final var o1EndDate = o1.getEndDate() == null ? LocalDate.now() : o1.getEndDate();
-                                final var o2EndDate = o2.getEndDate() == null ? LocalDate.now() : o2.getEndDate();
+                    if (o1.getStartDate().equals(o2.getStartDate())) {
+                        final var o1EndDate = o1.getEndDate() == null ? LocalDate.now() : DateUtil.parseDate(o1.getEndDate());
+                        final var o2EndDate = o2.getEndDate() == null ? LocalDate.now() : DateUtil.parseDate(o2.getEndDate());
 
-                                return o1EndDate.compareTo(o2EndDate);
-                            }
-                            return o1.getStartDate().compareTo(o2.getStartDate());
-                        })
+                        return o1EndDate.compareTo(o2EndDate);
+                    }
+                    return DateUtil.parseDate(o1.getStartDate()).compareTo(DateUtil.parseDate(o2.getStartDate()));
+                })
                 .collect(Collectors.toCollection(ArrayList::new));
 
         for (int i = 1; i < primaryTitles.size(); i++) {
@@ -104,7 +105,8 @@ public class TitleValidator {
             final var previousIndex = titles.indexOf(previous);
             final var index = titles.indexOf(title);
 
-            final var endDate = (previous.getEndDate() != null) ? previous.getEndDate() : today;
+            final var startDate = DateUtil.parseDate(title.getStartDate());
+            final var endDate = (previous.getEndDate() != null) ? DateUtil.parseDate(previous.getEndDate()) : today;
 
             if (title.equals(previous)) {
                 return List.of(new ValidationFailure()
@@ -112,7 +114,7 @@ public class TitleValidator {
                         .errorType(DUPLICATE_TYPE)
                         .message(DUPLICATE_MESSAGE)
                 );
-            } else if (title.getStartDate().isBefore(endDate)) {
+            } else if (startDate.isBefore(endDate)) {
                 failures.add(new ValidationFailure()
                         .fieldId("titles[%d].startDate".formatted(index))
                         .errorType(INVALID_VALUE_TYPE)

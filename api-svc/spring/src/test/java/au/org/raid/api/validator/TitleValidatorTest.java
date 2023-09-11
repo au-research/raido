@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -43,9 +44,9 @@ class TitleValidatorTest {
 
         final var title = new Title()
                 .type(type)
-                .title(TestConstants.TITLE)
-                .startDate(TestConstants.START_DATE)
-                .endDate(TestConstants.END_DATE)
+                .text(TestConstants.TITLE)
+                .startDate(TestConstants.START_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(TestConstants.END_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .language(language);
 
         final var failures = validationService.validate(List.of(title));
@@ -68,21 +69,21 @@ class TitleValidatorTest {
 
         final var title1 = new Title()
                 .type(type)
-                .title(TestConstants.TITLE)
-                .startDate(LocalDate.now().minusYears(2))
+                .text(TestConstants.TITLE)
+                .startDate(LocalDate.now().minusYears(2).format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .language(language);
 
         final var title2 = new Title()
                 .type(type)
-                .title(TestConstants.TITLE)
-                .startDate(LocalDate.now().minusYears(3))
-                .endDate(LocalDate.now().minusYears(2))
+                .text(TestConstants.TITLE)
+                .startDate(LocalDate.now().minusYears(3).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(LocalDate.now().minusYears(2).format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .language(language);
 
         final var title3 = new Title()
                 .type(type)
-                .title(TestConstants.TITLE)
-                .startDate(LocalDate.now().minusYears(2))
+                .text(TestConstants.TITLE)
+                .startDate(LocalDate.now().minusYears(2).format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .language(language);
 
         final var failures = validationService.validate(List.of(title1, title2, title3));
@@ -110,23 +111,23 @@ class TitleValidatorTest {
 
         final var title1 = new Title()
                 .type(type)
-                .title(TestConstants.TITLE)
-                .startDate(LocalDate.now().minusYears(3))
-                .endDate(LocalDate.now().minusYears(1))
+                .text(TestConstants.TITLE)
+                .startDate(LocalDate.now().minusYears(3).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .language(language);
 
         final var title2 = new Title()
                 .type(type)
-                .title(TestConstants.TITLE)
-                .startDate(LocalDate.now().minusYears(3))
-                .endDate(LocalDate.now().minusYears(2))
+                .text(TestConstants.TITLE)
+                .startDate(LocalDate.now().minusYears(3).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(LocalDate.now().minusYears(2).format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .language(language);
 
         final var title3 = new Title()
                 .type(type)
-                .title(TestConstants.TITLE)
-                .startDate(LocalDate.now().minusYears(4))
-                .endDate(LocalDate.now().minusYears(1))
+                .text(TestConstants.TITLE)
+                .startDate(LocalDate.now().minusYears(4).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .language(language);
 
         final var failures = validationService.validate(List.of(title1, title2, title3));
@@ -154,9 +155,9 @@ class TitleValidatorTest {
 
         final var title = new Title()
                 .type(type)
-                .title(TestConstants.TITLE)
-                .startDate(TestConstants.START_DATE)
-                .endDate(TestConstants.END_DATE);
+                .text(TestConstants.TITLE)
+                .startDate(TestConstants.START_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(TestConstants.END_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         final var failures = validationService.validate(List.of(title));
 
@@ -188,8 +189,8 @@ class TitleValidatorTest {
                 .type(new TitleTypeWithSchemaUri()
                         .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
                         .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
-                .startDate(TestConstants.START_DATE)
-                .endDate(TestConstants.END_DATE);
+                .startDate(TestConstants.START_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(TestConstants.END_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         final var failures = validationService.validate(List.of(title));
 
@@ -210,9 +211,9 @@ class TitleValidatorTest {
                 .type(new TitleTypeWithSchemaUri()
                         .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
                         .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
-                .startDate(TestConstants.START_DATE)
-                .endDate(TestConstants.END_DATE)
-                .title("");
+                .startDate(TestConstants.START_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(TestConstants.END_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .text("");
 
         final var failures = validationService.validate(List.of(title));
 
@@ -232,8 +233,8 @@ class TitleValidatorTest {
                 .type(new TitleTypeWithSchemaUri()
                         .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
                         .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
-                .title(TestConstants.TITLE)
-                .endDate(TestConstants.END_DATE);
+                .text(TestConstants.TITLE)
+                .endDate(TestConstants.END_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         final var failures = validationService.validate(List.of(title));
 

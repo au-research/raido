@@ -1,7 +1,6 @@
-package au.org.raid.api.service.raid.validation;
+package au.org.raid.api.validator;
 
 import au.org.raid.api.service.raid.id.IdentifierParser;
-import au.org.raid.api.validator.*;
 import au.org.raid.idl.raidv2.model.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +13,7 @@ import java.util.Collections;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class RaidoStableV1ValidationServiceTest {
+class RaidoStableV1ValidatorTest {
     @Mock
     private SubjectValidator subjectValidationService;
     @Mock
@@ -33,15 +32,16 @@ class RaidoStableV1ValidationServiceTest {
     private RelatedObjectValidator relatedObjectValidationService;
     @Mock
     private AlternateIdentifierValidator alternateIdentifierValidationService;
-
     @Mock
     private SpatialCoverageValidator spatialCoverageValidationService;
     @Mock
     private TraditionalKnowledgeLabelValidator traditionalKnowledgeLabelValidatorService;
     @Mock
     private AccessValidator accessValidationService;
+    @Mock
+    private DatesValidator datesValidator;
     @InjectMocks
-    private RaidoStableV1ValidationService validationService;
+    private RaidoStableV1Validator validationService;
 
     @Test
     void validatesAccessOnCreate() {
@@ -59,7 +59,7 @@ class RaidoStableV1ValidationServiceTest {
         final var access = new Access();
 
         final var raid = new UpdateRaidV1Request()
-                .id(new Id())
+                .identifier(new Id())
                 .access(access);
 
         validationService.validateForUpdate(handle, raid);
@@ -70,7 +70,7 @@ class RaidoStableV1ValidationServiceTest {
     @Test
     void validatesSubjectsOnCreate() {
         final var subjects = Collections.singletonList(new Subject());
-        final var raid = new CreateRaidV1Request().subjects(subjects);
+        final var raid = new CreateRaidV1Request().subject(subjects);
 
         validationService.validateForCreate(raid);
 
@@ -83,8 +83,8 @@ class RaidoStableV1ValidationServiceTest {
         final var subjects = Collections.singletonList(new Subject());
 
         final var raid = new UpdateRaidV1Request()
-                .id(new Id())
-                .subjects(subjects);
+                .identifier(new Id())
+                .subject(subjects);
 
         validationService.validateForUpdate(handle, raid);
 
@@ -94,7 +94,7 @@ class RaidoStableV1ValidationServiceTest {
     @Test
     void validatesRelatedRaidsOnCreate() {
         final var relatedRaids = Collections.singletonList(new RelatedRaid());
-        final var raid = new CreateRaidV1Request().relatedRaids(relatedRaids);
+        final var raid = new CreateRaidV1Request().relatedRaid(relatedRaids);
 
         validationService.validateForCreate(raid);
         verify(relatedRaidValidationService).validate(relatedRaids);
@@ -103,7 +103,7 @@ class RaidoStableV1ValidationServiceTest {
     @Test
     void validatesRelatedObjectsOnCreate() {
         final var relatedObjects = Collections.singletonList(new RelatedObject());
-        final var raid = new CreateRaidV1Request().relatedObjects(relatedObjects);
+        final var raid = new CreateRaidV1Request().relatedObject(relatedObjects);
 
         validationService.validateForCreate(raid);
         verify(relatedObjectValidationService).validateRelatedObjects(relatedObjects);
@@ -115,8 +115,8 @@ class RaidoStableV1ValidationServiceTest {
         final var relatedRaids = Collections.singletonList(new RelatedRaid());
 
         final var raid = new UpdateRaidV1Request()
-                .id(new Id())
-                .relatedRaids(relatedRaids);
+                .identifier(new Id())
+                .relatedRaid(relatedRaids);
 
         validationService.validateForUpdate(handle, raid);
         verify(relatedRaidValidationService).validate(relatedRaids);
@@ -128,8 +128,8 @@ class RaidoStableV1ValidationServiceTest {
         final var relatedObjects = Collections.singletonList(new RelatedObject());
 
         final var raid = new UpdateRaidV1Request()
-                .id(new Id())
-                .relatedObjects(relatedObjects);
+                .identifier(new Id())
+                .relatedObject(relatedObjects);
 
         validationService.validateForUpdate(handle, raid);
         verify(relatedObjectValidationService).validateRelatedObjects(relatedObjects);
@@ -141,8 +141,8 @@ class RaidoStableV1ValidationServiceTest {
         final var alternateIdentifiers = Collections.singletonList(new AlternateIdentifier());
 
         final var raid = new CreateRaidV1Request()
-                .id(new Id())
-                .alternateIdentifiers(alternateIdentifiers);
+                .identifier(new Id())
+                .alternateIdentifier(alternateIdentifiers);
 
         validationService.validateForCreate(raid);
         verify(alternateIdentifierValidationService).validateAlternateIdentifiers(alternateIdentifiers);
@@ -154,8 +154,8 @@ class RaidoStableV1ValidationServiceTest {
         final var alternateIdentifiers = Collections.singletonList(new AlternateIdentifier());
 
         final var raid = new UpdateRaidV1Request()
-                .id(new Id())
-                .alternateIdentifiers(alternateIdentifiers);
+                .identifier(new Id())
+                .alternateIdentifier(alternateIdentifiers);
 
         validationService.validateForUpdate(handle, raid);
         verify(alternateIdentifierValidationService).validateAlternateIdentifiers(alternateIdentifiers);
@@ -168,8 +168,8 @@ class RaidoStableV1ValidationServiceTest {
                 Collections.singletonList(new SpatialCoverage());
 
         final var raid = new CreateRaidV1Request()
-                .id(new Id())
-                .spatialCoverages(spatialCoverages);
+                .identifier(new Id())
+                .spatialCoverage(spatialCoverages);
 
         validationService.validateForCreate(raid);
         verify(spatialCoverageValidationService).validate(spatialCoverages);
@@ -182,8 +182,8 @@ class RaidoStableV1ValidationServiceTest {
                 Collections.singletonList(new SpatialCoverage());
 
         final var raid = new UpdateRaidV1Request()
-                .id(new Id())
-                .spatialCoverages(spatialCoverages);
+                .identifier(new Id())
+                .spatialCoverage(spatialCoverages);
 
         validationService.validateForUpdate(handle, raid);
         verify(spatialCoverageValidationService).validate(spatialCoverages);
@@ -196,8 +196,8 @@ class RaidoStableV1ValidationServiceTest {
                 Collections.singletonList(new TraditionalKnowledgeLabel());
 
         final var raid = new CreateRaidV1Request()
-                .id(new Id())
-                .traditionalKnowledgeLabels(traditionalKnowledgeLabels);
+                .identifier(new Id())
+                .traditionalKnowledgeLabel(traditionalKnowledgeLabels);
 
         validationService.validateForCreate(raid);
         verify(traditionalKnowledgeLabelValidatorService).validate(traditionalKnowledgeLabels);
@@ -210,8 +210,8 @@ class RaidoStableV1ValidationServiceTest {
                 Collections.singletonList(new TraditionalKnowledgeLabel());
 
         final var raid = new UpdateRaidV1Request()
-                .id(new Id())
-                .traditionalKnowledgeLabels(traditionalKnowledgeLabels);
+                .identifier(new Id())
+                .traditionalKnowledgeLabel(traditionalKnowledgeLabels);
 
         validationService.validateForUpdate(handle, raid);
         verify(traditionalKnowledgeLabelValidatorService).validate(traditionalKnowledgeLabels);

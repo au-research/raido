@@ -20,7 +20,7 @@ public class SubjectKeywordValidator {
     public List<ValidationFailure> validate(final SubjectKeyword keyword, final int subjectIndex, final int keywordIndex) {
         final var failures = new ArrayList<ValidationFailure>();
 
-        if (isBlank(keyword.getKeyword())) {
+        if (isBlank(keyword.getText())) {
             failures.add(new ValidationFailure()
                     .fieldId("subjects[%d].keywords[%d].keyword".formatted(subjectIndex, keywordIndex))
                     .errorType(NOT_SET_TYPE)
