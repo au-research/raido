@@ -261,7 +261,7 @@ task uberJar(type: Jar) {
     //noinspection GroovyAssignabilityCheck
     duplicatesStrategy "EXCLUDE"
     attributes (
-      'Main-Class': 'raido.apisvc.Api',
+      'Main-Class': 'au.org.raid.api.Api',
       "Implementation-Title": "Raido",
       // archiveVersion comes from project version, so it'll use our value
       "Implementation-Version": archiveVersion,

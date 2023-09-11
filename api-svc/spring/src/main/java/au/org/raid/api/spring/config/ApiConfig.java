@@ -26,7 +26,8 @@ import static au.org.raid.api.util.Log.to;
         "au.org.raid.api.service",
         "au.org.raid.api.endpoint",
         "au.org.raid.api.repository",
-        "au.org.raid.api.factory"
+        "au.org.raid.api.factory",
+        "au.org.raid.api.validator"
 })
 @PropertySources({
   /* This is NOT for you to put an `env.properties` file with credentials in the 
