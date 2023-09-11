@@ -30,27 +30,10 @@ class AccessValidatorTest {
     private AccessValidator validator;
 
     @Test
-    @DisplayName("Validation passes on closed raid with correct fields")
-    void closedValidationSucceeds() {
-        final var type = new AccessTypeWithSchemaUri()
-                .id(TestConstants.CLOSED_ACCESS_TYPE_ID)
-                .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
-
-        final var access = new Access()
-                .type(type)
-                .accessStatement(new AccessStatement().text("Closed"));
-
-        final List<ValidationFailure> failures = validator.validate(access);
-
-        assertThat(failures, empty());
-        verify(accessTypeValidator).validate(type);
-    }
-
-    @Test
     @DisplayName("Validation passes on embargoed raid with correct fields")
     void embargoedValidationSucceeds() {
         final var type = new AccessTypeWithSchemaUri()
-                .id(TestConstants.CLOSED_ACCESS_TYPE_ID)
+                .id(TestConstants.EMBARGOED_ACCESS_TYPE_ID)
                 .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
         final var access = new Access()
@@ -65,7 +48,7 @@ class AccessValidatorTest {
 
 
     @Test
-    @DisplayName("Validation fails with missing accessStatement on closed raid")
+    @DisplayName("Validation fails with closed raid")
     void missingAccessStatement() {
         final var type = new AccessTypeWithSchemaUri()
                 .id(TestConstants.CLOSED_ACCESS_TYPE_ID)
@@ -75,40 +58,13 @@ class AccessValidatorTest {
                 .type(type);
 
         final var failure = new ValidationFailure()
-                .fieldId("access.accessStatement")
-                .errorType("notSet")
-                .message("field must be set");
+                .fieldId("access.type.id")
+                .errorType("invalidValue")
+                .message("Creating closed Raids is no longer supported");
 
         final List<ValidationFailure> failures = validator.validate(access);
 
-        assertThat(failures.size(), is(1));
-        assertThat(failures, hasItem(failure));
-    }
-
-    @Test
-    @DisplayName("Validation fails with blank accessStatement on closed raid")
-    void blankStatementClosed() {
-        final var type = new AccessTypeWithSchemaUri()
-                .id(TestConstants.CLOSED_ACCESS_TYPE_ID)
-                .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
-
-        final var accessStatement = new AccessStatement().text("");
-
-        final var access = new Access()
-                .type(type)
-                .accessStatement(accessStatement);
-
-        final var failure = new ValidationFailure()
-                .fieldId("access.accessStatement")
-                .errorType("notSet")
-                .message("field must be set");
-
-        when(accessStatementValidator.validate(accessStatement)).thenReturn(List.of(failure));
-
-        final List<ValidationFailure> failures = validator.validate(access);
-
-        assertThat(failures.size(), is(1));
-        assertThat(failures, hasItem(failure));
+        assertThat(failures, is(List.of(failure)));
     }
 
     @Test
@@ -219,5 +175,26 @@ class AccessValidatorTest {
         assertThat(failures, empty());
         verify(accessTypeValidator).validate(type);
         verifyNoInteractions(accessStatementValidator);
+    }
+
+    @Test
+    @DisplayName("Validation fails on embargoed raid with embargo expiry over 18 month in future")
+    void embargoedInvalidExpiry() {
+        final var type = new AccessTypeWithSchemaUri()
+                .id(TestConstants.EMBARGOED_ACCESS_TYPE_ID)
+                .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
+
+        final var access = new Access()
+                .type(type)
+                .accessStatement(new AccessStatement().text("Embargoed"))
+                .embargoExpiry(LocalDate.now().plusMonths(19));
+
+        final List<ValidationFailure> failures = validator.validate(access);
+
+        assertThat(failures, is(List.of(new ValidationFailure()
+                .fieldId("access.embargoExpiry")
+                .errorType("invalidValue")
+                .message("Embargo expiry cannot be more than 18 months in the future")
+        )));
     }
 }

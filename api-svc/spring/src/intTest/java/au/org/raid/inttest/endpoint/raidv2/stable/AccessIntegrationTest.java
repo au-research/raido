@@ -157,21 +157,6 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
         }
     }
 
-    @Test
-    @DisplayName("Mint with valid closed access type")
-    void mintClosedAccess() {
-        createRequest.getAccess()
-                .type(new AccessTypeWithSchemaUri()
-                        .id(CLOSED_ACCESS_TYPE)
-                        .schemaUri(ACCESS_TYPE_SCHEMA_URI)
-                )
-                .accessStatement(new AccessStatement().text("Closed"));
-        try {
-            raidApi.createRaidV1(createRequest);
-        } catch (Exception e) {
-            fail("Mint should be successful");
-        }
-    }
 
     @Test
     @DisplayName("Mint with valid embargoed access type")
@@ -216,39 +201,14 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Mint with closed access type fails with missing accessStatement")
-    void missingAccessStatement() {
-        createRequest.getAccess()
-                .type(new AccessTypeWithSchemaUri()
-                        .id(CLOSED_ACCESS_TYPE)
-                        .schemaUri(ACCESS_TYPE_SCHEMA_URI)
-                );
-
-        try {
-            raidApi.createRaidV1(createRequest);
-        } catch (RaidApiValidationException e) {
-            final var failures = e.getFailures();
-            assertThat(failures).hasSize(1);
-            assertThat(failures).contains(
-                    new ValidationFailure()
-                            .fieldId("access.accessStatement")
-                            .errorType("notSet")
-                            .message("field must be set")
-            );
-        } catch (Exception e) {
-            fail("Mint should be successful");
-        }
-    }
-
-    @Test
-    @DisplayName("Mint with closed access type fails with blank accessStatement")
+    @DisplayName("Mint with closed access type fails")
     void blankAccessStatement() {
         createRequest.getAccess()
                 .type(new AccessTypeWithSchemaUri()
                         .id(CLOSED_ACCESS_TYPE)
                         .schemaUri(ACCESS_TYPE_SCHEMA_URI)
                 )
-                .accessStatement(new AccessStatement().text(""));
+                .accessStatement(new AccessStatement().text("Closed"));
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -257,9 +217,9 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("access.accessStatement.statement")
-                            .errorType("notSet")
-                            .message("field must be set")
+                            .fieldId("access.type.id")
+                            .errorType("invalidValue")
+                            .message("Creating closed Raids is no longer supported")
             );
         } catch (Exception e) {
             fail("Mint should be successful");

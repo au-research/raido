@@ -6,11 +6,11 @@ import au.org.raid.idl.raidv2.model.ValidationFailure;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static au.org.raid.api.endpoint.message.ValidationMessage.NOT_SET_MESSAGE;
-import static au.org.raid.api.endpoint.message.ValidationMessage.NOT_SET_TYPE;
+import static au.org.raid.api.endpoint.message.ValidationMessage.*;
 import static au.org.raid.api.util.StringUtil.isBlank;
 
 @Component
@@ -20,6 +20,9 @@ public class AccessValidator {
             "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json";
     private static final String ACCESS_TYPE_OPEN =
             "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json";
+    private static final String ACCESS_TYPE_CLOSED =
+            "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json";
+
     private final AccessTypeValidator typeValidationService;
     private final AccessStatementValidator accessStatementValidator;
 
@@ -43,19 +46,31 @@ public class AccessValidator {
             if (!isBlank(access.getType().getId())) {
                 final var typeId = access.getType().getId();
 
-                if (!typeId.equals(ACCESS_TYPE_OPEN)) { // TODO: needs to be validated regardless of access type
+                if (typeId.equals(ACCESS_TYPE_CLOSED)) {
+                    failures.add(new ValidationFailure()
+                            .fieldId("access.type.id")
+                            .errorType(INVALID_VALUE_TYPE)
+                            .message("Creating closed Raids is no longer supported"));
+                }
+
+                if (typeId.equals(ACCESS_TYPE_EMBARGOED)) {
                     if (access.getAccessStatement() == null) {
                         failures.add(new ValidationFailure()
                                 .fieldId("access.accessStatement")
                                 .errorType(NOT_SET_TYPE)
                                 .message(NOT_SET_MESSAGE));
                     }
-                }
-                if (typeId.equals(ACCESS_TYPE_EMBARGOED) && access.getEmbargoExpiry() == null) {
-                    failures.add(new ValidationFailure()
-                            .errorType(NOT_SET_TYPE)
-                            .fieldId("access.embargoExpiry")
-                            .message(NOT_SET_MESSAGE));
+                    if(access.getEmbargoExpiry() == null) {
+                        failures.add(new ValidationFailure()
+                                .errorType(NOT_SET_TYPE)
+                                .fieldId("access.embargoExpiry")
+                                .message(NOT_SET_MESSAGE));
+                    } else if (access.getEmbargoExpiry().isAfter(LocalDate.now().plusMonths(18))) {
+                        failures.add(new ValidationFailure()
+                                .fieldId("access.embargoExpiry")
+                                .errorType(INVALID_VALUE_TYPE)
+                                .message("Embargo expiry cannot be more than 18 months in the future"));
+                    }
                 }
             }
             if (access.getAccessStatement() != null) {
@@ -64,7 +79,6 @@ public class AccessValidator {
                 );
             }
         }
-
 
         return failures;
     }
