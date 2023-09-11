@@ -3,6 +3,7 @@ import { ScatterPlot as ScatterPlotIcon } from "@mui/icons-material";
 import Grid from "@mui/material/Grid";
 import {
   LegacyMetadataSchemaV1,
+  RaidDto,
   RaidoMetadataSchemaV1,
   RaidoMetadataSchemaV2,
   ReadRaidResponseV2,
@@ -20,7 +21,7 @@ interface ReadData {
     | LegacyMetadataSchemaV1;
 }
 
-export default function Main({ data }: { data: ReadData | undefined }) {
+export default function Main({ data }: { data: RaidDto | undefined }) {
   return (
     <Grid container alignItems="stretch">
       <Grid item xs={12} sm={3} md={3}>
