@@ -488,7 +488,14 @@ components:
     TraditionalKnowledgeLabel:
       type: object
       properties:
-        schemaUri: { type: string }
+        id: {
+          type: string,
+          example: https://localcontexts.org/label/tk-verified/
+        }
+        schemaUri: {
+          type: string,
+          example: https://localcontexts.org/labels/traditional-knowledge-labels/
+        }
     Language:
       type: object
       required: [ code, schemaUri]

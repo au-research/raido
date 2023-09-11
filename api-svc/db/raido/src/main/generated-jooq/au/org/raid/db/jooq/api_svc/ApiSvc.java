@@ -88,6 +88,8 @@ public class ApiSvc extends SchemaImpl {
             SubjectTypeSchema.SUBJECT_TYPE_SCHEMA,
             TitleType.TITLE_TYPE,
             TitleTypeSchema.TITLE_TYPE_SCHEMA,
+            TraditionalKnowledgeLabel.TRADITIONAL_KNOWLEDGE_LABEL,
+            TraditionalKnowledgeLabelSchema.TRADITIONAL_KNOWLEDGE_LABEL_SCHEMA,
             UserAuthzRequest.USER_AUTHZ_REQUEST
         );
     }

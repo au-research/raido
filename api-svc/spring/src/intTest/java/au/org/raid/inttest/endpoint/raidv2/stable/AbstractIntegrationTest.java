@@ -132,7 +132,15 @@ public class AbstractIntegrationTest {
                                 .schemaUri(LANGUAGE_SCHEMA_URI))
                         .id(GEONAMES_MELBOURNE)
                         .place("Melbourne")
-                        .schemaUri(GEONAMES_SCHEMA_URI)));
+                        .schemaUri(GEONAMES_SCHEMA_URI)))
+                .traditionalKnowledgeLabel(List.of(
+                        new TraditionalKnowledgeLabel()
+                                .id("https://localcontexts.org/label/tk-attribution/")
+                                .schemaUri("https://localcontexts.org/labels/traditional-knowledge-labels/"),
+                        new TraditionalKnowledgeLabel()
+                                .id("https://localcontexts.org/label/bc-provenance/")
+                                .schemaUri("https://localcontexts.org/labels/biocultural-labels/")
+                ));
     }
 
     private UpdateRaidV1Request mapReadToUpdate(RaidDto read) {
