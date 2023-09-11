@@ -1,3 +1,4 @@
+import AddIcon from '@mui/icons-material/Add';
 import {isPagePath, NavPathResult, NavTransition} from "Design/NavigationProvider";
 import React, {SyntheticEvent} from "react";
 import {ContainerCard} from "Design/ContainerCard";
@@ -6,16 +7,19 @@ import {DateDisplay, raidoTitle, RoleDisplay} from "Component/Util";
 import { ListRaidsV1Request } from "Generated/Raidv2/apis/RaidoStableV1Api"
 import {
   Alert,
+  Fab,
   IconButton,
   Menu,
   MenuItem,
   Snackbar,
+  Stack,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow,
+  Tooltip
 } from "@mui/material";
 import {useAuthApi} from "Api/AuthApi";
 import {useQuery} from "@tanstack/react-query";
@@ -194,10 +198,17 @@ export function RaidTableContainerV2({servicePointId}: ListRaidsV1Request){
   
   <ContainerCard title={"Recently minted RAiD data"}
     action={<>
+    <Stack direction={"row"} gap={2} sx={{p:1}}>
       <SettingsMenu raidData={raidQuery.data} />
       <RefreshIconButton onClick={() => raidQuery.refetch()}
         refreshing={raidQuery.isLoading || raidQuery.isRefetching} />
        <RaidoAddFab disabled={!appWritesEnabled} href={getMintRaidPageLink(servicePointId)}/>
+       <Tooltip title="New mint RAiD Page (under development)">
+          <Fab color="secondary" size='small' aria-label="add" href={"/mint-raid-new/20000000"}>
+            <AddIcon />
+          </Fab>
+        </Tooltip>
+       </Stack>
     </>}
   >
     <TableContainer>
@@ -258,9 +269,10 @@ export function RaidTableContainerV2({servicePointId}: ListRaidsV1Request){
                   textOverflow: "ellipsis",
                 }}
               >
-                <RaidoLink href={getEditRaidPageLink(handle)}>
+                {/* <RaidoLink href={getEditRaidPageLink(handle)}>
                   <TextSpan>{title}</TextSpan>
-                </RaidoLink>
+                </RaidoLink> */}
+                <a href={`/show-raid/${handle}`}>{title}</a>
               </TableCell>
               <TableCell>
                 <RaidoHandle handle={handle} 
