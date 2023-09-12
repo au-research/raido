@@ -234,11 +234,11 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
         assertThat(mintResult.getSuccess()).isFalse();
         assertThat(mintResult.getFailures()).satisfiesExactlyInAnyOrder(
                 i -> {
-                    assertThat(i.getFieldId()).isEqualTo("titles[0].title");
+                    assertThat(i.getFieldId()).isEqualTo("title[0].title");
                     assertThat(i.getErrorType()).isEqualTo("notSet");
                 },
                 i -> {
-                    assertThat(i.getFieldId()).isEqualTo("titles[0].startDate");
+                    assertThat(i.getFieldId()).isEqualTo("title[0].startDate");
                     assertThat(i.getErrorType()).isEqualTo("notSet");
                 }
         );

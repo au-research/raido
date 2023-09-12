@@ -29,7 +29,7 @@ public class OrganisationRoleValidator {
         if (isBlank(role.getId())) {
             failures.add(
                     new ValidationFailure()
-                            .fieldId("organisations[%d].roles[%d].id".formatted(organisationIndex, roleIndex))
+                            .fieldId("organisation[%d].role[%d].id".formatted(organisationIndex, roleIndex))
                             .errorType(NOT_SET_TYPE)
                             .message(NOT_SET_MESSAGE));
         }
@@ -37,7 +37,7 @@ public class OrganisationRoleValidator {
         if (isBlank(role.getSchemaUri())) {
             failures.add(
                     new ValidationFailure()
-                            .fieldId("organisations[%d].roles[%d].schemaUri".formatted(organisationIndex, roleIndex))
+                            .fieldId("organisation[%d].role[%d].schemaUri".formatted(organisationIndex, roleIndex))
                             .errorType(NOT_SET_TYPE)
                             .message(NOT_SET_MESSAGE)
             );
@@ -48,7 +48,7 @@ public class OrganisationRoleValidator {
             if (roleScheme.isEmpty()) {
                 failures.add(
                         new ValidationFailure()
-                                .fieldId("organisations[%d].roles[%d].schemaUri".formatted(organisationIndex, roleIndex))
+                                .fieldId("organisation[%d].role[%d].schemaUri".formatted(organisationIndex, roleIndex))
                                 .errorType(INVALID_VALUE_TYPE)
                                 .message(INVALID_SCHEMA)
                 );
@@ -56,7 +56,7 @@ public class OrganisationRoleValidator {
                     organisationRoleRepository.findByUriAndSchemaId(role.getId(), roleScheme.get().getId()).isEmpty()) {
                 failures.add(
                         new ValidationFailure()
-                                .fieldId("organisations[%d].roles[%d].id".formatted(organisationIndex, roleIndex))
+                                .fieldId("organisation[%d].role[%d].id".formatted(organisationIndex, roleIndex))
                                 .errorType(INVALID_VALUE_TYPE)
                                 .message(INVALID_ID_FOR_SCHEMA)
                 );

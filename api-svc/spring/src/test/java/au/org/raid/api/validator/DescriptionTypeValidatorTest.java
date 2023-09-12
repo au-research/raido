@@ -75,7 +75,7 @@ class DescriptionTypeValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("descriptions[3].type.id")
+                        .fieldId("description[3].type.id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -96,7 +96,7 @@ class DescriptionTypeValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("descriptions[3].type.id")
+                        .fieldId("description[3].type.id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -113,7 +113,7 @@ class DescriptionTypeValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("descriptions[3].type.schemaUri")
+                        .fieldId("description[3].type.schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -131,7 +131,7 @@ class DescriptionTypeValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("descriptions[3].type.schemaUri")
+                        .fieldId("description[3].type.schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -152,7 +152,7 @@ class DescriptionTypeValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("descriptions[3].type.schemaUri")
+                        .fieldId("description[3].type.schemaUri")
                         .errorType("invalidValue")
                         .message("schema is unknown/unsupported")
         ));
@@ -166,7 +166,7 @@ class DescriptionTypeValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("descriptions[3].type")
+                        .fieldId("description[3].type")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -193,7 +193,7 @@ class DescriptionTypeValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("descriptions[3].type.id")
+                        .fieldId("description[3].type.id")
                         .errorType("invalidValue")
                         .message("id does not exist within the given schema")
         ));

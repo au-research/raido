@@ -43,7 +43,7 @@ class SpatialCoverageValidatorTest {
 
         final var failures = validationService.validate(List.of(spatialCoverage));
         assertThat(failures, empty());
-        verify(languageValidator).validate(language, "spatialCoverages[0]");
+        verify(languageValidator).validate(language, "spatialCoverage[0]");
     }
 
     @Test
@@ -64,11 +64,11 @@ class SpatialCoverageValidatorTest {
                 .errorType("error-type")
                 .message("_message");
 
-        when(languageValidator.validate(language, "spatialCoverages[0]")).thenReturn(List.of(failure));
+        when(languageValidator.validate(language, "spatialCoverage[0]")).thenReturn(List.of(failure));
 
         final var failures = validationService.validate(List.of(spatialCoverage));
         assertThat(failures, is(List.of(failure)));
-        verify(languageValidator).validate(language, "spatialCoverages[0]");
+        verify(languageValidator).validate(language, "spatialCoverage[0]");
     }
 
     @Test
@@ -90,15 +90,15 @@ class SpatialCoverageValidatorTest {
                 .errorType("error-type")
                 .message("_message");
 
-        when(languageValidator.validate(language, "spatialCoverages[0]"))
+        when(languageValidator.validate(language, "spatialCoverage[0]"))
                 .thenReturn(Collections.emptyList());
 
-        when(uriValidator.validate(uri, "spatialCoverages[0].id"))
+        when(uriValidator.validate(uri, "spatialCoverage[0].id"))
                 .thenReturn(List.of(failure));
 
         final var failures = validationService.validate(List.of(spatialCoverage));
         assertThat(failures, is(List.of(failure)));
-        verify(languageValidator).validate(language, "spatialCoverages[0]");
+        verify(languageValidator).validate(language, "spatialCoverage[0]");
     }
 
     @Test
@@ -112,7 +112,7 @@ class SpatialCoverageValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("spatialCoverages[0].id")
+                        .fieldId("spatialCoverage[0].id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -130,7 +130,7 @@ class SpatialCoverageValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("spatialCoverages[0].id")
+                        .fieldId("spatialCoverage[0].id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -147,7 +147,7 @@ class SpatialCoverageValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("spatialCoverages[0].schemaUri")
+                        .fieldId("spatialCoverage[0].schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -165,7 +165,7 @@ class SpatialCoverageValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("spatialCoverages[0].schemaUri")
+                        .fieldId("spatialCoverage[0].schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -183,7 +183,7 @@ class SpatialCoverageValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("spatialCoverages[0].schemaUri")
+                        .fieldId("spatialCoverage[0].schemaUri")
                         .errorType("invalidValue")
                         .message("Spatial coverage scheme uri should be https://www.geonames.org/")
         ));

@@ -26,7 +26,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("descriptions[0].language.schemaUri")
+                    .fieldId("description[0].language.schemaUri")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -47,7 +47,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("descriptions[0].language.schemaUri")
+                    .fieldId("description[0].language.schemaUri")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -68,7 +68,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("descriptions[0].language.id")
+                    .fieldId("description[0].language.id")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -89,7 +89,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("descriptions[0].language.id")
+                    .fieldId("description[0].language.id")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -110,7 +110,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("descriptions[0].language.id")
+                    .fieldId("description[0].language.id")
                     .errorType("invalidValue")
                     .message("id does not exist within the given schema")
             );
@@ -131,7 +131,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("descriptions[0].language.schemaUri")
+                    .fieldId("description[0].language.schemaUri")
                     .errorType("invalidValue")
                     .message("schema is unknown/unsupported")
             );
@@ -166,7 +166,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("descriptions[0].type.schemaUri")
+                            .fieldId("description[0].type.schemaUri")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -188,7 +188,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("descriptions[0].type.schemaUri")
+                    .fieldId("description[0].type.schemaUri")
                     .errorType("invalidValue")
                     .message("schema is unknown/unsupported")
             );
@@ -210,7 +210,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("descriptions[0].type.schemaUri")
+                            .fieldId("description[0].type.schemaUri")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -231,7 +231,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("descriptions[0].description")
+                    .fieldId("description[0].text")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -252,7 +252,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("descriptions[0].description")
+                    .fieldId("description[0].text")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -273,7 +273,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("descriptions[0].type")
+                    .fieldId("description[0].type")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -297,7 +297,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("descriptions[0].type.id")
+                    .fieldId("description[0].type.id")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -322,7 +322,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("descriptions[0].type.id")
+                    .fieldId("description[0].type.id")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -343,7 +343,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("descriptions[0].type.id")
+                    .fieldId("description[0].type.id")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -365,7 +365,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("descriptions[0].type.id")
+                    .fieldId("description[0].type.id")
                     .errorType("invalidValue")
                     .message("id does not exist within the given schema")
             );

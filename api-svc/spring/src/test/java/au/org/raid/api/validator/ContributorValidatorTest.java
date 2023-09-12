@@ -38,7 +38,7 @@ class ContributorValidatorTest {
     private ContributorValidator validationService;
 
     @Test
-    @DisplayName("Validation fails with missing positions")
+    @DisplayName("Validation fails with missing position")
     void missingPositions() {
         final var role = new ContributorRoleWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
@@ -54,7 +54,7 @@ class ContributorValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors.positions")
+                        .fieldId("contributor.position")
                         .errorType("invalidValue")
                         .message("leader must be specified")
         ));
@@ -86,7 +86,7 @@ class ContributorValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors.positions")
+                        .fieldId("contributor.position")
                         .errorType("invalidValue")
                         .message("leader must be specified")
         ));
@@ -96,14 +96,14 @@ class ContributorValidatorTest {
     }
 
     @Test
-    @DisplayName("Validation fails with no contributors")
+    @DisplayName("Validation fails with no contributor")
     void noContributors() {
         final var failures = validationService.validate(Collections.emptyList());
 
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors")
+                        .fieldId("contributor")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -113,14 +113,14 @@ class ContributorValidatorTest {
     }
 
     @Test
-    @DisplayName("Validation fails with null contributors")
+    @DisplayName("Validation fails with null contributor")
     void nullContributors() {
         final var failures = validationService.validate(null);
 
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors")
+                        .fieldId("contributor")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -174,17 +174,17 @@ class ContributorValidatorTest {
                 .position(List.of(position));
 
         final var orcidError = new ValidationFailure()
-                .fieldId("contributors[0].id")
+                .fieldId("contributor[0].id")
                 .errorType(NOT_SET_TYPE)
                 .message(NOT_SET_MESSAGE);
 
         final var roleError = new ValidationFailure()
-                .fieldId("contributors[0].roles[0].role")
+                .fieldId("contributor[0].roles[0].role")
                 .errorType(NOT_SET_TYPE)
                 .message(NOT_SET_MESSAGE);
 
         final var positionError = new ValidationFailure()
-                .fieldId("contributors[0].positions[0].position")
+                .fieldId("contributor[0].position[0].position")
                 .errorType(NOT_SET_TYPE)
                 .message(NOT_SET_MESSAGE);
 
@@ -203,7 +203,7 @@ class ContributorValidatorTest {
     }
 
     @Test
-    @DisplayName("Validation fails with conflicting lead positions - year-month-day dates")
+    @DisplayName("Validation fails with conflicting lead position - year-month-day dates")
     void conflictingLeadPositions() {
         final var role1 = new ContributorRoleWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
@@ -241,13 +241,13 @@ class ContributorValidatorTest {
 
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(new ValidationFailure()
-                .fieldId("contributors[1].positions[0]")
+                .fieldId("contributor[1].position[0]")
                 .errorType("invalidValue")
-                .message("There can only be one leader in any given period. The position at contributors[0].positions[0] conflicts with this position.")));
+                .message("There can only be one leader in any given period. The position at contributor[0].position[0] conflicts with this position.")));
     }
 
     @Test
-    @DisplayName("Validation fails with conflicting lead positions - year-month dates")
+    @DisplayName("Validation fails with conflicting lead position - year-month dates")
     void conflictingLeadPositionsWithYearMonthDates() {
         final var role1 = new ContributorRoleWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
@@ -284,13 +284,13 @@ class ContributorValidatorTest {
         final var failures = validationService.validate(List.of(contributor1, contributor2));
 
         assertThat(failures, is(List.of(new ValidationFailure()
-                .fieldId("contributors[1].positions[0]")
+                .fieldId("contributor[1].position[0]")
                 .errorType("invalidValue")
-                .message("There can only be one leader in any given period. The position at contributors[0].positions[0] conflicts with this position."))));
+                .message("There can only be one leader in any given period. The position at contributor[0].position[0] conflicts with this position."))));
     }
 
     @Test
-    @DisplayName("Validation fails with conflicting lead positions - year dates")
+    @DisplayName("Validation fails with conflicting lead position - year dates")
     void conflictingLeadPositionsWithYearDates() {
         final var role1 = new ContributorRoleWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
@@ -327,13 +327,13 @@ class ContributorValidatorTest {
         final var failures = validationService.validate(List.of(contributor1, contributor2));
 
         assertThat(failures, is(List.of(new ValidationFailure()
-                .fieldId("contributors[1].positions[0]")
+                .fieldId("contributor[1].position[0]")
                 .errorType("invalidValue")
-                .message("There can only be one leader in any given period. The position at contributors[0].positions[0] conflicts with this position."))));
+                .message("There can only be one leader in any given period. The position at contributor[0].position[0] conflicts with this position."))));
     }
 
     @Test
-    @DisplayName("Validation passes with multiple lead positions - year dates")
+    @DisplayName("Validation passes with multiple lead position - year dates")
     void multipleLeadPositionsWithYearsAsDates() {
         final var role1 = new ContributorRoleWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
@@ -373,7 +373,7 @@ class ContributorValidatorTest {
     }
 
     @Test
-    @DisplayName("Validation passes with multiple lead positions - year-month dates")
+    @DisplayName("Validation passes with multiple lead position - year-month dates")
     void multipleLeadPositionsWithYearMonthDates() {
         final var role1 = new ContributorRoleWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
@@ -413,7 +413,7 @@ class ContributorValidatorTest {
     }
 
     @Test
-    @DisplayName("Validation passes with multiple lead positions - year-month-day dates")
+    @DisplayName("Validation passes with multiple lead position - year-month-day dates")
     void multipleLeadPositionsWithYearMonthDayDates() {
         final var role1 = new ContributorRoleWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
@@ -474,7 +474,7 @@ class ContributorValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors[0].schemaUri")
+                        .fieldId("contributor[0].schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -505,7 +505,7 @@ class ContributorValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors[0].schemaUri")
+                        .fieldId("contributor[0].schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -536,7 +536,7 @@ class ContributorValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors[0].schemaUri")
+                        .fieldId("contributor[0].schemaUri")
                         .errorType("invalidValue")
                         .message("has invalid/unsupported value - should be https://orcid.org/")
         ));

@@ -47,13 +47,13 @@ public class ContributorValidator {
                     if (isBlank(contributor.getSchemaUri())) {
                         failures.add(
                                 new ValidationFailure()
-                                        .fieldId("contributors[%d].schemaUri".formatted(index))
+                                        .fieldId("contributor[%d].schemaUri".formatted(index))
                                         .errorType(NOT_SET_TYPE)
                                         .message(NOT_SET_MESSAGE)
                         );
                     } else if (!contributor.getSchemaUri().equals(ORCID_ORG)) {
                         failures.add(new ValidationFailure()
-                                .fieldId("contributors[%d].schemaUri".formatted(index))
+                                .fieldId("contributor[%d].schemaUri".formatted(index))
                                 .errorType(INVALID_VALUE_TYPE)
                                 .message(INVALID_VALUE_MESSAGE + " - should be " + ORCID_ORG)
                         );
@@ -98,20 +98,15 @@ public class ContributorValidator {
         var leaders = getLeaders(contributors);
         if (leaders.isEmpty()) {
             failures.add(new ValidationFailure().
-                    fieldId("contributors.positions").
+                    fieldId("contributor.position").
                     errorType(INVALID_VALUE_TYPE).
                     message("leader must be specified"));
         } else if (leaders.size() > 1) {
-            // validate dates
-
             failures.addAll(validateLeadContributors(contributors));
         }
 
         return failures;
     }
-
-
-
 
 
     private List<ValidationFailure> validateLeadContributors(final List<Contributor> contributors) {
@@ -157,11 +152,11 @@ public class ContributorValidator {
 
             if (start.isBefore(previousEnd)) {
                 failures.add(new ValidationFailure()
-                        .fieldId("contributors[%d].positions[%d]".formatted(
+                        .fieldId("contributor[%d].position[%d]".formatted(
                                 (int) entry.get("contributorIndex"), (int) entry.get("positionIndex")
                         ))
                         .errorType(INVALID_VALUE_TYPE)
-                        .message(String.format("There can only be one leader in any given period. The position at contributors[%d].positions[%d] conflicts with this position."
+                        .message(String.format("There can only be one leader in any given period. The position at contributor[%d].position[%d] conflicts with this position."
                                 .formatted((int) previousEntry.get("contributorIndex"), (int) previousEntry.get("positionIndex")))
                         )
                 );

@@ -29,7 +29,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("titles[0].language.schemaUri")
+                    .fieldId("title[0].language.schemaUri")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -50,7 +50,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("titles[0].language.schemaUri")
+                    .fieldId("title[0].language.schemaUri")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -71,7 +71,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("titles[0].language.id")
+                    .fieldId("title[0].language.id")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -92,7 +92,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("titles[0].language.id")
+                    .fieldId("title[0].language.id")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -113,7 +113,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("titles[0].language.id")
+                    .fieldId("title[0].language.id")
                     .errorType("invalidValue")
                     .message("id does not exist within the given schema")
             );
@@ -134,7 +134,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("titles[0].language.schemaUri")
+                    .fieldId("title[0].language.schemaUri")
                     .errorType("invalidValue")
                     .message("schema is unknown/unsupported")
             );
@@ -155,7 +155,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("titles")
+                    .fieldId("title")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -176,7 +176,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("titles.type")
+                    .fieldId("title.type")
                     .errorType("missingPrimaryTitle")
                     .message("at least one primaryTitle entry must be provided")
             );
@@ -200,7 +200,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("titles.type")
+                            .fieldId("title.type")
                             .errorType("missingPrimaryTitle")
                             .message("at least one primaryTitle entry must be provided")
             );
@@ -224,7 +224,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("titles[0].type.schemaUri")
+                            .fieldId("title[0].type.schemaUri")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -248,7 +248,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("titles[0].type.schemaUri")
+                            .fieldId("title[0].type.schemaUri")
                             .errorType("invalidValue")
                             .message("schema is unknown/unsupported")
             );
@@ -280,7 +280,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("titles[1].type.id")
+                            .fieldId("title[1].type.id")
                             .message("field must be set")
                             .errorType("notSet")
             );
@@ -314,7 +314,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).contains(
                     new ValidationFailure()
                             .message("id does not exist within the given schema")
-                            .fieldId("titles[1].type.id")
+                            .fieldId("title[1].type.id")
                             .errorType("invalidValue")
             );
         } catch (Exception e) {
@@ -336,7 +336,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
 
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("titles[0].startDate")
+                            .fieldId("title[0].startDate")
                             .errorType("notSet")
                             .message("field must be set")
             );

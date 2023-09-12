@@ -71,7 +71,7 @@ public class TitleValidator {
 
             failures.addAll(titleTypeValidationService.validate(title.getType(), index));
 
-            failures.addAll(languageValidator.validate(title.getLanguage(), "titles[%d]".formatted(index)));
+            failures.addAll(languageValidator.validate(title.getLanguage(), "title[%d]".formatted(index)));
         });
         return failures;
     }
@@ -110,15 +110,15 @@ public class TitleValidator {
 
             if (title.equals(previous)) {
                 return List.of(new ValidationFailure()
-                        .fieldId("titles[%d]".formatted(index))
+                        .fieldId("title[%d]".formatted(index))
                         .errorType(DUPLICATE_TYPE)
                         .message(DUPLICATE_MESSAGE)
                 );
             } else if (startDate.isBefore(endDate)) {
                 failures.add(new ValidationFailure()
-                        .fieldId("titles[%d].startDate".formatted(index))
+                        .fieldId("title[%d].startDate".formatted(index))
                         .errorType(INVALID_VALUE_TYPE)
-                        .message("There can only be one primary title in any given period. The start date for this title overlaps with titles[%d]".formatted(previousIndex))
+                        .message("There can only be one primary title in any given period. The start date for this title overlaps with title[%d]".formatted(previousIndex))
                 );
 
             }

@@ -29,7 +29,7 @@ public class ContributorPositionValidator {
         if (position.getStartDate() == null) {
             failures.add(
                     new ValidationFailure()
-                            .fieldId("contributors[%d].positions[%d].startDate".formatted(contributorIndex, positionIndex))
+                            .fieldId("contributor[%d].position[%d].startDate".formatted(contributorIndex, positionIndex))
                             .errorType(NOT_SET_TYPE)
                             .message(NOT_SET_MESSAGE));
         }
@@ -37,7 +37,7 @@ public class ContributorPositionValidator {
         if (isBlank(position.getId())) {
             failures.add(
                     new ValidationFailure()
-                            .fieldId("contributors[%d].positions[%d].id".formatted(contributorIndex, positionIndex))
+                            .fieldId("contributor[%d].position[%d].id".formatted(contributorIndex, positionIndex))
                             .errorType(NOT_SET_TYPE)
                             .message(NOT_SET_MESSAGE));
         }
@@ -45,7 +45,7 @@ public class ContributorPositionValidator {
         if (isBlank(position.getSchemaUri())) {
             failures.add(
                     new ValidationFailure()
-                            .fieldId("contributors[%d].positions[%d].schemaUri".formatted(contributorIndex, positionIndex))
+                            .fieldId("contributor[%d].position[%d].schemaUri".formatted(contributorIndex, positionIndex))
                             .errorType(NOT_SET_TYPE)
                             .message(NOT_SET_MESSAGE)
             );
@@ -56,7 +56,7 @@ public class ContributorPositionValidator {
             if (positionScheme.isEmpty()) {
                 failures.add(
                         new ValidationFailure()
-                                .fieldId("contributors[%d].positions[%d].schemaUri".formatted(contributorIndex, positionIndex))
+                                .fieldId("contributor[%d].position[%d].schemaUri".formatted(contributorIndex, positionIndex))
                                 .errorType(INVALID_VALUE_TYPE)
                                 .message(INVALID_SCHEMA)
                 );
@@ -64,7 +64,7 @@ public class ContributorPositionValidator {
                     contributorPositionRepository.findByUriAndSchemaId(position.getId(), positionScheme.get().getId()).isEmpty()) {
                 failures.add(
                         new ValidationFailure()
-                                .fieldId("contributors[%d].positions[%d].id".formatted(contributorIndex, positionIndex))
+                                .fieldId("contributor[%d].position[%d].id".formatted(contributorIndex, positionIndex))
                                 .errorType(INVALID_VALUE_TYPE)
                                 .message(INVALID_ID_FOR_SCHEMA)
                 );

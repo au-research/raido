@@ -75,7 +75,7 @@ public class InvalidPidTest extends IntegrationTestCase {
         EXPECT("minting a raid with non-existent PIDs should fail");
         assertThatThrownBy(() -> raidApi.createRaidV1(new CreateRaidV1Request()
                 .title(titles(initialTitle))
-                .date(new Dates().startDate(today.format(DateTimeFormatter.ISO_LOCAL_DATE)))
+                .date(new Date().startDate(today.format(DateTimeFormatter.ISO_LOCAL_DATE)))
                 .description(descriptions("used for testing non-existent pids"))
                 .contributor(contributors(NONEXISTENT_TEST_ORCID))
                 .organisation(organisations(NONEXISTENT_TEST_ROR))
@@ -87,15 +87,15 @@ public class InvalidPidTest extends IntegrationTestCase {
                 )
         )).isInstanceOfSatisfying(RaidApiValidationException.class, ex -> {
             assertThat(ex.getFailures()).anySatisfy(iFail -> {
-                assertThat(iFail.getFieldId()).isEqualTo("contributors[0].id");
+                assertThat(iFail.getFieldId()).isEqualTo("contributor[0].id");
                 assertThat(iFail.getMessage()).contains("uri not found");
             });
             assertThat(ex.getFailures()).anySatisfy(iFail -> {
-                assertThat(iFail.getFieldId()).isEqualTo("organisations[0].id");
+                assertThat(iFail.getFieldId()).isEqualTo("organisation[0].id");
                 assertThat(iFail.getMessage()).contains("uri not found");
             });
             assertThat(ex.getFailures()).anySatisfy(iFail -> {
-                assertThat(iFail.getFieldId()).isEqualTo("relatedObjects[0].id");
+                assertThat(iFail.getFieldId()).isEqualTo("relatedObject[0].id");
                 assertThat(iFail.getMessage()).contains("uri not found");
             });
         });

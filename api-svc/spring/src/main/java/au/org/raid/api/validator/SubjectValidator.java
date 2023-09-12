@@ -34,7 +34,7 @@ public class SubjectValidator {
 
             if (subject.getSchemaUri() == null || !subject.getSchemaUri().equals(SchemaUri.SUBJECT.getUri())) {
                 final var failure = new ValidationFailure();
-                failure.setFieldId(String.format("subjects[%d].schemaUri", subjectIndex));
+                failure.setFieldId(String.format("subject[%d].schemaUri", subjectIndex));
                 failure.setMessage(String.format("must be %s.", SchemaUri.SUBJECT.getUri()));
                 failure.setErrorType(INVALID_VALUE_TYPE);
 
@@ -43,7 +43,7 @@ public class SubjectValidator {
 
             if (subject.getId() == null) {
                 final var failure = new ValidationFailure();
-                failure.setFieldId(String.format("subjects[%d].id", subjectIndex));
+                failure.setFieldId(String.format("subject[%d].id", subjectIndex));
                 failure.setMessage(NOT_SET_MESSAGE);
                 failure.setErrorType(NOT_SET_TYPE);
 
@@ -53,7 +53,7 @@ public class SubjectValidator {
 
                 if (!subject.getId().startsWith(SchemaUri.SUBJECT.getUri()) || subjectId.matches(".*\\D.*")) {
                     final var failure = new ValidationFailure();
-                    failure.setFieldId(String.format("subjects[%d].id", subjectIndex));
+                    failure.setFieldId(String.format("subject[%d].id", subjectIndex));
                     failure.setMessage(String.format("%s is not a valid field of research", subject.getId()));
                     failure.setErrorType(INVALID_VALUE_TYPE);
 
@@ -63,7 +63,7 @@ public class SubjectValidator {
 
                     if (subjectTypeRecord.isEmpty()) {
                         final var failure = new ValidationFailure();
-                        failure.setFieldId(String.format("subjects[%d].id", subjectIndex));
+                        failure.setFieldId(String.format("subject[%d].id", subjectIndex));
                         failure.setMessage(String.format("%s is not a standard FoR code", subject.getId()));
                         failure.setErrorType(INVALID_VALUE_TYPE);
 

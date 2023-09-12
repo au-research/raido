@@ -29,24 +29,24 @@ public class ValidationMessage {
 
     public static final ValidationFailure AT_LEAST_ONE_PRIMARY_TITLE =
             new ValidationFailure().
-                    fieldId("titles.type").
+                    fieldId("title.type").
                     errorType("missingPrimaryTitle").
                     message("at least one primaryTitle entry must be provided");
 
 
     public static final ValidationFailure TOO_MANY_PRIMARY_TITLE =
             new ValidationFailure().
-                    fieldId("titles.type").
+                    fieldId("title.type").
                     errorType("tooManyPrimaryTitle").
                     message("too many primaryTitle entries provided");
 
     public static final ValidationFailure TITLES_NOT_SET =
-            fieldNotSet("titles");
+            fieldNotSet("title");
     public static final ValidationFailure CONTRIB_NOT_SET =
-            fieldNotSet("contributors");
+            fieldNotSet("contributor");
 
     public static final ValidationFailure ORGANISATION_NOT_SET =
-            fieldNotSet("organisations");
+            fieldNotSet("organisation");
     public static final ValidationFailure METADATA_TOO_LARGE =
             new ValidationFailure().
                     fieldId("metadata").errorType(TOO_LONG_TYPE).
@@ -75,9 +75,9 @@ public class ValidationMessage {
                     errorType(INVALID_VALUE_TYPE).
                     message("can only call upgrade legacy raid to RaidoMetadataSchemaV1");
     public static final ValidationFailure DATES_NOT_SET =
-            fieldNotSet("metadata.dates");
+            fieldNotSet("date");
     public static final ValidationFailure DATES_START_DATE_NOT_SET =
-            fieldNotSet("metadata.dates.start");
+            fieldNotSet("date.start");
     public static final ValidationFailure ACCESS_NOT_SET =
             fieldNotSet("metadata.access");
     public static final ValidationFailure ACCESS_TYPE_NOT_SET =
@@ -126,7 +126,7 @@ public class ValidationMessage {
 
     public static ValidationFailure titleNotSet(int i) {
         return new ValidationFailure().
-                fieldId("titles[%s].title".formatted(i)).
+                fieldId("title[%s].title".formatted(i)).
                 errorType(NOT_SET_TYPE).
                 message(NOT_SET_MESSAGE);
     }
@@ -154,21 +154,21 @@ public class ValidationMessage {
 
     public static ValidationFailure titleStartDateNotSet(int i) {
         return new ValidationFailure().
-                fieldId("titles[%s].startDate".formatted(i)).
+                fieldId("title[%s].startDate".formatted(i)).
                 errorType(NOT_SET_TYPE).
                 message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure titlesTypeNotSet(int i) {
         return new ValidationFailure().
-                fieldId("titles[%s].type".formatted(i)).
+                fieldId("title[%s].type".formatted(i)).
                 errorType(NOT_SET_TYPE).
                 message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure contribIdSchemeNotSet(int i) {
         return new ValidationFailure().
-                fieldId("contributors[%s].identifierSchemeUri".formatted(i)).
+                fieldId("contributor[%s].identifierSchemeUri".formatted(i)).
                 errorType(NOT_SET_TYPE).
                 message(NOT_SET_MESSAGE);
     }
@@ -196,7 +196,7 @@ public class ValidationMessage {
 
     public static ValidationFailure primaryTitleTooLong(int i) {
         return new ValidationFailure().
-                fieldId("titles[%s].title".formatted(i)).
+                fieldId("title[%s].title".formatted(i)).
                 errorType(TOO_LONG_TYPE).
                 message("primaryTitle field must fit in length: " +
                         RAID.PRIMARY_TITLE.getDataType().length());

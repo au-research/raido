@@ -24,7 +24,7 @@ public class DescriptionTypeValidator {
 
         if (descriptionType == null) {
             return List.of(new ValidationFailure()
-                    .fieldId("descriptions[%d].type".formatted(index))
+                    .fieldId("description[%d].type".formatted(index))
                     .errorType(NOT_SET_TYPE)
                     .message(NOT_SET_MESSAGE)
             );
@@ -32,7 +32,7 @@ public class DescriptionTypeValidator {
 
         if (isBlank(descriptionType.getId())) {
             failures.add(new ValidationFailure()
-                    .fieldId("descriptions[%d].type.id".formatted(index))
+                    .fieldId("description[%d].type.id".formatted(index))
                     .errorType(NOT_SET_TYPE)
                     .message(NOT_SET_MESSAGE)
             );
@@ -40,7 +40,7 @@ public class DescriptionTypeValidator {
 
         if (isBlank(descriptionType.getSchemaUri())) {
             failures.add(new ValidationFailure()
-                    .fieldId("descriptions[%d].type.schemaUri".formatted(index))
+                    .fieldId("description[%d].type.schemaUri".formatted(index))
                     .errorType(NOT_SET_TYPE)
                     .message(NOT_SET_MESSAGE)
             );
@@ -50,13 +50,13 @@ public class DescriptionTypeValidator {
 
             if (descriptionTypeScheme.isEmpty()) {
                 failures.add(new ValidationFailure()
-                        .fieldId("descriptions[%d].type.schemaUri".formatted(index))
+                        .fieldId("description[%d].type.schemaUri".formatted(index))
                         .errorType(INVALID_VALUE_TYPE)
                         .message(INVALID_SCHEMA));
             } else if (!isBlank(descriptionType.getId()) &&
                     descriptionTypeRepository.findByUriAndSchemeId(descriptionType.getId(), descriptionTypeScheme.get().getId()).isEmpty()) {
                 failures.add(new ValidationFailure()
-                        .fieldId("descriptions[%d].type.id".formatted(index))
+                        .fieldId("description[%d].type.id".formatted(index))
                         .errorType(INVALID_VALUE_TYPE)
                         .message(INVALID_ID_FOR_SCHEMA));
             }

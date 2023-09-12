@@ -72,7 +72,7 @@ class OrganisationValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("organisations[0].schemaUri")
+                        .fieldId("organisation[0].schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -97,7 +97,7 @@ class OrganisationValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("organisations[0].schemaUri")
+                        .fieldId("organisation[0].schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -118,7 +118,7 @@ class OrganisationValidatorTest {
                 .role(List.of(role));
 
         final var rorError = new ValidationFailure()
-                .fieldId("organisations[0].id")
+                .fieldId("organisation[0].id")
                 .errorType(NOT_SET_TYPE)
                 .message(NOT_SET_MESSAGE);
 
@@ -149,7 +149,7 @@ class OrganisationValidatorTest {
                 .role(List.of(role));
 
         final var roleError = new ValidationFailure()
-                .fieldId("organisations[0].roles[0].id")
+                .fieldId("organisation[0].role[0].id")
                 .errorType(NOT_SET_TYPE)
                 .message(NOT_SET_MESSAGE);
 

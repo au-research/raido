@@ -1,6 +1,6 @@
 package au.org.raid.api.factory;
 
-import au.org.raid.idl.raidv2.model.Dates;
+import au.org.raid.idl.raidv2.model.Date;
 import au.org.raid.idl.raidv2.model.DatesBlock;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,6 +39,6 @@ class DatesFactoryTest {
     @Test
     @DisplayName("Dates fields are null if DatesBlock fields are null")
     void nullFields() {
-        assertThat(datesFactory.create(new DatesBlock()), is(new Dates()));
+        assertThat(datesFactory.create(new DatesBlock()), is(new Date()));
     }
 }

@@ -27,14 +27,14 @@ public class RelatedObjectCategoryValidator {
 
         if (isBlank(relatedObjectCategory.getId())) {
             failures.add(new ValidationFailure()
-                    .fieldId("relatedObjects[%d].category.id".formatted(index))
+                    .fieldId("relatedObject[%d].category.id".formatted(index))
                     .errorType(NOT_SET_TYPE)
                     .message(NOT_SET_MESSAGE)
             );
         }
         if (isBlank(relatedObjectCategory.getSchemaUri())) {
             failures.add(new ValidationFailure()
-                    .fieldId("relatedObjects[%d].category.schemaUri".formatted(index))
+                    .fieldId("relatedObject[%d].category.schemaUri".formatted(index))
                     .errorType(NOT_SET_TYPE)
                     .message(NOT_SET_MESSAGE)
             );
@@ -44,14 +44,14 @@ public class RelatedObjectCategoryValidator {
 
             if (relatedObjectCategoryScheme.isEmpty()) {
                 failures.add(new ValidationFailure()
-                        .fieldId("relatedObjects[%d].category.schemaUri".formatted(index))
+                        .fieldId("relatedObject[%d].category.schemaUri".formatted(index))
                         .errorType(INVALID_VALUE_TYPE)
                         .message(INVALID_SCHEMA)
                 );
             } else if (!isBlank(relatedObjectCategory.getId()) &&
                     relatedObjectCategoryRepository.findByUriAndSchemaId(relatedObjectCategory.getId(), relatedObjectCategoryScheme.get().getId()).isEmpty()) {
                 failures.add(new ValidationFailure()
-                        .fieldId("relatedObjects[%d].category.id".formatted(index))
+                        .fieldId("relatedObject[%d].category.id".formatted(index))
                         .errorType(INVALID_VALUE_TYPE)
                         .message(INVALID_ID_FOR_SCHEMA)
                 );

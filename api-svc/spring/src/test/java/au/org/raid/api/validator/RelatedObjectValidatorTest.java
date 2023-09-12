@@ -107,7 +107,7 @@ class RelatedObjectValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[0].id")
+                        .fieldId("relatedObject[0].id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -136,7 +136,7 @@ class RelatedObjectValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[0].id")
+                        .fieldId("relatedObject[0].id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -164,7 +164,7 @@ class RelatedObjectValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[0].schemaUri")
+                        .fieldId("relatedObject[0].schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -193,7 +193,7 @@ class RelatedObjectValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[0].schemaUri")
+                        .fieldId("relatedObject[0].schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -202,7 +202,7 @@ class RelatedObjectValidatorTest {
     @Test
     @DisplayName("Validation fails if DOI does not exist")
     void addsFailureIfDoiDoesNotExist() {
-        final var fieldId = "relatedObjects[0].id";
+        final var fieldId = "relatedObject[0].id";
         final var type = new RelatedObjectType()
                 .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
                 .schemaUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
@@ -250,12 +250,12 @@ class RelatedObjectValidatorTest {
                 .category(category);
 
         final var typeError = new ValidationFailure()
-                .fieldId("relatedObjects[0].type.id")
+                .fieldId("relatedObject[0].type.id")
                 .errorType(NOT_SET_TYPE)
                 .message(NOT_SET_MESSAGE);
 
         final var categoryError = new ValidationFailure()
-                .fieldId("relatedObjects[0].category.id")
+                .fieldId("relatedObject[0].category.id")
                 .errorType(NOT_SET_TYPE)
                 .message(NOT_SET_MESSAGE);
 

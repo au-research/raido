@@ -23,7 +23,7 @@ public class OrcidValidator {
 
         if (isBlank(orcid)) {
             failures.add(new ValidationFailure()
-                    .fieldId("contributors[%d].id".formatted(index))
+                    .fieldId("contributor[%d].id".formatted(index))
                     .errorType(NOT_SET_TYPE)
                     .message(NOT_SET_MESSAGE)
             );
@@ -32,7 +32,7 @@ public class OrcidValidator {
         }
 
         if (failures.isEmpty()) {
-            failures.addAll(orcidService.validate(orcid,String.format("contributors[%d].id", index)));
+            failures.addAll(orcidService.validate(orcid,String.format("contributor[%d].id", index)));
         }
 
 
@@ -71,7 +71,7 @@ public class OrcidValidator {
             int index, String message
     ) {
         return new ValidationFailure().
-                fieldId("contributors[%s].id".formatted(index)).
+                fieldId("contributor[%s].id".formatted(index)).
                 errorType(INVALID_VALUE_TYPE).
                 message(message);
     }

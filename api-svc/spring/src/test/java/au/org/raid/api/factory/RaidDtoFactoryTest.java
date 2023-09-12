@@ -311,7 +311,7 @@ class RaidDtoFactoryTest {
         @Test
         @DisplayName("Sets dates field")
         void dates() {
-            final var dates = new Dates();
+            final var dates = new Date();
 
             when(datesFactory.create(raidoMetadataSchemaV1.getDates())).thenReturn(dates);
             final var result = raidDtoFactory.create(raidRecord);

@@ -24,11 +24,11 @@ public class RorValidator {
 
         if (isBlank(ror)) {
             failures.add(new ValidationFailure()
-                    .fieldId("organisations[%d].id".formatted(index))
+                    .fieldId("organisation[%d].id".formatted(index))
                     .errorType(NOT_SET_TYPE)
                     .message(NOT_SET_MESSAGE));
         } else {
-            failures.addAll(rorService.validate(ror, "organisations[%d].id".formatted(index)));
+            failures.addAll(rorService.validate(ror, "organisation[%d].id".formatted(index)));
         }
 
         return failures;

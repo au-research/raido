@@ -28,14 +28,14 @@ public class RelatedObjectTypeValidator {
 
         if (isBlank(relatedObjectType.getId())) {
             failures.add(new ValidationFailure()
-                    .fieldId("relatedObjects[%d].type.id".formatted(index))
+                    .fieldId("relatedObject[%d].type.id".formatted(index))
                     .errorType(NOT_SET_TYPE)
                     .message(NOT_SET_MESSAGE)
             );
         }
         if (isBlank(relatedObjectType.getSchemaUri())) {
             failures.add(new ValidationFailure()
-                    .fieldId("relatedObjects[%d].type.schemaUri".formatted(index))
+                    .fieldId("relatedObject[%d].type.schemaUri".formatted(index))
                     .errorType(NOT_SET_TYPE)
                     .message(NOT_SET_MESSAGE)
             );
@@ -45,14 +45,14 @@ public class RelatedObjectTypeValidator {
 
             if (relatedObjectTypeScheme.isEmpty()) {
                 failures.add(new ValidationFailure()
-                        .fieldId("relatedObjects[%d].type.schemaUri".formatted(index))
+                        .fieldId("relatedObject[%d].type.schemaUri".formatted(index))
                         .errorType(INVALID_VALUE_TYPE)
                         .message(INVALID_SCHEMA)
                 );
             } else if (!isBlank(relatedObjectType.getId()) &&
                     relatedObjectTypeRepository.findByUriAndSchemaId(relatedObjectType.getId(), relatedObjectTypeScheme.get().getId()).isEmpty()) {
                 failures.add(new ValidationFailure()
-                        .fieldId("relatedObjects[%d].type.id".formatted(index))
+                        .fieldId("relatedObject[%d].type.id".formatted(index))
                         .errorType(INVALID_VALUE_TYPE)
                         .message(INVALID_ID_FOR_SCHEMA)
                 );

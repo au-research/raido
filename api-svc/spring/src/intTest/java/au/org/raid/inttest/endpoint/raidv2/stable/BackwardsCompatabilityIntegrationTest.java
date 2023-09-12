@@ -65,7 +65,7 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
                                             .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
                                     .startDate(metadata.getTitles().get(1).getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
                     ))
-                    .date(new Dates()
+                    .date(new Date()
                             .startDate(metadata.getDates().getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE))
                             .endDate(metadata.getDates().getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE)))
                     .description(List.of(
@@ -250,7 +250,7 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
                 )
                 .accessStatement(new AccessStatement().text("RAiD minted via legacy V1 endpoint is closed by default")));
 
-        assertThat(raidDto.getDate()).isEqualTo(new Dates()
+        assertThat(raidDto.getDate()).isEqualTo(new Date()
                 .startDate(raidModel.getStartDate()));
 
         assertThat(raidDto.getTitle()).isEqualTo(List.of(

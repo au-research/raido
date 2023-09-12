@@ -37,7 +37,7 @@ public class DescriptionValidator {
 
             if (isBlank(description.getText())) {
                 failures.add(new ValidationFailure()
-                        .fieldId("descriptions[%d].description".formatted(index))
+                        .fieldId("description[%d].text".formatted(index))
                         .errorType(NOT_SET_TYPE)
                         .message(NOT_SET_MESSAGE)
                 );
@@ -45,7 +45,7 @@ public class DescriptionValidator {
 
             failures.addAll(typeValidationService.validate(description.getType(), index));
             failures.addAll(
-                    languageValidator.validate(description.getLanguage(), "descriptions[%d]".formatted(index))
+                    languageValidator.validate(description.getLanguage(), "description[%d]".formatted(index))
             );
         });
 

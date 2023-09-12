@@ -117,7 +117,7 @@ components:
         title:
           type: array
           items: { $ref: '#/components/schemas/Title' }
-        date: { $ref: '#/components/schemas/Dates' }
+        date: { $ref: '#/components/schemas/Date' }
         description:
           type: array
           items: { $ref: '#/components/schemas/Description' }
@@ -220,7 +220,7 @@ components:
           description: >
             The Service Point (SP) that requested the RAiD. Analogous to a DataCite ‘Repository’. SPs belong to an owner, RAiD owners can have multiple SPs, and SPs do not need to be legal entities.
           example: 20000003
-    Dates:
+    Date:
       type: object
       description: Metadata schema block containing the start and end date of the RAiD.
       required: [ "startDate" ]

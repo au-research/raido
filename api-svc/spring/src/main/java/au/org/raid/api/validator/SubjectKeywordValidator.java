@@ -22,12 +22,12 @@ public class SubjectKeywordValidator {
 
         if (isBlank(keyword.getText())) {
             failures.add(new ValidationFailure()
-                    .fieldId("subjects[%d].keywords[%d].keyword".formatted(subjectIndex, keywordIndex))
+                    .fieldId("subject[%d].keyword[%d].keyword".formatted(subjectIndex, keywordIndex))
                     .errorType(NOT_SET_TYPE)
                     .message(NOT_SET_MESSAGE));
         }
 
-        failures.addAll(languageValidator.validate(keyword.getLanguage(), "subjects[%d].keywords[%d]".formatted(subjectIndex, keywordIndex)));
+        failures.addAll(languageValidator.validate(keyword.getLanguage(), "subject[%d].keyword[%d]".formatted(subjectIndex, keywordIndex)));
 
         return failures;
     }

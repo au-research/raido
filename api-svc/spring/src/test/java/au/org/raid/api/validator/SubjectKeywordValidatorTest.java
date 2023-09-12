@@ -30,7 +30,7 @@ class SubjectKeywordValidatorTest {
     @Test
     @DisplayName("Valid keyword passes validation")
     void validKeyword() {
-        final var parentField = "subjects[1].keywords[1]";
+        final var parentField = "subject[1].keyword[1]";
 
         final var language = new Language();
 
@@ -50,7 +50,7 @@ class SubjectKeywordValidatorTest {
     @Test
     @DisplayName("null keyword fails validation")
     void nullKeyword() {
-        final var parentField = "subjects[1].keywords[1]";
+        final var parentField = "subject[1].keyword[1]";
 
         final var language = new Language();
 
@@ -62,7 +62,7 @@ class SubjectKeywordValidatorTest {
         final var failures = validator.validate(keyword, 1, 1);
 
         assertThat(failures, is(List.of(new ValidationFailure()
-                .fieldId("subjects[1].keywords[1].keyword")
+                .fieldId("subject[1].keyword[1].keyword")
                 .errorType("notSet")
                 .message("field must be set")
         )));
@@ -73,7 +73,7 @@ class SubjectKeywordValidatorTest {
     @Test
     @DisplayName("null keyword fails validation")
     void emptyKeyword() {
-        final var parentField = "subjects[1].keywords[1]";
+        final var parentField = "subject[1].keyword[1]";
 
         final var language = new Language();
 
@@ -86,7 +86,7 @@ class SubjectKeywordValidatorTest {
         final var failures = validator.validate(keyword, 1, 1);
 
         assertThat(failures, is(List.of(new ValidationFailure()
-                .fieldId("subjects[1].keywords[1].keyword")
+                .fieldId("subject[1].keyword[1].keyword")
                 .errorType("notSet")
                 .message("field must be set")
         )));
@@ -97,7 +97,7 @@ class SubjectKeywordValidatorTest {
     @Test
     @DisplayName("Validation failures on language field are returned")
     void languageFailuresAreReturned() {
-        final var parentField = "subjects[1].keywords[1]";
+        final var parentField = "subject[1].keyword[1]";
 
         final var language = new Language();
 

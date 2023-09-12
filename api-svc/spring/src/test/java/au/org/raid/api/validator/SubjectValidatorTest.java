@@ -70,7 +70,7 @@ class SubjectValidatorTest {
 
         assertThat(failures, is(List.of(
                 new ValidationFailure()
-                        .fieldId("subjects[0].id")
+                        .fieldId("subject[0].id")
                         .errorType("invalidValue")
                         .message(String.format("%s is not a valid field of research", id))
         )));
@@ -90,7 +90,7 @@ class SubjectValidatorTest {
 
         assertThat(validationFailures, is(List.of(
                 new ValidationFailure()
-                        .fieldId("subjects[0].id")
+                        .fieldId("subject[0].id")
                         .errorType("invalidValue")
                         .message(String.format("%s is not a valid field of research", id))
         )));
@@ -111,7 +111,7 @@ class SubjectValidatorTest {
 
         assertThat(failures, is(List.of(
                 new ValidationFailure()
-                        .fieldId("subjects[0].id")
+                        .fieldId("subject[0].id")
                         .errorType("invalidValue")
                         .message(String.format("%s is not a standard FoR code", id))
         )));
@@ -130,7 +130,7 @@ class SubjectValidatorTest {
 
         assertThat(failures, is(List.of(
                 new ValidationFailure()
-                        .fieldId("subjects[0].schemaUri")
+                        .fieldId("subject[0].schemaUri")
                         .errorType("invalidValue")
                         .message("must be https://linked.data.gov.au/def/anzsrc-for/2020/.")
         )));
@@ -151,7 +151,7 @@ class SubjectValidatorTest {
         assertThat(validationFailures.size(), is(1));
         assertThat(validationFailures.get(0).getMessage(), is("must be https://linked.data.gov.au/def/anzsrc-for/2020/."));
         assertThat(validationFailures.get(0).getErrorType(), is("invalidValue"));
-        assertThat(validationFailures.get(0).getFieldId(), is("subjects[0].schemaUri"));
+        assertThat(validationFailures.get(0).getFieldId(), is("subject[0].schemaUri"));
     }
 
     @Test
@@ -167,11 +167,11 @@ class SubjectValidatorTest {
 
         assertThat(failures, is(List.of(
                 new ValidationFailure()
-                        .fieldId("subjects[0].schemaUri")
+                        .fieldId("subject[0].schemaUri")
                         .errorType("invalidValue")
                         .message("must be https://linked.data.gov.au/def/anzsrc-for/2020/."),
                 new ValidationFailure()
-                        .fieldId("subjects[0].id")
+                        .fieldId("subject[0].id")
                         .errorType("invalidValue")
                         .message("https://linked.data.gov.au/def/anzsrc-for/2020/222222 is not a standard FoR code")
                 )

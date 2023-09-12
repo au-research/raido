@@ -39,7 +39,7 @@ public class RaidoStableV1Validator {
     private final RelatedRaidValidator relatedRaidSvc;
     private final SpatialCoverageValidator spatialCoverageSvc;
     private final TraditionalKnowledgeLabelValidator traditionalKnowledgeLabelSvc;
-    private final DatesValidator datesValidator;
+    private final DateValidator dateValidator;
 
     private List<ValidationFailure> validateUpdateHandle(final String decodedHandleFromPath, final Id id) {
         final var failures = new ArrayList<ValidationFailure>();
@@ -125,7 +125,7 @@ public class RaidoStableV1Validator {
 
         var failures = new ArrayList<ValidationFailure>();
 
-        failures.addAll(datesValidator.validate(request.getDate()));
+        failures.addAll(dateValidator.validate(request.getDate()));
         failures.addAll(accessValidationService.validate(request.getAccess()));
         failures.addAll(titleSvc.validate(request.getTitle()));
         failures.addAll(descSvc.validate(request.getDescription()));
@@ -135,7 +135,7 @@ public class RaidoStableV1Validator {
         failures.addAll(subjectSvc.validate(request.getSubject()));
         failures.addAll(relatedRaidSvc.validate(request.getRelatedRaid()));
         failures.addAll(relatedObjectSvc.validateRelatedObjects(request.getRelatedObject()));
-        failures.addAll(alternateIdentifierSvc.validateAlternateIdentifiers(request.getAlternateIdentifier()));
+        failures.addAll(alternateIdentifierSvc.validateAlternateIdentifier(request.getAlternateIdentifier()));
         failures.addAll(spatialCoverageSvc.validate(request.getSpatialCoverage()));
         failures.addAll(traditionalKnowledgeLabelSvc.validate(
                 request.getTraditionalKnowledgeLabel()));
@@ -152,7 +152,7 @@ public class RaidoStableV1Validator {
 
         final var failures = new ArrayList<>(validateUpdateHandle(decodedHandle, request.getIdentifier()));
 
-        failures.addAll(datesValidator.validate(request.getDate()));
+        failures.addAll(dateValidator.validate(request.getDate()));
         failures.addAll(accessValidationService.validate(request.getAccess()));
         failures.addAll(titleSvc.validate(request.getTitle()));
         failures.addAll(descSvc.validate(request.getDescription()));
@@ -162,7 +162,7 @@ public class RaidoStableV1Validator {
         failures.addAll(subjectSvc.validate(request.getSubject()));
         failures.addAll(relatedRaidSvc.validate(request.getRelatedRaid()));
         failures.addAll(relatedObjectSvc.validateRelatedObjects(request.getRelatedObject()));
-        failures.addAll(alternateIdentifierSvc.validateAlternateIdentifiers(request.getAlternateIdentifier()));
+        failures.addAll(alternateIdentifierSvc.validateAlternateIdentifier(request.getAlternateIdentifier()));
         failures.addAll(spatialCoverageSvc.validate(request.getSpatialCoverage()));
         failures.addAll(traditionalKnowledgeLabelSvc.validate(
                 request.getTraditionalKnowledgeLabel()));

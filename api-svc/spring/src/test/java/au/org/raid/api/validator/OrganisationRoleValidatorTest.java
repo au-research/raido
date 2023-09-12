@@ -75,7 +75,7 @@ class OrganisationRoleValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("organisations[2].roles[3].schemaUri")
+                        .fieldId("organisation[2].role[3].schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -96,7 +96,7 @@ class OrganisationRoleValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("organisations[2].roles[3].schemaUri")
+                        .fieldId("organisation[2].role[3].schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -120,7 +120,7 @@ class OrganisationRoleValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("organisations[2].roles[3].schemaUri")
+                        .fieldId("organisation[2].role[3].schemaUri")
                         .errorType("invalidValue")
                         .message("schema is unknown/unsupported")
         ));
@@ -142,7 +142,7 @@ class OrganisationRoleValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("organisations[2].roles[3].id")
+                        .fieldId("organisation[2].role[3].id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -165,7 +165,7 @@ class OrganisationRoleValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("organisations[2].roles[3].id")
+                        .fieldId("organisation[2].role[3].id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -192,7 +192,7 @@ class OrganisationRoleValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("organisations[2].roles[3].id")
+                        .fieldId("organisation[2].role[3].id")
                         .errorType("invalidValue")
                         .message("id does not exist within the given schema")
         ));

@@ -82,7 +82,7 @@ class ContributorPositionValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors[2].positions[3].schemaUri")
+                        .fieldId("contributor[2].position[3].schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -105,7 +105,7 @@ class ContributorPositionValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors[2].positions[3].schemaUri")
+                        .fieldId("contributor[2].position[3].schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -131,7 +131,7 @@ class ContributorPositionValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors[2].positions[3].schemaUri")
+                        .fieldId("contributor[2].position[3].schemaUri")
                         .errorType("invalidValue")
                         .message("schema is unknown/unsupported")
         ));
@@ -155,7 +155,7 @@ class ContributorPositionValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors[2].positions[3].id")
+                        .fieldId("contributor[2].position[3].id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -180,7 +180,7 @@ class ContributorPositionValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors[2].positions[3].id")
+                        .fieldId("contributor[2].position[3].id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -209,7 +209,7 @@ class ContributorPositionValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors[2].positions[3].id")
+                        .fieldId("contributor[2].position[3].id")
                         .errorType("invalidValue")
                         .message("id does not exist within the given schema")
         ));
@@ -235,7 +235,7 @@ class ContributorPositionValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors[2].positions[3].startDate")
+                        .fieldId("contributor[2].position[3].startDate")
                         .errorType("notSet")
                         .message("field must be set")
         ));

@@ -63,7 +63,7 @@ class RelatedRaidValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedRaids[0].id")
+                        .fieldId("relatedRaid[0].id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -85,7 +85,7 @@ class RelatedRaidValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedRaids[0].id")
+                        .fieldId("relatedRaid[0].id")
                         .errorType("notSet")
                         .message("field must be set")
         ));

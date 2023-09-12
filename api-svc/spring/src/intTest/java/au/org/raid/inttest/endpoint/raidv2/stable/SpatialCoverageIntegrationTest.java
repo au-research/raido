@@ -24,7 +24,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("spatialCoverages[0].id")
+                    .fieldId("spatialCoverage[0].id")
                     .errorType("invalidValue")
                     .message("has invalid/unsupported value - should match ^https://(www\\.)?geonames.org/\\d+/.*$")
             );
@@ -45,7 +45,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("spatialCoverages[0].id")
+                    .fieldId("spatialCoverage[0].id")
                     .errorType("invalidValue")
                     .message("uri not found")
             );
@@ -66,7 +66,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("spatialCoverages[0].id")
+                    .fieldId("spatialCoverage[0].id")
                     .errorType("invalidValue")
                     .message("uri could not be validated - server error")
             );
@@ -87,7 +87,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("spatialCoverages[0].language.schemaUri")
+                    .fieldId("spatialCoverage[0].language.schemaUri")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -108,7 +108,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("spatialCoverages[0].language.schemaUri")
+                    .fieldId("spatialCoverage[0].language.schemaUri")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -129,7 +129,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("spatialCoverages[0].language.id")
+                    .fieldId("spatialCoverage[0].language.id")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -150,7 +150,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("spatialCoverages[0].language.id")
+                    .fieldId("spatialCoverage[0].language.id")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -171,7 +171,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("spatialCoverages[0].language.id")
+                    .fieldId("spatialCoverage[0].language.id")
                     .errorType("invalidValue")
                     .message("id does not exist within the given schema")
             );
@@ -193,7 +193,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("spatialCoverages[0].language.schemaUri")
+                    .fieldId("spatialCoverage[0].language.schemaUri")
                     .errorType("invalidValue")
                     .message("schema is unknown/unsupported")
             );

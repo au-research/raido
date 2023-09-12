@@ -78,7 +78,7 @@ class RelatedObjectCategoryValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[3].category.id")
+                        .fieldId("relatedObject[3].category.id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -101,7 +101,7 @@ class RelatedObjectCategoryValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[3].category.id")
+                        .fieldId("relatedObject[3].category.id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -120,7 +120,7 @@ class RelatedObjectCategoryValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[3].category.schemaUri")
+                        .fieldId("relatedObject[3].category.schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -140,7 +140,7 @@ class RelatedObjectCategoryValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[3].category.schemaUri")
+                        .fieldId("relatedObject[3].category.schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -163,7 +163,7 @@ class RelatedObjectCategoryValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[3].category.schemaUri")
+                        .fieldId("relatedObject[3].category.schemaUri")
                         .errorType("invalidValue")
                         .message("schema is unknown/unsupported")
         ));
@@ -188,7 +188,7 @@ class RelatedObjectCategoryValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[3].category.id")
+                        .fieldId("relatedObject[3].category.id")
                         .errorType("invalidValue")
                         .message("id does not exist within the given schema")
         ));

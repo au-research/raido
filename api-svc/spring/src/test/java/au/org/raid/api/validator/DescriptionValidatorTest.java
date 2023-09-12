@@ -52,7 +52,7 @@ class DescriptionValidatorTest {
         assertThat(failures, empty());
 
         verify(typeValidationService).validate(type, 0);
-        verify(languageValidator).validate(language, "descriptions[0]");
+        verify(languageValidator).validate(language, "description[0]");
 
     }
 
@@ -76,12 +76,12 @@ class DescriptionValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("descriptions[0].description")
+                        .fieldId("description[0].text")
                         .errorType("notSet")
                         .message("field must be set")
         ));
         verify(typeValidationService).validate(type, 0);
-        verify(languageValidator).validate(language, "descriptions[0]");
+        verify(languageValidator).validate(language, "description[0]");
     }
 
     @Test
@@ -99,7 +99,7 @@ class DescriptionValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("descriptions[0].description")
+                        .fieldId("description[0].text")
                         .errorType("notSet")
                         .message("field must be set")
         ));

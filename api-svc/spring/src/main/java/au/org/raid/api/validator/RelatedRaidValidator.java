@@ -32,7 +32,7 @@ public class RelatedRaidValidator {
 
                     if (isBlank(relatedRaid.getId())) {
                         failures.add(new ValidationFailure()
-                                .fieldId(String.format("relatedRaids[%d].id", index))
+                                .fieldId(String.format("relatedRaid[%d].id", index))
                                 .errorType(NOT_SET_TYPE)
                                 .message(NOT_SET_MESSAGE));
                     }

@@ -39,7 +39,7 @@ class RaidoStableV1ValidatorTest {
     @Mock
     private AccessValidator accessValidationService;
     @Mock
-    private DatesValidator datesValidator;
+    private DateValidator dateValidator;
     @InjectMocks
     private RaidoStableV1Validator validationService;
 
@@ -145,7 +145,7 @@ class RaidoStableV1ValidatorTest {
                 .alternateIdentifier(alternateIdentifiers);
 
         validationService.validateForCreate(raid);
-        verify(alternateIdentifierValidationService).validateAlternateIdentifiers(alternateIdentifiers);
+        verify(alternateIdentifierValidationService).validateAlternateIdentifier(alternateIdentifiers);
     }
 
     @Test
@@ -158,7 +158,7 @@ class RaidoStableV1ValidatorTest {
                 .alternateIdentifier(alternateIdentifiers);
 
         validationService.validateForUpdate(handle, raid);
-        verify(alternateIdentifierValidationService).validateAlternateIdentifiers(alternateIdentifiers);
+        verify(alternateIdentifierValidationService).validateAlternateIdentifier(alternateIdentifiers);
     }
 
     @Test

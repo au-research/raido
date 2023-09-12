@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     @Test
-    @DisplayName("Minting a RAiD with no contributors fails")
+    @DisplayName("Minting a RAiD with no contributor fails")
     void noContributors() {
         createRequest.setContributor(null);
 
@@ -32,7 +32,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributors")
+                            .fieldId("contributor")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -42,19 +42,19 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Minting a RAiD with empty contributors fails")
+    @DisplayName("Minting a RAiD with empty contributor fails")
     void emptyContributors() {
         createRequest.setContributor(Collections.emptyList());
 
         try {
             raidApi.createRaidV1(createRequest);
-            fail("No exception thrown with empty contributors");
+            fail("No exception thrown with empty contributor");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributors")
+                            .fieldId("contributor")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -90,7 +90,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributors[0].schemaUri")
+                            .fieldId("contributor[0].schemaUri")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -127,7 +127,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributors[0].schemaUri")
+                            .fieldId("contributor[0].schemaUri")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -163,7 +163,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributors[0].id")
+                            .fieldId("contributor[0].id")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -200,7 +200,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributors[0].id")
+                            .fieldId("contributor[0].id")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -210,7 +210,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Minting a RAiD with null positions fails")
+    @DisplayName("Minting a RAiD with null position fails")
     void nullPositions() {
         createRequest.setContributor(List.of(
                 new Contributor()
@@ -225,13 +225,13 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
 
         try {
             raidApi.createRaidV1(createRequest);
-            fail("No exception thrown with null positions");
+            fail("No exception thrown with null position");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributors.positions")
+                            .fieldId("contributor.position")
                             .errorType("invalidValue")
                             .message("leader must be specified")
             );
@@ -241,7 +241,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Minting a RAiD with empty positions fails")
+    @DisplayName("Minting a RAiD with empty position fails")
     void emptyPositions() {
         createRequest.setContributor(List.of(
                 new Contributor()
@@ -257,13 +257,13 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
 
         try {
             raidApi.createRaidV1(createRequest);
-            fail("No exception thrown with empty positions");
+            fail("No exception thrown with empty position");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributors.positions")
+                            .fieldId("contributor.position")
                             .errorType("invalidValue")
                             .message("leader must be specified")
             );
@@ -299,7 +299,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributors.positions")
+                            .fieldId("contributor.position")
                             .errorType("invalidValue")
                             .message("leader must be specified")
             );
@@ -337,7 +337,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             } catch (RaidApiValidationException e) {
                 assertThat(e.getFailures()).isEqualTo(List.of(
                         new ValidationFailure()
-                                .fieldId("contributors[0].id")
+                                .fieldId("contributor[0].id")
                                 .errorType("invalidValue")
                                 .message("has invalid/unsupported value - should match ^https://orcid\\.org/[\\d]{4}-[\\d]{4}-[\\d]{4}-[\\d]{3}[\\d|X]{1}$")
                 ));
@@ -374,7 +374,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributors[0].id")
+                                .fieldId("contributor[0].id")
                                 .errorType("invalidValue")
                                 .message("failed checksum, last digit should be `1`")
                 );
@@ -411,7 +411,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributors[0].id")
+                                .fieldId("contributor[0].id")
                                 .errorType("invalidValue")
                                 .message("uri not found")
                 );
@@ -450,7 +450,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributors[0].positions[0].schemaUri")
+                                .fieldId("contributor[0].position[0].schemaUri")
                                 .errorType("notSet")
                                 .message("field must be set")
                 );
@@ -490,7 +490,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributors[0].positions[1].id")
+                                .fieldId("contributor[0].position[1].id")
                                 .errorType("notSet")
                                 .message("field must be set")
                 );
@@ -531,7 +531,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributors[0].positions[1].schemaUri")
+                                .fieldId("contributor[0].position[1].schemaUri")
                                 .errorType("invalidValue")
                                 .message("schema is unknown/unsupported")
                 );
@@ -572,7 +572,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributors[0].positions[1].id")
+                                .fieldId("contributor[0].position[1].id")
                                 .errorType("invalidValue")
                                 .message("id does not exist within the given schema")
                 );
@@ -613,7 +613,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributors[0].roles[0].schemaUri")
+                                .fieldId("contributor[0].role[0].schemaUri")
                                 .errorType("notSet")
                                 .message("field must be set")
                 );
@@ -653,7 +653,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributors[0].roles[0].id")
+                                .fieldId("contributor[0].role[0].id")
                                 .errorType("notSet")
                                 .message("field must be set")
                 );
@@ -694,7 +694,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributors[0].roles[0].schemaUri")
+                                .fieldId("contributor[0].role[0].schemaUri")
                                 .errorType("invalidValue")
                                 .message("schema is unknown/unsupported")
                 );
@@ -735,7 +735,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributors[0].roles[0].id")
+                                .fieldId("contributor[0].role[0].id")
                                 .errorType("invalidValue")
                                 .message("id does not exist within the given schema")
                 );

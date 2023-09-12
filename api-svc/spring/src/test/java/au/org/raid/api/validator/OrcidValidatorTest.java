@@ -33,7 +33,7 @@ class OrcidValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors[3].id")
+                        .fieldId("contributor[3].id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -48,7 +48,7 @@ class OrcidValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors[3].id")
+                        .fieldId("contributor[3].id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -65,7 +65,7 @@ class OrcidValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors[3].id")
+                        .fieldId("contributor[3].id")
                         .errorType("invalidValue")
                         .message("should start with https://orcid.org/")
         ));
@@ -82,7 +82,7 @@ class OrcidValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors[3].id")
+                        .fieldId("contributor[3].id")
                         .errorType("invalidValue")
                         .message("too short")
         ));
@@ -99,7 +99,7 @@ class OrcidValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors[3].id")
+                        .fieldId("contributor[3].id")
                         .errorType("invalidValue")
                         .message("too long")
         ));
@@ -116,7 +116,7 @@ class OrcidValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors[3].id")
+                        .fieldId("contributor[3].id")
                         .errorType("invalidValue")
                         .message("failed checksum, last digit should be `1`")
         ));
@@ -126,7 +126,7 @@ class OrcidValidatorTest {
     @Test
     @DisplayName("Fails validation if pattern is incorrect")
     void invalidPattern() {
-        final var fieldId = "contributors[3].id";
+        final var fieldId = "contributor[3].id";
         final var orcid = "https://orcid.org/0000-0c00-0000-0000";
         final var failure = new ValidationFailure()
                 .fieldId(fieldId)
@@ -143,7 +143,7 @@ class OrcidValidatorTest {
     @Test
     @DisplayName("Fails validation if orcid does not exist")
     void orcidDoesNotExist() {
-        final var fieldId = "contributors[3].id";
+        final var fieldId = "contributor[3].id";
         final var orcid = "https://orcid.org/0000-0000-0000-0001";
 
         final var failure = new ValidationFailure()
@@ -164,7 +164,7 @@ class OrcidValidatorTest {
     void passes() {
         final var orcid = "https://orcid.org/0000-0000-0000-0001";
 
-        when(orcidService.validate(orcid, "contributors[3].id")).thenReturn(Collections.emptyList());
+        when(orcidService.validate(orcid, "contributor[3].id")).thenReturn(Collections.emptyList());
 
         final var failures = validationService.validate(orcid, 3);
 

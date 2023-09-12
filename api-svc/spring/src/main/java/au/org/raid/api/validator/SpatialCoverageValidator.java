@@ -32,26 +32,26 @@ public class SpatialCoverageValidator {
 
                     if (isBlank(spatialCoverage.getId())) {
                         failures.add(new ValidationFailure()
-                                .fieldId(String.format("spatialCoverages[%d].id", i))
+                                .fieldId(String.format("spatialCoverage[%d].id", i))
                                 .errorType(NOT_SET_TYPE)
                                 .message(NOT_SET_MESSAGE));
                     }
                     if (isBlank(spatialCoverage.getSchemaUri())) {
                         failures.add(new ValidationFailure()
-                                .fieldId(String.format("spatialCoverages[%d].schemaUri", i))
+                                .fieldId(String.format("spatialCoverage[%d].schemaUri", i))
                                 .errorType(NOT_SET_TYPE)
                                 .message(NOT_SET_MESSAGE));
                     } else if (!spatialCoverage.getSchemaUri().equals(SPATIAL_COVERAGE_SCHEMA_URI)) {
                         failures.add(new ValidationFailure()
-                                .fieldId(String.format("spatialCoverages[%d].schemaUri", i))
+                                .fieldId(String.format("spatialCoverage[%d].schemaUri", i))
                                 .errorType(INVALID_VALUE_TYPE)
                                 .message(String.format("Spatial coverage scheme uri should be %s", SPATIAL_COVERAGE_SCHEMA_URI)));
                     }
                     failures.addAll(
-                            languageValidator.validate(spatialCoverage.getLanguage(), "spatialCoverages[%d]".formatted(i))
+                            languageValidator.validate(spatialCoverage.getLanguage(), "spatialCoverage[%d]".formatted(i))
                     );
                     failures.addAll(geoNamesUriValidator.validate(
-                            spatialCoverage.getId(), String.format("spatialCoverages[%d].id", i)
+                            spatialCoverage.getId(), String.format("spatialCoverage[%d].id", i)
                     ));
                 });
 

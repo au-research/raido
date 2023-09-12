@@ -78,7 +78,7 @@ class RelatedObjectTypeValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[3].type.id")
+                        .fieldId("relatedObject[3].type.id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -101,7 +101,7 @@ class RelatedObjectTypeValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[3].type.id")
+                        .fieldId("relatedObject[3].type.id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -119,7 +119,7 @@ class RelatedObjectTypeValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[3].type.schemaUri")
+                        .fieldId("relatedObject[3].type.schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -139,7 +139,7 @@ class RelatedObjectTypeValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[3].type.schemaUri")
+                        .fieldId("relatedObject[3].type.schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -162,7 +162,7 @@ class RelatedObjectTypeValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[3].type.schemaUri")
+                        .fieldId("relatedObject[3].type.schemaUri")
                         .errorType("invalidValue")
                         .message("schema is unknown/unsupported")
         ));
@@ -187,7 +187,7 @@ class RelatedObjectTypeValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[3].type.id")
+                        .fieldId("relatedObject[3].type.id")
                         .errorType("invalidValue")
                         .message("id does not exist within the given schema")
         ));

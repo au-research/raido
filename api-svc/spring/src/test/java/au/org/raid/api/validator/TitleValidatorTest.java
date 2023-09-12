@@ -53,7 +53,7 @@ class TitleValidatorTest {
 
         assertThat(failures.size(), is(0));
         verify(typeValidationService).validate(type, 0);
-        verify(languageValidator).validate(language, "titles[0]");
+        verify(languageValidator).validate(language, "title[0]");
     }
 
     @Test
@@ -90,12 +90,12 @@ class TitleValidatorTest {
 
         assertThat(failures, is(List.of(
                 new ValidationFailure()
-                        .fieldId("titles[0]")
+                        .fieldId("title[0]")
                         .errorType("duplicateValue")
                         .message("an object with the same values appears in the list")
         )));
         verify(typeValidationService).validate(type, 0);
-        verify(languageValidator).validate(language, "titles[0]");
+        verify(languageValidator).validate(language, "title[0]");
     }
 
     @Test
@@ -134,16 +134,16 @@ class TitleValidatorTest {
 
         assertThat(failures, is(List.of(
                 new ValidationFailure()
-                        .fieldId("titles[1].startDate")
+                        .fieldId("title[1].startDate")
                         .errorType("invalidValue")
-                        .message("There can only be one primary title in any given period. The start date for this title overlaps with titles[2]"),
+                        .message("There can only be one primary title in any given period. The start date for this title overlaps with title[2]"),
                 new ValidationFailure()
-                        .fieldId("titles[0].startDate")
+                        .fieldId("title[0].startDate")
                         .errorType("invalidValue")
-                        .message("There can only be one primary title in any given period. The start date for this title overlaps with titles[1]")
+                        .message("There can only be one primary title in any given period. The start date for this title overlaps with title[1]")
         )));
         verify(typeValidationService).validate(type, 0);
-        verify(languageValidator).validate(language, "titles[0]");
+        verify(languageValidator).validate(language, "title[0]");
     }
 
     @Test
@@ -163,7 +163,7 @@ class TitleValidatorTest {
 
         assertThat(failures, is(List.of(
                 new ValidationFailure()
-                        .fieldId("titles.type")
+                        .fieldId("title.type")
                         .errorType("missingPrimaryTitle")
                         .message("at least one primaryTitle entry must be provided"))));
     }
@@ -176,7 +176,7 @@ class TitleValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("titles")
+                        .fieldId("title")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -197,7 +197,7 @@ class TitleValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("titles[0].title")
+                        .fieldId("title[0].title")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -220,7 +220,7 @@ class TitleValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("titles[0].title")
+                        .fieldId("title[0].title")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -241,7 +241,7 @@ class TitleValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("titles[0].startDate")
+                        .fieldId("title[0].startDate")
                         .errorType("notSet")
                         .message("field must be set")
         ));

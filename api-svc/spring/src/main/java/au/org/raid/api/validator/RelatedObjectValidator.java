@@ -49,23 +49,23 @@ public class RelatedObjectValidator {
 
                     if (isBlank(relatedObject.getId())) {
                         failures.add(new ValidationFailure()
-                                .fieldId(String.format("relatedObjects[%d].id", index))
+                                .fieldId(String.format("relatedObject[%d].id", index))
                                 .errorType(NOT_SET_TYPE)
                                 .message(NOT_SET_MESSAGE));
                     }  else {
                         failures.addAll(
-                                doiService.validate(relatedObject.getId(), String.format("relatedObjects[%d].id", index))
+                                doiService.validate(relatedObject.getId(), String.format("relatedObject[%d].id", index))
                         );
                     }
 
                     if (isBlank(relatedObject.getSchemaUri())) {
                         failures.add(new ValidationFailure()
-                                .fieldId(String.format("relatedObjects[%d].schemaUri", index))
+                                .fieldId(String.format("relatedObject[%d].schemaUri", index))
                                 .errorType(NOT_SET_TYPE)
                                 .message(NOT_SET_MESSAGE));
                     } else if (!relatedObject.getSchemaUri().equals(RELATED_OBJECT_SCHEMA_URI)) {
                         failures.add(new ValidationFailure()
-                                .fieldId(String.format("relatedObjects[%d].schemaUri", index))
+                                .fieldId(String.format("relatedObject[%d].schemaUri", index))
                                 .errorType("invalid")
                                 .message(String.format("Only %s is supported.", RELATED_OBJECT_SCHEMA_URI)));
                     }

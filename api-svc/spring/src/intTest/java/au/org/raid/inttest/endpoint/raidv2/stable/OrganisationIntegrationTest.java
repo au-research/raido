@@ -67,7 +67,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("organisations[0].schemaUri")
+                            .fieldId("organisation[0].schemaUri")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -99,7 +99,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("organisations[0].schemaUri")
+                            .fieldId("organisation[0].schemaUri")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -129,7 +129,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("organisations[0].id")
+                            .fieldId("organisation[0].id")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -160,7 +160,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("organisations[0].id")
+                            .fieldId("organisation[0].id")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -194,7 +194,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("organisations[0].id")
+                                .fieldId("organisation[0].id")
                                 .errorType("invalidValue")
                                 .message("has invalid/unsupported value - should match ^https://ror\\.org/[0-9a-z]{9}$")
                 );
@@ -225,7 +225,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("organisations[0].id")
+                                .fieldId("organisation[0].id")
                                 .errorType("invalidValue")
                                 .message("uri not found")
                 );
@@ -259,7 +259,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("organisations[0].roles[0].schemaUri")
+                                .fieldId("organisation[0].role[0].schemaUri")
                                 .errorType("notSet")
                                 .message("field must be set")
                 );
@@ -289,7 +289,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("organisations[0].roles[0].id")
+                                .fieldId("organisation[0].role[0].id")
                                 .errorType("notSet")
                                 .message("field must be set")
                 );
@@ -320,7 +320,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("organisations[0].roles[0].id")
+                                .fieldId("organisation[0].role[0].id")
                                 .errorType("notSet")
                                 .message("field must be set")
                 );
@@ -351,7 +351,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("organisations[0].roles[0].schemaUri")
+                                .fieldId("organisation[0].role[0].schemaUri")
                                 .errorType("invalidValue")
                                 .message("schema is unknown/unsupported")
                 );
@@ -382,7 +382,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("organisations[0].roles[0].id")
+                                .fieldId("organisation[0].role[0].id")
                                 .errorType("invalidValue")
                                 .message("id does not exist within the given schema")
                 );

@@ -98,7 +98,7 @@ public class AbstractIntegrationTest {
                                 .schemaUri(TITLE_TYPE_SCHEMA_URI))
                         .text(initialTitle)
                         .startDate(today.format(DateTimeFormatter.ISO_LOCAL_DATE))))
-                .date(new Dates().startDate(today.format(DateTimeFormatter.ISO_LOCAL_DATE)))
+                .date(new Date().startDate(today.format(DateTimeFormatter.ISO_LOCAL_DATE)))
                 .description(List.of(new Description()
                         .language(new Language()
                                 .schemaUri(LANGUAGE_SCHEMA_URI)

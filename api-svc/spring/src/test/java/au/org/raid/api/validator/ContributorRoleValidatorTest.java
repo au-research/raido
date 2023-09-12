@@ -74,7 +74,7 @@ class ContributorRoleValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors[2].roles[3].schemaUri")
+                        .fieldId("contributor[2].role[3].schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -95,7 +95,7 @@ class ContributorRoleValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors[2].roles[3].schemaUri")
+                        .fieldId("contributor[2].role[3].schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -119,7 +119,7 @@ class ContributorRoleValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors[2].roles[3].schemaUri")
+                        .fieldId("contributor[2].role[3].schemaUri")
                         .errorType("invalidValue")
                         .message("schema is unknown/unsupported")
         ));
@@ -141,7 +141,7 @@ class ContributorRoleValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors[2].roles[3].id")
+                        .fieldId("contributor[2].role[3].id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -164,7 +164,7 @@ class ContributorRoleValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors[2].roles[3].id")
+                        .fieldId("contributor[2].role[3].id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -191,7 +191,7 @@ class ContributorRoleValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributors[2].roles[3].id")
+                        .fieldId("contributor[2].role[3].id")
                         .errorType("invalidValue")
                         .message("id does not exist within the given schema")
         ));
