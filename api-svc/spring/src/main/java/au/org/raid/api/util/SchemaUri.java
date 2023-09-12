@@ -8,7 +8,7 @@ public enum SchemaUri {
     DOI("https://doi.org/"),
     ROR("https://ror.org/"),
     ORCID("https://orcid.org/"),
-    GEONAMES("https://geonames.org/"),
+    GEONAMES("https://www.geonames.org/"),
     SIL("https://www.iso.org/standard/39534.html"),
     SUBJECT("https://linked.data.gov.au/def/anzsrc-for/2020/")
     ;
