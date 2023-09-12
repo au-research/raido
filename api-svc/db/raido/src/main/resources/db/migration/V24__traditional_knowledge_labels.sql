@@ -51,6 +51,6 @@ values (1, 'https://localcontexts.org/label/tk-attribution/'),
        (2, 'https://localcontexts.org/label/bc-outreach/'),
        (2, 'https://localcontexts.org/label/bc-non-commercial/');
 
-
+update raido.api_svc.language_schema set uri = 'https://iso639-3.sil.org' where id = 1;
 
 end transaction;
