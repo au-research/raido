@@ -39,7 +39,7 @@ public class AbstractIntegrationTest {
     protected String operatorToken;
     protected String raidV1TestToken;
     protected LocalDate today = LocalDate.now();
-    protected CreateRaidV1Request createRequest;
+    protected RaidCreateRequest createRequest;
 
     protected RaidoStableV1Api raidApi;
     protected BasicRaidExperimentalApi experimentalApi;
@@ -83,11 +83,11 @@ public class AbstractIntegrationTest {
         return testInfo.getDisplayName();
     }
 
-    protected CreateRaidV1Request newCreateRequest() {
+    protected RaidCreateRequest newCreateRequest() {
         String initialTitle = getClass().getSimpleName() + "." + getName() +
                 idFactory.generateUniqueId();
 
-        return new CreateRaidV1Request()
+        return new RaidCreateRequest()
                 .title(List.of(new Title()
                         .language(new Language()
                                 .schemaUri(LANGUAGE_SCHEMA_URI)
@@ -143,8 +143,8 @@ public class AbstractIntegrationTest {
                 ));
     }
 
-    private UpdateRaidV1Request mapReadToUpdate(RaidDto read) {
-        return new UpdateRaidV1Request()
+    private RaidUpdateRequest mapReadToUpdate(RaidDto read) {
+        return new RaidUpdateRequest()
                 .identifier(read.getIdentifier())
                 .title(read.getTitle())
                 .date(read.getDate())

@@ -91,7 +91,7 @@ class RaidoStableV1Test {
             when(raidService.isEditable(any(ApiToken.class), anyLong())).thenReturn(true);
 
             doThrow(DataAccessException.class)
-                    .when(raidService).mintRaidSchemaV1(any(CreateRaidV1Request.class), eq(servicePointId));
+                    .when(raidService).mintRaidSchemaV1(any(RaidCreateRequest.class), eq(servicePointId));
 
             mockMvc.perform(post("/raid")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -107,10 +107,6 @@ class RaidoStableV1Test {
     @Test
     void mintRaidV1_ReturnsForbiddenWhenEditingInAppAndDisabledInServicePoint() throws Exception {
         final Long servicePointId = 999L;
-        final var title = "test-title";
-        final var startDate = LocalDate.now();
-        final var handle = new IdentifierHandle("10378.1", "1696639");
-        final var id = new IdentifierUrl("https://raid.org.au", handle);
 
         final var raidForPost = createRaidForPost();
 
@@ -166,7 +162,7 @@ class RaidoStableV1Test {
             when(raidService.isEditable(any(ApiToken.class), anyLong())).thenReturn(true);
 
 
-            when(validationService.validateForCreate(any(CreateRaidV1Request.class)))
+            when(validationService.validateForCreate(any(RaidCreateRequest.class)))
                     .thenReturn(List.of(validationFailure));
 
             final MvcResult mvcResult = mockMvc.perform(post("/raid")
@@ -187,7 +183,7 @@ class RaidoStableV1Test {
             assertThat(validationFailureResponse.getFailures().get(0).getErrorType(), Matchers.is(validationFailureType));
             assertThat(validationFailureResponse.getFailures().get(0).getMessage(), Matchers.is(validationFailureMessage));
 
-            verify(raidService, never()).mintRaidSchemaV1(any(CreateRaidV1Request.class), eq(servicePointId));
+            verify(raidService, never()).mintRaidSchemaV1(any(RaidCreateRequest.class), eq(servicePointId));
             verify(raidService, never()).read(anyString());
         }
     }
@@ -202,7 +198,7 @@ class RaidoStableV1Test {
         final var endDate = startDate.plusMonths(6);
 
         final var raidForPost = createRaidForPost();
-        final var raidForGet = createRaidForGet(id, servicePointId, title, startDate);
+        final var raidForGet = createRaidForGet(title, startDate);
 
         try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
             final var user = ApiToken.ApiTokenBuilder
@@ -220,9 +216,9 @@ class RaidoStableV1Test {
             when(raidService.isEditable(any(ApiToken.class), anyLong())).thenReturn(true);
 
 
-            when(validationService.validateForCreate(any(CreateRaidV1Request.class))).thenReturn(Collections.emptyList());
+            when(validationService.validateForCreate(any(RaidCreateRequest.class))).thenReturn(Collections.emptyList());
 
-            when(raidService.mintRaidSchemaV1(any(CreateRaidV1Request.class), eq(servicePointId))).thenReturn(id);
+            when(raidService.mintRaidSchemaV1(any(RaidCreateRequest.class), eq(servicePointId))).thenReturn(id);
             when(raidService.read(handle.format())).thenReturn(raidForGet);
 
             mockMvc.perform(post("/raid")
@@ -292,7 +288,7 @@ class RaidoStableV1Test {
             when(raidService.isEditable(any(ApiToken.class), anyLong())).thenReturn(true);
 
 
-            when(validationService.validateForUpdate(eq(handle), any(UpdateRaidV1Request.class))).thenReturn(List.of(validationFailure));
+            when(validationService.validateForUpdate(eq(handle), any(RaidUpdateRequest.class))).thenReturn(List.of(validationFailure));
 
             final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/%s/%s", prefix, suffix))
                             .contentType(MediaType.APPLICATION_JSON)
@@ -322,7 +318,6 @@ class RaidoStableV1Test {
         final var prefix = "10378.1";
         final var suffix = "1696639";
         final var servicePointId = 20000001L;
-        final var handle = new IdentifierHandle(prefix, suffix);
 
         final var input = createRaidForPut();
 
@@ -358,7 +353,7 @@ class RaidoStableV1Test {
         final var endDate = startDate.plusMonths(6);
 
         final var input = createRaidForPut();
-        final var output = createRaidForGet(id, servicePointId, title, startDate);
+        final var output = createRaidForGet(title, startDate);
 
         try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
             final ApiToken apiToken = mock(ApiToken.class);
@@ -425,7 +420,7 @@ class RaidoStableV1Test {
             authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
             when(raidService.isEditable(any(ApiToken.class), anyLong())).thenReturn(true);
 
-            when(validationService.validateForUpdate(eq(handle), any(UpdateRaidV1Request.class))).thenReturn(Collections.emptyList());
+            when(validationService.validateForUpdate(eq(handle), any(RaidUpdateRequest.class))).thenReturn(Collections.emptyList());
 
             doThrow(new ResourceNotFoundException(handle))
                     .when(raidService).update(input);
@@ -453,9 +448,7 @@ class RaidoStableV1Test {
         final var prefix = "10378.1";
         final var suffix = "1696639";
         final Long servicePointId = 20000001L;
-        final var handle = new IdentifierHandle(prefix, suffix);
-        final var id = new IdentifierUrl("https://raid.org.au", handle);
-        final var input = createRaidForGet(id, servicePointId, "", LocalDate.now());
+        final var input = createRaidForGet("", LocalDate.now());
 
         try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
             final ApiToken apiToken = mock(ApiToken.class);
@@ -490,10 +483,7 @@ class RaidoStableV1Test {
         final var suffix = "1696639";
         final var startDate = LocalDate.now().minusYears(1);
         final var title = "test-title";
-        final var handle = new IdentifierHandle(prefix, suffix);
-        final var id = new IdentifierUrl("https://raid.org.au", handle);
-        final Long servicePointId = 123L;
-        final var raid = createRaidForGet(id, servicePointId, title, startDate);
+        final var raid = createRaidForGet(title, startDate);
 
         try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
             final ApiToken apiToken = mock(ApiToken.class);
@@ -548,9 +538,7 @@ class RaidoStableV1Test {
         final var prefix = "10378.1";
         final var suffix = "1696639";
         final Long servicePointId = 20000001L;
-        final var handle = new IdentifierHandle(prefix, suffix);
-        final var id = new IdentifierUrl("https://raid.org.au", handle);
-        final var raid = createRaidForGet(id, servicePointId, "", LocalDate.now());
+        final var raid = createRaidForGet("", LocalDate.now());
 
         try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
             final ApiToken apiToken = mock(ApiToken.class);
@@ -587,7 +575,7 @@ class RaidoStableV1Test {
         final var id = new IdentifierUrl("https://raid.org.au", handle);
         final var endDate = startDate.plusMonths(6);
 
-        final var output = createRaidForGet(id, servicePointId, title, startDate);
+        final var output = createRaidForGet(title, startDate);
 
         try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
             final ApiToken apiToken = mock(ApiToken.class);
@@ -667,7 +655,7 @@ class RaidoStableV1Test {
         }
     }
 
-    private RaidDto createRaidForGet(final IdentifierUrl id, final long servicePointId, final String title, final LocalDate startDate) throws IOException {
+    private RaidDto createRaidForGet(final String title, final LocalDate startDate) throws IOException {
         final String json = FileUtil.resourceContent("/fixtures/raid.json");
 
         var raid = objectMapper.readValue(json, RaidDto.class);
@@ -681,13 +669,6 @@ class RaidoStableV1Test {
                 .endDate(startDate.plusMonths(6).format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .text(title)
                 .type(titleType);
-
-//        raid.getIdentifier()
-//                .id(id.formatUrl())
-//                .owner(
-//                        new Owner()
-//                        .servicePoint(servicePointId)
-//                );
 
         raid.getDate()
                 .startDate(startDate.format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -704,14 +685,14 @@ class RaidoStableV1Test {
         return raid;
     }
 
-    private UpdateRaidV1Request createRaidForPut() throws IOException {
+    private RaidUpdateRequest createRaidForPut() throws IOException {
         final String json = resourceContent("/fixtures/raid.json");
 
-        return objectMapper.readValue(json, UpdateRaidV1Request.class);
+        return objectMapper.readValue(json, RaidUpdateRequest.class);
     }
 
-    private CreateRaidV1Request createRaidForPost() throws IOException {
+    private RaidCreateRequest createRaidForPost() throws IOException {
         final String json = resourceContent("/fixtures/create-raid.json");
-        return objectMapper.readValue(json, CreateRaidV1Request.class);
+        return objectMapper.readValue(json, RaidCreateRequest.class);
     }
 }

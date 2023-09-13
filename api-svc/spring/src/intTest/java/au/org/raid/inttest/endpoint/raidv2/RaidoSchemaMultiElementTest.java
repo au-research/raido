@@ -61,12 +61,12 @@ public class RaidoSchemaMultiElementTest extends IntegrationTestCase {
                                 organisations(List.of(createDummyOrganisation(today))).
                                 access(new AccessBlock().type(OPEN))
                         )
-        );
+        ).getBody();
 
 
         WHEN("primary title is updated");
         var readRaid = raidApi.readRaidV2(
-                new ReadRaidV2Request().handle(mintResult.getRaid().getHandle()));
+                new ReadRaidV2Request().handle(mintResult.getRaid().getHandle())).getBody();
         System.out.println("XXX: " + readRaid);
         var readMeta = mapper.readValue(
                 readRaid.getMetadata().toString(), RaidoMetadataSchemaV1.class);
@@ -85,7 +85,7 @@ public class RaidoSchemaMultiElementTest extends IntegrationTestCase {
 
         THEN("alternate title should not be touched");
         readRaid = raidApi.readRaidV2(
-                new ReadRaidV2Request().handle(mintResult.getRaid().getHandle()));
+                new ReadRaidV2Request().handle(mintResult.getRaid().getHandle())).getBody();
         readMeta = mapper.readValue(
                 readRaid.getMetadata().toString(), RaidoMetadataSchemaV1.class);
 

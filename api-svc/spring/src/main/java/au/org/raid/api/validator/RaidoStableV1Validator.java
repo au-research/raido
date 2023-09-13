@@ -70,30 +70,6 @@ public class RaidoStableV1Validator {
         return failures;
     }
 
-//  private List<ValidationFailure> validateAccess(
-//    Access access
-//  ) {
-//    var failures = new ArrayList<ValidationFailure>();
-//
-//    if( access == null ){
-//      failures.add(ValidationMessage.ACCESS_NOT_SET);
-//    }
-//    else {
-//      if( access.getType() == null ){
-//        failures.add(ValidationMessage.ACCESS_TYPE_NOT_SET);
-//      }
-//      else {
-//        if(
-//          access.getType().equals(ACCESS_TYPE_CLOSED) &&
-//            access.getAccessStatement() == null
-//        ){
-//          failures.add(ValidationMessage.ACCESS_STATEMENT_NOT_SET);
-//        }
-//      }
-//    }
-
-    //    return failures;
-//  }
     public List<ValidationFailure> validateAlternateUrls(
             List<AlternateUrl> urls
     ) {
@@ -118,7 +94,7 @@ public class RaidoStableV1Validator {
         return failures;
     }
 
-    public List<ValidationFailure> validateForCreate(final CreateRaidV1Request request) {
+    public List<ValidationFailure> validateForCreate(final RaidCreateRequest request) {
         if (request == null) {
             return of(ValidationMessage.METADATA_NOT_SET);
         }
@@ -143,7 +119,7 @@ public class RaidoStableV1Validator {
         return failures;
     }
 
-    public List<ValidationFailure> validateForUpdate(final String handle, final UpdateRaidV1Request request) {
+    public List<ValidationFailure> validateForUpdate(final String handle, final RaidUpdateRequest request) {
         if (request == null) {
             return of(ValidationMessage.METADATA_NOT_SET);
         }

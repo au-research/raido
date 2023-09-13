@@ -55,7 +55,7 @@ dependencies{
   implementation libs.bundles.logback.runtime
 
   // used for migration code to call api-svc 
-  implementation( 'org.springframework.cloud:spring-cloud-starter-openfeign:3.1.2'){
+  implementation( 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.0'){
     exclude group: 'org.springframework.boot'
   }
   implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3"

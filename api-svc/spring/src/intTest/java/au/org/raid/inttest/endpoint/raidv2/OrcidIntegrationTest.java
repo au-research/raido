@@ -66,7 +66,7 @@ public class OrcidIntegrationTest extends IntegrationTestCase {
                                 )).organisations(List.of(createDummyOrganisation(today)))
                                 .access(new AccessBlock().type(OPEN))
                         )
-        );
+        ).getBody();
 
         assertThat(mintResult.getSuccess()).isTrue();
     }

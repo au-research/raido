@@ -7,8 +7,8 @@ import au.org.raid.api.util.DateUtil;
 import au.org.raid.db.jooq.api_svc.enums.Metaschema;
 import au.org.raid.db.jooq.api_svc.tables.records.RaidRecord;
 import au.org.raid.db.jooq.api_svc.tables.records.ServicePointRecord;
-import au.org.raid.idl.raidv2.model.CreateRaidV1Request;
-import au.org.raid.idl.raidv2.model.UpdateRaidV1Request;
+import au.org.raid.idl.raidv2.model.RaidCreateRequest;
+import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.JSONB;
@@ -31,7 +31,7 @@ public class RaidRecordFactory {
     }
 
     public RaidRecord create(
-            final CreateRaidV1Request raid,
+            final RaidCreateRequest raid,
             final ApidsMintResponse apidsMintResponse,
             final ServicePointRecord servicePointRecord) {
 
@@ -62,7 +62,7 @@ public class RaidRecordFactory {
                 .setConfidential(raid.getAccess().getType().equals(ACCESS_TYPE_CLOSED));
     }
 
-    public RaidRecord merge(final UpdateRaidV1Request raid, final RaidRecord existing) {
+    public RaidRecord merge(final RaidUpdateRequest raid, final RaidRecord existing) {
 
         final var primaryTitle = raid.getTitle().stream()
                 .filter(title -> title.getType().getId().equals(PRIMARY_TITLE_TYPE))

@@ -6,10 +6,11 @@ import au.org.raid.api.service.raid.RaidStableV1Service;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.validator.RaidoStableV1Validator;
 import au.org.raid.idl.raidv2.api.RaidoStableV1Api;
-import au.org.raid.idl.raidv2.model.CreateRaidV1Request;
+import au.org.raid.idl.raidv2.model.RaidCreateRequest;
 import au.org.raid.idl.raidv2.model.RaidDto;
-import au.org.raid.idl.raidv2.model.UpdateRaidV1Request;
+import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,17 +34,17 @@ public class RaidoStableV1 implements RaidoStableV1Api {
     }
 
     @Override
-    public RaidDto readRaidV1(final String prefix, final String suffix) {
+    public ResponseEntity<RaidDto> readRaidV1(final String prefix, final String suffix) {
         final var handle = String.join("/", prefix, suffix);
         var user = getApiToken();
         var data = raidService.read(handle);
         guardOperatorOrAssociated(user, data.getIdentifier().getOwner().getServicePoint());
-        return data;
+        return ResponseEntity.ok(data);
     }
 
     @Override
     @Transactional(propagation = NEVER)
-    public RaidDto createRaidV1(CreateRaidV1Request request) {
+    public ResponseEntity<RaidDto> createRaidV1(RaidCreateRequest request) {
         final var user = getApiToken();
 
         if (!raidService.isEditable(user, user.getServicePointId())) {
@@ -59,19 +60,19 @@ public class RaidoStableV1 implements RaidoStableV1Api {
         IdentifierUrl id = raidService.mintRaidSchemaV1(
                 request, user.getServicePointId());
 
-        return raidService.read(id.handle().format());
+        return ResponseEntity.ok(raidService.read(id.handle().format()));
     }
 
     @Override
-    public List<RaidDto> listRaidsV1(Long servicePointId) {
+    public ResponseEntity<List<RaidDto>> listRaidsV1(Long servicePointId) {
         var user = getApiToken();
         guardOperatorOrAssociated(user, servicePointId);
 
-        return raidService.list(servicePointId);
+        return ResponseEntity.ok(raidService.list(servicePointId));
     }
 
     @Override
-    public RaidDto updateRaidV1(final String prefix, final String suffix, UpdateRaidV1Request request) {
+    public ResponseEntity<RaidDto> updateRaidV1(final String prefix, final String suffix, RaidUpdateRequest request) {
         final var handle = String.join("/", prefix, suffix);
         var user = getApiToken();
         guardOperatorOrAssociated(user, request.getIdentifier().getOwner().getServicePoint());
@@ -86,6 +87,6 @@ public class RaidoStableV1 implements RaidoStableV1Api {
             throw new ValidationException(failures);
         }
 
-        return raidService.update(request);
+        return ResponseEntity.ok(raidService.update(request));
     }
 }

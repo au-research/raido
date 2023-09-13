@@ -46,7 +46,7 @@ class RaidoStableV1ValidatorTest {
     @Test
     void validatesAccessOnCreate() {
         final var access = new Access();
-        final var raid = new CreateRaidV1Request().access(access);
+        final var raid = new RaidCreateRequest().access(access);
 
         validationService.validateForCreate(raid);
 
@@ -58,7 +58,7 @@ class RaidoStableV1ValidatorTest {
         final var handle = "test-handle";
         final var access = new Access();
 
-        final var raid = new UpdateRaidV1Request()
+        final var raid = new RaidUpdateRequest()
                 .identifier(new Id())
                 .access(access);
 
@@ -70,7 +70,7 @@ class RaidoStableV1ValidatorTest {
     @Test
     void validatesSubjectsOnCreate() {
         final var subjects = Collections.singletonList(new Subject());
-        final var raid = new CreateRaidV1Request().subject(subjects);
+        final var raid = new RaidCreateRequest().subject(subjects);
 
         validationService.validateForCreate(raid);
 
@@ -82,7 +82,7 @@ class RaidoStableV1ValidatorTest {
         final var handle = "test-handle";
         final var subjects = Collections.singletonList(new Subject());
 
-        final var raid = new UpdateRaidV1Request()
+        final var raid = new RaidUpdateRequest()
                 .identifier(new Id())
                 .subject(subjects);
 
@@ -94,7 +94,7 @@ class RaidoStableV1ValidatorTest {
     @Test
     void validatesRelatedRaidsOnCreate() {
         final var relatedRaids = Collections.singletonList(new RelatedRaid());
-        final var raid = new CreateRaidV1Request().relatedRaid(relatedRaids);
+        final var raid = new RaidCreateRequest().relatedRaid(relatedRaids);
 
         validationService.validateForCreate(raid);
         verify(relatedRaidValidationService).validate(relatedRaids);
@@ -103,7 +103,7 @@ class RaidoStableV1ValidatorTest {
     @Test
     void validatesRelatedObjectsOnCreate() {
         final var relatedObjects = Collections.singletonList(new RelatedObject());
-        final var raid = new CreateRaidV1Request().relatedObject(relatedObjects);
+        final var raid = new RaidCreateRequest().relatedObject(relatedObjects);
 
         validationService.validateForCreate(raid);
         verify(relatedObjectValidationService).validateRelatedObjects(relatedObjects);
@@ -114,7 +114,7 @@ class RaidoStableV1ValidatorTest {
         final var handle = "test-handle";
         final var relatedRaids = Collections.singletonList(new RelatedRaid());
 
-        final var raid = new UpdateRaidV1Request()
+        final var raid = new RaidUpdateRequest()
                 .identifier(new Id())
                 .relatedRaid(relatedRaids);
 
@@ -127,7 +127,7 @@ class RaidoStableV1ValidatorTest {
         final var handle = "test-handle";
         final var relatedObjects = Collections.singletonList(new RelatedObject());
 
-        final var raid = new UpdateRaidV1Request()
+        final var raid = new RaidUpdateRequest()
                 .identifier(new Id())
                 .relatedObject(relatedObjects);
 
@@ -140,7 +140,7 @@ class RaidoStableV1ValidatorTest {
         final var handle = "test-handle";
         final var alternateIdentifiers = Collections.singletonList(new AlternateIdentifier());
 
-        final var raid = new CreateRaidV1Request()
+        final var raid = new RaidCreateRequest()
                 .identifier(new Id())
                 .alternateIdentifier(alternateIdentifiers);
 
@@ -153,7 +153,7 @@ class RaidoStableV1ValidatorTest {
         final var handle = "test-handle";
         final var alternateIdentifiers = Collections.singletonList(new AlternateIdentifier());
 
-        final var raid = new UpdateRaidV1Request()
+        final var raid = new RaidUpdateRequest()
                 .identifier(new Id())
                 .alternateIdentifier(alternateIdentifiers);
 
@@ -167,7 +167,7 @@ class RaidoStableV1ValidatorTest {
         final var spatialCoverages =
                 Collections.singletonList(new SpatialCoverage());
 
-        final var raid = new CreateRaidV1Request()
+        final var raid = new RaidCreateRequest()
                 .identifier(new Id())
                 .spatialCoverage(spatialCoverages);
 
@@ -181,7 +181,7 @@ class RaidoStableV1ValidatorTest {
         final var spatialCoverages =
                 Collections.singletonList(new SpatialCoverage());
 
-        final var raid = new UpdateRaidV1Request()
+        final var raid = new RaidUpdateRequest()
                 .identifier(new Id())
                 .spatialCoverage(spatialCoverages);
 
@@ -195,7 +195,7 @@ class RaidoStableV1ValidatorTest {
         final var traditionalKnowledgeLabels =
                 Collections.singletonList(new TraditionalKnowledgeLabel());
 
-        final var raid = new CreateRaidV1Request()
+        final var raid = new RaidCreateRequest()
                 .identifier(new Id())
                 .traditionalKnowledgeLabel(traditionalKnowledgeLabels);
 
@@ -209,7 +209,7 @@ class RaidoStableV1ValidatorTest {
         final var traditionalKnowledgeLabels =
                 Collections.singletonList(new TraditionalKnowledgeLabel());
 
-        final var raid = new UpdateRaidV1Request()
+        final var raid = new RaidUpdateRequest()
                 .identifier(new Id())
                 .traditionalKnowledgeLabel(traditionalKnowledgeLabels);
 

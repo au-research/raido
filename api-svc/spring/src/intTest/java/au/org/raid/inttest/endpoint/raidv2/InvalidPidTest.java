@@ -73,7 +73,7 @@ public class InvalidPidTest extends IntegrationTestCase {
         var today = LocalDate.now();
 
         EXPECT("minting a raid with non-existent PIDs should fail");
-        assertThatThrownBy(() -> raidApi.createRaidV1(new CreateRaidV1Request()
+        assertThatThrownBy(() -> raidApi.createRaidV1(new RaidCreateRequest()
                 .title(titles(initialTitle))
                 .date(new Date().startDate(today.format(DateTimeFormatter.ISO_LOCAL_DATE)))
                 .description(descriptions("used for testing non-existent pids"))

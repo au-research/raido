@@ -97,7 +97,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
                                 .organisations(List.of(createDummyOrganisation(today)))
                                 .access(new AccessBlock().type(OPEN))
                         )
-        );
+        ).getBody();
         assertThat(mintResult).isNotNull();
         assertThat(mintResult.getFailures()).isNullOrEmpty();
         assertThat(mintResult.getSuccess()).isTrue();
@@ -120,7 +120,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
 
         EXPECT("should be able to read the minted raid via public api (v3)");
         var v3Read = raidoApi.getPublicExperimental().
-                publicReadRaidV3(mintedRaid.getHandle());
+                publicReadRaidV3(mintedRaid.getHandle()).getBody();
         assertThat(v3Read).isNotNull();
         assertThat(v3Read.getCreateDate()).isNotNull();
         assertThat(v3Read.getServicePointId()).isEqualTo(RAIDO_SP_ID);
@@ -147,7 +147,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
         /* list by unique name to prevent eventual pagination issues */
         EXPECT("should be able to list the minted raid");
         var listResult = raidApi.listRaidV2(new RaidListRequestV2().
-                servicePointId(RAIDO_SP_ID).primaryTitle(initialTitle));
+                servicePointId(RAIDO_SP_ID).primaryTitle(initialTitle)).getBody();
         assertThat(listResult).singleElement().satisfies(i -> {
             assertThat(i.getHandle()).isEqualTo(mintedRaid.getHandle());
             assertThat(i.getPrimaryTitle()).isEqualTo(initialTitle);
@@ -164,14 +164,14 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
                 new UpdateRaidoSchemaV1Request().metadata(
                         mapRaidMetadataToRaido(v3Meta).
                                 titles(List.of(newTitle))
-                ));
+                )).getBody();
         assertThat(updateResult.getFailures()).isNullOrEmpty();
         assertThat(updateResult.getSuccess()).isTrue();
 
         THEN("should be able to read new value via publicRead");
         var readUpdatedData = (PublicRaidMetadataSchemaV1)
                 raidoApi.getPublicExperimental().
-                        publicReadRaidV3(mintedRaid.getHandle()).getMetadata();
+                        publicReadRaidV3(mintedRaid.getHandle()).getBody().getMetadata();
 
         assertThat(readUpdatedData.getAccess().getType()).isEqualTo(OPEN);
         assertThat(readUpdatedData.getTitles().get(0).getTitle()).isEqualTo(
@@ -186,13 +186,13 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
                                         readUpdatedData.getAccess().
                                                 type(CLOSED).
                                                 accessStatement("closed by update"))
-                ));
+                )).getBody();
         assertThat(closeResult.getFailures()).isNullOrEmpty();
         assertThat(closeResult.getSuccess()).isTrue();
 
         THEN("publicRaid should now return closed");
         var readClosed = raidoApi.getPublicExperimental().
-                publicReadRaidV3(mintedRaid.getHandle());
+                publicReadRaidV3(mintedRaid.getHandle()).getBody();
         var readClosedMeta = (PublicClosedMetadataSchemaV1)
                 readClosed.getMetadata();
         assertThat(readClosedMeta.getAccess().getType()).isEqualTo(CLOSED);
@@ -229,7 +229,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
                                 .dates(new DatesBlock().startDate(today))
                                 .access(new AccessBlock().type(OPEN))
                         )
-        );
+        ).getBody();
         THEN("validation failure should result");
         assertThat(mintResult.getSuccess()).isFalse();
         assertThat(mintResult.getFailures()).satisfiesExactlyInAnyOrder(

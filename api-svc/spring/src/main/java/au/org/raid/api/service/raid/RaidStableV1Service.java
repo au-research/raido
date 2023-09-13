@@ -17,9 +17,9 @@ import au.org.raid.api.service.raid.id.IdentifierParser.ParseProblems;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.spring.security.raidv2.ApiToken;
 import au.org.raid.api.util.Log;
-import au.org.raid.idl.raidv2.model.CreateRaidV1Request;
+import au.org.raid.idl.raidv2.model.RaidCreateRequest;
 import au.org.raid.idl.raidv2.model.RaidDto;
-import au.org.raid.idl.raidv2.model.UpdateRaidV1Request;
+import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -73,7 +73,7 @@ public class RaidStableV1Service {
     }
 
     public IdentifierUrl mintRaidSchemaV1(
-            final CreateRaidV1Request request,
+            final RaidCreateRequest request,
             final long servicePoint
     ) {
         /* this is the part where we want to make sure no TX is held open.
@@ -100,7 +100,7 @@ public class RaidStableV1Service {
 
     @SneakyThrows
     public RaidDto update(
-            final UpdateRaidV1Request raid
+            final RaidUpdateRequest raid
     ) {
         final Integer version = raid.getIdentifier().getVersion();
         if (version == null) {

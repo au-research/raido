@@ -18,6 +18,7 @@ import au.org.raid.idl.raidv2.model.*;
 import lombok.SneakyThrows;
 import org.jooq.DSLContext;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -68,25 +69,25 @@ public class AdminExperimental implements AdminExperimentalApi {
     }
 
     @Override
-    public List<AuthzRequestExtraV1> listAuthzRequest() {
+    public ResponseEntity<List<AuthzRequestExtraV1>> listAuthzRequest() {
         var user = AuthzUtil.getApiToken();
         // this is the authz check, will be moved to a role annotation soon
         Guard.areEqual(user.getRole(), OPERATOR.getLiteral());
 
-        return authzRequestSvc.listAllRecentAuthzRequest();
+        return ResponseEntity.ok(authzRequestSvc.listAllRecentAuthzRequest());
     }
 
     @Override
-    public AuthzRequestExtraV1 readRequestAuthz(Long authzRequestId) {
+    public ResponseEntity<AuthzRequestExtraV1> readRequestAuthz(Long authzRequestId) {
         // have to read it before we can see if user is allowed for servicePoint
         var authRequest = authzRequestSvc.readAuthzRequest(authzRequestId);
         var user = AuthzUtil.getApiToken();
         AuthzUtil.guardOperatorOrAssociatedSpAdmin(user, authRequest.getServicePointId());
-        return authRequest;
+        return ResponseEntity.ok(authRequest);
     }
 
     @Override
-    public Void updateAuthzRequestStatus(UpdateAuthzRequestStatus req) {
+    public ResponseEntity<Void> updateAuthzRequestStatus(UpdateAuthzRequestStatus req) {
         Guard.notNull("must provide authzRequestId", req.getAuthzRequestId());
         Guard.notNull("must provide status", req.getStatus());
 
@@ -104,32 +105,32 @@ public class AdminExperimental implements AdminExperimentalApi {
     }
 
     @Override
-    public List<ServicePoint> listServicePoint() {
+    public ResponseEntity<List<ServicePoint>> listServicePoint() {
         var user = AuthzUtil.getApiToken();
         AuthzUtil.guardOperatorOrSpAdmin(user);
 
-        return db.select().from(SERVICE_POINT).
+        return ResponseEntity.ok(db.select().from(SERVICE_POINT).
                 orderBy(SERVICE_POINT.NAME.asc()).
                 limit(Constant.MAX_EXPERIMENTAL_RECORDS).
-                fetchInto(ServicePoint.class);
+                fetchInto(ServicePoint.class));
     }
 
     /**
      * IMPROVE: Currently gives a 500 error if not found, 404 might be better?
      */
     @Override
-    public ServicePoint readServicePoint(Long servicePointId) {
+    public ResponseEntity<ServicePoint> readServicePoint(Long servicePointId) {
         var user = AuthzUtil.getApiToken();
         AuthzUtil.guardOperatorOrAssociated(user, servicePointId);
 
-        return db.select().from(SERVICE_POINT).
+        return ResponseEntity.ok(db.select().from(SERVICE_POINT).
                 where(SERVICE_POINT.ID.eq(servicePointId)).
-                fetchSingleInto(ServicePoint.class);
+                fetchSingleInto(ServicePoint.class));
     }
 
     @Override
     @SneakyThrows
-    public ServicePoint updateServicePoint(ServicePoint req) {
+    public ResponseEntity<ServicePoint> updateServicePoint(ServicePoint req) {
         var user = AuthzUtil.getApiToken();
         AuthzUtil.guardOperatorOrAssociatedSpAdmin(user, req.getId());
 
@@ -150,11 +151,11 @@ public class AdminExperimental implements AdminExperimentalApi {
             throw new ValidationFailureException(failures);
         }
 
-        return servicePointSvc.updateServicePoint(req);
+        return ResponseEntity.ok(servicePointSvc.updateServicePoint(req));
     }
 
     @Override
-    public AppUser readAppUser(Long appUserId) {
+    public ResponseEntity<AppUser> readAppUser(Long appUserId) {
         var user = AuthzUtil.getApiToken();
         if (ObjectUtil.areEqual(user.getAppUserId(), appUserId)) {
             // user is allowed to read their own record
@@ -169,43 +170,40 @@ public class AdminExperimental implements AdminExperimentalApi {
             throw iae;
         }
 
-        return appUserSvc.readAppUser(appUserId);
+        return ResponseEntity.ok(appUserSvc.readAppUser(appUserId));
     }
 
     @Override
-    public AppUserExtraV1 readAppUserExtra(Long appUserId) {
+    public ResponseEntity<AppUserExtraV1> readAppUserExtra(Long appUserId) {
         var user = AuthzUtil.getApiToken();
         AuthzUtil.guardOperatorOrSpAdmin(user);
 
-        var appUser = readAppUser(appUserId);
-        var servicePoint = readServicePoint(appUser.getServicePointId());
+        var appUser = readAppUser(appUserId).getBody();
+        assert appUser != null;
+        var servicePoint = readServicePoint(appUser.getServicePointId()).getBody();
 
         var authzRequest = authzRequestSvc.readAuthzRequestForUser(appUser);
 
         // bootstrapped user has no authzRequest, was auto-approved
-        if (authzRequest.isEmpty()) {
-            return new AppUserExtraV1().
-                    appUser(appUser).
-                    servicePoint(servicePoint);
-        }
-
-        return new AppUserExtraV1().
+        return authzRequest.map(authzRequestExtraV1 -> ResponseEntity.ok(new AppUserExtraV1().
                 appUser(appUser).
                 servicePoint(servicePoint).
-                authzRequest(authzRequest.get());
+                authzRequest(authzRequestExtraV1))).orElseGet(() -> ResponseEntity.ok(new AppUserExtraV1().
+                appUser(appUser).
+                servicePoint(servicePoint)));
 
     }
 
     @Override
-    public List<AppUser> listAppUser(Long servicePointId) {
+    public ResponseEntity<List<AppUser>> listAppUser(Long servicePointId) {
         var user = AuthzUtil.getApiToken();
         AuthzUtil.guardOperatorOrAssociatedSpAdmin(user, servicePointId);
 
-        return appUserSvc.listAppUser(servicePointId);
+        return ResponseEntity.ok(appUserSvc.listAppUser(servicePointId));
     }
 
     @Override
-    public AppUser updateAppUser(AppUser req) {
+    public ResponseEntity<AppUser> updateAppUser(AppUser req) {
         var invokingUser = AuthzUtil.getApiToken();
 
         var targetUser = db.fetchSingle(APP_USER, APP_USER.ID.eq(req.getId()));
@@ -220,15 +218,15 @@ public class AdminExperimental implements AdminExperimentalApi {
     }
 
     @Override
-    public List<ApiKey> listApiKey(Long servicePointId) {
+    public ResponseEntity<List<ApiKey>> listApiKey(Long servicePointId) {
         var user = AuthzUtil.getApiToken();
         AuthzUtil.guardOperatorOrAssociatedSpAdmin(user, servicePointId);
 
-        return appUserSvc.listApiKey(servicePointId);
+        return ResponseEntity.ok(appUserSvc.listApiKey(servicePointId));
     }
 
     @Override
-    public ApiKey updateApiKey(ApiKey req) {
+    public ResponseEntity<ApiKey> updateApiKey(ApiKey req) {
         var invokingUser = AuthzUtil.getApiToken();
         AuthzUtil.guardOperatorOrAssociatedSpAdmin(invokingUser, req.getServicePointId());
 
@@ -238,15 +236,15 @@ public class AdminExperimental implements AdminExperimentalApi {
     }
 
     @Override
-    public ApiKey readApiKey(Long apiKeyId) {
+    public ResponseEntity<ApiKey> readApiKey(Long apiKeyId) {
         var invokingUser = AuthzUtil.getApiToken();
         ApiKey apiKey = appUserSvc.readApiKey(apiKeyId);
         AuthzUtil.guardOperatorOrAssociatedSpAdmin(invokingUser, apiKey.getServicePointId());
-        return apiKey;
+        return ResponseEntity.ok(apiKey);
     }
 
     @Override
-    public GenerateApiTokenResponse generateApiToken(
+    public ResponseEntity<GenerateApiTokenResponse> generateApiToken(
             GenerateApiTokenRequest req
     ) {
         var invokingUser = AuthzUtil.getApiToken();
@@ -256,13 +254,13 @@ public class AdminExperimental implements AdminExperimentalApi {
 
         String apiToken = appUserSvc.generateApiToken(apiKey);
 
-        return new GenerateApiTokenResponse().
+        return ResponseEntity.ok(new GenerateApiTokenResponse().
                 apiKeyId(req.getApiKeyId()).
-                apiToken(apiToken);
+                apiToken(apiToken));
     }
 
     @Override
-    public MintResponse migrateLegacyRaid(MigrateLegacyRaidRequest req) {
+    public ResponseEntity<MintResponse> migrateLegacyRaid(MigrateLegacyRaidRequest req) {
         var mint = req.getMintRequest();
         var user = AuthzUtil.getApiToken();
         /* instead of allowing api-keys to have operator role, we just enforce
@@ -284,7 +282,7 @@ public class AdminExperimental implements AdminExperimentalApi {
             failures.add(ValidationMessage.fieldNotSet("mintRequest.createDate"));
         }
         if (!failures.isEmpty()) {
-            return new MintResponse().success(false).failures(failures);
+            return ResponseEntity.ok(new MintResponse().success(false).failures(failures));
         }
 
         // it'll work because IdBlock's already been validated
@@ -297,13 +295,12 @@ public class AdminExperimental implements AdminExperimentalApi {
                     req.getMintRequest().getCreateDate(),
                     req.getMetadata());
         } catch (ValidationFailureException e) {
-            return new MintResponse().success(false).failures(e.getFailures());
+            return ResponseEntity.ok(new MintResponse().success(false).failures(e.getFailures()));
         }
 
         // improve: this is unnecessary overhead - migration scripts don't care
         // about the response.
-        return new MintResponse().success(true).
-                raid(raidSvc.readRaidResponseV2(id.handle().format()));
+        return ResponseEntity.ok(new MintResponse().success(true).
+                raid(raidSvc.readRaidResponseV2(id.handle().format())));
     }
-
 }

@@ -1,18 +1,13 @@
 plugins {
   id 'java'
-  /* note: we use custom templates, so if you upgrade this, consider that the 
-  template files may have changed and you need to check and update them.
-  There were a few changed going from 6.0.1 to 6.2.0.  Particularly, seems like
-  the basepath support was added, maybe we can stop copy/pasting "/v2" prefix
-  into every. single. path? Needs testing. */
-  id "org.openapi.generator" version "6.2.1"
+  id "org.openapi.generator" version "7.0.0"
 }
 
 ext {
   raidV2SpecFile = file("src/raido-openapi-3.0.yaml")
   generateDirName = "src/main/generated"
   generateTsDirName = "../../app-client/src/Generated/Raidv2"
-  templateDirName = "src/main/resources/template"
+//  templateDirName = "src/main/resources/template"
 }
 
 dependencies{
@@ -22,6 +17,8 @@ dependencies{
   compileOnly 'jakarta.platform:jakarta.jakartaee-web-api:9.1.0'
 
   implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'
+  implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+
 
 }
 
@@ -53,7 +50,7 @@ openApiGenerate {
   generateApiTests = false
   generateModelDocumentation = false
   generateModelTests = false
-  templateDir = file(templateDirName).path
+//  templateDir = file(templateDirName).path
   
   modelPackage = "au.org.raid.idl.raidv2.model"
   apiPackage = "au.org.raid.idl.raidv2.api"
@@ -65,12 +62,12 @@ openApiGenerate {
   globalProperties = [
     // blank means that it generates all models
     models: "",
-    /* blank means all api classes will ge generated. 
-    We're not using the API classes yet, because I haven't figured out how 
-    to get openapi to generate a "principal" parameter. 
-    That means we're duplicating the path and parameter specifications in 
+    /* blank means all api classes will ge generated.
+    We're not using the API classes yet, because I haven't figured out how
+    to get openapi to generate a "principal" parameter.
+    That means we're duplicating the path and parameter specifications in
     the api-svc Spring code and intTests.  I would prefer to use these, but it's
-    really the model classes where most of the work is and we are using those. 
+    really the model classes where most of the work is and we are using those.
     Generate so we can copy/paste from them to endpoint classes 🤮  */
     apis: "",
     /* blank means all supporting code is generated and a bunch of readme, pom,
@@ -90,17 +87,17 @@ openApiGenerate {
   ]
   configOptions = [
 
-    /* use outputDir instead of this, so that random supporting openapi files 
+    /* use outputDir instead of this, so that random supporting openapi files
     are written in `generated` (and .gitignore'd) instead of in project dir. */
     sourceFolder: "",
 
-    /* useTags=true, means you can group api endpoints together onto a single 
-    class by setting a "tag" at the "/paths/path/method/tags" level. 
+    /* useTags=true, means you can group api endpoints together onto a single
+    class by setting a "tag" at the "/paths/path/method/tags" level.
     Endpoints with no tag end up on "DefaultApi.java".
     useTags=false means each endpoint gets its own class, name is generated from
     the path/method stuff.
     Use the "operationId" field in the YAML to control the generated method
-    name. 
+    name.
     */
     useTags: "true",
 
@@ -111,7 +108,7 @@ openApiGenerate {
     /* generates a @Controller anno on the api interface */
     useSpringController: "false",
 
-    /* Related to generating "api" classes (controlled by "apis" globalProp) 
+    /* Related to generating "api" classes (controlled by "apis" globalProp)
     Causes API classes to not generate default implementations of the endpoint
     methods. */
     skipDefaultInterface: "true",
@@ -122,31 +119,29 @@ openApiGenerate {
 
     /* wrap params in Optional.
     I like it but IDEA shows a warning.
-    When I tried passing an actual "false" value, Spring failed to map the 
-    optional.  I worked around it by redefining that boolean as required 
-    with a default value (not actually even sure about that).  
+    When I tried passing an actual "false" value, Spring failed to map the
+    optional.  I worked around it by redefining that boolean as required
+    with a default value (not actually even sure about that).
     Need to figure this out, or just turn this to false and forget about using
     optional. */
     useOptional: "true",
 
-    /* set to false because model classes were failing because of the import of 
+    /* set to false because model classes were failing because of the import of
     jackson.Nullable */
     openApiNullable: "false",
 
     /* Generate LocalDateTime, etc. */
     dateLibrary: "java8",
 
-    useBeanValidation: "false",
-    
     documentationProvider: "none",
-    disallowAdditionalPropertiesIfNotPresent: "false",
+    disallowAdditionalPropertiesIfNotPresent: "true",
 
     delegatePattern: "false",
   ]  
 }
 tasks.openApiGenerate{
   // make sure task is re-run if templates are changed
-  inputs.files templateDirName
+//  inputs.files templateDirName
   /* make sure task is re-run if reference files are changed, it appears 
   the task only looks at the base file. */
   inputs.files fileTree("src/**/*.yaml")

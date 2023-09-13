@@ -20,9 +20,7 @@ paths:
         content:
           application/json:
             schema:
-              allOf:
-                - { $ref: '#/components/schemas/RaidDto' }
-              required: [ metadataSchema, titles, dates, contributors, access ]
+                $ref: '#/components/schemas/RaidCreateRequest'
       responses:
         200:
           description: The Raid was successfully created.
@@ -92,9 +90,7 @@ paths:
         content:
           application/json:
             schema:
-              allOf:
-                - { $ref: '#/components/schemas/RaidDto' }
-              required: [ id, metadataSchema, titles, dates, contributors, access ]
+                $ref: '#/components/schemas/RaidUpdateRequest'
       responses:
         200:
           description: The Raid was successfully updated.
@@ -110,8 +106,61 @@ paths:
                 $ref: 'components.yaml#/components/schemas/ValidationFailureResponse'
 components:
   schemas:
-    RaidDto:
+    RaidCreateRequest:
       type: object
+      required:
+        - metadataSchema
+        - titles
+        - dates
+        - contributors
+        - access
+      properties:
+        identifier:
+          $ref: '#/components/schemas/Id'
+        title:
+          type: array
+          items: { $ref: '#/components/schemas/Title' }
+        date: { $ref: '#/components/schemas/Date' }
+        description:
+          type: array
+          items: { $ref: '#/components/schemas/Description' }
+        access: { $ref: '#/components/schemas/Access' }
+        alternateUrl:
+          type: array
+          items: { $ref: '#/components/schemas/AlternateUrl' }
+        contributor:
+          type: array
+          items: { $ref: '#/components/schemas/Contributor' }
+        organisation:
+          type: array
+          items: { $ref: '#/components/schemas/Organisation' }
+        subject:
+          type: array
+          items: { $ref: '#/components/schemas/Subject' }
+        relatedRaid:
+          type: array
+          items: { $ref: '#/components/schemas/RelatedRaid' }
+        relatedObject:
+          type: array
+          items: { $ref: '#/components/schemas/RelatedObject' }
+        alternateIdentifier:
+          type: array
+          items: { $ref: '#/components/schemas/AlternateIdentifier' }
+        spatialCoverage:
+          type: array
+          items: { $ref: '#/components/schemas/SpatialCoverage' }
+        traditionalKnowledgeLabel:
+          type: array
+          items: { $ref: '#/components/schemas/TraditionalKnowledgeLabel' }
+    RaidUpdateRequest:
+      type: object
+      required:
+        - identifier
+        - metadataSchema
+        - titles
+        - dates
+        - contributors
+        - access
       properties:
         identifier: { $ref: '#/components/schemas/Id' }
         title:
@@ -149,6 +198,9 @@ components:
         traditionalKnowledgeLabel:
           type: array
           items: { $ref: '#/components/schemas/TraditionalKnowledgeLabel' }
+    RaidDto:
+      allOf:
+        - $ref: '#/components/schemas/RaidUpdateRequest'
     Id:
       type: object
       required: [ id, schemaUri, registrationAgency, owner, servicePoint, license, version ]

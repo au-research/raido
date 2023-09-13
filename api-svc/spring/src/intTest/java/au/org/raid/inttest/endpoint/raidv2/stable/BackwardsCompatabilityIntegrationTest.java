@@ -25,7 +25,7 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
     void readExperimentalRaid() {
         final var today = LocalDate.now();
         try {
-            final MintResponse mintResponse = experimentalApi.mintRaidoSchemaV1(TestData.mintRaidoSchemaV1Request(RAIDO_SP_ID));
+            final MintResponse mintResponse = experimentalApi.mintRaidoSchemaV1(TestData.mintRaidoSchemaV1Request(RAIDO_SP_ID)).getBody();
 
             final var metadata = objectMapper.readValue((String) mintResponse.getRaid().getMetadata(), RaidoMetadataSchemaV1.class);
 
@@ -33,7 +33,7 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
             final var prefix = split[0];
             final var suffix = split[1];
 
-            final RaidDto raidDto = raidApi.readRaidV1(prefix, suffix);
+            final RaidDto raidDto = raidApi.readRaidV1(prefix, suffix).getBody();
 
             final var expected = new RaidDto()
                     .identifier(new Id()
@@ -227,7 +227,7 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
         final var prefix = split[0];
         final var suffix = split[1];
 
-        final RaidDto raidDto = raidApi.readRaidV1(prefix, suffix);
+        final RaidDto raidDto = raidApi.readRaidV1(prefix, suffix).getBody();
 
         assertThat(raidDto.getIdentifier()).isEqualTo(new Id()
                 .id("http://localhost:8080/" + raidModel.getHandle())

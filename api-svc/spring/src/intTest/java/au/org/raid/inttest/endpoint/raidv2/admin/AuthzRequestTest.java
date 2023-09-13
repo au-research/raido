@@ -51,15 +51,15 @@ public class AuthzRequestTest extends IntegrationTestCase {
         var createResult = unapprovedClient.updateAuthzRequest(
                 new UpdateAuthzRequest().
                         servicePointId(RAIDO_SP_ID).
-                        comments("intTest"));
+                        comments("intTest")).getBody();
 
         THEN("it should be returned from the read endpoint");
-        var authzRequest = admin.readRequestAuthz(createResult.getAuthzRequestId());
+        var authzRequest = admin.readRequestAuthz(createResult.getAuthzRequestId()).getBody();
         assertThat(authzRequest.getSubject()).isEqualTo(subject);
         assertThat(authzRequest.getStatus()).isEqualTo(REQUESTED);
 
         AND("it should be returned from the list endpoint");
-        var results = admin.listAuthzRequest();
+        var results = admin.listAuthzRequest().getBody();
         assertThat(results).anySatisfy(i -> {
             assertThat(i.getSubject()).isEqualTo(subject);
             assertThat(i.getId()).isEqualTo(createResult.getAuthzRequestId());
@@ -67,7 +67,7 @@ public class AuthzRequestTest extends IntegrationTestCase {
         });
 
         AND("the app-user should not yet exist");
-        var users = admin.listAppUser(RAIDO_SP_ID);
+        var users = admin.listAppUser(RAIDO_SP_ID).getBody();
         assertThat(users).noneSatisfy(i ->
                 assertThat(i.getSubject()).isEqualTo(subject));
 
@@ -80,12 +80,12 @@ public class AuthzRequestTest extends IntegrationTestCase {
         );
 
         THEN("the authz-request status should be updated");
-        authzRequest = admin.readRequestAuthz(createResult.getAuthzRequestId());
+        authzRequest = admin.readRequestAuthz(createResult.getAuthzRequestId()).getBody();
         assertThat(authzRequest.getSubject()).isEqualTo(subject);
         assertThat(authzRequest.getStatus()).isEqualTo(APPROVED);
 
         AND("the app-user should now exist");
-        users = admin.listAppUser(RAIDO_SP_ID);
+        users = admin.listAppUser(RAIDO_SP_ID).getBody();
         assertThat(users).anySatisfy(i -> {
             assertThat(i.getSubject()).isEqualTo(subject);
             assertThat(i.getRole()).isEqualTo(SP_USER.getLiteral());
@@ -106,10 +106,10 @@ public class AuthzRequestTest extends IntegrationTestCase {
         var createResult = unapprovedClient.updateAuthzRequest(
                 new UpdateAuthzRequest().
                         servicePointId(RAIDO_SP_ID).
-                        comments("intTest"));
+                        comments("intTest")).getBody();
 
         THEN("the app-user should not yet exist");
-        var users = admin.listAppUser(RAIDO_SP_ID);
+        var users = admin.listAppUser(RAIDO_SP_ID).getBody();
         assertThat(users).noneSatisfy(i -> {
             assertThat(i.getSubject()).isEqualTo(subject);
         });
@@ -121,12 +121,12 @@ public class AuthzRequestTest extends IntegrationTestCase {
         );
 
         THEN("the authz-request status should be updated");
-        var authzRequest = admin.readRequestAuthz(createResult.getAuthzRequestId());
+        var authzRequest = admin.readRequestAuthz(createResult.getAuthzRequestId()).getBody();
         assertThat(authzRequest.getSubject()).isEqualTo(subject);
         assertThat(authzRequest.getStatus()).isEqualTo(REJECTED);
 
         AND("it should be returned from the list endpoint with new status");
-        var results = admin.listAuthzRequest();
+        var results = admin.listAuthzRequest().getBody();
         assertThat(results).anySatisfy(i -> {
             assertThat(i.getSubject()).isEqualTo(subject);
             assertThat(i.getId()).isEqualTo(createResult.getAuthzRequestId());
@@ -134,7 +134,7 @@ public class AuthzRequestTest extends IntegrationTestCase {
         });
 
         THEN("the app-user should not exist");
-        users = admin.listAppUser(RAIDO_SP_ID);
+        users = admin.listAppUser(RAIDO_SP_ID).getBody();
         assertThat(users).noneSatisfy(i ->
                 assertThat(i.getSubject()).isEqualTo(subject));
     }
@@ -152,7 +152,7 @@ public class AuthzRequestTest extends IntegrationTestCase {
         var createResult = unapprovedClient.updateAuthzRequest(
                 new UpdateAuthzRequest().
                         servicePointId(RAIDO_SP_ID).
-                        comments("intTest"));
+                        comments("intTest")).getBody();
 
         EXPECT("unapproved user should not be able to call update-status endpoint");
         assertThatThrownBy(() ->
@@ -181,7 +181,7 @@ public class AuthzRequestTest extends IntegrationTestCase {
 
         GIVEN("the authz-requests exist");
         var createResult = unapprovedClient.updateAuthzRequest(
-                new UpdateAuthzRequest().servicePointId(RAIDO_SP_ID).comments(""));
+                new UpdateAuthzRequest().servicePointId(RAIDO_SP_ID).comments("")).getBody();
 
         EXPECT("SP_USER should not be able to call update-status endpoint");
         assertThatThrownBy(() ->
@@ -212,7 +212,7 @@ public class AuthzRequestTest extends IntegrationTestCase {
 
         GIVEN("the authz-requests exist");
         var createResult = unapprovedClient.updateAuthzRequest(
-                new UpdateAuthzRequest().servicePointId(RAIDO_SP_ID).comments(""));
+                new UpdateAuthzRequest().servicePointId(RAIDO_SP_ID).comments("")).getBody();
 
         EXPECT("SP_ADMIN from different SP should not be able to approve");
         assertThatThrownBy(() ->

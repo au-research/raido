@@ -187,7 +187,7 @@ class RaidStableV1ServiceTest {
         final var servicePointId = 999L;
         final var raidJson = raidJson();
 
-        final var updateRequest = objectMapper.readValue(raidJson, UpdateRaidV1Request.class);
+        final var updateRequest = objectMapper.readValue(raidJson, RaidUpdateRequest.class);
         final var expected = objectMapper.readValue(raidJson, RaidDto.class);
 
         final var existingRaid = new RaidRecord();
@@ -224,7 +224,7 @@ class RaidStableV1ServiceTest {
         final var servicePointId = 999L;
         final var raidJson = raidJson();
 
-        final var updateRequest = objectMapper.readValue(raidJson, UpdateRaidV1Request.class);
+        final var updateRequest = objectMapper.readValue(raidJson, RaidUpdateRequest.class);
         final var expected = objectMapper.readValue(raidJson, RaidDto.class);
 
         final var existingRaid = new RaidRecord().setMetadata(JSONB.valueOf(raidJson));
@@ -259,7 +259,7 @@ class RaidStableV1ServiceTest {
         final var servicePointId = 999L;
         final var raidJson = raidJson();
 
-        final var updateRequest = objectMapper.readValue(raidJson, UpdateRaidV1Request.class);
+        final var updateRequest = objectMapper.readValue(raidJson, RaidUpdateRequest.class);
 
         final var id = new IdentifierParser().parseUrlWithException(updateRequest.getIdentifier().getId());
         final var handle = id.handle().format();
@@ -280,8 +280,8 @@ class RaidStableV1ServiceTest {
         return FileUtil.resourceContent("/fixtures/raid.json");
     }
 
-    private CreateRaidV1Request createRaidRequest() throws IOException {
+    private RaidCreateRequest createRaidRequest() throws IOException {
         final String json = FileUtil.resourceContent("/fixtures/create-raid.json");
-        return objectMapper.readValue(json, CreateRaidV1Request.class);
+        return objectMapper.readValue(json, RaidCreateRequest.class);
     }
 }

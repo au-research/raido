@@ -26,6 +26,7 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.RestTemplate;
 
@@ -161,60 +162,60 @@ public abstract class IntegrationTestCase {
                 subject(subject).
                 enabled(true).
                 tokenCutoff(expiry.atOffset(UTC))
-        );
-        var token = adminApi.generateApiToken(new GenerateApiTokenRequest().
-                apiKeyId(apiKey.getId()));
-        return token;
+        ).getBody();
+        assert apiKey != null;
+        return adminApi.generateApiToken(new GenerateApiTokenRequest().
+                apiKeyId(apiKey.getId())).getBody();
     }
 
     public BasicRaidExperimentalApi basicRaidExperimentalClient(String token) {
-        return Feign.builder().
-                client(new OkHttpClient()).
-                encoder(new JacksonEncoder(mapper)).
-                decoder(new JacksonDecoder(mapper)).
-                contract(feignContract).
-                requestInterceptor(request ->
-                        request.header(AUTHORIZATION, "Bearer " + token)).
-                logger(new Slf4jLogger(BasicRaidExperimentalApi.class)).
-                logLevel(Level.FULL).
-                target(BasicRaidExperimentalApi.class, props.getRaidoServerUrl());
+        return Feign.builder()
+                .client(new OkHttpClient())
+                .encoder(new JacksonEncoder(mapper))
+                .decoder(new ResponseEntityDecoder(new JacksonDecoder(mapper)))
+                .contract(feignContract)
+                .requestInterceptor(request ->
+                        request.header(AUTHORIZATION, "Bearer " + token))
+                .logger(new Slf4jLogger(BasicRaidExperimentalApi.class))
+                .logLevel(Level.FULL)
+                .target(BasicRaidExperimentalApi.class, props.getRaidoServerUrl());
     }
 
     public PublicExperimentalApi publicExperimentalClient() {
-        return Feign.builder().
-                client(new OkHttpClient()).
-                encoder(new JacksonEncoder(mapper)).
-                decoder(new JacksonDecoder(mapper)).
-                contract(feignContract).
-                logger(new Slf4jLogger(PublicExperimentalApi.class)).
-                logLevel(Level.FULL).
-                target(PublicExperimentalApi.class, props.getRaidoServerUrl());
+        return Feign.builder()
+                .client(new OkHttpClient())
+                .encoder(new JacksonEncoder(mapper))
+                .decoder(new ResponseEntityDecoder(new JacksonDecoder(mapper)))
+                .contract(feignContract)
+                .logger(new Slf4jLogger(PublicExperimentalApi.class))
+                .logLevel(Level.FULL)
+                .target(PublicExperimentalApi.class, props.getRaidoServerUrl());
     }
 
     public UnapprovedExperimentalApi unapprovedClient(String token) {
-        return Feign.builder().
-                client(new OkHttpClient()).
-                encoder(new JacksonEncoder(mapper)).
-                decoder(new JacksonDecoder(mapper)).
-                contract(feignContract).
-                requestInterceptor(request ->
-                        request.header(AUTHORIZATION, "Bearer " + token)).
-                logger(new Slf4jLogger(UnapprovedExperimentalApi.class)).
-                logLevel(Level.FULL).
-                target(UnapprovedExperimentalApi.class, props.getRaidoServerUrl());
+        return Feign.builder()
+                .client(new OkHttpClient())
+                .encoder(new JacksonEncoder(mapper))
+                .decoder(new ResponseEntityDecoder(new JacksonDecoder(mapper)))
+                .contract(feignContract)
+                .requestInterceptor(request ->
+                        request.header(AUTHORIZATION, "Bearer " + token))
+                .logger(new Slf4jLogger(UnapprovedExperimentalApi.class))
+                .logLevel(Level.FULL)
+                .target(UnapprovedExperimentalApi.class, props.getRaidoServerUrl());
     }
 
     public AdminExperimentalApi adminExperimentalClientAs(String token) {
-        return Feign.builder().
-                client(new OkHttpClient()).
-                encoder(new JacksonEncoder(mapper)).
-                decoder(new JacksonDecoder(mapper)).
-                contract(feignContract).
-                requestInterceptor(request ->
-                        request.header(AUTHORIZATION, "Bearer " + token)).
-                logger(new Slf4jLogger(AdminExperimentalApi.class)).
-                logLevel(Level.FULL).
-                target(AdminExperimentalApi.class, props.getRaidoServerUrl());
+        return Feign.builder()
+                .client(new OkHttpClient())
+                .encoder(new JacksonEncoder(mapper))
+                .decoder(new ResponseEntityDecoder(new JacksonDecoder(mapper)))
+                .contract(feignContract)
+                .requestInterceptor(request ->
+                        request.header(AUTHORIZATION, "Bearer " + token))
+                .logger(new Slf4jLogger(AdminExperimentalApi.class))
+                .logLevel(Level.FULL)
+                .target(AdminExperimentalApi.class, props.getRaidoServerUrl());
     }
 
     public String raidoApiServerUrl(String url) {
@@ -227,7 +228,7 @@ public abstract class IntegrationTestCase {
     }
 
     public PublicServicePoint findPublicServicePoint(String name) {
-        return publicExperimentalClient().publicListServicePoint().stream().
+        return publicExperimentalClient().publicListServicePoint().getBody().stream().
                 filter(i -> i.getName().contains(name)).
                 findFirst().orElseThrow();
     }
@@ -236,7 +237,7 @@ public abstract class IntegrationTestCase {
      * Ok, I'm just being a crazy-person at this point.
      */
     public PublicServicePoint findOtherPublicServicePoint(Long anySpExceptThis) {
-        return publicExperimentalClient().publicListServicePoint().stream().
+        return publicExperimentalClient().publicListServicePoint().getBody().stream().
                 filter(i -> !i.getId().equals(anySpExceptThis)).
                 findFirst().orElseThrow();
     }
@@ -256,7 +257,7 @@ public abstract class IntegrationTestCase {
                 adminEmail("").
                 techEmail("").
                 enabled(true).
-                appWritesEnabled(true));
+                appWritesEnabled(true)).getBody();
     }
 
     public RaidoStableV1Api basicRaidStableClient(String token) {
