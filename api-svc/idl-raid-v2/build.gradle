@@ -134,7 +134,6 @@ openApiGenerate {
     dateLibrary: "java8",
 
     documentationProvider: "none",
-    disallowAdditionalPropertiesIfNotPresent: "true",
 
     delegatePattern: "false",
   ]  

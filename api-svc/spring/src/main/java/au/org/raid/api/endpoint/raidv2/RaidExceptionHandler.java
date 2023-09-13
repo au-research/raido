@@ -189,6 +189,19 @@ public class RaidExceptionHandler extends ResponseEntityExceptionHandler {
     */
         log.with("problem", ex.getMessage()).
                 warn("bad request - http message not readable");
-        return super.handleHttpMessageNotReadable(ex, headers, status, request);
+
+        final var typeFormat = "https://raid.org.au/errors#%s";
+
+        final var body = new FailureResponse()
+                .type(String.format(typeFormat, "InvalidJsonException"))
+                .title("Invalid JSON")
+                .status(400)
+                .detail(ex.getMessage())
+                .instance("https://raid.org.au");
+
+        return ResponseEntity
+                .status(400)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(body);
     }
 }

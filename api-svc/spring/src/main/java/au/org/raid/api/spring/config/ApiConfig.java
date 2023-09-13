@@ -3,6 +3,7 @@ package au.org.raid.api.spring.config;
 import au.org.raid.api.spring.config.http.converter.FormProblemDetailConverter;
 import au.org.raid.api.spring.config.http.converter.XmlProblemDetailConverter;
 import au.org.raid.api.util.Log;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -114,7 +115,8 @@ public class ApiConfig implements WebMvcConfigurer {
     like `new Date(json['startDate']` which did not parse the date properly.
     https://stackoverflow.com/a/67078987/924597 */
         jsonConverter.getObjectMapper().
-                disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+                disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
         converters.add(jsonConverter);
 
         converters.add(new FormProblemDetailConverter());
