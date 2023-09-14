@@ -13,12 +13,10 @@ import au.org.raid.api.service.raid.id.IdentifierParser;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.spring.config.environment.MetadataProps;
 import au.org.raid.api.util.FileUtil;
+import au.org.raid.api.util.SchemaUri;
 import au.org.raid.db.jooq.api_svc.tables.records.RaidRecord;
 import au.org.raid.db.jooq.api_svc.tables.records.ServicePointRecord;
-import au.org.raid.idl.raidv2.model.CreateRaidV1Request;
-import au.org.raid.idl.raidv2.model.Id;
-import au.org.raid.idl.raidv2.model.RaidDto;
-import au.org.raid.idl.raidv2.model.UpdateRaidV1Request;
+import au.org.raid.idl.raidv2.model.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,7 +29,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -67,7 +64,7 @@ class RaidStableV1ServiceTest {
     @Mock
     private IdentifierParser idParser;
     @Mock
-    private MetadataProps metaProps;
+    private MetadataProps metadataProps;
     @Mock
     private TransactionTemplate transactionTemplate;
     @Mock
@@ -84,9 +81,10 @@ class RaidStableV1ServiceTest {
     @Test
     @DisplayName("Mint a raid")
     void mintRaidV1() throws IOException {
+        final var urlPrefix = "https://raid.org.au/";
         final long servicePointId = 123;
         final var handle = new IdentifierHandle("10378.1", "1696639");
-        final var identifierUrl = new IdentifierUrl("https://raid.org.au", handle);
+        final var identifierUrl = new IdentifierUrl(urlPrefix, handle);
         final var urlIndex = 456;
         final var createRaidRequest = createRaidRequest();
         final var registrationAgency = "registration-agency";
@@ -106,18 +104,23 @@ class RaidStableV1ServiceTest {
 
 
         final var id = new Id()
-                .identifier(identifierUrl.formatUrl())
-                .identifierSchemeUri(RAID_ID_TYPE_URI)
-                .identifierRegistrationAgency(registrationAgency)
-                .identifierOwner(identifierOwner)
-                .identifierServicePoint(servicePointId);
+                .id(identifierUrl.formatUrl())
+                .schemaUri(RAID_ID_TYPE_URI)
+                .registrationAgency(new RegistrationAgency()
+                        .id(registrationAgency)
+                        .schemaUri(SchemaUri.ROR.getUri()))
+                .owner(new Owner()
+                        .id(identifierOwner)
+                        .schemaUri(SchemaUri.ROR.getUri())
+                        .servicePoint(servicePointId)
+                );
 
-        ReflectionTestUtils.setField(metaProps, "handleUrlPrefix", identifierUrl.urlPrefix());
+        when(metadataProps.getHandleUrlPrefix()).thenReturn(urlPrefix);
         when(servicePointRepository.findById(servicePointId)).thenReturn(Optional.of(servicePointRecord));
         when(apidsService.mintApidsHandleContentPrefix(any(Function.class))).thenReturn(apidsResponse);
         when(idParser.parseHandle(handle.format())).thenReturn(handle);
         when(idFactory.create(identifierUrl, servicePointRecord)).thenReturn(id);
-        when(metadataService.getMetaProps()).thenReturn(metaProps);
+        when(metadataService.getMetaProps()).thenReturn(metadataProps);
         when(raidRecordFactory.create(createRaidRequest, apidsResponse, servicePointRecord)).thenReturn(raidRecord);
 
         raidService.mintRaidSchemaV1(createRaidRequest, servicePointId);
@@ -184,14 +187,14 @@ class RaidStableV1ServiceTest {
         final var servicePointId = 999L;
         final var raidJson = raidJson();
 
-        final var updateRequest = objectMapper.readValue(raidJson, UpdateRaidV1Request.class);
+        final var updateRequest = objectMapper.readValue(raidJson, RaidUpdateRequest.class);
         final var expected = objectMapper.readValue(raidJson, RaidDto.class);
 
         final var existingRaid = new RaidRecord();
         final var updatedRaid = new RaidRecord()
                 .setMetadata(JSONB.valueOf(raidJson));
 
-        final var id = new IdentifierParser().parseUrlWithException(updateRequest.getId().getIdentifier());
+        final var id = new IdentifierParser().parseUrlWithException(updateRequest.getIdentifier().getId());
         final var handle = id.handle().format();
 
         final var servicePointRecord = new ServicePointRecord();
@@ -221,14 +224,14 @@ class RaidStableV1ServiceTest {
         final var servicePointId = 999L;
         final var raidJson = raidJson();
 
-        final var updateRequest = objectMapper.readValue(raidJson, UpdateRaidV1Request.class);
+        final var updateRequest = objectMapper.readValue(raidJson, RaidUpdateRequest.class);
         final var expected = objectMapper.readValue(raidJson, RaidDto.class);
 
         final var existingRaid = new RaidRecord().setMetadata(JSONB.valueOf(raidJson));
         final var updatedRaid = new RaidRecord()
                 .setMetadata(JSONB.valueOf(raidJson));
 
-        final var id = new IdentifierParser().parseUrlWithException(updateRequest.getId().getIdentifier());
+        final var id = new IdentifierParser().parseUrlWithException(updateRequest.getIdentifier().getId());
         final var handle = id.handle().format();
 
         final var servicePointRecord = new ServicePointRecord();
@@ -256,9 +259,9 @@ class RaidStableV1ServiceTest {
         final var servicePointId = 999L;
         final var raidJson = raidJson();
 
-        final var updateRequest = objectMapper.readValue(raidJson, UpdateRaidV1Request.class);
+        final var updateRequest = objectMapper.readValue(raidJson, RaidUpdateRequest.class);
 
-        final var id = new IdentifierParser().parseUrlWithException(updateRequest.getId().getIdentifier());
+        final var id = new IdentifierParser().parseUrlWithException(updateRequest.getIdentifier().getId());
         final var handle = id.handle().format();
 
         final var servicePointRecord = new ServicePointRecord();
@@ -277,8 +280,8 @@ class RaidStableV1ServiceTest {
         return FileUtil.resourceContent("/fixtures/raid.json");
     }
 
-    private CreateRaidV1Request createRaidRequest() throws IOException {
+    private RaidCreateRequest createRaidRequest() throws IOException {
         final String json = FileUtil.resourceContent("/fixtures/create-raid.json");
-        return objectMapper.readValue(json, CreateRaidV1Request.class);
+        return objectMapper.readValue(json, RaidCreateRequest.class);
     }
 }

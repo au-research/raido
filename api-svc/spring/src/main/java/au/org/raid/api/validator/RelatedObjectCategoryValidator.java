@@ -1,7 +1,7 @@
 package au.org.raid.api.validator;
 
 import au.org.raid.api.repository.RelatedObjectCategoryRepository;
-import au.org.raid.api.repository.RelatedObjectCategorySchemeRepository;
+import au.org.raid.api.repository.RelatedObjectCategorySchemaRepository;
 import au.org.raid.idl.raidv2.model.RelatedObjectCategory;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.springframework.stereotype.Component;
@@ -15,11 +15,11 @@ import static au.org.raid.api.util.StringUtil.isBlank;
 @Component
 public class RelatedObjectCategoryValidator {
     private final RelatedObjectCategoryRepository relatedObjectCategoryRepository;
-    private final RelatedObjectCategorySchemeRepository relatedObjectCategorySchemeRepository;
+    private final RelatedObjectCategorySchemaRepository relatedObjectCategorySchemaRepository;
 
-    public RelatedObjectCategoryValidator(final RelatedObjectCategoryRepository relatedObjectCategoryRepository, final RelatedObjectCategorySchemeRepository relatedObjectCategorySchemeRepository) {
+    public RelatedObjectCategoryValidator(final RelatedObjectCategoryRepository relatedObjectCategoryRepository, final RelatedObjectCategorySchemaRepository relatedObjectCategorySchemaRepository) {
         this.relatedObjectCategoryRepository = relatedObjectCategoryRepository;
-        this.relatedObjectCategorySchemeRepository = relatedObjectCategorySchemeRepository;
+        this.relatedObjectCategorySchemaRepository = relatedObjectCategorySchemaRepository;
     }
 
     public List<ValidationFailure> validate(final RelatedObjectCategory relatedObjectCategory, final int index) {
@@ -27,33 +27,33 @@ public class RelatedObjectCategoryValidator {
 
         if (isBlank(relatedObjectCategory.getId())) {
             failures.add(new ValidationFailure()
-                    .fieldId("relatedObjects[%d].category.id".formatted(index))
+                    .fieldId("relatedObject[%d].category.id".formatted(index))
                     .errorType(NOT_SET_TYPE)
-                    .message(FIELD_MUST_BE_SET_MESSAGE)
+                    .message(NOT_SET_MESSAGE)
             );
         }
-        if (isBlank(relatedObjectCategory.getSchemeUri())) {
+        if (isBlank(relatedObjectCategory.getSchemaUri())) {
             failures.add(new ValidationFailure()
-                    .fieldId("relatedObjects[%d].category.schemeUri".formatted(index))
+                    .fieldId("relatedObject[%d].category.schemaUri".formatted(index))
                     .errorType(NOT_SET_TYPE)
-                    .message(FIELD_MUST_BE_SET_MESSAGE)
+                    .message(NOT_SET_MESSAGE)
             );
         } else {
             final var relatedObjectCategoryScheme =
-                    relatedObjectCategorySchemeRepository.findByUri(relatedObjectCategory.getSchemeUri());
+                    relatedObjectCategorySchemaRepository.findByUri(relatedObjectCategory.getSchemaUri());
 
             if (relatedObjectCategoryScheme.isEmpty()) {
                 failures.add(new ValidationFailure()
-                        .fieldId("relatedObjects[%d].category.schemeUri".formatted(index))
+                        .fieldId("relatedObject[%d].category.schemaUri".formatted(index))
                         .errorType(INVALID_VALUE_TYPE)
-                        .message(INVALID_SCHEME)
+                        .message(INVALID_SCHEMA)
                 );
             } else if (!isBlank(relatedObjectCategory.getId()) &&
-                    relatedObjectCategoryRepository.findByUriAndSchemeId(relatedObjectCategory.getId(), relatedObjectCategoryScheme.get().getId()).isEmpty()) {
+                    relatedObjectCategoryRepository.findByUriAndSchemaId(relatedObjectCategory.getId(), relatedObjectCategoryScheme.get().getId()).isEmpty()) {
                 failures.add(new ValidationFailure()
-                        .fieldId("relatedObjects[%d].category.id".formatted(index))
+                        .fieldId("relatedObject[%d].category.id".formatted(index))
                         .errorType(INVALID_VALUE_TYPE)
-                        .message(INVALID_ID_FOR_SCHEME)
+                        .message(INVALID_ID_FOR_SCHEMA)
                 );
             }
         }

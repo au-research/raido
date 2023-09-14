@@ -14,13 +14,13 @@ import static au.org.raid.db.jooq.api_svc.tables.Language.LANGUAGE;
 public class LanguageRepository {
     private final DSLContext dslContext;
 
-    public Optional<LanguageRecord> findByIdAndSchemeId(final String id, final int schemeId) {
+    public Optional<LanguageRecord> findByIdAndSchemaId(final String id, final int schemaId) {
         return dslContext.select(LANGUAGE.fields())
                 .from(LANGUAGE)
                 .where(LANGUAGE.ID.eq(id))
-                .and(LANGUAGE.SCHEME_ID.eq(schemeId))
+                .and(LANGUAGE.SCHEMA_ID.eq(schemaId))
                 .fetchOptional(record -> new LanguageRecord()
-                        .setSchemeId(LANGUAGE.SCHEME_ID.getValue(record))
+                        .setSchemaId(LANGUAGE.SCHEMA_ID.getValue(record))
                         .setId(LANGUAGE.ID.getValue(record))
                 );
     }

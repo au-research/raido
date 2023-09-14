@@ -21,17 +21,17 @@ public class RelatedObjectTypeRecord extends UpdatableRecordImpl<RelatedObjectTy
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>api_svc.related_object_type.scheme_id</code>.
+     * Setter for <code>api_svc.related_object_type.schema_id</code>.
      */
-    public RelatedObjectTypeRecord setSchemeId(Integer value) {
+    public RelatedObjectTypeRecord setSchemaId(Integer value) {
         set(0, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.related_object_type.scheme_id</code>.
+     * Getter for <code>api_svc.related_object_type.schema_id</code>.
      */
-    public Integer getSchemeId() {
+    public Integer getSchemaId() {
         return (Integer) get(0);
     }
 
@@ -105,7 +105,7 @@ public class RelatedObjectTypeRecord extends UpdatableRecordImpl<RelatedObjectTy
 
     @Override
     public Field<Integer> field1() {
-        return RelatedObjectType.RELATED_OBJECT_TYPE.SCHEME_ID;
+        return RelatedObjectType.RELATED_OBJECT_TYPE.SCHEMA_ID;
     }
 
     @Override
@@ -125,7 +125,7 @@ public class RelatedObjectTypeRecord extends UpdatableRecordImpl<RelatedObjectTy
 
     @Override
     public Integer component1() {
-        return getSchemeId();
+        return getSchemaId();
     }
 
     @Override
@@ -145,7 +145,7 @@ public class RelatedObjectTypeRecord extends UpdatableRecordImpl<RelatedObjectTy
 
     @Override
     public Integer value1() {
-        return getSchemeId();
+        return getSchemaId();
     }
 
     @Override
@@ -165,7 +165,7 @@ public class RelatedObjectTypeRecord extends UpdatableRecordImpl<RelatedObjectTy
 
     @Override
     public RelatedObjectTypeRecord value1(Integer value) {
-        setSchemeId(value);
+        setSchemaId(value);
         return this;
     }
 
@@ -210,10 +210,10 @@ public class RelatedObjectTypeRecord extends UpdatableRecordImpl<RelatedObjectTy
     /**
      * Create a detached, initialised RelatedObjectTypeRecord
      */
-    public RelatedObjectTypeRecord(Integer schemeId, String uri, String name, String description) {
+    public RelatedObjectTypeRecord(Integer schemaId, String uri, String name, String description) {
         super(RelatedObjectType.RELATED_OBJECT_TYPE);
 
-        setSchemeId(schemeId);
+        setSchemaId(schemaId);
         setUri(uri);
         setName(name);
         setDescription(description);

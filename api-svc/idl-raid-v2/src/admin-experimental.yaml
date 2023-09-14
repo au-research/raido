@@ -286,12 +286,9 @@ components:
       description: >
         It's really an "AppUser", but modelling like this makes the API clearer
         and the client easier to write.
-      required: [
-        id, servicePointId, subject, idProvider,
-        enabled, role, dateCreated
-      ]
+      required: [ id, servicePointId, subject, idProvider, enabled, role, dateCreated ]
       properties:
-        id: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        id: { $ref: 'shared.yaml#/components/schemas/SurrogateKey' }
         servicePointId: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
         subject: {type: string}
         idProvider: {type: string}

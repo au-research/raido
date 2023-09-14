@@ -12,6 +12,7 @@ import au.org.raid.idl.raidv2.model.VersionResult;
 import jakarta.servlet.http.HttpServletRequest;
 import org.jooq.DSLContext;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,30 +69,29 @@ public class PublicExperimental implements PublicExperimentalApi {
      */
     @Transactional(propagation = Propagation.SUPPORTS)
     @Override
-    public VersionResult version() {
-        return new VersionResult().
+    public ResponseEntity<VersionResult> version() {
+        return ResponseEntity.ok(new VersionResult().
                 buildVersion(appInfo.getBuildVersion()).
                 buildCommitId(appInfo.getBuildCommitId()).
                 buildDate(appInfo.getBuildDate()).
-                startDate(startup.getStartTime().atOffset(UTC));
-
+                startDate(startup.getStartTime().atOffset(UTC)));
     }
 
     @Override
-    public List<PublicServicePoint> publicListServicePoint() {
-        return db.
+    public ResponseEntity<List<PublicServicePoint>> publicListServicePoint() {
+        return ResponseEntity.ok(db.
                 select(
                         SERVICE_POINT.ID,
                         SERVICE_POINT.NAME).
                 from(SERVICE_POINT).
                 where(SERVICE_POINT.ENABLED.isTrue()).
-                fetchInto(PublicServicePoint.class);
+                fetchInto(PublicServicePoint.class));
     }
 
     @Override
-    public PublicReadRaidResponseV3 publicReadRaidV3(String handle) {
+    public ResponseEntity<PublicReadRaidResponseV3> publicReadRaidV3(String handle) {
         var data = raidSvc.readRaidV2Data(handle);
-        return metaSvc.mapPublicReadResponse(data);
+        return ResponseEntity.ok(metaSvc.mapPublicReadResponse(data));
     }
 
     /**
@@ -125,7 +125,7 @@ public class PublicExperimental implements PublicExperimentalApi {
                     BAD_REQUEST_400, of(handle));
         }
 
-        return publicReadRaidV3(handle);
+        return publicReadRaidV3(handle).getBody();
     }
 
 }

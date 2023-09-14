@@ -44,7 +44,7 @@ class RelatedObjectValidationServiceTest {
                 .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/")
                 .relatedObjectCategory("Input");
 
-        when(relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType, 1))
+        when(relatedObjectTypeRepository.findByUriAndSchemaId(relatedObjectType, 1))
                 .thenReturn(Optional.of(new RelatedObjectTypeRecord()));
 
         final var failures =
@@ -78,7 +78,7 @@ class RelatedObjectValidationServiceTest {
                 .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/")
                 .relatedObjectCategory("Input");
 
-        when(relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType, 1))
+        when(relatedObjectTypeRepository.findByUriAndSchemaId(relatedObjectType, 1))
                 .thenReturn(Optional.of(new RelatedObjectTypeRecord()));
 
         final var failures =
@@ -103,7 +103,7 @@ class RelatedObjectValidationServiceTest {
                 .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/")
                 .relatedObjectCategory("Input");
 
-        when(relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType, 1))
+        when(relatedObjectTypeRepository.findByUriAndSchemaId(relatedObjectType, 1))
                 .thenReturn(Optional.of(new RelatedObjectTypeRecord()));
 
         final var failures =
@@ -147,7 +147,7 @@ class RelatedObjectValidationServiceTest {
                 .relatedObjectType(relatedObjectType)
                 .relatedObjectCategory("Input");
 
-        when(relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType, 1))
+        when(relatedObjectTypeRepository.findByUriAndSchemaId(relatedObjectType, 1))
                 .thenReturn(Optional.of(new RelatedObjectTypeRecord()));
 
         final var failures =
@@ -172,7 +172,7 @@ class RelatedObjectValidationServiceTest {
                 .relatedObjectType(relatedObjectType)
                 .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/");
 
-        when(relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType, 1))
+        when(relatedObjectTypeRepository.findByUriAndSchemaId(relatedObjectType, 1))
                 .thenReturn(Optional.of(new RelatedObjectTypeRecord()));
 
         final var failures =
@@ -198,7 +198,7 @@ class RelatedObjectValidationServiceTest {
                 .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/")
                 .relatedObjectCategory("Input");
 
-        when(relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType, 1))
+        when(relatedObjectTypeRepository.findByUriAndSchemaId(relatedObjectType, 1))
                 .thenReturn(Optional.of(new RelatedObjectTypeRecord()));
 
         final var failures =
@@ -224,7 +224,7 @@ class RelatedObjectValidationServiceTest {
                 .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/")
                 .relatedObjectCategory("Input");
 
-        when(relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType, 1))
+        when(relatedObjectTypeRepository.findByUriAndSchemaId(relatedObjectType, 1))
                 .thenReturn(Optional.of(new RelatedObjectTypeRecord()));
 
         final var failures =
@@ -250,7 +250,7 @@ class RelatedObjectValidationServiceTest {
                 .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/")
                 .relatedObjectCategory("Input");
 
-        when(relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType, 1))
+        when(relatedObjectTypeRepository.findByUriAndSchemaId(relatedObjectType, 1))
                 .thenReturn(Optional.empty());
 
         final var failures =
@@ -301,7 +301,7 @@ class RelatedObjectValidationServiceTest {
                 .relatedObjectTypeSchemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/")
                 .relatedObjectCategory("No a category");
 
-        when(relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType, 1))
+        when(relatedObjectTypeRepository.findByUriAndSchemaId(relatedObjectType, 1))
                 .thenReturn(Optional.of(new RelatedObjectTypeRecord()));
 
         final var failures =
@@ -332,7 +332,7 @@ class RelatedObjectValidationServiceTest {
                 .relatedObjectCategory("No a category")
                 .relatedObjectCategory("Input");
 
-        when(relatedObjectTypeRepository.findByUriAndSchemeId(relatedObjectType, 1))
+        when(relatedObjectTypeRepository.findByUriAndSchemaId(relatedObjectType, 1))
                 .thenReturn(Optional.of(new RelatedObjectTypeRecord()));
 
         final var failure = new ValidationFailure()

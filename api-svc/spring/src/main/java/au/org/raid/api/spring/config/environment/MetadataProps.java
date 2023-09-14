@@ -1,11 +1,16 @@
 package au.org.raid.api.spring.config.environment;
 
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 // improve: need to rename property keys that were moved from EnvProps.
 @Component
+@Data
 public class MetadataProps {
+
+    @Value("${raid.id.license:Creative Commons CC-0}")
+    private String raidlicense;
 
     /**
      * the "front door" (expected to be CloudFront or possibly even CloudFlare)
@@ -18,18 +23,18 @@ public class MetadataProps {
      */
     @Value("${EnvironmentConfig.raidoLandingPrefix:" +
             "http://localhost:7080/handle}")
-    public String raidoLandingPrefix;
+    private String raidoLandingPrefix;
 
     @Value("${EnvironmentConfig.globalUrlPrefix:" +
             "https://hdl.handle.net}")
-    public String globalUrlPrefix;
+    private String globalUrlPrefix;
 
     /**
      * For Raido, this is the RoR of the ARDC.
      */
     @Value("${EnvironmentConfig.identifierRegistrationAgency:" +
             "https://ror.org/038sjwq14}")
-    public String identifierRegistrationAgency;
+    private String identifierRegistrationAgency;
 
     /**
      * demo: demo.raid.org.au
@@ -37,7 +42,7 @@ public class MetadataProps {
      */
     @Value("${MetadataConfig.handleUrlPrefix:" +
             "http://localhost:8080}")
-    public String handleUrlPrefix;
+    private String handleUrlPrefix;
 
     /**
      * The servicelevel guide currently says "200 KB maximum size".
@@ -46,6 +51,5 @@ public class MetadataProps {
      * if data migration hits it.
      */
     @Value("${MetadataConfig.maxMetadataChars:10240}")
-    public long maxMetadataChars;
-
+    private long maxMetadataChars;
 }

@@ -8,20 +8,19 @@ import au.org.raid.inttest.IntegrationTestCase;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.HttpClientErrorException;
 
 import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static au.org.raid.api.spring.config.RaidWebSecurityConfig.ROOT_PATH;
 import static au.org.raid.api.test.util.BddUtil.*;
 import static au.org.raid.api.util.Log.to;
-import static au.org.raid.api.util.RestUtil.urlEncode;
 import static au.org.raid.inttest.util.MinimalRaidTestData.createMinimalSchemaV1;
 import static au.org.raid.inttest.util.MinimalRaidTestData.createMintRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
-import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class GetRaidHandleTest extends IntegrationTestCase {
@@ -35,7 +34,7 @@ public class GetRaidHandleTest extends IntegrationTestCase {
 
         WHEN("a raid is minted");
         var mintResult = raidApi.mintRaidoSchemaV1(
-                createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID));
+                createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID)).getBody();
 
 
         THEN("API GET of root mapping with handle should return data");
@@ -44,7 +43,7 @@ public class GetRaidHandleTest extends IntegrationTestCase {
         HttpEntity<String> entity = new HttpEntity<>(headers);
         var res = rest.exchange(
                 raidoApiServerUrl(ROOT_PATH) + "/" + mintResult.getRaid().getHandle(),
-                GET, entity, PublicReadRaidResponseV3.class);
+                HttpMethod.GET, entity, PublicReadRaidResponseV3.class);
 
         assertThat(res.getStatusCode().is2xxSuccessful()).
                 overridingErrorMessage("GET call should have succeeded directly").
@@ -74,7 +73,7 @@ public class GetRaidHandleTest extends IntegrationTestCase {
 
         WHEN("a raid is minted");
         var mintResult = raidApi.mintRaidoSchemaV1(
-                createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID));
+                createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID)).getBody();
 
 
         THEN("API GET of root mapping with handle should return data");
@@ -84,7 +83,7 @@ public class GetRaidHandleTest extends IntegrationTestCase {
         HttpEntity<String> entity = new HttpEntity<>(headers);
         var res = rest.exchange(
                 raidoApiServerUrl(ROOT_PATH) + "/" + mintResult.getRaid().getHandle(),
-                GET, entity, PublicReadRaidResponseV3.class);
+                HttpMethod.GET, entity, PublicReadRaidResponseV3.class);
 
         assertThat(res.getStatusCode().is3xxRedirection()).
                 overridingErrorMessage("GET call should have redirected").
@@ -96,22 +95,13 @@ public class GetRaidHandleTest extends IntegrationTestCase {
         var raidApi = super.basicRaidExperimentalClient();
         String title = getName() + idFactory.generateUniqueId();
 
-
         WHEN("a raid is minted");
         var mintResult = raidApi.mintRaidoSchemaV1(
-                createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID));
-
+                createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID)).getBody();
 
         THEN("API GET of root mapping with an encoded handle should return data");
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(ACCEPT, APPLICATION_JSON_VALUE);
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-
-        String encodedHandle = urlEncode(mintResult.getRaid().getHandle());
-
-        var res = valuesEncodingRest.exchange(
-                raidoApiServerUrl(ROOT_PATH) + "/" + encodedHandle,
-                GET, entity, PublicReadRaidResponseV3.class);
+        final var uri = raidoApiServerUrl(ROOT_PATH) + "/" + mintResult.getRaid().getHandle();
+        var res = rest.getForEntity(uri, PublicReadRaidResponseV3.class);
 
         assertThat(res.getStatusCode().is2xxSuccessful()).isTrue();
         var metadata = (PublicRaidMetadataSchemaV1) res.getBody().getMetadata();
@@ -127,7 +117,7 @@ public class GetRaidHandleTest extends IntegrationTestCase {
 
         WHEN("a raid is minted");
         var mintResult = raidApi.mintRaidoSchemaV1(
-                createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID));
+                createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID)).getBody();
 
         HttpHeaders headers = new HttpHeaders();
     /* RestTemplate appears to default to 
@@ -139,7 +129,7 @@ public class GetRaidHandleTest extends IntegrationTestCase {
         THEN("GET handle and no Accept header should redirect to landing page");
         var res = rest.exchange(
                 raidoApiServerUrl(ROOT_PATH) + mintResult.getRaid().getHandle(),
-                GET, entity, Void.class);
+                HttpMethod.GET, entity, Void.class);
         assertThat(res.getStatusCode().is3xxRedirection()).
                 overridingErrorMessage("missing accept header should have redirected").
                 isTrue();
@@ -160,7 +150,7 @@ public class GetRaidHandleTest extends IntegrationTestCase {
         assertThatThrownBy(() -> {
             rest.exchange(
                     raidoApiServerUrl(ROOT_PATH) + "/102.100.100/42.42",
-                    GET, entity, PublicReadRaidResponseV3.class);
+                    HttpMethod.GET, entity, PublicReadRaidResponseV3.class);
         }).
                 isInstanceOf(HttpClientErrorException.NotFound.class).
                 hasMessageContaining("404 Not Found");
@@ -177,7 +167,7 @@ public class GetRaidHandleTest extends IntegrationTestCase {
         assertThatThrownBy(() -> {
             rest.exchange(
                     raidoApiServerUrl(ROOT_PATH) + "/42.42.42/42.42",
-                    GET, entity, PublicReadRaidResponseV3.class);
+                    HttpMethod.GET, entity, PublicReadRaidResponseV3.class);
         }).
                 isInstanceOf(HttpClientErrorException.NotFound.class).
                 hasMessageContaining("404 Not Found");

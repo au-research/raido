@@ -15,8 +15,8 @@ import static org.hamcrest.Matchers.nullValue;
 @Component
 class RelatedObjectFactoryTest {
 
-    public static final String TYPE_SCHEME_URI = "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/";
-    public static final String CATEGORY_SCHEME_URI = "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/";
+    public static final String TYPE_SCHEMA_URI = "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/";
+    public static final String CATEGORY_SCHEMA_URI = "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/";
     private RelatedObjectFactory relatedObjectFactory = new RelatedObjectFactory();
 
     @Test
@@ -30,10 +30,10 @@ class RelatedObjectFactoryTest {
     void emptyFields() {
         final var expected = new RelatedObject()
                 .type(new RelatedObjectType()
-                        .schemeUri(TYPE_SCHEME_URI)
+                        .schemaUri(TYPE_SCHEMA_URI)
                 )
                 .category(new RelatedObjectCategory()
-                        .schemeUri(CATEGORY_SCHEME_URI));
+                        .schemaUri(CATEGORY_SCHEMA_URI));
 
         assertThat(relatedObjectFactory.create(new RelatedObjectBlock()), is(expected));
     }
@@ -42,26 +42,26 @@ class RelatedObjectFactoryTest {
     @DisplayName("Sets input category")
     void setsAllFields() {
         final var id = "_id";
-        final var identifierSchemeUri = "scheme-uri";
+        final var schemaUri = "scheme-uri";
         final var category = "input";
         final var type = "_type";
         final var typeSchemeUri = "type-scheme-uri";
 
         final var relatedObject = new RelatedObjectBlock()
                 .relatedObject(id)
-                .relatedObjectSchemeUri(identifierSchemeUri)
+                .relatedObjectSchemeUri(schemaUri)
                 .relatedObjectCategory(category)
                 .relatedObjectType(type)
                 .relatedObjectTypeSchemeUri(typeSchemeUri);
 
         final var expected = new RelatedObject()
                 .id(id)
-                .identifierSchemeUri(identifierSchemeUri)
+                .schemaUri(schemaUri)
                 .type(new RelatedObjectType()
                         .id(type)
-                        .schemeUri(TYPE_SCHEME_URI))
+                        .schemaUri(TYPE_SCHEMA_URI))
                 .category(new RelatedObjectCategory()
-                        .schemeUri(CATEGORY_SCHEME_URI)
+                        .schemaUri(CATEGORY_SCHEMA_URI)
                         .id("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json")
                 );
 
@@ -72,26 +72,26 @@ class RelatedObjectFactoryTest {
     @DisplayName("Ignores case when setting input category")
     void ignoresCase() {
         final var id = "_id";
-        final var identifierSchemeUri = "scheme-uri";
+        final var schemaUri = "scheme-uri";
         final var category = "Input";
         final var type = "_type";
         final var typeSchemeUri = "type-scheme-uri";
 
         final var relatedObject = new RelatedObjectBlock()
                 .relatedObject(id)
-                .relatedObjectSchemeUri(identifierSchemeUri)
+                .relatedObjectSchemeUri(schemaUri)
                 .relatedObjectCategory(category)
                 .relatedObjectType(type)
                 .relatedObjectTypeSchemeUri(typeSchemeUri);
 
         final var expected = new RelatedObject()
                 .id(id)
-                .identifierSchemeUri(identifierSchemeUri)
+                .schemaUri(schemaUri)
                 .type(new RelatedObjectType()
                         .id(type)
-                        .schemeUri(TYPE_SCHEME_URI))
+                        .schemaUri(TYPE_SCHEMA_URI))
                 .category(new RelatedObjectCategory()
-                        .schemeUri(CATEGORY_SCHEME_URI)
+                        .schemaUri(CATEGORY_SCHEMA_URI)
                         .id("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json")
                 );
 
@@ -102,26 +102,26 @@ class RelatedObjectFactoryTest {
     @DisplayName("Sets output category")
     void setsOutputCategory() {
         final var id = "_id";
-        final var identifierSchemeUri = "scheme-uri";
+        final var schemaUri = "scheme-uri";
         final var category = "output";
         final var type = "_type";
         final var typeSchemeUri = "type-scheme-uri";
 
         final var relatedObject = new RelatedObjectBlock()
                 .relatedObject(id)
-                .relatedObjectSchemeUri(identifierSchemeUri)
+                .relatedObjectSchemeUri(schemaUri)
                 .relatedObjectCategory(category)
                 .relatedObjectType(type)
                 .relatedObjectTypeSchemeUri(typeSchemeUri);
 
         final var expected = new RelatedObject()
                 .id(id)
-                .identifierSchemeUri(identifierSchemeUri)
+                .schemaUri(schemaUri)
                 .type(new RelatedObjectType()
                         .id(type)
-                        .schemeUri(TYPE_SCHEME_URI))
+                        .schemaUri(TYPE_SCHEMA_URI))
                 .category(new RelatedObjectCategory()
-                        .schemeUri(CATEGORY_SCHEME_URI)
+                        .schemaUri(CATEGORY_SCHEMA_URI)
                         .id("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/output.json")
                 );
 
@@ -132,26 +132,26 @@ class RelatedObjectFactoryTest {
     @DisplayName("Sets internal category")
     void setsInternalCategory() {
         final var id = "_id";
-        final var identifierSchemeUri = "scheme-uri";
+        final var schemaUri = "scheme-uri";
         final var category = "internal";
         final var type = "_type";
         final var typeSchemeUri = "type-scheme-uri";
 
         final var relatedObject = new RelatedObjectBlock()
                 .relatedObject(id)
-                .relatedObjectSchemeUri(identifierSchemeUri)
+                .relatedObjectSchemeUri(schemaUri)
                 .relatedObjectCategory(category)
                 .relatedObjectType(type)
                 .relatedObjectTypeSchemeUri(typeSchemeUri);
 
         final var expected = new RelatedObject()
                 .id(id)
-                .identifierSchemeUri(identifierSchemeUri)
+                .schemaUri(schemaUri)
                 .type(new RelatedObjectType()
                         .id(type)
-                        .schemeUri(TYPE_SCHEME_URI))
+                        .schemaUri(TYPE_SCHEMA_URI))
                 .category(new RelatedObjectCategory()
-                        .schemeUri(CATEGORY_SCHEME_URI)
+                        .schemaUri(CATEGORY_SCHEMA_URI)
                         .id("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/internal.json")
                 );
 

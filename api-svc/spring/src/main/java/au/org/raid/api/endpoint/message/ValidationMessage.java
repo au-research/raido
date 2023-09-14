@@ -12,14 +12,15 @@ public class ValidationMessage {
     public static final String NOT_SET_TYPE = "notSet";
     public static final String TOO_LONG_TYPE = "tooLong";
     public static final String INVALID_VALUE_TYPE = "invalidValue";
+    public static final String DUPLICATE_TYPE = "duplicateValue";
+    public static final String DUPLICATE_MESSAGE = "an object with the same values appears in the list";
     public static final String DISALLOWED_CHANGE_TYPE = "disallowedChange";
 
-    public static final String FIELD_MUST_BE_SET_MESSAGE = "field must be set";
-    public static final String INVALID_VALUE_MESSAGE =
-            "has invalid/unsupported value";
-    public static final String INVALID_ID_FOR_SCHEME = "id does not exist within the given scheme";
+    public static final String NOT_SET_MESSAGE = "field must be set";
+    public static final String INVALID_VALUE_MESSAGE = "has invalid/unsupported value";
+    public static final String INVALID_ID_FOR_SCHEMA = "id does not exist within the given schema";
 
-    public static final String INVALID_SCHEME = "scheme is unknown/unsupported";
+    public static final String INVALID_SCHEMA = "schema is unknown/unsupported";
 
     public static final String DISALLOWED_CHANGE_MESSAGE =
             "value is not allowed to change";
@@ -28,24 +29,24 @@ public class ValidationMessage {
 
     public static final ValidationFailure AT_LEAST_ONE_PRIMARY_TITLE =
             new ValidationFailure().
-                    fieldId("titles.type").
+                    fieldId("title.type").
                     errorType("missingPrimaryTitle").
                     message("at least one primaryTitle entry must be provided");
 
 
     public static final ValidationFailure TOO_MANY_PRIMARY_TITLE =
             new ValidationFailure().
-                    fieldId("titles.type").
+                    fieldId("title.type").
                     errorType("tooManyPrimaryTitle").
                     message("too many primaryTitle entries provided");
 
     public static final ValidationFailure TITLES_NOT_SET =
-            fieldNotSet("titles");
+            fieldNotSet("title");
     public static final ValidationFailure CONTRIB_NOT_SET =
-            fieldNotSet("contributors");
+            fieldNotSet("contributor");
 
     public static final ValidationFailure ORGANISATION_NOT_SET =
-            fieldNotSet("organisations");
+            fieldNotSet("organisation");
     public static final ValidationFailure METADATA_TOO_LARGE =
             new ValidationFailure().
                     fieldId("metadata").errorType(TOO_LONG_TYPE).
@@ -74,9 +75,9 @@ public class ValidationMessage {
                     errorType(INVALID_VALUE_TYPE).
                     message("can only call upgrade legacy raid to RaidoMetadataSchemaV1");
     public static final ValidationFailure DATES_NOT_SET =
-            fieldNotSet("metadata.dates");
+            fieldNotSet("date");
     public static final ValidationFailure DATES_START_DATE_NOT_SET =
-            fieldNotSet("metadata.dates.start");
+            fieldNotSet("date.start");
     public static final ValidationFailure ACCESS_NOT_SET =
             fieldNotSet("metadata.access");
     public static final ValidationFailure ACCESS_TYPE_NOT_SET =
@@ -106,7 +107,7 @@ public class ValidationMessage {
         return new ValidationFailure().
                 fieldId(fieldId).
                 errorType(NOT_SET_TYPE).
-                message(FIELD_MUST_BE_SET_MESSAGE);
+                message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure invalidIdentifier(String problem) {
@@ -125,16 +126,16 @@ public class ValidationMessage {
 
     public static ValidationFailure titleNotSet(int i) {
         return new ValidationFailure().
-                fieldId("titles[%s].title".formatted(i)).
+                fieldId("title[%s].title".formatted(i)).
                 errorType(NOT_SET_TYPE).
-                message(FIELD_MUST_BE_SET_MESSAGE);
+                message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure contribIdNotSet(int i) {
         return new ValidationFailure().
                 fieldId("contributor[%s].id".formatted(i)).
                 errorType(NOT_SET_TYPE).
-                message(FIELD_MUST_BE_SET_MESSAGE);
+                message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure contribIdInvalid(int i) {
@@ -148,35 +149,35 @@ public class ValidationMessage {
         return new ValidationFailure().
                 fieldId("organisation[%s].id".formatted(i)).
                 errorType(NOT_SET_TYPE).
-                message(FIELD_MUST_BE_SET_MESSAGE);
+                message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure titleStartDateNotSet(int i) {
         return new ValidationFailure().
-                fieldId("titles[%s].startDate".formatted(i)).
+                fieldId("title[%s].startDate".formatted(i)).
                 errorType(NOT_SET_TYPE).
-                message(FIELD_MUST_BE_SET_MESSAGE);
+                message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure titlesTypeNotSet(int i) {
         return new ValidationFailure().
-                fieldId("titles[%s].type".formatted(i)).
+                fieldId("title[%s].type".formatted(i)).
                 errorType(NOT_SET_TYPE).
-                message(FIELD_MUST_BE_SET_MESSAGE);
+                message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure contribIdSchemeNotSet(int i) {
         return new ValidationFailure().
-                fieldId("contributors[%s].identifierSchemeUri".formatted(i)).
+                fieldId("contributor[%s].identifierSchemeUri".formatted(i)).
                 errorType(NOT_SET_TYPE).
-                message(FIELD_MUST_BE_SET_MESSAGE);
+                message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure organisationIdSchemeNotSet(int i) {
         return new ValidationFailure().
                 fieldId("organisations[%s].identifierSchemeUri".formatted(i)).
                 errorType(NOT_SET_TYPE).
-                message(FIELD_MUST_BE_SET_MESSAGE);
+                message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure contribInvalidIdScheme(int i) {
@@ -195,7 +196,7 @@ public class ValidationMessage {
 
     public static ValidationFailure primaryTitleTooLong(int i) {
         return new ValidationFailure().
-                fieldId("titles[%s].title".formatted(i)).
+                fieldId("title[%s].title".formatted(i)).
                 errorType(TOO_LONG_TYPE).
                 message("primaryTitle field must fit in length: " +
                         RAID.PRIMARY_TITLE.getDataType().length());
@@ -211,21 +212,21 @@ public class ValidationMessage {
         return new ValidationFailure().
                 fieldId("descriptions[%s].description".formatted(i)).
                 errorType(NOT_SET_TYPE).
-                message(FIELD_MUST_BE_SET_MESSAGE);
+                message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure descriptionTypeNotSet(int i) {
         return new ValidationFailure().
                 fieldId("descriptions[%s].type".formatted(i)).
                 errorType(NOT_SET_TYPE).
-                message(FIELD_MUST_BE_SET_MESSAGE);
+                message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure alternateUrlNotSet(int i) {
         return new ValidationFailure().
                 fieldId("alternateUrls[%s].url".formatted(i)).
                 errorType(NOT_SET_TYPE).
-                message(FIELD_MUST_BE_SET_MESSAGE);
+                message(NOT_SET_MESSAGE);
     }
 
     public static ValidationFailure handlesDoNotMatch() {

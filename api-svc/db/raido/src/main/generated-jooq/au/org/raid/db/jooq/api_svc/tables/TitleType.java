@@ -40,9 +40,9 @@ public class TitleType extends TableImpl<TitleTypeRecord> {
     }
 
     /**
-     * The column <code>api_svc.title_type.scheme_id</code>.
+     * The column <code>api_svc.title_type.schema_id</code>.
      */
-    public final TableField<TitleTypeRecord, Integer> SCHEME_ID = createField(DSL.name("scheme_id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<TitleTypeRecord, Integer> SCHEMA_ID = createField(DSL.name("schema_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>api_svc.title_type.uri</code>.
@@ -94,20 +94,20 @@ public class TitleType extends TableImpl<TitleTypeRecord> {
 
     @Override
     public List<ForeignKey<TitleTypeRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.TITLE_TYPE__FK_TITLE_TYPE_SCHEME_ID);
+        return Arrays.asList(Keys.TITLE_TYPE__FK_TITLE_TYPE_SCHEMA_ID);
     }
 
-    private transient TitleTypeScheme _titleTypeScheme;
+    private transient TitleTypeSchema _titleTypeSchema;
 
     /**
-     * Get the implicit join path to the <code>api_svc.title_type_scheme</code>
+     * Get the implicit join path to the <code>api_svc.title_type_schema</code>
      * table.
      */
-    public TitleTypeScheme titleTypeScheme() {
-        if (_titleTypeScheme == null)
-            _titleTypeScheme = new TitleTypeScheme(this, Keys.TITLE_TYPE__FK_TITLE_TYPE_SCHEME_ID);
+    public TitleTypeSchema titleTypeSchema() {
+        if (_titleTypeSchema == null)
+            _titleTypeSchema = new TitleTypeSchema(this, Keys.TITLE_TYPE__FK_TITLE_TYPE_SCHEMA_ID);
 
-        return _titleTypeScheme;
+        return _titleTypeSchema;
     }
 
     @Override

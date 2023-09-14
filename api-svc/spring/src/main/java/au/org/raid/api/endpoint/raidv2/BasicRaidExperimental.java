@@ -16,6 +16,7 @@ import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -99,16 +100,16 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     */
 
     @Override
-    public ReadRaidResponseV2 readRaidV2(ReadRaidV2Request req) {
+    public ResponseEntity<ReadRaidResponseV2> readRaidV2(ReadRaidV2Request req) {
         Guard.hasValue("must pass a handle", req.getHandle());
         var user = getApiToken();
         var data = raidSvc.readRaidResponseV2(req.getHandle());
         guardOperatorOrAssociated(user, data.getServicePointId());
-        return data;
+        return ResponseEntity.ok(data);
     }
 
     @Override
-    public MintResponse mintRaidoSchemaV1(
+    public ResponseEntity<MintResponse> mintRaidoSchemaV1(
             MintRaidoSchemaV1Request req
     ) {
         var mint = req.getMintRequest();
@@ -128,7 +129,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
         var failures = validSvc.validateRaidoSchemaV1(req.getMetadata());
 
         if (!failures.isEmpty()) {
-            return mintFailed(failures);
+            return ResponseEntity.ok(mintFailed(failures));
         }
 
         IdentifierUrl id;
@@ -137,19 +138,22 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
                     req.getMintRequest().getServicePointId(),
                     req.getMetadata());
         } catch (ValidationFailureException e) {
-            return mintFailed(failures);
+            return ResponseEntity.ok(mintFailed(failures));
         }
 
-        return new MintResponse().success(true).
-                raid(readRaidV2(new ReadRaidV2Request().handle(id.handle().format())));
+        return ResponseEntity.ok(new MintResponse()
+                .success(true)
+                .raid(
+                        readRaidV2(new ReadRaidV2Request().handle(id.handle().format())).getBody()
+                ));
     }
 
     @Override
-    public List<RaidListItemV2> listRaidV2(RaidListRequestV2 req) {
+    public ResponseEntity<List<RaidListItemV2>> listRaidV2(RaidListRequestV2 req) {
         var user = getApiToken();
         guardOperatorOrAssociated(user, req.getServicePointId());
 
-        return db.select(RAID.HANDLE, RAID.PRIMARY_TITLE, RAID.START_DATE,
+        return ResponseEntity.ok(db.select(RAID.HANDLE, RAID.PRIMARY_TITLE, RAID.START_DATE,
                         RAID.CONFIDENTIAL, RAID.METADATA_SCHEMA, RAID.DATE_CREATED).
                 from(RAID)
                 .where(
@@ -164,15 +168,15 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
                         .primaryTitle(r.get(RAID.PRIMARY_TITLE))
                         .startDate(r.get(RAID.START_DATE))
                         .createDate(local2Offset(r.get(RAID.DATE_CREATED)))
-                        .metadataSchema(mapDb2Api(r.get(RAID.METADATA_SCHEMA))));
+                        .metadataSchema(mapDb2Api(r.get(RAID.METADATA_SCHEMA)))));
     }
 
     @Override
-    public List<RaidListItemV3> listRaidV3(RaidListRequestV2 request) {
+    public ResponseEntity<List<RaidListItemV3>> listRaidV3(RaidListRequestV2 request) {
         var user = getApiToken();
         guardOperatorOrAssociated(user, request.getServicePointId());
 
-        return db.select(RAID.HANDLE, RAID.PRIMARY_TITLE, RAID.START_DATE,
+        return ResponseEntity.ok(db.select(RAID.HANDLE, RAID.PRIMARY_TITLE, RAID.START_DATE,
                         RAID.CONFIDENTIAL, RAID.METADATA_SCHEMA, RAID.DATE_CREATED)
                 .from(RAID)
                 .where(
@@ -187,14 +191,14 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
                         .primaryTitle(r.get(RAID.PRIMARY_TITLE))
                         .startDate(r.get(RAID.START_DATE))
                         .createDate(local2Offset(r.get(RAID.DATE_CREATED)))
-                        .metadataSchema(mapDb2ApiV2(r.get(RAID.METADATA_SCHEMA))));
+                        .metadataSchema(mapDb2ApiV2(r.get(RAID.METADATA_SCHEMA)))));
     }
 
     /* Non-transactional, so that TX does not span the point when we talk
     to the external systems to validate (ROR, ORCID, DOI, etc.)
     See db-transaction-guideline.md. */
     @Override
-    public MintResponse updateRaidoSchemaV1(UpdateRaidoSchemaV1Request req) {
+    public ResponseEntity<MintResponse> updateRaidoSchemaV1(UpdateRaidoSchemaV1Request req) {
         var user = getApiToken();
         var newData = req.getMetadata();
 
@@ -203,23 +207,23 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
         }
 
         if (newData == null) {
-            return mintFailed(METADATA_NOT_SET);
+            return ResponseEntity.ok(mintFailed(METADATA_NOT_SET));
         }
 
         var newIdBlock = newData.getId();
         if (newIdBlock == null) {
-            return mintFailed(ID_BLOCK_NOT_SET);
+            return ResponseEntity.ok(mintFailed(ID_BLOCK_NOT_SET));
         }
 
         var idParse = idParser.parseUrl(newIdBlock.getIdentifier());
         if (idParse instanceof ParseProblems idProblems) {
-            return mintFailed(mapProblemsToValidationFailures(idProblems));
+            return ResponseEntity.ok(mintFailed(mapProblemsToValidationFailures(idProblems)));
         }
         var id = (IdentifierUrl) idParse;
         var handle = id.handle().format();
 
         if (req.getMetadata().getMetadataSchema() == LEGACYMETADATASCHEMAV1) {
-            return mintFailed(CANNOT_UPDATE_LEGACY_SCHEMA);
+            return ResponseEntity.ok(mintFailed(CANNOT_UPDATE_LEGACY_SCHEMA));
         }
 
         // improve: don't need the svcPoint, wasteful to read it here
@@ -228,15 +232,16 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
 
         var failures = raidSvc.updateRaidoSchemaV1(req.getMetadata(), oldRaid);
         if (failures.isEmpty()) {
-            return new MintResponse().success(true).raid(
-                    readRaidV2(new ReadRaidV2Request().handle(handle)));
+            return ResponseEntity.ok(new MintResponse().success(true).raid(
+                    readRaidV2(new ReadRaidV2Request().handle(handle)).getBody()
+            ));
         } else {
-            return mintFailed(failures);
+            return ResponseEntity.ok(mintFailed(failures));
         }
     }
 
     @Override
-    public MintResponse updateRaidoSchemaV2(UpdateRaidoSchemaV2Request request) {
+    public ResponseEntity<MintResponse> updateRaidoSchemaV2(UpdateRaidoSchemaV2Request request) {
         var user = getApiToken();
         var newData = request.getMetadata();
 
@@ -245,23 +250,23 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
         }
 
         if (newData == null) {
-            return mintFailed(METADATA_NOT_SET);
+            return ResponseEntity.ok(mintFailed(METADATA_NOT_SET));
         }
 
         var newIdBlock = newData.getId();
         if (newIdBlock == null) {
-            return mintFailed(ID_BLOCK_NOT_SET);
+            return ResponseEntity.ok(mintFailed(ID_BLOCK_NOT_SET));
         }
 
         var idParse = idParser.parseUrl(newIdBlock.getIdentifier());
         if (idParse instanceof ParseProblems idProblems) {
-            return mintFailed(mapProblemsToValidationFailures(idProblems));
+            return ResponseEntity.ok(mintFailed(mapProblemsToValidationFailures(idProblems)));
         }
         var id = (IdentifierUrl) idParse;
         var handle = id.handle().format();
 
         if (request.getMetadata().getMetadataSchema() == au.org.raid.idl.raidv2.model.RaidoMetaschemaV2.LEGACYMETADATASCHEMAV1) {
-            return mintFailed(CANNOT_UPDATE_LEGACY_SCHEMA);
+            return ResponseEntity.ok(mintFailed(CANNOT_UPDATE_LEGACY_SCHEMA));
         }
 
         // improve: don't need the svcPoint, wasteful to read it here
@@ -270,26 +275,28 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
 
         var failures = raidSvc.updateRaidoSchemaV2(request.getMetadata(), oldRaid);
         if (failures.isEmpty()) {
-            return new MintResponse().success(true).raid(
-                    readRaidV2(new ReadRaidV2Request().handle(handle)));
+            return ResponseEntity.ok(new MintResponse().success(true).raid(
+                    readRaidV2(new ReadRaidV2Request().handle(handle)).getBody()
+            ));
         } else {
-            return mintFailed(failures);
+            return ResponseEntity.ok(mintFailed(failures));
         }
     }
 
     @Override
-    public MintResponse upgradeLegacyToRaidoSchema(
+    public ResponseEntity<MintResponse> upgradeLegacyToRaidoSchema(
             UpdateRaidoSchemaV1Request req
     ) {
+
         var user = getApiToken();
         var newData = req.getMetadata();
         if (newData == null) {
-            return mintFailed(METADATA_NOT_SET);
+            return ResponseEntity.ok(mintFailed(METADATA_NOT_SET));
         }
 
         var idBlock = newData.getId();
         if (idBlock == null) {
-            return mintFailed(ID_BLOCK_NOT_SET);
+            return ResponseEntity.ok(mintFailed(ID_BLOCK_NOT_SET));
         }
 
         IdentifierUrl id;
@@ -309,10 +316,11 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     But as long as the new structure obeys the schema rules, who cares? */
         var failures = raidSvc.upgradeRaidoSchemaV1(req.getMetadata(), oldRaid);
         if (failures.isEmpty()) {
-            return new MintResponse().success(true).raid(
-                    readRaidV2(new ReadRaidV2Request().handle(handle)));
+            return ResponseEntity.ok(new MintResponse().success(true).raid(
+                    readRaidV2(new ReadRaidV2Request().handle(handle)).getBody()
+            ));
         } else {
-            return mintFailed(failures);
+            return ResponseEntity.ok(mintFailed(failures));
         }
     }
 }

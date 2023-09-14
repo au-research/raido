@@ -1,8 +1,8 @@
 package au.org.raid.api.validator;
 
 import au.org.raid.api.repository.ContributorPositionRepository;
-import au.org.raid.api.repository.ContributorPositionSchemeRepository;
-import au.org.raid.idl.raidv2.model.ContributorPositionWithSchemeUri;
+import au.org.raid.api.repository.ContributorPositionSchemaRepository;
+import au.org.raid.idl.raidv2.model.ContributorPositionWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.springframework.stereotype.Component;
 
@@ -14,59 +14,59 @@ import static au.org.raid.api.util.StringUtil.isBlank;
 
 @Component
 public class ContributorPositionValidator {
-    private final ContributorPositionSchemeRepository contributorPositionSchemeRepository;
+    private final ContributorPositionSchemaRepository contributorPositionSchemaRepository;
     private final ContributorPositionRepository contributorPositionRepository;
 
-    public ContributorPositionValidator(final ContributorPositionSchemeRepository contributorPositionSchemeRepository, final ContributorPositionRepository contributorPositionRepository) {
-        this.contributorPositionSchemeRepository = contributorPositionSchemeRepository;
+    public ContributorPositionValidator(final ContributorPositionSchemaRepository contributorPositionSchemaRepository, final ContributorPositionRepository contributorPositionRepository) {
+        this.contributorPositionSchemaRepository = contributorPositionSchemaRepository;
         this.contributorPositionRepository = contributorPositionRepository;
     }
 
     public List<ValidationFailure> validate(
-            final ContributorPositionWithSchemeUri position, final int contributorIndex, final int positionIndex) {
+            final ContributorPositionWithSchemaUri position, final int contributorIndex, final int positionIndex) {
         final var failures = new ArrayList<ValidationFailure>();
 
         if (position.getStartDate() == null) {
             failures.add(
                     new ValidationFailure()
-                            .fieldId("contributors[%d].positions[%d].startDate".formatted(contributorIndex, positionIndex))
+                            .fieldId("contributor[%d].position[%d].startDate".formatted(contributorIndex, positionIndex))
                             .errorType(NOT_SET_TYPE)
-                            .message(FIELD_MUST_BE_SET_MESSAGE));
+                            .message(NOT_SET_MESSAGE));
         }
 
         if (isBlank(position.getId())) {
             failures.add(
                     new ValidationFailure()
-                            .fieldId("contributors[%d].positions[%d].id".formatted(contributorIndex, positionIndex))
+                            .fieldId("contributor[%d].position[%d].id".formatted(contributorIndex, positionIndex))
                             .errorType(NOT_SET_TYPE)
-                            .message(FIELD_MUST_BE_SET_MESSAGE));
+                            .message(NOT_SET_MESSAGE));
         }
 
-        if (isBlank(position.getSchemeUri())) {
+        if (isBlank(position.getSchemaUri())) {
             failures.add(
                     new ValidationFailure()
-                            .fieldId("contributors[%d].positions[%d].schemeUri".formatted(contributorIndex, positionIndex))
+                            .fieldId("contributor[%d].position[%d].schemaUri".formatted(contributorIndex, positionIndex))
                             .errorType(NOT_SET_TYPE)
-                            .message(FIELD_MUST_BE_SET_MESSAGE)
+                            .message(NOT_SET_MESSAGE)
             );
         } else {
             final var positionScheme =
-                    contributorPositionSchemeRepository.findByUri(position.getSchemeUri());
+                    contributorPositionSchemaRepository.findByUri(position.getSchemaUri());
 
             if (positionScheme.isEmpty()) {
                 failures.add(
                         new ValidationFailure()
-                                .fieldId("contributors[%d].positions[%d].schemeUri".formatted(contributorIndex, positionIndex))
+                                .fieldId("contributor[%d].position[%d].schemaUri".formatted(contributorIndex, positionIndex))
                                 .errorType(INVALID_VALUE_TYPE)
-                                .message(INVALID_SCHEME)
+                                .message(INVALID_SCHEMA)
                 );
             } else if (!isBlank(position.getId()) &&
-                    contributorPositionRepository.findByUriAndSchemeId(position.getId(), positionScheme.get().getId()).isEmpty()) {
+                    contributorPositionRepository.findByUriAndSchemaId(position.getId(), positionScheme.get().getId()).isEmpty()) {
                 failures.add(
                         new ValidationFailure()
-                                .fieldId("contributors[%d].positions[%d].id".formatted(contributorIndex, positionIndex))
+                                .fieldId("contributor[%d].position[%d].id".formatted(contributorIndex, positionIndex))
                                 .errorType(INVALID_VALUE_TYPE)
-                                .message(INVALID_ID_FOR_SCHEME)
+                                .message(INVALID_ID_FOR_SCHEMA)
                 );
             }
         }

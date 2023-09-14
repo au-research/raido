@@ -30,43 +30,43 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class RaidoSchemaV1Test extends IntegrationTestCase {
 
     public static ContributorBlock createDummyLeaderContributor(LocalDate today) {
-        return new ContributorBlock().
-                id(REAL_TEST_ORCID).
-                identifierSchemeUri(HTTPS_ORCID_ORG_).
-                positions(List.of(new ContributorPosition().
-                        positionSchemaUri(HTTPS_RAID_ORG_).
-                        position(LEADER).
-                        startDate(today))).
-                roles(List.of(
-                        new ContributorRole().
-                                roleSchemeUri(HTTPS_CREDIT_NISO_ORG_).
-                                role(PROJECT_ADMINISTRATION)));
+        return new ContributorBlock()
+                .id(REAL_TEST_ORCID)
+                .identifierSchemeUri(HTTPS_ORCID_ORG_)
+                .positions(List.of(new ContributorPosition()
+                        .positionSchemaUri(HTTPS_RAID_ORG_)
+                        .position(LEADER)
+                        .startDate(today)))
+                .roles(List.of(
+                        new ContributorRole()
+                                .roleSchemeUri(HTTPS_CREDIT_NISO_ORG_)
+                                .role(PROJECT_ADMINISTRATION)));
     }
 
     public static OrganisationBlock createDummyOrganisation(LocalDate today) {
-        return new OrganisationBlock().
-                id(REAL_TEST_ROR).
-                identifierSchemeUri(OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_).
-                roles(List.of(
-                        new OrganisationRole().
-                                roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_).
-                                role(OrganisationRoleType.LEAD_RESEARCH_ORGANISATION)
+        return new OrganisationBlock()
+                .id(REAL_TEST_ROR)
+                .identifierSchemeUri(OrganisationIdentifierSchemeType.HTTPS_ROR_ORG_)
+                .roles(List.of(
+                        new OrganisationRole()
+                                .roleSchemeUri(OrganisationRoleSchemeType.HTTPS_RAID_ORG_)
+                                .role(OrganisationRoleType.LEAD_RESEARCH_ORGANISATION)
                                 .startDate(today)));
     }
 
     public static RaidoMetadataSchemaV1 mapRaidMetadataToRaido(
             PublicRaidMetadataSchemaV1 in
     ) {
-        return new RaidoMetadataSchemaV1().
-                metadataSchema(RAIDOMETADATASCHEMAV1).
-                id(in.getId()).
-                dates(in.getDates()).
-                titles(in.getTitles()).
-                descriptions(in.getDescriptions()).
-                alternateUrls(in.getAlternateUrls()).
-                contributors(in.getContributors()).
-                organisations(in.getOrganisations()).
-                access(in.getAccess());
+        return new RaidoMetadataSchemaV1()
+                .metadataSchema(RAIDOMETADATASCHEMAV1)
+                .id(in.getId())
+                .dates(in.getDates())
+                .titles(in.getTitles())
+                .descriptions(in.getDescriptions())
+                .alternateUrls(in.getAlternateUrls())
+                .contributors(in.getContributors())
+                .organisations(in.getOrganisations())
+                .access(in.getAccess());
     }
 
     @Test
@@ -97,7 +97,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
                                 .organisations(List.of(createDummyOrganisation(today)))
                                 .access(new AccessBlock().type(OPEN))
                         )
-        );
+        ).getBody();
         assertThat(mintResult).isNotNull();
         assertThat(mintResult.getFailures()).isNullOrEmpty();
         assertThat(mintResult.getSuccess()).isTrue();
@@ -120,7 +120,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
 
         EXPECT("should be able to read the minted raid via public api (v3)");
         var v3Read = raidoApi.getPublicExperimental().
-                publicReadRaidV3(mintedRaid.getHandle());
+                publicReadRaidV3(mintedRaid.getHandle()).getBody();
         assertThat(v3Read).isNotNull();
         assertThat(v3Read.getCreateDate()).isNotNull();
         assertThat(v3Read.getServicePointId()).isEqualTo(RAIDO_SP_ID);
@@ -147,7 +147,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
         /* list by unique name to prevent eventual pagination issues */
         EXPECT("should be able to list the minted raid");
         var listResult = raidApi.listRaidV2(new RaidListRequestV2().
-                servicePointId(RAIDO_SP_ID).primaryTitle(initialTitle));
+                servicePointId(RAIDO_SP_ID).primaryTitle(initialTitle)).getBody();
         assertThat(listResult).singleElement().satisfies(i -> {
             assertThat(i.getHandle()).isEqualTo(mintedRaid.getHandle());
             assertThat(i.getPrimaryTitle()).isEqualTo(initialTitle);
@@ -164,14 +164,14 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
                 new UpdateRaidoSchemaV1Request().metadata(
                         mapRaidMetadataToRaido(v3Meta).
                                 titles(List.of(newTitle))
-                ));
+                )).getBody();
         assertThat(updateResult.getFailures()).isNullOrEmpty();
         assertThat(updateResult.getSuccess()).isTrue();
 
         THEN("should be able to read new value via publicRead");
         var readUpdatedData = (PublicRaidMetadataSchemaV1)
                 raidoApi.getPublicExperimental().
-                        publicReadRaidV3(mintedRaid.getHandle()).getMetadata();
+                        publicReadRaidV3(mintedRaid.getHandle()).getBody().getMetadata();
 
         assertThat(readUpdatedData.getAccess().getType()).isEqualTo(OPEN);
         assertThat(readUpdatedData.getTitles().get(0).getTitle()).isEqualTo(
@@ -186,13 +186,13 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
                                         readUpdatedData.getAccess().
                                                 type(CLOSED).
                                                 accessStatement("closed by update"))
-                ));
+                )).getBody();
         assertThat(closeResult.getFailures()).isNullOrEmpty();
         assertThat(closeResult.getSuccess()).isTrue();
 
         THEN("publicRaid should now return closed");
         var readClosed = raidoApi.getPublicExperimental().
-                publicReadRaidV3(mintedRaid.getHandle());
+                publicReadRaidV3(mintedRaid.getHandle()).getBody();
         var readClosedMeta = (PublicClosedMetadataSchemaV1)
                 readClosed.getMetadata();
         assertThat(readClosedMeta.getAccess().getType()).isEqualTo(CLOSED);
@@ -215,30 +215,30 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
 
         WHEN("minting a raid with minimal content with empty primaryTitle");
         var mintResult = raidApi.mintRaidoSchemaV1(
-                new MintRaidoSchemaV1Request().
-                        mintRequest(new MintRaidoSchemaV1RequestMintRequest().
-                                servicePointId(RAIDO_SP_ID)).
-                        metadata(new RaidoMetadataSchemaV1().
-                                metadataSchema(RAIDOMETADATASCHEMAV1).
-                                titles(List.of(new TitleBlock().
-                                        type(PRIMARY_TITLE).
-                                        title(" ").
-                                        startDate(null))).
-                                contributors(List.of(createDummyLeaderContributor(today))).
-                                organisations(List.of(createDummyOrganisation(today))).
-                                dates(new DatesBlock().startDate(today)).
-                                access(new AccessBlock().type(OPEN))
+                new MintRaidoSchemaV1Request()
+                        .mintRequest(new MintRaidoSchemaV1RequestMintRequest()
+                                .servicePointId(RAIDO_SP_ID))
+                        .metadata(new RaidoMetadataSchemaV1()
+                                .metadataSchema(RAIDOMETADATASCHEMAV1)
+                                .titles(List.of(new TitleBlock()
+                                        .type(PRIMARY_TITLE)
+                                        .title(" ")
+                                        .startDate(null)))
+                                .contributors(List.of(createDummyLeaderContributor(today)))
+                                .organisations(List.of(createDummyOrganisation(today)))
+                                .dates(new DatesBlock().startDate(today))
+                                .access(new AccessBlock().type(OPEN))
                         )
-        );
+        ).getBody();
         THEN("validation failure should result");
         assertThat(mintResult.getSuccess()).isFalse();
         assertThat(mintResult.getFailures()).satisfiesExactlyInAnyOrder(
                 i -> {
-                    assertThat(i.getFieldId()).isEqualTo("titles[0].title");
+                    assertThat(i.getFieldId()).isEqualTo("title[0].title");
                     assertThat(i.getErrorType()).isEqualTo("notSet");
                 },
                 i -> {
-                    assertThat(i.getFieldId()).isEqualTo("titles[0].startDate");
+                    assertThat(i.getFieldId()).isEqualTo("title[0].startDate");
                     assertThat(i.getErrorType()).isEqualTo("notSet");
                 }
         );

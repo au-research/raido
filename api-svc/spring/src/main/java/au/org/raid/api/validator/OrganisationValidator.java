@@ -14,13 +14,13 @@ import static au.org.raid.api.util.StringUtil.isBlank;
 
 @Component
 public class OrganisationValidator {
-    private static final String ROR_SCHEME_URI = "https://ror.org/";
-    private final RorValidator rorValidationService;
+    private static final String ROR_SCHEMA_URI = "https://ror.org/";
+    private final RorValidator rorValidator;
     private final OrganisationRoleValidator roleValidationService;
 
-    public OrganisationValidator(final RorValidator rorValidationService,
+    public OrganisationValidator(final RorValidator rorValidator,
                                  final OrganisationRoleValidator roleValidationService) {
-        this.rorValidationService = rorValidationService;
+        this.rorValidator = rorValidator;
         this.roleValidationService = roleValidationService;
     }
 
@@ -40,24 +40,24 @@ public class OrganisationValidator {
         IntStream.range(0, organisations.size()).forEach(organisationIndex -> {
             final var organisation = organisations.get(organisationIndex);
 
-            if (isBlank(organisation.getIdentifierSchemeUri())) {
+            if (isBlank(organisation.getSchemaUri())) {
                 failures.add(new ValidationFailure()
-                        .fieldId("organisations[%d].schemeUri".formatted(organisationIndex))
+                        .fieldId("organisation[%d].schemaUri".formatted(organisationIndex))
                         .errorType(NOT_SET_TYPE)
-                        .message(FIELD_MUST_BE_SET_MESSAGE)
+                        .message(NOT_SET_MESSAGE)
                 );
-            } else if (!organisation.getIdentifierSchemeUri().equals(ROR_SCHEME_URI)) {
+            } else if (!organisation.getSchemaUri().equals(ROR_SCHEMA_URI)) {
                 failures.add(new ValidationFailure()
-                        .fieldId("organisations[%d].schemeUri")
+                        .fieldId("organisation[%d].schemaUri")
                         .errorType(INVALID_VALUE_TYPE)
                         .message(INVALID_VALUE_MESSAGE)
                 );
             }
 
-            failures.addAll(rorValidationService.validate(organisation.getId(), organisationIndex));
+            failures.addAll(rorValidator.validate(organisation.getId(), organisationIndex));
 
-            IntStream.range(0, organisation.getRoles().size()).forEach(roleIndex -> {
-                final var role = organisation.getRoles().get(roleIndex);
+            IntStream.range(0, organisation.getRole().size()).forEach(roleIndex -> {
+                final var role = organisation.getRole().get(roleIndex);
                 failures.addAll(roleValidationService.validate(role, organisationIndex, roleIndex));
             });
         });

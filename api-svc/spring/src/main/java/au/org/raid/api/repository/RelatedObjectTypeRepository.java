@@ -14,12 +14,12 @@ import static au.org.raid.db.jooq.api_svc.tables.RelatedObjectType.RELATED_OBJEC
 public class RelatedObjectTypeRepository {
     private final DSLContext dslContext;
 
-    public Optional<RelatedObjectTypeRecord> findByUriAndSchemeId(final String uri, final int schemeId) {
+    public Optional<RelatedObjectTypeRecord> findByUriAndSchemaId(final String uri, final int schemaId) {
         return dslContext.select(RELATED_OBJECT_TYPE.fields())
                 .from(RELATED_OBJECT_TYPE)
-                .where(RELATED_OBJECT_TYPE.URI.eq(uri).and(RELATED_OBJECT_TYPE.SCHEME_ID.eq(schemeId))).
+                .where(RELATED_OBJECT_TYPE.URI.eq(uri).and(RELATED_OBJECT_TYPE.SCHEMA_ID.eq(schemaId))).
                 fetchOptional(record -> new RelatedObjectTypeRecord()
-                        .setSchemeId(RELATED_OBJECT_TYPE.SCHEME_ID.getValue(record))
+                        .setSchemaId(RELATED_OBJECT_TYPE.SCHEMA_ID.getValue(record))
                         .setUri(RELATED_OBJECT_TYPE.URI.getValue(record))
                         .setName(RELATED_OBJECT_TYPE.NAME.getValue(record))
                         .setDescription(RELATED_OBJECT_TYPE.DESCRIPTION.getValue(record))

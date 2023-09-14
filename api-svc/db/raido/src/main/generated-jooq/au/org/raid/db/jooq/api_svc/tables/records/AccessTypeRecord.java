@@ -20,17 +20,17 @@ public class AccessTypeRecord extends UpdatableRecordImpl<AccessTypeRecord> impl
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>api_svc.access_type.scheme_id</code>.
+     * Setter for <code>api_svc.access_type.schema_id</code>.
      */
-    public AccessTypeRecord setSchemeId(Integer value) {
+    public AccessTypeRecord setSchemaId(Integer value) {
         set(0, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.access_type.scheme_id</code>.
+     * Getter for <code>api_svc.access_type.schema_id</code>.
      */
-    public Integer getSchemeId() {
+    public Integer getSchemaId() {
         return (Integer) get(0);
     }
 
@@ -74,7 +74,7 @@ public class AccessTypeRecord extends UpdatableRecordImpl<AccessTypeRecord> impl
 
     @Override
     public Field<Integer> field1() {
-        return AccessType.ACCESS_TYPE.SCHEME_ID;
+        return AccessType.ACCESS_TYPE.SCHEMA_ID;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class AccessTypeRecord extends UpdatableRecordImpl<AccessTypeRecord> impl
 
     @Override
     public Integer component1() {
-        return getSchemeId();
+        return getSchemaId();
     }
 
     @Override
@@ -94,7 +94,7 @@ public class AccessTypeRecord extends UpdatableRecordImpl<AccessTypeRecord> impl
 
     @Override
     public Integer value1() {
-        return getSchemeId();
+        return getSchemaId();
     }
 
     @Override
@@ -104,7 +104,7 @@ public class AccessTypeRecord extends UpdatableRecordImpl<AccessTypeRecord> impl
 
     @Override
     public AccessTypeRecord value1(Integer value) {
-        setSchemeId(value);
+        setSchemaId(value);
         return this;
     }
 
@@ -135,10 +135,10 @@ public class AccessTypeRecord extends UpdatableRecordImpl<AccessTypeRecord> impl
     /**
      * Create a detached, initialised AccessTypeRecord
      */
-    public AccessTypeRecord(Integer schemeId, String uri) {
+    public AccessTypeRecord(Integer schemaId, String uri) {
         super(AccessType.ACCESS_TYPE);
 
-        setSchemeId(schemeId);
+        setSchemaId(schemaId);
         setUri(uri);
     }
 }

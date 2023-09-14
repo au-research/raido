@@ -29,12 +29,12 @@ class TraditionalKnowledgeLabelFactoryTest {
     @Test
     @DisplayName("Sets all fields")
     void setsAllFields() {
-        final var schemeUri = "scheme-uri";
+        final var schemaUri = "scheme-uri";
         final var traditionalKnowledgeLabel = new TraditionalKnowledgeLabelBlock()
-                .traditionalKnowledgeLabelSchemeUri(schemeUri);
+                .traditionalKnowledgeLabelSchemeUri(schemaUri);
 
         final var expected = new TraditionalKnowledgeLabel()
-                .schemeUri(schemeUri);
+                .schemaUri(schemaUri);
 
         assertThat(traditionalKnowledgeLabelFactory.create(traditionalKnowledgeLabel), is(expected));
     }

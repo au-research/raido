@@ -1,8 +1,8 @@
 package au.org.raid.inttest.endpoint.raidv2.stable;
 
 import au.org.raid.idl.raidv2.model.Contributor;
-import au.org.raid.idl.raidv2.model.ContributorPositionWithSchemeUri;
-import au.org.raid.idl.raidv2.model.ContributorRoleWithSchemeUri;
+import au.org.raid.idl.raidv2.model.ContributorPositionWithSchemaUri;
+import au.org.raid.idl.raidv2.model.ContributorRoleWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import au.org.raid.inttest.RaidApiValidationException;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,9 +20,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     @Test
-    @DisplayName("Minting a RAiD with no contributors fails")
+    @DisplayName("Minting a RAiD with no contributor fails")
     void noContributors() {
-        createRequest.setContributors(null);
+        createRequest.setContributor(null);
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -31,7 +32,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributors")
+                            .fieldId("contributor")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -41,19 +42,19 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Minting a RAiD with empty contributors fails")
+    @DisplayName("Minting a RAiD with empty contributor fails")
     void emptyContributors() {
-        createRequest.setContributors(Collections.emptyList());
+        createRequest.setContributor(Collections.emptyList());
 
         try {
             raidApi.createRaidV1(createRequest);
-            fail("No exception thrown with empty contributors");
+            fail("No exception thrown with empty contributor");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributors")
+                            .fieldId("contributor")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -63,33 +64,33 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Minting a RAiD with missing identifierSchemeUri fails")
+    @DisplayName("Minting a RAiD with missing schemaUri fails")
     void missingIdentifierSchemeUri() {
-        createRequest.setContributors(List.of(
+        createRequest.setContributor(List.of(
                 new Contributor()
                         .id("https://orcid.org/0000-0000-0000-0001")
-                        .positions(List.of(
-                                new ContributorPositionWithSchemeUri()
-                                        .startDate(LocalDate.now())
-                                        .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                        .position(List.of(
+                                new ContributorPositionWithSchemaUri()
+                                        .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                        .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                         .id(LEADER_POSITION)
                         ))
-                        .roles(List.of(
-                                new ContributorRoleWithSchemeUri()
-                                        .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+                        .role(List.of(
+                                new ContributorRoleWithSchemaUri()
+                                        .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                         .id(SOFTWARE_CONTRIBUTOR_ROLE)
                         ))
         ));
 
         try {
             raidApi.createRaidV1(createRequest);
-            fail("No exception thrown with missing identifierSchemeUri");
+            fail("No exception thrown with missing schemaUri");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributors[0].identifierSchemeUri")
+                            .fieldId("contributor[0].schemaUri")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -99,34 +100,34 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Minting a RAiD with empty identifierSchemeUri fails")
+    @DisplayName("Minting a RAiD with empty schemaUri fails")
     void emptyIdentifierSchemeUri() {
-        createRequest.setContributors(List.of(
+        createRequest.setContributor(List.of(
                 new Contributor()
-                        .identifierSchemeUri("")
+                        .schemaUri("")
                         .id("https://orcid.org/0000-0000-0000-0001")
-                        .positions(List.of(
-                                new ContributorPositionWithSchemeUri()
-                                        .startDate(LocalDate.now())
-                                        .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                        .position(List.of(
+                                new ContributorPositionWithSchemaUri()
+                                        .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                        .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                         .id(LEADER_POSITION)
                         ))
-                        .roles(List.of(
-                                new ContributorRoleWithSchemeUri()
-                                        .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+                        .role(List.of(
+                                new ContributorRoleWithSchemaUri()
+                                        .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                         .id(SOFTWARE_CONTRIBUTOR_ROLE)
                         ))
         ));
 
         try {
             raidApi.createRaidV1(createRequest);
-            fail("No exception thrown with empty identifierSchemeUri");
+            fail("No exception thrown with empty schemaUri");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributors[0].identifierSchemeUri")
+                            .fieldId("contributor[0].schemaUri")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -138,18 +139,18 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with missing contributor id fails")
     void missingId() {
-        createRequest.setContributors(List.of(
+        createRequest.setContributor(List.of(
                 new Contributor()
-                        .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
-                        .positions(List.of(
-                                new ContributorPositionWithSchemeUri()
-                                        .startDate(LocalDate.now())
-                                        .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                        .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                        .position(List.of(
+                                new ContributorPositionWithSchemaUri()
+                                        .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                        .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                         .id(LEADER_POSITION)
                         ))
-                        .roles(List.of(
-                                new ContributorRoleWithSchemeUri()
-                                        .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+                        .role(List.of(
+                                new ContributorRoleWithSchemaUri()
+                                        .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                         .id(SOFTWARE_CONTRIBUTOR_ROLE)
                         ))
         ));
@@ -162,7 +163,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributors[0].id")
+                            .fieldId("contributor[0].id")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -174,19 +175,19 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with empty contributor id fails")
     void emptyId() {
-        createRequest.setContributors(List.of(
+        createRequest.setContributor(List.of(
                 new Contributor()
-                        .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
+                        .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                         .id("")
-                        .positions(List.of(
-                                new ContributorPositionWithSchemeUri()
-                                        .startDate(LocalDate.now())
-                                        .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                        .position(List.of(
+                                new ContributorPositionWithSchemaUri()
+                                        .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                        .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                         .id(LEADER_POSITION)
                         ))
-                        .roles(List.of(
-                                new ContributorRoleWithSchemeUri()
-                                        .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+                        .role(List.of(
+                                new ContributorRoleWithSchemaUri()
+                                        .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                         .id(SOFTWARE_CONTRIBUTOR_ROLE)
                         ))
         ));
@@ -199,7 +200,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributors[0].id")
+                            .fieldId("contributor[0].id")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -209,28 +210,28 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Minting a RAiD with null positions fails")
+    @DisplayName("Minting a RAiD with null position fails")
     void nullPositions() {
-        createRequest.setContributors(List.of(
+        createRequest.setContributor(List.of(
                 new Contributor()
-                        .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
+                        .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                         .id("https://orcid.org/0000-0000-0000-0001")
-                        .roles(List.of(
-                                new ContributorRoleWithSchemeUri()
-                                        .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+                        .role(List.of(
+                                new ContributorRoleWithSchemaUri()
+                                        .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                         .id(SOFTWARE_CONTRIBUTOR_ROLE)
                         ))
         ));
 
         try {
             raidApi.createRaidV1(createRequest);
-            fail("No exception thrown with null positions");
+            fail("No exception thrown with null position");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributors.positions")
+                            .fieldId("contributor.position")
                             .errorType("invalidValue")
                             .message("leader must be specified")
             );
@@ -240,29 +241,29 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Minting a RAiD with empty positions fails")
+    @DisplayName("Minting a RAiD with empty position fails")
     void emptyPositions() {
-        createRequest.setContributors(List.of(
+        createRequest.setContributor(List.of(
                 new Contributor()
-                        .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
+                        .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                         .id("https://orcid.org/0000-0000-0000-0001")
-                        .positions(Collections.emptyList())
-                        .roles(List.of(
-                                new ContributorRoleWithSchemeUri()
-                                        .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+                        .position(Collections.emptyList())
+                        .role(List.of(
+                                new ContributorRoleWithSchemaUri()
+                                        .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                         .id(SOFTWARE_CONTRIBUTOR_ROLE)
                         ))
         ));
 
         try {
             raidApi.createRaidV1(createRequest);
-            fail("No exception thrown with empty positions");
+            fail("No exception thrown with empty position");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributors.positions")
+                            .fieldId("contributor.position")
                             .errorType("invalidValue")
                             .message("leader must be specified")
             );
@@ -274,18 +275,18 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with missing leader position fails")
     void missingLeader() {
-        createRequest.setContributors(List.of(
+        createRequest.setContributor(List.of(
                 new Contributor()
-                        .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
+                        .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                         .id("https://orcid.org/0000-0000-0000-0001")
-                        .positions(List.of(
-                                new ContributorPositionWithSchemeUri()
-                                        .startDate(LocalDate.now())
-                                        .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                        .position(List.of(
+                                new ContributorPositionWithSchemaUri()
+                                        .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                        .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                         .id(OTHER_PARTICIPANT_POSITION)
-                        )).roles(List.of(
-                                new ContributorRoleWithSchemeUri()
-                                        .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+                        )).role(List.of(
+                                new ContributorRoleWithSchemaUri()
+                                        .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                         .id(SOFTWARE_CONTRIBUTOR_ROLE)
                         ))
         ));
@@ -298,7 +299,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributors.positions")
+                            .fieldId("contributor.position")
                             .errorType("invalidValue")
                             .message("leader must be specified")
             );
@@ -313,19 +314,19 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         @Test
         @DisplayName("Minting a RAiD with invalid orcid pattern fails")
         void invalidOrcidPattern() {
-            createRequest.setContributors(List.of(
+            createRequest.setContributor(List.of(
                     new Contributor()
-                            .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
+                            .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0c00-0000-0000")
-                            .positions(List.of(
-                                    new ContributorPositionWithSchemeUri()
-                                            .startDate(LocalDate.now())
-                                            .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                            .position(List.of(
+                                    new ContributorPositionWithSchemaUri()
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(LEADER_POSITION)
                             ))
-                            .roles(List.of(
-                                    new ContributorRoleWithSchemeUri()
-                                            .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+                            .role(List.of(
+                                    new ContributorRoleWithSchemaUri()
+                                            .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                             .id(SOFTWARE_CONTRIBUTOR_ROLE)
                             ))
             ));
@@ -336,7 +337,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             } catch (RaidApiValidationException e) {
                 assertThat(e.getFailures()).isEqualTo(List.of(
                         new ValidationFailure()
-                                .fieldId("contributors[0].id")
+                                .fieldId("contributor[0].id")
                                 .errorType("invalidValue")
                                 .message("has invalid/unsupported value - should match ^https://orcid\\.org/[\\d]{4}-[\\d]{4}-[\\d]{4}-[\\d]{3}[\\d|X]{1}$")
                 ));
@@ -348,19 +349,19 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         @Test
         @DisplayName("Minting a RAiD with invalid orcid checksum fails")
         void invalidOrcidChecksum() {
-            createRequest.setContributors(List.of(
+            createRequest.setContributor(List.of(
                     new Contributor()
-                            .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
+                            .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0000")
-                            .positions(List.of(
-                                    new ContributorPositionWithSchemeUri()
-                                            .startDate(LocalDate.now())
-                                            .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                            .position(List.of(
+                                    new ContributorPositionWithSchemaUri()
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(LEADER_POSITION)
                             ))
-                            .roles(List.of(
-                                    new ContributorRoleWithSchemeUri()
-                                            .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+                            .role(List.of(
+                                    new ContributorRoleWithSchemaUri()
+                                            .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                             .id(SOFTWARE_CONTRIBUTOR_ROLE)
                             ))
             ));
@@ -373,7 +374,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributors[0].id")
+                                .fieldId("contributor[0].id")
                                 .errorType("invalidValue")
                                 .message("failed checksum, last digit should be `1`")
                 );
@@ -385,19 +386,19 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         @Test
         @DisplayName("Minting a RAiD with non-existent orcid fails")
         void nonExistentOrcid() {
-            createRequest.setContributors(List.of(
+            createRequest.setContributor(List.of(
                     new Contributor()
-                            .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
+                            .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0001-0000-0009")
-                            .positions(List.of(
-                                    new ContributorPositionWithSchemeUri()
-                                            .startDate(LocalDate.now())
-                                            .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                            .position(List.of(
+                                    new ContributorPositionWithSchemaUri()
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(LEADER_POSITION)
                             ))
-                            .roles(List.of(
-                                    new ContributorRoleWithSchemeUri()
-                                            .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+                            .role(List.of(
+                                    new ContributorRoleWithSchemaUri()
+                                            .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                             .id(SOFTWARE_CONTRIBUTOR_ROLE)
                             ))
             ));
@@ -410,7 +411,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributors[0].id")
+                                .fieldId("contributor[0].id")
                                 .errorType("invalidValue")
                                 .message("uri not found")
                 );
@@ -422,34 +423,34 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
 
     @Nested
     @DisplayName("Position tests...")
-    class ContributorPositionWithSchemeUriTests {
+    class ContributorPositionWithSchemaUriTests {
         @Test
-        @DisplayName("Minting a RAiD with missing position schemeUri fails")
+        @DisplayName("Minting a RAiD with missing position schemaUri fails")
         void missingPositionSchemeUri() {
-            createRequest.setContributors(List.of(
+            createRequest.setContributor(List.of(
                     new Contributor()
-                            .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
+                            .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0001")
-                            .positions(List.of(
-                                    new ContributorPositionWithSchemeUri()
-                                            .startDate(LocalDate.now())
+                            .position(List.of(
+                                    new ContributorPositionWithSchemaUri()
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .id(LEADER_POSITION)
-                            )).roles(List.of(
-                                    new ContributorRoleWithSchemeUri()
-                                            .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+                            )).role(List.of(
+                                    new ContributorRoleWithSchemaUri()
+                                            .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                             .id(SOFTWARE_CONTRIBUTOR_ROLE)
                             ))
             ));
 
             try {
                 raidApi.createRaidV1(createRequest);
-                fail("No exception thrown with missing contributor identifierSchemeUri");
+                fail("No exception thrown with missing contributor schemaUri");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributors[0].positions[0].schemeUri")
+                                .fieldId("contributor[0].position[0].schemaUri")
                                 .errorType("notSet")
                                 .message("field must be set")
                 );
@@ -461,35 +462,35 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         @Test
         @DisplayName("Minting a RAiD with missing position type fails")
         void missingPositionType() {
-            createRequest.setContributors(List.of(
+            createRequest.setContributor(List.of(
                     new Contributor()
-                            .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
+                            .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0001")
-                            .positions(List.of(
-                                    new ContributorPositionWithSchemeUri()
-                                            .startDate(LocalDate.now())
-                                            .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                            .position(List.of(
+                                    new ContributorPositionWithSchemaUri()
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(LEADER_POSITION),
-                                    new ContributorPositionWithSchemeUri()
-                                            .startDate(LocalDate.now())
-                                            .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                                    new ContributorPositionWithSchemaUri()
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                             ))
-                            .roles(List.of(
-                                    new ContributorRoleWithSchemeUri()
-                                            .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+                            .role(List.of(
+                                    new ContributorRoleWithSchemaUri()
+                                            .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                             .id(SOFTWARE_CONTRIBUTOR_ROLE)
                             ))
             ));
 
             try {
                 raidApi.createRaidV1(createRequest);
-                fail("No exception thrown with missing contributor identifierSchemeUri");
+                fail("No exception thrown with missing contributor schemaUri");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributors[0].positions[1].id")
+                                .fieldId("contributor[0].position[1].id")
                                 .errorType("notSet")
                                 .message("field must be set")
                 );
@@ -499,40 +500,40 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         }
 
         @Test
-        @DisplayName("Minting a RAiD with invalid position schemeUri fails")
+        @DisplayName("Minting a RAiD with invalid position schemaUri fails")
         void invalidPositionSchemeUri() {
-            createRequest.setContributors(List.of(
+            createRequest.setContributor(List.of(
                     new Contributor()
-                            .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
+                            .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0001")
-                            .positions(List.of(
-                                    new ContributorPositionWithSchemeUri()
-                                            .startDate(LocalDate.now())
-                                            .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                            .position(List.of(
+                                    new ContributorPositionWithSchemaUri()
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(LEADER_POSITION),
-                                    new ContributorPositionWithSchemeUri()
-                                            .startDate(LocalDate.now())
-                                            .schemeUri("https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v2")
+                                    new ContributorPositionWithSchemaUri()
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                            .schemaUri("https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v2")
                                             .id(OTHER_PARTICIPANT_POSITION)
                             ))
-                            .roles(List.of(
-                                    new ContributorRoleWithSchemeUri()
-                                            .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+                            .role(List.of(
+                                    new ContributorRoleWithSchemaUri()
+                                            .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                             .id(SOFTWARE_CONTRIBUTOR_ROLE)
                             ))
             ));
 
             try {
                 raidApi.createRaidV1(createRequest);
-                fail("No exception thrown with missing contributor identifierSchemeUri");
+                fail("No exception thrown with missing contributor schemaUri");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributors[0].positions[1].schemeUri")
+                                .fieldId("contributor[0].position[1].schemaUri")
                                 .errorType("invalidValue")
-                                .message("scheme is unknown/unsupported")
+                                .message("schema is unknown/unsupported")
                 );
             } catch (Exception e) {
                 fail("Expected RaidApiValidationException");
@@ -540,40 +541,40 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         }
 
         @Test
-        @DisplayName("Minting a RAiD with invalid position type for scheme fails")
+        @DisplayName("Minting a RAiD with invalid position type for schema fails")
         void invalidPositionTypeForScheme() {
-            createRequest.setContributors(List.of(
+            createRequest.setContributor(List.of(
                     new Contributor()
-                            .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
+                            .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0001")
-                            .positions(List.of(
-                                    new ContributorPositionWithSchemeUri()
-                                            .startDate(LocalDate.now())
-                                            .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                            .position(List.of(
+                                    new ContributorPositionWithSchemaUri()
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(LEADER_POSITION),
-                                    new ContributorPositionWithSchemeUri()
-                                            .startDate(LocalDate.now())
-                                            .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                                    new ContributorPositionWithSchemaUri()
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/unknown.json")
                             ))
-                            .roles(List.of(
-                                    new ContributorRoleWithSchemeUri()
-                                            .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+                            .role(List.of(
+                                    new ContributorRoleWithSchemaUri()
+                                            .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                             .id(SOFTWARE_CONTRIBUTOR_ROLE)
                             ))
             ));
 
             try {
                 raidApi.createRaidV1(createRequest);
-                fail("No exception thrown with missing contributor identifierSchemeUri");
+                fail("No exception thrown with missing contributor schemaUri");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributors[0].positions[1].id")
+                                .fieldId("contributor[0].position[1].id")
                                 .errorType("invalidValue")
-                                .message("id does not exist within the given scheme")
+                                .message("id does not exist within the given schema")
                 );
             } catch (Exception e) {
                 fail("Expected RaidApiValidationException");
@@ -583,36 +584,36 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
 
     @Nested
     @DisplayName("Role tests...")
-    class ContributorRoleWithSchemeUriTests {
+    class ContributorRoleWithSchemaUriTests {
         @Test
-        @DisplayName("Minting a RAiD with missing role schemeUri fails")
+        @DisplayName("Minting a RAiD with missing role schemaUri fails")
         void missingRoleSchemeUri() {
-            createRequest.setContributors(List.of(
+            createRequest.setContributor(List.of(
                     new Contributor()
-                            .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
+                            .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0001")
-                            .positions(List.of(
-                                    new ContributorPositionWithSchemeUri()
-                                            .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
-                                            .startDate(LocalDate.now())
+                            .position(List.of(
+                                    new ContributorPositionWithSchemaUri()
+                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .id(LEADER_POSITION)
                             ))
-                            .roles(List.of(
-                                    new ContributorRoleWithSchemeUri()
-//              .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+                            .role(List.of(
+                                    new ContributorRoleWithSchemaUri()
+//              .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                             .id(SOFTWARE_CONTRIBUTOR_ROLE)
                             ))
             ));
 
             try {
                 raidApi.createRaidV1(createRequest);
-                fail("No exception thrown with missing role schemeUri");
+                fail("No exception thrown with missing role schemaUri");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributors[0].roles[0].schemeUri")
+                                .fieldId("contributor[0].role[0].schemaUri")
                                 .errorType("notSet")
                                 .message("field must be set")
                 );
@@ -624,23 +625,23 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         @Test
         @DisplayName("Minting a RAiD with missing role type fails")
         void missingPositionType() {
-            createRequest.setContributors(List.of(
+            createRequest.setContributor(List.of(
                     new Contributor()
-                            .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
+                            .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0001")
-                            .positions(List.of(
-                                    new ContributorPositionWithSchemeUri()
-                                            .startDate(LocalDate.now())
-                                            .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                            .position(List.of(
+                                    new ContributorPositionWithSchemaUri()
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(LEADER_POSITION),
-                                    new ContributorPositionWithSchemeUri()
-                                            .startDate(LocalDate.now())
-                                            .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                                    new ContributorPositionWithSchemaUri()
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(OTHER_PARTICIPANT_POSITION)
                             ))
-                            .roles(List.of(
-                                    new ContributorRoleWithSchemeUri()
-                                            .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+                            .role(List.of(
+                                    new ContributorRoleWithSchemaUri()
+                                            .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                             ))
             ));
 
@@ -652,7 +653,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributors[0].roles[0].id")
+                                .fieldId("contributor[0].role[0].id")
                                 .errorType("notSet")
                                 .message("field must be set")
                 );
@@ -662,40 +663,40 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         }
 
         @Test
-        @DisplayName("Minting a RAiD with invalid role schemeUri fails")
+        @DisplayName("Minting a RAiD with invalid role schemaUri fails")
         void invalidPositionSchemeUri() {
-            createRequest.setContributors(List.of(
+            createRequest.setContributor(List.of(
                     new Contributor()
-                            .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
+                            .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0001")
-                            .positions(List.of(
-                                    new ContributorPositionWithSchemeUri()
-                                            .startDate(LocalDate.now())
-                                            .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                            .position(List.of(
+                                    new ContributorPositionWithSchemaUri()
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(LEADER_POSITION),
-                                    new ContributorPositionWithSchemeUri()
-                                            .startDate(LocalDate.now())
-                                            .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                                    new ContributorPositionWithSchemaUri()
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(OTHER_PARTICIPANT_POSITION)
                             ))
-                            .roles(List.of(
-                                    new ContributorRoleWithSchemeUri()
-                                            .schemeUri("unknown")
+                            .role(List.of(
+                                    new ContributorRoleWithSchemaUri()
+                                            .schemaUri("unknown")
                                             .id(SOFTWARE_CONTRIBUTOR_ROLE)
                             ))
             ));
 
             try {
                 raidApi.createRaidV1(createRequest);
-                fail("No exception thrown with invalid role schemeUri");
+                fail("No exception thrown with invalid role schemaUri");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributors[0].roles[0].schemeUri")
+                                .fieldId("contributor[0].role[0].schemaUri")
                                 .errorType("invalidValue")
-                                .message("scheme is unknown/unsupported")
+                                .message("schema is unknown/unsupported")
                 );
             } catch (Exception e) {
                 fail("Expected RaidApiValidationException");
@@ -703,40 +704,40 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         }
 
         @Test
-        @DisplayName("Minting a RAiD with invalid type for role scheme fails")
+        @DisplayName("Minting a RAiD with invalid type for role schema fails")
         void invalidPositionTypeForScheme() {
-            createRequest.setContributors(List.of(
+            createRequest.setContributor(List.of(
                     new Contributor()
-                            .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
+                            .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0001")
-                            .positions(List.of(
-                                    new ContributorPositionWithSchemeUri()
-                                            .startDate(LocalDate.now())
-                                            .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                            .position(List.of(
+                                    new ContributorPositionWithSchemaUri()
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(LEADER_POSITION),
-                                    new ContributorPositionWithSchemeUri()
-                                            .startDate(LocalDate.now())
-                                            .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                                    new ContributorPositionWithSchemaUri()
+                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(OTHER_PARTICIPANT_POSITION)
                             ))
-                            .roles(List.of(
-                                    new ContributorRoleWithSchemeUri()
-                                            .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+                            .role(List.of(
+                                    new ContributorRoleWithSchemaUri()
+                                            .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                             .id("unknown")
                             ))
             ));
 
             try {
                 raidApi.createRaidV1(createRequest);
-                fail("No exception thrown with invalid type for role scheme");
+                fail("No exception thrown with invalid type for role schema");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributors[0].roles[0].id")
+                                .fieldId("contributor[0].role[0].id")
                                 .errorType("invalidValue")
-                                .message("id does not exist within the given scheme")
+                                .message("id does not exist within the given schema")
                 );
             } catch (Exception e) {
                 fail("Expected RaidApiValidationException");

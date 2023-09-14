@@ -9,6 +9,7 @@ import au.org.raid.idl.raidv2.api.UnapprovedExperimentalApi;
 import au.org.raid.idl.raidv2.model.UpdateAuthzRequest;
 import au.org.raid.idl.raidv2.model.UpdateAuthzResponse;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,7 +39,7 @@ public class UnapprovedExperimental implements UnapprovedExperimentalApi {
     more "unapproved user" endpoints (what for?) factor out the SecurityContext
     code to AuthzUtil or somewhere. */
     @Override
-    public UpdateAuthzResponse updateAuthzRequest(UpdateAuthzRequest req) {
+    public ResponseEntity<UpdateAuthzResponse> updateAuthzRequest(UpdateAuthzRequest req) {
         Guard.notNull(req);
         Guard.notNull(req.getServicePointId());
         Guard.notNull("comments may be empty, but not null", req.getComments());
@@ -58,11 +59,11 @@ public class UnapprovedExperimental implements UnapprovedExperimentalApi {
             throw ExceptionUtil.authFailed();
         }
 
-        return authzRequestSvc.updateRequestAuthz(
+        return ResponseEntity.ok(authzRequestSvc.updateRequestAuthz(
                 unapprovedUserToken.getClientId(),
                 unapprovedUserToken.getEmail(),
                 unapprovedUserToken.getSubject(),
-                req);
+                req));
     }
 
 }

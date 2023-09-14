@@ -20,17 +20,17 @@ public class DescriptionTypeRecord extends UpdatableRecordImpl<DescriptionTypeRe
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>api_svc.description_type.scheme_id</code>.
+     * Setter for <code>api_svc.description_type.schema_id</code>.
      */
-    public DescriptionTypeRecord setSchemeId(Integer value) {
+    public DescriptionTypeRecord setSchemaId(Integer value) {
         set(0, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.description_type.scheme_id</code>.
+     * Getter for <code>api_svc.description_type.schema_id</code>.
      */
-    public Integer getSchemeId() {
+    public Integer getSchemaId() {
         return (Integer) get(0);
     }
 
@@ -74,7 +74,7 @@ public class DescriptionTypeRecord extends UpdatableRecordImpl<DescriptionTypeRe
 
     @Override
     public Field<Integer> field1() {
-        return DescriptionType.DESCRIPTION_TYPE.SCHEME_ID;
+        return DescriptionType.DESCRIPTION_TYPE.SCHEMA_ID;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class DescriptionTypeRecord extends UpdatableRecordImpl<DescriptionTypeRe
 
     @Override
     public Integer component1() {
-        return getSchemeId();
+        return getSchemaId();
     }
 
     @Override
@@ -94,7 +94,7 @@ public class DescriptionTypeRecord extends UpdatableRecordImpl<DescriptionTypeRe
 
     @Override
     public Integer value1() {
-        return getSchemeId();
+        return getSchemaId();
     }
 
     @Override
@@ -104,7 +104,7 @@ public class DescriptionTypeRecord extends UpdatableRecordImpl<DescriptionTypeRe
 
     @Override
     public DescriptionTypeRecord value1(Integer value) {
-        setSchemeId(value);
+        setSchemaId(value);
         return this;
     }
 
@@ -135,10 +135,10 @@ public class DescriptionTypeRecord extends UpdatableRecordImpl<DescriptionTypeRe
     /**
      * Create a detached, initialised DescriptionTypeRecord
      */
-    public DescriptionTypeRecord(Integer schemeId, String uri) {
+    public DescriptionTypeRecord(Integer schemaId, String uri) {
         super(DescriptionType.DESCRIPTION_TYPE);
 
-        setSchemeId(schemeId);
+        setSchemaId(schemaId);
         setUri(uri);
     }
 }

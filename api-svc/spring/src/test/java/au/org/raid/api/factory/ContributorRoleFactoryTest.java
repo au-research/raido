@@ -3,7 +3,7 @@ package au.org.raid.api.factory;
 import au.org.raid.idl.raidv2.model.ContributorRole;
 import au.org.raid.idl.raidv2.model.ContributorRoleCreditNisoOrgType;
 import au.org.raid.idl.raidv2.model.ContributorRoleSchemeType;
-import au.org.raid.idl.raidv2.model.ContributorRoleWithSchemeUri;
+import au.org.raid.idl.raidv2.model.ContributorRoleWithSchemaUri;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
 class ContributorRoleFactoryTest {
-    private static final String SCHEME_URI =
+    private static final String SCHEMA_URI =
             "https://credit.niso.org/";
 
     private final ContributorRoleFactory roleFactory = new ContributorRoleFactory();
@@ -24,9 +24,9 @@ class ContributorRoleFactoryTest {
                 .role(ContributorRoleCreditNisoOrgType.CONCEPTUALIZATION)
                 .roleSchemeUri(ContributorRoleSchemeType.HTTPS_CREDIT_NISO_ORG_);
 
-        final var expected = new ContributorRoleWithSchemeUri()
+        final var expected = new ContributorRoleWithSchemaUri()
                 .id("https://credit.niso.org/contributor-roles/conceptualization/")
-                .schemeUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = roleFactory.create(role);
 
@@ -40,9 +40,9 @@ class ContributorRoleFactoryTest {
                 .role(ContributorRoleCreditNisoOrgType.DATA_CURATION)
                 .roleSchemeUri(ContributorRoleSchemeType.HTTPS_CREDIT_NISO_ORG_);
 
-        final var expected = new ContributorRoleWithSchemeUri()
+        final var expected = new ContributorRoleWithSchemaUri()
                 .id("https://credit.niso.org/contributor-roles/data-curation/")
-                .schemeUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = roleFactory.create(role);
 
@@ -56,9 +56,9 @@ class ContributorRoleFactoryTest {
                 .role(ContributorRoleCreditNisoOrgType.FORMAL_ANALYSIS)
                 .roleSchemeUri(ContributorRoleSchemeType.HTTPS_CREDIT_NISO_ORG_);
 
-        final var expected = new ContributorRoleWithSchemeUri()
+        final var expected = new ContributorRoleWithSchemaUri()
                 .id("https://credit.niso.org/contributor-roles/formal-analysis/")
-                .schemeUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = roleFactory.create(role);
 
@@ -72,9 +72,9 @@ class ContributorRoleFactoryTest {
                 .role(ContributorRoleCreditNisoOrgType.FUNDING_ACQUISITION)
                 .roleSchemeUri(ContributorRoleSchemeType.HTTPS_CREDIT_NISO_ORG_);
 
-        final var expected = new ContributorRoleWithSchemeUri()
+        final var expected = new ContributorRoleWithSchemaUri()
                 .id("https://credit.niso.org/contributor-roles/funding-acquisition/")
-                .schemeUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = roleFactory.create(role);
 
@@ -88,9 +88,9 @@ class ContributorRoleFactoryTest {
                 .role(ContributorRoleCreditNisoOrgType.INVESTIGATION)
                 .roleSchemeUri(ContributorRoleSchemeType.HTTPS_CREDIT_NISO_ORG_);
 
-        final var expected = new ContributorRoleWithSchemeUri()
+        final var expected = new ContributorRoleWithSchemaUri()
                 .id("https://credit.niso.org/contributor-roles/investigation/")
-                .schemeUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = roleFactory.create(role);
 
@@ -104,9 +104,9 @@ class ContributorRoleFactoryTest {
                 .role(ContributorRoleCreditNisoOrgType.METHODOLOGY)
                 .roleSchemeUri(ContributorRoleSchemeType.HTTPS_CREDIT_NISO_ORG_);
 
-        final var expected = new ContributorRoleWithSchemeUri()
+        final var expected = new ContributorRoleWithSchemaUri()
                 .id("https://credit.niso.org/contributor-roles/methodology/")
-                .schemeUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = roleFactory.create(role);
 
@@ -120,9 +120,9 @@ class ContributorRoleFactoryTest {
                 .role(ContributorRoleCreditNisoOrgType.PROJECT_ADMINISTRATION)
                 .roleSchemeUri(ContributorRoleSchemeType.HTTPS_CREDIT_NISO_ORG_);
 
-        final var expected = new ContributorRoleWithSchemeUri()
+        final var expected = new ContributorRoleWithSchemaUri()
                 .id("https://credit.niso.org/contributor-roles/project-administration/")
-                .schemeUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = roleFactory.create(role);
 
@@ -136,9 +136,9 @@ class ContributorRoleFactoryTest {
                 .role(ContributorRoleCreditNisoOrgType.RESOURCES)
                 .roleSchemeUri(ContributorRoleSchemeType.HTTPS_CREDIT_NISO_ORG_);
 
-        final var expected = new ContributorRoleWithSchemeUri()
+        final var expected = new ContributorRoleWithSchemaUri()
                 .id("https://credit.niso.org/contributor-roles/resources/")
-                .schemeUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = roleFactory.create(role);
 
@@ -152,9 +152,9 @@ class ContributorRoleFactoryTest {
                 .role(ContributorRoleCreditNisoOrgType.SOFTWARE)
                 .roleSchemeUri(ContributorRoleSchemeType.HTTPS_CREDIT_NISO_ORG_);
 
-        final var expected = new ContributorRoleWithSchemeUri()
+        final var expected = new ContributorRoleWithSchemaUri()
                 .id("https://credit.niso.org/contributor-roles/software/")
-                .schemeUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = roleFactory.create(role);
 
@@ -168,9 +168,9 @@ class ContributorRoleFactoryTest {
                 .role(ContributorRoleCreditNisoOrgType.SUPERVISION)
                 .roleSchemeUri(ContributorRoleSchemeType.HTTPS_CREDIT_NISO_ORG_);
 
-        final var expected = new ContributorRoleWithSchemeUri()
+        final var expected = new ContributorRoleWithSchemaUri()
                 .id("https://credit.niso.org/contributor-roles/supervision/")
-                .schemeUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = roleFactory.create(role);
 
@@ -184,9 +184,9 @@ class ContributorRoleFactoryTest {
                 .role(ContributorRoleCreditNisoOrgType.VALIDATION)
                 .roleSchemeUri(ContributorRoleSchemeType.HTTPS_CREDIT_NISO_ORG_);
 
-        final var expected = new ContributorRoleWithSchemeUri()
+        final var expected = new ContributorRoleWithSchemaUri()
                 .id("https://credit.niso.org/contributor-roles/validation/")
-                .schemeUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = roleFactory.create(role);
 
@@ -200,9 +200,9 @@ class ContributorRoleFactoryTest {
                 .role(ContributorRoleCreditNisoOrgType.VISUALIZATION)
                 .roleSchemeUri(ContributorRoleSchemeType.HTTPS_CREDIT_NISO_ORG_);
 
-        final var expected = new ContributorRoleWithSchemeUri()
+        final var expected = new ContributorRoleWithSchemaUri()
                 .id("https://credit.niso.org/contributor-roles/visualization/")
-                .schemeUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = roleFactory.create(role);
 
@@ -216,9 +216,9 @@ class ContributorRoleFactoryTest {
                 .role(ContributorRoleCreditNisoOrgType.WRITING_ORIGINAL_DRAFT)
                 .roleSchemeUri(ContributorRoleSchemeType.HTTPS_CREDIT_NISO_ORG_);
 
-        final var expected = new ContributorRoleWithSchemeUri()
+        final var expected = new ContributorRoleWithSchemaUri()
                 .id("https://credit.niso.org/contributor-roles/writing-original-draft/")
-                .schemeUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = roleFactory.create(role);
 
@@ -232,9 +232,9 @@ class ContributorRoleFactoryTest {
                 .role(ContributorRoleCreditNisoOrgType.WRITING_REVIEW_EDITING)
                 .roleSchemeUri(ContributorRoleSchemeType.HTTPS_CREDIT_NISO_ORG_);
 
-        final var expected = new ContributorRoleWithSchemeUri()
+        final var expected = new ContributorRoleWithSchemaUri()
                 .id("https://credit.niso.org/contributor-roles/writing-review-editing/")
-                .schemeUri(SCHEME_URI);
+                .schemaUri(SCHEMA_URI);
 
         final var result = roleFactory.create(role);
 
@@ -250,8 +250,8 @@ class ContributorRoleFactoryTest {
     @Test
     @DisplayName("ContributorRole with empty fields does not throw NullPointerException")
     void emptyFields() {
-        assertThat(roleFactory.create(new ContributorRole()), is(new ContributorRoleWithSchemeUri()
+        assertThat(roleFactory.create(new ContributorRole()), is(new ContributorRoleWithSchemaUri()
                 .id(null)
-                .schemeUri(SCHEME_URI)));
+                .schemaUri(SCHEMA_URI)));
     }
 }

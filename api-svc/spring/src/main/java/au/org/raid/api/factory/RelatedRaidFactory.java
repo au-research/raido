@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RelatedRaidFactory {
-    private static final String TYPE_SCHEME_URI =
+    private static final String TYPE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/";
 
     public RelatedRaid create(final RelatedRaidBlock relatedRaidBlock) {
@@ -19,6 +19,6 @@ public class RelatedRaidFactory {
                 .id(relatedRaidBlock.getRelatedRaid())
                 .type(new RelatedRaidType()
                         .id(relatedRaidBlock.getRelatedRaidType())
-                        .schemeUri(TYPE_SCHEME_URI));
+                        .schemaUri(TYPE_SCHEMA_URI));
     }
 }

@@ -16,7 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Collections;
 import java.util.List;
 
-import static au.org.raid.api.endpoint.message.ValidationMessage.FIELD_MUST_BE_SET_MESSAGE;
+import static au.org.raid.api.endpoint.message.ValidationMessage.NOT_SET_MESSAGE;
 import static au.org.raid.api.endpoint.message.ValidationMessage.NOT_SET_TYPE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -37,9 +37,9 @@ class RelatedObjectValidatorTest {
     private RelatedObjectValidator validationService;
 
 
-    // identifierSchemeUri is empty
+    // schemaUri is empty
 
-    // identifierSchemeUri is invalid
+    // schemaUri is invalid
 
     // type and category errors are returned
 
@@ -48,15 +48,15 @@ class RelatedObjectValidatorTest {
     void validaRelatedObject() {
         final var type = new RelatedObjectType()
                 .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
-                .schemeUri(TestConstants.RELATED_OBJECT_TYPE_SCHEME_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
 
         final var category = new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-                .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
 
         final var relatedObject = new RelatedObject()
                 .id(TestConstants.VALID_DOI)
-                .identifierSchemeUri(TestConstants.HTTPS_DOI_ORG)
+                .schemaUri(TestConstants.HTTPS_DOI_ORG)
                 .type(type)
                 .category(category);
 
@@ -90,14 +90,14 @@ class RelatedObjectValidatorTest {
     void nullId() {
         final var type = new RelatedObjectType()
                 .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
-                .schemeUri(TestConstants.RELATED_OBJECT_TYPE_SCHEME_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
 
         final var category = new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-                .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
 
         final var relatedObject = new RelatedObject()
-                .identifierSchemeUri(TestConstants.HTTPS_DOI_ORG)
+                .schemaUri(TestConstants.HTTPS_DOI_ORG)
                 .type(type)
                 .category(category);
 
@@ -107,7 +107,7 @@ class RelatedObjectValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[0].id")
+                        .fieldId("relatedObject[0].id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -118,15 +118,15 @@ class RelatedObjectValidatorTest {
     void emptyId() {
         final var type = new RelatedObjectType()
                 .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
-                .schemeUri(TestConstants.RELATED_OBJECT_TYPE_SCHEME_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
 
         final var category = new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-                .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
 
         final var relatedObject = new RelatedObject()
                 .id("")
-                .identifierSchemeUri(TestConstants.HTTPS_DOI_ORG)
+                .schemaUri(TestConstants.HTTPS_DOI_ORG)
                 .type(type)
                 .category(category);
 
@@ -136,22 +136,22 @@ class RelatedObjectValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[0].id")
+                        .fieldId("relatedObject[0].id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
     }
 
     @Test
-    @DisplayName("Fails validation with null identifierSchemeUri")
+    @DisplayName("Fails validation with null schemaUri")
     void nullSchemeUri() {
         final var type = new RelatedObjectType()
                 .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
-                .schemeUri(TestConstants.RELATED_OBJECT_TYPE_SCHEME_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
 
         final var category = new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-                .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
 
         final var relatedObject = new RelatedObject()
                 .id(TestConstants.VALID_DOI)
@@ -164,26 +164,26 @@ class RelatedObjectValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[0].identifierSchemeUri")
+                        .fieldId("relatedObject[0].schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
     }
 
     @Test
-    @DisplayName("Fails validation with empty identifierSchemeUri")
+    @DisplayName("Fails validation with empty schemaUri")
     void emptySchemeUri() {
         final var type = new RelatedObjectType()
                 .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
-                .schemeUri(TestConstants.RELATED_OBJECT_TYPE_SCHEME_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
 
         final var category = new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-                .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
 
         final var relatedObject = new RelatedObject()
                 .id(TestConstants.VALID_DOI)
-                .identifierSchemeUri("")
+                .schemaUri("")
                 .type(type)
                 .category(category);
 
@@ -193,7 +193,7 @@ class RelatedObjectValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("relatedObjects[0].identifierSchemeUri")
+                        .fieldId("relatedObject[0].schemaUri")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -202,18 +202,18 @@ class RelatedObjectValidatorTest {
     @Test
     @DisplayName("Validation fails if DOI does not exist")
     void addsFailureIfDoiDoesNotExist() {
-        final var fieldId = "relatedObjects[0].id";
+        final var fieldId = "relatedObject[0].id";
         final var type = new RelatedObjectType()
                 .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
-                .schemeUri(TestConstants.RELATED_OBJECT_TYPE_SCHEME_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
 
         final var category = new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-                .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
 
         final var relatedObject = new RelatedObject()
                 .id(TestConstants.VALID_DOI)
-                .identifierSchemeUri(TestConstants.HTTPS_DOI_ORG)
+                .schemaUri(TestConstants.HTTPS_DOI_ORG)
                 .type(type)
                 .category(category);
 
@@ -237,27 +237,27 @@ class RelatedObjectValidatorTest {
     void typeAndCategoryFailuresAreReturned() {
         final var type = new RelatedObjectType()
                 .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
-                .schemeUri(TestConstants.RELATED_OBJECT_TYPE_SCHEME_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
 
         final var category = new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-                .schemeUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEME_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
 
         final var relatedObject = new RelatedObject()
                 .id(TestConstants.VALID_DOI)
-                .identifierSchemeUri(TestConstants.HTTPS_DOI_ORG)
+                .schemaUri(TestConstants.HTTPS_DOI_ORG)
                 .type(type)
                 .category(category);
 
         final var typeError = new ValidationFailure()
-                .fieldId("relatedObjects[0].type.id")
+                .fieldId("relatedObject[0].type.id")
                 .errorType(NOT_SET_TYPE)
-                .message(FIELD_MUST_BE_SET_MESSAGE);
+                .message(NOT_SET_MESSAGE);
 
         final var categoryError = new ValidationFailure()
-                .fieldId("relatedObjects[0].category.id")
+                .fieldId("relatedObject[0].category.id")
                 .errorType(NOT_SET_TYPE)
-                .message(FIELD_MUST_BE_SET_MESSAGE);
+                .message(NOT_SET_MESSAGE);
 
         when(typeValidationService.validate(type, 0)).thenReturn(List.of(typeError));
         when(categoryValidationService.validate(category, 0)).thenReturn(List.of(categoryError));

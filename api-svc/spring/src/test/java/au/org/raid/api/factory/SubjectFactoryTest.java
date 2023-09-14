@@ -2,8 +2,11 @@ package au.org.raid.api.factory;
 
 import au.org.raid.idl.raidv2.model.Subject;
 import au.org.raid.idl.raidv2.model.SubjectBlock;
+import au.org.raid.idl.raidv2.model.SubjectKeyword;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -28,18 +31,18 @@ class SubjectFactoryTest {
     @DisplayName("All fields are set")
     void setsAllFields() {
         final var id = "_id";
-        final var schemeUri = "scheme-uri";
+        final var schemaUri = "scheme-uri";
         final var keyword = "_keyword";
 
         final var subject = new SubjectBlock()
                 .subject(id)
                 .subjectKeyword(keyword)
-                .subjectSchemeUri(schemeUri);
+                .subjectSchemeUri(schemaUri);
 
         final var expected = new Subject()
                 .id(id)
-                .schemeUri(schemeUri)
-                .keyword(keyword);
+                .schemaUri(schemaUri)
+                .keyword(List.of(new SubjectKeyword().text(keyword)));
 
         assertThat(subjectFactory.create(subject), is(expected));
 

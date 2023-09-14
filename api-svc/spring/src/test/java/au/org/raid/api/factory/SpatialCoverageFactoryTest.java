@@ -38,7 +38,7 @@ class SpatialCoverageFactoryTest {
 
         final var expected = new SpatialCoverage()
                 .id(id)
-                .schemeUri(schemeUri)
+                .schemaUri(schemeUri)
                 .place(place);
 
         assertThat(spatialCoverageFactory.create(spatialCoverage), is(expected));

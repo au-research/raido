@@ -1,11 +1,12 @@
 package au.org.raid.api.factory;
 
-import au.org.raid.idl.raidv2.model.Dates;
+import au.org.raid.idl.raidv2.model.Date;
 import au.org.raid.idl.raidv2.model.DatesBlock;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -25,8 +26,8 @@ class DatesFactoryTest {
 
         final var result = datesFactory.create(datesBlock);
 
-        assertThat(result.getStartDate(), is(startDate));
-        assertThat(result.getEndDate(), is(endDate));
+        assertThat(result.getStartDate(), is(startDate.format(DateTimeFormatter.ISO_LOCAL_DATE)));
+        assertThat(result.getEndDate(), is(endDate.format(DateTimeFormatter.ISO_LOCAL_DATE)));
     }
 
     @Test
@@ -38,6 +39,6 @@ class DatesFactoryTest {
     @Test
     @DisplayName("Dates fields are null if DatesBlock fields are null")
     void nullFields() {
-        assertThat(datesFactory.create(new DatesBlock()), is(new Dates()));
+        assertThat(datesFactory.create(new DatesBlock()), is(new Date()));
     }
 }

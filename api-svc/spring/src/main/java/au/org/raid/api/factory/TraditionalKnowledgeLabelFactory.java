@@ -12,6 +12,6 @@ public class TraditionalKnowledgeLabelFactory {
         }
 
         return new TraditionalKnowledgeLabel()
-                .schemeUri(traditionalKnowledgeLabelBlock.getTraditionalKnowledgeLabelSchemeUri());
+                .schemaUri(traditionalKnowledgeLabelBlock.getTraditionalKnowledgeLabelSchemeUri());
     }
 }

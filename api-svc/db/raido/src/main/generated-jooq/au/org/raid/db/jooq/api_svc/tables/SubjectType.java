@@ -13,6 +13,8 @@ import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 
 
@@ -58,9 +60,9 @@ public class SubjectType extends TableImpl<SubjectTypeRecord> {
     public final TableField<SubjectTypeRecord, String> NOTE = createField(DSL.name("note"), SQLDataType.CLOB, this, "");
 
     /**
-     * The column <code>api_svc.subject_type.scheme_id</code>.
+     * The column <code>api_svc.subject_type.schema_id</code>.
      */
-    public final TableField<SubjectTypeRecord, Integer> SCHEME_ID = createField(DSL.name("scheme_id"), SQLDataType.INTEGER, this, "");
+    public final TableField<SubjectTypeRecord, Integer> SCHEMA_ID = createField(DSL.name("schema_id"), SQLDataType.INTEGER, this, "");
 
     private SubjectType(Name alias, Table<SubjectTypeRecord> aliased) {
         this(alias, aliased, null);
@@ -103,6 +105,24 @@ public class SubjectType extends TableImpl<SubjectTypeRecord> {
     @Override
     public UniqueKey<SubjectTypeRecord> getPrimaryKey() {
         return Keys.SUBJECT_PKEY;
+    }
+
+    @Override
+    public List<ForeignKey<SubjectTypeRecord, ?>> getReferences() {
+        return Arrays.asList(Keys.SUBJECT_TYPE__FK_SUBJECT_TYPE_SCHEMA_ID);
+    }
+
+    private transient SubjectTypeSchema _subjectTypeSchema;
+
+    /**
+     * Get the implicit join path to the
+     * <code>api_svc.subject_type_schema</code> table.
+     */
+    public SubjectTypeSchema subjectTypeSchema() {
+        if (_subjectTypeSchema == null)
+            _subjectTypeSchema = new SubjectTypeSchema(this, Keys.SUBJECT_TYPE__FK_SUBJECT_TYPE_SCHEMA_ID);
+
+        return _subjectTypeSchema;
     }
 
     @Override

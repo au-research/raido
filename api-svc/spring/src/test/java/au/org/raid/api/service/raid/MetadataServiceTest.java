@@ -5,15 +5,22 @@ import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.spring.config.environment.MetadataProps;
 import au.org.raid.db.jooq.api_svc.tables.records.ServicePointRecord;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class MetadataServiceTest {
-    private final MetadataProps metadataProps = new MetadataProps();
+    @Mock
+    private MetadataProps metadataProps;
 
-    private final MetadataService metadataService =
-            new MetadataService(metadataProps);
+    @InjectMocks
+    private MetadataService metadataService;
 
     @Test
     void createIdBlock() {
@@ -22,12 +29,13 @@ class MetadataServiceTest {
         final var identifierRegistrationAgency = "registration-agency";
         final var id = new IdentifierUrl("https://unittest.com",
                 new IdentifierHandle("prefix", "suffix"));
-        final var identifierSchemeUri = "https://raid.org";
+        final var identifierSchemeUri = "https://raid.org/";
         final var globalUrlPrefix = "globalUrlPrefix";
 
-        metadataProps.identifierRegistrationAgency = identifierRegistrationAgency;
-        metadataProps.globalUrlPrefix = globalUrlPrefix;
-        metadataProps.handleUrlPrefix = "raid-url";
+
+        when(metadataProps.getIdentifierRegistrationAgency()).thenReturn(identifierRegistrationAgency);
+        when(metadataProps.getGlobalUrlPrefix()).thenReturn(globalUrlPrefix);
+        when(metadataProps.getHandleUrlPrefix()).thenReturn("raid-url");
 
         final var servicePointRecord = new ServicePointRecord()
                 .setId(servicePointId)

@@ -5,6 +5,7 @@ import au.org.raid.idl.raidv2.api.PublicStableApi;
 import au.org.raid.idl.raidv2.model.PublicReadRaidResponseV3;
 import org.jooq.exception.NoDataFoundException;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -27,7 +28,7 @@ public class PublicStable implements PublicStableApi {
     }
 
     @Override
-    public PublicReadRaidResponseV3 publicApiGetRaid(
+    public ResponseEntity<PublicReadRaidResponseV3> publicApiGetRaid(
             String prefix,
             String suffix
     ) {

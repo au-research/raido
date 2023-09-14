@@ -41,7 +41,7 @@ class RorValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("organisations[0].id")
+                        .fieldId("organisation[0].id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -55,7 +55,7 @@ class RorValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("organisations[0].id")
+                        .fieldId("organisation[0].id")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -64,7 +64,7 @@ class RorValidatorTest {
     @Test
     @DisplayName("Validation fails if ROR does not match correct pattern")
     void rorMatchesPattern() {
-        final var fieldId = "organisations[0].id";
+        final var fieldId = "organisation[0].id";
         final var invalidRor = "https://ror.org/038sjwqxx";
         final var failure = new ValidationFailure()
                 .fieldId(fieldId)
@@ -81,7 +81,7 @@ class RorValidatorTest {
     @Test
     @DisplayName("Validation fails if ROR does not exist")
     void rorDoesNotExist() {
-        final var fieldId = "organisations[0].id";
+        final var fieldId = "organisation[0].id";
 
         final var failure = new ValidationFailure()
                 .fieldId(fieldId)

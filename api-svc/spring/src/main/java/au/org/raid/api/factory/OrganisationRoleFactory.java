@@ -2,14 +2,15 @@ package au.org.raid.api.factory;
 
 import au.org.raid.idl.raidv2.model.OrganisationRole;
 import au.org.raid.idl.raidv2.model.OrganisationRoleType;
-import au.org.raid.idl.raidv2.model.OrganisationRoleWithSchemeUri;
+import au.org.raid.idl.raidv2.model.OrganisationRoleWithSchemaUri;
 import org.springframework.stereotype.Component;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @Component
 public class OrganisationRoleFactory {
-    private static final String SCHEME_URI =
+    private static final String SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/";
 
     private static final Map<OrganisationRoleType, String> ROLE_MAP =
@@ -25,15 +26,20 @@ public class OrganisationRoleFactory {
                     "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/partner-organisation.json"
             );
 
-    public OrganisationRoleWithSchemeUri create(final OrganisationRole role) {
+    public OrganisationRoleWithSchemaUri create(final OrganisationRole role) {
         if (role == null) {
             return null;
         }
 
-        return new OrganisationRoleWithSchemeUri()
+        final var startDate = (role.getStartDate() != null) ?
+                role.getStartDate().format(DateTimeFormatter.ISO_LOCAL_DATE) : null;
+        final var endDate = (role.getEndDate() != null) ?
+                role.getEndDate().format(DateTimeFormatter.ISO_LOCAL_DATE) : null;
+
+        return new OrganisationRoleWithSchemaUri()
                 .id(role.getRole() != null ? ROLE_MAP.get(role.getRole()) : null)
-                .schemeUri(SCHEME_URI)
-                .startDate(role.getStartDate())
-                .endDate(role.getEndDate());
+                .schemaUri(SCHEMA_URI)
+                .startDate(startDate)
+                .endDate(endDate);
     }
 }

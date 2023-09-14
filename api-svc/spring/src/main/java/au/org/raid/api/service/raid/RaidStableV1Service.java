@@ -17,9 +17,9 @@ import au.org.raid.api.service.raid.id.IdentifierParser.ParseProblems;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.spring.security.raidv2.ApiToken;
 import au.org.raid.api.util.Log;
-import au.org.raid.idl.raidv2.model.CreateRaidV1Request;
+import au.org.raid.idl.raidv2.model.RaidCreateRequest;
 import au.org.raid.idl.raidv2.model.RaidDto;
-import au.org.raid.idl.raidv2.model.UpdateRaidV1Request;
+import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -73,7 +73,7 @@ public class RaidStableV1Service {
     }
 
     public IdentifierUrl mintRaidSchemaV1(
-            final CreateRaidV1Request request,
+            final RaidCreateRequest request,
             final long servicePoint
     ) {
         /* this is the part where we want to make sure no TX is held open.
@@ -87,8 +87,8 @@ public class RaidStableV1Service {
 
 
         IdentifierHandle handle = parseHandleFromApids(apidsResponse);
-        var id = new IdentifierUrl(metaSvc.getMetaProps().handleUrlPrefix, handle);
-        request.setId(idFactory.create(id, servicePointRecord));
+        var id = new IdentifierUrl(metaSvc.getMetaProps().getHandleUrlPrefix(), handle);
+        request.setIdentifier(idFactory.create(id, servicePointRecord));
 
         final var raidRecord = raidRecordFactory.create(
                 request, apidsResponse, servicePointRecord);
@@ -100,16 +100,16 @@ public class RaidStableV1Service {
 
     @SneakyThrows
     public RaidDto update(
-            final UpdateRaidV1Request raid
+            final RaidUpdateRequest raid
     ) {
-        final Integer version = raid.getId().getVersion();
+        final Integer version = raid.getIdentifier().getVersion();
         if (version == null) {
             throw new InvalidVersionException(version);
         }
 
         final IdentifierUrl identifierUrl;
         try {
-            identifierUrl = idParser.parseUrlWithException(raid.getId().getIdentifier());
+            identifierUrl = idParser.parseUrlWithException(raid.getIdentifier().getId());
         } catch (ValidationFailureException e) {
             // it was already validated, so this shouldn't happen
             throw new RuntimeException(e);

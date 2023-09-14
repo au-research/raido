@@ -1,7 +1,7 @@
 package au.org.raid.inttest.endpoint.raidv2.stable;
 
 import au.org.raid.idl.raidv2.model.Organisation;
-import au.org.raid.idl.raidv2.model.OrganisationRoleWithSchemeUri;
+import au.org.raid.idl.raidv2.model.OrganisationRoleWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import au.org.raid.inttest.RaidApiValidationException;
 import org.junit.jupiter.api.DisplayName;
@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with no organisations succeeds")
     void noOrganisations() {
-        createRequest.setOrganisations(null);
+        createRequest.setOrganisation(null);
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -34,7 +35,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with empty organisations succeeds")
     void emptyOrganisations() {
-        createRequest.setOrganisations(Collections.emptyList());
+        createRequest.setOrganisation(Collections.emptyList());
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -46,27 +47,27 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Minting a RAiD with missing organisation identifierSchemeUri fails")
+    @DisplayName("Minting a RAiD with missing organisation schemaUri fails")
     void missingIdentifierSchemeUri() {
-        createRequest.setOrganisations(List.of(
+        createRequest.setOrganisation(List.of(
                 new Organisation()
                         .id(VALID_ROR)
-                        .roles(List.of(
-                                new OrganisationRoleWithSchemeUri()
-                                        .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
+                        .role(List.of(
+                                new OrganisationRoleWithSchemaUri()
+                                        .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                         .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                         ))
         ));
 
         try {
             raidApi.createRaidV1(createRequest);
-            fail("No exception thrown with missing identifierSchemeUri");
+            fail("No exception thrown with missing schemaUri");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("organisations[0].schemeUri")
+                            .fieldId("organisation[0].schemaUri")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -76,29 +77,29 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Minting a RAiD with empty organisation identifierSchemeUri fails")
+    @DisplayName("Minting a RAiD with empty organisation schemaUri fails")
     void emptyIdentifierSchemeUri() {
-        createRequest.setOrganisations(List.of(
+        createRequest.setOrganisation(List.of(
                 new Organisation()
-                        .identifierSchemeUri("")
+                        .schemaUri("")
                         .id(VALID_ROR)
-                        .roles(List.of(
-                                new OrganisationRoleWithSchemeUri()
-                                        .startDate(LocalDate.now())
-                                        .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
+                        .role(List.of(
+                                new OrganisationRoleWithSchemaUri()
+                                        .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                        .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                         .id(LEAD_RESEARCH_ORGANISATION)
                         ))
         ));
 
         try {
             raidApi.createRaidV1(createRequest);
-            fail("No exception thrown with empty identifierSchemeUri");
+            fail("No exception thrown with empty schemaUri");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("organisations[0].schemeUri")
+                            .fieldId("organisation[0].schemaUri")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -110,12 +111,12 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with missing organisation id fails")
     void missingId() {
-        createRequest.setOrganisations(List.of(
+        createRequest.setOrganisation(List.of(
                 new Organisation()
-                        .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
-                        .roles(List.of(
-                                new OrganisationRoleWithSchemeUri()
-                                        .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
+                        .schemaUri(ORGANISATION_IDENTIFIER_SCHEMA_URI)
+                        .role(List.of(
+                                new OrganisationRoleWithSchemaUri()
+                                        .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                         .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                         ))
         ));
@@ -128,7 +129,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("organisations[0].id")
+                            .fieldId("organisation[0].id")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -140,13 +141,13 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with empty organisation id fails")
     void emptyId() {
-        createRequest.setOrganisations(List.of(
+        createRequest.setOrganisation(List.of(
                 new Organisation()
-                        .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
+                        .schemaUri(ORGANISATION_IDENTIFIER_SCHEMA_URI)
                         .id("")
-                        .roles(List.of(
-                                new OrganisationRoleWithSchemeUri()
-                                        .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
+                        .role(List.of(
+                                new OrganisationRoleWithSchemaUri()
+                                        .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                         .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                         ))
         ));
@@ -159,7 +160,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("organisations[0].id")
+                            .fieldId("organisation[0].id")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -174,13 +175,13 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         @Test
         @DisplayName("Minting a RAiD with invalid ror pattern fails")
         void invalidRorPattern() {
-            createRequest.setOrganisations(List.of(
+            createRequest.setOrganisation(List.of(
                     new Organisation()
-                            .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
+                            .schemaUri(ORGANISATION_IDENTIFIER_SCHEMA_URI)
                             .id("https://ror.org/038sjwqx@")
-                            .roles(List.of(
-                                    new OrganisationRoleWithSchemeUri()
-                                            .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
+                            .role(List.of(
+                                    new OrganisationRoleWithSchemaUri()
+                                            .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                             .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                             ))
             ));
@@ -193,7 +194,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("organisations[0].id")
+                                .fieldId("organisation[0].id")
                                 .errorType("invalidValue")
                                 .message("has invalid/unsupported value - should match ^https://ror\\.org/[0-9a-z]{9}$")
                 );
@@ -205,13 +206,13 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         @Test
         @DisplayName("Minting a RAiD with non-existent ror fails")
         void nonExistentRor() {
-            createRequest.setOrganisations(List.of(
+            createRequest.setOrganisation(List.of(
                     new Organisation()
-                            .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
+                            .schemaUri(ORGANISATION_IDENTIFIER_SCHEMA_URI)
                             .id("https://ror.org/000000042")
-                            .roles(List.of(
-                                    new OrganisationRoleWithSchemeUri()
-                                            .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
+                            .role(List.of(
+                                    new OrganisationRoleWithSchemaUri()
+                                            .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                             .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                             ))
             ));
@@ -224,7 +225,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("organisations[0].id")
+                                .fieldId("organisation[0].id")
                                 .errorType("invalidValue")
                                 .message("uri not found")
                 );
@@ -236,29 +237,29 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
 
     @Nested
     @DisplayName("Role tests...")
-    class OrganisationRoleWithSchemeUriTests {
+    class OrganisationRoleWithSchemaUriTests {
         @Test
-        @DisplayName("Minting a RAiD with missing role schemeUri fails")
+        @DisplayName("Minting a RAiD with missing role schemaUri fails")
         void missingRoleSchemeUri() {
-            createRequest.setOrganisations(List.of(
+            createRequest.setOrganisation(List.of(
                     new Organisation()
-                            .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
+                            .schemaUri(ORGANISATION_IDENTIFIER_SCHEMA_URI)
                             .id(VALID_ROR)
-                            .roles(List.of(
-                                    new OrganisationRoleWithSchemeUri()
+                            .role(List.of(
+                                    new OrganisationRoleWithSchemaUri()
                                             .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                             ))
             ));
 
             try {
                 raidApi.createRaidV1(createRequest);
-                fail("No exception thrown with missing role schemeUri");
+                fail("No exception thrown with missing role schemaUri");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("organisations[0].roles[0].schemeUri")
+                                .fieldId("organisation[0].role[0].schemaUri")
                                 .errorType("notSet")
                                 .message("field must be set")
                 );
@@ -270,13 +271,13 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         @Test
         @DisplayName("Minting a RAiD with missing role type fails")
         void missingRoleType() {
-            createRequest.setOrganisations(List.of(
+            createRequest.setOrganisation(List.of(
                     new Organisation()
-                            .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
+                            .schemaUri(ORGANISATION_IDENTIFIER_SCHEMA_URI)
                             .id(VALID_ROR)
-                            .roles(List.of(
-                                    new OrganisationRoleWithSchemeUri()
-                                            .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
+                            .role(List.of(
+                                    new OrganisationRoleWithSchemaUri()
+                                            .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                             ))
             ));
 
@@ -288,7 +289,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("organisations[0].roles[0].id")
+                                .fieldId("organisation[0].role[0].id")
                                 .errorType("notSet")
                                 .message("field must be set")
                 );
@@ -300,14 +301,14 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         @Test
         @DisplayName("Minting a RAiD with empty role type fails")
         void emptyRoleType() {
-            createRequest.setOrganisations(List.of(
+            createRequest.setOrganisation(List.of(
                     new Organisation()
-                            .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
+                            .schemaUri(ORGANISATION_IDENTIFIER_SCHEMA_URI)
                             .id(VALID_ROR)
-                            .roles(List.of(
-                                    new OrganisationRoleWithSchemeUri()
+                            .role(List.of(
+                                    new OrganisationRoleWithSchemaUri()
                                             .id("")
-                                            .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
+                                            .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                             ))
             ));
 
@@ -319,7 +320,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("organisations[0].roles[0].id")
+                                .fieldId("organisation[0].role[0].id")
                                 .errorType("notSet")
                                 .message("field must be set")
                 );
@@ -329,30 +330,30 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         }
 
         @Test
-        @DisplayName("Minting a RAiD with invalid role schemeUri fails")
+        @DisplayName("Minting a RAiD with invalid role schemaUri fails")
         void invalidRoleSchemeUri() {
-            createRequest.setOrganisations(List.of(
+            createRequest.setOrganisation(List.of(
                     new Organisation()
-                            .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
+                            .schemaUri(ORGANISATION_IDENTIFIER_SCHEMA_URI)
                             .id(VALID_ROR)
-                            .roles(List.of(
-                                    new OrganisationRoleWithSchemeUri()
-                                            .schemeUri("unknown")
+                            .role(List.of(
+                                    new OrganisationRoleWithSchemaUri()
+                                            .schemaUri("unknown")
                                             .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                             ))
             ));
 
             try {
                 raidApi.createRaidV1(createRequest);
-                fail("No exception thrown with invalid role schemeUri");
+                fail("No exception thrown with invalid role schemaUri");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("organisations[0].roles[0].schemeUri")
+                                .fieldId("organisation[0].role[0].schemaUri")
                                 .errorType("invalidValue")
-                                .message("scheme is unknown/unsupported")
+                                .message("schema is unknown/unsupported")
                 );
             } catch (Exception e) {
                 fail("Expected RaidApiValidationException");
@@ -360,30 +361,30 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         }
 
         @Test
-        @DisplayName("Minting a RAiD with invalid type for role scheme fails")
+        @DisplayName("Minting a RAiD with invalid type for role schema fails")
         void invalidRoleTypeForScheme() {
-            createRequest.setOrganisations(List.of(
+            createRequest.setOrganisation(List.of(
                     new Organisation()
-                            .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI)
+                            .schemaUri(ORGANISATION_IDENTIFIER_SCHEMA_URI)
                             .id(VALID_ROR)
-                            .roles(List.of(
-                                    new OrganisationRoleWithSchemeUri()
-                                            .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
+                            .role(List.of(
+                                    new OrganisationRoleWithSchemaUri()
+                                            .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                             .id("unknown")
                             ))
             ));
 
             try {
                 raidApi.createRaidV1(createRequest);
-                fail("No exception thrown with invalid type for role scheme");
+                fail("No exception thrown with invalid type for role schema");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("organisations[0].roles[0].id")
+                                .fieldId("organisation[0].role[0].id")
                                 .errorType("invalidValue")
-                                .message("id does not exist within the given scheme")
+                                .message("id does not exist within the given schema")
                 );
             } catch (Exception e) {
                 fail("Expected RaidApiValidationException");
