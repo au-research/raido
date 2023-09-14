@@ -87,7 +87,7 @@ public class RaidStableV1Service {
 
 
         IdentifierHandle handle = parseHandleFromApids(apidsResponse);
-        var id = new IdentifierUrl(metaSvc.getMetaProps().handleUrlPrefix, handle);
+        var id = new IdentifierUrl(metaSvc.getMetaProps().getHandleUrlPrefix(), handle);
         request.setIdentifier(idFactory.create(id, servicePointRecord));
 
         final var raidRecord = raidRecordFactory.create(

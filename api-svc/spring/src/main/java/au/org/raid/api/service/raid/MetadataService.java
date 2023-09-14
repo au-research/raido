@@ -39,7 +39,7 @@ public class MetadataService {
     /* I think this should point top the metadata schema definition
     in the readthedocs, or our github OpenApi definition, or the "formal
     metadata schema" think MBA is working on? */
-    public static final String RAID_ID_TYPE_URI = "https://raid.org";
+    public static final String RAID_ID_TYPE_URI = "https://raid.org/";
     /* driven by the openapi spec, but I don't think there's any way to access
     the property name programmatically, the open-api generator for spring is all
     about generating annotations, not this kind of usage (same problem as
@@ -222,7 +222,7 @@ public class MetadataService {
     }
 
     public String formatRaidoLandingPageUrl(String handle) {
-        return "%s/%s".formatted(metaProps.raidoLandingPrefix, handle);
+        return "%s/%s".formatted(metaProps.getRaidoLandingPrefix(), handle);
     }
 
     public IdBlock createIdBlock(final IdentifierUrl id,
@@ -231,11 +231,11 @@ public class MetadataService {
         return new IdBlock().
                 identifier(id.formatUrl()).
                 identifierSchemeURI(RAID_ID_TYPE_URI).
-                identifierRegistrationAgency(metaProps.identifierRegistrationAgency).
+                identifierRegistrationAgency(metaProps.getIdentifierRegistrationAgency()).
                 identifierOwner(servicePointRecord.getIdentifierOwner()).
                 identifierServicePoint(servicePointRecord.getId()).
-                globalUrl(id.handle().format(metaProps.globalUrlPrefix)).
-                raidAgencyUrl(id.handle().format(metaProps.handleUrlPrefix)).
+                globalUrl(id.handle().format(metaProps.getGlobalUrlPrefix())).
+                raidAgencyUrl(id.handle().format(metaProps.getHandleUrlPrefix())).
                 version(1);
     }
 
@@ -249,9 +249,9 @@ public class MetadataService {
      * see this message and figure things out from there.
      */
     public List<ValidationFailure> validateMetadataSize(String metadataAsJson) {
-        if (metadataAsJson.length() > metaProps.maxMetadataChars) {
+        if (metadataAsJson.length() > metaProps.getMaxMetadataChars()) {
             log.with("jsonLength", metadataAsJson.length()).
-                    with("maxSize", metaProps.maxMetadataChars).
+                    with("maxSize", metaProps.getMaxMetadataChars()).
                     warn(METADATA_TOO_LARGE.getMessage());
             return List.of(METADATA_TOO_LARGE);
         }

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class IdFactory {
-    private final MetadataProps metaProps;
+    private final MetadataProps metadataProps;
 
     public Id create(final IdentifierUrl id,
                      final ServicePointRecord servicePointRecord
@@ -24,7 +24,7 @@ public class IdFactory {
                 id(id.formatUrl())
                 .schemaUri(MetadataService.RAID_ID_TYPE_URI)
                 .registrationAgency(new RegistrationAgency()
-                        .id(metaProps.identifierRegistrationAgency)
+                        .id(metadataProps.getIdentifierRegistrationAgency())
                         .schemaUri(SchemaUri.ROR.getUri())
                 )
                 .owner(new Owner()
@@ -32,8 +32,9 @@ public class IdFactory {
                         .schemaUri(SchemaUri.ROR.getUri())
                         .servicePoint(servicePointRecord.getId())
                 )
-                .globalUrl(id.handle().format(metaProps.globalUrlPrefix))
-                .raidAgencyUrl(id.handle().format(metaProps.handleUrlPrefix))
+                .globalUrl(id.handle().format(metadataProps.getGlobalUrlPrefix()))
+                .raidAgencyUrl(id.handle().format(metadataProps.getHandleUrlPrefix()))
+                .license(metadataProps.getRaidlicense())
                 .version(1);
     }
 
@@ -55,6 +56,7 @@ public class IdFactory {
                 )
                 .globalUrl(idBlock.getGlobalUrl())
                 .raidAgencyUrl(idBlock.getRaidAgencyUrl())
+                .license(metadataProps.getRaidlicense())
                 .version(idBlock.getVersion());
     }
 }

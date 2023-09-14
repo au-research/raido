@@ -3,7 +3,6 @@ package au.org.raid.api.service.raid.validation;
 import au.org.raid.api.repository.RaidRepository;
 import au.org.raid.api.repository.RelatedRaidTypeRepository;
 import au.org.raid.api.spring.config.environment.MetadataProps;
-import au.org.raid.api.util.Log;
 import au.org.raid.idl.raidv2.model.RelatedRaidBlock;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.springframework.stereotype.Component;
@@ -11,11 +10,8 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-import static au.org.raid.api.util.Log.to;
-
 @Component
 public class RelatedRaidValidationService {
-    private static final Log log = to(RelatedRaidValidationService.class);
     private static final String RELATED_RAID_TYPE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/";
     private static final String RELATED_RAID_TYPE_URI_PREFIX =
@@ -38,7 +34,7 @@ public class RelatedRaidValidationService {
             return failures;
         }
 
-        final var raidUrlPattern = String.format("^%s\\/\\d+\\.\\d+\\/\\d+$", metadataProps.handleUrlPrefix);
+        final var raidUrlPattern = String.format("^%s\\/\\d+\\.\\d+\\/\\d+$", metadataProps.getHandleUrlPrefix());
         final var relatedRaidTypeUrlPattern = String.format("^%s\\/[a-z\\-]+.json$", RELATED_RAID_TYPE_URI_PREFIX);
 
         for (int i = 0; i < relatedRaids.size(); i++) {
@@ -50,7 +46,7 @@ public class RelatedRaidValidationService {
                         .fieldId(String.format("relatedRaids[%d].relatedRaid", i))
                         .message(
                                 "RelatedRaid is invalid. Does not match %s/prefix/suffix"
-                                        .formatted(metadataProps.handleUrlPrefix)
+                                        .formatted(metadataProps.getHandleUrlPrefix())
                         )
                 );
             } else {

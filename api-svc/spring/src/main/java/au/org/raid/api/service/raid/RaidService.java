@@ -2,8 +2,6 @@ package au.org.raid.api.service.raid;
 
 import au.org.raid.api.exception.InvalidVersionException;
 import au.org.raid.api.exception.UnknownServicePointException;
-import au.org.raid.api.factory.RaidRecordFactory;
-import au.org.raid.api.repository.RaidRepository;
 import au.org.raid.api.repository.ServicePointRepository;
 import au.org.raid.api.service.apids.ApidsService;
 import au.org.raid.api.service.apids.model.ApidsMintResponse;
@@ -17,6 +15,7 @@ import au.org.raid.db.jooq.api_svc.enums.Metaschema;
 import au.org.raid.db.jooq.api_svc.tables.records.RaidRecord;
 import au.org.raid.db.jooq.api_svc.tables.records.ServicePointRecord;
 import au.org.raid.idl.raidv2.model.*;
+import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.jooq.JSONB;
 import org.jooq.exception.NoDataFoundException;
@@ -47,7 +46,9 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toMap;
 
 /* Be careful with usage of @Transactional, see db-transaction-guideline.md */
+@Deprecated
 @Component
+@RequiredArgsConstructor
 public class RaidService {
     private static final Log log = to(RaidService.class);
 
@@ -56,29 +57,8 @@ public class RaidService {
     private final MetadataService metaSvc;
     private final RaidoSchemaV1ValidationService validSvc;
     private final TransactionTemplate tx;
-
     private final ServicePointRepository servicePointRepository;
     private final IdentifierParser idParser;
-
-    public RaidService(
-            final DSLContext db,
-            final ApidsService apidsSvc,
-            final MetadataService metaSvc,
-            final RaidoSchemaV1ValidationService validSvc,
-            final TransactionTemplate tx,
-            final RaidRepository raidRepository,
-            final ServicePointRepository servicePointRepository,
-            final RaidRecordFactory raidRecordFactory,
-            IdentifierParser idParser
-    ) {
-        this.db = db;
-        this.apidsSvc = apidsSvc;
-        this.metaSvc = metaSvc;
-        this.validSvc = validSvc;
-        this.tx = tx;
-        this.servicePointRepository = servicePointRepository;
-        this.idParser = idParser;
-    }
 
     /**
      * Expects the passed metadata is valid.
@@ -132,7 +112,7 @@ public class RaidService {
                 servicePointRepository.findById(servicePointId)
                         .orElseThrow(() -> new UnknownServicePointException(servicePointId));
 
-        var id = new IdentifierUrl(metaSvc.getMetaProps().handleUrlPrefix, handle);
+        var id = new IdentifierUrl(metaSvc.getMetaProps().getHandleUrlPrefix(), handle);
         metadata.setId(metaSvc.createIdBlock(id, servicePointRecord));
 
         // validation failure possible
@@ -186,7 +166,7 @@ public class RaidService {
                 servicePointRepository.findById(servicePointId)
                         .orElseThrow(() -> new UnknownServicePointException(servicePointId));
 
-        var id = new IdentifierUrl(metaSvc.getMetaProps().handleUrlPrefix, handle);
+        var id = new IdentifierUrl(metaSvc.getMetaProps().getHandleUrlPrefix(), handle);
         metadata.setId(metaSvc.createIdBlock(id, servicePointRecord));
 
         // validation failure possible

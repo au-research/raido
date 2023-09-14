@@ -49,6 +49,7 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
                             .registrationAgency(new RegistrationAgency()
                                     .id(metadata.getId().getIdentifierRegistrationAgency())
                                     .schemaUri("https://ror.org/"))
+                            .license("Creative Commons CC-0")
                             .version(metadata.getId().getVersion()))
                     .title(List.of(
                             new Title()
@@ -233,7 +234,7 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
                 .id("http://localhost:8080/" + raidModel.getHandle())
                 .globalUrl("https://hdl.handle.net/" + raidModel.getHandle())
                 .raidAgencyUrl("http://localhost:8080/" + raidModel.getHandle())
-                .schemaUri("https://raid.org")
+                .schemaUri("https://raid.org/")
                 .registrationAgency(new RegistrationAgency()
                         .id("https://ror.org/038sjwq14")
                         .schemaUri("https://ror.org/"))
@@ -241,6 +242,7 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
                         .id("https://ror.org/00rqy9422")
                         .schemaUri("https://ror.org/")
                         .servicePoint(20000002L))
+                .license("Creative Commons CC-0")
                 .version(1));
 
         assertThat(raidDto.getAccess()).isEqualTo(new Access()
