@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import { Container } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAuthApi } from "Api/AuthApi";
@@ -12,30 +11,37 @@ import {
   useNavigation,
 } from "Design/NavigationProvider";
 import RaidForm from "Forms/RaidForm";
-import {
-  Access,
-  Contributor,
-  CreateRaidV1Request,
-  Dates,
-  RaidDto,
-  Title,
-} from "Generated/Raidv2";
+import { Access, Contributor, Dates, RaidDto, Title } from "Generated/Raidv2";
 
 import { useState } from "react";
 import { newRaid } from "utils";
 
-const pageUrl = "/mint-raid-new";
+const pageUrl = "/edit-raid-new";
 
-export function isMintRaidPagePath(pathname: string): NavPathResult {
+export function isEditRaidPagePath(pathname: string): NavPathResult {
   return isPagePath(pathname, pageUrl);
 }
 
 function getRaidHandleFromPathname(nav: NavigationState): string {
-  return parsePageSuffixParams<string>(nav, isMintRaidPagePath, String);
+  return parsePageSuffixParams<string>(nav, isEditRaidPagePath, String);
 }
 
 function Content() {
   const nav = useNavigation();
+
+  const [handle] = useState(getRaidHandleFromPathname(nav));
+  const [prefix, suffix] = handle.split("/");
+  console.log("handle");
+
+  const getRaid = async (): Promise<RaidDto> => {
+    return await api.raid.readRaidV1({ prefix, suffix });
+  };
+
+  const useGetRaid = () => {
+    return useQuery<RaidDto>(["raids"], getRaid);
+  };
+
+  const readQuery = useGetRaid();
 
   const handleRaidCreate = async (data: RaidDto): Promise<RaidDto> => {
     return await api.raid.createRaidV1({
@@ -58,7 +64,15 @@ function Content() {
     },
   });
 
-  const defaultValues = newRaid;
+  if (readQuery.isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (readQuery.isError) {
+    return <div>Error...</div>;
+  }
+
+  const defaultValues = readQuery.data || newRaid;
 
   return (
     <Container maxWidth="lg">
@@ -69,7 +83,7 @@ function Content() {
           // mintRequest.mutate(data);
         }}
         isSubmitting={mintRequest.isLoading}
-        formTitle="Mint new RAiD"
+        formTitle={`Edit RAiD ${handle}`}
       />
     </Container>
   );
@@ -78,7 +92,7 @@ function Content() {
 export default function MintRaidPage() {
   return (
     <NavTransition
-      isPagePath={isMintRaidPagePath}
+      isPagePath={isEditRaidPagePath}
       title={raidoTitle("Mint RAiD")}
     >
       <Content />
