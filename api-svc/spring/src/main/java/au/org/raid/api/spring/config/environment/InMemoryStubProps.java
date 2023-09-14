@@ -34,4 +34,10 @@ public class InMemoryStubProps {
 
     @Value("${geonames.in-memory-stub-delay:150}")
     public long geoNamesInMemoryStubDelay;
+
+    @Value("${openstreetmap.in-memory-stub:false}")
+    public boolean openStreetMapInMemoryStub;
+
+    @Value("${openstreetmap.in-memory-stub-delay:150}")
+    public long openStreetMapInMemoryStubDelay;
 }

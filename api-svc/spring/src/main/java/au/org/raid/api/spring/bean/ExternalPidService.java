@@ -11,11 +11,17 @@ import au.org.raid.api.spring.config.environment.InMemoryStubProps;
 import au.org.raid.api.util.Guard;
 import au.org.raid.api.util.Log;
 import au.org.raid.api.validator.GeoNamesUriValidator;
+import au.org.raid.api.validator.OpenStreetMapUriValidator;
+import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+import java.util.Map;
+import java.util.function.BiFunction;
 
 import static au.org.raid.api.util.Log.to;
 
@@ -70,7 +76,7 @@ public class ExternalPidService {
     public RorService rorService(
             EnvironmentProps envConfig,
             InMemoryStubProps stubProps,
-            RestTemplate rest
+            RestTemplate restTemplate
     ) {
         if (stubProps.rorInMemoryStub) {
             Guard.isTrue("Cannot use InMemoryRorServiceStub in a PROD env",
@@ -80,7 +86,7 @@ public class ExternalPidService {
             return new RorServiceStub();
         }
 
-        return new RorService(rest);
+        return new RorService(restTemplate);
     }
 
 
@@ -89,7 +95,7 @@ public class ExternalPidService {
     public DoiService doiService(
             EnvironmentProps envConfig,
             InMemoryStubProps stubProps,
-            RestTemplate rest
+            RestTemplate restTemplate
     ) {
         if (stubProps.doiInMemoryStub) {
             Guard.isTrue("Cannot use InMemoryDoiServiceStub in a PROD env",
@@ -98,7 +104,7 @@ public class ExternalPidService {
             return new DoiServiceStub();
         }
 
-        return new DoiService(rest);
+        return new DoiService(restTemplate);
     }
 
     @Bean
@@ -106,7 +112,7 @@ public class ExternalPidService {
     public GeoNamesUriValidator geoNamesUriValidator(
             final EnvironmentProps envConfig,
             final InMemoryStubProps stubProps,
-            final RestTemplate rest,
+            final RestTemplate restTemplate,
             @Value("${raid.validation.geonames.username}") final String username
     ) {
         if (stubProps.geoNamesInMemoryStub) {
@@ -116,6 +122,36 @@ public class ExternalPidService {
             return new GeonamesUriValidatorStub();
         }
 
-        return new GeoNamesUriValidator(rest,  username);
+        return new GeoNamesUriValidator(restTemplate,  username);
+    }
+
+    @Bean
+    @Primary
+    public OpenStreetMapUriValidator openStreetMapUriValidator(
+            final EnvironmentProps envConfig,
+            final InMemoryStubProps stubProps,
+            final RestTemplate restTemplate
+    ) {
+        if (stubProps.openStreetMapInMemoryStub) {
+            Guard.isTrue("Cannot use OpenStreetMapUriValidatorStub in a PROD env",
+                    !envConfig.isProd);
+            log.warn("using the in-memory OpenStreetMap validator");
+            return new OpenStreetMapValidatorStub();
+        }
+
+        return new OpenStreetMapUriValidator(restTemplate);
+    }
+
+    @Bean
+    public Map<String, BiFunction<String, String, List<ValidationFailure>>> spatialCoverageUriValidatorMap(
+            final GeoNamesUriValidator geoNamesUriValidator,
+            final OpenStreetMapUriValidator openStreetMapUriValidator,
+            @Value("${raid.spatial-coverage.schema-uri.geonames}") final String geoNamesSchemaUri,
+            @Value("${raid.spatial-coverage.schema-uri.openstreetmap}") final String openStreetMapSchemaUri
+    ) {
+        return Map.of(
+                geoNamesSchemaUri, geoNamesUriValidator::validate,
+                openStreetMapSchemaUri, openStreetMapUriValidator::validate
+        );
     }
 }

@@ -14,13 +14,13 @@ import static au.org.raid.db.jooq.api_svc.tables.DescriptionType.DESCRIPTION_TYP
 public class DescriptionTypeRepository {
     private final DSLContext dslContext;
 
-    public Optional<DescriptionTypeRecord> findByUriAndSchemeId(final String uri, final int schemeId) {
+    public Optional<DescriptionTypeRecord> findByUriAndSchemeId(final String uri, final int schemaId) {
         return dslContext.select(DESCRIPTION_TYPE.fields())
                 .from(DESCRIPTION_TYPE)
                 .where(DESCRIPTION_TYPE.URI.eq(uri))
-                .and(DESCRIPTION_TYPE.SCHEME_ID.eq(schemeId))
+                .and(DESCRIPTION_TYPE.SCHEMA_ID.eq(schemaId))
                 .fetchOptional(record -> new DescriptionTypeRecord()
-                        .setSchemeId(DESCRIPTION_TYPE.SCHEME_ID.getValue(record))
+                        .setSchemaId(DESCRIPTION_TYPE.SCHEMA_ID.getValue(record))
                         .setUri(DESCRIPTION_TYPE.URI.getValue(record))
                 );
     }

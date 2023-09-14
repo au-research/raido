@@ -40,9 +40,9 @@ public class OrganisationRole extends TableImpl<OrganisationRoleRecord> {
     }
 
     /**
-     * The column <code>api_svc.organisation_role.scheme_id</code>.
+     * The column <code>api_svc.organisation_role.schema_id</code>.
      */
-    public final TableField<OrganisationRoleRecord, Integer> SCHEME_ID = createField(DSL.name("scheme_id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<OrganisationRoleRecord, Integer> SCHEMA_ID = createField(DSL.name("schema_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>api_svc.organisation_role.uri</code>.
@@ -94,20 +94,20 @@ public class OrganisationRole extends TableImpl<OrganisationRoleRecord> {
 
     @Override
     public List<ForeignKey<OrganisationRoleRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.ORGANISATION_ROLE__FK_ORGANISATION_ROLE_TYPE_SCHEME_ID);
+        return Arrays.asList(Keys.ORGANISATION_ROLE__FK_ORGANISATION_ROLE_SCHEMA_ID);
     }
 
-    private transient OrganisationRoleScheme _organisationRoleScheme;
+    private transient OrganisationRoleSchema _organisationRoleSchema;
 
     /**
      * Get the implicit join path to the
-     * <code>api_svc.organisation_role_scheme</code> table.
+     * <code>api_svc.organisation_role_schema</code> table.
      */
-    public OrganisationRoleScheme organisationRoleScheme() {
-        if (_organisationRoleScheme == null)
-            _organisationRoleScheme = new OrganisationRoleScheme(this, Keys.ORGANISATION_ROLE__FK_ORGANISATION_ROLE_TYPE_SCHEME_ID);
+    public OrganisationRoleSchema organisationRoleSchema() {
+        if (_organisationRoleSchema == null)
+            _organisationRoleSchema = new OrganisationRoleSchema(this, Keys.ORGANISATION_ROLE__FK_ORGANISATION_ROLE_SCHEMA_ID);
 
-        return _organisationRoleScheme;
+        return _organisationRoleSchema;
     }
 
     @Override

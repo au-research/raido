@@ -4,12 +4,13 @@ import au.org.raid.api.exception.InvalidAccessException;
 import au.org.raid.api.exception.ValidationException;
 import au.org.raid.api.service.raid.RaidStableV1Service;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
-import au.org.raid.api.service.raid.validation.RaidoStableV1ValidationService;
+import au.org.raid.api.validator.RaidoStableV1Validator;
 import au.org.raid.idl.raidv2.api.RaidoStableV1Api;
-import au.org.raid.idl.raidv2.model.CreateRaidV1Request;
+import au.org.raid.idl.raidv2.model.RaidCreateRequest;
 import au.org.raid.idl.raidv2.model.RaidDto;
-import au.org.raid.idl.raidv2.model.UpdateRaidV1Request;
+import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,26 +25,26 @@ import static org.springframework.transaction.annotation.Propagation.NEVER;
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
 public class RaidoStableV1 implements RaidoStableV1Api {
-    private final RaidoStableV1ValidationService validationService;
+    private final RaidoStableV1Validator validationService;
     private final RaidStableV1Service raidService;
 
-    public RaidoStableV1(final RaidoStableV1ValidationService validationService, final RaidStableV1Service raidService) {
+    public RaidoStableV1(final RaidoStableV1Validator validationService, final RaidStableV1Service raidService) {
         this.validationService = validationService;
         this.raidService = raidService;
     }
 
     @Override
-    public RaidDto readRaidV1(final String prefix, final String suffix) {
+    public ResponseEntity<RaidDto> readRaidV1(final String prefix, final String suffix) {
         final var handle = String.join("/", prefix, suffix);
         var user = getApiToken();
         var data = raidService.read(handle);
-        guardOperatorOrAssociated(user, data.getId().getIdentifierServicePoint());
-        return data;
+        guardOperatorOrAssociated(user, data.getIdentifier().getOwner().getServicePoint());
+        return ResponseEntity.ok(data);
     }
 
     @Override
     @Transactional(propagation = NEVER)
-    public RaidDto createRaidV1(CreateRaidV1Request request) {
+    public ResponseEntity<RaidDto> createRaidV1(RaidCreateRequest request) {
         final var user = getApiToken();
 
         if (!raidService.isEditable(user, user.getServicePointId())) {
@@ -59,24 +60,24 @@ public class RaidoStableV1 implements RaidoStableV1Api {
         IdentifierUrl id = raidService.mintRaidSchemaV1(
                 request, user.getServicePointId());
 
-        return raidService.read(id.handle().format());
+        return ResponseEntity.ok(raidService.read(id.handle().format()));
     }
 
     @Override
-    public List<RaidDto> listRaidsV1(Long servicePointId) {
+    public ResponseEntity<List<RaidDto>> listRaidsV1(Long servicePointId) {
         var user = getApiToken();
         guardOperatorOrAssociated(user, servicePointId);
 
-        return raidService.list(servicePointId);
+        return ResponseEntity.ok(raidService.list(servicePointId));
     }
 
     @Override
-    public RaidDto updateRaidV1(final String prefix, final String suffix, UpdateRaidV1Request request) {
+    public ResponseEntity<RaidDto> updateRaidV1(final String prefix, final String suffix, RaidUpdateRequest request) {
         final var handle = String.join("/", prefix, suffix);
         var user = getApiToken();
-        guardOperatorOrAssociated(user, request.getId().getIdentifierServicePoint());
+        guardOperatorOrAssociated(user, request.getIdentifier().getOwner().getServicePoint());
 
-        if (!raidService.isEditable(user, request.getId().getIdentifierServicePoint())) {
+        if (!raidService.isEditable(user, request.getIdentifier().getOwner().getServicePoint())) {
             throw new InvalidAccessException("This service point does not allow Raids to be edited in the app.");
         }
 
@@ -86,6 +87,6 @@ public class RaidoStableV1 implements RaidoStableV1Api {
             throw new ValidationException(failures);
         }
 
-        return raidService.update(request);
+        return ResponseEntity.ok(raidService.update(request));
     }
 }

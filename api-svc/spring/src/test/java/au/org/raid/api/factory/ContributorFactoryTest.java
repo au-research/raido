@@ -44,13 +44,13 @@ class ContributorFactoryTest {
         final var orcid = "0000-0002-6492-9025";
         final var position1 = new ContributorPosition();
         final var position2 = new ContributorPosition();
-        final var position3 = new ContributorPositionWithSchemeUri();
-        final var position4 = new ContributorPositionWithSchemeUri();
+        final var position3 = new ContributorPositionWithSchemaUri();
+        final var position4 = new ContributorPositionWithSchemaUri();
 
         final var role1 = new ContributorRole();
         final var role2 = new ContributorRole();
-        final var role3 = new ContributorRoleWithSchemeUri();
-        final var role4 = new ContributorRoleWithSchemeUri();
+        final var role3 = new ContributorRoleWithSchemaUri();
+        final var role4 = new ContributorRoleWithSchemaUri();
 
         when(positionFactory.create(position1)).thenReturn(position3);
         when(positionFactory.create(position2)).thenReturn(position4);
@@ -67,9 +67,9 @@ class ContributorFactoryTest {
 
         assertThat(result, is(new Contributor()
                 .id(orcid)
-                .identifierSchemeUri("https://orcid.org/")
-                .positions(List.of(position3, position4))
-                .roles(List.of(role3, role4))
+                .schemaUri("https://orcid.org/")
+                .position(List.of(position3, position4))
+                .role(List.of(role3, role4))
         ));
     }
 }

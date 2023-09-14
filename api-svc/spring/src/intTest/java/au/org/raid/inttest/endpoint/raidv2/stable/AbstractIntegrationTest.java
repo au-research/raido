@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
@@ -38,7 +39,7 @@ public class AbstractIntegrationTest {
     protected String operatorToken;
     protected String raidV1TestToken;
     protected LocalDate today = LocalDate.now();
-    protected CreateRaidV1Request createRequest;
+    protected RaidCreateRequest createRequest;
 
     protected RaidoStableV1Api raidApi;
     protected BasicRaidExperimentalApi experimentalApi;
@@ -82,74 +83,82 @@ public class AbstractIntegrationTest {
         return testInfo.getDisplayName();
     }
 
-    protected CreateRaidV1Request newCreateRequest() {
+    protected RaidCreateRequest newCreateRequest() {
         String initialTitle = getClass().getSimpleName() + "." + getName() +
                 idFactory.generateUniqueId();
 
-        return new CreateRaidV1Request()
-                .titles(List.of(new Title()
+        return new RaidCreateRequest()
+                .title(List.of(new Title()
                         .language(new Language()
-                                .schemeUri(LANGUAGE_SCHEME_URI)
+                                .schemaUri(LANGUAGE_SCHEMA_URI)
                                 .id(LANGUAGE_ID)
                         )
-                        .type(new TitleTypeWithSchemeUri()
+                        .type(new TitleTypeWithSchemaUri()
                                 .id(PRIMARY_TITLE_TYPE)
-                                .schemeUri(TITLE_TYPE_SCHEME_URI))
-                        .title(initialTitle)
-                        .startDate(today)))
-                .dates(new Dates().startDate(today))
-                .descriptions(List.of(new Description()
+                                .schemaUri(TITLE_TYPE_SCHEMA_URI))
+                        .text(initialTitle)
+                        .startDate(today.format(DateTimeFormatter.ISO_LOCAL_DATE))))
+                .date(new Date().startDate(today.format(DateTimeFormatter.ISO_LOCAL_DATE)))
+                .description(List.of(new Description()
                         .language(new Language()
-                                .schemeUri(LANGUAGE_SCHEME_URI)
+                                .schemaUri(LANGUAGE_SCHEMA_URI)
                                 .id(LANGUAGE_ID))
-                        .type(new DescriptionTypeWithSchemeUri()
+                        .type(new DescriptionTypeWithSchemaUri()
                                 .id(PRIMARY_DESCRIPTION_TYPE)
-                                .schemeUri(DESCRIPTION_TYPE_SCHEME_URI))
-                        .description("stuff about the int test raid")
+                                .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI))
+                        .text("stuff about the int test raid")
                         .language(new Language()
-                                .schemeUri(LANGUAGE_SCHEME_URI)
+                                .schemaUri(LANGUAGE_SCHEMA_URI)
                                 .id(LANGUAGE_ID))
                 ))
 
-                .contributors(List.of(contributor(
+                .contributor(List.of(contributor(
                         REAL_TEST_ORCID, LEADER_POSITION, SOFTWARE_CONTRIBUTOR_ROLE, today)))
-                .organisations(List.of(organisation(
+                .organisation(List.of(organisation(
                         REAL_TEST_ROR, LEAD_RESEARCH_ORGANISATION, today)))
                 .access(new Access()
                         .accessStatement(new AccessStatement()
-                                .statement("Embargoed")
+                                .text("Embargoed")
                                 .language(new Language()
                                         .id(LANGUAGE_ID)
-                                        .schemeUri(LANGUAGE_SCHEME_URI)))
-                        .type(new AccessTypeWithSchemeUri()
+                                        .schemaUri(LANGUAGE_SCHEMA_URI)))
+                        .type(new AccessTypeWithSchemaUri()
                                 .id(EMBARGOED_ACCESS_TYPE)
-                                .schemeUri(ACCESS_TYPE_SCHEME_URI))
+                                .schemaUri(ACCESS_TYPE_SCHEMA_URI))
                         .embargoExpiry(LocalDate.now().plusMonths(1)))
-                .spatialCoverages(List.of(new SpatialCoverage()
+                .spatialCoverage(List.of(new SpatialCoverage()
                         .language(new Language()
                                 .id(LANGUAGE_ID)
-                                .schemeUri(LANGUAGE_SCHEME_URI))
+                                .schemaUri(LANGUAGE_SCHEMA_URI))
                         .id(GEONAMES_MELBOURNE)
                         .place("Melbourne")
-                        .schemeUri(GEONAMES_SCHEMA_URI)));
+                        .schemaUri(GEONAMES_SCHEMA_URI)))
+                .traditionalKnowledgeLabel(List.of(
+                        new TraditionalKnowledgeLabel()
+                                .id("https://localcontexts.org/label/tk-attribution/")
+                                .schemaUri("https://localcontexts.org/labels/traditional-knowledge-labels/"),
+                        new TraditionalKnowledgeLabel()
+                                .id("https://localcontexts.org/label/bc-provenance/")
+                                .schemaUri("https://localcontexts.org/labels/biocultural-labels/")
+                ));
     }
 
-    private UpdateRaidV1Request mapReadToUpdate(RaidDto read) {
-        return new UpdateRaidV1Request().
-                id(read.getId()).
-                titles(read.getTitles()).
-                dates(read.getDates()).
-                descriptions(read.getDescriptions()).
-                access(read.getAccess()).
-                alternateUrls(read.getAlternateUrls()).
-                contributors(read.getContributors()).
-                organisations(read.getOrganisations()).
-                subjects(read.getSubjects()).
-                relatedRaids(read.getRelatedRaids()).
-                relatedObjects(read.getRelatedObjects()).
-                alternateIdentifiers(read.getAlternateIdentifiers()).
-                spatialCoverages(read.getSpatialCoverages()).
-                traditionalKnowledgeLabels(read.getTraditionalKnowledgeLabels());
+    private RaidUpdateRequest mapReadToUpdate(RaidDto read) {
+        return new RaidUpdateRequest()
+                .identifier(read.getIdentifier())
+                .title(read.getTitle())
+                .date(read.getDate())
+                .description(read.getDescription())
+                .access(read.getAccess())
+                .alternateUrl(read.getAlternateUrl())
+                .contributor(read.getContributor())
+                .organisation(read.getOrganisation())
+                .subject(read.getSubject())
+                .relatedRaid(read.getRelatedRaid())
+                .relatedObject(read.getRelatedObject())
+                .alternateIdentifier(read.getAlternateIdentifier())
+                .spatialCoverage(read.getSpatialCoverage())
+                .traditionalKnowledgeLabel(read.getTraditionalKnowledgeLabel());
     }
 
     public Contributor contributor(
@@ -160,14 +169,14 @@ public class AbstractIntegrationTest {
     ) {
         return new Contributor()
                 .id(orcid)
-                .identifierSchemeUri(CONTRIBUTOR_IDENTIFIER_SCHEME_URI)
-                .positions(List.of(new ContributorPositionWithSchemeUri()
-                        .schemeUri(CONTRIBUTOR_POSITION_SCHEME_URI)
+                .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                .position(List.of(new ContributorPositionWithSchemaUri()
+                        .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                         .id(position)
-                        .startDate(startDate)))
-                .roles(List.of(
-                        new ContributorRoleWithSchemeUri()
-                                .schemeUri(CONTRIBUTOR_ROLE_SCHEME_URI)
+                        .startDate(startDate.format(DateTimeFormatter.ISO_LOCAL_DATE))))
+                .role(List.of(
+                        new ContributorRoleWithSchemaUri()
+                                .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                 .id(role)));
     }
 
@@ -178,11 +187,11 @@ public class AbstractIntegrationTest {
     ) {
         return new Organisation()
                 .id(ror)
-                .identifierSchemeUri(ORGANISATION_IDENTIFIER_SCHEME_URI).
-                roles(List.of(
-                        new OrganisationRoleWithSchemeUri()
-                                .schemeUri(ORGANISATION_ROLE_SCHEME_URI)
+                .schemaUri(ORGANISATION_IDENTIFIER_SCHEMA_URI)
+                .role(List.of(
+                        new OrganisationRoleWithSchemaUri()
+                                .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                 .id(role)
-                                .startDate(today)));
+                                .startDate(today.format(DateTimeFormatter.ISO_LOCAL_DATE))));
     }
 }

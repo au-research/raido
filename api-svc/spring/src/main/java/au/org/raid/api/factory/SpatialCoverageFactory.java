@@ -14,7 +14,7 @@ public class SpatialCoverageFactory {
 
         return new SpatialCoverage()
                 .id(spatialCoverageBlock.getSpatialCoverage())
-                .schemeUri(spatialCoverageBlock.getSpatialCoverageSchemeUri())
+                .schemaUri(spatialCoverageBlock.getSpatialCoverageSchemeUri())
                 .place(spatialCoverageBlock.getSpatialCoveragePlace());
     }
 }

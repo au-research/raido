@@ -3,8 +3,8 @@ package au.org.raid.api.service.raid;
 import au.org.raid.db.jooq.api_svc.enums.Metaschema;
 import au.org.raid.db.jooq.api_svc.tables.records.RaidRecord;
 import au.org.raid.idl.raidv2.model.RaidDto;
+import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
 import au.org.raid.idl.raidv2.model.RaidoMetadataSchemaV1;
-import au.org.raid.idl.raidv2.model.UpdateRaidV1Request;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -38,7 +38,7 @@ public class RaidChecksumService {
     }
 
     @SneakyThrows
-    public String create(final UpdateRaidV1Request raid) {
+    public String create(final RaidUpdateRequest raid) {
         return DigestUtils.md5DigestAsHex(objectMapper.writeValueAsString(raid).getBytes());
     }
 

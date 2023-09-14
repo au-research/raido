@@ -20,17 +20,17 @@ public class OrganisationRoleRecord extends UpdatableRecordImpl<OrganisationRole
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>api_svc.organisation_role.scheme_id</code>.
+     * Setter for <code>api_svc.organisation_role.schema_id</code>.
      */
-    public OrganisationRoleRecord setSchemeId(Integer value) {
+    public OrganisationRoleRecord setSchemaId(Integer value) {
         set(0, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.organisation_role.scheme_id</code>.
+     * Getter for <code>api_svc.organisation_role.schema_id</code>.
      */
-    public Integer getSchemeId() {
+    public Integer getSchemaId() {
         return (Integer) get(0);
     }
 
@@ -74,7 +74,7 @@ public class OrganisationRoleRecord extends UpdatableRecordImpl<OrganisationRole
 
     @Override
     public Field<Integer> field1() {
-        return OrganisationRole.ORGANISATION_ROLE.SCHEME_ID;
+        return OrganisationRole.ORGANISATION_ROLE.SCHEMA_ID;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class OrganisationRoleRecord extends UpdatableRecordImpl<OrganisationRole
 
     @Override
     public Integer component1() {
-        return getSchemeId();
+        return getSchemaId();
     }
 
     @Override
@@ -94,7 +94,7 @@ public class OrganisationRoleRecord extends UpdatableRecordImpl<OrganisationRole
 
     @Override
     public Integer value1() {
-        return getSchemeId();
+        return getSchemaId();
     }
 
     @Override
@@ -104,7 +104,7 @@ public class OrganisationRoleRecord extends UpdatableRecordImpl<OrganisationRole
 
     @Override
     public OrganisationRoleRecord value1(Integer value) {
-        setSchemeId(value);
+        setSchemaId(value);
         return this;
     }
 
@@ -135,10 +135,10 @@ public class OrganisationRoleRecord extends UpdatableRecordImpl<OrganisationRole
     /**
      * Create a detached, initialised OrganisationRoleRecord
      */
-    public OrganisationRoleRecord(Integer schemeId, String uri) {
+    public OrganisationRoleRecord(Integer schemaId, String uri) {
         super(OrganisationRole.ORGANISATION_ROLE);
 
-        setSchemeId(schemeId);
+        setSchemaId(schemaId);
         setUri(uri);
     }
 }

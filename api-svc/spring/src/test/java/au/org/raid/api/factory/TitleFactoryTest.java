@@ -3,11 +3,12 @@ package au.org.raid.api.factory;
 import au.org.raid.idl.raidv2.model.Title;
 import au.org.raid.idl.raidv2.model.TitleBlock;
 import au.org.raid.idl.raidv2.model.TitleType;
-import au.org.raid.idl.raidv2.model.TitleTypeWithSchemeUri;
+import au.org.raid.idl.raidv2.model.TitleTypeWithSchemaUri;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -18,7 +19,7 @@ class TitleFactoryTest {
             "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
     private static final String ALTERNATIVE_ID =
             "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json";
-    private static final String TITLE_TYPE_SCHEME_URI =
+    private static final String TITLE_TYPE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/";
 
     private static final LocalDate START_DATE = LocalDate.now().minusYears(2);
@@ -39,12 +40,12 @@ class TitleFactoryTest {
         final var result = titleFactory.create(title);
 
         final var expected = new Title()
-                .title(TITLE)
-                .startDate(START_DATE)
-                .endDate(END_DATE)
-                .type(new TitleTypeWithSchemeUri()
+                .text(TITLE)
+                .startDate(START_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(END_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .type(new TitleTypeWithSchemaUri()
                         .id(PRIMARY_ID)
-                        .schemeUri(TITLE_TYPE_SCHEME_URI));
+                        .schemaUri(TITLE_TYPE_SCHEMA_URI));
 
         assertThat(result, is(expected));
     }
@@ -61,12 +62,12 @@ class TitleFactoryTest {
         final var result = titleFactory.create(title);
 
         final var expected = new Title()
-                .title(TITLE)
-                .startDate(START_DATE)
-                .endDate(END_DATE)
-                .type(new TitleTypeWithSchemeUri()
+                .text(TITLE)
+                .startDate(START_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .endDate(END_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
+                .type(new TitleTypeWithSchemaUri()
                         .id(ALTERNATIVE_ID)
-                        .schemeUri(TITLE_TYPE_SCHEME_URI));
+                        .schemaUri(TITLE_TYPE_SCHEMA_URI));
 
         assertThat(result, is(expected));
     }
@@ -85,8 +86,8 @@ class TitleFactoryTest {
         final var result = titleFactory.create(title);
 
         final var expected = new Title()
-                .type(new TitleTypeWithSchemeUri()
-                        .schemeUri(TITLE_TYPE_SCHEME_URI));
+                .type(new TitleTypeWithSchemaUri()
+                        .schemaUri(TITLE_TYPE_SCHEMA_URI));
 
         assertThat(result, is(expected));
     }

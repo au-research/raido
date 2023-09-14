@@ -1,28 +1,27 @@
 package au.org.raid.api.validator;
 
 import au.org.raid.api.repository.SubjectTypeRepository;
+import au.org.raid.api.util.SchemaUri;
 import au.org.raid.db.jooq.api_svc.tables.records.SubjectTypeRecord;
 import au.org.raid.idl.raidv2.model.Subject;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 
-import static au.org.raid.api.util.ObjectUtil.indexed;
+import static au.org.raid.api.endpoint.message.ValidationMessage.*;
 
 @Component
+@RequiredArgsConstructor
 public class SubjectValidator {
-
-    private static final String SUBJECT_SCHEME_URI = "https://linked.data.gov.au/def/anzsrc-for/2020/";
     private final SubjectTypeRepository subjectTypeRepository;
-
-    public SubjectValidator(final SubjectTypeRepository subjectTypeRepository) {
-        this.subjectTypeRepository = subjectTypeRepository;
-    }
-
-    public List<ValidationFailure> validateSubjects(List<Subject> subjects) {
+    private final SubjectKeywordValidator subjectKeywordValidator;
+    
+    public List<ValidationFailure> validate(List<Subject> subjects) {
 
         final var failures = new ArrayList<ValidationFailure>();
 
@@ -30,49 +29,56 @@ public class SubjectValidator {
             return failures;
         }
 
-        subjects.stream().
-                collect(indexed()).
-                forEach((i, subject) -> {
-                    if (subject.getSchemeUri() == null || !subject.getSchemeUri().equals(SUBJECT_SCHEME_URI)) {
+        IntStream.range(0, subjects.size()).forEach(subjectIndex -> {
+            final var subject = subjects.get(subjectIndex);
+
+            if (subject.getSchemaUri() == null || !subject.getSchemaUri().equals(SchemaUri.SUBJECT.getUri())) {
+                final var failure = new ValidationFailure();
+                failure.setFieldId(String.format("subject[%d].schemaUri", subjectIndex));
+                failure.setMessage(String.format("must be %s.", SchemaUri.SUBJECT.getUri()));
+                failure.setErrorType(INVALID_VALUE_TYPE);
+
+                failures.add(failure);
+            }
+
+            if (subject.getId() == null) {
+                final var failure = new ValidationFailure();
+                failure.setFieldId(String.format("subject[%d].id", subjectIndex));
+                failure.setMessage(NOT_SET_MESSAGE);
+                failure.setErrorType(NOT_SET_TYPE);
+
+                failures.add(failure);
+            } else {
+                final var subjectId = subject.getId().substring(subject.getId().lastIndexOf('/') + 1);
+
+                if (!subject.getId().startsWith(SchemaUri.SUBJECT.getUri()) || subjectId.matches(".*\\D.*")) {
+                    final var failure = new ValidationFailure();
+                    failure.setFieldId(String.format("subject[%d].id", subjectIndex));
+                    failure.setMessage(String.format("%s is not a valid field of research", subject.getId()));
+                    failure.setErrorType(INVALID_VALUE_TYPE);
+
+                    failures.add(failure);
+                } else {
+                    final Optional<SubjectTypeRecord> subjectTypeRecord = subjectTypeRepository.findById(subjectId);
+
+                    if (subjectTypeRecord.isEmpty()) {
                         final var failure = new ValidationFailure();
-                        failure.setFieldId(String.format("subjects[%d].subjectSchemeUri", i));
-                        failure.setMessage(String.format("must be %s.", SUBJECT_SCHEME_URI));
-                        failure.setErrorType("invalid");
+                        failure.setFieldId(String.format("subject[%d].id", subjectIndex));
+                        failure.setMessage(String.format("%s is not a standard FoR code", subject.getId()));
+                        failure.setErrorType(INVALID_VALUE_TYPE);
 
                         failures.add(failure);
                     }
+                }
+            }
 
-                    if (subject.getId() == null) {
-                        final var failure = new ValidationFailure();
-                        failure.setFieldId(String.format("subjects[%d].id", i));
-                        failure.setMessage("Subject field is required");
-                        failure.setErrorType("invalid");
-
-                        failures.add(failure);
-                    } else {
-                        final var subjectId = subject.getId().substring(subject.getId().lastIndexOf('/') + 1);
-
-                        if (!subject.getId().startsWith(SUBJECT_SCHEME_URI) || subjectId.matches(".*\\D.*")) {
-                            final var failure = new ValidationFailure();
-                            failure.setFieldId(String.format("subjects[%d].id", i));
-                            failure.setMessage(String.format("%s is not a valid field of research", subject.getId()));
-                            failure.setErrorType("invalid");
-
-                            failures.add(failure);
-                        } else {
-                            final Optional<SubjectTypeRecord> subjectTypeRecord = subjectTypeRepository.findById(subjectId);
-
-                            if (subjectTypeRecord.isEmpty()) {
-                                final var failure = new ValidationFailure();
-                                failure.setFieldId(String.format("subjects[%d].id", i));
-                                failure.setMessage(String.format("%s is not a standard FoR code", subject.getId()));
-                                failure.setErrorType("invalid");
-
-                                failures.add(failure);
-                            }
-                        }
-                    }
+            if (subject.getKeyword() != null) {
+                IntStream.range(0, subject.getKeyword().size()).forEach(keywordIndex -> {
+                    final var keyword = subject.getKeyword().get(keywordIndex);
+                    failures.addAll(subjectKeywordValidator.validate(keyword, subjectIndex, keywordIndex));
                 });
+            }
+        });
 
         return failures;
     }

@@ -42,8 +42,8 @@ class OrganisationFactoryTest {
 
         final var role1 = new OrganisationRole();
         final var role2 = new OrganisationRole();
-        final var role3 = new OrganisationRoleWithSchemeUri();
-        final var role4 = new OrganisationRoleWithSchemeUri();
+        final var role3 = new OrganisationRoleWithSchemaUri();
+        final var role4 = new OrganisationRoleWithSchemaUri();
 
         when(roleFactory.create(role1)).thenReturn(role3);
         when(roleFactory.create(role2)).thenReturn(role4);
@@ -57,8 +57,8 @@ class OrganisationFactoryTest {
 
         assertThat(result, is(new Organisation()
                 .id(ror)
-                .identifierSchemeUri("https://ror.org/")
-                .roles(List.of(role3, role4))
+                .schemaUri("https://ror.org/")
+                .role(List.of(role3, role4))
         ));
     }
 }

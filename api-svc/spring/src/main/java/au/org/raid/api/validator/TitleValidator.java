@@ -1,13 +1,15 @@
 package au.org.raid.api.validator;
 
-import au.org.raid.api.service.raid.validation.LanguageValidationService;
+import au.org.raid.api.util.DateUtil;
 import au.org.raid.idl.raidv2.model.Title;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static au.org.raid.api.endpoint.message.ValidationMessage.*;
@@ -23,7 +25,7 @@ public class TitleValidator {
             "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
 
     private final TitleTypeValidator titleTypeValidationService;
-    private final LanguageValidationService languageValidationService;
+    private final LanguageValidator languageValidator;
 
 
     public List<ValidationFailure> validatePrimaryTitle(
@@ -37,7 +39,8 @@ public class TitleValidator {
         }
 
         if (primaryTitles.size() > 1) {
-            return List.of(TOO_MANY_PRIMARY_TITLE);
+            // check dates
+            return validatePrimaryTitleDates(titles);
         }
 
         return emptyList();
@@ -56,10 +59,10 @@ public class TitleValidator {
             ;
             var title = titles.get(index);
 
-            if (isBlank(title.getTitle())) {
+            if (isBlank(title.getText())) {
                 failures.add(titleNotSet(index));
             }
-            if (!valueFits(RAID.PRIMARY_TITLE, title.getTitle())) {
+            if (!valueFits(RAID.PRIMARY_TITLE, title.getText())) {
                 failures.add(primaryTitleTooLong(index));
             }
             if (title.getStartDate() == null) {
@@ -68,7 +71,7 @@ public class TitleValidator {
 
             failures.addAll(titleTypeValidationService.validate(title.getType(), index));
 
-            failures.addAll(languageValidationService.validate(title.getLanguage(), "titles[%d]".formatted(index)));
+            failures.addAll(languageValidator.validate(title.getLanguage(), "title[%d]".formatted(index)));
         });
         return failures;
     }
@@ -77,5 +80,50 @@ public class TitleValidator {
         return titles.stream().filter(title ->
                 title.getType().getId() != null && title.getType().getId().equals(PRIMARY_TITLE_TYPE)
         ).toList();
+    }
+
+    private List<ValidationFailure> validatePrimaryTitleDates(final List<Title> titles) {
+        final var failures = new ArrayList<ValidationFailure>();
+        final var today = LocalDate.now();
+
+        var primaryTitles = titles.stream()
+                .filter(title -> title.getType().getId().equals(PRIMARY_TITLE_TYPE))
+                .sorted((o1, o2) -> {
+                    if (o1.getStartDate().equals(o2.getStartDate())) {
+                        final var o1EndDate = o1.getEndDate() == null ? LocalDate.now() : DateUtil.parseDate(o1.getEndDate());
+                        final var o2EndDate = o2.getEndDate() == null ? LocalDate.now() : DateUtil.parseDate(o2.getEndDate());
+
+                        return o1EndDate.compareTo(o2EndDate);
+                    }
+                    return DateUtil.parseDate(o1.getStartDate()).compareTo(DateUtil.parseDate(o2.getStartDate()));
+                })
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        for (int i = 1; i < primaryTitles.size(); i++) {
+            final var previous = primaryTitles.get(i - 1);
+            final var title = primaryTitles.get(i);
+            final var previousIndex = titles.indexOf(previous);
+            final var index = titles.indexOf(title);
+
+            final var startDate = DateUtil.parseDate(title.getStartDate());
+            final var endDate = (previous.getEndDate() != null) ? DateUtil.parseDate(previous.getEndDate()) : today;
+
+            if (title.equals(previous)) {
+                return List.of(new ValidationFailure()
+                        .fieldId("title[%d]".formatted(index))
+                        .errorType(DUPLICATE_TYPE)
+                        .message(DUPLICATE_MESSAGE)
+                );
+            } else if (startDate.isBefore(endDate)) {
+                failures.add(new ValidationFailure()
+                        .fieldId("title[%d].startDate".formatted(index))
+                        .errorType(INVALID_VALUE_TYPE)
+                        .message("There can only be one primary title in any given period. The start date for this title overlaps with title[%d]".formatted(previousIndex))
+                );
+
+            }
+        }
+
+        return failures;
     }
 }

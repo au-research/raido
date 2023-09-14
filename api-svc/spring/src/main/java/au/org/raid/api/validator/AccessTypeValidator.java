@@ -1,8 +1,8 @@
 package au.org.raid.api.validator;
 
 import au.org.raid.api.repository.AccessTypeRepository;
-import au.org.raid.api.repository.AccessTypeSchemeRepository;
-import au.org.raid.idl.raidv2.model.AccessTypeWithSchemeUri;
+import au.org.raid.api.repository.AccessTypeSchemaRepository;
+import au.org.raid.idl.raidv2.model.AccessTypeWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.springframework.stereotype.Component;
 
@@ -14,22 +14,22 @@ import static au.org.raid.api.util.StringUtil.isBlank;
 
 @Component
 public class AccessTypeValidator {
-    private final AccessTypeSchemeRepository accessTypeSchemeRepository;
+    private final AccessTypeSchemaRepository accessTypeSchemaRepository;
     private final AccessTypeRepository accessTypeRepository;
 
-    public AccessTypeValidator(final AccessTypeSchemeRepository accessTypeSchemeRepository, final AccessTypeRepository accessTypeRepository) {
-        this.accessTypeSchemeRepository = accessTypeSchemeRepository;
+    public AccessTypeValidator(final AccessTypeSchemaRepository accessTypeSchemaRepository, final AccessTypeRepository accessTypeRepository) {
+        this.accessTypeSchemaRepository = accessTypeSchemaRepository;
         this.accessTypeRepository = accessTypeRepository;
     }
 
-    public List<ValidationFailure> validate(final AccessTypeWithSchemeUri accessType) {
+    public List<ValidationFailure> validate(final AccessTypeWithSchemaUri accessType) {
         final var failures = new ArrayList<ValidationFailure>();
 
         if (accessType == null) {
             return List.of(new ValidationFailure()
                     .fieldId("access.type")
                     .errorType(NOT_SET_TYPE)
-                    .message(FIELD_MUST_BE_SET_MESSAGE)
+                    .message(NOT_SET_MESSAGE)
             );
         }
 
@@ -37,31 +37,31 @@ public class AccessTypeValidator {
             failures.add(new ValidationFailure()
                     .fieldId("access.type.id")
                     .errorType(NOT_SET_TYPE)
-                    .message(FIELD_MUST_BE_SET_MESSAGE)
+                    .message(NOT_SET_MESSAGE)
             );
         }
 
-        if (isBlank(accessType.getSchemeUri())) {
+        if (isBlank(accessType.getSchemaUri())) {
             failures.add(new ValidationFailure()
-                    .fieldId("access.type.schemeUri")
+                    .fieldId("access.type.schemaUri")
                     .errorType(NOT_SET_TYPE)
-                    .message(FIELD_MUST_BE_SET_MESSAGE)
+                    .message(NOT_SET_MESSAGE)
             );
         } else {
             final var accessTypeScheme =
-                    accessTypeSchemeRepository.findByUri(accessType.getSchemeUri());
+                    accessTypeSchemaRepository.findByUri(accessType.getSchemaUri());
 
             if (accessTypeScheme.isEmpty()) {
                 failures.add(new ValidationFailure()
-                        .fieldId("access.type.schemeUri")
+                        .fieldId("access.type.schemaUri")
                         .errorType(INVALID_VALUE_TYPE)
-                        .message(INVALID_SCHEME));
+                        .message(INVALID_SCHEMA));
             } else if (!isBlank(accessType.getId()) &&
-                    accessTypeRepository.findByUriAndSchemeId(accessType.getId(), accessTypeScheme.get().getId()).isEmpty()) {
+                    accessTypeRepository.findByUriAndSchemaId(accessType.getId(), accessTypeScheme.get().getId()).isEmpty()) {
                 failures.add(new ValidationFailure()
                         .fieldId("access.type.id")
                         .errorType(INVALID_VALUE_TYPE)
-                        .message(INVALID_ID_FOR_SCHEME));
+                        .message(INVALID_ID_FOR_SCHEMA));
             }
         }
 

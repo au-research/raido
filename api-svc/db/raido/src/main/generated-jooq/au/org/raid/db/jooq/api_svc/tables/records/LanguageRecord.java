@@ -50,17 +50,17 @@ public class LanguageRecord extends TableRecordImpl<LanguageRecord> implements R
     }
 
     /**
-     * Setter for <code>api_svc.language.scheme_id</code>.
+     * Setter for <code>api_svc.language.schema_id</code>.
      */
-    public LanguageRecord setSchemeId(Integer value) {
+    public LanguageRecord setSchemaId(Integer value) {
         set(2, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.language.scheme_id</code>.
+     * Getter for <code>api_svc.language.schema_id</code>.
      */
-    public Integer getSchemeId() {
+    public Integer getSchemaId() {
         return (Integer) get(2);
     }
 
@@ -90,7 +90,7 @@ public class LanguageRecord extends TableRecordImpl<LanguageRecord> implements R
 
     @Override
     public Field<Integer> field3() {
-        return Language.LANGUAGE.SCHEME_ID;
+        return Language.LANGUAGE.SCHEMA_ID;
     }
 
     @Override
@@ -105,7 +105,7 @@ public class LanguageRecord extends TableRecordImpl<LanguageRecord> implements R
 
     @Override
     public Integer component3() {
-        return getSchemeId();
+        return getSchemaId();
     }
 
     @Override
@@ -120,7 +120,7 @@ public class LanguageRecord extends TableRecordImpl<LanguageRecord> implements R
 
     @Override
     public Integer value3() {
-        return getSchemeId();
+        return getSchemaId();
     }
 
     @Override
@@ -137,7 +137,7 @@ public class LanguageRecord extends TableRecordImpl<LanguageRecord> implements R
 
     @Override
     public LanguageRecord value3(Integer value) {
-        setSchemeId(value);
+        setSchemaId(value);
         return this;
     }
 
@@ -163,11 +163,11 @@ public class LanguageRecord extends TableRecordImpl<LanguageRecord> implements R
     /**
      * Create a detached, initialised LanguageRecord
      */
-    public LanguageRecord(String id, String name, Integer schemeId) {
+    public LanguageRecord(String id, String name, Integer schemaId) {
         super(Language.LANGUAGE);
 
         setId(id);
         setName(name);
-        setSchemeId(schemeId);
+        setSchemaId(schemaId);
     }
 }

@@ -20,17 +20,17 @@ public class ContributorRoleRecord extends UpdatableRecordImpl<ContributorRoleRe
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>api_svc.contributor_role.scheme_id</code>.
+     * Setter for <code>api_svc.contributor_role.schema_id</code>.
      */
-    public ContributorRoleRecord setSchemeId(Integer value) {
+    public ContributorRoleRecord setSchemaId(Integer value) {
         set(0, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.contributor_role.scheme_id</code>.
+     * Getter for <code>api_svc.contributor_role.schema_id</code>.
      */
-    public Integer getSchemeId() {
+    public Integer getSchemaId() {
         return (Integer) get(0);
     }
 
@@ -74,7 +74,7 @@ public class ContributorRoleRecord extends UpdatableRecordImpl<ContributorRoleRe
 
     @Override
     public Field<Integer> field1() {
-        return ContributorRole.CONTRIBUTOR_ROLE.SCHEME_ID;
+        return ContributorRole.CONTRIBUTOR_ROLE.SCHEMA_ID;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class ContributorRoleRecord extends UpdatableRecordImpl<ContributorRoleRe
 
     @Override
     public Integer component1() {
-        return getSchemeId();
+        return getSchemaId();
     }
 
     @Override
@@ -94,7 +94,7 @@ public class ContributorRoleRecord extends UpdatableRecordImpl<ContributorRoleRe
 
     @Override
     public Integer value1() {
-        return getSchemeId();
+        return getSchemaId();
     }
 
     @Override
@@ -104,7 +104,7 @@ public class ContributorRoleRecord extends UpdatableRecordImpl<ContributorRoleRe
 
     @Override
     public ContributorRoleRecord value1(Integer value) {
-        setSchemeId(value);
+        setSchemaId(value);
         return this;
     }
 
@@ -135,10 +135,10 @@ public class ContributorRoleRecord extends UpdatableRecordImpl<ContributorRoleRe
     /**
      * Create a detached, initialised ContributorRoleRecord
      */
-    public ContributorRoleRecord(Integer schemeId, String uri) {
+    public ContributorRoleRecord(Integer schemaId, String uri) {
         super(ContributorRole.CONTRIBUTOR_ROLE);
 
-        setSchemeId(schemeId);
+        setSchemaId(schemaId);
         setUri(uri);
     }
 }

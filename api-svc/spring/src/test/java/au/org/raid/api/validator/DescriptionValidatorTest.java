@@ -1,9 +1,8 @@
 package au.org.raid.api.validator;
 
-import au.org.raid.api.service.raid.validation.LanguageValidationService;
 import au.org.raid.api.util.TestConstants;
 import au.org.raid.idl.raidv2.model.Description;
-import au.org.raid.idl.raidv2.model.DescriptionTypeWithSchemeUri;
+import au.org.raid.idl.raidv2.model.DescriptionTypeWithSchemaUri;
 import au.org.raid.idl.raidv2.model.Language;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;
@@ -28,23 +27,23 @@ class DescriptionValidatorTest {
     @Mock
     private DescriptionTypeValidator typeValidationService;
     @Mock
-    private LanguageValidationService languageValidationService;
+    private LanguageValidator languageValidator;
     @InjectMocks
     private DescriptionValidator validationService;
 
     @Test
     @DisplayName("Validation passes with valid description")
     void validDescription() {
-        final var type = new DescriptionTypeWithSchemeUri()
+        final var type = new DescriptionTypeWithSchemaUri()
                 .id(TestConstants.PRIMARY_DESCRIPTION_TYPE)
-                .schemeUri(TestConstants.DESCRIPTION_TYPE_SCHEME_URI);
+                .schemaUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI);
 
         final var language = new Language()
                 .id(TestConstants.LANGUAGE_ID)
-                .schemeUri(TestConstants.LANGUAGE_SCHEME_URI);
+                .schemaUri(TestConstants.LANGUAGE_SCHEMA_URI);
 
         final var description = new Description()
-                .description(DESCRIPTION_VALUE)
+                .text(DESCRIPTION_VALUE)
                 .type(type)
                 .language(language);
 
@@ -53,20 +52,20 @@ class DescriptionValidatorTest {
         assertThat(failures, empty());
 
         verify(typeValidationService).validate(type, 0);
-        verify(languageValidationService).validate(language, "descriptions[0]");
+        verify(languageValidator).validate(language, "description[0]");
 
     }
 
     @Test
     @DisplayName("Validation fails with null description")
     void nullDescription() {
-        final var type = new DescriptionTypeWithSchemeUri()
+        final var type = new DescriptionTypeWithSchemaUri()
                 .id(TestConstants.PRIMARY_DESCRIPTION_TYPE)
-                .schemeUri(TestConstants.DESCRIPTION_TYPE_SCHEME_URI);
+                .schemaUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI);
 
         final var language = new Language()
                 .id(TestConstants.LANGUAGE_ID)
-                .schemeUri(TestConstants.LANGUAGE_SCHEME_URI);
+                .schemaUri(TestConstants.LANGUAGE_SCHEMA_URI);
 
         final var description = new Description()
                 .type(type)
@@ -77,22 +76,22 @@ class DescriptionValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("descriptions[0].description")
+                        .fieldId("description[0].text")
                         .errorType("notSet")
                         .message("field must be set")
         ));
         verify(typeValidationService).validate(type, 0);
-        verify(languageValidationService).validate(language, "descriptions[0]");
+        verify(languageValidator).validate(language, "description[0]");
     }
 
     @Test
     @DisplayName("Validation fails with empty description")
     void emptyDescription() {
         final var description = new Description()
-                .description("")
-                .type(new DescriptionTypeWithSchemeUri()
+                .text("")
+                .type(new DescriptionTypeWithSchemaUri()
                         .id(TestConstants.PRIMARY_DESCRIPTION_TYPE)
-                        .schemeUri(TestConstants.DESCRIPTION_TYPE_SCHEME_URI)
+                        .schemaUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI)
                 );
 
         final var failures = validationService.validate(List.of(description));
@@ -100,7 +99,7 @@ class DescriptionValidatorTest {
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("descriptions[0].description")
+                        .fieldId("description[0].text")
                         .errorType("notSet")
                         .message("field must be set")
         ));
@@ -109,12 +108,12 @@ class DescriptionValidatorTest {
     @Test
     @DisplayName("Type validation failures are returned")
     void typeErrorAreReturned() {
-        final var type = new DescriptionTypeWithSchemeUri()
+        final var type = new DescriptionTypeWithSchemaUri()
                 .id(TestConstants.PRIMARY_DESCRIPTION_TYPE)
-                .schemeUri(TestConstants.DESCRIPTION_TYPE_SCHEME_URI);
+                .schemaUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI);
 
         final var description = new Description()
-                .description(DESCRIPTION_VALUE)
+                .text(DESCRIPTION_VALUE)
                 .type(type);
 
         final var typeError = new ValidationFailure();

@@ -8,13 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static au.org.raid.api.endpoint.message.ValidationMessage.FIELD_MUST_BE_SET_MESSAGE;
+import static au.org.raid.api.endpoint.message.ValidationMessage.NOT_SET_MESSAGE;
 import static au.org.raid.api.endpoint.message.ValidationMessage.NOT_SET_TYPE;
 
 @Component
 public class AlternateIdentifierValidator {
 
-    public List<ValidationFailure> validateAlternateIdentifiers(List<AlternateIdentifier> alternateIdentifiers) {
+    public List<ValidationFailure> validateAlternateIdentifier(List<AlternateIdentifier> alternateIdentifiers) {
         final var failures = new ArrayList<ValidationFailure>();
 
         if (alternateIdentifiers == null) {
@@ -27,17 +27,17 @@ public class AlternateIdentifierValidator {
 
                     if (alternateIdentifier.getId() == null) {
                         failures.add(new ValidationFailure()
-                                .fieldId(String.format("alternateIdentifiers[%d].id", i))
+                                .fieldId(String.format("alternateIdentifier[%d].id", i))
                                 .errorType(NOT_SET_TYPE)
-                                .message(FIELD_MUST_BE_SET_MESSAGE)
+                                .message(NOT_SET_MESSAGE)
                         );
                     }
 
                     if (alternateIdentifier.getType() == null) {
                         failures.add(new ValidationFailure()
-                                .fieldId(String.format("alternateIdentifiers[%d].type", i))
+                                .fieldId(String.format("alternateIdentifier[%d].type", i))
                                 .errorType(NOT_SET_TYPE)
-                                .message(FIELD_MUST_BE_SET_MESSAGE)
+                                .message(NOT_SET_MESSAGE)
                         );
                     }
 

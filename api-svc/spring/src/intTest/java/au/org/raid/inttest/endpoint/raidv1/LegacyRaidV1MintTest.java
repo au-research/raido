@@ -42,7 +42,7 @@ public class LegacyRaidV1MintTest extends IntegrationTestCase {
 
         EXPECT("should be able to read the minted raid via V3 public endpoint");
         PublicReadRaidResponseV3 pubReadV3 = raidoApi.getPublicExperimental().
-                publicReadRaidV3(mintResult.getHandle());
+                publicReadRaidV3(mintResult.getHandle()).getBody();
         assertThat(pubReadV3).isNotNull();
         var pubMetaV3 = (PublicClosedMetadataSchemaV1) pubReadV3.getMetadata();
         assertThat(pubMetaV3.getId().getIdentifier()).

@@ -20,17 +20,17 @@ public class TitleTypeRecord extends UpdatableRecordImpl<TitleTypeRecord> implem
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>api_svc.title_type.scheme_id</code>.
+     * Setter for <code>api_svc.title_type.schema_id</code>.
      */
-    public TitleTypeRecord setSchemeId(Integer value) {
+    public TitleTypeRecord setSchemaId(Integer value) {
         set(0, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.title_type.scheme_id</code>.
+     * Getter for <code>api_svc.title_type.schema_id</code>.
      */
-    public Integer getSchemeId() {
+    public Integer getSchemaId() {
         return (Integer) get(0);
     }
 
@@ -74,7 +74,7 @@ public class TitleTypeRecord extends UpdatableRecordImpl<TitleTypeRecord> implem
 
     @Override
     public Field<Integer> field1() {
-        return TitleType.TITLE_TYPE.SCHEME_ID;
+        return TitleType.TITLE_TYPE.SCHEMA_ID;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class TitleTypeRecord extends UpdatableRecordImpl<TitleTypeRecord> implem
 
     @Override
     public Integer component1() {
-        return getSchemeId();
+        return getSchemaId();
     }
 
     @Override
@@ -94,7 +94,7 @@ public class TitleTypeRecord extends UpdatableRecordImpl<TitleTypeRecord> implem
 
     @Override
     public Integer value1() {
-        return getSchemeId();
+        return getSchemaId();
     }
 
     @Override
@@ -104,7 +104,7 @@ public class TitleTypeRecord extends UpdatableRecordImpl<TitleTypeRecord> implem
 
     @Override
     public TitleTypeRecord value1(Integer value) {
-        setSchemeId(value);
+        setSchemaId(value);
         return this;
     }
 
@@ -135,10 +135,10 @@ public class TitleTypeRecord extends UpdatableRecordImpl<TitleTypeRecord> implem
     /**
      * Create a detached, initialised TitleTypeRecord
      */
-    public TitleTypeRecord(Integer schemeId, String uri) {
+    public TitleTypeRecord(Integer schemaId, String uri) {
         super(TitleType.TITLE_TYPE);
 
-        setSchemeId(schemeId);
+        setSchemaId(schemaId);
         setUri(uri);
     }
 }

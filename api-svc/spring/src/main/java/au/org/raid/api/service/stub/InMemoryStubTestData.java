@@ -22,6 +22,9 @@ public class InMemoryStubTestData {
     public static String NONEXISTENT_TEST_DOI = "https://doi.org/10.42/000000";
     public static String SERVER_ERROR_TEST_DOI = "https://doi.org/10.42/000001";
 
-    public static String NONEXISTENT_TEST_GEONAMES_URI = "https://geonames.org/0/not-found.html";
-    public static String SERVER_ERROR_TEST_GEONAMES_URI = "https://geonames.org/0/server-error.html";
+    public static String NONEXISTENT_TEST_GEONAMES_URI = "https://www.geonames.org/0/not-found.html";
+    public static String SERVER_ERROR_TEST_GEONAMES_URI = "https://www.geonames.org/0/server-error.html";
+
+    public static String NONEXISTENT_TEST_OPENSTREETMAP_URI = "https://www.openstreetmap.org/not-found";
+    public static String SERVER_ERROR_TEST_OPENSTREETMAP_URI = "https://www.openstreetmap.org/server-error";
 }

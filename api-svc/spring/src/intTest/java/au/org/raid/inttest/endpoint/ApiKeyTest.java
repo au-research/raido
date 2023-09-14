@@ -61,11 +61,11 @@ public class ApiKeyTest extends IntegrationTestCase {
                 subject(servicePoint.getName() + "-key").
                 enabled(true).
                 tokenCutoff(expiry.atOffset(UTC))
-        );
+        ).getBody();
 
         AND("api token is generated");
         var spUserToken = adminApi.generateApiToken(new GenerateApiTokenRequest().
-                apiKeyId(spUser.getId()));
+                apiKeyId(spUser.getId())).getBody();
         var basicApiAsSpUser = basicRaidExperimentalClient(spUserToken.getApiToken());
 
         THEN("should be able to list raids on that service point with the api-key");

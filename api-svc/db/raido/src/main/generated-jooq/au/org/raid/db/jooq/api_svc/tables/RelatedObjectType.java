@@ -40,9 +40,9 @@ public class RelatedObjectType extends TableImpl<RelatedObjectTypeRecord> {
     }
 
     /**
-     * The column <code>api_svc.related_object_type.scheme_id</code>.
+     * The column <code>api_svc.related_object_type.schema_id</code>.
      */
-    public final TableField<RelatedObjectTypeRecord, Integer> SCHEME_ID = createField(DSL.name("scheme_id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<RelatedObjectTypeRecord, Integer> SCHEMA_ID = createField(DSL.name("schema_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>api_svc.related_object_type.uri</code>.
@@ -106,20 +106,20 @@ public class RelatedObjectType extends TableImpl<RelatedObjectTypeRecord> {
 
     @Override
     public List<ForeignKey<RelatedObjectTypeRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RELATED_OBJECT_TYPE__FK_RELATED_OBJECT_TYPE_SCHEME_ID);
+        return Arrays.asList(Keys.RELATED_OBJECT_TYPE__FK_RELATED_OBJECT_TYPE_SCHEMA_ID);
     }
 
-    private transient RelatedObjectTypeScheme _relatedObjectTypeScheme;
+    private transient RelatedObjectTypeSchema _relatedObjectTypeSchema;
 
     /**
      * Get the implicit join path to the
-     * <code>api_svc.related_object_type_scheme</code> table.
+     * <code>api_svc.related_object_type_schema</code> table.
      */
-    public RelatedObjectTypeScheme relatedObjectTypeScheme() {
-        if (_relatedObjectTypeScheme == null)
-            _relatedObjectTypeScheme = new RelatedObjectTypeScheme(this, Keys.RELATED_OBJECT_TYPE__FK_RELATED_OBJECT_TYPE_SCHEME_ID);
+    public RelatedObjectTypeSchema relatedObjectTypeSchema() {
+        if (_relatedObjectTypeSchema == null)
+            _relatedObjectTypeSchema = new RelatedObjectTypeSchema(this, Keys.RELATED_OBJECT_TYPE__FK_RELATED_OBJECT_TYPE_SCHEMA_ID);
 
-        return _relatedObjectTypeScheme;
+        return _relatedObjectTypeSchema;
     }
 
     @Override

@@ -21,17 +21,17 @@ public class RelatedRaidTypeRecord extends UpdatableRecordImpl<RelatedRaidTypeRe
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>api_svc.related_raid_type.scheme_id</code>.
+     * Setter for <code>api_svc.related_raid_type.schema_id</code>.
      */
-    public RelatedRaidTypeRecord setSchemeId(Integer value) {
+    public RelatedRaidTypeRecord setSchemaId(Integer value) {
         set(0, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.related_raid_type.scheme_id</code>.
+     * Getter for <code>api_svc.related_raid_type.schema_id</code>.
      */
-    public Integer getSchemeId() {
+    public Integer getSchemaId() {
         return (Integer) get(0);
     }
 
@@ -105,7 +105,7 @@ public class RelatedRaidTypeRecord extends UpdatableRecordImpl<RelatedRaidTypeRe
 
     @Override
     public Field<Integer> field1() {
-        return RelatedRaidType.RELATED_RAID_TYPE.SCHEME_ID;
+        return RelatedRaidType.RELATED_RAID_TYPE.SCHEMA_ID;
     }
 
     @Override
@@ -125,7 +125,7 @@ public class RelatedRaidTypeRecord extends UpdatableRecordImpl<RelatedRaidTypeRe
 
     @Override
     public Integer component1() {
-        return getSchemeId();
+        return getSchemaId();
     }
 
     @Override
@@ -145,7 +145,7 @@ public class RelatedRaidTypeRecord extends UpdatableRecordImpl<RelatedRaidTypeRe
 
     @Override
     public Integer value1() {
-        return getSchemeId();
+        return getSchemaId();
     }
 
     @Override
@@ -165,7 +165,7 @@ public class RelatedRaidTypeRecord extends UpdatableRecordImpl<RelatedRaidTypeRe
 
     @Override
     public RelatedRaidTypeRecord value1(Integer value) {
-        setSchemeId(value);
+        setSchemaId(value);
         return this;
     }
 
@@ -210,10 +210,10 @@ public class RelatedRaidTypeRecord extends UpdatableRecordImpl<RelatedRaidTypeRe
     /**
      * Create a detached, initialised RelatedRaidTypeRecord
      */
-    public RelatedRaidTypeRecord(Integer schemeId, String uri, String name, String description) {
+    public RelatedRaidTypeRecord(Integer schemaId, String uri, String name, String description) {
         super(RelatedRaidType.RELATED_RAID_TYPE);
 
-        setSchemeId(schemeId);
+        setSchemaId(schemaId);
         setUri(uri);
         setName(name);
         setDescription(description);

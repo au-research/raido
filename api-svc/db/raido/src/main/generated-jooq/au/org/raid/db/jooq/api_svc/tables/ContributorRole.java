@@ -40,9 +40,9 @@ public class ContributorRole extends TableImpl<ContributorRoleRecord> {
     }
 
     /**
-     * The column <code>api_svc.contributor_role.scheme_id</code>.
+     * The column <code>api_svc.contributor_role.schema_id</code>.
      */
-    public final TableField<ContributorRoleRecord, Integer> SCHEME_ID = createField(DSL.name("scheme_id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<ContributorRoleRecord, Integer> SCHEMA_ID = createField(DSL.name("schema_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>api_svc.contributor_role.uri</code>.
@@ -94,20 +94,20 @@ public class ContributorRole extends TableImpl<ContributorRoleRecord> {
 
     @Override
     public List<ForeignKey<ContributorRoleRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.CONTRIBUTOR_ROLE__FK_CONTRIBUTOR_ROLE_TYPE_SCHEME_ID);
+        return Arrays.asList(Keys.CONTRIBUTOR_ROLE__FK_CONTRIBUTOR_ROLE_SCHEMA_ID);
     }
 
-    private transient ContributorRoleScheme _contributorRoleScheme;
+    private transient ContributorRoleSchema _contributorRoleSchema;
 
     /**
      * Get the implicit join path to the
-     * <code>api_svc.contributor_role_scheme</code> table.
+     * <code>api_svc.contributor_role_schema</code> table.
      */
-    public ContributorRoleScheme contributorRoleScheme() {
-        if (_contributorRoleScheme == null)
-            _contributorRoleScheme = new ContributorRoleScheme(this, Keys.CONTRIBUTOR_ROLE__FK_CONTRIBUTOR_ROLE_TYPE_SCHEME_ID);
+    public ContributorRoleSchema contributorRoleSchema() {
+        if (_contributorRoleSchema == null)
+            _contributorRoleSchema = new ContributorRoleSchema(this, Keys.CONTRIBUTOR_ROLE__FK_CONTRIBUTOR_ROLE_SCHEMA_ID);
 
-        return _contributorRoleScheme;
+        return _contributorRoleSchema;
     }
 
     @Override

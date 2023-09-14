@@ -101,14 +101,14 @@ public class OrganisationValidationService {
                         fieldId("%s.roles[%s].roleSchemeUri".
                                 formatted(fieldPrefix.get(), i)).
                         errorType(NOT_SET_TYPE).
-                        message(FIELD_MUST_BE_SET_MESSAGE));
+                        message(NOT_SET_MESSAGE));
             }
             if (iRole.getRole() == null) {
                 failures.add(new ValidationFailure().
                         fieldId("%s.roles[%s].role".
                                 formatted(fieldPrefix.get(), i)).
                         errorType(NOT_SET_TYPE).
-                        message(FIELD_MUST_BE_SET_MESSAGE));
+                        message(NOT_SET_MESSAGE));
             }
         });
 

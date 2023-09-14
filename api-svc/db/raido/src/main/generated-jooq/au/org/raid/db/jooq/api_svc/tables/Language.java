@@ -50,9 +50,9 @@ public class Language extends TableImpl<LanguageRecord> {
     public final TableField<LanguageRecord, String> NAME = createField(DSL.name("name"), SQLDataType.VARCHAR.nullable(false), this, "");
 
     /**
-     * The column <code>api_svc.language.scheme_id</code>.
+     * The column <code>api_svc.language.schema_id</code>.
      */
-    public final TableField<LanguageRecord, Integer> SCHEME_ID = createField(DSL.name("scheme_id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<LanguageRecord, Integer> SCHEMA_ID = createField(DSL.name("schema_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
     private Language(Name alias, Table<LanguageRecord> aliased) {
         this(alias, aliased, null);
@@ -94,20 +94,20 @@ public class Language extends TableImpl<LanguageRecord> {
 
     @Override
     public List<ForeignKey<LanguageRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.LANGUAGE__LANGUAGE_SCHEME_ID);
+        return Arrays.asList(Keys.LANGUAGE__FK_LANGUAGE_SCHEMA_ID);
     }
 
-    private transient LanguageScheme _languageScheme;
+    private transient LanguageSchema _languageSchema;
 
     /**
-     * Get the implicit join path to the <code>api_svc.language_scheme</code>
+     * Get the implicit join path to the <code>api_svc.language_schema</code>
      * table.
      */
-    public LanguageScheme languageScheme() {
-        if (_languageScheme == null)
-            _languageScheme = new LanguageScheme(this, Keys.LANGUAGE__LANGUAGE_SCHEME_ID);
+    public LanguageSchema languageSchema() {
+        if (_languageSchema == null)
+            _languageSchema = new LanguageSchema(this, Keys.LANGUAGE__FK_LANGUAGE_SCHEMA_ID);
 
-        return _languageScheme;
+        return _languageSchema;
     }
 
     @Override

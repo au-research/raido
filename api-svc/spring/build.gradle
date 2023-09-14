@@ -181,7 +181,7 @@ testing{
         // for PostConstruct/PreDestroy - pkg: jakarta.annotation (used to be javax)
         implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
         
-        implementation( 'org.springframework.cloud:spring-cloud-starter-openfeign:3.1.2'){
+        implementation( 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.0'){
           /* Not a huge deal to pull in spring-boot, since it's only the 
           integration tests - but still I don't want to deal with it.
           - avoids having to ignore all the confusing and unused  

@@ -121,19 +121,19 @@ public class RaidDtoFactory {
                         .toList();
 
             return new RaidDto()
-                    .id(idFactory.create(metadata.getId()))
-                    .dates(datesFactory.create(metadata.getDates()))
-                    .titles(titles)
-                    .descriptions(descriptions)
-                    .contributors(contributors)
-                    .organisations(organisations)
-                    .relatedObjects(relatedObjects)
-                    .alternateIdentifiers(alternateIdentifiers)
-                    .alternateUrls(alternateUrls)
-                    .relatedRaids(relatedRaids)
-                    .subjects(subjects)
-                    .traditionalKnowledgeLabels(traditionalKnowledgeLabels)
-                    .spatialCoverages(spatialCoverages)
+                    .identifier(idFactory.create(metadata.getId()))
+                    .date(datesFactory.create(metadata.getDates()))
+                    .title(titles)
+                    .description(descriptions)
+                    .contributor(contributors)
+                    .organisation(organisations)
+                    .relatedObject(relatedObjects)
+                    .alternateIdentifier(alternateIdentifiers)
+                    .alternateUrl(alternateUrls)
+                    .relatedRaid(relatedRaids)
+                    .subject(subjects)
+                    .traditionalKnowledgeLabel(traditionalKnowledgeLabels)
+                    .spatialCoverage(spatialCoverages)
                     .access(accessFactory.create(metadata.getAccess()));
         }
     }

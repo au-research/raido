@@ -9,7 +9,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class AccessFactory {
-    private static final String ACCESS_SCHEME_URI =
+    private static final String ACCESS_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/";
 
     private static final Map<AccessType, String> ACCESS_TYPE_MAP = Map.of(
@@ -24,14 +24,14 @@ public class AccessFactory {
 
         AccessStatement accessStatement = null;
         if (accessBlock.getType() != null && accessBlock.getType() != AccessType.OPEN) {
-            accessStatement = new AccessStatement().statement(accessBlock.getAccessStatement());
+            accessStatement = new AccessStatement().text(accessBlock.getAccessStatement());
         }
 
         return new Access()
                 .accessStatement(accessStatement)
-                .type(new AccessTypeWithSchemeUri()
+                .type(new AccessTypeWithSchemaUri()
                         .id(accessBlock.getType() != null ? ACCESS_TYPE_MAP.get(accessBlock.getType()) : null)
-                        .schemeUri(ACCESS_SCHEME_URI)
+                        .schemaUri(ACCESS_SCHEMA_URI)
                 );
     }
 }

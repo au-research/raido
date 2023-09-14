@@ -76,12 +76,12 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
                                 servicePointId(notreDame.getId()).
                                 contentIndex(1).
                                 createDate(OffsetDateTime.now())).
-                        metadata(initMetadata));
+                        metadata(initMetadata)).getBody();
         assertThat(mintResult.getFailures()).isNullOrEmpty();
         assertThat(mintResult.getSuccess()).isTrue();
 
         EXPECT("should be able to read the minted raid via public api");
-        var pubRead = raidoApi.getPublicExperimental().publicReadRaidV3(handle);
+        var pubRead = raidoApi.getPublicExperimental().publicReadRaidV3(handle).getBody();
         assertThat(pubRead).isNotNull();
         assertThat(pubRead.getCreateDate()).isNotNull();
         assertThat(pubRead.getServicePointId()).isEqualTo(notreDame.getId());
@@ -97,7 +97,7 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
 
         EXPECT("should be able to list a migrated raid");
         var listResult = basicApiAsNotreDame.listRaidV2(new RaidListRequestV2().
-                servicePointId(notreDame.getId()).primaryTitle(initialTitle));
+                servicePointId(notreDame.getId()).primaryTitle(initialTitle)).getBody();
         assertThat(listResult).singleElement().satisfies(i -> {
             assertThat(i.getHandle()).isEqualTo(mintResult.getRaid().getHandle());
             assertThat(i.getPrimaryTitle()).isEqualTo(initialTitle);
@@ -114,7 +114,7 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
                                 servicePointId(notreDame.getId()).
                                 contentIndex(1).
                                 createDate(OffsetDateTime.now())).
-                        metadata(initMetadata));
+                        metadata(initMetadata)).getBody();
         assertThat(remintResult.getFailures()).isNullOrEmpty();
         assertThat(remintResult.getSuccess()).isTrue();
 
@@ -134,12 +134,12 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
                                 descriptions(remintMetadata.getDescriptions()).
                                 alternateUrls(remintMetadata.getAlternateUrls()).
                                 contributors(List.of(createDummyLeaderContributor(today)))
-                ));
+                )).getBody();
         assertThat(upgradeResult.getFailures()).isNullOrEmpty();
         assertThat(upgradeResult.getSuccess()).isTrue();
 
         EXPECT("upgraded raid should have a contributor");
-        pubRead = raidoApi.getPublicExperimental().publicReadRaidV3(handle);
+        pubRead = raidoApi.getPublicExperimental().publicReadRaidV3(handle).getBody();
         pubReadMeta = (PublicRaidMetadataSchemaV1) pubRead.getMetadata();
         assertThat(pubReadMeta.getContributors()).isNotEmpty();
 
@@ -152,17 +152,14 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
                                 servicePointId(notreDame.getId()).
                                 contentIndex(1).
                                 createDate(OffsetDateTime.now())).
-                        metadata(initMetadata));
+                        metadata(initMetadata)).getBody();
         assertThat(remintResult.getFailures()).isNullOrEmpty();
         assertThat(remintResult.getSuccess()).isTrue();
 
 
         EXPECT("reproduce that upgraded re-migrated raid had contributors stomped");
-        pubRead = raidoApi.getPublicExperimental().publicReadRaidV3(handle);
+        pubRead = raidoApi.getPublicExperimental().publicReadRaidV3(handle).getBody();
         pubReadMeta = (PublicRaidMetadataSchemaV1) pubRead.getMetadata();
         assertThat(pubReadMeta.getContributors()).isNullOrEmpty();
-
     }
-
-
 }

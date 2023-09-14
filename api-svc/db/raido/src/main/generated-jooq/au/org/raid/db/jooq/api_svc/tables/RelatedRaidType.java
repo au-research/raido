@@ -40,9 +40,9 @@ public class RelatedRaidType extends TableImpl<RelatedRaidTypeRecord> {
     }
 
     /**
-     * The column <code>api_svc.related_raid_type.scheme_id</code>.
+     * The column <code>api_svc.related_raid_type.schema_id</code>.
      */
-    public final TableField<RelatedRaidTypeRecord, Integer> SCHEME_ID = createField(DSL.name("scheme_id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<RelatedRaidTypeRecord, Integer> SCHEMA_ID = createField(DSL.name("schema_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column <code>api_svc.related_raid_type.uri</code>.
@@ -104,20 +104,20 @@ public class RelatedRaidType extends TableImpl<RelatedRaidTypeRecord> {
 
     @Override
     public List<ForeignKey<RelatedRaidTypeRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RELATED_RAID_TYPE__FK_RELATED_RAID_TYPE_SCHEME_ID);
+        return Arrays.asList(Keys.RELATED_RAID_TYPE__FK_RELATED_RAID_TYPE_SCHEMA_ID);
     }
 
-    private transient RelatedRaidTypeScheme _relatedRaidTypeScheme;
+    private transient RelatedRaidTypeSchema _relatedRaidTypeSchema;
 
     /**
      * Get the implicit join path to the
-     * <code>api_svc.related_raid_type_scheme</code> table.
+     * <code>api_svc.related_raid_type_schema</code> table.
      */
-    public RelatedRaidTypeScheme relatedRaidTypeScheme() {
-        if (_relatedRaidTypeScheme == null)
-            _relatedRaidTypeScheme = new RelatedRaidTypeScheme(this, Keys.RELATED_RAID_TYPE__FK_RELATED_RAID_TYPE_SCHEME_ID);
+    public RelatedRaidTypeSchema relatedRaidTypeSchema() {
+        if (_relatedRaidTypeSchema == null)
+            _relatedRaidTypeSchema = new RelatedRaidTypeSchema(this, Keys.RELATED_RAID_TYPE__FK_RELATED_RAID_TYPE_SCHEMA_ID);
 
-        return _relatedRaidTypeScheme;
+        return _relatedRaidTypeSchema;
     }
 
     @Override
