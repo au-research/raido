@@ -25,7 +25,7 @@ import {
   isRaidLandingPagePath,
   RaidLandingPage
 } from "Page/Public/RaidLandingPage";
-import { ShowRaidPage } from "Page/ShowRaidPage";
+import ShowRaidPage from "Page/ShowRaidPage";
 import { AboutRaidPage, isAboutRaidPagePath } from "Page/Unauth/AboutRaidPage";
 import { isPrivacyPagePath, PrivacyPage } from "Page/Unauth/PrivacyPage";
 import {
@@ -36,6 +36,7 @@ import { useMemo } from 'react';
 import { LocationPathnameProvider } from "Util/Hook/LocationPathname";
 import { LocationSearchProvider } from "Util/Hook/LocationSearch";
 import './App.css';
+import EditRaidPageNew from "Page/EditRaidPageNew";
 
 export function App(){
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -111,6 +112,7 @@ export function App(){
                       <ListApiKeyPage/>
                       <ApiKeyPage/>
                       <EditRaidPage/>
+                      <EditRaidPageNew />
                       <ShowRaidPage/>
                       <MintRaidPage/>
                       <MintRaidPageNew/>
