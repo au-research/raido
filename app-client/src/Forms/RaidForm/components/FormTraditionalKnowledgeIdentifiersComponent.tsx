@@ -17,7 +17,12 @@ import {
   Typography,
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
-import { Control, Controller, useFieldArray } from "react-hook-form";
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  useFieldArray,
+} from "react-hook-form";
 
 export const identifierTypes = [
   "https://localcontexts.org/labels/traditional-knowledge-labels/",
@@ -26,8 +31,12 @@ export const identifierTypes = [
 
 export default function FormTraditionalKnowledgeIdentifiersComponent({
   control,
+  errors,
+  color,
 }: {
   control: Control<RaidDto, any>;
+  errors: FieldErrors<RaidDto>;
+  color: string;
 }) {
   const tradionalKnowledgeIdentifierArray = useFieldArray({
     control,
@@ -41,8 +50,20 @@ export default function FormTraditionalKnowledgeIdentifiersComponent({
   };
 
   return (
-    <Card sx={{ p: 2, borderTop: "solid", borderTopColor: "primary.main" }}>
+    <Card
+      variant="outlined"
+      sx={{
+        borderLeft: "solid",
+        borderLeftColor: color,
+        borderLeftWidth: 3,
+      }}
+    >
       <CardHeader
+        title={
+          <Typography variant="h6" component="div">
+            Traditional Knowledge Identifiers
+          </Typography>
+        }
         action={
           <Tooltip
             title="Add Traditional Knowledge Identifier"
@@ -56,8 +77,6 @@ export default function FormTraditionalKnowledgeIdentifiersComponent({
             </IconButton>
           </Tooltip>
         }
-        title="Traditional Knowledge Identifiers"
-        subheader="RAiD Traditional Knowledge Identifiers"
       />
       <CardContent>
         <Stack gap={3} divider={<Divider />}>
@@ -74,7 +93,7 @@ export default function FormTraditionalKnowledgeIdentifiersComponent({
             return (
               <Box
                 sx={{
-                  bgcolor: "rgba(0, 0, 0, 0.03)",
+                  bgcolor: "rgba(0, 0, 0, 0.02)",
                   p: 2,
                   borderRadius: 2,
                 }}

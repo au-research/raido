@@ -17,58 +17,75 @@ import {
   Typography,
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
-import { Control, Controller, useFieldArray } from "react-hook-form";
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  useFieldArray,
+} from "react-hook-form";
 
-export default function FormAlternateIdentifiersComponent({
+export default function FormAlternateUrlsComponent({
   control,
+  errors,
+  color,
 }: {
   control: Control<RaidDto, any>;
+  errors: FieldErrors<RaidDto>;
+  color: string;
 }) {
-  const alternateIdentifiersFieldArray = useFieldArray({
+  const alternateUrlsFieldArray = useFieldArray({
     control,
-    name: "alternateIdentifiers",
+    name: "alternateUrls",
   });
 
-  const handleAddAlternateIdentifiers = () => {
-    alternateIdentifiersFieldArray.append({
-      id: faker.lorem.words(3),
-      type: faker.lorem.words(3),
+  const handleAddAlternateUrls = () => {
+    alternateUrlsFieldArray.append({
+      url: faker.internet.url(),
     });
   };
 
   return (
-    <Card sx={{ p: 2, borderTop: "solid", borderTopColor: "primary.main" }}>
+    <Card
+      variant="outlined"
+      sx={{
+        borderLeft: "solid",
+        borderLeftColor: color,
+        borderLeftWidth: 3,
+      }}
+    >
       <CardHeader
+        title={
+          <Typography variant="h6" component="div">
+            Alternate URLs
+          </Typography>
+        }
         action={
-          <Tooltip title="Add Alternate Identifier" placement="right">
+          <Tooltip title="Add Alternate URL" placement="right">
             <IconButton
-              aria-label="Add Alternate Identifier"
-              onClick={handleAddAlternateIdentifiers}
+              aria-label="Add Alternate URL"
+              onClick={handleAddAlternateUrls}
             >
               <AddCircleOutlineIcon />
             </IconButton>
           </Tooltip>
         }
-        title="Alternate Identifiers"
-        subheader="RAiD Alternate Identifiers"
       />
       <CardContent>
         <Stack gap={3} divider={<Divider />}>
-          {alternateIdentifiersFieldArray.fields.length === 0 && (
+          {alternateUrlsFieldArray.fields.length === 0 && (
             <Typography
               variant="body2"
               color={"text.secondary"}
               textAlign={"center"}
             >
-              No alternate identifiers defined
+              No alternate URLs defined
             </Typography>
           )}
-
-          {alternateIdentifiersFieldArray.fields.map((field, index) => {
+          {alternateUrlsFieldArray.fields.map((field, index) => {
             return (
               <Box
                 sx={{
-                  bgcolor: "rgba(0, 0, 0, 0.03)",
+                  bgcolor: "rgba(0, 0, 0, 0.02)",
                   p: 2,
                   borderRadius: 2,
                 }}
@@ -76,7 +93,7 @@ export default function FormAlternateIdentifiersComponent({
               >
                 <Controller
                   control={control}
-                  name={`alternateIdentifiers.${index}`}
+                  name={`alternateUrls.${index}`}
                   render={({ field: { onChange, ...controllerField } }) => {
                     return (
                       <>
@@ -85,42 +102,27 @@ export default function FormAlternateIdentifiersComponent({
                             <Grid item xs={12} sm={12} md={4}>
                               <TextField
                                 {...controllerField}
-                                value={controllerField?.value?.id}
+                                value={controllerField?.value?.url}
                                 size="small"
                                 fullWidth
-                                label="Alternate Identifier"
+                                label="Alternate URL"
                                 onChange={(event) => {
                                   onChange({
                                     ...controllerField.value,
-                                    id: event.target.value,
-                                  });
-                                }}
-                              />
-                            </Grid>
-                            <Grid item xs={12} sm={12} md={4}>
-                              <TextField
-                                {...controllerField}
-                                value={controllerField?.value?.type}
-                                size="small"
-                                fullWidth
-                                label="Alternate Identifier Type"
-                                onChange={(event) => {
-                                  onChange({
-                                    ...controllerField.value,
-                                    type: event.target.value,
+                                    url: event.target.value,
                                   });
                                 }}
                               />
                             </Grid>
                           </Grid>
                           <Tooltip
-                            title="Remove Alternate Identifier"
+                            title="Remove Alternate URL"
                             placement="right"
                           >
                             <IconButton
-                              aria-label="Remove Alternate Identifier"
+                              aria-label="Remove Alternate URL"
                               onClick={() =>
-                                alternateIdentifiersFieldArray.remove(index)
+                                alternateUrlsFieldArray.remove(index)
                               }
                             >
                               <RemoveCircleOutlineIcon />

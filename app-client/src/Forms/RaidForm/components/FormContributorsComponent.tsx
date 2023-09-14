@@ -22,7 +22,12 @@ import {
 import { DatePicker } from "@mui/x-date-pickers";
 import { RaidDto } from "Generated/Raidv2";
 import dayjs from "dayjs";
-import { Control, Controller, useFieldArray } from "react-hook-form";
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  useFieldArray,
+} from "react-hook-form";
 import { contributorPositions, contributorRoles } from "references";
 import { extractKeyFromIdUri } from "utils";
 
@@ -133,7 +138,11 @@ function ContributorRootField({
                             </IconButton>
                           </Tooltip>
                         }
-                        title="Positions"
+                        title={
+                          <Typography variant="h6" component="div">
+                            Positions
+                          </Typography>
+                        }
                         subheader={`Positions for ${contributorTitle}`}
                       />
                       <CardContent>
@@ -322,6 +331,12 @@ function ContributorRootField({
 
                     <Card variant={"outlined"} sx={{ bgcolor: "transparent" }}>
                       <CardHeader
+                        title={
+                          <Typography variant="h6" component="div">
+                            Roles
+                          </Typography>
+                        }
+                        subheader={`Roles for ${contributorTitle}`}
                         action={
                           <Tooltip title="Add Role" placement="right">
                             <IconButton
@@ -332,8 +347,6 @@ function ContributorRootField({
                             </IconButton>
                           </Tooltip>
                         }
-                        title="Roles"
-                        subheader={`Roles for ${contributorTitle}`}
                       />
                       <CardContent>
                         <Stack spacing={2}>
@@ -431,8 +444,12 @@ function ContributorRootField({
 
 export default function FormContributorsComponent({
   control,
+  errors,
+  color,
 }: {
   control: Control<RaidDto, any>;
+  errors: FieldErrors<RaidDto>;
+  color: string;
 }) {
   const contributorsArray = useFieldArray({
     control,
@@ -452,15 +469,27 @@ export default function FormContributorsComponent({
   const handleAddContributor = (event: React.MouseEvent<HTMLButtonElement>) => {
     contributorsArray.append({
       id: ``,
-      identifierSchemeUri: "http://orcid.org/",
+      identifierSchemeUri: "https://orcid.org/",
       positions: [],
       roles: [],
     });
   };
 
   return (
-    <Card sx={{ p: 2, borderTop: "solid", borderTopColor: "primary.main" }}>
+    <Card
+      variant="outlined"
+      sx={{
+        borderLeft: "solid",
+        borderLeftColor: color,
+        borderLeftWidth: 3,
+      }}
+    >
       <CardHeader
+        title={
+          <Typography variant="h6" component="div">
+            Contributors
+          </Typography>
+        }
         action={
           <Tooltip title="Add Contributor" placement="right">
             <IconButton
@@ -471,8 +500,6 @@ export default function FormContributorsComponent({
             </IconButton>
           </Tooltip>
         }
-        title="Contributors"
-        subheader="RAiD Contributors"
       />
       <CardContent>
         <Stack gap={3} divider={<Divider />}>
@@ -489,7 +516,7 @@ export default function FormContributorsComponent({
             return (
               <Box
                 sx={{
-                  bgcolor: "rgba(0, 0, 0, 0.03)",
+                  bgcolor: "rgba(0, 0, 0, 0.02)",
                   p: 2,
                   borderRadius: 2,
                 }}

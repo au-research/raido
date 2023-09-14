@@ -5,26 +5,51 @@ import {
   CardHeader,
   Grid,
   TextField,
+  Typography,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { RaidDto } from "Generated/Raidv2";
 import dayjs from "dayjs";
-import { Control, Controller } from "react-hook-form";
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  UseFormTrigger,
+} from "react-hook-form";
 
 export default function FormDatesComponent({
   control,
+  errors,
+  color,
+  trigger,
 }: {
   control: Control<RaidDto, any>;
+  errors: FieldErrors<RaidDto>;
+  color: string;
+  trigger: UseFormTrigger<RaidDto>;
 }) {
   const dateThreeYearsFromToday = dayjs().add(3, "year");
 
   return (
-    <Card sx={{ p: 2, borderTop: "solid", borderTopColor: "primary.main" }}>
-      <CardHeader title="Dates" subheader="RAiD Dates" />
+    <Card
+      variant="outlined"
+      sx={{
+        borderLeft: "solid",
+        borderLeftColor: color,
+        borderLeftWidth: 3,
+      }}
+    >
+      <CardHeader
+        title={
+          <Typography variant="h6" component="div">
+            Dates
+          </Typography>
+        }
+      />
       <CardContent>
         <Box
           sx={{
-            bgcolor: "rgba(0, 0, 0, 0.03)",
+            bgcolor: "rgba(0, 0, 0, 0.02)",
             p: 2,
             borderRadius: 2,
           }}

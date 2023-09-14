@@ -16,17 +16,26 @@ import {
   Stack,
   TextField,
   Tooltip,
-  Typography
+  Typography,
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
-import { Control, Controller, useFieldArray } from "react-hook-form";
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  useFieldArray,
+} from "react-hook-form";
 import { descriptionTypes } from "references";
-import { languages } from "../../languages";
+import { languages } from "../../../Page/languages";
 
 export default function FormDescriptionsComponent({
   control,
+  errors,
+  color,
 }: {
   control: Control<RaidDto, any>;
+  errors: FieldErrors<RaidDto>;
+  color: string;
 }) {
   const descriptionsFieldArray = useFieldArray({
     control,
@@ -54,8 +63,20 @@ export default function FormDescriptionsComponent({
 
   return (
     <Grid item xs={12} sm={12} md={12}>
-      <Card sx={{ p: 2, borderTop: "solid", borderTopColor: "primary.main" }}>
+      <Card
+        variant="outlined"
+        sx={{
+          borderLeft: "solid",
+          borderLeftColor: color,
+          borderLeftWidth: 3,
+        }}
+      >
         <CardHeader
+          title={
+            <Typography variant="h6" component="div">
+              Descriptions
+            </Typography>
+          }
           action={
             <Tooltip title="Add Description" placement="right">
               <IconButton
@@ -66,8 +87,6 @@ export default function FormDescriptionsComponent({
               </IconButton>
             </Tooltip>
           }
-          title="Descriptions"
-          subheader="RAiD Descriptions"
         />
         <CardContent>
           <Stack gap={3} divider={<Divider />}>
@@ -84,7 +103,7 @@ export default function FormDescriptionsComponent({
               return (
                 <Box
                   sx={{
-                    bgcolor: "rgba(0, 0, 0, 0.03)",
+                    bgcolor: "rgba(0, 0, 0, 0.02)",
                     p: 2,
                     borderRadius: 2,
                   }}

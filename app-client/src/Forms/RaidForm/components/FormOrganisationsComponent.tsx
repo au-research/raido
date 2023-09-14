@@ -19,7 +19,12 @@ import {
 import { DatePicker } from "@mui/x-date-pickers";
 import { RaidDto } from "Generated/Raidv2";
 import dayjs from "dayjs";
-import { Control, Controller, useFieldArray } from "react-hook-form";
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  useFieldArray,
+} from "react-hook-form";
 import { contributorRoles } from "references";
 
 function OrganisationRootField({
@@ -286,8 +291,12 @@ function OrganisationRootField({
 
 export default function FormOrganisationsComponent({
   control,
+  errors,
+  color,
 }: {
   control: Control<RaidDto, any>;
+  errors: FieldErrors<RaidDto>;
+  color: string;
 }) {
   const organisationsArray = useFieldArray({
     control,
@@ -303,7 +312,14 @@ export default function FormOrganisationsComponent({
   };
 
   return (
-    <Card sx={{ p: 2, borderTop: "solid", borderTopColor: "primary.main" }}>
+    <Card
+      variant="outlined"
+      sx={{
+        borderLeft: "solid",
+        borderLeftColor: color,
+        borderLeftWidth: 3,
+      }}
+    >
       <CardHeader
         action={
           <Tooltip title="Add Organisation" placement="right">
@@ -333,7 +349,7 @@ export default function FormOrganisationsComponent({
             return (
               <Box
                 sx={{
-                  bgcolor: "rgba(0, 0, 0, 0.03)",
+                  bgcolor: "rgba(0, 0, 0, 0.02)",
                   p: 2,
                   borderRadius: 2,
                 }}

@@ -24,13 +24,22 @@ import { useAuthApi } from "Api/AuthApi";
 import { useAuth } from "Auth/AuthProvider";
 import { ListRaidsV1Request, RaidDto } from "Generated/Raidv2";
 import { RqQuery } from "Util/ReactQueryUtil";
-import { Control, Controller, useFieldArray } from "react-hook-form";
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  useFieldArray,
+} from "react-hook-form";
 import { relatedRaidTypes } from "../../../references";
 
 export default function FormRelatedRaidsComponent({
   control,
+  errors,
+  color,
 }: {
   control: Control<RaidDto, any>;
+  errors: FieldErrors<RaidDto>;
+  color: string;
 }) {
   const api = useAuthApi();
   const {
@@ -73,8 +82,20 @@ export default function FormRelatedRaidsComponent({
   };
 
   return (
-    <Card sx={{ p: 2, borderTop: "solid", borderTopColor: "primary.main" }}>
+    <Card
+      variant="outlined"
+      sx={{
+        borderLeft: "solid",
+        borderLeftColor: color,
+        borderLeftWidth: 3,
+      }}
+    >
       <CardHeader
+        title={
+          <Typography variant="h6" component="div">
+            Related RAiDs
+          </Typography>
+        }
         action={
           <Tooltip title="Related Raid" placement="right">
             <IconButton
@@ -85,8 +106,6 @@ export default function FormRelatedRaidsComponent({
             </IconButton>
           </Tooltip>
         }
-        title="Related Raids"
-        subheader="RAiD Related Raids"
       />
       <CardContent>
         <Stack gap={3} divider={<Divider />}>
@@ -103,7 +122,7 @@ export default function FormRelatedRaidsComponent({
             return (
               <Box
                 sx={{
-                  bgcolor: "rgba(0, 0, 0, 0.03)",
+                  bgcolor: "rgba(0, 0, 0, 0.02)",
                   p: 2,
                   borderRadius: 2,
                 }}

@@ -15,20 +15,29 @@ import {
   Stack,
   TextField,
   Tooltip,
-  Typography
+  Typography,
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
-import { Control, Controller, useFieldArray } from "react-hook-form";
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  useFieldArray,
+} from "react-hook-form";
 import { extractKeyFromIdUri } from "utils";
 import {
   relatedObjectCategories,
-  relatedObjectTypes
+  relatedObjectTypes,
 } from "../../../references";
 
 export default function FormRelatedObjectsComponent({
   control,
+  errors,
+  color,
 }: {
   control: Control<RaidDto, any>;
+  errors: FieldErrors<RaidDto>;
+  color: string;
 }) {
   const relatedObjectsFieldArray = useFieldArray({
     control,
@@ -53,8 +62,20 @@ export default function FormRelatedObjectsComponent({
   };
 
   return (
-    <Card sx={{ p: 2, borderTop: "solid", borderTopColor: "primary.main" }}>
+    <Card
+      variant="outlined"
+      sx={{
+        borderLeft: "solid",
+        borderLeftColor: color,
+        borderLeftWidth: 3,
+      }}
+    >
       <CardHeader
+        title={
+          <Typography variant="h6" component="div">
+            Related Objects
+          </Typography>
+        }
         action={
           <Tooltip title="Add Related Object" placement="right">
             <IconButton
@@ -65,8 +86,6 @@ export default function FormRelatedObjectsComponent({
             </IconButton>
           </Tooltip>
         }
-        title="Related Objects"
-        subheader="RAiD Related Objects"
       />
       <CardContent>
         <Stack gap={3} divider={<Divider />}>
@@ -83,7 +102,7 @@ export default function FormRelatedObjectsComponent({
             return (
               <Box
                 sx={{
-                  bgcolor: "rgba(0, 0, 0, 0.03)",
+                  bgcolor: "rgba(0, 0, 0, 0.02)",
                   p: 2,
                   borderRadius: 2,
                 }}

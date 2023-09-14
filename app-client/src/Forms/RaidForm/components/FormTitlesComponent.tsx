@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
@@ -9,7 +8,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Divider,
   Grid,
   IconButton,
   MenuItem,
@@ -21,15 +19,27 @@ import {
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { RaidDto } from "Generated/Raidv2";
 import dayjs from "dayjs";
-import { Control, Controller, useFieldArray } from "react-hook-form";
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  UseFormTrigger,
+  useFieldArray,
+} from "react-hook-form";
 import { titleTypes } from "references";
 import { threeYearsFromDate } from "utils";
-import { languages } from "../../languages";
+import { languages } from "../../../Page/languages";
 
 export default function FormTitlesComponent({
   control,
+  errors,
+  color,
+  trigger,
 }: {
   control: Control<RaidDto, any>;
+  errors: FieldErrors<RaidDto>;
+  color: string;
+  trigger: UseFormTrigger<RaidDto>;
 }) {
   const titlesFieldArray = useFieldArray({
     control,
@@ -46,8 +56,9 @@ export default function FormTitlesComponent({
       [...titlesFieldArray.fields].length === 0
         ? TitleTypes.primary
         : TitleTypes.alternative;
+
     titlesFieldArray.append({
-      title: faker.lorem.words(3),
+      title: ``,
       type: {
         id: typeId,
         schemeUri:
@@ -55,17 +66,30 @@ export default function FormTitlesComponent({
       },
       language: {
         id: "eng",
-        schemeUri: "",
+        schemeUri: "https://www.iso.org/standard/39534.html",
       },
 
       startDate: new Date(),
       endDate: threeYearsFromDate().toDate(),
     });
+    trigger("titles");
   };
 
   return (
-    <Card sx={{ p: 2, borderTop: "solid", borderTopColor: "primary.main" }}>
+    <Card
+      variant="outlined"
+      sx={{
+        borderLeft: "solid",
+        borderLeftColor: errors.titles ? "red" : color,
+        borderLeftWidth: errors.titles ? 5 : 3,
+      }}
+    >
       <CardHeader
+        title={
+          <Typography variant="h6" component="div">
+            Titles
+          </Typography>
+        }
         action={
           <Tooltip title="Add Title" placement="right">
             <IconButton aria-label="Add Title" onClick={handleAddTitle}>
@@ -73,29 +97,40 @@ export default function FormTitlesComponent({
             </IconButton>
           </Tooltip>
         }
-        title="Titles"
-        subheader="RAiD Titles"
       />
+
       <CardContent>
-        <Stack gap={3} divider={<Divider />}>
-          {titlesFieldArray.fields.length === 0 && (
-            <Typography
-              variant="body2"
-              color={"text.secondary"}
-              textAlign={"center"}
-            >
-              No titles defined
-            </Typography>
-          )}
+        <Stack gap={3}>
+          <Box>
+            {errors.titles && (
+              <Typography
+                variant="body2"
+                color={"text.error"}
+                textAlign={"center"}
+              >
+                {errors.titles.message}
+              </Typography>
+            )}
+            {titlesFieldArray.fields.length === 0 && (
+              <Typography
+                variant="body2"
+                color={"text.secondary"}
+                textAlign={"center"}
+              >
+                No titles defined
+              </Typography>
+            )}
+          </Box>
           {titlesFieldArray.fields.map((field, index) => {
             return (
               <Box
                 sx={{
-                  bgcolor: "rgba(0, 0, 0, 0.03)",
+                  bgcolor: "rgba(0, 0, 0, 0.02)",
                   p: 2,
                   borderRadius: 2,
                 }}
                 key={field.id}
+                className="animated-tile animated-tile-reverse"
               >
                 <Controller
                   control={control}
@@ -112,6 +147,13 @@ export default function FormTitlesComponent({
                                 size="small"
                                 fullWidth
                                 label="Title"
+                                required
+                                error={!!errors?.titles?.[index]?.title}
+                                helperText={
+                                  !!errors?.titles?.[index]?.title
+                                    ? errors?.titles?.[index]?.title?.message
+                                    : null
+                                }
                                 onChange={(event) => {
                                   onChange({
                                     ...controllerField.value,
@@ -210,6 +252,10 @@ export default function FormTitlesComponent({
                                   textField: {
                                     size: "small",
                                     fullWidth: true,
+                                    error: !!errors?.titles?.[index]?.startDate,
+                                    helperText:
+                                      errors?.titles?.[index]?.startDate
+                                        ?.message,
                                   },
                                   actionBar: {
                                     actions: ["today"],

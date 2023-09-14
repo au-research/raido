@@ -6,31 +6,49 @@ import {
   CardHeader,
   Grid,
   MenuItem,
-  TextField
+  TextField,
+  Typography,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { RaidDto } from "Generated/Raidv2";
 import dayjs from "dayjs";
-import { Control, Controller } from "react-hook-form";
+import { Control, Controller, FieldErrors } from "react-hook-form";
 import { accessTypes } from "references";
 import { extractKeyFromIdUri } from "utils";
-import { languages } from "../../languages";
+import { languages } from "../../../Page/languages";
 
 const dateThreeYearsFromNow = dayjs().add(3, "year");
 
 export default function FormAccessComponent({
   control,
+  errors,
+  color,
 }: {
   control: Control<RaidDto, any>;
+  errors: FieldErrors<RaidDto>;
+  color: string;
 }) {
   return (
     <>
-      <Card sx={{ p: 2, borderTop: "solid", borderTopColor: "primary.main" }}>
-        <CardHeader title="Access" subheader="RAiD Access" />
+      <Card
+        variant="outlined"
+        sx={{
+          borderLeft: "solid",
+          borderLeftColor: color,
+          borderLeftWidth: 3,
+        }}
+      >
+        <CardHeader
+          title={
+            <Typography variant="h6" component="div">
+              Access
+            </Typography>
+          }
+        />
         <CardContent>
           <Box
             sx={{
-              bgcolor: "rgba(0, 0, 0, 0.03)",
+              bgcolor: "rgba(0, 0, 0, 0.02)",
               p: 2,
               borderRadius: 2,
             }}
