@@ -40,12 +40,12 @@ export default function FormTraditionalKnowledgeIdentifiersComponent({
 }) {
   const tradionalKnowledgeIdentifierArray = useFieldArray({
     control,
-    name: "traditionalKnowledgeLabels",
+    name: "traditionalKnowledgeLabel",
   });
 
   const handleAddTradionalKnowledgeIdentifier = () => {
     tradionalKnowledgeIdentifierArray.append({
-      schemeUri: "aaa",
+      schemaUri: "aaa",
     });
   };
 
@@ -101,7 +101,7 @@ export default function FormTraditionalKnowledgeIdentifiersComponent({
               >
                 <Controller
                   control={control}
-                  name={`titles.${index}`}
+                  name={`title.${index}`}
                   render={({ field: { onChange, ...controllerField } }) => {
                     return (
                       <>

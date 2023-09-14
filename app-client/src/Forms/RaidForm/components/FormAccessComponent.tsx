@@ -56,7 +56,7 @@ export default function FormAccessComponent({
             <Grid container spacing={2}>
               <Grid item xs={12} sm={3} md={4}>
                 <Controller
-                  name="access.accessStatement.statement"
+                  name="access.accessStatement.text"
                   control={control}
                   render={({ field }) => (
                     <TextField

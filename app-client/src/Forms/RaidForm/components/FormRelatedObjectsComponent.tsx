@@ -41,7 +41,7 @@ export default function FormRelatedObjectsComponent({
 }) {
   const relatedObjectsFieldArray = useFieldArray({
     control,
-    name: "relatedObjects",
+    name: "relatedObject",
   });
 
   const handleAddRelatedObjects = () => {
@@ -56,7 +56,7 @@ export default function FormRelatedObjectsComponent({
         .toLocaleLowerCase()}`,
       type: {
         id: "isPartOf",
-        schemeUri: "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        schemaUri: "https://linked.data.gov.au/def/anzsrc-for/2020/",
       },
     });
   };
@@ -110,7 +110,7 @@ export default function FormRelatedObjectsComponent({
               >
                 <Controller
                   control={control}
-                  name={`relatedObjects.${index}`}
+                  name={`relatedObject.${index}`}
                   render={({ field: { onChange, ...controllerField } }) => {
                     return (
                       <>

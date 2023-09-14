@@ -55,7 +55,7 @@ export default function FormRelatedRaidsComponent({
 
   const relatedRaidsFieldArray = useFieldArray({
     control,
-    name: "relatedRaids",
+    name: "relatedRaid",
   });
 
   const raidQuery: RqQuery<RaidDto[]> = useQuery(
@@ -76,7 +76,7 @@ export default function FormRelatedRaidsComponent({
       id: faker.string.uuid(),
       type: {
         id: "isPartOf",
-        schemeUri: "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        schemaUri: "https://linked.data.gov.au/def/anzsrc-for/2020/",
       },
     });
   };
@@ -130,7 +130,7 @@ export default function FormRelatedRaidsComponent({
               >
                 <Controller
                   control={control}
-                  name={`relatedRaids.${index}`}
+                  name={`relatedRaid.${index}`}
                   render={({ field: { onChange, ...controllerField } }) => {
                     return (
                       <>
@@ -166,7 +166,7 @@ export default function FormRelatedRaidsComponent({
                             </Grid>
                             <Grid item xs={12} sm={12} md={8}>
                               <Controller
-                                name={`relatedRaids.${index}.id`}
+                                name={`relatedRaid.${index}.id`}
                                 control={control}
                                 defaultValue=""
                                 rules={{ required: true }}
@@ -177,8 +177,10 @@ export default function FormRelatedRaidsComponent({
                                   <Autocomplete
                                     options={raidQuery.data || []}
                                     getOptionLabel={(option) => {
+                                      // const identifierParts =
+                                      //   option?.id?.identifier.split("/");
                                       const identifierParts =
-                                        option?.id?.identifier.split("/");
+                                        option.identifier.id.split("/");
 
                                       const identifierPartsLength =
                                         identifierParts?.length;
@@ -194,15 +196,20 @@ export default function FormRelatedRaidsComponent({
                                           ]
                                         : "";
                                       return `${prefix}/${suffix}: ${
-                                        option?.titles?.map((el) => el.title) ||
+                                        option?.title?.map((el) => el.text) ||
                                         ""
                                       }`;
                                     }}
                                     onChange={(_, newValue) => {
-                                      onChange(newValue ? newValue.id : "");
+                                      onChange(
+                                        newValue ? newValue.identifier.id : ""
+                                      );
                                     }}
                                     isOptionEqualToValue={(option, value) => {
-                                      return option.id === value.id;
+                                      return (
+                                        option.identifier.id ===
+                                        value.identifier.id
+                                      );
                                     }}
                                     renderInput={(params) => (
                                       <TextField

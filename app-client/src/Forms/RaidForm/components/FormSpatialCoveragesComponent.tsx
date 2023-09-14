@@ -38,18 +38,18 @@ export default function FormSpatialCoveragesComponent({
 }) {
   const spatialCoveragesFieldArray = useFieldArray({
     control,
-    name: "spatialCoverages",
+    name: "spatialCoverage",
   });
 
   const handleAddSpatialCoverage = () => {
     spatialCoveragesFieldArray.append({
       id: "",
-      schemeUri:
+      schemaUri:
         "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/",
       place: "",
       language: {
         id: "eng",
-        schemeUri: "https://iso639-3.sil.org/",
+        schemaUri: "https://iso639-3.sil.org/",
       },
     });
   };
@@ -103,7 +103,7 @@ export default function FormSpatialCoveragesComponent({
               >
                 <Controller
                   control={control}
-                  name={`spatialCoverages.${index}`}
+                  name={`spatialCoverage.${index}`}
                   render={({ field: { onChange, ...controllerField } }) => {
                     return (
                       <>
@@ -190,7 +190,7 @@ export default function FormSpatialCoveragesComponent({
 
                             <Grid item xs={12} sm={6} md={4}>
                               <Controller
-                                name={`descriptions.${index}.language.id`}
+                                name={`description.${index}.language.id`}
                                 control={control}
                                 defaultValue=""
                                 rules={{ required: true }}

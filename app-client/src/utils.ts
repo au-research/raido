@@ -1,6 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { Card } from "@mui/material";
-import { CreateRaidV1Request } from "Generated/Raidv2";
+import { RaidCreateRequest } from "Generated/Raidv2";
 import dayjs, { Dayjs } from "dayjs";
 import { z } from "zod";
 
@@ -61,55 +60,55 @@ export const FormSchema = z.object({
     .min(1),
 });
 
-export const newRaid: CreateRaidV1Request = {
-  titles: [
+export const newRaid: RaidCreateRequest = {
+  title: [
     {
-      title: `Generated: ${faker.lorem.words(5)}`,
+      text: `Generated: ${faker.lorem.words(5)}`,
       type: {
         id: "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
-        schemeUri:
+        schemaUri:
           "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/",
       },
       language: {
         id: "eng",
-        schemeUri: "https://www.iso.org/standard/39534.html",
+        schemaUri: "https://www.iso.org/standard/39534.html",
       },
-      startDate: new Date(),
+      startDate: dayjs(new Date()).format("YYYY-MM-DD"),
     },
   ],
-  dates: {
-    startDate: new Date(),
+  date: {
+    startDate: dayjs(new Date()).format("YYYY-MM-DD"),
   },
   access: {
     type: {
       id: "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
-      schemeUri:
+      schemaUri:
         "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/",
     },
     accessStatement: {
-      statement: "This is a test statement",
+      text: "This is a test statement",
       language: {
         id: "eng",
-        schemeUri: "https://iso639-3.sil.org/",
+        schemaUri: "https://iso639-3.sil.org/",
       },
     },
   },
 
-  contributors: [
+  contributor: [
     {
       id: "https://orcid.org/0009-0000-9306-3120",
-      identifierSchemeUri: "https://orcid.org/",
-      positions: [
+      schemaUri: "https://orcid.org/",
+      position: [
         {
-          schemeUri:
+          schemaUri:
             "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
           id: "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
-          startDate: new Date(),
+          startDate: dayjs(new Date()).format("YYYY-MM-DD"),
         },
       ],
-      roles: [
+      role: [
         {
-          schemeUri: "https://credit.niso.org/contributor-roles/",
+          schemaUri: "https://credit.niso.org/contributor-roles/",
           id: "https://credit.niso.org/contributor-roles/supervision/",
         },
       ],

@@ -57,7 +57,7 @@ export default function FormDatesComponent({
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6} md={3}>
               <Controller
-                name="dates.startDate"
+                name="date.startDate"
                 control={control}
                 render={({ field: { onChange, ...restField } }) => {
                   return (
@@ -91,7 +91,7 @@ export default function FormDatesComponent({
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
               <Controller
-                name="dates.endDate"
+                name="date.endDate"
                 control={control}
                 render={({ field: { onChange, ...restField } }) => {
                   return (

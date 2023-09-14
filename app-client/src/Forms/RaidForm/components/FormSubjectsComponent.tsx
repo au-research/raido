@@ -38,14 +38,13 @@ export default function FormSubjectsComponent({
 }) {
   const subjectsFieldArray = useFieldArray({
     control,
-    name: "subjects",
+    name: "subject",
   });
 
   const handleAddSubject = () => {
     subjectsFieldArray.append({
-      keyword: faker.lorem.word(),
       id: "Transgenesis",
-      schemeUri: "https://linked.data.gov.au/def/anzsrc-for/2020/",
+      schemaUri: "https://linked.data.gov.au/def/anzsrc-for/2020/",
     });
   };
 
@@ -92,7 +91,7 @@ export default function FormSubjectsComponent({
               >
                 <Controller
                   control={control}
-                  name={`subjects.${index}`}
+                  name={`subject.${index}`}
                   render={({ field: { onChange, ...controllerField } }) => {
                     return (
                       <>
@@ -100,7 +99,7 @@ export default function FormSubjectsComponent({
                           <Grid container spacing={2}>
                             <Grid item xs={12} sm={12} md={12}>
                               <Controller
-                                name={`subjects.${index}.schemeUri`}
+                                name={`subject.${index}.schemaUri`}
                                 control={control}
                                 defaultValue=""
                                 rules={{ required: true }}

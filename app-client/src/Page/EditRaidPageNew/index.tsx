@@ -11,7 +11,14 @@ import {
   useNavigation,
 } from "Design/NavigationProvider";
 import RaidForm from "Forms/RaidForm";
-import { Access, Contributor, Dates, RaidDto, Title } from "Generated/Raidv2";
+import {
+  Access,
+  Contributor,
+  DatesBlock,
+  ModelDate,
+  RaidDto,
+  Title,
+} from "Generated/Raidv2";
 
 import { useState } from "react";
 import { newRaid } from "utils";
@@ -45,11 +52,11 @@ function Content() {
 
   const handleRaidCreate = async (data: RaidDto): Promise<RaidDto> => {
     return await api.raid.createRaidV1({
-      createRaidV1Request: {
-        titles: data?.titles || ([] as Title[]),
+      raidCreateRequest: {
+        title: data?.title || ([] as Title[]),
         access: data?.access || ({} as Access),
-        dates: data?.dates || ({} as Dates),
-        contributors: data?.contributors || ([] as Contributor[]),
+        date: data?.date || ({} as ModelDate),
+        contributor: data?.contributor || ([] as Contributor[]),
       },
     });
   };

@@ -6,7 +6,7 @@ import {
   CardHeader,
   Stack,
 } from "@mui/material";
-import { RaidDto } from "Generated/Raidv2";
+import { RaidCreateRequest, RaidDto } from "Generated/Raidv2";
 import { FormProvider, useForm } from "react-hook-form";
 import FormAlternateIdentifiersComponent from "./components/FormAlternateIdentifiersComponent";
 import FormAlternateUrlsComponent from "./components/FormAlternateUrlsComponent";
@@ -27,7 +27,7 @@ import { CategoryHeader } from "helper-components";
 import { FormSchema, raidColors } from "utils";
 
 type FormProps = {
-  defaultValues: RaidDto;
+  defaultValues: RaidCreateRequest;
   onSubmit(data: RaidDto): void;
   isSubmitting: boolean;
   formTitle: string;
@@ -60,7 +60,7 @@ export default function RaidForm({
   const methods = useForm();
 
   const handleChange = () => {
-    trigger("titles");
+    trigger("title");
   };
 
   console.log(defaultValues);
@@ -74,13 +74,7 @@ export default function RaidForm({
         onChange={handleChange}
       >
         <Card variant="outlined" sx={{ mt: 3, background: "transparent" }}>
-          <CardHeader
-            title={
-              defaultValues.id
-                ? `Edit RAiD`
-                : "Mint new RAiD"
-            }
-          />
+          <CardHeader title="RAiD Form" />
           <CardContent>
             <Stack spacing={2}>
               <CategoryHeader

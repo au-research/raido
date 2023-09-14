@@ -58,7 +58,7 @@ export default function RaidFormComponentOld({
   const methods = useForm();
 
   const handleChange = () => {
-    trigger("titles");
+    trigger("title");
   };
 
   return (

@@ -14,11 +14,11 @@ export default function Titles({ data }: { data: RaidDto | undefined }) {
       <CardHeader title="Titles" subheader="RAiD Titles" />
       <CardContent>
         <List>
-          {data?.titles?.map((title, index) => {
+          {data?.title?.map((title, index) => {
             return (
               <ListItemButton key={index}>
                 <ListItemText
-                  primary={title.title}
+                  primary={title.text}
                   secondary={`${title?.type.id || ""}`}
                 />
               </ListItemButton>

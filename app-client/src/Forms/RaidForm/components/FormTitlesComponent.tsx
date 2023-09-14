@@ -43,7 +43,7 @@ export default function FormTitlesComponent({
 }) {
   const titlesFieldArray = useFieldArray({
     control,
-    name: "titles",
+    name: "title",
   });
 
   enum TitleTypes {
@@ -58,21 +58,20 @@ export default function FormTitlesComponent({
         : TitleTypes.alternative;
 
     titlesFieldArray.append({
-      title: ``,
+      text: ``,
       type: {
         id: typeId,
-        schemeUri:
+        schemaUri:
           "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/",
       },
       language: {
         id: "eng",
-        schemeUri: "https://www.iso.org/standard/39534.html",
+        schemaUri: "https://www.iso.org/standard/39534.html",
       },
-
-      startDate: new Date(),
-      endDate: threeYearsFromDate().toDate(),
+      startDate: dayjs(new Date()).format("YYYY-MM-DD"),
+      endDate: threeYearsFromDate().format("YYYY-MM-DD"),
     });
-    trigger("titles");
+    trigger("title");
   };
 
   return (
@@ -80,8 +79,8 @@ export default function FormTitlesComponent({
       variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: errors.titles ? "red" : color,
-        borderLeftWidth: errors.titles ? 5 : 3,
+        borderLeftColor: errors.title ? "red" : color,
+        borderLeftWidth: errors.title ? 5 : 3,
       }}
     >
       <CardHeader
@@ -102,13 +101,13 @@ export default function FormTitlesComponent({
       <CardContent>
         <Stack gap={3}>
           <Box>
-            {errors.titles && (
+            {errors.title && (
               <Typography
                 variant="body2"
                 color={"text.error"}
                 textAlign={"center"}
               >
-                {errors.titles.message}
+                {errors.title.message}
               </Typography>
             )}
             {titlesFieldArray.fields.length === 0 && (
@@ -134,7 +133,7 @@ export default function FormTitlesComponent({
               >
                 <Controller
                   control={control}
-                  name={`titles.${index}`}
+                  name={`title.${index}`}
                   render={({ field: { onChange, ...controllerField } }) => {
                     return (
                       <>
@@ -143,15 +142,15 @@ export default function FormTitlesComponent({
                             <Grid item xs={12} sm={12} md={6}>
                               <TextField
                                 {...controllerField}
-                                value={controllerField?.value?.title}
+                                value={controllerField?.value?.text}
                                 size="small"
                                 fullWidth
                                 label="Title"
                                 required
-                                error={!!errors?.titles?.[index]?.title}
+                                error={!!errors?.title?.[index]?.text}
                                 helperText={
-                                  !!errors?.titles?.[index]?.title
-                                    ? errors?.titles?.[index]?.title?.message
+                                  !!errors?.title?.[index]?.text
+                                    ? errors?.title?.[index]?.text?.message
                                     : null
                                 }
                                 onChange={(event) => {
@@ -192,7 +191,7 @@ export default function FormTitlesComponent({
                             </Grid>
                             <Grid item xs={12} sm={6} md={4}>
                               <Controller
-                                name={`titles.${index}.language.id`}
+                                name={`title.${index}.language.id`}
                                 control={control}
                                 defaultValue=""
                                 rules={{ required: true }}
@@ -252,9 +251,9 @@ export default function FormTitlesComponent({
                                   textField: {
                                     size: "small",
                                     fullWidth: true,
-                                    error: !!errors?.titles?.[index]?.startDate,
+                                    error: !!errors?.title?.[index]?.startDate,
                                     helperText:
-                                      errors?.titles?.[index]?.startDate
+                                      errors?.title?.[index]?.startDate
                                         ?.message,
                                   },
                                   actionBar: {

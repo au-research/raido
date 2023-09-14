@@ -39,11 +39,11 @@ export default function Meta({ data }: { data: RaidDto | undefined }) {
                 color="text.secondary"
                 variant="body1"
                 component={Link}
-                href={`https://hdl.handle.net/${data?.id?.identifier}`}
+                href={`https://hdl.handle.net/${data?.identifier?.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {data?.id?.identifier} <LaunchIcon sx={{ fontSize: 12 }} />
+                {data?.identifier?.id} <LaunchIcon sx={{ fontSize: 12 }} />
               </Typography>
             </Box>
           </Grid>
@@ -65,11 +65,11 @@ export default function Meta({ data }: { data: RaidDto | undefined }) {
                 color="text.secondary"
                 variant="body1"
                 component={Link}
-                href={`http://localhost:8080/${data?.id?.identifier}`}
+                href={`http://localhost:8080/${data?.identifier?.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {data?.id?.identifier} <LaunchIcon sx={{ fontSize: 12 }} />
+                {data?.identifier?.id} <LaunchIcon sx={{ fontSize: 12 }} />
               </Typography>
             </Box>
           </Grid>

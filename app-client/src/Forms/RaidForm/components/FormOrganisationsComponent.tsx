@@ -300,14 +300,14 @@ export default function FormOrganisationsComponent({
 }) {
   const organisationsArray = useFieldArray({
     control,
-    name: `organisations`,
+    name: `organisation`,
   });
 
   const handleAddOrganisation = () => {
     organisationsArray.append({
       id: ``,
-      identifierSchemeUri: "https://ror.org",
-      roles: [],
+      schemaUri: "https://ror.org",
+      role: [],
     });
   };
 

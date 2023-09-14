@@ -56,18 +56,18 @@ const extractValuesFromRaid = (
   startDate: string;
   endDate: string;
 } => {
-  const title = raid?.titles ? raid?.titles[0]?.title || "" : "";
+  const title = raid?.title ? raid?.title[0]?.text || "" : "";
 
-  const handle = raid?.id?.identifier
-    ? new URL(raid?.id?.identifier).pathname.substring(1)
+  const handle = raid?.identifier?.id
+    ? new URL(raid?.identifier?.id).pathname.substring(1)
     : "";
 
-  const startDate = raid?.dates?.startDate
-    ? formatLocalDateAsIso(new Date(raid.dates.startDate))
+  const startDate = raid?.date?.startDate
+    ? formatLocalDateAsIso(new Date(raid.date.startDate))
     : "";
 
-  const endDate = raid?.dates?.endDate
-    ? formatLocalDateAsIso(new Date(raid.dates.endDate))
+  const endDate = raid?.date?.endDate
+    ? formatLocalDateAsIso(new Date(raid.date.endDate))
     : "";
 
   return {

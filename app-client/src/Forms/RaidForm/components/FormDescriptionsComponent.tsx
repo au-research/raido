@@ -39,7 +39,7 @@ export default function FormDescriptionsComponent({
 }) {
   const descriptionsFieldArray = useFieldArray({
     control,
-    name: "descriptions",
+    name: "description",
   });
 
   const handleAddDescription = () => {
@@ -48,15 +48,15 @@ export default function FormDescriptionsComponent({
         ? "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json"
         : "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json";
     descriptionsFieldArray.append({
-      description: faker.lorem.paragraph(),
+      text: faker.lorem.paragraph(),
       type: {
         id: typeId,
-        schemeUri:
+        schemaUri:
           "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/",
       },
       language: {
         id: "eng",
-        schemeUri: "https://iso639-3.sil.org/",
+        schemaUri: "https://iso639-3.sil.org/",
       },
     });
   };
@@ -111,7 +111,7 @@ export default function FormDescriptionsComponent({
                 >
                   <Controller
                     control={control}
-                    name={`descriptions.${index}`}
+                    name={`description.${index}`}
                     render={({ field: { onChange, ...controllerField } }) => {
                       return (
                         <>
@@ -125,14 +125,14 @@ export default function FormDescriptionsComponent({
                                 <TextField
                                   multiline
                                   {...controllerField}
-                                  value={controllerField?.value?.description}
+                                  value={controllerField?.value?.text}
                                   size="small"
                                   fullWidth
                                   label="Description"
                                   onChange={(event) => {
                                     onChange({
                                       ...controllerField.value,
-                                      description: event.target.value,
+                                      text: event.target.value,
                                     });
                                   }}
                                 />
@@ -167,7 +167,7 @@ export default function FormDescriptionsComponent({
                               </Grid>
                               <Grid item xs={12} sm={6} md={4}>
                                 <Controller
-                                  name={`descriptions.${index}.language.id`}
+                                  name={`description.${index}.language.id`}
                                   control={control}
                                   defaultValue=""
                                   rules={{ required: true }}

@@ -1,11 +1,10 @@
-
 import {
   Card,
   CardContent,
   CardHeader,
   List,
   ListItemButton,
-  ListItemText
+  ListItemText,
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
 
@@ -15,11 +14,11 @@ export default function Descriptions({ data }: { data: RaidDto | undefined }) {
       <CardHeader title="Descriptions" subheader="RAiD Descriptions" />
       <CardContent>
         <List>
-          {data?.descriptions?.map((description, index) => {
+          {data?.description?.map((description, index) => {
             return (
               <ListItemButton>
                 <ListItemText
-                  primary={description.description}
+                  primary={description.text}
                   secondary={`${description?.type.id || ""}`}
                 />
               </ListItemButton>

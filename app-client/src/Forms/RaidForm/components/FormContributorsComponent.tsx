@@ -453,25 +453,25 @@ export default function FormContributorsComponent({
 }) {
   const contributorsArray = useFieldArray({
     control,
-    name: `contributors`,
+    name: `contributor`,
   });
 
   const contributorPositionsArray = useFieldArray({
     control,
-    name: `contributors.${0}.positions`,
+    name: `contributor.${0}.position`,
   });
 
   const contributorRolesArray = useFieldArray({
     control,
-    name: `contributors.${0}.roles`,
+    name: `contributor.${0}.role`,
   });
 
   const handleAddContributor = (event: React.MouseEvent<HTMLButtonElement>) => {
     contributorsArray.append({
       id: ``,
-      identifierSchemeUri: "https://orcid.org/",
-      positions: [],
-      roles: [],
+      schemaUri: "https://orcid.org/",
+      position: [],
+      role: [],
     });
   };
 

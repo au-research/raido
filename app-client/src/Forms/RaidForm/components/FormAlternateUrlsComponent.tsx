@@ -35,7 +35,7 @@ export default function FormAlternateUrlsComponent({
 }) {
   const alternateUrlsFieldArray = useFieldArray({
     control,
-    name: "alternateUrls",
+    name: "alternateUrl",
   });
 
   const handleAddAlternateUrls = () => {
@@ -93,7 +93,7 @@ export default function FormAlternateUrlsComponent({
               >
                 <Controller
                   control={control}
-                  name={`alternateUrls.${index}`}
+                  name={`alternateUrl.${index}`}
                   render={({ field: { onChange, ...controllerField } }) => {
                     return (
                       <>

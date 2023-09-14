@@ -35,7 +35,7 @@ export default function FormAlternateIdentifiersComponent({
 }) {
   const alternateIdentifiersFieldArray = useFieldArray({
     control,
-    name: "alternateIdentifiers",
+    name: "alternateIdentifier",
   });
 
   const handleAddAlternateIdentifiers = () => {
@@ -95,7 +95,7 @@ export default function FormAlternateIdentifiersComponent({
               >
                 <Controller
                   control={control}
-                  name={`alternateIdentifiers.${index}`}
+                  name={`alternateIdentifier.${index}`}
                   render={({ field: { onChange, ...controllerField } }) => {
                     return (
                       <>

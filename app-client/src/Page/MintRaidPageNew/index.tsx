@@ -1,6 +1,5 @@
-import { faker } from "@faker-js/faker";
 import { Container } from "@mui/material";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useAuthApi } from "Api/AuthApi";
 import { raidoTitle } from "Component/Util";
 import {
@@ -15,13 +14,11 @@ import RaidForm from "Forms/RaidForm";
 import {
   Access,
   Contributor,
-  CreateRaidV1Request,
-  Dates,
+  ModelDate,
   RaidDto,
   Title,
 } from "Generated/Raidv2";
 
-import { useState } from "react";
 import { newRaid } from "utils";
 
 const pageUrl = "/mint-raid-new";
@@ -30,20 +27,22 @@ export function isMintRaidPagePath(pathname: string): NavPathResult {
   return isPagePath(pathname, pageUrl);
 }
 
-function getRaidHandleFromPathname(nav: NavigationState): string {
-  return parsePageSuffixParams<string>(nav, isMintRaidPagePath, String);
-}
-
 function Content() {
-  const nav = useNavigation();
-
   const handleRaidCreate = async (data: RaidDto): Promise<RaidDto> => {
+    // return await api.raid.createRaidV1({
+    //   raidCreateRequest: {
+    //     title: data?.title || ([] as Title[]),
+    //     access: data?.access || ({} as Access),
+    //     date: data?.date || ({} as ModelDate),
+    //     contributor: data?.contributor || ([] as Contributor[]),
+    //   },
+    // });
     return await api.raid.createRaidV1({
-      createRaidV1Request: {
-        titles: data?.titles || ([] as Title[]),
+      raidCreateRequest: {
+        title: data?.title || ([] as Title[]),
         access: data?.access || ({} as Access),
-        dates: data?.dates || ({} as Dates),
-        contributors: data?.contributors || ([] as Contributor[]),
+        date: data?.date || ({} as ModelDate),
+        contributor: data?.contributor || ([] as Contributor[]),
       },
     });
   };
