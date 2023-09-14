@@ -16,7 +16,7 @@ export default function Titles({ data }: { data: RaidDto | undefined }) {
         <List>
           {data?.titles?.map((title, index) => {
             return (
-              <ListItemButton>
+              <ListItemButton key={index}>
                 <ListItemText
                   primary={title.title}
                   secondary={`${title?.type.id || ""}`}
