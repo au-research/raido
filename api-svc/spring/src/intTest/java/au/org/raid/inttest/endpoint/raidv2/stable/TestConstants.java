@@ -88,7 +88,7 @@ public class TestConstants {
 
     public static final String VALID_ROR = "https://ror.org/038sjwq14";
 
-    public static final String LANGUAGE_SCHEMA_URI = "https://www.iso.org/standard/39534.html";
+    public static final String LANGUAGE_SCHEMA_URI = "https://iso639-3.sil.org";
     public static final String LANGUAGE_ID = "eng";
 
     public static final String GEONAMES_MELBOURNE = "https://www.geonames.org/2158177/melbourne.html";
