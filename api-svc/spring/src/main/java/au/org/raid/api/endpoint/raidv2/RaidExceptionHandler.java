@@ -3,10 +3,9 @@ package au.org.raid.api.endpoint.raidv2;
 import au.org.raid.api.exception.*;
 import au.org.raid.api.spring.RedactingExceptionResolver;
 import au.org.raid.api.spring.security.ApiSafeException;
-import au.org.raid.api.util.Log;
-import au.org.raid.api.util.ObjectUtil;
 import au.org.raid.idl.raidv2.model.FailureResponse;
 import au.org.raid.idl.raidv2.model.ValidationFailureResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.exception.DataAccessException;
 import org.springframework.http.*;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -15,20 +14,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+@Slf4j
 @ControllerAdvice
 public class RaidExceptionHandler extends ResponseEntityExceptionHandler {
-    private static final Log log = Log.to(RaidExceptionHandler.class);
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ValidationFailureResponse> handleValidationException(final Exception e) {
         final var exception = (ValidationException) e;
-    /* we expect validation errors to be frequent, and they're not useful for
-    detecting vulnerability probes/scanning - no need to see them in the logs
-    for a real environment (logging the stack seems like overkill too) */
-        log.with("failures.size", exception.getFailures().size()).
-                with("failures[0..2]", ObjectUtil.first(exception.getFailures(), 2)).
-                info("validation exception");
-        log.debugEx(exception.getTitle(), e);
 
         final var body = new ValidationFailureResponse()
                 .type(exception.getType())
@@ -47,7 +39,6 @@ public class RaidExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(CrossAccountAccessException.class)
     public ResponseEntity<FailureResponse> handleCrossAccountException(final Exception e) {
         final var exception = (CrossAccountAccessException) e;
-        log.warnEx(exception.getTitle(), e);
 
         final var body = new FailureResponse()
                 .type(exception.getType())
@@ -65,7 +56,6 @@ public class RaidExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<FailureResponse> handleRaidApiException(final Exception e) {
         final var exception = (ResourceNotFoundException) e;
-        log.warnEx(exception.getTitle(), e);
 
         final var body = new FailureResponse()
                 .type(exception.getType())
@@ -83,7 +73,6 @@ public class RaidExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(InvalidJsonException.class)
     public ResponseEntity<FailureResponse> handleInvalidJsonException(final Exception e) {
         final var exception = (InvalidJsonException) e;
-        log.warnEx(exception.getTitle(), e);
 
         final var body = new FailureResponse()
                 .type(exception.getType())
@@ -98,10 +87,23 @@ public class RaidExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(body);
     }
 
+    @ExceptionHandler(RaidApiException.class)
+    public ResponseEntity<FailureResponse> handle(final RaidApiException e) {
+        final var body = new FailureResponse()
+                .type(e.getType())
+                .title(e.getTitle())
+                .status(e.getStatus())
+                .detail(e.getDetail())
+                .instance(e.getInstance());
+
+        return ResponseEntity
+                .status(HttpStatusCode.valueOf(e.getStatus()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(body);
+    }
+
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<Void> dataAccessExceptionHandler(final Exception e) {
-        log.errorEx("Database exception", e);
-
         return ResponseEntity
                 .internalServerError()
                 .build();
@@ -115,9 +117,9 @@ public class RaidExceptionHandler extends ResponseEntityExceptionHandler {
                 return response;
             }
         } catch (Exception handlerEx) {
-            log.errorEx("Exception thrown in exception handler", handlerEx);
+            log.error("Exception thrown in exception handler", handlerEx);
         }
-        log.errorEx("Unhandled exception", e);
+        log.error("Unhandled exception", e);
 
         return ResponseEntity
                 .internalServerError()
@@ -143,7 +145,7 @@ public class RaidExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(InvalidAccessException.class)
     public ResponseEntity<FailureResponse> handleInvalidAccessException(final Exception e) {
         final var exception = (InvalidAccessException) e;
-        log.warnEx(exception.getTitle(), e);
+        log.warn(exception.getTitle(), e);
 
         final var body = new FailureResponse()
                 .type(exception.getType())
@@ -161,7 +163,7 @@ public class RaidExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(InvalidVersionException.class)
     public ResponseEntity<FailureResponse> handleInvalidVersionException(final Exception e) {
         final var exception = (InvalidVersionException) e;
-        log.warnEx(exception.getTitle(), e);
+        log.warn(exception.getTitle(), e);
 
         final var body = new FailureResponse()
                 .type(exception.getType())
@@ -187,8 +189,7 @@ public class RaidExceptionHandler extends ResponseEntityExceptionHandler {
     I couldn't figure out how to actually print the content of
     ex.httpInputMessage.  So it's logged from the RequestLoggingFilter.
     */
-        log.with("problem", ex.getMessage()).
-                warn("bad request - http message not readable");
+        log.warn(ex.getMessage());
 
         final var typeFormat = "https://raid.org.au/errors#%s";
 
