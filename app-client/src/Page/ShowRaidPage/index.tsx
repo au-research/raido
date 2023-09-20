@@ -1,4 +1,4 @@
-import { Button, Container, Stack } from "@mui/material";
+import { Box, Button, Container, Stack } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthApi } from "Api/AuthApi";
 import { raidoTitle } from "Component/Util";
@@ -13,6 +13,11 @@ import {
 import { RaidDto } from "Generated/Raidv2";
 
 import { useState } from "react";
+import ShowTitleComponent from "./components/ShowTitleComponent";
+import { CategoryHeader } from "helper-components";
+import { raidColors } from "utils";
+import ShowDateComponent from "./components/ShowDateComponent";
+import ShowDescriptionComponent from "./components/ShowDescriptionComponent";
 
 const pageUrl = "/show-raid";
 
@@ -51,26 +56,42 @@ function Content() {
   }
 
   const defaultValues = readQuery.data;
+  console.log("defaultValues", defaultValues);
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" sx={{ py: 2 }}>
       <Stack direction={"column"} spacing={2}>
-        <pre>Show RAiD content here...</pre>
-        <Button
-          variant={"outlined"}
-          size={"small"}
-          href={`/edit-raid-new/${handle}`}
+        <CategoryHeader
+          color={raidColors.get("yellow") || ""}
+          title="Main"
+          subheader="RAiD Main Data"
+        />
+        <ShowTitleComponent
+          raid={defaultValues}
+          color={raidColors.get("yellow") || ""}
+        />
+        <ShowDateComponent
+          raid={defaultValues}
+          color={raidColors.get("yellow") || ""}
+        />
+        <ShowDescriptionComponent
+          raid={defaultValues}
+          color={raidColors.get("yellow") || ""}
+        />
+        <Box
+          sx={{
+            py: 2,
+            display: "flex",
+          }}
         >
-          Edit Raid
-        </Button>
-
-        <Button
-          variant={"outlined"}
-          size={"small"}
-          href={`/edit-raid/${handle}`}
-        >
-          Edit Raid - Legacy
-        </Button>
+          <Button
+            variant={"contained"}
+            href={`/edit-raid-new/${handle}`}
+            sx={{ ml: 2 }}
+          >
+            Edit Raid
+          </Button>
+        </Box>
       </Stack>
     </Container>
   );
