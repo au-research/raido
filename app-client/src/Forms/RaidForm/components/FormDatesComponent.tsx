@@ -67,11 +67,7 @@ export default function FormDatesComponent({
                       format="DD-MMM-YYYY"
                       onChange={(event) => {
                         if (dayjs.isDayjs(event)) {
-                          onChange(
-                            event?.format("YYYY-MM-DD")
-                              ? new Date(event?.format("YYYY-MM-DD"))
-                              : ""
-                          );
+                          onChange(event?.format("YYYY-MM-DD") || "");
                         }
                       }}
                       slotProps={{
@@ -97,21 +93,20 @@ export default function FormDatesComponent({
                   return (
                     <DatePicker
                       label="End Date"
-                      defaultValue={dateThreeYearsFromToday}
+                      defaultValue={dayjs(restField.value)}
                       format="DD-MMM-YYYY"
                       onChange={(event) => {
                         if (dayjs.isDayjs(event)) {
-                          onChange(
-                            event?.format("YYYY-MM-DD")
-                              ? new Date(event?.format("YYYY-MM-DD"))
-                              : ""
-                          );
+                          onChange(event?.format("YYYY-MM-DD") || "");
                         }
                       }}
                       slotProps={{
                         textField: {
                           fullWidth: true,
                           size: "small",
+                        },
+                        actionBar: {
+                          actions: ["today"],
                         },
                       }}
                       slots={<TextField />}
