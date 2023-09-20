@@ -13,353 +13,370 @@ import {
   FormGroup,
   Grid,
   IconButton,
-  MenuItem,
   Stack,
   TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers";
 import { RaidDto } from "Generated/Raidv2";
 import dayjs from "dayjs";
 import {
   Control,
   Controller,
+  FieldArrayWithId,
   FieldErrors,
+  UseFieldArrayReturn,
   useFieldArray,
 } from "react-hook-form";
-import { contributorPositions, contributorRoles } from "references";
-import { extractKeyFromIdUri } from "utils";
 
 function ContributorRootField({
   contributorsArray,
   field,
   control,
   index,
-}: any) {
+  errors,
+}: {
+  contributorsArray: UseFieldArrayReturn<
+    RaidDto,
+    "contributor",
+    "formFieldGeneratedId"
+  >;
+  field: FieldArrayWithId<RaidDto, "contributor", "formFieldGeneratedId">;
+  control: Control<RaidDto, any>;
+  index: number;
+  errors: FieldErrors<RaidDto>;
+}) {
   const contributorPositionsArray = useFieldArray({
     control,
-    name: `contributors.${index}.positions`,
+    name: `contributor.${index}.position`,
+    keyName: "formFieldGeneratedId",
   });
 
-  const addPositionHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleAddPosition = (event: React.MouseEvent<HTMLButtonElement>) => {
     contributorPositionsArray.append({
-      schemeUri:
+      schemaUri:
         "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
-      id: `https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json`,
+      id: `https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/leader.json`,
       startDate: dayjs(new Date()).format("YYYY-MM-DD"),
     });
   };
 
   const contributorRolesArray = useFieldArray({
     control,
-    name: `contributors.${index}.roles`,
+    name: `contributor.${index}.role`,
+    keyName: "formFieldGeneratedId",
   });
 
-  const addRoleHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleAddRole = (event: React.MouseEvent<HTMLButtonElement>) => {
     contributorRolesArray.append({
-      schemeUri: "https://credit.niso.org/",
+      schemaUri: "https://credit.niso.org/",
       id: `https://credit.niso.org/contributor-roles/software/`,
     });
   };
 
   return (
-    <div key={field.id}>
-      <Controller
-        control={control}
-        name={`contributors.${index}`}
-        render={({ field: { onChange, ...controllerField } }) => {
-          const contributorTitle =
-            controllerField?.value?.id || `Contributor ${index + 1}`;
-          return (
-            <>
-              <Card variant="outlined" sx={{ bgcolor: "transparent" }}>
-                <CardHeader
-                  title={
-                    <Typography variant="h6">{contributorTitle}</Typography>
-                  }
-                  action={
-                    <Tooltip title="Remove contributor" placement="right">
-                      <IconButton
-                        aria-label="Remove contributor"
-                        onClick={() => contributorsArray.remove(index)}
-                      >
-                        <RemoveCircleOutlineIcon />
-                      </IconButton>
-                    </Tooltip>
-                  }
-                />
-                <CardContent>
-                  <Stack direction="column" gap={3}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12} sm={12} md={6}>
-                        <TextField
-                          {...controllerField}
-                          value={controllerField?.value?.id}
-                          size="small"
-                          fullWidth
-                          label="Contributor ID"
-                          onChange={(event) => {
-                            onChange({
-                              ...controllerField.value,
-                              id: event.target.value,
-                            });
-                          }}
-                        />
-                      </Grid>
-
-                      <Grid item xs={12} sm={12} md={3}>
-                        <FormGroup>
-                          <FormControlLabel
-                            control={<Checkbox />}
-                            label="Project Leader"
-                          />
-                        </FormGroup>
-                      </Grid>
-                      <Grid item xs={12} sm={12} md={3}>
-                        <FormGroup>
-                          <FormControlLabel
-                            control={<Checkbox />}
-                            label="Project Contact"
-                          />
-                        </FormGroup>
-                      </Grid>
+    <Controller
+      control={control}
+      name={`contributor.${index}`}
+      render={({ field: { onChange, ...controllerField } }) => {
+        const contributorTitle =
+          controllerField?.value?.id || `Contributor ${index + 1}`;
+        return (
+          <>
+            <Card variant="outlined" sx={{ bgcolor: "transparent" }}>
+              <CardHeader
+                title={<Typography variant="h6">{contributorTitle}</Typography>}
+                action={
+                  <Tooltip title="Remove contributor" placement="right">
+                    <IconButton
+                      aria-label="Remove contributor"
+                      onClick={() => contributorsArray.remove(index)}
+                    >
+                      <RemoveCircleOutlineIcon />
+                    </IconButton>
+                  </Tooltip>
+                }
+              />
+              <CardContent>
+                <Stack direction="column" gap={3}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={12} md={6}>
+                      <TextField
+                        {...controllerField}
+                        value={controllerField?.value?.id}
+                        size="small"
+                        fullWidth
+                        label="Contributor ID"
+                        onChange={(event) => {
+                          onChange({
+                            ...controllerField?.value,
+                            id: event.target.value,
+                          });
+                        }}
+                      />
                     </Grid>
 
-                    <Card variant={"outlined"} sx={{ bgcolor: "transparent" }}>
-                      <CardHeader
-                        action={
-                          <Tooltip title="Add Position" placement="right">
-                            <IconButton
-                              aria-label="Add Position"
-                              onClick={addPositionHandler}
-                            >
-                              <AddCircleOutlineIcon />
-                            </IconButton>
-                          </Tooltip>
-                        }
-                        title={
-                          <Typography variant="h6" component="div">
-                            Positions
+                    <Grid item xs={12} sm={12} md={3}>
+                      <FormGroup>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Project Leader"
+                        />
+                      </FormGroup>
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={3}>
+                      <FormGroup>
+                        <FormControlLabel
+                          control={<Checkbox />}
+                          label="Project Contact"
+                        />
+                      </FormGroup>
+                    </Grid>
+                  </Grid>
+
+                  {/* <FormContributorsPositionsComponent
+                    control={control}
+                    index={index}
+                    errors={errors}
+                  /> */}
+
+                  {/* <Card variant={"outlined"} sx={{ bgcolor: "transparent" }}>
+                    <CardHeader
+                      action={
+                        <Tooltip title="Add Position" placement="right">
+                          <IconButton
+                            aria-label="Add Position"
+                            onClick={handleAddPosition}
+                          >
+                            <AddCircleOutlineIcon />
+                          </IconButton>
+                        </Tooltip>
+                      }
+                      title={
+                        <Typography variant="h6" component="div">
+                          Positions
+                        </Typography>
+                      }
+                      subheader={`Positions for ${contributorTitle}`}
+                    />
+                    <CardContent>
+                      <Stack spacing={2}>
+                        {contributorPositionsArray.fields.length === 0 && (
+                          <Typography
+                            variant="body2"
+                            color={"text.secondary"}
+                            textAlign={"center"}
+                          >
+                            No positions defined
                           </Typography>
-                        }
-                        subheader={`Positions for ${contributorTitle}`}
-                      />
-                      <CardContent>
-                        <Stack spacing={2}>
-                          {contributorPositionsArray.fields.length === 0 && (
-                            <Typography
-                              variant="body2"
-                              color={"text.secondary"}
-                              textAlign={"center"}
-                            >
-                              No positions defined
-                            </Typography>
-                          )}
-                          {contributorPositionsArray.fields.map(
-                            (_, positionIndex) => {
-                              return (
-                                <div key={positionIndex}>
-                                  <Stack
-                                    direction="row"
-                                    alignItems="flex-start"
-                                    gap={1}
-                                  >
-                                    <Grid container spacing={2}>
-                                      <Grid item xs={12} sm={4} md={4}>
-                                        <TextField
-                                          select
-                                          {...controllerField}
-                                          value={
-                                            controllerField?.value?.positions &&
-                                            controllerField?.value?.positions[
-                                              positionIndex
-                                            ]
-                                              ? controllerField?.value
-                                                  ?.positions[positionIndex].id
-                                              : ""
-                                          }
-                                          size="small"
-                                          fullWidth
-                                          label="Position"
-                                          onChange={(event) => {
-                                            const newPosition = {
-                                              ...controllerField?.value
-                                                ?.positions[positionIndex],
-                                              id: event.target.value,
-                                            };
-
-                                            const updatedPositions = [
-                                              ...controllerField?.value
-                                                ?.positions,
-                                            ];
-                                            updatedPositions[positionIndex] =
-                                              newPosition;
-
-                                            onChange({
-                                              ...controllerField.value,
-                                              positions: updatedPositions,
-                                            });
-                                          }}
-                                        >
-                                          {contributorPositions.map(
-                                            (position) => (
-                                              <MenuItem
-                                                key={position}
-                                                value={position}
-                                              >
-                                                {extractKeyFromIdUri(position)}
-                                              </MenuItem>
-                                            )
-                                          )}
-                                        </TextField>
-                                      </Grid>
-
-                                      <Grid item xs={12} sm={4} md={4}>
-                                        <DatePicker
-                                          label="Position Start Date"
-                                          defaultValue={
-                                            controllerField?.value?.positions &&
-                                            controllerField?.value?.positions[
-                                              positionIndex
-                                            ]
-                                              ? dayjs(
-                                                  controllerField?.value
-                                                    ?.positions[positionIndex]
-                                                    .startDate
-                                                )
-                                              : ""
-                                          }
-                                          format="DD-MMM-YYYY"
-                                          onChange={(event) => {
-                                            if (dayjs.isDayjs(event)) {
-                                              onChange({
-                                                ...controllerField.value,
-                                                startDate: event?.format(
-                                                  "YYYY-MM-DD"
-                                                )
-                                                  ? new Date(
-                                                      event?.format(
-                                                        "YYYY-MM-DD"
-                                                      )
-                                                    )
-                                                  : "",
-                                              });
-                                            }
-                                          }}
-                                          slotProps={{
-                                            textField: {
-                                              size: "small",
-                                              fullWidth: true,
-                                            },
-                                            actionBar: {
-                                              actions: ["today"],
-                                            },
-                                          }}
-                                          slots={<TextField />}
-                                        />
-                                      </Grid>
-                                      <Grid item xs={12} sm={4} md={4}>
-                                        <DatePicker
-                                          label="Position End Date"
-                                          defaultValue={
-                                            controllerField?.value?.positions &&
-                                            controllerField?.value?.positions[
-                                              positionIndex
-                                            ]
-                                              ? dayjs(
-                                                  controllerField?.value
-                                                    ?.positions[positionIndex]
-                                                    .startDate
-                                                )
-                                              : ""
-                                          }
-                                          format="DD-MMM-YYYY"
-                                          onChange={(event) => {
-                                            if (dayjs.isDayjs(event)) {
-                                              onChange({
-                                                ...controllerField.value,
-                                                startDate: event?.format(
-                                                  "YYYY-MM-DD"
-                                                )
-                                                  ? new Date(
-                                                      event?.format(
-                                                        "YYYY-MM-DD"
-                                                      )
-                                                    )
-                                                  : "",
-                                              });
-                                            }
-                                          }}
-                                          slotProps={{
-                                            textField: {
-                                              size: "small",
-                                              fullWidth: true,
-                                            },
-                                            actionBar: {
-                                              actions: ["today"],
-                                            },
-                                          }}
-                                          slots={<TextField />}
-                                        />
-                                      </Grid>
-                                    </Grid>
-                                    <Tooltip
-                                      title="Remove position"
-                                      placement="right"
-                                    >
-                                      <IconButton
-                                        size="small"
-                                        aria-label="close"
-                                        onClick={(event) => {
-                                          contributorPositionsArray.remove(
+                        )}
+                        {contributorPositionsArray.fields.map(
+                          (positionFields, positionIndex) => {
+                            return (
+                              <div key={positionFields.formFieldGeneratedId}>
+                                <Stack
+                                  direction="row"
+                                  alignItems="flex-start"
+                                  gap={1}
+                                >
+                                  <Grid container spacing={2}>
+                                    <Grid item xs={12} sm={4} md={4}>
+                                      <Button>{positionIndex}</Button>
+                                      <pre>
+                                        {JSON.stringify(
+                                          controllerField,
+                                          null,
+                                          2
+                                        )}
+                                      </pre>
+                                      <TextField
+                                        select
+                                        {...controllerField}
+                                        value={
+                                          controllerField?.value?.position[
                                             positionIndex
+                                          ]?.id
+                                        }
+                                        size="small"
+                                        fullWidth
+                                        label="Position"
+                                        onChange={(event) => {
+                                          console.log(
+                                            "controllerField",
+                                            controllerField
                                           );
+                                          const newPosition = {
+                                            ...controllerField?.value?.position[
+                                              positionIndex
+                                            ],
+                                            id: event.target.value,
+                                          };
+                                          const updatedPositions = [
+                                            ...controllerField?.value?.position,
+                                          ];
+                                          updatedPositions[positionIndex] =
+                                            newPosition;
+                                          onChange({
+                                            ...controllerField?.value,
+                                            position: updatedPositions,
+                                          });
                                         }}
                                       >
-                                        <RemoveCircleOutlineIcon />
-                                      </IconButton>
-                                    </Tooltip>
-                                  </Stack>
-                                </div>
-                              );
-                            }
-                          )}
-                        </Stack>
-                      </CardContent>
-                    </Card>
+                                        {contributorPositions.map(
+                                          (position) => (
+                                            <MenuItem
+                                              key={position}
+                                              value={position}
+                                            >
+                                              {extractKeyFromIdUri(position)}
+                                            </MenuItem>
+                                          )
+                                        )}
+                                      </TextField>
+                                    </Grid>
 
-                    <Card variant={"outlined"} sx={{ bgcolor: "transparent" }}>
-                      <CardHeader
-                        title={
-                          <Typography variant="h6" component="div">
-                            Roles
+                                    <Grid item xs={12} sm={4} md={4}>
+                                      <DatePicker
+                                        label="Position Start Date"
+                                        defaultValue={
+                                          controllerField?.value?.position &&
+                                          controllerField?.value?.position[
+                                            positionIndex
+                                          ]
+                                            ? dayjs(
+                                                controllerField?.value
+                                                  ?.position[positionIndex]
+                                                  .startDate
+                                              )
+                                            : ""
+                                        }
+                                        format="DD-MMM-YYYY"
+                                        onChange={(event) => {
+                                          if (dayjs.isDayjs(event)) {
+                                            onChange({
+                                              ...controllerField.value,
+                                              startDate: event?.format(
+                                                "YYYY-MM-DD"
+                                              )
+                                                ? new Date(
+                                                    event?.format("YYYY-MM-DD")
+                                                  )
+                                                : "",
+                                            });
+                                          }
+                                        }}
+                                        slotProps={{
+                                          textField: {
+                                            size: "small",
+                                            fullWidth: true,
+                                          },
+                                          actionBar: {
+                                            actions: ["today"],
+                                          },
+                                        }}
+                                        slots={<TextField />}
+                                      />
+                                    </Grid>
+                                    <Grid item xs={12} sm={4} md={4}>
+                                      <DatePicker
+                                        label="Position End Date"
+                                        defaultValue={
+                                          controllerField?.value?.position &&
+                                          controllerField?.value?.position[
+                                            positionIndex
+                                          ]
+                                            ? dayjs(
+                                                controllerField?.value
+                                                  ?.position[positionIndex]
+                                                  .startDate
+                                              )
+                                            : ""
+                                        }
+                                        format="DD-MMM-YYYY"
+                                        onChange={(event) => {
+                                          if (dayjs.isDayjs(event)) {
+                                            onChange({
+                                              ...controllerField.value,
+                                              startDate: event?.format(
+                                                "YYYY-MM-DD"
+                                              )
+                                                ? new Date(
+                                                    event?.format("YYYY-MM-DD")
+                                                  )
+                                                : "",
+                                            });
+                                          }
+                                        }}
+                                        slotProps={{
+                                          textField: {
+                                            size: "small",
+                                            fullWidth: true,
+                                          },
+                                          actionBar: {
+                                            actions: ["today"],
+                                          },
+                                        }}
+                                        slots={<TextField />}
+                                      />
+                                    </Grid>
+                                  </Grid>
+                                  <Tooltip
+                                    title="Remove position"
+                                    placement="right"
+                                  >
+                                    <IconButton
+                                      size="small"
+                                      aria-label="close"
+                                      onClick={(event) => {
+                                        contributorPositionsArray.remove(
+                                          positionIndex
+                                        );
+                                      }}
+                                    >
+                                      <RemoveCircleOutlineIcon />
+                                    </IconButton>
+                                  </Tooltip>
+                                </Stack>
+                              </div>
+                            );
+                          }
+                        )}
+                      </Stack>
+                    </CardContent>
+                  </Card> */}
+
+                  {/* <Card variant={"outlined"} sx={{ bgcolor: "transparent" }}>
+                    <CardHeader
+                      title={
+                        <Typography variant="h6" component="div">
+                          Roles
+                        </Typography>
+                      }
+                      subheader={`Roles for ${contributorTitle}`}
+                      action={
+                        <Tooltip title="Add Role" placement="right">
+                          <IconButton
+                            aria-label="Add Role"
+                            onClick={handleAddRole}
+                          >
+                            <AddCircleOutlineIcon />
+                          </IconButton>
+                        </Tooltip>
+                      }
+                    />
+                    <CardContent>
+                      <Stack spacing={2}>
+                        {contributorRolesArray.fields.length === 0 && (
+                          <Typography
+                            variant="body2"
+                            color={"text.secondary"}
+                            textAlign={"center"}
+                          >
+                            No roles defined
                           </Typography>
-                        }
-                        subheader={`Roles for ${contributorTitle}`}
-                        action={
-                          <Tooltip title="Add Role" placement="right">
-                            <IconButton
-                              aria-label="Add Role"
-                              onClick={addRoleHandler}
-                            >
-                              <AddCircleOutlineIcon />
-                            </IconButton>
-                          </Tooltip>
-                        }
-                      />
-                      <CardContent>
-                        <Stack spacing={2}>
-                          {contributorRolesArray.fields.length === 0 && (
-                            <Typography
-                              variant="body2"
-                              color={"text.secondary"}
-                              textAlign={"center"}
-                            >
-                              No roles defined
-                            </Typography>
-                          )}
-                          {contributorRolesArray.fields.map((_, roleIndex) => {
+                        )}
+                        {contributorRolesArray.fields.map(
+                          (roleField, roleIndex) => {
                             return (
                               <Grid
                                 item
@@ -373,9 +390,9 @@ function ContributorRootField({
                                     select
                                     {...controllerField}
                                     value={
-                                      controllerField?.value?.roles &&
-                                      controllerField?.value?.roles[roleIndex]
-                                        ? controllerField?.value?.roles[
+                                      controllerField?.value?.role &&
+                                      controllerField?.value?.role[roleIndex]
+                                        ? controllerField?.value?.role[
                                             roleIndex
                                           ].id
                                         : ""
@@ -385,14 +402,14 @@ function ContributorRootField({
                                     label="Role"
                                     onChange={(event) => {
                                       const newRole = {
-                                        ...controllerField?.value?.roles[
+                                        ...controllerField?.value?.role[
                                           roleIndex
                                         ],
                                         id: event.target.value,
                                       };
 
                                       const updatedRoles = [
-                                        ...controllerField?.value?.roles,
+                                        ...controllerField?.value?.role,
                                       ];
                                       updatedRoles[roleIndex] = newRole;
 
@@ -427,18 +444,19 @@ function ContributorRootField({
                                 </Stack>
                               </Grid>
                             );
-                          })}
-                        </Stack>
-                      </CardContent>
-                    </Card>
-                  </Stack>
-                </CardContent>
-              </Card>
-            </>
-          );
-        }}
-      />
-    </div>
+                          }
+                        )}
+                      </Stack>
+                    </CardContent>
+                  </Card> */}
+                </Stack>
+                <pre>{JSON.stringify(errors, null, 2)}</pre>
+              </CardContent>
+            </Card>
+          </>
+        );
+      }}
+    />
   );
 }
 
@@ -454,24 +472,28 @@ export default function FormContributorsComponent({
   const contributorsArray = useFieldArray({
     control,
     name: `contributor`,
-  });
-
-  const contributorPositionsArray = useFieldArray({
-    control,
-    name: `contributor.${0}.position`,
-  });
-
-  const contributorRolesArray = useFieldArray({
-    control,
-    name: `contributor.${0}.role`,
+    keyName: "formFieldGeneratedId",
   });
 
   const handleAddContributor = (event: React.MouseEvent<HTMLButtonElement>) => {
     contributorsArray.append({
       id: ``,
       schemaUri: "https://orcid.org/",
-      position: [],
-      role: [],
+      position: [
+        {
+          schemaUri:
+            "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+          id: "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+          startDate: dayjs(new Date()).format("YYYY-MM-DD"),
+        },
+      ],
+      role: [
+        {
+          schemaUri:
+            "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/role/v1/",
+          id: "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/role/v1/supervision.json",
+        },
+      ],
     });
   };
 
@@ -520,15 +542,15 @@ export default function FormContributorsComponent({
                   p: 2,
                   borderRadius: 2,
                 }}
-                key={field.id}
+                key={field.formFieldGeneratedId}
               >
                 <ContributorRootField
                   contributorsArray={contributorsArray}
-                  contributorPositionsArray={contributorPositionsArray}
                   field={field}
                   control={control}
                   index={index}
-                  key={index}
+                  key={field.formFieldGeneratedId}
+                  errors={errors}
                 />
               </Box>
             );
