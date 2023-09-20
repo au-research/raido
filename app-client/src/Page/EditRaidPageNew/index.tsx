@@ -14,14 +14,14 @@ import RaidForm from "Forms/RaidForm";
 import {
   Access,
   Contributor,
-  DatesBlock,
+  Description,
   ModelDate,
   RaidDto,
   Title,
 } from "Generated/Raidv2";
 
 import { useState } from "react";
-import { newRaid } from "utils";
+import { Identifier } from "typescript";
 
 const pageUrl = "/edit-raid-new";
 
@@ -35,10 +35,10 @@ function getRaidHandleFromPathname(nav: NavigationState): string {
 
 function Content() {
   const nav = useNavigation();
+  const api = useAuthApi();
 
   const [handle] = useState(getRaidHandleFromPathname(nav));
   const [prefix, suffix] = handle.split("/");
-  console.log("handle");
 
   const getRaid = async (): Promise<RaidDto> => {
     return await api.raid.readRaidV1({ prefix, suffix });
@@ -50,9 +50,14 @@ function Content() {
 
   const readQuery = useGetRaid();
 
-  const handleRaidCreate = async (data: RaidDto): Promise<RaidDto> => {
-    return await api.raid.createRaidV1({
-      raidCreateRequest: {
+  const handleRaidUpdate = async (data: RaidDto): Promise<RaidDto> => {
+    return await api.raid.updateRaidV1({
+      prefix,
+      suffix,
+      raidUpdateRequest: {
+        identifier: data?.identifier || ({} as Identifier),
+
+        description: data?.description || ([] as Description[]),
         title: data?.title || ([] as Title[]),
         access: data?.access || ({} as Access),
         date: data?.date || ({} as ModelDate),
@@ -61,10 +66,9 @@ function Content() {
     });
   };
 
-  const api = useAuthApi();
-  const mintRequest = useMutation(handleRaidCreate, {
-    onSuccess: (mintResult) => {
-      console.log("mintResult", mintResult);
+  const updateRequest = useMutation(handleRaidUpdate, {
+    onSuccess: (updateResult) => {
+      console.log("updateResult", updateResult);
     },
     onError: (error) => {
       console.log("error", error);
@@ -79,18 +83,15 @@ function Content() {
     return <div>Error...</div>;
   }
 
-  const defaultValues = readQuery.data || newRaid;
-
   return (
     <Container maxWidth="lg">
       <RaidForm
-        defaultValues={defaultValues}
+        defaultValues={readQuery.data}
         onSubmit={async (data) => {
           console.log(JSON.stringify(data, null, 2));
-          // mintRequest.mutate(data);
+          updateRequest.mutate(data);
         }}
-        isSubmitting={mintRequest.isLoading}
-        formTitle={`Edit RAiD ${handle}`}
+        isSubmitting={updateRequest.isLoading}
       />
     </Container>
   );
@@ -100,7 +101,7 @@ export default function MintRaidPage() {
   return (
     <NavTransition
       isPagePath={isEditRaidPagePath}
-      title={raidoTitle("Mint RAiD")}
+      title={raidoTitle("Edit RAiD")}
     >
       <Content />
     </NavTransition>
