@@ -202,9 +202,9 @@ export function RaidTableContainerV2({servicePointId}: ListRaidsV1Request){
       <SettingsMenu raidData={raidQuery.data} />
       <RefreshIconButton onClick={() => raidQuery.refetch()}
         refreshing={raidQuery.isLoading || raidQuery.isRefetching} />
-       <RaidoAddFab disabled={!appWritesEnabled} href={getMintRaidPageLink(servicePointId)}/>
-       <Tooltip title="New mint RAiD Page (under development)">
-          <Fab color="secondary" size='small' aria-label="add" href={"/mint-raid-new/20000000"}>
+       {/* <RaidoAddFab disabled={!appWritesEnabled} href={getMintRaidPageLink(servicePointId)}/> */}
+       <Tooltip title="Mint new RAiD">
+          <Fab color="primary" size='small' aria-label="add" href={"/mint-raid-new/20000000"}>
             <AddIcon />
           </Fab>
         </Tooltip>
