@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { RaidCreateRequest, RaidDto } from "Generated/Raidv2";
 import { FormProvider, useForm } from "react-hook-form";
+import FormAccessComponent from "./components/FormAccessComponent";
 import FormAlternateIdentifiersComponent from "./components/FormAlternateIdentifiersComponent";
 import FormAlternateUrlsComponent from "./components/FormAlternateUrlsComponent";
 import FormContributorsComponent from "./components/FormContributorsComponent";
@@ -20,7 +21,6 @@ import FormSpatialCoveragesComponent from "./components/FormSpatialCoveragesComp
 import FormSubjectsComponent from "./components/FormSubjectsComponent";
 import FormTitlesComponent from "./components/FormTitlesComponent";
 import FormTraditionalKnowledgeIdentifiersComponent from "./components/FormTraditionalKnowledgeIdentifiersComponent";
-import FormAccessComponent from "./components/FormAccessComponent";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CategoryHeader } from "helper-components";
@@ -30,14 +30,12 @@ type FormProps = {
   defaultValues: RaidCreateRequest;
   onSubmit(data: RaidDto): void;
   isSubmitting: boolean;
-  formTitle: string;
 };
 
 export default function RaidForm({
   onSubmit,
   defaultValues,
   isSubmitting,
-  formTitle,
 }: FormProps) {
   const {
     control,
@@ -59,27 +57,22 @@ export default function RaidForm({
 
   const methods = useForm();
 
-  const handleChange = () => {
-    trigger("title");
-  };
-
-  console.log(defaultValues);
-
   return (
     <FormProvider {...methods}>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        autoComplete="off"
-        noValidate
-        onChange={handleChange}
-      >
+      <form onSubmit={handleSubmit(onSubmit)} autoComplete="off" noValidate>
         <Card variant="outlined" sx={{ mt: 3, background: "transparent" }}>
-          <CardHeader title="RAiD Form" />
+          <CardHeader
+            title={
+              defaultValues?.identifier?.id &&
+              defaultValues?.identifier?.id?.length > 0
+                ? "Edit RAiD"
+                : "Mint new RAiD"
+            }
+          />
           <CardContent>
             <Stack spacing={2}>
               <CategoryHeader
                 color={raidColors.get("yellow") || ""}
-                lightColor={raidColors.get("yellowLight") || ""}
                 title="Main"
                 subheader="RAiD Main Data"
               />
@@ -101,31 +94,30 @@ export default function RaidForm({
                   errors={errors}
                   color={raidColors.get("yellow") || ""}
                 />
-                <FormAccessComponent
+                {/* <FormAccessComponent
                   control={control}
                   errors={errors}
                   color={raidColors.get("yellow") || ""}
-                />
-                <FormContributorsComponent
+                /> */}
+                {/* <FormContributorsComponent
                   control={control}
                   errors={errors}
                   color={raidColors.get("yellow") || ""}
-                />
-                <FormOrganisationsComponent
+                /> */}
+                {/* <FormOrganisationsComponent
                   control={control}
                   errors={errors}
                   color={raidColors.get("yellow") || ""}
-                />
-                <FormSubjectsComponent
+                /> */}
+                {/* <FormSubjectsComponent
                   control={control}
                   errors={errors}
                   color={raidColors.get("yellow") || ""}
-                />
+                /> */}
               </Stack>
 
-              <CategoryHeader
+              {/* <CategoryHeader
                 color={raidColors.get("pink") || ""}
-                lightColor={raidColors.get("pinkLight") || ""}
                 title="Related Entities"
                 subheader="RAiD Related Entities"
               />
@@ -150,11 +142,10 @@ export default function RaidForm({
                   errors={errors}
                   color={raidColors.get("pink") || ""}
                 />
-              </Stack>
+              </Stack> */}
 
-              <CategoryHeader
+              {/* <CategoryHeader
                 color={raidColors.get("blue") || ""}
-                lightColor={raidColors.get("blueLight") || ""}
                 title="Other Fields"
                 subheader="RAiD Other Fields"
               />
@@ -170,7 +161,7 @@ export default function RaidForm({
                   errors={errors}
                   color={raidColors.get("blue") || ""}
                 />
-              </Stack>
+              </Stack> */}
             </Stack>
           </CardContent>
           <CardActions>
@@ -184,6 +175,9 @@ export default function RaidForm({
             </Button>
             <Button variant="contained" size="small" onClick={handleFormReset}>
               Reset
+            </Button>
+            <Button variant="contained" size="small" href="/" sx={{ ml: 1 }}>
+              Cancel
             </Button>
           </CardActions>
           <pre>{JSON.stringify(errors, null, 2)}</pre>
