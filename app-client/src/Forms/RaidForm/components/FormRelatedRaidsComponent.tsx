@@ -73,7 +73,7 @@ export default function FormRelatedRaidsComponent({
 
   const handleAddRelatedRaids = () => {
     relatedRaidsFieldArray.append({
-      id: faker.string.uuid(),
+      // id: faker.string.uuid(),
       type: {
         id: "isPartOf",
         schemaUri: "https://linked.data.gov.au/def/anzsrc-for/2020/",

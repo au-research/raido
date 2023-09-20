@@ -66,7 +66,7 @@ export default function FormTitlesComponent({
       },
       language: {
         id: "eng",
-        schemaUri: "https://www.iso.org/standard/39534.html",
+        schemaUri: "https://iso639-3.sil.org",
       },
       startDate: dayjs(new Date()).format("YYYY-MM-DD"),
       endDate: threeYearsFromDate().format("YYYY-MM-DD"),
@@ -146,7 +146,6 @@ export default function FormTitlesComponent({
                                 size="small"
                                 fullWidth
                                 label="Title"
-                                required
                                 error={!!errors?.title?.[index]?.text}
                                 helperText={
                                   !!errors?.title?.[index]?.text
@@ -156,7 +155,7 @@ export default function FormTitlesComponent({
                                 onChange={(event) => {
                                   onChange({
                                     ...controllerField.value,
-                                    title: event.target.value,
+                                    text: event.target.value,
                                   });
                                 }}
                               />

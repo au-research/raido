@@ -8,7 +8,6 @@ export function CategoryHeader({
   title: string;
   subheader: string;
   color: string;
-  lightColor?: string;
 }) {
   return (
     <Card
