@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import {
   AdminExperimentalApi, BasicRaidExperimentalApi,
   Configuration,
+  RaidoStableV1Api,
 } from "Generated/Raidv2";
 import { Config } from "Config";
 import { useAuth } from "Auth/AuthProvider";
@@ -11,6 +12,7 @@ import { useOpenErrorDialog } from "Error/ErrorDialog";
 
 export interface AuthApiState {
   basicRaid: BasicRaidExperimentalApi,
+  raid: RaidoStableV1Api,
   admin: AdminExperimentalApi,
 }
 
@@ -63,6 +65,7 @@ export function AuthApiProvider({children}: {
   
   return <AuthApiContext.Provider value={{
     basicRaid: new BasicRaidExperimentalApi(config),
+    raid: new RaidoStableV1Api(config),
     admin: new AdminExperimentalApi(config),
   }}>
     <QueryClientProvider client={queryClient}>

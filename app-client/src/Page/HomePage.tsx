@@ -1,20 +1,25 @@
+import AddIcon from '@mui/icons-material/Add';
 import {isPagePath, NavPathResult, NavTransition} from "Design/NavigationProvider";
 import React, {SyntheticEvent} from "react";
 import {ContainerCard} from "Design/ContainerCard";
 import {LargeContentMain} from "Design/LayoutMain";
 import {DateDisplay, raidoTitle, RoleDisplay} from "Component/Util";
+import { ListRaidsV1Request } from "Generated/Raidv2/apis/RaidoStableV1Api"
 import {
   Alert,
+  Fab,
   IconButton,
   Menu,
   MenuItem,
   Snackbar,
+  Stack,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow,
+  Tooltip
 } from "@mui/material";
 import {useAuthApi} from "Api/AuthApi";
 import {useQuery} from "@tanstack/react-query";
@@ -22,7 +27,8 @@ import {CompactErrorPanel} from "Error/CompactErrorPanel";
 import {TextSpan} from "Component/TextSpan";
 import {useAuth} from "Auth/AuthProvider";
 import {RqQuery} from "Util/ReactQueryUtil";
-import {RaidListItemV2} from "Generated/Raidv2";
+import {RaidDto} from "Generated/Raidv2";
+
 import {InfoField, InfoFieldList} from "Component/InfoField";
 import {RefreshIconButton} from "Component/RefreshIconButton";
 import {CompactLinearProgress} from "Component/SmallPageSpinner";
@@ -42,7 +48,35 @@ const log = console;
 
 const pageUrl = "/home";
 
+const extractValuesFromRaid = (
+  raid: RaidDto
+): {
+  title: string;
+  handle: string;
+  startDate: string;
+  endDate: string;
+} => {
+  const title = raid?.title ? raid?.title[0]?.text || "" : "";
 
+  const handle = raid?.identifier?.id
+    ? new URL(raid?.identifier?.id).pathname.substring(1)
+    : "";
+
+  const startDate = raid?.date?.startDate
+    ? formatLocalDateAsIso(new Date(raid.date.startDate))
+    : "";
+
+  const endDate = raid?.date?.endDate
+    ? formatLocalDateAsIso(new Date(raid.date.endDate))
+    : "";
+
+  return {
+    title,
+    handle,
+    startDate,
+    endDate,
+  };
+};
 
 export function getHomePageLink(): string{
   return pageUrl;
@@ -112,19 +146,23 @@ function RaidCurrentUser(){
 }
 
 
-export function RaidTableContainerV2({servicePointId}: {servicePointId: number}){
+export function RaidTableContainerV2({servicePointId}: ListRaidsV1Request){
   const [handleCopied, setHandleCopied] = React.useState(
     undefined as undefined | string);
 
   const api = useAuthApi();
   const {session: {payload: user}} = useAuth();
 
-  const raidQuery: RqQuery<RaidListItemV2[]> =
-    useQuery(['listRaids', servicePointId], async () => {
-      return await api.basicRaid.listRaidV3({
-        raidListRequestV2: {servicePointId: servicePointId}
-      });
+  const listRaids = async ({ servicePointId }: ListRaidsV1Request) => {
+    return await api.raid.listRaidsV1({
+      servicePointId,
     });
+  };
+
+  const raidQuery: RqQuery<RaidDto[]> = useQuery(
+    ["listRaids", servicePointId],
+    () => listRaids({ servicePointId })
+  );
     
   const spQuery = useQuery(['readServicePoint', user.servicePointId],
     async () => await api.admin.readServicePoint({
@@ -160,10 +198,17 @@ export function RaidTableContainerV2({servicePointId}: {servicePointId: number})
   
   <ContainerCard title={"Recently minted RAiD data"}
     action={<>
+    <Stack direction={"row"} gap={2} sx={{p:1}}>
       <SettingsMenu raidData={raidQuery.data} />
       <RefreshIconButton onClick={() => raidQuery.refetch()}
         refreshing={raidQuery.isLoading || raidQuery.isRefetching} />
-       <RaidoAddFab disabled={!appWritesEnabled} href={getMintRaidPageLink(servicePointId)}/>
+       {/* <RaidoAddFab disabled={!appWritesEnabled} href={getMintRaidPageLink(servicePointId)}/> */}
+       <Tooltip title="Mint new RAiD">
+          <Fab color="primary" size='small' aria-label="add" href={"/mint-raid-new/20000000"}>
+            <AddIcon />
+          </Fab>
+        </Tooltip>
+       </Stack>
     </>}
   >
     <TableContainer>
@@ -195,10 +240,16 @@ export function RaidTableContainerV2({servicePointId}: {servicePointId: number})
           </TableRow></TableBody>
         }
         <TableBody>
-          { raidQuery.data?.map((row) => (
+          { raidQuery.data?.map((row) => {
+            
+            const { title, handle, startDate, endDate } =
+              extractValuesFromRaid(row);
+    
+            
+            return (
             <TableRow
-              key={row.handle}
-              data-handle={row.handle}
+              key={handle}
+              data-handle={handle}
               // don't render a border under last row
               sx={{'&:last-child td, &:last-child th': {border: 0}}}
             >
@@ -218,22 +269,25 @@ export function RaidTableContainerV2({servicePointId}: {servicePointId: number})
                   textOverflow: "ellipsis",
                 }}
               >
-                <RaidoLink href={getEditRaidPageLink(row.handle)}>
-                  <TextSpan>{row.primaryTitle || ''}</TextSpan>
-                </RaidoLink>
+                {/* <RaidoLink href={getEditRaidPageLink(handle)}>
+                  <TextSpan>{title}</TextSpan>
+                </RaidoLink> */}
+                <a href={`/show-raid/${handle}`}>{title}</a>
               </TableCell>
               <TableCell>
-                <RaidoHandle handle={row.handle} 
+                <RaidoHandle handle={handle} 
                   onCopyHandleClicked={onCopyHandleClicked} />
               </TableCell>
               <TableCell>
-                <DateDisplay date={row.startDate}/>
+                <DateDisplay date={startDate}/>
               </TableCell>
               <TableCell>
-                <DateDisplay date={row.createDate}/>
+                <DateDisplay date={endDate}/>
               </TableCell>
             </TableRow>
-          ))}
+            )
+            
+          })}
         </TableBody>
       </Table>
 
@@ -276,7 +330,7 @@ function RaidoHandle({handle, onCopyHandleClicked}:{
 }
 
 function SettingsMenu({raidData}:{
-  raidData: RaidListItemV2[]|undefined
+  raidData: RaidDto[]|undefined
 }){
   const[ isMenuOpen, setIsMenuOpen] = React.useState(false);
   const menuAnchorRef = React.useRef<HTMLButtonElement>(null!);
@@ -289,13 +343,20 @@ function SettingsMenu({raidData}:{
   function downloadData(){
     
     assert(raidData, "raid data was empty when download clicked");
-
+    
     const escapedTextData = raidData.map(iRaid => {
+
+      const { title, handle, startDate, endDate } =
+        extractValuesFromRaid(iRaid);
+
+      
+
+
       return [
-        escapeCsvField(iRaid.primaryTitle),
-        escapeCsvField(iRaid.handle),
-        escapeCsvField(formatLocalDateAsIso(iRaid.startDate)),
-        escapeCsvField(formatLocalDateAsIso(iRaid.createDate)),
+        escapeCsvField(title),
+        escapeCsvField(handle),
+        escapeCsvField(startDate),
+        escapeCsvField(endDate),
       ]
     });
     escapedTextData.unshift([

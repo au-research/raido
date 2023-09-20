@@ -7,8 +7,9 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import CategoryHeadingBox from "../../../components/category-heading-box";
 import { ReadData } from "types";
+import { RaidDto } from "Generated/Raidv2";
 
-export default function Meta({ data }: { data: ReadData | undefined }) {
+export default function Meta({ data }: { data: RaidDto | undefined }) {
   return (
     <Grid container alignItems="stretch">
       <Grid item xs={12} sm={3} md={3}>
@@ -38,11 +39,11 @@ export default function Meta({ data }: { data: ReadData | undefined }) {
                 color="text.secondary"
                 variant="body1"
                 component={Link}
-                href={`https://hdl.handle.net/${data?.raid?.handle}`}
+                href={`https://hdl.handle.net/${data?.identifier?.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {data?.raid?.handle} <LaunchIcon sx={{ fontSize: 12 }} />
+                {data?.identifier?.id} <LaunchIcon sx={{ fontSize: 12 }} />
               </Typography>
             </Box>
           </Grid>
@@ -64,11 +65,11 @@ export default function Meta({ data }: { data: ReadData | undefined }) {
                 color="text.secondary"
                 variant="body1"
                 component={Link}
-                href={`http://localhost:8080/${data?.raid?.handle}`}
+                href={`http://localhost:8080/${data?.identifier?.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {data?.raid?.handle} <LaunchIcon sx={{ fontSize: 12 }} />
+                {data?.identifier?.id} <LaunchIcon sx={{ fontSize: 12 }} />
               </Typography>
             </Box>
           </Grid>
@@ -77,7 +78,7 @@ export default function Meta({ data }: { data: ReadData | undefined }) {
             <Box>
               <Typography variant="body2">Service point</Typography>
               <Typography color="text.secondary" variant="body1">
-                {data?.raid?.servicePointName}
+                n/a
               </Typography>
             </Box>
           </Grid>

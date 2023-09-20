@@ -1,66 +1,31 @@
 import {
-  Description as DescriptionIcon,
-  SentimentDissatisfied as SentimentDissatisfiedIcon,
-} from "@mui/icons-material";
-
-import {
-  Box,
+  Card,
+  CardContent,
+  CardHeader,
   List,
-  ListItem,
-  ListItemIcon,
+  ListItemButton,
   ListItemText,
-  ListSubheader,
-  Typography,
 } from "@mui/material";
-import { ReadData } from "types";
+import { RaidDto } from "Generated/Raidv2";
 
-export default function Descriptions({ data }: { data: ReadData | undefined }) {
+export default function Descriptions({ data }: { data: RaidDto | undefined }) {
   return (
-    <>
-      <Typography
-        variant="body2"
-        sx={{ fontWeight: 500, ml: 2 }}
-        color="text.secondary"
-      >
-        Description
-      </Typography>
-
-      {(data?.metadata?.descriptions?.length &&
-        data?.metadata?.descriptions?.length > 0 && (
-          <List dense={true}>
-            {data?.metadata?.descriptions?.map((description, index) => (
-              <ListItem key={index}>
-                <ListItemIcon>
-                  <DescriptionIcon />
-                </ListItemIcon>
+    <Card variant="outlined">
+      <CardHeader title="Descriptions" subheader="RAiD Descriptions" />
+      <CardContent>
+        <List>
+          {data?.description?.map((description, index) => {
+            return (
+              <ListItemButton>
                 <ListItemText
-                  primary={description.description}
-                  secondary={
-                    <Box sx={{ display: "flex" }}>
-                      <span>{description.type}</span>
-                    </Box>
-                  }
+                  primary={description.text}
+                  secondary={`${description?.type.id || ""}`}
                 />
-              </ListItem>
-            ))}
-          </List>
-        )) || (
-        <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-        >
-          <SentimentDissatisfiedIcon
-            sx={{
-              color: "rgba(0, 0, 0, 0.6)",
-            }}
-          />
-          <Typography variant="body2" color="text.secondary">
-            No content available.
-          </Typography>
-        </Box>
-      )}
-    </>
+              </ListItemButton>
+            );
+          })}
+        </List>
+      </CardContent>
+    </Card>
   );
 }

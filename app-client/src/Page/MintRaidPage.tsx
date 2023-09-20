@@ -309,14 +309,14 @@ function MintRaidContainer({servicePointId, onCreate}: {
           }}
           error={!isTitleValid}
         />
-        <DesktopDatePicker label={"Start date *"} inputFormat="YYYY-MM-DD"
+        {/* <DesktopDatePicker label={"Start date *"} inputFormat="YYYY-MM-DD"
           disabled={isWorking}
           value={formData.startDate || ''}
           onChange={(newValue: Dayjs | null) => {
             setFormData({...formData, startDate: newValue?.toDate()})
           }}
           renderInput={(params) => <TextField {...params} />}
-        />
+        /> */}
         <TextField id="description" label="Primary description" 
           variant="outlined" autoCorrect="off" autoCapitalize="on"
           disabled={isWorking}
