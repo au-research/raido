@@ -35,8 +35,8 @@ export default function FormDatesComponent({
       variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: color,
-        borderLeftWidth: 3,
+        borderLeftColor: errors.date ? "red" : color,
+        borderLeftWidth: errors.date ? 5 : 3,
       }}
     >
       <CardHeader
@@ -66,20 +66,23 @@ export default function FormDatesComponent({
                       defaultValue={dayjs(restField.value)}
                       format="DD-MMM-YYYY"
                       onChange={(event) => {
-                        if (dayjs.isDayjs(event)) {
-                          onChange(event?.format("YYYY-MM-DD") || "");
-                        }
+                        onChange(event?.format("YYYY-MM-DD"));
                       }}
                       slotProps={{
                         textField: {
                           fullWidth: true,
                           size: "small",
+                          required: true,
+                          error: !!errors?.date?.startDate,
+                          helperText: !!errors?.date?.startDate
+                            ? errors?.date?.startDate?.message
+                            : null,
                         },
                         actionBar: {
                           actions: ["today"],
                         },
                       }}
-                      slots={<TextField />}
+                      slots={<TextField required />}
                     />
                   );
                 }}

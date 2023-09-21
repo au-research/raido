@@ -3,6 +3,25 @@ import { RaidCreateRequest } from "Generated/Raidv2";
 import dayjs, { Dayjs } from "dayjs";
 import { z } from "zod";
 
+export const extractPrefixAndSuffixFromIdentifier = (
+  identifier: string
+): { prefix: string; suffix: string } => {
+  const pattern = /\/([^/]+)\/([^/]+)$/;
+  const matches = identifier.match(pattern);
+
+  if (matches && matches.length === 3) {
+    return {
+      prefix: matches[1],
+      suffix: matches[2],
+    };
+  }
+
+  return {
+    prefix: "",
+    suffix: "",
+  };
+};
+
 export const extractKeyFromIdUri = (inputUri: string = ""): string => {
   let result = "";
   const regex = /\/([^/]+)\.json$/;
@@ -95,6 +114,10 @@ export const FormSchema = z.object({
       })
     )
     .min(1),
+  date: z.object({
+    startDate: z.string(),
+    endDate: z.string().optional(),
+  }),
   description: z.array(
     z.object({
       text: z.string().nonempty(),
@@ -111,10 +134,6 @@ export const FormSchema = z.object({
       }),
     })
   ),
-  date: z.object({
-    startDate: z.string().nonempty(),
-    endDate: z.string().optional(),
-  }),
   access: z.object({
     type: z.object({
       id: z.string(),
@@ -130,6 +149,11 @@ export const FormSchema = z.object({
       }),
     }),
   }),
+  alternateUrl: z.array(
+    z.object({
+      url: z.string().url().nonempty(),
+    })
+  ),
   contributor: z.array(
     z.object({
       id: z
@@ -155,12 +179,87 @@ export const FormSchema = z.object({
       ),
     })
   ),
+  organisation: z.array(
+    z.object({
+      id: z.string().nonempty(),
+      schemaUri: z.string().nonempty(),
+      role: z.array(
+        z.object({
+          id: z.string(),
+          schemaUri: z.string(),
+          startDate: z.string(),
+          endDate: z.string().optional(),
+        })
+      ),
+    })
+  ),
+  subject: z.array(
+    z.object({
+      id: z.string().nonempty(),
+      schemaUri: z.string().nonempty(),
+      keyword: z.array(
+        z.object({
+          text: z.string().nonempty(),
+          language: z.object({
+            id: z.string().nonempty(),
+            schemaUri: z.literal("https://iso639-3.sil.org"),
+          }),
+        })
+      ),
+    })
+  ),
+  relatedRaid: z.array(
+    z.object({
+      id: z.string().nonempty(),
+      type: z.object({
+        id: z.string(),
+        schemaUri: z.string(),
+      }),
+    })
+  ),
+  relatedObject: z.array(
+    z.object({
+      id: z.string().nonempty(),
+      schemaUri: z.string().nonempty(),
+      type: z.object({
+        id: z.string(),
+        schemaUri: z.string(),
+      }),
+      category: z.object({
+        id: z.string(),
+        schemaUri: z.string(),
+      }),
+    })
+  ),
+  alternateIdentifier: z.array(
+    z.object({
+      id: z.string().nonempty(),
+      type: z.string().nonempty(),
+    })
+  ),
+  spatialCoverage: z.array(
+    z.object({
+      id: z.string().nonempty(),
+      schemaUri: z.string().nonempty(),
+      place: z.string().nonempty(),
+      language: z.object({
+        id: z.string().nonempty(),
+        schemaUri: z.literal("https://iso639-3.sil.org"),
+      }),
+    })
+  ),
+  traditionalKnowledgeLabel: z.array(
+    z.object({
+      id: z.string().nonempty(),
+      schemaUri: z.string().nonempty(),
+    })
+  ),
 });
 
 export const newRaid: RaidCreateRequest = {
   title: [
     {
-      text: `[Generated]: ${faker.lorem.words(5)}`,
+      text: `[G]: ${faker.lorem.words(5)}`,
       type: {
         id: "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
         schemaUri:
@@ -173,7 +272,7 @@ export const newRaid: RaidCreateRequest = {
       startDate: dayjs(new Date()).format("YYYY-MM-DD"),
     },
     {
-      text: `[Generated]: ${faker.lorem.words(5)}`,
+      text: `[G]: ${faker.lorem.words(5)}`,
       type: {
         id: "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
         schemaUri:
@@ -188,7 +287,7 @@ export const newRaid: RaidCreateRequest = {
   ],
   description: [
     {
-      text: `[Generated]: ${faker.lorem.paragraph()}`,
+      text: `[G]: ${faker.lorem.paragraph()}`,
       type: {
         id: "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
         schemaUri:
@@ -200,7 +299,7 @@ export const newRaid: RaidCreateRequest = {
       },
     },
     {
-      text: `[Generated]: ${faker.lorem.paragraph()}`,
+      text: `[G]: ${faker.lorem.paragraph()}`,
       type: {
         id: "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
         schemaUri:
@@ -222,7 +321,7 @@ export const newRaid: RaidCreateRequest = {
         "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/",
     },
     accessStatement: {
-      text: `[Generated]: ${faker.lorem.words(5)}`,
+      text: `[G]: ${faker.lorem.words(5)}`,
       language: {
         id: "eng",
         schemaUri: "https://iso639-3.sil.org",

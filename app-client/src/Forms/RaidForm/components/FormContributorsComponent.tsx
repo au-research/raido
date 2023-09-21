@@ -26,6 +26,7 @@ import {
   FieldArrayWithId,
   FieldErrors,
   UseFieldArrayReturn,
+  UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
 
@@ -450,7 +451,6 @@ function ContributorRootField({
                     </CardContent>
                   </Card> */}
                 </Stack>
-                <pre>{JSON.stringify(errors, null, 2)}</pre>
               </CardContent>
             </Card>
           </>
@@ -464,10 +464,12 @@ export default function FormContributorsComponent({
   control,
   errors,
   color,
+  trigger,
 }: {
   control: Control<RaidDto, any>;
   errors: FieldErrors<RaidDto>;
   color: string;
+  trigger: UseFormTrigger<RaidDto>;
 }) {
   const contributorsArray = useFieldArray({
     control,
@@ -524,7 +526,7 @@ export default function FormContributorsComponent({
         }
       />
       <CardContent>
-        <Stack gap={3} divider={<Divider />}>
+        <Stack gap={2}>
           {contributorsArray.fields.length === 0 && (
             <Typography
               variant="body2"

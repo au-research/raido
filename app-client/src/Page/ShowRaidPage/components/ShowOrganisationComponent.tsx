@@ -9,9 +9,8 @@ import {
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
 import { extractKeyFromIdUri } from "utils";
-import { languages } from "../../../Page/languages";
 
-export default function ShowDescriptionComponent({
+export default function ShowOrganisationComponent({
   raid,
   color,
 }: {
@@ -31,7 +30,7 @@ export default function ShowDescriptionComponent({
         <CardHeader
           title={
             <Typography variant="h6" component="div">
-              Descriptions
+              Organisations
             </Typography>
           }
         />
@@ -39,24 +38,17 @@ export default function ShowDescriptionComponent({
         <CardContent>
           <Stack gap={3}>
             <Box>
-              {raid?.description?.length === 0 && (
+              {raid?.organisation?.length === 0 && (
                 <Typography
                   variant="body2"
                   color={"text.secondary"}
                   textAlign={"center"}
                 >
-                  No descriptions defined
+                  No organisation defined
                 </Typography>
               )}
             </Box>
-            {raid?.description?.map((description, index) => {
-              const language = languages.find(
-                (language) => language.id === description?.language?.id
-              );
-
-              const descriptionType = extractKeyFromIdUri(
-                description.type.id || ""
-              );
+            {raid?.organisation?.map((organisation, index) => {
               return (
                 <Stack sx={{ paddingLeft: 2 }} spacing={2} key={index}>
                   <Box
@@ -68,19 +60,11 @@ export default function ShowDescriptionComponent({
                     className="animated-tile animated-tile-reverse"
                   >
                     <Grid container spacing={2}>
-                      <Grid item xs={12} sm={12} md={10}>
+                      <Grid item xs={12} sm={12} md={12}>
                         <Box>
-                          <Typography variant="body2">{`Description (${descriptionType})`}</Typography>
+                          <Typography variant="body2">Name</Typography>
                           <Typography color="text.secondary" variant="body1">
-                            {description.text}
-                          </Typography>
-                        </Box>
-                      </Grid>
-                      <Grid item xs={12} sm={12} md={2}>
-                        <Box>
-                          <Typography variant="body2">Language</Typography>
-                          <Typography color="text.secondary" variant="body1">
-                            {language?.name}
+                            {organisation.id}
                           </Typography>
                         </Box>
                       </Grid>

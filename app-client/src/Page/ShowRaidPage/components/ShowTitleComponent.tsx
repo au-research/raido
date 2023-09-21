@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
 import { extractKeyFromIdUri } from "utils";
+import { languages } from "../../../Page/languages";
 
 export default function ShowTitleComponent({
   raid,
@@ -50,6 +51,9 @@ export default function ShowTitleComponent({
             </Box>
             {raid?.title?.map((title, index) => {
               const titleType = extractKeyFromIdUri(title.type.id || "");
+              const language = languages.find(
+                (language) => language.id === title?.language?.id
+              );
               return (
                 <Stack sx={{ paddingLeft: 2 }} spacing={2} key={index}>
                   <Box
@@ -73,7 +77,7 @@ export default function ShowTitleComponent({
                         <Box>
                           <Typography variant="body2">Language</Typography>
                           <Typography color="text.secondary" variant="body1">
-                            {title.language?.id}
+                            {language?.name}
                           </Typography>
                         </Box>
                       </Grid>

@@ -21,6 +21,7 @@ import {
   Control,
   Controller,
   FieldErrors,
+  UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
 
@@ -28,10 +29,12 @@ export default function FormAlternateIdentifiersComponent({
   control,
   errors,
   color,
+  trigger,
 }: {
   control: Control<RaidDto, any>;
   errors: FieldErrors<RaidDto>;
   color: string;
+  trigger: UseFormTrigger<RaidDto>;
 }) {
   const alternateIdentifiersFieldArray = useFieldArray({
     control,
@@ -72,7 +75,7 @@ export default function FormAlternateIdentifiersComponent({
         }
       />
       <CardContent>
-        <Stack gap={3} divider={<Divider />}>
+        <Stack gap={2}>
           {alternateIdentifiersFieldArray.fields.length === 0 && (
             <Typography
               variant="body2"

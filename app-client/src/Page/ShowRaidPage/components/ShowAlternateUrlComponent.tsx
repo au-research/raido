@@ -9,9 +9,8 @@ import {
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
 import { extractKeyFromIdUri } from "utils";
-import { languages } from "../../../Page/languages";
 
-export default function ShowDescriptionComponent({
+export default function ShowAlternateUrlComponent({
   raid,
   color,
 }: {
@@ -31,7 +30,7 @@ export default function ShowDescriptionComponent({
         <CardHeader
           title={
             <Typography variant="h6" component="div">
-              Descriptions
+              Alternate Urls
             </Typography>
           }
         />
@@ -39,24 +38,17 @@ export default function ShowDescriptionComponent({
         <CardContent>
           <Stack gap={3}>
             <Box>
-              {raid?.description?.length === 0 && (
+              {raid?.alternateUrl?.length === 0 && (
                 <Typography
                   variant="body2"
                   color={"text.secondary"}
                   textAlign={"center"}
                 >
-                  No descriptions defined
+                  No alternate urls defined
                 </Typography>
               )}
             </Box>
-            {raid?.description?.map((description, index) => {
-              const language = languages.find(
-                (language) => language.id === description?.language?.id
-              );
-
-              const descriptionType = extractKeyFromIdUri(
-                description.type.id || ""
-              );
+            {raid?.alternateUrl?.map((alternateUrl, index) => {
               return (
                 <Stack sx={{ paddingLeft: 2 }} spacing={2} key={index}>
                   <Box
@@ -68,19 +60,18 @@ export default function ShowDescriptionComponent({
                     className="animated-tile animated-tile-reverse"
                   >
                     <Grid container spacing={2}>
-                      <Grid item xs={12} sm={12} md={10}>
+                      <Grid item xs={12} sm={12} md={12}>
                         <Box>
-                          <Typography variant="body2">{`Description (${descriptionType})`}</Typography>
-                          <Typography color="text.secondary" variant="body1">
-                            {description.text}
-                          </Typography>
-                        </Box>
-                      </Grid>
-                      <Grid item xs={12} sm={12} md={2}>
-                        <Box>
-                          <Typography variant="body2">Language</Typography>
-                          <Typography color="text.secondary" variant="body1">
-                            {language?.name}
+                          <Typography variant="body2">Title</Typography>
+                          <Typography
+                            color="text.secondary"
+                            variant="body1"
+                            component="a"
+                            href={alternateUrl.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {alternateUrl.url}
                           </Typography>
                         </Box>
                       </Grid>

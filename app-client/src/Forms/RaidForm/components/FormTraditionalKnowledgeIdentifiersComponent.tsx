@@ -21,6 +21,7 @@ import {
   Control,
   Controller,
   FieldErrors,
+  UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
 
@@ -33,10 +34,12 @@ export default function FormTraditionalKnowledgeIdentifiersComponent({
   control,
   errors,
   color,
+  trigger,
 }: {
   control: Control<RaidDto, any>;
   errors: FieldErrors<RaidDto>;
   color: string;
+  trigger: UseFormTrigger<RaidDto>;
 }) {
   const tradionalKnowledgeIdentifierArray = useFieldArray({
     control,
@@ -79,7 +82,7 @@ export default function FormTraditionalKnowledgeIdentifiersComponent({
         }
       />
       <CardContent>
-        <Stack gap={3} divider={<Divider />}>
+        <Stack gap={2}>
           {tradionalKnowledgeIdentifierArray.fields.length === 0 && (
             <Typography
               variant="body2"

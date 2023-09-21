@@ -22,6 +22,7 @@ import {
   Control,
   Controller,
   FieldErrors,
+  UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
 import { extractKeyFromIdUri } from "utils";
@@ -34,10 +35,12 @@ export default function FormRelatedObjectsComponent({
   control,
   errors,
   color,
+  trigger,
 }: {
   control: Control<RaidDto, any>;
   errors: FieldErrors<RaidDto>;
   color: string;
+  trigger: UseFormTrigger<RaidDto>;
 }) {
   const relatedObjectsFieldArray = useFieldArray({
     control,
@@ -88,7 +91,7 @@ export default function FormRelatedObjectsComponent({
         }
       />
       <CardContent>
-        <Stack gap={3} divider={<Divider />}>
+        <Stack gap={2}>
           {relatedObjectsFieldArray.fields.length === 0 && (
             <Typography
               variant="body2"

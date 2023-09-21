@@ -23,6 +23,7 @@ import {
   Control,
   Controller,
   FieldErrors,
+  UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
 import { descriptionTypes } from "references";
@@ -32,10 +33,12 @@ export default function FormDescriptionsComponent({
   control,
   errors,
   color,
+  trigger,
 }: {
   control: Control<RaidDto, any>;
   errors: FieldErrors<RaidDto>;
   color: string;
+  trigger: UseFormTrigger<RaidDto>;
 }) {
   const descriptionsFieldArray = useFieldArray({
     control,
@@ -48,17 +51,20 @@ export default function FormDescriptionsComponent({
         ? "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json"
         : "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json";
     descriptionsFieldArray.append({
-      text: faker.lorem.paragraph(),
+      // text: faker.lorem.paragraph(),
+      text: "",
       type: {
         id: typeId,
         schemaUri:
-          "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/",
+          "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/",
       },
+
       language: {
         id: "eng",
-        schemaUri: "https://iso639-3.sil.org/",
+        schemaUri: "https://iso639-3.sil.org",
       },
     });
+    trigger("description");
   };
 
   return (
@@ -67,8 +73,8 @@ export default function FormDescriptionsComponent({
         variant="outlined"
         sx={{
           borderLeft: "solid",
-          borderLeftColor: color,
-          borderLeftWidth: 3,
+          borderLeftColor: errors.description ? "red" : color,
+          borderLeftWidth: errors.description ? 5 : 3,
         }}
       >
         <CardHeader
@@ -89,16 +95,28 @@ export default function FormDescriptionsComponent({
           }
         />
         <CardContent>
-          <Stack gap={3} divider={<Divider />}>
-            {descriptionsFieldArray.fields.length === 0 && (
-              <Typography
-                variant="body2"
-                color={"text.secondary"}
-                textAlign={"center"}
-              >
-                No descriptions defined
-              </Typography>
-            )}
+          <Stack gap={2}>
+            <Box>
+              {errors.title && (
+                <Typography
+                  variant="body2"
+                  color={"text.error"}
+                  textAlign={"center"}
+                >
+                  {errors.title.message}
+                </Typography>
+              )}
+              {descriptionsFieldArray.fields.length === 0 && (
+                <Typography
+                  variant="body2"
+                  color={"text.secondary"}
+                  textAlign={"center"}
+                >
+                  No descriptions defined
+                </Typography>
+              )}
+            </Box>
+
             {descriptionsFieldArray.fields.map((field, index) => {
               return (
                 <Box
@@ -127,8 +145,17 @@ export default function FormDescriptionsComponent({
                                   {...controllerField}
                                   value={controllerField?.value?.text}
                                   size="small"
+                                  required
+                                  rows={3}
                                   fullWidth
                                   label="Description"
+                                  error={!!errors?.description?.[index]?.text}
+                                  helperText={
+                                    !!errors?.description?.[index]?.text
+                                      ? errors?.description?.[index]?.text
+                                          ?.message
+                                      : null
+                                  }
                                   onChange={(event) => {
                                     onChange({
                                       ...controllerField.value,
@@ -196,10 +223,16 @@ export default function FormDescriptionsComponent({
                                           {...params}
                                           size="small"
                                           label="Description Language"
-                                          error={!!error}
+                                          required
+                                          error={
+                                            !!errors?.description?.[index]
+                                              ?.language
+                                          }
                                           helperText={
-                                            error
-                                              ? "This field is required"
+                                            !!errors?.description?.[index]
+                                              ?.language?.id
+                                              ? errors?.description?.[index]
+                                                  ?.language?.id?.message
                                               : null
                                           }
                                         />

@@ -65,7 +65,7 @@ export default function Meta({ data }: { data: RaidDto | undefined }) {
                 color="text.secondary"
                 variant="body1"
                 component={Link}
-                href={`http://localhost:8080/${data?.identifier?.id}`}
+                href={`/${data?.identifier?.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >

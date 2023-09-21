@@ -21,6 +21,7 @@ import {
   Control,
   Controller,
   FieldErrors,
+  UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
 
@@ -28,10 +29,12 @@ export default function FormAlternateUrlsComponent({
   control,
   errors,
   color,
+  trigger,
 }: {
   control: Control<RaidDto, any>;
   errors: FieldErrors<RaidDto>;
   color: string;
+  trigger: UseFormTrigger<RaidDto>;
 }) {
   const alternateUrlsFieldArray = useFieldArray({
     control,
@@ -71,7 +74,7 @@ export default function FormAlternateUrlsComponent({
         }
       />
       <CardContent>
-        <Stack gap={3} divider={<Divider />}>
+        <Stack gap={2}>
           {alternateUrlsFieldArray.fields.length === 0 && (
             <Typography
               variant="body2"
