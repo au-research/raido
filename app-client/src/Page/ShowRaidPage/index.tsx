@@ -1,4 +1,6 @@
-import { Box, Button, Container, Stack } from "@mui/material";
+import { Edit as EditIcon } from "@mui/icons-material";
+
+import { Box, Button, Container, Fab, Stack } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthApi } from "Api/AuthApi";
 import { raidoTitle } from "Component/Util";
@@ -12,12 +14,16 @@ import {
 } from "Design/NavigationProvider";
 import { RaidDto } from "Generated/Raidv2";
 
-import { useState } from "react";
-import ShowTitleComponent from "./components/ShowTitleComponent";
 import { CategoryHeader } from "helper-components";
+import { useState } from "react";
 import { raidColors } from "utils";
+import ShowAccessComponent from "./components/ShowAccessComponent";
+import ShowAlternateUrlComponent from "./components/ShowAlternateUrlComponent";
+import ShowContributorComponent from "./components/ShowContributorComponent";
 import ShowDateComponent from "./components/ShowDateComponent";
 import ShowDescriptionComponent from "./components/ShowDescriptionComponent";
+import ShowOrganisationComponent from "./components/ShowOrganisationComponent";
+import ShowTitleComponent from "./components/ShowTitleComponent";
 
 const pageUrl = "/show-raid";
 
@@ -56,44 +62,57 @@ function Content() {
   }
 
   const defaultValues = readQuery.data;
-  console.log("defaultValues", defaultValues);
 
   return (
-    <Container maxWidth="lg" sx={{ py: 2 }}>
-      <Stack direction={"column"} spacing={2}>
-        <CategoryHeader
-          color={raidColors.get("yellow") || ""}
-          title="Main"
-          subheader="RAiD Main Data"
-        />
-        <ShowTitleComponent
-          raid={defaultValues}
-          color={raidColors.get("yellow") || ""}
-        />
-        <ShowDateComponent
-          raid={defaultValues}
-          color={raidColors.get("yellow") || ""}
-        />
-        <ShowDescriptionComponent
-          raid={defaultValues}
-          color={raidColors.get("yellow") || ""}
-        />
-        <Box
-          sx={{
-            py: 2,
-            display: "flex",
-          }}
-        >
-          <Button
-            variant={"contained"}
-            href={`/edit-raid-new/${handle}`}
-            sx={{ ml: 2 }}
-          >
-            Edit Raid
-          </Button>
-        </Box>
-      </Stack>
-    </Container>
+    <>
+      <Fab
+        variant="extended"
+        color="primary"
+        sx={{ position: "fixed", bottom: "16px", right: "16px" }}
+        component="a"
+        href={`/edit-raid-new/${handle}`}
+      >
+        <EditIcon sx={{ mr: 1 }} />
+        Edit RAiD
+      </Fab>
+      <Container maxWidth="lg" sx={{ py: 2 }}>
+        <Stack direction={"column"} spacing={2}>
+          <CategoryHeader
+            color={raidColors.get("blue") || ""}
+            title="Main"
+            subheader="RAiD Main Data"
+          />
+          <ShowTitleComponent
+            raid={defaultValues}
+            color={raidColors.get("blue") || ""}
+          />
+          <ShowDateComponent
+            raid={defaultValues}
+            color={raidColors.get("blue") || ""}
+          />
+          <ShowDescriptionComponent
+            raid={defaultValues}
+            color={raidColors.get("blue") || ""}
+          />
+          <ShowAccessComponent
+            raid={defaultValues}
+            color={raidColors.get("blue") || ""}
+          />
+          <ShowAlternateUrlComponent
+            raid={defaultValues}
+            color={raidColors.get("blue") || ""}
+          />
+          <ShowContributorComponent
+            raid={defaultValues}
+            color={raidColors.get("blue") || ""}
+          />
+          <ShowOrganisationComponent
+            raid={defaultValues}
+            color={raidColors.get("blue") || ""}
+          />
+        </Stack>
+      </Container>
+    </>
   );
 }
 
