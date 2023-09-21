@@ -22,6 +22,7 @@ import {
   Control,
   Controller,
   FieldErrors,
+  UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
 import fieldData from "../../../fieldData.json";
@@ -31,10 +32,12 @@ export default function FormSpatialCoveragesComponent({
   control,
   errors,
   color,
+  trigger,
 }: {
   control: Control<RaidDto, any>;
   errors: FieldErrors<RaidDto>;
   color: string;
+  trigger: UseFormTrigger<RaidDto>;
 }) {
   const spatialCoveragesFieldArray = useFieldArray({
     control,
@@ -81,7 +84,7 @@ export default function FormSpatialCoveragesComponent({
         }
       />
       <CardContent>
-        <Stack gap={3} divider={<Divider />}>
+        <Stack gap={2}>
           {spatialCoveragesFieldArray.fields.length === 0 && (
             <Typography
               variant="body2"

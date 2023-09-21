@@ -12,7 +12,12 @@ import {
 import { DatePicker } from "@mui/x-date-pickers";
 import { RaidDto } from "Generated/Raidv2";
 import dayjs from "dayjs";
-import { Control, Controller, FieldErrors } from "react-hook-form";
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  UseFormTrigger,
+} from "react-hook-form";
 import { accessTypes } from "references";
 import { extractKeyFromIdUri } from "utils";
 import { languages } from "../../../Page/languages";
@@ -23,10 +28,12 @@ export default function FormAccessComponent({
   control,
   errors,
   color,
+  trigger,
 }: {
   control: Control<RaidDto, any>;
   errors: FieldErrors<RaidDto>;
   color: string;
+  trigger: UseFormTrigger<RaidDto>;
 }) {
   return (
     <>
@@ -34,13 +41,19 @@ export default function FormAccessComponent({
         variant="outlined"
         sx={{
           borderLeft: "solid",
-          borderLeftColor: color,
-          borderLeftWidth: 3,
+          borderLeftColor: errors.access ? "red" : color,
+          borderLeftWidth: errors.access ? 5 : 3,
         }}
       >
         <CardHeader
           title={
-            <Typography variant="h6" component="div">
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{
+                color: errors.access ? "red" : "inherit",
+              }}
+            >
               Access
             </Typography>
           }
@@ -65,6 +78,12 @@ export default function FormAccessComponent({
                       variant="outlined"
                       size="small"
                       fullWidth
+                      error={!!errors?.access?.accessStatement?.text}
+                      helperText={
+                        !!errors?.access?.accessStatement?.text
+                          ? errors?.access?.accessStatement?.text?.message
+                          : null
+                      }
                       {...field}
                     />
                   )}
@@ -122,8 +141,15 @@ export default function FormAccessComponent({
                           {...params}
                           size="small"
                           label="Access Statement Language"
-                          error={!!error}
-                          helperText={error ? "This field is required" : null}
+                          error={
+                            !!errors?.access?.accessStatement?.language?.id
+                          }
+                          helperText={
+                            !!errors?.access?.accessStatement?.language?.id
+                              ? errors?.access?.accessStatement?.language?.id
+                                  ?.message
+                              : null
+                          }
                         />
                       )}
                     />
