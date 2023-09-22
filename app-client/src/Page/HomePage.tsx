@@ -1,4 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
+import SaveIcon from "@mui/icons-material/Save";
 import {
   isPagePath,
   NavPathResult,
@@ -301,14 +302,18 @@ export function RaidTableContainerV2({ servicePointId }: ListRaidsV1Request) {
                 refreshing={raidQuery.isLoading || raidQuery.isRefetching}
               />
               {/* <RaidoAddFab disabled={!appWritesEnabled} href={getMintRaidPageLink(servicePointId)}/> */}
-              <Tooltip title="Mint new RAiD">
+
+              <Tooltip title="Mint new RAiD" placement="left">
                 <Fab
+                  variant="extended"
                   color="primary"
-                  size="small"
-                  aria-label="add"
+                  sx={{ position: "fixed", bottom: "16px", right: "16px" }}
+                  component="button"
+                  type="submit"
                   href={"/mint-raid-new/20000000"}
                 >
-                  <AddIcon />
+                  <AddIcon sx={{ mr: 1 }} />
+                  Mint new RAiD
                 </Fab>
               </Tooltip>
             </Stack>
