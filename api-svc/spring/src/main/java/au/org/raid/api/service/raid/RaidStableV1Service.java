@@ -56,6 +56,15 @@ public class RaidStableV1Service {
                 .toList();
     }
 
+    public List<RaidDto> list(final ApiToken apiToken) {
+        final var servicePointId = apiToken.getServicePointId();
+
+        return raidRepository.findAllByServicePointOrNotConfidentialId(servicePointId).stream()
+                .map(raidDtoFactory::create)
+                .toList();
+    }
+
+
     private IdentifierHandle parseHandleFromApids(
             ApidsMintResponse apidsResponse
     ) {

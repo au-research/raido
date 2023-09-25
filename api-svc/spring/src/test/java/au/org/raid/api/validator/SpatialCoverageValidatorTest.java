@@ -1,6 +1,6 @@
 package au.org.raid.api.validator;
 
-import au.org.raid.api.util.SchemaUri;
+import au.org.raid.api.util.SchemaValues;
 import au.org.raid.api.util.TestConstants;
 import au.org.raid.idl.raidv2.model.Language;
 import au.org.raid.idl.raidv2.model.SpatialCoverage;
@@ -30,7 +30,7 @@ class SpatialCoverageValidatorTest {
     @DisplayName("Validation passes with valid spatial coverage")
     void validSpatialCoverage() {
         final var uriValidatorMap = Map.of(
-                SchemaUri.GEONAMES.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> Collections.emptyList()
+                SchemaValues.GEONAMES_SCHEMA_URI.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> Collections.emptyList()
         );
 
         final var validationService = new SpatialCoverageValidator(languageValidator, uriValidatorMap);
@@ -41,7 +41,7 @@ class SpatialCoverageValidatorTest {
 
         final var spatialCoverage = new SpatialCoverage()
                 .id("https://www.geonames.org/2643743/london.html")
-                .schemaUri(SchemaUri.GEONAMES.getUri())
+                .schemaUri(SchemaValues.GEONAMES_SCHEMA_URI.getUri())
                 .place("London")
                 .language(language);
 
@@ -54,7 +54,7 @@ class SpatialCoverageValidatorTest {
     @DisplayName("Adds language validation failures")
     void addLanguageValidationFailures() {
         final var uriValidatorMap = Map.of(
-                SchemaUri.GEONAMES.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> Collections.emptyList()
+                SchemaValues.GEONAMES_SCHEMA_URI.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> Collections.emptyList()
         );
 
         final var validationService = new SpatialCoverageValidator(languageValidator, uriValidatorMap);
@@ -65,7 +65,7 @@ class SpatialCoverageValidatorTest {
 
         final var spatialCoverage = new SpatialCoverage()
                 .id("https://www.geonames.org/2643743/london.html")
-                .schemaUri(SchemaUri.GEONAMES.getUri())
+                .schemaUri(SchemaValues.GEONAMES_SCHEMA_URI.getUri())
                 .place("London")
                 .language(language);
 
@@ -90,7 +90,7 @@ class SpatialCoverageValidatorTest {
                 .message("_message");
 
         final var uriValidatorMap = Map.of(
-                SchemaUri.GEONAMES.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> List.of(failure)
+                SchemaValues.GEONAMES_SCHEMA_URI.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> List.of(failure)
         );
 
         final var validationService = new SpatialCoverageValidator(languageValidator, uriValidatorMap);
@@ -117,7 +117,7 @@ class SpatialCoverageValidatorTest {
     @DisplayName("Validation fails with null id")
     void nullId() {
         final var uriValidatorMap = Map.of(
-                SchemaUri.GEONAMES.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> Collections.emptyList()
+                SchemaValues.GEONAMES_SCHEMA_URI.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> Collections.emptyList()
         );
 
         final var validationService = new SpatialCoverageValidator(languageValidator, uriValidatorMap);
@@ -139,7 +139,7 @@ class SpatialCoverageValidatorTest {
     @DisplayName("Validation fails if id is empty string")
     void emptyId() {
         final var uriValidatorMap = Map.of(
-                SchemaUri.GEONAMES.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> Collections.emptyList()
+                SchemaValues.GEONAMES_SCHEMA_URI.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> Collections.emptyList()
         );
 
         final var validationService = new SpatialCoverageValidator(languageValidator, uriValidatorMap);
@@ -163,7 +163,7 @@ class SpatialCoverageValidatorTest {
     @DisplayName("Validation fails with null schemaUri")
     void nullSchemeUri() {
         final var uriValidatorMap = Map.of(
-                SchemaUri.GEONAMES.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> Collections.emptyList()
+                SchemaValues.GEONAMES_SCHEMA_URI.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> Collections.emptyList()
         );
 
         final var validationService = new SpatialCoverageValidator(languageValidator, uriValidatorMap);
@@ -186,7 +186,7 @@ class SpatialCoverageValidatorTest {
     @DisplayName("Validation fails schemaUri is empty string")
     void emptySchemeUri() {
         final var uriValidatorMap = Map.of(
-                SchemaUri.GEONAMES.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> Collections.emptyList()
+                SchemaValues.GEONAMES_SCHEMA_URI.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> Collections.emptyList()
         );
 
         final var validationService = new SpatialCoverageValidator(languageValidator, uriValidatorMap);
@@ -209,7 +209,7 @@ class SpatialCoverageValidatorTest {
     @DisplayName("Validation fails with invalid schemaUri")
     void invalidSchemeUri() {
         final var uriValidatorMap = Map.of(
-                SchemaUri.GEONAMES.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> Collections.emptyList()
+                SchemaValues.GEONAMES_SCHEMA_URI.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> Collections.emptyList()
         );
 
         final var validationService = new SpatialCoverageValidator(languageValidator, uriValidatorMap);

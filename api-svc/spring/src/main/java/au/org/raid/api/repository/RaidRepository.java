@@ -119,4 +119,27 @@ public class RaidRepository {
                         .setPrimaryTitle(RAID.PRIMARY_TITLE.getValue(record))
                 );
     }
+
+    public List<RaidRecord> findAllByServicePointOrNotConfidentialId(Long servicePointId) {
+        return dslContext.select(RAID.fields())
+                .from(RAID)
+                .where(
+                        RAID.SERVICE_POINT_ID.eq(servicePointId).or(RAID.CONFIDENTIAL.equal(false))
+                )
+                .orderBy(RAID.DATE_CREATED.desc())
+                .limit(Constant.MAX_EXPERIMENTAL_RECORDS)
+                .fetch(record -> new RaidRecord()
+                        .setVersion(RAID.VERSION.getValue(record))
+                        .setHandle(RAID.HANDLE.getValue(record))
+                        .setServicePointId(RAID.SERVICE_POINT_ID.getValue(record))
+                        .setUrl(RAID.URL.getValue(record))
+                        .setUrlIndex(RAID.URL_INDEX.getValue(record))
+                        .setMetadataSchema(RAID.METADATA_SCHEMA.getValue(record))
+                        .setMetadata(RAID.METADATA.getValue(record))
+                        .setDateCreated(RAID.DATE_CREATED.getValue(record))
+                        .setStartDate(RAID.START_DATE.getValue(record))
+                        .setConfidential(RAID.CONFIDENTIAL.getValue(record))
+                        .setPrimaryTitle(RAID.PRIMARY_TITLE.getValue(record))
+                );
+    }
 }

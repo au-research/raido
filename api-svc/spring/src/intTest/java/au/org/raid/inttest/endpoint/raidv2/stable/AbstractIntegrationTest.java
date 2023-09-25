@@ -33,6 +33,8 @@ import static au.org.raid.inttest.util.MinimalRaidTestData.REAL_TEST_ROR;
         name = "SpringJUnitConfigContext",
         value = IntegrationTestConfig.class)
 public class AbstractIntegrationTest {
+    protected static final Long RDM_UQ_SUP_ID = 20000002L;
+
     @RegisterExtension
     protected static JettyTestServer jettyTestServer = new JettyTestServer();
     protected final IdFactory idFactory = new IdFactory("inttest");

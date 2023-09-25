@@ -22,7 +22,7 @@ paths:
             schema:
                 $ref: '#/components/schemas/RaidCreateRequest'
       responses:
-        200:
+        201:
           description: The Raid was successfully created.
           content:
             application/json:
@@ -42,7 +42,6 @@ paths:
       parameters:
         - name: servicePointId
           in: query
-          required: true
           schema:
             type: integer
             format: int64
@@ -81,6 +80,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RaidDto'
+        403:
+          description: Closed or Embargoed raids return a 403 response with an access statement
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClosedRaid'
     put:
       tags:
         - raido-stable-v1
@@ -560,3 +565,10 @@ components:
           type: string,
           example: https://iso639-3.sil.org/
         }
+    ClosedRaid:
+      type: object
+      properties:
+        identifier:
+          $ref: '#/components/schemas/Id'
+        access:
+          $ref: '#/components/schemas/Access'

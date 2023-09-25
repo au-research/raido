@@ -124,7 +124,7 @@ openApiGenerate {
     with a default value (not actually even sure about that).
     Need to figure this out, or just turn this to false and forget about using
     optional. */
-    useOptional: "true",
+//    useOptional: "true",
 
     /* set to false because model classes were failing because of the import of
     jackson.Nullable */

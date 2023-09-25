@@ -3,6 +3,7 @@ package au.org.raid.api.endpoint.raidv2;
 import au.org.raid.api.exception.*;
 import au.org.raid.api.spring.RedactingExceptionResolver;
 import au.org.raid.api.spring.security.ApiSafeException;
+import au.org.raid.idl.raidv2.model.ClosedRaid;
 import au.org.raid.idl.raidv2.model.FailureResponse;
 import au.org.raid.idl.raidv2.model.ValidationFailureResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,17 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @Slf4j
 @ControllerAdvice
 public class RaidExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(ClosedRaidException.class)
+    public ResponseEntity<ClosedRaid> handleClosedRaidException(final ClosedRaidException e) {
+        final var raid = e.getRaid();
+
+        final var body = new ClosedRaid()
+                .identifier(raid.getIdentifier())
+                .access(raid.getAccess());
+
+        return ResponseEntity.status(403).body(body);
+    }
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ValidationFailureResponse> handleValidationException(final Exception e) {

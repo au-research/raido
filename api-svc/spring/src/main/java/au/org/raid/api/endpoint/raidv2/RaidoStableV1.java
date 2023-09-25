@@ -1,9 +1,11 @@
 package au.org.raid.api.endpoint.raidv2;
 
+import au.org.raid.api.exception.ClosedRaidException;
 import au.org.raid.api.exception.InvalidAccessException;
 import au.org.raid.api.exception.ValidationException;
 import au.org.raid.api.service.raid.RaidStableV1Service;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
+import au.org.raid.api.util.SchemaValues;
 import au.org.raid.api.validator.RaidoStableV1Validator;
 import au.org.raid.idl.raidv2.api.RaidoStableV1Api;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
@@ -11,16 +13,16 @@ import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static au.org.raid.api.endpoint.raidv2.AuthzUtil.getApiToken;
 import static au.org.raid.api.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
-import static org.springframework.transaction.annotation.Propagation.NEVER;
 
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
@@ -35,15 +37,22 @@ public class RaidoStableV1 implements RaidoStableV1Api {
 
     @Override
     public ResponseEntity<RaidDto> readRaidV1(final String prefix, final String suffix) {
-        final var handle = String.join("/", prefix, suffix);
         var user = getApiToken();
-        var data = raidService.read(handle);
-        guardOperatorOrAssociated(user, data.getIdentifier().getOwner().getServicePoint());
-        return ResponseEntity.ok(data);
+        //return 403 if raid is confidential and doesn't have same service point as user
+
+        final var handle = String.join("/", prefix, suffix);
+        var raid = raidService.read(handle);
+
+        if (!raid.getIdentifier().getOwner().getServicePoint().equals(user.getServicePointId())
+                && !raid.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri())) {
+            throw new ClosedRaidException(raid);
+        }
+
+        return ResponseEntity.ok(raid);
     }
 
+
     @Override
-    @Transactional(propagation = NEVER)
     public ResponseEntity<RaidDto> createRaidV1(RaidCreateRequest request) {
         final var user = getApiToken();
 
@@ -60,15 +69,17 @@ public class RaidoStableV1 implements RaidoStableV1Api {
         IdentifierUrl id = raidService.mintRaidSchemaV1(
                 request, user.getServicePointId());
 
-        return ResponseEntity.ok(raidService.read(id.handle().format()));
+        return ResponseEntity.created(URI.create(id.formatUrl()))
+                .body(raidService.read(id.handle().format()));
     }
 
     @Override
-    public ResponseEntity<List<RaidDto>> listRaidsV1(Long servicePointId) {
+    public ResponseEntity<List<RaidDto>> listRaidsV1(Long servicePoint) {
         var user = getApiToken();
-        guardOperatorOrAssociated(user, servicePointId);
 
-        return ResponseEntity.ok(raidService.list(servicePointId));
+        return ResponseEntity.ok(Optional.ofNullable(servicePoint)
+                .map(raidService::list)
+                .orElse(raidService.list(user)));
     }
 
     @Override

@@ -13,7 +13,7 @@ import au.org.raid.api.service.raid.id.IdentifierParser;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.spring.config.environment.MetadataProps;
 import au.org.raid.api.util.FileUtil;
-import au.org.raid.api.util.SchemaUri;
+import au.org.raid.api.util.SchemaValues;
 import au.org.raid.db.jooq.api_svc.tables.records.RaidRecord;
 import au.org.raid.db.jooq.api_svc.tables.records.ServicePointRecord;
 import au.org.raid.idl.raidv2.model.*;
@@ -108,10 +108,10 @@ class RaidStableV1ServiceTest {
                 .schemaUri(RAID_ID_TYPE_URI)
                 .registrationAgency(new RegistrationAgency()
                         .id(registrationAgency)
-                        .schemaUri(SchemaUri.ROR.getUri()))
+                        .schemaUri(SchemaValues.ROR_SCHEMA_URI.getUri()))
                 .owner(new Owner()
                         .id(identifierOwner)
-                        .schemaUri(SchemaUri.ROR.getUri())
+                        .schemaUri(SchemaValues.ROR_SCHEMA_URI.getUri())
                         .servicePoint(servicePointId)
                 );
 

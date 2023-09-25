@@ -7,6 +7,7 @@ import au.org.raid.api.service.raid.id.IdentifierHandle;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.spring.security.raidv2.ApiToken;
 import au.org.raid.api.util.FileUtil;
+import au.org.raid.api.util.SchemaValues;
 import au.org.raid.api.validator.RaidoStableV1Validator;
 import au.org.raid.idl.raidv2.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +15,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.hamcrest.Matchers;
 import org.jooq.exception.DataAccessException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -226,7 +228,7 @@ class RaidoStableV1Test {
                             .content(objectMapper.writeValueAsString(raidForPost))
                             .characterEncoding("utf-8"))
                     .andDo(print())
-                    .andExpect(status().isOk())
+                    .andExpect(status().isCreated())
                     .andExpect(jsonPath("$.identifier.id", Matchers.is(id.formatUrl())))
                     .andExpect(jsonPath("$.identifier.schemaUri", Matchers.is("https://raid.org")))
                     .andExpect(jsonPath("$.identifier.registrationAgency.id", Matchers.is("https://ror.org/038sjwq14")))
@@ -487,6 +489,7 @@ class RaidoStableV1Test {
 
         try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
             final ApiToken apiToken = mock(ApiToken.class);
+            when(apiToken.getServicePointId()).thenReturn(20000001L);
             authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
 
             when(raidService.read(String.join("/", prefix, suffix))).thenReturn(raid);
@@ -534,35 +537,73 @@ class RaidoStableV1Test {
     }
 
     @Test
-    void readRaidsV1_ReturnsForbiddenWithInvalidServicePoint() throws Exception {
+    @DisplayName("Requesting a closed raid with a different service point returns forbidden response")
+    void forbiddenWithClosedRaidAndDifferentServicePoint() throws Exception {
         final var prefix = "10378.1";
         final var suffix = "1696639";
         final Long servicePointId = 20000001L;
         final var raid = createRaidForGet("", LocalDate.now());
 
         try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-            final ApiToken apiToken = mock(ApiToken.class);
+            final var apiToken = ApiToken.ApiTokenBuilder.anApiToken()
+                    .withAppUserId(1L)
+                    .withServicePointId(999L)
+                    .withClientId("_clientId")
+                    .withSubject("_subject")
+                    .withEmail("_email")
+                    .withRole("_role")
+                    .build();
+
             authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
 
             when(raidService.read(String.join("/", prefix, suffix))).thenReturn(raid);
 
-            authzUtil.when(() -> AuthzUtil.guardOperatorOrAssociated(apiToken, servicePointId))
-                    .thenThrow(new CrossAccountAccessException(servicePointId));
-
-            final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
+            mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
                             .characterEncoding("utf-8"))
                     .andDo(print())
                     .andExpect(status().isForbidden())
+                    .andExpect(jsonPath("$.identifier.id", Matchers.is("https://raid.org.au/10378.1/1696639")))
+                    .andExpect(jsonPath("$.access.type.id", Matchers.is(SchemaValues.ACCESS_TYPE_CLOSED.getUri())))
+                    .andExpect(jsonPath("$.access.accessStatement.text", Matchers.is("This RAiD is closed")))
+                    .andExpect(jsonPath("$.access.accessStatement.language.id", Matchers.is("eng")))
+                    .andExpect(jsonPath("$.access.accessStatement.language.schemaUri", Matchers.is("https://www.iso.org/standard/39534.html")))
                     .andReturn();
+        }
+    }
 
-            final FailureResponse failureResponse = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), FailureResponse.class);
+    @Test
+    @DisplayName("Requesting an embargoed raid with a different service point returns forbidden response")
+    void forbiddenWithEmbargoedRaidAndDifferentServicePoint() throws Exception {
+        final var prefix = "10378.1";
+        final var suffix = "1696639";
+        final Long servicePointId = 20000001L;
+        final var raid = embargoedRaid();
 
-            assertThat(failureResponse.getType(), Matchers.is("https://raid.org.au/errors#CrossAccountAccessException"));
-            assertThat(failureResponse.getTitle(), Matchers.is("You do not have permission to access this RAiD."));
-            assertThat(failureResponse.getStatus(), Matchers.is(403));
-            assertThat(failureResponse.getDetail(), Matchers.is("You don't have permission to access RAiDs with a service point of " + servicePointId));
-            assertThat(failureResponse.getInstance(), Matchers.is("https://raid.org.au"));
+        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
+            final var apiToken = ApiToken.ApiTokenBuilder.anApiToken()
+                    .withAppUserId(1L)
+                    .withServicePointId(999L)
+                    .withClientId("_clientId")
+                    .withSubject("_subject")
+                    .withEmail("_email")
+                    .withRole("_role")
+                    .build();
 
+            authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
+
+            when(raidService.read(String.join("/", prefix, suffix))).thenReturn(raid);
+
+            mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
+                            .characterEncoding("utf-8"))
+                    .andDo(print())
+                    .andExpect(status().isForbidden())
+                    .andExpect(jsonPath("$.identifier.id", Matchers.is("https://raid.org.au/10378.1/1696639")))
+                    .andExpect(jsonPath("$.access.type.id", Matchers.is(SchemaValues.ACCESS_TYPE_EMBARGOED.getUri())))
+                    .andExpect(jsonPath("$.access.embargoExpiry", Matchers.is("2024-12-31")))
+                    .andExpect(jsonPath("$.access.accessStatement.text", Matchers.is("This RAiD is embargoed")))
+                    .andExpect(jsonPath("$.access.accessStatement.language.id", Matchers.is("eng")))
+                    .andExpect(jsonPath("$.access.accessStatement.language.schemaUri", Matchers.is("https://www.iso.org/standard/39534.html")))
+                    .andReturn();
         }
     }
 
@@ -625,36 +666,6 @@ class RaidoStableV1Test {
         }
     }
 
-    @Test
-    void listRaidsV1_ReturnsForbiddenWithInvalidServicePoint() throws Exception {
-        final Long servicePointId = 999L;
-
-        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-            final ApiToken apiToken = mock(ApiToken.class);
-            authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
-
-            authzUtil.when(() -> AuthzUtil.guardOperatorOrAssociated(apiToken, servicePointId))
-                    .thenThrow(new CrossAccountAccessException(servicePointId));
-
-            final MvcResult mvcResult = mockMvc.perform(get("/raid")
-                            .queryParam("servicePointId", servicePointId.toString())
-                            .characterEncoding("utf-8"))
-                    .andDo(print())
-                    .andExpect(status().isForbidden())
-                    .andReturn();
-
-            final FailureResponse failureResponse = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), FailureResponse.class);
-
-            assertThat(failureResponse.getType(), Matchers.is("https://raid.org.au/errors#CrossAccountAccessException"));
-            assertThat(failureResponse.getTitle(), Matchers.is("You do not have permission to access this RAiD."));
-            assertThat(failureResponse.getStatus(), Matchers.is(403));
-            assertThat(failureResponse.getDetail(), Matchers.is("You don't have permission to access RAiDs with a service point of 999"));
-            assertThat(failureResponse.getInstance(), Matchers.is("https://raid.org.au"));
-
-            verifyNoInteractions(raidService);
-        }
-    }
-
     private RaidDto createRaidForGet(final String title, final LocalDate startDate) throws IOException {
         final String json = FileUtil.resourceContent("/fixtures/raid.json");
 
@@ -683,6 +694,11 @@ class RaidoStableV1Test {
                 .endDate(startDate.plusMonths(6).format(DateTimeFormatter.ISO_LOCAL_DATE));
 
         return raid;
+    }
+
+    private RaidDto embargoedRaid() throws IOException {
+        final String json = resourceContent("/fixtures/embargoed-raid.json");
+        return objectMapper.readValue(json, RaidDto.class);
     }
 
     private RaidUpdateRequest createRaidForPut() throws IOException {
