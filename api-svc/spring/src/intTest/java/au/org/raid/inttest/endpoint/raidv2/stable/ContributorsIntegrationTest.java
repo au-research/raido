@@ -26,7 +26,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
 
         try {
             raidApi.createRaidV1(createRequest);
-            fail("No exception thrown with no contrbutors");
+            fail("No exception thrown with no contributors");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
@@ -575,6 +575,99 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                                 .fieldId("contributor[0].position[1].id")
                                 .errorType("invalidValue")
                                 .message("id does not exist within the given schema")
+                );
+            } catch (Exception e) {
+                fail("Expected RaidApiValidationException");
+            }
+        }
+
+        @Test
+        @DisplayName("Minting a RAiD with a contributor with overlapping positions fails")
+        void overlappingPositions() {
+            createRequest.setContributor(List.of(
+                    new Contributor()
+                            .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                            .id("https://orcid.org/0000-0000-0000-0001")
+                            .position(List.of(
+                                    new ContributorPositionWithSchemaUri()
+                                            .id(LEADER_POSITION)
+                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
+                                            .startDate(LocalDate.now().minusYears(2).format(DateTimeFormatter.ISO_LOCAL_DATE)),
+                                    new ContributorPositionWithSchemaUri()
+                                            .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/co-investigator.json")
+                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
+                                            .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                            ))
+                            .role(List.of(
+                                    new ContributorRoleWithSchemaUri()
+                                            .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
+                                            .id(SOFTWARE_CONTRIBUTOR_ROLE)
+                            ))
+            ));
+
+            try {
+                raidApi.createRaidV1(createRequest);
+                fail("No exception thrown with missing contributor schemaUri");
+            } catch (RaidApiValidationException e) {
+                final var failures = e.getFailures();
+                assertThat(failures).hasSize(1);
+                assertThat(failures).contains(
+                        new ValidationFailure()
+                                .fieldId("contributor[0].position[1].startDate")
+                                .errorType("invalidValue")
+                                .message("Contributors can only hold one position at any given time. This position conflicts with contributor[0].position[0]")
+                );
+            } catch (Exception e) {
+                fail("Expected RaidApiValidationException");
+            }
+        }
+
+        @Test
+        @DisplayName("A raid can only have one leader at any given time")
+        void multipleLeaders() {
+            createRequest.setContributor(List.of(
+                    new Contributor()
+                            .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                            .id("https://orcid.org/0000-0000-0000-0001")
+                            .position(List.of(
+                                    new ContributorPositionWithSchemaUri()
+                                            .id(LEADER_POSITION)
+                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
+                                            .startDate(LocalDate.now().minusYears(2).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                            ))
+                            .role(List.of(
+                                    new ContributorRoleWithSchemaUri()
+                                            .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
+                                            .id(SOFTWARE_CONTRIBUTOR_ROLE)
+                            )),
+                    new Contributor()
+                            .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                            .id("https://orcid.org/0000-0000-0000-0001")
+                            .position(List.of(
+                                    new ContributorPositionWithSchemaUri()
+                                            .id(LEADER_POSITION)
+                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
+                                            .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                    ))
+                            .role(List.of(
+                                    new ContributorRoleWithSchemaUri()
+                                            .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
+                                            .id(SOFTWARE_CONTRIBUTOR_ROLE)
+                            ))
+
+            ));
+
+            try {
+                raidApi.createRaidV1(createRequest);
+                fail("No exception thrown with missing contributor schemaUri");
+            } catch (RaidApiValidationException e) {
+                final var failures = e.getFailures();
+                assertThat(failures).hasSize(1);
+                assertThat(failures).contains(
+                        new ValidationFailure()
+                                .fieldId("contributor[1].position[0]")
+                                .errorType("invalidValue")
+                                .message("There can only be one leader in any given period. The position at contributor[0].position[0] conflicts with this position.")
                 );
             } catch (Exception e) {
                 fail("Expected RaidApiValidationException");
