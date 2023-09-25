@@ -232,7 +232,7 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
 
 
         final var token = bootstrapTokenSvc.bootstrapToken(
-                RDM_UQ_SUP_ID, "RdmUqApiToken", OPERATOR);
+                UQ_SERVICE_POINT_ID, "RdmUqApiToken", OPERATOR);
 
         final var raidApi = testClient.raidApi(token);
 

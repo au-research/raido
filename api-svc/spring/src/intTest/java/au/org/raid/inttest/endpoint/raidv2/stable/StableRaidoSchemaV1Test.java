@@ -130,7 +130,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
         final var handle = (IdentifierHandle) identifierParser.parseHandle(path);
 
         final var token = bootstrapTokenSvc.bootstrapToken(
-                RDM_UQ_SUP_ID, "RdmUqApiToken", OPERATOR);
+                UQ_SERVICE_POINT_ID, "RdmUqApiToken", OPERATOR);
 
         final var api = testClient.raidApi(token);
 
@@ -156,7 +156,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
         raidApi.createRaidV1(createRequest);
 
         final var token = bootstrapTokenSvc.bootstrapToken(
-                RDM_UQ_SUP_ID, "RdmUqApiToken", OPERATOR);
+                UQ_SERVICE_POINT_ID, "RdmUqApiToken", OPERATOR);
 
         final var api = testClient.raidApi(token);
 
@@ -167,7 +167,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
 
             // filter closed/embargoed raids where the service point does not match RDM@UQ
             final var result = raidList.stream().filter(raid ->
-                    !raid.getIdentifier().getOwner().getServicePoint().equals(RDM_UQ_SUP_ID) &&
+                    !raid.getIdentifier().getOwner().getServicePoint().equals(UQ_SERVICE_POINT_ID) &&
                             (raid.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_CLOSED.getUri()) ||
                                     raid.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_EMBARGOED.getUri())
                             )
