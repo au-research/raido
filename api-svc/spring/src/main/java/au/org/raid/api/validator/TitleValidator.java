@@ -27,7 +27,6 @@ public class TitleValidator {
     private final TitleTypeValidator titleTypeValidationService;
     private final LanguageValidator languageValidator;
 
-
     public List<ValidationFailure> validatePrimaryTitle(
             List<Title> titles
     ) {
@@ -68,9 +67,15 @@ public class TitleValidator {
             if (title.getStartDate() == null) {
                 failures.add(titleStartDateNotSet(index));
             }
+            else if (!isBlank(title.getEndDate()) && DateUtil.parseDate(title.getEndDate()).isBefore(DateUtil.parseDate(title.getStartDate()))) {
+                failures.add(new ValidationFailure()
+                        .fieldId("title[%d].endDate". formatted(index))
+                        .errorType(INVALID_VALUE_TYPE)
+                        .message(END_DATE_BEFORE_START_DATE)
+                );
+            }
 
             failures.addAll(titleTypeValidationService.validate(title.getType(), index));
-
             failures.addAll(languageValidator.validate(title.getLanguage(), "title[%d]".formatted(index)));
         });
         return failures;

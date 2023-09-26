@@ -1,7 +1,7 @@
 package au.org.raid.api.validator;
 
 import au.org.raid.api.repository.SubjectTypeRepository;
-import au.org.raid.api.util.SchemaUri;
+import au.org.raid.api.util.SchemaValues;
 import au.org.raid.db.jooq.api_svc.tables.records.SubjectTypeRecord;
 import au.org.raid.idl.raidv2.model.Subject;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
@@ -32,10 +32,10 @@ public class SubjectValidator {
         IntStream.range(0, subjects.size()).forEach(subjectIndex -> {
             final var subject = subjects.get(subjectIndex);
 
-            if (subject.getSchemaUri() == null || !subject.getSchemaUri().equals(SchemaUri.SUBJECT.getUri())) {
+            if (subject.getSchemaUri() == null || !subject.getSchemaUri().equals(SchemaValues.SUBJECT_SCHEMA_URI.getUri())) {
                 final var failure = new ValidationFailure();
                 failure.setFieldId(String.format("subject[%d].schemaUri", subjectIndex));
-                failure.setMessage(String.format("must be %s.", SchemaUri.SUBJECT.getUri()));
+                failure.setMessage(String.format("must be %s.", SchemaValues.SUBJECT_SCHEMA_URI.getUri()));
                 failure.setErrorType(INVALID_VALUE_TYPE);
 
                 failures.add(failure);
@@ -51,7 +51,7 @@ public class SubjectValidator {
             } else {
                 final var subjectId = subject.getId().substring(subject.getId().lastIndexOf('/') + 1);
 
-                if (!subject.getId().startsWith(SchemaUri.SUBJECT.getUri()) || subjectId.matches(".*\\D.*")) {
+                if (!subject.getId().startsWith(SchemaValues.SUBJECT_SCHEMA_URI.getUri()) || subjectId.matches(".*\\D.*")) {
                     final var failure = new ValidationFailure();
                     failure.setFieldId(String.format("subject[%d].id", subjectIndex));
                     failure.setMessage(String.format("%s is not a valid field of research", subject.getId()));

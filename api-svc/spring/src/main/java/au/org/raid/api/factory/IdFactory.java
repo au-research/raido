@@ -3,7 +3,7 @@ package au.org.raid.api.factory;
 import au.org.raid.api.service.raid.MetadataService;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.spring.config.environment.MetadataProps;
-import au.org.raid.api.util.SchemaUri;
+import au.org.raid.api.util.SchemaValues;
 import au.org.raid.db.jooq.api_svc.tables.records.ServicePointRecord;
 import au.org.raid.idl.raidv2.model.Id;
 import au.org.raid.idl.raidv2.model.IdBlock;
@@ -25,11 +25,11 @@ public class IdFactory {
                 .schemaUri(MetadataService.RAID_ID_TYPE_URI)
                 .registrationAgency(new RegistrationAgency()
                         .id(metadataProps.getIdentifierRegistrationAgency())
-                        .schemaUri(SchemaUri.ROR.getUri())
+                        .schemaUri(SchemaValues.ROR_SCHEMA_URI.getUri())
                 )
                 .owner(new Owner()
                         .id(servicePointRecord.getIdentifierOwner())
-                        .schemaUri(SchemaUri.ROR.getUri())
+                        .schemaUri(SchemaValues.ROR_SCHEMA_URI.getUri())
                         .servicePoint(servicePointRecord.getId())
                 )
                 .globalUrl(id.handle().format(metadataProps.getGlobalUrlPrefix()))
@@ -47,11 +47,11 @@ public class IdFactory {
                 .schemaUri(idBlock.getIdentifierSchemeURI())
                 .registrationAgency(new RegistrationAgency()
                         .id(idBlock.getIdentifierRegistrationAgency())
-                        .schemaUri(SchemaUri.ROR.getUri())
+                        .schemaUri(SchemaValues.ROR_SCHEMA_URI.getUri())
                 )
                 .owner(new Owner()
                         .id(idBlock.getIdentifierOwner())
-                        .schemaUri(SchemaUri.ROR.getUri())
+                        .schemaUri(SchemaValues.ROR_SCHEMA_URI.getUri())
                         .servicePoint(idBlock.getIdentifierServicePoint())
                 )
                 .globalUrl(idBlock.getGlobalUrl())

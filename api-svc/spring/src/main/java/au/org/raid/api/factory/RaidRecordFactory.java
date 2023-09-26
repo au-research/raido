@@ -9,6 +9,7 @@ import au.org.raid.db.jooq.api_svc.tables.records.RaidRecord;
 import au.org.raid.db.jooq.api_svc.tables.records.ServicePointRecord;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
+import au.org.raid.idl.raidv2.model.Title;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jooq.JSONB;
@@ -19,8 +20,8 @@ import java.time.LocalDateTime;
 //TODO: write a test for this
 @Component
 public class RaidRecordFactory {
-    private static final String ACCESS_TYPE_CLOSED =
-            "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json";
+    private static final String ACCESS_TYPE_OPEN =
+            "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json";
 
     private static final String PRIMARY_TITLE_TYPE =
             "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
@@ -38,8 +39,8 @@ public class RaidRecordFactory {
         final var primaryTitle = raid.getTitle().stream()
                 .filter(title -> title.getType().getId().equals(PRIMARY_TITLE_TYPE))
                 .findFirst()
-                .orElseThrow(() -> new InvalidTitleException("One title with a titleType of 'Primary' should be specified."))
-                .getText();
+                .map(Title::getText)
+                .orElse("");
 
         final String raidJson;
         try {
@@ -59,7 +60,7 @@ public class RaidRecordFactory {
                 .setMetadataSchema(Metaschema.raido_metadata_schema_v2)
                 .setStartDate(DateUtil.parseDate(raid.getDate().getStartDate()))
                 .setDateCreated(LocalDateTime.now())
-                .setConfidential(raid.getAccess().getType().equals(ACCESS_TYPE_CLOSED));
+                .setConfidential(!raid.getAccess().getType().getId().equals(ACCESS_TYPE_OPEN));
     }
 
     public RaidRecord merge(final RaidUpdateRequest raid, final RaidRecord existing) {
@@ -90,6 +91,6 @@ public class RaidRecordFactory {
                 .setMetadata(JSONB.valueOf(raidJson))
                 .setMetadataSchema(Metaschema.raido_metadata_schema_v2)
                 .setStartDate(DateUtil.parseDate(raid.getDate().getStartDate()))
-                .setConfidential(raid.getAccess().getType().equals(ACCESS_TYPE_CLOSED));
+                .setConfidential(!raid.getAccess().getType().getId().equals(ACCESS_TYPE_OPEN));
     }
 }

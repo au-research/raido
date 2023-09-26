@@ -452,6 +452,44 @@ class ContributorValidatorTest {
         assertThat(failures, empty());
     }
 
+
+
+    @Test
+    @DisplayName("Validation fails if contributor has overlapping positions - year-month-day dates")
+    void overlappingPositions() {
+        final var role1 = new ContributorRoleWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
+                .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
+
+        final var position1 = new ContributorPositionWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
+                .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
+                .startDate("2020-01-01")
+                .endDate("2021-12-31");
+
+        final var position2 = new ContributorPositionWithSchemaUri()
+                .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
+                .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
+                .startDate("2021-06-01")
+                .endDate("2023-06-01");
+
+        final var contributor1 = new Contributor()
+                .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                .id(TestConstants.VALID_ORCID)
+                .role(List.of(role1))
+                .position(List.of(position1, position2));
+
+
+        final var failures = validationService.validate(List.of(contributor1));
+
+        assertThat(failures, is(List.of(
+                new ValidationFailure()
+                        .fieldId("contributor[0].position[1].startDate")
+                        .errorType("invalidValue")
+                        .message("Contributors can only hold one position at any given time. This position conflicts with contributor[0].position[0]")
+        )));
+    }
+
     @Test
     @DisplayName("Validation fails with null schemaUri")
     void nullIdentifierSchemeUri() {

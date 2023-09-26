@@ -1,7 +1,7 @@
 package au.org.raid.api.validator;
 
 import au.org.raid.api.repository.SubjectTypeRepository;
-import au.org.raid.api.util.SchemaUri;
+import au.org.raid.api.util.SchemaValues;
 import au.org.raid.db.jooq.api_svc.tables.records.SubjectTypeRecord;
 import au.org.raid.idl.raidv2.model.Subject;
 import au.org.raid.idl.raidv2.model.SubjectKeyword;
@@ -41,7 +41,7 @@ class SubjectValidatorTest {
 
         final var subject = new Subject()
                 .id(id)
-                .schemaUri(SchemaUri.SUBJECT.getUri())
+                .schemaUri(SchemaValues.SUBJECT_SCHEMA_URI.getUri())
                 .keyword(List.of(new SubjectKeyword()));
 
         when(keywordValidator.validate(keyword,0,0)).thenReturn(Collections.emptyList());
@@ -64,7 +64,7 @@ class SubjectValidatorTest {
 
         final var subject = new Subject()
                 .id(id)
-                .schemaUri(SchemaUri.SUBJECT.getUri());
+                .schemaUri(SchemaValues.SUBJECT_SCHEMA_URI.getUri());
 
         final List<ValidationFailure> failures = validationService.validate(Collections.singletonList(subject));
 
@@ -84,7 +84,7 @@ class SubjectValidatorTest {
 
         final var subject = new Subject()
                 .id(id)
-                .schemaUri(SchemaUri.SUBJECT.getUri());
+                .schemaUri(SchemaValues.SUBJECT_SCHEMA_URI.getUri());
 
         final List<ValidationFailure> validationFailures = validationService.validate(Collections.singletonList(subject));
 
@@ -103,7 +103,7 @@ class SubjectValidatorTest {
 
         final var subject = new Subject()
                 .id(id)
-                .schemaUri(SchemaUri.SUBJECT.getUri());
+                .schemaUri(SchemaValues.SUBJECT_SCHEMA_URI.getUri());
 
         when(subjectTypeRepository.findById("222222")).thenReturn(Optional.empty());
 
@@ -186,7 +186,7 @@ class SubjectValidatorTest {
 
         final var subject = new Subject()
                 .id(id)
-                .schemaUri(SchemaUri.SUBJECT.getUri())
+                .schemaUri(SchemaValues.SUBJECT_SCHEMA_URI.getUri())
                 .keyword(List.of(new SubjectKeyword()));
 
         final var failure = new ValidationFailure();

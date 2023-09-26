@@ -12,10 +12,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
+import static au.org.raid.db.jooq.api_svc.enums.UserRole.OPERATOR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTest {
+
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -227,6 +229,12 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
         final String[] split = raidModel.getHandle().split("/");
         final var prefix = split[0];
         final var suffix = split[1];
+
+
+        final var token = bootstrapTokenSvc.bootstrapToken(
+                UQ_SERVICE_POINT_ID, "RdmUqApiToken", OPERATOR);
+
+        final var raidApi = testClient.raidApi(token);
 
         final RaidDto raidDto = raidApi.readRaidV1(prefix, suffix).getBody();
 

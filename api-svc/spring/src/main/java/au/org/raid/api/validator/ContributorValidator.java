@@ -2,6 +2,7 @@ package au.org.raid.api.validator;
 
 import au.org.raid.api.util.DateUtil;
 import au.org.raid.idl.raidv2.model.Contributor;
+import au.org.raid.idl.raidv2.model.ContributorPositionWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.springframework.stereotype.Component;
 
@@ -73,6 +74,8 @@ public class ContributorValidator {
                                 failures.addAll(positionValidationService.validate(position, index, positionIndex));
                             });
 
+                    failures.addAll(validatePositions(contributor.getPosition(), index));
+
                 });
 
         failures.addAll(validateLeader(contributors));
@@ -108,7 +111,6 @@ public class ContributorValidator {
         return failures;
     }
 
-
     private List<ValidationFailure> validateLeadContributors(final List<Contributor> contributors) {
         final var failures = new ArrayList<ValidationFailure>();
         final var today = LocalDate.now();
@@ -126,8 +128,8 @@ public class ContributorValidator {
                         "contributorIndex", contributorIndex,
                         "positionIndex", positionIndex,
                         "leader", position.getId().equals(LEADER_POSITION),
-                        "startDate", position.getStartDate(),
-                        "endDate", position.getEndDate()
+                        "startDate", DateUtil.parseDate(position.getStartDate()),
+                        "endDate", position.getEndDate() == null ? LocalDate.now() : DateUtil.parseDate(position.getEndDate())
                 ));
             }
         }
@@ -135,10 +137,10 @@ public class ContributorValidator {
         List<Map<String, Object>> leaders = positions.stream()
                 .filter(map -> (boolean) map.get("leader"))
                 .sorted((o1, o2) -> {
-                    if (DateUtil.parseDate((String) o1.get("startDate")).equals(DateUtil.parseDate((String)o2.get("startDate")))) {
-                        return DateUtil.parseDate((String) o1.get("endDate")).compareTo(DateUtil.parseDate((String) o2.get("endDate")));
+                    if (o1.get("startDate").equals(o2.get("startDate"))) {
+                        return ((LocalDate) o1.get("endDate")).compareTo((LocalDate) o2.get("endDate"));
                     }
-                    return DateUtil.parseDate((String) o1.get("startDate")).compareTo(DateUtil.parseDate((String) o2.get("startDate")));
+                    return ((LocalDate) o1.get("startDate")).compareTo((LocalDate) o2.get("startDate"));
                 })
                 .toList();
 
@@ -146,9 +148,8 @@ public class ContributorValidator {
             var previousEntry = leaders.get(i - 1);
             var entry = leaders.get(i);
 
-            final var start = DateUtil.parseDate((String) entry.get("startDate"));
-            final var previousEnd = previousEntry.get("endDate") == null ?
-                    LocalDate.now() : DateUtil.parseDate((String) previousEntry.get("endDate"));
+            final var start = (LocalDate) entry.get("startDate");
+            final var previousEnd = (LocalDate) previousEntry.get("endDate");
 
             if (start.isBefore(previousEnd)) {
                 failures.add(new ValidationFailure()
@@ -160,9 +161,46 @@ public class ContributorValidator {
                                 .formatted((int) previousEntry.get("contributorIndex"), (int) previousEntry.get("positionIndex")))
                         )
                 );
+            }
+        }
+
+        return failures;
+    }
+
+    private List<ValidationFailure> validatePositions(final List<ContributorPositionWithSchemaUri> positions, final int contributorIndex) {
+        final var failures = new ArrayList<ValidationFailure>();
+        var sortedPositions = new ArrayList<Map<String, Object>>();
+
+        for (int i = 0; i < positions.size(); i++) {
+            final var position = positions.get(i);
+
+            sortedPositions.add(Map.of(
+                    "index", i,
+                    "start", DateUtil.parseDate(position.getStartDate()),
+                    "end", position.getEndDate() == null ? LocalDate.now() : DateUtil.parseDate(position.getEndDate())
+                    ));
+        }
+
+        sortedPositions.sort((o1, o2) -> {
+            if (o1.get("start").equals(o2.get("start"))) {
+                return ((LocalDate) o1.get("end")).compareTo((LocalDate) o2.get("end"));
+            }
+            return ((LocalDate) o1.get("start")).compareTo((LocalDate) o2.get("start"));
+        });
+
+        for (int i = 1; i < sortedPositions.size(); i++) {
+            final var previousPosition = sortedPositions.get(i - 1);
+            final var position = sortedPositions.get(i);
+
+            if (((LocalDate) position.get("start")).isBefore(((LocalDate) previousPosition.get("end")))) {
+                failures.add(new ValidationFailure()
+                        .fieldId("contributor[%d].position[%d].startDate".formatted(contributorIndex, (int)position.get("index")))
+                        .errorType(INVALID_VALUE_TYPE)
+                        .message("Contributors can only hold one position at any given time. This position conflicts with contributor[%d].position[%d]"
+                                .formatted(contributorIndex, (int) previousPosition.get("index")))
+                );
 
             }
-
         }
 
         return failures;

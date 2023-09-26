@@ -2,7 +2,7 @@ package au.org.raid.api.factory;
 
 import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.spring.config.environment.MetadataProps;
-import au.org.raid.api.util.SchemaUri;
+import au.org.raid.api.util.SchemaValues;
 import au.org.raid.db.jooq.api_svc.tables.records.ServicePointRecord;
 import au.org.raid.idl.raidv2.model.Id;
 import au.org.raid.idl.raidv2.model.IdBlock;
@@ -57,10 +57,10 @@ class IdFactoryTest {
         assertThat(result.getSchemaUri(), is(IDENTIFIER_SCHEMA_URI));
         assertThat(result.getRegistrationAgency(), is(new RegistrationAgency()
                 .id(IDENTIFIER_REGISTRATION_AGENCY)
-                .schemaUri(SchemaUri.ROR.getUri())));
+                .schemaUri(SchemaValues.ROR_SCHEMA_URI.getUri())));
         assertThat(result.getOwner(), is(new Owner()
                 .id(IDENTIFIER_OWNER)
-                .schemaUri(SchemaUri.ROR.getUri())
+                .schemaUri(SchemaValues.ROR_SCHEMA_URI.getUri())
                 .servicePoint(IDENTIFIER_SERVICE_POINT)
         ));
         assertThat(result.getGlobalUrl(), is(GLOBAL_URL));

@@ -117,15 +117,6 @@ openApiGenerate {
     true - does not generate controller classes */
     interfaceOnly: "true",
 
-    /* wrap params in Optional.
-    I like it but IDEA shows a warning.
-    When I tried passing an actual "false" value, Spring failed to map the
-    optional.  I worked around it by redefining that boolean as required
-    with a default value (not actually even sure about that).
-    Need to figure this out, or just turn this to false and forget about using
-    optional. */
-    useOptional: "true",
-
     /* set to false because model classes were failing because of the import of
     jackson.Nullable */
     openApiNullable: "false",

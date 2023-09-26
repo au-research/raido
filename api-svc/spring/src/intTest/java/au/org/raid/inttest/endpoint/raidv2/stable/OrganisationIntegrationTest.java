@@ -54,6 +54,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                         .id(VALID_ROR)
                         .role(List.of(
                                 new OrganisationRoleWithSchemaUri()
+                                        .startDate("2021")
                                         .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                         .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                         ))
@@ -118,6 +119,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                                 new OrganisationRoleWithSchemaUri()
                                         .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                         .id(LEAD_RESEARCH_ORGANISATION_ROLE)
+                                        .startDate("2021")
                         ))
         ));
 
@@ -149,7 +151,8 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                                 new OrganisationRoleWithSchemaUri()
                                         .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                         .id(LEAD_RESEARCH_ORGANISATION_ROLE)
-                        ))
+                                        .startDate("2021")))
+
         ));
 
         try {
@@ -183,6 +186,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                                     new OrganisationRoleWithSchemaUri()
                                             .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                             .id(LEAD_RESEARCH_ORGANISATION_ROLE)
+                                            .startDate("2021")
                             ))
             ));
 
@@ -214,6 +218,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                                     new OrganisationRoleWithSchemaUri()
                                             .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                             .id(LEAD_RESEARCH_ORGANISATION_ROLE)
+                                            .startDate("2021")
                             ))
             ));
 
@@ -248,6 +253,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                             .role(List.of(
                                     new OrganisationRoleWithSchemaUri()
                                             .id(LEAD_RESEARCH_ORGANISATION_ROLE)
+                                            .startDate("2021")
                             ))
             ));
 
@@ -278,6 +284,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                             .role(List.of(
                                     new OrganisationRoleWithSchemaUri()
                                             .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
+                                            .startDate("2021")
                             ))
             ));
 
@@ -309,6 +316,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                                     new OrganisationRoleWithSchemaUri()
                                             .id("")
                                             .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
+                                            .startDate("2021")
                             ))
             ));
 
@@ -340,6 +348,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                                     new OrganisationRoleWithSchemaUri()
                                             .schemaUri("unknown")
                                             .id(LEAD_RESEARCH_ORGANISATION_ROLE)
+                                            .startDate("2021")
                             ))
             ));
 
@@ -371,6 +380,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                                     new OrganisationRoleWithSchemaUri()
                                             .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                             .id("unknown")
+                                            .startDate("2021")
                             ))
             ));
 

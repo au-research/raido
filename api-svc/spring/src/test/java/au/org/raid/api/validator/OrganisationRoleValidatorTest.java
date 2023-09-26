@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static au.org.raid.api.util.TestConstants.LEAD_RESEARCH_ORGANISATION_ROLE;
@@ -50,7 +51,8 @@ class OrganisationRoleValidatorTest {
     void validOrganisationRoleWithSchemaUri() {
         final var role = new OrganisationRoleWithSchemaUri()
                 .id(LEAD_RESEARCH_ORGANISATION_ROLE)
-                .schemaUri(ORGANISATION_ROLE_SCHEMA_URI);
+                .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
+                .startDate("2021");
 
         when(contributorRoleSchemaRepository.findByUri(ORGANISATION_ROLE_SCHEMA_URI))
                 .thenReturn(Optional.of(ORGANISATION_ROLE_SCHEMA_RECORD));
@@ -65,10 +67,37 @@ class OrganisationRoleValidatorTest {
     }
 
     @Test
+    @DisplayName("Validation fails if end date is before start date")
+    void endDateBeforeStartDate() {
+        final var role = new OrganisationRoleWithSchemaUri()
+                .id(LEAD_RESEARCH_ORGANISATION_ROLE)
+                .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
+                .startDate("2021")
+                .endDate("2020");
+
+        when(contributorRoleSchemaRepository.findByUri(ORGANISATION_ROLE_SCHEMA_URI))
+                .thenReturn(Optional.of(ORGANISATION_ROLE_SCHEMA_RECORD));
+
+        when(contributorRoleRepository
+                .findByUriAndSchemaId(LEAD_RESEARCH_ORGANISATION_ROLE, ORGANISATION_ROLE_SCHEMA_ID))
+                .thenReturn(Optional.of(ORGANISATION_ROLE_RECORD));
+
+        final var failures = validationService.validate(role, 2, 3);
+
+        assertThat(failures, is(List.of(
+                new ValidationFailure()
+                        .fieldId("organisation[2].role[3].endDate")
+                        .errorType("invalidValue")
+                        .message("end date is before start date")
+        )));
+    }
+
+    @Test
     @DisplayName("Validation fails with null schemaUri")
     void nullSchemaUri() {
         final var role = new OrganisationRoleWithSchemaUri()
-                .id(LEAD_RESEARCH_ORGANISATION_ROLE);
+                .id(LEAD_RESEARCH_ORGANISATION_ROLE)
+                .startDate("2021");
 
         final var failures = validationService.validate(role, 2, 3);
 
@@ -89,7 +118,8 @@ class OrganisationRoleValidatorTest {
     void emptySchemaUri() {
         final var role = new OrganisationRoleWithSchemaUri()
                 .schemaUri("")
-                .id(LEAD_RESEARCH_ORGANISATION_ROLE);
+                .id(LEAD_RESEARCH_ORGANISATION_ROLE)
+                .startDate("2021");
 
         final var failures = validationService.validate(role, 2, 3);
 
@@ -110,7 +140,8 @@ class OrganisationRoleValidatorTest {
     void invalidSchemaUri() {
         final var role = new OrganisationRoleWithSchemaUri()
                 .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
-                .id(LEAD_RESEARCH_ORGANISATION_ROLE);
+                .id(LEAD_RESEARCH_ORGANISATION_ROLE)
+                .startDate("2021");
 
         when(contributorRoleSchemaRepository.findByUri(ORGANISATION_ROLE_SCHEMA_URI))
                 .thenReturn(Optional.empty());
@@ -132,7 +163,8 @@ class OrganisationRoleValidatorTest {
     @DisplayName("Validation fails with null role")
     void nullRole() {
         final var role = new OrganisationRoleWithSchemaUri()
-                .schemaUri(ORGANISATION_ROLE_SCHEMA_URI);
+                .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
+                .startDate("2021");
 
         when(contributorRoleSchemaRepository.findByUri(ORGANISATION_ROLE_SCHEMA_URI))
                 .thenReturn(Optional.of(ORGANISATION_ROLE_SCHEMA_RECORD));
@@ -151,11 +183,12 @@ class OrganisationRoleValidatorTest {
     }
 
     @Test
-    @DisplayName("Validation fails with empty role")
+    @DisplayName("Validation fails with empty role type id")
     void emptyRole() {
         final var role = new OrganisationRoleWithSchemaUri()
                 .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
-                .id("");
+                .id("")
+                .startDate("2021");
 
         when(contributorRoleSchemaRepository.findByUri(ORGANISATION_ROLE_SCHEMA_URI))
                 .thenReturn(Optional.of(ORGANISATION_ROLE_SCHEMA_RECORD));
@@ -178,7 +211,8 @@ class OrganisationRoleValidatorTest {
     void invalidRole() {
         final var role = new OrganisationRoleWithSchemaUri()
                 .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
-                .id(LEAD_RESEARCH_ORGANISATION_ROLE);
+                .id(LEAD_RESEARCH_ORGANISATION_ROLE)
+                .startDate("2021");
 
         when(contributorRoleSchemaRepository.findByUri(ORGANISATION_ROLE_SCHEMA_URI))
                 .thenReturn(Optional.of(ORGANISATION_ROLE_SCHEMA_RECORD));

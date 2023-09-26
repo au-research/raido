@@ -12,6 +12,7 @@ public class ValidationMessage {
     public static final String NOT_SET_TYPE = "notSet";
     public static final String TOO_LONG_TYPE = "tooLong";
     public static final String INVALID_VALUE_TYPE = "invalidValue";
+    public static final String END_DATE_BEFORE_START_DATE = "end date is before start date";
     public static final String DUPLICATE_TYPE = "duplicateValue";
     public static final String DUPLICATE_MESSAGE = "an object with the same values appears in the list";
     public static final String DISALLOWED_CHANGE_TYPE = "disallowedChange";
