@@ -2,6 +2,7 @@ package au.org.raid.api.validator;
 
 import au.org.raid.api.repository.ContributorPositionRepository;
 import au.org.raid.api.repository.ContributorPositionSchemaRepository;
+import au.org.raid.api.util.DateUtil;
 import au.org.raid.idl.raidv2.model.ContributorPositionWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,12 @@ public class ContributorPositionValidator {
                             .fieldId("contributor[%d].position[%d].startDate".formatted(contributorIndex, positionIndex))
                             .errorType(NOT_SET_TYPE)
                             .message(NOT_SET_MESSAGE));
+        } else if (!isBlank(position.getEndDate()) && DateUtil.parseDate(position.getEndDate()).isBefore(DateUtil.parseDate(position.getStartDate()))) {
+            failures.add(
+                    new ValidationFailure()
+                            .fieldId("contributor[%d].position[%d].endDate".formatted(contributorIndex, positionIndex))
+                            .errorType(INVALID_VALUE_TYPE)
+                            .message(END_DATE_BEFORE_START_DATE));
         }
 
         if (isBlank(position.getId())) {

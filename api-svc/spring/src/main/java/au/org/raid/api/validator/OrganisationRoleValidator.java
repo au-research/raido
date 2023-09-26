@@ -2,6 +2,7 @@ package au.org.raid.api.validator;
 
 import au.org.raid.api.repository.OrganisationRoleRepository;
 import au.org.raid.api.repository.OrganisationRoleSchemaRepository;
+import au.org.raid.api.util.DateUtil;
 import au.org.raid.idl.raidv2.model.OrganisationRoleWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.springframework.stereotype.Component;
@@ -61,6 +62,20 @@ public class OrganisationRoleValidator {
                                 .message(INVALID_ID_FOR_SCHEMA)
                 );
             }
+        }
+
+        if (isBlank(role.getStartDate())) {
+            failures.add(new ValidationFailure()
+                    .fieldId("organisation[%d].role[%d].startDate".formatted(organisationIndex, roleIndex))
+                    .errorType(NOT_SET_TYPE)
+                    .message(NOT_SET_MESSAGE)
+            );
+        } else if (!isBlank(role.getEndDate()) && DateUtil.parseDate(role.getEndDate()).isBefore(DateUtil.parseDate(role.getStartDate()))) {
+            failures.add(new ValidationFailure()
+                    .fieldId("organisation[%d].role[%d].endDate".formatted(organisationIndex, roleIndex))
+                    .errorType(INVALID_VALUE_TYPE)
+                    .message(END_DATE_BEFORE_START_DATE)
+            );
         }
 
         return failures;

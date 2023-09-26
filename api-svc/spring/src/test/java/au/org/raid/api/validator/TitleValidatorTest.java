@@ -57,6 +57,36 @@ class TitleValidatorTest {
     }
 
     @Test
+    @DisplayName("Validation fails if end date is before start date")
+    void endDateBeforeStartDate() {
+        final var type = new TitleTypeWithSchemaUri()
+                .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
+                .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
+
+        final var language = new Language()
+                .id(TestConstants.LANGUAGE_ID)
+                .schemaUri(TestConstants.LANGUAGE_SCHEMA_URI);
+
+        final var title = new Title()
+                .type(type)
+                .text(TestConstants.TITLE)
+                .startDate("2022")
+                .endDate("2021")
+                .language(language);
+
+        final var failures = validationService.validate(List.of(title));
+
+        assertThat(failures, is(List.of(new ValidationFailure()
+                .fieldId("title[0].endDate")
+                .errorType("invalidValue")
+                .message("end date is before start date")
+
+        )));
+        verify(typeValidationService).validate(type, 0);
+        verify(languageValidator).validate(language, "title[0]");
+    }
+
+    @Test
     @DisplayName("Validation fails when primary title is duplicated")
     void duplicatePrimaryTitle() {
         final var type = new TitleTypeWithSchemaUri()

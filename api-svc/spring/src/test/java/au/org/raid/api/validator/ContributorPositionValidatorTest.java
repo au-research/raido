@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 
 import static au.org.raid.api.util.TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI;
@@ -67,6 +68,32 @@ class ContributorPositionValidatorTest {
         final var failures = validationService.validate(position, 2, 3);
 
         assertThat(failures, empty());
+    }
+
+    @Test
+    @DisplayName("Validation fails if end date is before start date")
+    void endDateBeforeStartDate() {
+        final var position = new ContributorPositionWithSchemaUri()
+                .id(LEADER_CONTRIBUTOR_POSITION)
+                .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
+                .startDate("2022-03")
+                .endDate("2022-02");
+
+        when(contributorPositionSchemaRepository.findByUri(CONTRIBUTOR_POSITION_SCHEMA_URI))
+                .thenReturn(Optional.of(CONTRIBUTOR_POSITION_TYPE_SCHEMA_RECORD));
+
+        when(contributorPositionRepository
+                .findByUriAndSchemaId(LEADER_CONTRIBUTOR_POSITION, CONTRIBUTOR_POSITION_TYPE_SCHEMA_ID))
+                .thenReturn(Optional.of(CONTRIBUTOR_POSITION_TYPE_RECORD));
+
+        final var failures = validationService.validate(position, 2, 3);
+
+        assertThat(failures, is(List.of(
+                new ValidationFailure()
+                        .fieldId("contributor[2].position[3].endDate")
+                        .errorType("invalidValue")
+                        .message("end date is before start date")
+        )));
     }
 
     @Test
