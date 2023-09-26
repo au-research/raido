@@ -21,6 +21,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
@@ -88,6 +89,19 @@ public class AbstractIntegrationTest {
     protected RaidCreateRequest newCreateRequest() {
         String initialTitle = getClass().getSimpleName() + "." + getName() +
                 idFactory.generateUniqueId();
+        final var descriptions = new ArrayList<Description>();
+        descriptions.add(new Description()
+                .language(new Language()
+                        .schemaUri(LANGUAGE_SCHEMA_URI)
+                        .id(LANGUAGE_ID))
+                .type(new DescriptionTypeWithSchemaUri()
+                        .id(PRIMARY_DESCRIPTION_TYPE)
+                        .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI))
+                .text("stuff about the int test raid")
+                .language(new Language()
+                        .schemaUri(LANGUAGE_SCHEMA_URI)
+                        .id(LANGUAGE_ID)));
+
 
         return new RaidCreateRequest()
                 .title(List.of(new Title()
@@ -101,18 +115,7 @@ public class AbstractIntegrationTest {
                         .text(initialTitle)
                         .startDate(today.format(DateTimeFormatter.ISO_LOCAL_DATE))))
                 .date(new Date().startDate(today.format(DateTimeFormatter.ISO_LOCAL_DATE)))
-                .description(List.of(new Description()
-                        .language(new Language()
-                                .schemaUri(LANGUAGE_SCHEMA_URI)
-                                .id(LANGUAGE_ID))
-                        .type(new DescriptionTypeWithSchemaUri()
-                                .id(PRIMARY_DESCRIPTION_TYPE)
-                                .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI))
-                        .text("stuff about the int test raid")
-                        .language(new Language()
-                                .schemaUri(LANGUAGE_SCHEMA_URI)
-                                .id(LANGUAGE_ID))
-                ))
+                .description(descriptions)
 
                 .contributor(List.of(contributor(
                         REAL_TEST_ORCID, LEADER_POSITION, SOFTWARE_CONTRIBUTOR_ROLE, today)))

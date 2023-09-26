@@ -1,6 +1,8 @@
 package au.org.raid.inttest.endpoint.raidv2.stable;
 
+import au.org.raid.idl.raidv2.model.Description;
 import au.org.raid.idl.raidv2.model.DescriptionTypeWithSchemaUri;
+import au.org.raid.idl.raidv2.model.Language;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import au.org.raid.inttest.RaidApiValidationException;
 import org.junit.jupiter.api.DisplayName;
@@ -78,7 +80,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Minting a RAiD with a description with an null language fails")
+    @DisplayName("Minting a RAiD with a description with an null language id fails")
     void nullLanguageId() {
         createRequest.getDescription().get(0).getLanguage().setId(null);
 
@@ -154,7 +156,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Validation fails with missing schemaUri")
+    @DisplayName("Validation fails with missing type schemaUri")
     void missingSchemeUri() {
         createRequest.getDescription().get(0).getType().schemaUri(null);
 
@@ -176,7 +178,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Validation fails with invalid schemaUri")
+    @DisplayName("Validation fails with invalid type schemaUri")
     void invalidSchemeUri() {
         createRequest.getDescription().get(0).getType()
                 .schemaUri("https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v2");
@@ -198,7 +200,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Validation fails with blank schemaUri")
+    @DisplayName("Validation fails with blank type schemaUri")
     void blankSchemeUri() {
         createRequest.getDescription().get(0).getType().schemaUri("");
 
@@ -220,7 +222,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Validation fails with missing description")
+    @DisplayName("Validation fails with missing text")
     void missingDescription() {
         createRequest.getDescription().get(0).text(null);
 
@@ -241,7 +243,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Validation fails with blank description")
+    @DisplayName("Validation fails with blank text")
     void blankDescription() {
         createRequest.getDescription().get(0).text("");
 
@@ -264,7 +266,8 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Validation fails with missing type")
     void nullType() {
-        createRequest.getDescription().get(0).type(null);
+        createRequest.getDescription().add(new Description()
+                .text("New description"));
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -273,7 +276,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("description[0].type")
+                    .fieldId("description[1].type")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -285,9 +288,9 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Validation fails with missing type id")
     void missingId() {
-        createRequest.getDescription().get(0).type(
-                new DescriptionTypeWithSchemaUri()
-                        .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI)
+        createRequest.getDescription().add(newDescription()
+                .type(new DescriptionTypeWithSchemaUri()
+                        .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI))
         );
 
         try {
@@ -297,7 +300,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("description[0].type.id")
+                    .fieldId("description[1].type.id")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -307,12 +310,13 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Validation fails with empty id")
+    @DisplayName("Validation fails with empty type id")
     void emptyId() {
-        createRequest.getDescription().get(0).type(
-                new DescriptionTypeWithSchemaUri()
+        createRequest.getDescription().add(new Description()
+                .type(new DescriptionTypeWithSchemaUri()
                         .id("")
-                        .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI)
+                        .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI))
+                .text("Description text...")
         );
 
         try {
@@ -322,28 +326,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("description[0].type.id")
-                    .errorType("notSet")
-                    .message("field must be set")
-            );
-        } catch (Exception e) {
-            fail("Expected RaidApiValidationException");
-        }
-    }
-
-    @Test
-    @DisplayName("Validation fails with blank type")
-    void blankType() {
-        createRequest.getDescription().get(0).getType().id("");
-
-        try {
-            raidApi.createRaidV1(createRequest);
-            fail("No exception thrown with missing schemaUri");
-        } catch (RaidApiValidationException e) {
-            final var failures = e.getFailures();
-            assertThat(failures).hasSize(1);
-            assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("description[0].type.id")
+                    .fieldId("description[1].type.id")
                     .errorType("notSet")
                     .message("field must be set")
             );
@@ -355,8 +338,14 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Validation fails if type is not found within schema")
     void invalidType() {
-        createRequest.getDescription().get(0)
-                .getType().id("https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/unknown.json");
+        createRequest.getDescription().add(
+                new Description()
+                        .type(new DescriptionTypeWithSchemaUri()
+                                .id("https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/unknown.json")
+                                .schemaUri("https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/")
+                        )
+                        .text("description text...")
+                );
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -365,7 +354,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(new ValidationFailure()
-                    .fieldId("description[0].type.id")
+                    .fieldId("description[1].type.id")
                     .errorType("invalidValue")
                     .message("id does not exist within the given schema")
             );
@@ -373,4 +362,18 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
             fail("Expected RaidApiValidationException");
         }
     }
+
+    private Description newDescription() {
+        return new Description()
+                .text("New description...")
+                .type(new DescriptionTypeWithSchemaUri()
+                        .id("https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json")
+                        .schemaUri("https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/")
+                )
+                .language(new Language()
+                        .schemaUri("https://iso639-3.sil.org")
+                        .id("eng")
+                );
+    }
+
 }
