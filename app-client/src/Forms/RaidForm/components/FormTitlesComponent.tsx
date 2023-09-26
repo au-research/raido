@@ -29,6 +29,7 @@ import {
 import { titleTypes } from "references";
 import { threeYearsFromDate } from "utils";
 import { languages } from "../../../Page/languages";
+import { faker } from "@faker-js/faker";
 
 export default function FormTitlesComponent({
   control,
@@ -46,19 +47,14 @@ export default function FormTitlesComponent({
     name: "title",
   });
 
-  enum TitleTypes {
-    primary = "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
-    alternative = "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
-  }
-
   const handleAddTitle = () => {
     const typeId =
       [...titlesFieldArray.fields].length === 0
-        ? TitleTypes.primary
-        : TitleTypes.alternative;
+        ? titleTypes.find((type) => type.key === "primary")?.id
+        : titleTypes.find((type) => type.key === "alternative")?.id;
 
     titlesFieldArray.append({
-      text: ``,
+      text: `[G] ${faker.lorem.sentence()}`,
       type: {
         id: typeId,
         schemaUri:
@@ -99,7 +95,7 @@ export default function FormTitlesComponent({
       />
 
       <CardContent>
-        <Stack gap={3}>
+        <Stack gap={2}>
           <Box>
             {errors.title && (
               <Typography
@@ -139,11 +135,12 @@ export default function FormTitlesComponent({
                       <>
                         <Stack direction="row" alignItems="flex-start" gap={1}>
                           <Grid container spacing={2}>
-                            <Grid item xs={12} sm={12} md={6}>
+                            <Grid item xs={12} sm={12} md={7}>
                               <TextField
                                 {...controllerField}
                                 value={controllerField?.value?.text}
                                 size="small"
+                                required
                                 fullWidth
                                 label="Title"
                                 error={!!errors?.title?.[index]?.text}
@@ -188,7 +185,7 @@ export default function FormTitlesComponent({
                                 ))}
                               </TextField>
                             </Grid>
-                            <Grid item xs={12} sm={6} md={4}>
+                            <Grid item xs={12} sm={6} md={3}>
                               <Controller
                                 name={`title.${index}.language.id`}
                                 control={control}
@@ -219,6 +216,7 @@ export default function FormTitlesComponent({
                                         {...params}
                                         size="small"
                                         label="Title Language"
+                                        required
                                         error={!!error}
                                         helperText={
                                           error
@@ -241,19 +239,20 @@ export default function FormTitlesComponent({
                                 onChange={(event) => {
                                   onChange({
                                     ...controllerField.value,
-                                    startDate: event?.format("YYYY-MM-DD")
-                                      ? new Date(event?.format("YYYY-MM-DD"))
-                                      : "",
+                                    startDate: event?.format("YYYY-MM-DD"),
                                   });
                                 }}
                                 slotProps={{
                                   textField: {
-                                    size: "small",
                                     fullWidth: true,
+                                    size: "small",
+                                    required: true,
                                     error: !!errors?.title?.[index]?.startDate,
-                                    helperText:
-                                      errors?.title?.[index]?.startDate
-                                        ?.message,
+                                    helperText: !!errors?.title?.[index]
+                                      ?.startDate
+                                      ? errors?.title?.[index]?.startDate
+                                          ?.message
+                                      : null,
                                   },
                                   actionBar: {
                                     actions: ["today"],
@@ -268,19 +267,15 @@ export default function FormTitlesComponent({
                                 defaultValue={threeYearsFromDate()}
                                 format="DD-MMM-YYYY"
                                 onChange={(event) => {
-                                  if (dayjs.isDayjs(event)) {
-                                    onChange({
-                                      ...controllerField.value,
-                                      endDate: event?.format("YYYY-MM-DD")
-                                        ? new Date(event?.format("YYYY-MM-DD"))
-                                        : "",
-                                    });
-                                  }
+                                  onChange({
+                                    ...controllerField.value,
+                                    endDate: event?.format("YYYY-MM-DD"),
+                                  });
                                 }}
                                 slotProps={{
                                   textField: {
-                                    size: "small",
                                     fullWidth: true,
+                                    size: "small",
                                   },
                                   actionBar: {
                                     actions: ["today"],

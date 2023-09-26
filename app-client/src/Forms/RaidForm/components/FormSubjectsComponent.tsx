@@ -22,6 +22,7 @@ import {
   Control,
   Controller,
   FieldErrors,
+  UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
 
@@ -31,10 +32,12 @@ export default function FormSubjectsComponent({
   control,
   errors,
   color,
+  trigger,
 }: {
   control: Control<RaidDto, any>;
   errors: FieldErrors<RaidDto>;
   color: string;
+  trigger: UseFormTrigger<RaidDto>;
 }) {
   const subjectsFieldArray = useFieldArray({
     control,
@@ -66,10 +69,9 @@ export default function FormSubjectsComponent({
           </Tooltip>
         }
         title="Subjects"
-        subheader="RAiD Subjects"
       />
       <CardContent>
-        <Stack gap={3} divider={<Divider />}>
+        <Stack gap={2}>
           {subjectsFieldArray.fields.length === 0 && (
             <Typography
               variant="body2"

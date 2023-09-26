@@ -3,15 +3,17 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
   Grid,
   Stack,
   Typography,
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
 import { extractKeyFromIdUri } from "utils";
-import { languages } from "../../../Page/languages";
 
-export default function ShowDescriptionComponent({
+export default function ShowContributorComponent({
   raid,
   color,
 }: {
@@ -31,7 +33,7 @@ export default function ShowDescriptionComponent({
         <CardHeader
           title={
             <Typography variant="h6" component="div">
-              Descriptions
+              Contributors
             </Typography>
           }
         />
@@ -39,24 +41,17 @@ export default function ShowDescriptionComponent({
         <CardContent>
           <Stack gap={3}>
             <Box>
-              {raid?.description?.length === 0 && (
+              {raid?.contributor?.length === 0 && (
                 <Typography
                   variant="body2"
                   color={"text.secondary"}
                   textAlign={"center"}
                 >
-                  No descriptions defined
+                  No contributors defined
                 </Typography>
               )}
             </Box>
-            {raid?.description?.map((description, index) => {
-              const language = languages.find(
-                (language) => language.id === description?.language?.id
-              );
-
-              const descriptionType = extractKeyFromIdUri(
-                description.type.id || ""
-              );
+            {raid?.contributor?.map((contributor, index) => {
               return (
                 <Stack sx={{ paddingLeft: 2 }} spacing={2} key={index}>
                   <Box
@@ -68,20 +63,36 @@ export default function ShowDescriptionComponent({
                     className="animated-tile animated-tile-reverse"
                   >
                     <Grid container spacing={2}>
-                      <Grid item xs={12} sm={12} md={10}>
+                      <Grid item xs={12} sm={12} md={4}>
                         <Box>
-                          <Typography variant="body2">{`Description (${descriptionType})`}</Typography>
+                          <Typography variant="body2">ID</Typography>
                           <Typography color="text.secondary" variant="body1">
-                            {description.text}
+                            {contributor.id}
                           </Typography>
                         </Box>
                       </Grid>
-                      <Grid item xs={12} sm={12} md={2}>
+                      <Grid item xs={12} sm={12} md={4}>
                         <Box>
-                          <Typography variant="body2">Language</Typography>
-                          <Typography color="text.secondary" variant="body1">
-                            {language?.name}
-                          </Typography>
+                          <FormGroup>
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  disabled
+                                  checked={contributor.leader}
+                                />
+                              }
+                              label="Leader"
+                            />
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  disabled
+                                  checked={contributor.contact}
+                                />
+                              }
+                              label="Contact"
+                            />
+                          </FormGroup>
                         </Box>
                       </Grid>
                     </Grid>

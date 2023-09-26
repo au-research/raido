@@ -1,4 +1,6 @@
-import { Container } from "@mui/material";
+import {
+  Container
+} from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAuthApi } from "Api/AuthApi";
 import { raidoTitle } from "Component/Util";
@@ -13,15 +15,23 @@ import {
 import RaidForm from "Forms/RaidForm";
 import {
   Access,
+  AlternateIdentifier,
+  AlternateUrl,
   Contributor,
   Description,
+  Id,
   ModelDate,
+  Organisation,
   RaidDto,
+  RelatedObject,
+  RelatedRaid,
+  SpatialCoverage,
+  Subject,
   Title,
+  TraditionalKnowledgeLabel,
 } from "Generated/Raidv2";
 
 import { useState } from "react";
-import { Identifier } from "typescript";
 
 const pageUrl = "/edit-raid-new";
 
@@ -55,13 +65,24 @@ function Content() {
       prefix,
       suffix,
       raidUpdateRequest: {
-        identifier: data?.identifier || ({} as Identifier),
+        identifier: data?.identifier || ({} as Id),
 
         description: data?.description || ([] as Description[]),
         title: data?.title || ([] as Title[]),
         access: data?.access || ({} as Access),
+        alternateUrl: data?.alternateUrl || ({} as AlternateUrl[]),
+        relatedRaid: data?.relatedRaid || ([] as RelatedRaid[]),
         date: data?.date || ({} as ModelDate),
         contributor: data?.contributor || ([] as Contributor[]),
+        alternateIdentifier:
+          data?.alternateIdentifier || ([] as AlternateIdentifier[]),
+        organisation: data?.organisation || ([] as Organisation[]),
+        relatedObject: data?.relatedObject || ([] as RelatedObject[]),
+        spatialCoverage: data?.spatialCoverage || ([] as SpatialCoverage[]),
+        subject: data?.subject || ([] as Subject[]),
+        traditionalKnowledgeLabel:
+          data?.traditionalKnowledgeLabel ||
+          ([] as TraditionalKnowledgeLabel[]),
       },
     });
   };
@@ -69,6 +90,7 @@ function Content() {
   const updateRequest = useMutation(handleRaidUpdate, {
     onSuccess: (updateResult) => {
       console.log("updateResult", updateResult);
+      window.location.href = `/show-raid/${prefix}/${suffix}`;
     },
     onError: (error) => {
       console.log("error", error);
@@ -97,7 +119,7 @@ function Content() {
   );
 }
 
-export default function MintRaidPage() {
+export default function EditRaidPAgeNew() {
   return (
     <NavTransition
       isPagePath={isEditRaidPagePath}

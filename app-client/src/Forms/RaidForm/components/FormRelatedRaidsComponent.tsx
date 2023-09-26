@@ -28,6 +28,7 @@ import {
   Control,
   Controller,
   FieldErrors,
+  UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
 import { relatedRaidTypes } from "../../../references";
@@ -36,10 +37,12 @@ export default function FormRelatedRaidsComponent({
   control,
   errors,
   color,
+  trigger,
 }: {
   control: Control<RaidDto, any>;
   errors: FieldErrors<RaidDto>;
   color: string;
+  trigger: UseFormTrigger<RaidDto>;
 }) {
   const api = useAuthApi();
   const {
@@ -108,7 +111,7 @@ export default function FormRelatedRaidsComponent({
         }
       />
       <CardContent>
-        <Stack gap={3} divider={<Divider />}>
+        <Stack gap={2}>
           {relatedRaidsFieldArray.fields.length === 0 && (
             <Typography
               variant="body2"
