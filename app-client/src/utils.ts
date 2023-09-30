@@ -328,6 +328,25 @@ export const newRaid: RaidCreateRequest = {
       },
     },
   },
+  organisation: [
+    {
+      id: "https://ror.org/038sjwq14",
+      schemaUri: "https://ror.org/",
+      role: [
+        {
+          id: "https://credit.niso.org/contributor-roles/software/",
+          schemaUri: "https://credit.niso.org/contributor-roles/",
+          startDate: "2020-01-01",
+        },
+        {
+          id: "https://credit.niso.org/contributor-roles/supervision/",
+          schemaUri: "https://credit.niso.org/contributor-roles/",
+          startDate: "2022-01-01",
+        },
+      ],
+    },
+  ],
+
   contributor: [
     {
       id: "https://orcid.org/0009-0000-9306-3120",

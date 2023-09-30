@@ -7,7 +7,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Divider,
   Grid,
   IconButton,
   MenuItem,
@@ -23,6 +22,7 @@ import {
   Control,
   Controller,
   FieldErrors,
+  UseFieldArrayReturn,
   UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
@@ -30,263 +30,269 @@ import { contributorRoles } from "references";
 
 function OrganisationRootField({
   organisationsArray,
-  field,
   control,
-  index,
-}: any) {
+  organisationsArrayIndex,
+}: {
+  organisationsArray: UseFieldArrayReturn<
+    RaidDto,
+    "organisation",
+    "organisationIdGenerated"
+  >;
+  control: Control<RaidDto, any>;
+  organisationsArrayIndex: number;
+}) {
   const organisationRolesArray = useFieldArray({
     control,
-    name: `organisations.${index}.roles`,
+    name: `organisation.${organisationsArrayIndex}.role`,
+    keyName: "organisationRoleIdGenerated",
   });
 
   const addRoleHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     organisationRolesArray.append({
-      schemeUri: "https://credit.niso.org/",
-      id: `https://credit.niso.org/contributor-roles/software/`,
+      id: ``,
+      startDate: dayjs().format("YYYY-MM-DD"),
+      endDate: dayjs().add(3, "year").format("YYYY-MM-DD"),
+      schemaUri: "https://credit.niso.org/",
     });
   };
 
   return (
-    <div key={field.id}>
-      <Controller
-        control={control}
-        name={`organisations.${index}`}
-        render={({ field: { onChange, ...controllerField } }) => {
-          const organisationTitle =
-            controllerField?.value?.id || `Organisation ${index + 1}`;
-          return (
-            <>
-              <Card variant="outlined" sx={{ bgcolor: "transparent" }}>
-                <CardHeader
-                  title={
-                    <Typography variant="h6">{organisationTitle}</Typography>
-                  }
-                  action={
-                    <Tooltip title="Remove organisation" placement="right">
-                      <IconButton
-                        aria-label="Remove organisation"
-                        onClick={() => organisationsArray.remove(index)}
-                      >
-                        <RemoveCircleOutlineIcon />
-                      </IconButton>
-                    </Tooltip>
-                  }
-                />
-                <CardContent>
-                  <Stack direction="column" gap={3}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12} sm={12} md={6}>
-                        <TextField
-                          {...controllerField}
-                          value={controllerField?.value?.id}
-                          size="small"
-                          fullWidth
-                          label="Organisation ID"
-                          onChange={(event) => {
-                            onChange({
-                              ...controllerField.value,
-                              id: event.target.value,
-                            });
-                          }}
-                        />
-                      </Grid>
-                    </Grid>
-
-                    <Card variant={"outlined"} sx={{ bgcolor: "transparent" }}>
-                      <CardHeader
-                        action={
-                          <Tooltip title="Add Role" placement="right">
-                            <IconButton
-                              aria-label="Add Role"
-                              onClick={addRoleHandler}
-                            >
-                              <AddCircleOutlineIcon />
-                            </IconButton>
-                          </Tooltip>
-                        }
-                        title="Roles"
-                        subheader={`Roles for ${organisationTitle}`}
+    <Controller
+      control={control}
+      name={`organisation.${organisationsArrayIndex}`}
+      render={({ field: { onChange, ...controllerField } }) => {
+        const organisationTitle =
+          controllerField?.value?.id ||
+          `Organisation ${organisationsArrayIndex + 1}`;
+        return (
+          <>
+            <Card variant="outlined" sx={{ bgcolor: "transparent" }}>
+              <CardHeader
+                title={
+                  <Typography variant="h6">{organisationTitle}</Typography>
+                }
+                action={
+                  <Tooltip title="Remove organisation" placement="right">
+                    <IconButton
+                      aria-label="Remove organisation"
+                      onClick={() =>
+                        organisationsArray.remove(organisationsArrayIndex)
+                      }
+                    >
+                      <RemoveCircleOutlineIcon />
+                    </IconButton>
+                  </Tooltip>
+                }
+              />
+              <CardContent>
+                <Stack direction="column" gap={3}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={12} md={6}>
+                      <TextField
+                        {...controllerField}
+                        value={controllerField?.value?.id}
+                        size="small"
+                        fullWidth
+                        label="Organisation ID"
+                        onChange={(event) => {
+                          onChange({
+                            ...controllerField.value,
+                            id: event.target.value,
+                          });
+                        }}
                       />
-                      <CardContent>
-                        <Stack spacing={2}>
-                          {organisationRolesArray.fields.map(
-                            (_, organisationIndex) => {
-                              return (
-                                <Stack
-                                  direction="row"
-                                  alignItems="flex-start"
-                                  gap={1}
-                                  key={organisationIndex}
-                                >
-                                  <Grid container spacing={2}>
-                                    <Grid item xs={12} sm={4} md={6}>
-                                      <TextField
-                                        select
-                                        {...controllerField}
-                                        value={
-                                          controllerField?.value?.roles &&
-                                          controllerField?.value?.roles[
-                                            organisationIndex
-                                          ]
-                                            ? controllerField?.value?.roles[
-                                                organisationIndex
-                                              ].id
-                                            : ""
-                                        }
-                                        size="small"
-                                        fullWidth
-                                        label="Role"
-                                        onChange={(event) => {
-                                          const newRole = {
-                                            ...controllerField?.value?.roles[
-                                              organisationIndex
-                                            ],
-                                            id: event.target.value,
-                                          };
+                    </Grid>
+                  </Grid>
 
-                                          const updatedRoles = [
-                                            ...controllerField?.value?.roles,
-                                          ];
-                                          updatedRoles[organisationIndex] =
-                                            newRole;
-
-                                          onChange({
-                                            ...controllerField.value,
-                                            roles: updatedRoles,
-                                          });
-                                        }}
-                                      >
-                                        {contributorRoles.map((role) => {
-                                          const roleParts = role.split("/");
-
-                                          return (
-                                            <MenuItem key={role} value={role}>
-                                              {roleParts[
-                                                roleParts.length - 2
-                                              ] || role}
-                                            </MenuItem>
-                                          );
-                                        })}
-                                      </TextField>
-                                    </Grid>
-
-                                    <Grid item xs={12} sm={4} md={3}>
-                                      <DatePicker
-                                        label="Role Start Date"
-                                        defaultValue={
-                                          controllerField?.value?.roles &&
-                                          controllerField?.value?.roles[
-                                            organisationIndex
-                                          ]
-                                            ? dayjs(
-                                                controllerField?.value?.roles[
-                                                  organisationIndex
-                                                ].startDate
-                                              )
-                                            : ""
-                                        }
-                                        format="DD-MMM-YYYY"
-                                        onChange={(event) => {
-                                          if (dayjs.isDayjs(event)) {
-                                            onChange({
-                                              ...controllerField.value,
-                                              startDate: event?.format(
-                                                "YYYY-MM-DD"
-                                              )
-                                                ? new Date(
-                                                    event?.format("YYYY-MM-DD")
-                                                  )
-                                                : "",
-                                            });
-                                          }
-                                        }}
-                                        slotProps={{
-                                          textField: {
-                                            size: "small",
-                                            fullWidth: true,
-                                          },
-                                          actionBar: {
-                                            actions: ["today"],
-                                          },
-                                        }}
-                                        slots={<TextField />}
-                                      />
-                                    </Grid>
-
-                                    <Grid item xs={12} sm={4} md={3}>
-                                      <DatePicker
-                                        label="Role End Date"
-                                        defaultValue={
-                                          controllerField?.value?.roles &&
-                                          controllerField?.value?.roles[
-                                            organisationIndex
-                                          ]
-                                            ? dayjs(
-                                                controllerField?.value?.roles[
-                                                  organisationIndex
-                                                ].endDate
-                                              )
-                                            : ""
-                                        }
-                                        format="DD-MMM-YYYY"
-                                        onChange={(event) => {
-                                          if (dayjs.isDayjs(event)) {
-                                            onChange({
-                                              ...controllerField.value,
-                                              endDate: event?.format(
-                                                "YYYY-MM-DD"
-                                              )
-                                                ? new Date(
-                                                    event?.format("YYYY-MM-DD")
-                                                  )
-                                                : "",
-                                            });
-                                          }
-                                        }}
-                                        slotProps={{
-                                          textField: {
-                                            size: "small",
-                                            fullWidth: true,
-                                          },
-                                          actionBar: {
-                                            actions: ["today"],
-                                          },
-                                        }}
-                                        slots={<TextField />}
-                                      />
-                                    </Grid>
-                                  </Grid>
-                                  <Tooltip
-                                    title="Remove role"
-                                    placement="right"
-                                  >
-                                    <IconButton
+                  <Card variant={"outlined"} sx={{ bgcolor: "transparent" }}>
+                    <CardHeader
+                      action={
+                        <Tooltip title="Add Role" placement="right">
+                          <IconButton
+                            aria-label="Add Role"
+                            onClick={addRoleHandler}
+                          >
+                            <AddCircleOutlineIcon />
+                          </IconButton>
+                        </Tooltip>
+                      }
+                      title="Roles"
+                      subheader={`Roles for ${organisationTitle}`}
+                    />
+                    <CardContent>
+                      <Stack spacing={2}>
+                        {organisationRolesArray.fields.map(
+                          (organisationRoleField, organisationRoleIndex) => {
+                            return (
+                              <Stack
+                                direction="row"
+                                alignItems="flex-start"
+                                gap={1}
+                                key={organisationRoleIndex}
+                              >
+                                <Grid container spacing={2}>
+                                  <Grid item xs={12} sm={4} md={6}>
+                                    <TextField
+                                      select
+                                      {...controllerField}
+                                      value={
+                                        controllerField.value.role[
+                                          organisationRoleIndex
+                                        ]?.id || ""
+                                      }
                                       size="small"
-                                      aria-label="close"
-                                      onClick={(event) => {
-                                        organisationRolesArray.remove(
-                                          organisationIndex
-                                        );
+                                      fullWidth
+                                      label="Role"
+                                      onChange={(event) => {
+                                        const oldValue =
+                                          organisationRolesArray.fields[
+                                            organisationRoleIndex
+                                          ];
+
+                                        const newValue = {
+                                          ...oldValue,
+                                          id: event.target.value,
+                                        };
+
+                                        onChange({
+                                          ...controllerField.value,
+                                          role: [
+                                            ...controllerField.value.role.slice(
+                                              0,
+                                              organisationRoleIndex
+                                            ),
+                                            newValue,
+                                            ...controllerField.value.role.slice(
+                                              organisationRoleIndex + 1
+                                            ),
+                                          ],
+                                        });
                                       }}
                                     >
-                                      <RemoveCircleOutlineIcon />
-                                    </IconButton>
-                                  </Tooltip>
-                                </Stack>
-                              );
-                            }
-                          )}
-                        </Stack>
-                      </CardContent>
-                    </Card>
-                  </Stack>
-                </CardContent>
-              </Card>
-            </>
-          );
-        }}
-      />
-    </div>
+                                      {contributorRoles.map((role) => {
+                                        const roleParts = role.split("/");
+
+                                        return (
+                                          <MenuItem key={role} value={role}>
+                                            {roleParts[roleParts.length - 2] ||
+                                              role}
+                                          </MenuItem>
+                                        );
+                                      })}
+                                    </TextField>
+                                  </Grid>
+
+                                  <Grid item xs={12} sm={4} md={3}>
+                                    <DatePicker
+                                      label="Role Start Date"
+                                      defaultValue={
+                                        controllerField?.value?.role &&
+                                        controllerField?.value?.role[
+                                          organisationRoleIndex
+                                        ]
+                                          ? dayjs(
+                                              controllerField?.value?.role[
+                                                organisationRoleIndex
+                                              ].startDate
+                                            )
+                                          : ""
+                                      }
+                                      format="DD-MMM-YYYY"
+                                      onChange={(event) => {
+                                        if (dayjs.isDayjs(event)) {
+                                          onChange({
+                                            ...controllerField.value,
+                                            startDate: event?.format(
+                                              "YYYY-MM-DD"
+                                            )
+                                              ? new Date(
+                                                  event?.format("YYYY-MM-DD")
+                                                )
+                                              : "",
+                                          });
+                                        }
+                                      }}
+                                      slotProps={{
+                                        textField: {
+                                          size: "small",
+                                          fullWidth: true,
+                                        },
+                                        actionBar: {
+                                          actions: ["today"],
+                                        },
+                                      }}
+                                      slots={<TextField />}
+                                    />
+                                  </Grid>
+
+                                  <Grid item xs={12} sm={4} md={3}>
+                                    <DatePicker
+                                      label="Role End Date"
+                                      defaultValue={
+                                        controllerField?.value?.role &&
+                                        controllerField?.value?.role[
+                                          organisationRoleIndex
+                                        ]
+                                          ? dayjs(
+                                              controllerField?.value?.role[
+                                                organisationRoleIndex
+                                              ].endDate
+                                            )
+                                          : ""
+                                      }
+                                      format="DD-MMM-YYYY"
+                                      onChange={(event) => {
+                                        if (dayjs.isDayjs(event)) {
+                                          onChange({
+                                            ...controllerField.value,
+                                            endDate: event?.format("YYYY-MM-DD")
+                                              ? new Date(
+                                                  event?.format("YYYY-MM-DD")
+                                                )
+                                              : "",
+                                          });
+                                        }
+                                      }}
+                                      slotProps={{
+                                        textField: {
+                                          size: "small",
+                                          fullWidth: true,
+                                        },
+                                        actionBar: {
+                                          actions: ["today"],
+                                        },
+                                      }}
+                                      slots={<TextField />}
+                                    />
+                                  </Grid>
+                                </Grid>
+                                <Tooltip title="Remove role" placement="right">
+                                  <IconButton
+                                    size="small"
+                                    aria-label="close"
+                                    onClick={(event) => {
+                                      organisationRolesArray.remove(
+                                        organisationRoleIndex
+                                      );
+                                    }}
+                                  >
+                                    <RemoveCircleOutlineIcon />
+                                  </IconButton>
+                                </Tooltip>
+                              </Stack>
+                            );
+                          }
+                        )}
+                      </Stack>
+                    </CardContent>
+                  </Card>
+                </Stack>
+              </CardContent>
+            </Card>
+          </>
+        );
+      }}
+    />
   );
 }
 
@@ -304,11 +310,12 @@ export default function FormOrganisationsComponent({
   const organisationsArray = useFieldArray({
     control,
     name: `organisation`,
+    keyName: "organisationIdGenerated",
   });
 
   const handleAddOrganisation = () => {
     organisationsArray.append({
-      id: ``,
+      id: `foo - ${Date.now()}`,
       schemaUri: "https://ror.org",
       role: [],
     });
@@ -348,26 +355,26 @@ export default function FormOrganisationsComponent({
               No organisations defined
             </Typography>
           )}
-          {organisationsArray.fields.map((field, index) => {
-            return (
-              <Box
-                sx={{
-                  bgcolor: "rgba(0, 0, 0, 0.02)",
-                  p: 2,
-                  borderRadius: 2,
-                }}
-                key={field.id}
-              >
-                <OrganisationRootField
-                  organisationsArray={organisationsArray}
-                  field={field}
-                  control={control}
-                  index={index}
-                  key={index}
-                />
-              </Box>
-            );
-          })}
+          {organisationsArray.fields.map(
+            (organisationsArrayField, organisationsArrayIndex) => {
+              return (
+                <Box
+                  sx={{
+                    bgcolor: "rgba(0, 0, 0, 0.02)",
+                    p: 2,
+                    borderRadius: 2,
+                  }}
+                  key={organisationsArrayField.id}
+                >
+                  <OrganisationRootField
+                    organisationsArray={organisationsArray}
+                    control={control}
+                    organisationsArrayIndex={organisationsArrayIndex}
+                  />
+                </Box>
+              );
+            }
+          )}
         </Stack>
       </CardContent>
     </Card>
