@@ -45,8 +45,6 @@ import static au.org.raid.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
 import static au.org.raid.idl.raidv2.model.TitleType.PRIMARY_TITLE;
 import static java.util.Collections.emptyList;
 import static java.util.List.of;
-import static org.eclipse.jetty.http.HttpStatus.BAD_REQUEST_400;
-import static org.eclipse.jetty.http.HttpStatus.NOT_FOUND_404;
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 import static org.springframework.transaction.annotation.Propagation.NEVER;
@@ -63,8 +61,6 @@ public class RaidV1 implements RaidV1Api {
     public static final String HANDLE_SEPARATOR = "/";
 
     public static final String V1_RAID_POST_URL = "/v1/RAiD";
-
-    private static final Log log = to(RaidV1.class);
 
     private DSLContext db;
     private RaidService raidSvc;
@@ -137,14 +133,14 @@ public class RaidV1 implements RaidV1Api {
                         contentPath(r.get(RAID.URL)).
                         creationDate(formatIsoDateTime(r.get(RAID.DATE_CREATED))));
         if (result == null) {
-            throw apiSafe(HANDLE_NOT_FOUND, NOT_FOUND_404, of(raidId));
+            throw apiSafe(HANDLE_NOT_FOUND, 404, of(raidId));
         }
         return result;
     }
 
     public void guardDemoEnv(Boolean demo) {
         if (isTrue(demo)) {
-            throw apiSafe(DEMO_NOT_SUPPPORTED, BAD_REQUEST_400);
+            throw apiSafe(DEMO_NOT_SUPPPORTED, 400);
         }
     }
 
@@ -168,11 +164,6 @@ public class RaidV1 implements RaidV1Api {
             @RequestParam(value = "demo", required = false) Boolean demo
     ) {
         String path = urlDecode(req.getServletPath().trim());
-        log.with("path", req.getServletPath()).
-                with("decodedPath", path).
-                with("params", req.getParameterMap()).
-                info("handleCatchAll() called");
-
         if (!path.startsWith(HANDLE_CATCHALL_PREFIX)) {
             throw iae("unexpected path: %s", path);
         }
@@ -180,7 +171,7 @@ public class RaidV1 implements RaidV1Api {
         String handle = path.substring(HANDLE_CATCHALL_PREFIX.length());
         if (!handle.contains(HANDLE_SEPARATOR)) {
             throw apiSafe("handle did not contain a slash character",
-                    BAD_REQUEST_400, of(handle));
+                    400, of(handle));
         }
 
         return handleRaidIdGet(handle, demo);
@@ -216,9 +207,7 @@ public class RaidV1 implements RaidV1Api {
                     servicePoint.getId(),
                     metadataToMint);
         } catch (ValidationFailureException e) {
-            log.with("failures", e.getFailures()).
-                    warn("legacy mint raid v1 endpoint failed");
-            throw apiSafe(RAID_V1_MINT_DATA_ERROR, BAD_REQUEST_400,
+            throw apiSafe(RAID_V1_MINT_DATA_ERROR, 400,
                     e.getFailures().stream().map(i1 ->
                             "%s - %s".formatted(i1.getFieldId(), i1.getMessage())
                     ).toList());
@@ -274,7 +263,7 @@ public class RaidV1 implements RaidV1Api {
 
         if (create.getMeta() == null) {
             problems.add("no 'meta' provided");
-            throw apiSafe(RAID_V1_MINT_DATA_ERROR, BAD_REQUEST_400, problems);
+            throw apiSafe(RAID_V1_MINT_DATA_ERROR, 400, problems);
         }
     
     /* the  fake name generation logic has been removed - makes no sense
@@ -285,7 +274,7 @@ public class RaidV1 implements RaidV1Api {
         }
 
         if (!problems.isEmpty()) {
-            throw apiSafe(RAID_V1_MINT_DATA_ERROR, BAD_REQUEST_400, problems);
+            throw apiSafe(RAID_V1_MINT_DATA_ERROR, 400, problems);
         }
     }
 

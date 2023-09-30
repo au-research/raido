@@ -36,7 +36,6 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
     public static final String NON_EXISTENT_NON_API_PATH = "/does-not-exist";
     public static final String AUTHN_READ_RAID = "/v2/experimental/read-raid/v2";
     public static final String EXAMPLE_HANDLE = "102.100.100/suffix";
-    private static final Log log = to(HttpStatusMappingTest.class);
 
     @Test
     public void getAnonymousExistentPublicApiEndpointShouldWork() {

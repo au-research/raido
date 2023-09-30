@@ -1,0 +1,26 @@
+raid:
+  test:
+    api:
+      url: http://localhost:${server.port}
+  db:
+    user: postgres
+    password: changeme
+    host: localhost
+    port: 7432
+  spatial-coverage:
+    schema-uri:
+      geonames: https://www.geonames.org/
+      openstreetmap: https://www.openstreetmap.org/
+  validation:
+    geonames:
+      username: geonames
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${raid.db.host}:${raid.db.port}/raido
+    username: ${raid.db.user}
+    password: ${raid.db.password}
+  jooq:
+    sql-dialect: postgres
+server:
+  port: 10001

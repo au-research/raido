@@ -21,19 +21,14 @@ import au.org.raid.api.util.Log;
  Same with upper-casing the actual message.
  */
 public class BddUtil {
-  private static final Log log = Log.to(BddUtil.class);
-  
   public static void log(String classifier, String descrtiption) {
-    log.info(classifier.toUpperCase() + ": " + descrtiption);
   }
 
   public static void GIVEN(String description) {
-    log("given", description);
   }
 
   // use expect for when you so when/then in a single statement (think AssertJ)
   public static void EXPECT(String description) {
-    log("expect", description);
   }
 
   public static void WHEN(String description) {
@@ -41,10 +36,8 @@ public class BddUtil {
   }
 
   public static void THEN(String description) {
-    log("then", description);
   }
 
   public static void AND(String description) {
-    log("and", description);
   }
 }

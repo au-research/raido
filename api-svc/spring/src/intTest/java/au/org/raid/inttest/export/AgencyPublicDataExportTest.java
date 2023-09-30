@@ -5,6 +5,8 @@ import au.org.raid.idl.raidv2.model.RaidoMetadataSchemaV1;
 import au.org.raid.inttest.IntegrationTestCase;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import raido.cmdline.AgencyPublicDataExport;
 
 import java.io.IOException;
@@ -31,7 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * if we do that - shouldn't be too hard, I'm jus being lazy.
  */
 public class AgencyPublicDataExportTest extends IntegrationTestCase {
-    private static final Log log = to(AgencyPublicDataExportTest.class);
+    private static final Logger log = LoggerFactory.getLogger(AgencyPublicDataExportTest.class);
 
     @Test
     @Disabled("Only handles V1 raids")

@@ -10,8 +10,6 @@ import static au.org.raid.api.util.Log.to;
 public class EnvironmentProps {
     public static final String ENV_NAME_DEFAULT = "unknown";
 
-    private static final Log log = to(EnvironmentProps.class);
-
     /**
      * avoid comparing the envName with a value, use isProd or make a proper
      * config parameter for the feature you want to control.

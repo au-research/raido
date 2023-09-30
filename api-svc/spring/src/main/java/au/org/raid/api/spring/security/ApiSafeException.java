@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 import static au.org.raid.api.util.ExceptionUtil.logError;
 import static au.org.raid.api.util.Log.to;
 import static java.util.Collections.emptyList;
-import static org.eclipse.jetty.http.HttpStatus.INTERNAL_SERVER_ERROR_500;
 
 
 /**
@@ -45,11 +44,11 @@ public class ApiSafeException extends RuntimeException {
     private List<String> detail;
 
     public ApiSafeException(String message) {
-        this(message, INTERNAL_SERVER_ERROR_500, emptyList(), false);
+        this(message, 500, emptyList(), false);
     }
 
     public ApiSafeException(String message, List<String> detail) {
-        this(message, INTERNAL_SERVER_ERROR_500, detail, false);
+        this(message, 500, detail, false);
     }
 
     public ApiSafeException(String message, int httpStatus) {

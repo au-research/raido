@@ -40,7 +40,6 @@ import static org.jooq.impl.DSL.inline;
 @Component
 public class BootstrapAuthTokenService {
     public static final String INTTEST_ENV = "inttest";
-    private static final Log log = to(BootstrapAuthTokenService.class);
     @Autowired
     protected DSLContext db;
     @Autowired
@@ -60,14 +59,6 @@ public class BootstrapAuthTokenService {
     one. */
     private String v1TestOwner = "RDM@UQ";
 
-    /**
-     * Doing this eagerly, so the execution time is not counted against
-     * whatever test happens to run first.
-     */
-    @PostConstruct
-    public void setup() {
-        log.info("setup()");
-    }
 
     @Transactional
     public String initRaidV1TestToken() {

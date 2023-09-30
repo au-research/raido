@@ -2,7 +2,6 @@ package au.org.raid.inttest;
 
 import au.org.raid.api.service.stub.util.IdFactory;
 import au.org.raid.api.spring.config.environment.EnvironmentProps;
-import au.org.raid.api.util.Log;
 import au.org.raid.api.util.Nullable;
 import au.org.raid.db.jooq.api_svc.enums.UserRole;
 import au.org.raid.idl.raidv1.api.RaidV1Api;
@@ -36,7 +35,6 @@ import java.util.List;
 
 import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static au.org.raid.api.spring.config.RaidWebSecurityConfig.RAID_V1_API;
-import static au.org.raid.api.util.Log.to;
 import static au.org.raid.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
 import static au.org.raid.db.jooq.api_svc.enums.UserRole.OPERATOR;
 import static au.org.raid.inttest.config.IntegrationTestConfig.REST_TEMPLATE_VALUES_ONLY_ENCODING;
@@ -51,7 +49,6 @@ public abstract class IntegrationTestCase {
     // be careful, 25 char max column length
     public static final String INT_TEST_ROR = "https://ror.org/038sjwq14";
     protected static final IdFactory idFactory = new IdFactory("inttest");
-    private static final Log log = to(IntegrationTestCase.class);
     @RegisterExtension
     protected static JettyTestServer jettyTestServer = new JettyTestServer();
     @Autowired

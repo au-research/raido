@@ -32,8 +32,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * as a "potential partial compromise vector via information leakage".
  */
 public class AuthzRequestTest extends IntegrationTestCase {
-    private static final Log log = to(AuthzRequestTest.class);
-
     /**
      * user requests authorization to a service-point, admin approves the request,
      * the app-user is created.

@@ -24,8 +24,6 @@ import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public class GetRaidHandleTest extends IntegrationTestCase {
-    private static final Log log = to(GetRaidHandleTest.class);
-
     @Test
     void apiGetExistingShouldSucceedWithAcceptJson() {
         var raidApi = super.basicRaidExperimentalClient();

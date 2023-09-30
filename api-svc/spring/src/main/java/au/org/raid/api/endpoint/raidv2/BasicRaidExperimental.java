@@ -41,8 +41,6 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
 public class BasicRaidExperimental implements BasicRaidExperimentalApi {
-    private static final Log log = to(BasicRaidExperimental.class);
-
     private DSLContext db;
     private RaidService raidSvc;
     private RaidoSchemaV1ValidationService validSvc;
@@ -68,7 +66,6 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
        user-friendly error. */
             if (primaryTitle.length() < 5) {
                 var iae = iae("primaryTitle is too short to list raids");
-                log.with("primaryTitle", primaryTitle).error(iae.getMessage());
                 throw iae;
             }
             primaryTitle = "%" + primaryTitle + "%";

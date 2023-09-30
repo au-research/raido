@@ -1,8 +1,6 @@
 package au.org.raid.api.spring.config;
 
-import au.org.raid.api.endpoint.anonymous.RootPathController;
 import au.org.raid.api.endpoint.raidv1.RaidV1;
-import au.org.raid.api.endpoint.raidv2.PublicStable;
 import au.org.raid.api.service.auth.RaidV2ApiKeyApiTokenService;
 import au.org.raid.api.service.auth.RaidV2AppUserApiTokenService;
 import au.org.raid.api.service.raidv1.RaidV1AuthService;
@@ -59,31 +57,23 @@ public class RaidWebSecurityConfig {
     ) throws Exception {
         log.info("securityFilterChain()");
 
-        http.authorizeHttpRequests().
+        http.authorizeHttpRequests()
                 // order is important, more specific has to come before more general
-                        requestMatchers(RAID_V1_API + RaidV1.HANDLE_URL_PREFIX + "/**").permitAll().
-                requestMatchers(RAID_V2_PUBLIC_API + "/**").permitAll().
-                requestMatchers(IDP_URL).permitAll().
+                        .requestMatchers(RAID_V1_API + RaidV1.HANDLE_URL_PREFIX + "/**").permitAll()
+                        .requestMatchers(RAID_V2_PUBLIC_API + "/**").permitAll()
+                        .requestMatchers(IDP_URL).permitAll()
                 /* Used only for the status endpoint; either make this explicit (no
                 wildcard, like IDP_URL) or better, move status endpoint under `/v2`.
                 Remember to update ASG health check, ALB rules, cloudfront rules. */
-                        requestMatchers(PUBLIC + "/**").permitAll().
-                requestMatchers(RAID_V1_API + "/**").fullyAuthenticated().
-                requestMatchers(RAID_V2_API + "/**").fullyAuthenticated().
-                requestMatchers(RAID_STABLE_API + "/**").fullyAuthenticated().
-
-                /** The "get raid" API looks like: `https://raid.org.au/prefix/suffix`,
-                 so it doesn't have an explicit url prefix - have to just use
-                 `anyRequest()`.
-                 @see PublicStable
-                 @see RootPathController
-                 */
-                        anyRequest().permitAll();
+                .requestMatchers(PUBLIC + "/**").permitAll()
+                        .requestMatchers(RAID_V1_API + "/**").fullyAuthenticated()
+                        .requestMatchers(RAID_V2_API + "/**").fullyAuthenticated()
+                        .requestMatchers(RAID_STABLE_API + "/**").fullyAuthenticated()
+                        .anyRequest().permitAll();
 
         http.oauth2ResourceServer(oauth2 ->
                 oauth2.authenticationManagerResolver(tokenResolver));
 
-        http.httpBasic().disable().
                 /* api-svc is stateless and the browser client does not use cookies;
                 in this article, section 2.1 and 2.2 are most applicable:
                 https://www.baeldung.com/csrf-stateless-rest-api
@@ -96,15 +86,20 @@ public class RaidWebSecurityConfig {
                 We would have to build the infrastructure for it - which would be an
                 unworkable amount of effort given the current threat model and our
                 available infrastructure resourcing constraints. */
-                        csrf().disable().
-                sessionManagement().sessionCreationPolicy(STATELESS);
+        http.httpBasic()
+                .disable()
+                .csrf()
+                .disable()
+                .sessionManagement()
+                .sessionCreationPolicy(STATELESS);
 
-        http.headers().
                 /* https://www.baeldung.com/spring-prevent-xss */
-                        xssProtection().and().
+        http.headers()
+                .xssProtection()
+                .and()
                 /* No real point in doing this - api-svc only serves data.
                 Added to avoid arguments and false-positives on security scans. */
-                        contentSecurityPolicy("script-src 'self'");
+                .contentSecurityPolicy("script-src 'self'");
 
         return http.build();
     }
@@ -122,7 +117,9 @@ public class RaidWebSecurityConfig {
                 return raidV1AuthProvider::authenticate;
             } else if (isStableApi(request)) {
                 return raidV2AuthProvider::authenticate;
-            } else {
+            }
+
+            else {
         /* client has done a request (probably a POST), with a bearer token,
         but not on a recognised "API path".
         IMPROVE: dig out the token and decode it, so we can log details? */

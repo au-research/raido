@@ -26,7 +26,6 @@ import static au.org.raid.api.util.Log.to;
 import static au.org.raid.api.util.ObjectUtil.areEqual;
 import static au.org.raid.api.util.StringUtil.mask;
 import static java.util.Optional.of;
-import static org.eclipse.jetty.util.TypeUtil.isFalse;
 
 /**
  * Handles signing and verifying api-token JWTs for signing in for app-users
@@ -157,7 +156,7 @@ public class RaidV2AppUserApiTokenService {
                     return authFailed();
                 });
 
-        if (isFalse(user.getEnabled())) {
+        if (!user.getEnabled()) {
             log.with("appUserId", appUserId).with("email", email).
                     warn("attempted token authz - disabled user");
             throw authFailed();

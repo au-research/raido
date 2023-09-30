@@ -2,7 +2,6 @@ package au.org.raid.api.endpoint.raidv2;
 
 import au.org.raid.api.service.raid.MetadataService;
 import au.org.raid.api.service.raid.RaidService;
-import au.org.raid.api.spring.StartupListener;
 import au.org.raid.api.spring.bean.AppInfoBean;
 import au.org.raid.api.util.Log;
 import au.org.raid.idl.raidv2.api.PublicExperimentalApi;
@@ -27,9 +26,7 @@ import static au.org.raid.api.util.ExceptionUtil.iae;
 import static au.org.raid.api.util.Log.to;
 import static au.org.raid.api.util.RestUtil.urlDecode;
 import static au.org.raid.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
-import static java.time.ZoneOffset.UTC;
 import static java.util.List.of;
-import static org.eclipse.jetty.http.HttpStatus.BAD_REQUEST_400;
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 
 @Scope(proxyMode = TARGET_CLASS)
@@ -39,24 +36,19 @@ public class PublicExperimental implements PublicExperimentalApi {
     public static final String HANDLE_V3_CATCHALL_PREFIX =
             RAID_V2_API + "/public/handle/v3" + "/";
     public static final String HANDLE_SEPARATOR = "/";
-    private static final Log log = to(PublicExperimental.class);
-
     private DSLContext db;
     private AppInfoBean appInfo;
-    private StartupListener startup;
     private RaidService raidSvc;
     private MetadataService metaSvc;
 
     public PublicExperimental(
             DSLContext db,
             AppInfoBean appInfo,
-            StartupListener startup,
             RaidService raidSvc,
             MetadataService metaSvc
     ) {
         this.db = db;
         this.appInfo = appInfo;
-        this.startup = startup;
         this.raidSvc = raidSvc;
         this.metaSvc = metaSvc;
     }
@@ -73,8 +65,7 @@ public class PublicExperimental implements PublicExperimentalApi {
         return ResponseEntity.ok(new VersionResult().
                 buildVersion(appInfo.getBuildVersion()).
                 buildCommitId(appInfo.getBuildCommitId()).
-                buildDate(appInfo.getBuildDate()).
-                startDate(startup.getStartTime().atOffset(UTC)));
+                buildDate(appInfo.getBuildDate()));
     }
 
     @Override
@@ -110,10 +101,6 @@ public class PublicExperimental implements PublicExperimentalApi {
             HttpServletRequest req
     ) {
         String path = urlDecode(req.getServletPath().trim());
-        log.with("path", req.getServletPath()).
-                with("decodedPath", path).
-                with("params", req.getParameterMap()).
-                info("handleRaidV2CatchAllAsHtml() called");
 
         if (!path.startsWith(HANDLE_V3_CATCHALL_PREFIX)) {
             throw iae("unexpected path: %s", path);
@@ -122,7 +109,7 @@ public class PublicExperimental implements PublicExperimentalApi {
         String handle = path.substring(HANDLE_V3_CATCHALL_PREFIX.length());
         if (!handle.contains(HANDLE_SEPARATOR)) {
             throw apiSafe("handle did not contain a slash character",
-                    BAD_REQUEST_400, of(handle));
+                    400, of(handle));
         }
 
         return publicReadRaidV3(handle).getBody();

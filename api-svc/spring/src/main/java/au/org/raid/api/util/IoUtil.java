@@ -1,5 +1,7 @@
 package au.org.raid.api.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -9,13 +11,8 @@ import java.util.stream.Stream;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.newInputStream;
 
+@Slf4j
 public class IoUtil {
-    private static Log LOG = Log.to(IoUtil.class);
-
-    /**
-     * "quietly" refers to not throwing exceptions, the exception will be
-     * logged as an error.
-     */
     public static void closeQuietly(@Nullable Closeable is, @Nullable Log log) {
         if (is == null) {
             return;
@@ -24,8 +21,7 @@ public class IoUtil {
         try {
             is.close();
         } catch (Exception ex) {
-            Log logger = log == null ? LOG : log;
-            logger.errorEx("Ignore failure in closing the Closeable", ex);
+            log.error("Ignore failure in closing the Closeable", ex);
         }
     }
 

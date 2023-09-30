@@ -64,9 +64,9 @@ public class Shared {
     public static ClientHttpRequestFactory clientHttpRequestFactory(
             boolean followRedirects
     ) {
-        OkHttpClient client = new OkHttpClient.Builder().
-                followRedirects(followRedirects).
-                build();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .followRedirects(followRedirects)
+                .build();
 
         return new OkHttp3ClientHttpRequestFactory(client) {
             @Override

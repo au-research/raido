@@ -1,23 +1,14 @@
 package au.org.raid.api.util;
 
-import javax.management.MBeanServer;
-import javax.management.MalformedObjectNameException;
-import javax.management.ObjectName;
-import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.InputStream;
-import java.lang.management.GarbageCollectorMXBean;
-import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
 import java.util.Locale;
-import java.util.Set;
 import java.util.TimeZone;
 
-import static java.lang.Runtime.getRuntime;
-import static org.springframework.util.unit.DataSize.ofBytes;
-
+@Slf4j
 public class JvmUtil {
-    private static Log log = Log.to(JvmUtil.class);
-
     /**
      * Use UTC, UTF-8 and Locale.ROOT as the defined defaults.
      * This avoids issues with different platforms behaving differently depending
@@ -44,7 +35,7 @@ public class JvmUtil {
     public static void setDefaultUtcTimezone() {
         String currentTimeZoneId = TimeZone.getDefault().getID();
         if (StringUtil.areDifferent(currentTimeZoneId, "UTC")) {
-            log.warn("TimeZone.default forced to UTC from `%s` - JVM should be" +
+            log.warn("TimeZone.default forced to UTC from `{}` - JVM should be" +
                             " started with `-Duser.timezone=UTC`.",
                     currentTimeZoneId);
             TimeZone.setDefault(DateUtil.utcTimezone());
@@ -54,7 +45,7 @@ public class JvmUtil {
     public static void setDefaultRootLocale() {
         Locale locale = Locale.getDefault();
         if (!locale.equals(Locale.ROOT)) {
-            log.warn("Locale forced to ROOT from `%s` - JVM should be started with" +
+            log.warn("Locale forced to ROOT from `{}` - JVM should be started with" +
                             " `-Duser.language= -Duser.country= -Duser.variant=`",
                     locale);
             Locale.setDefault(Locale.ROOT);
@@ -69,64 +60,6 @@ public class JvmUtil {
                 "user.language", "user.country", "user.variant");
     }
 
-    /**
-     * Memory and GC logging was implemented before Micrometer metrics were
-     * implemented.  I like seeing them logged on startup as I understand the
-     * meaning of the basic built-in stats and how they relate to the JVM - as
-     * opposed to he Micrometer metrics, which I find difficult to interpret.
-     */
-    public static void logMemoryInfo(String from) {
-        if (!log.isInfoEnabled()) {
-            return;
-        }
-
-        Runtime runtime = getRuntime();
-
-        log.with("from", from).
-                with("totalMemory", ofBytes(runtime.totalMemory()).toMegabytes()).
-                with("maxMemory", ofBytes(runtime.maxMemory()).toMegabytes()).
-                with("freeMemory", ofBytes(runtime.freeMemory()).toMegabytes()).
-                info("memory stats (MB)");
-
-        logGcInfo();
-    }
-
-    public static void logGcInfo() {
-        MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-        listGcMxBeans(mBeanServer).forEach(iName -> {
-            GarbageCollectorMXBean iGcBean = getGcMxBean(mBeanServer, iName);
-            log.with("name", iName).
-                    with("collectionCount", iGcBean.getCollectionCount()).
-                    with("collectionTime", iGcBean.getCollectionTime()).
-                    info("GC info");
-        });
-    }
-
-    private static Set<ObjectName> listGcMxBeans(MBeanServer mBeanServer) {
-        try {
-            return mBeanServer.queryNames(new ObjectName(
-                            ManagementFactory.GARBAGE_COLLECTOR_MXBEAN_DOMAIN_TYPE + ",*"),
-                    null);
-        } catch (MalformedObjectNameException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static GarbageCollectorMXBean getGcMxBean(
-            MBeanServer mBeanServer,
-            ObjectName gcBeanName
-    ) {
-        GarbageCollectorMXBean gcBean;
-        try {
-            gcBean = ManagementFactory.newPlatformMXBeanProxy(
-                    mBeanServer,
-                    gcBeanName.getCanonicalName(),
-                    GarbageCollectorMXBean.class);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return gcBean;
-    }
 
     private static void infoLogSysProp(String... names) {
         for (String iName : names) {
@@ -149,11 +82,11 @@ public class JvmUtil {
         InputStream buildInfo = JvmUtil.class.getResourceAsStream(buildInfoPath);
 
         if (buildInfo == null) {
-            log.info("no resource stream returned for %s", buildInfoPath);
+            log.info("no resource stream returned for {}", buildInfoPath);
             return;
         }
 
-        log.info("build-info:\n%s", IoUtil.linesAsString(buildInfo));
+        log.info("build-info:\n{}", IoUtil.linesAsString(buildInfo));
     }
 
     public static boolean isWindowsPlatform() {

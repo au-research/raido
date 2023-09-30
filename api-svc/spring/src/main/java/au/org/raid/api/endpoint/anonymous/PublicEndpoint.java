@@ -3,19 +3,19 @@ package au.org.raid.api.endpoint.anonymous;
 import au.org.raid.api.spring.bean.MetricRegistry;
 import au.org.raid.api.util.JvmUtil;
 import au.org.raid.api.util.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
+@Slf4j
 @RestController
 public class PublicEndpoint {
     public static final String STATUS_PATH = "/public/status";
     public static final String STATISTICS_PATH = "/public/statistics";
     public static final Map<String, String> STATUS = Map.of("status", "UP");
-    private static final Log log = Log.to(PublicEndpoint.class);
     private MetricRegistry metricReg;
-
 
     public PublicEndpoint(MetricRegistry metricReg) {
         this.metricReg = metricReg;
@@ -39,7 +39,6 @@ public class PublicEndpoint {
      */
     @GetMapping(STATISTICS_PATH)
     public void logStats() {
-        JvmUtil.logMemoryInfo(STATUS_PATH);
         metricReg.logConnectionPoolMetrics();
     }
 

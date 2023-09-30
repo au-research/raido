@@ -37,7 +37,8 @@ flyway{
 
 dependencies{
   implementation project(':api-svc:idl-raid-v2')
-  implementation libs.bundles.spring6
+//  implementation libs.bundles.spring6
+  implementation libs.bundles.springboot3
 
   // don't really care, whatever version Gradle is using will do
   implementation localGroovy()
@@ -47,12 +48,6 @@ dependencies{
 
   runtimeOnly libs.pgjdbc
   jooqGenerator libs.pgjdbc
-
-  /* not using bundle because this was not originally defined to capture
-  JUL logging, so I don't want to change it.  */
-  implementation libs.slf4j.api
-
-  implementation libs.bundles.logback.runtime
 
   // used for migration code to call api-svc 
   implementation( 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.0'){
@@ -100,8 +95,6 @@ testing{
 
         // copy/pasted from dependencies block - yuck :( 
         implementation 'org.codehaus.groovy:groovy-all:3.0.9'
-        implementation libs.jooq
-        runtimeOnly libs.pgjdbc
       }
     }
   }
