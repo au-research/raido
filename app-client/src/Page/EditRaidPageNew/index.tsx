@@ -1,6 +1,4 @@
-import {
-  Container
-} from "@mui/material";
+import { Container } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useAuthApi } from "Api/AuthApi";
 import { raidoTitle } from "Component/Util";
@@ -110,7 +108,6 @@ function Content() {
       <RaidForm
         defaultValues={readQuery.data}
         onSubmit={async (data) => {
-          console.log(JSON.stringify(data, null, 2));
           updateRequest.mutate(data);
         }}
         isSubmitting={updateRequest.isLoading}
