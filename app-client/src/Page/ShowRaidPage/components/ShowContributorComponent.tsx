@@ -7,11 +7,14 @@ import {
   FormControlLabel,
   FormGroup,
   Grid,
+  List,
+  ListItem,
+  ListItemText,
   Stack,
   Typography,
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
-import { extractKeyFromIdUri } from "utils";
+import { extractKeyFromIdUri, extractLastUrlSegment } from "utils";
 
 export default function ShowContributorComponent({
   raid,
@@ -93,6 +96,37 @@ export default function ShowContributorComponent({
                               label="Contact"
                             />
                           </FormGroup>
+                        </Box>
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={12}>
+                        <Box>
+                          <Typography variant="body2">Positions</Typography>
+                          <List dense disablePadding>
+                            {contributor.position?.map((position, index) => (
+                              <ListItem key={index}>
+                                <ListItemText
+                                  primary={extractKeyFromIdUri(position.id)}
+                                  secondary={`${position.startDate || ""} ➡️ ${
+                                    position.endDate || "No end date"
+                                  }`}
+                                />
+                              </ListItem>
+                            ))}
+                          </List>
+                        </Box>
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={12}>
+                        <Box>
+                          <Typography variant="body2">Roles</Typography>
+                          <List dense disablePadding>
+                            {contributor.role?.map((role, index) => (
+                              <ListItem key={index}>
+                                <ListItemText
+                                  primary={extractLastUrlSegment(role.id)}
+                                />
+                              </ListItem>
+                            ))}
+                          </List>
                         </Box>
                       </Grid>
                     </Grid>
