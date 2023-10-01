@@ -54,7 +54,78 @@ ext {
   ecsEcrImagePath = "$ecsEcrHost/$ecsEcrRepo:$project.version"
 }
 
+task dockerStage(type: Copy) {
+  dependsOn ':api-svc:spring:build'
+  group = 'docker.build'
+  destinationDir = file(stagingDir)
+  description = "copy dockerfile, scripts, jar, etc. to $stagingDir"
 
+  doFirst {
+    println "pulling application jar from $apiSvcJarPath"
+    delete file(stagingDir)
+  }
+
+  // docker files
+  from (srcDir){
+    // avoid the chaos of windows line endings on unix
+    // shouldn't need this on raido, given the text=lf git setting
+    filter(FixCrLfFilter.class, eol: FixCrLfFilter.CrLf.newInstance("lf"))
+  }
+
+  from(apiSvcJarPath)
+}
+
+task ecsDockerBuild(type: Exec){
+  group = 'docker.build'
+  dependsOn dockerStage
+  description = "build the docker image $containerName:[project version]"
+
+  doFirst{
+    println "building $localImagePath ..."
+  }
+  workingDir = project.ext.stagingDir
+
+  commandLine osCmd('docker', 'build',
+    '-t', localImagePath,
+    '-f', 'Dockerfile',
+    '.'
+  )
+}
+
+task ecsDockerTag(type: Exec){
+  group = 'docker.build'
+  dependsOn ecsDockerBuild
+  description = "tag local image so that it can be pushed to ECR," +
+    " using project.version as the image tag"
+
+  doFirst {
+    assert ecsEcrHost : "ecsEcrHost must be set in api-svc-docker.gradle"
+    assert ecsEcrRepo : "ecsEcrRepo must be set in api-svc-docker.gradle"
+    // add a check that makes sure we're not tagging a dirty version as a
+    // release image
+    println "tagging $localImagePath as $ecsEcrImagePath ..."
+  }
+
+  workingDir = project.ext.stagingDir
+  commandLine osCmd('docker', 'tag', localImagePath, ecsEcrImagePath)
+}
+
+task ecsDockerPush(type: Exec){
+  group = 'docker.build'
+  dependsOn ecsDockerTag
+  description = "push project.version tagged image to ECR"
+
+  workingDir = project.ext.stagingDir
+  commandLine osCmd('docker', 'push', ecsEcrImagePath)
+
+  doFirst {
+    assert ecsEcrHost : "ecsEcrHost must be set in api-svc-docker.gradle"
+    assert ecsEcrRepo : "ecsEcrRepo must be set in api-svc-docker.gradle"
+    // add a check that makes sure we're not tagging a dirty version as a
+    // release image
+    println "pushing $ecsEcrImagePath ..."
+  }
+}
 
 
 /* 
