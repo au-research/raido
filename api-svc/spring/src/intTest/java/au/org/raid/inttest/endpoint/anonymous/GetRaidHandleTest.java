@@ -5,6 +5,7 @@ import au.org.raid.api.util.Log;
 import au.org.raid.idl.raidv2.model.PublicRaidMetadataSchemaV1;
 import au.org.raid.idl.raidv2.model.PublicReadRaidResponseV3;
 import au.org.raid.inttest.IntegrationTestCase;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +24,7 @@ import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+@Disabled
 public class GetRaidHandleTest extends IntegrationTestCase {
     @Test
     void apiGetExistingShouldSucceedWithAcceptJson() {

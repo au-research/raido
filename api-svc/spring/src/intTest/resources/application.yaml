@@ -23,4 +23,4 @@ spring:
   jooq:
     sql-dialect: postgres
 server:
-  port: 10001
+  port: 8080

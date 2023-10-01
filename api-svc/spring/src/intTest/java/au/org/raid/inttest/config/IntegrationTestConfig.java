@@ -30,24 +30,24 @@ public class IntegrationTestConfig {
 //        return Shared.clientHttpRequestFactory(false);
 //    }
 
-//    @Bean
-//    @Qualifier(REST_TEMPLATE_VALUES_ONLY_ENCODING)
-//    public RestTemplate restTemplateWithEncodingMode(
-//            ClientHttpRequestFactory factory
-//    ) {
-//        var restTemplate = new RestTemplate();
-//    /* this is because of the silly "handles contain a slash" problem.
-//    If I manually url encode the handle so that the slash is replaced, then
-//    when RestTemplate sees the `%2F` (for slash) in the path, it will
-//    re-urlencode the percent symbol so we end up with "%252F" in the path.
-//    */
-//        var defaultUriBuilderFactory = new DefaultUriBuilderFactory();
-//        defaultUriBuilderFactory.setEncodingMode(
-//                DefaultUriBuilderFactory.EncodingMode.VALUES_ONLY);
-//        restTemplate.setUriTemplateHandler(defaultUriBuilderFactory);
-//        restTemplate.setRequestFactory(factory);
-//        return restTemplate;
-//    }
+    @Bean
+    @Qualifier(REST_TEMPLATE_VALUES_ONLY_ENCODING)
+    public RestTemplate restTemplateWithEncodingMode(
+            ClientHttpRequestFactory factory
+    ) {
+        var restTemplate = new RestTemplate();
+    /* this is because of the silly "handles contain a slash" problem.
+    If I manually url encode the handle so that the slash is replaced, then
+    when RestTemplate sees the `%2F` (for slash) in the path, it will
+    re-urlencode the percent symbol so we end up with "%252F" in the path.
+    */
+        var defaultUriBuilderFactory = new DefaultUriBuilderFactory();
+        defaultUriBuilderFactory.setEncodingMode(
+                DefaultUriBuilderFactory.EncodingMode.VALUES_ONLY);
+        restTemplate.setUriTemplateHandler(defaultUriBuilderFactory);
+        restTemplate.setRequestFactory(factory);
+        return restTemplate;
+    }
 
 //    @Bean
 //    @Primary

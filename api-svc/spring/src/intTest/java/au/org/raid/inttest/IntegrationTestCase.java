@@ -1,5 +1,6 @@
 package au.org.raid.inttest;
 
+import au.org.raid.api.Api;
 import au.org.raid.api.service.stub.util.IdFactory;
 import au.org.raid.api.spring.config.environment.EnvironmentProps;
 import au.org.raid.api.util.Nullable;
@@ -25,7 +26,9 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.RestTemplate;
 
@@ -42,15 +45,15 @@ import static au.org.raid.inttest.util.MinimalRaidTestData.REAL_TEST_ROR;
 import static java.time.ZoneOffset.UTC;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
-@SpringJUnitConfig(
-        name = "SpringJUnitConfigContext",
-        value = IntegrationTestConfig.class)
+@SpringBootTest(classes = Api.class,
+        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@ContextConfiguration(classes = IntegrationTestConfig.class)
 public abstract class IntegrationTestCase {
     // be careful, 25 char max column length
     public static final String INT_TEST_ROR = "https://ror.org/038sjwq14";
     protected static final IdFactory idFactory = new IdFactory("inttest");
-    @RegisterExtension
-    protected static JettyTestServer jettyTestServer = new JettyTestServer();
+//    @RegisterExtension
+//    protected static JettyTestServer jettyTestServer = new JettyTestServer();
     @Autowired
     protected RestTemplate rest;
     @Autowired
