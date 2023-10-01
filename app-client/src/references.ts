@@ -26,6 +26,14 @@ export const accessTypes = [
   "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
 ];
 
+export const organisationRoles = [
+  "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+  "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json",
+  "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/other-organisation.json",
+  "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/other-research-organisation.json",
+  "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/partner-organisation.json",
+];
+
 export const languages = [
   {
     id: "eng",
