@@ -3,7 +3,6 @@ import {
   RemoveCircleOutline as RemoveCircleOutlineIcon,
 } from "@mui/icons-material";
 import {
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -21,7 +20,6 @@ import dayjs from "dayjs";
 import {
   Control,
   Controller,
-  FieldArrayWithId,
   FieldErrors,
   useFieldArray,
 } from "react-hook-form";
@@ -30,16 +28,16 @@ import { extractKeyFromIdUri } from "utils";
 
 export default function FormContributorsPositionsComponent({
   control,
-  index,
+  contributorsArrayIndex,
   errors,
 }: {
   control: Control<RaidDto, any>;
-  index: number;
+  contributorsArrayIndex: number;
   errors: FieldErrors<RaidDto>;
 }) {
   const contributorPositionsArray = useFieldArray({
     control,
-    name: `contributor.${index}.position`,
+    name: `contributor.${contributorsArrayIndex}.position`,
     keyName: "formFieldGeneratedId",
   });
 
@@ -47,24 +45,22 @@ export default function FormContributorsPositionsComponent({
     contributorPositionsArray.append({
       schemaUri:
         "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
-      id: `https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/leader.json`,
+      id: "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
       startDate: dayjs(new Date()).format("YYYY-MM-DD"),
+      endDate: dayjs(new Date()).add(3, "year").format("YYYY-MM-DD"),
     });
   };
 
   return (
     <Controller
       control={control}
-      name={`contributor.${index}`}
+      name={`contributor.${contributorsArrayIndex}.position`}
       render={({ field: { onChange, ...controllerField } }) => {
         const contributorTitle =
-          controllerField?.value?.id || `Contributor ${index + 1}`;
+          controllerField?.value || `Contributor ${contributorsArrayIndex + 1}`;
         return (
           <>
-            <Card
-              variant={"outlined"}
-              sx={{ bgcolor: "transparent", border: "3px solid purple" }}
-            >
+            <Card variant={"outlined"} sx={{ bgcolor: "transparent" }}>
               <CardHeader
                 action={
                   <Tooltip title="Add Position" placement="right">
@@ -81,7 +77,7 @@ export default function FormContributorsPositionsComponent({
                     Positions
                   </Typography>
                 }
-                subheader={`Positions for ${contributorTitle}`}
+                subheader="Contributor positions"
               />
               <CardContent>
                 <Stack spacing={2}>
@@ -105,41 +101,30 @@ export default function FormContributorsPositionsComponent({
                           >
                             <Grid container spacing={2}>
                               <Grid item xs={12} sm={4} md={4}>
-                                <Button>{positionIndex}</Button>
-                                <pre>
-                                  {JSON.stringify(controllerField, null, 2)}
-                                </pre>
                                 <TextField
                                   select
                                   {...controllerField}
                                   value={
-                                    controllerField?.value?.position[
-                                      positionIndex
-                                    ]?.id
+                                    controllerField?.value?.[positionIndex]
+                                      ?.id || ""
                                   }
                                   size="small"
                                   fullWidth
                                   label="Position"
                                   onChange={(event) => {
-                                    console.log(
-                                      "controllerField",
-                                      controllerField
-                                    );
-                                    const newPosition = {
-                                      ...controllerField?.value?.position[
+                                    onChange([
+                                      ...controllerField.value.slice(
+                                        0,
                                         positionIndex
-                                      ],
-                                      id: event.target.value,
-                                    };
-                                    const updatedPositions = [
-                                      ...controllerField?.value?.position,
-                                    ];
-                                    updatedPositions[positionIndex] =
-                                      newPosition;
-                                    onChange({
-                                      ...controllerField?.value,
-                                      position: updatedPositions,
-                                    });
+                                      ),
+                                      {
+                                        ...controllerField.value[positionIndex],
+                                        id: event.target.value,
+                                      },
+                                      ...controllerField.value.slice(
+                                        positionIndex + 1
+                                      ),
+                                    ]);
                                   }}
                                 >
                                   {contributorPositions.map((position) => (
@@ -153,30 +138,27 @@ export default function FormContributorsPositionsComponent({
                               <Grid item xs={12} sm={4} md={4}>
                                 <DatePicker
                                   label="Position Start Date"
-                                  defaultValue={
-                                    controllerField?.value?.position &&
-                                    controllerField?.value?.position[
-                                      positionIndex
-                                    ]
-                                      ? dayjs(
-                                          controllerField?.value?.position[
-                                            positionIndex
-                                          ].startDate
-                                        )
-                                      : ""
+                                  value={
+                                    dayjs(
+                                      controllerField?.value?.[positionIndex]
+                                        ?.startDate
+                                    ) || ""
                                   }
                                   format="DD-MMM-YYYY"
                                   onChange={(event) => {
-                                    if (dayjs.isDayjs(event)) {
-                                      onChange({
-                                        ...controllerField.value,
-                                        startDate: event?.format("YYYY-MM-DD")
-                                          ? new Date(
-                                              event?.format("YYYY-MM-DD")
-                                            )
-                                          : "",
-                                      });
-                                    }
+                                    onChange([
+                                      ...controllerField.value.slice(
+                                        0,
+                                        positionIndex
+                                      ),
+                                      {
+                                        ...controllerField.value[positionIndex],
+                                        startDate: event,
+                                      },
+                                      ...controllerField.value.slice(
+                                        positionIndex + 1
+                                      ),
+                                    ]);
                                   }}
                                   slotProps={{
                                     textField: {
@@ -193,30 +175,27 @@ export default function FormContributorsPositionsComponent({
                               <Grid item xs={12} sm={4} md={4}>
                                 <DatePicker
                                   label="Position End Date"
-                                  defaultValue={
-                                    controllerField?.value?.position &&
-                                    controllerField?.value?.position[
-                                      positionIndex
-                                    ]
-                                      ? dayjs(
-                                          controllerField?.value?.position[
-                                            positionIndex
-                                          ].startDate
-                                        )
-                                      : ""
+                                  value={
+                                    dayjs(
+                                      controllerField?.value?.[positionIndex]
+                                        ?.endDate
+                                    ) || ""
                                   }
                                   format="DD-MMM-YYYY"
                                   onChange={(event) => {
-                                    if (dayjs.isDayjs(event)) {
-                                      onChange({
-                                        ...controllerField.value,
-                                        startDate: event?.format("YYYY-MM-DD")
-                                          ? new Date(
-                                              event?.format("YYYY-MM-DD")
-                                            )
-                                          : "",
-                                      });
-                                    }
+                                    onChange([
+                                      ...controllerField.value.slice(
+                                        0,
+                                        positionIndex
+                                      ),
+                                      {
+                                        ...controllerField.value[positionIndex],
+                                        startDate: event,
+                                      },
+                                      ...controllerField.value.slice(
+                                        positionIndex + 1
+                                      ),
+                                    ]);
                                   }}
                                   slotProps={{
                                     textField: {

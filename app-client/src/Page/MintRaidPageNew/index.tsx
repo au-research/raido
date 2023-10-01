@@ -42,7 +42,6 @@ function Content() {
     return await api.raid.createRaidV1({
       raidCreateRequest: {
         identifier: data?.identifier || ({} as Id),
-
         description: data?.description || ([] as Description[]),
         title: data?.title || ([] as Title[]),
         access: data?.access || ({} as Access),
@@ -82,7 +81,6 @@ function Content() {
       <RaidForm
         defaultValues={defaultValues}
         onSubmit={async (data) => {
-          console.log(JSON.stringify(data, null, 2));
           mintRequest.mutate(data);
         }}
         isSubmitting={mintRequest.isLoading}

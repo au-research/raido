@@ -69,8 +69,6 @@ export default function RaidForm({
     ? extractPrefixAndSuffixFromIdentifier(defaultValues?.identifier?.id!)
     : { prefix: "", suffix: "" };
 
-  
-
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit(onSubmit)} autoComplete="off" noValidate>
@@ -151,12 +149,7 @@ export default function RaidForm({
                   trigger={trigger}
                 />
 
-                <Box
-                  sx={{
-                    pointerEvents: "none",
-                    opacity: "0.4",
-                  }}
-                >
+                <Box sx={{}}>
                   <FormContributorsComponent
                     control={control}
                     errors={errors}
@@ -165,12 +158,7 @@ export default function RaidForm({
                   />
                 </Box>
 
-                <Box
-                  sx={{
-                    pointerEvents: "none",
-                    opacity: "0.4",
-                  }}
-                >
+                <Box sx={{}}>
                   <FormOrganisationsComponent
                     control={control}
                     errors={errors}
@@ -205,6 +193,7 @@ export default function RaidForm({
                   color={raidColors.get("blue")!}
                   trigger={trigger}
                 />
+
                 <FormAlternateUrlsComponent
                   control={control}
                   errors={errors}
