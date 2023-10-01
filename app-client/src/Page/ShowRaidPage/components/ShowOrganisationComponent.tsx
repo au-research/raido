@@ -4,6 +4,9 @@ import {
   CardContent,
   CardHeader,
   Grid,
+  List,
+  ListItem,
+  ListItemText,
   Stack,
   Typography,
 } from "@mui/material";
@@ -66,6 +69,24 @@ export default function ShowOrganisationComponent({
                           <Typography color="text.secondary" variant="body1">
                             {organisation.id}
                           </Typography>
+                        </Box>
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={12}>
+                        <Box>
+                          <Typography variant="body2">Roles</Typography>
+
+                          <List dense disablePadding>
+                            {organisation.role?.map((role, index) => (
+                              <ListItem key={index}>
+                                <ListItemText
+                                  primary={extractKeyFromIdUri(role.id)}
+                                  secondary={`${role.startDate || ""} ➡️ ${
+                                    role.endDate || "No end date"
+                                  }`}
+                                />
+                              </ListItem>
+                            ))}
+                          </List>
                         </Box>
                       </Grid>
                     </Grid>

@@ -26,7 +26,8 @@ import {
   UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
-import { contributorRoles } from "references";
+import { organisationRoles } from "references";
+import { extractKeyFromIdUri } from "utils";
 
 function OrganisationRootField({
   organisationsArray,
@@ -52,7 +53,8 @@ function OrganisationRootField({
       id: ``,
       startDate: dayjs().format("YYYY-MM-DD"),
       endDate: dayjs().add(3, "year").format("YYYY-MM-DD"),
-      schemaUri: "https://credit.niso.org/",
+      schemaUri:
+        "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
     });
   };
 
@@ -169,13 +171,12 @@ function OrganisationRootField({
                                         });
                                       }}
                                     >
-                                      {contributorRoles.map((role) => {
+                                      {organisationRoles.map((role) => {
                                         const roleParts = role.split("/");
 
                                         return (
                                           <MenuItem key={role} value={role}>
-                                            {roleParts[roleParts.length - 2] ||
-                                              role}
+                                            {extractKeyFromIdUri(role)}
                                           </MenuItem>
                                         );
                                       })}
