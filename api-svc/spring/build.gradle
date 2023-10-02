@@ -45,32 +45,20 @@ dependencies{
   implementation libs.bundles.springboot3
   implementation libs.springdoc.openapi
 
-  /* use SLf4J API to log against - pkg: org.slf4j */
-
-  /* connection pool - upgraded from 3.4.5, rollback if issues with 5.0.0 
-  https://github.com/brettwooldridge/HikariCP/blob/dev/CHANGES
-  No changes in the last year. Could be an issue.  On the other hand, the author
-  seems to be around still, and there's only so much functionality you want out 
-  of a CP - maybe it's just "done".
-  Though we'll definitely need a new CP when Loom happens if Hikari isn't being
-  updated. */
-  implementation "com.zaxxer:HikariCP:5.0.0"
-
-  /* for PostConstruct/PreDestroy - pkg: jakarta.annotation (used to be javax) 
+  /* for PostConstruct/PreDestroy - pkg: jakarta.annotation (used to be javax)
   https://mvnrepository.com/artifact/jakarta.annotation/jakarta.annotation-api 
   */
-  implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
+  implementation 'jakarta.annotation:jakarta.annotation-api'
 
   /* logging DB statements 
   https://github.com/p6spy/p6spy/releases
   Another quiet project, consider an alternative. */
   implementation 'org.geonames:geonames-ws-client:1.1.17'
-  implementation 'p6spy:p6spy:3.9.1'
-  compileOnly 'org.projectlombok:lombok:1.18.28'
-  annotationProcessor 'org.projectlombok:lombok:1.18.28'
+  compileOnly 'org.projectlombok:lombok'
+  annotationProcessor 'org.projectlombok:lombok'
 
-  testCompileOnly 'org.projectlombok:lombok:1.18.28'
-  testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
+  testCompileOnly 'org.projectlombok:lombok'
+  testAnnotationProcessor 'org.projectlombok:lombok'
     // postgres DB driver
   runtimeOnly libs.pgjdbc
 
@@ -82,11 +70,11 @@ dependencies{
   https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
   Using 2.14.x might be a mistake, but I already made it for the dataformat and
   datatype libraries, so might as well be consistently wrong 😒 */
-  runtimeOnly 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
+  runtimeOnly 'com.fasterxml.jackson.core:jackson-databind'
   // support for XML serialization for APIDS endpoints (probably others later)
-  implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.2'
+  implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
   // so that MappingJackson2XmlHttpMessageConverter can parse to LocalDateTime 
-  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2"
+  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
 
   /* used for:
    - generating/verifying HS256 JWTs for RAID v1 tokens 
@@ -120,23 +108,19 @@ dependencies{
   testImplementation project(':api-svc:test-shared')
   testImplementation libs.bundles.springboot3.test
 
-//  testImplementation 'org.mockito:mockito-core:4.11.0'
   testImplementation 'org.mockito:mockito-inline:4.11.0'
-  testImplementation 'org.mockito:mockito-junit-jupiter:4.11.0'
+  testImplementation 'org.mockito:mockito-junit-jupiter'
   // https://junit.org/junit5/docs/current/release-notes/index.html
-  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
-  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 
   testImplementation libs.assertj
 
   // because MockRestServiceServer couldn't find class org.hamcrest.Matcher
-  testImplementation 'org.hamcrest:hamcrest:2.2'
-
-  // because Spring MockMvc couldn't find jakarta.servlet.ServletConnection
-  testImplementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+  testImplementation 'org.hamcrest:hamcrest'
 
   // needed for jsonpath testing in Spring MVC tests
-  testImplementation 'com.jayway.jsonpath:json-path:2.7.0'
+  testImplementation 'com.jayway.jsonpath:json-path'
 
 }
 

@@ -48,7 +48,6 @@ dependencyResolutionManagement{
       bundle('springboot3', [
               'spring-boot-starter-web',
               'spring-boot-starter-security',
-              'spring-boot-starter-jdbc',
               'spring-boot-starter-oauth2-resource-server',
               'spring-boot-starter-jooq',
               'spring-boot-starter-actuator'
