@@ -19,3 +19,4 @@ build/
 
 .run/
 .DS_Store
+/api-svc/db/raido/src/main/generated-jooq/
