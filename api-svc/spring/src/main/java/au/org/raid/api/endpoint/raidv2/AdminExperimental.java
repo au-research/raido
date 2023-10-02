@@ -35,7 +35,6 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 @RestController
 @Transactional
 public class AdminExperimental implements AdminExperimentalApi {
-    private static final Log log = Log.to(AdminExperimental.class);
     private final RorService rorService;
     private AuthzRequestService authzRequestSvc;
     private ServicePointService servicePointSvc;
@@ -165,8 +164,6 @@ public class AdminExperimental implements AdminExperimentalApi {
       different service point. */
         } else {
             var iae = ExceptionUtil.iae("user read not allowed");
-            log.with("user", user).with("appUserId", appUserId).
-                    error(iae.getMessage());
             throw iae;
         }
 

@@ -42,13 +42,10 @@ dependencies{
   // for flyway
   runtimeOnly libs.pgjdbc
 
-  /* use SLf4J API to log against - pkg: org.slf4j */
-  implementation libs.bundles.slf4j
-  
   jooqGenerator libs.pgjdbc
 
   // use logback as the backing log implementation for slf4j
-  runtimeOnly libs.bundles.logback.runtime
+//  runtimeOnly libs.bundles.logback.runtime
 }
 
 compileJava {

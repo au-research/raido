@@ -18,8 +18,6 @@ public class AuthzUtil {
      20M and raido is the first SP inserted via flyway. */
     public static final long RAIDO_SP_ID = 20_000_000;
 
-    private static final Log log = Log.to(AuthzUtil.class);
-
     /**
      * This will fail if the authentication is not a AuthzTokenPayload
      */
@@ -29,8 +27,6 @@ public class AuthzUtil {
             return apiToken;
         }
 
-        log.with("authentication", authentication).
-                error("user provided a bearer-token that is not an api-token");
         throw ExceptionUtil.authFailed();
     }
 
@@ -44,24 +40,15 @@ public class AuthzUtil {
         if (!ObjectUtil.areEqual(user.getClientId(), IdProvider.RAIDO_API.getLiteral())) {
       /* IMPROVE: there really ought to be a better/more explicit way to tell 
       if a given user is an api-key or a real user. */
-            var iae = ExceptionUtil.iae(RaidApiMessage.ONLY_RAIDO_ADMIN);
-            log.with("user", user).with("reason", "not an api-key").
-                    error(iae.getMessage());
-            throw iae;
+            throw ExceptionUtil.iae(RaidApiMessage.ONLY_RAIDO_ADMIN);
         }
 
         if (!ObjectUtil.areEqual(user.getRole(), SP_ADMIN.getLiteral())) {
-            var iae = ExceptionUtil.iae(RaidApiMessage.ONLY_RAIDO_ADMIN);
-            log.with("user", user).with("reason", "not admin role").
-                    error(iae.getMessage());
-            throw iae;
+            throw ExceptionUtil.iae(RaidApiMessage.ONLY_RAIDO_ADMIN);
         }
 
         if (!ObjectUtil.areEqual(user.getServicePointId(), RAIDO_SP_ID)) {
-            var iae = ExceptionUtil.iae(RaidApiMessage.ONLY_RAIDO_ADMIN);
-            log.with("user", user).with("reason", "not raido SP").
-                    error(iae.getMessage());
-            throw iae;
+            throw ExceptionUtil.iae(RaidApiMessage.ONLY_RAIDO_ADMIN);
         }
     }
 
@@ -83,8 +70,6 @@ public class AuthzUtil {
 
         if (!ObjectUtil.areEqual(servicePointId, user.getServicePointId())) {
             var exception = new CrossAccountAccessException(servicePointId);
-            log.with("user", user).with("servicePointId", servicePointId).
-                    error(exception.getMessage());
             throw exception;
         }
     }
@@ -105,15 +90,10 @@ public class AuthzUtil {
             }
 
             // SP_ADMIN is not allowed to do stuff to other SP's
-            var iae = ExceptionUtil.iae(RaidApiMessage.DISALLOWED_X_SVC_CALL);
-            log.with("user", user).with("servicePointId", servicePointId).
-                    error(iae.getMessage());
-            throw iae;
+            throw ExceptionUtil.iae(RaidApiMessage.DISALLOWED_X_SVC_CALL);
         }
 
-        var iae = ExceptionUtil.iae(RaidApiMessage.ONLY_OP_OR_SP_ADMIN);
-        log.with("user", user).error(iae.getMessage());
-        throw iae;
+        throw ExceptionUtil.iae(RaidApiMessage.ONLY_OP_OR_SP_ADMIN);
     }
 
     public static void guardOperatorOrAssociatedSpUser(
@@ -131,10 +111,7 @@ public class AuthzUtil {
         }
 
         // not allowed to read raids from other SP's
-        var iae = ExceptionUtil.iae(RaidApiMessage.DISALLOWED_X_SVC_CALL);
-        log.with("user", user).with("servicePointId", servicePointId).
-                error(iae.getMessage());
-        throw iae;
+        throw ExceptionUtil.iae(RaidApiMessage.DISALLOWED_X_SVC_CALL);
     }
 
     public static boolean isOperatorOrSpAdmin(
@@ -152,7 +129,6 @@ public class AuthzUtil {
         }
 
         var iae = ExceptionUtil.iae(RaidApiMessage.ONLY_OP_OR_SP_ADMIN);
-        log.with("user", user).error(iae.getMessage());
         throw iae;
     }
 

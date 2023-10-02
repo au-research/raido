@@ -12,7 +12,8 @@ ext {
 }
 
 dependencies{
-  implementation libs.bundles.spring6
+//  implementation libs.bundles.spring6
+  implementation libs.bundles.springboot3
 
   // pkg: jakarta.servlet - used to be javax.servlet  
   compileOnly 'jakarta.platform:jakarta.jakartaee-web-api:9.1.0'

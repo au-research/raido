@@ -5,6 +5,4 @@ plugins{
 dependencies{
   // it's ok for test-shared to depend on prod, just not the other way around
   implementation project(':api-svc:spring')
-
-  implementation libs.bundles.slf4j
 }

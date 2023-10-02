@@ -3,7 +3,6 @@ package au.org.raid.inttest;
 import au.org.raid.idl.raidv1.api.RaidV1Api;
 import au.org.raid.idl.raidv2.api.BasicRaidExperimentalApi;
 import au.org.raid.idl.raidv2.api.RaidoStableV1Api;
-import au.org.raid.inttest.config.IntTestProps;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Contract;
 import feign.Feign;
@@ -23,13 +22,12 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class TestClient {
     private final ObjectMapper objectMapper;
     private final Contract contract;
+    private final String apiUrl;
 
-    private final IntTestProps props;
-
-    public TestClient(final ObjectMapper objectMapper, final Contract contract, final IntTestProps props) {
+    public TestClient(final ObjectMapper objectMapper, final Contract contract, final String apiUrl) {
         this.objectMapper = objectMapper;
         this.contract = contract;
-        this.props = props;
+        this.apiUrl = apiUrl;
     }
 
     public BasicRaidExperimentalApi basicRaidExperimentalClient(
@@ -44,7 +42,7 @@ public class TestClient {
                         request.header(AUTHORIZATION, "Bearer " + token))
                 .logger(new Slf4jLogger(BasicRaidExperimentalApi.class))
                 .logLevel(Logger.Level.FULL)
-                .target(BasicRaidExperimentalApi.class, props.getRaidoServerUrl());
+                .target(BasicRaidExperimentalApi.class, apiUrl);
     }
 
     public RaidoStableV1Api raidApi(
@@ -62,7 +60,7 @@ public class TestClient {
                 .requestInterceptor(request -> request.header(AUTHORIZATION, "Bearer " + token))
                 .logger(new Slf4jLogger(RaidoStableV1Api.class))
                 .logLevel(Logger.Level.FULL)
-                .target(RaidoStableV1Api.class, props.getRaidoServerUrl());
+                .target(RaidoStableV1Api.class, apiUrl);
     }
 
     public RaidV1Api legacyApi(final String token) {
@@ -75,6 +73,6 @@ public class TestClient {
                         request.header(AUTHORIZATION, "Bearer " + token))
                 .logger(new Slf4jLogger(RaidV1Api.class))
                 .logLevel(Logger.Level.FULL)
-                .target(RaidV1Api.class, props.getRaidoServerUrl() + RAID_V1_API);
+                .target(RaidV1Api.class, apiUrl + RAID_V1_API);
     }
 }

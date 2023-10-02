@@ -1,0 +1,28 @@
+raid:
+  db:
+    user: not-set
+    password: not-set
+    host: localhost
+    port: 7432
+  spatial-coverage:
+    schema-uri:
+      geonames: https://www.geonames.org/
+      openstreetmap: https://www.openstreetmap.org/
+  validation:
+    geonames:
+      username: geonames
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${raid.db.host}:${raid.db.port}/raido
+    username: ${raid.db.user}
+    password: ${raid.db.password}
+  jooq:
+    sql-dialect: postgres
+
+springdoc:
+  swagger-ui:
+    enabled: true
+  api-docs:
+    path: /docs
+

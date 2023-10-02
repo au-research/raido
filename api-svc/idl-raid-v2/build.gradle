@@ -11,15 +11,14 @@ ext {
 }
 
 dependencies{
-  implementation libs.bundles.spring6
+  implementation libs.bundles.springboot3
+  implementation libs.springdoc.openapi
 
   // pkg: jakarta.servlet - used to be javax.servlet  
   compileOnly 'jakarta.platform:jakarta.jakartaee-web-api:9.1.0'
 
   implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'
   implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
-
-
 }
 
 compileJava {
@@ -55,8 +54,6 @@ openApiGenerate {
   modelPackage = "au.org.raid.idl.raidv2.model"
   apiPackage = "au.org.raid.idl.raidv2.api"
 
-
-
   /* Setting globals seems to mean it only generates what you specify. 
   If no globalProps, it generates everything.*/
   globalProperties = [
@@ -87,46 +84,47 @@ openApiGenerate {
   ]
   configOptions = [
 
-    /* use outputDir instead of this, so that random supporting openapi files
-    are written in `generated` (and .gitignore'd) instead of in project dir. */
-    sourceFolder: "",
+          /* use outputDir instead of this, so that random supporting openapi files
+          are written in `generated` (and .gitignore'd) instead of in project dir. */
+          sourceFolder         : "",
 
-    /* useTags=true, means you can group api endpoints together onto a single
-    class by setting a "tag" at the "/paths/path/method/tags" level.
-    Endpoints with no tag end up on "DefaultApi.java".
-    useTags=false means each endpoint gets its own class, name is generated from
-    the path/method stuff.
-    Use the "operationId" field in the YAML to control the generated method
-    name.
-    */
-    useTags: "true",
+          /* useTags=true, means you can group api endpoints together onto a single
+          class by setting a "tag" at the "/paths/path/method/tags" level.
+          Endpoints with no tag end up on "DefaultApi.java".
+          useTags=false means each endpoint gets its own class, name is generated from
+          the path/method stuff.
+          Use the "operationId" field in the YAML to control the generated method
+          name.
+          */
+          useTags              : "true",
 
-    /* use newer spring annotations, including jakarta isntead of javax. for
-    servlet annotations. */
-    useSpringBoot3: "true",
+          /* use newer spring annotations, including jakarta isntead of javax. for
+          servlet annotations. */
+          useSpringBoot3       : "true",
 
-    /* generates a @Controller anno on the api interface */
-    useSpringController: "false",
+          /* generates a @Controller anno on the api interface */
+          useSpringController  : "true",
 
-    /* Related to generating "api" classes (controlled by "apis" globalProp)
-    Causes API classes to not generate default implementations of the endpoint
-    methods. */
-    skipDefaultInterface: "true",
+          useSwaggerUI         : "true",
 
-    /* false - generates api Controller classes and other stuff.
-    true - does not generate controller classes */
-    interfaceOnly: "true",
 
-    /* set to false because model classes were failing because of the import of
-    jackson.Nullable */
-    openApiNullable: "false",
+          /* Related to generating "api" classes (controlled by "apis" globalProp)
+          Causes API classes to not generate default implementations of the endpoint
+          methods. */
+          skipDefaultInterface : "true",
 
-    /* Generate LocalDateTime, etc. */
-    dateLibrary: "java8",
+          /* false - generates api Controller classes and other stuff.
+          true - does not generate controller classes */
+          interfaceOnly        : "true",
 
-    documentationProvider: "none",
+          /* set to false because model classes were failing because of the import of
+          jackson.Nullable */
+          openApiNullable      : "false",
 
-    delegatePattern: "false",
+          /* Generate LocalDateTime, etc. */
+          dateLibrary          : "java8",
+
+          delegatePattern      : "false",
   ]  
 }
 tasks.openApiGenerate{

@@ -25,8 +25,6 @@ import static org.springframework.security.core.context.SecurityContextHolder.ge
 @RestController
 @Transactional
 public class UnapprovedExperimental implements UnapprovedExperimentalApi {
-    private static final Log log = Log.to(UnapprovedExperimental.class);
-
     private AuthzRequestService authzRequestSvc;
 
     public UnapprovedExperimental(
@@ -47,15 +45,10 @@ public class UnapprovedExperimental implements UnapprovedExperimentalApi {
         var apiToken = getContext().getAuthentication();
 
         if (apiToken == null) {
-            log.error("SecurityContext is empty)");
             throw ExceptionUtil.authFailed();
         }
 
         if (!(apiToken instanceof UnapprovedUserApiToken unapprovedUserToken)) {
-            log.with("tokenType", apiToken.getClass().getName()).
-                    // this is a decoded structure, no signature - ok to log it
-                            with("apiToken", apiToken).
-                    error("authentication type is not an unapproved user api-token)");
             throw ExceptionUtil.authFailed();
         }
 

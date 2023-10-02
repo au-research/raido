@@ -11,7 +11,6 @@ import au.org.raid.api.util.Nullable;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.eclipse.jetty.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.ErrorResponse;
@@ -158,35 +157,7 @@ public class RedactingExceptionResolver implements HandlerExceptionResolver {
             return ((ErrorResponse) ex).getStatusCode().value();
         }
 
-        if (ex instanceof ValidationException) {
-            return HttpStatus.BAD_REQUEST_400;
-        }
-
-        if (ex instanceof ResourceNotFoundException) {
-            return HttpStatus.NOT_FOUND_404;
-        }
-
-        if (ex instanceof BadCredentialsException) {
-            return HttpStatus.UNAUTHORIZED_401;
-        }
-
-        if (ex instanceof IdProviderException) {
-            return HttpStatus.BAD_REQUEST_400;
-        }
-
-        if (ex instanceof CrossAccountAccessException) {
-            return HttpStatus.FORBIDDEN_403;
-        }
-
-//    if( ex instanceof NotAuthorizedExcepton ){
-//      return HttpStatus.UNAUTHORIZED;
-//    }
-
-        if (ex instanceof NoHandlerFoundException) {
-            return HttpStatus.NOT_FOUND_404;
-        }
-
-        return HttpStatus.INTERNAL_SERVER_ERROR_500;
+        return 500;
     }
 
     @Nullable

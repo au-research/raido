@@ -14,6 +14,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,15 +24,14 @@ import java.util.List;
 import java.util.Optional;
 
 import static au.org.raid.db.jooq.api_svc.enums.IdProvider.ORCID;
-import static org.eclipse.jetty.util.TypeUtil.isFalse;
 
 
+@Slf4j
 @RequestMapping
 @RestController
 public class AppUserAuthnEndpoint {
     public static final String IDP_URL = "/idpresponse";
     public static final String EMAIL_CLAIM = "email";
-    private static final Log log = Log.to(AppUserAuthnEndpoint.class);
     private ObjectMapper map;
 
     private RaidV2AppUserOidcService userOidcSvc;
@@ -82,8 +82,6 @@ public class AppUserAuthnEndpoint {
     public void authenticate(
             HttpServletRequest req, HttpServletResponse res
     ) throws IOException, ApiSafeException {
-        // log only the keySet, not the values, don't want authn codes in logs
-        log.with("params", req.getParameterMap().keySet()).debug("/idpresponse");
 
         String idpResponseCode = req.getParameter("code");
         if (StringUtil.isNullOrEmpty(idpResponseCode)) {
@@ -96,7 +94,6 @@ public class AppUserAuthnEndpoint {
         }
 
         String decodedState = RestUtil.base64Decode(stateValue);
-        log.with("decodeState", decodedState).debug();
 
         var state = map.readValue(decodedState, AuthState.class);
 
@@ -107,8 +104,6 @@ public class AppUserAuthnEndpoint {
         if (!isAllowedRedirectUri(
                 authnProps.getAllowedClientRedirectUris(), state.redirectUri)
         ) {
-            log.with("redirectUri", state.redirectUri).
-                    error("redirectUri not in allowed list");
             throw ExceptionUtil.authFailed();
         }
 
@@ -147,10 +142,6 @@ public class AppUserAuthnEndpoint {
         var userRecord = appUserRepo.
                 getAppUserRecord(email, subject, state.clientId);
         if (userRecord.isEmpty()) {
-            log.with("email", email).
-                    with("subject", subject).
-                    with("clientId", state.clientId).
-                    debug("identified new NonAuthz user");
             // valid: authenticated via an IdP but not authorized/approved as a user
             res.sendRedirect("%s#id_token=%s".formatted(
                     state.redirectUri,
@@ -165,18 +156,12 @@ public class AppUserAuthnEndpoint {
         }
 
         var user = userRecord.get();
-        if (isFalse(user.getEnabled())) {
+        if (!user.getEnabled()) {
             // SP would need to look in their user list to know user is disabled
-            log.with("appUserId", user.getId()).
-                    with("email", user.getEmail()).
-                    info("user tried to authenticate, but is disabled");
             throw ExceptionUtil.authFailed();
         }
 
         if (user.getIdProvider() == IdProvider.RAIDO_API) {
-            log.with("appUserId", user.getId()).
-                    with("subject", user.getSubject()).
-                    info("api-key users cannot authenticate using user service");
             throw ExceptionUtil.authFailed();
         }
 

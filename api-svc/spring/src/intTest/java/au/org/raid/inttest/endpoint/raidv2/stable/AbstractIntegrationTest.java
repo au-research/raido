@@ -1,23 +1,26 @@
 package au.org.raid.inttest.endpoint.raidv2.stable;
 
+import au.org.raid.api.Api;
 import au.org.raid.api.service.raid.id.IdentifierParser;
 import au.org.raid.api.service.stub.util.IdFactory;
 import au.org.raid.idl.raidv1.api.RaidV1Api;
 import au.org.raid.idl.raidv2.api.BasicRaidExperimentalApi;
 import au.org.raid.idl.raidv2.api.RaidoStableV1Api;
 import au.org.raid.idl.raidv2.model.*;
-import au.org.raid.inttest.JettyTestServer;
 import au.org.raid.inttest.TestClient;
 import au.org.raid.inttest.auth.BootstrapAuthTokenService;
-import au.org.raid.inttest.config.IntTestProps;
+import au.org.raid.inttest.client.RaidApi;
 import au.org.raid.inttest.config.IntegrationTestConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Contract;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
-import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -30,14 +33,11 @@ import static au.org.raid.inttest.endpoint.raidv2.stable.TestConstants.*;
 import static au.org.raid.inttest.util.MinimalRaidTestData.REAL_TEST_ORCID;
 import static au.org.raid.inttest.util.MinimalRaidTestData.REAL_TEST_ROR;
 
-@SpringJUnitConfig(
-        name = "SpringJUnitConfigContext",
-        value = IntegrationTestConfig.class)
+@SpringBootTest(classes = Api.class,
+        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@ContextConfiguration(classes = IntegrationTestConfig.class)
 public class AbstractIntegrationTest {
     protected static final Long UQ_SERVICE_POINT_ID = 20000002L;
-
-    @RegisterExtension
-    protected static JettyTestServer jettyTestServer = new JettyTestServer();
     protected final IdFactory idFactory = new IdFactory("inttest");
     protected String operatorToken;
     protected String raidV1TestToken;
@@ -50,6 +50,8 @@ public class AbstractIntegrationTest {
     protected RaidV1Api legacyApi;
 
     protected IdentifierParser identifierParser;
+    @Autowired
+    protected RaidApi api;
 
     @Autowired
     protected TestClient testClient;
@@ -57,8 +59,6 @@ public class AbstractIntegrationTest {
     protected ObjectMapper mapper;
     @Autowired
     protected Contract feignContract;
-    @Autowired
-    protected IntTestProps props;
     @Autowired
     protected BootstrapAuthTokenService bootstrapTokenSvc;
     private TestInfo testInfo;

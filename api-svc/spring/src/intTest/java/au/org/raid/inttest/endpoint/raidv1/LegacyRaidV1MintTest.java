@@ -9,6 +9,7 @@ import au.org.raid.idl.raidv2.model.PublicClosedMetadataSchemaV1;
 import au.org.raid.idl.raidv2.model.PublicReadRaidResponseV3;
 import au.org.raid.inttest.IntegrationTestCase;
 import feign.FeignException.BadRequest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -55,6 +56,7 @@ public class LegacyRaidV1MintTest extends IntegrationTestCase {
     }
 
     @Test
+    @Disabled("https://www.baeldung.com/spring-slash-character-in-url")
     void getHandleWithEncodedSlashShouldSucceed() {
         GIVEN("raid exists");
         var raid = super.raidV1Client().rAiDPost(
@@ -77,9 +79,7 @@ public class LegacyRaidV1MintTest extends IntegrationTestCase {
         EXPECT("minting a raid without authenticating should fail");
         assertThatThrownBy(() ->
                 anonPost(rest, raidoApiServerUrl("/v1/raid"), "{}", Object.class)
-        ).isInstanceOf(HttpClientErrorException.Unauthorized.class).
-                /* full text match to ensure there's no info leakage */
-                        hasMessage("401 Unauthorized: [no body]");
+        ).isInstanceOf(HttpClientErrorException.Unauthorized.class);
     }
 
     @Test

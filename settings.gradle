@@ -22,24 +22,13 @@ dependencyResolutionManagement{
 
   versionCatalogs{
     libs{
-      /* https://www.jooq.org/learn/ 
+      /* https://www.jooq.org/learn/
       Follow relevant version link for patch release history. */
       version('jooq', '3.18.0')
-      // https://github.com/spring-projects/spring-framework/releases
-      version('spring6', '6.0.6')
-      /* sometimes the latest version of spring-sec matches the spring version, 
-      but often if lags behind, especially for fix versions.
-      https://github.com/spring-projects/spring-security/releases */
-      version('spring6-sec', '6.0.2')
-      // https://github.com/eclipse/jetty.project/releases
-      version('jetty11', '11.0.14')
-      // https://logback.qos.ch/news.html
-      version('logback', '1.4.6')
       // https://github.com/OpenFeign/feign/releases
       version('feign', '12.2')
       // https://www.slf4j.org/news.html
-      version('slf4j', '2.0.7')
-
+      version('springboot3', '3.1.4')
 
       // https://documentation.red-gate.com/fd/release-notes-for-flyway-engine-179732572.html
       plugin('flyway', 'org.flywaydb.flyway').version('9.19.3')      
@@ -51,32 +40,28 @@ dependencyResolutionManagement{
       // https://assertj.github.io/doc/#assertj-core-release-notes
       library('assertj', 'org.assertj:assertj-core:3.24.2')
 
-      // core spring/web - pkg: org.springframework
-      library('spring-webmvc', 'org.springframework', 'spring-webmvc').versionRef('spring6')
-      // for @Transactional annotation
-      library('spring-tx', 'org.springframework', 'spring-tx').versionRef('spring6')
-      library('spring-jdbc', 'org.springframework', 'spring-jdbc').versionRef('spring6')
-      // core spring/web security - pkg: import org.sf.security
-      library('spring-security-core', 'org.springframework.security', 'spring-security-core').versionRef('spring6-sec')
-      // pkg: org.sf.security.web
-      library('spring-security-web', 'org.springframework.security', 'spring-security-web').versionRef('spring6-sec')
-      // for configuring through code - pkg: org.sf.security.config
-      library('spring-security-config', 'org.springframework.security', 'spring-security-config').versionRef('spring6-sec')
-      library('spring-security-oauth2-core', 'org.springframework.security', 'spring-security-oauth2-core').versionRef('spring6-sec')
-      library(
-        'spring-security-oauth2-resource-server', 
-        'org.springframework.security', 
-        'spring-security-oauth2-resource-server'
-      ).versionRef('spring6-sec')
-      bundle('spring6', [
-        'spring-webmvc', 
-        'spring-tx',
-        'spring-jdbc',
-        'spring-security-core',
-        'spring-security-web',
-        'spring-security-config',
-        'spring-security-oauth2-core',
-        'spring-security-oauth2-resource-server',
+      library('springdoc-openapi', 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0')
+
+      library('spring-boot-starter-web', 'org.springframework.boot', 'spring-boot-starter-web').versionRef('springboot3')
+      library('spring-boot-starter-security', 'org.springframework.boot', 'spring-boot-starter-security').versionRef('springboot3')
+      library('spring-boot-starter-jdbc', 'org.springframework.boot', 'spring-boot-starter-jdbc').versionRef('springboot3')
+      library('spring-boot-starter-oauth2-resource-server', 'org.springframework.boot', 'spring-boot-starter-oauth2-resource-server').versionRef('springboot3')
+      library('spring-boot-starter-jooq', 'org.springframework.boot', 'spring-boot-starter-jooq').versionRef('springboot3')
+      library('spring-boot-starter-actuator', 'org.springframework.boot', 'spring-boot-starter-actuator').versionRef('springboot3')
+
+      bundle('springboot3', [
+              'spring-boot-starter-web',
+              'spring-boot-starter-security',
+              'spring-boot-starter-jdbc',
+              'spring-boot-starter-oauth2-resource-server',
+              'spring-boot-starter-jooq',
+              'spring-boot-starter-actuator'
+      ])
+
+      library('spring-boot-starter-test', 'org.springframework.boot', 'spring-boot-starter-test').versionRef('springboot3')
+
+      bundle('springboot3-test', [
+              'spring-boot-starter-test'
       ])
 
       library('feign-okhttp', 'io.github.openfeign', 'feign-okhttp').versionRef('feign')
@@ -87,28 +72,6 @@ dependencyResolutionManagement{
         'feign-jackson',
         'feign-slf4j',
       ])
-
-      // embedded Jetty server - pkg: org.eclipse.jetty.server
-      library('jetty-server', 'org.eclipse.jetty','jetty-server').versionRef('jetty11')
-      // Jetty support for Servlet API - pkg: org.eclipse.jetty.servlet
-      library('jetty-servlets', 'org.eclipse.jetty','jetty-servlets').versionRef('jetty11')
-      // new lib I had to import or couldnt' find ServletContextHandler
-      library('jetty-servlet', 'org.eclipse.jetty','jetty-servlet').versionRef('jetty11')
-      bundle('jetty11', ['jetty-server', 'jetty-servlets', 'jetty-servlet'])
-
-      library('logback-core', 'ch.qos.logback','logback-core').versionRef('logback')
-      library('logback-classic', 'ch.qos.logback','logback-classic').versionRef('logback')
-      bundle('logback-runtime', ['logback-core', 'logback-classic'])
-
-      library('spring-test', 'org.springframework', 'spring-test').versionRef('spring6')
-      library('spring-security-test', 'org.springframework.security', 'spring-security-test').versionRef('spring6-sec')
-      bundle('spring6-test', [ 'spring-test', 'spring-security-test'])
-      
-      library('slf4j-api', 'org.slf4j', 'slf4j-api').versionRef('slf4j')
-      // allows SLF4J to capture java.util logging 
-      library('slf4j-jul', 'org.slf4j', 'jul-to-slf4j').versionRef('slf4j')
-      bundle('slf4j', [ 'slf4j-api', 'slf4j-jul'])
-
     }
   }
 }

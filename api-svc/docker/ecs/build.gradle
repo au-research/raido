@@ -79,15 +79,15 @@ task ecsDockerBuild(type: Exec){
   group = 'docker.build'
   dependsOn dockerStage
   description = "build the docker image $containerName:[project version]"
-  
+
   doFirst{
     println "building $localImagePath ..."
   }
   workingDir = project.ext.stagingDir
-  
-  commandLine osCmd('docker', 'build', 
-    '-t', localImagePath, 
-    '-f', 'Dockerfile', 
+
+  commandLine osCmd('docker', 'build',
+    '-t', localImagePath,
+    '-f', 'Dockerfile',
     '.'
   )
 }
@@ -101,7 +101,7 @@ task ecsDockerTag(type: Exec){
   doFirst {
     assert ecsEcrHost : "ecsEcrHost must be set in api-svc-docker.gradle"
     assert ecsEcrRepo : "ecsEcrRepo must be set in api-svc-docker.gradle"
-    // add a check that makes sure we're not tagging a dirty version as a 
+    // add a check that makes sure we're not tagging a dirty version as a
     // release image
     println "tagging $localImagePath as $ecsEcrImagePath ..."
   }
@@ -121,7 +121,7 @@ task ecsDockerPush(type: Exec){
   doFirst {
     assert ecsEcrHost : "ecsEcrHost must be set in api-svc-docker.gradle"
     assert ecsEcrRepo : "ecsEcrRepo must be set in api-svc-docker.gradle"
-    // add a check that makes sure we're not tagging a dirty version as a 
+    // add a check that makes sure we're not tagging a dirty version as a
     // release image
     println "pushing $ecsEcrImagePath ..."
   }

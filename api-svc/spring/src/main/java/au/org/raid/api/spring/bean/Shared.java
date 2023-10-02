@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -35,6 +36,7 @@ public class Shared {
     }
 
     @Bean
+    @Primary
     public static RestTemplate restTemplate(ClientHttpRequestFactory factory) {
         MappingJackson2XmlHttpMessageConverter xmlConverter =
                 new MappingJackson2XmlHttpMessageConverter();
@@ -64,9 +66,9 @@ public class Shared {
     public static ClientHttpRequestFactory clientHttpRequestFactory(
             boolean followRedirects
     ) {
-        OkHttpClient client = new OkHttpClient.Builder().
-                followRedirects(followRedirects).
-                build();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .followRedirects(followRedirects)
+                .build();
 
         return new OkHttp3ClientHttpRequestFactory(client) {
             @Override
