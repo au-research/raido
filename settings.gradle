@@ -22,9 +22,6 @@ dependencyResolutionManagement{
 
   versionCatalogs{
     libs{
-      /* https://www.jooq.org/learn/
-      Follow relevant version link for patch release history. */
-      version('jooq', '3.18.0')
       // https://github.com/OpenFeign/feign/releases
       version('feign', '12.2')
       // https://www.slf4j.org/news.html
@@ -34,7 +31,6 @@ dependencyResolutionManagement{
       plugin('flyway', 'org.flywaydb.flyway').version('9.19.3')      
       plugin('jooq', 'nu.studer.jooq').version('8.1')      
       
-      library('jooq', 'org.jooq', 'jooq').versionRef('jooq')
       // https://jdbc.postgresql.org/changelogs/
       library('pgjdbc', 'org.postgresql:postgresql:42.5.4')
       // https://assertj.github.io/doc/#assertj-core-release-notes

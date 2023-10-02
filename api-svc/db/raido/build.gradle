@@ -37,8 +37,6 @@ if( file(configPath).exists() ){
 }
 
 dependencies{
-  implementation libs.jooq
-  
   // for flyway
   runtimeOnly libs.pgjdbc
 
@@ -106,7 +104,7 @@ task cleanJooqGeneratedSrc(type: Delete){
 }
 
 jooq{
-  version = libs.versions.jooq.get()
+  version = '3.18.0'
   configurations{
     main{  // name of the jOOQ configuration
       generateSchemaSourceOnCompilation = false

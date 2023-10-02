@@ -43,9 +43,6 @@ dependencies{
   // don't really care, whatever version Gradle is using will do
   implementation localGroovy()
 
-  // look in settings.gradle for version catalog specs 
-  implementation libs.jooq
-
   runtimeOnly libs.pgjdbc
   jooqGenerator libs.pgjdbc
 
@@ -169,7 +166,7 @@ task cleanJooqGeneratedSrc(type: Delete){
 }
 
 jooq{
-  version = libs.versions.jooq.get()
+  version = '3.18.0'
   configurations{
     main{  // name of the jOOQ configuration
       generateSchemaSourceOnCompilation = false
