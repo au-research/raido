@@ -52,6 +52,7 @@ import {
 } from "Util/DateUtil";
 import { escapeCsvField } from "Util/DownloadUtil";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { t } from "i18next";
 
 const log = console;
 
@@ -292,7 +293,7 @@ export function RaidTableContainerV2({ servicePointId }: ListRaidsV1Request) {
       )}
 
       <ContainerCard
-        title={"Recently minted RAiD data"}
+        title={t("handleTableHeading")}
         action={
           <>
             <Stack direction={"row"} gap={2} sx={{ p: 1 }}>
