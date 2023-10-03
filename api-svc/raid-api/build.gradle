@@ -214,3 +214,7 @@ task buildInfo(type: WriteProperties){
   property("build.buildDate", new Date().toString())
 }
 processResources.dependsOn buildInfo
+
+bootJar {
+  archiveFileName = "raido-api-svc.jar"
+}
