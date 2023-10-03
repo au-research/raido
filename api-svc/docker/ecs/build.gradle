@@ -55,7 +55,7 @@ ext {
 }
 
 task dockerStage(type: Copy) {
-  dependsOn ':api-svc:spring:build'
+  dependsOn ':api-svc:raid-api:build'
   group = 'docker.build'
   destinationDir = file(stagingDir)
   description = "copy dockerfile, scripts, jar, etc. to $stagingDir"
