@@ -210,7 +210,7 @@ function InstitutionAutocomplete({state, query}: {
     options={query.data || []}
     value={institution}
     onChange={handleChange}
-    renderInput={(params) =>
+    renderInput={(...params) =>
       <TextField {...params} required label="Institution"
         autoFocus={true}/>
     }

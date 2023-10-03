@@ -39,7 +39,7 @@ export function  ButtonContainer({
             return null;
           }
           return <span style={buttonPadding}>
-            {i}
+            <>{i}</>
           </span>
         }
       )}
