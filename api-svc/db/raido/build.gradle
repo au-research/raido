@@ -150,6 +150,8 @@ jooq{
   }
 }
 tasks.generateJooq.dependsOn cleanJooqGeneratedSrc
+tasks.compileJava.dependsOn tasks.generateJooq
+
 
 tasks.register('loadSubjects', LoadSubjectsTask) {
   dataFileUrl = 'https://vocabs.ardc.edu.au/registry/api/resource/downloads/1438/anzsrc-2020-for-20210429.ttl'
