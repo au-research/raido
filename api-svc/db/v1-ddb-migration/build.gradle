@@ -204,4 +204,3 @@ jooq{
   }
 }
 tasks.generateJooq.dependsOn cleanJooqGeneratedSrc
-tasks.compileJava.dependsOn generateJooq

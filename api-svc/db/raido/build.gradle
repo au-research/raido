@@ -150,7 +150,6 @@ jooq{
   }
 }
 tasks.generateJooq.dependsOn cleanJooqGeneratedSrc
-tasks.compileJava.dependsOn tasks.generateJooq
 
 
 tasks.register('loadSubjects', LoadSubjectsTask) {
