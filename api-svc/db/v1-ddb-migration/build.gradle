@@ -50,6 +50,8 @@ dependencies{
   implementation( 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.0'){
     exclude group: 'org.springframework.boot'
   }
+
+  implementation 'org.jooq:jooq:3.18.0'
   implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3"
   
   // these were in api-svc somehow (transitively from spring?), 

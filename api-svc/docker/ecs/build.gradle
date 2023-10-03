@@ -6,10 +6,10 @@ import static raido.OsUtil.osCmd
 version = rootProject.version
 
 // needed to reference ext properties of the project
-evaluationDependsOn(':api-svc:spring')
+evaluationDependsOn(':api-svc:raid-api')
 
 ext{
-  apiSvcJarPath = project(":api-svc:spring").tasks.uberJar.archivePath
+  apiSvcJarPath = project(":api-svc:raid-api").tasks.bootJar.archiveFileName
   srcDir = 'src/main/docker'
   stagingDir = "$project.buildDir/dockerStaging"
 

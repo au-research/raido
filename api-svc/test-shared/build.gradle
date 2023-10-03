@@ -2,7 +2,7 @@ plugins{
   id 'java'
 }
 
-dependencies{
-  // it's ok for test-shared to depend on prod, just not the other way around
-  implementation project(':api-svc:spring')
+dependencies {
+    implementation project(':api-svc:raid-api')
 }
+
