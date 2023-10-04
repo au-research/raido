@@ -214,7 +214,7 @@ export default function FormRelatedRaidsComponent({
                                         value.identifier.id
                                       );
                                     }}
-                                    renderInput={(params) => (
+                                    renderInput={(...params) => (
                                       <TextField
                                         {...params}
                                         size="small"

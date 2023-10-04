@@ -211,7 +211,7 @@ export default function FormTitlesComponent({
                                     isOptionEqualToValue={(option, value) => {
                                       return option.id === value.id;
                                     }}
-                                    renderInput={(params) => (
+                                    renderInput={(...params) => (
                                       <TextField
                                         {...params}
                                         size="small"
