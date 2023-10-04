@@ -9,6 +9,7 @@ public class CorsConfiguration implements WebMvcConfigurer{
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/swagger-ui/index.html");
+        registry.addMapping("/swagger-ui/index.html")
+                .allowedOrigins("https://api.test.raid.org.au");
     }
 }
