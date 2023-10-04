@@ -29,6 +29,8 @@ import {
   TraditionalKnowledgeLabel,
 } from "Generated/Raidv2";
 
+import "../../i18n";
+
 import { newRaid } from "utils";
 
 const pageUrl = "/mint-raid-new";
