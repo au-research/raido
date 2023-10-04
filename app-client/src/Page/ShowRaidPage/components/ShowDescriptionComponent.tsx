@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
 import { extractKeyFromIdUri } from "utils";
-import { languages } from "../../../Page/languages";
+import language from "../../../References/language.json";
 
 export default function ShowDescriptionComponent({
   raid,
@@ -50,7 +50,7 @@ export default function ShowDescriptionComponent({
               )}
             </Box>
             {raid?.description?.map((description, index) => {
-              const language = languages.find(
+              const lang = language.find(
                 (language) => language.id === description?.language?.id
               );
 
@@ -80,7 +80,7 @@ export default function ShowDescriptionComponent({
                         <Box>
                           <Typography variant="body2">Language</Typography>
                           <Typography color="text.secondary" variant="body1">
-                            {language?.name}
+                            {lang?.name}
                           </Typography>
                         </Box>
                       </Grid>
