@@ -1,6 +1,16 @@
 import { Edit as EditIcon } from "@mui/icons-material";
 
-import { Box, Button, Container, Fab, Stack } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Container,
+  Fab,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthApi } from "Api/AuthApi";
 import { raidoTitle } from "Component/Util";
@@ -13,6 +23,9 @@ import {
   useNavigation,
 } from "Design/NavigationProvider";
 import { RaidDto } from "Generated/Raidv2";
+
+import JsonView from "react18-json-view";
+import "react18-json-view/src/style.css";
 
 import { CategoryHeader } from "helper-components";
 import { useState } from "react";
@@ -110,6 +123,29 @@ function Content() {
             raid={defaultValues}
             color={raidColors.get("blue") || ""}
           />
+
+          <Box sx={{ paddingLeft: 2 }}>
+            <Card
+              variant="outlined"
+              sx={{
+                borderLeft: "solid",
+                borderLeftColor: raidColors.get("blue") || "",
+                borderLeftWidth: 3,
+              }}
+            >
+              <CardHeader
+                title={
+                  <Typography variant="h6" component="div">
+                    Raw Data
+                  </Typography>
+                }
+              />
+
+              <CardContent>
+                <JsonView src={readQuery.data} />
+              </CardContent>
+            </Card>
+          </Box>
         </Stack>
       </Container>
     </>

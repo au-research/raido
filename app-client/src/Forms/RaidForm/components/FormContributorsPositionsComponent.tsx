@@ -23,7 +23,7 @@ import {
   FieldErrors,
   useFieldArray,
 } from "react-hook-form";
-import { contributorPositions } from "references";
+import contributorPositions from "../../../References/contributor_position.json";
 import { extractKeyFromIdUri } from "utils";
 
 export default function FormContributorsPositionsComponent({
@@ -128,8 +128,11 @@ export default function FormContributorsPositionsComponent({
                                   }}
                                 >
                                   {contributorPositions.map((position) => (
-                                    <MenuItem key={position} value={position}>
-                                      {extractKeyFromIdUri(position)}
+                                    <MenuItem
+                                      key={position.uri}
+                                      value={position.uri}
+                                    >
+                                      {extractKeyFromIdUri(position.uri)}
                                     </MenuItem>
                                   ))}
                                 </TextField>

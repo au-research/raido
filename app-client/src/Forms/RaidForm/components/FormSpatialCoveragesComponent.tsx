@@ -26,7 +26,7 @@ import {
   useFieldArray,
 } from "react-hook-form";
 import fieldData from "../../../fieldData.json";
-import { languages } from "../../../Page/languages";
+import language from "../../../References/language.json";
 
 export default function FormSpatialCoveragesComponent({
   control,
@@ -202,12 +202,12 @@ export default function FormSpatialCoveragesComponent({
                                   fieldState: { error },
                                 }) => (
                                   <Autocomplete
-                                    options={languages}
+                                    options={language}
                                     getOptionLabel={(option) =>
                                       `${option.id}: ${option.name}`
                                     }
                                     value={
-                                      languages.find(
+                                      language.find(
                                         (lang) => lang.id === value
                                       ) || null
                                     }

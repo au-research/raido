@@ -1,0 +1,14 @@
+[
+  {
+    "schema_id": 1,
+    "uri": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json"
+  },
+  {
+    "schema_id": 1,
+    "uri": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json"
+  },
+  {
+    "schema_id": 1,
+    "uri": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json"
+  }
+]

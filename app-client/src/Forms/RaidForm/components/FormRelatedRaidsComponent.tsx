@@ -31,7 +31,7 @@ import {
   UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
-import { relatedRaidTypes } from "../../../references";
+import relatedRaidTypes from "../../../References/related_raid_type.json";
 
 export default function FormRelatedRaidsComponent({
   control,

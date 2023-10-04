@@ -1,0 +1,22 @@
+[
+  {
+    "schema_id": 1,
+    "uri": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/co-investigator.json"
+  },
+  {
+    "schema_id": 1,
+    "uri": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/contact-person.json"
+  },
+  {
+    "schema_id": 1,
+    "uri": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json"
+  },
+  {
+    "schema_id": 1,
+    "uri": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/other-participant.json"
+  },
+  {
+    "schema_id": 1,
+    "uri": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/principal-investigator.json"
+  }
+]

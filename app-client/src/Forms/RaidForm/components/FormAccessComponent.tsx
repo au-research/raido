@@ -18,9 +18,10 @@ import {
   FieldErrors,
   UseFormTrigger,
 } from "react-hook-form";
-import { accessTypes } from "references";
+
+import accessTypes from "../../../References/access_type.json";
 import { extractKeyFromIdUri } from "utils";
-import { languages } from "../../../Page/languages";
+import language from "../../../References/language.json";
 
 const dateThreeYearsFromNow = dayjs().add(3, "year");
 
@@ -104,8 +105,8 @@ export default function FormAccessComponent({
                       {...field}
                     >
                       {accessTypes.map((accessType) => (
-                        <MenuItem key={accessType} value={accessType}>
-                          {extractKeyFromIdUri(accessType)}
+                        <MenuItem key={accessType.uri} value={accessType.uri}>
+                          {extractKeyFromIdUri(accessType.uri)}
                         </MenuItem>
                       ))}
                     </TextField>
@@ -123,12 +124,12 @@ export default function FormAccessComponent({
                     fieldState: { error },
                   }) => (
                     <Autocomplete
-                      options={languages}
+                      options={language}
                       getOptionLabel={(option) =>
                         `${option.id}: ${option.name}`
                       }
                       value={
-                        languages.find((lang) => lang.id === value) || null
+                        language.find((lang: any) => lang.id === value) || null
                       }
                       onChange={(_, newValue) => {
                         onChange(newValue ? newValue.id : "");

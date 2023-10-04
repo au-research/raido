@@ -21,8 +21,8 @@ import {
   FieldErrors,
   useFieldArray,
 } from "react-hook-form";
-import { contributorRoles } from "references";
-import { extractKeyFromIdUri, extractLastUrlSegment } from "utils";
+import contributorRoles from "../../../References/contributor_role.json";
+import { extractLastUrlSegment } from "utils";
 
 export default function FormContributorsRolesComponent({
   control,
@@ -112,8 +112,8 @@ export default function FormContributorsRolesComponent({
                                 }}
                               >
                                 {contributorRoles.map((role) => (
-                                  <MenuItem key={role} value={role}>
-                                    {extractLastUrlSegment(role)}
+                                  <MenuItem key={role.uri} value={role.uri}>
+                                    {extractLastUrlSegment(role.uri)}
                                   </MenuItem>
                                 ))}
                               </TextField>

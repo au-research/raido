@@ -26,10 +26,8 @@ import {
   useFieldArray,
 } from "react-hook-form";
 import { extractKeyFromIdUri } from "utils";
-import {
-  relatedObjectCategories,
-  relatedObjectTypes,
-} from "../../../references";
+import relatedObjectCategories from "../../../References/related_object_category.json";
+import relatedObjectTypes from "../../../References/related_object_type.json";
 
 export default function FormRelatedObjectsComponent({
   control,
