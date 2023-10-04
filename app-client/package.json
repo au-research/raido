@@ -40,6 +40,7 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.45.4",
     "react-scripts": "5.0.1",
+    "react18-json-view": "^0.2.5",
     "typescript": "4.9.4",
     "web-vitals": "2.1.4",
     "zod": "^3.22.2"
