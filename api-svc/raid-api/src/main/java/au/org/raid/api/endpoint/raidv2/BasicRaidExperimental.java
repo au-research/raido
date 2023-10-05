@@ -12,11 +12,15 @@ import au.org.raid.api.util.Log;
 import au.org.raid.db.jooq.api_svc.enums.Metaschema;
 import au.org.raid.idl.raidv2.api.BasicRaidExperimentalApi;
 import au.org.raid.idl.raidv2.model.*;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -40,6 +44,8 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 /* Be careful with usage of @Transactional, see db-transaction-guideline.md */
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
+@CrossOrigin
+@SecurityScheme(name = "bearerAuth", scheme = "bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 public class BasicRaidExperimental implements BasicRaidExperimentalApi {
     private DSLContext db;
     private RaidService raidSvc;

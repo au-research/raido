@@ -11,6 +11,8 @@ info:
 paths:
   /raid:
     post:
+      security:
+        - bearerAuth: [ ]
       tags:
         - raido-stable-v1
       operationId: create-raid-v1
@@ -35,6 +37,8 @@ paths:
               schema:
                 $ref: 'components.yaml#/components/schemas/ValidationFailureResponse'
     get:
+      security:
+        - bearerAuth: [ ]
       tags:
         - raido-stable-v1
       operationId: list-raids-v1
@@ -69,6 +73,8 @@ paths:
         schema:
           type: string
     get:
+      security:
+        - bearerAuth: [ ]
       tags:
         - raido-stable-v1
       operationId: read-raid-v1
@@ -87,6 +93,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/ClosedRaid'
     put:
+      security:
+        - bearerAuth: [ ]
       tags:
         - raido-stable-v1
       operationId: update-raid-v1

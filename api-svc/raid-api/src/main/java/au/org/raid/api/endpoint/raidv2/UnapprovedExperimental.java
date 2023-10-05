@@ -8,9 +8,13 @@ import au.org.raid.api.util.Log;
 import au.org.raid.idl.raidv2.api.UnapprovedExperimentalApi;
 import au.org.raid.idl.raidv2.model.UpdateAuthzRequest;
 import au.org.raid.idl.raidv2.model.UpdateAuthzResponse;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
@@ -24,6 +28,7 @@ import static org.springframework.security.core.context.SecurityContextHolder.ge
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
 @Transactional
+@CrossOrigin
 public class UnapprovedExperimental implements UnapprovedExperimentalApi {
     private AuthzRequestService authzRequestSvc;
 
