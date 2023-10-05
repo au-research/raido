@@ -4,6 +4,7 @@ import au.org.raid.api.spring.bean.MetricRegistry;
 import au.org.raid.api.util.JvmUtil;
 import au.org.raid.api.util.Log;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,6 +29,7 @@ public class PublicEndpoint {
      * result in the ASG cycling EC2 instances constantly, which will do nothing
      * to resolve the DB issue.
      */
+    @CrossOrigin
     @GetMapping(STATUS_PATH)
     public Map<String, String> warmUp() {
         return STATUS;

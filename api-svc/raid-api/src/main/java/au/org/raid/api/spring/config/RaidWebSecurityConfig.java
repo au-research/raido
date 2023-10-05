@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManagerResolver;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -57,19 +58,25 @@ public class RaidWebSecurityConfig {
     ) throws Exception {
         log.info("securityFilterChain()");
 
-        http.authorizeHttpRequests()
-                // order is important, more specific has to come before more general
+        // order is important, more specific has to come before more general
+        http.authorizeHttpRequests((authorizeHttpRequests) ->
+                authorizeHttpRequests
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/swagger-ui*/**").permitAll()
+                        .requestMatchers("/docs/**").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers(RAID_V1_API + RaidV1.HANDLE_URL_PREFIX + "/**").permitAll()
                         .requestMatchers(RAID_V2_PUBLIC_API + "/**").permitAll()
                         .requestMatchers(IDP_URL).permitAll()
-                /* Used only for the status endpoint; either make this explicit (no
-                wildcard, like IDP_URL) or better, move status endpoint under `/v2`.
-                Remember to update ASG health check, ALB rules, cloudfront rules. */
-                .requestMatchers(PUBLIC + "/**").permitAll()
+                        /* Used only for the status endpoint; either make this explicit (no
+                        wildcard, like IDP_URL) or better, move status endpoint under `/v2`.
+                        Remember to update ASG health check, ALB rules, cloudfront rules. */.requestMatchers(PUBLIC + "/**").permitAll()
                         .requestMatchers(RAID_V1_API + "/**").fullyAuthenticated()
                         .requestMatchers(RAID_V2_API + "/**").fullyAuthenticated()
                         .requestMatchers(RAID_STABLE_API + "/**").fullyAuthenticated()
-                        .anyRequest().permitAll();
+                        .anyRequest().denyAll()
+        );
+
 
         http.oauth2ResourceServer(oauth2 ->
                 oauth2.authenticationManagerResolver(tokenResolver));

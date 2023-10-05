@@ -8,12 +8,16 @@ import au.org.raid.idl.raidv2.api.PublicExperimentalApi;
 import au.org.raid.idl.raidv2.model.PublicReadRaidResponseV3;
 import au.org.raid.idl.raidv2.model.PublicServicePoint;
 import au.org.raid.idl.raidv2.model.VersionResult;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import jakarta.servlet.http.HttpServletRequest;
 import org.jooq.DSLContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +36,7 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
 @Transactional
+@CrossOrigin
 public class PublicExperimental implements PublicExperimentalApi {
     public static final String HANDLE_V3_CATCHALL_PREFIX =
             RAID_V2_API + "/public/handle/v3" + "/";
