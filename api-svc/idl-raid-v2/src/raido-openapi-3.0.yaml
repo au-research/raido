@@ -5,8 +5,11 @@ servers:
     description: The production service - "PROD".
   - url: 'https://api.demo.raid.org.au'
     description: >
-      DEMO environment, used for developer integration testing and 
+      DEMO environment, used for client integration testing and 
       customer demonstrations.
+  - url: 'https://api.test.raid.org.au'
+    description: >
+      dev environment, used for developer integration testing.
   - url: 'http://localhost:8080'
     description: Local development.
     
@@ -45,7 +48,7 @@ tags:
   - name: basic-raid-stable
     description: Stable APIs.
 security:
-  - BearerAuth: []
+  - bearerAuth: []
 
 paths:
 
@@ -134,7 +137,7 @@ paths:
 
 components:
   securitySchemes:
-    BearerAuth:
+    bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT

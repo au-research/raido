@@ -15,11 +15,15 @@ import au.org.raid.api.util.*;
 import au.org.raid.db.jooq.api_svc.tables.records.AppUserRecord;
 import au.org.raid.idl.raidv2.api.AdminExperimentalApi;
 import au.org.raid.idl.raidv2.model.*;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import lombok.SneakyThrows;
 import org.jooq.DSLContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -31,6 +35,8 @@ import static au.org.raid.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
 import static au.org.raid.db.jooq.api_svc.tables.UserAuthzRequest.USER_AUTHZ_REQUEST;
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 
+@CrossOrigin
+@SecurityScheme(name = "bearerAuth", scheme = "bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
 @Transactional

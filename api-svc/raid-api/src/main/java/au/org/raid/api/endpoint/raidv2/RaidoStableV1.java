@@ -11,8 +11,12 @@ import au.org.raid.idl.raidv2.api.RaidoStableV1Api;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
@@ -26,6 +30,8 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
+@CrossOrigin
+@SecurityScheme(name = "bearerAuth", scheme = "bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 public class RaidoStableV1 implements RaidoStableV1Api {
     private final RaidoStableV1Validator validationService;
     private final RaidStableV1Service raidService;
@@ -53,7 +59,7 @@ public class RaidoStableV1 implements RaidoStableV1Api {
 
 
     @Override
-    public ResponseEntity<RaidDto> createRaidV1(RaidCreateRequest request) {
+    public ResponseEntity<RaidDto> createRaidV1(final RaidCreateRequest request) {
         final var user = getApiToken();
 
         if (!raidService.isEditable(user, user.getServicePointId())) {
@@ -74,7 +80,7 @@ public class RaidoStableV1 implements RaidoStableV1Api {
     }
 
     @Override
-    public ResponseEntity<List<RaidDto>> listRaidsV1(Long servicePoint) {
+    public ResponseEntity<List<RaidDto>> listRaidsV1(final Long servicePoint) {
         var user = getApiToken();
 
         return ResponseEntity.ok(Optional.ofNullable(servicePoint)

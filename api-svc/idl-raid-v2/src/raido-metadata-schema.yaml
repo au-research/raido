@@ -11,6 +11,8 @@ info:
 paths:
   /mint-raido-schema-v1:
     post:
+      security:
+        - bearerAuth: [ ]
       tags:
         - basic-raid-experimental
       operationId: mint-raido-schema-v1
@@ -44,6 +46,8 @@ paths:
                 $ref: '#/components/schemas/MintResponse'
   /read-raid-v2:
     post:
+      security:
+        - bearerAuth: [ ]
       tags:
         - basic-raid-experimental
       operationId: read-raid-v2
@@ -66,6 +70,8 @@ paths:
                 $ref: '#/components/schemas/ReadRaidResponseV2'
   /list-raid-v2:
     post:
+      security:
+        - bearerAuth: [ ]
       tags:
         - basic-raid-experimental
       operationId: list-raid-v2
@@ -87,6 +93,8 @@ paths:
                   $ref: '#/components/schemas/RaidListItemV2'
   /list-raid-v3:
     post:
+      security:
+        - bearerAuth: [ ]
       tags:
         - basic-raid-experimental
       operationId: list-raid-v3
@@ -108,6 +116,8 @@ paths:
                   $ref: '#/components/schemas/RaidListItemV3'
   /migrate-legacy-raid:
     post:
+      security:
+        - bearerAuth: [ ]
       tags:
         - admin-experimental
       operationId: /migrate-legacy-raid
@@ -139,6 +149,8 @@ paths:
                 $ref: '#/components/schemas/MintResponse'
   /update-raido-schema-v2:
     post:
+      security:
+        - bearerAuth: [ ]
       tags:
         - basic-raid-experimental
       operationId: update-raido-schema-v2
@@ -164,6 +176,8 @@ paths:
                 $ref: '#/components/schemas/MintResponse'
   /update-raido-schema-v1:
     post:
+      security:
+        - bearerAuth: [ ]
       tags:
         - basic-raid-experimental
       operationId: update-raido-schema-v1
@@ -189,6 +203,8 @@ paths:
                 $ref: '#/components/schemas/MintResponse'
   /upgrade-legacy-to-raido-schema:
     post:
+      security:
+        - bearerAuth: [ ]
       tags:
         - basic-raid-experimental
       operationId: upgrade-legacy-to-raido-schema

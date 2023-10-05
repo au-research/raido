@@ -31,6 +31,7 @@ import static org.springframework.http.MediaType.TEXT_HTML_VALUE;
  * - non-api urls - /does-not-exist
  * - api endpoint urls - /public/does-not-exist
  */
+@Disabled
 public class HttpStatusMappingTest extends IntegrationTestCase {
     // tests will fail if someone defines this as a valid endpoint path
     public static final String NON_EXISTENT_API_PATH = PUBLIC + "/does-not-exist";

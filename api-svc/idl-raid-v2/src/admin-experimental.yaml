@@ -11,6 +11,8 @@ info:
 paths:
   /read-request-authz:
     get:
+      security:
+        - bearerAuth: [ ]
       tags:
         - admin-experimental
       operationId: read-request-authz
@@ -31,6 +33,8 @@ paths:
                 $ref: '#/components/schemas/AuthzRequestExtraV1'
   /update-authz-request-status:
     post:
+      security:
+        - bearerAuth: [ ]
       tags:
         - admin-experimental
       operationId: update-authz-request-status
@@ -46,6 +50,8 @@ paths:
           description: succeeded
   /list-authz-request:
     get:
+      security:
+        - bearerAuth: [ ]
       tags:
         - admin-experimental
       operationId: list-authz-request
@@ -61,6 +67,8 @@ paths:
                   $ref: '#/components/schemas/AuthzRequestExtraV1'
   /service-point:
     get:
+      security:
+        - bearerAuth: [ ]
       tags:
         - admin-experimental
       operationId: list-service-point
@@ -78,6 +86,8 @@ paths:
                 items:
                   $ref: '#/components/schemas/ServicePoint'
     post:
+      security:
+        - bearerAuth: [ ]
       tags:
         - admin-experimental
       operationId: update-service-point
@@ -97,6 +107,8 @@ paths:
                 $ref: '#/components/schemas/ServicePoint'
   /read-service-point:
     get:
+      security:
+        - bearerAuth: [ ]
       tags:
         - admin-experimental
       operationId: read-service-point
@@ -117,6 +129,8 @@ paths:
                 $ref: '#/components/schemas/ServicePoint'
   /list-app-user:
     get:
+      security:
+        - bearerAuth: [ ]
       tags:
         - admin-experimental
       operationId: list-app-user
@@ -139,6 +153,8 @@ paths:
                   $ref: '#/components/schemas/AppUser'
   /update-app-user:
     post:
+      security:
+        - bearerAuth: [ ]
       tags:
         - admin-experimental
       operationId: update-app-user
@@ -158,6 +174,8 @@ paths:
                 $ref: '#/components/schemas/AppUser'
   /read-app-user:
     get:
+      security:
+        - bearerAuth: [ ]
       tags:
         - admin-experimental
       operationId: read-app-user
@@ -178,6 +196,8 @@ paths:
                 $ref: '#/components/schemas/AppUser'                
   /list-api-key:
     get:
+      security:
+        - bearerAuth: [ ]
       tags:
         - admin-experimental
       operationId: list-api-key
@@ -200,6 +220,8 @@ paths:
                   $ref: '#/components/schemas/ApiKey'
   /update-api-key:
     post:
+      security:
+        - bearerAuth: [ ]
       tags:
         - admin-experimental
       operationId: update-api-key
@@ -221,6 +243,8 @@ paths:
                 $ref: '#/components/schemas/ApiKey'
   /read-api-key:
     get:
+      security:
+        - bearerAuth: [ ]
       tags:
         - admin-experimental
       operationId: read-api-key
@@ -241,6 +265,8 @@ paths:
                 $ref: '#/components/schemas/ApiKey' 
   /read-app-user-extra:
     get:
+      security:
+        - bearerAuth: [ ]
       tags:
         - admin-experimental
       operationId: read-app-user-extra
@@ -261,6 +287,8 @@ paths:
                 $ref: '#/components/schemas/AppUserExtraV1'
   /generate-api-token:
     post:
+      security:
+        - bearerAuth: [ ]
       tags:
         - admin-experimental
       operationId: generate-api-token
