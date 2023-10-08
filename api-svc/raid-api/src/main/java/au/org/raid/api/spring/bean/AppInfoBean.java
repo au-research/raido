@@ -10,13 +10,13 @@ import static au.org.raid.api.util.Log.to;
 public class AppInfoBean {
     private static final Log log = to(AppInfoBean.class);
 
-    @Value("${build.version:local}")
+    @Value("${build.version:n/a}")
     private String buildVersion;
 
-    @Value("${build.commitId:local}")
+    @Value("${build.commitId:n/a}")
     private String buildCommitId;
 
-    @Value("${build.buildDate:local}")
+    @Value("${build.buildDate:m/a}")
     private String buildDate;
 
     public String getBuildVersion() {

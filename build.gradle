@@ -1,4 +1,3 @@
-import raido.GitUtil
 import raido.TimingListener
 
 plugins {
@@ -10,7 +9,6 @@ println "Gradle build launched with Java version: " + JavaVersion.current()
 
 ext {
   versionEnvName = "RAIDO_PROJECT_VERSION"
-  gitCommitHash = GitUtil.fullCommitHash(ext.versionEnvName)
 }
 
 /* Project version drives things like:
@@ -29,7 +27,6 @@ just really want to get Gradle running, set the value to "unknown" or something.
 
 See release-process.md for example git commands.
 */
-version = GitUtil.describe(ext.versionEnvName)
 println "Project version: $version"
 
 // to upgrade the wrapper, change the version and run this task
@@ -52,13 +49,3 @@ clean {
 
 // prints out timings for task execution, just for observability
 gradle.addListener new TimingListener()
-
-// you can also show the project version by running `gradlew properties`
-task showVersion{
-  group "build"
-  description "prints the project version, usually populated from Git tag refs"
-  doFirst{
-    println project.version
-    println project.ext.gitCommitHash as String
-  }
-}
