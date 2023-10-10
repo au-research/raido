@@ -31,7 +31,8 @@ import {
   UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
-import relatedRaidTypes from "../../../References/related_raid_type.json";
+import relatedRaidType from "../../../References/related_raid_type.json";
+import relatedRaidTypeSchema from "../../../References/related_raid_type_schema.json";
 
 export default function FormRelatedRaidsComponent({
   control,
@@ -78,8 +79,8 @@ export default function FormRelatedRaidsComponent({
     relatedRaidsFieldArray.append({
       // id: faker.string.uuid(),
       type: {
-        id: "isPartOf",
-        schemaUri: "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        id: relatedRaidType[0].uri,
+        schemaUri: relatedRaidTypeSchema[0].uri,
       },
     });
   };
@@ -157,10 +158,10 @@ export default function FormRelatedRaidsComponent({
                                   });
                                 }}
                               >
-                                {relatedRaidTypes.map((relatedRaidType) => (
+                                {relatedRaidType.map((relatedRaidType) => (
                                   <MenuItem
                                     key={relatedRaidType.uri}
-                                    value={relatedRaidType.name}
+                                    value={relatedRaidType.uri}
                                   >
                                     {relatedRaidType.name}
                                   </MenuItem>

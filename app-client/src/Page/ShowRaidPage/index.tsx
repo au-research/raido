@@ -37,6 +37,8 @@ import ShowDateComponent from "./components/ShowDateComponent";
 import ShowDescriptionComponent from "./components/ShowDescriptionComponent";
 import ShowOrganisationComponent from "./components/ShowOrganisationComponent";
 import ShowTitleComponent from "./components/ShowTitleComponent";
+import ShowRelatedObjectComponent from "./components/ShowRelatedObjectComponent";
+import ShowRelatedRaidComponent from "./components/ShowRelatedRaidComponent";
 
 const pageUrl = "/show-raid";
 
@@ -92,8 +94,8 @@ function Content() {
         <Stack direction={"column"} spacing={2}>
           <CategoryHeader
             color={raidColors.get("blue") || ""}
-            title="Main"
-            subheader="RAiD Main Data"
+            title={`Handle ${handle}`}
+            subheader={`Show data`}
           />
           <ShowTitleComponent
             raid={defaultValues}
@@ -120,6 +122,14 @@ function Content() {
             color={raidColors.get("blue") || ""}
           />
           <ShowOrganisationComponent
+            raid={defaultValues}
+            color={raidColors.get("blue") || ""}
+          />
+          <ShowRelatedObjectComponent
+            raid={defaultValues}
+            color={raidColors.get("blue") || ""}
+          />
+          <ShowRelatedRaidComponent
             raid={defaultValues}
             color={raidColors.get("blue") || ""}
           />
