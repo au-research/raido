@@ -5,10 +5,7 @@ import { raidoTitle } from "Component/Util";
 import {
   NavPathResult,
   NavTransition,
-  NavigationState,
   isPagePath,
-  parsePageSuffixParams,
-  useNavigation,
 } from "Design/NavigationProvider";
 import RaidForm from "Forms/RaidForm";
 import {
@@ -77,7 +74,7 @@ function Content() {
   const defaultValues = newRaid;
 
   return (
-    <Container maxWidth={"lg"}>
+    <Container maxWidth="lg" sx={{ py: 2 }}>
       <RaidForm
         defaultValues={defaultValues}
         onSubmit={async (data) => {
