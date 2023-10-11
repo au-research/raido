@@ -1,9 +1,10 @@
-import { createTheme, CssBaseline, useMediaQuery } from "@mui/material";
+import { Box, createTheme, CssBaseline, useMediaQuery } from "@mui/material";
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AuthApiProvider } from "Api/AuthApi";
 import { AuthProvider } from "Auth/AuthProvider";
 import { AppNavBar } from "Design/AppNavBar";
+import { AppNavBarNew } from "Design/AppNavBarNew";
 import { NavigationProvider } from "Design/NavigationProvider";
 import { RaidoTheme } from "Design/RaidoTheme";
 import { ErrorDialogProvider } from "Error/ErrorDialog";
@@ -98,8 +99,10 @@ export function App(){
                     {/* transition animation and delegates to location infra */}
                     <NavigationProvider>
                       {/* NavBar across the top of screen and sliding drawer */}
-                      <AppNavBar/>
+                      {/* <AppNavBar/> */}
+                      <AppNavBarNew/>
   
+                      <Box sx={{pt:7}}></Box>
                       {/* Navigable, authenticated pages, self-routed */}
                       <HomePage/>
                       <AboutAppPage/>

@@ -12,7 +12,13 @@ import { DateDisplay, raidoTitle, RoleDisplay } from "Component/Util";
 import { ListRaidsV1Request } from "Generated/Raidv2/apis/RaidoStableV1Api";
 import {
   Alert,
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Container,
   Fab,
+  Grid,
   IconButton,
   Menu,
   MenuItem,
@@ -127,11 +133,11 @@ function Content() {
     session: { payload: user },
   } = useAuth();
   return (
-    <LargeContentMain>
+    <Container maxWidth="lg">
       <RaidCurrentUser />
       <br />
       <RaidTableContainerV2 servicePointId={user.servicePointId} />
-    </LargeContentMain>
+    </Container>
   );
 }
 
@@ -148,27 +154,75 @@ function RaidCurrentUser() {
       })
   );
   return (
-    <ContainerCard title={"Signed-in user"}>
-      <InfoFieldList>
-        <InfoField id={"email"} label={"Identity"} value={user.email} />
-        <InfoField
-          id={"idProvider"}
-          label={"ID provider"}
-          value={<IdProviderDisplay payload={user} />}
-        />
-        <InfoField
-          id={"servicePoint"}
-          label={"Service point"}
-          value={spQuery.data?.name || ""}
-        />
-        <InfoField
-          id={"role"}
-          label={"Role"}
-          value={<RoleDisplay role={user.role} />}
-        />
-      </InfoFieldList>
-      <CompactErrorPanel error={spQuery.error} />
-    </ContainerCard>
+    <>
+      <Card
+        sx={{
+          mt: 3,
+          borderLeft: "solid",
+          borderLeftColor: "primary.main",
+          borderLeftWidth: 3,
+        }}
+      >
+        <CardHeader title="Signed-in user" />
+        <CardContent>
+          <Grid container>
+            <Grid item xs={12} sm={6} md={6}>
+              <Box>
+                <Typography variant="body2">Identity</Typography>
+                <Typography color="text.secondary" variant="body1">
+                  {user.email}
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={2} md={2}>
+              <Box>
+                <Typography variant="body2">ID provider</Typography>
+                <Typography color="text.secondary" variant="body1">
+                  <IdProviderDisplay payload={user} />
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={2} md={2}>
+              <Box>
+                <Typography variant="body2">Service point</Typography>
+                <Typography color="text.secondary" variant="body1">
+                  {spQuery.data?.name || ""}
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={2} md={2}>
+              <Box>
+                <Typography variant="body2">Role</Typography>
+                <Typography color="text.secondary" variant="body1">
+                  <RoleDisplay role={user.role} />
+                </Typography>
+              </Box>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+      {/* <ContainerCard title={"Signed-in user"}>
+        <InfoFieldList>
+          <InfoField id={"email"} label={"Identity"} value={user.email} />
+          <InfoField
+            id={"idProvider"}
+            label={"ID provider"}
+            value={<IdProviderDisplay payload={user} />}
+          />
+          <InfoField
+            id={"servicePoint"}
+            label={"Service point"}
+            value={spQuery.data?.name || ""}
+          />
+          <InfoField
+            id={"role"}
+            label={"Role"}
+            value={<RoleDisplay role={user.role} />}
+          />
+        </InfoFieldList>
+        <CompactErrorPanel error={spQuery.error} />
+      </ContainerCard> */}
+    </>
   );
 }
 
@@ -291,84 +345,67 @@ export function RaidTableContainerV2({ servicePointId }: ListRaidsV1Request) {
         <></>
       )}
 
-      <ContainerCard
-        title={"Recently minted RAiD data"}
-        action={
-          <>
-            <Stack direction={"row"} gap={2} sx={{ p: 1 }}>
+      <Fab
+        variant="extended"
+        color="primary"
+        sx={{ position: "fixed", bottom: "16px", right: "16px" }}
+        component="button"
+        type="submit"
+        href={"/mint-raid-new/20000000"}
+      >
+        <AddIcon sx={{ mr: 1 }} />
+        Mint new RAiD
+      </Fab>
+
+      <Card
+        sx={{
+          borderLeft: "solid",
+          borderLeftColor: "primary.main",
+          borderLeftWidth: 3,
+        }}
+      >
+        <CardHeader
+          title="Recently minted RAiD data"
+          action={
+            <>
               <SettingsMenu raidData={raidQuery.data} />
               <RefreshIconButton
                 onClick={() => raidQuery.refetch()}
                 refreshing={raidQuery.isLoading || raidQuery.isRefetching}
               />
-              {/* <RaidoAddFab disabled={!appWritesEnabled} href={getMintRaidPageLink(servicePointId)}/> */}
-
-              <Tooltip title="Mint new RAiD" placement="left">
-                <Fab
-                  variant="extended"
-                  color="primary"
-                  sx={{ position: "fixed", bottom: "16px", right: "16px" }}
-                  component="button"
-                  type="submit"
-                  href={"/mint-raid-new/20000000"}
-                >
-                  <AddIcon sx={{ mr: 1 }} />
-                  Mint new RAiD
-                </Fab>
-              </Tooltip>
-            </Stack>
-          </>
-        }
-      >
-        {raidQuery.data && (
-          <DataGrid
-            rows={raidQuery.data}
-            columns={columns}
-            density="compact"
-            autoHeight
-            getRowId={(row) => row.identifier.globalUrl}
-            // onRowClick={handleRowClick}
-            initialState={{
-              pagination: { paginationModel: { pageSize: 10 } },
-              columns: {
-                columnVisibilityModel: {
-                  avatar: false,
-                  primaryDescription: false,
+            </>
+          }
+        />
+        <CardContent>
+          {raidQuery.data && (
+            <DataGrid
+              rows={raidQuery.data}
+              columns={columns}
+              density="compact"
+              autoHeight
+              getRowId={(row) => row.identifier.globalUrl}
+              // onRowClick={handleRowClick}
+              initialState={{
+                pagination: { paginationModel: { pageSize: 10 } },
+                columns: {
+                  columnVisibilityModel: {
+                    avatar: false,
+                    primaryDescription: false,
+                  },
                 },
-              },
-            }}
-            // slots={{ toolbar: GridToolbar }}
-            pageSizeOptions={[10, 25, 50, 100]}
-            // sx={{
-            //   backgroundColor: `${theme.palette.background.paper}`,
-            //   borderTop: `3px solid ${theme.palette.secondary.main}`,
-            //   p: 2,
-            // }}
-            data-testid="raids-table"
-          />
-        )}
-
-        {/* This is first time I've used the Snackbar.
-    Personally I don't like toasts most of the time, but the copy button has
-    no feedback, so I felt it was necessary.
-    There's a lot of improvements to be made here.
-    I'd rather the snackbar was global, and we kept a history of all these 
-    notifications (just in memory, for the life of the browsing context, not
-    local storage or anything like that. */}
-        <Snackbar
-          open={!!handleCopied}
-          autoHideDuration={toastDuration}
-          onClose={handleToastClose}
-        >
-          <Alert
-            onClose={handleToastClose}
-            severity="info"
-            sx={{ width: "100%" }}
-          >
-            Handle {handleCopied} copied to clipboard.
-          </Alert>
-        </Snackbar>
-      </ContainerCard>
+              }}
+              // slots={{ toolbar: GridToolbar }}
+              pageSizeOptions={[10, 25, 50, 100]}
+              // sx={{
+              //   backgroundColor: `${theme.palette.background.paper}`,
+              //   borderTop: `3px solid ${theme.palette.secondary.main}`,
+              //   p: 2,
+              // }}
+              data-testid="raids-table"
+            />
+          )}
+        </CardContent>
+      </Card>
     </>
   );
 }
