@@ -332,6 +332,14 @@ export function RaidTableContainerV2({ servicePointId }: ListRaidsV1Request) {
     // },
   ];
 
+  const handleRowClick = (event: any) => {
+    const [prefix, suffix] = new URL(event.row.identifier.id).pathname
+      .substring(1)
+      .split("/");
+
+    window.location.href = `/show-raid/${prefix}/${suffix}`;
+  };
+
   return (
     <>
       {/* Ensure the `readServicePoint` data has completely loaded before evaluating `spQuery`.
@@ -384,7 +392,7 @@ export function RaidTableContainerV2({ servicePointId }: ListRaidsV1Request) {
               density="compact"
               autoHeight
               getRowId={(row) => row.identifier.globalUrl}
-              // onRowClick={handleRowClick}
+              onRowClick={handleRowClick}
               initialState={{
                 pagination: { paginationModel: { pageSize: 10 } },
                 columns: {

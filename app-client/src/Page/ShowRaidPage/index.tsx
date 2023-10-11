@@ -94,8 +94,8 @@ function Content() {
         <Stack direction={"column"} spacing={2}>
           <CategoryHeader
             color={raidColors.get("blue") || ""}
-            title={`Handle ${handle}`}
-            subheader={`Show data`}
+            title={`RAiD ${handle}`}
+            subheader={`Showing data`}
           />
           <ShowTitleComponent
             raid={defaultValues}

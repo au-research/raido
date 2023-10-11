@@ -106,7 +106,7 @@ export default function RaidForm({
                 ? `Handle ${new URL(
                     defaultValues?.identifier?.id!
                   ).pathname.substring(1)}`
-                : "Mint new handle"
+                : "Mint new RAiD"
             }`}
             subheader={""}
           />
