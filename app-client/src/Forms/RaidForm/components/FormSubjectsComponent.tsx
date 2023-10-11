@@ -26,7 +26,7 @@ import {
   useFieldArray,
 } from "react-hook-form";
 
-import { subjects } from "../../../references";
+import subjectType from "../../../References/subject_type.json";
 
 export default function FormSubjectsComponent({
   control,
@@ -110,12 +110,12 @@ export default function FormSubjectsComponent({
                                   fieldState: { error },
                                 }) => (
                                   <Autocomplete
-                                    options={subjects}
+                                    options={subjectType}
                                     getOptionLabel={(option) =>
                                       `${option.id}: ${option.name}`
                                     }
                                     value={
-                                      subjects.find(
+                                      subjectType.find(
                                         (lang) => lang.id === value
                                       ) || null
                                     }

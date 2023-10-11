@@ -1,6 +1,16 @@
 import { Edit as EditIcon } from "@mui/icons-material";
 
-import { Box, Button, Container, Fab, Stack } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Container,
+  Fab,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthApi } from "Api/AuthApi";
 import { raidoTitle } from "Component/Util";
@@ -14,6 +24,9 @@ import {
 } from "Design/NavigationProvider";
 import { RaidDto } from "Generated/Raidv2";
 
+import JsonView from "react18-json-view";
+import "react18-json-view/src/style.css";
+
 import { CategoryHeader } from "helper-components";
 import { useState } from "react";
 import { raidColors } from "utils";
@@ -24,6 +37,8 @@ import ShowDateComponent from "./components/ShowDateComponent";
 import ShowDescriptionComponent from "./components/ShowDescriptionComponent";
 import ShowOrganisationComponent from "./components/ShowOrganisationComponent";
 import ShowTitleComponent from "./components/ShowTitleComponent";
+import ShowRelatedObjectComponent from "./components/ShowRelatedObjectComponent";
+import ShowRelatedRaidComponent from "./components/ShowRelatedRaidComponent";
 
 const pageUrl = "/show-raid";
 
@@ -79,8 +94,8 @@ function Content() {
         <Stack direction={"column"} spacing={2}>
           <CategoryHeader
             color={raidColors.get("blue") || ""}
-            title="Main"
-            subheader="RAiD Main Data"
+            title={`Handle ${handle}`}
+            subheader={`Show data`}
           />
           <ShowTitleComponent
             raid={defaultValues}
@@ -110,6 +125,37 @@ function Content() {
             raid={defaultValues}
             color={raidColors.get("blue") || ""}
           />
+          <ShowRelatedObjectComponent
+            raid={defaultValues}
+            color={raidColors.get("blue") || ""}
+          />
+          <ShowRelatedRaidComponent
+            raid={defaultValues}
+            color={raidColors.get("blue") || ""}
+          />
+
+          <Box sx={{ paddingLeft: 2 }}>
+            <Card
+              variant="outlined"
+              sx={{
+                borderLeft: "solid",
+                borderLeftColor: raidColors.get("blue") || "",
+                borderLeftWidth: 3,
+              }}
+            >
+              <CardHeader
+                title={
+                  <Typography variant="h6" component="div">
+                    Raw Data
+                  </Typography>
+                }
+              />
+
+              <CardContent>
+                <JsonView src={readQuery.data} />
+              </CardContent>
+            </Card>
+          </Box>
         </Stack>
       </Container>
     </>

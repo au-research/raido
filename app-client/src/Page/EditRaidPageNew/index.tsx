@@ -104,10 +104,11 @@ function Content() {
   }
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" sx={{ py: 2 }}>
       <RaidForm
         defaultValues={readQuery.data}
         onSubmit={async (data) => {
+          console.log(JSON.stringify(data, null, 2));
           updateRequest.mutate(data);
         }}
         isSubmitting={updateRequest.isLoading}
@@ -116,11 +117,11 @@ function Content() {
   );
 }
 
-export default function EditRaidPAgeNew() {
+export default function EditRaidPageNew() {
   return (
     <NavTransition
       isPagePath={isEditRaidPagePath}
-      title={raidoTitle("Edit RAiD")}
+      title={raidoTitle(`Edit RAiD`)}
     >
       <Content />
     </NavTransition>

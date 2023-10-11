@@ -26,9 +26,9 @@ import {
   UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
-import { titleTypes } from "references";
-import { threeYearsFromDate } from "utils";
-import { languages } from "../../../Page/languages";
+import titleTypes from "../../../References/title_type.json";
+import { extractKeyFromIdUri, threeYearsFromDate } from "utils";
+import language from "../../../References/language.json";
 import { faker } from "@faker-js/faker";
 
 export default function FormTitlesComponent({
@@ -50,8 +50,8 @@ export default function FormTitlesComponent({
   const handleAddTitle = () => {
     const typeId =
       [...titlesFieldArray.fields].length === 0
-        ? titleTypes.find((type) => type.key === "primary")?.id
-        : titleTypes.find((type) => type.key === "alternative")?.id;
+        ? titleTypes.find((type) => type.uri === "primary")?.uri
+        : titleTypes.find((type) => type.uri === "alternative")?.uri;
 
     titlesFieldArray.append({
       text: `[G] ${faker.lorem.sentence()}`,
@@ -164,7 +164,7 @@ export default function FormTitlesComponent({
                                 value={controllerField?.value?.type.id}
                                 size="small"
                                 fullWidth
-                                label="Title Type"
+                                label="Type"
                                 onChange={(event) => {
                                   onChange({
                                     ...controllerField.value,
@@ -177,10 +177,10 @@ export default function FormTitlesComponent({
                               >
                                 {titleTypes.map((titleType) => (
                                   <MenuItem
-                                    key={titleType.id}
-                                    value={titleType.id}
+                                    key={titleType.uri}
+                                    value={titleType.uri}
                                   >
-                                    {titleType.key}
+                                    {extractKeyFromIdUri(titleType.uri)}
                                   </MenuItem>
                                 ))}
                               </TextField>
@@ -196,12 +196,12 @@ export default function FormTitlesComponent({
                                   fieldState: { error },
                                 }) => (
                                   <Autocomplete
-                                    options={languages}
+                                    options={language}
                                     getOptionLabel={(option) =>
                                       `${option.id}: ${option.name}`
                                     }
                                     value={
-                                      languages.find(
+                                      language.find(
                                         (lang) => lang.id === value
                                       ) || null
                                     }
@@ -215,7 +215,7 @@ export default function FormTitlesComponent({
                                       <TextField
                                         {...params}
                                         size="small"
-                                        label="Title Language"
+                                        label="Language"
                                         required
                                         error={!!error}
                                         helperText={
@@ -231,7 +231,7 @@ export default function FormTitlesComponent({
                             </Grid>
                             <Grid item xs={12} sm={6} md={3}>
                               <DatePicker
-                                label="Title Start Date"
+                                label="Start Date"
                                 defaultValue={dayjs(
                                   controllerField?.value?.startDate
                                 )}
@@ -263,7 +263,7 @@ export default function FormTitlesComponent({
                             </Grid>
                             <Grid item xs={12} sm={6} md={3}>
                               <DatePicker
-                                label="Title End Date"
+                                label="End Date"
                                 defaultValue={threeYearsFromDate()}
                                 format="DD-MMM-YYYY"
                                 onChange={(event) => {

@@ -9,9 +9,8 @@ import {
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
 import { extractKeyFromIdUri } from "utils";
-import language from "../../../References/language.json";
 
-export default function ShowDescriptionComponent({
+export default function ShowRelatedRaisComponent({
   raid,
   color,
 }: {
@@ -31,7 +30,7 @@ export default function ShowDescriptionComponent({
         <CardHeader
           title={
             <Typography variant="h6" component="div">
-              Descriptions
+              Related Objects
             </Typography>
           }
         />
@@ -39,24 +38,17 @@ export default function ShowDescriptionComponent({
         <CardContent>
           <Stack gap={3}>
             <Box>
-              {raid?.description?.length === 0 && (
+              {raid?.relatedObject?.length === 0 && (
                 <Typography
                   variant="body2"
                   color={"text.secondary"}
                   textAlign={"center"}
                 >
-                  No descriptions defined
+                  No related objects defined
                 </Typography>
               )}
             </Box>
-            {raid?.description?.map((description, index) => {
-              const lang = language.find(
-                (language) => language.id === description?.language?.id
-              );
-
-              const descriptionType = extractKeyFromIdUri(
-                description.type.id || ""
-              );
+            {raid?.relatedObject?.map((relatedObject, index) => {
               return (
                 <Stack sx={{ paddingLeft: 2 }} spacing={2} key={index}>
                   <Box
@@ -68,19 +60,27 @@ export default function ShowDescriptionComponent({
                     className="animated-tile animated-tile-reverse"
                   >
                     <Grid container spacing={2}>
-                      <Grid item xs={12} sm={12} md={10}>
+                      <Grid item xs={12} sm={12} md={6}>
                         <Box>
-                          <Typography variant="body2">{`Description (${descriptionType})`}</Typography>
+                          <Typography variant="body2">ID</Typography>
                           <Typography color="text.secondary" variant="body1">
-                            {description.text}
+                            <a href={relatedObject.id}>{relatedObject.id}</a>
                           </Typography>
                         </Box>
                       </Grid>
-                      <Grid item xs={12} sm={12} md={2}>
+                      <Grid item xs={12} sm={12} md={3}>
                         <Box>
-                          <Typography variant="body2">Language</Typography>
+                          <Typography variant="body2">Type</Typography>
                           <Typography color="text.secondary" variant="body1">
-                            {lang?.name}
+                            {extractKeyFromIdUri(relatedObject.type?.id)}
+                          </Typography>
+                        </Box>
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={3}>
+                        <Box>
+                          <Typography variant="body2">Category</Typography>
+                          <Typography color="text.secondary" variant="body1">
+                            {extractKeyFromIdUri(relatedObject.category?.id)}
                           </Typography>
                         </Box>
                       </Grid>

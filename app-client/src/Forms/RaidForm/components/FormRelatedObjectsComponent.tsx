@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
@@ -8,7 +7,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Divider,
   Grid,
   IconButton,
   MenuItem,
@@ -26,10 +24,10 @@ import {
   useFieldArray,
 } from "react-hook-form";
 import { extractKeyFromIdUri } from "utils";
-import {
-  relatedObjectCategories,
-  relatedObjectTypes,
-} from "../../../references";
+import relatedObjectCategories from "../../../References/related_object_category.json";
+import relatedObjectCategoriesSchema from "../../../References/related_object_category_schema.json";
+import relatedObjectTypes from "../../../References/related_object_type.json";
+import relatedObjectTypesSchema from "../../../References/related_object_type_schema.json";
 
 export default function FormRelatedObjectsComponent({
   control,
@@ -49,17 +47,16 @@ export default function FormRelatedObjectsComponent({
 
   const handleAddRelatedObjects = () => {
     relatedObjectsFieldArray.append({
-      id: `https://doi.org/10.${faker.number.int({
-        min: 10000,
-        max: 99999,
-      })}/${faker.lorem.word()}.${faker.string
-        .alphanumeric({
-          length: 7,
-        })
-        .toLocaleLowerCase()}`,
+      id: `https://doi.org/10.5555.25/raid.2023.00000001`,
+      schemaUri: "https://doi.org/",
       type: {
-        id: "isPartOf",
-        schemaUri: "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        id: relatedObjectTypes[0].uri,
+        schemaUri: relatedObjectTypesSchema[0].uri,
+      },
+
+      category: {
+        id: relatedObjectCategories[0].uri,
+        schemaUri: relatedObjectCategoriesSchema[0].uri,
       },
     });
   };
@@ -129,10 +126,7 @@ export default function FormRelatedObjectsComponent({
                                 onChange={(event) => {
                                   onChange({
                                     ...controllerField.value,
-                                    type: {
-                                      ...controllerField?.value?.type,
-                                      id: event.target.value,
-                                    },
+                                    id: event.target.value,
                                   });
                                 }}
                               />
@@ -158,7 +152,7 @@ export default function FormRelatedObjectsComponent({
                                 {relatedObjectTypes.map((relatedObjectType) => (
                                   <MenuItem
                                     key={relatedObjectType.uri}
-                                    value={relatedObjectType.name}
+                                    value={relatedObjectType.uri}
                                   >
                                     {relatedObjectType.name}
                                   </MenuItem>

@@ -9,7 +9,8 @@ import {
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
 import { extractKeyFromIdUri } from "utils";
-import { languages } from "../../../Page/languages";
+import language from "../../../References/language.json";
+import dayjs from "dayjs";
 
 export default function ShowTitleComponent({
   raid,
@@ -51,8 +52,11 @@ export default function ShowTitleComponent({
             </Box>
             {raid?.title?.map((title, index) => {
               const titleType = extractKeyFromIdUri(title.type.id || "");
-              const language = languages.find(
+              const lang = language.find(
                 (language) => language.id === title?.language?.id
+              );
+              const startDateDisplay = dayjs(title.startDate).format(
+                "DD-MMM-YYYY"
               );
               return (
                 <Stack sx={{ paddingLeft: 2 }} spacing={2} key={index}>
@@ -65,31 +69,39 @@ export default function ShowTitleComponent({
                     className="animated-tile animated-tile-reverse"
                   >
                     <Grid container spacing={2}>
-                      <Grid item xs={12} sm={12} md={12}>
+                      <Grid item xs={12} sm={12} md={7}>
                         <Box>
-                          <Typography variant="body2">{`Title (${titleType})`}</Typography>
+                          <Typography variant="body2">Title</Typography>
                           <Typography color="text.secondary" variant="body1">
                             {title.text}
                           </Typography>
                         </Box>
                       </Grid>
-                      <Grid item xs={12} sm={12} md={4}>
+                      <Grid item xs={12} sm={6} md={2}>
+                        <Box>
+                          <Typography variant="body2">Type</Typography>
+                          <Typography color="text.secondary" variant="body1">
+                            {extractKeyFromIdUri(title.type.id)}
+                          </Typography>
+                        </Box>
+                      </Grid>
+                      <Grid item xs={12} sm={6} md={3}>
                         <Box>
                           <Typography variant="body2">Language</Typography>
                           <Typography color="text.secondary" variant="body1">
-                            {language?.name}
+                            {lang?.name}
                           </Typography>
                         </Box>
                       </Grid>
-                      <Grid item xs={12} sm={12} md={4}>
+                      <Grid item xs={12} sm={6} md={3}>
                         <Box>
                           <Typography variant="body2">Start Date</Typography>
                           <Typography color="text.secondary" variant="body1">
-                            {title.startDate}
+                            {startDateDisplay}
                           </Typography>
                         </Box>
                       </Grid>
-                      <Grid item xs={12} sm={12} md={4}>
+                      <Grid item xs={12} sm={6} md={3}>
                         <Box>
                           <Typography variant="body2">End Date</Typography>
                           <Typography color="text.secondary" variant="body1">

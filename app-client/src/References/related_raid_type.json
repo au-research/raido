@@ -1,0 +1,56 @@
+[
+  {
+    "schema_id": 1,
+    "uri": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/continues.json",
+    "name": "Continues",
+    "description": "Continues the related RAiD."
+  },
+  {
+    "schema_id": 1,
+    "uri": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/has-part.json",
+    "name": "HasPart",
+    "description": "Has part of the related RAiD."
+  },
+  {
+    "schema_id": 1,
+    "uri": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/is-continued-by.json",
+    "name": "IsContinuedBy",
+    "description": "Is continued by the related RAiD."
+  },
+  {
+    "schema_id": 1,
+    "uri": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/is-derived-from.json",
+    "name": "IsDerivedFrom",
+    "description": "Is derived from the related RAiD."
+  },
+  {
+    "schema_id": 1,
+    "uri": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/is-identical-to.json",
+    "name": "IsIdenticalTo",
+    "description": "Is identical to the related RAiD."
+  },
+  {
+    "schema_id": 1,
+    "uri": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/is-obsoleted-by.json",
+    "name": "IsObsoletedBy",
+    "description": "Is obsoleted by the related RAiD."
+  },
+  {
+    "schema_id": 1,
+    "uri": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/is-part-of.json",
+    "name": "IsPartOf",
+    "description": "Is part of the related RAiD."
+  },
+  {
+    "schema_id": 1,
+    "uri": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/is-source-of.json",
+    "name": "IsSourceOf",
+    "description": "Is the source of the related RAiD."
+  },
+  {
+    "schema_id": 1,
+    "uri": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/obsoletes.json",
+    "name": "Obsoletes",
+    "description": "Obsoletes the related RAiD."
+  }
+]

@@ -26,8 +26,9 @@ import {
   UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
-import { descriptionTypes } from "references";
-import { languages } from "../../../Page/languages";
+import descriptionTypes from "../../../References/description_type.json";
+import language from "../../../References/language.json";
+import { extractKeyFromIdUri } from "utils";
 
 export default function FormDescriptionsComponent({
   control,
@@ -184,10 +185,10 @@ export default function FormDescriptionsComponent({
                                 >
                                   {descriptionTypes.map((descriptionType) => (
                                     <MenuItem
-                                      key={descriptionType.id}
-                                      value={descriptionType.id}
+                                      key={descriptionType.uri}
+                                      value={descriptionType.uri}
                                     >
-                                      {descriptionType.key}
+                                      {extractKeyFromIdUri(descriptionType.uri)}
                                     </MenuItem>
                                   ))}
                                 </TextField>
@@ -203,12 +204,12 @@ export default function FormDescriptionsComponent({
                                     fieldState: { error },
                                   }) => (
                                     <Autocomplete
-                                      options={languages}
+                                      options={language}
                                       getOptionLabel={(option) =>
                                         `${option.id}: ${option.name}`
                                       }
                                       value={
-                                        languages.find(
+                                        language.find(
                                           (lang) => lang.id === value
                                         ) || null
                                       }

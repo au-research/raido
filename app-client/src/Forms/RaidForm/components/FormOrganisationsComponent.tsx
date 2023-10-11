@@ -26,8 +26,8 @@ import {
   UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
-import { organisationRoles } from "references";
 import { extractKeyFromIdUri } from "utils";
+import organisationRoles from "../../../References/organisation_role.json";
 
 function OrganisationRootField({
   organisationsArray,
@@ -172,11 +172,12 @@ function OrganisationRootField({
                                       }}
                                     >
                                       {organisationRoles.map((role) => {
-                                        const roleParts = role.split("/");
-
                                         return (
-                                          <MenuItem key={role} value={role}>
-                                            {extractKeyFromIdUri(role)}
+                                          <MenuItem
+                                            key={role.uri}
+                                            value={role.uri}
+                                          >
+                                            {extractKeyFromIdUri(role.uri)}
                                           </MenuItem>
                                         );
                                       })}

@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
 import { extractKeyFromIdUri } from "utils";
-import { languages } from "../../../Page/languages";
+import language from "../../../References/language.json";
 
 export default function ShowAccessComponent({
   raid,
@@ -18,7 +18,7 @@ export default function ShowAccessComponent({
   raid: RaidDto;
   color: string;
 }) {
-  const language = languages.find(
+  const lang = language.find(
     (language) => language.id === raid?.access?.accessStatement?.language?.id
   );
 
@@ -66,7 +66,7 @@ export default function ShowAccessComponent({
                   <Box>
                     <Typography variant="body2">Language</Typography>
                     <Typography color="text.secondary" variant="body1">
-                      {language?.name}
+                      {lang?.name}
                     </Typography>
                   </Box>
                 </Grid>
