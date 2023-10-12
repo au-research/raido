@@ -12,7 +12,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "end": ""
+    "end": "",
+    "e2e": "npx playwright test"
   },
   "dependencies": {
     "@emotion/react": "11.10.6",
@@ -46,6 +47,7 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.39.0",
     "cross-env": "7.0.3",
     "json5": ">=2.2.2",
     "source-map-explorer": "2.5.3"
