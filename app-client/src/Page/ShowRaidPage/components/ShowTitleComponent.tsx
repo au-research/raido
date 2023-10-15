@@ -55,9 +55,7 @@ export default function ShowTitleComponent({
               const lang = language.find(
                 (language) => language.id === title?.language?.id
               );
-              const startDateDisplay = dayjs(title.startDate).format(
-                "DD-MMM-YYYY"
-              );
+
               return (
                 <Stack sx={{ paddingLeft: 2 }} spacing={2} key={index}>
                   <Box
@@ -97,7 +95,7 @@ export default function ShowTitleComponent({
                         <Box>
                           <Typography variant="body2">Start Date</Typography>
                           <Typography color="text.secondary" variant="body1">
-                            {startDateDisplay}
+                            {dayjs(title.startDate).format("DD-MMM-YYYY")}
                           </Typography>
                         </Box>
                       </Grid>
@@ -105,7 +103,7 @@ export default function ShowTitleComponent({
                         <Box>
                           <Typography variant="body2">End Date</Typography>
                           <Typography color="text.secondary" variant="body1">
-                            {title.endDate}
+                            {dayjs(title.endDate).format("DD-MMM-YYYY")}
                           </Typography>
                         </Box>
                       </Grid>

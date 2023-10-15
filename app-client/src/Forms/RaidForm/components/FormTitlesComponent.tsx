@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
@@ -18,7 +19,7 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { RaidDto } from "Generated/Raidv2";
-import dayjs from "dayjs";
+import dayjs, { isDayjs } from "dayjs";
 import {
   Control,
   Controller,
@@ -26,10 +27,45 @@ import {
   UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
-import titleTypes from "../../../References/title_type.json";
 import { extractKeyFromIdUri, threeYearsFromDate } from "utils";
+import { z } from "zod";
 import language from "../../../References/language.json";
-import { faker } from "@faker-js/faker";
+import languageSchema from "../../../References/language_schema.json";
+import titleType from "../../../References/title_type.json";
+import titleTypeSchema from "../../../References/title_type_schema.json";
+
+export const titlesValidationSchema = z
+  .array(
+    z.object({
+      text: z.string().nonempty(),
+      type: z.object({
+        id: z.enum(titleType.map((type) => type.uri) as [string, ...string[]]),
+        schemaUri: z.literal(titleTypeSchema[0].uri),
+      }),
+      language: z.object({
+        id: z.string().nonempty(),
+        schemaUri: z.literal(languageSchema[0].uri),
+      }),
+      startDate: z.string(),
+      endDate: z.string().optional(),
+    })
+  )
+  .min(1);
+
+export const titlesGenerateData = () => {
+  return {
+    text: `[G] ${faker.lorem.sentence()}`,
+    type: {
+      id: titleType[1].uri,
+      schemaUri: titleTypeSchema[0].uri,
+    },
+    language: {
+      id: "eng",
+      schemaUri: languageSchema[0].uri,
+    },
+    startDate: dayjs(new Date()).format("YYYY-MM-DD"),
+  };
+};
 
 export default function FormTitlesComponent({
   control,
@@ -48,25 +84,7 @@ export default function FormTitlesComponent({
   });
 
   const handleAddTitle = () => {
-    const typeId =
-      [...titlesFieldArray.fields].length === 0
-        ? titleTypes.find((type) => type.uri === "primary")?.uri
-        : titleTypes.find((type) => type.uri === "alternative")?.uri;
-
-    titlesFieldArray.append({
-      text: `[G] ${faker.lorem.sentence()}`,
-      type: {
-        id: typeId,
-        schemaUri:
-          "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/",
-      },
-      language: {
-        id: "eng",
-        schemaUri: "https://iso639-3.sil.org",
-      },
-      startDate: dayjs(new Date()).format("YYYY-MM-DD"),
-      endDate: threeYearsFromDate().format("YYYY-MM-DD"),
-    });
+    titlesFieldArray.append(titlesGenerateData());
     trigger("title");
   };
 
@@ -163,6 +181,7 @@ export default function FormTitlesComponent({
                                 {...controllerField}
                                 value={controllerField?.value?.type.id}
                                 size="small"
+                                required
                                 fullWidth
                                 label="Type"
                                 onChange={(event) => {
@@ -175,7 +194,7 @@ export default function FormTitlesComponent({
                                   });
                                 }}
                               >
-                                {titleTypes.map((titleType) => (
+                                {titleType.map((titleType) => (
                                   <MenuItem
                                     key={titleType.uri}
                                     value={titleType.uri}
@@ -218,11 +237,7 @@ export default function FormTitlesComponent({
                                         label="Language"
                                         required
                                         error={!!error}
-                                        helperText={
-                                          error
-                                            ? "This field is required"
-                                            : null
-                                        }
+                                        helperText={error?.message}
                                       />
                                     )}
                                   />
@@ -264,18 +279,32 @@ export default function FormTitlesComponent({
                             <Grid item xs={12} sm={6} md={3}>
                               <DatePicker
                                 label="End Date"
-                                defaultValue={threeYearsFromDate()}
+                                defaultValue={
+                                  controllerField?.value?.endDate
+                                    ? dayjs(controllerField.value.endDate)
+                                    : ""
+                                }
                                 format="DD-MMM-YYYY"
                                 onChange={(event) => {
+                                  let formattedDate = "";
+                                  if (event && isDayjs(event)) {
+                                    formattedDate = event.format("YYYY-MM-DD");
+                                  }
+
                                   onChange({
-                                    ...controllerField.value,
-                                    endDate: event?.format("YYYY-MM-DD"),
+                                    ...(controllerField?.value || {}),
+                                    endDate: formattedDate,
                                   });
                                 }}
                                 slotProps={{
                                   textField: {
                                     fullWidth: true,
                                     size: "small",
+                                    error: !!errors?.title?.[index]?.startDate,
+                                    helperText: !!errors?.title?.[index]
+                                      ?.startDate
+                                      ? errors?.title[index]?.startDate?.message
+                                      : null,
                                   },
                                   actionBar: {
                                     actions: ["today"],

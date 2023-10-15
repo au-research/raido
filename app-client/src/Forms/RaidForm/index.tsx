@@ -25,11 +25,8 @@ import FormTraditionalKnowledgeIdentifiersComponent from "./components/FormTradi
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CategoryHeader } from "helper-components";
-import {
-  FormSchema,
-  extractPrefixAndSuffixFromIdentifier,
-  raidColors,
-} from "utils";
+import { extractPrefixAndSuffixFromIdentifier, raidColors } from "utils";
+import { ValidationFormSchema } from "validation";
 
 type FormProps = {
   defaultValues: RaidCreateRequest;
@@ -50,7 +47,7 @@ export default function RaidForm({
     formState: { errors },
   } = useForm<RaidDto>({
     defaultValues,
-    resolver: zodResolver(FormSchema),
+    resolver: zodResolver(ValidationFormSchema),
     mode: "onChange",
     reValidateMode: "onChange",
   });
