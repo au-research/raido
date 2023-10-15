@@ -34,6 +34,9 @@ import languageSchema from "../../../References/language_schema.json";
 import titleType from "../../../References/title_type.json";
 import titleTypeSchema from "../../../References/title_type_schema.json";
 
+const datePattern =
+  /^(?:\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|02-(?:0[1-9]|1\d|2[0-8]))|\d{4}-(?:0[1-9]|1[0-2])|\d{4})$/;
+
 export const titlesValidationSchema = z
   .array(
     z.object({
@@ -46,8 +49,8 @@ export const titlesValidationSchema = z
         id: z.string().nonempty(),
         schemaUri: z.literal(languageSchema[0].uri),
       }),
-      startDate: z.string(),
-      endDate: z.string().optional(),
+      startDate: z.string().regex(datePattern).nonempty(),
+      endDate: z.string().regex(datePattern).optional(),
     })
   )
   .min(1);
@@ -244,73 +247,51 @@ export default function FormTitlesComponent({
                                 )}
                               />
                             </Grid>
-                            <Grid item xs={12} sm={6} md={3}>
-                              <DatePicker
+                            <Grid item xs={12} sm={6} md={6}>
+                              <TextField
+                                {...controllerField}
+                                value={controllerField?.value?.startDate}
+                                size="small"
+                                required
+                                fullWidth
                                 label="Start Date"
-                                defaultValue={dayjs(
-                                  controllerField?.value?.startDate
-                                )}
-                                format="DD-MMM-YYYY"
+                                error={!!errors?.title?.[index]?.startDate}
+                                helperText={
+                                  !errors?.title?.[index]?.startDate
+                                    ? "YYYY-MM-DD or YYYY-MM or YYYY"
+                                    : !!errors?.title?.[index]?.startDate
+                                    ? errors?.title?.[index]?.startDate?.message
+                                    : null
+                                }
                                 onChange={(event) => {
                                   onChange({
                                     ...controllerField.value,
-                                    startDate: event?.format("YYYY-MM-DD"),
+                                    startDate: event.target.value,
                                   });
                                 }}
-                                slotProps={{
-                                  textField: {
-                                    fullWidth: true,
-                                    size: "small",
-                                    required: true,
-                                    error: !!errors?.title?.[index]?.startDate,
-                                    helperText: !!errors?.title?.[index]
-                                      ?.startDate
-                                      ? errors?.title?.[index]?.startDate
-                                          ?.message
-                                      : null,
-                                  },
-                                  actionBar: {
-                                    actions: ["today"],
-                                  },
-                                }}
-                                slots={<TextField />}
                               />
                             </Grid>
-                            <Grid item xs={12} sm={6} md={3}>
-                              <DatePicker
+                            <Grid item xs={12} sm={6} md={6}>
+                              <TextField
+                                {...controllerField}
+                                value={controllerField?.value?.endDate}
+                                size="small"
+                                fullWidth
                                 label="End Date"
-                                defaultValue={
-                                  controllerField?.value?.endDate
-                                    ? dayjs(controllerField.value.endDate)
-                                    : ""
+                                error={!!errors?.title?.[index]?.endDate}
+                                helperText={
+                                  !errors?.title?.[index]?.endDate
+                                    ? "YYYY-MM-DD or YYYY-MM or YYYY"
+                                    : !!errors?.title?.[index]?.endDate
+                                    ? errors?.title?.[index]?.endDate?.message
+                                    : null
                                 }
-                                format="DD-MMM-YYYY"
                                 onChange={(event) => {
-                                  let formattedDate = "";
-                                  if (event && isDayjs(event)) {
-                                    formattedDate = event.format("YYYY-MM-DD");
-                                  }
-
                                   onChange({
-                                    ...(controllerField?.value || {}),
-                                    endDate: formattedDate,
+                                    ...controllerField.value,
+                                    endDate: event.target.value,
                                   });
                                 }}
-                                slotProps={{
-                                  textField: {
-                                    fullWidth: true,
-                                    size: "small",
-                                    error: !!errors?.title?.[index]?.startDate,
-                                    helperText: !!errors?.title?.[index]
-                                      ?.startDate
-                                      ? errors?.title[index]?.startDate?.message
-                                      : null,
-                                  },
-                                  actionBar: {
-                                    actions: ["today"],
-                                  },
-                                }}
-                                slots={<TextField />}
                               />
                             </Grid>
                           </Grid>

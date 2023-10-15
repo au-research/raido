@@ -91,11 +91,18 @@ export default function ShowTitleComponent({
                           </Typography>
                         </Box>
                       </Grid>
-                      <Grid item xs={12} sm={6} md={3}>
+                      <Grid item xs={12} sm={6} md={6}>
                         <Box>
                           <Typography variant="body2">Start Date</Typography>
                           <Typography color="text.secondary" variant="body1">
-                            {dayjs(title.startDate).format("DD-MMM-YYYY")}
+                            {title.startDate}
+                          </Typography>
+                          <Typography
+                            color="text.secondary"
+                            variant="subtitle2"
+                            sx={{ fontSize: 12 }}
+                          >
+                            YYYY or YYYY-MM or YYYY-MM-DD
                           </Typography>
                         </Box>
                       </Grid>
@@ -103,7 +110,14 @@ export default function ShowTitleComponent({
                         <Box>
                           <Typography variant="body2">End Date</Typography>
                           <Typography color="text.secondary" variant="body1">
-                            {dayjs(title.endDate).format("DD-MMM-YYYY")}
+                            {title.endDate}
+                          </Typography>
+                          <Typography
+                            color="text.secondary"
+                            variant="subtitle2"
+                            sx={{ fontSize: 12 }}
+                          >
+                            YYYY or YYYY-MM or YYYY-MM-DD
                           </Typography>
                         </Box>
                       </Grid>
