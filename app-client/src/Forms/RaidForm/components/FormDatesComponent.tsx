@@ -7,8 +7,8 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { RaidDto } from "Generated/Raidv2";
+import { dateHelperText, dateHelperTextRequired, datePattern } from "date-utils";
 import dayjs from "dayjs";
 import {
   Control,
@@ -16,6 +16,19 @@ import {
   FieldErrors,
   UseFormTrigger,
 } from "react-hook-form";
+import { z } from "zod";
+
+export const datesValidationSchema = z.object({
+  startDate: z.string().regex(datePattern).nonempty(),
+  endDate: z.string().regex(datePattern).optional(),
+});
+
+export const datesGenerateData = () => {
+  return {
+    startDate: dayjs(new Date()).format("YYYY-MM-DD"),
+    endDate: dayjs(new Date()).add(3, "year").format("YYYY-MM-DD"),
+  };
+};
 
 export default function FormDatesComponent({
   control,
@@ -28,8 +41,6 @@ export default function FormDatesComponent({
   color: string;
   trigger: UseFormTrigger<RaidDto>;
 }) {
-  const dateThreeYearsFromToday = dayjs().add(3, "year");
-
   return (
     <Card
       variant="outlined"
@@ -55,67 +66,52 @@ export default function FormDatesComponent({
           }}
         >
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid item xs={12} sm={6} md={6}>
               <Controller
                 name="date.startDate"
                 control={control}
-                render={({ field: { onChange, ...restField } }) => {
-                  return (
-                    <DatePicker
-                      label="Start Date"
-                      defaultValue={dayjs(restField.value)}
-                      format="DD-MMM-YYYY"
-                      onChange={(event) => {
-                        onChange(event?.format("YYYY-MM-DD"));
-                      }}
-                      slotProps={{
-                        textField: {
-                          fullWidth: true,
-                          size: "small",
-                          required: true,
-                          error: !!errors?.date?.startDate,
-                          helperText: !!errors?.date?.startDate
-                            ? errors?.date?.startDate?.message
-                            : null,
-                        },
-                        actionBar: {
-                          actions: ["today"],
-                        },
-                      }}
-                      slots={<TextField required />}
-                    />
-                  );
-                }}
+                render={({ field }) => (
+                  <TextField
+                    label="Start Date"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    {...field}
+                    value={field.value}
+                    error={!!errors?.date?.startDate}
+                    helperText={
+                      !errors?.date?.startDate
+                        ? dateHelperTextRequired
+                        : !!errors?.date?.startDate
+                        ? errors?.date?.startDate?.message
+                        : null
+                    }
+                  />
+                )}
               />
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid item xs={12} sm={6} md={6}>
               <Controller
                 name="date.endDate"
                 control={control}
-                render={({ field: { onChange, ...restField } }) => {
-                  return (
-                    <DatePicker
-                      label="End Date"
-                      defaultValue={dayjs(restField.value)}
-                      format="DD-MMM-YYYY"
-                      onChange={(event) => {
-                        if (dayjs.isDayjs(event)) {
-                          onChange(event?.format("YYYY-MM-DD") || "");
-                        }
-                      }}
-                      slotProps={{
-                        textField: {
-                          fullWidth: true,
-                          size: "small",
-                        },
-                        actionBar: {
-                          actions: ["today"],
-                        },
-                      }}
-                      slots={<TextField />}
-                    />
-                  );
-                }}
+                render={({ field }) => (
+                  <TextField
+                    label="End Date"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    {...field}
+                    value={field.value}
+                    error={!!errors?.date?.endDate}
+                    helperText={
+                      !errors?.date?.endDate
+                        ? dateHelperText
+                        : !!errors?.date?.endDate
+                        ? errors?.date?.endDate?.message
+                        : null
+                    }
+                  />
+                )}
               />
             </Grid>
           </Grid>

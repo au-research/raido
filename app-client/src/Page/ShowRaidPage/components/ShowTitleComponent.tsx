@@ -8,9 +8,9 @@ import {
   Typography,
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
+import { dateDisplayFormatter } from "date-utils";
 import { extractKeyFromIdUri } from "utils";
 import language from "../../../References/language.json";
-import dayjs from "dayjs";
 
 export default function ShowTitleComponent({
   raid,
@@ -57,7 +57,7 @@ export default function ShowTitleComponent({
               );
 
               return (
-                <Stack sx={{ paddingLeft: 2 }} spacing={2} key={index}>
+                <Stack spacing={2} key={index}>
                   <Box
                     sx={{
                       bgcolor: "rgba(0, 0, 0, 0.02)",
@@ -95,14 +95,7 @@ export default function ShowTitleComponent({
                         <Box>
                           <Typography variant="body2">Start Date</Typography>
                           <Typography color="text.secondary" variant="body1">
-                            {title.startDate}
-                          </Typography>
-                          <Typography
-                            color="text.secondary"
-                            variant="subtitle2"
-                            sx={{ fontSize: 12 }}
-                          >
-                            YYYY or YYYY-MM or YYYY-MM-DD
+                            {dateDisplayFormatter(title.startDate)}
                           </Typography>
                         </Box>
                       </Grid>
@@ -110,14 +103,7 @@ export default function ShowTitleComponent({
                         <Box>
                           <Typography variant="body2">End Date</Typography>
                           <Typography color="text.secondary" variant="body1">
-                            {title.endDate}
-                          </Typography>
-                          <Typography
-                            color="text.secondary"
-                            variant="subtitle2"
-                            sx={{ fontSize: 12 }}
-                          >
-                            YYYY or YYYY-MM or YYYY-MM-DD
+                            {dateDisplayFormatter(title.endDate)}
                           </Typography>
                         </Box>
                       </Grid>

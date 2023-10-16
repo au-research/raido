@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { titlesValidationSchema } from "../Forms/RaidForm/components/FormTitlesComponent";
+import { datesValidationSchema } from "Forms/RaidForm/components/FormDatesComponent";
 
 export const ValidationFormSchema = z.object({
   identifier: z
@@ -22,10 +23,7 @@ export const ValidationFormSchema = z.object({
     })
     .optional(),
   title: titlesValidationSchema,
-  date: z.object({
-    startDate: z.string(),
-    endDate: z.string().optional(),
-  }),
+  date: datesValidationSchema,
   description: z.array(
     z.object({
       text: z.string().nonempty(),

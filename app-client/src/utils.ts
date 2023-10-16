@@ -1,7 +1,6 @@
 import { faker } from "@faker-js/faker";
-import {
-  titlesGenerateData
-} from "Forms/RaidForm/components/FormTitlesComponent";
+import { datesGenerateData } from "Forms/RaidForm/components/FormDatesComponent";
+import { titlesGenerateData } from "Forms/RaidForm/components/FormTitlesComponent";
 import { RaidCreateRequest } from "Generated/Raidv2";
 import dayjs, { Dayjs } from "dayjs";
 
@@ -107,9 +106,7 @@ export const newRaid: RaidCreateRequest = {
       },
     },
   ],
-  date: {
-    startDate: dayjs(new Date()).format("YYYY-MM-DD"),
-  },
+  date: datesGenerateData(),
   access: {
     type: {
       id: "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",

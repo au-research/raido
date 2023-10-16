@@ -46,7 +46,7 @@ export default function ShowDateComponent({
               className="animated-tile animated-tile-reverse"
             >
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={12} md={4}>
+                <Grid item xs={12} sm={12} md={6}>
                   <Box>
                     <Typography variant="body2">Start Date</Typography>
                     <Typography color="text.secondary" variant="body1">
@@ -56,7 +56,7 @@ export default function ShowDateComponent({
                     </Typography>
                   </Box>
                 </Grid>
-                <Grid item xs={12} sm={12} md={4}>
+                <Grid item xs={12} sm={12} md={6}>
                   <Box>
                     <Typography variant="body2">End Date</Typography>
                     <Typography color="text.secondary" variant="body1">

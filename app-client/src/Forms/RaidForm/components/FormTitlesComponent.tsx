@@ -17,25 +17,27 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { RaidDto } from "Generated/Raidv2";
-import dayjs, { isDayjs } from "dayjs";
+import {
+  dateHelperText,
+  dateHelperTextRequired,
+  datePattern,
+} from "date-utils";
+import dayjs from "dayjs";
 import {
   Control,
   Controller,
   FieldErrors,
+  UseFieldArrayReturn,
   UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
-import { extractKeyFromIdUri, threeYearsFromDate } from "utils";
+import { extractKeyFromIdUri } from "utils";
 import { z } from "zod";
 import language from "../../../References/language.json";
 import languageSchema from "../../../References/language_schema.json";
 import titleType from "../../../References/title_type.json";
 import titleTypeSchema from "../../../References/title_type_schema.json";
-
-const datePattern =
-  /^(?:\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|02-(?:0[1-9]|1\d|2[0-8]))|\d{4}-(?:0[1-9]|1[0-2])|\d{4})$/;
 
 export const titlesValidationSchema = z
   .array(
@@ -55,11 +57,17 @@ export const titlesValidationSchema = z
   )
   .min(1);
 
-export const titlesGenerateData = () => {
+export const titlesGenerateData = (
+  titlesFieldArray?: UseFieldArrayReturn<RaidDto, "title", "id">
+) => {
+  const typeId =
+    titlesFieldArray?.fields && titlesFieldArray?.fields?.length > 0
+      ? titleType.find((el) => el.uri.includes("alternative"))?.uri
+      : titleType.find((el) => el.uri.includes("primary"))?.uri;
   return {
     text: `[G] ${faker.lorem.sentence()}`,
     type: {
-      id: titleType[1].uri,
+      id: typeId,
       schemaUri: titleTypeSchema[0].uri,
     },
     language: {
@@ -87,7 +95,7 @@ export default function FormTitlesComponent({
   });
 
   const handleAddTitle = () => {
-    titlesFieldArray.append(titlesGenerateData());
+    titlesFieldArray.append(titlesGenerateData(titlesFieldArray));
     trigger("title");
   };
 
@@ -99,6 +107,7 @@ export default function FormTitlesComponent({
         borderLeftColor: errors.title ? "red" : color,
         borderLeftWidth: errors.title ? 5 : 3,
       }}
+      className={errors.title ? "shake" : ""}
     >
       <CardHeader
         title={
@@ -258,7 +267,7 @@ export default function FormTitlesComponent({
                                 error={!!errors?.title?.[index]?.startDate}
                                 helperText={
                                   !errors?.title?.[index]?.startDate
-                                    ? "YYYY-MM-DD or YYYY-MM or YYYY"
+                                    ? dateHelperTextRequired
                                     : !!errors?.title?.[index]?.startDate
                                     ? errors?.title?.[index]?.startDate?.message
                                     : null
@@ -281,7 +290,7 @@ export default function FormTitlesComponent({
                                 error={!!errors?.title?.[index]?.endDate}
                                 helperText={
                                   !errors?.title?.[index]?.endDate
-                                    ? "YYYY-MM-DD or YYYY-MM or YYYY"
+                                    ? dateHelperText
                                     : !!errors?.title?.[index]?.endDate
                                     ? errors?.title?.[index]?.endDate?.message
                                     : null
