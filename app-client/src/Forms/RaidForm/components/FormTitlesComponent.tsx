@@ -39,7 +39,7 @@ import languageSchema from "../../../References/language_schema.json";
 import titleType from "../../../References/title_type.json";
 import titleTypeSchema from "../../../References/title_type_schema.json";
 
-export const titlesValidationSchema = z
+export const titlesValidationSchema: any = z
   .array(
     z.object({
       text: z.string().nonempty(),

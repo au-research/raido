@@ -2,6 +2,7 @@ import { z } from "zod";
 import { titlesValidationSchema } from "../Forms/RaidForm/components/FormTitlesComponent";
 import { datesValidationSchema } from "Forms/RaidForm/components/FormDatesComponent";
 import { descriptionsValidationSchema } from "Forms/RaidForm/components/FormDescriptionsComponent";
+import { accessValidationSchema } from "Forms/RaidForm/components/FormAccessComponent";
 
 export const ValidationFormSchema = z.object({
   identifier: z
@@ -26,21 +27,7 @@ export const ValidationFormSchema = z.object({
   title: titlesValidationSchema,
   date: datesValidationSchema,
   description: descriptionsValidationSchema,
-  access: z.object({
-    type: z.object({
-      id: z.string(),
-      schemaUri: z.literal(
-        "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
-      ),
-    }),
-    accessStatement: z.object({
-      text: z.string().nonempty(),
-      language: z.object({
-        id: z.string().nonempty(),
-        schemaUri: z.literal("https://iso639-3.sil.org"),
-      }),
-    }),
-  }),
+  access: accessValidationSchema,
   alternateUrl: z.array(
     z.object({
       url: z.string().url().nonempty(),

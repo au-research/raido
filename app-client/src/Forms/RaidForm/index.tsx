@@ -1,15 +1,8 @@
 import { Close as CloseIcon, Save as SaveIcon } from "@mui/icons-material";
-import {
-  Box,
-  CircularProgress,
-  Fab,
-  LinearProgress,
-  Stack,
-  Tooltip,
-} from "@mui/material";
+import { Box, Fab, Stack, Tooltip } from "@mui/material";
 import { RaidCreateRequest, RaidDto } from "Generated/Raidv2";
 import { FormProvider, useForm } from "react-hook-form";
-import FormAccessComponent from "./components/FormAccessComponent";
+
 import FormAlternateIdentifiersComponent from "./components/FormAlternateIdentifiersComponent";
 import FormAlternateUrlsComponent from "./components/FormAlternateUrlsComponent";
 import FormContributorsComponent from "./components/FormContributorsComponent";
@@ -22,6 +15,9 @@ import FormSpatialCoveragesComponent from "./components/FormSpatialCoveragesComp
 import FormSubjectsComponent from "./components/FormSubjectsComponent";
 import FormTitlesComponent from "./components/FormTitlesComponent";
 import FormTraditionalKnowledgeIdentifiersComponent from "./components/FormTraditionalKnowledgeIdentifiersComponent";
+
+// make sure this is the last import
+import FormAccessComponent from "./components/FormAccessComponent";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CategoryHeader } from "helper-components";

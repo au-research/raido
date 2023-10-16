@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import {
   Autocomplete,
   Box,
@@ -18,12 +19,46 @@ import {
   FieldErrors,
   UseFormTrigger,
 } from "react-hook-form";
-
-import accessTypes from "../../../References/access_type.json";
 import { extractKeyFromIdUri } from "utils";
+import { z } from "zod";
+import accessType from "../../../References/access_type.json";
+import accessTypeSchema from "../../../References/access_type_schema.json";
 import language from "../../../References/language.json";
+import languageSchema from "../../../References/language_schema.json";
 
 const dateThreeYearsFromNow = dayjs().add(3, "year");
+
+export const accessValidationSchema = z.object({
+  type: z.object({
+    id: z.enum(accessType.map((type) => type.uri) as [string, ...string[]]),
+    schemaUri: z.literal(accessTypeSchema[0].uri),
+  }),
+  accessStatement: z.object({
+    text: z.string().nonempty(),
+    language: z.object({
+      id: z.string().nonempty(),
+      schemaUri: z.literal(languageSchema[0].uri),
+    }),
+  }),
+  embargoExpiry: z.date().optional(),
+});
+
+export const accessGenerateData = () => {
+  return {
+    type: {
+      id: accessType[1].uri,
+      schemaUri: accessTypeSchema[0].uri,
+    },
+    accessStatement: {
+      text: `[G]: ${faker.lorem.words(5)}`,
+      language: {
+        id: "eng",
+        schemaUri: languageSchema[0].uri,
+      },
+    },
+    embargoExpiry: dayjs().add(180, "day").toDate(),
+  };
+};
 
 export default function FormAccessComponent({
   control,
@@ -90,29 +125,6 @@ export default function FormAccessComponent({
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={2}>
-                <Controller
-                  name="access.type.id"
-                  control={control}
-                  render={({ field }) => (
-                    <TextField
-                      select
-                      required
-                      label="Access Type"
-                      variant="outlined"
-                      size="small"
-                      fullWidth
-                      {...field}
-                    >
-                      {accessTypes.map((accessType) => (
-                        <MenuItem key={accessType.uri} value={accessType.uri}>
-                          {extractKeyFromIdUri(accessType.uri)}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  )}
-                />
-              </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <Controller
                   name="access.accessStatement.language.id"
@@ -159,20 +171,39 @@ export default function FormAccessComponent({
               </Grid>
               <Grid item xs={12} sm={6} md={2}>
                 <Controller
+                  name="access.type.id"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      select
+                      required
+                      label="Access Type"
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      {...field}
+                    >
+                      {accessType.map((accessType) => (
+                        <MenuItem key={accessType.uri} value={accessType.uri}>
+                          {extractKeyFromIdUri(accessType.uri)}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={2}>
+                <Controller
                   name="access.embargoExpiry"
                   control={control}
                   render={({ field: { onChange, ...restField } }) => {
                     return (
                       <DatePicker
                         label="Embargo Expiry"
-                        defaultValue={dateThreeYearsFromNow}
+                        defaultValue={dayjs().add(180, "day")}
                         format="DD-MMM-YYYY"
                         onChange={(event) => {
-                          onChange(
-                            event?.format("YYYY-MM-DD")
-                              ? new Date(event?.format("YYYY-MM-DD"))
-                              : ""
-                          );
+                          onChange(event ? event : null);
                         }}
                         slotProps={{
                           textField: {

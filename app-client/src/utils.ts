@@ -1,5 +1,7 @@
-import { faker } from "@faker-js/faker";
+import { accessGenerateData } from "Forms/RaidForm/components/FormAccessComponent";
+
 import { datesGenerateData } from "Forms/RaidForm/components/FormDatesComponent";
+import { descriptionsGenerateData } from "Forms/RaidForm/components/FormDescriptionsComponent";
 import { titlesGenerateData } from "Forms/RaidForm/components/FormTitlesComponent";
 import { RaidCreateRequest } from "Generated/Raidv2";
 import dayjs, { Dayjs } from "dayjs";
@@ -80,47 +82,9 @@ export const raidColors = new Map([
 
 export const newRaid: RaidCreateRequest = {
   title: [titlesGenerateData()],
-  description: [
-    {
-      text: `[G]: ${faker.lorem.paragraph()}`,
-      type: {
-        id: "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
-        schemaUri:
-          "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/",
-      },
-      language: {
-        id: "eng",
-        schemaUri: "https://iso639-3.sil.org",
-      },
-    },
-    {
-      text: `[G]: ${faker.lorem.paragraph()}`,
-      type: {
-        id: "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
-        schemaUri:
-          "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/",
-      },
-      language: {
-        id: "eng",
-        schemaUri: "https://iso639-3.sil.org",
-      },
-    },
-  ],
+  description: [descriptionsGenerateData()],
   date: datesGenerateData(),
-  access: {
-    type: {
-      id: "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
-      schemaUri:
-        "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/",
-    },
-    accessStatement: {
-      text: `[G]: ${faker.lorem.words(5)}`,
-      language: {
-        id: "eng",
-        schemaUri: "https://iso639-3.sil.org",
-      },
-    },
-  },
+  access: accessGenerateData(),
   organisation: [
     {
       id: "https://ror.org/038sjwq14",
@@ -141,7 +105,6 @@ export const newRaid: RaidCreateRequest = {
       ],
     },
   ],
-
   contributor: [
     {
       id: "https://orcid.org/0009-0000-9306-3120",
