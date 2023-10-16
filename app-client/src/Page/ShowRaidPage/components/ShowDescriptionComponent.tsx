@@ -58,7 +58,7 @@ export default function ShowDescriptionComponent({
                 description.type.id || ""
               );
               return (
-                <Stack sx={{ paddingLeft: 2 }} spacing={2} key={index}>
+                <Stack spacing={2} key={index}>
                   <Box
                     sx={{
                       bgcolor: "rgba(0, 0, 0, 0.02)",
@@ -68,11 +68,23 @@ export default function ShowDescriptionComponent({
                     className="animated-tile animated-tile-reverse"
                   >
                     <Grid container spacing={2}>
-                      <Grid item xs={12} sm={12} md={10}>
+                      <Grid item xs={12} sm={12} md={8}>
                         <Box>
-                          <Typography variant="body2">{`Description (${descriptionType})`}</Typography>
+                          <Typography variant="body2">
+                            Description Text
+                          </Typography>
                           <Typography color="text.secondary" variant="body1">
                             {description.text}
+                          </Typography>
+                        </Box>
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={2}>
+                        <Box>
+                          <Typography variant="body2">
+                            Description Type
+                          </Typography>
+                          <Typography color="text.secondary" variant="body1">
+                            {extractKeyFromIdUri(description.type.id)}
                           </Typography>
                         </Box>
                       </Grid>

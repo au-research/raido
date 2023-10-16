@@ -67,7 +67,7 @@ export const titlesGenerateData = (
   return {
     text: `[G] ${faker.lorem.sentence()}`,
     type: {
-      id: typeId,
+      id: typeId || "",
       schemaUri: titleTypeSchema[0].uri,
     },
     language: {

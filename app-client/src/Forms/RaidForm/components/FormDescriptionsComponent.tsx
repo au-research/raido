@@ -9,26 +9,66 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Divider,
   Grid,
   IconButton,
   MenuItem,
   Stack,
   TextField,
   Tooltip,
-  Typography,
+  Typography
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
 import {
   Control,
   Controller,
   FieldErrors,
+  UseFieldArrayReturn,
   UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
-import descriptionTypes from "../../../References/description_type.json";
-import language from "../../../References/language.json";
+
 import { extractKeyFromIdUri } from "utils";
+import { z } from "zod";
+import descriptionType from "../../../References/description_type.json";
+import descriptionTypeSchema from "../../../References/description_type_schema.json";
+import language from "../../../References/language.json";
+import languageSchema from "../../../References/language_schema.json";
+
+export const descriptionsValidationSchema = z.array(
+  z.object({
+    text: z.string().nonempty(),
+    type: z.object({
+      id: z.enum(
+        descriptionType.map((type) => type.uri) as [string, ...string[]]
+      ),
+      schemaUri: z.literal(descriptionTypeSchema[0].uri),
+    }),
+    language: z.object({
+      id: z.string().nonempty(),
+      schemaUri: z.literal(languageSchema[0].uri),
+    }),
+  })
+);
+
+export const descriptionsGenerateData = (
+  descriptionsFieldArray?: UseFieldArrayReturn<RaidDto, "description", "id">
+) => {
+  const typeId =
+    descriptionsFieldArray?.fields && descriptionsFieldArray?.fields?.length > 0
+      ? descriptionType.find((el) => el.uri.includes("alternative"))?.uri
+      : descriptionType.find((el) => el.uri.includes("primary"))?.uri;
+  return {
+    text: `[G] ${faker.lorem.sentence()}`,
+    type: {
+      id: typeId || "",
+      schemaUri: descriptionTypeSchema[0].uri,
+    },
+    language: {
+      id: "eng",
+      schemaUri: languageSchema[0].uri,
+    },
+  };
+};
 
 export default function FormDescriptionsComponent({
   control,
@@ -47,24 +87,9 @@ export default function FormDescriptionsComponent({
   });
 
   const handleAddDescription = () => {
-    const typeId =
-      [...descriptionsFieldArray.fields].length === 0
-        ? "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json"
-        : "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json";
-    descriptionsFieldArray.append({
-      // text: faker.lorem.paragraph(),
-      text: "",
-      type: {
-        id: typeId,
-        schemaUri:
-          "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/",
-      },
-
-      language: {
-        id: "eng",
-        schemaUri: "https://iso639-3.sil.org",
-      },
-    });
+    descriptionsFieldArray.append(
+      descriptionsGenerateData(descriptionsFieldArray)
+    );
     trigger("description");
   };
 
@@ -183,7 +208,7 @@ export default function FormDescriptionsComponent({
                                     });
                                   }}
                                 >
-                                  {descriptionTypes.map((descriptionType) => (
+                                  {descriptionType.map((descriptionType) => (
                                     <MenuItem
                                       key={descriptionType.uri}
                                       value={descriptionType.uri}

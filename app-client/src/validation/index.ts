@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { titlesValidationSchema } from "../Forms/RaidForm/components/FormTitlesComponent";
 import { datesValidationSchema } from "Forms/RaidForm/components/FormDatesComponent";
+import { descriptionsValidationSchema } from "Forms/RaidForm/components/FormDescriptionsComponent";
 
 export const ValidationFormSchema = z.object({
   identifier: z
@@ -24,21 +25,7 @@ export const ValidationFormSchema = z.object({
     .optional(),
   title: titlesValidationSchema,
   date: datesValidationSchema,
-  description: z.array(
-    z.object({
-      text: z.string().nonempty(),
-      type: z.object({
-        id: z.string(),
-        schemaUri: z.literal(
-          "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
-        ),
-      }),
-      language: z.object({
-        id: z.string().nonempty(),
-        schemaUri: z.literal("https://iso639-3.sil.org"),
-      }),
-    })
-  ),
+  description: descriptionsValidationSchema,
   access: z.object({
     type: z.object({
       id: z.string(),
