@@ -8,7 +8,7 @@ import FormAlternateUrlsComponent from "./components/FormAlternateUrlsComponent"
 
 import FormDatesComponent from "./components/FormDatesComponent";
 
-import FormOrganisationsComponent from "./components/FormOrganisationsComponent";
+
 import FormRelatedObjectsComponent from "./components/FormRelatedObjectsComponent";
 import FormRelatedRaidsComponent from "./components/FormRelatedRaidsComponent";
 import FormSpatialCoveragesComponent from "./components/FormSpatialCoveragesComponent";
@@ -20,6 +20,7 @@ import FormTraditionalKnowledgeIdentifiersComponent from "./components/FormTradi
 import FormAccessComponent from "./components/FormAccessComponent";
 import FormContributorsComponent from "./components/FormContributorsComponent";
 import FormDescriptionsComponent from "./components/FormDescriptionsComponent";
+import FormOrganisationsComponent from "./components/FormOrganisationsComponent";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CategoryHeader } from "helper-components";

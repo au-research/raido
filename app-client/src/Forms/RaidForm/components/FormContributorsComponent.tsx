@@ -226,25 +226,7 @@ export default function FormContributorsComponent({
   });
 
   const handleAddContributor = (event: React.MouseEvent<HTMLButtonElement>) => {
-    contributorsArray.append({
-      id: ``,
-      schemaUri: "https://orcid.org/",
-      position: [
-        {
-          schemaUri:
-            "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
-          id: "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
-          startDate: dayjs(new Date()).format("YYYY-MM-DD"),
-          endDate: dayjs(new Date()).add(3, "year").format("YYYY-MM-DD"),
-        },
-      ],
-      role: [
-        {
-          schemaUri: "https://credit.niso.org/",
-          id: "https://credit.niso.org/contributor-roles/conceptualization/",
-        },
-      ],
-    });
+    contributorsArray.append(contributorsGenerateData());
   };
 
   return (

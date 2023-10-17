@@ -3,14 +3,20 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Chip,
   Grid,
-  List,
-  ListItem,
-  ListItemText,
+  Paper,
   Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Typography,
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
+import { dateDisplayFormatter } from "date-utils";
 import { extractKeyFromIdUri } from "utils";
 
 export default function ShowOrganisationComponent({
@@ -75,18 +81,63 @@ export default function ShowOrganisationComponent({
                         <Box>
                           <Typography variant="body2">Roles</Typography>
 
-                          <List dense disablePadding>
-                            {organisation.role?.map((role, index) => (
-                              <ListItem key={index}>
-                                <ListItemText
-                                  primary={extractKeyFromIdUri(role.id)}
-                                  secondary={`${role.startDate || ""} ➡️ ${
-                                    role.endDate || "No end date"
-                                  }`}
-                                />
-                              </ListItem>
-                            ))}
-                          </List>
+                          {organisation.role.length === 0 && (
+                            <Typography
+                              variant="body2"
+                              color={"text.secondary"}
+                              textAlign={"center"}
+                            >
+                              No roles defined
+                            </Typography>
+                          )}
+
+                          <TableContainer
+                            component={Paper}
+                            variant="outlined"
+                            sx={{
+                              background: "transparent",
+                            }}
+                          >
+                            <Table size="small">
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell sx={{ width: "50%" }}>
+                                    Position
+                                  </TableCell>
+                                  <TableCell>Start Date</TableCell>
+                                  <TableCell>End Date</TableCell>
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {organisation.role.map((row) => {
+                                  return (
+                                    <TableRow
+                                      key={row.id}
+                                      sx={{
+                                        "&:last-child td, &:last-child th": {
+                                          border: 0,
+                                        },
+                                      }}
+                                    >
+                                      <TableCell component="th" scope="row">
+                                        <Chip
+                                          label={extractKeyFromIdUri(row.id)}
+                                          size="small"
+                                          color="primary"
+                                        />
+                                      </TableCell>
+                                      <TableCell>
+                                        {dateDisplayFormatter(row.startDate)}
+                                      </TableCell>
+                                      <TableCell>
+                                        {dateDisplayFormatter(row.endDate)}
+                                      </TableCell>
+                                    </TableRow>
+                                  );
+                                })}
+                              </TableBody>
+                            </Table>
+                          </TableContainer>
                         </Box>
                       </Grid>
                     </Grid>

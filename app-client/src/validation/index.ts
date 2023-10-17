@@ -4,6 +4,7 @@ import { datesValidationSchema } from "Forms/RaidForm/components/FormDatesCompon
 import { descriptionsValidationSchema } from "Forms/RaidForm/components/FormDescriptionsComponent";
 import { accessValidationSchema } from "Forms/RaidForm/components/FormAccessComponent";
 import { contributorsValidationSchema } from "Forms/RaidForm/components/FormContributorsComponent";
+import { organisationsValidationSchema } from "Forms/RaidForm/components/FormOrganisationsComponent";
 
 export const ValidationFormSchema = z.object({
   identifier: z
@@ -35,22 +36,7 @@ export const ValidationFormSchema = z.object({
     })
   ),
   contributor: contributorsValidationSchema,
-  organisation: z.array(
-    z.object({
-      id: z.string().nonempty(),
-      schemaUri: z.string().nonempty(),
-      role: z.array(
-        z.object({
-          id: z.string(),
-          schemaUri: z.literal(
-            "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/"
-          ),
-          startDate: z.string(),
-          endDate: z.string().optional(),
-        })
-      ),
-    })
-  ),
+  organisation: organisationsValidationSchema,
   subject: z.array(
     z.object({
       id: z.string().nonempty(),

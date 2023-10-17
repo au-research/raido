@@ -3,6 +3,7 @@ import { contributorsGenerateData } from "Forms/RaidForm/components/FormContribu
 
 import { datesGenerateData } from "Forms/RaidForm/components/FormDatesComponent";
 import { descriptionsGenerateData } from "Forms/RaidForm/components/FormDescriptionsComponent";
+import { organisationsGenerateData } from "Forms/RaidForm/components/FormOrganisationsComponent";
 import { titlesGenerateData } from "Forms/RaidForm/components/FormTitlesComponent";
 import { RaidCreateRequest } from "Generated/Raidv2";
 import dayjs, { Dayjs } from "dayjs";
@@ -80,25 +81,6 @@ export const newRaid: RaidCreateRequest = {
   description: [descriptionsGenerateData()],
   date: datesGenerateData(),
   access: accessGenerateData(),
-  organisation: [
-    {
-      id: "https://ror.org/038sjwq14",
-      schemaUri: "https://ror.org/",
-      role: [
-        {
-          id: "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
-          schemaUri:
-            "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
-          startDate: "2020-01-01",
-        },
-        {
-          id: "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
-          schemaUri:
-            "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
-          startDate: "2022-01-01",
-        },
-      ],
-    },
-  ],
+  organisation: [organisationsGenerateData()],
   contributor: [contributorsGenerateData()],
 };

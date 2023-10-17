@@ -147,7 +147,9 @@ export default function ShowContributorComponent({
                               <Table size="small">
                                 <TableHead>
                                   <TableRow>
-                                    <TableCell>Position</TableCell>
+                                    <TableCell sx={{ width: "50%" }}>
+                                      Position
+                                    </TableCell>
                                     <TableCell>Start Date</TableCell>
                                     <TableCell>End Date</TableCell>
                                   </TableRow>
