@@ -1,15 +1,4 @@
 import AddIcon from "@mui/icons-material/Add";
-import SaveIcon from "@mui/icons-material/Save";
-import {
-  isPagePath,
-  NavPathResult,
-  NavTransition,
-} from "Design/NavigationProvider";
-import React, { SyntheticEvent } from "react";
-import { ContainerCard } from "Design/ContainerCard";
-import { LargeContentMain } from "Design/LayoutMain";
-import { DateDisplay, raidoTitle, RoleDisplay } from "Component/Util";
-import { ListRaidsV1Request } from "Generated/Raidv2/apis/RaidoStableV1Api";
 import {
   Alert,
   Box,
@@ -22,42 +11,35 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Snackbar,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Tooltip,
 } from "@mui/material";
-import { useAuthApi } from "Api/AuthApi";
 import { useQuery } from "@tanstack/react-query";
-import { CompactErrorPanel } from "Error/CompactErrorPanel";
-import { TextSpan } from "Component/TextSpan";
+import { useAuthApi } from "Api/AuthApi";
 import { useAuth } from "Auth/AuthProvider";
-import { RqQuery } from "Util/ReactQueryUtil";
+import { TextSpan } from "Component/TextSpan";
+import { raidoTitle, RoleDisplay } from "Component/Util";
+import {
+  isPagePath,
+  NavPathResult,
+  NavTransition,
+} from "Design/NavigationProvider";
+import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import { RaidDto } from "Generated/Raidv2";
+import { ListRaidsV1Request } from "Generated/Raidv2/apis/RaidoStableV1Api";
+import React, { SyntheticEvent } from "react";
+import { RqQuery } from "Util/ReactQueryUtil";
 
-import { InfoField, InfoFieldList } from "Component/InfoField";
-import { RefreshIconButton } from "Component/RefreshIconButton";
-import { CompactLinearProgress } from "Component/SmallPageSpinner";
-import { RaidoLink } from "Component/RaidoLink";
-import { RaidoAddFab } from "Component/AppButton";
-import { getEditRaidPageLink } from "Page/EditRaidPage";
-import { getMintRaidPageLink } from "Page/MintRaidPage";
-import { IdProviderDisplay } from "Component/IdProviderDisplay";
 import { ContentCopy, FileDownload, Settings } from "@mui/icons-material";
-import { toastDuration } from "Design/RaidoTheme";
-import { assert } from "Util/TypeUtil";
 import Typography from "@mui/material/Typography";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { IdProviderDisplay } from "Component/IdProviderDisplay";
+import { RaidoLink } from "Component/RaidoLink";
+import { RefreshIconButton } from "Component/RefreshIconButton";
 import {
   formatLocalDateAsFileSafeIsoShortDateTime,
   formatLocalDateAsIso,
 } from "Util/DateUtil";
 import { escapeCsvField } from "Util/DownloadUtil";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { assert } from "Util/TypeUtil";
 
 const log = console;
 
@@ -154,75 +136,52 @@ function RaidCurrentUser() {
       })
   );
   return (
-    <>
-      <Card
-        sx={{
-          mt: 3,
-          borderLeft: "solid",
-          borderLeftColor: "primary.main",
-          borderLeftWidth: 3,
-        }}
-      >
-        <CardHeader title="Signed-in user" />
-        <CardContent>
-          <Grid container>
-            <Grid item xs={12} sm={6} md={6}>
-              <Box>
-                <Typography variant="body2">Identity</Typography>
-                <Typography color="text.secondary" variant="body1">
-                  {user.email}
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item xs={12} sm={2} md={2}>
-              <Box>
-                <Typography variant="body2">ID provider</Typography>
-                <Typography color="text.secondary" variant="body1">
-                  <IdProviderDisplay payload={user} />
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item xs={12} sm={2} md={2}>
-              <Box>
-                <Typography variant="body2">Service point</Typography>
-                <Typography color="text.secondary" variant="body1">
-                  {spQuery.data?.name || ""}
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid item xs={12} sm={2} md={2}>
-              <Box>
-                <Typography variant="body2">Role</Typography>
-                <Typography color="text.secondary" variant="body1">
-                  <RoleDisplay role={user.role} />
-                </Typography>
-              </Box>
-            </Grid>
+    <Card
+      sx={{
+        mt: 3,
+        borderLeft: "solid",
+        borderLeftColor: "primary.main",
+        borderLeftWidth: 3,
+      }}
+    >
+      <CardHeader title="Signed-in user" />
+      <CardContent>
+        <Grid container>
+          <Grid item xs={12} sm={6} md={6}>
+            <Box>
+              <Typography variant="body2">Identity</Typography>
+              <Typography color="text.secondary" variant="body1">
+                {user.email}
+              </Typography>
+            </Box>
           </Grid>
-        </CardContent>
-      </Card>
-      {/* <ContainerCard title={"Signed-in user"}>
-        <InfoFieldList>
-          <InfoField id={"email"} label={"Identity"} value={user.email} />
-          <InfoField
-            id={"idProvider"}
-            label={"ID provider"}
-            value={<IdProviderDisplay payload={user} />}
-          />
-          <InfoField
-            id={"servicePoint"}
-            label={"Service point"}
-            value={spQuery.data?.name || ""}
-          />
-          <InfoField
-            id={"role"}
-            label={"Role"}
-            value={<RoleDisplay role={user.role} />}
-          />
-        </InfoFieldList>
-        <CompactErrorPanel error={spQuery.error} />
-      </ContainerCard> */}
-    </>
+          <Grid item xs={12} sm={2} md={2}>
+            <Box>
+              <Typography variant="body2">ID provider</Typography>
+              <Typography color="text.secondary" variant="body1">
+                <IdProviderDisplay payload={user} />
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={2} md={2}>
+            <Box>
+              <Typography variant="body2">Service point</Typography>
+              <Typography color="text.secondary" variant="body1">
+                {spQuery.data?.name || ""}
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12} sm={2} md={2}>
+            <Box>
+              <Typography variant="body2">Role</Typography>
+              <Typography color="text.secondary" variant="body1">
+                <RoleDisplay role={user.role} />
+              </Typography>
+            </Box>
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -309,27 +268,26 @@ export function RaidTableContainerV2({ servicePointId }: ListRaidsV1Request) {
         return params.row.title.map((title: any, index: number) => {
           return title.text + (index < params.row.title.length - 1 ? ", " : "");
         });
-        // return params.row.titles[0].title;
       },
     },
     {
-      field: "startDate",
+      field: "date.startDate",
       headerName: "Start Date",
-      width: 200,
+      width: 100,
       renderCell: (params) => {
         return params.row.date.startDate;
       },
+      sortable: false,
     },
-
-    // {
-    //   field: "endDate",
-    //   headerName: "End Date",
-    //   width: 200,
-    //   renderCell: (params) => {
-    //     return "";
-    //     // return params.row.dates.endDate;
-    //   },
-    // },
+    {
+      field: "date.endDate",
+      headerName: "End Date",
+      width: 100,
+      renderCell: (params) => {
+        return params.row.date.endDate;
+      },
+      sortable: false,
+    },
   ];
 
   const handleRowClick = (event: any) => {
@@ -402,14 +360,7 @@ export function RaidTableContainerV2({ servicePointId }: ListRaidsV1Request) {
                   },
                 },
               }}
-              // slots={{ toolbar: GridToolbar }}
               pageSizeOptions={[10, 25, 50, 100]}
-              // sx={{
-              //   backgroundColor: `${theme.palette.background.paper}`,
-              //   borderTop: `3px solid ${theme.palette.secondary.main}`,
-              //   p: 2,
-              // }}
-              data-testid="raids-table"
             />
           )}
         </CardContent>
