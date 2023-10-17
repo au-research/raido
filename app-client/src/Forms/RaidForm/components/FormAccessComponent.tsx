@@ -26,8 +26,6 @@ import accessTypeSchema from "../../../References/access_type_schema.json";
 import language from "../../../References/language.json";
 import languageSchema from "../../../References/language_schema.json";
 
-const dateThreeYearsFromNow = dayjs().add(3, "year");
-
 export const accessValidationSchema = z.object({
   type: z.object({
     id: z.enum(accessType.map((type) => type.uri) as [string, ...string[]]),
@@ -50,7 +48,7 @@ export const accessGenerateData = () => {
       schemaUri: accessTypeSchema[0].uri,
     },
     accessStatement: {
-      text: `[G]: ${faker.lorem.words(5)}`,
+      text: `[G]: ${faker.lorem.sentence()}`,
       language: {
         id: "eng",
         schemaUri: languageSchema[0].uri,
@@ -200,10 +198,10 @@ export default function FormAccessComponent({
                     return (
                       <DatePicker
                         label="Embargo Expiry"
-                        defaultValue={dayjs().add(180, "day")}
+                        defaultValue={dayjs(restField.value)}
                         format="DD-MMM-YYYY"
                         onChange={(event) => {
-                          onChange(event ? event : null);
+                          onChange(event ? event.toDate() : null);
                         }}
                         slotProps={{
                           textField: {

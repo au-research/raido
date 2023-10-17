@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
-import dayjs from "dayjs";
+import { dateDisplayFormatter } from "date-utils";
 
 export default function ShowDateComponent({
   raid,
@@ -50,9 +50,7 @@ export default function ShowDateComponent({
                   <Box>
                     <Typography variant="body2">Start Date</Typography>
                     <Typography color="text.secondary" variant="body1">
-                      {raid?.date?.startDate
-                        ? dayjs(raid?.date?.startDate).format("DD-MMM-YYYY")
-                        : "N/A"}
+                      {dateDisplayFormatter(raid?.date?.startDate)}
                     </Typography>
                   </Box>
                 </Grid>
@@ -60,9 +58,7 @@ export default function ShowDateComponent({
                   <Box>
                     <Typography variant="body2">End Date</Typography>
                     <Typography color="text.secondary" variant="body1">
-                      {raid?.date?.endDate
-                        ? dayjs(raid?.date?.endDate).format("DD-MMM-YYYY")
-                        : "N/A"}
+                      {dateDisplayFormatter(raid?.date?.endDate)}
                     </Typography>
                   </Box>
                 </Grid>

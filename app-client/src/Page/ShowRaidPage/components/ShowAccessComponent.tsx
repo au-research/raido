@@ -8,9 +8,10 @@ import {
   Typography,
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
+import { dateDisplayFormatter } from "date-utils";
+import dayjs from "dayjs";
 import { extractKeyFromIdUri } from "utils";
 import language from "../../../References/language.json";
-import dayjs from "dayjs";
 
 export default function ShowAccessComponent({
   raid,
@@ -79,14 +80,20 @@ export default function ShowAccessComponent({
                     </Typography>
                   </Box>
                 </Grid>
-                <Grid item xs={12} sm={12} md={2}>
-                  <Box>
-                    <Typography variant="body2">Embargo Expiry</Typography>
-                    <Typography color="text.secondary" variant="body1">
-                      {dayjs(raid?.access?.embargoExpiry).format("DD-MMM-YYYY")}
-                    </Typography>
-                  </Box>
-                </Grid>
+                {raid?.access?.type?.id.includes("embargo") && (
+                  <Grid item xs={12} sm={12} md={2}>
+                    <Box>
+                      <Typography variant="body2">Embargo Expiry</Typography>
+                      <Typography color="text.secondary" variant="body1">
+                        {dateDisplayFormatter(
+                          dayjs(raid?.access?.embargoExpiry).format(
+                            "YYYY-MM-DD"
+                          )
+                        )}
+                      </Typography>
+                    </Box>
+                  </Grid>
+                )}
               </Grid>
             </Box>
           </Stack>

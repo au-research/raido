@@ -75,6 +75,7 @@ export const titlesGenerateData = (
       schemaUri: languageSchema[0].uri,
     },
     startDate: dayjs(new Date()).format("YYYY-MM-DD"),
+    endDate: undefined,
   };
 };
 
