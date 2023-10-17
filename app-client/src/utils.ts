@@ -1,4 +1,5 @@
 import { accessGenerateData } from "Forms/RaidForm/components/FormAccessComponent";
+import { contributorsGenerateData } from "Forms/RaidForm/components/FormContributorsComponent";
 
 import { datesGenerateData } from "Forms/RaidForm/components/FormDatesComponent";
 import { descriptionsGenerateData } from "Forms/RaidForm/components/FormDescriptionsComponent";
@@ -47,12 +48,6 @@ export const extractLastUrlSegment = (inputUri: string = ""): string => {
   return result;
 };
 
-// Test
-console.log(
-  extractKeyFromIdUri(
-    "https://credit.niso.org/contributor-roles/formal-analysis/"
-  )
-);
 // Expected output: "formal-analysis"
 
 /**
@@ -105,24 +100,5 @@ export const newRaid: RaidCreateRequest = {
       ],
     },
   ],
-  contributor: [
-    {
-      id: "https://orcid.org/0009-0000-9306-3120",
-      schemaUri: "https://orcid.org/",
-      position: [
-        {
-          schemaUri:
-            "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
-          id: "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
-          startDate: "2023-08-24",
-        },
-      ],
-      role: [
-        {
-          schemaUri: "https://credit.niso.org/",
-          id: "https://credit.niso.org/contributor-roles/conceptualization/",
-        },
-      ],
-    },
-  ],
+  contributor: [contributorsGenerateData()],
 };

@@ -4,16 +4,22 @@ import {
   CardContent,
   CardHeader,
   Checkbox,
+  Chip,
   FormControlLabel,
-  FormGroup,
   Grid,
-  List,
-  ListItem,
-  ListItemText,
+  Paper,
   Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Typography,
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
+import { dateDisplayFormatter } from "date-utils";
+import dayjs from "dayjs";
 import { extractKeyFromIdUri, extractLastUrlSegment } from "utils";
 
 export default function ShowContributorComponent({
@@ -56,82 +62,165 @@ export default function ShowContributorComponent({
             </Box>
             {raid?.contributor?.map((contributor, index) => {
               return (
-                <Stack sx={{ paddingLeft: 2 }} spacing={2} key={index}>
-                  <Box
-                    sx={{
-                      bgcolor: "rgba(0, 0, 0, 0.02)",
-                      p: 2,
-                      borderRadius: 2,
-                    }}
-                    className="animated-tile animated-tile-reverse"
-                  >
-                    <Grid container spacing={2}>
-                      <Grid item xs={12} sm={12} md={4}>
-                        <Box>
-                          <Typography variant="body2">ID</Typography>
-                          <Typography color="text.secondary" variant="body1">
-                            {contributor.id}
+                <Card variant="outlined" key={index}>
+                  <CardContent>
+                    <Stack spacing={2} key={index}>
+                      <Box
+                        sx={{
+                          bgcolor: "rgba(0, 0, 0, 0.02)",
+                          p: 2,
+                          borderRadius: 2,
+                        }}
+                        className="animated-tile animated-tile-reverse"
+                      >
+                        <Grid container spacing={2}>
+                          <Grid item xs={12} sm={12} md={6}>
+                            <Box>
+                              <Typography variant="body2">ID</Typography>
+                              <Typography
+                                color="text.secondary"
+                                variant="body1"
+                              >
+                                {contributor.id}
+                              </Typography>
+                            </Box>
+                          </Grid>
+                          <Grid item xs={12} sm={12} md={3}>
+                            <Box>
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    disabled
+                                    checked={contributor.leader}
+                                  />
+                                }
+                                label="Leader"
+                              />
+                            </Box>
+                          </Grid>
+                          <Grid item xs={12} sm={12} md={3}>
+                            <Box>
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    disabled
+                                    checked={contributor.contact}
+                                  />
+                                }
+                                label="Contact"
+                              />
+                            </Box>
+                          </Grid>
+                        </Grid>
+                      </Box>
+                      <Box
+                        sx={{
+                          bgcolor: "rgba(0, 0, 0, 0.02)",
+                          p: 2,
+                          borderRadius: 2,
+                        }}
+                        className="animated-tile animated-tile-reverse"
+                      >
+                        <Grid item xs={12} sm={12} md={12}>
+                          <Typography variant="body2" gutterBottom>
+                            Positions
                           </Typography>
-                        </Box>
-                      </Grid>
-                      <Grid item xs={12} sm={12} md={4}>
-                        <Box>
-                          <FormGroup>
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  disabled
-                                  checked={contributor.leader}
-                                />
-                              }
-                              label="Leader"
-                            />
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  disabled
-                                  checked={contributor.contact}
-                                />
-                              }
-                              label="Contact"
-                            />
-                          </FormGroup>
-                        </Box>
-                      </Grid>
-                      <Grid item xs={12} sm={12} md={12}>
-                        <Box>
-                          <Typography variant="body2">Positions</Typography>
-                          <List dense disablePadding>
-                            {contributor.position?.map((position, index) => (
-                              <ListItem key={index}>
-                                <ListItemText
-                                  primary={extractKeyFromIdUri(position.id)}
-                                  secondary={`${position.startDate || ""} ➡️ ${
-                                    position.endDate || "No end date"
-                                  }`}
-                                />
-                              </ListItem>
+
+                          {contributor.position.length === 0 && (
+                            <Typography
+                              variant="body2"
+                              color={"text.secondary"}
+                              textAlign={"center"}
+                            >
+                              No positions defined
+                            </Typography>
+                          )}
+
+                          {contributor.position.length > 0 && (
+                            <TableContainer
+                              component={Paper}
+                              variant="outlined"
+                              sx={{
+                                background: "transparent",
+                              }}
+                            >
+                              <Table size="small">
+                                <TableHead>
+                                  <TableRow>
+                                    <TableCell>Position</TableCell>
+                                    <TableCell>Start Date</TableCell>
+                                    <TableCell>End Date</TableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  {contributor.position.map((row) => {
+                                    return (
+                                      <TableRow
+                                        key={row.id}
+                                        sx={{
+                                          "&:last-child td, &:last-child th": {
+                                            border: 0,
+                                          },
+                                        }}
+                                      >
+                                        <TableCell component="th" scope="row">
+                                          <Chip
+                                            label={extractKeyFromIdUri(row.id)}
+                                            size="small"
+                                            color="primary"
+                                          />
+                                        </TableCell>
+                                        <TableCell>
+                                          {dateDisplayFormatter(row.startDate)}
+                                        </TableCell>
+                                        <TableCell>
+                                          {dateDisplayFormatter(row.endDate)}
+                                        </TableCell>
+                                      </TableRow>
+                                    );
+                                  })}
+                                </TableBody>
+                              </Table>
+                            </TableContainer>
+                          )}
+                        </Grid>
+                      </Box>
+                      <Box
+                        sx={{
+                          bgcolor: "rgba(0, 0, 0, 0.02)",
+                          p: 2,
+                          borderRadius: 2,
+                        }}
+                        className="animated-tile animated-tile-reverse"
+                      >
+                        <Grid item xs={12} sm={12} md={12}>
+                          <Typography variant="body2" gutterBottom>
+                            Roles
+                          </Typography>
+                          {contributor.role.length === 0 && (
+                            <Typography
+                              variant="body2"
+                              color={"text.secondary"}
+                              textAlign={"center"}
+                            >
+                              No roles defined
+                            </Typography>
+                          )}
+                          <Stack direction={"row"} gap={1}>
+                            {contributor.role.map((row, index) => (
+                              <Chip
+                                label={extractLastUrlSegment(row.id)}
+                                size="small"
+                                color="primary"
+                                key={index}
+                              />
                             ))}
-                          </List>
-                        </Box>
-                      </Grid>
-                      <Grid item xs={12} sm={12} md={12}>
-                        <Box>
-                          <Typography variant="body2">Roles</Typography>
-                          <List dense disablePadding>
-                            {contributor.role?.map((role, index) => (
-                              <ListItem key={index}>
-                                <ListItemText
-                                  primary={extractLastUrlSegment(role.id)}
-                                />
-                              </ListItem>
-                            ))}
-                          </List>
-                        </Box>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </Stack>
+                          </Stack>
+                        </Grid>
+                      </Box>
+                    </Stack>
+                  </CardContent>
+                </Card>
               );
             })}
           </Stack>

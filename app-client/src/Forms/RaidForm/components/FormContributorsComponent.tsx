@@ -18,6 +18,8 @@ import {
   Typography,
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
+import contributorPosition from "References/contributor_position.json";
+import contributorPositionSchema from "References/contributor_position_schema.json";
 import dayjs from "dayjs";
 import {
   Control,
@@ -29,6 +31,64 @@ import {
 } from "react-hook-form";
 import FormContributorsPositionsComponent from "./FormContributorsPositionsComponent";
 import FormContributorsRolesComponent from "./FormContributorsRolesComponent";
+
+import contributorRole from "References/contributor_role.json";
+import contributorRoleSchema from "References/contributor_role_schema.json";
+
+import { z } from "zod";
+import { combinedPattern, yearMonthDayPattern } from "date-utils";
+
+export const contributorsValidationSchema = z.array(
+  z.object({
+    id: z
+      .string()
+      .regex(
+        new RegExp("^https://orcid.org/\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]$")
+      ),
+    leader: z.boolean(),
+    contact: z.boolean(),
+    schemaUri: z.literal("https://orcid.org/"),
+    position: z.array(
+      z.object({
+        id: z.string(),
+        schemaUri: z.literal(contributorPositionSchema[0].uri),
+        startDate: z.string().regex(combinedPattern).nonempty(),
+        endDate: z.string().regex(combinedPattern).optional().nullable(),
+      })
+    ),
+    role: z.array(
+      z.object({
+        id: z.string(),
+        schemaUri: z.literal(contributorRoleSchema[0].uri),
+      })
+    ),
+  })
+);
+
+export const contributorsGenerateData = () => {
+  const leaderIndex = contributorPosition.findIndex((el) =>
+    el.uri.includes("leader")
+  );
+  return {
+    id: "https://orcid.org/0009-0000-9306-3120",
+    leader: false,
+    contact: false,
+    schemaUri: "https://orcid.org/",
+    position: [
+      {
+        schemaUri: contributorPositionSchema[0].uri,
+        id: contributorPosition[leaderIndex].uri,
+        startDate: dayjs().format("YYYY-MM-DD"),
+      },
+    ],
+    role: [
+      {
+        schemaUri: contributorRoleSchema[0].uri,
+        id: contributorRole[0].uri,
+      },
+    ],
+  };
+};
 
 function ContributorRootField({
   contributorsArray,
@@ -53,6 +113,7 @@ function ContributorRootField({
         const contributorTitle =
           controllerField?.value?.id ||
           `Contributor ${contributorsArrayIndex + 1}`;
+
         return (
           <>
             <Card variant="outlined" sx={{ bgcolor: "transparent" }}>
@@ -93,16 +154,34 @@ function ContributorRootField({
                     <Grid item xs={12} sm={12} md={3}>
                       <FormGroup>
                         <FormControlLabel
+                          {...controllerField}
+                          checked={controllerField?.value?.leader}
                           control={<Checkbox />}
                           label="Project Leader"
+                          onChange={(event) => {
+                            onChange({
+                              ...controllerField?.value,
+                              leader: (event.target as HTMLInputElement)
+                                .checked,
+                            });
+                          }}
                         />
                       </FormGroup>
                     </Grid>
                     <Grid item xs={12} sm={12} md={3}>
                       <FormGroup>
                         <FormControlLabel
+                          {...controllerField}
+                          checked={controllerField?.value?.contact}
                           control={<Checkbox />}
                           label="Project Contact"
+                          onChange={(event) => {
+                            onChange({
+                              ...controllerField?.value,
+                              contact: (event.target as HTMLInputElement)
+                                .checked,
+                            });
+                          }}
                         />
                       </FormGroup>
                     </Grid>

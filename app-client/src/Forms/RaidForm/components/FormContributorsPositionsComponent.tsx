@@ -16,15 +16,18 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import { RaidDto } from "Generated/Raidv2";
-import dayjs from "dayjs";
+import dayjs, { isDayjs } from "dayjs";
 import {
   Control,
   Controller,
   FieldErrors,
   useFieldArray,
 } from "react-hook-form";
-import contributorPositions from "../../../References/contributor_position.json";
+import contributorPosition from "References/contributor_position.json";
+import contributorPositionSchema from "References/contributor_position_schema.json";
 import { extractKeyFromIdUri } from "utils";
+
+import { dateHelperTextRequired } from "../../../date-utils";
 
 export default function FormContributorsPositionsComponent({
   control,
@@ -43,11 +46,10 @@ export default function FormContributorsPositionsComponent({
 
   const handleAddPosition = (event: React.MouseEvent<HTMLButtonElement>) => {
     contributorPositionsArray.append({
-      schemaUri:
-        "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
-      id: "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
-      startDate: dayjs(new Date()).format("YYYY-MM-DD"),
-      endDate: dayjs(new Date()).add(3, "year").format("YYYY-MM-DD"),
+      schemaUri: contributorPositionSchema[0].uri,
+      id: contributorPosition[0].uri,
+      startDate: dayjs().format("YYYY-MM-DD"),
+      endDate: dayjs().add(180, "day").format("YYYY-MM-DD"),
     });
   };
 
@@ -127,7 +129,7 @@ export default function FormContributorsPositionsComponent({
                                     ]);
                                   }}
                                 >
-                                  {contributorPositions.map((position) => (
+                                  {contributorPosition.map((position) => (
                                     <MenuItem
                                       key={position.uri}
                                       value={position.uri}
@@ -139,15 +141,34 @@ export default function FormContributorsPositionsComponent({
                               </Grid>
 
                               <Grid item xs={12} sm={4} md={4}>
-                                <DatePicker
-                                  label="Position Start Date"
+                                <TextField
+                                  {...controllerField}
                                   value={
-                                    dayjs(
-                                      controllerField?.value?.[positionIndex]
-                                        ?.startDate
-                                    ) || ""
+                                    controllerField?.value?.[positionIndex]
+                                      ?.startDate || ""
                                   }
-                                  format="DD-MMM-YYYY"
+                                  size="small"
+                                  fullWidth
+                                  label="Start Date"
+                                  error={
+                                    !!errors?.contributor?.[
+                                      contributorsArrayIndex
+                                    ]?.position?.[positionIndex]?.startDate
+                                  }
+                                  helperText={
+                                    !errors?.contributor?.[
+                                      contributorsArrayIndex
+                                    ]?.position?.[positionIndex]?.startDate
+                                      ? dateHelperTextRequired
+                                      : !!errors?.contributor?.[
+                                          contributorsArrayIndex
+                                        ]?.position?.[positionIndex]?.startDate
+                                      ? errors?.contributor?.[
+                                          contributorsArrayIndex
+                                        ]?.position?.[positionIndex]?.startDate
+                                          ?.message
+                                      : null
+                                  }
                                   onChange={(event) => {
                                     onChange([
                                       ...controllerField.value.slice(
@@ -156,35 +177,44 @@ export default function FormContributorsPositionsComponent({
                                       ),
                                       {
                                         ...controllerField.value[positionIndex],
-                                        startDate: event,
+                                        startDate: event.target.value,
                                       },
                                       ...controllerField.value.slice(
                                         positionIndex + 1
                                       ),
                                     ]);
                                   }}
-                                  slotProps={{
-                                    textField: {
-                                      size: "small",
-                                      fullWidth: true,
-                                    },
-                                    actionBar: {
-                                      actions: ["today"],
-                                    },
-                                  }}
-                                  slots={<TextField />}
                                 />
                               </Grid>
                               <Grid item xs={12} sm={4} md={4}>
-                                <DatePicker
-                                  label="Position End Date"
+                                <TextField
+                                  {...controllerField}
                                   value={
-                                    dayjs(
-                                      controllerField?.value?.[positionIndex]
-                                        ?.endDate
-                                    ) || ""
+                                    controllerField?.value?.[positionIndex]
+                                      ?.endDate || ""
                                   }
-                                  format="DD-MMM-YYYY"
+                                  size="small"
+                                  fullWidth
+                                  label="End Date"
+                                  error={
+                                    !!errors?.contributor?.[
+                                      contributorsArrayIndex
+                                    ]?.position?.[positionIndex]?.endDate
+                                  }
+                                  helperText={
+                                    !errors?.contributor?.[
+                                      contributorsArrayIndex
+                                    ]?.position?.[positionIndex]?.endDate
+                                      ? dateHelperTextRequired
+                                      : !!errors?.contributor?.[
+                                          contributorsArrayIndex
+                                        ]?.position?.[positionIndex]?.endDate
+                                      ? errors?.contributor?.[
+                                          contributorsArrayIndex
+                                        ]?.position?.[positionIndex]?.endDate
+                                          ?.message
+                                      : null
+                                  }
                                   onChange={(event) => {
                                     onChange([
                                       ...controllerField.value.slice(
@@ -193,23 +223,13 @@ export default function FormContributorsPositionsComponent({
                                       ),
                                       {
                                         ...controllerField.value[positionIndex],
-                                        startDate: event,
+                                        endDate: event.target.value || null,
                                       },
                                       ...controllerField.value.slice(
                                         positionIndex + 1
                                       ),
                                     ]);
                                   }}
-                                  slotProps={{
-                                    textField: {
-                                      size: "small",
-                                      fullWidth: true,
-                                    },
-                                    actionBar: {
-                                      actions: ["today"],
-                                    },
-                                  }}
-                                  slots={<TextField />}
                                 />
                               </Grid>
                             </Grid>

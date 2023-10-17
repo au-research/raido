@@ -21,7 +21,7 @@ import { RaidDto } from "Generated/Raidv2";
 import {
   dateHelperText,
   dateHelperTextRequired,
-  datePattern,
+  combinedPattern,
 } from "date-utils";
 import dayjs from "dayjs";
 import {
@@ -51,8 +51,8 @@ export const titlesValidationSchema: any = z
         id: z.string().nonempty(),
         schemaUri: z.literal(languageSchema[0].uri),
       }),
-      startDate: z.string().regex(datePattern).nonempty(),
-      endDate: z.string().regex(datePattern).optional(),
+      startDate: z.string().regex(combinedPattern).nonempty(),
+      endDate: z.string().regex(combinedPattern).optional(),
     })
   )
   .min(1);

@@ -5,9 +5,9 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import FormAlternateIdentifiersComponent from "./components/FormAlternateIdentifiersComponent";
 import FormAlternateUrlsComponent from "./components/FormAlternateUrlsComponent";
-import FormContributorsComponent from "./components/FormContributorsComponent";
+
 import FormDatesComponent from "./components/FormDatesComponent";
-import FormDescriptionsComponent from "./components/FormDescriptionsComponent";
+
 import FormOrganisationsComponent from "./components/FormOrganisationsComponent";
 import FormRelatedObjectsComponent from "./components/FormRelatedObjectsComponent";
 import FormRelatedRaidsComponent from "./components/FormRelatedRaidsComponent";
@@ -18,6 +18,8 @@ import FormTraditionalKnowledgeIdentifiersComponent from "./components/FormTradi
 
 // make sure this is the last import
 import FormAccessComponent from "./components/FormAccessComponent";
+import FormContributorsComponent from "./components/FormContributorsComponent";
+import FormDescriptionsComponent from "./components/FormDescriptionsComponent";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CategoryHeader } from "helper-components";

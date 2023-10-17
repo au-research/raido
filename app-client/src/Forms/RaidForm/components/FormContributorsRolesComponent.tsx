@@ -21,7 +21,9 @@ import {
   FieldErrors,
   useFieldArray,
 } from "react-hook-form";
-import contributorRoles from "../../../References/contributor_role.json";
+import contributorRole from "References/contributor_role.json";
+import contributorRoleSchema from "References/contributor_role_schema.json";
+
 import { extractLastUrlSegment } from "utils";
 
 export default function FormContributorsRolesComponent({
@@ -41,8 +43,8 @@ export default function FormContributorsRolesComponent({
 
   const handleAddRole = (event: React.MouseEvent<HTMLButtonElement>) => {
     contributorRolesArray.append({
-      schemaUri: "https://credit.niso.org/",
-      id: "https://credit.niso.org/contributor-roles/conceptualization/",
+      schemaUri: contributorRoleSchema[0].uri,
+      id: contributorRole[0].uri,
     });
   };
 
@@ -111,7 +113,7 @@ export default function FormContributorsRolesComponent({
                                   ]);
                                 }}
                               >
-                                {contributorRoles.map((role) => (
+                                {contributorRole.map((role) => (
                                   <MenuItem key={role.uri} value={role.uri}>
                                     {extractLastUrlSegment(role.uri)}
                                   </MenuItem>

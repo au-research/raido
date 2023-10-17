@@ -3,6 +3,7 @@ import { titlesValidationSchema } from "../Forms/RaidForm/components/FormTitlesC
 import { datesValidationSchema } from "Forms/RaidForm/components/FormDatesComponent";
 import { descriptionsValidationSchema } from "Forms/RaidForm/components/FormDescriptionsComponent";
 import { accessValidationSchema } from "Forms/RaidForm/components/FormAccessComponent";
+import { contributorsValidationSchema } from "Forms/RaidForm/components/FormContributorsComponent";
 
 export const ValidationFormSchema = z.object({
   identifier: z
@@ -33,31 +34,7 @@ export const ValidationFormSchema = z.object({
       url: z.string().url().nonempty(),
     })
   ),
-  contributor: z.array(
-    z.object({
-      id: z
-        .string()
-        .regex(
-          new RegExp("^https://orcid.org/\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]$")
-        ),
-      schemaUri: z.literal("https://orcid.org/"),
-      position: z.array(
-        z.object({
-          id: z.string(),
-          schemaUri: z.literal(
-            "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/"
-          ),
-          startDate: z.string(),
-        })
-      ),
-      role: z.array(
-        z.object({
-          id: z.string(),
-          schemaUri: z.literal("https://credit.niso.org/"),
-        })
-      ),
-    })
-  ),
+  contributor: contributorsValidationSchema,
   organisation: z.array(
     z.object({
       id: z.string().nonempty(),

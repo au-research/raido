@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
-import { dateHelperText, dateHelperTextRequired, datePattern } from "date-utils";
+import { dateHelperText, dateHelperTextRequired, combinedPattern } from "date-utils";
 import dayjs from "dayjs";
 import {
   Control,
@@ -19,8 +19,8 @@ import {
 import { z } from "zod";
 
 export const datesValidationSchema = z.object({
-  startDate: z.string().regex(datePattern).nonempty(),
-  endDate: z.string().regex(datePattern).optional(),
+  startDate: z.string().regex(combinedPattern).nonempty(),
+  endDate: z.string().regex(combinedPattern).optional(),
 });
 
 export const datesGenerateData = () => {
