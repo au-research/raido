@@ -3,14 +3,21 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Chip,
   Grid,
+  List,
+  ListItem,
+  ListItemText,
   Stack,
   Typography,
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
+import { dateDisplayFormatter } from "date-utils";
 import { extractKeyFromIdUri } from "utils";
+import language from "References/language.json";
+import subjectType from "References/subject_type.json";
 
-export default function ShowRelatedRaisComponent({
+export default function ShowSubjectComponent({
   raid,
   color,
 }: {
@@ -30,7 +37,7 @@ export default function ShowRelatedRaisComponent({
         <CardHeader
           title={
             <Typography variant="h6" component="div">
-              Related Objects
+              Subjects
             </Typography>
           }
         />
@@ -38,19 +45,23 @@ export default function ShowRelatedRaisComponent({
         <CardContent>
           <Stack gap={3}>
             <Box>
-              {raid?.relatedObject?.length === 0 && (
+              {raid?.subject?.length === 0 && (
                 <Typography
                   variant="body2"
                   color={"text.secondary"}
                   textAlign={"center"}
                 >
-                  No related objects defined
+                  No subjects defined
                 </Typography>
               )}
             </Box>
-            {raid?.relatedObject?.map((relatedObject, index) => {
+            {raid?.subject?.map((subject, index) => {
+              const subjectTitle = subjectType.find(
+                (el) => el.id === subject.id
+              );
+
               return (
-                <Stack sx={{ paddingLeft: 2 }} spacing={2} key={index}>
+                <Stack spacing={2} key={index}>
                   <Box
                     sx={{
                       bgcolor: "rgba(0, 0, 0, 0.02)",
@@ -60,34 +71,31 @@ export default function ShowRelatedRaisComponent({
                     className="animated-tile animated-tile-reverse"
                   >
                     <Grid container spacing={2}>
-                      <Grid item xs={12} sm={12} md={6}>
+                      <Grid item xs={12} sm={12} md={12}>
                         <Box>
-                          <Typography variant="body2">ID</Typography>
+                          <Typography variant="body2">Subject</Typography>
                           <Typography color="text.secondary" variant="body1">
-                            <a
-                              href={relatedObject.id}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {relatedObject.id}
-                            </a>
+                            {subjectTitle?.name}
                           </Typography>
                         </Box>
                       </Grid>
-                      <Grid item xs={12} sm={12} md={3}>
+                      <Grid item xs={12} sm={12} md={12}>
                         <Box>
-                          <Typography variant="body2">Type</Typography>
-                          <Typography color="text.secondary" variant="body1">
-                            {extractKeyFromIdUri(relatedObject.type?.id)}
-                          </Typography>
-                        </Box>
-                      </Grid>
-                      <Grid item xs={12} sm={12} md={3}>
-                        <Box>
-                          <Typography variant="body2">Category</Typography>
-                          <Typography color="text.secondary" variant="body1">
-                            {extractKeyFromIdUri(relatedObject.category?.id)}
-                          </Typography>
+                          <Typography variant="body2">Keywords</Typography>
+                          <List dense>
+                            {subject?.keyword?.map((el) => (
+                              <ListItem>
+                                <ListItemText
+                                  primary={el.text}
+                                  secondary={
+                                    language.find(
+                                      (lang) => lang.id === el?.language?.id
+                                    )?.name
+                                  }
+                                />
+                              </ListItem>
+                            ))}
+                          </List>
                         </Box>
                       </Grid>
                     </Grid>

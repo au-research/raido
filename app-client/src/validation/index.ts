@@ -5,6 +5,7 @@ import { descriptionsValidationSchema } from "Forms/RaidForm/components/FormDesc
 import { accessValidationSchema } from "Forms/RaidForm/components/FormAccessComponent";
 import { contributorsValidationSchema } from "Forms/RaidForm/components/FormContributorsComponent";
 import { organisationsValidationSchema } from "Forms/RaidForm/components/FormOrganisationsComponent";
+import { subjectsValidationSchema } from "Forms/RaidForm/components/FormSubjectsComponent";
 
 export const ValidationFormSchema = z.object({
   identifier: z
@@ -37,21 +38,7 @@ export const ValidationFormSchema = z.object({
   ),
   contributor: contributorsValidationSchema,
   organisation: organisationsValidationSchema,
-  subject: z.array(
-    z.object({
-      id: z.string().nonempty(),
-      schemaUri: z.string().nonempty(),
-      keyword: z.array(
-        z.object({
-          text: z.string().nonempty(),
-          language: z.object({
-            id: z.string().nonempty(),
-            schemaUri: z.literal("https://iso639-3.sil.org"),
-          }),
-        })
-      ),
-    })
-  ),
+  subject: subjectsValidationSchema,
   relatedRaid: z.array(
     z.object({
       id: z.string().nonempty(),

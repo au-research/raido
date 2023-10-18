@@ -8,7 +8,6 @@ import FormAlternateUrlsComponent from "./components/FormAlternateUrlsComponent"
 
 import FormDatesComponent from "./components/FormDatesComponent";
 
-
 import FormRelatedObjectsComponent from "./components/FormRelatedObjectsComponent";
 import FormRelatedRaidsComponent from "./components/FormRelatedRaidsComponent";
 import FormSpatialCoveragesComponent from "./components/FormSpatialCoveragesComponent";
@@ -107,72 +106,42 @@ export default function RaidForm({
             subheader={""}
           />
           <Stack sx={{ paddingLeft: 2 }} spacing={2}>
-            <FormTitlesComponent
-              control={control}
-              errors={errors}
-              color={raidColors.get("blue")!}
-              trigger={trigger}
-            />
-
             <FormDatesComponent
               control={control}
               errors={errors}
               color={raidColors.get("blue")!}
               trigger={trigger}
             />
-
+            <FormTitlesComponent
+              control={control}
+              errors={errors}
+              color={raidColors.get("blue")!}
+              trigger={trigger}
+            />
             <FormDescriptionsComponent
               control={control}
               errors={errors}
               color={raidColors.get("blue")!}
               trigger={trigger}
             />
-
-            <FormAccessComponent
+            <FormContributorsComponent
               control={control}
               errors={errors}
               color={raidColors.get("blue")!}
               trigger={trigger}
             />
-
-            <Box sx={{}}>
-              <FormContributorsComponent
-                control={control}
-                errors={errors}
-                color={raidColors.get("blue")!}
-                trigger={trigger}
-              />
-            </Box>
-
-            <Box sx={{}}>
-              <FormOrganisationsComponent
-                control={control}
-                errors={errors}
-                color={raidColors.get("blue")!}
-                trigger={trigger}
-              />
-            </Box>
-          </Stack>
-          <CategoryHeader
-            title="Related & Alternate Entities"
-            subheader="RAiD Related & Alternate Entities"
-            color={raidColors.get("blue")!}
-          />
-          <Stack sx={{ paddingLeft: 2 }} spacing={2}>
-            <FormRelatedRaidsComponent
+            <FormOrganisationsComponent
               control={control}
               errors={errors}
               color={raidColors.get("blue")!}
               trigger={trigger}
             />
-
             <FormRelatedObjectsComponent
               control={control}
               errors={errors}
               color={raidColors.get("blue")!}
               trigger={trigger}
             />
-
             <FormAlternateIdentifiersComponent
               control={control}
               errors={errors}
@@ -186,14 +155,28 @@ export default function RaidForm({
               color={raidColors.get("blue")!}
               trigger={trigger}
             />
-          </Stack>
-          <CategoryHeader
-            title="Other Fields"
-            subheader="Other Fields"
-            color={raidColors.get("blue")!}
-          />
-          <Stack sx={{ paddingLeft: 2 }} spacing={2}>
+            <FormRelatedRaidsComponent
+              control={control}
+              errors={errors}
+              color={raidColors.get("blue")!}
+              trigger={trigger}
+            />
+
+            <FormAccessComponent
+              control={control}
+              errors={errors}
+              color={raidColors.get("blue")!}
+              trigger={trigger}
+            />
+
             <FormSubjectsComponent
+              control={control}
+              errors={errors}
+              color={raidColors.get("blue")!}
+              trigger={trigger}
+            />
+
+            <FormTraditionalKnowledgeIdentifiersComponent
               control={control}
               errors={errors}
               color={raidColors.get("blue")!}
@@ -207,13 +190,20 @@ export default function RaidForm({
               trigger={trigger}
             />
 
-            <FormTraditionalKnowledgeIdentifiersComponent
-              control={control}
-              errors={errors}
-              color={raidColors.get("blue")!}
-              trigger={trigger}
-            />
+            <Box sx={{}}></Box>
           </Stack>
+          <CategoryHeader
+            title="Related & Alternate Entities"
+            subheader="RAiD Related & Alternate Entities"
+            color={raidColors.get("blue")!}
+          />
+          <Stack sx={{ paddingLeft: 2 }} spacing={2}></Stack>
+          <CategoryHeader
+            title="Other Fields"
+            subheader="Other Fields"
+            color={raidColors.get("blue")!}
+          />
+          <Stack sx={{ paddingLeft: 2 }} spacing={2}></Stack>
         </Stack>
 
         <pre>{JSON.stringify(errors, null, 2)}</pre>

@@ -1,3 +1,4 @@
+import { th } from "@faker-js/faker";
 import { Container } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
 import { useAuthApi } from "Api/AuthApi";
@@ -36,27 +37,35 @@ export function isMintRaidPagePath(pathname: string): NavPathResult {
 
 function Content() {
   const handleRaidCreate = async (data: RaidDto): Promise<RaidDto> => {
-    return await api.raid.createRaidV1({
-      raidCreateRequest: {
-        identifier: data?.identifier || ({} as Id),
-        description: data?.description || ([] as Description[]),
-        title: data?.title || ([] as Title[]),
-        access: data?.access || ({} as Access),
-        alternateUrl: data?.alternateUrl || ({} as AlternateUrl[]),
-        relatedRaid: data?.relatedRaid || ([] as RelatedRaid[]),
-        date: data?.date || ({} as ModelDate),
-        contributor: data?.contributor || ([] as Contributor[]),
-        alternateIdentifier:
-          data?.alternateIdentifier || ([] as AlternateIdentifier[]),
-        organisation: data?.organisation || ([] as Organisation[]),
-        relatedObject: data?.relatedObject || ([] as RelatedObject[]),
-        spatialCoverage: data?.spatialCoverage || ([] as SpatialCoverage[]),
-        subject: data?.subject || ([] as Subject[]),
-        traditionalKnowledgeLabel:
-          data?.traditionalKnowledgeLabel ||
-          ([] as TraditionalKnowledgeLabel[]),
-      },
-    });
+    try {
+      return await api.raid.createRaidV1({
+        raidCreateRequest: {
+          identifier: data?.identifier || ({} as Id),
+          description: data?.description || ([] as Description[]),
+          title: data?.title || ([] as Title[]),
+          access: data?.access || ({} as Access),
+          alternateUrl: data?.alternateUrl || ({} as AlternateUrl[]),
+          relatedRaid: data?.relatedRaid || ([] as RelatedRaid[]),
+          date: data?.date || ({} as ModelDate),
+          contributor: data?.contributor || ([] as Contributor[]),
+          alternateIdentifier:
+            data?.alternateIdentifier || ([] as AlternateIdentifier[]),
+          organisation: data?.organisation || ([] as Organisation[]),
+          relatedObject: data?.relatedObject || ([] as RelatedObject[]),
+          spatialCoverage: data?.spatialCoverage || ([] as SpatialCoverage[]),
+          subject: data?.subject || ([] as Subject[]),
+          traditionalKnowledgeLabel:
+            data?.traditionalKnowledgeLabel ||
+            ([] as TraditionalKnowledgeLabel[]),
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      }
+      throw new Error("Error creating raid");
+    }
   };
 
   const api = useAuthApi();
@@ -67,7 +76,10 @@ function Content() {
       window.location.href = `/show-raid/${prefix}/${suffix}`;
     },
     onError: (error) => {
-      console.log("error", error);
+      console.log("+++ error +++");
+      if (error instanceof Error) {
+        console.log(error.message);
+      }
     },
   });
 

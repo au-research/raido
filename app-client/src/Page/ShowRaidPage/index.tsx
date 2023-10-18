@@ -39,6 +39,8 @@ import ShowOrganisationComponent from "./components/ShowOrganisationComponent";
 import ShowTitleComponent from "./components/ShowTitleComponent";
 import ShowRelatedObjectComponent from "./components/ShowRelatedObjectComponent";
 import ShowRelatedRaidComponent from "./components/ShowRelatedRaidComponent";
+import ShowSubjectComponent from "./components/ShowSubjectComponent";
+import ShowAlternateIdentifierComponent from "./components/ShowAlternateIdentifierComponent";
 
 const pageUrl = "/show-raid";
 
@@ -97,23 +99,15 @@ function Content() {
             title={`RAiD ${handle}`}
             subheader={`Showing data`}
           />
-          <ShowTitleComponent
-            raid={defaultValues}
-            color={raidColors.get("blue") || ""}
-          />
           <ShowDateComponent
             raid={defaultValues}
             color={raidColors.get("blue") || ""}
           />
+          <ShowTitleComponent
+            raid={defaultValues}
+            color={raidColors.get("blue") || ""}
+          />
           <ShowDescriptionComponent
-            raid={defaultValues}
-            color={raidColors.get("blue") || ""}
-          />
-          <ShowAccessComponent
-            raid={defaultValues}
-            color={raidColors.get("blue") || ""}
-          />
-          <ShowAlternateUrlComponent
             raid={defaultValues}
             color={raidColors.get("blue") || ""}
           />
@@ -129,10 +123,29 @@ function Content() {
             raid={defaultValues}
             color={raidColors.get("blue") || ""}
           />
+          <ShowAlternateIdentifierComponent
+            raid={defaultValues}
+            color={raidColors.get("blue") || ""}
+          />
+          <ShowAlternateUrlComponent
+            raid={defaultValues}
+            color={raidColors.get("blue") || ""}
+          />
           <ShowRelatedRaidComponent
             raid={defaultValues}
             color={raidColors.get("blue") || ""}
           />
+          <ShowAccessComponent
+            raid={defaultValues}
+            color={raidColors.get("blue") || ""}
+          />
+          <ShowSubjectComponent
+            raid={defaultValues}
+            color={raidColors.get("blue") || ""}
+          />
+
+          <pre>ToDo: Traditional Knowledge Label</pre>
+          <pre>ToDo: Spatial Coverage</pre>
 
           <Box sx={{ paddingLeft: 2 }}>
             <Card

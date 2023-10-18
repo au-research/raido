@@ -34,10 +34,10 @@ import {
 } from "react-hook-form";
 import { extractKeyFromIdUri } from "utils";
 import { z } from "zod";
-import language from "../../../References/language.json";
-import languageSchema from "../../../References/language_schema.json";
-import titleType from "../../../References/title_type.json";
-import titleTypeSchema from "../../../References/title_type_schema.json";
+import language from "References/language.json";
+import languageSchema from "References/language_schema.json";
+import titleType from "References/title_type.json";
+import titleTypeSchema from "References/title_type_schema.json";
 
 export const titlesValidationSchema: any = z
   .array(
