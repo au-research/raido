@@ -83,8 +83,8 @@ export default function ShowSubjectComponent({
                         <Box>
                           <Typography variant="body2">Keywords</Typography>
                           <List dense>
-                            {subject?.keyword?.map((el) => (
-                              <ListItem>
+                            {subject?.keyword?.map((el, index) => (
+                              <ListItem key={index}>
                                 <ListItemText
                                   primary={el.text}
                                   secondary={

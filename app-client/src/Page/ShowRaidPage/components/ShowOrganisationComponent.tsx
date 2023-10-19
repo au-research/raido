@@ -109,10 +109,10 @@ export default function ShowOrganisationComponent({
                                 </TableRow>
                               </TableHead>
                               <TableBody>
-                                {organisation.role.map((row) => {
+                                {organisation.role.map((row, index) => {
                                   return (
                                     <TableRow
-                                      key={row.id}
+                                      key={index}
                                       sx={{
                                         "&:last-child td, &:last-child th": {
                                           border: 0,

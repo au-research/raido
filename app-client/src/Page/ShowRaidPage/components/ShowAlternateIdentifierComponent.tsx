@@ -38,17 +38,17 @@ export default function ShowAlternateIdentifierComponent({
         <CardContent>
           <Stack gap={3}>
             <Box>
-              {raid?.alternateUrl?.length === 0 && (
+              {raid?.alternateIdentifier?.length === 0 && (
                 <Typography
                   variant="body2"
                   color={"text.secondary"}
                   textAlign={"center"}
                 >
-                  No alternate urls defined
+                  No alternate identifiers defined
                 </Typography>
               )}
             </Box>
-            {raid?.alternateUrl?.map((alternateUrl, index) => {
+            {raid?.alternateIdentifier?.map((alternateIdentifier, index) => {
               return (
                 <Stack sx={{ paddingLeft: 2 }} spacing={2} key={index}>
                   <Box
@@ -60,18 +60,19 @@ export default function ShowAlternateIdentifierComponent({
                     className="animated-tile animated-tile-reverse"
                   >
                     <Grid container spacing={2}>
-                      <Grid item xs={12} sm={12} md={12}>
+                      <Grid item xs={12} sm={12} md={6}>
+                        <Box>
+                          <Typography variant="body2">Type</Typography>
+                          <Typography color="text.secondary" variant="body1">
+                            {alternateIdentifier.type}
+                          </Typography>
+                        </Box>
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={6}>
                         <Box>
                           <Typography variant="body2">Title</Typography>
-                          <Typography
-                            color="text.secondary"
-                            variant="body1"
-                            component="a"
-                            href={alternateUrl.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {alternateUrl.url}
+                          <Typography color="text.secondary" variant="body1">
+                            {alternateIdentifier.id}
                           </Typography>
                         </Box>
                       </Grid>

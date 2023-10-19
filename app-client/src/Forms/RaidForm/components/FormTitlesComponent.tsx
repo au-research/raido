@@ -108,7 +108,6 @@ export default function FormTitlesComponent({
         borderLeftColor: errors.title ? "red" : color,
         borderLeftWidth: errors.title ? 5 : 3,
       }}
-      className={errors.title ? "shake" : ""}
     >
       <CardHeader
         title={

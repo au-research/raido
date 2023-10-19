@@ -25,6 +25,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CategoryHeader } from "helper-components";
 import { extractPrefixAndSuffixFromIdentifier, raidColors } from "utils";
 import { ValidationFormSchema } from "validation";
+import AnchorButtons from "Component/AnchorButtons";
 
 type FormProps = {
   defaultValues: RaidCreateRequest;
@@ -62,152 +63,189 @@ export default function RaidForm({
     : { prefix: "", suffix: "" };
 
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit)} autoComplete="off" noValidate>
-        <Tooltip title="Cancel" placement="left">
-          <Fab
-            color="primary"
-            size="small"
-            sx={{ position: "fixed", bottom: "72px", right: "16px" }}
-            component="button"
-            href={
-              defaultValues?.identifier?.id
-                ? `/show-raid/${prefix}/${suffix}`
-                : "/"
-            }
-          >
-            <CloseIcon />
-          </Fab>
-        </Tooltip>
-        <Tooltip title="Save changes" placement="left">
-          <Fab
-            variant="extended"
-            color="primary"
-            sx={{ position: "fixed", bottom: "16px", right: "16px" }}
-            component="button"
-            type="submit"
-            disabled={isSubmitting || Object.keys(errors).length > 0}
-          >
-            <SaveIcon sx={{ mr: 1 }} />
-            {isSubmitting ? "Saving..." : "Save"}
-          </Fab>
-        </Tooltip>
+    <>
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit)} autoComplete="off" noValidate>
+          <Tooltip title="Cancel" placement="left">
+            <Fab
+              color="primary"
+              size="small"
+              sx={{ position: "fixed", bottom: "72px", right: "16px" }}
+              component="button"
+              href={
+                defaultValues?.identifier?.id
+                  ? `/show-raid/${prefix}/${suffix}`
+                  : "/"
+              }
+            >
+              <CloseIcon />
+            </Fab>
+          </Tooltip>
+          <Tooltip title="Save changes" placement="left">
+            <Fab
+              variant="extended"
+              color="primary"
+              sx={{ position: "fixed", bottom: "16px", right: "16px" }}
+              component="button"
+              type="submit"
+              disabled={isSubmitting || Object.keys(errors).length > 0}
+            >
+              <SaveIcon sx={{ mr: 1 }} />
+              {isSubmitting ? "Saving..." : "Save"}
+            </Fab>
+          </Tooltip>
 
-        <Stack spacing={2}>
-          <CategoryHeader
-            color={raidColors.get("blue")!}
-            title={`${
-              defaultValues?.identifier?.id
-                ? `Handle ${new URL(
-                    defaultValues?.identifier?.id!
-                  ).pathname.substring(1)}`
-                : "Mint new RAiD"
-            }`}
-            subheader={""}
-          />
-          <Stack sx={{ paddingLeft: 2 }} spacing={2}>
-            <FormDatesComponent
-              control={control}
-              errors={errors}
+          <Stack spacing={2}>
+            <CategoryHeader
               color={raidColors.get("blue")!}
-              trigger={trigger}
-            />
-            <FormTitlesComponent
-              control={control}
-              errors={errors}
-              color={raidColors.get("blue")!}
-              trigger={trigger}
-            />
-            <FormDescriptionsComponent
-              control={control}
-              errors={errors}
-              color={raidColors.get("blue")!}
-              trigger={trigger}
-            />
-            <FormContributorsComponent
-              control={control}
-              errors={errors}
-              color={raidColors.get("blue")!}
-              trigger={trigger}
-            />
-            <FormOrganisationsComponent
-              control={control}
-              errors={errors}
-              color={raidColors.get("blue")!}
-              trigger={trigger}
-            />
-            <FormRelatedObjectsComponent
-              control={control}
-              errors={errors}
-              color={raidColors.get("blue")!}
-              trigger={trigger}
-            />
-            <FormAlternateIdentifiersComponent
-              control={control}
-              errors={errors}
-              color={raidColors.get("blue")!}
-              trigger={trigger}
+              title={`${
+                defaultValues?.identifier?.id
+                  ? `Handle ${new URL(
+                      defaultValues?.identifier?.id!
+                    ).pathname.substring(1)}`
+                  : "Mint new RAiD"
+              }`}
+              subheader={""}
             />
 
-            <FormAlternateUrlsComponent
-              control={control}
-              errors={errors}
-              color={raidColors.get("blue")!}
-              trigger={trigger}
-            />
-            <FormRelatedRaidsComponent
-              control={control}
-              errors={errors}
-              color={raidColors.get("blue")!}
-              trigger={trigger}
-            />
+            <AnchorButtons errors={errors} />
+            <Stack sx={{ paddingLeft: 2 }} spacing={2}>
+              <Box id="dates" className="scroll">
+                <FormDatesComponent
+                  control={control}
+                  errors={errors}
+                  color={raidColors.get("blue")!}
+                  trigger={trigger}
+                />
+              </Box>
 
-            <FormAccessComponent
-              control={control}
-              errors={errors}
-              color={raidColors.get("blue")!}
-              trigger={trigger}
-            />
+              <Box id="titles" className="scroll">
+                <FormTitlesComponent
+                  control={control}
+                  errors={errors}
+                  color={raidColors.get("blue")!}
+                  trigger={trigger}
+                />
+              </Box>
 
-            <FormSubjectsComponent
-              control={control}
-              errors={errors}
-              color={raidColors.get("blue")!}
-              trigger={trigger}
-            />
+              <Box id="descriptions" className="scroll">
+                <FormDescriptionsComponent
+                  control={control}
+                  errors={errors}
+                  color={raidColors.get("blue")!}
+                  trigger={trigger}
+                />
+              </Box>
 
-            <FormTraditionalKnowledgeIdentifiersComponent
-              control={control}
-              errors={errors}
-              color={raidColors.get("blue")!}
-              trigger={trigger}
-            />
+              <Box id="contributors" className="scroll">
+                <FormContributorsComponent
+                  control={control}
+                  errors={errors}
+                  color={raidColors.get("blue")!}
+                  trigger={trigger}
+                />
+              </Box>
 
-            <FormSpatialCoveragesComponent
-              control={control}
-              errors={errors}
-              color={raidColors.get("blue")!}
-              trigger={trigger}
-            />
+              <Box id="organisations" className="scroll">
+                <FormOrganisationsComponent
+                  control={control}
+                  errors={errors}
+                  color={raidColors.get("blue")!}
+                  trigger={trigger}
+                />
+              </Box>
 
-            <Box sx={{}}></Box>
+              <Box id="related-raids" className="scroll">
+                <FormRelatedObjectsComponent
+                  control={control}
+                  errors={errors}
+                  color={raidColors.get("blue")!}
+                  trigger={trigger}
+                />
+              </Box>
+
+              <Box id="alternate-identifiers" className="scroll">
+                <FormAlternateIdentifiersComponent
+                  control={control}
+                  errors={errors}
+                  color={raidColors.get("blue")!}
+                  trigger={trigger}
+                />
+              </Box>
+
+              <Box id="alternate-urls" className="scroll">
+                <FormAlternateUrlsComponent
+                  control={control}
+                  errors={errors}
+                  color={raidColors.get("blue")!}
+                  trigger={trigger}
+                />
+              </Box>
+
+              <Box id="related-raids" className="scroll">
+                <FormRelatedRaidsComponent
+                  control={control}
+                  errors={errors}
+                  color={raidColors.get("blue")!}
+                  trigger={trigger}
+                />
+              </Box>
+
+              <Box id="access" className="scroll">
+                <FormAccessComponent
+                  control={control}
+                  errors={errors}
+                  color={raidColors.get("blue")!}
+                  trigger={trigger}
+                />
+              </Box>
+
+              <Box id="subjects" className="scroll">
+                <FormSubjectsComponent
+                  control={control}
+                  errors={errors}
+                  color={raidColors.get("blue")!}
+                  trigger={trigger}
+                />
+              </Box>
+
+              <Box id="traditional-knowledge-identifiers" className="scroll">
+                <FormTraditionalKnowledgeIdentifiersComponent
+                  control={control}
+                  errors={errors}
+                  color={raidColors.get("blue")!}
+                  trigger={trigger}
+                />
+              </Box>
+
+              <Box id="spatial-coverages" className="scroll">
+                <FormSpatialCoveragesComponent
+                  control={control}
+                  errors={errors}
+                  color={raidColors.get("blue")!}
+                  trigger={trigger}
+                />
+              </Box>
+
+              <Box sx={{}}></Box>
+            </Stack>
+            <CategoryHeader
+              title="Related & Alternate Entities"
+              subheader="RAiD Related & Alternate Entities"
+              color={raidColors.get("blue")!}
+            />
+            <Stack sx={{ paddingLeft: 2 }} spacing={2}></Stack>
+            <CategoryHeader
+              title="Other Fields"
+              subheader="Other Fields"
+              color={raidColors.get("blue")!}
+            />
+            <Stack sx={{ paddingLeft: 2 }} spacing={2}></Stack>
           </Stack>
-          <CategoryHeader
-            title="Related & Alternate Entities"
-            subheader="RAiD Related & Alternate Entities"
-            color={raidColors.get("blue")!}
-          />
-          <Stack sx={{ paddingLeft: 2 }} spacing={2}></Stack>
-          <CategoryHeader
-            title="Other Fields"
-            subheader="Other Fields"
-            color={raidColors.get("blue")!}
-          />
-          <Stack sx={{ paddingLeft: 2 }} spacing={2}></Stack>
-        </Stack>
 
-        <pre>{JSON.stringify(errors, null, 2)}</pre>
-      </form>
-    </FormProvider>
+          <pre>{JSON.stringify(errors, null, 2)}</pre>
+        </form>
+      </FormProvider>
+    </>
   );
 }

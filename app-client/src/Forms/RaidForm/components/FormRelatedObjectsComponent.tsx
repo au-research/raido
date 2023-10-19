@@ -50,12 +50,11 @@ export default function FormRelatedObjectsComponent({
       id: `https://doi.org/10.5555.25/raid.2023.00000001`,
       schemaUri: "https://doi.org/",
       type: {
-        id: relatedObjectTypes[0].uri,
+        id: relatedObjectTypes[Math.floor(Math.random() * relatedObjectTypes.length)].uri,
         schemaUri: relatedObjectTypesSchema[0].uri,
       },
-
       category: {
-        id: relatedObjectCategories[0].uri,
+        id: relatedObjectCategories[Math.floor(Math.random() * relatedObjectCategories.length)].uri,
         schemaUri: relatedObjectCategoriesSchema[0].uri,
       },
     });
