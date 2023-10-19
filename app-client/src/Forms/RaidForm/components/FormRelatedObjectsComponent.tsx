@@ -28,6 +28,41 @@ import relatedObjectCategories from "../../../References/related_object_category
 import relatedObjectCategoriesSchema from "../../../References/related_object_category_schema.json";
 import relatedObjectTypes from "../../../References/related_object_type.json";
 import relatedObjectTypesSchema from "../../../References/related_object_type_schema.json";
+import { z } from "zod";
+
+export const relatedObjectValidationSchema = z.array(
+  z.object({
+    id: z.string().nonempty(),
+    schemaUri: z.string().nonempty(),
+    type: z.object({
+      id: z.string(),
+      schemaUri: z.string(),
+    }),
+    category: z.object({
+      id: z.string(),
+      schemaUri: z.string(),
+    }),
+  })
+);
+
+export const relatedObjectGenerateData = () => {
+  return {
+    id: `https://doi.org/10.5555.25/raid.2023.00000001`,
+    schemaUri: "https://doi.org/",
+    type: {
+      id: relatedObjectTypes[
+        Math.floor(Math.random() * relatedObjectTypes.length)
+      ].uri,
+      schemaUri: relatedObjectTypesSchema[0].uri,
+    },
+    category: {
+      id: relatedObjectCategories[
+        Math.floor(Math.random() * relatedObjectCategories.length)
+      ].uri,
+      schemaUri: relatedObjectCategoriesSchema[0].uri,
+    },
+  };
+};
 
 export default function FormRelatedObjectsComponent({
   control,
@@ -46,18 +81,7 @@ export default function FormRelatedObjectsComponent({
   });
 
   const handleAddRelatedObjects = () => {
-    relatedObjectsFieldArray.append({
-      id: `https://doi.org/10.5555.25/raid.2023.00000001`,
-      schemaUri: "https://doi.org/",
-      type: {
-        id: relatedObjectTypes[Math.floor(Math.random() * relatedObjectTypes.length)].uri,
-        schemaUri: relatedObjectTypesSchema[0].uri,
-      },
-      category: {
-        id: relatedObjectCategories[Math.floor(Math.random() * relatedObjectCategories.length)].uri,
-        schemaUri: relatedObjectCategoriesSchema[0].uri,
-      },
-    });
+    relatedObjectsFieldArray.append(relatedObjectGenerateData());
   };
 
   return (
@@ -65,8 +89,8 @@ export default function FormRelatedObjectsComponent({
       variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: color,
-        borderLeftWidth: 3,
+        borderLeftColor: errors.relatedObject ? "red" : color,
+        borderLeftWidth: errors.relatedObject ? 5 : 3,
       }}
     >
       <CardHeader

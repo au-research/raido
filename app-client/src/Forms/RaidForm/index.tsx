@@ -1,3 +1,9 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CategoryHeader } from "helper-components";
+import { extractPrefixAndSuffixFromIdentifier, raidColors } from "utils";
+import { ValidationFormSchema } from "validation";
+import AnchorButtons from "Component/AnchorButtons";
+
 import { Close as CloseIcon, Save as SaveIcon } from "@mui/icons-material";
 import { Box, Fab, Stack, Tooltip } from "@mui/material";
 import { RaidCreateRequest, RaidDto } from "Generated/Raidv2";
@@ -8,24 +14,20 @@ import FormAlternateUrlsComponent from "./components/FormAlternateUrlsComponent"
 
 import FormDatesComponent from "./components/FormDatesComponent";
 
-import FormRelatedObjectsComponent from "./components/FormRelatedObjectsComponent";
 import FormRelatedRaidsComponent from "./components/FormRelatedRaidsComponent";
 import FormSpatialCoveragesComponent from "./components/FormSpatialCoveragesComponent";
-import FormSubjectsComponent from "./components/FormSubjectsComponent";
-import FormTitlesComponent from "./components/FormTitlesComponent";
-import FormTraditionalKnowledgeIdentifiersComponent from "./components/FormTraditionalKnowledgeIdentifiersComponent";
+
+// import FormTraditionalKnowledgeIdentifiersComponent from "./components/FormTraditionalKnowledgeIdentifiersComponent";
 
 // make sure this is the last import
+
+import FormSubjectsComponent from "./components/FormSubjectsComponent";
+import FormTitlesComponent from "./components/FormTitlesComponent";
 import FormAccessComponent from "./components/FormAccessComponent";
 import FormContributorsComponent from "./components/FormContributorsComponent";
 import FormDescriptionsComponent from "./components/FormDescriptionsComponent";
 import FormOrganisationsComponent from "./components/FormOrganisationsComponent";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CategoryHeader } from "helper-components";
-import { extractPrefixAndSuffixFromIdentifier, raidColors } from "utils";
-import { ValidationFormSchema } from "validation";
-import AnchorButtons from "Component/AnchorButtons";
+import FormRelatedObjectsComponent from "./components/FormRelatedObjectsComponent";
 
 type FormProps = {
   defaultValues: RaidCreateRequest;
@@ -155,7 +157,7 @@ export default function RaidForm({
                 />
               </Box>
 
-              <Box id="related-raids" className="scroll">
+              <Box id="related-objects" className="scroll">
                 <FormRelatedObjectsComponent
                   control={control}
                   errors={errors}
@@ -209,16 +211,16 @@ export default function RaidForm({
                 />
               </Box>
 
-              <Box id="traditional-knowledge-identifiers" className="scroll">
+              {/* <Box id="traditional-knowledge-identifiers" className="scroll">
                 <FormTraditionalKnowledgeIdentifiersComponent
                   control={control}
                   errors={errors}
                   color={raidColors.get("blue")!}
                   trigger={trigger}
                 />
-              </Box>
+              </Box> */}
 
-              <Box id="spatial-coverages" className="scroll">
+              <Box id="spatial-coverage" className="scroll">
                 <FormSpatialCoveragesComponent
                   control={control}
                   errors={errors}
@@ -229,23 +231,10 @@ export default function RaidForm({
 
               <Box sx={{}}></Box>
             </Stack>
-            <CategoryHeader
-              title="Related & Alternate Entities"
-              subheader="RAiD Related & Alternate Entities"
-              color={raidColors.get("blue")!}
-            />
-            <Stack sx={{ paddingLeft: 2 }} spacing={2}></Stack>
-            <CategoryHeader
-              title="Other Fields"
-              subheader="Other Fields"
-              color={raidColors.get("blue")!}
-            />
-            <Stack sx={{ paddingLeft: 2 }} spacing={2}></Stack>
           </Stack>
-
-          <pre>{JSON.stringify(errors, null, 2)}</pre>
         </form>
       </FormProvider>
+      <pre>{JSON.stringify(errors, null, 2)}</pre>
     </>
   );
 }

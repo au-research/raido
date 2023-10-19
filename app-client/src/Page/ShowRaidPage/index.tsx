@@ -11,7 +11,7 @@ import {
   Container,
   Fab,
   Stack,
-  Typography
+  Typography,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthApi } from "Api/AuthApi";
@@ -44,6 +44,7 @@ import ShowRelatedObjectComponent from "./components/ShowRelatedObjectComponent"
 import ShowRelatedRaidComponent from "./components/ShowRelatedRaidComponent";
 import ShowSubjectComponent from "./components/ShowSubjectComponent";
 import ShowTitleComponent from "./components/ShowTitleComponent";
+import ShowSpatialCoverageComponent from "./components/ShowSpatialCoverageComponent";
 
 const pageUrl = "/show-raid";
 
@@ -200,8 +201,14 @@ function Content() {
             />
           </Box>
 
-          <pre>ToDo: Traditional Knowledge Label</pre>
-          <pre>ToDo: Spatial Coverage</pre>
+          {/* <pre>ToDo: Traditional Knowledge Label</pre> */}
+
+          <Box id="spatial-coverage" className="scroll">
+            <ShowSpatialCoverageComponent
+              raid={defaultValues}
+              color={raidColors.get("blue") || ""}
+            />
+          </Box>
 
           <Box sx={{ paddingLeft: 2 }}>
             <Card

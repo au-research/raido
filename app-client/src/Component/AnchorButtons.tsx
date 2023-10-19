@@ -12,46 +12,55 @@ export default function AnchorButtons({
     {
       label: "Dates",
       anchor: "dates",
+      errors: errors?.date,
     },
     {
       label: "Titles",
       anchor: "titles",
       count: defaultValues?.title?.length,
+      errors: errors?.title,
     },
     {
       label: "Descriptions",
       anchor: "descriptions",
       count: defaultValues?.description?.length,
+      errors: errors?.description,
     },
     {
       label: `Contributors`,
       anchor: "contributors",
       count: defaultValues?.contributor?.length,
+      errors: errors?.contributor,
     },
     {
       label: "Organisations",
       anchor: "organisations",
       count: defaultValues?.organisation?.length,
+      errors: errors?.organisation,
     },
     {
       label: "Related Objects",
       anchor: "related-objects",
       count: defaultValues?.relatedObject?.length,
+      errors: errors?.relatedObject,
     },
     {
       label: "Alternate Identifiers",
       anchor: "alternate-identifiers",
       count: defaultValues?.alternateIdentifier?.length,
+      errors: errors?.alternateIdentifier,
     },
     {
       label: "Alternate URLs",
       anchor: "alternate-urls",
       count: defaultValues?.alternateUrl?.length,
+      errors: errors?.alternateUrl,
     },
     {
       label: "Related RAiDs",
       anchor: "related-raids",
       count: defaultValues?.relatedRaid?.length,
+      errors: errors?.relatedRaids,
     },
     {
       label: "Access",
@@ -62,6 +71,13 @@ export default function AnchorButtons({
       label: "Subjects",
       anchor: "subjects",
       count: defaultValues?.subject?.length,
+      errors: errors?.subject,
+    },
+    {
+      label: "Spatial Coverage",
+      anchor: "spatial-coverage",
+      count: defaultValues?.spatialCoverage?.length,
+      errors: errors?.spatialCoverage,
     },
   ];
   return (

@@ -235,8 +235,8 @@ export default function FormContributorsComponent({
       variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: color,
-        borderLeftWidth: 3,
+        borderLeftColor: errors.contributor ? "red" : color,
+        borderLeftWidth: errors.contributor ? 5 : 3,
       }}
     >
       <CardHeader

@@ -8,7 +8,6 @@ import {
   Typography,
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
-import { extractKeyFromIdUri } from "utils";
 
 export default function ShowAlternateUrlComponent({
   raid,
@@ -30,7 +29,7 @@ export default function ShowAlternateUrlComponent({
         <CardHeader
           title={
             <Typography variant="h6" component="div">
-              Alternate Urls
+              Alternate URLs
             </Typography>
           }
         />

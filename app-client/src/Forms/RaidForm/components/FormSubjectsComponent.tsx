@@ -201,8 +201,8 @@ export default function FormSubjectsComponent({
       variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: color,
-        borderLeftWidth: 3,
+        borderLeftColor: errors.subject ? "red" : color,
+        borderLeftWidth: errors.subject ? 5 : 3,
       }}
     >
       <CardHeader

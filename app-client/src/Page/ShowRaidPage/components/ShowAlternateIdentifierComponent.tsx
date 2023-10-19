@@ -30,7 +30,7 @@ export default function ShowAlternateIdentifierComponent({
         <CardHeader
           title={
             <Typography variant="h6" component="div">
-              Alternate Identifier
+              Alternate Identifiers
             </Typography>
           }
         />
