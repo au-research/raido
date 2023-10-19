@@ -45,9 +45,9 @@ export const spatialCoverageValidationSchema = z.array(
 
 export const spatialCoverageGenerateData = () => {
   return {
-    id: "https://www.geonames.org/2751773/leiden.html",
+    id: "https://www.geonames.org/2766824/salzburg.html",
     schemaUri: "https://www.geonames.org/",
-    place: "Leiden",
+    place: "Salzburg",
     language: {
       id: "eng",
       schemaUri: languageSchema[0].uri,
