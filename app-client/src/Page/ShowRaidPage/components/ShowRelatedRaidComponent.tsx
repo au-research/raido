@@ -49,6 +49,10 @@ export default function ShowRelatedRaidComponent({
               )}
             </Box>
             {raid?.relatedRaid?.map((relatedRaid, index) => {
+              const raidHandle = new URL(relatedRaid?.id!).pathname.substring(
+                1
+              );
+
               return (
                 <Stack sx={{ paddingLeft: 2 }} spacing={2} key={index}>
                   <Box
@@ -64,7 +68,9 @@ export default function ShowRelatedRaidComponent({
                         <Box>
                           <Typography variant="body2">ID</Typography>
                           <Typography color="text.secondary" variant="body1">
-                            <a href={relatedRaid.id}>{relatedRaid.id}</a>
+                            <a href={`/show-raid/${raidHandle}`}>
+                              {`${raidHandle}`}
+                            </a>
                           </Typography>
                         </Box>
                       </Grid>

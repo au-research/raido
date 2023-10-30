@@ -24,6 +24,19 @@ import {
   UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
+import { z } from "zod";
+
+export const alternateUrlValidationSchema = z.array(
+  z.object({
+    url: z.string().url().nonempty(),
+  })
+);
+
+export const alternateUrlGenerateData = () => {
+  return {
+    url: faker.internet.url(),
+  };
+};
 
 export default function FormAlternateUrlsComponent({
   control,
@@ -42,9 +55,7 @@ export default function FormAlternateUrlsComponent({
   });
 
   const handleAddAlternateUrls = () => {
-    alternateUrlsFieldArray.append({
-      url: faker.internet.url(),
-    });
+    alternateUrlsFieldArray.append(alternateUrlGenerateData());
   };
 
   return (
@@ -52,8 +63,8 @@ export default function FormAlternateUrlsComponent({
       variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: color,
-        borderLeftWidth: 3,
+        borderLeftColor: errors.alternateUrl ? "red" : color,
+        borderLeftWidth: errors.alternateUrl ? 5 : 3,
       }}
     >
       <CardHeader
@@ -102,7 +113,7 @@ export default function FormAlternateUrlsComponent({
                       <>
                         <Stack direction="row" alignItems="flex-start" gap={1}>
                           <Grid container spacing={2}>
-                            <Grid item xs={12} sm={12} md={4}>
+                            <Grid item xs={12} sm={12} md={12}>
                               <TextField
                                 {...controllerField}
                                 value={controllerField?.value?.url}

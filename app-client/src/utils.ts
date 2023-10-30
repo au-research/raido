@@ -1,9 +1,15 @@
 import { accessGenerateData } from "Forms/RaidForm/components/FormAccessComponent";
+import { alternateIdentifierGenerateData } from "Forms/RaidForm/components/FormAlternateIdentifiersComponent";
+import { alternateUrlGenerateData } from "Forms/RaidForm/components/FormAlternateUrlsComponent";
 import { contributorsGenerateData } from "Forms/RaidForm/components/FormContributorsComponent";
 
 import { datesGenerateData } from "Forms/RaidForm/components/FormDatesComponent";
 import { descriptionsGenerateData } from "Forms/RaidForm/components/FormDescriptionsComponent";
 import { organisationsGenerateData } from "Forms/RaidForm/components/FormOrganisationsComponent";
+import { relatedObjectGenerateData } from "Forms/RaidForm/components/FormRelatedObjectsComponent";
+import { relatedRaidGenerateData } from "Forms/RaidForm/components/FormRelatedRaidsComponent";
+import { spatialCoverageGenerateData } from "Forms/RaidForm/components/FormSpatialCoveragesComponent";
+import { subjectsGenerateData } from "Forms/RaidForm/components/FormSubjectsComponent";
 import { titlesGenerateData } from "Forms/RaidForm/components/FormTitlesComponent";
 import { RaidCreateRequest } from "Generated/Raidv2";
 import dayjs, { Dayjs } from "dayjs";
@@ -83,4 +89,22 @@ export const newRaid: RaidCreateRequest = {
   access: accessGenerateData(),
   organisation: [organisationsGenerateData()],
   contributor: [contributorsGenerateData()],
+  subject: [subjectsGenerateData()],
+  relatedRaid: [],
+  alternateUrl: [
+    alternateUrlGenerateData(),
+    alternateUrlGenerateData(),
+    alternateUrlGenerateData(),
+  ],
+  spatialCoverage: [spatialCoverageGenerateData()],
+  relatedObject: [
+    relatedObjectGenerateData(),
+    relatedObjectGenerateData(),
+    relatedObjectGenerateData(),
+  ],
+  alternateIdentifier: [
+    alternateIdentifierGenerateData(),
+    alternateIdentifierGenerateData(),
+    alternateIdentifierGenerateData(),
+  ],
 };

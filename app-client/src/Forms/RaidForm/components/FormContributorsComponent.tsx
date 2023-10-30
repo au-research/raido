@@ -72,7 +72,7 @@ export const contributorsGenerateData = () => {
   return {
     id: "https://orcid.org/0009-0000-9306-3120",
     leader: false,
-    contact: false,
+    contact: true,
     schemaUri: "https://orcid.org/",
     position: [
       {
@@ -84,7 +84,8 @@ export const contributorsGenerateData = () => {
     role: [
       {
         schemaUri: contributorRoleSchema[0].uri,
-        id: contributorRole[0].uri,
+        id: contributorRole[Math.floor(Math.random() * contributorRole.length)]
+          .uri,
       },
     ],
   };
@@ -234,8 +235,8 @@ export default function FormContributorsComponent({
       variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: color,
-        borderLeftWidth: 3,
+        borderLeftColor: errors.contributor ? "red" : color,
+        borderLeftWidth: errors.contributor ? 5 : 3,
       }}
     >
       <CardHeader

@@ -1,8 +1,10 @@
-import { Edit as EditIcon } from "@mui/icons-material";
+import {
+  Edit as EditIcon,
+  KeyboardArrowUp as KeyboardArrowUpIcon,
+} from "@mui/icons-material";
 
 import {
   Box,
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -27,18 +29,22 @@ import { RaidDto } from "Generated/Raidv2";
 import JsonView from "react18-json-view";
 import "react18-json-view/src/style.css";
 
+import AnchorButtons from "Component/AnchorButtons";
 import { CategoryHeader } from "helper-components";
-import { useState } from "react";
+import { MouseEvent, useState } from "react";
 import { raidColors } from "utils";
 import ShowAccessComponent from "./components/ShowAccessComponent";
+import ShowAlternateIdentifierComponent from "./components/ShowAlternateIdentifierComponent";
 import ShowAlternateUrlComponent from "./components/ShowAlternateUrlComponent";
 import ShowContributorComponent from "./components/ShowContributorComponent";
 import ShowDateComponent from "./components/ShowDateComponent";
 import ShowDescriptionComponent from "./components/ShowDescriptionComponent";
 import ShowOrganisationComponent from "./components/ShowOrganisationComponent";
-import ShowTitleComponent from "./components/ShowTitleComponent";
 import ShowRelatedObjectComponent from "./components/ShowRelatedObjectComponent";
 import ShowRelatedRaidComponent from "./components/ShowRelatedRaidComponent";
+import ShowSubjectComponent from "./components/ShowSubjectComponent";
+import ShowTitleComponent from "./components/ShowTitleComponent";
+import ShowSpatialCoverageComponent from "./components/ShowSpatialCoverageComponent";
 
 const pageUrl = "/show-raid";
 
@@ -52,6 +58,15 @@ function getRaidHandleFromPathname(nav: NavigationState): string {
 
 function Content() {
   const nav = useNavigation();
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const [handle] = useState(getRaidHandleFromPathname(nav));
   const [prefix, suffix] = handle.split("/");
@@ -81,6 +96,19 @@ function Content() {
   return (
     <>
       <Fab
+        color="primary"
+        sx={{ position: "fixed", bottom: "78px", right: "16px" }}
+        onClick={() => {
+          document.getElementById("start")?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+            inline: "start",
+          });
+        }}
+      >
+        <KeyboardArrowUpIcon />
+      </Fab>
+      <Fab
         variant="extended"
         color="primary"
         sx={{ position: "fixed", bottom: "16px", right: "16px" }}
@@ -90,49 +118,97 @@ function Content() {
         <EditIcon sx={{ mr: 1 }} />
         Edit RAiD
       </Fab>
-      <Container maxWidth="lg" sx={{ py: 2 }}>
+      <Container
+        maxWidth="lg"
+        sx={{ py: 7.5 }}
+        id="start"
+        className="scroll-start"
+      >
         <Stack direction={"column"} spacing={2}>
           <CategoryHeader
             color={raidColors.get("blue") || ""}
             title={`RAiD ${handle}`}
             subheader={`Showing data`}
           />
-          <ShowTitleComponent
-            raid={defaultValues}
-            color={raidColors.get("blue") || ""}
-          />
-          <ShowDateComponent
-            raid={defaultValues}
-            color={raidColors.get("blue") || ""}
-          />
-          <ShowDescriptionComponent
-            raid={defaultValues}
-            color={raidColors.get("blue") || ""}
-          />
-          <ShowAccessComponent
-            raid={defaultValues}
-            color={raidColors.get("blue") || ""}
-          />
-          <ShowAlternateUrlComponent
-            raid={defaultValues}
-            color={raidColors.get("blue") || ""}
-          />
-          <ShowContributorComponent
-            raid={defaultValues}
-            color={raidColors.get("blue") || ""}
-          />
-          <ShowOrganisationComponent
-            raid={defaultValues}
-            color={raidColors.get("blue") || ""}
-          />
-          <ShowRelatedObjectComponent
-            raid={defaultValues}
-            color={raidColors.get("blue") || ""}
-          />
-          <ShowRelatedRaidComponent
-            raid={defaultValues}
-            color={raidColors.get("blue") || ""}
-          />
+
+          <AnchorButtons defaultValues={defaultValues} />
+
+          <Box id="dates" className="scroll">
+            <ShowDateComponent
+              raid={defaultValues}
+              color={raidColors.get("blue") || ""}
+            />
+          </Box>
+          <Box id="titles" className="scroll">
+            <ShowTitleComponent
+              raid={defaultValues}
+              color={raidColors.get("blue") || ""}
+            />
+          </Box>
+          <Box id="descriptions" className="scroll">
+            <ShowDescriptionComponent
+              raid={defaultValues}
+              color={raidColors.get("blue") || ""}
+            />
+          </Box>
+          <Box id="contributors" className="scroll">
+            <ShowContributorComponent
+              raid={defaultValues}
+              color={raidColors.get("blue") || ""}
+            />
+          </Box>
+          <Box id="organisations" className="scroll">
+            <ShowOrganisationComponent
+              raid={defaultValues}
+              color={raidColors.get("blue") || ""}
+            />
+          </Box>
+          <Box id="related-objects" className="scroll">
+            <ShowRelatedObjectComponent
+              raid={defaultValues}
+              color={raidColors.get("blue") || ""}
+            />
+          </Box>
+          <Box id="alternate-identifiers" className="scroll">
+            <ShowAlternateIdentifierComponent
+              raid={defaultValues}
+              color={raidColors.get("blue") || ""}
+            />
+          </Box>
+          <Box id="alternate-urls" className="scroll">
+            <ShowAlternateUrlComponent
+              raid={defaultValues}
+              color={raidColors.get("blue") || ""}
+            />
+          </Box>
+          <Box id="related-raids" className="scroll">
+            <ShowRelatedRaidComponent
+              raid={defaultValues}
+              color={raidColors.get("blue") || ""}
+            />
+          </Box>
+          <Box id="access" className="scroll">
+            <ShowAccessComponent
+              raid={defaultValues}
+              color={raidColors.get("blue") || ""}
+            />
+          </Box>
+
+          <Box id="subjects" className="scroll">
+            <ShowSubjectComponent
+              raid={defaultValues}
+              color={raidColors.get("blue") || ""}
+            />
+          </Box>
+
+          {/* <pre>ToDo: Traditional Knowledge Label</pre> */}
+
+          <Box id="spatial-coverage" className="scroll">
+            <ShowSpatialCoverageComponent
+              raid={defaultValues}
+              color={raidColors.get("blue") || ""}
+            />
+          </Box>
 
           <Box sx={{ paddingLeft: 2 }}>
             <Card

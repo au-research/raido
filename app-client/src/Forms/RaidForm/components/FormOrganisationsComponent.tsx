@@ -170,8 +170,8 @@ export default function FormOrganisationsComponent({
       variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: color,
-        borderLeftWidth: 3,
+        borderLeftColor: errors.organisation ? "red" : color,
+        borderLeftWidth: errors.organisation ? 5 : 3,
       }}
     >
       <CardHeader

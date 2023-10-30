@@ -34,10 +34,10 @@ import {
 } from "react-hook-form";
 import { extractKeyFromIdUri } from "utils";
 import { z } from "zod";
-import language from "../../../References/language.json";
-import languageSchema from "../../../References/language_schema.json";
-import titleType from "../../../References/title_type.json";
-import titleTypeSchema from "../../../References/title_type_schema.json";
+import language from "References/language.json";
+import languageSchema from "References/language_schema.json";
+import titleType from "References/title_type.json";
+import titleTypeSchema from "References/title_type_schema.json";
 
 export const titlesValidationSchema: any = z
   .array(
@@ -108,7 +108,6 @@ export default function FormTitlesComponent({
         borderLeftColor: errors.title ? "red" : color,
         borderLeftWidth: errors.title ? 5 : 3,
       }}
-      className={errors.title ? "shake" : ""}
     >
       <CardHeader
         title={

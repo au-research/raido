@@ -33,6 +33,27 @@ import {
 } from "react-hook-form";
 import relatedRaidType from "../../../References/related_raid_type.json";
 import relatedRaidTypeSchema from "../../../References/related_raid_type_schema.json";
+import { z } from "zod";
+
+export const relatedRaidValidationSchema = z.array(
+  z.object({
+    id: z.string().nonempty(),
+    type: z.object({
+      id: z.string(),
+      schemaUri: z.string(),
+    }),
+  })
+);
+
+export const relatedRaidGenerateData = () => {
+  return {
+    type: {
+      id: relatedRaidType[Math.floor(Math.random() * relatedRaidType.length)]
+        .uri,
+      schemaUri: relatedRaidTypeSchema[0].uri,
+    },
+  };
+};
 
 export default function FormRelatedRaidsComponent({
   control,
@@ -76,13 +97,7 @@ export default function FormRelatedRaidsComponent({
   }
 
   const handleAddRelatedRaids = () => {
-    relatedRaidsFieldArray.append({
-      // id: faker.string.uuid(),
-      type: {
-        id: relatedRaidType[0].uri,
-        schemaUri: relatedRaidTypeSchema[0].uri,
-      },
-    });
+    relatedRaidsFieldArray.append(relatedRaidGenerateData());
   };
 
   return (

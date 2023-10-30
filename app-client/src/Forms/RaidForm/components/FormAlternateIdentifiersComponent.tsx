@@ -24,6 +24,21 @@ import {
   UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
+import { z } from "zod";
+
+export const alternateIdentifierValidationSchema = z.array(
+  z.object({
+    id: z.string().nonempty(),
+    type: z.string().nonempty(),
+  })
+);
+
+export const alternateIdentifierGenerateData = () => {
+  return {
+    id: faker.lorem.words(3),
+    type: faker.lorem.words(3),
+  };
+};
 
 export default function FormAlternateIdentifiersComponent({
   control,
@@ -42,10 +57,7 @@ export default function FormAlternateIdentifiersComponent({
   });
 
   const handleAddAlternateIdentifiers = () => {
-    alternateIdentifiersFieldArray.append({
-      id: faker.lorem.words(3),
-      type: faker.lorem.words(3),
-    });
+    alternateIdentifiersFieldArray.append(alternateIdentifierGenerateData());
   };
 
   return (
@@ -53,8 +65,8 @@ export default function FormAlternateIdentifiersComponent({
       variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: color,
-        borderLeftWidth: 3,
+        borderLeftColor: errors.alternateIdentifier ? "red" : color,
+        borderLeftWidth: errors.alternateIdentifier ? 5 : 3,
       }}
     >
       <CardHeader
@@ -104,7 +116,7 @@ export default function FormAlternateIdentifiersComponent({
                       <>
                         <Stack direction="row" alignItems="flex-start" gap={1}>
                           <Grid container spacing={2}>
-                            <Grid item xs={12} sm={12} md={4}>
+                            <Grid item xs={12} sm={12} md={6}>
                               <TextField
                                 {...controllerField}
                                 value={controllerField?.value?.id}
@@ -119,7 +131,7 @@ export default function FormAlternateIdentifiersComponent({
                                 }}
                               />
                             </Grid>
-                            <Grid item xs={12} sm={12} md={4}>
+                            <Grid item xs={12} sm={12} md={6}>
                               <TextField
                                 {...controllerField}
                                 value={controllerField?.value?.type}

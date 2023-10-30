@@ -26,7 +26,34 @@ import {
   useFieldArray,
 } from "react-hook-form";
 import fieldData from "../../../fieldData.json";
-import language from "../../../References/language.json";
+import language from "References/language.json";
+import languageSchema from "References/language_schema.json";
+
+import { z } from "zod";
+
+export const spatialCoverageValidationSchema = z.array(
+  z.object({
+    id: z.string().nonempty(),
+    schemaUri: z.string().nonempty(),
+    place: z.string().nonempty(),
+    language: z.object({
+      id: z.string().nonempty(),
+      schemaUri: z.string().nonempty(),
+    }),
+  })
+);
+
+export const spatialCoverageGenerateData = () => {
+  return {
+    id: "https://www.geonames.org/2766824/salzburg.html",
+    schemaUri: "https://www.geonames.org/",
+    place: "Salzburg",
+    language: {
+      id: "eng",
+      schemaUri: languageSchema[0].uri,
+    },
+  };
+};
 
 export default function FormSpatialCoveragesComponent({
   control,
@@ -45,16 +72,7 @@ export default function FormSpatialCoveragesComponent({
   });
 
   const handleAddSpatialCoverage = () => {
-    spatialCoveragesFieldArray.append({
-      id: "",
-      schemaUri:
-        "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/",
-      place: "",
-      language: {
-        id: "eng",
-        schemaUri: "https://iso639-3.sil.org/",
-      },
-    });
+    spatialCoveragesFieldArray.append(spatialCoverageGenerateData());
   };
 
   return (

@@ -5,6 +5,12 @@ import { descriptionsValidationSchema } from "Forms/RaidForm/components/FormDesc
 import { accessValidationSchema } from "Forms/RaidForm/components/FormAccessComponent";
 import { contributorsValidationSchema } from "Forms/RaidForm/components/FormContributorsComponent";
 import { organisationsValidationSchema } from "Forms/RaidForm/components/FormOrganisationsComponent";
+import { subjectsValidationSchema } from "Forms/RaidForm/components/FormSubjectsComponent";
+import { alternateUrlValidationSchema } from "Forms/RaidForm/components/FormAlternateUrlsComponent";
+import { relatedRaidValidationSchema } from "Forms/RaidForm/components/FormRelatedRaidsComponent";
+import { relatedObjectValidationSchema } from "Forms/RaidForm/components/FormRelatedObjectsComponent";
+import { alternateIdentifierValidationSchema } from "Forms/RaidForm/components/FormAlternateIdentifiersComponent";
+import { spatialCoverageValidationSchema } from "Forms/RaidForm/components/FormSpatialCoveragesComponent";
 
 export const ValidationFormSchema = z.object({
   identifier: z
@@ -30,72 +36,18 @@ export const ValidationFormSchema = z.object({
   date: datesValidationSchema,
   description: descriptionsValidationSchema,
   access: accessValidationSchema,
-  alternateUrl: z.array(
-    z.object({
-      url: z.string().url().nonempty(),
-    })
-  ),
+  alternateUrl: alternateUrlValidationSchema,
   contributor: contributorsValidationSchema,
   organisation: organisationsValidationSchema,
-  subject: z.array(
-    z.object({
-      id: z.string().nonempty(),
-      schemaUri: z.string().nonempty(),
-      keyword: z.array(
-        z.object({
-          text: z.string().nonempty(),
-          language: z.object({
-            id: z.string().nonempty(),
-            schemaUri: z.literal("https://iso639-3.sil.org"),
-          }),
-        })
-      ),
-    })
-  ),
-  relatedRaid: z.array(
-    z.object({
-      id: z.string().nonempty(),
-      type: z.object({
-        id: z.string(),
-        schemaUri: z.string(),
-      }),
-    })
-  ),
-  relatedObject: z.array(
-    z.object({
-      id: z.string().nonempty(),
-      schemaUri: z.string().nonempty(),
-      type: z.object({
-        id: z.string(),
-        schemaUri: z.string(),
-      }),
-      category: z.object({
-        id: z.string(),
-        schemaUri: z.string(),
-      }),
-    })
-  ),
-  alternateIdentifier: z.array(
-    z.object({
-      id: z.string().nonempty(),
-      type: z.string().nonempty(),
-    })
-  ),
-  spatialCoverage: z.array(
-    z.object({
-      id: z.string().nonempty(),
-      schemaUri: z.string().nonempty(),
-      place: z.string().nonempty(),
-      language: z.object({
-        id: z.string().nonempty(),
-        schemaUri: z.literal("https://iso639-3.sil.org"),
-      }),
-    })
-  ),
-  traditionalKnowledgeLabel: z.array(
-    z.object({
-      id: z.string().nonempty(),
-      schemaUri: z.string().nonempty(),
-    })
-  ),
+  subject: subjectsValidationSchema,
+  relatedRaid: relatedRaidValidationSchema,
+  relatedObject: relatedObjectValidationSchema,
+  alternateIdentifier: alternateIdentifierValidationSchema,
+  spatialCoverage: spatialCoverageValidationSchema,
+  // traditionalKnowledgeLabel: z.array(
+  //   z.object({
+  //     id: z.string().nonempty(),
+  //     schemaUri: z.string().nonempty(),
+  //   })
+  // ),
 });

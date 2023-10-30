@@ -44,7 +44,7 @@ export default function FormContributorsRolesComponent({
   const handleAddRole = (event: React.MouseEvent<HTMLButtonElement>) => {
     contributorRolesArray.append({
       schemaUri: contributorRoleSchema[0].uri,
-      id: contributorRole[0].uri,
+      id: contributorRole[Math.floor(Math.random() * contributorRole.length)].uri,
     });
   };
 
@@ -87,7 +87,7 @@ export default function FormContributorsRolesComponent({
                       <div key={roleField.formFieldGeneratedId}>
                         <Stack direction="row" alignItems="flex-start" gap={1}>
                           <Grid container spacing={2}>
-                            <Grid item xs={12} sm={4} md={4}>
+                            <Grid item xs={12} sm={12} md={12}>
                               <TextField
                                 select
                                 {...controllerField}

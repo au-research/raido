@@ -208,16 +208,18 @@ export default function ShowContributorComponent({
                               No roles defined
                             </Typography>
                           )}
-                          <Stack direction={"row"} gap={1}>
+                          <Grid container spacing={1}>
                             {contributor.role.map((row, index) => (
-                              <Chip
-                                label={extractLastUrlSegment(row.id)}
-                                size="small"
-                                color="primary"
-                                key={index}
-                              />
+                              <Grid item key={index}>
+                                <Chip
+                                  label={extractLastUrlSegment(row.id)}
+                                  size="small"
+                                  color="primary"
+                                  key={index}
+                                />
+                              </Grid>
                             ))}
-                          </Stack>
+                          </Grid>
                         </Grid>
                       </Box>
                     </Stack>
