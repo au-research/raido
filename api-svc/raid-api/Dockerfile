@@ -1,7 +1,5 @@
 FROM raid-api-base:latest
 
-USER root
-
-RUN apt-get update && apt-get install -y curl && apt-get clean
-
-USER cnb
+# Needed to perform health check as curl is not available in container
+# and brings a load of vulnerabilities with it
+COPY scripts/status.java .

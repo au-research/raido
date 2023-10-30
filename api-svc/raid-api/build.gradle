@@ -223,7 +223,7 @@ bootBuildImage {
   imageName = 'raid-api-base:latest'
 }
 
-task buildDocker(type: Exec) {
+tasks.register('buildDocker', Exec) {
   dependsOn bootBuildImage
   def imageName = project.hasProperty('imageName') ? project.imageName : 'raid-api:' + new Date().getTime()
   commandLine 'docker', 'build', '-t', imageName, '.'
