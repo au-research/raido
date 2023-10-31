@@ -1,9 +1,7 @@
-package scripts;
-
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class status {
+public class Status {
     public static void main(String[] args) throws Exception {
         assert args[0] != null;
 
