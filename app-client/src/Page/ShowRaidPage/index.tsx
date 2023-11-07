@@ -1,14 +1,17 @@
 import {
   Edit as EditIcon,
   KeyboardArrowUp as KeyboardArrowUpIcon,
+  OpenInNew as OpenInNewIcon,
 } from "@mui/icons-material";
 
 import {
   Box,
+  Button,
   Card,
   CardContent,
   CardHeader,
   Container,
+  Divider,
   Fab,
   Stack,
   Typography,
@@ -131,6 +134,34 @@ function Content() {
             subheader={`Showing data`}
           />
 
+          <Box>
+            <Button
+              startIcon={<OpenInNewIcon />}
+              variant="contained"
+              href={`http://doi.org/${handle}?auth`}
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                width: "185px",
+                ml: 1,
+                background: "#fff",
+                color: "#000",
+                borderLeftStyle: "solid",
+                borderLeftColor: raidColors.get("blue") || "",
+                borderLeftWidth: 2,
+                textTransform: "none",
+                
+                justifyContent: "flex-start",
+                "&:hover": {
+                  backgroundColor: "#eee",
+                },
+              }}
+            >
+              DOI
+            </Button>
+          </Box>
+
+          <Divider />
           <AnchorButtons defaultValues={defaultValues} />
 
           <Box id="dates" className="scroll">
