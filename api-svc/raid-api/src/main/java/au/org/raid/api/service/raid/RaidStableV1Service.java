@@ -11,6 +11,8 @@ import au.org.raid.api.repository.RaidRepository;
 import au.org.raid.api.repository.ServicePointRepository;
 import au.org.raid.api.service.apids.ApidsService;
 import au.org.raid.api.service.apids.model.ApidsMintResponse;
+import au.org.raid.api.service.doihandle.DoiHandleService;
+import au.org.raid.api.service.doihandle.DoiSessionCreator;
 import au.org.raid.api.service.raid.id.IdentifierHandle;
 import au.org.raid.api.service.raid.id.IdentifierParser;
 import au.org.raid.api.service.raid.id.IdentifierParser.ParseProblems;
@@ -28,6 +30,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.List;
+import java.util.UUID;
 
 import static au.org.raid.api.util.ExceptionUtil.runtimeException;
 import static au.org.raid.api.util.Log.to;
@@ -49,7 +52,6 @@ public class RaidStableV1Service {
     private final RaidChecksumService checksumService;
     private final RaidDtoFactory raidDtoFactory;
 
-
     public List<RaidDto> list(final Long servicePointId) {
         return raidRepository.findAllByServicePointId(servicePointId).stream()
                 .map(raidDtoFactory::create)
@@ -64,7 +66,6 @@ public class RaidStableV1Service {
                 .toList();
     }
 
-
     private IdentifierHandle parseHandleFromApids(
             ApidsMintResponse apidsResponse
     ) {
@@ -77,7 +78,6 @@ public class RaidStableV1Service {
             throw runtimeException("APIDS service returned malformed handle: %s",
                     apidsResponse.identifier.handle);
         }
-
         return (IdentifierHandle) parseResult;
     }
 
@@ -85,23 +85,27 @@ public class RaidStableV1Service {
             final RaidCreateRequest request,
             final long servicePoint
     ) {
-        /* this is the part where we want to make sure no TX is held open.
-         * Maybe *this* should be marked tx.prop=never? */
+
         final var servicePointRecord =
                 servicePointRepository.findById(servicePoint).orElseThrow(() ->
                         new UnknownServicePointException(servicePoint));
 
-        final var apidsResponse = apidsSvc.mintApidsHandleContentPrefix(
-                metaSvc::formatRaidoLandingPageUrl);
+        // SW: Create a new session to authenticate with the DOI server
+        String sessionId = new DoiSessionCreator().createSessionId();
+
+        String doiHandlePrefix = System.getenv("DOI_HANDLE_PREFIX");
+        String doiHandleSuffix = UUID.randomUUID().toString();
 
 
-        IdentifierHandle handle = parseHandleFromApids(apidsResponse);
-        var id = new IdentifierUrl(metaSvc.getMetaProps().getHandleUrlPrefix(), handle);
+        IdentifierUrl id = new IdentifierUrl("https://raid.org", doiHandlePrefix, doiHandleSuffix);
         request.setIdentifier(idFactory.create(id, servicePointRecord));
 
         final var raidRecord = raidRecordFactory.create(
-                request, apidsResponse, servicePointRecord);
+                request, doiHandlePrefix+"/"+doiHandleSuffix, servicePointRecord);
 
+        String metadataForInsert = raidRecord.getMetadata().toString();
+        DoiHandleService doiHandleService = new DoiHandleService();
+        doiHandleService.createDoi(sessionId, metadataForInsert, doiHandleSuffix);
         tx.executeWithoutResult(status -> raidRepository.insert(raidRecord));
 
         return id;

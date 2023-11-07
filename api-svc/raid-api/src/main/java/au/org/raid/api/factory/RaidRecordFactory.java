@@ -2,7 +2,6 @@ package au.org.raid.api.factory;
 
 import au.org.raid.api.exception.InvalidJsonException;
 import au.org.raid.api.exception.InvalidTitleException;
-import au.org.raid.api.service.apids.model.ApidsMintResponse;
 import au.org.raid.api.util.DateUtil;
 import au.org.raid.db.jooq.api_svc.enums.Metaschema;
 import au.org.raid.db.jooq.api_svc.tables.records.RaidRecord;
@@ -33,7 +32,7 @@ public class RaidRecordFactory {
 
     public RaidRecord create(
             final RaidCreateRequest raid,
-            final ApidsMintResponse apidsMintResponse,
+            final String doiHandle,
             final ServicePointRecord servicePointRecord) {
 
         final var primaryTitle = raid.getTitle().stream()
@@ -51,10 +50,10 @@ public class RaidRecordFactory {
 
         return new RaidRecord()
                 .setVersion(raid.getIdentifier().getVersion())
-                .setHandle(apidsMintResponse.identifier.handle)
+                .setHandle(doiHandle)
                 .setServicePointId(servicePointRecord.getId())
-                .setUrl(apidsMintResponse.identifier.property.value)
-                .setUrlIndex(apidsMintResponse.identifier.property.index)
+                .setUrl("https:/raid.org/" + doiHandle)
+                .setUrlIndex(2)
                 .setPrimaryTitle(primaryTitle)
                 .setMetadata(JSONB.valueOf(raidJson))
                 .setMetadataSchema(Metaschema.raido_metadata_schema_v2)
