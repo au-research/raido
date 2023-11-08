@@ -1,3 +1,12 @@
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath  'org.flywaydb:flyway-database-postgresql:10.0.0'
+  }
+}
+
 plugins{
   id "groovy"
   alias(libs.plugins.flyway)
@@ -36,6 +45,7 @@ flyway{
 }
 
 dependencies{
+  implementation 'org.flywaydb:flyway-database-postgresql:10.0.0'
   implementation project(':api-svc:idl-raid-v2')
 //  implementation libs.bundles.spring6
   implementation libs.bundles.springboot3
