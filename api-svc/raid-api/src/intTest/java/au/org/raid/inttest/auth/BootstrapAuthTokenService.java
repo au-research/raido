@@ -4,10 +4,8 @@ import au.org.raid.api.service.auth.RaidV2ApiKeyApiTokenService;
 import au.org.raid.api.service.auth.RaidV2AppUserApiTokenService;
 import au.org.raid.api.service.raidv1.RaidV1AuthService;
 import au.org.raid.api.spring.config.environment.*;
-import au.org.raid.api.util.Log;
 import au.org.raid.db.jooq.api_svc.enums.UserRole;
-import au.org.raid.db.jooq.raid_v1_import.tables.records.TokenRecord;
-import jakarta.annotation.PostConstruct;
+import au.org.raid.db.jooq.api_svc.tables.records.TokenRecord;
 import org.jooq.DSLContext;
 import org.jooq.JSONB;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +17,9 @@ import java.time.ZoneOffset;
 
 import static au.org.raid.api.spring.security.raidv2.ApiToken.ApiTokenBuilder.anApiToken;
 import static au.org.raid.api.spring.security.raidv2.UnapprovedUserApiToken.UnapprovedUserApiTokenBuilder.anUnapprovedUserApiToken;
-import static au.org.raid.api.util.Log.to;
 import static au.org.raid.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
 import static au.org.raid.db.jooq.api_svc.tables.AppUser.APP_USER;
-import static au.org.raid.db.jooq.raid_v1_import.tables.Token.TOKEN;
+import static au.org.raid.db.jooq.api_svc.tables.Token.TOKEN;
 import static org.jooq.impl.DSL.inline;
 
 /**

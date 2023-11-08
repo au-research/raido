@@ -32,6 +32,7 @@ import au.org.raid.db.jooq.api_svc.tables.SubjectType;
 import au.org.raid.db.jooq.api_svc.tables.SubjectTypeSchema;
 import au.org.raid.db.jooq.api_svc.tables.TitleType;
 import au.org.raid.db.jooq.api_svc.tables.TitleTypeSchema;
+import au.org.raid.db.jooq.api_svc.tables.Token;
 import au.org.raid.db.jooq.api_svc.tables.TraditionalKnowledgeLabel;
 import au.org.raid.db.jooq.api_svc.tables.TraditionalKnowledgeLabelSchema;
 import au.org.raid.db.jooq.api_svc.tables.UserAuthzRequest;
@@ -118,6 +119,7 @@ public class ApiSvc extends SchemaImpl {
             SubjectTypeSchema.SUBJECT_TYPE_SCHEMA,
             TitleType.TITLE_TYPE,
             TitleTypeSchema.TITLE_TYPE_SCHEMA,
+            Token.TOKEN,
             TraditionalKnowledgeLabel.TRADITIONAL_KNOWLEDGE_LABEL,
             TraditionalKnowledgeLabelSchema.TRADITIONAL_KNOWLEDGE_LABEL_SCHEMA,
             UserAuthzRequest.USER_AUTHZ_REQUEST
