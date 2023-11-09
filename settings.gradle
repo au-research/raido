@@ -4,15 +4,9 @@ include ":api-svc:idl-raid-v1"
 include ":api-svc:idl-raid-v2"
 include ":api-svc:test-shared"
 include ':api-svc:raid-api'
-include ":api-svc:docker"
-include ":api-svc:docker:ecs"
-include ":api-svc:docker:data-export"
 include ":api-svc:db"
 include ":api-svc:db:shared"
 include ":api-svc:db:raido"
-include ":api-svc:db:v1-ddb-migration"
-include ":api-svc:db:restore-raido-db"
-include ":api-svc:load-test"
 include ":app-client"
 
 dependencyResolutionManagement{

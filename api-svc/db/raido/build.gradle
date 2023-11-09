@@ -1,14 +1,4 @@
-import au.raid.org.api.LoadSubjectsTask
 import org.flywaydb.gradle.task.AbstractFlywayTask
-
-//buildscript {
-//  repositories {
-//    mavenCentral()
-//  }
-//  dependencies {
-//    classpath  'org.flywaydb:flyway-database-postgresql:10.0.0'
-//  }
-//}
 
 plugins{
   id 'java'
@@ -16,44 +6,57 @@ plugins{
   alias(libs.plugins.jooq)
 }
 
-// to make sure it's properties are loaded before this project
-evaluationDependsOn(':api-svc:db:shared')
-evaluationDependsOn(':api-svc:db:v1-ddb-migration')
-
 ext{
+  // <shared>
+  apiSvcPgUrl = "jdbc:postgresql://localhost:7432/raido"
+  apiSvcPgSchema = "api_svc"
 
-  sharedProject = project(":api-svc:db:shared")
-//  raidV1Project = project(":api-svc:db:v1-ddb-migration")
+  /*  This is a different user than what the api-svc uses, this user must
+  be able to create schemas, tables, etc.
+  In an AWS env, this is the RDS master user; locally, probably just 'postgres'
+  */
+  apiSvcPgUser = 'postgres'
+  apiSvcPgPassword = ""
+
+  apiSvcMigrationHost = ""
+  apiSvcMigrationKey = ""
+
+  /* this is the password used by the api-svc, we need it at the gradle level
+  so the flyway scripts can set the password for the api_user role. */
+  apiSvcRolePassword = null
+
+  // non-prod, usually want to set in ~/.config/raido/api-svc-db.gradle:
+  // apiSvcExtraLocations=["classpath:db/env/api_user","classpath:db/env/demo"]
+  apiSvcExtraLocations = [""]
+
+  /* force the user to override this explicitly in their environment.
+  The idea is to avoid accidentally running this in prod. */
+  flywayCleanDisabled = true
 
   jooqGeneratedSrcDir = 'src/main/generated-jooq'
   jooqGeneratedPkg = 'au.org.raid.db.jooq'
 
-//  defaultSysProps = apiSvcProject.defaultSysProps
-
   // the config loading config :/
   homeDir = System.properties['user.home']
-  configPath = System.getProperty("RAIDO_APISVC_DB_RAIDO_CONFIG_PATH",
-    "${homeDir}/.config/raido/api-svc-db-raido.gradle")
+  configPath = System.getProperty("RAIDO_APISVC_DB_CONFIG_PATH",
+          "${homeDir}/.config/raido/api-svc-db.gradle")
+
+  // </shared>
+
+  jooqGeneratedSrcDir = 'src/main/generated-jooq'
+  jooqGeneratedPkg = 'au.org.raid.db.jooq'
 }
 
 /* after ext{} block so that stuff is the default, and so the config
    can refer to those default values */
 if( file(configPath).exists() ){
   println "loading config from: ${configPath}"
-  /* never done config this way before, not entirely sure it's a good idea,
-  probably a Bad Plan to a full turing-complete language for config */
   apply from: configPath
 }
 
 dependencies{
-  // for flyway
   runtimeOnly libs.pgjdbc
-//  implementation 'org.flywaydb:flyway-database-postgresql:10.0.0'
-
   jooqGenerator libs.pgjdbc
-
-  // use logback as the backing log implementation for slf4j
-//  runtimeOnly libs.bundles.logback.runtime
 }
 
 compileJava {
@@ -69,31 +72,30 @@ sourceSets{
   }
 }
 
-
 flyway{
-  url = sharedProject.apiSvcPgUrl
-  user = sharedProject.apiSvcPgUser
-  password = sharedProject.apiSvcPgPassword
-  schemas = [sharedProject.apiSvcPgSchema]
+  url = apiSvcPgUrl
+  user = apiSvcPgUser
+  password = apiSvcPgPassword
+  schemas = [apiSvcPgSchema]
   failOnMissingLocations = true
-  locations = ['classpath:db/migration'] + sharedProject.apiSvcExtraLocations
+  locations = ['classpath:db/migration'] + apiSvcExtraLocations
   placeholders = [
     /* this one is really only needed when setting locations to load the 
     api_user script */
-    'apiSvcRolePassword' : sharedProject.apiSvcRolePassword,
+    'apiSvcRolePassword' : apiSvcRolePassword,
   ]
   /* flag to avoid accidentally running in prod */
-  cleanDisabled = sharedProject.flywayCleanDisabled
+  cleanDisabled = flywayCleanDisabled
 }
 
 tasks.flywayMigrate.doFirst {
-  assert sharedProject.apiSvcPgPassword : "must set the apiSvcPgPassword"
-  assert sharedProject.apiSvcRolePassword : "must set the apiSvcRolePassword"
+  assert apiSvcPgPassword : "must set the apiSvcPgPassword"
+  assert apiSvcRolePassword : "must set the apiSvcRolePassword"
   project.logger.lifecycle "flyway.locations:" + flyway.locations
 }
 tasks.flywayInfo.doFirst {
-  assert sharedProject.apiSvcPgPassword : "must set the apiSvcPgPassword"
-  assert sharedProject.apiSvcRolePassword : "must set the apiSvcRolePassword"
+  assert apiSvcPgPassword : "must set the apiSvcPgPassword"
+  assert apiSvcRolePassword : "must set the apiSvcRolePassword"
   project.logger.lifecycle "flyway.locations:" + flyway.locations
 }
 
@@ -122,9 +124,9 @@ jooq{
       generationTool{
         jdbc{
           driver = 'org.postgresql.Driver'
-          url = sharedProject.apiSvcPgUrl
-          user = sharedProject.apiSvcPgUser
-          password = sharedProject.apiSvcPgPassword
+          url = apiSvcPgUrl
+          user = apiSvcPgUser
+          password = apiSvcPgPassword
         }
         generator{
           name = 'org.jooq.codegen.DefaultGenerator'
@@ -132,7 +134,7 @@ jooq{
             name = 'org.jooq.meta.postgres.PostgresDatabase'
             schemata{
               schema{
-                inputSchema = sharedProject.apiSvcPgSchema
+                inputSchema = apiSvcPgSchema
               }
               schema{
                 // weird error about "project"
@@ -160,11 +162,3 @@ jooq{
   }
 }
 tasks.generateJooq.dependsOn cleanJooqGeneratedSrc
-
-
-tasks.register('loadSubjects', LoadSubjectsTask) {
-  dataFileUrl = 'https://vocabs.ardc.edu.au/registry/api/resource/downloads/1438/anzsrc-2020-for-20210429.ttl'
-  dbUrl = sharedProject.apiSvcPgUrl
-  dbUsername = sharedProject.apiSvcPgUser
-  dbPassword = sharedProject.apiSvcPgPassword
-}
