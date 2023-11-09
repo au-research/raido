@@ -2,7 +2,6 @@ rootProject.name = "raido"
 
 include ":api-svc:idl-raid-v1"
 include ":api-svc:idl-raid-v2"
-include ":api-svc:test-shared"
 include ':api-svc:raid-api'
 include ":api-svc:db"
 include ":app-client"

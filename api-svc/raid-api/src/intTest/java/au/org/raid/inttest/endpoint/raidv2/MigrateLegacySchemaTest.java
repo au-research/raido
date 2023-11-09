@@ -14,7 +14,6 @@ import java.util.List;
 
 import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static au.org.raid.api.service.raid.MetadataService.RAID_ID_TYPE_URI;
-import static au.org.raid.api.test.util.BddUtil.EXPECT;
 import static au.org.raid.idl.raidv2.model.RaidoMetaschema.LEGACYMETADATASCHEMAV1;
 import static au.org.raid.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
 import static au.org.raid.idl.raidv2.model.TitleType.PRIMARY_TITLE;
@@ -69,7 +68,6 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
                 alternateUrls(List.of(new AlternateUrlBlock().
                         url("https://example.com/some.url.related.to.the.raid")));
 
-        EXPECT("migrating a raid with correct content should work");
         var mintResult = adminApiAsRaido.migrateLegacyRaid(
                 new MigrateLegacyRaidRequest().
                         mintRequest(new MigrateLegacyRaidRequestMintRequest().
@@ -80,7 +78,6 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
         assertThat(mintResult.getFailures()).isNullOrEmpty();
         assertThat(mintResult.getSuccess()).isTrue();
 
-        EXPECT("should be able to read the minted raid via public api");
         var pubRead = raidoApi.getPublicExperimental().publicReadRaidV3(handle).getBody();
         assertThat(pubRead).isNotNull();
         assertThat(pubRead.getCreateDate()).isNotNull();
@@ -95,7 +92,6 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
         // technically this is an invalid raid, contrib is supposed to be mandatory
         assertThat(pubReadMeta.getContributors()).isNullOrEmpty();
 
-        EXPECT("should be able to list a migrated raid");
         var listResult = basicApiAsNotreDame.listRaidV2(new RaidListRequestV2().
                 servicePointId(notreDame.getId()).primaryTitle(initialTitle)).getBody();
         assertThat(listResult).singleElement().satisfies(i -> {
@@ -107,7 +103,6 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
         });
 
 
-        EXPECT("should be able to re-migrate an existing raid");
         var remintResult = adminApiAsRaido.migrateLegacyRaid(
                 new MigrateLegacyRaidRequest().
                         mintRequest(new MigrateLegacyRaidRequestMintRequest().
@@ -118,7 +113,6 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
         assertThat(remintResult.getFailures()).isNullOrEmpty();
         assertThat(remintResult.getSuccess()).isTrue();
 
-        EXPECT("should be able to upgrade a legacy raid to raido schema");
         var remintMetadata = mapper.readValue(
                 remintResult.getRaid().getMetadata().toString(),
                 LegacyMetadataSchemaV1.class);
@@ -138,14 +132,12 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
         assertThat(upgradeResult.getFailures()).isNullOrEmpty();
         assertThat(upgradeResult.getSuccess()).isTrue();
 
-        EXPECT("upgraded raid should have a contributor");
         pubRead = raidoApi.getPublicExperimental().publicReadRaidV3(handle).getBody();
         pubReadMeta = (PublicRaidMetadataSchemaV1) pubRead.getMetadata();
         assertThat(pubReadMeta.getContributors()).isNotEmpty();
 
     /* "reproduce" because we don't actually want this behaviour, we'd prefer 
     that this failed - this "documents" the existing undesirable behaviour */
-        EXPECT("reproduce that upgraded raids are able to re-migrated");
         remintResult = adminApiAsRaido.migrateLegacyRaid(
                 new MigrateLegacyRaidRequest().
                         mintRequest(new MigrateLegacyRaidRequestMintRequest().
@@ -157,7 +149,6 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
         assertThat(remintResult.getSuccess()).isTrue();
 
 
-        EXPECT("reproduce that upgraded re-migrated raid had contributors stomped");
         pubRead = raidoApi.getPublicExperimental().publicReadRaidV3(handle).getBody();
         pubReadMeta = (PublicRaidMetadataSchemaV1) pubRead.getMetadata();
         assertThat(pubReadMeta.getContributors()).isNullOrEmpty();

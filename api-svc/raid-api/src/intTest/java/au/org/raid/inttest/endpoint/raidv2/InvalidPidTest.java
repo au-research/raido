@@ -10,7 +10,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static au.org.raid.api.service.stub.InMemoryStubTestData.*;
-import static au.org.raid.api.test.util.BddUtil.EXPECT;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -72,7 +71,6 @@ public class InvalidPidTest extends IntegrationTestCase {
                 idFactory.generateUniqueId();
         var today = LocalDate.now();
 
-        EXPECT("minting a raid with non-existent PIDs should fail");
         assertThatThrownBy(() -> raidApi.createRaidV1(new RaidCreateRequest()
                 .title(titles(initialTitle))
                 .date(new Date().startDate(today.format(DateTimeFormatter.ISO_LOCAL_DATE)))

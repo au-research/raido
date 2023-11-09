@@ -105,7 +105,6 @@ dependencies{
   implementation 'software.amazon.awssdk:cloudwatch:2.20.52'
   implementation 'io.micrometer:micrometer-registry-cloudwatch2:1.10.6'
 
-  testImplementation project(':api-svc:test-shared')
   testImplementation libs.bundles.springboot3.test
 
   testImplementation 'org.mockito:mockito-inline:4.11.0'
@@ -147,7 +146,6 @@ testing{
         implementation project(':api-svc:db')
         implementation project(':api-svc:idl-raid-v1')
         implementation project(':api-svc:idl-raid-v2')
-        implementation project(':api-svc:test-shared')
 
         implementation.bundle libs.bundles.springboot3
         implementation.bundle libs.bundles.springboot3.test

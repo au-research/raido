@@ -14,7 +14,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
-import static au.org.raid.api.test.util.BddUtil.*;
 import static au.org.raid.idl.raidv2.model.AccessType.OPEN;
 import static au.org.raid.idl.raidv2.model.ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_;
 import static au.org.raid.idl.raidv2.model.ContributorPositionRaidMetadataSchemaType.LEADER;
@@ -95,7 +94,6 @@ public class RaidoSchemaV2Test extends IntegrationTestCase {
         var today = LocalDate.now();
         var idParser = new IdentifierParser();
 
-        EXPECT("minting a raid with minimal content should succeed");
         var mintResult = raidApi.mintRaidoSchemaV1(
                 new MintRaidoSchemaV1Request().
                         mintRequest(new MintRaidoSchemaV1RequestMintRequest().
@@ -128,12 +126,10 @@ public class RaidoSchemaV2Test extends IntegrationTestCase {
         assertThat(mintedMetadata.getMetadataSchema()).
                 isEqualTo(RAIDOMETADATASCHEMAV1);
 
-        EXPECT("should be able to read the minted raid via authz api");
         var readResult = raidApi.readRaidV2(
                 new ReadRaidV2Request().handle(mintedRaid.getHandle())).getBody();
         assertThat(readResult).isNotNull();
 
-        WHEN("raid primaryTitle is updated");
         var readMetadata = mapper.readValue((String) readResult.getMetadata(), RaidoMetadataSchemaV2.class);
         var readPrimaryTitle = readMetadata.getTitles().get(0);
         var newTitle =
@@ -146,7 +142,6 @@ public class RaidoSchemaV2Test extends IntegrationTestCase {
         assertThat(update1.getFailures()).isNullOrEmpty();
         assertThat(update1.getSuccess()).isTrue();
 
-        THEN("version and schema version should be updated");
         var update1Read = raidApi.readRaidV2(new ReadRaidV2Request().handle(mintedRaid.getHandle())).getBody();
         var update1Metadata = mapper.readValue((String) update1Read.getMetadata(), RaidoMetadataSchemaV2.class);
         assertThat(update1Metadata.getAccess().getType()).isEqualTo(OPEN);
@@ -154,7 +149,6 @@ public class RaidoSchemaV2Test extends IntegrationTestCase {
                 initialTitle + " updated");
         assertThat(update1Metadata.getMetadataSchema()).isEqualTo(RAIDOMETADATASCHEMAV2);
 
-        WHEN("raid description is updated again");
         var existingDescription = update1Metadata.getDescriptions().get(0);
         var newDescription =
                 existingDescription.description(existingDescription.getDescription() + " updated");
@@ -167,7 +161,6 @@ public class RaidoSchemaV2Test extends IntegrationTestCase {
         assertThat(update2.getFailures()).isNullOrEmpty();
         assertThat(update2.getSuccess()).isTrue();
 
-        THEN("version is incremented");
         var update2Read = raidApi.readRaidV2(new ReadRaidV2Request().handle(mintedRaid.getHandle())).getBody();
         var update2Metadata = mapper.readValue((String) update2Read.getMetadata(), RaidoMetadataSchemaV2.class);
         assertThat(update2Metadata.getAccess().getType()).isEqualTo(OPEN);
@@ -176,7 +169,6 @@ public class RaidoSchemaV2Test extends IntegrationTestCase {
         assertThat(update2Metadata.getMetadataSchema()).isEqualTo(RAIDOMETADATASCHEMAV2);
         assertThat(update2Metadata.getId().getVersion()).isEqualTo(3);
 
-        EXPECT("should be able to read the minted raid via public api (v3)");
         var v3Read = raidoApi.getPublicExperimental().
                 publicReadRaidV3(mintedRaid.getHandle()).getBody();
         assertThat(v3Read).isNotNull();
@@ -212,7 +204,6 @@ public class RaidoSchemaV2Test extends IntegrationTestCase {
         var today = LocalDate.now();
         var idParser = new IdentifierParser();
 
-        EXPECT("minting a raid with minimal content should succeed");
         var mintResult = raidApi.mintRaidoSchemaV1(
                 new MintRaidoSchemaV1Request().
                         mintRequest(new MintRaidoSchemaV1RequestMintRequest().
@@ -245,12 +236,10 @@ public class RaidoSchemaV2Test extends IntegrationTestCase {
         assertThat(mintedMetadata.getMetadataSchema()).
                 isEqualTo(RAIDOMETADATASCHEMAV1);
 
-        EXPECT("should be able to read the minted raid via authz api");
         var readResult = raidApi.readRaidV2(
                 new ReadRaidV2Request().handle(mintedRaid.getHandle())).getBody();
         assertThat(readResult).isNotNull();
 
-        WHEN("raid primaryTitle is updated");
         var readMetadata = mapper.readValue((String) readResult.getMetadata(), RaidoMetadataSchemaV2.class);
         var readPrimaryTitle = readMetadata.getTitles().get(0);
         var newTitle =
@@ -263,7 +252,6 @@ public class RaidoSchemaV2Test extends IntegrationTestCase {
         assertThat(update1.getFailures()).isNullOrEmpty();
         assertThat(update1.getSuccess()).isTrue();
 
-        THEN("version and schema version should be updated");
         var update1Read = raidApi.readRaidV2(new ReadRaidV2Request().handle(mintedRaid.getHandle())).getBody();
         var update1Metadata = mapper.readValue((String) update1Read.getMetadata(), RaidoMetadataSchemaV2.class);
         assertThat(update1Metadata.getAccess().getType()).isEqualTo(OPEN);
@@ -271,7 +259,6 @@ public class RaidoSchemaV2Test extends IntegrationTestCase {
                 initialTitle + " updated");
         assertThat(update1Metadata.getMetadataSchema()).isEqualTo(RAIDOMETADATASCHEMAV2);
 
-        WHEN("raid is updated with old version");
         var existingDescription = update1Metadata.getDescriptions().get(0);
         var newDescription =
                 existingDescription.description(existingDescription.getDescription() + " updated");

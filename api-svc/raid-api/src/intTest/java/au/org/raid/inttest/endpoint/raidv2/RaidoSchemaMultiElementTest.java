@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
-import static au.org.raid.api.test.util.BddUtil.*;
 import static au.org.raid.idl.raidv2.model.AccessType.OPEN;
 import static au.org.raid.idl.raidv2.model.DescriptionType.ALTERNATIVE_DESCRIPTION;
 import static au.org.raid.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
@@ -35,7 +34,6 @@ public class RaidoSchemaMultiElementTest extends IntegrationTestCase {
         var today = LocalDate.now();
         String alternateTitle = "alternate title";
 
-        EXPECT("mint with multiple elements in title/desc should succeed");
         var mintResult = raidApi.mintRaidoSchemaV1(
                 new MintRaidoSchemaV1Request().
                         mintRequest(new MintRaidoSchemaV1RequestMintRequest().
@@ -64,7 +62,6 @@ public class RaidoSchemaMultiElementTest extends IntegrationTestCase {
         ).getBody();
 
 
-        WHEN("primary title is updated");
         var readRaid = raidApi.readRaidV2(
                 new ReadRaidV2Request().handle(mintResult.getRaid().getHandle())).getBody();
         System.out.println("XXX: " + readRaid);
@@ -83,7 +80,6 @@ public class RaidoSchemaMultiElementTest extends IntegrationTestCase {
                 ));
 
 
-        THEN("alternate title should not be touched");
         readRaid = raidApi.readRaidV2(
                 new ReadRaidV2Request().handle(mintResult.getRaid().getHandle())).getBody();
         readMeta = mapper.readValue(

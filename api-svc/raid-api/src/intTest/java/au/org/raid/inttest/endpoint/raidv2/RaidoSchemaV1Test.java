@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
-import static au.org.raid.api.test.util.BddUtil.*;
 import static au.org.raid.idl.raidv2.model.AccessType.CLOSED;
 import static au.org.raid.idl.raidv2.model.AccessType.OPEN;
 import static au.org.raid.idl.raidv2.model.ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_;
@@ -78,7 +77,6 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
         var today = LocalDate.now();
         var idParser = new IdentifierParser();
 
-        EXPECT("minting a raid with minimal content should succeed");
         var mintResult = raidApi.mintRaidoSchemaV1(
                 new MintRaidoSchemaV1Request()
                         .mintRequest(new MintRaidoSchemaV1RequestMintRequest()
@@ -112,13 +110,11 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
                 isEqualTo(RAIDOMETADATASCHEMAV1);
 
 
-        EXPECT("should be able to read the minted raid via authz api");
         var readResult = raidApi.readRaidV2(
                 new ReadRaidV2Request().handle(mintedRaid.getHandle()));
         assertThat(readResult).isNotNull();
 
 
-        EXPECT("should be able to read the minted raid via public api (v3)");
         var v3Read = raidoApi.getPublicExperimental().
                 publicReadRaidV3(mintedRaid.getHandle()).getBody();
         assertThat(v3Read).isNotNull();
@@ -145,7 +141,6 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
 
 
         /* list by unique name to prevent eventual pagination issues */
-        EXPECT("should be able to list the minted raid");
         var listResult = raidApi.listRaidV2(new RaidListRequestV2().
                 servicePointId(RAIDO_SP_ID).primaryTitle(initialTitle)).getBody();
         assertThat(listResult).singleElement().satisfies(i -> {
@@ -156,7 +151,6 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
         });
 
 
-        WHEN("raid primaryTitle is updated");
         var readPrimaryTitle = v3Meta.getTitles().get(0);
         var newTitle =
                 readPrimaryTitle.title(readPrimaryTitle.getTitle() + " updated");
@@ -168,7 +162,6 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
         assertThat(updateResult.getFailures()).isNullOrEmpty();
         assertThat(updateResult.getSuccess()).isTrue();
 
-        THEN("should be able to read new value via publicRead");
         var readUpdatedData = (PublicRaidMetadataSchemaV1)
                 raidoApi.getPublicExperimental().
                         publicReadRaidV3(mintedRaid.getHandle()).getBody().getMetadata();
@@ -178,7 +171,6 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
                 initialTitle + " updated");
 
 
-        WHEN("raid is updated to closed");
         var closeResult = raidApi.updateRaidoSchemaV1(
                 new UpdateRaidoSchemaV1Request().metadata(
                         mapRaidMetadataToRaido(readUpdatedData).
@@ -190,7 +182,6 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
         assertThat(closeResult.getFailures()).isNullOrEmpty();
         assertThat(closeResult.getSuccess()).isTrue();
 
-        THEN("publicRaid should now return closed");
         var readClosed = raidoApi.getPublicExperimental().
                 publicReadRaidV3(mintedRaid.getHandle()).getBody();
         var readClosedMeta = (PublicClosedMetadataSchemaV1)
@@ -213,7 +204,6 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
         var raidApi = super.basicRaidExperimentalClient();
         var today = LocalDate.now();
 
-        WHEN("minting a raid with minimal content with empty primaryTitle");
         var mintResult = raidApi.mintRaidoSchemaV1(
                 new MintRaidoSchemaV1Request()
                         .mintRequest(new MintRaidoSchemaV1RequestMintRequest()
@@ -230,7 +220,6 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
                                 .access(new AccessBlock().type(OPEN))
                         )
         ).getBody();
-        THEN("validation failure should result");
         assertThat(mintResult.getSuccess()).isFalse();
         assertThat(mintResult.getFailures()).satisfiesExactlyInAnyOrder(
                 i -> {

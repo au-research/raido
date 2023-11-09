@@ -1,7 +1,5 @@
 package au.org.raid.inttest.endpoint.anonymous;
 
-import au.org.raid.api.test.util.BddUtil;
-import au.org.raid.api.util.Log;
 import au.org.raid.idl.raidv2.model.PublicRaidMetadataSchemaV1;
 import au.org.raid.idl.raidv2.model.PublicReadRaidResponseV3;
 import au.org.raid.inttest.IntegrationTestCase;
@@ -14,8 +12,6 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static au.org.raid.api.spring.config.RaidWebSecurityConfig.ROOT_PATH;
-import static au.org.raid.api.test.util.BddUtil.*;
-import static au.org.raid.api.util.Log.to;
 import static au.org.raid.inttest.util.MinimalRaidTestData.createMinimalSchemaV1;
 import static au.org.raid.inttest.util.MinimalRaidTestData.createMintRequest;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,12 +28,10 @@ public class GetRaidHandleTest extends IntegrationTestCase {
         String title = getName() + idFactory.generateUniqueId();
 
 
-        WHEN("a raid is minted");
         var mintResult = raidApi.mintRaidoSchemaV1(
                 createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID)).getBody();
 
 
-        THEN("API GET of root mapping with handle should return data");
         HttpHeaders headers = new HttpHeaders();
         headers.set(ACCEPT, APPLICATION_JSON_VALUE);
         HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -71,12 +65,10 @@ public class GetRaidHandleTest extends IntegrationTestCase {
         String title = getName() + idFactory.generateUniqueId();
 
 
-        WHEN("a raid is minted");
         var mintResult = raidApi.mintRaidoSchemaV1(
                 createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID)).getBody();
 
 
-        THEN("API GET of root mapping with handle should return data");
         HttpHeaders headers = new HttpHeaders();
         headers.set(ACCEPT, "*/*");
         headers.set(CONTENT_TYPE, APPLICATION_JSON_VALUE);
@@ -95,11 +87,9 @@ public class GetRaidHandleTest extends IntegrationTestCase {
         var raidApi = super.basicRaidExperimentalClient();
         String title = getName() + idFactory.generateUniqueId();
 
-        WHEN("a raid is minted");
         var mintResult = raidApi.mintRaidoSchemaV1(
                 createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID)).getBody();
 
-        THEN("API GET of root mapping with an encoded handle should return data");
         final var uri = raidoApiServerUrl(ROOT_PATH) + "/" + mintResult.getRaid().getHandle();
         var res = rest.getForEntity(uri, PublicReadRaidResponseV3.class);
 
@@ -110,12 +100,9 @@ public class GetRaidHandleTest extends IntegrationTestCase {
 
     @Test
     public void browserViewExistingWithNoAcceptHeaderShouldRedirectToWebsite() {
-        BddUtil.EXPECT(getName());
-
         var raidApi = super.basicRaidExperimentalClient();
         String title = getName() + idFactory.generateUniqueId();
 
-        WHEN("a raid is minted");
         var mintResult = raidApi.mintRaidoSchemaV1(
                 createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID)).getBody();
 
@@ -125,8 +112,6 @@ public class GetRaidHandleTest extends IntegrationTestCase {
         headers.set(ACCEPT, "");
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
-
-        THEN("GET handle and no Accept header should redirect to landing page");
         var res = rest.exchange(
                 raidoApiServerUrl(ROOT_PATH) + mintResult.getRaid().getHandle(),
                 HttpMethod.GET, entity, Void.class);
@@ -140,8 +125,6 @@ public class GetRaidHandleTest extends IntegrationTestCase {
 
     @Test
     void apiGetNonExistentShould404() {
-        EXPECT(getName());
-
         HttpHeaders headers = new HttpHeaders();
         headers.set(ACCEPT, APPLICATION_JSON_VALUE);
         HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -158,8 +141,6 @@ public class GetRaidHandleTest extends IntegrationTestCase {
 
     @Test
     void apiGetInvalidPrefixShould404() {
-        EXPECT(getName());
-
         HttpHeaders headers = new HttpHeaders();
         headers.set(ACCEPT, APPLICATION_JSON_VALUE);
         HttpEntity<String> entity = new HttpEntity<>(headers);

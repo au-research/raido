@@ -1,7 +1,5 @@
 package au.org.raid.inttest.endpoint;
 
-import au.org.raid.api.test.util.BddUtil;
-import au.org.raid.api.util.Log;
 import au.org.raid.inttest.IntegrationTestCase;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -14,7 +12,6 @@ import org.springframework.web.client.HttpClientErrorException.Unauthorized;
 import static au.org.raid.api.endpoint.anonymous.PublicEndpoint.STATUS_PATH;
 import static au.org.raid.api.spring.config.RaidWebSecurityConfig.PUBLIC;
 import static au.org.raid.api.spring.config.RaidWebSecurityConfig.ROOT_PATH;
-import static au.org.raid.api.util.Log.to;
 import static au.org.raid.api.util.RestUtil.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -41,7 +38,6 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
 
     @Test
     public void getAnonymousExistentPublicApiEndpointShouldWork() {
-        BddUtil.EXPECT(getName());
         assertThat(
                 anonGet(rest, raidoApiServerUrl(STATUS_PATH), Result.class).status
         ).isEqualTo("UP");
@@ -49,7 +45,6 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
 
     @Test
     public void getAnonymousExistentAuthnApiEndpointShouldFail() {
-        BddUtil.EXPECT(getName());
         assertThatThrownBy(() -> {
             anonGet(rest, raidoApiServerUrl(AUTHN_READ_RAID + "/" + EXAMPLE_HANDLE),
                     Void.class);
@@ -59,8 +54,6 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
 
     @Test
     public void getBadlyEncodedTokenExistentAuthnApiEndpointShouldFail() {
-        BddUtil.EXPECT(getName());
-
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth("xxx.yyy.zzz");
         HttpEntity<Result> entity = new HttpEntity<>(headers);
@@ -73,8 +66,7 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
 
     @Test
     public void getAnonymousNonExistentApiEndpointShould404() {
-        BddUtil.EXPECT(getName());
-    /* being under "/public/..." is what makes it an "API endpoint", matching 
+    /* being under "/public/..." is what makes it an "API endpoint", matching
      WebSecurityConfig requestMatcher.  But since there is no matching endpoint
      declared for this path, we should get a 404. */
         assertThatThrownBy(() -> {
@@ -90,8 +82,6 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
      */
     @Test
     public void getAnonPublicEndpointWithBadTokenDoesFail() {
-        BddUtil.EXPECT(getName());
-
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth("xxx.yyy.zzz");
         HttpEntity<Result> entity = new HttpEntity<>(headers);
@@ -106,8 +96,6 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
 
     @Test
     public void getNonExistentNonApiShould404() {
-        BddUtil.EXPECT(getName());
-
         assertThatThrownBy(() -> {
             anonGet(rest, raidoApiServerUrl(NON_EXISTENT_NON_API_PATH), String.class);
         }).
@@ -117,8 +105,6 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
     @Test
     @Disabled
     public void browserViewRootShouldRedirectToWebsite() {
-        BddUtil.EXPECT(getName());
-
         HttpHeaders headers = new HttpHeaders();
         headers.set(ACCEPT, TEXT_HTML_VALUE);
         HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -133,8 +119,6 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
     @Test
     @Disabled
     public void browserViewHandleShouldRedirectToLandingPage() {
-        BddUtil.EXPECT(getName());
-
         HttpHeaders headers = new HttpHeaders();
         headers.set(ACCEPT, TEXT_HTML_VALUE);
         HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -150,8 +134,6 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
     @Test
     @Disabled
     public void browserViewEncodedHandleShouldRedirectToLandingPage() {
-        BddUtil.EXPECT(getName());
-
         var encodedHandle = urlEncode(EXAMPLE_HANDLE);
 
         HttpHeaders headers = new HttpHeaders();
@@ -168,8 +150,6 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
 
     @Test
     public void apiGetRootShould404() {
-        BddUtil.EXPECT(getName());
-
         HttpHeaders headers = new HttpHeaders();
         headers.set(ACCEPT, APPLICATION_JSON_VALUE);
         headers.set(CONTENT_TYPE, APPLICATION_JSON_VALUE);
@@ -184,8 +164,6 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
     @Test
     @Disabled
     public void postNonExistentRootShould405() {
-        BddUtil.EXPECT(getName());
-
         HttpEntity<String> entity = new HttpEntity<>(new HttpHeaders());
 
         assertThatThrownBy(() -> {
@@ -198,8 +176,6 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
     @Test
     @Disabled
     public void postNonExistentNonApiShouldFail() {
-        BddUtil.EXPECT(getName());
-
         HttpHeaders headers = new HttpHeaders();
         headers.set(CONTENT_TYPE, APPLICATION_JSON_VALUE);
         HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -215,8 +191,6 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
     @Test
     @Disabled
     public void postNonExistentNonApiNoAcceptHeaderShouldFail() {
-        BddUtil.EXPECT(getName());
-
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
@@ -231,7 +205,6 @@ public class HttpStatusMappingTest extends IntegrationTestCase {
     @Test
     @Disabled
     public void postNonExistentApiEndpointShould405() {
-        BddUtil.EXPECT(getName());
         assertThatThrownBy(() -> {
             anonPost(rest, raidoApiServerUrl(NON_EXISTENT_API_PATH),
                     String.class, String.class);

@@ -1,6 +1,5 @@
 package au.org.raid.inttest.export;
 
-import au.org.raid.api.util.Log;
 import au.org.raid.idl.raidv2.model.RaidoMetadataSchemaV1;
 import au.org.raid.inttest.IntegrationTestCase;
 import org.junit.jupiter.api.Disabled;
@@ -14,10 +13,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
-import static au.org.raid.api.test.util.BddUtil.*;
 import static au.org.raid.api.util.IdeUtil.formatClickable;
 import static au.org.raid.api.util.IoUtil.lines;
-import static au.org.raid.api.util.Log.to;
 import static au.org.raid.idl.raidv2.model.AccessType.CLOSED;
 import static au.org.raid.inttest.util.MinimalRaidTestData.createMinimalSchemaV1;
 import static au.org.raid.inttest.util.MinimalRaidTestData.createMintRequest;
@@ -43,7 +40,6 @@ public class AgencyPublicDataExportTest extends IntegrationTestCase {
         String closedTitle = "closed-" + getName() + idFactory.generateUniqueId();
         Path testFilePath = Files.createTempFile(getName(), ".ndjson");
 
-        GIVEN("open and closed raids exist");
         var openRaidMint = raidApi.mintRaidoSchemaV1(
                 createMintRequest(createMinimalSchemaV1(openTitle), RAIDO_SP_ID));
         RaidoMetadataSchemaV1 closedMintData = createMinimalSchemaV1(closedTitle);
@@ -52,11 +48,9 @@ public class AgencyPublicDataExportTest extends IntegrationTestCase {
         var closedRaidMint = raidApi.mintRaidoSchemaV1(
                 createMintRequest(closedMintData, RAIDO_SP_ID));
 
-        WHEN("export is run");
         /* only need to do a few records to make sure it works */
         AgencyPublicDataExport.export(testFilePath.toString(), 10);
 
-        THEN("file containing that raid should be written");
     /* given the data export is in descending date order, our minted raids
     should be the most recent things in here (might contain only our created 
     raids, or all of prod data or anything in between.) */
