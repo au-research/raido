@@ -5,8 +5,6 @@ include ":api-svc:idl-raid-v2"
 include ":api-svc:test-shared"
 include ':api-svc:raid-api'
 include ":api-svc:db"
-include ":api-svc:db:shared"
-include ":api-svc:db:raido"
 include ":app-client"
 
 dependencyResolutionManagement{
