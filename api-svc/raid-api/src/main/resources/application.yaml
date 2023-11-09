@@ -19,7 +19,10 @@ spring:
     password: ${raid.db.password}
   jooq:
     sql-dialect: postgres
-
+  flyway:
+    default-schema: api_svc
+    create-schemas: true
+    baseline-version: 25
 springdoc:
   swagger-ui:
     enabled: true

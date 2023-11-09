@@ -1,14 +1,14 @@
 import au.raid.org.api.LoadSubjectsTask
 import org.flywaydb.gradle.task.AbstractFlywayTask
 
-buildscript {
-  repositories {
-    mavenCentral()
-  }
-  dependencies {
-    classpath  'org.flywaydb:flyway-database-postgresql:10.0.0'
-  }
-}
+//buildscript {
+//  repositories {
+//    mavenCentral()
+//  }
+//  dependencies {
+//    classpath  'org.flywaydb:flyway-database-postgresql:10.0.0'
+//  }
+//}
 
 plugins{
   id 'java'
@@ -23,7 +23,7 @@ evaluationDependsOn(':api-svc:db:v1-ddb-migration')
 ext{
 
   sharedProject = project(":api-svc:db:shared")
-  raidV1Project = project(":api-svc:db:v1-ddb-migration")
+//  raidV1Project = project(":api-svc:db:v1-ddb-migration")
 
   jooqGeneratedSrcDir = 'src/main/generated-jooq'
   jooqGeneratedPkg = 'au.org.raid.db.jooq'
@@ -48,7 +48,7 @@ if( file(configPath).exists() ){
 dependencies{
   // for flyway
   runtimeOnly libs.pgjdbc
-  implementation 'org.flywaydb:flyway-database-postgresql:10.0.0'
+//  implementation 'org.flywaydb:flyway-database-postgresql:10.0.0'
 
   jooqGenerator libs.pgjdbc
 
@@ -104,9 +104,9 @@ tasks.withType(AbstractFlywayTask) {
 
 /* github build failed because the migrations tried to create the app_user,
 but that migration task hadn't run yet. */
-tasks.flywayMigrate.mustRunAfter(
-  raidV1Project.tasks.flywayMigrate
-)
+//tasks.flywayMigrate.mustRunAfter(
+//  raidV1Project.tasks.flywayMigrate
+//)
 
 task cleanJooqGeneratedSrc(type: Delete){
   group = "jooq"

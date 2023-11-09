@@ -22,5 +22,7 @@ spring:
     password: ${raid.db.password}
   jooq:
     sql-dialect: postgres
+  flyway:
+    enabled: false
 server:
   port: 8080

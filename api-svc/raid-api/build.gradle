@@ -40,7 +40,7 @@ dependencies{
   implementation project(':api-svc:db:raido')
   implementation project(':api-svc:idl-raid-v1')
   implementation project(':api-svc:idl-raid-v2')
-  
+  implementation 'org.flywaydb:flyway-core:9.22.3'
   // look in settings.gradle for version catalog specs 
   implementation libs.bundles.springboot3
   implementation libs.springdoc.openapi

@@ -28,8 +28,9 @@ dependencyResolutionManagement{
       version('springboot3', '3.1.4')
 
       // https://documentation.red-gate.com/fd/release-notes-for-flyway-engine-179732572.html
-      plugin('flyway', 'org.flywaydb.flyway').version('10.0.0')
-      plugin('jooq', 'nu.studer.jooq').version('8.1')      
+//      plugin('flyway', 'org.flywaydb.flyway').version('10.0.0')
+      plugin('flyway', 'org.flywaydb.flyway').version('9.22.3')
+      plugin('jooq', 'nu.studer.jooq').version('8.1')
       
       // https://jdbc.postgresql.org/changelogs/
       library('pgjdbc', 'org.postgresql:postgresql:42.5.4')
@@ -50,7 +51,7 @@ dependencyResolutionManagement{
               'spring-boot-starter-security',
               'spring-boot-starter-oauth2-resource-server',
               'spring-boot-starter-jooq',
-              'spring-boot-starter-actuator'
+              'spring-boot-starter-actuator',
       ])
 
       library('spring-boot-starter-test', 'org.springframework.boot', 'spring-boot-starter-test').versionRef('springboot3')
