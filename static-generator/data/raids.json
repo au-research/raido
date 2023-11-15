@@ -1,0 +1,5382 @@
+[
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1777739",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1777739",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1777739",
+      "license": "Creative Commons CC-0",
+      "version": 2
+    },
+    "title": [
+      {
+        "text": "[G] Alias tumultus acer vaco tam villa tremo. Updated",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-11-06",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2023-11-06",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "[G] Summa sit eius ab cubitum conscendo caput somniculosus deludo.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "[G]: Explicabo socius subito trado.",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": "2024-05-04"
+    },
+    "alternateUrl": [
+      {
+        "url": "https://winding-numismatist.org"
+      },
+      {
+        "url": "https://extra-small-fragrance.org/"
+      },
+      {
+        "url": "https://reasonable-vitro.name/"
+      }
+    ],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0009-0000-9306-3120",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-11-06",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/writing-original-draft/"
+          }
+        ],
+        "leader": false,
+        "contact": true
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2023-11-06",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [
+      {
+        "id": "https://linked.data.gov.au/def/anzsrc-for/2020/400911",
+        "schemaUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        "keyword": [
+          {
+            "text": "[G] Unde colo aequitas tabgo.",
+            "language": {
+              "id": "eng",
+              "schemaUri": "https://iso639-3.sil.org"
+            }
+          },
+          {
+            "text": "[G] Aut tactus amo stella deprimo derideo summisse adopto.",
+            "language": {
+              "id": "deu",
+              "schemaUri": "https://iso639-3.sil.org"
+            }
+          }
+        ]
+      }
+    ],
+    "relatedRaid": [],
+    "relatedObject": [
+      {
+        "id": "https://doi.org/10.5555.25/raid.2023.00000001",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/data-paper.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/output.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      },
+      {
+        "id": "https://doi.org/10.5555.25/raid.2023.00000001",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/standard.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/output.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      },
+      {
+        "id": "https://doi.org/10.5555.25/raid.2023.00000001",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/instrument.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/internal.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      }
+    ],
+    "alternateIdentifier": [
+      {
+        "id": "comes adopto totus",
+        "type": "tabella creta defessus"
+      },
+      {
+        "id": "suadeo carbo defaeco",
+        "type": "valens stella cerno"
+      },
+      {
+        "id": "tubineus venia totam",
+        "type": "saepe degusto uterque"
+      }
+    ],
+    "spatialCoverage": [
+      {
+        "id": "https://www.geonames.org/2766824/salzburg.html",
+        "schemaUri": "https://www.geonames.org/",
+        "place": "Salzburg",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "traditionalKnowledgeLabel": []
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1776342",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1776342",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1776342",
+      "license": "Creative Commons CC-0",
+      "version": 2
+    },
+    "title": [
+      {
+        "text": "Rob Test 2023-10-24",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2021",
+        "endDate": "2022",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "Previous Primary Title",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2020",
+        "endDate": "2021",
+        "language": null
+      },
+      {
+        "text": "Alternative Title",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2021",
+        "endDate": "2022",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2021-01",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "This is the primary description...",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "This is an alternative description...",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": null
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "embargoed",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": "2023-12-12"
+    },
+    "alternateUrl": [
+      {
+        "url": "http://localhost:1234"
+      },
+      {
+        "url": "http://localhost:5678"
+      }
+    ],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0000-0003-0635-1998",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2022-06",
+            "endDate": "2023-01"
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": true,
+        "contact": true
+      },
+      {
+        "id": "https://orcid.org/0000-0002-6492-9025",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-01",
+            "endDate": "2023-07"
+          },
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/other-participant.json",
+            "startDate": "2022-06-01",
+            "endDate": "2022-12-31"
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/015w2mp89",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json",
+            "startDate": "2023-08",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [
+      {
+        "id": "https://linked.data.gov.au/def/anzsrc-for/2020/3001",
+        "schemaUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        "keyword": [
+          {
+            "text": "Agricultural biotechnology",
+            "language": null
+          }
+        ]
+      },
+      {
+        "id": "https://linked.data.gov.au/def/anzsrc-for/2020/300101",
+        "schemaUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        "keyword": [
+          {
+            "text": "Agricultural biotechnology diagnostics (incl. biosensors)",
+            "language": null
+          }
+        ]
+      }
+    ],
+    "relatedRaid": [
+      {
+        "id": "http://raid.org/inmem/10378.1/1733374",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/continues.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/"
+        }
+      },
+      {
+        "id": "http://raid.org/10378.1/1733376",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/is-continued-by.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/"
+        }
+      }
+    ],
+    "relatedObject": [
+      {
+        "id": "https://doi.org/10.47366/sabia.v5n1a3",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/audiovisual.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      },
+      {
+        "id": "https://doi.org/10.1000/182",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/output.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      }
+    ],
+    "alternateIdentifier": [
+      {
+        "id": "ce35b108-3b0d-11ee-be56-0242ac120002",
+        "type": "UUID"
+      },
+      {
+        "id": "19B65F6DFF52432F706648D753A5A8EC8E4DEE25E10664245BA7AA957B10D887",
+        "type": "SHA256"
+      }
+    ],
+    "spatialCoverage": [
+      {
+        "id": "https://www.openstreetmap.org/relation/62422#map=11/52.5072/13.4248",
+        "schemaUri": "https://www.openstreetmap.org/",
+        "place": "Berlin",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "id": "https://www.geonames.org/2145234/victoria.html",
+        "schemaUri": "https://www.geonames.org/",
+        "place": "Victoria",
+        "language": null
+      }
+    ],
+    "traditionalKnowledgeLabel": [
+      {
+        "id": null,
+        "schemaUri": "https://localcontexts.org/labels/biocultural-labels/"
+      },
+      {
+        "id": "https://localcontexts.org/label/tk-attribution/",
+        "schemaUri": "https://localcontexts.org/labels/traditional-knowledge-labels/"
+      }
+    ]
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1776239",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1776239",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1776239",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "[G] Comptus bellum valde volubilis volup despecto capio solvo.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-21",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2023-10-21",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "[G] Vaco calcar bos curo candidus universe.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "[G]: Administratio viriliter brevis ver amita vado sponte vinculum atrocitas neque.",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": "2024-04-17"
+    },
+    "alternateUrl": [
+      {
+        "url": "https://nifty-loquat.name"
+      },
+      {
+        "url": "https://fluffy-rehospitalisation.net"
+      },
+      {
+        "url": "https://breakable-solution.name"
+      }
+    ],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0009-0000-9306-3120",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-10-21",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/supervision/"
+          }
+        ],
+        "leader": false,
+        "contact": true
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2023-10-21",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [
+      {
+        "id": "https://linked.data.gov.au/def/anzsrc-for/2020/340502",
+        "schemaUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        "keyword": [
+          {
+            "text": "[G] Sonitus depromo ulterius.",
+            "language": {
+              "id": "eng",
+              "schemaUri": "https://iso639-3.sil.org"
+            }
+          },
+          {
+            "text": "[G] Concido tepidus vivo tabula centum laudantium corona coaegresco studio tutamen.",
+            "language": {
+              "id": "deu",
+              "schemaUri": "https://iso639-3.sil.org"
+            }
+          }
+        ]
+      }
+    ],
+    "relatedRaid": [],
+    "relatedObject": [
+      {
+        "id": "https://doi.org/10.5555.25/raid.2023.00000001",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/workflow.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/output.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      },
+      {
+        "id": "https://doi.org/10.5555.25/raid.2023.00000001",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/physical-object.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/output.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      },
+      {
+        "id": "https://doi.org/10.5555.25/raid.2023.00000001",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/service.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      }
+    ],
+    "alternateIdentifier": [
+      {
+        "id": "cornu caritas creator",
+        "type": "contra accedo vomer"
+      },
+      {
+        "id": "cruentus conforto valeo",
+        "type": "advoco tutamen cupressus"
+      },
+      {
+        "id": "trado pectus dolorum",
+        "type": "charisma adimpleo cedo"
+      }
+    ],
+    "spatialCoverage": [
+      {
+        "id": "https://www.geonames.org/2766824/salzburg.html",
+        "schemaUri": "https://www.geonames.org/",
+        "place": "Salzburg",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "traditionalKnowledgeLabel": []
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1775810",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1775810",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1775810",
+      "license": "Creative Commons CC-0",
+      "version": 2
+    },
+    "title": [
+      {
+        "text": "Clamo arceo clarus cometes bibo fuga adduco coruscus illum.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-20",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2023-10-20",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "[G] Cunae amplexus tubineus paens subito tolero turpis.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "[G]: Decretum nihil vos capio.",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": "2024-04-17"
+    },
+    "alternateUrl": [
+      {
+        "url": "https://watchful-typhoon.net/"
+      },
+      {
+        "url": "https://intent-alpenhorn.net"
+      },
+      {
+        "url": "https://medium-naturalisation.net"
+      }
+    ],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0009-0000-9306-3120",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-10-20",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/formal-analysis/"
+          }
+        ],
+        "leader": false,
+        "contact": true
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2023-10-20",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [
+      {
+        "id": "https://linked.data.gov.au/def/anzsrc-for/2020/490409",
+        "schemaUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        "keyword": [
+          {
+            "text": "[G] Decerno combibo minima audentia est acer.",
+            "language": {
+              "id": "eng",
+              "schemaUri": "https://iso639-3.sil.org"
+            }
+          },
+          {
+            "text": "[G] Cibo tubineus xiphias consectetur.",
+            "language": {
+              "id": "deu",
+              "schemaUri": "https://iso639-3.sil.org"
+            }
+          }
+        ]
+      }
+    ],
+    "relatedRaid": [],
+    "relatedObject": [
+      {
+        "id": "https://doi.org/10.5555.25/raid.2023.00000001",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/conference-poster.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/internal.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      },
+      {
+        "id": "https://doi.org/10.5555.25/raid.2023.00000001",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/computational-notebook.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      },
+      {
+        "id": "https://doi.org/10.5555.25/raid.2023.00000001",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/event.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      }
+    ],
+    "alternateIdentifier": [
+      {
+        "id": "tres censura uxor",
+        "type": "ocer ventosus charisma"
+      },
+      {
+        "id": "pel cogo cito",
+        "type": "alias arbitro clamo"
+      },
+      {
+        "id": "vado civis appono",
+        "type": "coepi infit comburo"
+      }
+    ],
+    "spatialCoverage": [
+      {
+        "id": "https://www.geonames.org/2766824/salzburg.html",
+        "schemaUri": "https://www.geonames.org/",
+        "place": "Salzburg",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "traditionalKnowledgeLabel": []
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1774862",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1774862",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1774862",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "Rob Test 2023-10-10",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2021",
+        "endDate": "2022",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "Previous Primary Title",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2020",
+        "endDate": "2021",
+        "language": null
+      },
+      {
+        "text": "Alternative Title",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2021",
+        "endDate": "2022",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2021-01",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "This is the primary description...",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "This is an alternative description...",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": null
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "embargoed",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": "2023-12-12"
+    },
+    "alternateUrl": [
+      {
+        "url": "http://localhost:1234"
+      },
+      {
+        "url": "http://localhost:5678"
+      }
+    ],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0000-0003-0635-1998",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2022-06",
+            "endDate": "2023-01"
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": true,
+        "contact": true
+      },
+      {
+        "id": "https://orcid.org/0000-0002-6492-9025",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-01",
+            "endDate": "2023-07"
+          },
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/other-participant.json",
+            "startDate": "2022-06-01",
+            "endDate": "2022-12-31"
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/015w2mp89",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json",
+            "startDate": "2023-08",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [
+      {
+        "id": "https://linked.data.gov.au/def/anzsrc-for/2020/3001",
+        "schemaUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        "keyword": [
+          {
+            "text": "Agricultural biotechnology",
+            "language": null
+          }
+        ]
+      },
+      {
+        "id": "https://linked.data.gov.au/def/anzsrc-for/2020/300101",
+        "schemaUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        "keyword": [
+          {
+            "text": "Agricultural biotechnology diagnostics (incl. biosensors)",
+            "language": null
+          }
+        ]
+      }
+    ],
+    "relatedRaid": [
+      {
+        "id": "http://raid.org/inmem/10378.1/1733374",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/continues.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/"
+        }
+      },
+      {
+        "id": "http://raid.org/10378.1/1733376",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/is-continued-by.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/"
+        }
+      }
+    ],
+    "relatedObject": [
+      {
+        "id": "https://doi.org/10.47366/sabia.v5n1a3",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/audiovisual.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      },
+      {
+        "id": "https://doi.org/10.1000/182",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/output.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      }
+    ],
+    "alternateIdentifier": [
+      {
+        "id": "ce35b108-3b0d-11ee-be56-0242ac120002",
+        "type": "UUID"
+      },
+      {
+        "id": "19B65F6DFF52432F706648D753A5A8EC8E4DEE25E10664245BA7AA957B10D887",
+        "type": "SHA256"
+      }
+    ],
+    "spatialCoverage": [
+      {
+        "id": "https://www.openstreetmap.org/relation/62422#map=11/52.5072/13.4248",
+        "schemaUri": "https://www.openstreetmap.org/",
+        "place": "Berlin",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "id": "https://www.geonames.org/2145234/victoria.html",
+        "schemaUri": "https://www.geonames.org/",
+        "place": "Victoria",
+        "language": null
+      }
+    ],
+    "traditionalKnowledgeLabel": [
+      {
+        "id": null,
+        "schemaUri": "https://localcontexts.org/labels/biocultural-labels/"
+      },
+      {
+        "id": "https://localcontexts.org/label/tk-attribution/",
+        "schemaUri": "https://localcontexts.org/labels/traditional-knowledge-labels/"
+      }
+    ]
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1774538",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1774538",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1774538",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "Rob Test 2023-10-19 11:44:00",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2021",
+        "endDate": "2022",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "Previous Primary Title",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2020",
+        "endDate": "2021",
+        "language": null
+      },
+      {
+        "text": "Alternative Title",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2021",
+        "endDate": "2022",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2021-01",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "This is the primary description...",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "This is an alternative description...",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": null
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "embargoed",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": "2023-12-12"
+    },
+    "alternateUrl": [
+      {
+        "url": "http://localhost:1234"
+      },
+      {
+        "url": "http://localhost:5678"
+      }
+    ],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0000-0003-0635-1998",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2022-06",
+            "endDate": "2023-01"
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": true,
+        "contact": true
+      },
+      {
+        "id": "https://orcid.org/0000-0002-6492-9025",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-01",
+            "endDate": "2023-07"
+          },
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/other-participant.json",
+            "startDate": "2022-06-01",
+            "endDate": "2022-12-31"
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/015w2mp89",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json",
+            "startDate": "2023-08",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [
+      {
+        "id": "https://linked.data.gov.au/def/anzsrc-for/2020/3001",
+        "schemaUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        "keyword": [
+          {
+            "text": "Agricultural biotechnology",
+            "language": null
+          }
+        ]
+      },
+      {
+        "id": "https://linked.data.gov.au/def/anzsrc-for/2020/300101",
+        "schemaUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        "keyword": [
+          {
+            "text": "Agricultural biotechnology diagnostics (incl. biosensors)",
+            "language": null
+          }
+        ]
+      }
+    ],
+    "relatedRaid": [
+      {
+        "id": "http://raid.org/inmem/10378.1/1733374",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/continues.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/"
+        }
+      },
+      {
+        "id": "http://raid.org/10378.1/1733376",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/is-continued-by.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/"
+        }
+      }
+    ],
+    "relatedObject": [
+      {
+        "id": "https://doi.org/10.47366/sabia.v5n1a3",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/audiovisual.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      },
+      {
+        "id": "https://doi.org/10.1000/182",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/output.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      }
+    ],
+    "alternateIdentifier": [
+      {
+        "id": "ce35b108-3b0d-11ee-be56-0242ac120002",
+        "type": "UUID"
+      },
+      {
+        "id": "19B65F6DFF52432F706648D753A5A8EC8E4DEE25E10664245BA7AA957B10D887",
+        "type": "SHA256"
+      }
+    ],
+    "spatialCoverage": [
+      {
+        "id": "https://www.openstreetmap.org/relation/62422#map=11/52.5072/13.4248",
+        "schemaUri": "https://www.openstreetmap.org/",
+        "place": "Berlin",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "id": "https://www.geonames.org/2145234/victoria.html",
+        "schemaUri": "https://www.geonames.org/",
+        "place": "Victoria",
+        "language": null
+      }
+    ],
+    "traditionalKnowledgeLabel": [
+      {
+        "id": null,
+        "schemaUri": "https://localcontexts.org/labels/biocultural-labels/"
+      },
+      {
+        "id": "https://localcontexts.org/label/tk-attribution/",
+        "schemaUri": "https://localcontexts.org/labels/traditional-knowledge-labels/"
+      }
+    ]
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1774537",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1774537",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1774537",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "Rob Test 2023-10-10",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2021",
+        "endDate": "2022",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "Previous Primary Title",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2020",
+        "endDate": "2021",
+        "language": null
+      },
+      {
+        "text": "Alternative Title",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2021",
+        "endDate": "2022",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2021-01",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "This is the primary description...",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "This is an alternative description...",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": null
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "embargoed",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": "2023-12-12"
+    },
+    "alternateUrl": [
+      {
+        "url": "http://localhost:1234"
+      },
+      {
+        "url": "http://localhost:5678"
+      }
+    ],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0000-0003-0635-1998",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2022-06",
+            "endDate": "2023-01"
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": true,
+        "contact": true
+      },
+      {
+        "id": "https://orcid.org/0000-0002-6492-9025",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-01",
+            "endDate": "2023-07"
+          },
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/other-participant.json",
+            "startDate": "2022-06-01",
+            "endDate": "2022-12-31"
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/015w2mp89",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json",
+            "startDate": "2023-08",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [
+      {
+        "id": "https://linked.data.gov.au/def/anzsrc-for/2020/3001",
+        "schemaUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        "keyword": [
+          {
+            "text": "Agricultural biotechnology",
+            "language": null
+          }
+        ]
+      },
+      {
+        "id": "https://linked.data.gov.au/def/anzsrc-for/2020/300101",
+        "schemaUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        "keyword": [
+          {
+            "text": "Agricultural biotechnology diagnostics (incl. biosensors)",
+            "language": null
+          }
+        ]
+      }
+    ],
+    "relatedRaid": [
+      {
+        "id": "http://raid.org/inmem/10378.1/1733374",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/continues.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/"
+        }
+      },
+      {
+        "id": "http://raid.org/10378.1/1733376",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/is-continued-by.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/"
+        }
+      }
+    ],
+    "relatedObject": [
+      {
+        "id": "https://doi.org/10.47366/sabia.v5n1a3",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/audiovisual.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      },
+      {
+        "id": "https://doi.org/10.1000/182",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/output.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      }
+    ],
+    "alternateIdentifier": [
+      {
+        "id": "ce35b108-3b0d-11ee-be56-0242ac120002",
+        "type": "UUID"
+      },
+      {
+        "id": "19B65F6DFF52432F706648D753A5A8EC8E4DEE25E10664245BA7AA957B10D887",
+        "type": "SHA256"
+      }
+    ],
+    "spatialCoverage": [
+      {
+        "id": "https://www.openstreetmap.org/relation/62422#map=11/52.5072/13.4248",
+        "schemaUri": "https://www.openstreetmap.org/",
+        "place": "Berlin",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "id": "https://www.geonames.org/2145234/victoria.html",
+        "schemaUri": "https://www.geonames.org/",
+        "place": "Victoria",
+        "language": null
+      }
+    ],
+    "traditionalKnowledgeLabel": [
+      {
+        "id": null,
+        "schemaUri": "https://localcontexts.org/labels/biocultural-labels/"
+      },
+      {
+        "id": "https://localcontexts.org/label/tk-attribution/",
+        "schemaUri": "https://localcontexts.org/labels/traditional-knowledge-labels/"
+      }
+    ]
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1774029",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1774029",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1774029",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "Rob Test 2023-10-10",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2021",
+        "endDate": "2022",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "Previous Primary Title",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2020",
+        "endDate": "2021",
+        "language": null
+      },
+      {
+        "text": "Alternative Title",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2021",
+        "endDate": "2022",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2021-01",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "This is the primary description...",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "This is an alternative description...",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": null
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "embargoed",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": "2023-12-12"
+    },
+    "alternateUrl": [
+      {
+        "url": "http://localhost:1234"
+      },
+      {
+        "url": "http://localhost:5678"
+      }
+    ],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0000-0003-0635-1998",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2022-06",
+            "endDate": "2023-01"
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": true,
+        "contact": true
+      },
+      {
+        "id": "https://orcid.org/0000-0002-6492-9025",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-01",
+            "endDate": "2023-07"
+          },
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/other-participant.json",
+            "startDate": "2022-06-01",
+            "endDate": "2022-12-31"
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/015w2mp89",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json",
+            "startDate": "2023-08",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [
+      {
+        "id": "https://linked.data.gov.au/def/anzsrc-for/2020/3001",
+        "schemaUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        "keyword": [
+          {
+            "text": "Agricultural biotechnology",
+            "language": null
+          }
+        ]
+      },
+      {
+        "id": "https://linked.data.gov.au/def/anzsrc-for/2020/300101",
+        "schemaUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        "keyword": [
+          {
+            "text": "Agricultural biotechnology diagnostics (incl. biosensors)",
+            "language": null
+          }
+        ]
+      }
+    ],
+    "relatedRaid": [
+      {
+        "id": "http://raid.org/inmem/10378.1/1733374",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/continues.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/"
+        }
+      },
+      {
+        "id": "http://raid.org/10378.1/1733376",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/is-continued-by.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/"
+        }
+      }
+    ],
+    "relatedObject": [
+      {
+        "id": "https://doi.org/10.47366/sabia.v5n1a3",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/audiovisual.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      },
+      {
+        "id": "https://doi.org/10.1000/182",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/output.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      }
+    ],
+    "alternateIdentifier": [
+      {
+        "id": "ce35b108-3b0d-11ee-be56-0242ac120002",
+        "type": "UUID"
+      },
+      {
+        "id": "19B65F6DFF52432F706648D753A5A8EC8E4DEE25E10664245BA7AA957B10D887",
+        "type": "SHA256"
+      }
+    ],
+    "spatialCoverage": [
+      {
+        "id": "https://www.openstreetmap.org/relation/62422#map=11/52.5072/13.4248",
+        "schemaUri": "https://www.openstreetmap.org/",
+        "place": "Berlin",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "id": "https://www.geonames.org/2145234/victoria.html",
+        "schemaUri": "https://www.geonames.org/",
+        "place": "Victoria",
+        "language": null
+      }
+    ],
+    "traditionalKnowledgeLabel": [
+      {
+        "id": null,
+        "schemaUri": "https://localcontexts.org/labels/biocultural-labels/"
+      },
+      {
+        "id": "https://localcontexts.org/label/tk-attribution/",
+        "schemaUri": "https://localcontexts.org/labels/traditional-knowledge-labels/"
+      }
+    ]
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1770414",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1770414",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1770414",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "Demo for NII",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-12",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: testimonium odio tempore votum amplexus",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-12",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2023-10-12",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "[G]: Talus eius creator adopto quae velociter. Cura velum molestiae. Aequus alter spargo accusamus autus cornu carcer iusto auctor cognatus.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: Vulgus eum quibusdam antea conor arto vergo tersus tergeo. Aspicio deficio tandem sunt vito amor curriculum libero quas. Coniecto arbor capto.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "[G]: vaco considero volutabrum accommodo adfero",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": null
+    },
+    "alternateUrl": [],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0009-0000-9306-3120",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-08-24",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/conceptualization/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2020-01-01",
+            "endDate": null
+          },
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2022-01-01",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [],
+    "relatedRaid": [],
+    "relatedObject": [],
+    "alternateIdentifier": [],
+    "spatialCoverage": [],
+    "traditionalKnowledgeLabel": []
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1770308",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1770308",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1770308",
+      "license": "Creative Commons CC-0",
+      "version": 4
+    },
+    "title": [
+      {
+        "text": "[G]: tergum aperiam spes spiritus copia",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-12",
+        "endDate": null,
+        "language": {
+          "id": "ena",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: dolorem eius antiquus vorago veniam",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-12",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2023-10-12",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "[G]: Depereo clementia tondeo abbas abbas inflammatio abutor vapulus crebro patruus. Conqueror amet amissio possimus caelestis chirographum ademptio cariosus. Sumo una tenetur admoneo cupiditas ciminatio.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: Voveo substantia cattus verbum deleniti adduco somnus. Sequi virtus demens tabesco amicitia cunabula. Defero conatus vero numquam video ager subnecto.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "[G]: textor capitulus curso spes aequus",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": null
+    },
+    "alternateUrl": [],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0009-0000-9306-3120",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-08-24",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/conceptualization/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2020-01-01",
+            "endDate": null
+          },
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2022-01-01",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [],
+    "relatedRaid": [],
+    "relatedObject": [],
+    "alternateIdentifier": [],
+    "spatialCoverage": [],
+    "traditionalKnowledgeLabel": []
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1770307",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1770307",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1770307",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "Hello World!",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2021",
+        "endDate": "2022",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "Previous Primary Title",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2020",
+        "endDate": "2021",
+        "language": null
+      },
+      {
+        "text": "Alternative Title",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2021",
+        "endDate": "2022",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2021-01",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "This is the primary description...",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "This is an alternative description...",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": null
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "embargoed",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": "2023-12-12"
+    },
+    "alternateUrl": [
+      {
+        "url": "http://localhost:1234"
+      },
+      {
+        "url": "http://localhost:5678"
+      }
+    ],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0000-0003-0635-1998",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2022-06",
+            "endDate": "2023-01"
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": true,
+        "contact": true
+      },
+      {
+        "id": "https://orcid.org/0000-0002-6492-9025",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-01",
+            "endDate": "2023-07"
+          },
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/other-participant.json",
+            "startDate": "2022-06-01",
+            "endDate": "2022-12-31"
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/015w2mp89",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json",
+            "startDate": "2023-08",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [
+      {
+        "id": "https://linked.data.gov.au/def/anzsrc-for/2020/3001",
+        "schemaUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        "keyword": [
+          {
+            "text": "Agricultural biotechnology",
+            "language": null
+          }
+        ]
+      },
+      {
+        "id": "https://linked.data.gov.au/def/anzsrc-for/2020/300101",
+        "schemaUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        "keyword": [
+          {
+            "text": "Agricultural biotechnology diagnostics (incl. biosensors)",
+            "language": null
+          }
+        ]
+      }
+    ],
+    "relatedRaid": [
+      {
+        "id": "http://raid.org/inmem/10378.1/1733374",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/continues.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/"
+        }
+      },
+      {
+        "id": "http://raid.org/10378.1/1733376",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/is-continued-by.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/"
+        }
+      }
+    ],
+    "relatedObject": [
+      {
+        "id": "https://doi.org/10.47366/sabia.v5n1a3",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/audiovisual.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      },
+      {
+        "id": "https://doi.org/10.1000/182",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/output.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      }
+    ],
+    "alternateIdentifier": [
+      {
+        "id": "ce35b108-3b0d-11ee-be56-0242ac120002",
+        "type": "UUID"
+      },
+      {
+        "id": "19B65F6DFF52432F706648D753A5A8EC8E4DEE25E10664245BA7AA957B10D887",
+        "type": "SHA256"
+      }
+    ],
+    "spatialCoverage": [
+      {
+        "id": "https://www.openstreetmap.org/relation/62422#map=11/52.5072/13.4248",
+        "schemaUri": "https://www.openstreetmap.org/",
+        "place": "Berlin",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "id": "https://www.geonames.org/2145234/victoria.html",
+        "schemaUri": "https://www.geonames.org/",
+        "place": "Victoria",
+        "language": null
+      }
+    ],
+    "traditionalKnowledgeLabel": [
+      {
+        "id": null,
+        "schemaUri": "https://localcontexts.org/labels/biocultural-labels/"
+      },
+      {
+        "id": "https://localcontexts.org/label/tk-attribution/",
+        "schemaUri": "https://localcontexts.org/labels/traditional-knowledge-labels/"
+      }
+    ]
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1770306",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1770306",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1770306",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "Rob Test 2023-10-10",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2021",
+        "endDate": "2022",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "Previous Primary Title",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2020",
+        "endDate": "2021",
+        "language": null
+      },
+      {
+        "text": "Alternative Title",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2021",
+        "endDate": "2022",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2021-01",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "This is the primary description...",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "This is an alternative description...",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": null
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "embargoed",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": "2023-12-12"
+    },
+    "alternateUrl": [
+      {
+        "url": "http://localhost:1234"
+      },
+      {
+        "url": "http://localhost:5678"
+      }
+    ],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0000-0003-0635-1998",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2022-06",
+            "endDate": "2023-01"
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": true,
+        "contact": true
+      },
+      {
+        "id": "https://orcid.org/0000-0002-6492-9025",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-01",
+            "endDate": "2023-07"
+          },
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/other-participant.json",
+            "startDate": "2022-06-01",
+            "endDate": "2022-12-31"
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/015w2mp89",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json",
+            "startDate": "2023-08",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [
+      {
+        "id": "https://linked.data.gov.au/def/anzsrc-for/2020/3001",
+        "schemaUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        "keyword": [
+          {
+            "text": "Agricultural biotechnology",
+            "language": null
+          }
+        ]
+      },
+      {
+        "id": "https://linked.data.gov.au/def/anzsrc-for/2020/300101",
+        "schemaUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        "keyword": [
+          {
+            "text": "Agricultural biotechnology diagnostics (incl. biosensors)",
+            "language": null
+          }
+        ]
+      }
+    ],
+    "relatedRaid": [
+      {
+        "id": "http://raid.org/inmem/10378.1/1733374",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/continues.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/"
+        }
+      },
+      {
+        "id": "http://raid.org/10378.1/1733376",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/is-continued-by.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/"
+        }
+      }
+    ],
+    "relatedObject": [
+      {
+        "id": "https://doi.org/10.47366/sabia.v5n1a3",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/audiovisual.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      },
+      {
+        "id": "https://doi.org/10.1000/182",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/output.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      }
+    ],
+    "alternateIdentifier": [
+      {
+        "id": "ce35b108-3b0d-11ee-be56-0242ac120002",
+        "type": "UUID"
+      },
+      {
+        "id": "19B65F6DFF52432F706648D753A5A8EC8E4DEE25E10664245BA7AA957B10D887",
+        "type": "SHA256"
+      }
+    ],
+    "spatialCoverage": [
+      {
+        "id": "https://www.openstreetmap.org/relation/62422#map=11/52.5072/13.4248",
+        "schemaUri": "https://www.openstreetmap.org/",
+        "place": "Berlin",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "id": "https://www.geonames.org/2145234/victoria.html",
+        "schemaUri": "https://www.geonames.org/",
+        "place": "Victoria",
+        "language": null
+      }
+    ],
+    "traditionalKnowledgeLabel": [
+      {
+        "id": null,
+        "schemaUri": "https://localcontexts.org/labels/biocultural-labels/"
+      },
+      {
+        "id": "https://localcontexts.org/label/tk-attribution/",
+        "schemaUri": "https://localcontexts.org/labels/traditional-knowledge-labels/"
+      }
+    ]
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1769372",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1769372",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1769372",
+      "license": "Creative Commons CC-0",
+      "version": 2
+    },
+    "title": [
+      {
+        "text": "Minted from Swagger UI - 2023-10-11 (Updated)",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2021",
+        "endDate": "2022",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "Previous Primary Title",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2020",
+        "endDate": "2021",
+        "language": null
+      },
+      {
+        "text": "Alternative Title",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2021",
+        "endDate": "2022",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2021-01",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "This is the primary description...",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "This is an alternative description...",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": null
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "embargoed",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": "2023-12-12"
+    },
+    "alternateUrl": [
+      {
+        "url": "http://localhost:1234"
+      },
+      {
+        "url": "http://localhost:5678"
+      }
+    ],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0000-0003-0635-1998",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2022-06",
+            "endDate": "2023-01"
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": true,
+        "contact": true
+      },
+      {
+        "id": "https://orcid.org/0000-0002-6492-9025",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-01",
+            "endDate": "2023-07"
+          },
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/other-participant.json",
+            "startDate": "2022-06-01",
+            "endDate": "2022-12-31"
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/015w2mp89",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json",
+            "startDate": "2023-08",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [
+      {
+        "id": "https://linked.data.gov.au/def/anzsrc-for/2020/3001",
+        "schemaUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        "keyword": [
+          {
+            "text": "Agricultural biotechnology",
+            "language": null
+          }
+        ]
+      },
+      {
+        "id": "https://linked.data.gov.au/def/anzsrc-for/2020/300101",
+        "schemaUri": "https://linked.data.gov.au/def/anzsrc-for/2020/",
+        "keyword": [
+          {
+            "text": "Agricultural biotechnology diagnostics (incl. biosensors)",
+            "language": null
+          }
+        ]
+      }
+    ],
+    "relatedRaid": [
+      {
+        "id": "http://raid.org/inmem/10378.1/1733374",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/continues.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/"
+        }
+      },
+      {
+        "id": "http://raid.org/10378.1/1733376",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/is-continued-by.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/"
+        }
+      }
+    ],
+    "relatedObject": [
+      {
+        "id": "https://doi.org/10.47366/sabia.v5n1a3",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/audiovisual.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      },
+      {
+        "id": "https://doi.org/10.1000/182",
+        "schemaUri": "https://doi.org/",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1/"
+        },
+        "category": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/output.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/"
+        }
+      }
+    ],
+    "alternateIdentifier": [
+      {
+        "id": "ce35b108-3b0d-11ee-be56-0242ac120002",
+        "type": "UUID"
+      },
+      {
+        "id": "19B65F6DFF52432F706648D753A5A8EC8E4DEE25E10664245BA7AA957B10D887",
+        "type": "SHA256"
+      }
+    ],
+    "spatialCoverage": [
+      {
+        "id": "https://www.openstreetmap.org/relation/62422#map=11/52.5072/13.4248",
+        "schemaUri": "https://www.openstreetmap.org/",
+        "place": "Berlin",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "id": "https://www.geonames.org/2145234/victoria.html",
+        "schemaUri": "https://www.geonames.org/",
+        "place": "Victoria",
+        "language": null
+      }
+    ],
+    "traditionalKnowledgeLabel": [
+      {
+        "id": null,
+        "schemaUri": "https://localcontexts.org/labels/biocultural-labels/"
+      },
+      {
+        "id": "https://localcontexts.org/label/tk-attribution/",
+        "schemaUri": "https://localcontexts.org/labels/traditional-knowledge-labels/"
+      }
+    ]
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1766330",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1766330",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1766330",
+      "license": "Creative Commons CC-0",
+      "version": 5
+    },
+    "title": [
+      {
+        "text": "Test RAiD...",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-06",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: dignissimos verto vociferor cum subiungo",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-06",
+        "endDate": null,
+        "language": {
+          "id": "alu",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2023-10-06",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "[G]: Solus celo vigor claustrum. Vinculum claro ullus tui placeat. Theatrum placeat uxor dens thermae vomica.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: Validus coepi adduco demens. Agnosco aggredior animus denego. Demo eligendi tabernus paens adipisci nulla repudiandae amoveo.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "aau",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "[G]: sollers claro teres apto caecus",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": null
+    },
+    "alternateUrl": [],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0009-0000-9306-3120",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-08-24",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/conceptualization/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2020-01-01",
+            "endDate": null
+          },
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2022-01-01",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [],
+    "relatedRaid": [],
+    "relatedObject": [],
+    "alternateIdentifier": [],
+    "spatialCoverage": [],
+    "traditionalKnowledgeLabel": []
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1766314",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1766314",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1766314",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "[G]: occaecati depereo versus auxilium adnuo",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-06",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: certe sustineo earum sapiente vix",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-06",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2023-10-06",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "[G]: Curtus accommodo tondeo deprimo coerceo cuius denique claustrum caste coniuratio. Odit thymbra commodi caecus. Virgo utroque terra virgo voluptatem pecco sum villa commodi alii.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: Arbitro desipio pax delicate acer comparo. Decipio accusamus ratione provident tabella curiositas. Admiratio amicitia rerum vesper.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "[G]: vulticulus exercitationem utor ocer vesper",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": null
+    },
+    "alternateUrl": [],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0009-0000-9306-3120",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-08-24",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/conceptualization/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2020-01-01",
+            "endDate": null
+          },
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2022-01-01",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [],
+    "relatedRaid": [],
+    "relatedObject": [],
+    "alternateIdentifier": [],
+    "spatialCoverage": [],
+    "traditionalKnowledgeLabel": []
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1766303",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1766303",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1766303",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "[G]: cruentus terror bellum statim terreo",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-06",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: subito uterque numquam solitudo clarus",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-06",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2023-10-06",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "[G]: Ultio coma deripio conservo vespillo villa. Ullus vespillo bibo capillus delectatio perspiciatis deleo cado. Umquam aqua solum.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: Aegre aptus absum. Avaritia hic benigne. Villa modi nesciunt tubineus tonsor ancilla tantum admiratio iste credo.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "[G]: quod cohaero aggredior stabilis thesaurus",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": null
+    },
+    "alternateUrl": [],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0009-0000-9306-3120",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-08-24",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/conceptualization/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2020-01-01",
+            "endDate": null
+          },
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2022-01-01",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [],
+    "relatedRaid": [],
+    "relatedObject": [],
+    "alternateIdentifier": [],
+    "spatialCoverage": [],
+    "traditionalKnowledgeLabel": []
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1765358",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1765358",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1765358",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "[G]: laudantium adaugeo testimonium autem calcar",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-05",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: minus atrox conforto denego umquam",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-05",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2023-10-05",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "[G]: Venio eveniet defungo altus carus ater. Damnatio audio curiositas neque cado sum voluptate atrocitas ab. Bis undique turbo alius contego vel summa alii depraedor amet.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: Dignissimos cuppedia dolore sollers asperiores spiculum reprehenderit inflammatio. Benigne ago cito bibo defluo calamitas. Truculenter voco vita temperantia canis.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "[G]: adipisci dapifer villa animus beatae",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": null
+    },
+    "alternateUrl": [],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0009-0000-9306-3120",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-08-24",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/conceptualization/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2020-01-01",
+            "endDate": null
+          },
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2022-01-01",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [],
+    "relatedRaid": [],
+    "relatedObject": [],
+    "alternateIdentifier": [],
+    "spatialCoverage": [],
+    "traditionalKnowledgeLabel": []
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1765354",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1765354",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1765354",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "[G]: nisi confido absconditus suppono summisse",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-05",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: ulterius fuga aeger abbas teres",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-05",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2023-10-05",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "[G]: Adinventitias complectus victoria. Cresco omnis coaegresco cunae aliquam communis verus sub vado. Stillicidium creator bestia.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: Sumptus sint cursus decerno. Pecus nesciunt voluptatum curto. Adopto veritas totidem convoco stips decerno iste tripudio patrocinor.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "[G]: arceo vigilo cum vobis baiulus",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": null
+    },
+    "alternateUrl": [],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0009-0000-9306-3120",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-08-24",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/conceptualization/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2020-01-01",
+            "endDate": null
+          },
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2022-01-01",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [],
+    "relatedRaid": [],
+    "relatedObject": [],
+    "alternateIdentifier": [],
+    "spatialCoverage": [],
+    "traditionalKnowledgeLabel": []
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1765337",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1765337",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1765337",
+      "license": "Creative Commons CC-0",
+      "version": 2
+    },
+    "title": [
+      {
+        "text": "[G]: consectetur suffoco quas deinde aspicio....",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-05",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: vel victus aegrotatio spes sol",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-05",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2023-10-05",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "[G]: Angelus cumque patria curo illum stella. Earum quam vereor coaegresco vito. Demonstro aequitas peior.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: Coruscus adopto desolo supplanto beatus corrupti cattus cavus amaritudo. Chirographum arbor admoneo adnuo apparatus confugo conscendo tandem damnatio. Conculco aspernatur bardus audacia.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "[G]: suscipit voro aperiam audeo terga",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": null
+    },
+    "alternateUrl": [],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0009-0000-9306-3120",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-08-24",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/conceptualization/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2020-01-01",
+            "endDate": null
+          },
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2022-01-01",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [],
+    "relatedRaid": [],
+    "relatedObject": [],
+    "alternateIdentifier": [],
+    "spatialCoverage": [],
+    "traditionalKnowledgeLabel": []
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1765335",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1765335",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1765335",
+      "license": "Creative Commons CC-0",
+      "version": 2
+    },
+    "title": [
+      {
+        "text": "[G]: trans ultra claudeo torqueo optio...!",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-05",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: confero curo umerus verbera patrocinor",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-05",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2023-10-05",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "[G]: Tyrannus esse desidero acer validus casso usus qui illum. Convoco iste atrocitas degenero expedita copia absque acies aspernatur debeo. Repellendus audio facere avaritia nesciunt decens absens.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: Cubicularis perferendis curatio amoveo virga caput aequus. Suscipio substantia bestia. Crustulum cresco alveus conventus delego coepi somnus.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "[G]: bellum reiciendis vapulus aiunt solus",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": null
+    },
+    "alternateUrl": [],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0009-0000-9306-3120",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-08-24",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/conceptualization/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2020-01-01",
+            "endDate": null
+          },
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2022-01-01",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [],
+    "relatedRaid": [],
+    "relatedObject": [],
+    "alternateIdentifier": [],
+    "spatialCoverage": [],
+    "traditionalKnowledgeLabel": []
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1765334",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1765334",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1765334",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "[G]: tergum ratione ver sint vociferor",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-05",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: cubo tunc deficio truculenter condico",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-05",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2023-10-05",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "[G]: Timor allatus vulticulus curvo temptatio vere perferendis. Sursum defungo adflicto. Verecundia explicabo caecus dedico adimpleo cimentarius.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: Vestigium solum vetus creptio vestigium. Surculus communis antiquus. Vesica pauci apparatus dignissimos causa benevolentia asporto totus viscus volup.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "[G]: inflammatio ceno cupiditas dedico appello",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": null
+    },
+    "alternateUrl": [],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0009-0000-9306-3120",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-08-24",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/conceptualization/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2020-01-01",
+            "endDate": null
+          },
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2022-01-01",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [],
+    "relatedRaid": [],
+    "relatedObject": [],
+    "alternateIdentifier": [],
+    "spatialCoverage": [],
+    "traditionalKnowledgeLabel": []
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1765333",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1765333",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1765333",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "[G]: pariatur ulciscor basium cui aspicio",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-05",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: conservo tondeo bestia capto tactus",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-05",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2023-10-05",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "[G]: Demulceo bellum valde. Comprehendo cenaculum vilis turbo crepusculum umbra amplus depraedor maiores consequuntur. Teneo teneo delectus voluptatum sollicito.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: Nisi absconditus aspernatur. Abutor abutor delectatio voluptatum varius. Vinculum ventito abscido tristis.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "[G]: deputo ustilo acer repudiandae aperio",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": null
+    },
+    "alternateUrl": [],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0009-0000-9306-3120",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-08-24",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/conceptualization/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2020-01-01",
+            "endDate": null
+          },
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2022-01-01",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [],
+    "relatedRaid": [],
+    "relatedObject": [],
+    "alternateIdentifier": [],
+    "spatialCoverage": [],
+    "traditionalKnowledgeLabel": []
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1765245",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1765245",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1765245",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "[G]: commemoro convoco benigne adaugeo depopulo",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-05",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: tener despecto truculenter vulnero acidus",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-05",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2023-10-05",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "[G]: Depereo ait appositus recusandae consectetur volaticus comptus thymbra. Amiculum absconditus umquam absorbeo barba repellendus deduco. Bellicus earum celo tubineus valde eos cicuta denuo totam.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: Sol paens vorago campana calco suadeo voluptates cibo. Optio debilito amplus voluptatum cresco crapula sordeo tribuo. Recusandae atque appello hic ara animadverto vulgaris.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "[G]: basium vado delibero crastinus voluptatum",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": null
+    },
+    "alternateUrl": [],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0009-0000-9306-3120",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-08-24",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/conceptualization/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2020-01-01",
+            "endDate": null
+          },
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2022-01-01",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [],
+    "relatedRaid": [],
+    "relatedObject": [],
+    "alternateIdentifier": [],
+    "spatialCoverage": [],
+    "traditionalKnowledgeLabel": []
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1764337",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1764337",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1764337",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "[G]: amplitudo debeo sordeo dapifer consectetur",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-04",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: sed testimonium cubicularis demulceo deludo",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-10-04",
+        "endDate": null,
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "date": {
+      "startDate": "2023-10-04",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "[G]: Infit decerno adiuvo. Repudiandae tero ex vomito. Aedificium quasi canto.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      {
+        "text": "[G]: Pecco similique capillus conatus. Adnuo tremo validus harum alveus. Cicuta arma asporto enim.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "[G]: addo fuga denique speculum uredo",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://iso639-3.sil.org"
+        }
+      },
+      "embargoExpiry": null
+    },
+    "alternateUrl": [],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0009-0000-9306-3120",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-08-24",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/conceptualization/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2020-01-01",
+            "endDate": null
+          },
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json",
+            "startDate": "2022-01-01",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [],
+    "relatedRaid": [],
+    "relatedObject": [],
+    "alternateIdentifier": [],
+    "spatialCoverage": [],
+    "traditionalKnowledgeLabel": []
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1720086",
+      "schemaUri": "https://raid.org",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1720086",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1720086",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "Chrysanthemum Japonicum genome assembly",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-07-26",
+        "endDate": null,
+        "language": null
+      }
+    ],
+    "date": {
+      "startDate": "2023-07-26",
+      "endDate": null
+    },
+    "description": [],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": null,
+      "embargoExpiry": null
+    },
+    "alternateUrl": null,
+    "contributor": [
+      {
+        "id": "https://orcid.org/0000-0001-8025-8412",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-07-26",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json",
+            "startDate": "2023-07-26",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [],
+    "relatedRaid": [
+      {
+        "id": "https://demo.raid.org.au/10378.1/1720042",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/relationship-type/is-part-of.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/"
+        }
+      }
+    ],
+    "relatedObject": [],
+    "alternateIdentifier": [],
+    "spatialCoverage": [],
+    "traditionalKnowledgeLabel": []
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1720042",
+      "schemaUri": "https://raid.org",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1720042",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1720042",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "History of chrysanthemums ",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-04-10",
+        "endDate": null,
+        "language": null
+      }
+    ],
+    "date": {
+      "startDate": "2023-04-10",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "Investigating the polyploid origins of this Asteraceae",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": null
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": null,
+      "embargoExpiry": null
+    },
+    "alternateUrl": null,
+    "contributor": [
+      {
+        "id": "https://orcid.org/0000-0001-8025-8412",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-04-10",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/04qw24q55",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json",
+            "startDate": "2023-04-10",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [],
+    "relatedRaid": [],
+    "relatedObject": [],
+    "alternateIdentifier": [
+      {
+        "id": "https://doi.org/10.1093/g3journal/jkab358",
+        "type": "DOI"
+      }
+    ],
+    "spatialCoverage": [],
+    "traditionalKnowledgeLabel": [
+      {
+        "id": null,
+        "schemaUri": "https://localcontexts.org/labels/traditional-knowledge-labels/"
+      }
+    ]
+  },
+  {
+    "identifier": {
+      "id": "https://demo.raid.org.au/10378.1/1718371",
+      "schemaUri": "https://raid.org",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1718371",
+      "raidAgencyUrl": "https://demo.raid.org.au/10378.1/1718371",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "Steffen Test 01",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-07-24",
+        "endDate": null,
+        "language": null
+      }
+    ],
+    "date": {
+      "startDate": "2023-07-24",
+      "endDate": null
+    },
+    "description": [],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": null,
+      "embargoExpiry": null
+    },
+    "alternateUrl": null,
+    "contributor": [
+      {
+        "id": "https://orcid.org/0009-0000-9306-3120",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-07-24",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json",
+            "startDate": "2023-07-24",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [],
+    "relatedRaid": [],
+    "relatedObject": [],
+    "alternateIdentifier": [],
+    "spatialCoverage": [],
+    "traditionalKnowledgeLabel": []
+  },
+  {
+    "identifier": {
+      "id": "https://raid.org.au/102.100.100/485876",
+      "schemaUri": "https://raid.org",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/102.100.100/485876",
+      "raidAgencyUrl": "https://raid.org.au/102.100.100/485876",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "STO V1.2 deploy test updated",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-05-15",
+        "endDate": null,
+        "language": null
+      }
+    ],
+    "date": {
+      "startDate": "2023-05-15",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "test",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": null
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": null,
+      "embargoExpiry": null
+    },
+    "alternateUrl": null,
+    "contributor": [
+      {
+        "id": "https://orcid.org/0009-0000-9306-3120",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-05-15",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json",
+            "startDate": "2023-05-15",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [],
+    "relatedRaid": [],
+    "relatedObject": [],
+    "alternateIdentifier": [],
+    "spatialCoverage": [],
+    "traditionalKnowledgeLabel": []
+  },
+  {
+    "identifier": {
+      "id": "https://raid.org.au/102.100.100/484783",
+      "schemaUri": "https://raid.org",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/102.100.100/484783",
+      "raidAgencyUrl": "https://raid.org.au/102.100.100/484783",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "STO V1.1 deploy test updated",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-04-11",
+        "endDate": null,
+        "language": null
+      }
+    ],
+    "date": {
+      "startDate": "2023-04-11",
+      "endDate": null
+    },
+    "description": [],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": {
+        "text": "test close",
+        "language": null
+      },
+      "embargoExpiry": null
+    },
+    "alternateUrl": null,
+    "contributor": [
+      {
+        "id": "https://orcid.org/0000-0001-7233-7241",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-04-11",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json",
+            "startDate": "2023-04-11",
+            "endDate": null
+          }
+        ]
+      }
+    ],
+    "subject": [],
+    "relatedRaid": [],
+    "relatedObject": [],
+    "alternateIdentifier": [],
+    "spatialCoverage": null,
+    "traditionalKnowledgeLabel": null
+  },
+  {
+    "identifier": {
+      "id": "https://raid.org.au/102.100.100/484493",
+      "schemaUri": "https://raid.org",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/102.100.100/484493",
+      "raidAgencyUrl": "https://raid.org.au/102.100.100/484493",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "STO Postgres 15.2 upgrade testx",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-03-28",
+        "endDate": null,
+        "language": null
+      }
+    ],
+    "date": {
+      "startDate": "2023-03-28",
+      "endDate": null
+    },
+    "description": [],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": null,
+      "embargoExpiry": null
+    },
+    "alternateUrl": null,
+    "contributor": [
+      {
+        "id": "https://orcid.org/0000-0001-7233-7241",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-03-28",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [],
+    "subject": null,
+    "relatedRaid": null,
+    "relatedObject": null,
+    "alternateIdentifier": null,
+    "spatialCoverage": null,
+    "traditionalKnowledgeLabel": null
+  },
+  {
+    "identifier": {
+      "id": "https://raid.org.au/102.100.100/483858",
+      "schemaUri": "https://raid.org",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/102.100.100/483858",
+      "raidAgencyUrl": "https://raid.org.au/102.100.100/483858",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "STO prod issue landing page not foundx",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-03-16",
+        "endDate": null,
+        "language": null
+      }
+    ],
+    "date": {
+      "startDate": "2023-03-16",
+      "endDate": null
+    },
+    "description": [],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": null,
+      "embargoExpiry": null
+    },
+    "alternateUrl": null,
+    "contributor": [
+      {
+        "id": "https://orcid.org/0009-0000-9306-3120",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-03-16",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [],
+    "subject": [],
+    "relatedRaid": [],
+    "relatedObject": [],
+    "alternateIdentifier": [],
+    "spatialCoverage": [],
+    "traditionalKnowledgeLabel": []
+  },
+  {
+    "identifier": {
+      "id": "https://raid.org.au/102.100.100/483661",
+      "schemaUri": "https://raid.org",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/102.100.100/483661",
+      "raidAgencyUrl": "https://raid.org.au/102.100.100/483661",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "STO production cutover mint 2",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-03-14",
+        "endDate": null,
+        "language": null
+      }
+    ],
+    "date": {
+      "startDate": "2023-03-14",
+      "endDate": null
+    },
+    "description": [],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": null,
+      "embargoExpiry": null
+    },
+    "alternateUrl": null,
+    "contributor": [
+      {
+        "id": "https://orcid.org/0000-0001-7233-7241",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-03-14",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [],
+    "subject": null,
+    "relatedRaid": null,
+    "relatedObject": null,
+    "alternateIdentifier": null,
+    "spatialCoverage": null,
+    "traditionalKnowledgeLabel": null
+  },
+  {
+    "identifier": {
+      "id": "https://raid.org.au/10378.1/1700790",
+      "schemaUri": "https://raid.org",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1700790",
+      "raidAgencyUrl": "https://raid.org.au/10378.1/1700790",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "STO production cutover mint 1",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-03-14",
+        "endDate": null,
+        "language": null
+      }
+    ],
+    "date": {
+      "startDate": "2023-03-14",
+      "endDate": null
+    },
+    "description": [
+      {
+        "text": "This raid was minted using the DEMO handle server in the production enviornment.",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/"
+        },
+        "language": null
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": null,
+      "embargoExpiry": null
+    },
+    "alternateUrl": null,
+    "contributor": [
+      {
+        "id": "https://orcid.org/0000-0001-7233-7241",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-03-14",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [],
+    "subject": null,
+    "relatedRaid": null,
+    "relatedObject": null,
+    "alternateIdentifier": null,
+    "spatialCoverage": null,
+    "traditionalKnowledgeLabel": null
+  },
+  {
+    "identifier": {
+      "id": "https://raid.org.au/10378.1/1700205",
+      "schemaUri": "https://raid.org",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "globalUrl": "https://hdl.handle.net/10378.1/1700205",
+      "raidAgencyUrl": "https://raid.org.au/10378.1/1700205",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "sto prod mint 1",
+        "type": {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/"
+        },
+        "startDate": "2023-03-07",
+        "endDate": null,
+        "language": null
+      }
+    ],
+    "date": {
+      "startDate": "2023-03-07",
+      "endDate": null
+    },
+    "description": [],
+    "access": {
+      "type": {
+        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json",
+        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/"
+      },
+      "accessStatement": null,
+      "embargoExpiry": null
+    },
+    "alternateUrl": null,
+    "contributor": [
+      {
+        "id": "https://orcid.org/0000-0001-7233-7241",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/",
+            "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+            "startDate": "2023-03-07",
+            "endDate": null
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/project-administration/"
+          }
+        ],
+        "leader": null,
+        "contact": null
+      }
+    ],
+    "organisation": [],
+    "subject": null,
+    "relatedRaid": null,
+    "relatedObject": null,
+    "alternateIdentifier": null,
+    "spatialCoverage": null,
+    "traditionalKnowledgeLabel": null
+  }
+]

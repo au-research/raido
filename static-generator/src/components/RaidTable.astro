@@ -1,0 +1,47 @@
+---
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
+import { getPrefixFromUrl, getSuffixFromUrl } from "@/utils";
+import raids from "../../data/raids.json";
+---
+
+<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead className="w-[100px]">Handle</TableHead>
+      <TableHead className="w-[100px]">Start Date</TableHead>
+      <TableHead className="w-[100px]">End Date</TableHead>
+      <TableHead className="w-[300px]">Title</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    {
+      raids.map((raid) => {
+        const prefix = getPrefixFromUrl(raid.identifier.id);
+        const suffix = getSuffixFromUrl(raid.identifier.id);
+        return (
+          <TableRow key={raid.identifier.id}>
+            <TableCell className="font-medium">
+              <a href={`/raids/${suffix}`}>
+                {prefix}/{suffix}
+              </a>
+            </TableCell>
+
+            <TableCell className="truncate">{raid.date.startDate}</TableCell>
+
+            <TableCell className="truncate">
+              {raid.title.map((title) => title.text).join(", ")}
+            </TableCell>
+          </TableRow>
+        );
+      })
+    }
+  </TableBody>
+</Table>
