@@ -47,42 +47,41 @@ const suffix = getSuffixFromUrl(metadata?.identifier?.id);
 ---
 
 <Layout title="RAiD">
-  <main class="flex flex-col pb-4 gap-4">
-    <BreadcrumbsBar
-      items={[
-        {
-          label: "Home",
-          href: "/",
-        },
-        {
-          label: "Raids",
-          href: "/raids",
-        },
-        {
-          label: `${suffix}/${prefix}`,
-          href: `/raids/${id}`,
-        },
-      ]}
-    />
-
-    <a href={`https://app.demo.raid.org.au/edit-raid-new/10378.1/${suffix}`}>
-      <Button
-        className="bg-[#5594d8] hover:bg-[#2f7acb] text-white shadow border rounded-full fixed bottom-5 right-5 w-36 h-12"
+  <BreadcrumbsBar
+    items={[
+      {
+        label: "Home",
+        href: "/",
+      },
+      {
+        label: "Raids",
+        href: "/raids",
+      },
+      {
+        label: `${prefix}/${suffix}`,
+        href: `/raids/${id}`,
+      },
+    ]}
+  />
+  <a href={`https://app.demo.raid.org.au/edit-raid-new/10378.1/${suffix}`}>
+    <Button
+      className="bg-[#5594d8] hover:bg-[#2f7acb] text-white shadow border rounded-full fixed bottom-5 right-5 w-36 h-12"
+    >
+      <svg
+        class="w-5 h-5 mr-3"
+        focusable="false"
+        aria-hidden="true"
+        viewBox="0 0 24 24"
+        stroke-color="white"
+        fill="white"
+        ><path
+          d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+        ></path></svg
       >
-        <svg
-          class="w-5 h-5 mr-3"
-          focusable="false"
-          aria-hidden="true"
-          viewBox="0 0 24 24"
-          stroke-color="white"
-          fill="white"
-          ><path
-            d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
-          ></path></svg
-        >
-         Edit RAiD
-      </Button>
-    </a>
+       Edit RAiD
+    </Button>
+  </a>
+  <main class="flex flex-col gap-4">
     <RaidDatesComponent dates={metadata.date as Dates} />
     <RaidTitlesComponent titles={metadata.title as Title[]} />
     <RaidDescriptionComponent
