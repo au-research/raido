@@ -1,0 +1,96 @@
+---
+import RaidDatesComponent from "@/components/RaidDatesComponent.astro";
+import RaidDescriptionComponent from "@/components/RaidDescriptionComponent.astro";
+import RaidOrganisationsComponent from "@/components/RaidOrganisationsComponent.astro";
+import RaidSubjectsComponent from "@/components/RaidSubjectsComponent.astro";
+import raids from "../../../data/raids.json";
+import BreadcrumbsBar from "../../components/BreadcrumbsBar.astro";
+import RaidContributorsComponent from "../../components/RaidContributorsComponent.astro";
+import RaidTitlesComponent from "../../components/RaidTitlesComponent.astro";
+import Layout from "../../layouts/Layout.astro";
+import type {
+  Access,
+  AlternateIdentifier,
+  AlternateUrl,
+  Contributor,
+  Dates,
+  Description,
+  Organisation,
+  RelatedObject,
+  RelatedRaid,
+  SpatialCoverage,
+  Subject,
+  Title,
+} from "../../types";
+import { getPrefixFromUrl, getSuffixFromUrl } from "../../utils";
+import RaidRelatedObjectsComponent from "@/components/RaidRelatedObjectsComponent.astro";
+import RaidAlternateIdentifiersComponent from "@/components/RaidAlternateIdentifiersComponent.astro";
+import RaidAlternateUrlsComponent from "@/components/RaidAlternateUrlsComponent.astro";
+import RaidRelatedRaidsComponent from "@/components/RaidRelatedRaidsComponent.astro";
+import RaidAccessComponent from "@/components/RaidAccessComponent.astro";
+import RaidSpatialCoverageComponent from "@/components/RaidSpatialCoverageComponent.astro";
+import RaidRawDataComponent from "@/components/RaidRawDataComponent.astro";
+
+export function getStaticPaths() {
+  return raids.map((item) => ({
+    params: { id: getSuffixFromUrl(item?.identifier?.id) },
+    props: { metadata: item },
+  }));
+}
+
+const { id } = Astro.params;
+const { metadata } = Astro.props;
+
+const prefix = getPrefixFromUrl(metadata?.identifier?.id);
+const suffix = getSuffixFromUrl(metadata?.identifier?.id);
+---
+
+<Layout title="RAiD">
+  <main class="flex flex-col pb-4 gap-4">
+    <BreadcrumbsBar
+      items={[
+        {
+          label: "Home",
+          href: "/",
+        },
+        {
+          label: "Raids",
+          href: "/raids",
+        },
+        {
+          label: `${suffix}/${prefix}`,
+          href: `/raids/${id}`,
+        },
+      ]}
+    />
+    <RaidDatesComponent dates={metadata.date as Dates} />
+    <RaidTitlesComponent titles={metadata.title as Title[]} />
+    <RaidDescriptionComponent
+      descriptions={metadata.description as Description[]}
+    />
+    <RaidContributorsComponent
+      contributors={metadata.contributor as Contributor[]}
+    />
+    <RaidOrganisationsComponent
+      organisations={metadata.organisation as Organisation[]}
+    />
+    <RaidRelatedObjectsComponent
+      relatedObjects={metadata.relatedObject as RelatedObject[]}
+    />
+    <RaidAlternateIdentifiersComponent
+      alternateIdentifiers={metadata.alternateIdentifier as AlternateIdentifier[]}
+    />
+    <RaidAlternateUrlsComponent
+      alternateUrls={metadata.alternateUrl as AlternateUrl[]}
+    />
+    <RaidRelatedRaidsComponent
+      relatedRaids={metadata.relatedRaid as RelatedRaid[]}
+    />
+    <RaidAccessComponent access={metadata.access as Access} />
+    <RaidSubjectsComponent subjects={metadata.subject as Subject[]} />
+    <RaidSpatialCoverageComponent
+      spatialCoverages={metadata.spatialCoverage as SpatialCoverage[]}
+    />
+    <RaidRawDataComponent metadata={metadata} />
+  </main>
+</Layout>

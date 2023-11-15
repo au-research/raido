@@ -1,0 +1,71 @@
+---
+import "@/styles/globals.css";
+
+import { Button } from "@/components/ui/button";
+
+import raids from "../../data/raids.json";
+import BreadcrumbsBar from "../components/BreadcrumbsBar.astro";
+import Layout from "../layouts/Layout.astro";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+---
+
+<Layout title="RAiD">
+  <main>
+    <BreadcrumbsBar
+      items={[
+        {
+          label: "Home",
+          href: "/",
+        },
+      ]}
+    />
+
+    <div class="flex flex-col gap-4">
+      <div class="grid grid-cols-2 gap-4">
+        <Card className="border-l-blue-400 border-l-4 bg-white">
+          <CardHeader>
+            <CardTitle>Related objects</CardTitle>
+            <CardDescription className="text-gray-400">
+              Media type of related objects
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <img src="/media-chart.jpg" alt="" />
+          </CardContent>
+        </Card>
+        <Card className="border-l-blue-400 border-l-4 bg-white">
+          <CardHeader>
+            <CardTitle>RAiDs created</CardTitle>
+            <CardDescription className="text-gray-400">
+              RAiDs created per year
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <img src="/years-chart.jpg" alt="" />
+          </CardContent>
+        </Card>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <Card className="border-l-blue-400 border-l-4 bg-white">
+          <CardHeader>
+            <CardTitle>All RAiDs</CardTitle>
+            <CardDescription className="text-gray-400">
+              {raids.length} RAiD(s)
+            </CardDescription>
+          </CardHeader>
+          <CardFooter className="flex justify-end">
+            <a href="/raids"> <Button variant="outline">Show RAiDs</Button></a>
+          </CardFooter>
+        </Card>
+      </div>
+    </div>
+  </main>
+</Layout>

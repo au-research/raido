@@ -1,0 +1,54 @@
+---
+import type { RelatedRaid } from "../types";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+import { getHumanReadableKey, getTypeFromUrl } from "@/utils";
+
+interface Props {
+  relatedRaids: RelatedRaid[];
+}
+
+const { relatedRaids } = Astro.props;
+---
+
+<Card className="rounded border-l-[#5594d8] border-l-4 bg-white">
+  <CardHeader>
+    <CardTitle>Related RAiDs</CardTitle>
+    <CardDescription>
+      {relatedRaids?.length} Related RAiD(s)
+    </CardDescription>
+  </CardHeader>
+  <CardContent>
+    <div class="flex flex-col gap-4">
+      {
+        relatedRaids?.map((el: RelatedRaid, index: number) => {
+          return (
+            <div class="flex flex-col gap-4 border rounded p-5">
+              <div class="mb-2">
+                <p class="font-semibold leading-none mb-5">
+                  <span class="text-gray-300 text-sm mr-1">#{index + 1}</span>
+                  <a href={el.id}>{el.id}</a>
+                </p>
+              </div>
+              <div class="grid grid-cols-4">
+                <div class="space-y-1 text-sm">
+                  <h3 class="font-medium leading-none">
+                    {getHumanReadableKey(getTypeFromUrl(el.type.id))}
+                  </h3>
+                  <p class="text-xs text-muted-foreground">Type</p>
+                </div>
+              </div>
+            </div>
+          );
+        })
+      }
+    </div>
+  </CardContent>
+</Card>

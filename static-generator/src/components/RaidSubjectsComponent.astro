@@ -1,0 +1,64 @@
+---
+import type { Subject } from "../types";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+interface Props {
+  subjects: Subject[];
+}
+
+const { subjects } = Astro.props;
+---
+
+<Card className="rounded border-l-[#5594d8] border-l-4 bg-white">
+  <CardHeader>
+    <CardTitle>Subjects</CardTitle>
+    <CardDescription>
+      {subjects?.length} Subject(s)
+    </CardDescription>
+  </CardHeader>
+  <CardContent>
+    <div class="flex flex-col gap-4">
+      {
+        subjects?.map((el: Subject, index: number) => {
+          return (
+            <div class="flex flex-col gap-4 border rounded p-5">
+              <div class="mb-2">
+                <p class="font-semibold leading-none mb-5">
+                  <span class="text-gray-300 text-sm mr-1">#{index + 1}</span>
+                  {el.id}
+                </p>
+              </div>
+
+              <div class="mb-2">
+                <p class="font-medium leading-none">Keywords</p>
+              </div>
+              {el.keyword.map((kw) => {
+                return (
+                  <div class="grid grid-cols-2">
+                    <div class="space-y-1 text-sm">
+                      <h3 class="font-medium leading-none">{kw.text}</h3>
+                      <p class="text-xs text-muted-foreground">Text</p>
+                    </div>
+                    <div class="space-y-1 text-sm">
+                      <h3 class="font-medium leading-none">
+                        {kw.language?.id || "-"}
+                      </h3>
+                      <p class="text-xs text-muted-foreground">Language</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })
+      }
+    </div>
+  </CardContent>
+</Card>
