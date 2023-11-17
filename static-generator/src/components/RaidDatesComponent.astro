@@ -1,0 +1,36 @@
+---
+import type { Dates } from "../types";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+interface Props {
+  dates: Dates;
+}
+
+const { dates } = Astro.props;
+---
+
+<Card className="rounded border-l-[#5594d8] border-l-4 bg-white">
+  <CardHeader>
+    <CardTitle>Dates</CardTitle>
+    <CardDescription>RAiD dates</CardDescription>
+  </CardHeader>
+  <CardContent>
+    <div class="grid grid-cols-4">
+      <div class="space-y-1 text-sm">
+        <h3 class="font-medium leading-none">{dates.startDate}</h3>
+        <p class="text-xs text-muted-foreground">Start Date</p>
+      </div>
+      <div class="space-y-1 text-sm">
+        <h3 class="font-medium leading-none">{dates.endDate || "-"}</h3>
+        <p class="text-xs text-muted-foreground">End Date</p>
+      </div>
+    </div>
+  </CardContent>
+</Card>

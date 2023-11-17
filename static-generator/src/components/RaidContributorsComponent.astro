@@ -1,0 +1,103 @@
+---
+import type { Contributor } from "../types";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+import {
+  getHumanReadableKey,
+  getLastElementFromUrl,
+  getTypeFromUrl,
+} from "@/utils";
+
+interface Props {
+  contributors: Contributor[];
+}
+
+const { contributors } = Astro.props;
+---
+
+<Card className="rounded border-l-[#5594d8] border-l-4 bg-white">
+  <CardHeader>
+    <CardTitle>Contributors</CardTitle>
+    <CardDescription>
+      {contributors.length} Contributors(s)
+    </CardDescription>
+  </CardHeader>
+  <CardContent>
+    <div class="flex flex-col gap-4">
+      {
+        contributors.map((el: Contributor, index: number) => {
+          return (
+            <div class="flex flex-col gap-4 border rounded p-5">
+              <div class="mb-2">
+                <p class="font-semibold leading-none mb-5">
+                  <span class="text-gray-300 text-sm mr-1">#{index + 1}</span>
+                  {el.id}
+                </p>
+                <div class="grid grid-cols-4 pl-5">
+                  <div class="space-y-1 text-sm">
+                    <h3 class="font-medium leading-none">
+                      {el.contact ? "yes" : "no"}
+                    </h3>
+                    <p class="text-xs text-muted-foreground">Contact?</p>
+                  </div>
+                  <div class="space-y-1 text-sm">
+                    <h3 class="font-medium leading-none">
+                      {el.leader ? "yes" : "no"}
+                    </h3>
+                    <p class="text-xs text-muted-foreground">Leader?</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-2">
+                <p class="font-medium leading-none">Positions</p>
+              </div>
+              {el.position.map((pos) => (
+                <div class="mb-2 pl-5">
+                  <p class="font-medium leading-none">
+                    <p class="mb-2">
+                      <a href={pos.id}>
+                        {getHumanReadableKey(getTypeFromUrl(pos.id))}
+                      </a>
+                    </p>
+                    <div class="grid grid-cols-4 pl-5">
+                      <div class="space-y-1 text-sm">
+                        <h3 class="font-medium leading-none">
+                          {pos.startDate}
+                        </h3>
+                        <p class="text-xs text-muted-foreground">Start Date</p>
+                      </div>
+                      <div class="space-y-1 text-sm">
+                        <h3 class="font-medium leading-none">{pos.endDate}</h3>
+                        <p class="text-xs text-muted-foreground">End Date</p>
+                      </div>
+                    </div>
+                  </p>
+                </div>
+              ))}
+              <div class="mb-2">
+                <p class="font-medium leading-none">Roles</p>
+              </div>
+              {el.role.map((role) => {
+                return (
+                  <div class="mb-2 pl-5">
+                    <a href={role.id}>
+                      {getHumanReadableKey(getLastElementFromUrl(role.id))}
+                    </a>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })
+      }
+    </div>
+  </CardContent>
+</Card>

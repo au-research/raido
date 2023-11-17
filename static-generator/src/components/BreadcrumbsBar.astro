@@ -1,0 +1,35 @@
+---
+interface Props {
+  items: {
+    href: string;
+    label: string;
+  }[];
+}
+
+const { items } = Astro.props;
+import HomeIcon from "../components/HomeIcon.astro";
+import ChevronRightIcon from "../components/ChevronRightIcon.astro";
+---
+
+<nav class="flex" aria-label="Breadcrumb">
+  <ol
+    class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse border rounded p-2 px-4 mb-3 border-l-blue-400 border-l-4 bg-white"
+  >
+    {
+      items?.map((el, index) => {
+        const firstElement = index === 0;
+        return (
+          <li class="inline-flex items-center">
+            <a
+              href={el.href}
+              class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white"
+            >
+              {(firstElement && <HomeIcon />) || <ChevronRightIcon />}
+              <span class="ml-2">{el.label}</span>
+            </a>
+          </li>
+        );
+      })
+    }
+  </ol>
+</nav>
