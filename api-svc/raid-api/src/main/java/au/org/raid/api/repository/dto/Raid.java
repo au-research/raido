@@ -1,7 +1,7 @@
 package au.org.raid.api.repository.dto;
 
-import au.org.raid.db.jooq.api_svc.tables.records.RaidRecord;
-import au.org.raid.db.jooq.api_svc.tables.records.ServicePointRecord;
+import au.org.raid.db.jooq.tables.records.RaidRecord;
+import au.org.raid.db.jooq.tables.records.ServicePointRecord;
 
 public record Raid(
         RaidRecord raid,

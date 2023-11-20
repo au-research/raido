@@ -5,7 +5,7 @@ import au.org.raid.api.service.raid.ValidationFailureException;
 import au.org.raid.api.spring.config.environment.AgencyPublicDataExportProps;
 import au.org.raid.api.util.Log;
 import au.org.raid.api.util.Nullable;
-import au.org.raid.db.jooq.api_svc.tables.records.RaidRecord;
+import au.org.raid.db.jooq.tables.records.RaidRecord;
 import au.org.raid.idl.raidv2.model.PublicReadRaidMetadataResponseV1;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 
 import static au.org.raid.api.util.ExceptionUtil.wrapException;
 import static au.org.raid.api.util.Log.to;
-import static au.org.raid.db.jooq.api_svc.tables.Raid.RAID;
+import static au.org.raid.db.jooq.tables.Raid.RAID;
 
 /**
  * Writes output file as "NDJSON": http://ndjson.org/

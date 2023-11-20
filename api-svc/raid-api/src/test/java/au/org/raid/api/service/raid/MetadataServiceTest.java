@@ -3,7 +3,7 @@ package au.org.raid.api.service.raid;
 import au.org.raid.api.service.raid.id.IdentifierHandle;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.spring.config.environment.MetadataProps;
-import au.org.raid.db.jooq.api_svc.tables.records.ServicePointRecord;
+import au.org.raid.db.jooq.tables.records.ServicePointRecord;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

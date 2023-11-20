@@ -8,7 +8,7 @@ import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.spring.security.raidv2.ApiToken;
 import au.org.raid.api.util.FileUtil;
 import au.org.raid.api.util.SchemaValues;
-import au.org.raid.api.validator.RaidoStableV1Validator;
+import au.org.raid.api.validator.ValidationService;
 import au.org.raid.idl.raidv2.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -68,7 +68,7 @@ class RaidoStableV1Test {
     @Mock
     private RaidStableV1Service raidService;
     @Mock
-    private RaidoStableV1Validator validationService;
+    private ValidationService validationService;
     @InjectMocks
     private RaidoStableV1 controller;
 

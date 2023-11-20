@@ -39,7 +39,7 @@ import static au.org.raid.api.util.ObjectUtil.isTrue;
 import static au.org.raid.api.util.RestUtil.urlDecode;
 import static au.org.raid.api.util.StringUtil.hasValue;
 import static au.org.raid.api.util.StringUtil.isBlank;
-import static au.org.raid.db.jooq.api_svc.tables.Raid.RAID;
+import static au.org.raid.db.jooq.tables.Raid.RAID;
 import static au.org.raid.idl.raidv2.model.AccessType.CLOSED;
 import static au.org.raid.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
 import static au.org.raid.idl.raidv2.model.TitleType.PRIMARY_TITLE;

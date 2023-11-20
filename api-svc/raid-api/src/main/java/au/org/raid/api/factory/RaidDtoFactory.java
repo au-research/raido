@@ -1,7 +1,7 @@
 package au.org.raid.api.factory;
 
-import au.org.raid.db.jooq.api_svc.enums.Metaschema;
-import au.org.raid.db.jooq.api_svc.tables.records.RaidRecord;
+import au.org.raid.db.jooq.enums.Metaschema;
+import au.org.raid.db.jooq.tables.records.RaidRecord;
 import au.org.raid.idl.raidv2.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

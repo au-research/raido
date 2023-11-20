@@ -9,7 +9,7 @@ import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.service.raid.validation.RaidoSchemaV1ValidationService;
 import au.org.raid.api.util.Guard;
 import au.org.raid.api.util.Log;
-import au.org.raid.db.jooq.api_svc.enums.Metaschema;
+import au.org.raid.db.jooq.enums.Metaschema;
 import au.org.raid.idl.raidv2.api.BasicRaidExperimentalApi;
 import au.org.raid.idl.raidv2.model.*;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
@@ -37,7 +37,7 @@ import static au.org.raid.api.util.DateUtil.local2Offset;
 import static au.org.raid.api.util.ExceptionUtil.iae;
 import static au.org.raid.api.util.Log.to;
 import static au.org.raid.api.util.StringUtil.hasValue;
-import static au.org.raid.db.jooq.api_svc.tables.Raid.RAID;
+import static au.org.raid.db.jooq.tables.Raid.RAID;
 import static au.org.raid.idl.raidv2.model.RaidoMetaschema.LEGACYMETADATASCHEMAV1;
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 

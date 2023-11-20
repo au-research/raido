@@ -1,7 +1,7 @@
 package au.org.raid.api.repository;
 
 import au.org.raid.api.endpoint.Constant;
-import au.org.raid.db.jooq.api_svc.tables.records.RaidRecord;
+import au.org.raid.db.jooq.tables.records.RaidRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static au.org.raid.db.jooq.api_svc.tables.Raid.RAID;
-import static au.org.raid.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
+import static au.org.raid.db.jooq.tables.Raid.RAID;
+import static au.org.raid.db.jooq.tables.ServicePoint.SERVICE_POINT;
 
 @Repository
 @RequiredArgsConstructor
@@ -45,16 +45,16 @@ public class RaidRepository {
                 .execute();
     }
 
-    public int updateByHandleAndVersion(final RaidRecord raidRecord) {
+    public int updateByHandleAndVersion(final RaidRecord raidRecord, final int version) {
         return dslContext.update(RAID)
                 .set(RAID.PRIMARY_TITLE, raidRecord.getPrimaryTitle())
                 .set(RAID.METADATA, raidRecord.getMetadata())
                 .set(RAID.METADATA_SCHEMA, raidRecord.getMetadataSchema())
                 .set(RAID.START_DATE, raidRecord.getStartDate())
                 .set(RAID.CONFIDENTIAL, raidRecord.getConfidential())
-                .set(RAID.VERSION, raidRecord.getVersion() + 1)
+                .set(RAID.VERSION, raidRecord.getVersion())
                 .where(RAID.HANDLE.eq(raidRecord.getHandle()))
-                .and(RAID.VERSION.eq(raidRecord.getVersion()))
+                .and(RAID.VERSION.eq(version))
                 .execute();
     }
 

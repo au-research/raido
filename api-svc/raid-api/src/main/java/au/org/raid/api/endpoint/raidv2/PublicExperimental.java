@@ -29,7 +29,7 @@ import static au.org.raid.api.spring.security.ApiSafeException.apiSafe;
 import static au.org.raid.api.util.ExceptionUtil.iae;
 import static au.org.raid.api.util.Log.to;
 import static au.org.raid.api.util.RestUtil.urlDecode;
-import static au.org.raid.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
+import static au.org.raid.db.jooq.tables.ServicePoint.SERVICE_POINT;
 import static java.util.List.of;
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 

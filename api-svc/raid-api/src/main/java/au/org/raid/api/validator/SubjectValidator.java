@@ -2,7 +2,7 @@ package au.org.raid.api.validator;
 
 import au.org.raid.api.repository.SubjectTypeRepository;
 import au.org.raid.api.util.SchemaValues;
-import au.org.raid.db.jooq.api_svc.tables.records.SubjectTypeRecord;
+import au.org.raid.db.jooq.tables.records.SubjectTypeRecord;
 import au.org.raid.idl.raidv2.model.Subject;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import lombok.RequiredArgsConstructor;

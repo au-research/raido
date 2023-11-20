@@ -7,10 +7,10 @@ import au.org.raid.api.util.ExceptionUtil;
 import au.org.raid.api.util.Guard;
 import au.org.raid.api.util.Log;
 import au.org.raid.api.util.ObjectUtil;
-import au.org.raid.db.jooq.api_svc.enums.IdProvider;
+import au.org.raid.db.jooq.enums.IdProvider;
 
-import static au.org.raid.db.jooq.api_svc.enums.UserRole.OPERATOR;
-import static au.org.raid.db.jooq.api_svc.enums.UserRole.SP_ADMIN;
+import static au.org.raid.db.jooq.enums.UserRole.OPERATOR;
+import static au.org.raid.db.jooq.enums.UserRole.SP_ADMIN;
 import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 
 public class AuthzUtil {

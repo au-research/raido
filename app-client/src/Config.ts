@@ -161,7 +161,7 @@ const devConfig: EnvironmentConfig = {
   },
   google: {
     // DEMO OAuth client on raid.services@ardc account
-    clientId: "333652356987-ecetlds8nprpf81er55jnva1750jputr.apps.googleusercontent.com",
+    clientId: "333652356987-5gn0qr18uj9n8po8dedi22dpmode1ogh.apps.googleusercontent.com",
     authorizeUrl: "https://accounts.google.com/o/oauth2/v2/auth",
     authnScope: "openid email profile",
   },

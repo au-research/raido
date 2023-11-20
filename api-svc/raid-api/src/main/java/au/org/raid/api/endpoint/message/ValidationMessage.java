@@ -2,7 +2,7 @@ package au.org.raid.api.endpoint.message;
 
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 
-import static au.org.raid.db.jooq.api_svc.tables.Raid.RAID;
+import static au.org.raid.db.jooq.tables.Raid.RAID;
 
 public class ValidationMessage {
 

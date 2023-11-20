@@ -1,13 +1,13 @@
 package au.org.raid.api.repository;
 
-import au.org.raid.db.jooq.api_svc.tables.records.OrganisationRoleRecord;
+import au.org.raid.db.jooq.tables.records.OrganisationRoleRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-import static au.org.raid.db.jooq.api_svc.tables.OrganisationRole.ORGANISATION_ROLE;
+import static au.org.raid.db.jooq.tables.OrganisationRole.ORGANISATION_ROLE;
 
 @Repository
 @RequiredArgsConstructor

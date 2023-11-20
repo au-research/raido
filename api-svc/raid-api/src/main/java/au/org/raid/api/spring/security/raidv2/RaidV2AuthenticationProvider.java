@@ -15,7 +15,7 @@ import org.springframework.security.oauth2.server.resource.authentication.Bearer
 
 import static au.org.raid.api.util.Log.to;
 import static au.org.raid.api.util.StringUtil.mask;
-import static au.org.raid.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
+import static au.org.raid.db.jooq.enums.IdProvider.RAIDO_API;
 
 public class RaidV2AuthenticationProvider implements AuthenticationProvider {
     private static final Log log = to(RaidV2AuthenticationProvider.class);

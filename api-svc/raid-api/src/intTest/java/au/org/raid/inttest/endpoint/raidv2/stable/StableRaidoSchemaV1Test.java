@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.net.URI;
 
-import static au.org.raid.db.jooq.api_svc.enums.UserRole.OPERATOR;
+import static au.org.raid.db.jooq.enums.UserRole.OPERATOR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 

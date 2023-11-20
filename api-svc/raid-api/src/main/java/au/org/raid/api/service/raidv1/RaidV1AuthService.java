@@ -7,7 +7,7 @@ import au.org.raid.api.spring.security.raidv1.Raid1PostAuthenicationJsonWebToken
 import au.org.raid.api.util.ExceptionUtil;
 import au.org.raid.api.util.Guard;
 import au.org.raid.api.util.Log;
-import au.org.raid.db.jooq.api_svc.tables.records.TokenRecord;
+import au.org.raid.db.jooq.tables.records.TokenRecord;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -23,7 +23,7 @@ import java.util.Optional;
 import static au.org.raid.api.util.ExceptionUtil.authFailed;
 import static au.org.raid.api.util.Log.to;
 import static au.org.raid.api.util.StringUtil.*;
-import static au.org.raid.db.jooq.api_svc.tables.Token.TOKEN;
+import static au.org.raid.db.jooq.tables.Token.TOKEN;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 

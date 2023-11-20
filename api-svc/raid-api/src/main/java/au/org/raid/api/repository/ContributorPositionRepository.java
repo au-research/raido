@@ -1,13 +1,13 @@
 package au.org.raid.api.repository;
 
-import au.org.raid.db.jooq.api_svc.tables.records.ContributorPositionRecord;
+import au.org.raid.db.jooq.tables.records.ContributorPositionRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-import static au.org.raid.db.jooq.api_svc.tables.ContributorPosition.CONTRIBUTOR_POSITION;
+import static au.org.raid.db.jooq.tables.ContributorPosition.CONTRIBUTOR_POSITION;
 
 @Repository
 @RequiredArgsConstructor

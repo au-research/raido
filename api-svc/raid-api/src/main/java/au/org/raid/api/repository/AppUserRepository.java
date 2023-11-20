@@ -1,13 +1,13 @@
 package au.org.raid.api.repository;
 
 import au.org.raid.api.util.Guard;
-import au.org.raid.db.jooq.api_svc.tables.records.AppUserRecord;
+import au.org.raid.db.jooq.tables.records.AppUserRecord;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-import static au.org.raid.db.jooq.api_svc.tables.AppUser.APP_USER;
+import static au.org.raid.db.jooq.tables.AppUser.APP_USER;
 
 @Repository
 public class AppUserRepository {

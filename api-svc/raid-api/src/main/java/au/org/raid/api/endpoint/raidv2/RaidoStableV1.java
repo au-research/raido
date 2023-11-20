@@ -6,7 +6,7 @@ import au.org.raid.api.exception.ValidationException;
 import au.org.raid.api.service.raid.RaidStableV1Service;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.util.SchemaValues;
-import au.org.raid.api.validator.RaidoStableV1Validator;
+import au.org.raid.api.validator.ValidationService;
 import au.org.raid.idl.raidv2.api.RaidoStableV1Api;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
 import au.org.raid.idl.raidv2.model.RaidDto;
@@ -33,10 +33,10 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 @CrossOrigin
 @SecurityScheme(name = "bearerAuth", scheme = "bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 public class RaidoStableV1 implements RaidoStableV1Api {
-    private final RaidoStableV1Validator validationService;
+    private final ValidationService validationService;
     private final RaidStableV1Service raidService;
 
-    public RaidoStableV1(final RaidoStableV1Validator validationService, final RaidStableV1Service raidService) {
+    public RaidoStableV1(final ValidationService validationService, final RaidStableV1Service raidService) {
         this.validationService = validationService;
         this.raidService = raidService;
     }

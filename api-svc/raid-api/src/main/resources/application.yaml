@@ -12,6 +12,10 @@ raid:
     geonames:
       username: geonames
 spring:
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://${raid.db.host}:${raid.db.port}/raido

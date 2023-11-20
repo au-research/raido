@@ -1,5 +1,6 @@
 package au.org.raid.api.spring.bean;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -92,13 +93,14 @@ public class Shared {
      mapper used by the feign client for integration tests - we had to register
      the module for those usages, why not here?
     */
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper().
-                /* from memory, this was to get the Spring REST API endpoints writing
-                datetime the way I wanted. */
-                        disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).
-                registerModule(new JavaTimeModule());
-    }
+//    @Bean
+//    public ObjectMapper objectMapper() {
+//        return new ObjectMapper().
+//                /* from memory, this was to get the Spring REST API endpoints writing
+//                datetime the way I wanted. */
+//                        disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS).
+//                registerModule(new JavaTimeModule())
+//                .setSerializationInclusion(JsonInclude.Include.NON_NULL);
+//    }
 
 }

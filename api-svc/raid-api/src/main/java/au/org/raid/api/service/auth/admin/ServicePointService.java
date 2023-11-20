@@ -6,7 +6,7 @@ import org.jooq.DSLContext;
 import org.springframework.stereotype.Component;
 
 import static au.org.raid.api.util.Log.to;
-import static au.org.raid.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
+import static au.org.raid.db.jooq.tables.ServicePoint.SERVICE_POINT;
 
 @Component
 public class ServicePointService {

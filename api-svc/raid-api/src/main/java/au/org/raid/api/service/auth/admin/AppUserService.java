@@ -6,8 +6,8 @@ import au.org.raid.api.spring.security.raidv2.ApiToken;
 import au.org.raid.api.util.DateUtil;
 import au.org.raid.api.util.Guard;
 import au.org.raid.api.util.Log;
-import au.org.raid.db.jooq.api_svc.enums.UserRole;
-import au.org.raid.db.jooq.api_svc.tables.records.AppUserRecord;
+import au.org.raid.db.jooq.enums.UserRole;
+import au.org.raid.db.jooq.tables.records.AppUserRecord;
 import au.org.raid.idl.raidv2.model.ApiKey;
 import au.org.raid.idl.raidv2.model.AppUser;
 import org.jooq.DSLContext;
@@ -24,9 +24,9 @@ import static au.org.raid.api.util.DateUtil.offset2Local;
 import static au.org.raid.api.util.ExceptionUtil.iae;
 import static au.org.raid.api.util.Log.to;
 import static au.org.raid.api.util.ObjectUtil.areEqual;
-import static au.org.raid.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
-import static au.org.raid.db.jooq.api_svc.enums.UserRole.*;
-import static au.org.raid.db.jooq.api_svc.tables.AppUser.APP_USER;
+import static au.org.raid.db.jooq.enums.IdProvider.RAIDO_API;
+import static au.org.raid.db.jooq.enums.UserRole.*;
+import static au.org.raid.db.jooq.tables.AppUser.APP_USER;
 
 /**
  * "user" records for both people "app-user" and machines "api-key".

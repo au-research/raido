@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
-import static au.org.raid.db.jooq.api_svc.enums.UserRole.OPERATOR;
+import static au.org.raid.db.jooq.enums.UserRole.OPERATOR;
 import static au.org.raid.inttest.endpoint.raidv2.stable.TestConstants.*;
 import static au.org.raid.inttest.util.MinimalRaidTestData.REAL_TEST_ORCID;
 import static au.org.raid.inttest.util.MinimalRaidTestData.REAL_TEST_ROR;

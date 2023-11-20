@@ -9,6 +9,7 @@ import au.org.raid.api.factory.RaidDtoFactory;
 import au.org.raid.api.factory.RaidRecordFactory;
 import au.org.raid.api.repository.RaidRepository;
 import au.org.raid.api.repository.ServicePointRepository;
+import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.apids.ApidsService;
 import au.org.raid.api.service.apids.model.ApidsMintResponse;
 import au.org.raid.api.service.raid.id.IdentifierHandle;
@@ -48,6 +49,7 @@ public class RaidStableV1Service {
     private final IdFactory idFactory;
     private final RaidChecksumService checksumService;
     private final RaidDtoFactory raidDtoFactory;
+    private final RaidHistoryService raidHistoryService;
 
 
     public List<RaidDto> list(final Long servicePointId) {
@@ -94,13 +96,12 @@ public class RaidStableV1Service {
         final var apidsResponse = apidsSvc.mintApidsHandleContentPrefix(
                 metaSvc::formatRaidoLandingPageUrl);
 
-
         IdentifierHandle handle = parseHandleFromApids(apidsResponse);
         var id = new IdentifierUrl(metaSvc.getMetaProps().getHandleUrlPrefix(), handle);
         request.setIdentifier(idFactory.create(id, servicePointRecord));
 
-        final var raidRecord = raidRecordFactory.create(
-                request, apidsResponse, servicePointRecord);
+        final var raidDto = raidHistoryService.save(request);
+        final var raidRecord = raidRecordFactory.create(raidDto);
 
         tx.executeWithoutResult(status -> raidRepository.insert(raidRecord));
 
@@ -136,13 +137,11 @@ public class RaidStableV1Service {
             return objectMapper.readValue(
                     existing.getMetadata().data(), RaidDto.class);
         }
-        final var raidRecord = raidRecordFactory.merge(raid, existing);
 
-        final Integer numRowsChanged = tx.execute(status -> raidRepository.updateByHandleAndVersion(raidRecord));
+        final var raidDto = raidHistoryService.save(raid);
 
-        if (numRowsChanged == null || numRowsChanged != 1) {
-            throw new InvalidVersionException(version);
-        }
+        final var raidRecord = raidRecordFactory.create(raidDto);
+        raidRepository.updateByHandleAndVersion(raidRecord, version);
 
         final var result = raidRepository.findByHandle(handle)
                 .orElseThrow(() -> new ResourceNotFoundException(handle));
