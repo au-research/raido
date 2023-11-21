@@ -8,7 +8,7 @@ public class GoogleOidcProps {
 
     // default value is the DEMO OAuth client on raid.services@ardc account
     @Value("${GoogleOidc.clientId:" +
-            "333652356987-ecetlds8nprpf81er55jnva1750jputr.apps.googleusercontent.com}")
+            "333652356987-5gn0qr18uj9n8po8dedi22dpmode1ogh.apps.googleusercontent.com}")
     public String clientId;
 
     @Value("${GoogleOidc.clientSecret}")
