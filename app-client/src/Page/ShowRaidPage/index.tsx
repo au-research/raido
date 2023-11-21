@@ -17,10 +17,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuthApi } from "Api/AuthApi";
 import { raidoTitle } from "Component/Util";
 import {
+  isPagePath,
+  NavigationState,
   NavPathResult,
   NavTransition,
-  NavigationState,
-  isPagePath,
   parsePageSuffixParams,
   useNavigation,
 } from "Design/NavigationProvider";
@@ -31,7 +31,7 @@ import "react18-json-view/src/style.css";
 
 import AnchorButtons from "Component/AnchorButtons";
 import { CategoryHeader } from "helper-components";
-import { MouseEvent, useState } from "react";
+import { useState } from "react";
 import { raidColors } from "utils";
 import ShowAccessComponent from "./components/ShowAccessComponent";
 import ShowAlternateIdentifierComponent from "./components/ShowAlternateIdentifierComponent";
@@ -58,15 +58,6 @@ function getRaidHandleFromPathname(nav: NavigationState): string {
 
 function Content() {
   const nav = useNavigation();
-
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   const [handle] = useState(getRaidHandleFromPathname(nav));
   const [prefix, suffix] = handle.split("/");
@@ -134,10 +125,7 @@ function Content() {
           <AnchorButtons defaultValues={defaultValues} />
 
           <Box id="dates" className="scroll">
-            <ShowDateComponent
-              raid={defaultValues}
-              color={raidColors.get("blue") || ""}
-            />
+            <ShowDateComponent raid={defaultValues} />
           </Box>
           <Box id="titles" className="scroll">
             <ShowTitleComponent

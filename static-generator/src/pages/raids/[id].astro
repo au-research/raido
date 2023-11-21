@@ -9,20 +9,19 @@ import RaidContributorsComponent from "../../components/RaidContributorsComponen
 import RaidTitlesComponent from "../../components/RaidTitlesComponent.astro";
 import Layout from "../../layouts/Layout.astro";
 import type {
-  Access,
-  AlternateIdentifier,
-  AlternateUrl,
-  Contributor,
-  Dates,
-  Description,
-  Organisation,
-  RelatedObject,
-  RelatedRaid,
-  SpatialCoverage,
-  Subject,
-  Title,
+    Access,
+    AlternateIdentifier,
+    AlternateUrl,
+    Contributor,
+    Description,
+    Organisation,
+    RelatedObject,
+    RelatedRaid,
+    SpatialCoverage,
+    Subject,
+    Title,
 } from "../../types";
-import { getPrefixFromUrl, getSuffixFromUrl } from "../../utils";
+import {getPrefixFromUrl, getSuffixFromUrl} from "../../utils";
 import RaidRelatedObjectsComponent from "@/components/RaidRelatedObjectsComponent.astro";
 import RaidAlternateIdentifiersComponent from "@/components/RaidAlternateIdentifiersComponent.astro";
 import RaidAlternateUrlsComponent from "@/components/RaidAlternateUrlsComponent.astro";
@@ -30,86 +29,88 @@ import RaidRelatedRaidsComponent from "@/components/RaidRelatedRaidsComponent.as
 import RaidAccessComponent from "@/components/RaidAccessComponent.astro";
 import RaidSpatialCoverageComponent from "@/components/RaidSpatialCoverageComponent.astro";
 import RaidRawDataComponent from "@/components/RaidRawDataComponent.astro";
-import { Button } from "@/components/ui/button";
+import {Button} from "@/components/ui/button";
+
+import type {ModelDate} from "../../../../app-client/src/Generated/Raidv2"
 
 export function getStaticPaths() {
-  return raids.map((item) => ({
-    params: { id: getSuffixFromUrl(item?.identifier?.id) },
-    props: { metadata: item },
-  }));
+    return raids.map((item) => ({
+        params: {id: getSuffixFromUrl(item?.identifier?.id)},
+        props: {metadata: item},
+    }));
 }
 
-const { id } = Astro.params;
-const { metadata } = Astro.props;
+const {id} = Astro.params;
+const {metadata} = Astro.props;
 
 const prefix = getPrefixFromUrl(metadata?.identifier?.id);
 const suffix = getSuffixFromUrl(metadata?.identifier?.id);
 ---
 
 <Layout title="RAiD">
-  <BreadcrumbsBar
-    items={[
-      {
-        label: "Home",
-        href: "/",
-      },
-      {
-        label: "Raids",
-        href: "/raids",
-      },
-      {
-        label: `${prefix}/${suffix}`,
-        href: `/raids/${id}`,
-      },
-    ]}
-  />
-  <a href={`https://app.demo.raid.org.au/edit-raid-new/10378.1/${suffix}`}>
-    <Button
-      className="bg-[#5594d8] hover:bg-[#2f7acb] text-white shadow border rounded-full fixed bottom-5 right-5 w-36 h-12"
-    >
-      <svg
-        class="w-5 h-5 mr-3"
-        focusable="false"
-        aria-hidden="true"
-        viewBox="0 0 24 24"
-        stroke-color="white"
-        fill="white"
-        ><path
-          d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
-        ></path></svg
-      >
-       Edit RAiD
-    </Button>
-  </a>
-  <main class="flex flex-col gap-4">
-    <RaidDatesComponent dates={metadata.date as Dates} />
-    <RaidTitlesComponent titles={metadata.title as Title[]} />
-    <RaidDescriptionComponent
-      descriptions={metadata.description as Description[]}
+    <BreadcrumbsBar
+            items={[
+                {
+                    label: "Home",
+                    href: "/",
+                },
+                {
+                    label: "Raids", href: "/raids",
+                },
+                {
+                    label: `${prefix}/${suffix}`,
+                    href: `/raids/${id}`,
+                },
+            ]}
     />
-    <RaidContributorsComponent
-      contributors={metadata.contributor as Contributor[]}
-    />
-    <RaidOrganisationsComponent
-      organisations={metadata.organisation as Organisation[]}
-    />
-    <RaidRelatedObjectsComponent
-      relatedObjects={metadata.relatedObject as RelatedObject[]}
-    />
-    <RaidAlternateIdentifiersComponent
-      alternateIdentifiers={metadata.alternateIdentifier as AlternateIdentifier[]}
-    />
-    <RaidAlternateUrlsComponent
-      alternateUrls={metadata.alternateUrl as AlternateUrl[]}
-    />
-    <RaidRelatedRaidsComponent
-      relatedRaids={metadata.relatedRaid as RelatedRaid[]}
-    />
-    <RaidAccessComponent access={metadata.access as Access} />
-    <RaidSubjectsComponent subjects={metadata.subject as Subject[]} />
-    <RaidSpatialCoverageComponent
-      spatialCoverages={metadata.spatialCoverage as SpatialCoverage[]}
-    />
-    <RaidRawDataComponent metadata={metadata} />
-  </main>
+    <a href={`https://app.demo.raid.org.au/edit-raid-new/10378.1/${suffix}`}>
+        <Button
+                className="bg-[#5594d8] hover:bg-[#2f7acb] text-white shadow border rounded-full fixed bottom-5 right-5 w-36 h-12"
+        >
+            <svg
+                    class="w-5 h-5 mr-3"
+                    focusable="false"
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    fill="white"
+            >
+                <path
+                        d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                ></path>
+            </svg
+            >
+            Edit RAiD
+        </Button>
+    </a>
+    <main class="flex flex-col gap-4">
+        <RaidDatesComponent dates={metadata.date as unknown as ModelDate}/>
+        <RaidTitlesComponent titles={metadata.title as Title[]}/>
+        <RaidDescriptionComponent
+                descriptions={metadata.description as Description[]}
+        />
+        <RaidContributorsComponent
+                contributors={metadata.contributor as Contributor[]}
+        />
+        <RaidOrganisationsComponent
+                organisations={metadata.organisation as Organisation[]}
+        />
+        <RaidRelatedObjectsComponent
+                relatedObjects={metadata.relatedObject as RelatedObject[]}
+        />
+        <RaidAlternateIdentifiersComponent
+                alternateIdentifiers={metadata.alternateIdentifier as AlternateIdentifier[]}
+        />
+        <RaidAlternateUrlsComponent
+                alternateUrls={metadata.alternateUrl as AlternateUrl[]}
+        />
+        <RaidRelatedRaidsComponent
+                relatedRaids={metadata.relatedRaid as RelatedRaid[]}
+        />
+        <RaidAccessComponent access={metadata.access as Access}/>
+        <RaidSubjectsComponent subjects={metadata.subject as Subject[]}/>
+        <RaidSpatialCoverageComponent
+                spatialCoverages={metadata.spatialCoverage as SpatialCoverage[]}
+        />
+        <RaidRawDataComponent metadata={metadata}/>
+    </main>
 </Layout>
