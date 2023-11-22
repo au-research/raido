@@ -61,6 +61,8 @@ public class AbstractIntegrationTest {
     protected Contract feignContract;
     @Autowired
     protected BootstrapAuthTokenService bootstrapTokenSvc;
+    @Autowired
+    protected RaidUpdateRequestFactory raidUpdateRequestFactory;
     private TestInfo testInfo;
 
     @BeforeEach

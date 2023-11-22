@@ -1,5 +1,8 @@
 package au.org.raid.api.service;
 
+import lombok.Data;
+
+@Data
 public class Handle {
     final String prefix;
     final String suffix;
