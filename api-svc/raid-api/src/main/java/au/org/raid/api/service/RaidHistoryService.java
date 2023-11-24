@@ -1,25 +1,21 @@
 package au.org.raid.api.service;
 
 import au.org.raid.api.entity.ChangeType;
-import au.org.raid.api.factory.JsonObjectFactory;
+import au.org.raid.api.factory.HandleFactory;
 import au.org.raid.api.factory.JsonPatchFactory;
+import au.org.raid.api.factory.JsonValueFactory;
+import au.org.raid.api.factory.RaidHistoryRecordFactory;
 import au.org.raid.api.repository.RaidHistoryRepository;
+import au.org.raid.api.spring.RaidHistoryProperties;
 import au.org.raid.db.jooq.tables.records.RaidHistoryRecord;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.json.Json;
-import jakarta.json.JsonPatch;
-import jakarta.json.JsonValue;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Transactional
@@ -29,25 +25,22 @@ public class RaidHistoryService {
     private final ObjectMapper objectMapper;
     private final RaidHistoryRepository raidHistoryRepository;
     private final JsonPatchFactory jsonPatchFactory;
-    private final JsonObjectFactory jsonObjectFactory;
-    private final int baselineInterval = 5;
+    private final JsonValueFactory jsonValueFactory;
+    private final HandleFactory handleFactory;
+    private final RaidHistoryRecordFactory raidHistoryRecordFactory;
+    private final RaidHistoryProperties properties;
 
     @SneakyThrows
-    public RaidDto save(final RaidCreateRequest raid) {
-        final var raidString = objectMapper.writeValueAsString(raid);
-        final var handle = new Handle(raid.getIdentifier().getId());
+    public RaidDto save(final RaidCreateRequest request) {
+        final var raidString = objectMapper.writeValueAsString(request);
+        final var handle = handleFactory.create(request.getIdentifier().getId());
         final var diff = jsonPatchFactory.create(EMPTY_JSON, raidString);
 
-        raidHistoryRepository.insert(new RaidHistoryRecord()
-                .setHandle(handle.toString())
-                .setRevision(1)
-                .setChangeType(ChangeType.PATCH.toString())
-                .setDiff(diff.toString()));
+        raidHistoryRepository.insert(raidHistoryRecordFactory.create(handle, 1, ChangeType.PATCH, diff));
 
-        var json = Json.createReader(new StringReader(EMPTY_JSON)).readValue().asJsonObject();
-        json = diff.apply(json);
+        var raid = jsonValueFactory.create(diff);
 
-        return objectMapper.readValue(json.toString(), RaidDto.class);
+        return objectMapper.readValue(raid.toString(), RaidDto.class);
     }
 
     @SneakyThrows
@@ -58,48 +51,27 @@ public class RaidHistoryService {
 
         final var raidString = objectMapper.writeValueAsString(raid);
 
-        final var handle = new Handle(raid.getIdentifier().getId());
+        final var handle = handleFactory.create(raid.getIdentifier().getId());
 
-        final var history = new ArrayList<>(raidHistoryRepository.findAllByHandle(handle.toString()));
+        final var history = raidHistoryRepository.findAllByHandle(handle.toString()).stream()
+                .map(RaidHistoryRecord::getDiff)
+                .map(jsonValueFactory::create)
+                .toList();
 
-        final var diff = jsonPatchFactory.create(build(history).toString(), raidString);
+        final var diff = jsonPatchFactory.create(jsonValueFactory.create(history).toString(), raidString);
 
-        raidHistoryRepository.insert(new RaidHistoryRecord()
-                .setHandle(handle.toString())
-                .setRevision(newVersion)
-                .setChangeType(ChangeType.PATCH.toString())
-                .setDiff(diff.toString()));
+        raidHistoryRepository.insert(
+                raidHistoryRecordFactory.create(handle, newVersion, ChangeType.PATCH, diff)
+        );
 
-        if (newVersion % baselineInterval == 0) {
+        if (newVersion % properties.getBaselineInterval() == 0) {
             final var baselineDiff = jsonPatchFactory.create(EMPTY_JSON, raidString);
 
-            raidHistoryRepository.insert(new RaidHistoryRecord()
-                    .setHandle(handle.toString())
-                    .setRevision(newVersion)
-                    .setChangeType(ChangeType.BASELINE.toString())
-                    .setDiff(baselineDiff.toString()));
+            raidHistoryRepository.insert(
+                raidHistoryRecordFactory.create(handle, newVersion, ChangeType.BASELINE, baselineDiff)
+            );
         }
 
-        return objectMapper.readValue(build(history, diff).toString(), RaidDto.class);
+        return objectMapper.readValue(jsonValueFactory.create(history, diff).toString(), RaidDto.class);
     }
-
-    private JsonValue build(final List<RaidHistoryRecord> history, final JsonPatch patch) {
-        final var json = build(history);
-
-        return patch.apply(json.asJsonObject());
-    }
-
-    @SneakyThrows
-    private JsonValue build(final List<RaidHistoryRecord> history) {
-        var json = jsonObjectFactory.create(EMPTY_JSON);
-
-        for (final var item : history) {
-            final var change = Json.createReader(new StringReader(item.getDiff())).readArray();
-            final var patch = Json.createPatch(change);
-            json = patch.apply(json);
-        }
-
-        return json;
-    }
-
 }

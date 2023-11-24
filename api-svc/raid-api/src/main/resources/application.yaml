@@ -11,6 +11,8 @@ raid:
   validation:
     geonames:
       username: geonames
+  history:
+    baseline-interval: 5
 spring:
   jackson:
     default-property-inclusion: non_null

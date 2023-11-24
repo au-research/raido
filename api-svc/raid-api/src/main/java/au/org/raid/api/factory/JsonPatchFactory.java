@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class JsonPatchFactory {
-    private final JsonObjectFactory jsonObjectFactory;
+    private final JsonValueFactory jsonValueFactory;
     public JsonPatch create(final String existing, final String updated) {
-        return Json.createDiff(jsonObjectFactory.create(existing), jsonObjectFactory.create(updated));
+        return Json.createDiff(jsonValueFactory.create(existing).asJsonObject(), jsonValueFactory.create(updated).asJsonObject());
     }
 }
