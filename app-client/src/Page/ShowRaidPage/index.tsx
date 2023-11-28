@@ -5,6 +5,7 @@ import {
 
 import {
   Box,
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -31,7 +32,7 @@ import "react18-json-view/src/style.css";
 
 import AnchorButtons from "Component/AnchorButtons";
 import { CategoryHeader } from "helper-components";
-import { useState } from "react";
+import React, { useState } from "react";
 import { raidColors } from "utils";
 import ShowAccessComponent from "./components/ShowAccessComponent";
 import ShowAlternateIdentifierComponent from "./components/ShowAlternateIdentifierComponent";
@@ -121,6 +122,27 @@ function Content() {
             title={`RAiD ${handle}`}
             subheader={`Showing data`}
           />
+
+          <Button
+            size="small"
+            variant="contained"
+            sx={{
+              maxWidth: "200px",
+              marginLeft: "50px",
+              background: "#fff",
+              color: "#000",
+              borderLeftStyle: "solid",
+              borderLeftColor: "#f0ab00",
+              borderLeftWidth: 2,
+              textTransform: "none",
+              "&:hover": {
+                backgroundColor: "#eee",
+              },
+            }}
+            href={`https://doi.test.datacite.org/dois/10.82841%2F${suffix}`}
+          >
+            Open in Datacite
+          </Button>
 
           <AnchorButtons defaultValues={defaultValues} />
 
