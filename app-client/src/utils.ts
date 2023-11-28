@@ -15,7 +15,7 @@ import { RaidCreateRequest } from "Generated/Raidv2";
 import dayjs, { Dayjs } from "dayjs";
 
 export const extractPrefixAndSuffixFromIdentifier = (
-  identifier: string
+  identifier: string,
 ): { prefix: string; suffix: string } => {
   const pattern = /\/([^/]+)\/([^/]+)$/;
   const matches = identifier.match(pattern);
@@ -70,7 +70,7 @@ export const extractLastUrlSegment = (inputUri: string = ""): string => {
  *   threeYearsFromDate('2020-01-01'); // returns '2023-01-01'
  */
 export const threeYearsFromDate = (
-  inputDate: string = dayjs().format()
+  inputDate: string = dayjs().format(),
 ): Dayjs => {
   return dayjs(inputDate).add(3, "year");
 };
@@ -83,11 +83,17 @@ export const raidColors = new Map([
 ]);
 
 export const newRaid: RaidCreateRequest = {
-  title: [titlesGenerateData()],
+  title: [
+    titlesGenerateData(true),
+    titlesGenerateData(false),
+    titlesGenerateData(false),
+  ],
   description: [descriptionsGenerateData()],
   date: datesGenerateData(),
   access: accessGenerateData(),
-  organisation: [organisationsGenerateData()],
+  organisation: [
+    // organisationsGenerateData()
+  ],
   contributor: [contributorsGenerateData()],
   subject: [subjectsGenerateData()],
   relatedRaid: [],
@@ -96,11 +102,13 @@ export const newRaid: RaidCreateRequest = {
     alternateUrlGenerateData(),
     alternateUrlGenerateData(),
   ],
-  spatialCoverage: [spatialCoverageGenerateData()],
+  spatialCoverage: [
+    // spatialCoverageGenerateData()
+  ],
   relatedObject: [
-    relatedObjectGenerateData(),
-    relatedObjectGenerateData(),
-    relatedObjectGenerateData(),
+    // relatedObjectGenerateData(),
+    // relatedObjectGenerateData(),
+    // relatedObjectGenerateData(),
   ],
   alternateIdentifier: [
     alternateIdentifierGenerateData(),
