@@ -53,17 +53,14 @@ export const titlesValidationSchema: any = z
       }),
       startDate: z.string().regex(combinedPattern).nonempty(),
       endDate: z.string().regex(combinedPattern).optional(),
-    })
+    }),
   )
   .min(1);
 
-export const titlesGenerateData = (
-  titlesFieldArray?: UseFieldArrayReturn<RaidDto, "title", "id">
-) => {
-  const typeId =
-    titlesFieldArray?.fields && titlesFieldArray?.fields?.length > 0
-      ? titleType.find((el) => el.uri.includes("alternative"))?.uri
-      : titleType.find((el) => el.uri.includes("primary"))?.uri;
+export const titlesGenerateData = (isPrimary?: boolean) => {
+  const typeId = isPrimary
+    ? titleType.find((el) => el.uri.includes("primary"))?.uri
+    : titleType.find((el) => el.uri.includes("alternative"))?.uri;
   return {
     text: `[G] ${faker.lorem.sentence()}`,
     type: {
@@ -96,7 +93,7 @@ export default function FormTitlesComponent({
   });
 
   const handleAddTitle = () => {
-    titlesFieldArray.append(titlesGenerateData(titlesFieldArray));
+    titlesFieldArray.append(titlesGenerateData());
     trigger("title");
   };
 
@@ -233,7 +230,7 @@ export default function FormTitlesComponent({
                                     }
                                     value={
                                       language.find(
-                                        (lang) => lang.id === value
+                                        (lang) => lang.id === value,
                                       ) || null
                                     }
                                     onChange={(_, newValue) => {
