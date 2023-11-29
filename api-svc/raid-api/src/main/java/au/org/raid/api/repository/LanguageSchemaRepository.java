@@ -1,13 +1,13 @@
 package au.org.raid.api.repository;
 
-import au.org.raid.db.jooq.api_svc.tables.records.LanguageSchemaRecord;
+import au.org.raid.db.jooq.tables.records.LanguageSchemaRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-import static au.org.raid.db.jooq.api_svc.tables.LanguageSchema.LANGUAGE_SCHEMA;
+import static au.org.raid.db.jooq.tables.LanguageSchema.LANGUAGE_SCHEMA;
 
 @Repository
 @RequiredArgsConstructor

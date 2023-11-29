@@ -1,7 +1,7 @@
 package au.org.raid.api.service.auth;
 
 import au.org.raid.api.util.Log;
-import au.org.raid.db.jooq.api_svc.enums.IdProvider;
+import au.org.raid.db.jooq.enums.IdProvider;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.stereotype.Component;
 

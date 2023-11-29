@@ -2,8 +2,8 @@ package au.org.raid.api.validator;
 
 import au.org.raid.api.repository.OrganisationRoleRepository;
 import au.org.raid.api.repository.OrganisationRoleSchemaRepository;
-import au.org.raid.db.jooq.api_svc.tables.records.OrganisationRoleRecord;
-import au.org.raid.db.jooq.api_svc.tables.records.OrganisationRoleSchemaRecord;
+import au.org.raid.db.jooq.tables.records.OrganisationRoleRecord;
+import au.org.raid.db.jooq.tables.records.OrganisationRoleSchemaRecord;
 import au.org.raid.idl.raidv2.model.OrganisationRoleWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;

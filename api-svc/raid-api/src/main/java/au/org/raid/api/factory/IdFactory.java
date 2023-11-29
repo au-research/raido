@@ -4,7 +4,7 @@ import au.org.raid.api.service.raid.MetadataService;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.spring.config.environment.MetadataProps;
 import au.org.raid.api.util.SchemaValues;
-import au.org.raid.db.jooq.api_svc.tables.records.ServicePointRecord;
+import au.org.raid.db.jooq.tables.records.ServicePointRecord;
 import au.org.raid.idl.raidv2.model.Id;
 import au.org.raid.idl.raidv2.model.IdBlock;
 import au.org.raid.idl.raidv2.model.Owner;

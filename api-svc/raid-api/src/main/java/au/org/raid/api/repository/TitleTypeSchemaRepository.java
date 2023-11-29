@@ -1,13 +1,13 @@
 package au.org.raid.api.repository;
 
-import au.org.raid.db.jooq.api_svc.tables.records.TitleTypeSchemaRecord;
+import au.org.raid.db.jooq.tables.records.TitleTypeSchemaRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-import static au.org.raid.db.jooq.api_svc.tables.TitleTypeSchema.TITLE_TYPE_SCHEMA;
+import static au.org.raid.db.jooq.tables.TitleTypeSchema.TITLE_TYPE_SCHEMA;
 
 @Repository
 @RequiredArgsConstructor

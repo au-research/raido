@@ -1,7 +1,7 @@
 package au.org.raid.api.service.raid.validation;
 
 import au.org.raid.api.repository.SubjectTypeRepository;
-import au.org.raid.db.jooq.api_svc.tables.records.SubjectTypeRecord;
+import au.org.raid.db.jooq.tables.records.SubjectTypeRecord;
 import au.org.raid.idl.raidv2.model.SubjectBlock;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.Test;

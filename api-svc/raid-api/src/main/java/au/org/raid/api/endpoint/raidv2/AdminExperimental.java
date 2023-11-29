@@ -12,7 +12,7 @@ import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.service.raid.validation.RaidoSchemaV1ValidationService;
 import au.org.raid.api.service.ror.RorService;
 import au.org.raid.api.util.*;
-import au.org.raid.db.jooq.api_svc.tables.records.AppUserRecord;
+import au.org.raid.db.jooq.tables.records.AppUserRecord;
 import au.org.raid.idl.raidv2.api.AdminExperimentalApi;
 import au.org.raid.idl.raidv2.model.*;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
@@ -29,10 +29,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
-import static au.org.raid.db.jooq.api_svc.enums.UserRole.OPERATOR;
-import static au.org.raid.db.jooq.api_svc.tables.AppUser.APP_USER;
-import static au.org.raid.db.jooq.api_svc.tables.ServicePoint.SERVICE_POINT;
-import static au.org.raid.db.jooq.api_svc.tables.UserAuthzRequest.USER_AUTHZ_REQUEST;
+import static au.org.raid.db.jooq.enums.UserRole.OPERATOR;
+import static au.org.raid.db.jooq.tables.AppUser.APP_USER;
+import static au.org.raid.db.jooq.tables.ServicePoint.SERVICE_POINT;
+import static au.org.raid.db.jooq.tables.UserAuthzRequest.USER_AUTHZ_REQUEST;
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 
 @CrossOrigin

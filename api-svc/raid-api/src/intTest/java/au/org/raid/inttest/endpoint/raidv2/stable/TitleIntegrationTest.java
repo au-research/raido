@@ -1,7 +1,7 @@
 package au.org.raid.inttest.endpoint.raidv2.stable;
 
 import au.org.raid.api.Api;
-import au.org.raid.db.jooq.api_svc.enums.UserRole;
+import au.org.raid.db.jooq.enums.UserRole;
 import au.org.raid.idl.raidv2.model.Title;
 import au.org.raid.idl.raidv2.model.TitleTypeWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;

@@ -1,13 +1,13 @@
 package au.org.raid.api.repository;
 
-import au.org.raid.db.jooq.api_svc.tables.records.RelatedRaidTypeSchemaRecord;
+import au.org.raid.db.jooq.tables.records.RelatedRaidTypeSchemaRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-import static au.org.raid.db.jooq.api_svc.tables.RelatedRaidTypeSchema.RELATED_RAID_TYPE_SCHEMA;
+import static au.org.raid.db.jooq.tables.RelatedRaidTypeSchema.RELATED_RAID_TYPE_SCHEMA;
 
 @Repository
 @RequiredArgsConstructor

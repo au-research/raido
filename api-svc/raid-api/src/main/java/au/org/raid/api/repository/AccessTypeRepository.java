@@ -1,13 +1,13 @@
 package au.org.raid.api.repository;
 
-import au.org.raid.db.jooq.api_svc.tables.records.AccessTypeRecord;
+import au.org.raid.db.jooq.tables.records.AccessTypeRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-import static au.org.raid.db.jooq.api_svc.tables.AccessType.ACCESS_TYPE;
+import static au.org.raid.db.jooq.tables.AccessType.ACCESS_TYPE;
 
 @Repository
 @RequiredArgsConstructor

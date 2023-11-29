@@ -140,6 +140,7 @@ const ciConfig: EnvironmentConfig = {
 };
 
 const devConfig: EnvironmentConfig = {
+
     environmentName: "dev",
     isProd: false,
     // have to run the https proxy for this, see local-orcid-signin.md

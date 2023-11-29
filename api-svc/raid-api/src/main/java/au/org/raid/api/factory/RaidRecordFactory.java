@@ -2,15 +2,19 @@ package au.org.raid.api.factory;
 
 import au.org.raid.api.exception.InvalidJsonException;
 import au.org.raid.api.exception.InvalidTitleException;
+import au.org.raid.api.service.Handle;
+import au.org.raid.api.service.apids.model.ApidsMintResponse;
 import au.org.raid.api.util.DateUtil;
-import au.org.raid.db.jooq.api_svc.enums.Metaschema;
-import au.org.raid.db.jooq.api_svc.tables.records.RaidRecord;
-import au.org.raid.db.jooq.api_svc.tables.records.ServicePointRecord;
+import au.org.raid.db.jooq.enums.Metaschema;
+import au.org.raid.db.jooq.tables.records.RaidRecord;
+import au.org.raid.db.jooq.tables.records.ServicePointRecord;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
+import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
 import au.org.raid.idl.raidv2.model.Title;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import org.jooq.JSONB;
 import org.springframework.stereotype.Component;
 
@@ -30,9 +34,34 @@ public class RaidRecordFactory {
         this.objectMapper = objectMapper;
     }
 
+    @SneakyThrows
+    public RaidRecord create(final RaidDto raid, final String dataciteHandle) {
+        final var handle = new Handle(raid.getIdentifier().getGlobalUrl());
+
+        final var primaryTitle = raid.getTitle().stream()
+                .filter(title -> title.getType().getId().equals(PRIMARY_TITLE_TYPE))
+                .findFirst()
+                .orElseThrow(() -> new InvalidTitleException(null));
+
+        return new RaidRecord()
+                .setVersion(raid.getIdentifier().getVersion())
+//                .setHandle(handle.toString())
+                .setHandle(dataciteHandle)
+                .setServicePointId(raid.getIdentifier().getOwner().getServicePoint())
+//                .setUrl(raid.getIdentifier().getGlobalUrl())
+                .setUrl("https:/raid.org/" + dataciteHandle)
+                .setUrlIndex(0)
+                .setPrimaryTitle(primaryTitle.getText())
+                .setMetadata(JSONB.valueOf(objectMapper.writeValueAsString(raid)))
+                .setMetadataSchema(Metaschema.raido_metadata_schema_v2)
+                .setStartDate(DateUtil.parseDate(raid.getDate().getStartDate()))
+                .setDateCreated(LocalDateTime.now())
+                .setConfidential(!raid.getAccess().getType().getId().equals(ACCESS_TYPE_OPEN));
+    }
+
     public RaidRecord create(
             final RaidCreateRequest raid,
-            final String dataciteHandle,
+            final ApidsMintResponse apidsMintResponse,
             final ServicePointRecord servicePointRecord) {
 
         final var primaryTitle = raid.getTitle().stream()
@@ -50,10 +79,10 @@ public class RaidRecordFactory {
 
         return new RaidRecord()
                 .setVersion(raid.getIdentifier().getVersion())
-                .setHandle(dataciteHandle)
+                .setHandle(apidsMintResponse.identifier.handle)
                 .setServicePointId(servicePointRecord.getId())
-                .setUrl("https:/raid.org/" + dataciteHandle)
-                .setUrlIndex(0)
+                .setUrl(apidsMintResponse.identifier.property.value)
+                .setUrlIndex(apidsMintResponse.identifier.property.index)
                 .setPrimaryTitle(primaryTitle)
                 .setMetadata(JSONB.valueOf(raidJson))
                 .setMetadataSchema(Metaschema.raido_metadata_schema_v2)
@@ -70,8 +99,8 @@ public class RaidRecordFactory {
                 .orElseThrow(() -> new InvalidTitleException("One title with a titleType of 'Primary' should be specified."))
                 .getText();
 
-        final var newVersion = raid.getIdentifier().getVersion() + 1;
-        raid.getIdentifier().version(newVersion);
+//        final var newVersion = raid.getIdentifier().getVersion() + 1;
+//        raid.getIdentifier().version(newVersion);
 
         final String raidJson;
         try {

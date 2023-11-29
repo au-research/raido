@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
 import static au.org.raid.api.endpoint.message.ValidationMessage.*;
 import static au.org.raid.api.util.JooqUtil.valueFits;
 import static au.org.raid.api.util.StringUtil.isBlank;
-import static au.org.raid.db.jooq.api_svc.tables.Raid.RAID;
+import static au.org.raid.db.jooq.tables.Raid.RAID;
 import static java.util.Collections.emptyList;
 
 @Service

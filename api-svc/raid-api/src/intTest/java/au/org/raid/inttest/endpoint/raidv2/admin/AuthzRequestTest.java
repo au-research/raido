@@ -7,8 +7,8 @@ import feign.FeignException.InternalServerError;
 import org.junit.jupiter.api.Test;
 
 import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
-import static au.org.raid.db.jooq.api_svc.enums.UserRole.SP_ADMIN;
-import static au.org.raid.db.jooq.api_svc.enums.UserRole.SP_USER;
+import static au.org.raid.db.jooq.enums.UserRole.SP_ADMIN;
+import static au.org.raid.db.jooq.enums.UserRole.SP_USER;
 import static au.org.raid.idl.raidv2.model.AuthzRequestStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

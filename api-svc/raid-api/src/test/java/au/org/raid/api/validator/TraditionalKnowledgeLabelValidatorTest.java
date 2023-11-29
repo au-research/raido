@@ -2,8 +2,8 @@ package au.org.raid.api.validator;
 
 import au.org.raid.api.repository.TraditionalKnowledgeLabelRepository;
 import au.org.raid.api.repository.TraditionalKnowledgeLabelSchemaRepository;
-import au.org.raid.db.jooq.api_svc.tables.records.TraditionalKnowledgeLabelRecord;
-import au.org.raid.db.jooq.api_svc.tables.records.TraditionalKnowledgeLabelSchemaRecord;
+import au.org.raid.db.jooq.tables.records.TraditionalKnowledgeLabelRecord;
+import au.org.raid.db.jooq.tables.records.TraditionalKnowledgeLabelSchemaRecord;
 import au.org.raid.idl.raidv2.model.TraditionalKnowledgeLabel;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;

@@ -1,13 +1,13 @@
 package au.org.raid.api.repository;
 
-import au.org.raid.db.jooq.api_svc.tables.records.DescriptionTypeRecord;
+import au.org.raid.db.jooq.tables.records.DescriptionTypeRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-import static au.org.raid.db.jooq.api_svc.tables.DescriptionType.DESCRIPTION_TYPE;
+import static au.org.raid.db.jooq.tables.DescriptionType.DESCRIPTION_TYPE;
 
 @Repository
 @RequiredArgsConstructor

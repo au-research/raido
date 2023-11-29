@@ -41,7 +41,7 @@ class RaidoStableV1ValidatorTest {
     @Mock
     private DateValidator dateValidator;
     @InjectMocks
-    private RaidoStableV1Validator validationService;
+    private ValidationService validationService;
 
     @Test
     void validatesAccessOnCreate() {

@@ -9,7 +9,7 @@ import au.org.raid.api.spring.security.IdProviderException;
 import au.org.raid.api.spring.security.raidv2.ApiToken;
 import au.org.raid.api.spring.security.raidv2.UnapprovedUserApiToken;
 import au.org.raid.api.util.*;
-import au.org.raid.db.jooq.api_svc.enums.IdProvider;
+import au.org.raid.db.jooq.enums.IdProvider;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import static au.org.raid.db.jooq.api_svc.enums.IdProvider.ORCID;
+import static au.org.raid.db.jooq.enums.IdProvider.ORCID;
 
 
 @Slf4j

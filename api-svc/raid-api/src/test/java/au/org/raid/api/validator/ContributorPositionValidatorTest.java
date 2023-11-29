@@ -2,8 +2,8 @@ package au.org.raid.api.validator;
 
 import au.org.raid.api.repository.ContributorPositionRepository;
 import au.org.raid.api.repository.ContributorPositionSchemaRepository;
-import au.org.raid.db.jooq.api_svc.tables.records.ContributorPositionRecord;
-import au.org.raid.db.jooq.api_svc.tables.records.ContributorPositionSchemaRecord;
+import au.org.raid.db.jooq.tables.records.ContributorPositionRecord;
+import au.org.raid.db.jooq.tables.records.ContributorPositionSchemaRecord;
 import au.org.raid.idl.raidv2.model.ContributorPositionWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;

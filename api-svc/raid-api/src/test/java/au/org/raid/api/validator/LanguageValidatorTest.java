@@ -2,8 +2,8 @@ package au.org.raid.api.validator;
 
 import au.org.raid.api.repository.LanguageRepository;
 import au.org.raid.api.repository.LanguageSchemaRepository;
-import au.org.raid.db.jooq.api_svc.tables.records.LanguageRecord;
-import au.org.raid.db.jooq.api_svc.tables.records.LanguageSchemaRecord;
+import au.org.raid.db.jooq.tables.records.LanguageRecord;
+import au.org.raid.db.jooq.tables.records.LanguageSchemaRecord;
 import au.org.raid.idl.raidv2.model.Language;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;

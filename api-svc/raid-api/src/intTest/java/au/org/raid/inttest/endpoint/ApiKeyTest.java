@@ -12,8 +12,8 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 
 import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
-import static au.org.raid.db.jooq.api_svc.enums.IdProvider.RAIDO_API;
-import static au.org.raid.db.jooq.api_svc.enums.UserRole.SP_USER;
+import static au.org.raid.db.jooq.enums.IdProvider.RAIDO_API;
+import static au.org.raid.db.jooq.enums.UserRole.SP_USER;
 import static java.time.ZoneOffset.UTC;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

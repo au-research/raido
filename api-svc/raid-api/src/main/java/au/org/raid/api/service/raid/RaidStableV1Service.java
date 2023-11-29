@@ -2,6 +2,7 @@ package au.org.raid.api.service.raid;
 
 import au.org.raid.api.exception.InvalidJsonException;
 import au.org.raid.api.exception.InvalidVersionException;
+import au.org.raid.api.service.datacite.DataciteService;
 import au.org.raid.api.exception.ResourceNotFoundException;
 import au.org.raid.api.exception.UnknownServicePointException;
 import au.org.raid.api.factory.IdFactory;
@@ -9,9 +10,9 @@ import au.org.raid.api.factory.RaidDtoFactory;
 import au.org.raid.api.factory.RaidRecordFactory;
 import au.org.raid.api.repository.RaidRepository;
 import au.org.raid.api.repository.ServicePointRepository;
+import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.apids.ApidsService;
 import au.org.raid.api.service.apids.model.ApidsMintResponse;
-import au.org.raid.api.service.datacite.DataciteService;
 import au.org.raid.api.service.raid.id.IdentifierHandle;
 import au.org.raid.api.service.raid.id.IdentifierParser;
 import au.org.raid.api.service.raid.id.IdentifierParser.ParseProblems;
@@ -38,6 +39,8 @@ import static au.org.raid.api.util.Log.to;
 @RequiredArgsConstructor
 public class RaidStableV1Service {
     private static final Log log = to(RaidStableV1Service.class);
+    private final ApidsService apidsSvc;
+    private final MetadataService metaSvc;
     private final TransactionTemplate tx;
     private final RaidRepository raidRepository;
     private final ServicePointRepository servicePointRepository;
@@ -47,6 +50,7 @@ public class RaidStableV1Service {
     private final IdFactory idFactory;
     private final RaidChecksumService checksumService;
     private final RaidDtoFactory raidDtoFactory;
+    private final RaidHistoryService raidHistoryService;
 
 
     public List<RaidDto> list(final Long servicePointId) {
@@ -63,26 +67,54 @@ public class RaidStableV1Service {
                 .toList();
     }
 
+
+    private IdentifierHandle parseHandleFromApids(
+            ApidsMintResponse apidsResponse
+    ) {
+        var parseResult = idParser.parseHandle(apidsResponse.identifier.handle);
+
+        if (parseResult instanceof ParseProblems problems) {
+            log.with("handle", apidsResponse.identifier.handle).
+                    with("problems", problems.getProblems()).
+                    error("APIDS service returned malformed handle");
+            throw runtimeException("APIDS service returned malformed handle: %s",
+                    apidsResponse.identifier.handle);
+        }
+
+        return (IdentifierHandle) parseResult;
+    }
+
     public IdentifierUrl mintRaidSchemaV1(
             final RaidCreateRequest request,
             final long servicePoint
     ) {
+        /* this is the part where we want to make sure no TX is held open.
+         * Maybe *this* should be marked tx.prop=never? */
+
         DataciteService dataciteService = new DataciteService();
 
         final var servicePointRecord =
                 servicePointRepository.findById(servicePoint).orElseThrow(() ->
                         new UnknownServicePointException(servicePoint));
 
+        final var apidsResponse = apidsSvc.mintApidsHandleContentPrefix(
+                metaSvc::formatRaidoLandingPageUrl);
+
         String datacitePrefix = dataciteService.getDatacitePrefix();
         String dataciteSuffix = dataciteService.getDataciteSuffix();
         String dataciteHandle = datacitePrefix + "/" + dataciteSuffix;
 
-        IdentifierUrl id = new IdentifierUrl("https://raid.org", datacitePrefix, dataciteSuffix);
+        IdentifierHandle handle = parseHandleFromApids(apidsResponse);
+//        var id = new IdentifierUrl(metaSvc.getMetaProps().getHandleUrlPrefix(), handle);
+        var id = new IdentifierUrl("https://raid.org", datacitePrefix, dataciteSuffix);
         request.setIdentifier(idFactory.create(id, servicePointRecord));
         String dataciteRaidHandle = dataciteService.createDataciteRaid(request, dataciteHandle);
 
-        final var raidRecord = raidRecordFactory.create(request, dataciteRaidHandle, servicePointRecord);
+        final var raidDto = raidHistoryService.save(request);
+        final var raidRecord = raidRecordFactory.create(raidDto, dataciteRaidHandle);
+
         tx.executeWithoutResult(status -> raidRepository.insert(raidRecord));
+
         return id;
     }
 
@@ -107,6 +139,7 @@ public class RaidStableV1Service {
         final var existing = raidRepository.findByHandleAndVersion(handle, version)
                 .orElseThrow(() -> new ResourceNotFoundException(handle));
 
+
         final var existingChecksum = checksumService.create(existing);
         final var updateChecksum = checksumService.create(raid);
 
@@ -114,7 +147,8 @@ public class RaidStableV1Service {
             return objectMapper.readValue(
                     existing.getMetadata().data(), RaidDto.class);
         }
-        final var raidRecord = raidRecordFactory.merge(raid, existing);
+
+        final var raidDto = raidHistoryService.save(raid);
 
         try {
             DataciteService dataciteService = new DataciteService();
@@ -123,11 +157,8 @@ public class RaidStableV1Service {
             throw new RuntimeException("Error updating datacite RAiD");
         }
 
-        final Integer numRowsChanged = tx.execute(status -> raidRepository.updateByHandleAndVersion(raidRecord));
-
-        if (numRowsChanged == null || numRowsChanged != 1) {
-            throw new InvalidVersionException(version);
-        }
+        final var raidRecord = raidRecordFactory.create(raidDto, handle);
+        raidRepository.updateByHandleAndVersion(raidRecord, version);
 
         final var result = raidRepository.findByHandle(handle)
                 .orElseThrow(() -> new ResourceNotFoundException(handle));

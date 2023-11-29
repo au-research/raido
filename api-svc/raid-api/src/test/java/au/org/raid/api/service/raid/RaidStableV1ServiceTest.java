@@ -6,6 +6,7 @@ import au.org.raid.api.factory.RaidDtoFactory;
 import au.org.raid.api.factory.RaidRecordFactory;
 import au.org.raid.api.repository.RaidRepository;
 import au.org.raid.api.repository.ServicePointRepository;
+import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.apids.ApidsService;
 import au.org.raid.api.service.apids.model.ApidsMintResponse;
 import au.org.raid.api.service.raid.id.IdentifierHandle;
@@ -14,8 +15,8 @@ import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.spring.config.environment.MetadataProps;
 import au.org.raid.api.util.FileUtil;
 import au.org.raid.api.util.SchemaValues;
-import au.org.raid.db.jooq.api_svc.tables.records.RaidRecord;
-import au.org.raid.db.jooq.api_svc.tables.records.ServicePointRecord;
+import au.org.raid.db.jooq.tables.records.RaidRecord;
+import au.org.raid.db.jooq.tables.records.ServicePointRecord;
 import au.org.raid.idl.raidv2.model.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -75,6 +76,8 @@ class RaidStableV1ServiceTest {
     private RaidChecksumService checksumService;
     @Mock
     private RaidDtoFactory raidDtoFactory;
+    @Mock
+    private RaidHistoryService raidHistoryService;
     @InjectMocks
     private RaidStableV1Service raidService;
 
@@ -100,6 +103,8 @@ class RaidStableV1ServiceTest {
         apidsResponse.identifier = apidsIdentifier;
 
         final var servicePointRecord = new ServicePointRecord();
+
+        final var raidDto = new RaidDto();
         final var raidRecord = new RaidRecord();
 
 
@@ -121,7 +126,8 @@ class RaidStableV1ServiceTest {
         when(idParser.parseHandle(handle.format())).thenReturn(handle);
         when(idFactory.create(identifierUrl, servicePointRecord)).thenReturn(id);
         when(metadataService.getMetaProps()).thenReturn(metadataProps);
-        when(raidRecordFactory.create(createRaidRequest, apidsResponse, servicePointRecord)).thenReturn(raidRecord);
+        when(raidHistoryService.save(createRaidRequest)).thenReturn(raidDto);
+        when(raidRecordFactory.create(raidDto)).thenReturn(raidRecord);
 
         raidService.mintRaidSchemaV1(createRaidRequest, servicePointId);
 
@@ -204,16 +210,18 @@ class RaidStableV1ServiceTest {
         when(checksumService.create(updateRequest)).thenReturn("2");
 
         when(raidRepository.findByHandleAndVersion(handle, 1)).thenReturn(Optional.of(existingRaid));
-        when(raidRecordFactory.merge(updateRequest, existingRaid)).thenReturn(updatedRaid);
+
+        when(raidHistoryService.save(updateRequest)).thenReturn(expected);
+        when(raidRecordFactory.create(expected)).thenReturn(updatedRaid);
         when(idParser.parseUrlWithException(id.formatUrl())).thenReturn(id);
         when(mapper.readValue(raidJson, RaidDto.class)).thenReturn(expected);
-        when(transactionTemplate.execute(any(TransactionCallback.class))).thenReturn(1);
+//        when(transactionTemplate.execute(any(TransactionCallback.class))).thenReturn(1);
         when(raidRepository.findByHandle(handle)).thenReturn(Optional.of(updatedRaid));
 
         final var result = raidService.update(updateRequest);
 
         verify(raidRepository).findByHandleAndVersion(handle, 1);
-        verify(transactionTemplate).execute(any(TransactionCallback.class));
+//        verify(transactionTemplate).execute(any(TransactionCallback.class));
 
         assertThat(result, Matchers.is(expected));
     }

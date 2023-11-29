@@ -1,6 +1,6 @@
 package au.org.raid.inttest.client;
 
-import au.org.raid.db.jooq.api_svc.enums.UserRole;
+import au.org.raid.db.jooq.enums.UserRole;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.inttest.auth.BootstrapAuthTokenService;
