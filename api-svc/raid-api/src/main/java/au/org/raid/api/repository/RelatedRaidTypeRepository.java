@@ -21,8 +21,6 @@ public class RelatedRaidTypeRepository {
                 fetchOptional(record -> new RelatedRaidTypeRecord()
                         .setSchemaId(RELATED_RAID_TYPE.SCHEMA_ID.getValue(record))
                         .setUri(RELATED_RAID_TYPE.URI.getValue(record))
-                        .setName(RELATED_RAID_TYPE.NAME.getValue(record))
-                        .setDescription(RELATED_RAID_TYPE.DESCRIPTION.getValue(record))
                 );
     }
 
@@ -33,8 +31,6 @@ public class RelatedRaidTypeRepository {
                 fetchOptional(record -> new RelatedRaidTypeRecord()
                         .setSchemaId(RELATED_RAID_TYPE.SCHEMA_ID.getValue(record))
                         .setUri(RELATED_RAID_TYPE.URI.getValue(record))
-                        .setName(RELATED_RAID_TYPE.NAME.getValue(record))
-                        .setDescription(RELATED_RAID_TYPE.DESCRIPTION.getValue(record))
                 );
     }
 }

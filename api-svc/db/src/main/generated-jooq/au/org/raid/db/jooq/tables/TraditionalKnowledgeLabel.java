@@ -8,17 +8,16 @@ import au.org.raid.db.jooq.ApiSvc;
 import au.org.raid.db.jooq.Keys;
 import au.org.raid.db.jooq.tables.records.TraditionalKnowledgeLabelRecord;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function2;
+import org.jooq.Function3;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row2;
+import org.jooq.Row3;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -53,14 +52,19 @@ public class TraditionalKnowledgeLabel extends TableImpl<TraditionalKnowledgeLab
     }
 
     /**
-     * The column <code>api_svc.traditional_knowledge_label.schema_id</code>.
+     * The column <code>api_svc.traditional_knowledge_label.id</code>.
      */
-    public final TableField<TraditionalKnowledgeLabelRecord, Integer> SCHEMA_ID = createField(DSL.name("schema_id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<TraditionalKnowledgeLabelRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>api_svc.traditional_knowledge_label.uri</code>.
      */
     public final TableField<TraditionalKnowledgeLabelRecord, String> URI = createField(DSL.name("uri"), SQLDataType.VARCHAR.nullable(false), this, "");
+
+    /**
+     * The column <code>api_svc.traditional_knowledge_label.schema_id</code>.
+     */
+    public final TableField<TraditionalKnowledgeLabelRecord, Integer> SCHEMA_ID = createField(DSL.name("schema_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
     private TraditionalKnowledgeLabel(Name alias, Table<TraditionalKnowledgeLabelRecord> aliased) {
         this(alias, aliased, null);
@@ -103,26 +107,13 @@ public class TraditionalKnowledgeLabel extends TableImpl<TraditionalKnowledgeLab
     }
 
     @Override
-    public UniqueKey<TraditionalKnowledgeLabelRecord> getPrimaryKey() {
-        return Keys.TRADITIONAL_KNOWLEDGE_LABEL_PKEY;
+    public Identity<TraditionalKnowledgeLabelRecord, Integer> getIdentity() {
+        return (Identity<TraditionalKnowledgeLabelRecord, Integer>) super.getIdentity();
     }
 
     @Override
-    public List<ForeignKey<TraditionalKnowledgeLabelRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.TRADITIONAL_KNOWLEDGE_LABEL__FK_TRADITIONAL_KNOWLEDGE_LABEL_ID);
-    }
-
-    private transient TraditionalKnowledgeLabelSchema _traditionalKnowledgeLabelSchema;
-
-    /**
-     * Get the implicit join path to the
-     * <code>api_svc.traditional_knowledge_label_schema</code> table.
-     */
-    public TraditionalKnowledgeLabelSchema traditionalKnowledgeLabelSchema() {
-        if (_traditionalKnowledgeLabelSchema == null)
-            _traditionalKnowledgeLabelSchema = new TraditionalKnowledgeLabelSchema(this, Keys.TRADITIONAL_KNOWLEDGE_LABEL__FK_TRADITIONAL_KNOWLEDGE_LABEL_ID);
-
-        return _traditionalKnowledgeLabelSchema;
+    public UniqueKey<TraditionalKnowledgeLabelRecord> getPrimaryKey() {
+        return Keys.TRADITIONAL_KNOWLEDGE_LABEL_NEW_PKEY;
     }
 
     @Override
@@ -165,18 +156,18 @@ public class TraditionalKnowledgeLabel extends TableImpl<TraditionalKnowledgeLab
     }
 
     // -------------------------------------------------------------------------
-    // Row2 type methods
+    // Row3 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row2<Integer, String> fieldsRow() {
-        return (Row2) super.fieldsRow();
+    public Row3<Integer, String, Integer> fieldsRow() {
+        return (Row3) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function2<? super Integer, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function3<? super Integer, ? super String, ? super Integer, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -184,7 +175,7 @@ public class TraditionalKnowledgeLabel extends TableImpl<TraditionalKnowledgeLab
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function2<? super Integer, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function3<? super Integer, ? super String, ? super Integer, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

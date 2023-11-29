@@ -18,13 +18,13 @@ import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function11;
+import org.jooq.Function16;
 import org.jooq.Index;
 import org.jooq.JSONB;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row11;
+import org.jooq.Row16;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -80,18 +80,6 @@ public class Raid extends TableImpl<RaidRecord> {
     public final TableField<RaidRecord, String> URL = createField(DSL.name("url"), SQLDataType.VARCHAR(512).nullable(false), this, "The value that we set as the `URL` property via ARDC APIDS.\n  Example: `https://demo.raido-infra.com/raid/123.456/789`. \n  The global handle regisrty url (e.g. `https://hdl.handle.net/123.456/789`) \n  will redirect to this value.");
 
     /**
-     * The column <code>api_svc.raid.url_index</code>. The `index` of the URL
-     * property in APIDS. This can be different if we change
-     *   how we mint URL values via APIDS.
-     */
-    public final TableField<RaidRecord, Integer> URL_INDEX = createField(DSL.name("url_index"), SQLDataType.INTEGER.nullable(false), this, "The `index` of the URL property in APIDS. This can be different if we change\n  how we mint URL values via APIDS.");
-
-    /**
-     * The column <code>api_svc.raid.primary_title</code>.
-     */
-    public final TableField<RaidRecord, String> PRIMARY_TITLE = createField(DSL.name("primary_title"), SQLDataType.VARCHAR(256).nullable(false), this, "");
-
-    /**
      * The column <code>api_svc.raid.confidential</code>.
      */
     public final TableField<RaidRecord, Boolean> CONFIDENTIAL = createField(DSL.name("confidential"), SQLDataType.BOOLEAN.nullable(false), this, "");
@@ -121,6 +109,41 @@ public class Raid extends TableImpl<RaidRecord> {
      * The column <code>api_svc.raid.version</code>.
      */
     public final TableField<RaidRecord, Integer> VERSION = createField(DSL.name("version"), SQLDataType.INTEGER.defaultValue(DSL.field(DSL.raw("1"), SQLDataType.INTEGER)), this, "");
+
+    /**
+     * The column <code>api_svc.raid.end_date</code>.
+     */
+    public final TableField<RaidRecord, String> END_DATE = createField(DSL.name("end_date"), SQLDataType.VARCHAR, this, "");
+
+    /**
+     * The column <code>api_svc.raid.registration_agency</code>.
+     */
+    public final TableField<RaidRecord, String> REGISTRATION_AGENCY = createField(DSL.name("registration_agency"), SQLDataType.VARCHAR, this, "");
+
+    /**
+     * The column <code>api_svc.raid.owner</code>.
+     */
+    public final TableField<RaidRecord, String> OWNER = createField(DSL.name("owner"), SQLDataType.VARCHAR, this, "");
+
+    /**
+     * The column <code>api_svc.raid.license</code>.
+     */
+    public final TableField<RaidRecord, String> LICENSE = createField(DSL.name("license"), SQLDataType.VARCHAR, this, "");
+
+    /**
+     * The column <code>api_svc.raid.access_type_id</code>.
+     */
+    public final TableField<RaidRecord, Integer> ACCESS_TYPE_ID = createField(DSL.name("access_type_id"), SQLDataType.INTEGER, this, "");
+
+    /**
+     * The column <code>api_svc.raid.embargo_expiry</code>.
+     */
+    public final TableField<RaidRecord, String> EMBARGO_EXPIRY = createField(DSL.name("embargo_expiry"), SQLDataType.VARCHAR, this, "");
+
+    /**
+     * The column <code>api_svc.raid.access_statement</code>.
+     */
+    public final TableField<RaidRecord, String> ACCESS_STATEMENT = createField(DSL.name("access_statement"), SQLDataType.CLOB, this, "");
 
     private Raid(Name alias, Table<RaidRecord> aliased) {
         this(alias, aliased, null);
@@ -228,18 +251,18 @@ public class Raid extends TableImpl<RaidRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row11 type methods
+    // Row16 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row11<String, Long, String, Integer, String, Boolean, Metaschema, JSONB, LocalDate, LocalDateTime, Integer> fieldsRow() {
-        return (Row11) super.fieldsRow();
+    public Row16<String, Long, String, Boolean, Metaschema, JSONB, LocalDate, LocalDateTime, Integer, String, String, String, String, Integer, String, String> fieldsRow() {
+        return (Row16) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function11<? super String, ? super Long, ? super String, ? super Integer, ? super String, ? super Boolean, ? super Metaschema, ? super JSONB, ? super LocalDate, ? super LocalDateTime, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function16<? super String, ? super Long, ? super String, ? super Boolean, ? super Metaschema, ? super JSONB, ? super LocalDate, ? super LocalDateTime, ? super Integer, ? super String, ? super String, ? super String, ? super String, ? super Integer, ? super String, ? super String, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -247,7 +270,7 @@ public class Raid extends TableImpl<RaidRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function11<? super String, ? super Long, ? super String, ? super Integer, ? super String, ? super Boolean, ? super Metaschema, ? super JSONB, ? super LocalDate, ? super LocalDateTime, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function16<? super String, ? super Long, ? super String, ? super Boolean, ? super Metaschema, ? super JSONB, ? super LocalDate, ? super LocalDateTime, ? super Integer, ? super String, ? super String, ? super String, ? super String, ? super Integer, ? super String, ? super String, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

@@ -7,29 +7,47 @@ package au.org.raid.db.jooq;
 import au.org.raid.db.jooq.tables.AccessType;
 import au.org.raid.db.jooq.tables.AccessTypeSchema;
 import au.org.raid.db.jooq.tables.AppUser;
+import au.org.raid.db.jooq.tables.Contributor;
 import au.org.raid.db.jooq.tables.ContributorPosition;
 import au.org.raid.db.jooq.tables.ContributorPositionSchema;
 import au.org.raid.db.jooq.tables.ContributorRole;
 import au.org.raid.db.jooq.tables.ContributorRoleSchema;
+import au.org.raid.db.jooq.tables.ContributorSchema;
+import au.org.raid.db.jooq.tables.Description;
 import au.org.raid.db.jooq.tables.DescriptionType;
 import au.org.raid.db.jooq.tables.DescriptionTypeSchema;
 import au.org.raid.db.jooq.tables.FlywaySchemaHistory;
 import au.org.raid.db.jooq.tables.Language;
 import au.org.raid.db.jooq.tables.LanguageSchema;
+import au.org.raid.db.jooq.tables.Organisation;
 import au.org.raid.db.jooq.tables.OrganisationRole;
 import au.org.raid.db.jooq.tables.OrganisationRoleSchema;
+import au.org.raid.db.jooq.tables.OrganisationSchema;
 import au.org.raid.db.jooq.tables.Raid;
+import au.org.raid.db.jooq.tables.RaidAlternateIdentifier;
+import au.org.raid.db.jooq.tables.RaidAlternateUrl;
+import au.org.raid.db.jooq.tables.RaidContributorPosition;
+import au.org.raid.db.jooq.tables.RaidContributorRole;
 import au.org.raid.db.jooq.tables.RaidHistory;
+import au.org.raid.db.jooq.tables.RaidOrganisationRole;
+import au.org.raid.db.jooq.tables.RaidRelatedObject;
+import au.org.raid.db.jooq.tables.RaidSpatialCoverage;
+import au.org.raid.db.jooq.tables.RaidSubjectType;
+import au.org.raid.db.jooq.tables.RaidTraditionalKnowledgeLabel;
 import au.org.raid.db.jooq.tables.RaidoOperator;
+import au.org.raid.db.jooq.tables.RelatedObject;
 import au.org.raid.db.jooq.tables.RelatedObjectCategory;
 import au.org.raid.db.jooq.tables.RelatedObjectCategorySchema;
 import au.org.raid.db.jooq.tables.RelatedObjectType;
 import au.org.raid.db.jooq.tables.RelatedObjectTypeSchema;
+import au.org.raid.db.jooq.tables.RelatedRaid;
 import au.org.raid.db.jooq.tables.RelatedRaidType;
 import au.org.raid.db.jooq.tables.RelatedRaidTypeSchema;
 import au.org.raid.db.jooq.tables.ServicePoint;
+import au.org.raid.db.jooq.tables.SpatialCoverageSchema;
 import au.org.raid.db.jooq.tables.SubjectType;
 import au.org.raid.db.jooq.tables.SubjectTypeSchema;
+import au.org.raid.db.jooq.tables.Title;
 import au.org.raid.db.jooq.tables.TitleType;
 import au.org.raid.db.jooq.tables.TitleTypeSchema;
 import au.org.raid.db.jooq.tables.Token;
@@ -76,16 +94,25 @@ public class ApiSvc extends SchemaImpl {
     public final List<Sequence<?>> getSequences() {
         return Arrays.asList(
             Sequences.ACCESS_TYPE_SCHEME_ID_SEQ,
+            Sequences.CONTRIBUTOR_POSITION_NEW_ID_SEQ,
             Sequences.CONTRIBUTOR_POSITION_SCHEME_ID_SEQ,
+            Sequences.CONTRIBUTOR_ROLE_NEW_ID_SEQ,
             Sequences.CONTRIBUTOR_ROLE_SCHEME_ID_SEQ,
+            Sequences.DESCRIPTION_TYPE_NEW_ID_SEQ,
             Sequences.DESCRIPTION_TYPE_SCHEME_ID_SEQ,
             Sequences.LANGUAGE_SCHEME_ID_SEQ,
+            Sequences.ORGANISATION_ROLE_NEW_ID_SEQ,
             Sequences.ORGANISATION_ROLE_SCHEME_ID_SEQ,
+            Sequences.RELATED_OBJECT_CATEGORY_NEW_ID_SEQ,
             Sequences.RELATED_OBJECT_CATEGORY_SCHEME_ID_SEQ,
+            Sequences.RELATED_OBJECT_TYPE_NEW_ID_SEQ,
             Sequences.RELATED_OBJECT_TYPE_SCHEME_ID_SEQ,
+            Sequences.RELATED_RAID_TYPE_NEW_ID_SEQ,
             Sequences.RELATED_RAID_TYPE_SCHEME_ID_SEQ,
             Sequences.SUBJECT_TYPE_SCHEME_ID_SEQ,
-            Sequences.TITLE_TYPE_SCHEME_ID_SEQ
+            Sequences.TITLE_TYPE_NEW_ID_SEQ,
+            Sequences.TITLE_TYPE_SCHEME_ID_SEQ,
+            Sequences.TRADITIONAL_KNOWLEDGE_LABEL_NEW_ID_SEQ
         );
     }
 
@@ -95,29 +122,47 @@ public class ApiSvc extends SchemaImpl {
             AccessType.ACCESS_TYPE,
             AccessTypeSchema.ACCESS_TYPE_SCHEMA,
             AppUser.APP_USER,
+            Contributor.CONTRIBUTOR,
             ContributorPosition.CONTRIBUTOR_POSITION,
             ContributorPositionSchema.CONTRIBUTOR_POSITION_SCHEMA,
             ContributorRole.CONTRIBUTOR_ROLE,
             ContributorRoleSchema.CONTRIBUTOR_ROLE_SCHEMA,
+            ContributorSchema.CONTRIBUTOR_SCHEMA,
+            Description.DESCRIPTION,
             DescriptionType.DESCRIPTION_TYPE,
             DescriptionTypeSchema.DESCRIPTION_TYPE_SCHEMA,
             FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
             Language.LANGUAGE,
             LanguageSchema.LANGUAGE_SCHEMA,
+            Organisation.ORGANISATION,
             OrganisationRole.ORGANISATION_ROLE,
             OrganisationRoleSchema.ORGANISATION_ROLE_SCHEMA,
+            OrganisationSchema.ORGANISATION_SCHEMA,
             Raid.RAID,
+            RaidAlternateIdentifier.RAID_ALTERNATE_IDENTIFIER,
+            RaidAlternateUrl.RAID_ALTERNATE_URL,
+            RaidContributorPosition.RAID_CONTRIBUTOR_POSITION,
+            RaidContributorRole.RAID_CONTRIBUTOR_ROLE,
             RaidHistory.RAID_HISTORY,
+            RaidOrganisationRole.RAID_ORGANISATION_ROLE,
+            RaidRelatedObject.RAID_RELATED_OBJECT,
+            RaidSpatialCoverage.RAID_SPATIAL_COVERAGE,
+            RaidSubjectType.RAID_SUBJECT_TYPE,
+            RaidTraditionalKnowledgeLabel.RAID_TRADITIONAL_KNOWLEDGE_LABEL,
             RaidoOperator.RAIDO_OPERATOR,
+            RelatedObject.RELATED_OBJECT,
             RelatedObjectCategory.RELATED_OBJECT_CATEGORY,
             RelatedObjectCategorySchema.RELATED_OBJECT_CATEGORY_SCHEMA,
             RelatedObjectType.RELATED_OBJECT_TYPE,
             RelatedObjectTypeSchema.RELATED_OBJECT_TYPE_SCHEMA,
+            RelatedRaid.RELATED_RAID,
             RelatedRaidType.RELATED_RAID_TYPE,
             RelatedRaidTypeSchema.RELATED_RAID_TYPE_SCHEMA,
             ServicePoint.SERVICE_POINT,
+            SpatialCoverageSchema.SPATIAL_COVERAGE_SCHEMA,
             SubjectType.SUBJECT_TYPE,
             SubjectTypeSchema.SUBJECT_TYPE_SCHEMA,
+            Title.TITLE,
             TitleType.TITLE_TYPE,
             TitleTypeSchema.TITLE_TYPE_SCHEMA,
             Token.TOKEN,

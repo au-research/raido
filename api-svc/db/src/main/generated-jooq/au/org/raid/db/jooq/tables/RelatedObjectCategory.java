@@ -8,17 +8,16 @@ import au.org.raid.db.jooq.ApiSvc;
 import au.org.raid.db.jooq.Keys;
 import au.org.raid.db.jooq.tables.records.RelatedObjectCategoryRecord;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function2;
+import org.jooq.Function3;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row2;
+import org.jooq.Row3;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -52,14 +51,19 @@ public class RelatedObjectCategory extends TableImpl<RelatedObjectCategoryRecord
     }
 
     /**
-     * The column <code>api_svc.related_object_category.schema_id</code>.
+     * The column <code>api_svc.related_object_category.id</code>.
      */
-    public final TableField<RelatedObjectCategoryRecord, Integer> SCHEMA_ID = createField(DSL.name("schema_id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<RelatedObjectCategoryRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>api_svc.related_object_category.uri</code>.
      */
     public final TableField<RelatedObjectCategoryRecord, String> URI = createField(DSL.name("uri"), SQLDataType.VARCHAR.nullable(false), this, "");
+
+    /**
+     * The column <code>api_svc.related_object_category.schema_id</code>.
+     */
+    public final TableField<RelatedObjectCategoryRecord, Integer> SCHEMA_ID = createField(DSL.name("schema_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
     private RelatedObjectCategory(Name alias, Table<RelatedObjectCategoryRecord> aliased) {
         this(alias, aliased, null);
@@ -102,26 +106,13 @@ public class RelatedObjectCategory extends TableImpl<RelatedObjectCategoryRecord
     }
 
     @Override
-    public UniqueKey<RelatedObjectCategoryRecord> getPrimaryKey() {
-        return Keys.RELATED_OBJECT_CATEGORY_PKEY;
+    public Identity<RelatedObjectCategoryRecord, Integer> getIdentity() {
+        return (Identity<RelatedObjectCategoryRecord, Integer>) super.getIdentity();
     }
 
     @Override
-    public List<ForeignKey<RelatedObjectCategoryRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RELATED_OBJECT_CATEGORY__FK_RELATED_OBJECT_CATEGORY_SCHEMA_ID);
-    }
-
-    private transient RelatedObjectCategorySchema _relatedObjectCategorySchema;
-
-    /**
-     * Get the implicit join path to the
-     * <code>api_svc.related_object_category_schema</code> table.
-     */
-    public RelatedObjectCategorySchema relatedObjectCategorySchema() {
-        if (_relatedObjectCategorySchema == null)
-            _relatedObjectCategorySchema = new RelatedObjectCategorySchema(this, Keys.RELATED_OBJECT_CATEGORY__FK_RELATED_OBJECT_CATEGORY_SCHEMA_ID);
-
-        return _relatedObjectCategorySchema;
+    public UniqueKey<RelatedObjectCategoryRecord> getPrimaryKey() {
+        return Keys.RELATED_OBJECT_CATEGORY_NEW_PKEY;
     }
 
     @Override
@@ -164,18 +155,18 @@ public class RelatedObjectCategory extends TableImpl<RelatedObjectCategoryRecord
     }
 
     // -------------------------------------------------------------------------
-    // Row2 type methods
+    // Row3 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row2<Integer, String> fieldsRow() {
-        return (Row2) super.fieldsRow();
+    public Row3<Integer, String, Integer> fieldsRow() {
+        return (Row3) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function2<? super Integer, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function3<? super Integer, ? super String, ? super Integer, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -183,7 +174,7 @@ public class RelatedObjectCategory extends TableImpl<RelatedObjectCategoryRecord
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function2<? super Integer, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function3<? super Integer, ? super String, ? super Integer, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

@@ -8,17 +8,16 @@ import au.org.raid.db.jooq.ApiSvc;
 import au.org.raid.db.jooq.Keys;
 import au.org.raid.db.jooq.tables.records.TitleTypeRecord;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function2;
+import org.jooq.Function3;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row2;
+import org.jooq.Row3;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -52,14 +51,19 @@ public class TitleType extends TableImpl<TitleTypeRecord> {
     }
 
     /**
-     * The column <code>api_svc.title_type.schema_id</code>.
+     * The column <code>api_svc.title_type.id</code>.
      */
-    public final TableField<TitleTypeRecord, Integer> SCHEMA_ID = createField(DSL.name("schema_id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<TitleTypeRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>api_svc.title_type.uri</code>.
      */
     public final TableField<TitleTypeRecord, String> URI = createField(DSL.name("uri"), SQLDataType.VARCHAR.nullable(false), this, "");
+
+    /**
+     * The column <code>api_svc.title_type.schema_id</code>.
+     */
+    public final TableField<TitleTypeRecord, Integer> SCHEMA_ID = createField(DSL.name("schema_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
     private TitleType(Name alias, Table<TitleTypeRecord> aliased) {
         this(alias, aliased, null);
@@ -100,26 +104,13 @@ public class TitleType extends TableImpl<TitleTypeRecord> {
     }
 
     @Override
-    public UniqueKey<TitleTypeRecord> getPrimaryKey() {
-        return Keys.TITLE_TYPE_PKEY;
+    public Identity<TitleTypeRecord, Integer> getIdentity() {
+        return (Identity<TitleTypeRecord, Integer>) super.getIdentity();
     }
 
     @Override
-    public List<ForeignKey<TitleTypeRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.TITLE_TYPE__FK_TITLE_TYPE_SCHEMA_ID);
-    }
-
-    private transient TitleTypeSchema _titleTypeSchema;
-
-    /**
-     * Get the implicit join path to the <code>api_svc.title_type_schema</code>
-     * table.
-     */
-    public TitleTypeSchema titleTypeSchema() {
-        if (_titleTypeSchema == null)
-            _titleTypeSchema = new TitleTypeSchema(this, Keys.TITLE_TYPE__FK_TITLE_TYPE_SCHEMA_ID);
-
-        return _titleTypeSchema;
+    public UniqueKey<TitleTypeRecord> getPrimaryKey() {
+        return Keys.TITLE_TYPE_NEW_PKEY;
     }
 
     @Override
@@ -162,18 +153,18 @@ public class TitleType extends TableImpl<TitleTypeRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row2 type methods
+    // Row3 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row2<Integer, String> fieldsRow() {
-        return (Row2) super.fieldsRow();
+    public Row3<Integer, String, Integer> fieldsRow() {
+        return (Row3) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function2<? super Integer, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function3<? super Integer, ? super String, ? super Integer, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -181,7 +172,7 @@ public class TitleType extends TableImpl<TitleTypeRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function2<? super Integer, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function3<? super Integer, ? super String, ? super Integer, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

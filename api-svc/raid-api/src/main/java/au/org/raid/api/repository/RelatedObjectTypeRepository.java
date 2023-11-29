@@ -21,8 +21,6 @@ public class RelatedObjectTypeRepository {
                 fetchOptional(record -> new RelatedObjectTypeRecord()
                         .setSchemaId(RELATED_OBJECT_TYPE.SCHEMA_ID.getValue(record))
                         .setUri(RELATED_OBJECT_TYPE.URI.getValue(record))
-                        .setName(RELATED_OBJECT_TYPE.NAME.getValue(record))
-                        .setDescription(RELATED_OBJECT_TYPE.DESCRIPTION.getValue(record))
                 );
     }
 }
