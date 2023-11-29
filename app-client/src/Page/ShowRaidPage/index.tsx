@@ -45,6 +45,7 @@ import ShowRelatedRaidComponent from "./components/ShowRelatedRaidComponent";
 import ShowSubjectComponent from "./components/ShowSubjectComponent";
 import ShowTitleComponent from "./components/ShowTitleComponent";
 import ShowSpatialCoverageComponent from "./components/ShowSpatialCoverageComponent";
+import ShowExternalLinksComponent from "./components/ShowExternalLinksComponent";
 
 const pageUrl = "/show-raid";
 
@@ -193,6 +194,12 @@ function Content() {
 
           <Box id="spatial-coverage" className="scroll">
             <ShowSpatialCoverageComponent
+              raid={defaultValues}
+              color={raidColors.get("blue") || ""}
+            />
+          </Box>
+          <Box id="spatial-coverage" className="scroll">
+            <ShowExternalLinksComponent
               raid={defaultValues}
               color={raidColors.get("blue") || ""}
             />

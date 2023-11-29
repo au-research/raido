@@ -2,6 +2,7 @@ import AddIcon from "@mui/icons-material/Add";
 import {
   Alert,
   Box,
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -46,7 +47,7 @@ const log = console;
 const pageUrl = "/home";
 
 const extractValuesFromRaid = (
-  raid: RaidDto
+  raid: RaidDto,
 ): {
   title: string;
   handle: string;
@@ -133,7 +134,7 @@ function RaidCurrentUser() {
     async () =>
       await api.admin.readServicePoint({
         servicePointId: user.servicePointId,
-      })
+      }),
   );
   return (
     <Card
@@ -187,7 +188,7 @@ function RaidCurrentUser() {
 
 export function RaidTableContainerV2({ servicePointId }: ListRaidsV1Request) {
   const [handleCopied, setHandleCopied] = React.useState(
-    undefined as undefined | string
+    undefined as undefined | string,
   );
 
   const api = useAuthApi();
@@ -203,7 +204,7 @@ export function RaidTableContainerV2({ servicePointId }: ListRaidsV1Request) {
 
   const raidQuery: RqQuery<RaidDto[]> = useQuery(
     ["listRaids", servicePointId],
-    () => listRaids({ servicePointId })
+    () => listRaids({ servicePointId }),
   );
 
   const spQuery = useQuery(
@@ -211,7 +212,7 @@ export function RaidTableContainerV2({ servicePointId }: ListRaidsV1Request) {
     async () =>
       await api.admin.readServicePoint({
         servicePointId: user.servicePointId,
-      })
+      }),
   );
 
   const appWritesEnabled = spQuery.data?.appWritesEnabled;
@@ -229,7 +230,7 @@ export function RaidTableContainerV2({ servicePointId }: ListRaidsV1Request) {
 
   const handleToastClose = (
     event?: React.SyntheticEvent | Event,
-    reason?: string
+    reason?: string,
   ) => {
     // source copied from https://mui.com/material-ui/react-snackbar/#simple-snackbars
     if (reason === "clickaway") {
@@ -285,6 +286,26 @@ export function RaidTableContainerV2({ servicePointId }: ListRaidsV1Request) {
       width: 100,
       renderCell: (params) => {
         return params.row.date.endDate;
+      },
+      sortable: false,
+    },
+    {
+      field: "dataciteLink",
+      headerName: "Datacite",
+      width: 100,
+      renderCell: (params) => {
+        const [prefix, suffix] = new URL(params.row.identifier.id).pathname
+          .substring(1)
+          .split("/");
+        return (
+          <Button
+            size={"small"}
+            variant={"outlined"}
+            href={`https://doi.test.datacite.org/dois/10.82841%2F${suffix}`}
+          >
+            Datacite
+          </Button>
+        );
       },
       sortable: false,
     },
@@ -433,7 +454,7 @@ function SettingsMenu({ raidData }: { raidData: RaidDto[] | undefined }) {
     const link = document.createElement("a");
     link.href = downloadLink;
     const fileSafeTimestamp = formatLocalDateAsFileSafeIsoShortDateTime(
-      new Date()
+      new Date(),
     );
     link.download = `recent-raids-${fileSafeTimestamp}.csv`;
     link.click();
