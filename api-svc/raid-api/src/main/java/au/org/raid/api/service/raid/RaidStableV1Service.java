@@ -12,6 +12,7 @@ import au.org.raid.api.repository.ServicePointRepository;
 import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.apids.ApidsService;
 import au.org.raid.api.service.apids.model.ApidsMintResponse;
+import au.org.raid.api.service.datacite.DataciteService;
 import au.org.raid.api.service.raid.id.IdentifierHandle;
 import au.org.raid.api.service.raid.id.IdentifierParser;
 import au.org.raid.api.service.raid.id.IdentifierParser.ParseProblems;
@@ -39,6 +40,7 @@ import static au.org.raid.api.util.Log.to;
 public class RaidStableV1Service {
     private static final Log log = to(RaidStableV1Service.class);
     private final ApidsService apidsSvc;
+    private final DataciteService dataciteSvc;
     private final MetadataService metaSvc;
     private final TransactionTemplate tx;
     private final RaidRepository raidRepository;
@@ -103,6 +105,11 @@ public class RaidStableV1Service {
         final var raidDto = raidHistoryService.save(request);
         final var raidRecord = raidRecordFactory.create(raidDto);
 
+        // TODO: Replace apids with datacite handle creation
+        String dataciteHandle = dataciteSvc.getDataciteHandle();
+        apidsResponse.identifier.handle = dataciteHandle;
+        dataciteSvc.createDataciteRaid(request, dataciteHandle);
+
         tx.executeWithoutResult(status -> raidRepository.insert(raidRecord));
 
         return id;
@@ -147,6 +154,7 @@ public class RaidStableV1Service {
                 .orElseThrow(() -> new ResourceNotFoundException(handle));
 
         try {
+            dataciteSvc.updateDataciteRaid(raid, handle);
             return objectMapper.readValue(
                     result.getMetadata().data(), RaidDto.class);
         } catch (JsonProcessingException e) {
