@@ -18,7 +18,7 @@ public class DataciteService {
     public final String createDataciteRaid(RaidCreateRequest request, String handle) {
         String responseHandle;
         try {
-            URL url = new URL(System.getenv("DATACITE_ENDPOINT") + "/dois");
+            URL url = new URL(System.getenv("datacite.endpoint") + "/dois");
             // RestTemplate restTemplate = new RestTemplate();
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setRequestMethod("POST");
@@ -26,8 +26,8 @@ public class DataciteService {
             httpURLConnection.setRequestProperty("Content-Type", "application/json");
 
             // Prepare the basic auth credentials
-            String username = System.getenv("DATACITE_USERNAME");
-            String password = System.getenv("DATACITE_PASSWORD");
+            String username = System.getenv("datacite.user");
+            String password = System.getenv("datacite.password");
             String encodedCredentials = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
 
             httpURLConnection.setRequestProperty("Authorization", "Basic " + encodedCredentials);
@@ -58,7 +58,7 @@ public class DataciteService {
     }
 
     public final String getDatacitePrefix(){
-        return System.getenv("DATACITE_HANDLE_PREFIX");
+        return System.getenv("datacite.handle.prefix");
     }
 
     public final String getDataciteSuffix(){
@@ -69,7 +69,7 @@ public class DataciteService {
 
     public final void updateDataciteRaid(RaidUpdateRequest request, String handle) {
         try {
-            URL url = new URL(System.getenv("DATACITE_ENDPOINT") + "/dois");
+            URL url = new URL(System.getenv("datacite.endpoint") + "/dois");
 
             // RestTemplate restTemplate = new RestTemplate();
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -78,8 +78,8 @@ public class DataciteService {
             httpURLConnection.setRequestProperty("Content-Type", "application/json");
 
             // Prepare the basic auth credentials
-            String username = System.getenv("DATACITE_USERNAME");
-            String password = System.getenv("DATACITE_PASSWORD");
+            String username = System.getenv("datacite.user");
+            String password = System.getenv("datacite.password");
             String encodedCredentials = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
 
             httpURLConnection.setRequestProperty("Authorization", "Basic " + encodedCredentials);
