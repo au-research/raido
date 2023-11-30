@@ -98,6 +98,11 @@ public class RaidStableV1Service {
         final var apidsResponse = apidsSvc.mintApidsHandleContentPrefix(
                 metaSvc::formatRaidoLandingPageUrl);
 
+        // TODO: Replace apids with datacite handle creation
+        String dataciteHandle = dataciteSvc.getDataciteHandle();
+        apidsResponse.identifier.handle = dataciteHandle;
+        dataciteSvc.createDataciteRaid(request, dataciteHandle);
+
         IdentifierHandle handle = parseHandleFromApids(apidsResponse);
         var id = new IdentifierUrl(metaSvc.getMetaProps().getHandleUrlPrefix(), handle);
         request.setIdentifier(idFactory.create(id, servicePointRecord));
@@ -105,10 +110,7 @@ public class RaidStableV1Service {
         final var raidDto = raidHistoryService.save(request);
         final var raidRecord = raidRecordFactory.create(raidDto);
 
-        // TODO: Replace apids with datacite handle creation
-        String dataciteHandle = dataciteSvc.getDataciteHandle();
-        apidsResponse.identifier.handle = dataciteHandle;
-        dataciteSvc.createDataciteRaid(request, dataciteHandle);
+
 
         tx.executeWithoutResult(status -> raidRepository.insert(raidRecord));
 
