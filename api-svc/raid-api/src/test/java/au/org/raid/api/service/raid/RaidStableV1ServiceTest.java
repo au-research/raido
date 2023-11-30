@@ -9,6 +9,7 @@ import au.org.raid.api.repository.ServicePointRepository;
 import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.apids.ApidsService;
 import au.org.raid.api.service.apids.model.ApidsMintResponse;
+import au.org.raid.api.service.datacite.DataciteService;
 import au.org.raid.api.service.raid.id.IdentifierHandle;
 import au.org.raid.api.service.raid.id.IdentifierParser;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
@@ -78,6 +79,8 @@ class RaidStableV1ServiceTest {
     private RaidDtoFactory raidDtoFactory;
     @Mock
     private RaidHistoryService raidHistoryService;
+    @Mock
+    private DataciteService dataciteService;
     @InjectMocks
     private RaidStableV1Service raidService;
 
