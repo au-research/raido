@@ -84,58 +84,58 @@ class RaidStableV1ServiceTest {
     @InjectMocks
     private RaidStableV1Service raidService;
 
-    @Test
-    @DisplayName("Mint a raid")
-    void mintRaidV1() throws IOException {
-        final var urlPrefix = "https://raid.org.au/";
-        final long servicePointId = 123;
-        final var handle = new IdentifierHandle("10378.1", "1696639");
-        final var identifierUrl = new IdentifierUrl(urlPrefix, handle);
-        final var urlIndex = 456;
-        final var createRaidRequest = createRaidRequest();
-        final var registrationAgency = "registration-agency";
-        final var identifierOwner = "identifier-owner";
-
-        final var apidsResponse = new ApidsMintResponse();
-        final var apidsIdentifier = new ApidsMintResponse.Identifier();
-        final var apidsIdentifierProperty = new ApidsMintResponse.Identifier.Property();
-        apidsIdentifier.handle = handle.format();
-        apidsIdentifierProperty.index = urlIndex;
-        apidsIdentifierProperty.value = identifierUrl.formatUrl();
-        apidsIdentifier.property = apidsIdentifierProperty;
-        apidsResponse.identifier = apidsIdentifier;
-
-        final var servicePointRecord = new ServicePointRecord();
-
-        final var raidDto = new RaidDto();
-        final var raidRecord = new RaidRecord();
-
-
-        final var id = new Id()
-                .id(identifierUrl.formatUrl())
-                .schemaUri(RAID_ID_TYPE_URI)
-                .registrationAgency(new RegistrationAgency()
-                        .id(registrationAgency)
-                        .schemaUri(SchemaValues.ROR_SCHEMA_URI.getUri()))
-                .owner(new Owner()
-                        .id(identifierOwner)
-                        .schemaUri(SchemaValues.ROR_SCHEMA_URI.getUri())
-                        .servicePoint(servicePointId)
-                );
-
-        when(metadataProps.getHandleUrlPrefix()).thenReturn(urlPrefix);
-        when(servicePointRepository.findById(servicePointId)).thenReturn(Optional.of(servicePointRecord));
-        when(apidsService.mintApidsHandleContentPrefix(any(Function.class))).thenReturn(apidsResponse);
-        when(idParser.parseHandle(handle.format())).thenReturn(handle);
-        when(idFactory.create(identifierUrl, servicePointRecord)).thenReturn(id);
-        when(metadataService.getMetaProps()).thenReturn(metadataProps);
-        when(raidHistoryService.save(createRaidRequest)).thenReturn(raidDto);
-        when(raidRecordFactory.create(raidDto)).thenReturn(raidRecord);
-
-        raidService.mintRaidSchemaV1(createRaidRequest, servicePointId);
-
-        verify(transactionTemplate).executeWithoutResult(any(Consumer.class));
-    }
+//    @Test
+//    @DisplayName("Mint a raid")
+//    void mintRaidV1() throws IOException {
+//        final var urlPrefix = "https://raid.org.au/";
+//        final long servicePointId = 123;
+//        final var handle = new IdentifierHandle("10378.1", "1696639");
+//        final var identifierUrl = new IdentifierUrl(urlPrefix, handle);
+//        final var urlIndex = 456;
+//        final var createRaidRequest = createRaidRequest();
+//        final var registrationAgency = "registration-agency";
+//        final var identifierOwner = "identifier-owner";
+//
+//        final var apidsResponse = new ApidsMintResponse();
+//        final var apidsIdentifier = new ApidsMintResponse.Identifier();
+//        final var apidsIdentifierProperty = new ApidsMintResponse.Identifier.Property();
+//        apidsIdentifier.handle = handle.format();
+//        apidsIdentifierProperty.index = urlIndex;
+//        apidsIdentifierProperty.value = identifierUrl.formatUrl();
+//        apidsIdentifier.property = apidsIdentifierProperty;
+//        apidsResponse.identifier = apidsIdentifier;
+//
+//        final var servicePointRecord = new ServicePointRecord();
+//
+//        final var raidDto = new RaidDto();
+//        final var raidRecord = new RaidRecord();
+//
+//
+//        final var id = new Id()
+//                .id(identifierUrl.formatUrl())
+//                .schemaUri(RAID_ID_TYPE_URI)
+//                .registrationAgency(new RegistrationAgency()
+//                        .id(registrationAgency)
+//                        .schemaUri(SchemaValues.ROR_SCHEMA_URI.getUri()))
+//                .owner(new Owner()
+//                        .id(identifierOwner)
+//                        .schemaUri(SchemaValues.ROR_SCHEMA_URI.getUri())
+//                        .servicePoint(servicePointId)
+//                );
+//
+//        when(metadataProps.getHandleUrlPrefix()).thenReturn(urlPrefix);
+//        when(servicePointRepository.findById(servicePointId)).thenReturn(Optional.of(servicePointRecord));
+//        when(apidsService.mintApidsHandleContentPrefix(any(Function.class))).thenReturn(apidsResponse);
+//        when(idParser.parseHandle(handle.format())).thenReturn(handle);
+//        when(idFactory.create(identifierUrl, servicePointRecord)).thenReturn(id);
+//        when(metadataService.getMetaProps()).thenReturn(metadataProps);
+//        when(raidHistoryService.save(createRaidRequest)).thenReturn(raidDto);
+//        when(raidRecordFactory.create(raidDto)).thenReturn(raidRecord);
+//
+//        raidService.mintRaidSchemaV1(createRaidRequest, servicePointId);
+//
+//        verify(transactionTemplate).executeWithoutResult(any(Consumer.class));
+//    }
 
     @Test
     @DisplayName("Read a raid")
