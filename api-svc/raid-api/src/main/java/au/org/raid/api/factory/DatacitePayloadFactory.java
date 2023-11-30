@@ -35,7 +35,8 @@ public class DatacitePayloadFactory {
     private void createCreatorNode(ObjectNode attributesNode, Owner owner){
         ArrayNode creatorsNode = attributesNode.putArray("creators");
         ObjectNode creatorNode = creatorsNode.addObject();
-        creatorNode.put("name", owner.getId());
+//        creatorNode.put("name", owner.getId());
+        creatorNode.put("name", "https://ror.org/038sjwq14");
     }
     private void createResourceTypeNode(ObjectNode attributesNode){
         ObjectNode resourceTypeNode = attributesNode.putObject("types");
@@ -108,7 +109,9 @@ public class DatacitePayloadFactory {
     private void createAccessNode(ObjectNode attributesNode, Id identifier){
         ArrayNode accessNode = attributesNode.putArray("rightsList");
         ObjectNode accessNodeObject = accessNode.addObject();
-        accessNodeObject.put("rights", identifier.getLicense());
+//        accessNodeObject.put("rights", identifier.getLicense());
+        accessNodeObject.put("rights", "Creative Commons CC-0");
+
         // TODO: Get correct URL for license
         accessNodeObject.put("rightsUri", "https://creativecommons.org/licenses/by/4.0/");
     }
