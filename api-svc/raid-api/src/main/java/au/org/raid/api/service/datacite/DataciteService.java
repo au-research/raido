@@ -2,6 +2,7 @@ package au.org.raid.api.service.datacite;
 
 
 import au.org.raid.api.factory.DatacitePayloadFactory;
+import au.org.raid.api.spring.config.DataCiteProperties;
 import au.org.raid.idl.raidv2.model.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,23 +16,27 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.UUID;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class DataciteService {
+    private final DataCiteProperties properties;
+
     public final String createDataciteRaid(RaidCreateRequest request, String handle) {
         // TODO: Use RestTemplate instead of HttpURLConnection
         String responseHandle;
         try {
-            URL url = new URL(System.getenv("datacite.endpoint") + "/dois");
+            URL url = new URL(properties.getEndpoint() + "/dois");
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setRequestMethod("POST");
             httpURLConnection.setDoOutput(true);
             httpURLConnection.setRequestProperty("Content-Type", "application/json");
 
             // Prepare the basic auth credentials
-            String username = System.getenv("datacite.user");
-            String password = System.getenv("datacite.password");
+            String username = properties.getUser();
+            String password = properties.getPassword();
             String encodedCredentials = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
 
             httpURLConnection.setRequestProperty("Authorization", "Basic " + encodedCredentials);
@@ -61,7 +66,7 @@ public class DataciteService {
     }
 
     public final String getDatacitePrefix(){
-        return System.getenv("datacite.handle.prefix");
+        return properties.getPrefix();
     }
 
     public final String getDataciteSuffix(){
@@ -79,7 +84,7 @@ public class DataciteService {
     public final String updateDataciteRaid(RaidUpdateRequest request, String handle) {
         // TODO: Use RestTemplate instead of HttpURLConnection
         try {
-            URL url = new URL(System.getenv("datacite.endpoint") + "/dois/" + handle);
+            URL url = new URL(properties.getEndpoint() + "/dois/" + handle);
 
             // RestTemplate restTemplate = new RestTemplate();
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -88,8 +93,8 @@ public class DataciteService {
             httpURLConnection.setRequestProperty("Content-Type", "application/json");
 
             // Prepare the basic auth credentials
-            String username = System.getenv("datacite.user");
-            String password = System.getenv("datacite.password");
+            String username = properties.getUser();
+            String password = properties.getPassword();
             String encodedCredentials = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
 
             httpURLConnection.setRequestProperty("Authorization", "Basic " + encodedCredentials);
