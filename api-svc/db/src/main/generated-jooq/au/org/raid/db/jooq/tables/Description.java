@@ -14,12 +14,12 @@ import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function4;
+import org.jooq.Function5;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row4;
+import org.jooq.Row5;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -70,7 +70,12 @@ public class Description extends TableImpl<DescriptionRecord> {
     /**
      * The column <code>api_svc.description.value</code>.
      */
-    public final TableField<DescriptionRecord, String> VALUE = createField(DSL.name("value"), SQLDataType.CLOB, this, "");
+    public final TableField<DescriptionRecord, String> VALUE = createField(DSL.name("value"), SQLDataType.CLOB.nullable(false), this, "");
+
+    /**
+     * The column <code>api_svc.description.language_id</code>.
+     */
+    public final TableField<DescriptionRecord, Integer> LANGUAGE_ID = createField(DSL.name("language_id"), SQLDataType.INTEGER, this, "");
 
     private Description(Name alias, Table<DescriptionRecord> aliased) {
         this(alias, aliased, null);
@@ -122,11 +127,12 @@ public class Description extends TableImpl<DescriptionRecord> {
 
     @Override
     public List<ForeignKey<DescriptionRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.DESCRIPTION__FK_DESCRIPTION_RAID_NAME, Keys.DESCRIPTION__FK_DESCRIPTION_TYPE);
+        return Arrays.asList(Keys.DESCRIPTION__FK_DESCRIPTION_RAID_NAME, Keys.DESCRIPTION__FK_DESCRIPTION_TYPE, Keys.DESCRIPTION__FK_DESCRIPTION_LANGUAGE_ID);
     }
 
     private transient Raid _raid;
     private transient DescriptionType _descriptionType;
+    private transient Language _language;
 
     /**
      * Get the implicit join path to the <code>api_svc.raid</code> table.
@@ -147,6 +153,16 @@ public class Description extends TableImpl<DescriptionRecord> {
             _descriptionType = new DescriptionType(this, Keys.DESCRIPTION__FK_DESCRIPTION_TYPE);
 
         return _descriptionType;
+    }
+
+    /**
+     * Get the implicit join path to the <code>api_svc.language</code> table.
+     */
+    public Language language() {
+        if (_language == null)
+            _language = new Language(this, Keys.DESCRIPTION__FK_DESCRIPTION_LANGUAGE_ID);
+
+        return _language;
     }
 
     @Override
@@ -189,18 +205,18 @@ public class Description extends TableImpl<DescriptionRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row4 type methods
+    // Row5 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row4<Integer, String, Integer, String> fieldsRow() {
-        return (Row4) super.fieldsRow();
+    public Row5<Integer, String, Integer, String, Integer> fieldsRow() {
+        return (Row5) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function4<? super Integer, ? super String, ? super Integer, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function5<? super Integer, ? super String, ? super Integer, ? super String, ? super Integer, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -208,7 +224,7 @@ public class Description extends TableImpl<DescriptionRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function4<? super Integer, ? super String, ? super Integer, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function5<? super Integer, ? super String, ? super Integer, ? super String, ? super Integer, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

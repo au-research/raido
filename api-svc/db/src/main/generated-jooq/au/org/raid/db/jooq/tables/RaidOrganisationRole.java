@@ -14,11 +14,12 @@ import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function3;
+import org.jooq.Function5;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row3;
+import org.jooq.Row5;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -52,20 +53,31 @@ public class RaidOrganisationRole extends TableImpl<RaidOrganisationRoleRecord> 
     }
 
     /**
-     * The column <code>api_svc.raid_organisation_role.raid_name</code>.
+     * The column <code>api_svc.raid_organisation_role.id</code>.
      */
-    public final TableField<RaidOrganisationRoleRecord, String> RAID_NAME = createField(DSL.name("raid_name"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<RaidOrganisationRoleRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>api_svc.raid_organisation_role.organisation_id</code>.
+     * The column
+     * <code>api_svc.raid_organisation_role.raid_organisation_id</code>.
      */
-    public final TableField<RaidOrganisationRoleRecord, Integer> ORGANISATION_ID = createField(DSL.name("organisation_id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<RaidOrganisationRoleRecord, Integer> RAID_ORGANISATION_ID = createField(DSL.name("raid_organisation_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column
      * <code>api_svc.raid_organisation_role.organisation_role_id</code>.
      */
     public final TableField<RaidOrganisationRoleRecord, Integer> ORGANISATION_ROLE_ID = createField(DSL.name("organisation_role_id"), SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>api_svc.raid_organisation_role.start_date</code>.
+     */
+    public final TableField<RaidOrganisationRoleRecord, String> START_DATE = createField(DSL.name("start_date"), SQLDataType.VARCHAR, this, "");
+
+    /**
+     * The column <code>api_svc.raid_organisation_role.end_date</code>.
+     */
+    public final TableField<RaidOrganisationRoleRecord, String> END_DATE = createField(DSL.name("end_date"), SQLDataType.VARCHAR, this, "");
 
     private RaidOrganisationRole(Name alias, Table<RaidOrganisationRoleRecord> aliased) {
         this(alias, aliased, null);
@@ -108,38 +120,37 @@ public class RaidOrganisationRole extends TableImpl<RaidOrganisationRoleRecord> 
     }
 
     @Override
+    public Identity<RaidOrganisationRoleRecord, Integer> getIdentity() {
+        return (Identity<RaidOrganisationRoleRecord, Integer>) super.getIdentity();
+    }
+
+    @Override
     public UniqueKey<RaidOrganisationRoleRecord> getPrimaryKey() {
         return Keys.RAID_ORGANISATION_ROLE_PKEY;
     }
 
     @Override
-    public List<ForeignKey<RaidOrganisationRoleRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_ORGANISATION_ROLE__FK_RAID_ORGANISATION_ROLE_RAID_NAME, Keys.RAID_ORGANISATION_ROLE__FK_RAID_ORGANISATION_ROLE_ORGANISATION_ID, Keys.RAID_ORGANISATION_ROLE__FK_RAID_ORGANISATION_ROLE_ORGANISATION_ROLE_ID);
+    public List<UniqueKey<RaidOrganisationRoleRecord>> getUniqueKeys() {
+        return Arrays.asList(Keys.RAID_ORGANISATION_ROLE_RAID_ORGANISATION_ID_ORGANISATION_RO_KEY);
     }
 
-    private transient Raid _raid;
-    private transient Organisation _organisation;
+    @Override
+    public List<ForeignKey<RaidOrganisationRoleRecord, ?>> getReferences() {
+        return Arrays.asList(Keys.RAID_ORGANISATION_ROLE__FK_RAID_ORGANISATION_ROLE_RAID_ORGANISATION_ID, Keys.RAID_ORGANISATION_ROLE__FK_RAID_ORGANISATION_ROLE_ORGANISATION_ROLE_ID);
+    }
+
+    private transient RaidOrganisation _raidOrganisation;
     private transient OrganisationRole _organisationRole;
 
     /**
-     * Get the implicit join path to the <code>api_svc.raid</code> table.
-     */
-    public Raid raid() {
-        if (_raid == null)
-            _raid = new Raid(this, Keys.RAID_ORGANISATION_ROLE__FK_RAID_ORGANISATION_ROLE_RAID_NAME);
-
-        return _raid;
-    }
-
-    /**
-     * Get the implicit join path to the <code>api_svc.organisation</code>
+     * Get the implicit join path to the <code>api_svc.raid_organisation</code>
      * table.
      */
-    public Organisation organisation() {
-        if (_organisation == null)
-            _organisation = new Organisation(this, Keys.RAID_ORGANISATION_ROLE__FK_RAID_ORGANISATION_ROLE_ORGANISATION_ID);
+    public RaidOrganisation raidOrganisation() {
+        if (_raidOrganisation == null)
+            _raidOrganisation = new RaidOrganisation(this, Keys.RAID_ORGANISATION_ROLE__FK_RAID_ORGANISATION_ROLE_RAID_ORGANISATION_ID);
 
-        return _organisation;
+        return _raidOrganisation;
     }
 
     /**
@@ -193,18 +204,18 @@ public class RaidOrganisationRole extends TableImpl<RaidOrganisationRoleRecord> 
     }
 
     // -------------------------------------------------------------------------
-    // Row3 type methods
+    // Row5 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row3<String, Integer, Integer> fieldsRow() {
-        return (Row3) super.fieldsRow();
+    public Row5<Integer, Integer, Integer, String, String> fieldsRow() {
+        return (Row5) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function3<? super String, ? super Integer, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function5<? super Integer, ? super Integer, ? super Integer, ? super String, ? super String, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -212,7 +223,7 @@ public class RaidOrganisationRole extends TableImpl<RaidOrganisationRoleRecord> 
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function3<? super String, ? super Integer, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function5<? super Integer, ? super Integer, ? super Integer, ? super String, ? super String, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

@@ -37,17 +37,17 @@ public class OrganisationSchemaRecord extends UpdatableRecordImpl<OrganisationSc
     }
 
     /**
-     * Setter for <code>api_svc.organisation_schema.schema_uri</code>.
+     * Setter for <code>api_svc.organisation_schema.uri</code>.
      */
-    public OrganisationSchemaRecord setSchemaUri(String value) {
+    public OrganisationSchemaRecord setUri(String value) {
         set(1, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.organisation_schema.schema_uri</code>.
+     * Getter for <code>api_svc.organisation_schema.uri</code>.
      */
-    public String getSchemaUri() {
+    public String getUri() {
         return (String) get(1);
     }
 
@@ -81,7 +81,7 @@ public class OrganisationSchemaRecord extends UpdatableRecordImpl<OrganisationSc
 
     @Override
     public Field<String> field2() {
-        return OrganisationSchema.ORGANISATION_SCHEMA.SCHEMA_URI;
+        return OrganisationSchema.ORGANISATION_SCHEMA.URI;
     }
 
     @Override
@@ -91,7 +91,7 @@ public class OrganisationSchemaRecord extends UpdatableRecordImpl<OrganisationSc
 
     @Override
     public String component2() {
-        return getSchemaUri();
+        return getUri();
     }
 
     @Override
@@ -101,7 +101,7 @@ public class OrganisationSchemaRecord extends UpdatableRecordImpl<OrganisationSc
 
     @Override
     public String value2() {
-        return getSchemaUri();
+        return getUri();
     }
 
     @Override
@@ -112,7 +112,7 @@ public class OrganisationSchemaRecord extends UpdatableRecordImpl<OrganisationSc
 
     @Override
     public OrganisationSchemaRecord value2(String value) {
-        setSchemaUri(value);
+        setUri(value);
         return this;
     }
 
@@ -137,10 +137,10 @@ public class OrganisationSchemaRecord extends UpdatableRecordImpl<OrganisationSc
     /**
      * Create a detached, initialised OrganisationSchemaRecord
      */
-    public OrganisationSchemaRecord(Integer id, String schemaUri) {
+    public OrganisationSchemaRecord(Integer id, String uri) {
         super(OrganisationSchema.ORGANISATION_SCHEMA);
 
         setId(id);
-        setSchemaUri(schemaUri);
+        setUri(uri);
     }
 }

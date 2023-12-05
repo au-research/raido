@@ -61,9 +61,6 @@ public class TitleValidator {
             if (isBlank(title.getText())) {
                 failures.add(titleNotSet(index));
             }
-            if (!valueFits(RAID.PRIMARY_TITLE, title.getText())) {
-                failures.add(primaryTitleTooLong(index));
-            }
             if (title.getStartDate() == null) {
                 failures.add(titleStartDateNotSet(index));
             }

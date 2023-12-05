@@ -8,22 +8,22 @@ import au.org.raid.db.jooq.ApiSvc;
 import au.org.raid.db.jooq.Keys;
 import au.org.raid.db.jooq.tables.records.LanguageRecord;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function3;
+import org.jooq.Function4;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row3;
+import org.jooq.Row4;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
 import org.jooq.TableField;
 import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
@@ -53,7 +53,12 @@ public class Language extends TableImpl<LanguageRecord> {
     /**
      * The column <code>api_svc.language.id</code>.
      */
-    public final TableField<LanguageRecord, String> ID = createField(DSL.name("id"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<LanguageRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
+
+    /**
+     * The column <code>api_svc.language.code</code>.
+     */
+    public final TableField<LanguageRecord, String> CODE = createField(DSL.name("code"), SQLDataType.VARCHAR.nullable(false), this, "");
 
     /**
      * The column <code>api_svc.language.name</code>.
@@ -104,21 +109,13 @@ public class Language extends TableImpl<LanguageRecord> {
     }
 
     @Override
-    public List<ForeignKey<LanguageRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.LANGUAGE__FK_LANGUAGE_SCHEMA_ID);
+    public Identity<LanguageRecord, Integer> getIdentity() {
+        return (Identity<LanguageRecord, Integer>) super.getIdentity();
     }
 
-    private transient LanguageSchema _languageSchema;
-
-    /**
-     * Get the implicit join path to the <code>api_svc.language_schema</code>
-     * table.
-     */
-    public LanguageSchema languageSchema() {
-        if (_languageSchema == null)
-            _languageSchema = new LanguageSchema(this, Keys.LANGUAGE__FK_LANGUAGE_SCHEMA_ID);
-
-        return _languageSchema;
+    @Override
+    public UniqueKey<LanguageRecord> getPrimaryKey() {
+        return Keys.LANGUAGE_NEW_PKEY;
     }
 
     @Override
@@ -161,18 +158,18 @@ public class Language extends TableImpl<LanguageRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row3 type methods
+    // Row4 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row3<String, String, Integer> fieldsRow() {
-        return (Row3) super.fieldsRow();
+    public Row4<Integer, String, String, Integer> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function3<? super String, ? super String, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function4<? super Integer, ? super String, ? super String, ? super Integer, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -180,7 +177,7 @@ public class Language extends TableImpl<LanguageRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function3<? super String, ? super String, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function4<? super Integer, ? super String, ? super String, ? super Integer, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

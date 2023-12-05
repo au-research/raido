@@ -15,6 +15,7 @@ import java.util.function.Function;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Function3;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
@@ -52,14 +53,15 @@ public class RaidContributorRole extends TableImpl<RaidContributorRoleRecord> {
     }
 
     /**
-     * The column <code>api_svc.raid_contributor_role.raid_name</code>.
+     * The column <code>api_svc.raid_contributor_role.id</code>.
      */
-    public final TableField<RaidContributorRoleRecord, String> RAID_NAME = createField(DSL.name("raid_name"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<RaidContributorRoleRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>api_svc.raid_contributor_role.contributor_id</code>.
+     * The column
+     * <code>api_svc.raid_contributor_role.raid_contributor_id</code>.
      */
-    public final TableField<RaidContributorRoleRecord, Integer> CONTRIBUTOR_ID = createField(DSL.name("contributor_id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<RaidContributorRoleRecord, Integer> RAID_CONTRIBUTOR_ID = createField(DSL.name("raid_contributor_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column
@@ -108,37 +110,37 @@ public class RaidContributorRole extends TableImpl<RaidContributorRoleRecord> {
     }
 
     @Override
+    public Identity<RaidContributorRoleRecord, Integer> getIdentity() {
+        return (Identity<RaidContributorRoleRecord, Integer>) super.getIdentity();
+    }
+
+    @Override
     public UniqueKey<RaidContributorRoleRecord> getPrimaryKey() {
         return Keys.RAID_CONTRIBUTOR_ROLE_PKEY;
     }
 
     @Override
-    public List<ForeignKey<RaidContributorRoleRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_CONTRIBUTOR_ROLE__FK_RAID_CONTRIBUTOR_ROLE_RAID_NAME, Keys.RAID_CONTRIBUTOR_ROLE__FK_RAID_CONTRIBUTOR_CONTRIBUTOR_ID, Keys.RAID_CONTRIBUTOR_ROLE__FK_RAID_CONTRIBUTOR_ROLE_CONTRIBUTOR_ROLE_ID);
+    public List<UniqueKey<RaidContributorRoleRecord>> getUniqueKeys() {
+        return Arrays.asList(Keys.RAID_CONTRIBUTOR_ROLE_RAID_CONTRIBUTOR_ID_CONTRIBUTOR_ROLE__KEY);
     }
 
-    private transient Raid _raid;
-    private transient Contributor _contributor;
+    @Override
+    public List<ForeignKey<RaidContributorRoleRecord, ?>> getReferences() {
+        return Arrays.asList(Keys.RAID_CONTRIBUTOR_ROLE__FK_RAID_CONTRIBUTOR_ROLE_RAID_CONTRIBUTOR_ID, Keys.RAID_CONTRIBUTOR_ROLE__FK_RAID_CONTRIBUTOR_ROLE_CONTRIBUTOR_ROLE_ID);
+    }
+
+    private transient RaidContributor _raidContributor;
     private transient ContributorRole _contributorRole;
 
     /**
-     * Get the implicit join path to the <code>api_svc.raid</code> table.
+     * Get the implicit join path to the <code>api_svc.raid_contributor</code>
+     * table.
      */
-    public Raid raid() {
-        if (_raid == null)
-            _raid = new Raid(this, Keys.RAID_CONTRIBUTOR_ROLE__FK_RAID_CONTRIBUTOR_ROLE_RAID_NAME);
+    public RaidContributor raidContributor() {
+        if (_raidContributor == null)
+            _raidContributor = new RaidContributor(this, Keys.RAID_CONTRIBUTOR_ROLE__FK_RAID_CONTRIBUTOR_ROLE_RAID_CONTRIBUTOR_ID);
 
-        return _raid;
-    }
-
-    /**
-     * Get the implicit join path to the <code>api_svc.contributor</code> table.
-     */
-    public Contributor contributor() {
-        if (_contributor == null)
-            _contributor = new Contributor(this, Keys.RAID_CONTRIBUTOR_ROLE__FK_RAID_CONTRIBUTOR_CONTRIBUTOR_ID);
-
-        return _contributor;
+        return _raidContributor;
     }
 
     /**
@@ -196,14 +198,14 @@ public class RaidContributorRole extends TableImpl<RaidContributorRoleRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row3<String, Integer, Integer> fieldsRow() {
+    public Row3<Integer, Integer, Integer> fieldsRow() {
         return (Row3) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function3<? super String, ? super Integer, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function3<? super Integer, ? super Integer, ? super Integer, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -211,7 +213,7 @@ public class RaidContributorRole extends TableImpl<RaidContributorRoleRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function3<? super String, ? super Integer, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function3<? super Integer, ? super Integer, ? super Integer, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

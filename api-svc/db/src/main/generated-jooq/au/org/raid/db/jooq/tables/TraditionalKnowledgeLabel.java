@@ -8,6 +8,8 @@ import au.org.raid.db.jooq.ApiSvc;
 import au.org.raid.db.jooq.Keys;
 import au.org.raid.db.jooq.tables.records.TraditionalKnowledgeLabelRecord;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 
 import org.jooq.Field;
@@ -114,6 +116,11 @@ public class TraditionalKnowledgeLabel extends TableImpl<TraditionalKnowledgeLab
     @Override
     public UniqueKey<TraditionalKnowledgeLabelRecord> getPrimaryKey() {
         return Keys.TRADITIONAL_KNOWLEDGE_LABEL_NEW_PKEY;
+    }
+
+    @Override
+    public List<UniqueKey<TraditionalKnowledgeLabelRecord>> getUniqueKeys() {
+        return Arrays.asList(Keys.TRADITIONAL_KNOWLEDGE_LABEL_NEW_URI_SCHEMA_ID_KEY);
     }
 
     @Override

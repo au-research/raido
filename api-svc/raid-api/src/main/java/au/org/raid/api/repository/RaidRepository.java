@@ -23,8 +23,6 @@ public class RaidRepository {
                 .set(RAID.HANDLE, raid.getHandle())
                 .set(RAID.SERVICE_POINT_ID, raid.getServicePointId())
                 .set(RAID.URL, raid.getUrl())
-                .set(RAID.URL_INDEX, raid.getUrlIndex())
-                .set(RAID.PRIMARY_TITLE, raid.getPrimaryTitle())
                 .set(RAID.METADATA, raid.getMetadata())
                 .set(RAID.METADATA_SCHEMA, raid.getMetadataSchema())
                 .set(RAID.START_DATE, raid.getStartDate())
@@ -36,7 +34,6 @@ public class RaidRepository {
 
     public int update(final RaidRecord raidRecord) {
         return dslContext.update(RAID)
-                .set(RAID.PRIMARY_TITLE, raidRecord.getPrimaryTitle())
                 .set(RAID.METADATA, raidRecord.getMetadata())
                 .set(RAID.METADATA_SCHEMA, raidRecord.getMetadataSchema())
                 .set(RAID.START_DATE, raidRecord.getStartDate())
@@ -47,7 +44,6 @@ public class RaidRepository {
 
     public int updateByHandleAndVersion(final RaidRecord raidRecord, final int version) {
         return dslContext.update(RAID)
-                .set(RAID.PRIMARY_TITLE, raidRecord.getPrimaryTitle())
                 .set(RAID.METADATA, raidRecord.getMetadata())
                 .set(RAID.METADATA_SCHEMA, raidRecord.getMetadataSchema())
                 .set(RAID.START_DATE, raidRecord.getStartDate())
@@ -66,13 +62,11 @@ public class RaidRepository {
                         .setHandle(RAID.HANDLE.getValue(record))
                         .setServicePointId(RAID.SERVICE_POINT_ID.getValue(record))
                         .setUrl(RAID.URL.getValue(record))
-                        .setUrlIndex(RAID.URL_INDEX.getValue(record))
                         .setMetadataSchema(RAID.METADATA_SCHEMA.getValue(record))
                         .setMetadata(RAID.METADATA.getValue(record))
                         .setDateCreated(RAID.DATE_CREATED.getValue(record))
                         .setStartDate(RAID.START_DATE.getValue(record))
                         .setConfidential(RAID.CONFIDENTIAL.getValue(record))
-                        .setPrimaryTitle(RAID.PRIMARY_TITLE.getValue(record))
                 );
     }
 
@@ -86,13 +80,11 @@ public class RaidRepository {
                         .setHandle(RAID.HANDLE.getValue(record))
                         .setServicePointId(RAID.SERVICE_POINT_ID.getValue(record))
                         .setUrl(RAID.URL.getValue(record))
-                        .setUrlIndex(RAID.URL_INDEX.getValue(record))
                         .setMetadataSchema(RAID.METADATA_SCHEMA.getValue(record))
                         .setMetadata(RAID.METADATA.getValue(record))
                         .setDateCreated(RAID.DATE_CREATED.getValue(record))
                         .setStartDate(RAID.START_DATE.getValue(record))
                         .setConfidential(RAID.CONFIDENTIAL.getValue(record))
-                        .setPrimaryTitle(RAID.PRIMARY_TITLE.getValue(record))
                 );
     }
 
@@ -110,13 +102,11 @@ public class RaidRepository {
                         .setHandle(RAID.HANDLE.getValue(record))
                         .setServicePointId(RAID.SERVICE_POINT_ID.getValue(record))
                         .setUrl(RAID.URL.getValue(record))
-                        .setUrlIndex(RAID.URL_INDEX.getValue(record))
                         .setMetadataSchema(RAID.METADATA_SCHEMA.getValue(record))
                         .setMetadata(RAID.METADATA.getValue(record))
                         .setDateCreated(RAID.DATE_CREATED.getValue(record))
                         .setStartDate(RAID.START_DATE.getValue(record))
                         .setConfidential(RAID.CONFIDENTIAL.getValue(record))
-                        .setPrimaryTitle(RAID.PRIMARY_TITLE.getValue(record))
                 );
     }
 
@@ -133,13 +123,11 @@ public class RaidRepository {
                         .setHandle(RAID.HANDLE.getValue(record))
                         .setServicePointId(RAID.SERVICE_POINT_ID.getValue(record))
                         .setUrl(RAID.URL.getValue(record))
-                        .setUrlIndex(RAID.URL_INDEX.getValue(record))
                         .setMetadataSchema(RAID.METADATA_SCHEMA.getValue(record))
                         .setMetadata(RAID.METADATA.getValue(record))
                         .setDateCreated(RAID.DATE_CREATED.getValue(record))
                         .setStartDate(RAID.START_DATE.getValue(record))
                         .setConfidential(RAID.CONFIDENTIAL.getValue(record))
-                        .setPrimaryTitle(RAID.PRIMARY_TITLE.getValue(record))
                 );
     }
 }

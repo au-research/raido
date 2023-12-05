@@ -26,13 +26,15 @@ import au.org.raid.db.jooq.tables.OrganisationSchema;
 import au.org.raid.db.jooq.tables.Raid;
 import au.org.raid.db.jooq.tables.RaidAlternateIdentifier;
 import au.org.raid.db.jooq.tables.RaidAlternateUrl;
+import au.org.raid.db.jooq.tables.RaidContributor;
 import au.org.raid.db.jooq.tables.RaidContributorPosition;
 import au.org.raid.db.jooq.tables.RaidContributorRole;
 import au.org.raid.db.jooq.tables.RaidHistory;
+import au.org.raid.db.jooq.tables.RaidOrganisation;
 import au.org.raid.db.jooq.tables.RaidOrganisationRole;
 import au.org.raid.db.jooq.tables.RaidRelatedObject;
 import au.org.raid.db.jooq.tables.RaidSpatialCoverage;
-import au.org.raid.db.jooq.tables.RaidSubjectType;
+import au.org.raid.db.jooq.tables.RaidSubject;
 import au.org.raid.db.jooq.tables.RaidTraditionalKnowledgeLabel;
 import au.org.raid.db.jooq.tables.RaidoOperator;
 import au.org.raid.db.jooq.tables.RelatedObject;
@@ -100,6 +102,7 @@ public class ApiSvc extends SchemaImpl {
             Sequences.CONTRIBUTOR_ROLE_SCHEME_ID_SEQ,
             Sequences.DESCRIPTION_TYPE_NEW_ID_SEQ,
             Sequences.DESCRIPTION_TYPE_SCHEME_ID_SEQ,
+            Sequences.LANGUAGE_NEW_ID_SEQ,
             Sequences.LANGUAGE_SCHEME_ID_SEQ,
             Sequences.ORGANISATION_ROLE_NEW_ID_SEQ,
             Sequences.ORGANISATION_ROLE_SCHEME_ID_SEQ,
@@ -141,13 +144,15 @@ public class ApiSvc extends SchemaImpl {
             Raid.RAID,
             RaidAlternateIdentifier.RAID_ALTERNATE_IDENTIFIER,
             RaidAlternateUrl.RAID_ALTERNATE_URL,
+            RaidContributor.RAID_CONTRIBUTOR,
             RaidContributorPosition.RAID_CONTRIBUTOR_POSITION,
             RaidContributorRole.RAID_CONTRIBUTOR_ROLE,
             RaidHistory.RAID_HISTORY,
+            RaidOrganisation.RAID_ORGANISATION,
             RaidOrganisationRole.RAID_ORGANISATION_ROLE,
             RaidRelatedObject.RAID_RELATED_OBJECT,
             RaidSpatialCoverage.RAID_SPATIAL_COVERAGE,
-            RaidSubjectType.RAID_SUBJECT_TYPE,
+            RaidSubject.RAID_SUBJECT,
             RaidTraditionalKnowledgeLabel.RAID_TRADITIONAL_KNOWLEDGE_LABEL,
             RaidoOperator.RAIDO_OPERATOR,
             RelatedObject.RELATED_OBJECT,

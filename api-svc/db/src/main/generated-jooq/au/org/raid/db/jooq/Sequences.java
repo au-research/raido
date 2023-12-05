@@ -51,6 +51,11 @@ public class Sequences {
     public static final Sequence<Integer> DESCRIPTION_TYPE_SCHEME_ID_SEQ = Internal.createSequence("description_type_scheme_id_seq", ApiSvc.API_SVC, SQLDataType.INTEGER.nullable(false), null, null, null, null, false, null);
 
     /**
+     * The sequence <code>api_svc.language_new_id_seq</code>
+     */
+    public static final Sequence<Integer> LANGUAGE_NEW_ID_SEQ = Internal.createSequence("language_new_id_seq", ApiSvc.API_SVC, SQLDataType.INTEGER.nullable(false), null, null, null, null, false, null);
+
+    /**
      * The sequence <code>api_svc.language_scheme_id_seq</code>
      */
     public static final Sequence<Integer> LANGUAGE_SCHEME_ID_SEQ = Internal.createSequence("language_scheme_id_seq", ApiSvc.API_SVC, SQLDataType.INTEGER.nullable(false), null, null, null, null, false, null);

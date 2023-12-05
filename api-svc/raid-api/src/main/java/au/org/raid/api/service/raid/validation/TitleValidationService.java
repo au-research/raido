@@ -51,9 +51,6 @@ public class TitleValidationService {
             if (isBlank(iTitle.getTitle())) {
                 failures.add(titleNotSet(i));
             }
-            if (!valueFits(RAID.PRIMARY_TITLE, iTitle.getTitle())) {
-                failures.add(primaryTitleTooLong(i));
-            }
             if (iTitle.getType() == null) {
                 failures.add(titlesTypeNotSet(i));
             }

@@ -14,16 +14,18 @@ import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function4;
+import org.jooq.Function5;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row4;
+import org.jooq.Row5;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
 import org.jooq.TableField;
 import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
@@ -49,6 +51,11 @@ public class RaidRelatedObject extends TableImpl<RaidRelatedObjectRecord> {
     public Class<RaidRelatedObjectRecord> getRecordType() {
         return RaidRelatedObjectRecord.class;
     }
+
+    /**
+     * The column <code>api_svc.raid_related_object.id</code>.
+     */
+    public final TableField<RaidRelatedObjectRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>api_svc.raid_related_object.raid_name</code>.
@@ -110,6 +117,21 @@ public class RaidRelatedObject extends TableImpl<RaidRelatedObjectRecord> {
     @Override
     public Schema getSchema() {
         return aliased() ? null : ApiSvc.API_SVC;
+    }
+
+    @Override
+    public Identity<RaidRelatedObjectRecord, Integer> getIdentity() {
+        return (Identity<RaidRelatedObjectRecord, Integer>) super.getIdentity();
+    }
+
+    @Override
+    public UniqueKey<RaidRelatedObjectRecord> getPrimaryKey() {
+        return Keys.RAID_RELATED_OBJECT_PKEY;
+    }
+
+    @Override
+    public List<UniqueKey<RaidRelatedObjectRecord>> getUniqueKeys() {
+        return Arrays.asList(Keys.RAID_RELATED_OBJECT_RAID_NAME_RELATED_OBJECT_ID_RELATED_OBJ_KEY);
     }
 
     @Override
@@ -194,18 +216,18 @@ public class RaidRelatedObject extends TableImpl<RaidRelatedObjectRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row4 type methods
+    // Row5 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row4<String, Integer, Integer, Integer> fieldsRow() {
-        return (Row4) super.fieldsRow();
+    public Row5<Integer, String, Integer, Integer, Integer> fieldsRow() {
+        return (Row5) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function4<? super String, ? super Integer, ? super Integer, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function5<? super Integer, ? super String, ? super Integer, ? super Integer, ? super Integer, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -213,7 +235,7 @@ public class RaidRelatedObject extends TableImpl<RaidRelatedObjectRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function4<? super String, ? super Integer, ? super Integer, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function5<? super Integer, ? super String, ? super Integer, ? super Integer, ? super Integer, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

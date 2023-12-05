@@ -123,8 +123,6 @@ public class RaidService {
                 set(RAID.HANDLE, handle.format()).
                 set(RAID.SERVICE_POINT_ID, servicePointId).
                 set(RAID.URL, raidUrl).
-                set(RAID.URL_INDEX, apidsResponse.identifier.property.index).
-                set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
                 set(RAID.METADATA, JSONB.valueOf(metadataAsJson)).
                 set(RAID.METADATA_SCHEMA, mapApi2Db(metadata.getMetadataSchema())).
                 set(RAID.START_DATE, raidData.startDate()).
@@ -177,8 +175,6 @@ public class RaidService {
                 set(RAID.HANDLE, handle.format()).
                 set(RAID.SERVICE_POINT_ID, servicePointId).
                 set(RAID.URL, raidUrl).
-                set(RAID.URL_INDEX, apidsResponse.identifier.property.index).
-                set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
                 set(RAID.METADATA, JSONB.valueOf(metadataAsJson)).
                 set(RAID.METADATA_SCHEMA, mapApi2Db(metadata.getMetadataSchema())).
                 set(RAID.START_DATE, raidData.startDate()).
@@ -215,7 +211,6 @@ public class RaidService {
                 handle(data.raid().getHandle()).
                 servicePointId(data.servicePoint().getId()).
                 servicePointName(data.servicePoint().getName()).
-                primaryTitle(data.raid().getPrimaryTitle()).
                 startDate(data.raid().getStartDate()).
                 createDate(local2Offset(data.raid().getDateCreated())).
                 url(data.raid().getUrl()).
@@ -259,8 +254,6 @@ public class RaidService {
                 set(RAID.HANDLE, handle).
                 set(RAID.SERVICE_POINT_ID, servicePointId).
                 set(RAID.URL, id.formatUrl()).
-                set(RAID.URL_INDEX, urlContentIndex).
-                set(RAID.PRIMARY_TITLE, primaryTitle).
                 set(RAID.METADATA, jsonbMetadata).
                 set(RAID.METADATA_SCHEMA, mapApi2Db(metadata.getMetadataSchema())).
                 set(RAID.START_DATE, startDate).
@@ -306,7 +299,6 @@ public class RaidService {
         final var metadata = metadataAsJson;
 
         var rowsUpdated = tx.execute(status -> db.update(RAID).
-                set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
                 set(RAID.METADATA, JSONB.valueOf(metadata)).
                 set(RAID.START_DATE, raidData.startDate()).
                 set(RAID.CONFIDENTIAL, raidData.confidential()).
@@ -360,7 +352,6 @@ public class RaidService {
         var raidData = getDenormalisedRaidData(newData);
         tx.executeWithoutResult((status) -> {
             db.update(RAID).
-                    set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
                     set(RAID.METADATA, json).
                     set(RAID.START_DATE, raidData.startDate()).
                     set(RAID.CONFIDENTIAL, raidData.confidential()).
@@ -408,7 +399,6 @@ public class RaidService {
         tx.executeWithoutResult((status) -> {
             db.update(RAID).
                     set(RAID.METADATA_SCHEMA, raido_metadata_schema_v1).
-                    set(RAID.PRIMARY_TITLE, raidData.primaryTitle()).
                     set(RAID.METADATA, json).
                     set(RAID.START_DATE, raidData.startDate()).
                     set(RAID.CONFIDENTIAL, raidData.confidential()).

@@ -14,11 +14,11 @@ import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function3;
+import org.jooq.Function5;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row3;
+import org.jooq.Row5;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -65,6 +65,16 @@ public class RaidSpatialCoverage extends TableImpl<RaidSpatialCoverageRecord> {
      * The column <code>api_svc.raid_spatial_coverage.schema_id</code>.
      */
     public final TableField<RaidSpatialCoverageRecord, Integer> SCHEMA_ID = createField(DSL.name("schema_id"), SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>api_svc.raid_spatial_coverage.place</code>.
+     */
+    public final TableField<RaidSpatialCoverageRecord, String> PLACE = createField(DSL.name("place"), SQLDataType.VARCHAR, this, "");
+
+    /**
+     * The column <code>api_svc.raid_spatial_coverage.place_language_id</code>.
+     */
+    public final TableField<RaidSpatialCoverageRecord, Integer> PLACE_LANGUAGE_ID = createField(DSL.name("place_language_id"), SQLDataType.INTEGER, this, "");
 
     private RaidSpatialCoverage(Name alias, Table<RaidSpatialCoverageRecord> aliased) {
         this(alias, aliased, null);
@@ -113,11 +123,12 @@ public class RaidSpatialCoverage extends TableImpl<RaidSpatialCoverageRecord> {
 
     @Override
     public List<ForeignKey<RaidSpatialCoverageRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_RAID_NAME, Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_SCHEMA_ID);
+        return Arrays.asList(Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_RAID_NAME, Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_SCHEMA_ID, Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_PLACE_LANGUAGE_ID);
     }
 
     private transient Raid _raid;
     private transient SpatialCoverageSchema _spatialCoverageSchema;
+    private transient Language _language;
 
     /**
      * Get the implicit join path to the <code>api_svc.raid</code> table.
@@ -138,6 +149,16 @@ public class RaidSpatialCoverage extends TableImpl<RaidSpatialCoverageRecord> {
             _spatialCoverageSchema = new SpatialCoverageSchema(this, Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_SCHEMA_ID);
 
         return _spatialCoverageSchema;
+    }
+
+    /**
+     * Get the implicit join path to the <code>api_svc.language</code> table.
+     */
+    public Language language() {
+        if (_language == null)
+            _language = new Language(this, Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_PLACE_LANGUAGE_ID);
+
+        return _language;
     }
 
     @Override
@@ -180,18 +201,18 @@ public class RaidSpatialCoverage extends TableImpl<RaidSpatialCoverageRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row3 type methods
+    // Row5 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row3<String, String, Integer> fieldsRow() {
-        return (Row3) super.fieldsRow();
+    public Row5<String, String, Integer, String, Integer> fieldsRow() {
+        return (Row5) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function3<? super String, ? super String, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function5<? super String, ? super String, ? super Integer, ? super String, ? super Integer, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -199,7 +220,7 @@ public class RaidSpatialCoverage extends TableImpl<RaidSpatialCoverageRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function3<? super String, ? super String, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function5<? super String, ? super String, ? super Integer, ? super String, ? super Integer, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

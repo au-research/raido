@@ -8,6 +8,8 @@ import au.org.raid.db.jooq.ApiSvc;
 import au.org.raid.db.jooq.Keys;
 import au.org.raid.db.jooq.tables.records.RelatedRaidTypeRecord;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 
 import org.jooq.Field;
@@ -111,6 +113,11 @@ public class RelatedRaidType extends TableImpl<RelatedRaidTypeRecord> {
     @Override
     public UniqueKey<RelatedRaidTypeRecord> getPrimaryKey() {
         return Keys.RELATED_RAID_TYPE_NEW_PKEY1;
+    }
+
+    @Override
+    public List<UniqueKey<RelatedRaidTypeRecord>> getUniqueKeys() {
+        return Arrays.asList(Keys.RELATED_RAID_TYPE_NEW_URI_SCHEMA_ID_KEY);
     }
 
     @Override

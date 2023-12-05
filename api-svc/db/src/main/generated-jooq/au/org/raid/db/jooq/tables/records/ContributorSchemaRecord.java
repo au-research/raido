@@ -37,17 +37,17 @@ public class ContributorSchemaRecord extends UpdatableRecordImpl<ContributorSche
     }
 
     /**
-     * Setter for <code>api_svc.contributor_schema.schema_uri</code>.
+     * Setter for <code>api_svc.contributor_schema.uri</code>.
      */
-    public ContributorSchemaRecord setSchemaUri(String value) {
+    public ContributorSchemaRecord setUri(String value) {
         set(1, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.contributor_schema.schema_uri</code>.
+     * Getter for <code>api_svc.contributor_schema.uri</code>.
      */
-    public String getSchemaUri() {
+    public String getUri() {
         return (String) get(1);
     }
 
@@ -81,7 +81,7 @@ public class ContributorSchemaRecord extends UpdatableRecordImpl<ContributorSche
 
     @Override
     public Field<String> field2() {
-        return ContributorSchema.CONTRIBUTOR_SCHEMA.SCHEMA_URI;
+        return ContributorSchema.CONTRIBUTOR_SCHEMA.URI;
     }
 
     @Override
@@ -91,7 +91,7 @@ public class ContributorSchemaRecord extends UpdatableRecordImpl<ContributorSche
 
     @Override
     public String component2() {
-        return getSchemaUri();
+        return getUri();
     }
 
     @Override
@@ -101,7 +101,7 @@ public class ContributorSchemaRecord extends UpdatableRecordImpl<ContributorSche
 
     @Override
     public String value2() {
-        return getSchemaUri();
+        return getUri();
     }
 
     @Override
@@ -112,7 +112,7 @@ public class ContributorSchemaRecord extends UpdatableRecordImpl<ContributorSche
 
     @Override
     public ContributorSchemaRecord value2(String value) {
-        setSchemaUri(value);
+        setUri(value);
         return this;
     }
 
@@ -137,10 +137,10 @@ public class ContributorSchemaRecord extends UpdatableRecordImpl<ContributorSche
     /**
      * Create a detached, initialised ContributorSchemaRecord
      */
-    public ContributorSchemaRecord(Integer id, String schemaUri) {
+    public ContributorSchemaRecord(Integer id, String uri) {
         super(ContributorSchema.CONTRIBUTOR_SCHEMA);
 
         setId(id);
-        setSchemaUri(schemaUri);
+        setUri(uri);
     }
 }

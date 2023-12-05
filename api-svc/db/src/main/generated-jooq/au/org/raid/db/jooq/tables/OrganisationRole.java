@@ -8,6 +8,8 @@ import au.org.raid.db.jooq.ApiSvc;
 import au.org.raid.db.jooq.Keys;
 import au.org.raid.db.jooq.tables.records.OrganisationRoleRecord;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 
 import org.jooq.Field;
@@ -111,6 +113,11 @@ public class OrganisationRole extends TableImpl<OrganisationRoleRecord> {
     @Override
     public UniqueKey<OrganisationRoleRecord> getPrimaryKey() {
         return Keys.ORGANISATION_ROLE_NEW_PKEY;
+    }
+
+    @Override
+    public List<UniqueKey<OrganisationRoleRecord>> getUniqueKeys() {
+        return Arrays.asList(Keys.ORGANISATION_ROLE_NEW_URI_SCHEMA_ID_KEY);
     }
 
     @Override

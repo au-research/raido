@@ -8,6 +8,8 @@ import au.org.raid.db.jooq.ApiSvc;
 import au.org.raid.db.jooq.Keys;
 import au.org.raid.db.jooq.tables.records.SpatialCoverageSchemaRecord;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 
 import org.jooq.Field;
@@ -108,6 +110,11 @@ public class SpatialCoverageSchema extends TableImpl<SpatialCoverageSchemaRecord
     @Override
     public UniqueKey<SpatialCoverageSchemaRecord> getPrimaryKey() {
         return Keys.SPATIAL_COVERAGE_SCHEMA_PKEY;
+    }
+
+    @Override
+    public List<UniqueKey<SpatialCoverageSchemaRecord>> getUniqueKeys() {
+        return Arrays.asList(Keys.SPATIAL_COVERAGE_SCHEMA_SCHEMA_URI_KEY);
     }
 
     @Override

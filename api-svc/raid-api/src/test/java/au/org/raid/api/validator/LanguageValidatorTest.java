@@ -29,7 +29,7 @@ class LanguageValidatorTest {
     private static final String LANGUAGE_SCHEMA_URI = "https://www.iso.org/standard/39534.html";
 
     private static final LanguageRecord LANGUAGE_RECORD = new LanguageRecord()
-            .setId(LANGUAGE_ID)
+            .setCode(LANGUAGE_ID)
             .setSchemaId(LANGUAGE_SCHEMA_ID);
 
     private static final LanguageSchemaRecord LANGUAGE_SCHEMA_RECORD = new LanguageSchemaRecord()

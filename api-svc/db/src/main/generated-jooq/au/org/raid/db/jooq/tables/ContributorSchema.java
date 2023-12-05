@@ -13,6 +13,7 @@ import java.util.function.Function;
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Function2;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
@@ -52,12 +53,12 @@ public class ContributorSchema extends TableImpl<ContributorSchemaRecord> {
     /**
      * The column <code>api_svc.contributor_schema.id</code>.
      */
-    public final TableField<ContributorSchemaRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<ContributorSchemaRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>api_svc.contributor_schema.schema_uri</code>.
+     * The column <code>api_svc.contributor_schema.uri</code>.
      */
-    public final TableField<ContributorSchemaRecord, String> SCHEMA_URI = createField(DSL.name("schema_uri"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<ContributorSchemaRecord, String> URI = createField(DSL.name("uri"), SQLDataType.VARCHAR.nullable(false), this, "");
 
     private ContributorSchema(Name alias, Table<ContributorSchemaRecord> aliased) {
         this(alias, aliased, null);
@@ -95,6 +96,11 @@ public class ContributorSchema extends TableImpl<ContributorSchemaRecord> {
     @Override
     public Schema getSchema() {
         return aliased() ? null : ApiSvc.API_SVC;
+    }
+
+    @Override
+    public Identity<ContributorSchemaRecord, Integer> getIdentity() {
+        return (Identity<ContributorSchemaRecord, Integer>) super.getIdentity();
     }
 
     @Override

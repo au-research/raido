@@ -8,11 +8,14 @@ import au.org.raid.db.jooq.ApiSvc;
 import au.org.raid.db.jooq.Keys;
 import au.org.raid.db.jooq.tables.records.OrganisationSchemaRecord;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Function2;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
@@ -52,12 +55,12 @@ public class OrganisationSchema extends TableImpl<OrganisationSchemaRecord> {
     /**
      * The column <code>api_svc.organisation_schema.id</code>.
      */
-    public final TableField<OrganisationSchemaRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<OrganisationSchemaRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>api_svc.organisation_schema.schema_uri</code>.
+     * The column <code>api_svc.organisation_schema.uri</code>.
      */
-    public final TableField<OrganisationSchemaRecord, String> SCHEMA_URI = createField(DSL.name("schema_uri"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<OrganisationSchemaRecord, String> URI = createField(DSL.name("uri"), SQLDataType.VARCHAR.nullable(false), this, "");
 
     private OrganisationSchema(Name alias, Table<OrganisationSchemaRecord> aliased) {
         this(alias, aliased, null);
@@ -100,8 +103,18 @@ public class OrganisationSchema extends TableImpl<OrganisationSchemaRecord> {
     }
 
     @Override
+    public Identity<OrganisationSchemaRecord, Integer> getIdentity() {
+        return (Identity<OrganisationSchemaRecord, Integer>) super.getIdentity();
+    }
+
+    @Override
     public UniqueKey<OrganisationSchemaRecord> getPrimaryKey() {
         return Keys.ORGANISATION_SCHEMA_PKEY;
+    }
+
+    @Override
+    public List<UniqueKey<OrganisationSchemaRecord>> getUniqueKeys() {
+        return Arrays.asList(Keys.ORGANISATION_SCHEMA_URI_KEY);
     }
 
     @Override

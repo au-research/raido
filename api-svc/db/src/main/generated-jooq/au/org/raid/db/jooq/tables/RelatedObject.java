@@ -8,6 +8,8 @@ import au.org.raid.db.jooq.ApiSvc;
 import au.org.raid.db.jooq.Keys;
 import au.org.raid.db.jooq.tables.records.RelatedObjectRecord;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 
 import org.jooq.Field;
@@ -111,6 +113,11 @@ public class RelatedObject extends TableImpl<RelatedObjectRecord> {
     @Override
     public UniqueKey<RelatedObjectRecord> getPrimaryKey() {
         return Keys.RELATED_OBJECT_PKEY;
+    }
+
+    @Override
+    public List<UniqueKey<RelatedObjectRecord>> getUniqueKeys() {
+        return Arrays.asList(Keys.RELATED_OBJECT_PID_SCHEMA_URI_KEY);
     }
 
     @Override

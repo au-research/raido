@@ -116,6 +116,11 @@ public class Organisation extends TableImpl<OrganisationRecord> {
     }
 
     @Override
+    public List<UniqueKey<OrganisationRecord>> getUniqueKeys() {
+        return Arrays.asList(Keys.ORGANISATION_PID_SCHEMA_ID_KEY);
+    }
+
+    @Override
     public List<ForeignKey<OrganisationRecord, ?>> getReferences() {
         return Arrays.asList(Keys.ORGANISATION__FK_ORGANISATION_SCHEMA_ID);
     }

@@ -116,6 +116,11 @@ public class Contributor extends TableImpl<ContributorRecord> {
     }
 
     @Override
+    public List<UniqueKey<ContributorRecord>> getUniqueKeys() {
+        return Arrays.asList(Keys.CONTRIBUTOR_PID_SCHEMA_ID_KEY);
+    }
+
+    @Override
     public List<ForeignKey<ContributorRecord, ?>> getReferences() {
         return Arrays.asList(Keys.CONTRIBUTOR__FK_CONTRIBUTOR_SCHEMA_ID);
     }

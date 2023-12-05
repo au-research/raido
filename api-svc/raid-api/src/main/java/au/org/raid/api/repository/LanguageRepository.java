@@ -14,10 +14,10 @@ import static au.org.raid.db.jooq.tables.Language.LANGUAGE;
 public class LanguageRepository {
     private final DSLContext dslContext;
 
-    public Optional<LanguageRecord> findByIdAndSchemaId(final String id, final int schemaId) {
+    public Optional<LanguageRecord> findByIdAndSchemaId(final String code, final int schemaId) {
         return dslContext.select(LANGUAGE.fields())
                 .from(LANGUAGE)
-                .where(LANGUAGE.ID.eq(id))
+                .where(LANGUAGE.CODE.eq(code))
                 .and(LANGUAGE.SCHEMA_ID.eq(schemaId))
                 .fetchOptional(record -> new LanguageRecord()
                         .setSchemaId(LANGUAGE.SCHEMA_ID.getValue(record))

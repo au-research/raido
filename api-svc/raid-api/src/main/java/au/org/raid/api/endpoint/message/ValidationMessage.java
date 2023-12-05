@@ -195,14 +195,6 @@ public class ValidationMessage {
                 message(INVALID_VALUE_MESSAGE);
     }
 
-    public static ValidationFailure primaryTitleTooLong(int i) {
-        return new ValidationFailure().
-                fieldId("title[%s].title".formatted(i)).
-                errorType(TOO_LONG_TYPE).
-                message("primaryTitle field must fit in length: " +
-                        RAID.PRIMARY_TITLE.getDataType().length());
-    }
-
     public static ValidationFailure metadataJsonParseFailure() {
         return new ValidationFailure().fieldId("metadata").
                 errorType("jsonParse").

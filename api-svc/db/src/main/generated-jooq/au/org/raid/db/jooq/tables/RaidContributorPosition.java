@@ -14,11 +14,12 @@ import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function3;
+import org.jooq.Function5;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row3;
+import org.jooq.Row5;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -52,20 +53,31 @@ public class RaidContributorPosition extends TableImpl<RaidContributorPositionRe
     }
 
     /**
-     * The column <code>api_svc.raid_contributor_position.raid_name</code>.
+     * The column <code>api_svc.raid_contributor_position.id</code>.
      */
-    public final TableField<RaidContributorPositionRecord, String> RAID_NAME = createField(DSL.name("raid_name"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<RaidContributorPositionRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>api_svc.raid_contributor_position.contributor_id</code>.
+     * The column
+     * <code>api_svc.raid_contributor_position.raid_contributor_id</code>.
      */
-    public final TableField<RaidContributorPositionRecord, Integer> CONTRIBUTOR_ID = createField(DSL.name("contributor_id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<RaidContributorPositionRecord, Integer> RAID_CONTRIBUTOR_ID = createField(DSL.name("raid_contributor_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column
      * <code>api_svc.raid_contributor_position.contributor_position_id</code>.
      */
     public final TableField<RaidContributorPositionRecord, Integer> CONTRIBUTOR_POSITION_ID = createField(DSL.name("contributor_position_id"), SQLDataType.INTEGER.nullable(false), this, "");
+
+    /**
+     * The column <code>api_svc.raid_contributor_position.start_date</code>.
+     */
+    public final TableField<RaidContributorPositionRecord, String> START_DATE = createField(DSL.name("start_date"), SQLDataType.VARCHAR.nullable(false), this, "");
+
+    /**
+     * The column <code>api_svc.raid_contributor_position.end_date</code>.
+     */
+    public final TableField<RaidContributorPositionRecord, String> END_DATE = createField(DSL.name("end_date"), SQLDataType.VARCHAR, this, "");
 
     private RaidContributorPosition(Name alias, Table<RaidContributorPositionRecord> aliased) {
         this(alias, aliased, null);
@@ -108,37 +120,37 @@ public class RaidContributorPosition extends TableImpl<RaidContributorPositionRe
     }
 
     @Override
+    public Identity<RaidContributorPositionRecord, Integer> getIdentity() {
+        return (Identity<RaidContributorPositionRecord, Integer>) super.getIdentity();
+    }
+
+    @Override
     public UniqueKey<RaidContributorPositionRecord> getPrimaryKey() {
         return Keys.RAID_CONTRIBUTOR_POSITION_PKEY;
     }
 
     @Override
-    public List<ForeignKey<RaidContributorPositionRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_CONTRIBUTOR_POSITION__FK_RAID_CONTRIBUTOR_POSITION_RAID_NAME, Keys.RAID_CONTRIBUTOR_POSITION__FK_RAID_CONTRIBUTOR_CONTRIBUTOR_ID, Keys.RAID_CONTRIBUTOR_POSITION__FK_RAID_CONTRIBUTOR_POSITION_CONTRIBUTOR_POSITION_ID);
+    public List<UniqueKey<RaidContributorPositionRecord>> getUniqueKeys() {
+        return Arrays.asList(Keys.RAID_CONTRIBUTOR_POSITION_RAID_CONTRIBUTOR_ID_CONTRIBUTOR_P_KEY);
     }
 
-    private transient Raid _raid;
-    private transient Contributor _contributor;
+    @Override
+    public List<ForeignKey<RaidContributorPositionRecord, ?>> getReferences() {
+        return Arrays.asList(Keys.RAID_CONTRIBUTOR_POSITION__FK_RAID_CONTRIBUTOR_POSITION_RAID_CONTRIBUTOR_ID, Keys.RAID_CONTRIBUTOR_POSITION__FK_RAID_CONTRIBUTOR_POSITION_CONTRIBUTOR_POSITION_ID);
+    }
+
+    private transient RaidContributor _raidContributor;
     private transient ContributorPosition _contributorPosition;
 
     /**
-     * Get the implicit join path to the <code>api_svc.raid</code> table.
+     * Get the implicit join path to the <code>api_svc.raid_contributor</code>
+     * table.
      */
-    public Raid raid() {
-        if (_raid == null)
-            _raid = new Raid(this, Keys.RAID_CONTRIBUTOR_POSITION__FK_RAID_CONTRIBUTOR_POSITION_RAID_NAME);
+    public RaidContributor raidContributor() {
+        if (_raidContributor == null)
+            _raidContributor = new RaidContributor(this, Keys.RAID_CONTRIBUTOR_POSITION__FK_RAID_CONTRIBUTOR_POSITION_RAID_CONTRIBUTOR_ID);
 
-        return _raid;
-    }
-
-    /**
-     * Get the implicit join path to the <code>api_svc.contributor</code> table.
-     */
-    public Contributor contributor() {
-        if (_contributor == null)
-            _contributor = new Contributor(this, Keys.RAID_CONTRIBUTOR_POSITION__FK_RAID_CONTRIBUTOR_CONTRIBUTOR_ID);
-
-        return _contributor;
+        return _raidContributor;
     }
 
     /**
@@ -192,18 +204,18 @@ public class RaidContributorPosition extends TableImpl<RaidContributorPositionRe
     }
 
     // -------------------------------------------------------------------------
-    // Row3 type methods
+    // Row5 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row3<String, Integer, Integer> fieldsRow() {
-        return (Row3) super.fieldsRow();
+    public Row5<Integer, Integer, Integer, String, String> fieldsRow() {
+        return (Row5) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function3<? super String, ? super Integer, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function5<? super Integer, ? super Integer, ? super Integer, ? super String, ? super String, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -211,7 +223,7 @@ public class RaidContributorPosition extends TableImpl<RaidContributorPositionRe
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function3<? super String, ? super Integer, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function5<? super Integer, ? super Integer, ? super Integer, ? super String, ? super String, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }
