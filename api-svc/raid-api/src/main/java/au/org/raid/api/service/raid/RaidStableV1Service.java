@@ -99,7 +99,7 @@ public class RaidStableV1Service {
                 metaSvc::formatRaidoLandingPageUrl);
 
         // TODO: Replace apids with datacite handle creation
-        String dataciteHandle = dataciteSvc.getDataciteHandle();
+        String dataciteHandle = dataciteSvc.mintDataciteHandle();
         apidsResponse.identifier.handle = dataciteHandle;
         dataciteSvc.createDataciteRaid(request, dataciteHandle);
 
@@ -109,8 +109,6 @@ public class RaidStableV1Service {
 
         final var raidDto = raidHistoryService.save(request);
         final var raidRecord = raidRecordFactory.create(raidDto);
-
-
 
         tx.executeWithoutResult(status -> raidRepository.insert(raidRecord));
 

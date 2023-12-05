@@ -1,125 +1,122 @@
 package au.org.raid.api.service.datacite;
 
-
 import au.org.raid.api.factory.DatacitePayloadFactory;
 import au.org.raid.api.spring.config.DataCiteProperties;
-import au.org.raid.idl.raidv2.model.*;
+import au.org.raid.idl.raidv2.model.RaidCreateRequest;
+import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.*;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.UUID;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class DataciteService {
     private final DataCiteProperties properties;
+    private final ObjectMapper objectMapper;
+    private final RestTemplate restTemplate;
+    private static final Logger log = LoggerFactory.getLogger(DataciteService.class);
 
-    public final String createDataciteRaid(RaidCreateRequest request, String handle) {
-        // TODO: Use RestTemplate instead of HttpURLConnection
-        String responseHandle;
-        try {
-            URL url = new URL(properties.getEndpoint() + "/dois");
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            httpURLConnection.setRequestMethod("POST");
-            httpURLConnection.setDoOutput(true);
-            httpURLConnection.setRequestProperty("Content-Type", "application/json");
-
-            // Prepare the basic auth credentials
-            String username = properties.getUser();
-            String password = properties.getPassword();
-            String encodedCredentials = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
-
-            httpURLConnection.setRequestProperty("Authorization", "Basic " + encodedCredentials);
-
-            DatacitePayloadFactory payloadFactory = new DatacitePayloadFactory();
-            String createPayload = payloadFactory.payloadForCreate(request, handle);
-
-
-            try (OutputStream os = httpURLConnection.getOutputStream()) {
-                byte[] input = createPayload.getBytes(StandardCharsets.UTF_8);
-                os.write(input, 0, input.length);
-            }
-
-            try (InputStream inputStream = httpURLConnection.getInputStream()) {
-                ObjectMapper inputStreamObjectMapper = new ObjectMapper();
-                JsonNode inputStreamRootNode = inputStreamObjectMapper.readTree(inputStream);
-                responseHandle = inputStreamRootNode.path("data").path("id").asText();
-            } catch (IOException e) {
-                throw new RuntimeException("Error reading response");
-            }
-
-        } catch (Exception e) {
-            throw new RuntimeException("Error creating handle");
-        }
-
-        return responseHandle;
-    }
-
-    public final String getDatacitePrefix(){
+    private final String getDatacitePrefix() {
         return properties.getPrefix();
     }
 
-    public final String getDataciteSuffix(){
+    private final String getDataciteSuffix() {
         // TODO: This is a temporary solution to create a random identifier for the datacite handle
-        // This should be replaced with a proper solution
         return UUID.randomUUID().toString().split("-")[0];
     }
 
-    public final String getDataciteHandle(){
+    public final String mintDataciteHandle() {
         String prefix = getDatacitePrefix();
         String suffix = getDataciteSuffix();
         return prefix + "/" + suffix;
     }
 
-    public final String updateDataciteRaid(RaidUpdateRequest request, String handle) {
-        // TODO: Use RestTemplate instead of HttpURLConnection
+    private HttpHeaders generateDataciteRequestHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String auth = properties.getUser() + ":" + properties.getPassword();
+        String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
+        headers.add("Authorization", "Basic " + encodedAuth);
+        return headers;
+    }
+
+    private ObjectNode createPayloadForRequest(RaidCreateRequest createRequest, String handle) {
+        DatacitePayloadFactory payloadFactory = new DatacitePayloadFactory();
+        return payloadFactory.payloadForCreate(createRequest, handle);
+    }
+
+    private ObjectNode createPayloadForRequest(RaidUpdateRequest updateRequest, String handle) {
+        DatacitePayloadFactory payloadFactory = new DatacitePayloadFactory();
+        return payloadFactory.payloadForUpdate(updateRequest, handle);
+    }
+
+    private String processResponse(ResponseEntity<JsonNode> response) {
+        JsonNode responseBody = response.getBody();
+        if (responseBody == null) {
+            throw new IllegalStateException("Response body is null");
+        }
+
+        JsonNode dataNode = responseBody.path("data");
+        if (dataNode.isMissingNode()) {
+            throw new IllegalStateException("Response body does not contain 'data' node");
+        }
+
+        JsonNode idNode = dataNode.path("id");
+        if (idNode.isMissingNode()) {
+            throw new IllegalStateException("Data node does not contain 'id' node");
+        }
+
+        return idNode.asText();
+    }
+
+    public final String createDataciteRaid(RaidCreateRequest createRequest, String handle) {
+        final String endpoint = properties.getEndpoint() + "/dois";
+        final HttpHeaders headers = generateDataciteRequestHeaders();
+
+        final ObjectNode createPayload = createPayloadForRequest(createRequest, handle);
+        final HttpEntity<ObjectNode> entity = new HttpEntity<>(createPayload, headers);
+
         try {
-            URL url = new URL(properties.getEndpoint() + "/dois/" + handle);
-
-            // RestTemplate restTemplate = new RestTemplate();
-            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-            httpURLConnection.setRequestMethod("PUT");
-            httpURLConnection.setDoOutput(true);
-            httpURLConnection.setRequestProperty("Content-Type", "application/json");
-
-            // Prepare the basic auth credentials
-            String username = properties.getUser();
-            String password = properties.getPassword();
-            String encodedCredentials = Base64.getEncoder().encodeToString((username + ":" + password).getBytes());
-
-            httpURLConnection.setRequestProperty("Authorization", "Basic " + encodedCredentials);
-
-            DatacitePayloadFactory payloadFactory = new DatacitePayloadFactory();
-            String payloadForUpdate = payloadFactory.payloadForUpdate(request, handle);
-
-
-            try (OutputStream os = httpURLConnection.getOutputStream()) {
-                byte[] input = payloadForUpdate.getBytes(StandardCharsets.UTF_8);
-                os.write(input, 0, input.length);
-            }
-
-            try (InputStream inputStream = httpURLConnection.getInputStream()) {
-                ObjectMapper inputStreamObjectMapper = new ObjectMapper();
-                JsonNode inputStreamRootNode = inputStreamObjectMapper.readTree(inputStream);
-            } catch (IOException e) {
-                System.out.println(e);
-                throw new RuntimeException("Error reading response");
-            }
-
-            return handle;
+            ResponseEntity<JsonNode> response = restTemplate.exchange(endpoint, HttpMethod.POST, entity, JsonNode.class);
+            return processResponse(response);
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            log.error("HTTP error occurred: {}", e.getMessage());
+            throw e;
         } catch (Exception e) {
-            System.out.println(e);
-            throw new RuntimeException("Error updating handle");
+            log.error("Error occurred while creating Datacite RAID: {}", e.getMessage());
+            throw new RuntimeException("Error creating handle", e);
         }
     }
+
+    public final String updateDataciteRaid(RaidUpdateRequest updateRequest, String handle) {
+        final String endpoint = properties.getEndpoint() + "/dois/" + handle;
+        log.info("endpoint: " + endpoint);
+        final HttpHeaders headers = generateDataciteRequestHeaders();
+
+        final ObjectNode createPayload = createPayloadForRequest(updateRequest, handle);
+        final HttpEntity<ObjectNode> entity = new HttpEntity<>(createPayload, headers);
+
+        try {
+            ResponseEntity<JsonNode> response = restTemplate.exchange(endpoint, HttpMethod.PUT, entity, JsonNode.class);
+            return processResponse(response);
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            log.error("HTTP error occurred: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            log.error("Error occurred while creating Datacite RAID: {}", e.getMessage());
+            throw new RuntimeException("Error creating handle", e);
+        }
+    }
+
 }

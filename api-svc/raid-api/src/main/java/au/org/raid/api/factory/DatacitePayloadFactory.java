@@ -124,7 +124,7 @@ public class DatacitePayloadFactory {
         }
     }
 
-    public String payloadForCreate(RaidCreateRequest request, String handle){
+    public ObjectNode payloadForCreate(RaidCreateRequest request, String handle){
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode rootNode = objectMapper.createObjectNode();
 
@@ -190,9 +190,9 @@ public class DatacitePayloadFactory {
         // DESCRIPTIONS
         createDescriptionNode(attributesNode, request.getDescription());
 
-        return rootNode.toString();
+        return rootNode;
     }
-    public String payloadForUpdate(RaidUpdateRequest request, String handle){
+    public ObjectNode payloadForUpdate(RaidUpdateRequest request, String handle){
         ObjectMapper objectMapper = new ObjectMapper();
         ObjectNode rootNode = objectMapper.createObjectNode();
 
@@ -258,6 +258,6 @@ public class DatacitePayloadFactory {
         // DESCRIPTIONS
         createDescriptionNode(attributesNode, request.getDescription());
 
-        return rootNode.toString();
+        return rootNode;
     }
 }
