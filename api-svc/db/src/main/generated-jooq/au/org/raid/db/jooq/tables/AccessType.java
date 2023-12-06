@@ -8,17 +8,16 @@ import au.org.raid.db.jooq.ApiSvc;
 import au.org.raid.db.jooq.Keys;
 import au.org.raid.db.jooq.tables.records.AccessTypeRecord;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function2;
+import org.jooq.Function3;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row2;
+import org.jooq.Row3;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -52,14 +51,19 @@ public class AccessType extends TableImpl<AccessTypeRecord> {
     }
 
     /**
-     * The column <code>api_svc.access_type.schema_id</code>.
+     * The column <code>api_svc.access_type.id</code>.
      */
-    public final TableField<AccessTypeRecord, Integer> SCHEMA_ID = createField(DSL.name("schema_id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<AccessTypeRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
      * The column <code>api_svc.access_type.uri</code>.
      */
     public final TableField<AccessTypeRecord, String> URI = createField(DSL.name("uri"), SQLDataType.VARCHAR.nullable(false), this, "");
+
+    /**
+     * The column <code>api_svc.access_type.schema_id</code>.
+     */
+    public final TableField<AccessTypeRecord, Integer> SCHEMA_ID = createField(DSL.name("schema_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
     private AccessType(Name alias, Table<AccessTypeRecord> aliased) {
         this(alias, aliased, null);
@@ -100,26 +104,13 @@ public class AccessType extends TableImpl<AccessTypeRecord> {
     }
 
     @Override
-    public UniqueKey<AccessTypeRecord> getPrimaryKey() {
-        return Keys.ACCESS_TYPE_PKEY;
+    public Identity<AccessTypeRecord, Integer> getIdentity() {
+        return (Identity<AccessTypeRecord, Integer>) super.getIdentity();
     }
 
     @Override
-    public List<ForeignKey<AccessTypeRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.ACCESS_TYPE__FK_ACCESS_TYPE_SCHEMA_ID);
-    }
-
-    private transient AccessTypeSchema _accessTypeSchema;
-
-    /**
-     * Get the implicit join path to the <code>api_svc.access_type_schema</code>
-     * table.
-     */
-    public AccessTypeSchema accessTypeSchema() {
-        if (_accessTypeSchema == null)
-            _accessTypeSchema = new AccessTypeSchema(this, Keys.ACCESS_TYPE__FK_ACCESS_TYPE_SCHEMA_ID);
-
-        return _accessTypeSchema;
+    public UniqueKey<AccessTypeRecord> getPrimaryKey() {
+        return Keys.ACCESS_TYPE_NEW_PKEY;
     }
 
     @Override
@@ -162,18 +153,18 @@ public class AccessType extends TableImpl<AccessTypeRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row2 type methods
+    // Row3 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row2<Integer, String> fieldsRow() {
-        return (Row2) super.fieldsRow();
+    public Row3<Integer, String, Integer> fieldsRow() {
+        return (Row3) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function2<? super Integer, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function3<? super Integer, ? super String, ? super Integer, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -181,7 +172,7 @@ public class AccessType extends TableImpl<AccessTypeRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function2<? super Integer, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function3<? super Integer, ? super String, ? super Integer, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

@@ -14,11 +14,12 @@ import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function2;
+import org.jooq.Function4;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row2;
+import org.jooq.Row4;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -53,6 +54,11 @@ public class RaidTraditionalKnowledgeLabel extends TableImpl<RaidTraditionalKnow
     }
 
     /**
+     * The column <code>api_svc.raid_traditional_knowledge_label.id</code>.
+     */
+    public final TableField<RaidTraditionalKnowledgeLabelRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
+
+    /**
      * The column
      * <code>api_svc.raid_traditional_knowledge_label.raid_name</code>.
      */
@@ -62,7 +68,13 @@ public class RaidTraditionalKnowledgeLabel extends TableImpl<RaidTraditionalKnow
      * The column
      * <code>api_svc.raid_traditional_knowledge_label.traditional_knowledge_label_id</code>.
      */
-    public final TableField<RaidTraditionalKnowledgeLabelRecord, Integer> TRADITIONAL_KNOWLEDGE_LABEL_ID = createField(DSL.name("traditional_knowledge_label_id"), SQLDataType.INTEGER.nullable(false), this, "");
+    public final TableField<RaidTraditionalKnowledgeLabelRecord, Integer> TRADITIONAL_KNOWLEDGE_LABEL_ID = createField(DSL.name("traditional_knowledge_label_id"), SQLDataType.INTEGER, this, "");
+
+    /**
+     * The column
+     * <code>api_svc.raid_traditional_knowledge_label.traditional_knowledge_label_schema_id</code>.
+     */
+    public final TableField<RaidTraditionalKnowledgeLabelRecord, Integer> TRADITIONAL_KNOWLEDGE_LABEL_SCHEMA_ID = createField(DSL.name("traditional_knowledge_label_schema_id"), SQLDataType.INTEGER, this, "");
 
     private RaidTraditionalKnowledgeLabel(Name alias, Table<RaidTraditionalKnowledgeLabelRecord> aliased) {
         this(alias, aliased, null);
@@ -106,25 +118,54 @@ public class RaidTraditionalKnowledgeLabel extends TableImpl<RaidTraditionalKnow
     }
 
     @Override
+    public Identity<RaidTraditionalKnowledgeLabelRecord, Integer> getIdentity() {
+        return (Identity<RaidTraditionalKnowledgeLabelRecord, Integer>) super.getIdentity();
+    }
+
+    @Override
     public UniqueKey<RaidTraditionalKnowledgeLabelRecord> getPrimaryKey() {
         return Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL_PKEY;
     }
 
     @Override
     public List<ForeignKey<RaidTraditionalKnowledgeLabelRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__FK_RAID_TRADITIONAL_KNOWLEDGE_LABEL_RAID_NAME);
+        return Arrays.asList(Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__FK_RAID_TRAD_KNOW_LABEL_RAID_NAME, Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__FK_RAID_TRAD_KNOW_LABEL_TRADITIONAL_KNOWLEDGE_LABEL_ID, Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__FK_RAID_TRAD_KNOW_LABEL_TRADITIONAL_KNOWLEDGE_LABEL_SCHEMA_ID);
     }
 
     private transient Raid _raid;
+    private transient TraditionalKnowledgeLabel _traditionalKnowledgeLabel;
+    private transient TraditionalKnowledgeLabelSchema _traditionalKnowledgeLabelSchema;
 
     /**
      * Get the implicit join path to the <code>api_svc.raid</code> table.
      */
     public Raid raid() {
         if (_raid == null)
-            _raid = new Raid(this, Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__FK_RAID_TRADITIONAL_KNOWLEDGE_LABEL_RAID_NAME);
+            _raid = new Raid(this, Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__FK_RAID_TRAD_KNOW_LABEL_RAID_NAME);
 
         return _raid;
+    }
+
+    /**
+     * Get the implicit join path to the
+     * <code>api_svc.traditional_knowledge_label</code> table.
+     */
+    public TraditionalKnowledgeLabel traditionalKnowledgeLabel() {
+        if (_traditionalKnowledgeLabel == null)
+            _traditionalKnowledgeLabel = new TraditionalKnowledgeLabel(this, Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__FK_RAID_TRAD_KNOW_LABEL_TRADITIONAL_KNOWLEDGE_LABEL_ID);
+
+        return _traditionalKnowledgeLabel;
+    }
+
+    /**
+     * Get the implicit join path to the
+     * <code>api_svc.traditional_knowledge_label_schema</code> table.
+     */
+    public TraditionalKnowledgeLabelSchema traditionalKnowledgeLabelSchema() {
+        if (_traditionalKnowledgeLabelSchema == null)
+            _traditionalKnowledgeLabelSchema = new TraditionalKnowledgeLabelSchema(this, Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__FK_RAID_TRAD_KNOW_LABEL_TRADITIONAL_KNOWLEDGE_LABEL_SCHEMA_ID);
+
+        return _traditionalKnowledgeLabelSchema;
     }
 
     @Override
@@ -167,18 +208,18 @@ public class RaidTraditionalKnowledgeLabel extends TableImpl<RaidTraditionalKnow
     }
 
     // -------------------------------------------------------------------------
-    // Row2 type methods
+    // Row4 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row2<String, Integer> fieldsRow() {
-        return (Row2) super.fieldsRow();
+    public Row4<Integer, String, Integer, Integer> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function2<? super String, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function4<? super Integer, ? super String, ? super Integer, ? super Integer, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -186,7 +227,7 @@ public class RaidTraditionalKnowledgeLabel extends TableImpl<RaidTraditionalKnow
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function2<? super String, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function4<? super Integer, ? super String, ? super Integer, ? super Integer, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

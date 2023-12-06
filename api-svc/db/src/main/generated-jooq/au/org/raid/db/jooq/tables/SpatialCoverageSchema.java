@@ -58,9 +58,9 @@ public class SpatialCoverageSchema extends TableImpl<SpatialCoverageSchemaRecord
     public final TableField<SpatialCoverageSchemaRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>api_svc.spatial_coverage_schema.schema_uri</code>.
+     * The column <code>api_svc.spatial_coverage_schema.uri</code>.
      */
-    public final TableField<SpatialCoverageSchemaRecord, String> SCHEMA_URI = createField(DSL.name("schema_uri"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<SpatialCoverageSchemaRecord, String> URI = createField(DSL.name("uri"), SQLDataType.VARCHAR.nullable(false), this, "");
 
     private SpatialCoverageSchema(Name alias, Table<SpatialCoverageSchemaRecord> aliased) {
         this(alias, aliased, null);
@@ -114,7 +114,7 @@ public class SpatialCoverageSchema extends TableImpl<SpatialCoverageSchemaRecord
 
     @Override
     public List<UniqueKey<SpatialCoverageSchemaRecord>> getUniqueKeys() {
-        return Arrays.asList(Keys.SPATIAL_COVERAGE_SCHEMA_SCHEMA_URI_KEY);
+        return Arrays.asList(Keys.SPATIAL_COVERAGE_SCHEMA_URI_KEY);
     }
 
     @Override

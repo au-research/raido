@@ -72,9 +72,9 @@ public class RaidSpatialCoverage extends TableImpl<RaidSpatialCoverageRecord> {
     public final TableField<RaidSpatialCoverageRecord, String> PLACE = createField(DSL.name("place"), SQLDataType.VARCHAR, this, "");
 
     /**
-     * The column <code>api_svc.raid_spatial_coverage.place_language_id</code>.
+     * The column <code>api_svc.raid_spatial_coverage.language_id</code>.
      */
-    public final TableField<RaidSpatialCoverageRecord, Integer> PLACE_LANGUAGE_ID = createField(DSL.name("place_language_id"), SQLDataType.INTEGER, this, "");
+    public final TableField<RaidSpatialCoverageRecord, Integer> LANGUAGE_ID = createField(DSL.name("language_id"), SQLDataType.INTEGER, this, "");
 
     private RaidSpatialCoverage(Name alias, Table<RaidSpatialCoverageRecord> aliased) {
         this(alias, aliased, null);
@@ -123,7 +123,7 @@ public class RaidSpatialCoverage extends TableImpl<RaidSpatialCoverageRecord> {
 
     @Override
     public List<ForeignKey<RaidSpatialCoverageRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_RAID_NAME, Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_SCHEMA_ID, Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_PLACE_LANGUAGE_ID);
+        return Arrays.asList(Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_RAID_NAME, Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_SCHEMA_ID, Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_LANGUAGE_ID);
     }
 
     private transient Raid _raid;
@@ -156,7 +156,7 @@ public class RaidSpatialCoverage extends TableImpl<RaidSpatialCoverageRecord> {
      */
     public Language language() {
         if (_language == null)
-            _language = new Language(this, Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_PLACE_LANGUAGE_ID);
+            _language = new Language(this, Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_LANGUAGE_ID);
 
         return _language;
     }

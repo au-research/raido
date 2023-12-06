@@ -82,17 +82,17 @@ public class RaidSpatialCoverageRecord extends UpdatableRecordImpl<RaidSpatialCo
     }
 
     /**
-     * Setter for <code>api_svc.raid_spatial_coverage.place_language_id</code>.
+     * Setter for <code>api_svc.raid_spatial_coverage.language_id</code>.
      */
-    public RaidSpatialCoverageRecord setPlaceLanguageId(Integer value) {
+    public RaidSpatialCoverageRecord setLanguageId(Integer value) {
         set(4, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.raid_spatial_coverage.place_language_id</code>.
+     * Getter for <code>api_svc.raid_spatial_coverage.language_id</code>.
      */
-    public Integer getPlaceLanguageId() {
+    public Integer getLanguageId() {
         return (Integer) get(4);
     }
 
@@ -141,7 +141,7 @@ public class RaidSpatialCoverageRecord extends UpdatableRecordImpl<RaidSpatialCo
 
     @Override
     public Field<Integer> field5() {
-        return RaidSpatialCoverage.RAID_SPATIAL_COVERAGE.PLACE_LANGUAGE_ID;
+        return RaidSpatialCoverage.RAID_SPATIAL_COVERAGE.LANGUAGE_ID;
     }
 
     @Override
@@ -166,7 +166,7 @@ public class RaidSpatialCoverageRecord extends UpdatableRecordImpl<RaidSpatialCo
 
     @Override
     public Integer component5() {
-        return getPlaceLanguageId();
+        return getLanguageId();
     }
 
     @Override
@@ -191,7 +191,7 @@ public class RaidSpatialCoverageRecord extends UpdatableRecordImpl<RaidSpatialCo
 
     @Override
     public Integer value5() {
-        return getPlaceLanguageId();
+        return getLanguageId();
     }
 
     @Override
@@ -220,7 +220,7 @@ public class RaidSpatialCoverageRecord extends UpdatableRecordImpl<RaidSpatialCo
 
     @Override
     public RaidSpatialCoverageRecord value5(Integer value) {
-        setPlaceLanguageId(value);
+        setLanguageId(value);
         return this;
     }
 
@@ -248,13 +248,13 @@ public class RaidSpatialCoverageRecord extends UpdatableRecordImpl<RaidSpatialCo
     /**
      * Create a detached, initialised RaidSpatialCoverageRecord
      */
-    public RaidSpatialCoverageRecord(String raidName, String id, Integer schemaId, String place, Integer placeLanguageId) {
+    public RaidSpatialCoverageRecord(String raidName, String id, Integer schemaId, String place, Integer languageId) {
         super(RaidSpatialCoverage.RAID_SPATIAL_COVERAGE);
 
         setRaidName(raidName);
         setId(id);
         setSchemaId(schemaId);
         setPlace(place);
-        setPlaceLanguageId(placeLanguageId);
+        setLanguageId(languageId);
     }
 }

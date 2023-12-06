@@ -14,11 +14,12 @@ import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function4;
+import org.jooq.Function3;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row4;
+import org.jooq.Row3;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -52,6 +53,11 @@ public class RaidSubject extends TableImpl<RaidSubjectRecord> {
     }
 
     /**
+     * The column <code>api_svc.raid_subject.id</code>.
+     */
+    public final TableField<RaidSubjectRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
+
+    /**
      * The column <code>api_svc.raid_subject.raid_name</code>.
      */
     public final TableField<RaidSubjectRecord, String> RAID_NAME = createField(DSL.name("raid_name"), SQLDataType.VARCHAR.nullable(false), this, "");
@@ -60,16 +66,6 @@ public class RaidSubject extends TableImpl<RaidSubjectRecord> {
      * The column <code>api_svc.raid_subject.subject_type_id</code>.
      */
     public final TableField<RaidSubjectRecord, String> SUBJECT_TYPE_ID = createField(DSL.name("subject_type_id"), SQLDataType.VARCHAR.nullable(false), this, "");
-
-    /**
-     * The column <code>api_svc.raid_subject.keyword</code>.
-     */
-    public final TableField<RaidSubjectRecord, String> KEYWORD = createField(DSL.name("keyword"), SQLDataType.VARCHAR, this, "");
-
-    /**
-     * The column <code>api_svc.raid_subject.keyword_language_id</code>.
-     */
-    public final TableField<RaidSubjectRecord, Integer> KEYWORD_LANGUAGE_ID = createField(DSL.name("keyword_language_id"), SQLDataType.INTEGER, this, "");
 
     private RaidSubject(Name alias, Table<RaidSubjectRecord> aliased) {
         this(alias, aliased, null);
@@ -110,18 +106,27 @@ public class RaidSubject extends TableImpl<RaidSubjectRecord> {
     }
 
     @Override
+    public Identity<RaidSubjectRecord, Integer> getIdentity() {
+        return (Identity<RaidSubjectRecord, Integer>) super.getIdentity();
+    }
+
+    @Override
     public UniqueKey<RaidSubjectRecord> getPrimaryKey() {
         return Keys.RAID_SUBJECT_PKEY;
     }
 
     @Override
+    public List<UniqueKey<RaidSubjectRecord>> getUniqueKeys() {
+        return Arrays.asList(Keys.RAID_SUBJECT_RAID_NAME_SUBJECT_TYPE_ID_KEY);
+    }
+
+    @Override
     public List<ForeignKey<RaidSubjectRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_SUBJECT__FK_RAID_SUBJECT_RAID_NAME, Keys.RAID_SUBJECT__FK_RAID_SUBJECT_SUBJECT_ID, Keys.RAID_SUBJECT__FK_RAID_SUBJECT_KEYWORD_LANGUAGE_ID);
+        return Arrays.asList(Keys.RAID_SUBJECT__FK_RAID_SUBJECT_RAID_NAME, Keys.RAID_SUBJECT__FK_RAID_SUBJECT_SUBJECT_ID);
     }
 
     private transient Raid _raid;
     private transient SubjectType _subjectType;
-    private transient Language _language;
 
     /**
      * Get the implicit join path to the <code>api_svc.raid</code> table.
@@ -142,16 +147,6 @@ public class RaidSubject extends TableImpl<RaidSubjectRecord> {
             _subjectType = new SubjectType(this, Keys.RAID_SUBJECT__FK_RAID_SUBJECT_SUBJECT_ID);
 
         return _subjectType;
-    }
-
-    /**
-     * Get the implicit join path to the <code>api_svc.language</code> table.
-     */
-    public Language language() {
-        if (_language == null)
-            _language = new Language(this, Keys.RAID_SUBJECT__FK_RAID_SUBJECT_KEYWORD_LANGUAGE_ID);
-
-        return _language;
     }
 
     @Override
@@ -194,18 +189,18 @@ public class RaidSubject extends TableImpl<RaidSubjectRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row4 type methods
+    // Row3 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row4<String, String, String, Integer> fieldsRow() {
-        return (Row4) super.fieldsRow();
+    public Row3<Integer, String, String> fieldsRow() {
+        return (Row3) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function4<? super String, ? super String, ? super String, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function3<? super Integer, ? super String, ? super String, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -213,7 +208,7 @@ public class RaidSubject extends TableImpl<RaidSubjectRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function4<? super String, ? super String, ? super String, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function3<? super Integer, ? super String, ? super String, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

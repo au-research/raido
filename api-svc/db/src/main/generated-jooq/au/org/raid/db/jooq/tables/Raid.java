@@ -18,13 +18,13 @@ import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function19;
+import org.jooq.Function20;
 import org.jooq.Index;
 import org.jooq.JSONB;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row19;
+import org.jooq.Row20;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -128,16 +128,6 @@ public class Raid extends TableImpl<RaidRecord> {
     public final TableField<RaidRecord, String> END_DATE = createField(DSL.name("end_date"), SQLDataType.VARCHAR, this, "");
 
     /**
-     * The column <code>api_svc.raid.registration_agency</code>.
-     */
-    public final TableField<RaidRecord, String> REGISTRATION_AGENCY = createField(DSL.name("registration_agency"), SQLDataType.VARCHAR, this, "");
-
-    /**
-     * The column <code>api_svc.raid.owner</code>.
-     */
-    public final TableField<RaidRecord, String> OWNER = createField(DSL.name("owner"), SQLDataType.VARCHAR, this, "");
-
-    /**
      * The column <code>api_svc.raid.license</code>.
      */
     public final TableField<RaidRecord, String> LICENSE = createField(DSL.name("license"), SQLDataType.VARCHAR, this, "");
@@ -161,6 +151,21 @@ public class Raid extends TableImpl<RaidRecord> {
      * The column <code>api_svc.raid.access_statement_language_id</code>.
      */
     public final TableField<RaidRecord, Integer> ACCESS_STATEMENT_LANGUAGE_ID = createField(DSL.name("access_statement_language_id"), SQLDataType.INTEGER, this, "");
+
+    /**
+     * The column <code>api_svc.raid.schema_uri</code>.
+     */
+    public final TableField<RaidRecord, String> SCHEMA_URI = createField(DSL.name("schema_uri"), SQLDataType.VARCHAR, this, "");
+
+    /**
+     * The column <code>api_svc.raid.registration_agency_organisation_id</code>.
+     */
+    public final TableField<RaidRecord, Integer> REGISTRATION_AGENCY_ORGANISATION_ID = createField(DSL.name("registration_agency_organisation_id"), SQLDataType.INTEGER, this, "");
+
+    /**
+     * The column <code>api_svc.raid.owner_organisation_id</code>.
+     */
+    public final TableField<RaidRecord, Integer> OWNER_ORGANISATION_ID = createField(DSL.name("owner_organisation_id"), SQLDataType.INTEGER, this, "");
 
     private Raid(Name alias, Table<RaidRecord> aliased) {
         this(alias, aliased, null);
@@ -212,11 +217,13 @@ public class Raid extends TableImpl<RaidRecord> {
 
     @Override
     public List<ForeignKey<RaidRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID__RAID_SERVICE_POINT_ID_FKEY, Keys.RAID__FK_RAID_ACCESS_STATEMENT_LANGUAGE_ID);
+        return Arrays.asList(Keys.RAID__RAID_SERVICE_POINT_ID_FKEY, Keys.RAID__FK_RAID_ACCESS_STATEMENT_LANGUAGE_ID, Keys.RAID__FK_RAID_REGISTRATION_AGENCY_ORGANISATION_ID, Keys.RAID__FK_RAID_OWNER_ORGANISATION_ID);
     }
 
     private transient ServicePoint _servicePoint;
     private transient Language _language;
+    private transient Organisation _fkRaidRegistrationAgencyOrganisationId;
+    private transient Organisation _fkRaidOwnerOrganisationId;
 
     /**
      * Get the implicit join path to the <code>api_svc.service_point</code>
@@ -237,6 +244,29 @@ public class Raid extends TableImpl<RaidRecord> {
             _language = new Language(this, Keys.RAID__FK_RAID_ACCESS_STATEMENT_LANGUAGE_ID);
 
         return _language;
+    }
+
+    /**
+     * Get the implicit join path to the <code>api_svc.organisation</code>
+     * table, via the <code>fk_raid_registration_agency_organisation_id</code>
+     * key.
+     */
+    public Organisation fkRaidRegistrationAgencyOrganisationId() {
+        if (_fkRaidRegistrationAgencyOrganisationId == null)
+            _fkRaidRegistrationAgencyOrganisationId = new Organisation(this, Keys.RAID__FK_RAID_REGISTRATION_AGENCY_ORGANISATION_ID);
+
+        return _fkRaidRegistrationAgencyOrganisationId;
+    }
+
+    /**
+     * Get the implicit join path to the <code>api_svc.organisation</code>
+     * table, via the <code>fk_raid_owner_organisation_id</code> key.
+     */
+    public Organisation fkRaidOwnerOrganisationId() {
+        if (_fkRaidOwnerOrganisationId == null)
+            _fkRaidOwnerOrganisationId = new Organisation(this, Keys.RAID__FK_RAID_OWNER_ORGANISATION_ID);
+
+        return _fkRaidOwnerOrganisationId;
     }
 
     @Override
@@ -279,18 +309,18 @@ public class Raid extends TableImpl<RaidRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row19 type methods
+    // Row20 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row19<String, Long, String, Integer, String, Boolean, Metaschema, JSONB, LocalDate, LocalDateTime, Integer, String, String, String, String, Integer, String, String, Integer> fieldsRow() {
-        return (Row19) super.fieldsRow();
+    public Row20<String, Long, String, Integer, String, Boolean, Metaschema, JSONB, LocalDate, LocalDateTime, Integer, String, String, Integer, String, String, Integer, String, Integer, Integer> fieldsRow() {
+        return (Row20) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function19<? super String, ? super Long, ? super String, ? super Integer, ? super String, ? super Boolean, ? super Metaschema, ? super JSONB, ? super LocalDate, ? super LocalDateTime, ? super Integer, ? super String, ? super String, ? super String, ? super String, ? super Integer, ? super String, ? super String, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function20<? super String, ? super Long, ? super String, ? super Integer, ? super String, ? super Boolean, ? super Metaschema, ? super JSONB, ? super LocalDate, ? super LocalDateTime, ? super Integer, ? super String, ? super String, ? super Integer, ? super String, ? super String, ? super Integer, ? super String, ? super Integer, ? super Integer, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -298,7 +328,7 @@ public class Raid extends TableImpl<RaidRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function19<? super String, ? super Long, ? super String, ? super Integer, ? super String, ? super Boolean, ? super Metaschema, ? super JSONB, ? super LocalDate, ? super LocalDateTime, ? super Integer, ? super String, ? super String, ? super String, ? super String, ? super Integer, ? super String, ? super String, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function20<? super String, ? super Long, ? super String, ? super Integer, ? super String, ? super Boolean, ? super Metaschema, ? super JSONB, ? super LocalDate, ? super LocalDateTime, ? super Integer, ? super String, ? super String, ? super Integer, ? super String, ? super String, ? super Integer, ? super String, ? super Integer, ? super Integer, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

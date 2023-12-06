@@ -33,13 +33,16 @@ import au.org.raid.db.jooq.tables.RaidHistory;
 import au.org.raid.db.jooq.tables.RaidOrganisation;
 import au.org.raid.db.jooq.tables.RaidOrganisationRole;
 import au.org.raid.db.jooq.tables.RaidRelatedObject;
+import au.org.raid.db.jooq.tables.RaidRelatedObjectCategory;
 import au.org.raid.db.jooq.tables.RaidSpatialCoverage;
 import au.org.raid.db.jooq.tables.RaidSubject;
+import au.org.raid.db.jooq.tables.RaidSubjectKeyword;
 import au.org.raid.db.jooq.tables.RaidTraditionalKnowledgeLabel;
 import au.org.raid.db.jooq.tables.RaidoOperator;
 import au.org.raid.db.jooq.tables.RelatedObject;
 import au.org.raid.db.jooq.tables.RelatedObjectCategory;
 import au.org.raid.db.jooq.tables.RelatedObjectCategorySchema;
+import au.org.raid.db.jooq.tables.RelatedObjectSchema;
 import au.org.raid.db.jooq.tables.RelatedObjectType;
 import au.org.raid.db.jooq.tables.RelatedObjectTypeSchema;
 import au.org.raid.db.jooq.tables.RelatedRaid;
@@ -95,6 +98,7 @@ public class ApiSvc extends SchemaImpl {
     @Override
     public final List<Sequence<?>> getSequences() {
         return Arrays.asList(
+            Sequences.ACCESS_TYPE_NEW_ID_SEQ,
             Sequences.ACCESS_TYPE_SCHEME_ID_SEQ,
             Sequences.CONTRIBUTOR_POSITION_NEW_ID_SEQ,
             Sequences.CONTRIBUTOR_POSITION_SCHEME_ID_SEQ,
@@ -151,13 +155,16 @@ public class ApiSvc extends SchemaImpl {
             RaidOrganisation.RAID_ORGANISATION,
             RaidOrganisationRole.RAID_ORGANISATION_ROLE,
             RaidRelatedObject.RAID_RELATED_OBJECT,
+            RaidRelatedObjectCategory.RAID_RELATED_OBJECT_CATEGORY,
             RaidSpatialCoverage.RAID_SPATIAL_COVERAGE,
             RaidSubject.RAID_SUBJECT,
+            RaidSubjectKeyword.RAID_SUBJECT_KEYWORD,
             RaidTraditionalKnowledgeLabel.RAID_TRADITIONAL_KNOWLEDGE_LABEL,
             RaidoOperator.RAIDO_OPERATOR,
             RelatedObject.RELATED_OBJECT,
             RelatedObjectCategory.RELATED_OBJECT_CATEGORY,
             RelatedObjectCategorySchema.RELATED_OBJECT_CATEGORY_SCHEMA,
+            RelatedObjectSchema.RELATED_OBJECT_SCHEMA,
             RelatedObjectType.RELATED_OBJECT_TYPE,
             RelatedObjectTypeSchema.RELATED_OBJECT_TYPE_SCHEMA,
             RelatedRaid.RELATED_RAID,

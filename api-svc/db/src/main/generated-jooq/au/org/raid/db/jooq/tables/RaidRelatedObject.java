@@ -14,12 +14,12 @@ import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function5;
+import org.jooq.Function4;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row5;
+import org.jooq.Row4;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -66,12 +66,6 @@ public class RaidRelatedObject extends TableImpl<RaidRelatedObjectRecord> {
      * The column <code>api_svc.raid_related_object.related_object_id</code>.
      */
     public final TableField<RaidRelatedObjectRecord, Integer> RELATED_OBJECT_ID = createField(DSL.name("related_object_id"), SQLDataType.INTEGER.nullable(false), this, "");
-
-    /**
-     * The column
-     * <code>api_svc.raid_related_object.related_object_category_id</code>.
-     */
-    public final TableField<RaidRelatedObjectRecord, Integer> RELATED_OBJECT_CATEGORY_ID = createField(DSL.name("related_object_category_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
      * The column
@@ -136,12 +130,22 @@ public class RaidRelatedObject extends TableImpl<RaidRelatedObjectRecord> {
 
     @Override
     public List<ForeignKey<RaidRelatedObjectRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_RELATED_OBJECT_ID, Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_RELATED_OBJECT_CATEGORY_ID, Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_RELATED_OBJECT_TYPE_ID);
+        return Arrays.asList(Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_RAID_NAME, Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_RELATED_OBJECT_ID, Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_RELATED_OBJECT_TYPE_ID);
     }
 
+    private transient Raid _raid;
     private transient RelatedObject _relatedObject;
-    private transient RelatedObjectCategory _relatedObjectCategory;
     private transient RelatedObjectType _relatedObjectType;
+
+    /**
+     * Get the implicit join path to the <code>api_svc.raid</code> table.
+     */
+    public Raid raid() {
+        if (_raid == null)
+            _raid = new Raid(this, Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_RAID_NAME);
+
+        return _raid;
+    }
 
     /**
      * Get the implicit join path to the <code>api_svc.related_object</code>
@@ -152,17 +156,6 @@ public class RaidRelatedObject extends TableImpl<RaidRelatedObjectRecord> {
             _relatedObject = new RelatedObject(this, Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_RELATED_OBJECT_ID);
 
         return _relatedObject;
-    }
-
-    /**
-     * Get the implicit join path to the
-     * <code>api_svc.related_object_category</code> table.
-     */
-    public RelatedObjectCategory relatedObjectCategory() {
-        if (_relatedObjectCategory == null)
-            _relatedObjectCategory = new RelatedObjectCategory(this, Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_RELATED_OBJECT_CATEGORY_ID);
-
-        return _relatedObjectCategory;
     }
 
     /**
@@ -216,18 +209,18 @@ public class RaidRelatedObject extends TableImpl<RaidRelatedObjectRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row5 type methods
+    // Row4 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row5<Integer, String, Integer, Integer, Integer> fieldsRow() {
-        return (Row5) super.fieldsRow();
+    public Row4<Integer, String, Integer, Integer> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function5<? super Integer, ? super String, ? super Integer, ? super Integer, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function4<? super Integer, ? super String, ? super Integer, ? super Integer, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -235,7 +228,7 @@ public class RaidRelatedObject extends TableImpl<RaidRelatedObjectRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function5<? super Integer, ? super String, ? super Integer, ? super Integer, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function4<? super Integer, ? super String, ? super Integer, ? super Integer, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

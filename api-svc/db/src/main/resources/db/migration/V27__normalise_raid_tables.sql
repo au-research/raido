@@ -16,6 +16,23 @@ from api_svc.language;
 drop table api_svc.language;
 alter table api_svc.language_new rename to language;
 
+-- ACCESS
+create table api_svc.access_type_new
+(
+    id        serial primary key,
+    uri       varchar not null,
+    schema_id int     not null
+);
+
+insert into api_svc.access_type_new (uri, schema_id)
+select uri, schema_id
+from api_svc.access_type;
+
+drop table api_svc.access_type;
+alter table api_svc.access_type_new rename to access_type;
+
+-- /ACCESS
+
 -- TITLE
 create table api_svc.title_type_new
 (
@@ -365,18 +382,19 @@ create table api_svc.related_raid
 
 alter table api_svc.raid
     add column end_date            varchar,
-    add column registration_agency varchar,
-    add column owner               varchar,
     add column license             varchar,
     add column access_type_id      int,
     add column embargo_expiry      varchar,
     add column access_statement    text,
     add column access_statement_language_id int,
-    add constraint fk_raid_access_statement_language_id foreign key (access_statement_language_id) references language (id),
+    add column schema_uri varchar,
+    add column registration_agency_organisation_id int,
+    add column owner_organisation_id int,
+    add constraint fk_raid_access_statement_language_id foreign key (access_statement_language_id) references api_svc.language (id),
+    add constraint fk_raid_registration_agency_organisation_id foreign key (registration_agency_organisation_id) references api_svc.organisation (id),
+    add constraint fk_raid_owner_organisation_id foreign key (owner_organisation_id) references api_svc.organisation (id),
     alter column url_index drop not null,
     alter column primary_title drop not null;
-;
-
 
 -- /RAID
 
@@ -427,10 +445,13 @@ alter table api_svc.traditional_knowledge_label_new rename to traditional_knowle
 
 create table api_svc.raid_traditional_knowledge_label
 (
-    raid_name                      varchar not null,
-    traditional_knowledge_label_id int     not null,
-    primary key (raid_name, traditional_knowledge_label_id),
-    constraint fk_raid_traditional_knowledge_label_raid_name foreign key (raid_name) references api_svc.raid (handle)
+    id                                    serial primary key,
+    raid_name                             varchar not null,
+    traditional_knowledge_label_id        int,
+    traditional_knowledge_label_schema_id int,
+    constraint fk_raid_trad_know_label_raid_name foreign key (raid_name) references api_svc.raid (handle),
+    constraint fk_raid_trad_know_label_traditional_knowledge_label_id foreign key (traditional_knowledge_label_id) references api_svc.traditional_knowledge_label (id),
+    constraint fk_raid_trad_know_label_traditional_knowledge_label_schema_id foreign key (traditional_knowledge_label_schema_id) references api_svc.traditional_knowledge_label_schema (id)
 );
 
 -- /TRADITIONAL KNOWLEDGE LABEL
@@ -440,21 +461,25 @@ create table api_svc.raid_traditional_knowledge_label
 create table api_svc.spatial_coverage_schema
 (
     id         serial primary key,
-    schema_uri varchar not null,
-    unique (schema_uri)
+    uri varchar not null,
+    unique (uri)
 );
+
+insert into api_svc.spatial_coverage_schema (uri)
+values ('https://www.openstreetmap.org/'),
+       ('https://www.geonames.org/');
 
 create table api_svc.raid_spatial_coverage
 (
-    raid_name varchar not null,
-    id        varchar not null,
-    schema_id int     not null,
-    place varchar,
-    place_language_id int,
+    raid_name   varchar not null,
+    id          varchar not null,
+    schema_id   int     not null,
+    place       varchar,
+    language_id int,
     primary key (raid_name, id, schema_id),
     constraint fk_raid_spatial_coverage_raid_name foreign key (raid_name) references api_svc.raid (handle),
     constraint fk_raid_spatial_coverage_schema_id foreign key (schema_id) references api_svc.spatial_coverage_schema (id),
-    constraint fk_raid_spatial_coverage_place_language_id foreign key (place_language_id) references api_svc.language (id)
+    constraint fk_raid_spatial_coverage_language_id foreign key (language_id) references api_svc.language (id)
 );
 
 -- /SPATIAL COVERAGE
@@ -900,9 +925,174 @@ on conflict do nothing;
 
 -- INSERT TRADITIONAL KNOWLEDGE LABELS
 
+insert into api_svc.raid_traditional_knowledge_label (raid_name, traditional_knowledge_label_id, traditional_knowledge_label_schema_id)
+select handle as raid_name,
+       case when r.id is null then null
+            else (select id from api_svc.traditional_knowledge_label where uri = r.id)
+           end as traditional_knowledge_label_id,
+       (select id from api_svc.traditional_knowledge_label_schema where uri = r."schemaUri") as traditional_knowledge_label_schema_id
+from (select handle, id, "schemaUri"
+      from api_svc.raid,
+           jsonb_to_recordset(api_svc.raid.metadata #> '{traditionalKnowledgeLabel}') as x(id text, "schemaUri" text)
+      where api_svc.raid.metadata_schema = 'raido-metadata-schema-v2'
+        and metadata ->> 'traditionalKnowledgeLabel' is not null) r
+on conflict do nothing;
 
+insert into api_svc.raid_traditional_knowledge_label (raid_name, traditional_knowledge_label_schema_id)
+select handle as raid_name,
+       (select id from api_svc.traditional_knowledge_label_schema where uri = r."traditionalKnowledgeLabelSchemeUri") as traditional_knowledge_label_schema_id
+from (select handle, "traditionalKnowledgeLabelSchemeUri"
+      from api_svc.raid,
+           jsonb_to_recordset(api_svc.raid.metadata #> '{traditionalKnowledgeLabels}') as x("traditionalKnowledgeLabelSchemeUri" text)
+      where api_svc.raid.metadata_schema <> 'raido-metadata-schema-v2'
+        and metadata ->> 'traditionalKnowledgeLabels' is not null) r
+on conflict do nothing;
 
 -- /INSERT TRADITIONAL KNOWLEDGE LABELS
+
+-- INSERT SPATIAL COVERAGE
+
+insert into api_svc.raid_spatial_coverage (raid_name, id, schema_id, place, language_id)
+select handle as raid_name,
+       id,
+       (select id from api_svc.spatial_coverage_schema where uri = r."schemaUri") as schema_id,
+       place,
+       (select id from api_svc.language where code = r.language_code) as language_id
+from (select handle, x.id, x."schemaUri", place, xx.id as language_code
+      from api_svc.raid,
+           jsonb_to_recordset(api_svc.raid.metadata #> '{spatialCoverage}') as x(id text, "schemaUri" text, place text, language jsonb),
+           lateral jsonb_to_record(x.language) as xx(id text, "schemaUri" text)
+      where api_svc.raid.metadata_schema = 'raido-metadata-schema-v2'
+        and metadata ->> 'spatialCoverage' is not null) r
+on conflict do nothing;
+
+insert into api_svc.raid_spatial_coverage (raid_name, id, schema_id, place)
+select handle as raid_name,
+       "spatialCoverage",
+       (select id from api_svc.spatial_coverage_schema where uri = r."spatialCoverageSchemeUri") as schema_id,
+       "spatialCoveragePlace"
+from (select handle, x."spatialCoverage", x."spatialCoverageSchemeUri", "spatialCoveragePlace"
+      from api_svc.raid,
+           jsonb_to_recordset(api_svc.raid.metadata #> '{spatialCoverages}') as x("spatialCoverage" text, "spatialCoverageSchemeUri" text, "spatialCoveragePlace" text)
+      where api_svc.raid.metadata_schema <> 'raido-metadata-schema-v2'
+        and metadata ->> 'spatialCoverages' is not null) r
+on conflict do nothing;
+
+-- /INSERT SPATIAL COVERAGE
+
+-- UPDATE RAID
+
+insert into api_svc.organisation (pid, schema_id)
+select r.id, 1
+from (select identifier_registration_agency.id as id
+      from api_svc.raid,
+           jsonb_to_record(metadata -> 'identifier') as identifier(id text, "schemaUri" text,
+                                                                   "registrationAgency" jsonb,
+                                                                   owner jsonb, license text, version int),
+           lateral jsonb_to_record(identifier."registrationAgency") as identifier_registration_agency(id text, "schemaUri" text, "servicePoint" int)
+      where metadata_schema = 'raido-metadata-schema-v2') r
+on conflict do nothing;
+
+insert into api_svc.organisation (pid, schema_id)
+select r.id, 1 as schema_id
+from (select identifier_owner.id as id
+      from api_svc.raid,
+           jsonb_to_record(metadata -> 'identifier') as identifier(id text, "schemaUri" text,
+                                                                   "registrationAgency" jsonb,
+                                                                   owner jsonb, license text, version int),
+           lateral jsonb_to_record(identifier.owner) as identifier_owner(id text, "schemaUri" text)
+      where metadata_schema = 'raido-metadata-schema-v2') r
+on conflict do nothing;
+
+insert into api_svc.organisation (pid, schema_id)
+select distinct r.id, 1
+from (select identifier."identifierRegistrationAgency" as id
+      from api_svc.raid,
+           jsonb_to_record(metadata -> 'id') as identifier(identifier text, "identifierSchemeUri" text, "identifierRegistrationAgency" text,
+                                                           "identifierOwner" text, identifierServicePoint text, globalUrl text, raidAgencyUrl text, version int)
+      where metadata_schema <> 'raido-metadata-schema-v2') r
+on conflict do nothing;
+
+insert into api_svc.organisation (pid, schema_id)
+select distinct r.id, 1 as schema_id
+from (select identifier."identifierOwner" as id
+      from api_svc.raid,
+           jsonb_to_record(metadata -> 'id') as identifier(identifier text, "identifierSchemeUri" text, "identifierRegistrationAgency" text,
+                                                           "identifierOwner" text, identifierServicePoint text, globalUrl text, raidAgencyUrl text, version int)
+      where metadata_schema <> 'raido-metadata-schema-v2') r
+on conflict do nothing;
+
+update api_svc.raid set
+                        end_date = r.end_date,
+                        access_type_id = (select id from api_svc.access_type where uri = r.access_type_id),
+                        embargo_expiry = r.embargo_expiry,
+                        access_statement = r.access_statement_text,
+                        access_statement_language_id = (select id from api_svc.language where code = r.access_statement_language_code),
+                        schema_uri = r.schema_uri,
+                        registration_agency_organisation_id = (select id from api_svc.organisation where pid = r.identifier_registration_agency_id),
+                        owner_organisation_id = (select id from api_svc.organisation where pid = r.identifier_owner_id),
+                        license = r.license
+from
+    (select handle,
+            date."endDate" as end_date,
+            access_type.id as access_type_id,
+            access."embargoExpiry" as embargo_expiry,
+            access_statement.text as access_statement_text,
+            access_statement_language.id as access_statement_language_code,
+            identifier."schemaUri" as schema_uri,
+            identifier_registration_agency.id as identifier_registration_agency_id,
+            identifier_owner.id as identifier_owner_id,
+            identifier.license as license
+     from api_svc.raid,
+          jsonb_to_record(metadata -> 'identifier') as identifier(id text, "schemaUri" text, "registrationAgency" jsonb,
+                                                                  owner jsonb, license text, version int),
+          lateral jsonb_to_record(identifier."registrationAgency") as identifier_registration_agency(id text, "schemaUri" text, "servicePoint" int),
+          lateral jsonb_to_record(identifier.owner) as identifier_owner(id text, "schemaUri" text),
+          lateral jsonb_to_record(metadata -> 'date') as date("startDate" text, "endDate" text),
+          lateral jsonb_to_record(metadata -> 'access') as access(type jsonb, "embargoExpiry" text, "accessStatement" jsonb),
+          lateral jsonb_to_record(access.type) as access_type(id text, "schemaUri" text),
+          lateral jsonb_to_record(access."accessStatement") as access_statement(text text, language jsonb),
+          lateral jsonb_to_record(access_statement.language) as access_statement_language(id text, "schemaUri" text)
+     where metadata_schema = 'raido-metadata-schema-v2') r
+where api_svc.raid.handle = r.handle;
+
+update api_svc.raid
+set end_date                            = r.end_date,
+    access_type_id                      = case
+                                              when r.access_type = 'Open' then 1
+                                              else 3 end,
+    access_statement                    = r.access_statement_text,
+    schema_uri                          = r.schema_uri,
+    registration_agency_organisation_id = (select id
+                                           from api_svc.organisation
+                                           where pid = r.identifier_registration_agency_id),
+    owner_organisation_id               = (select id from api_svc.organisation where pid = r.identifier_owner_id),
+    license                             = 'Creative Commons CC-0'
+from (select handle,
+             date."endDate"                            as end_date,
+             access.type                               as access_type,
+             access_statement.text                     as access_statement_text,
+             identifier."identifierSchemeUri"          as schema_uri,
+             identifier."identifierRegistrationAgency" as identifier_registration_agency_id,
+             identifier."identifierOwner"              as identifier_owner_id
+      from api_svc.raid,
+           jsonb_to_record(metadata -> 'id') as identifier(identifier text, "identifierSchemeUri" text,
+                                                           "identifierRegistrationAgency" text,
+                                                           "identifierOwner" text, identifierServicePoint text,
+                                                           globalUrl text, raidAgencyUrl text, version int),
+           lateral jsonb_to_record(metadata -> 'dates') as date("startDate" text, "endDate" text),
+           lateral jsonb_to_record(metadata -> 'access') as access(type text, "accessStatement" text)
+      where metadata_schema <> 'raido-metadata-schema-v2') r
+where api_svc.raid.handle = r.handle;
+
+
+
+-- /UPDATE RAID
+
+
+
+
+
 
 
 
