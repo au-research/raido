@@ -48,19 +48,20 @@ from api_svc.title_type;
 drop table api_svc.title_type;
 alter table api_svc.title_type_new rename to title_type;
 
-create table api_svc.title
+create table api_svc.raid_title
 (
     id            serial primary key,
     raid_name     varchar not null,
     title_type_id int     not null,
-    value         text    not null,
+    text          text    not null,
     language_id   int,
-    start_date varchar not null,
-    end_date varchar,
+    start_date    varchar not null,
+    end_date      varchar,
     constraint fk_title_raid_name foreign key (raid_name) references api_svc.raid (handle),
     constraint fk_title_type foreign key (title_type_id) references api_svc.title_type (id),
     constraint fk_title_language_id foreign key (language_id) references api_svc.language (id)
 );
+
 
 -- /TITLE
 
@@ -486,10 +487,10 @@ create table api_svc.raid_spatial_coverage
 
 -- INSERT TITLES
 -- METADATA SCHEMA V2
-insert into api_svc.title (raid_name, title_type_id, value, language_id, start_date, end_date)
+insert into api_svc.raid_title (raid_name, title_type_id, text, language_id, start_date, end_date)
 select r.handle as raid_name,
        (select id from api_svc.title_type where uri = r.type::json->> 'id') as title_type_id,
-       r.text as value,
+       r.text as text,
        (select id from api_svc.language where code = r.language::json->> 'id') as language_id,
        "startDate" as start_date,
        "endDate" as end_date
@@ -501,11 +502,11 @@ on conflict do nothing;
 
 
 -- METADATA SCHEMA V2 & LEGACY
-insert into api_svc.title (raid_name, title_type_id, value, start_date, end_date)
+insert into api_svc.raid_title (raid_name, title_type_id, text, start_date, end_date)
 select r.handle as raid_name,
        case when r.type = 'Primary Title' then 2
             else 1 end as title_type_id,
-       r.title as value,
+       r.title as text,
        "startDate" as start_date,
        "endDate" as end_date
 from (select handle, x.*
@@ -1071,7 +1072,7 @@ set end_date                            = r.end_date,
 from (select handle,
              date."endDate"                            as end_date,
              access.type                               as access_type,
-             access_statement.text                     as access_statement_text,
+             access."accessStatement"                  as access_statement_text,
              identifier."identifierSchemeUri"          as schema_uri,
              identifier."identifierRegistrationAgency" as identifier_registration_agency_id,
              identifier."identifierOwner"              as identifier_owner_id
@@ -1087,17 +1088,7 @@ where api_svc.raid.handle = r.handle;
 
 
 
+
 -- /UPDATE RAID
-
-
-
-
-
-
-
-
-
-
-
 
 END TRANSACTION;

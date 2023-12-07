@@ -37,6 +37,7 @@ import au.org.raid.db.jooq.tables.RaidRelatedObjectCategory;
 import au.org.raid.db.jooq.tables.RaidSpatialCoverage;
 import au.org.raid.db.jooq.tables.RaidSubject;
 import au.org.raid.db.jooq.tables.RaidSubjectKeyword;
+import au.org.raid.db.jooq.tables.RaidTitle;
 import au.org.raid.db.jooq.tables.RaidTraditionalKnowledgeLabel;
 import au.org.raid.db.jooq.tables.RaidoOperator;
 import au.org.raid.db.jooq.tables.RelatedObject;
@@ -52,7 +53,6 @@ import au.org.raid.db.jooq.tables.ServicePoint;
 import au.org.raid.db.jooq.tables.SpatialCoverageSchema;
 import au.org.raid.db.jooq.tables.SubjectType;
 import au.org.raid.db.jooq.tables.SubjectTypeSchema;
-import au.org.raid.db.jooq.tables.Title;
 import au.org.raid.db.jooq.tables.TitleType;
 import au.org.raid.db.jooq.tables.TitleTypeSchema;
 import au.org.raid.db.jooq.tables.Token;
@@ -159,6 +159,7 @@ public class ApiSvc extends SchemaImpl {
             RaidSpatialCoverage.RAID_SPATIAL_COVERAGE,
             RaidSubject.RAID_SUBJECT,
             RaidSubjectKeyword.RAID_SUBJECT_KEYWORD,
+            RaidTitle.RAID_TITLE,
             RaidTraditionalKnowledgeLabel.RAID_TRADITIONAL_KNOWLEDGE_LABEL,
             RaidoOperator.RAIDO_OPERATOR,
             RelatedObject.RELATED_OBJECT,
@@ -174,7 +175,6 @@ public class ApiSvc extends SchemaImpl {
             SpatialCoverageSchema.SPATIAL_COVERAGE_SCHEMA,
             SubjectType.SUBJECT_TYPE,
             SubjectTypeSchema.SUBJECT_TYPE_SCHEMA,
-            Title.TITLE,
             TitleType.TITLE_TYPE,
             TitleTypeSchema.TITLE_TYPE_SCHEMA,
             Token.TOKEN,
