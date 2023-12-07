@@ -1,5 +1,6 @@
 package au.org.raid.api.factory;
 
+import au.org.raid.db.jooq.tables.records.ContributorPositionRecord;
 import au.org.raid.idl.raidv2.model.ContributorPosition;
 import au.org.raid.idl.raidv2.model.ContributorPositionRaidMetadataSchemaType;
 import au.org.raid.idl.raidv2.model.ContributorPositionWithSchemaUri;
