@@ -13,7 +13,6 @@ import au.org.raid.db.jooq.tables.ContributorPositionSchema;
 import au.org.raid.db.jooq.tables.ContributorRole;
 import au.org.raid.db.jooq.tables.ContributorRoleSchema;
 import au.org.raid.db.jooq.tables.ContributorSchema;
-import au.org.raid.db.jooq.tables.Description;
 import au.org.raid.db.jooq.tables.DescriptionType;
 import au.org.raid.db.jooq.tables.DescriptionTypeSchema;
 import au.org.raid.db.jooq.tables.FlywaySchemaHistory;
@@ -29,6 +28,7 @@ import au.org.raid.db.jooq.tables.RaidAlternateUrl;
 import au.org.raid.db.jooq.tables.RaidContributor;
 import au.org.raid.db.jooq.tables.RaidContributorPosition;
 import au.org.raid.db.jooq.tables.RaidContributorRole;
+import au.org.raid.db.jooq.tables.RaidDescription;
 import au.org.raid.db.jooq.tables.RaidHistory;
 import au.org.raid.db.jooq.tables.RaidOrganisation;
 import au.org.raid.db.jooq.tables.RaidOrganisationRole;
@@ -135,7 +135,6 @@ public class ApiSvc extends SchemaImpl {
             ContributorRole.CONTRIBUTOR_ROLE,
             ContributorRoleSchema.CONTRIBUTOR_ROLE_SCHEMA,
             ContributorSchema.CONTRIBUTOR_SCHEMA,
-            Description.DESCRIPTION,
             DescriptionType.DESCRIPTION_TYPE,
             DescriptionTypeSchema.DESCRIPTION_TYPE_SCHEMA,
             FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
@@ -151,6 +150,7 @@ public class ApiSvc extends SchemaImpl {
             RaidContributor.RAID_CONTRIBUTOR,
             RaidContributorPosition.RAID_CONTRIBUTOR_POSITION,
             RaidContributorRole.RAID_CONTRIBUTOR_ROLE,
+            RaidDescription.RAID_DESCRIPTION,
             RaidHistory.RAID_HISTORY,
             RaidOrganisation.RAID_ORGANISATION,
             RaidOrganisationRole.RAID_ORGANISATION_ROLE,

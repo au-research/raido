@@ -80,12 +80,12 @@ from api_svc.description_type;
 drop table api_svc.description_type;
 alter table api_svc.description_type_new rename to description_type;
 
-create table api_svc.description
+create table api_svc.raid_description
 (
     id                  serial primary key,
     raid_name           varchar not null,
     description_type_id int     not null,
-    value               text    not null,
+    text               text    not null,
     language_id         int,
     constraint fk_description_raid_name foreign key (raid_name) references api_svc.raid (handle),
     constraint fk_description_type foreign key (description_type_id) references api_svc.description_type (id),
@@ -519,10 +519,10 @@ on conflict do nothing;
 
 -- INSERT DESCRIPTIONS
 
-insert into api_svc.description (raid_name, description_type_id, value, language_id)
+insert into api_svc.raid_description (raid_name, description_type_id, text, language_id)
 select r.handle as raid_name,
        (select id from api_svc.description_type where uri = r.type::json->> 'id') as description_type_id,
-       r.text as value,
+       r.text as text,
        (select id from api_svc.language where code = r.language::json->> 'id') as language_id
 from (select handle, x.*
       from api_svc.raid,
@@ -531,11 +531,11 @@ from (select handle, x.*
 on conflict do nothing;
 
 -- METADATA SCHEMA V2 & LEGACY
-insert into api_svc.description (raid_name, description_type_id, value)
+insert into api_svc.raid_description (raid_name, description_type_id, text)
 select r.handle as raid_name,
        case when r.type = 'Primary Description' then 2
             else 1 end as description_type_id,
-       r.description as value
+       r.description as text
 from (select handle, x.*
       from api_svc.raid,
            jsonb_to_recordset(api_svc.raid.metadata #> '{descriptions}') as x(type text, "description" text)
