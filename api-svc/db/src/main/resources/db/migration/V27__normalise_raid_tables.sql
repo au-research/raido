@@ -286,10 +286,11 @@ alter table api_svc.related_object_type_new rename to related_object_type;
 
 create table api_svc.related_object
 (
-    id serial primary key,
-    pid         varchar not null,
-    schema_uri varchar not null,
-    unique(pid, schema_uri)
+    id        serial primary key,
+    pid       varchar not null,
+    schema_id int     not null,
+    unique (pid, schema_id),
+    constraint fk_related_object_schema_id foreign key (schema_id) references related_object_schema (id)
 );
 
 create table api_svc.raid_related_object
@@ -736,20 +737,20 @@ on conflict do nothing;
 -- /INSERT ORGANISATIONS
 
 -- INSERT RELATED OBJECTS
-insert into api_svc.related_object (pid, schema_uri)
+insert into api_svc.related_object (pid, schema_id)
 select
     id as pid,
-    (select id from api_svc.related_object_schema where uri = "schemaUri") as schema_uri
+    (select id from api_svc.related_object_schema where uri = "schemaUri") as schema_id
 from (select x.*
       from api_svc.raid,
            jsonb_to_recordset(api_svc.raid.metadata #> '{relatedObject}') as x(id text, "schemaUri" text, type jsonb, category jsonb)
       where api_svc.raid.metadata_schema = 'raido-metadata-schema-v2' and metadata ->> 'relatedObject' is not null) r
 on conflict do nothing;
 
-insert into api_svc.related_object (pid, schema_uri)
+insert into api_svc.related_object (pid, schema_id)
 select
     "relatedObject" as pid,
-    (select id from api_svc.related_object_schema where uri = "relatedObjectSchemeUri") as schema_uri
+    (select id from api_svc.related_object_schema where uri = "relatedObjectSchemeUri") as schema_id
 from (select x.*
       from api_svc.raid,
            jsonb_to_recordset(api_svc.raid.metadata #> '{relatedObjects}') as x("relatedObject" text, "relatedObjectType" text, "relatedObjectCategory" text, "relatedObjectSchemeUri" text, "relatedObjectTypeSchemeUri" text)

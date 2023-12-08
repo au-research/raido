@@ -63,9 +63,9 @@ public class RelatedObject extends TableImpl<RelatedObjectRecord> {
     public final TableField<RelatedObjectRecord, String> PID = createField(DSL.name("pid"), SQLDataType.VARCHAR.nullable(false), this, "");
 
     /**
-     * The column <code>api_svc.related_object.schema_uri</code>.
+     * The column <code>api_svc.related_object.schema_id</code>.
      */
-    public final TableField<RelatedObjectRecord, String> SCHEMA_URI = createField(DSL.name("schema_uri"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<RelatedObjectRecord, Integer> SCHEMA_ID = createField(DSL.name("schema_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
     private RelatedObject(Name alias, Table<RelatedObjectRecord> aliased) {
         this(alias, aliased, null);
@@ -117,7 +117,25 @@ public class RelatedObject extends TableImpl<RelatedObjectRecord> {
 
     @Override
     public List<UniqueKey<RelatedObjectRecord>> getUniqueKeys() {
-        return Arrays.asList(Keys.RELATED_OBJECT_PID_SCHEMA_URI_KEY);
+        return Arrays.asList(Keys.RELATED_OBJECT_PID_SCHEMA_ID_KEY);
+    }
+
+    @Override
+    public List<ForeignKey<RelatedObjectRecord, ?>> getReferences() {
+        return Arrays.asList(Keys.RELATED_OBJECT__FK_RELATED_OBJECT_SCHEMA_ID);
+    }
+
+    private transient RelatedObjectSchema _relatedObjectSchema;
+
+    /**
+     * Get the implicit join path to the
+     * <code>api_svc.related_object_schema</code> table.
+     */
+    public RelatedObjectSchema relatedObjectSchema() {
+        if (_relatedObjectSchema == null)
+            _relatedObjectSchema = new RelatedObjectSchema(this, Keys.RELATED_OBJECT__FK_RELATED_OBJECT_SCHEMA_ID);
+
+        return _relatedObjectSchema;
     }
 
     @Override
@@ -164,14 +182,14 @@ public class RelatedObject extends TableImpl<RelatedObjectRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row3<Integer, String, String> fieldsRow() {
+    public Row3<Integer, String, Integer> fieldsRow() {
         return (Row3) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function3<? super Integer, ? super String, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function3<? super Integer, ? super String, ? super Integer, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -179,7 +197,7 @@ public class RelatedObject extends TableImpl<RelatedObjectRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function3<? super Integer, ? super String, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function3<? super Integer, ? super String, ? super Integer, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

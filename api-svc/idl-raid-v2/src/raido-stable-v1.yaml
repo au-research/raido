@@ -353,7 +353,7 @@ components:
       properties:
         type:
           $ref: '#/components/schemas/AccessTypeWithSchemaUri'
-        accessStatement:
+        statement:
           $ref: '#/components/schemas/AccessStatement'
         embargoExpiry: {
           type: string,
@@ -514,7 +514,9 @@ components:
         type:
           $ref: '#/components/schemas/RelatedObjectType'
         category:
-          $ref: '#/components/schemas/RelatedObjectCategory'
+          type: array
+          items:
+            $ref: '#/components/schemas/RelatedObjectCategory'
     RelatedObjectType:
       type: object
       properties:

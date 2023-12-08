@@ -20,6 +20,7 @@ public class RelatedObjectCategoryRepository {
                 .where(RELATED_OBJECT_CATEGORY.URI.eq(uri)
                         .and(RELATED_OBJECT_CATEGORY.SCHEMA_ID.eq(schemaId)))
                 .fetchOptional(record -> new RelatedObjectCategoryRecord()
+                        .setSchemaId(RELATED_OBJECT_CATEGORY.ID.getValue(record))
                         .setSchemaId(RELATED_OBJECT_CATEGORY.SCHEMA_ID.getValue(record))
                         .setUri(RELATED_OBJECT_CATEGORY.URI.getValue(record))
                 );
