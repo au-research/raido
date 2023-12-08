@@ -9,7 +9,7 @@ import au.org.raid.db.jooq.tables.RaidHistory;
 import java.time.LocalDateTime;
 
 import org.jooq.Field;
-import org.jooq.Record2;
+import org.jooq.Record3;
 import org.jooq.Record5;
 import org.jooq.Row5;
 import org.jooq.impl.UpdatableRecordImpl;
@@ -103,8 +103,8 @@ public class RaidHistoryRecord extends UpdatableRecordImpl<RaidHistoryRecord> im
     // -------------------------------------------------------------------------
 
     @Override
-    public Record2<String, Integer> key() {
-        return (Record2) super.key();
+    public Record3<String, Integer, String> key() {
+        return (Record3) super.key();
     }
 
     // -------------------------------------------------------------------------

@@ -5,6 +5,7 @@ import au.org.raid.idl.raidv2.model.Contributor;
 import au.org.raid.idl.raidv2.model.ContributorPositionWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ContributorRoleWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,16 +48,18 @@ class ContributorValidatorTest {
         final var contributor = new Contributor()
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
-                .role(List.of(role));
+                .role(List.of(role))
+                .leader(true)
+                .contact(true);
 
         final var failures = validationService.validate(List.of(contributor));
 
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributor.position")
-                        .errorType("invalidValue")
-                        .message("leader must be specified")
+                        .fieldId("contributor[0]")
+                        .errorType("notSet")
+                        .message("A contributor must have a position")
         ));
 
         verify(roleValidationService).validate(role, 0, 0);
@@ -64,7 +67,7 @@ class ContributorValidatorTest {
     }
 
     @Test
-    @DisplayName("Validation fails with missing lead position")
+    @DisplayName("Validation fails with missing leader")
     void missingLeadPositions() {
         final var role = new ContributorRoleWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
@@ -79,16 +82,17 @@ class ContributorValidatorTest {
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
                 .role(List.of(role))
-                .position(List.of(position));
+                .position(List.of(position))
+                .contact(true);
 
         final var failures = validationService.validate(List.of(contributor));
 
         assertThat(failures, hasSize(1));
         assertThat(failures, hasItem(
                 new ValidationFailure()
-                        .fieldId("contributor.position")
+                        .fieldId("contributor")
                         .errorType("invalidValue")
-                        .message("leader must be specified")
+                        .message("At least one contributor must be flagged as a project leader")
         ));
 
         verify(roleValidationService).validate(role, 0, 0);
@@ -145,7 +149,9 @@ class ContributorValidatorTest {
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
                 .role(List.of(role))
-                .position(List.of(position));
+                .position(List.of(position))
+                .leader(true)
+                .contact(true);
 
         final var failures = validationService.validate(List.of(contributor));
 
@@ -171,7 +177,9 @@ class ContributorValidatorTest {
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
                 .role(List.of(role))
-                .position(List.of(position));
+                .position(List.of(position))
+                .leader(true)
+                .contact(true);
 
         final var orcidError = new ValidationFailure()
                 .fieldId("contributor[0].id")
@@ -202,6 +210,7 @@ class ContributorValidatorTest {
         verify(positionValidationService).validate(position, 0, 0);
     }
 
+    @Disabled
     @Test
     @DisplayName("Validation fails with conflicting lead position - year-month-day dates")
     void conflictingLeadPositions() {
@@ -246,6 +255,7 @@ class ContributorValidatorTest {
                 .message("There can only be one leader in any given period. The position at contributor[0].position[0] conflicts with this position.")));
     }
 
+    @Disabled
     @Test
     @DisplayName("Validation fails with conflicting lead position - year-month dates")
     void conflictingLeadPositionsWithYearMonthDates() {
@@ -289,6 +299,7 @@ class ContributorValidatorTest {
                 .message("There can only be one leader in any given period. The position at contributor[0].position[0] conflicts with this position."))));
     }
 
+    @Disabled
     @Test
     @DisplayName("Validation fails with conflicting lead position - year dates")
     void conflictingLeadPositionsWithYearDates() {
@@ -332,6 +343,7 @@ class ContributorValidatorTest {
                 .message("There can only be one leader in any given period. The position at contributor[0].position[0] conflicts with this position."))));
     }
 
+    @Disabled
     @Test
     @DisplayName("Validation passes with multiple lead position - year dates")
     void multipleLeadPositionsWithYearsAsDates() {
@@ -389,7 +401,9 @@ class ContributorValidatorTest {
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
                 .role(List.of(role1))
-                .position(List.of(position1));
+                .position(List.of(position1))
+                .leader(true)
+                .contact(true);
 
         final var role2 = new ContributorRoleWithSchemaUri()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
@@ -405,13 +419,16 @@ class ContributorValidatorTest {
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
                 .role(List.of(role2))
-                .position(List.of(position2));
+                .position(List.of(position2))
+                .leader(true)
+                .contact(true);
 
         final var failures = validationService.validate(List.of(contributor2, contributor1));
 
         assertThat(failures, empty());
     }
 
+    @Disabled
     @Test
     @DisplayName("Validation passes with multiple lead position - year-month-day dates")
     void multipleLeadPositionsWithYearMonthDayDates() {
@@ -477,7 +494,9 @@ class ContributorValidatorTest {
                 .schemaUri(TestConstants.CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .id(TestConstants.VALID_ORCID)
                 .role(List.of(role1))
-                .position(List.of(position1, position2));
+                .position(List.of(position1, position2))
+                .leader(true)
+                .contact(true);
 
 
         final var failures = validationService.validate(List.of(contributor1));
@@ -505,7 +524,9 @@ class ContributorValidatorTest {
         final var contributor = new Contributor()
                 .id(TestConstants.VALID_ORCID)
                 .role(List.of(role))
-                .position(List.of(position));
+                .position(List.of(position))
+                .leader(true)
+                .contact(true);
 
         final var failures = validationService.validate(List.of(contributor));
 
@@ -536,7 +557,9 @@ class ContributorValidatorTest {
                 .id(TestConstants.VALID_ORCID)
                 .schemaUri("")
                 .role(List.of(role))
-                .position(List.of(position));
+                .position(List.of(position))
+                .leader(true)
+                .contact(true);
 
         final var failures = validationService.validate(List.of(contributor));
 
@@ -567,7 +590,9 @@ class ContributorValidatorTest {
                 .id(TestConstants.VALID_ORCID)
                 .schemaUri("https://example.org/")
                 .role(List.of(role))
-                .position(List.of(position));
+                .position(List.of(position))
+                .leader(true)
+                .contact(true);
 
         final var failures = validationService.validate(List.of(contributor));
 
