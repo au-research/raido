@@ -65,10 +65,11 @@ export default function FormContributorsPositionsComponent({
             <Card variant={"outlined"} sx={{ bgcolor: "transparent" }}>
               <CardHeader
                 action={
-                  <Tooltip title="Add Position" placement="right">
+                  <Tooltip title="Add position (max. 1)" placement="right">
                     <IconButton
                       aria-label="Add Position"
                       onClick={handleAddPosition}
+                      disabled={contributorPositionsArray.fields.length > 0}
                     >
                       <AddCircleOutlineIcon />
                     </IconButton>

@@ -55,7 +55,7 @@ export const contributorsValidationSchema = z.array(
         startDate: z.string().regex(combinedPattern).nonempty(),
         endDate: z.string().regex(combinedPattern).optional().nullable(),
       })
-    ),
+    ).max(1),
     role: z.array(
       z.object({
         id: z.string(),
