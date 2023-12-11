@@ -76,7 +76,7 @@ export const contributorsGenerateData = () => {
   );
   return {
     id: "https://orcid.org/0009-0000-9306-3120",
-    leader: false,
+    leader: true,
     contact: true,
     schemaUri: "https://orcid.org/",
     position: [
