@@ -5,6 +5,7 @@ import au.org.raid.api.exception.InvalidAccessException;
 import au.org.raid.api.exception.ValidationException;
 import au.org.raid.api.service.raid.RaidStableV1Service;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
+import au.org.raid.api.service.datacite.DataciteService;
 import au.org.raid.api.util.SchemaValues;
 import au.org.raid.api.validator.ValidationService;
 import au.org.raid.idl.raidv2.api.RaidoStableV1Api;
@@ -35,10 +36,12 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 public class RaidoStableV1 implements RaidoStableV1Api {
     private final ValidationService validationService;
     private final RaidStableV1Service raidService;
+    private final DataciteService dataciteService;
 
-    public RaidoStableV1(final ValidationService validationService, final RaidStableV1Service raidService) {
+    public RaidoStableV1(final ValidationService validationService, final RaidStableV1Service raidService, final DataciteService dataciteService) {
         this.validationService = validationService;
         this.raidService = raidService;
+        this.dataciteService = dataciteService;
     }
 
     @Override
@@ -74,6 +77,8 @@ public class RaidoStableV1 implements RaidoStableV1Api {
 
         IdentifierUrl id = raidService.mintRaidSchemaV1(
                 request, user.getServicePointId());
+
+//        dataciteService.createDataciteRaid(request, id.getHandle());
 
         return ResponseEntity.created(URI.create(id.formatUrl()))
                 .body(raidService.read(id.handle().format()));
