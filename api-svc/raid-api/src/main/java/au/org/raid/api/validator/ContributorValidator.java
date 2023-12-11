@@ -123,7 +123,7 @@ public class ContributorValidator {
         if (leaders.isEmpty()) {
             failures.add(new ValidationFailure().
                     fieldId("contributor").
-                    errorType(INVALID_VALUE_TYPE).
+                    errorType(NOT_SET_TYPE).
                     message("At least one contributor must be flagged as a project contact"));
         }
 
