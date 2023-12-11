@@ -45,7 +45,7 @@ export const organisationsValidationSchema = z.array(
         startDate: z.string().regex(combinedPattern).nonempty(),
         endDate: z.string().regex(combinedPattern).optional().nullable(),
       })
-    ),
+    ).max(1),
   })
 );
 
