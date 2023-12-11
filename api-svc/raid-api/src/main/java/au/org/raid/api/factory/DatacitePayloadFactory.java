@@ -48,6 +48,9 @@ public class DatacitePayloadFactory {
         resourceTypeNode.put("resourceTypeGeneral", "Other");
     }
     private void createContributorNode(ArrayNode contributorsNode, List<Contributor> contributorList){
+        if(contributorList == null) {
+            return;
+        }
         for (Contributor contributor : contributorList) {
             ObjectNode contributorNode = contributorsNode.addObject();
             contributorNode.put("name", "Name for " + contributor.getId());
@@ -60,6 +63,9 @@ public class DatacitePayloadFactory {
         }
     }
     private void createOrganisationNode(ArrayNode contributorsNode, List<Organisation> organisationList){
+        if(organisationList == null) {
+            return;
+        }
         for (Organisation organisation : organisationList) {
             ObjectNode contributorNode = contributorsNode.addObject();
             contributorNode.put("name", "Name for " + organisation.getId());
@@ -67,6 +73,9 @@ public class DatacitePayloadFactory {
         }
     }
     private void createRelatedIdentifiersNode(ArrayNode relatedIdentifiersNode, List<RelatedObject> realtedObjectList) {
+        if(realtedObjectList == null) {
+            return;
+        }
         for (RelatedObject relatedObject : realtedObjectList) {
             ObjectNode relatedIdentifierNode = relatedIdentifiersNode.addObject();
             relatedIdentifierNode.put("relatedIdentifier", relatedObject.getId());
@@ -79,6 +88,9 @@ public class DatacitePayloadFactory {
         }
     }
     private void createAlternateIdentifiersNode(ObjectNode attributesNode, List<AlternateIdentifier> alternateIdentifierList) {
+        if(alternateIdentifierList == null) {
+            return;
+        }
         ArrayNode alternateIdentifiersNode = attributesNode.putArray("alternateIdentifiers");
         for (AlternateIdentifier alternateIdentifier : alternateIdentifierList) {
             ObjectNode alternateIdentifierNode = alternateIdentifiersNode.addObject();
@@ -87,6 +99,9 @@ public class DatacitePayloadFactory {
         }
     }
     private void createAlternateUrlsNode(ArrayNode relatedIdentifiersNode, List<AlternateUrl> alternateUrlList){
+        if(alternateUrlList == null) {
+            return;
+        }
         for (AlternateUrl alternateUrl : alternateUrlList) {
             ObjectNode alternateUrlNode = relatedIdentifiersNode.addObject();
             alternateUrlNode.put("relatedIdentifier", alternateUrl.getUrl());
@@ -97,6 +112,9 @@ public class DatacitePayloadFactory {
         }
     }
     private void createRelatedRaidsNode(ArrayNode relatedIdentifiersNode, List<RelatedRaid> relatedRaidList){
+        if(relatedRaidList == null) {
+            return;
+        }
         for (RelatedRaid relatedRaid : relatedRaidList) {
             ObjectNode relatedRaidNode = relatedIdentifiersNode.addObject();
             relatedRaidNode.put("relatedIdentifier", relatedRaid.getId());
@@ -116,6 +134,9 @@ public class DatacitePayloadFactory {
         accessNodeObject.put("rightsUri", "https://creativecommons.org/licenses/by/4.0/");
     }
     private void createDescriptionNode(ObjectNode attributesNode, List<Description> descriptionList){
+        if(descriptionList == null) {
+            return;
+        }
         ArrayNode descriptionsNode = attributesNode.putArray("descriptions");
         for (Description description : descriptionList) {
             ObjectNode descriptionNode = descriptionsNode.addObject();

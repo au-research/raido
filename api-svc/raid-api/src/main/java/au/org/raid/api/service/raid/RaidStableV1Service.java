@@ -12,6 +12,7 @@ import au.org.raid.api.repository.ServicePointRepository;
 import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.apids.ApidsService;
 import au.org.raid.api.service.apids.model.ApidsMintResponse;
+import au.org.raid.api.service.datacite.DataciteMintResponse;
 import au.org.raid.api.service.datacite.DataciteService;
 import au.org.raid.api.service.raid.id.IdentifierHandle;
 import au.org.raid.api.service.raid.id.IdentifierParser;
@@ -85,7 +86,24 @@ public class RaidStableV1Service {
         return (IdentifierHandle) parseResult;
     }
 
-    public IdentifierUrl mintRaidSchemaV1(
+    private IdentifierHandle parseHandleFromDatacite(
+            DataciteMintResponse dataciteResponse
+    ) {
+        var parseResult = idParser.parseHandle(dataciteResponse.identifier.handle);
+
+        if (parseResult instanceof ParseProblems problems) {
+            log.with("handle", dataciteResponse.identifier.handle).
+                    with("problems", problems.getProblems()).
+                    error("APIDS service returned malformed handle");
+            throw runtimeException("APIDS service returned malformed handle: %s",
+                    dataciteResponse.identifier.handle);
+        }
+
+        return (IdentifierHandle) parseResult;
+    }
+
+    @Deprecated
+    public IdentifierUrl mintRaidSchemaV1Apids(
             final RaidCreateRequest request,
             final long servicePoint
     ) {
@@ -98,19 +116,35 @@ public class RaidStableV1Service {
         final var apidsResponse = apidsSvc.mintApidsHandleContentPrefix(
                 metaSvc::formatRaidoLandingPageUrl);
 
-        // TODO: Replace apids with datacite handle creation
-        String dataciteHandle = dataciteSvc.getDataciteHandle();
-        apidsResponse.identifier.handle = dataciteHandle;
-        dataciteSvc.createDataciteRaid(request, dataciteHandle);
-
         IdentifierHandle handle = parseHandleFromApids(apidsResponse);
+
         var id = new IdentifierUrl(metaSvc.getMetaProps().getHandleUrlPrefix(), handle);
         request.setIdentifier(idFactory.create(id, servicePointRecord));
 
         final var raidDto = raidHistoryService.save(request);
         final var raidRecord = raidRecordFactory.create(raidDto);
 
+        tx.executeWithoutResult(status -> raidRepository.insert(raidRecord));
 
+        return id;
+    }
+
+    public IdentifierUrl mintRaidSchemaV1(
+            final RaidCreateRequest request,
+            final long servicePoint
+    ) {
+        final var servicePointRecord =
+                servicePointRepository.findById(servicePoint).orElseThrow(() ->
+                        new UnknownServicePointException(servicePoint));
+
+        final var dataciteResponse = dataciteSvc.mintDataciteHandleContentPrefix();
+        IdentifierHandle handle = parseHandleFromDatacite(dataciteResponse);
+
+        var id = new IdentifierUrl(metaSvc.getMetaProps().getHandleUrlPrefix(), handle);
+        request.setIdentifier(idFactory.create(id, servicePointRecord));
+
+        final var raidDto = raidHistoryService.save(request);
+        final var raidRecord = raidRecordFactory.create(raidDto);
 
         tx.executeWithoutResult(status -> raidRepository.insert(raidRecord));
 
@@ -156,7 +190,7 @@ public class RaidStableV1Service {
                 .orElseThrow(() -> new ResourceNotFoundException(handle));
 
         try {
-            dataciteSvc.updateDataciteRaid(raid, handle);
+//            dataciteSvc.updateDataciteRaid(raid, handle);
             return objectMapper.readValue(
                     result.getMetadata().data(), RaidDto.class);
         } catch (JsonProcessingException e) {

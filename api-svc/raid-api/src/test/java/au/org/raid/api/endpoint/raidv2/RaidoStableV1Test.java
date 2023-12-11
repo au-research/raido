@@ -2,6 +2,7 @@ package au.org.raid.api.endpoint.raidv2;
 
 import au.org.raid.api.exception.CrossAccountAccessException;
 import au.org.raid.api.exception.ResourceNotFoundException;
+import au.org.raid.api.service.datacite.DataciteService;
 import au.org.raid.api.service.raid.RaidStableV1Service;
 import au.org.raid.api.service.raid.id.IdentifierHandle;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
@@ -69,6 +70,8 @@ class RaidoStableV1Test {
     private RaidStableV1Service raidService;
     @Mock
     private ValidationService validationService;
+    @Mock
+    private DataciteService dataciteService;
     @InjectMocks
     private RaidoStableV1 controller;
 
