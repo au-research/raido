@@ -38,46 +38,51 @@ import contributorRoleSchema from "References/contributor_role_schema.json";
 import { z } from "zod";
 import { combinedPattern, yearMonthDayPattern } from "date-utils";
 
-export const contributorsValidationSchema = z.array(
-  z.object({
-    id: z
+const contributorSchema = z.object({
+  id: z
       .string()
-      .regex(
-        new RegExp("^https://orcid.org/\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]$")
-      ),
-    leader: z.boolean(),
-    contact: z.boolean(),
-    schemaUri: z.literal("https://orcid.org/"),
-    position: z.array(
+      .regex(new RegExp("^https://orcid.org/\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]$")),
+  leader: z.boolean(),
+  contact: z.boolean(),
+  schemaUri: z.literal("https://orcid.org/"),
+  position: z.array(
       z.object({
         id: z.string(),
         schemaUri: z.literal(contributorPositionSchema[0].uri),
         startDate: z.string().regex(combinedPattern).nonempty(),
         endDate: z.string().regex(combinedPattern).optional().nullable(),
       })
-    ).max(1),
-    role: z.array(
+  ).max(1),
+  role: z.array(
       z.object({
         id: z.string(),
         schemaUri: z.literal(contributorRoleSchema[0].uri),
       })
-    ),
-  })
-);
+  ),
+});
+
+export const contributorsValidationSchema = z.array(contributorSchema).refine(data => {
+  const hasLeader = data.some(contributor => contributor.leader);
+  const hasContact = data.some(contributor => contributor.contact);
+  return hasLeader && hasContact;
+}, {
+  message: "There must be at least one leader and one contact in the contributors."
+});
+
 
 export const contributorsGenerateData = () => {
-  const leaderIndex = contributorPosition.findIndex((el) =>
-    el.uri.includes("leader")
+  const otherIndex = contributorPosition.findIndex((el) =>
+    el.uri.includes("other")
   );
   return {
     id: "https://orcid.org/0009-0000-9306-3120",
-    leader: false,
+    leader: true,
     contact: true,
     schemaUri: "https://orcid.org/",
     position: [
       {
         schemaUri: contributorPositionSchema[0].uri,
-        id: contributorPosition[leaderIndex].uri,
+        id: contributorPosition[otherIndex].uri,
         startDate: dayjs().format("YYYY-MM-DD"),
       },
     ],
@@ -96,6 +101,7 @@ function ContributorRootField({
   control,
   contributorsArrayIndex,
   errors,
+  trigger
 }: {
   contributorsArray: UseFieldArrayReturn<
     RaidDto,
@@ -105,6 +111,7 @@ function ContributorRootField({
   control: Control<RaidDto, any>;
   contributorsArrayIndex: number;
   errors: FieldErrors<RaidDto>;
+  trigger: UseFormTrigger<RaidDto>;
 }) {
   return (
     <Controller
@@ -165,6 +172,7 @@ function ContributorRootField({
                               leader: (event.target as HTMLInputElement)
                                 .checked,
                             });
+                            trigger(`contributor`);
                           }}
                         />
                       </FormGroup>
@@ -182,10 +190,17 @@ function ContributorRootField({
                               contact: (event.target as HTMLInputElement)
                                 .checked,
                             });
+                            trigger(`contributor`);
                           }}
                         />
                       </FormGroup>
+
                     </Grid>
+
+                    <Grid item xs={12} sm={12} md={12}>
+                      {errors?.contributor?.root?.message}
+                    </Grid>
+
                   </Grid>
 
                   <FormContributorsPositionsComponent
@@ -283,6 +298,7 @@ export default function FormContributorsComponent({
                     control={control}
                     contributorsArrayIndex={contributorsArrayIndex}
                     errors={errors}
+                    trigger={trigger}
                   />
                 </Box>
               );

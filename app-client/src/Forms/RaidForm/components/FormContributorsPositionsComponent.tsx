@@ -27,6 +27,8 @@ import contributorPosition from "References/contributor_position.json";
 import contributorPositionSchema from "References/contributor_position_schema.json";
 import { extractKeyFromIdUri } from "utils";
 
+
+
 import { dateHelperTextRequired } from "../../../date-utils";
 
 export default function FormContributorsPositionsComponent({
@@ -130,7 +132,7 @@ export default function FormContributorsPositionsComponent({
                                     ]);
                                   }}
                                 >
-                                  {contributorPosition.map((position) => (
+                                  {contributorPosition.filter(el=>!el.uri.includes('leader.json') && !el.uri.includes('contact-person.json')).map((position) => (
                                     <MenuItem
                                       key={position.uri}
                                       value={position.uri}
