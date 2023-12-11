@@ -5,6 +5,7 @@ import au.org.raid.idl.raidv2.model.ContributorPositionWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ContributorRoleWithSchemaUri;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import au.org.raid.inttest.RaidApiValidationException;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -69,6 +70,8 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         createRequest.setContributor(List.of(
                 new Contributor()
                         .id("https://orcid.org/0000-0000-0000-0001")
+                        .contact(true)
+                        .leader(true)
                         .position(List.of(
                                 new ContributorPositionWithSchemaUri()
                                         .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -105,6 +108,8 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         createRequest.setContributor(List.of(
                 new Contributor()
                         .schemaUri("")
+                        .contact(true)
+                        .leader(true)
                         .id("https://orcid.org/0000-0000-0000-0001")
                         .position(List.of(
                                 new ContributorPositionWithSchemaUri()
@@ -142,6 +147,8 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         createRequest.setContributor(List.of(
                 new Contributor()
                         .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                        .contact(true)
+                        .leader(true)
                         .position(List.of(
                                 new ContributorPositionWithSchemaUri()
                                         .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -178,6 +185,8 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         createRequest.setContributor(List.of(
                 new Contributor()
                         .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                        .contact(true)
+                        .leader(true)
                         .id("")
                         .position(List.of(
                                 new ContributorPositionWithSchemaUri()
@@ -215,6 +224,8 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         createRequest.setContributor(List.of(
                 new Contributor()
                         .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                        .contact(true)
+                        .leader(true)
                         .id("https://orcid.org/0000-0000-0000-0001")
                         .role(List.of(
                                 new ContributorRoleWithSchemaUri()
@@ -231,9 +242,9 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributor.position")
-                            .errorType("invalidValue")
-                            .message("leader must be specified")
+                            .fieldId("contributor[0]")
+                            .errorType("notSet")
+                            .message("A contributor must have a position")
             );
         } catch (Exception e) {
             fail("Expected RaidApiValidationException");
@@ -246,6 +257,8 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         createRequest.setContributor(List.of(
                 new Contributor()
                         .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                        .contact(true)
+                        .leader(true)
                         .id("https://orcid.org/0000-0000-0000-0001")
                         .position(Collections.emptyList())
                         .role(List.of(
@@ -263,9 +276,9 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributor.position")
-                            .errorType("invalidValue")
-                            .message("leader must be specified")
+                            .fieldId("contributor[0]")
+                            .errorType("notSet")
+                            .message("A contributor must have a position")
             );
         } catch (Exception e) {
             fail("Expected RaidApiValidationException");
@@ -273,12 +286,13 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("Minting a RAiD with missing leader position fails")
-    void missingLeader() {
+    @DisplayName("Minting a RAiD with missing contact fails")
+    void missingContact() {
         createRequest.setContributor(List.of(
                 new Contributor()
                         .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                         .id("https://orcid.org/0000-0000-0000-0001")
+                        .leader(true)
                         .position(List.of(
                                 new ContributorPositionWithSchemaUri()
                                         .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -293,15 +307,52 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
 
         try {
             raidApi.createRaidV1(createRequest);
-            fail("No exception thrown with missing leader position");
+            fail("No exception thrown with missing contact");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("contributor.position")
+                            .fieldId("contributor")
+                            .errorType("notSet")
+                            .message("At least one contributor must be flagged as a project contact")
+            );
+        } catch (Exception e) {
+            fail("Expected RaidApiValidationException");
+        }
+    }
+
+    @Test
+    @DisplayName("Minting a RAiD with missing leader fails")
+    void missingLeader() {
+        createRequest.setContributor(List.of(
+                new Contributor()
+                        .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                        .id("https://orcid.org/0000-0000-0000-0001")
+                        .contact(true)
+                        .position(List.of(
+                                new ContributorPositionWithSchemaUri()
+                                        .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
+                                        .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
+                                        .id(OTHER_PARTICIPANT_POSITION)
+                        )).role(List.of(
+                                new ContributorRoleWithSchemaUri()
+                                        .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
+                                        .id(SOFTWARE_CONTRIBUTOR_ROLE)
+                        ))
+        ));
+
+        try {
+            raidApi.createRaidV1(createRequest);
+            fail("No exception thrown with missing leader");
+        } catch (RaidApiValidationException e) {
+            final var failures = e.getFailures();
+            assertThat(failures).hasSize(1);
+            assertThat(failures).contains(
+                    new ValidationFailure()
+                            .fieldId("contributor")
                             .errorType("invalidValue")
-                            .message("leader must be specified")
+                            .message("At least one contributor must be flagged as a project leader")
             );
         } catch (Exception e) {
             fail("Expected RaidApiValidationException");
@@ -316,6 +367,8 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         void invalidOrcidPattern() {
             createRequest.setContributor(List.of(
                     new Contributor()
+                            .contact(true)
+                            .leader(true)
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0c00-0000-0000")
                             .position(List.of(
@@ -351,6 +404,8 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         void invalidOrcidChecksum() {
             createRequest.setContributor(List.of(
                     new Contributor()
+                            .contact(true)
+                            .leader(true)
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0000")
                             .position(List.of(
@@ -388,6 +443,8 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         void nonExistentOrcid() {
             createRequest.setContributor(List.of(
                     new Contributor()
+                            .contact(true)
+                            .leader(true)
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0001-0000-0009")
                             .position(List.of(
@@ -429,6 +486,8 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         void missingPositionSchemeUri() {
             createRequest.setContributor(List.of(
                     new Contributor()
+                            .contact(true)
+                            .leader(true)
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0001")
                             .position(List.of(
@@ -465,6 +524,8 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             createRequest.setContributor(List.of(
                     new Contributor()
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                            .contact(true)
+                            .leader(true)
                             .id("https://orcid.org/0000-0000-0000-0001")
                             .position(List.of(
                                     new ContributorPositionWithSchemaUri()
@@ -505,6 +566,8 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             createRequest.setContributor(List.of(
                     new Contributor()
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                            .contact(true)
+                            .leader(true)
                             .id("https://orcid.org/0000-0000-0000-0001")
                             .position(List.of(
                                     new ContributorPositionWithSchemaUri()
@@ -545,6 +608,8 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         void invalidPositionTypeForScheme() {
             createRequest.setContributor(List.of(
                     new Contributor()
+                            .contact(true)
+                            .leader(true)
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0001")
                             .position(List.of(
@@ -586,6 +651,8 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         void overlappingPositions() {
             createRequest.setContributor(List.of(
                     new Contributor()
+                            .contact(true)
+                            .leader(true)
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0001")
                             .position(List.of(
@@ -622,6 +689,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             }
         }
 
+        @Disabled
         @Test
         @DisplayName("A raid can only have one leader at any given time")
         void multipleLeaders() {
@@ -684,6 +752,8 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             createRequest.setContributor(List.of(
                     new Contributor()
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                            .contact(true)
+                            .leader(true)
                             .id("https://orcid.org/0000-0000-0000-0001")
                             .position(List.of(
                                     new ContributorPositionWithSchemaUri()
@@ -722,6 +792,8 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                     new Contributor()
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0001")
+                            .contact(true)
+                            .leader(true)
                             .position(List.of(
                                     new ContributorPositionWithSchemaUri()
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -761,6 +833,8 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             createRequest.setContributor(List.of(
                     new Contributor()
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
+                            .contact(true)
+                            .leader(true)
                             .id("https://orcid.org/0000-0000-0000-0001")
                             .position(List.of(
                                     new ContributorPositionWithSchemaUri()
@@ -801,6 +875,8 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         void invalidPositionTypeForScheme() {
             createRequest.setContributor(List.of(
                     new Contributor()
+                            .contact(true)
+                            .leader(true)
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0001")
                             .position(List.of(

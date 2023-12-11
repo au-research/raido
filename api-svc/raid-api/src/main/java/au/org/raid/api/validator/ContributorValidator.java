@@ -60,6 +60,14 @@ public class ContributorValidator {
                         );
                     }
 
+                    if (contributor.getPosition().isEmpty()) {
+                        failures.add(new ValidationFailure()
+                                .fieldId("contributor[%d]".formatted(index))
+                                .errorType(NOT_SET_TYPE)
+                                .message("A contributor must have a position")
+                        );
+                    }
+
                     failures.addAll(orcidValidationService.validate(contributor.getId(), index));
 
                     IntStream.range(0, contributor.getRole().size())
@@ -79,18 +87,9 @@ public class ContributorValidator {
                 });
 
         failures.addAll(validateLeader(contributors));
+        failures.addAll(validateContact(contributors));
 
         return failures;
-    }
-
-    public List<Contributor> getLeaders(
-            List<Contributor> contributors
-    ) {
-        return contributors.stream()
-                .filter(i -> i.getPosition()
-                        .stream()
-                        .anyMatch(j -> j.getId().equals(LEADER_POSITION))
-                ).toList();
     }
 
     private List<ValidationFailure> validateLeader(
@@ -98,14 +97,34 @@ public class ContributorValidator {
     ) {
         var failures = new ArrayList<ValidationFailure>();
 
-        var leaders = getLeaders(contributors);
+        var leaders = contributors.stream()
+                .filter(contributor -> contributor.getLeader() != null && contributor.getLeader())
+                .toList();
+
         if (leaders.isEmpty()) {
             failures.add(new ValidationFailure().
-                    fieldId("contributor.position").
+                    fieldId("contributor").
                     errorType(INVALID_VALUE_TYPE).
-                    message("leader must be specified"));
-        } else if (leaders.size() > 1) {
-            failures.addAll(validateLeadContributors(contributors));
+                    message("At least one contributor must be flagged as a project leader"));
+        }
+
+        return failures;
+    }
+
+    private List<ValidationFailure> validateContact(
+            List<Contributor> contributors
+    ) {
+        var failures = new ArrayList<ValidationFailure>();
+
+        var leaders = contributors.stream()
+                .filter(contributor -> contributor.getContact() != null && contributor.getContact())
+                .toList();
+
+        if (leaders.isEmpty()) {
+            failures.add(new ValidationFailure().
+                    fieldId("contributor").
+                    errorType(NOT_SET_TYPE).
+                    message("At least one contributor must be flagged as a project contact"));
         }
 
         return failures;
@@ -113,8 +132,6 @@ public class ContributorValidator {
 
     private List<ValidationFailure> validateLeadContributors(final List<Contributor> contributors) {
         final var failures = new ArrayList<ValidationFailure>();
-        final var today = LocalDate.now();
-
 
         final List<Map<String, Object>> positions = new ArrayList<>();
 

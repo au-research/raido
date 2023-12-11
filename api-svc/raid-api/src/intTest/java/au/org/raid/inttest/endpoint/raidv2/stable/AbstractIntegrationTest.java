@@ -176,6 +176,8 @@ public class AbstractIntegrationTest {
     ) {
         return new Contributor()
                 .id(orcid)
+                .contact(true)
+                .leader(true)
                 .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .position(List.of(new ContributorPositionWithSchemaUri()
                         .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
