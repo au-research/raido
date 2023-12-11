@@ -64,7 +64,6 @@ public class RaidoSchemaMultiElementTest extends IntegrationTestCase {
 
         var readRaid = raidApi.readRaidV2(
                 new ReadRaidV2Request().handle(mintResult.getRaid().getHandle())).getBody();
-        System.out.println("XXX: " + readRaid);
         var readMeta = mapper.readValue(
                 readRaid.getMetadata().toString(), RaidoMetadataSchemaV1.class);
         // not actually sure about ordering of returned json elements?
