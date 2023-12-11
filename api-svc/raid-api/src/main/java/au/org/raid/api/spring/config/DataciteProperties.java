@@ -7,12 +7,9 @@ import org.springframework.context.annotation.Configuration;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "datacite")
-public class DataCiteProperties {
+public class DataciteProperties {
     private String user;
     private String password;
     private String endpoint;
     private String prefix;
-
-
-
 }

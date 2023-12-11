@@ -1,7 +1,7 @@
 raid:
   db:
-    user: not-set
-    password: not-set
+    user: postgres
+    password: supersecret
     host: localhost
     port: 7432
   spatial-coverage:

@@ -4,7 +4,7 @@ raid:
       url: http://localhost:${server.port}
   db:
     user: postgres
-    password: changeme
+    password: supersecret
     host: localhost
     port: 7432
   spatial-coverage:
