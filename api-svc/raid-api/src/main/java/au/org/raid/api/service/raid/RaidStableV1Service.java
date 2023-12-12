@@ -146,6 +146,8 @@ public class RaidStableV1Service {
         final var raidDto = raidHistoryService.save(request);
         final var raidRecord = raidRecordFactory.create(raidDto);
 
+        dataciteSvc.createDataciteRaid(request, handle.format());
+
         tx.executeWithoutResult(status -> raidRepository.insert(raidRecord));
 
         return id;
@@ -190,7 +192,7 @@ public class RaidStableV1Service {
                 .orElseThrow(() -> new ResourceNotFoundException(handle));
 
         try {
-//            dataciteSvc.updateDataciteRaid(raid, handle);
+            dataciteSvc.updateDataciteRaid(raid, handle);
             return objectMapper.readValue(
                     result.getMetadata().data(), RaidDto.class);
         } catch (JsonProcessingException e) {

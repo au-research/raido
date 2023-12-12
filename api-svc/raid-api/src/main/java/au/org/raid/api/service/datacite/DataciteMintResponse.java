@@ -25,6 +25,7 @@ public class DataciteMintResponse {
         return ObjectUtil.jsonToString(this);
     }
 
+    @Setter
     public static class Identifier {
         public String handle;
         public Property property;
