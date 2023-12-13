@@ -50,18 +50,18 @@ class RelatedObjectValidatorTest {
                 .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
                 .schemaUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
 
-        final var category = new RelatedObjectCategory()
+        final var categories = List.of(new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI));
 
         final var relatedObject = new RelatedObject()
                 .id(TestConstants.VALID_DOI)
                 .schemaUri(TestConstants.HTTPS_DOI_ORG)
                 .type(type)
-                .category(category);
+                .category(categories);
 
         when(typeValidationService.validate(type, 0)).thenReturn(Collections.emptyList());
-        when(categoryValidationService.validate(category, 0)).thenReturn(Collections.emptyList());
+        when(categoryValidationService.validate(categories, 0)).thenReturn(Collections.emptyList());
 
         final var failures =
                 validationService.validateRelatedObjects(Collections.singletonList(relatedObject));
@@ -92,14 +92,14 @@ class RelatedObjectValidatorTest {
                 .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
                 .schemaUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
 
-        final var category = new RelatedObjectCategory()
+        final var categories = List.of(new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI));
 
         final var relatedObject = new RelatedObject()
                 .schemaUri(TestConstants.HTTPS_DOI_ORG)
                 .type(type)
-                .category(category);
+                .category(categories);
 
         final var failures =
                 validationService.validateRelatedObjects(Collections.singletonList(relatedObject));
@@ -120,15 +120,15 @@ class RelatedObjectValidatorTest {
                 .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
                 .schemaUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
 
-        final var category = new RelatedObjectCategory()
+        final var categories = List.of(new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI));
 
         final var relatedObject = new RelatedObject()
                 .id("")
                 .schemaUri(TestConstants.HTTPS_DOI_ORG)
                 .type(type)
-                .category(category);
+                .category(categories);
 
         final var failures =
                 validationService.validateRelatedObjects(Collections.singletonList(relatedObject));
@@ -149,14 +149,14 @@ class RelatedObjectValidatorTest {
                 .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
                 .schemaUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
 
-        final var category = new RelatedObjectCategory()
+        final var categories = List.of(new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI));
 
         final var relatedObject = new RelatedObject()
                 .id(TestConstants.VALID_DOI)
                 .type(type)
-                .category(category);
+                .category(categories);
 
         final var failures =
                 validationService.validateRelatedObjects(Collections.singletonList(relatedObject));
@@ -177,15 +177,15 @@ class RelatedObjectValidatorTest {
                 .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
                 .schemaUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
 
-        final var category = new RelatedObjectCategory()
+        final var categories = List.of(new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI));
 
         final var relatedObject = new RelatedObject()
                 .id(TestConstants.VALID_DOI)
                 .schemaUri("")
                 .type(type)
-                .category(category);
+                .category(categories);
 
         final var failures =
                 validationService.validateRelatedObjects(Collections.singletonList(relatedObject));
@@ -207,15 +207,15 @@ class RelatedObjectValidatorTest {
                 .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
                 .schemaUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
 
-        final var category = new RelatedObjectCategory()
+        final var categories = List.of(new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI));
 
         final var relatedObject = new RelatedObject()
                 .id(TestConstants.VALID_DOI)
                 .schemaUri(TestConstants.HTTPS_DOI_ORG)
                 .type(type)
-                .category(category);
+                .category(categories);
 
         final var failure = new ValidationFailure()
                 .fieldId(fieldId)
@@ -223,7 +223,7 @@ class RelatedObjectValidatorTest {
                 .message("uri not found");
 
         when(typeValidationService.validate(type, 0)).thenReturn(Collections.emptyList());
-        when(categoryValidationService.validate(category, 0)).thenReturn(Collections.emptyList());
+        when(categoryValidationService.validate(categories, 0)).thenReturn(Collections.emptyList());
         when(doiService.validate(TestConstants.VALID_DOI, fieldId)).thenReturn(List.of(failure));
 
         final var failures =
@@ -239,15 +239,15 @@ class RelatedObjectValidatorTest {
                 .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
                 .schemaUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
 
-        final var category = new RelatedObjectCategory()
+        final var categories = List.of(new RelatedObjectCategory()
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI);
+                .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI));
 
         final var relatedObject = new RelatedObject()
                 .id(TestConstants.VALID_DOI)
                 .schemaUri(TestConstants.HTTPS_DOI_ORG)
                 .type(type)
-                .category(category);
+                .category(categories);
 
         final var typeError = new ValidationFailure()
                 .fieldId("relatedObject[0].type.id")
@@ -260,7 +260,7 @@ class RelatedObjectValidatorTest {
                 .message(NOT_SET_MESSAGE);
 
         when(typeValidationService.validate(type, 0)).thenReturn(List.of(typeError));
-        when(categoryValidationService.validate(category, 0)).thenReturn(List.of(categoryError));
+        when(categoryValidationService.validate(categories, 0)).thenReturn(List.of(categoryError));
 
         final var failures =
                 validationService.validateRelatedObjects(Collections.singletonList(relatedObject));

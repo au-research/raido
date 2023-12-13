@@ -124,7 +124,7 @@ public class AbstractIntegrationTest {
                 .organisation(List.of(organisation(
                         REAL_TEST_ROR, LEAD_RESEARCH_ORGANISATION, today)))
                 .access(new Access()
-                        .accessStatement(new AccessStatement()
+                        .statement(new AccessStatement()
                                 .text("Embargoed")
                                 .language(new Language()
                                         .id(LANGUAGE_ID)

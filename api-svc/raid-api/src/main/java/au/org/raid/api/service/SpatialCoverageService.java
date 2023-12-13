@@ -19,7 +19,11 @@ public class SpatialCoverageService {
     private final RaidSpatialCoverageRecordFactory raidSpatialCoverageRecordFactory;
     private final LanguageService languageService;
 
-    public void create(final List<SpatialCoverage> spatialCoverages, final String raidName) {
+    public void create(final List<SpatialCoverage> spatialCoverages, final String handle) {
+        if (spatialCoverages == null) {
+            return;
+        }
+
         for (final var spatialCoverage : spatialCoverages) {
 
             final var spatialCoverageSchemaRecord = spatialCoverageSchemaRepository.findByUri(spatialCoverage.getSchemaUri())
@@ -28,7 +32,7 @@ public class SpatialCoverageService {
 
             final var languageId = languageService.findLanguageId(spatialCoverage.getLanguage());
 
-            final var raidSpatialCoverageRecord = raidSpatialCoverageRecordFactory.create(spatialCoverage, raidName, spatialCoverageSchemaRecord.getId(), languageId);
+            final var raidSpatialCoverageRecord = raidSpatialCoverageRecordFactory.create(spatialCoverage, handle, spatialCoverageSchemaRecord.getId(), languageId);
 
             raidSpatialCoverageRepository.create(raidSpatialCoverageRecord);
         }

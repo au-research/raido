@@ -75,7 +75,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
                 throw iae;
             }
             primaryTitle = "%" + primaryTitle + "%";
-//            searchCondition = DSL.condition(RAID.PRIMARY_TITLE.like(primaryTitle));
+            searchCondition = DSL.condition(RAID.PRIMARY_TITLE.like(primaryTitle));
         }
         return searchCondition;
     }
@@ -157,7 +157,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
         guardOperatorOrAssociated(user, req.getServicePointId());
 
         return ResponseEntity.ok(db.select(RAID.HANDLE, RAID.START_DATE,
-                        RAID.CONFIDENTIAL, RAID.METADATA_SCHEMA, RAID.DATE_CREATED).
+                        RAID.CONFIDENTIAL, RAID.METADATA_SCHEMA, RAID.DATE_CREATED, RAID.PRIMARY_TITLE).
                 from(RAID)
                 .where(
                         RAID.SERVICE_POINT_ID.eq(req.getServicePointId())
@@ -168,7 +168,7 @@ public class BasicRaidExperimental implements BasicRaidExperimentalApi {
                 .limit(MAX_EXPERIMENTAL_RECORDS)
                 .fetch(r -> new RaidListItemV2()
                         .handle(r.get(RAID.HANDLE))
-//                        .primaryTitle(r.get(RAID.PRIMARY_TITLE))
+                        .primaryTitle(r.get(RAID.PRIMARY_TITLE))
                         .startDate(r.get(RAID.START_DATE))
                         .createDate(local2Offset(r.get(RAID.DATE_CREATED)))
                         .metadataSchema(mapDb2Api(r.get(RAID.METADATA_SCHEMA)))));

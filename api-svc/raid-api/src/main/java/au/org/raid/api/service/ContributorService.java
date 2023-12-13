@@ -2,7 +2,6 @@ package au.org.raid.api.service;
 
 import au.org.raid.api.factory.record.*;
 import au.org.raid.api.repository.*;
-import au.org.raid.db.jooq.tables.records.ContributorPositionSchemaRecord;
 import au.org.raid.idl.raidv2.model.Contributor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,13 +27,13 @@ public class ContributorService {
     private final RaidContributorPositionRecordFactory raidContributorPositionRecordFactory;
     private final RaidContributorRoleRecordFactory raidContributorRoleRecordFactory;
 
-    public void create(final String raidName, final List<Contributor> contributors) {
+    public void create(final List<Contributor> contributors, final String handle) {
         for (var contributor : contributors) {
             final var contributorRecord = contributorRecordFactory.create(contributor);
-            final var contributorId = contributorRepository.create(contributorRecord).getId();
+            final var contributorId = contributorRepository.findOrCreate(contributorRecord).getId();
 
             // raid contributor
-            final var raidContributorRecord = raidContributorRecordFactory.create(contributor, contributorId, raidName);
+            final var raidContributorRecord = raidContributorRecordFactory.create(contributor, contributorId, handle);
             final var raidContributorId = raidContributorRepository.create(raidContributorRecord).getId();
 
             // raid contributor position

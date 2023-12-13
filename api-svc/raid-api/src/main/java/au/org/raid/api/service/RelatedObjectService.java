@@ -23,7 +23,11 @@ public class RelatedObjectService {
     private final RaidRelatedObjectRecordFactory raidRelatedObjectRecordFactory;
     private final RaidRelatedObjectCategoryService raidRelatedObjectCategoryService;
 
-    public void create(final List<RelatedObject> relatedObjects, final String raidName) {
+    public void create(final List<RelatedObject> relatedObjects, final String handle) {
+        if (relatedObjects == null) {
+            return;
+        }
+
         for (final var relatedObject : relatedObjects) {
             final var relatedObjectSchemaRecord = relatedObjectSchemaRepository.findByUri(relatedObject.getSchemaUri())
                     .orElseThrow(() -> new RuntimeException(
@@ -32,7 +36,7 @@ public class RelatedObjectService {
             final var relatedObjectRecord =
                     relatedObjectRecordFactory.create(relatedObject.getId(), relatedObjectSchemaRecord.getId());
 
-            final var savedRelatedObjectRecord = relatedObjectRepository.create(relatedObjectRecord);
+            final var savedRelatedObjectRecord = relatedObjectRepository.findOrCreate(relatedObjectRecord);
 
             final var relatedObjectTypeSchemaRecord =
                     relatedObjectTypeSchemaRepository.findByUri(relatedObject.getSchemaUri())
@@ -46,7 +50,7 @@ public class RelatedObjectService {
                     .formatted(relatedObject.getId(), relatedObject.getSchemaUri())));
 
             final var raidRelatedObjectRecord = raidRelatedObjectRecordFactory.create(
-                    raidName, savedRelatedObjectRecord.getId(), relatedObjectTypeRecord.getId());
+                    handle, savedRelatedObjectRecord.getId(), relatedObjectTypeRecord.getId());
 
             raidRelatedObjectRepository.create(raidRelatedObjectRecord);
 
@@ -55,10 +59,4 @@ public class RelatedObjectService {
             }
         }
     }
-
-
-
-
-
-
 }

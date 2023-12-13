@@ -19,4 +19,17 @@ public class RelatedObjectRepository {
                 .returning()
                 .fetchOne();
     }
+
+    public RelatedObjectRecord findOrCreate(final RelatedObjectRecord record) {
+        final var result = dslContext.select(RELATED_OBJECT.fields())
+                .from(RELATED_OBJECT)
+                .where(RELATED_OBJECT.PID.eq(record.getPid()))
+                .and(RELATED_OBJECT.SCHEMA_ID.eq(record.getSchemaId()))
+                .fetchOptional(r -> new RelatedObjectRecord()
+                        .setId(RELATED_OBJECT.ID.getValue(r))
+                        .setPid(RELATED_OBJECT.PID.getValue(r))
+                        .setSchemaId(RELATED_OBJECT.SCHEMA_ID.getValue(r)));
+
+        return result.orElseGet(() -> create(record));
+    }
 }

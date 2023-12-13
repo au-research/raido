@@ -10,6 +10,7 @@ import au.org.raid.api.factory.RaidRecordFactory;
 import au.org.raid.api.repository.RaidRepository;
 import au.org.raid.api.repository.ServicePointRepository;
 import au.org.raid.api.service.RaidHistoryService;
+import au.org.raid.api.service.RaidIngestService;
 import au.org.raid.api.service.apids.ApidsService;
 import au.org.raid.api.service.apids.model.ApidsMintResponse;
 import au.org.raid.api.service.raid.id.IdentifierHandle;
@@ -50,6 +51,7 @@ public class RaidStableV1Service {
     private final RaidChecksumService checksumService;
     private final RaidDtoFactory raidDtoFactory;
     private final RaidHistoryService raidHistoryService;
+    private final RaidIngestService raidIngestService;
 
 
     public List<RaidDto> list(final Long servicePointId) {
@@ -101,9 +103,7 @@ public class RaidStableV1Service {
         request.setIdentifier(idFactory.create(id, servicePointRecord));
 
         final var raidDto = raidHistoryService.save(request);
-        final var raidRecord = raidRecordFactory.create(raidDto);
-
-        tx.executeWithoutResult(status -> raidRepository.insert(raidRecord));
+        raidIngestService.create(raidDto);
 
         return id;
     }

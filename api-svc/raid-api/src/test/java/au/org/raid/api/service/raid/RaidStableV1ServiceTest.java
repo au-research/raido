@@ -7,6 +7,7 @@ import au.org.raid.api.factory.RaidRecordFactory;
 import au.org.raid.api.repository.RaidRepository;
 import au.org.raid.api.repository.ServicePointRepository;
 import au.org.raid.api.service.RaidHistoryService;
+import au.org.raid.api.service.RaidIngestService;
 import au.org.raid.api.service.apids.ApidsService;
 import au.org.raid.api.service.apids.model.ApidsMintResponse;
 import au.org.raid.api.service.raid.id.IdentifierHandle;
@@ -30,14 +31,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static au.org.raid.api.service.raid.MetadataService.RAID_ID_TYPE_URI;
@@ -78,8 +77,11 @@ class RaidStableV1ServiceTest {
     private RaidDtoFactory raidDtoFactory;
     @Mock
     private RaidHistoryService raidHistoryService;
+    @Mock
+    private RaidIngestService raidIngestService;
+
     @InjectMocks
-    private RaidStableV1Service raidService;
+    private RaidStableV1Service raidStableV1Service;
 
     @Test
     @DisplayName("Mint a raid")
@@ -127,11 +129,9 @@ class RaidStableV1ServiceTest {
         when(idFactory.create(identifierUrl, servicePointRecord)).thenReturn(id);
         when(metadataService.getMetaProps()).thenReturn(metadataProps);
         when(raidHistoryService.save(createRaidRequest)).thenReturn(raidDto);
-        when(raidRecordFactory.create(raidDto)).thenReturn(raidRecord);
 
-        raidService.mintRaidSchemaV1(createRaidRequest, servicePointId);
-
-        verify(transactionTemplate).executeWithoutResult(any(Consumer.class));
+        raidStableV1Service.mintRaidSchemaV1(createRaidRequest, servicePointId);
+        verify(raidIngestService).create(raidDto);
     }
 
     @Test
@@ -152,7 +152,7 @@ class RaidStableV1ServiceTest {
 
         when(raidDtoFactory.create(raidRecord)).thenReturn(expected);
 
-        RaidDto result = raidService.read(handle);
+        RaidDto result = raidStableV1Service.read(handle);
         assertThat(result, Matchers.is(expected));
     }
 
@@ -170,7 +170,7 @@ class RaidStableV1ServiceTest {
 
         when(raidDtoFactory.create(raidRecord)).thenReturn(expected);
 
-        List<RaidDto> results = raidService.list(servicePointId);
+        List<RaidDto> results = raidStableV1Service.list(servicePointId);
         assertThat(results.get(0), Matchers.is(expected));
     }
 
@@ -184,7 +184,7 @@ class RaidStableV1ServiceTest {
 
         when(raidRepository.findByHandle(handle)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> raidService.read(handle));
+        assertThrows(ResourceNotFoundException.class, () -> raidStableV1Service.read(handle));
     }
 
     @Test
@@ -218,7 +218,7 @@ class RaidStableV1ServiceTest {
 //        when(transactionTemplate.execute(any(TransactionCallback.class))).thenReturn(1);
         when(raidRepository.findByHandle(handle)).thenReturn(Optional.of(updatedRaid));
 
-        final var result = raidService.update(updateRequest);
+        final var result = raidStableV1Service.update(updateRequest);
 
         verify(raidRepository).findByHandleAndVersion(handle, 1);
 //        verify(transactionTemplate).execute(any(TransactionCallback.class));
@@ -252,7 +252,7 @@ class RaidStableV1ServiceTest {
         when(idParser.parseUrlWithException(id.formatUrl())).thenReturn(id);
         when(mapper.readValue(raidJson, RaidDto.class)).thenReturn(expected);
 
-        final var result = raidService.update(updateRequest);
+        final var result = raidStableV1Service.update(updateRequest);
 
         verifyNoInteractions(raidRecordFactory);
         verify(raidRepository).findByHandleAndVersion(handle, 1);
@@ -278,7 +278,7 @@ class RaidStableV1ServiceTest {
         when(raidRepository.findByHandleAndVersion(handle, 1)).thenReturn(Optional.empty());
         when(idParser.parseUrlWithException(id.formatUrl())).thenReturn(id);
 
-        assertThrows(ResourceNotFoundException.class, () -> raidService.update(updateRequest));
+        assertThrows(ResourceNotFoundException.class, () -> raidStableV1Service.update(updateRequest));
 
         verify(raidRepository).findByHandleAndVersion(handle, 1);
         verifyNoInteractions(transactionTemplate);

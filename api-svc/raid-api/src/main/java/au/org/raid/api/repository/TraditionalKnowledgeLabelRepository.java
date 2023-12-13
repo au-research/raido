@@ -20,6 +20,7 @@ public class TraditionalKnowledgeLabelRepository {
                 .where(TRADITIONAL_KNOWLEDGE_LABEL.URI.eq(uri)
                         .and(TRADITIONAL_KNOWLEDGE_LABEL.SCHEMA_ID.eq(schemaId)))
                 .fetchOptional(record -> new TraditionalKnowledgeLabelRecord()
+                        .setId(TRADITIONAL_KNOWLEDGE_LABEL.ID.getValue(record))
                         .setSchemaId(TRADITIONAL_KNOWLEDGE_LABEL.SCHEMA_ID.getValue(record))
                         .setUri(TRADITIONAL_KNOWLEDGE_LABEL.URI.getValue(record))
                 );

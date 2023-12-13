@@ -19,6 +19,7 @@ public class RelatedRaidTypeRepository {
                 .from(RELATED_RAID_TYPE)
                 .where(RELATED_RAID_TYPE.URI.eq(uri).and(RELATED_RAID_TYPE.SCHEMA_ID.eq(schemaId))).
                 fetchOptional(record -> new RelatedRaidTypeRecord()
+                        .setId(RELATED_RAID_TYPE.ID.getValue(record))
                         .setSchemaId(RELATED_RAID_TYPE.SCHEMA_ID.getValue(record))
                         .setUri(RELATED_RAID_TYPE.URI.getValue(record))
                 );

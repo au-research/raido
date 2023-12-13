@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class RaidContributorRecordFactory {
 
-    public RaidContributorRecord create(final Contributor contributor, final int contributorId, final String raidName) {
+    public RaidContributorRecord create(final Contributor contributor, final int contributorId, final String handle) {
         return new RaidContributorRecord()
                 .setContributorId(contributorId)
                 .setContact(contributor.getContact())
                 .setLeader(contributor.getLeader())
-                .setRaidName(raidName);
+                .setRaidName(handle);
     }
 }

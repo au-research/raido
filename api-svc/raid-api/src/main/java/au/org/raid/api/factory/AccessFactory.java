@@ -28,7 +28,7 @@ public class AccessFactory {
         }
 
         return new Access()
-                .accessStatement(accessStatement)
+                .statement(accessStatement)
                 .type(new AccessTypeWithSchemaUri()
                         .id(accessBlock.getType() != null ? ACCESS_TYPE_MAP.get(accessBlock.getType()) : null)
                         .schemaUri(ACCESS_SCHEMA_URI)

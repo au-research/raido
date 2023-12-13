@@ -178,18 +178,18 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
                                     .type(new RelatedObjectType()
                                             .id(metadata.getRelatedObjects().get(0).getRelatedObjectType())
                                             .schemaUri(metadata.getRelatedObjects().get(0).getRelatedObjectTypeSchemeUri()))
-                                    .category(new RelatedObjectCategory()
+                                    .category(List.of(new RelatedObjectCategory()
                                             .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
-                                            .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI)),
+                                            .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI))),
                             new RelatedObject()
                                     .id(metadata.getRelatedObjects().get(1).getRelatedObject())
                                     .schemaUri(metadata.getRelatedObjects().get(0).getRelatedObjectSchemeUri())
                                     .type(new RelatedObjectType()
                                             .id(metadata.getRelatedObjects().get(1).getRelatedObjectType())
                                             .schemaUri(metadata.getRelatedObjects().get(1).getRelatedObjectTypeSchemeUri()))
-                                    .category(new RelatedObjectCategory()
+                                    .category(List.of(new RelatedObjectCategory()
                                             .id(TestConstants.OUTPUT_RELATED_OBJECT_CATEGORY)
-                                            .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI))))
+                                            .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI)))))
                     .alternateIdentifier(List.of(
                             new AlternateIdentifier()
                                     .id(metadata.getAlternateIdentifiers().get(0).getAlternateIdentifier())
@@ -258,7 +258,7 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
                         .id(TestConstants.CLOSED_ACCESS_TYPE)
                         .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI)
                 )
-                .accessStatement(new AccessStatement().text("RAiD minted via legacy V1 endpoint is closed by default")));
+                .statement(new AccessStatement().text("RAiD minted via legacy V1 endpoint is closed by default")));
 
         assertThat(raidDto.getDate()).isEqualTo(new Date()
                 .startDate(raidModel.getStartDate()));

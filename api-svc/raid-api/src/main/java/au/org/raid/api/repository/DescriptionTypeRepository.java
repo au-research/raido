@@ -20,6 +20,7 @@ public class DescriptionTypeRepository {
                 .where(DESCRIPTION_TYPE.URI.eq(uri))
                 .and(DESCRIPTION_TYPE.SCHEMA_ID.eq(schemaId))
                 .fetchOptional(record -> new DescriptionTypeRecord()
+                        .setId(DESCRIPTION_TYPE.ID.getValue(record))
                         .setSchemaId(DESCRIPTION_TYPE.SCHEMA_ID.getValue(record))
                         .setUri(DESCRIPTION_TYPE.URI.getValue(record))
                 );

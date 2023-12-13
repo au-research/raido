@@ -8,6 +8,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -32,8 +34,8 @@ class RelatedObjectFactoryTest {
                 .type(new RelatedObjectType()
                         .schemaUri(TYPE_SCHEMA_URI)
                 )
-                .category(new RelatedObjectCategory()
-                        .schemaUri(CATEGORY_SCHEMA_URI));
+                .category(List.of(new RelatedObjectCategory()
+                        .schemaUri(CATEGORY_SCHEMA_URI)));
 
         assertThat(relatedObjectFactory.create(new RelatedObjectBlock()), is(expected));
     }
@@ -60,9 +62,9 @@ class RelatedObjectFactoryTest {
                 .type(new RelatedObjectType()
                         .id(type)
                         .schemaUri(TYPE_SCHEMA_URI))
-                .category(new RelatedObjectCategory()
+                .category(List.of(new RelatedObjectCategory()
                         .schemaUri(CATEGORY_SCHEMA_URI)
-                        .id("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json")
+                        .id("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json"))
                 );
 
         assertThat(relatedObjectFactory.create(relatedObject), is(expected));
@@ -90,9 +92,9 @@ class RelatedObjectFactoryTest {
                 .type(new RelatedObjectType()
                         .id(type)
                         .schemaUri(TYPE_SCHEMA_URI))
-                .category(new RelatedObjectCategory()
+                .category(List.of(new RelatedObjectCategory()
                         .schemaUri(CATEGORY_SCHEMA_URI)
-                        .id("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json")
+                        .id("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json"))
                 );
 
         assertThat(relatedObjectFactory.create(relatedObject), is(expected));
@@ -120,9 +122,9 @@ class RelatedObjectFactoryTest {
                 .type(new RelatedObjectType()
                         .id(type)
                         .schemaUri(TYPE_SCHEMA_URI))
-                .category(new RelatedObjectCategory()
+                .category(List.of(new RelatedObjectCategory()
                         .schemaUri(CATEGORY_SCHEMA_URI)
-                        .id("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/output.json")
+                        .id("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/output.json"))
                 );
 
         assertThat(relatedObjectFactory.create(relatedObject), is(expected));
@@ -150,9 +152,9 @@ class RelatedObjectFactoryTest {
                 .type(new RelatedObjectType()
                         .id(type)
                         .schemaUri(TYPE_SCHEMA_URI))
-                .category(new RelatedObjectCategory()
+                .category(List.of(new RelatedObjectCategory()
                         .schemaUri(CATEGORY_SCHEMA_URI)
-                        .id("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/internal.json")
+                        .id("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/internal.json"))
                 );
 
         assertThat(relatedObjectFactory.create(relatedObject), is(expected));

@@ -128,6 +128,7 @@ public class RaidService {
                 set(RAID.START_DATE, raidData.startDate()).
                 set(RAID.DATE_CREATED, LocalDateTime.now()).
                 set(RAID.CONFIDENTIAL, raidData.confidential()).
+                set(RAID.PRIMARY_TITLE, raidData.primaryTitle).
                 execute());
 
         return id;
@@ -174,6 +175,7 @@ public class RaidService {
         tx.executeWithoutResult((status) -> db.insertInto(RAID).
                 set(RAID.HANDLE, handle.format()).
                 set(RAID.SERVICE_POINT_ID, servicePointId).
+                set(RAID.PRIMARY_TITLE, raidData.primaryTitle).
                 set(RAID.URL, raidUrl).
                 set(RAID.METADATA, JSONB.valueOf(metadataAsJson)).
                 set(RAID.METADATA_SCHEMA, mapApi2Db(metadata.getMetadataSchema())).
@@ -209,6 +211,7 @@ public class RaidService {
         }
         return new ReadRaidResponseV2().
                 handle(data.raid().getHandle()).
+                primaryTitle(data.raid().getPrimaryTitle()).
                 servicePointId(data.servicePoint().getId()).
                 servicePointName(data.servicePoint().getName()).
                 startDate(data.raid().getStartDate()).
@@ -259,6 +262,7 @@ public class RaidService {
                 set(RAID.START_DATE, startDate).
                 set(RAID.DATE_CREATED, offset2Local(createDate)).
                 set(RAID.CONFIDENTIAL, confidential).
+                set(RAID.PRIMARY_TITLE, primaryTitle).
                 onConflict(RAID.HANDLE).doUpdate().
                 set(stream(RAID.fields()).collect(toMap(f -> f, DSL::excluded))).
                 where(RAID.HANDLE.eq(handle)).

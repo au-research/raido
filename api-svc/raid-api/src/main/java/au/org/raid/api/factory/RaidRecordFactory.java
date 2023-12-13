@@ -35,6 +35,49 @@ public class RaidRecordFactory {
     }
 
     @SneakyThrows
+    public RaidRecord create(final RaidDto raid,
+                             final Integer accessTypeId,
+                             final Integer accessStatementLanguageId,
+                             final Integer registrationAgencyOrganisationId,
+                             final Integer ownerOrganisationId
+                             ) {
+
+
+        final var handle = new Handle(raid.getIdentifier().getGlobalUrl());
+
+        final var primaryTitle = raid.getTitle().stream()
+                .filter(title -> title.getType().getId().equals(PRIMARY_TITLE_TYPE))
+                .findFirst()
+                .orElseThrow(() -> new InvalidTitleException(null));
+
+        String accessStatement = null;
+        if (raid.getAccess().getStatement() != null) {
+            accessStatement = raid.getAccess().getStatement().getText();
+        }
+
+        return new RaidRecord()
+                .setHandle(handle.toString())
+                .setServicePointId(raid.getIdentifier().getOwner().getServicePoint())
+                .setUrl(raid.getIdentifier().getGlobalUrl())
+                .setPrimaryTitle(primaryTitle.getText())
+                .setConfidential(!raid.getAccess().getType().getId().equals(ACCESS_TYPE_OPEN))
+                .setMetadataSchema(Metaschema.raido_metadata_schema_v2)
+                .setMetadata(JSONB.valueOf(objectMapper.writeValueAsString(raid)))
+                .setStartDate(DateUtil.parseDate(raid.getDate().getStartDate()))
+                .setDateCreated(LocalDateTime.now())
+                .setVersion(raid.getIdentifier().getVersion())
+                .setEndDate(raid.getDate().getEndDate())
+                .setLicense(raid.getIdentifier().getLicense())
+                .setAccessTypeId(accessTypeId)
+                .setEmbargoExpiry(raid.getAccess().getEmbargoExpiry())
+                .setAccessStatement(accessStatement)
+                .setAccessStatementLanguageId(accessStatementLanguageId)
+                .setSchemaUri(raid.getIdentifier().getSchemaUri())
+                .setRegistrationAgencyOrganisationId(registrationAgencyOrganisationId)
+                .setOwnerOrganisationId(ownerOrganisationId);
+    }
+
+    @SneakyThrows
     public RaidRecord create(final RaidDto raid) {
         final var handle = new Handle(raid.getIdentifier().getGlobalUrl());
 
@@ -46,6 +89,7 @@ public class RaidRecordFactory {
         return new RaidRecord()
                 .setVersion(raid.getIdentifier().getVersion())
                 .setHandle(handle.toString())
+                .setPrimaryTitle(primaryTitle.getText())
                 .setServicePointId(raid.getIdentifier().getOwner().getServicePoint())
                 .setUrl(raid.getIdentifier().getGlobalUrl())
                 .setMetadata(JSONB.valueOf(objectMapper.writeValueAsString(raid)))
@@ -75,6 +119,7 @@ public class RaidRecordFactory {
 
         return new RaidRecord()
                 .setVersion(raid.getIdentifier().getVersion())
+                .setPrimaryTitle(primaryTitle)
                 .setHandle(apidsMintResponse.identifier.handle)
                 .setServicePointId(servicePointRecord.getId())
                 .setUrl(apidsMintResponse.identifier.property.value)

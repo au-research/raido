@@ -59,7 +59,7 @@
       "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json",
       "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1"
     },
-    "accessStatement": {
+    "statement": {
       "text": "This RAiD is closed",
       "language": {
         "id": "eng",
@@ -145,10 +145,12 @@
         "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book.json",
         "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1"
       },
-      "category": {
-        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json",
-        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1"
-      }
+      "category": [
+        {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1"
+        }
+      ]
     },
     {
       "id": "https://doi.org/10.47366/sabia.v5n1a3",
@@ -157,10 +159,12 @@
         "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/book.json",
         "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1"
       },
-      "category": {
-        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json",
-        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1"
-      }
+      "category": [
+        {
+          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json",
+          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1"
+        }
+      ]
     }
   ],
   "alternateIdentifier": [

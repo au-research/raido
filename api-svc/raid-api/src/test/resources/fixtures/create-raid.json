@@ -26,7 +26,7 @@
       "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json",
       "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1"
     },
-    "accessStatement": {
+    "statement": {
       "text": "This RAiD is closed",
       "language": {
         "id": "eng",

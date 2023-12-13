@@ -386,7 +386,7 @@ alter table api_svc.raid
     add column end_date            varchar,
     add column license             varchar,
     add column access_type_id      int,
-    add column embargo_expiry      varchar,
+    add column embargo_expiry      date,
     add column access_statement    text,
     add column access_statement_language_id int,
     add column schema_uri varchar,
@@ -1051,7 +1051,7 @@ from
           lateral jsonb_to_record(identifier."registrationAgency") as identifier_registration_agency(id text, "schemaUri" text, "servicePoint" int),
           lateral jsonb_to_record(identifier.owner) as identifier_owner(id text, "schemaUri" text),
           lateral jsonb_to_record(metadata -> 'date') as date("startDate" text, "endDate" text),
-          lateral jsonb_to_record(metadata -> 'access') as access(type jsonb, "embargoExpiry" text, "accessStatement" jsonb),
+          lateral jsonb_to_record(metadata -> 'access') as access(type jsonb, "embargoExpiry" date, "accessStatement" jsonb),
           lateral jsonb_to_record(access.type) as access_type(id text, "schemaUri" text),
           lateral jsonb_to_record(access."accessStatement") as access_statement(text text, language jsonb),
           lateral jsonb_to_record(access_statement.language) as access_statement_language(id text, "schemaUri" text)

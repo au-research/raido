@@ -20,6 +20,7 @@ public class TitleTypeRepository {
                 .where(TITLE_TYPE.URI.eq(uri)
                         .and(TITLE_TYPE.SCHEMA_ID.eq(schemaId)))
                 .fetchOptional(record -> new TitleTypeRecord()
+                        .setId(TITLE_TYPE.ID.getValue(record))
                         .setSchemaId(TITLE_TYPE.SCHEMA_ID.getValue(record))
                         .setUri(TITLE_TYPE.URI.getValue(record))
                 );

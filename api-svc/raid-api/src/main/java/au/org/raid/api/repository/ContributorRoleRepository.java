@@ -20,6 +20,7 @@ public class ContributorRoleRepository {
                 .where(CONTRIBUTOR_ROLE.URI.eq(uri)
                         .and(CONTRIBUTOR_ROLE.SCHEMA_ID.eq(schemaId)))
                 .fetchOptional(record -> new ContributorRoleRecord()
+                        .setId(CONTRIBUTOR_ROLE.ID.getValue(record))
                         .setSchemaId(CONTRIBUTOR_ROLE.SCHEMA_ID.getValue(record))
                         .setUri(CONTRIBUTOR_ROLE.URI.getValue(record))
                 );

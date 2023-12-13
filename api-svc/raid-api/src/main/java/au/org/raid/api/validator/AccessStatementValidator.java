@@ -22,7 +22,7 @@ public class AccessStatementValidator {
 
         if (accessStatement == null) {
             return List.of(new ValidationFailure()
-                    .fieldId("access.accessStatement")
+                    .fieldId("access.statement")
                     .errorType(NOT_SET_TYPE)
                     .message(NOT_SET_MESSAGE)
             );
@@ -30,14 +30,14 @@ public class AccessStatementValidator {
 
         if (isBlank(accessStatement.getText())) {
             failures.add(new ValidationFailure()
-                    .fieldId("access.accessStatement.statement")
+                    .fieldId("access.statement.statement")
                     .errorType(NOT_SET_TYPE)
                     .message(NOT_SET_MESSAGE)
             );
         }
 
         failures.addAll(
-                languageValidator.validate(accessStatement.getLanguage(), "access.accessStatement"));
+                languageValidator.validate(accessStatement.getLanguage(), "access.statement"));
 
         return failures;
     }

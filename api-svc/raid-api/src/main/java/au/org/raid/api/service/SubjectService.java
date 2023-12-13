@@ -24,7 +24,11 @@ public class SubjectService {
     private final RaidSubjectKeywordRecordFactory raidSubjectKeywordRecordFactory;
     private final RaidSubjectKeywordRepository raidSubjectKeywordRepository;
 
-    public void create(final List<Subject> subjects, final String raidName) {
+    public void create(final List<Subject> subjects, final String handle) {
+        if (subjects == null) {
+            return;
+        }
+
         for (final var subject : subjects) {
 
             final var subjectId = subject.getId().substring(subject.getId().lastIndexOf('/'));
@@ -32,7 +36,7 @@ public class SubjectService {
             final var subjectTypeRecord = subjectTypeRepository.findById(subjectId)
                     .orElseThrow(() -> new RuntimeException("Subject type not found %s".formatted(subject.getId())));
 
-            final var raidSubjectRecord = raidSubjectRecordFactory.create(raidName, subjectTypeRecord.getId());
+            final var raidSubjectRecord = raidSubjectRecordFactory.create(handle, subjectTypeRecord.getId());
 
             final var raidSubject = raidSubjectRepository.create(raidSubjectRecord);
 

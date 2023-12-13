@@ -250,7 +250,7 @@ class RaidoStableV1Test {
                     .andExpect(jsonPath("$.description[0].type.schemaUri", Matchers.is(DESCRIPTION_TYPE_SCHEMA_URI)))
                     .andExpect(jsonPath("$.access.type.id", Matchers.is(ACCESS_TYPE_CLOSED)))
                     .andExpect(jsonPath("$.access.type.schemaUri", Matchers.is(ACCESS_SCHEMA_URI)))
-                    .andExpect(jsonPath("$.access.accessStatement.text", Matchers.is("This RAiD is closed")))
+                    .andExpect(jsonPath("$.access.statement.text", Matchers.is("This RAiD is closed")))
                     .andExpect(jsonPath("$.contributor[0].id", Matchers.is("https://orcid.org/0000-0002-4368-8058")))
                     .andExpect(jsonPath("$.contributor[0].schemaUri", Matchers.is("https://orcid.org/")))
                     .andExpect(jsonPath("$.contributor[0].position[0].schemaUri", Matchers.is("https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1")))
@@ -392,7 +392,7 @@ class RaidoStableV1Test {
                     .andExpect(jsonPath("$.description[0].type.schemaUri", Matchers.is(DESCRIPTION_TYPE_SCHEMA_URI)))
                     .andExpect(jsonPath("$.access.type.id", Matchers.is(ACCESS_TYPE_CLOSED)))
                     .andExpect(jsonPath("$.access.type.schemaUri", Matchers.is(ACCESS_SCHEMA_URI)))
-                    .andExpect(jsonPath("$.access.accessStatement.text", Matchers.is("This RAiD is closed")))
+                    .andExpect(jsonPath("$.access.statement.text", Matchers.is("This RAiD is closed")))
                     .andExpect(jsonPath("$.contributor[0].id", Matchers.is("https://orcid.org/0000-0002-4368-8058")))
                     .andExpect(jsonPath("$.contributor[0].schemaUri", Matchers.is("https://orcid.org/")))
                     .andExpect(jsonPath("$.contributor[0].position[0].schemaUri", Matchers.is("https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1")))
@@ -564,9 +564,9 @@ class RaidoStableV1Test {
                     .andExpect(status().isForbidden())
                     .andExpect(jsonPath("$.identifier.id", Matchers.is("https://raid.org.au/10378.1/1696639")))
                     .andExpect(jsonPath("$.access.type.id", Matchers.is(SchemaValues.ACCESS_TYPE_CLOSED.getUri())))
-                    .andExpect(jsonPath("$.access.accessStatement.text", Matchers.is("This RAiD is closed")))
-                    .andExpect(jsonPath("$.access.accessStatement.language.id", Matchers.is("eng")))
-                    .andExpect(jsonPath("$.access.accessStatement.language.schemaUri", Matchers.is("https://www.iso.org/standard/39534.html")))
+                    .andExpect(jsonPath("$.access.statement.text", Matchers.is("This RAiD is closed")))
+                    .andExpect(jsonPath("$.access.statement.language.id", Matchers.is("eng")))
+                    .andExpect(jsonPath("$.access.statement.language.schemaUri", Matchers.is("https://www.iso.org/standard/39534.html")))
                     .andReturn();
         }
     }
@@ -600,9 +600,9 @@ class RaidoStableV1Test {
                     .andExpect(jsonPath("$.identifier.id", Matchers.is("https://raid.org.au/10378.1/1696639")))
                     .andExpect(jsonPath("$.access.type.id", Matchers.is(SchemaValues.ACCESS_TYPE_EMBARGOED.getUri())))
                     .andExpect(jsonPath("$.access.embargoExpiry", Matchers.is("2024-12-31")))
-                    .andExpect(jsonPath("$.access.accessStatement.text", Matchers.is("This RAiD is embargoed")))
-                    .andExpect(jsonPath("$.access.accessStatement.language.id", Matchers.is("eng")))
-                    .andExpect(jsonPath("$.access.accessStatement.language.schemaUri", Matchers.is("https://www.iso.org/standard/39534.html")))
+                    .andExpect(jsonPath("$.access.statement.text", Matchers.is("This RAiD is embargoed")))
+                    .andExpect(jsonPath("$.access.statement.language.id", Matchers.is("eng")))
+                    .andExpect(jsonPath("$.access.statement.language.schemaUri", Matchers.is("https://www.iso.org/standard/39534.html")))
                     .andReturn();
         }
     }
@@ -648,7 +648,7 @@ class RaidoStableV1Test {
                     .andExpect(jsonPath("$[0].description[0].type.schemaUri", Matchers.is(DESCRIPTION_TYPE_SCHEMA_URI)))
                     .andExpect(jsonPath("$[0].access.type.id", Matchers.is(ACCESS_TYPE_CLOSED)))
                     .andExpect(jsonPath("$[0].access.type.schemaUri", Matchers.is(ACCESS_SCHEMA_URI)))
-                    .andExpect(jsonPath("$[0].access.accessStatement.text", Matchers.is("This RAiD is closed")))
+                    .andExpect(jsonPath("$[0].access.statement.text", Matchers.is("This RAiD is closed")))
                     .andExpect(jsonPath("$[0].contributor[0].id", Matchers.is("https://orcid.org/0000-0002-4368-8058")))
                     .andExpect(jsonPath("$[0].contributor[0].schemaUri", Matchers.is("https://orcid.org/")))
                     .andExpect(jsonPath("$[0].contributor[0].position[0].schemaUri", Matchers.is("https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1")))

@@ -6,6 +6,7 @@ import au.org.raid.idl.raidv2.model.RelatedObjectCategory;
 import au.org.raid.idl.raidv2.model.RelatedObjectType;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -29,10 +30,10 @@ public class RelatedObjectFactory {
         return new RelatedObject()
                 .id(relatedObjectBlock.getRelatedObject())
                 .schemaUri(relatedObjectBlock.getRelatedObjectSchemeUri())
-                .category(new RelatedObjectCategory()
+                .category(List.of(new RelatedObjectCategory()
                         .schemaUri(CATEGORY_SCHEMA_URI)
                         .id(relatedObjectBlock.getRelatedObjectCategory() != null ?
-                                CATEGORY_MAP.get(relatedObjectBlock.getRelatedObjectCategory().toLowerCase()) : null)
+                                CATEGORY_MAP.get(relatedObjectBlock.getRelatedObjectCategory().toLowerCase()) : null))
                 )
                 .type(new RelatedObjectType()
                         .schemaUri(TYPE_SCHEMA_URI)

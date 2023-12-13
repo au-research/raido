@@ -54,9 +54,9 @@ public class AccessValidator {
                 }
 
                 if (typeId.equals(ACCESS_TYPE_EMBARGOED)) {
-                    if (access.getAccessStatement() == null) {
+                    if (access.getStatement() == null) {
                         failures.add(new ValidationFailure()
-                                .fieldId("access.accessStatement")
+                                .fieldId("access.statement")
                                 .errorType(NOT_SET_TYPE)
                                 .message(NOT_SET_MESSAGE));
                     }
@@ -73,9 +73,9 @@ public class AccessValidator {
                     }
                 }
             }
-            if (access.getAccessStatement() != null) {
+            if (access.getStatement() != null) {
                 failures.addAll(
-                        accessStatementValidator.validate(access.getAccessStatement())
+                        accessStatementValidator.validate(access.getStatement())
                 );
             }
         }

@@ -140,7 +140,7 @@ public class Raid extends TableImpl<RaidRecord> {
     /**
      * The column <code>api_svc.raid.embargo_expiry</code>.
      */
-    public final TableField<RaidRecord, String> EMBARGO_EXPIRY = createField(DSL.name("embargo_expiry"), SQLDataType.VARCHAR, this, "");
+    public final TableField<RaidRecord, LocalDate> EMBARGO_EXPIRY = createField(DSL.name("embargo_expiry"), SQLDataType.LOCALDATE, this, "");
 
     /**
      * The column <code>api_svc.raid.access_statement</code>.
@@ -313,14 +313,14 @@ public class Raid extends TableImpl<RaidRecord> {
     // -------------------------------------------------------------------------
 
     @Override
-    public Row20<String, Long, String, Integer, String, Boolean, Metaschema, JSONB, LocalDate, LocalDateTime, Integer, String, String, Integer, String, String, Integer, String, Integer, Integer> fieldsRow() {
+    public Row20<String, Long, String, Integer, String, Boolean, Metaschema, JSONB, LocalDate, LocalDateTime, Integer, String, String, Integer, LocalDate, String, Integer, String, Integer, Integer> fieldsRow() {
         return (Row20) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function20<? super String, ? super Long, ? super String, ? super Integer, ? super String, ? super Boolean, ? super Metaschema, ? super JSONB, ? super LocalDate, ? super LocalDateTime, ? super Integer, ? super String, ? super String, ? super Integer, ? super String, ? super String, ? super Integer, ? super String, ? super Integer, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function20<? super String, ? super Long, ? super String, ? super Integer, ? super String, ? super Boolean, ? super Metaschema, ? super JSONB, ? super LocalDate, ? super LocalDateTime, ? super Integer, ? super String, ? super String, ? super Integer, ? super LocalDate, ? super String, ? super Integer, ? super String, ? super Integer, ? super Integer, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -328,7 +328,7 @@ public class Raid extends TableImpl<RaidRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function20<? super String, ? super Long, ? super String, ? super Integer, ? super String, ? super Boolean, ? super Metaschema, ? super JSONB, ? super LocalDate, ? super LocalDateTime, ? super Integer, ? super String, ? super String, ? super Integer, ? super String, ? super String, ? super Integer, ? super String, ? super Integer, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function20<? super String, ? super Long, ? super String, ? super Integer, ? super String, ? super Boolean, ? super Metaschema, ? super JSONB, ? super LocalDate, ? super LocalDateTime, ? super Integer, ? super String, ? super String, ? super Integer, ? super LocalDate, ? super String, ? super Integer, ? super String, ? super Integer, ? super Integer, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

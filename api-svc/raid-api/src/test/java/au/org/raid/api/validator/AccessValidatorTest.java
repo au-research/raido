@@ -38,7 +38,7 @@ class AccessValidatorTest {
 
         final var access = new Access()
                 .type(type)
-                .accessStatement(new AccessStatement().text("Embargoed"))
+                .statement(new AccessStatement().text("Embargoed"))
                 .embargoExpiry(LocalDate.now());
 
         final List<ValidationFailure> failures = validator.validate(access);
@@ -78,7 +78,7 @@ class AccessValidatorTest {
 
         final var access = new Access()
                 .type(type)
-                .accessStatement(accessStatement)
+                .statement(accessStatement)
                 .embargoExpiry(LocalDate.now());
 
         final var failure = new ValidationFailure()
@@ -119,7 +119,7 @@ class AccessValidatorTest {
 
         final var access = new Access()
                 .type(type)
-                .accessStatement(new AccessStatement().text("access statement"));
+                .statement(new AccessStatement().text("access statement"));
 
         final List<ValidationFailure> failures = validator.validate(access);
 
@@ -146,7 +146,7 @@ class AccessValidatorTest {
 
         final var access = new Access()
                 .type(type)
-                .accessStatement(accessStatement);
+                .statement(accessStatement);
 
         final var failure = new ValidationFailure();
 
@@ -186,7 +186,7 @@ class AccessValidatorTest {
 
         final var access = new Access()
                 .type(type)
-                .accessStatement(new AccessStatement().text("Embargoed"))
+                .statement(new AccessStatement().text("Embargoed"))
                 .embargoExpiry(LocalDate.now().plusMonths(19));
 
         final List<ValidationFailure> failures = validator.validate(access);

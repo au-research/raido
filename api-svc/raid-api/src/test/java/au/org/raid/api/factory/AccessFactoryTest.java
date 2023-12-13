@@ -33,7 +33,7 @@ class AccessFactoryTest {
                 .type(new AccessTypeWithSchemaUri()
                         .id(CLOSED_ID)
                         .schemaUri(ACCESS_TYPE_SCHEMA_URI))
-                .accessStatement(new AccessStatement().text(accessStatement));
+                .statement(new AccessStatement().text(accessStatement));
 
         assertThat(result, is(expected));
     }

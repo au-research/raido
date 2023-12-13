@@ -19,7 +19,11 @@ public class RelatedRaidService {
     private final RelatedRaidTypeRepository relatedRaidTypeRepository;
     private final RelatedRaidRepository relatedRaidRepository;
     private final RelatedRaidRecordFactory relatedRaidRecordFactory;
-    public void create(final List<RelatedRaid> relatedRaids, final String raidName) {
+    public void create(final List<RelatedRaid> relatedRaids, final String handle) {
+        if (relatedRaids == null) {
+            return;
+        }
+
         for (final var relatedRaid : relatedRaids) {
             final var relatedRaidType = relatedRaid.getType();
 
@@ -33,7 +37,7 @@ public class RelatedRaidService {
                             "Related raid type %s not found in schema %s".formatted(relatedRaidType.getId(), relatedRaidType.getSchemaUri())));
 
             final var relatedRaidRecord = relatedRaidRecordFactory.create(
-                    raidName, relatedRaid.getId(), relatedRaidTypeRecord.getId());
+                    handle, relatedRaid.getId(), relatedRaidTypeRecord.getId());
 
             relatedRaidRepository.create(relatedRaidRecord);
         }

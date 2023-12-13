@@ -228,6 +228,7 @@ public class RaidV1 implements RaidV1Api {
                 startDate(formatIsoDate(raid.raid().getStartDate())).
                 creationDate(formatDynamoDateTime(raid.raid().getDateCreated())).
                 meta(new RaidModelMeta().
+                        name(raid.raid().getPrimaryTitle()).
                         description(description)).
                 providers(emptyList()).
                 institutions(emptyList());

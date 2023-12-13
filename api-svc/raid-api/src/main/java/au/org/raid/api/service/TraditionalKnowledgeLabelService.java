@@ -21,7 +21,11 @@ public class TraditionalKnowledgeLabelService {
     private final RaidTraditionalKnowledgeLabelRecordFactory raidTraditionalKnowledgeLabelRecordFactory;
     private final RaidTraditionalKnowledgeLabelRepository raidTraditionalKnowledgeLabelRepository;
 
-    public void create(final List<TraditionalKnowledgeLabel> traditionalKnowledgeLabels, final String raidName) {
+    public void create(final List<TraditionalKnowledgeLabel> traditionalKnowledgeLabels, final String handle) {
+        if (traditionalKnowledgeLabels == null) {
+            return;
+        }
+
         for (final var traditionalKnowledgeLabel : traditionalKnowledgeLabels) {
             final var traditionalKnowledgeLabelSchemaRecord =
                     traditionalKnowledgeLabelSchemaRepository.findByUri(traditionalKnowledgeLabel.getSchemaUri())
@@ -35,7 +39,7 @@ public class TraditionalKnowledgeLabelService {
                     .orElse(null);
 
             final var raidTraditionalKnowledgeLabelRecord = raidTraditionalKnowledgeLabelRecordFactory.create(
-                    raidName, traditionalKnowledgeLabelId, traditionalKnowledgeLabelSchemaRecord.getId()
+                    handle, traditionalKnowledgeLabelId, traditionalKnowledgeLabelSchemaRecord.getId()
             );
 
             raidTraditionalKnowledgeLabelRepository.create(raidTraditionalKnowledgeLabelRecord);

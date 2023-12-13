@@ -15,9 +15,13 @@ import java.util.List;
 public class AlternateIdentifierService {
     private final RaidAlternateIdentifierRepository raidAlternateIdentifierRepository;
     private final RaidAlternateIdentifierRecordFactory raidAlternateIdentifierRecordFactory;
-    public void create(final List<AlternateIdentifier> alternateIdentifiers, final String raidName) {
+    public void create(final List<AlternateIdentifier> alternateIdentifiers, final String handle) {
+        if (alternateIdentifiers == null) {
+            return;
+        }
+
         for (final var alternateIdentifier : alternateIdentifiers) {
-            final var raidAlternateIdentifierRecord = raidAlternateIdentifierRecordFactory.create(alternateIdentifier, raidName);
+            final var raidAlternateIdentifierRecord = raidAlternateIdentifierRecordFactory.create(alternateIdentifier, handle);
             raidAlternateIdentifierRepository.create(raidAlternateIdentifierRecord);
         }
     }

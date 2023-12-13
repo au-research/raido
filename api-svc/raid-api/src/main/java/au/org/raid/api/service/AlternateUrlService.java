@@ -16,9 +16,13 @@ public class AlternateUrlService {
     private final RaidAlternateUrlRepository raidAlternateUrlRepository;
     private final RaidAlternateUrlRecordFactory raidAlternateUrlRecordFactory;
 
-    public void create(final List<AlternateUrl> alternateUrls, final String raidName) {
+    public void create(final List<AlternateUrl> alternateUrls, final String handle) {
+        if (alternateUrls == null) {
+            return;
+        }
+
         for (final var alternateUrl : alternateUrls) {
-            final var raidAlternateUrlRecord = raidAlternateUrlRecordFactory.create(alternateUrl, raidName);
+            final var raidAlternateUrlRecord = raidAlternateUrlRecordFactory.create(alternateUrl, handle);
             raidAlternateUrlRepository.create(raidAlternateUrlRecord);
         }
     }

@@ -21,7 +21,7 @@ public class DescriptionService {
     private final RaidDescriptionRecordFactory raidDescriptionRecordFactory;
     private final RaidDescriptionRepository raidDescriptionRepository;
 
-    public void create(final List<Description> descriptions, final String raidName) {
+    public void create(final List<Description> descriptions, final String handle) {
         for (final var description : descriptions) {
             final var descriptionType = description.getType();
 
@@ -38,7 +38,7 @@ public class DescriptionService {
             final var languageId = languageService.findLanguageId(description.getLanguage());
 
             final var raidDescriptionRecord = raidDescriptionRecordFactory.create(
-                    raidName,
+                    handle,
                     description.getText(),
                     descriptionTypeRecord.getId(),
                     languageId);

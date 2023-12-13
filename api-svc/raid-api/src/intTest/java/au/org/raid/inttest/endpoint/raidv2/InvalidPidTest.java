@@ -161,10 +161,10 @@ public class InvalidPidTest extends IntegrationTestCase {
                                 .id("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/audiovisual.json")
                                 .schemaUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1")
                 )
-                .category(
+                .category(List.of(
                         new RelatedObjectCategory()
                                 .id("https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json")
-                                .schemaUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1")
+                                .schemaUri("https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1"))
                 );
     }
 }

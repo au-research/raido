@@ -15,8 +15,21 @@ public class ContributorRepository {
         return dslContext.insertInto(CONTRIBUTOR)
                 .set(CONTRIBUTOR.PID, contributor.getPid())
                 .set(CONTRIBUTOR.SCHEMA_ID, contributor.getSchemaId())
-                .onConflictDoNothing()
                 .returning()
                 .fetchOne();
+    }
+
+    public ContributorRecord findOrCreate(final ContributorRecord contributor) {
+        final var result = dslContext.select(CONTRIBUTOR.fields())
+                .from(CONTRIBUTOR)
+                .where(CONTRIBUTOR.PID.eq(contributor.getPid())
+                        .and(CONTRIBUTOR.SCHEMA_ID.eq(contributor.getSchemaId())))
+                .fetchOptional(record -> new ContributorRecord()
+                        .setId(CONTRIBUTOR.ID.getValue(record))
+                        .setPid(CONTRIBUTOR.PID.getValue(record))
+                        .setSchemaId(CONTRIBUTOR.SCHEMA_ID.getValue(record))
+                );
+
+        return result.orElseGet(() -> create(contributor));
     }
 }

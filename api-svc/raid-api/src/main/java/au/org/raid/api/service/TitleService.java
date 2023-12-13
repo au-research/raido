@@ -21,7 +21,7 @@ public class TitleService {
     private final LanguageService languageService;
     private final RaidTitleRecordFactory raidTitleRecordFactory;
 
-    public void create(final List<Title> titles, final String raidName) {
+    public void create(final List<Title> titles, final String handle) {
 
         for (final var title : titles) {
             final var titleTypeSchema = titleTypeSchemaRepository.findByUri(title.getType().getSchemaUri())
@@ -33,7 +33,7 @@ public class TitleService {
 
             final var languageId = languageService.findLanguageId(title.getLanguage());
 
-            final var raidTitleRecord = raidTitleRecordFactory.create(title, raidName, titleType.getId(), languageId);
+            final var raidTitleRecord = raidTitleRecordFactory.create(title, handle, titleType.getId(), languageId);
 
             raidTitleRepository.create(raidTitleRecord);
         }

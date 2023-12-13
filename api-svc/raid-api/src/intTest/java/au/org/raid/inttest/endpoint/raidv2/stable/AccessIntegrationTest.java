@@ -18,7 +18,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Mint with invalid language id fails")
     void invalidLanguageId() {
-        createRequest.getAccess().getAccessStatement().getLanguage().setId("xxx");
+        createRequest.getAccess().getStatement().getLanguage().setId("xxx");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -27,7 +27,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("access.accessStatement.language.id")
+                            .fieldId("access.statement.language.id")
                             .errorType("invalidValue")
                             .message("id does not exist within the given schema")
             );
@@ -39,7 +39,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Mint with invalid language schemaUri fails")
     void invalidLanguageSchemeUri() {
-        createRequest.getAccess().getAccessStatement().getLanguage().schemaUri("http://localhost");
+        createRequest.getAccess().getStatement().getLanguage().schemaUri("http://localhost");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -48,7 +48,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("access.accessStatement.language.schemaUri")
+                            .fieldId("access.statement.language.schemaUri")
                             .errorType("invalidValue")
                             .message("schema is unknown/unsupported")
             );
@@ -60,7 +60,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Mint with empty language schemaUri fails")
     void nullLanguageSchemeUri() {
-        createRequest.getAccess().getAccessStatement().getLanguage().schemaUri(null);
+        createRequest.getAccess().getStatement().getLanguage().schemaUri(null);
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -69,7 +69,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("access.accessStatement.language.schemaUri")
+                            .fieldId("access.statement.language.schemaUri")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -81,7 +81,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Mint with empty language schemaUri fails")
     void emptyLanguageSchemeUri() {
-        createRequest.getAccess().getAccessStatement().getLanguage().schemaUri("");
+        createRequest.getAccess().getStatement().getLanguage().schemaUri("");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -90,7 +90,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("access.accessStatement.language.schemaUri")
+                            .fieldId("access.statement.language.schemaUri")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -102,7 +102,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Mint with empty language id fails")
     void emptyLanguageId() {
-        createRequest.getAccess().getAccessStatement().getLanguage().setId("");
+        createRequest.getAccess().getStatement().getLanguage().setId("");
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -111,7 +111,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("access.accessStatement.language.id")
+                            .fieldId("access.statement.language.id")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -123,7 +123,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Mint with null language id fails")
     void nullLanguageId() {
-        createRequest.getAccess().getAccessStatement().getLanguage().setId(null);
+        createRequest.getAccess().getStatement().getLanguage().setId(null);
 
         try {
             raidApi.createRaidV1(createRequest);
@@ -132,7 +132,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
             assertThat(failures).hasSize(1);
             assertThat(failures).contains(
                     new ValidationFailure()
-                            .fieldId("access.accessStatement.language.id")
+                            .fieldId("access.statement.language.id")
                             .errorType("notSet")
                             .message("field must be set")
             );
@@ -167,7 +167,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
                         .schemaUri(ACCESS_TYPE_SCHEMA_URI)
                 )
                 .embargoExpiry(LocalDate.now())
-                .accessStatement(new AccessStatement().text("Embargoed"));
+                .statement(new AccessStatement().text("Embargoed"));
         try {
             raidApi.createRaidV1(createRequest);
         } catch (Exception e) {
@@ -183,7 +183,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
                         .id(EMBARGOED_ACCESS_TYPE)
                         .schemaUri(ACCESS_TYPE_SCHEMA_URI)
                 )
-                .accessStatement(new AccessStatement().text("Embargoed"));
+                .statement(new AccessStatement().text("Embargoed"));
         try {
             raidApi.createRaidV1(createRequest);
         } catch (RaidApiValidationException e) {
@@ -208,7 +208,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
                         .id(CLOSED_ACCESS_TYPE)
                         .schemaUri(ACCESS_TYPE_SCHEMA_URI)
                 )
-                .accessStatement(new AccessStatement().text("Closed"));
+                .statement(new AccessStatement().text("Closed"));
 
         try {
             raidApi.createRaidV1(createRequest);

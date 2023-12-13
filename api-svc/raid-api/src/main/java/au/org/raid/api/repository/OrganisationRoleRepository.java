@@ -20,6 +20,7 @@ public class OrganisationRoleRepository {
                 .where(ORGANISATION_ROLE.URI.eq(uri)
                         .and(ORGANISATION_ROLE.SCHEMA_ID.eq(schemaId)))
                 .fetchOptional(record -> new OrganisationRoleRecord()
+                        .setId(ORGANISATION_ROLE.ID.getValue(record))
                         .setSchemaId(ORGANISATION_ROLE.SCHEMA_ID.getValue(record))
                         .setUri(ORGANISATION_ROLE.URI.getValue(record))
                 );

@@ -34,7 +34,7 @@ class AccessStatementValidatorTest {
                 .id(TestConstants.LANGUAGE_ID)
                 .schemaUri(TestConstants.LANGUAGE_SCHEMA_URI);
 
-        when(languageValidator.validate(language, "access.accessStatement"))
+        when(languageValidator.validate(language, "access.statement"))
                 .thenReturn(Collections.emptyList());
 
         final var accessStatement = new AccessStatement()
@@ -44,18 +44,18 @@ class AccessStatementValidatorTest {
         final var failures = validationService.validate(accessStatement);
 
         assertThat(failures, empty());
-        verify(languageValidator).validate(language, "access.accessStatement");
+        verify(languageValidator).validate(language, "access.statement");
     }
 
     @Test
-    @DisplayName("Fails validation with null accessStatement")
+    @DisplayName("Fails validation with null statement")
     void nullAccessStatement() {
 
         final var failures = validationService.validate(null);
 
         assertThat(failures, is(
                 List.of(new ValidationFailure()
-                        .fieldId("access.accessStatement")
+                        .fieldId("access.statement")
                         .errorType("notSet")
                         .message("field must be set"))));
         verifyNoInteractions(languageValidator);
@@ -68,7 +68,7 @@ class AccessStatementValidatorTest {
                 .id(TestConstants.LANGUAGE_ID)
                 .schemaUri(TestConstants.LANGUAGE_SCHEMA_URI);
 
-        when(languageValidator.validate(language, "access.accessStatement"))
+        when(languageValidator.validate(language, "access.statement"))
                 .thenReturn(Collections.emptyList());
 
         final var accessStatement = new AccessStatement()
@@ -78,10 +78,10 @@ class AccessStatementValidatorTest {
 
         assertThat(failures, is(
                 List.of(new ValidationFailure()
-                        .fieldId("access.accessStatement.statement")
+                        .fieldId("access.statement.statement")
                         .errorType("notSet")
                         .message("field must be set"))));
-        verify(languageValidator).validate(language, "access.accessStatement");
+        verify(languageValidator).validate(language, "access.statement");
     }
 
     @Test
@@ -92,11 +92,11 @@ class AccessStatementValidatorTest {
                 .schemaUri(TestConstants.LANGUAGE_SCHEMA_URI);
 
         final var failure = new ValidationFailure()
-                .fieldId("access.accessStatement.language.id")
+                .fieldId("access.statement.language.id")
                 .errorType("notSet")
                 .message("field must be set");
 
-        when(languageValidator.validate(language, "access.accessStatement"))
+        when(languageValidator.validate(language, "access.statement"))
                 .thenReturn(List.of(failure));
 
         final var accessStatement = new AccessStatement()
@@ -106,6 +106,6 @@ class AccessStatementValidatorTest {
         final var failures = validationService.validate(accessStatement);
 
         assertThat(failures, is(List.of(failure)));
-        verify(languageValidator).validate(language, "access.accessStatement");
+        verify(languageValidator).validate(language, "access.statement");
     }
 }
