@@ -1,4 +1,4 @@
-package au.org.raid.api.service.datacite;
+package au.org.raid.api.model.datacite;
 
 import au.org.raid.api.util.ObjectUtil;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
