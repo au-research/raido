@@ -15,14 +15,16 @@ public class DescriptionTypeRepository {
     private final DSLContext dslContext;
 
     public Optional<DescriptionTypeRecord> findByUriAndSchemeId(final String uri, final int schemaId) {
-        return dslContext.select(DESCRIPTION_TYPE.fields())
-                .from(DESCRIPTION_TYPE)
+        return dslContext
+                .selectFrom(DESCRIPTION_TYPE)
                 .where(DESCRIPTION_TYPE.URI.eq(uri))
                 .and(DESCRIPTION_TYPE.SCHEMA_ID.eq(schemaId))
-                .fetchOptional(record -> new DescriptionTypeRecord()
-                        .setId(DESCRIPTION_TYPE.ID.getValue(record))
-                        .setSchemaId(DESCRIPTION_TYPE.SCHEMA_ID.getValue(record))
-                        .setUri(DESCRIPTION_TYPE.URI.getValue(record))
-                );
+                .fetchOptional();
+    }
+
+    public Optional<DescriptionTypeRecord> findById(final Integer id) {
+        return dslContext.selectFrom(DESCRIPTION_TYPE)
+                .where(DESCRIPTION_TYPE.ID.eq(id))
+                .fetchOptional();
     }
 }

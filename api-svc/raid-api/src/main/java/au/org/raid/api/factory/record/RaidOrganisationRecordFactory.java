@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RaidOrganisationRecordFactory {
-    public RaidOrganisationRecord create(final int organisationId, final String raidName) {
+    public RaidOrganisationRecord create(final int organisationId, final String handle) {
         return new RaidOrganisationRecord()
                 .setOrganisationId(organisationId)
-                .setRaidName(raidName);
+                .setHandle(handle);
     }
 }

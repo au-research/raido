@@ -58,9 +58,9 @@ public class RaidSubject extends TableImpl<RaidSubjectRecord> {
     public final TableField<RaidSubjectRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>api_svc.raid_subject.raid_name</code>.
+     * The column <code>api_svc.raid_subject.handle</code>.
      */
-    public final TableField<RaidSubjectRecord, String> RAID_NAME = createField(DSL.name("raid_name"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<RaidSubjectRecord, String> HANDLE = createField(DSL.name("handle"), SQLDataType.VARCHAR.nullable(false), this, "");
 
     /**
      * The column <code>api_svc.raid_subject.subject_type_id</code>.
@@ -117,12 +117,12 @@ public class RaidSubject extends TableImpl<RaidSubjectRecord> {
 
     @Override
     public List<UniqueKey<RaidSubjectRecord>> getUniqueKeys() {
-        return Arrays.asList(Keys.RAID_SUBJECT_RAID_NAME_SUBJECT_TYPE_ID_KEY);
+        return Arrays.asList(Keys.RAID_SUBJECT_HANDLE_SUBJECT_TYPE_ID_KEY);
     }
 
     @Override
     public List<ForeignKey<RaidSubjectRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_SUBJECT__FK_RAID_SUBJECT_RAID_NAME, Keys.RAID_SUBJECT__FK_RAID_SUBJECT_SUBJECT_ID);
+        return Arrays.asList(Keys.RAID_SUBJECT__FK_RAID_SUBJECT_HANDLE, Keys.RAID_SUBJECT__FK_RAID_SUBJECT_SUBJECT_ID);
     }
 
     private transient Raid _raid;
@@ -133,7 +133,7 @@ public class RaidSubject extends TableImpl<RaidSubjectRecord> {
      */
     public Raid raid() {
         if (_raid == null)
-            _raid = new Raid(this, Keys.RAID_SUBJECT__FK_RAID_SUBJECT_RAID_NAME);
+            _raid = new Raid(this, Keys.RAID_SUBJECT__FK_RAID_SUBJECT_HANDLE);
 
         return _raid;
     }

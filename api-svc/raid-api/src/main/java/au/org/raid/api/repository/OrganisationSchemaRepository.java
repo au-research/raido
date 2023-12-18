@@ -14,12 +14,14 @@ import static au.org.raid.db.jooq.tables.OrganisationSchema.ORGANISATION_SCHEMA;
 public class OrganisationSchemaRepository {
     private final DSLContext dslContext;
     public Optional<OrganisationSchemaRecord> findByUri(final String uri) {
-        return dslContext.select(ORGANISATION_SCHEMA.fields())
-                .from(ORGANISATION_SCHEMA)
+        return dslContext.selectFrom(ORGANISATION_SCHEMA)
                 .where(ORGANISATION_SCHEMA.URI.eq(uri))
-                .fetchOptional(record -> new OrganisationSchemaRecord()
-                        .setId(ORGANISATION_SCHEMA.ID.getValue(record))
-                        .setUri(ORGANISATION_SCHEMA.URI.getValue(record))
-                );
+                .fetchOptional();
+    }
+
+    public Optional<OrganisationSchemaRecord> findById(final Integer id) {
+        return dslContext.selectFrom(ORGANISATION_SCHEMA)
+                .where(ORGANISATION_SCHEMA.ID.eq(id))
+                .fetchOptional();
     }
 }

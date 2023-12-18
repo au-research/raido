@@ -52,9 +52,9 @@ public class RaidAlternateIdentifier extends TableImpl<RaidAlternateIdentifierRe
     }
 
     /**
-     * The column <code>api_svc.raid_alternate_identifier.raid_name</code>.
+     * The column <code>api_svc.raid_alternate_identifier.handle</code>.
      */
-    public final TableField<RaidAlternateIdentifierRecord, String> RAID_NAME = createField(DSL.name("raid_name"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<RaidAlternateIdentifierRecord, String> HANDLE = createField(DSL.name("handle"), SQLDataType.VARCHAR.nullable(false), this, "");
 
     /**
      * The column <code>api_svc.raid_alternate_identifier.id</code>.
@@ -113,7 +113,7 @@ public class RaidAlternateIdentifier extends TableImpl<RaidAlternateIdentifierRe
 
     @Override
     public List<ForeignKey<RaidAlternateIdentifierRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_ALTERNATE_IDENTIFIER__FK_RAID_ALTERNATE_IDENTIFIER_RAID_NAME);
+        return Arrays.asList(Keys.RAID_ALTERNATE_IDENTIFIER__FK_RAID_ALTERNATE_IDENTIFIER_HANDLE);
     }
 
     private transient Raid _raid;
@@ -123,7 +123,7 @@ public class RaidAlternateIdentifier extends TableImpl<RaidAlternateIdentifierRe
      */
     public Raid raid() {
         if (_raid == null)
-            _raid = new Raid(this, Keys.RAID_ALTERNATE_IDENTIFIER__FK_RAID_ALTERNATE_IDENTIFIER_RAID_NAME);
+            _raid = new Raid(this, Keys.RAID_ALTERNATE_IDENTIFIER__FK_RAID_ALTERNATE_IDENTIFIER_HANDLE);
 
         return _raid;
     }

@@ -15,4 +15,10 @@ public class AlternateIdentifierFactory {
                 .id(alternateIdentifierBlock.getAlternateIdentifier())
                 .type(alternateIdentifierBlock.getAlternateIdentifierType());
     }
+
+    public AlternateIdentifier create(final String id, final String type) {
+        return new AlternateIdentifier()
+                .id(id)
+                .type(type);
+    }
 }

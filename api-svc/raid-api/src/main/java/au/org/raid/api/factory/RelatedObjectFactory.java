@@ -40,4 +40,13 @@ public class RelatedObjectFactory {
                         .id(relatedObjectBlock.getRelatedObjectType())
                 );
     }
+
+    public RelatedObject create(final String id, final String schemaUri, final RelatedObjectType type, final List<RelatedObjectCategory> categories) {
+        return new RelatedObject()
+                .id(id)
+                .schemaUri(schemaUri)
+                .type(type)
+                .category(categories);
+    }
+
 }

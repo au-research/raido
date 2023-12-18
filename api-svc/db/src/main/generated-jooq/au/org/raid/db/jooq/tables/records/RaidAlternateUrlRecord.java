@@ -21,17 +21,17 @@ public class RaidAlternateUrlRecord extends UpdatableRecordImpl<RaidAlternateUrl
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>api_svc.raid_alternate_url.raid_name</code>.
+     * Setter for <code>api_svc.raid_alternate_url.handle</code>.
      */
-    public RaidAlternateUrlRecord setRaidName(String value) {
+    public RaidAlternateUrlRecord setHandle(String value) {
         set(0, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.raid_alternate_url.raid_name</code>.
+     * Getter for <code>api_svc.raid_alternate_url.handle</code>.
      */
-    public String getRaidName() {
+    public String getHandle() {
         return (String) get(0);
     }
 
@@ -75,7 +75,7 @@ public class RaidAlternateUrlRecord extends UpdatableRecordImpl<RaidAlternateUrl
 
     @Override
     public Field<String> field1() {
-        return RaidAlternateUrl.RAID_ALTERNATE_URL.RAID_NAME;
+        return RaidAlternateUrl.RAID_ALTERNATE_URL.HANDLE;
     }
 
     @Override
@@ -85,7 +85,7 @@ public class RaidAlternateUrlRecord extends UpdatableRecordImpl<RaidAlternateUrl
 
     @Override
     public String component1() {
-        return getRaidName();
+        return getHandle();
     }
 
     @Override
@@ -95,7 +95,7 @@ public class RaidAlternateUrlRecord extends UpdatableRecordImpl<RaidAlternateUrl
 
     @Override
     public String value1() {
-        return getRaidName();
+        return getHandle();
     }
 
     @Override
@@ -105,7 +105,7 @@ public class RaidAlternateUrlRecord extends UpdatableRecordImpl<RaidAlternateUrl
 
     @Override
     public RaidAlternateUrlRecord value1(String value) {
-        setRaidName(value);
+        setHandle(value);
         return this;
     }
 
@@ -136,10 +136,10 @@ public class RaidAlternateUrlRecord extends UpdatableRecordImpl<RaidAlternateUrl
     /**
      * Create a detached, initialised RaidAlternateUrlRecord
      */
-    public RaidAlternateUrlRecord(String raidName, String url) {
+    public RaidAlternateUrlRecord(String handle, String url) {
         super(RaidAlternateUrl.RAID_ALTERNATE_URL);
 
-        setRaidName(raidName);
+        setHandle(handle);
         setUrl(url);
     }
 }

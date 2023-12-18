@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 import static au.org.raid.db.jooq.tables.RaidContributorPosition.RAID_CONTRIBUTOR_POSITION;
 
 @Repository
@@ -19,5 +21,11 @@ public class RaidContributorPositionRepository {
                 .set(RAID_CONTRIBUTOR_POSITION.END_DATE, contributorPosition.getEndDate())
                 .returning()
                 .fetchOne();
+    }
+
+    public List<RaidContributorPositionRecord> findAllByRaidContributorId(final Integer raidContributorId) {
+        return dslContext.selectFrom(RAID_CONTRIBUTOR_POSITION)
+                .where(RAID_CONTRIBUTOR_POSITION.RAID_CONTRIBUTOR_ID.eq(raidContributorId))
+                .fetch();
     }
 }

@@ -15,14 +15,15 @@ public class OrganisationRoleRepository {
     private final DSLContext dslContext;
 
     public Optional<OrganisationRoleRecord> findByUriAndSchemaId(final String uri, final int schemaId) {
-        return dslContext.select(ORGANISATION_ROLE.fields())
-                .from(ORGANISATION_ROLE)
+        return dslContext.selectFrom(ORGANISATION_ROLE)
                 .where(ORGANISATION_ROLE.URI.eq(uri)
                         .and(ORGANISATION_ROLE.SCHEMA_ID.eq(schemaId)))
-                .fetchOptional(record -> new OrganisationRoleRecord()
-                        .setId(ORGANISATION_ROLE.ID.getValue(record))
-                        .setSchemaId(ORGANISATION_ROLE.SCHEMA_ID.getValue(record))
-                        .setUri(ORGANISATION_ROLE.URI.getValue(record))
-                );
+                .fetchOptional();
+    }
+
+    public Optional<OrganisationRoleRecord> findById(final Integer id) {
+        return dslContext.selectFrom(ORGANISATION_ROLE)
+                .where(ORGANISATION_ROLE.ID.eq(id))
+                .fetchOptional();
     }
 }

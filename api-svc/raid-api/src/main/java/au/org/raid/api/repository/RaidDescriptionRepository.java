@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 import static au.org.raid.db.jooq.tables.RaidDescription.RAID_DESCRIPTION;
 
 @Repository
@@ -14,11 +16,17 @@ public class RaidDescriptionRepository {
 
     public RaidDescriptionRecord create(final RaidDescriptionRecord record) {
         return dslContext.insertInto(RAID_DESCRIPTION)
-                .set(RAID_DESCRIPTION.RAID_NAME, record.getRaidName())
+                .set(RAID_DESCRIPTION.HANDLE, record.getHandle())
                 .set(RAID_DESCRIPTION.DESCRIPTION_TYPE_ID, record.getDescriptionTypeId())
                 .set(RAID_DESCRIPTION.TEXT, record.getText())
                 .set(RAID_DESCRIPTION.LANGUAGE_ID, record.getLanguageId())
                 .returning()
                 .fetchOne();
+    }
+
+    public List<RaidDescriptionRecord> findAllByHandle(final String handle) {
+        return dslContext.selectFrom(RAID_DESCRIPTION)
+                .where(RAID_DESCRIPTION.HANDLE.eq(handle))
+                .fetch();
     }
 }

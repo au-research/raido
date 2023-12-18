@@ -14,4 +14,9 @@ public class AlternateUrlFactory {
         return new AlternateUrl()
                 .url(alternateUrlBlock.getUrl());
     }
+
+    public AlternateUrl create(final String url) {
+        return new AlternateUrl()
+                .url(url);
+    }
 }

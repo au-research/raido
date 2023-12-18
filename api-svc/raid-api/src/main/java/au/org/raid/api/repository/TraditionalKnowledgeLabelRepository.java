@@ -15,14 +15,15 @@ public class TraditionalKnowledgeLabelRepository {
     private final DSLContext dslContext;
 
     public Optional<TraditionalKnowledgeLabelRecord> findByUriAndSchemaId(final String uri, final int schemaId) {
-        return dslContext.select(TRADITIONAL_KNOWLEDGE_LABEL.fields())
-                .from(TRADITIONAL_KNOWLEDGE_LABEL)
+        return dslContext.selectFrom(TRADITIONAL_KNOWLEDGE_LABEL)
                 .where(TRADITIONAL_KNOWLEDGE_LABEL.URI.eq(uri)
                         .and(TRADITIONAL_KNOWLEDGE_LABEL.SCHEMA_ID.eq(schemaId)))
-                .fetchOptional(record -> new TraditionalKnowledgeLabelRecord()
-                        .setId(TRADITIONAL_KNOWLEDGE_LABEL.ID.getValue(record))
-                        .setSchemaId(TRADITIONAL_KNOWLEDGE_LABEL.SCHEMA_ID.getValue(record))
-                        .setUri(TRADITIONAL_KNOWLEDGE_LABEL.URI.getValue(record))
-                );
+                .fetchOptional();
+    }
+
+    public Optional<TraditionalKnowledgeLabelRecord> findById(final Integer id) {
+        return dslContext.selectFrom(TRADITIONAL_KNOWLEDGE_LABEL)
+                .where(TRADITIONAL_KNOWLEDGE_LABEL.ID.eq(id))
+                .fetchOptional();
     }
 }

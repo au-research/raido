@@ -146,11 +146,11 @@ class RaidStableV1ServiceTest {
 
         raidRecord.setMetadata(JSONB.valueOf(raidJson));
 
-        when(raidRepository.findByHandle(handle)).thenReturn(Optional.of(raidRecord));
 
         final var expected = objectMapper.readValue(raidJson(), RaidDto.class);
+        when(raidIngestService.findByHandle(handle)).thenReturn(Optional.of(expected));
 
-        when(raidDtoFactory.create(raidRecord)).thenReturn(expected);
+//        when(raidDtoFactory.create(raidRecord)).thenReturn(expected);
 
         RaidDto result = raidStableV1Service.read(handle);
         assertThat(result, Matchers.is(expected));
@@ -182,7 +182,7 @@ class RaidStableV1ServiceTest {
         final ServicePointRecord servicePointRecord = new ServicePointRecord();
         servicePointRecord.setId(servicePointId);
 
-        when(raidRepository.findByHandle(handle)).thenReturn(Optional.empty());
+        when(raidIngestService.findByHandle(handle)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> raidStableV1Service.read(handle));
     }

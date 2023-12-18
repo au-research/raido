@@ -15,12 +15,14 @@ public class RelatedObjectSchemaRepository {
     private final DSLContext dslContext;
 
     public Optional<RelatedObjectSchemaRecord> findByUri(final String uri) {
-        return dslContext.select(RELATED_OBJECT_SCHEMA.fields())
-                .from(RELATED_OBJECT_SCHEMA)
+        return dslContext.selectFrom(RELATED_OBJECT_SCHEMA)
                 .where(RELATED_OBJECT_SCHEMA.URI.eq(uri))
-                .fetchOptional(record -> new RelatedObjectSchemaRecord()
-                        .setId(RELATED_OBJECT_SCHEMA.ID.getValue(record))
-                        .setUri(RELATED_OBJECT_SCHEMA.URI.getValue(record))
-                );
+                .fetchOptional();
+    }
+
+    public Optional<RelatedObjectSchemaRecord> findById(final Integer id) {
+        return dslContext.selectFrom(RELATED_OBJECT_SCHEMA)
+                .where(RELATED_OBJECT_SCHEMA.ID.eq(id))
+                .fetchOptional();
     }
 }

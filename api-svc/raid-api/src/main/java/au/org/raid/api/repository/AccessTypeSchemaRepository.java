@@ -15,12 +15,14 @@ public class AccessTypeSchemaRepository {
     private final DSLContext dslContext;
 
     public Optional<AccessTypeSchemaRecord> findByUri(final String uri) {
-        return dslContext.select(ACCESS_TYPE_SCHEMA.fields())
-                .from(ACCESS_TYPE_SCHEMA)
+        return dslContext.selectFrom(ACCESS_TYPE_SCHEMA)
                 .where(ACCESS_TYPE_SCHEMA.URI.eq(uri))
-                .fetchOptional(record -> new AccessTypeSchemaRecord()
-                        .setId(ACCESS_TYPE_SCHEMA.ID.getValue(record))
-                        .setUri(ACCESS_TYPE_SCHEMA.URI.getValue(record))
-                );
+                .fetchOptional();
+    }
+
+    public Optional<AccessTypeSchemaRecord> findById(final Integer id) {
+        return dslContext.selectFrom(ACCESS_TYPE_SCHEMA)
+                .where(ACCESS_TYPE_SCHEMA.ID.eq(id))
+                .fetchOptional();
     }
 }

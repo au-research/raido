@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RaidAlternateUrlRecordFactory {
-    public RaidAlternateUrlRecord create(final AlternateUrl alternateUrl, final String raidName) {
+    public RaidAlternateUrlRecord create(final AlternateUrl alternateUrl, final String handle) {
         return new RaidAlternateUrlRecord()
-                .setRaidName(raidName)
+                .setHandle(handle)
                 .setUrl(alternateUrl.getUrl());
     }
 }

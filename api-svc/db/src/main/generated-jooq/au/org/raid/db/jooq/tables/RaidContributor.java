@@ -58,9 +58,9 @@ public class RaidContributor extends TableImpl<RaidContributorRecord> {
     public final TableField<RaidContributorRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>api_svc.raid_contributor.raid_name</code>.
+     * The column <code>api_svc.raid_contributor.handle</code>.
      */
-    public final TableField<RaidContributorRecord, String> RAID_NAME = createField(DSL.name("raid_name"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<RaidContributorRecord, String> HANDLE = createField(DSL.name("handle"), SQLDataType.VARCHAR.nullable(false), this, "");
 
     /**
      * The column <code>api_svc.raid_contributor.contributor_id</code>.
@@ -127,12 +127,12 @@ public class RaidContributor extends TableImpl<RaidContributorRecord> {
 
     @Override
     public List<UniqueKey<RaidContributorRecord>> getUniqueKeys() {
-        return Arrays.asList(Keys.RAID_CONTRIBUTOR_RAID_NAME_CONTRIBUTOR_ID_KEY);
+        return Arrays.asList(Keys.RAID_CONTRIBUTOR_HANDLE_CONTRIBUTOR_ID_KEY);
     }
 
     @Override
     public List<ForeignKey<RaidContributorRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_CONTRIBUTOR__FK_RAID_CONTRIBUTOR_RAID_NAME, Keys.RAID_CONTRIBUTOR__FK_RAID_CONTRIBUTOR_CONTRIBUTOR_ID);
+        return Arrays.asList(Keys.RAID_CONTRIBUTOR__FK_RAID_CONTRIBUTOR_HANDLE, Keys.RAID_CONTRIBUTOR__FK_RAID_CONTRIBUTOR_CONTRIBUTOR_ID);
     }
 
     private transient Raid _raid;
@@ -143,7 +143,7 @@ public class RaidContributor extends TableImpl<RaidContributorRecord> {
      */
     public Raid raid() {
         if (_raid == null)
-            _raid = new Raid(this, Keys.RAID_CONTRIBUTOR__FK_RAID_CONTRIBUTOR_RAID_NAME);
+            _raid = new Raid(this, Keys.RAID_CONTRIBUTOR__FK_RAID_CONTRIBUTOR_HANDLE);
 
         return _raid;
     }

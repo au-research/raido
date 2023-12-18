@@ -23,4 +23,10 @@ public class RelatedObjectTypeSchemaRepository {
                         .setUri(RELATED_OBJECT_TYPE_SCHEMA.URI.getValue(record))
                 );
     }
+
+    public Optional<RelatedObjectTypeSchemaRecord> findById(final Integer id) {
+        return dslContext.selectFrom(RELATED_OBJECT_TYPE_SCHEMA)
+                .where(RELATED_OBJECT_TYPE_SCHEMA.ID.eq(id))
+                .fetchOptional();
+    }
 }

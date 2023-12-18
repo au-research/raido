@@ -58,9 +58,9 @@ public class RaidTitle extends TableImpl<RaidTitleRecord> {
     public final TableField<RaidTitleRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>api_svc.raid_title.raid_name</code>.
+     * The column <code>api_svc.raid_title.handle</code>.
      */
-    public final TableField<RaidTitleRecord, String> RAID_NAME = createField(DSL.name("raid_name"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<RaidTitleRecord, String> HANDLE = createField(DSL.name("handle"), SQLDataType.VARCHAR.nullable(false), this, "");
 
     /**
      * The column <code>api_svc.raid_title.title_type_id</code>.
@@ -137,7 +137,7 @@ public class RaidTitle extends TableImpl<RaidTitleRecord> {
 
     @Override
     public List<ForeignKey<RaidTitleRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_TITLE__FK_TITLE_RAID_NAME, Keys.RAID_TITLE__FK_TITLE_TYPE, Keys.RAID_TITLE__FK_TITLE_LANGUAGE_ID);
+        return Arrays.asList(Keys.RAID_TITLE__FK_TITLE_HANDLE, Keys.RAID_TITLE__FK_TITLE_TYPE, Keys.RAID_TITLE__FK_TITLE_LANGUAGE_ID);
     }
 
     private transient Raid _raid;
@@ -149,7 +149,7 @@ public class RaidTitle extends TableImpl<RaidTitleRecord> {
      */
     public Raid raid() {
         if (_raid == null)
-            _raid = new Raid(this, Keys.RAID_TITLE__FK_TITLE_RAID_NAME);
+            _raid = new Raid(this, Keys.RAID_TITLE__FK_TITLE_HANDLE);
 
         return _raid;
     }

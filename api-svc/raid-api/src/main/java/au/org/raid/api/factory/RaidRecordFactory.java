@@ -66,6 +66,7 @@ public class RaidRecordFactory {
                 .setStartDate(DateUtil.parseDate(raid.getDate().getStartDate()))
                 .setDateCreated(LocalDateTime.now())
                 .setVersion(raid.getIdentifier().getVersion())
+                .setStartDateString(raid.getDate().getStartDate())
                 .setEndDate(raid.getDate().getEndDate())
                 .setLicense(raid.getIdentifier().getLicense())
                 .setAccessTypeId(accessTypeId)

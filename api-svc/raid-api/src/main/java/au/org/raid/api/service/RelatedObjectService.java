@@ -1,5 +1,6 @@
 package au.org.raid.api.service;
 
+import au.org.raid.api.factory.RelatedObjectFactory;
 import au.org.raid.api.factory.record.RaidRelatedObjectRecordFactory;
 import au.org.raid.api.factory.record.RelatedObjectRecordFactory;
 import au.org.raid.api.repository.*;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,6 +24,8 @@ public class RelatedObjectService {
     private final RelatedObjectRecordFactory relatedObjectRecordFactory;
     private final RaidRelatedObjectRecordFactory raidRelatedObjectRecordFactory;
     private final RaidRelatedObjectCategoryService raidRelatedObjectCategoryService;
+    private final RelatedObjectTypeService relatedObjectTypeService;
+    private final RelatedObjectFactory relatedObjectFactory;
 
     public void create(final List<RelatedObject> relatedObjects, final String handle) {
         if (relatedObjects == null) {
@@ -39,24 +43,52 @@ public class RelatedObjectService {
             final var savedRelatedObjectRecord = relatedObjectRepository.findOrCreate(relatedObjectRecord);
 
             final var relatedObjectTypeSchemaRecord =
-                    relatedObjectTypeSchemaRepository.findByUri(relatedObject.getSchemaUri())
+                    relatedObjectTypeSchemaRepository.findByUri(relatedObject.getType().getSchemaUri())
                             .orElseThrow(() -> new RuntimeException(
                                     "Related object schema not found %s".formatted(relatedObject.getSchemaUri())));
 
             final var relatedObjectTypeRecord = relatedObjectTypeRepository.findByUriAndSchemaId(
-                    relatedObject.getId(),
+                    relatedObject.getType().getId(),
                     relatedObjectTypeSchemaRecord.getId()
             ).orElseThrow(() -> new RuntimeException("Related object type %s not found in schema %s"
                     .formatted(relatedObject.getId(), relatedObject.getSchemaUri())));
 
-            final var raidRelatedObjectRecord = raidRelatedObjectRecordFactory.create(
-                    handle, savedRelatedObjectRecord.getId(), relatedObjectTypeRecord.getId());
-
-            raidRelatedObjectRepository.create(raidRelatedObjectRecord);
+            final var raidRelatedObjectRecord = raidRelatedObjectRepository.create(raidRelatedObjectRecordFactory.create(
+                    handle, savedRelatedObjectRecord.getId(), relatedObjectTypeRecord.getId()));
 
             for (final var category : relatedObject.getCategory()) {
                 raidRelatedObjectCategoryService.create(category, raidRelatedObjectRecord.getId());
             }
         }
+    }
+
+    public List<RelatedObject> findAllByHandle(final String handle) {
+        final var relatedObjects = new ArrayList<RelatedObject>();
+        final var records = raidRelatedObjectRepository.findAllByHandle(handle);
+
+        for (final var record : records) {
+            final var relatedObjectId = record.getRelatedObjectId();
+
+            final var relatedObjectRecord = relatedObjectRepository.findById(relatedObjectId)
+                    .orElseThrow(() -> new RuntimeException(
+                            "Related object not found with id %d".formatted(relatedObjectId)));
+
+            final var schemaId = relatedObjectRecord.getSchemaId();
+
+            final var relatedObjectSchemaRecord = relatedObjectSchemaRepository.findById(schemaId)
+                    .orElseThrow(() -> new RuntimeException("Related object schema not found with id %d".formatted(schemaId)));
+
+            final var type = relatedObjectTypeService.findById(record.getRelatedObjectTypeId());
+            final var categories = raidRelatedObjectCategoryService.findAllByRaidRelatedObjectId(record.getId());
+
+            relatedObjects.add(relatedObjectFactory.create(
+                    relatedObjectRecord.getPid(),
+                    relatedObjectSchemaRecord.getUri(),
+                    type,
+                    categories
+            ));
+
+        }
+        return relatedObjects;
     }
 }

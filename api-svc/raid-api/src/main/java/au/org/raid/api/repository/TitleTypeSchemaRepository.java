@@ -15,12 +15,14 @@ public class TitleTypeSchemaRepository {
     private final DSLContext dslContext;
 
     public Optional<TitleTypeSchemaRecord> findByUri(final String uri) {
-        return dslContext.select(TITLE_TYPE_SCHEMA.fields())
-                .from(TITLE_TYPE_SCHEMA)
+        return dslContext.selectFrom(TITLE_TYPE_SCHEMA)
                 .where(TITLE_TYPE_SCHEMA.URI.eq(uri))
-                .fetchOptional(record -> new TitleTypeSchemaRecord()
-                        .setId(TITLE_TYPE_SCHEMA.ID.getValue(record))
-                        .setUri(TITLE_TYPE_SCHEMA.URI.getValue(record))
-                );
+                .fetchOptional();
+    }
+
+    public Optional<TitleTypeSchemaRecord> findById(final Integer id) {
+        return dslContext.selectFrom(TITLE_TYPE_SCHEMA)
+                .where(TITLE_TYPE_SCHEMA.ID.eq(id))
+                .fetchOptional();
     }
 }

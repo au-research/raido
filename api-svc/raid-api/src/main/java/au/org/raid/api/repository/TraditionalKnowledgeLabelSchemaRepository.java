@@ -1,5 +1,6 @@
 package au.org.raid.api.repository;
 
+import au.org.raid.db.jooq.tables.records.TraditionalKnowledgeLabelRecord;
 import au.org.raid.db.jooq.tables.records.TraditionalKnowledgeLabelSchemaRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -21,5 +22,11 @@ public class TraditionalKnowledgeLabelSchemaRepository {
                         .setId(TRADITIONAL_KNOWLEDGE_LABEL_SCHEMA.ID.getValue(record))
                         .setUri(TRADITIONAL_KNOWLEDGE_LABEL_SCHEMA.URI.getValue(record))
                 );
+    }
+
+    public Optional<TraditionalKnowledgeLabelSchemaRecord> findById(final Integer id) {
+        return dslContext.selectFrom(TRADITIONAL_KNOWLEDGE_LABEL_SCHEMA)
+                .where(TRADITIONAL_KNOWLEDGE_LABEL_SCHEMA.ID.eq(id))
+                .fetchOptional();
     }
 }

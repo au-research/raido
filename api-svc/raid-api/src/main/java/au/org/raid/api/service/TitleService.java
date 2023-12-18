@@ -1,5 +1,6 @@
 package au.org.raid.api.service;
 
+import au.org.raid.api.factory.TitleFactory;
 import au.org.raid.api.factory.record.RaidTitleRecordFactory;
 import au.org.raid.api.repository.RaidTitleRepository;
 import au.org.raid.api.repository.TitleTypeRepository;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,6 +22,7 @@ public class TitleService {
     private final TitleTypeSchemaRepository titleTypeSchemaRepository;
     private final LanguageService languageService;
     private final RaidTitleRecordFactory raidTitleRecordFactory;
+    private final TitleFactory titleFactory;
 
     public void create(final List<Title> titles, final String handle) {
 
@@ -37,5 +40,29 @@ public class TitleService {
 
             raidTitleRepository.create(raidTitleRecord);
         }
+    }
+
+    public List<Title> findAllByHandle(final String handle) {
+        final var titles = new ArrayList<Title>();
+        final var records = raidTitleRepository.findAllByHandle(handle);
+
+        for (final var record : records) {
+            final var titleTypeId = record.getTitleTypeId();
+
+            final var titleTypeRecord = titleTypeRepository.findById(titleTypeId)
+                    .orElseThrow(() -> new RuntimeException(
+                            "Title type not found with id %d".formatted(titleTypeId)));
+
+            final var titleTypeSchemaId = titleTypeRecord.getSchemaId();
+            final var titleTypeSchemaRecord = titleTypeSchemaRepository.findById(titleTypeSchemaId)
+                    .orElseThrow(() -> new RuntimeException(
+                            "Title type schema not found with id %s".formatted(titleTypeSchemaId)));
+
+            final var language = languageService.findById(record.getLanguageId());
+
+            titles.add(titleFactory.create(record, titleTypeRecord.getUri(), titleTypeSchemaRecord.getUri(), language));
+        }
+
+        return titles;
     }
 }

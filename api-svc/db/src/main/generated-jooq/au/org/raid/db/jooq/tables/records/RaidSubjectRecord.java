@@ -37,17 +37,17 @@ public class RaidSubjectRecord extends UpdatableRecordImpl<RaidSubjectRecord> im
     }
 
     /**
-     * Setter for <code>api_svc.raid_subject.raid_name</code>.
+     * Setter for <code>api_svc.raid_subject.handle</code>.
      */
-    public RaidSubjectRecord setRaidName(String value) {
+    public RaidSubjectRecord setHandle(String value) {
         set(1, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.raid_subject.raid_name</code>.
+     * Getter for <code>api_svc.raid_subject.handle</code>.
      */
-    public String getRaidName() {
+    public String getHandle() {
         return (String) get(1);
     }
 
@@ -96,7 +96,7 @@ public class RaidSubjectRecord extends UpdatableRecordImpl<RaidSubjectRecord> im
 
     @Override
     public Field<String> field2() {
-        return RaidSubject.RAID_SUBJECT.RAID_NAME;
+        return RaidSubject.RAID_SUBJECT.HANDLE;
     }
 
     @Override
@@ -111,7 +111,7 @@ public class RaidSubjectRecord extends UpdatableRecordImpl<RaidSubjectRecord> im
 
     @Override
     public String component2() {
-        return getRaidName();
+        return getHandle();
     }
 
     @Override
@@ -126,7 +126,7 @@ public class RaidSubjectRecord extends UpdatableRecordImpl<RaidSubjectRecord> im
 
     @Override
     public String value2() {
-        return getRaidName();
+        return getHandle();
     }
 
     @Override
@@ -142,7 +142,7 @@ public class RaidSubjectRecord extends UpdatableRecordImpl<RaidSubjectRecord> im
 
     @Override
     public RaidSubjectRecord value2(String value) {
-        setRaidName(value);
+        setHandle(value);
         return this;
     }
 
@@ -174,11 +174,11 @@ public class RaidSubjectRecord extends UpdatableRecordImpl<RaidSubjectRecord> im
     /**
      * Create a detached, initialised RaidSubjectRecord
      */
-    public RaidSubjectRecord(Integer id, String raidName, String subjectTypeId) {
+    public RaidSubjectRecord(Integer id, String handle, String subjectTypeId) {
         super(RaidSubject.RAID_SUBJECT);
 
         setId(id);
-        setRaidName(raidName);
+        setHandle(handle);
         setSubjectTypeId(subjectTypeId);
     }
 }

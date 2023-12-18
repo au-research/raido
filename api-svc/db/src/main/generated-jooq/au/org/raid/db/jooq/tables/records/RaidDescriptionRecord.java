@@ -37,17 +37,17 @@ public class RaidDescriptionRecord extends UpdatableRecordImpl<RaidDescriptionRe
     }
 
     /**
-     * Setter for <code>api_svc.raid_description.raid_name</code>.
+     * Setter for <code>api_svc.raid_description.handle</code>.
      */
-    public RaidDescriptionRecord setRaidName(String value) {
+    public RaidDescriptionRecord setHandle(String value) {
         set(1, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.raid_description.raid_name</code>.
+     * Getter for <code>api_svc.raid_description.handle</code>.
      */
-    public String getRaidName() {
+    public String getHandle() {
         return (String) get(1);
     }
 
@@ -126,7 +126,7 @@ public class RaidDescriptionRecord extends UpdatableRecordImpl<RaidDescriptionRe
 
     @Override
     public Field<String> field2() {
-        return RaidDescription.RAID_DESCRIPTION.RAID_NAME;
+        return RaidDescription.RAID_DESCRIPTION.HANDLE;
     }
 
     @Override
@@ -151,7 +151,7 @@ public class RaidDescriptionRecord extends UpdatableRecordImpl<RaidDescriptionRe
 
     @Override
     public String component2() {
-        return getRaidName();
+        return getHandle();
     }
 
     @Override
@@ -176,7 +176,7 @@ public class RaidDescriptionRecord extends UpdatableRecordImpl<RaidDescriptionRe
 
     @Override
     public String value2() {
-        return getRaidName();
+        return getHandle();
     }
 
     @Override
@@ -202,7 +202,7 @@ public class RaidDescriptionRecord extends UpdatableRecordImpl<RaidDescriptionRe
 
     @Override
     public RaidDescriptionRecord value2(String value) {
-        setRaidName(value);
+        setHandle(value);
         return this;
     }
 
@@ -248,11 +248,11 @@ public class RaidDescriptionRecord extends UpdatableRecordImpl<RaidDescriptionRe
     /**
      * Create a detached, initialised RaidDescriptionRecord
      */
-    public RaidDescriptionRecord(Integer id, String raidName, Integer descriptionTypeId, String text, Integer languageId) {
+    public RaidDescriptionRecord(Integer id, String handle, Integer descriptionTypeId, String text, Integer languageId) {
         super(RaidDescription.RAID_DESCRIPTION);
 
         setId(id);
-        setRaidName(raidName);
+        setHandle(handle);
         setDescriptionTypeId(descriptionTypeId);
         setText(text);
         setLanguageId(languageId);

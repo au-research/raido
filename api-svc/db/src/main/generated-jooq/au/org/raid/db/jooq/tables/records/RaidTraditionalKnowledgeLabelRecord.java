@@ -37,19 +37,17 @@ public class RaidTraditionalKnowledgeLabelRecord extends UpdatableRecordImpl<Rai
     }
 
     /**
-     * Setter for
-     * <code>api_svc.raid_traditional_knowledge_label.raid_name</code>.
+     * Setter for <code>api_svc.raid_traditional_knowledge_label.handle</code>.
      */
-    public RaidTraditionalKnowledgeLabelRecord setRaidName(String value) {
+    public RaidTraditionalKnowledgeLabelRecord setHandle(String value) {
         set(1, value);
         return this;
     }
 
     /**
-     * Getter for
-     * <code>api_svc.raid_traditional_knowledge_label.raid_name</code>.
+     * Getter for <code>api_svc.raid_traditional_knowledge_label.handle</code>.
      */
-    public String getRaidName() {
+    public String getHandle() {
         return (String) get(1);
     }
 
@@ -117,7 +115,7 @@ public class RaidTraditionalKnowledgeLabelRecord extends UpdatableRecordImpl<Rai
 
     @Override
     public Field<String> field2() {
-        return RaidTraditionalKnowledgeLabel.RAID_TRADITIONAL_KNOWLEDGE_LABEL.RAID_NAME;
+        return RaidTraditionalKnowledgeLabel.RAID_TRADITIONAL_KNOWLEDGE_LABEL.HANDLE;
     }
 
     @Override
@@ -137,7 +135,7 @@ public class RaidTraditionalKnowledgeLabelRecord extends UpdatableRecordImpl<Rai
 
     @Override
     public String component2() {
-        return getRaidName();
+        return getHandle();
     }
 
     @Override
@@ -157,7 +155,7 @@ public class RaidTraditionalKnowledgeLabelRecord extends UpdatableRecordImpl<Rai
 
     @Override
     public String value2() {
-        return getRaidName();
+        return getHandle();
     }
 
     @Override
@@ -178,7 +176,7 @@ public class RaidTraditionalKnowledgeLabelRecord extends UpdatableRecordImpl<Rai
 
     @Override
     public RaidTraditionalKnowledgeLabelRecord value2(String value) {
-        setRaidName(value);
+        setHandle(value);
         return this;
     }
 
@@ -217,11 +215,11 @@ public class RaidTraditionalKnowledgeLabelRecord extends UpdatableRecordImpl<Rai
     /**
      * Create a detached, initialised RaidTraditionalKnowledgeLabelRecord
      */
-    public RaidTraditionalKnowledgeLabelRecord(Integer id, String raidName, Integer traditionalKnowledgeLabelId, Integer traditionalKnowledgeLabelSchemaId) {
+    public RaidTraditionalKnowledgeLabelRecord(Integer id, String handle, Integer traditionalKnowledgeLabelId, Integer traditionalKnowledgeLabelSchemaId) {
         super(RaidTraditionalKnowledgeLabel.RAID_TRADITIONAL_KNOWLEDGE_LABEL);
 
         setId(id);
-        setRaidName(raidName);
+        setHandle(handle);
         setTraditionalKnowledgeLabelId(traditionalKnowledgeLabelId);
         setTraditionalKnowledgeLabelSchemaId(traditionalKnowledgeLabelSchemaId);
     }

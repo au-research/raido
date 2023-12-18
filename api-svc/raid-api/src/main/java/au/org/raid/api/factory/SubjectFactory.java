@@ -26,4 +26,11 @@ public class SubjectFactory {
                 .schemaUri(subjectBlock.getSubjectSchemeUri())
                 .keyword(keywords);
     }
+
+    public Subject create(final String id, final String schemaUri, final List<SubjectKeyword> keywords) {
+        return new Subject()
+                .id(id)
+                .schemaUri(schemaUri)
+                .keyword(keywords);
+    }
 }

@@ -21,7 +21,7 @@ export default function ShowAccessComponent({
   color: string;
 }) {
   const lang = language.find(
-    (language) => language.id === raid?.access?.accessStatement?.language?.id
+    (language) => language.id === raid?.access?.statement?.language?.id
   );
 
   return (
@@ -60,7 +60,7 @@ export default function ShowAccessComponent({
                       {extractKeyFromIdUri(raid?.access?.type?.id)})
                     </Typography>
                     <Typography color="text.secondary" variant="body1">
-                      {raid?.access?.accessStatement?.text}
+                      {raid?.access?.statement?.text}
                     </Typography>
                   </Box>
                 </Grid>

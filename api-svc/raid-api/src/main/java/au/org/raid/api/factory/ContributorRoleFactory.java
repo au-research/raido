@@ -1,5 +1,6 @@
 package au.org.raid.api.factory;
 
+import au.org.raid.db.jooq.tables.records.RaidContributorRoleRecord;
 import au.org.raid.idl.raidv2.model.ContributorRole;
 import au.org.raid.idl.raidv2.model.ContributorRoleCreditNisoOrgType;
 import au.org.raid.idl.raidv2.model.ContributorRoleWithSchemaUri;
@@ -54,5 +55,11 @@ public class ContributorRoleFactory {
         return new ContributorRoleWithSchemaUri()
                 .id(role.getRole() != null ? ROLE_MAP.get(role.getRole()) : null)
                 .schemaUri(SCHEMA_URI);
+    }
+
+    public ContributorRoleWithSchemaUri create(final String id, final String schemaUri) {
+        return new ContributorRoleWithSchemaUri()
+                .id(id)
+                .schemaUri(schemaUri);
     }
 }

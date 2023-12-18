@@ -21,17 +21,17 @@ public class RaidAlternateIdentifierRecord extends UpdatableRecordImpl<RaidAlter
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>api_svc.raid_alternate_identifier.raid_name</code>.
+     * Setter for <code>api_svc.raid_alternate_identifier.handle</code>.
      */
-    public RaidAlternateIdentifierRecord setRaidName(String value) {
+    public RaidAlternateIdentifierRecord setHandle(String value) {
         set(0, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.raid_alternate_identifier.raid_name</code>.
+     * Getter for <code>api_svc.raid_alternate_identifier.handle</code>.
      */
-    public String getRaidName() {
+    public String getHandle() {
         return (String) get(0);
     }
 
@@ -90,7 +90,7 @@ public class RaidAlternateIdentifierRecord extends UpdatableRecordImpl<RaidAlter
 
     @Override
     public Field<String> field1() {
-        return RaidAlternateIdentifier.RAID_ALTERNATE_IDENTIFIER.RAID_NAME;
+        return RaidAlternateIdentifier.RAID_ALTERNATE_IDENTIFIER.HANDLE;
     }
 
     @Override
@@ -105,7 +105,7 @@ public class RaidAlternateIdentifierRecord extends UpdatableRecordImpl<RaidAlter
 
     @Override
     public String component1() {
-        return getRaidName();
+        return getHandle();
     }
 
     @Override
@@ -120,7 +120,7 @@ public class RaidAlternateIdentifierRecord extends UpdatableRecordImpl<RaidAlter
 
     @Override
     public String value1() {
-        return getRaidName();
+        return getHandle();
     }
 
     @Override
@@ -135,7 +135,7 @@ public class RaidAlternateIdentifierRecord extends UpdatableRecordImpl<RaidAlter
 
     @Override
     public RaidAlternateIdentifierRecord value1(String value) {
-        setRaidName(value);
+        setHandle(value);
         return this;
     }
 
@@ -173,10 +173,10 @@ public class RaidAlternateIdentifierRecord extends UpdatableRecordImpl<RaidAlter
     /**
      * Create a detached, initialised RaidAlternateIdentifierRecord
      */
-    public RaidAlternateIdentifierRecord(String raidName, String id, String type) {
+    public RaidAlternateIdentifierRecord(String handle, String id, String type) {
         super(RaidAlternateIdentifier.RAID_ALTERNATE_IDENTIFIER);
 
-        setRaidName(raidName);
+        setHandle(handle);
         setId(id);
         setType(type);
     }

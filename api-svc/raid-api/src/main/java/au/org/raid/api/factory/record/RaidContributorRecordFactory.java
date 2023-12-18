@@ -12,6 +12,6 @@ public class RaidContributorRecordFactory {
                 .setContributorId(contributorId)
                 .setContact(contributor.getContact())
                 .setLeader(contributor.getLeader())
-                .setRaidName(handle);
+                .setHandle(handle);
     }
 }

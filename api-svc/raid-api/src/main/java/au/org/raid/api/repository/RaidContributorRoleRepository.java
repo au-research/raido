@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 import static au.org.raid.db.jooq.tables.RaidContributorRole.RAID_CONTRIBUTOR_ROLE;
 
 @Repository
@@ -17,5 +19,11 @@ public class RaidContributorRoleRepository {
                 .set(RAID_CONTRIBUTOR_ROLE.CONTRIBUTOR_ROLE_ID, contributorRole.getContributorRoleId())
                 .returning()
                 .fetchOne();
+    }
+
+    public List<RaidContributorRoleRecord> findAllByRaidContributorId(final Integer raidContributorId) {
+        return dslContext.selectFrom(RAID_CONTRIBUTOR_ROLE)
+                .where(RAID_CONTRIBUTOR_ROLE.RAID_CONTRIBUTOR_ID.eq(raidContributorId))
+                .fetch();
     }
 }

@@ -14,4 +14,10 @@ public class TraditionalKnowledgeLabelFactory {
         return new TraditionalKnowledgeLabel()
                 .schemaUri(traditionalKnowledgeLabelBlock.getTraditionalKnowledgeLabelSchemeUri());
     }
+
+    public TraditionalKnowledgeLabel create(final String id, final String schemaUri) {
+        return new TraditionalKnowledgeLabel()
+                .id(id)
+                .schemaUri(schemaUri);
+    }
 }

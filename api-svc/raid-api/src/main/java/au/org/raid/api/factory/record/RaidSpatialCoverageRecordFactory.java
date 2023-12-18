@@ -6,12 +6,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RaidSpatialCoverageRecordFactory {
-    public RaidSpatialCoverageRecord create(final SpatialCoverage spatialCoverage, final String raidName, final Integer schemaId, final Integer languageId) {
+    public RaidSpatialCoverageRecord create(final String uri, final String handle, final Integer schemaId) {
         return new RaidSpatialCoverageRecord()
-                .setRaidName(raidName)
+                .setHandle(handle)
                 .setSchemaId(schemaId)
-                .setLanguageId(languageId)
-                .setPlace(spatialCoverage.getPlace())
-                .setId(spatialCoverage.getId());
+                .setUri(uri);
     }
 }

@@ -55,12 +55,12 @@ export const relatedObjectGenerateData = () => {
       ].uri,
       schemaUri: relatedObjectTypesSchema[0].uri,
     },
-    category: {
+    category: [{
       id: relatedObjectCategories[
         Math.floor(Math.random() * relatedObjectCategories.length)
       ].uri,
       schemaUri: relatedObjectCategoriesSchema[0].uri,
-    },
+    }],
   };
 };
 
@@ -186,7 +186,7 @@ export default function FormRelatedObjectsComponent({
                               <TextField
                                 select
                                 {...controllerField}
-                                value={controllerField?.value?.category?.id}
+                                //value={controllerField?.value?.category?.id}
                                 size="small"
                                 fullWidth
                                 label="Related Object Category"

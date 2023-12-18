@@ -15,12 +15,14 @@ public class SpatialCoverageSchemaRepository {
     private final DSLContext dslContext;
 
     public Optional<SpatialCoverageSchemaRecord> findByUri(final String uri) {
-        return dslContext.select(SPATIAL_COVERAGE_SCHEMA.fields())
-                .from(SPATIAL_COVERAGE_SCHEMA)
+        return dslContext.selectFrom(SPATIAL_COVERAGE_SCHEMA)
                 .where(SPATIAL_COVERAGE_SCHEMA.URI.eq(uri))
-                .fetchOptional(record -> new SpatialCoverageSchemaRecord()
-                        .setId(SPATIAL_COVERAGE_SCHEMA.ID.getValue(record))
-                        .setUri(SPATIAL_COVERAGE_SCHEMA.URI.getValue(record))
-                );
+                .fetchOptional();
+    }
+
+    public Optional<SpatialCoverageSchemaRecord> findById(final Integer id) {
+        return dslContext.selectFrom(SPATIAL_COVERAGE_SCHEMA)
+                .where(SPATIAL_COVERAGE_SCHEMA.ID.eq(id))
+                .fetchOptional();
     }
 }

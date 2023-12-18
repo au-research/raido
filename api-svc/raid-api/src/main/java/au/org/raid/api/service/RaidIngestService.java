@@ -1,5 +1,6 @@
 package au.org.raid.api.service;
 
+import au.org.raid.api.factory.DateFactory;
 import au.org.raid.api.factory.HandleFactory;
 import au.org.raid.api.factory.RaidRecordFactory;
 import au.org.raid.api.repository.RaidRepository;
@@ -7,6 +8,9 @@ import au.org.raid.idl.raidv2.model.RaidDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -28,7 +32,8 @@ public class RaidIngestService {
     private final AccessService accessService;
     private final LanguageService languageService;
     private final HandleFactory handleFactory;
-
+    private final IdService idService;
+    private final DateFactory dateFactory;
     public void create(final RaidDto raid) {
         final var handle = handleFactory.create(raid.getIdentifier().getId()).toString();
 
@@ -65,5 +70,43 @@ public class RaidIngestService {
         subjectService.create(raid.getSubject(), handle);
         traditionalKnowledgeLabelService.create(raid.getTraditionalKnowledgeLabel(), handle);
         spatialCoverageService.create(raid.getSpatialCoverage(), handle);
+    }
+
+    public Optional<RaidDto> findByHandle(final String handle) {
+        final var raidRecordOptional = raidRepository.findByHandle(handle);
+
+        if (raidRecordOptional.isEmpty()) {
+            return Optional.empty();
+        }
+
+        final var record = raidRecordOptional.get();
+
+        final var titles = titleService.findAllByHandle(handle);
+        final var descriptions = descriptionService.findAllByHandle(handle);
+        final var contributors = contributorService.findAllByHandle(handle);
+        final var organisations = organisationService.findAllByHandle(handle);
+        final var relatedObjects = relatedObjectService.findAllByHandle(handle);
+        final var alternateIdentifiers = alternateIdentifierService.findAllByHandle(handle);
+        final var alternateUrls = alternateUrlService.findAllByHandle(handle);
+        final var relatedRaids = relatedRaidService.findAllByHandle(handle);
+        final var subjects = subjectService.findAllByHandle(handle);
+        final var traditionalKnowledgeLabels = traditionalKnowledgeLabelService.findAllByHandle(handle);
+        final var spatialCoverages = spatialCoverageService.findAllByHandle(handle);
+
+        return Optional.of(new RaidDto()
+                .identifier(idService.getId(record))
+                .date(dateFactory.create(record.getStartDateString(), record.getEndDate()))
+                .title(titles)
+                .description(descriptions)
+                .contributor(contributors)
+                .organisation(organisations)
+                .relatedObject(relatedObjects)
+                .alternateIdentifier(alternateIdentifiers)
+                .alternateUrl(alternateUrls)
+                .relatedRaid(relatedRaids)
+                .access(accessService.getAccess(record))
+                .subject(subjects)
+                .traditionalKnowledgeLabel(traditionalKnowledgeLabels)
+                .spatialCoverage(spatialCoverages));
     }
 }

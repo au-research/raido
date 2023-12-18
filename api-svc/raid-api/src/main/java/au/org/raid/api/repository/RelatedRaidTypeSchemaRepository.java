@@ -15,12 +15,14 @@ public class RelatedRaidTypeSchemaRepository {
     private final DSLContext dslContext;
 
     public Optional<RelatedRaidTypeSchemaRecord> findByUri(final String uri) {
-        return dslContext.select(RELATED_RAID_TYPE_SCHEMA.fields())
-                .from(RELATED_RAID_TYPE_SCHEMA)
+        return dslContext.selectFrom(RELATED_RAID_TYPE_SCHEMA)
                 .where(RELATED_RAID_TYPE_SCHEMA.URI.eq(uri))
-                .fetchOptional(record -> new RelatedRaidTypeSchemaRecord()
-                        .setId(RELATED_RAID_TYPE_SCHEMA.ID.getValue(record))
-                        .setUri(RELATED_RAID_TYPE_SCHEMA.URI.getValue(record))
-                );
+                .fetchOptional();
+    }
+
+    public Optional<RelatedRaidTypeSchemaRecord> findById(final Integer id) {
+        return dslContext.selectFrom(RELATED_RAID_TYPE_SCHEMA)
+                .where(RELATED_RAID_TYPE_SCHEMA.ID.eq(id))
+                .fetchOptional();
     }
 }

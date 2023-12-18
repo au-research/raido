@@ -1,14 +1,19 @@
 package au.org.raid.api.service;
 
+import au.org.raid.api.factory.OrganisationRoleFactory;
 import au.org.raid.api.factory.record.RaidOrganisationRecordFactory;
 import au.org.raid.api.factory.record.RaidOrganisationRoleRecordFactory;
 import au.org.raid.api.repository.OrganisationRoleRepository;
 import au.org.raid.api.repository.OrganisationRoleSchemaRepository;
 import au.org.raid.api.repository.RaidOrganisationRoleRepository;
+import au.org.raid.idl.raidv2.model.ContributorRoleWithSchemaUri;
 import au.org.raid.idl.raidv2.model.OrganisationRoleWithSchemaUri;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -18,6 +23,7 @@ public class OrganisationRoleService {
     private final OrganisationRoleSchemaRepository organisationRoleSchemaRepository;
     private final RaidOrganisationRoleRepository raidOrganisationRoleRepository;
     private final RaidOrganisationRoleRecordFactory raidOrganisationRoleRecordFactory;
+    private final OrganisationRoleFactory organisationRoleFactory;
 
     public void create(final OrganisationRoleWithSchemaUri organisationRole, final int raidOrganisationId) {
         final var organisationRoleSchemaRecord =
@@ -36,5 +42,34 @@ public class OrganisationRoleService {
         );
 
         raidOrganisationRoleRepository.create(raidOrganisationRoleRecord);
+    }
+
+    public List<OrganisationRoleWithSchemaUri> findAllByRaidOrganisationId(final Integer raidOrganisationId) {
+        final var organisationRoles = new ArrayList<OrganisationRoleWithSchemaUri>();
+
+        final var raidOrganisationRoles = raidOrganisationRoleRepository.findAllByRaidOrganisationId(raidOrganisationId);
+
+        for (final var raidOrganisationRole : raidOrganisationRoles) {
+            final var organisationRoleId = raidOrganisationRole.getOrganisationRoleId();
+
+            final var organisationRoleRecord = organisationRoleRepository
+                    .findById(raidOrganisationRole.getOrganisationRoleId())
+                    .orElseThrow(() -> new RuntimeException(
+                            "Organisation role not found with id %d".formatted(organisationRoleId)));
+
+            final var schemaId = organisationRoleRecord.getSchemaId();
+
+            final var organisationRoleSchemaRecord = organisationRoleSchemaRepository.findById(schemaId)
+                    .orElseThrow(() -> new RuntimeException(
+                            "Organisation role schema not found with id %d".formatted(schemaId)));
+
+            organisationRoles.add(organisationRoleFactory.create(
+                    organisationRoleRecord.getUri(),
+                    organisationRoleSchemaRecord.getUri(),
+                    raidOrganisationRole.getStartDate(),
+                    raidOrganisationRole.getEndDate()
+            ));
+        }
+        return organisationRoles;
     }
 }

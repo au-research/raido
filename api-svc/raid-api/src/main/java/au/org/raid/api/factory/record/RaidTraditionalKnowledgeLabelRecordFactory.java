@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RaidTraditionalKnowledgeLabelRecordFactory {
-    public RaidTraditionalKnowledgeLabelRecord create(final String raidName, final Integer labelId, final Integer schemaId) {
+    public RaidTraditionalKnowledgeLabelRecord create(final String handle, final Integer labelId, final Integer schemaId) {
         return new RaidTraditionalKnowledgeLabelRecord()
-                .setRaidName(raidName)
+                .setHandle(handle)
                 .setTraditionalKnowledgeLabelId(labelId)
                 .setTraditionalKnowledgeLabelSchemaId(schemaId);
     }

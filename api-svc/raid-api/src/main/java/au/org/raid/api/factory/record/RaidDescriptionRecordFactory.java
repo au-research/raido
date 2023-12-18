@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RaidDescriptionRecordFactory {
-    public RaidDescriptionRecord create(final String raidName, final String text, final Integer descriptionTypeId, final Integer languageId) {
+    public RaidDescriptionRecord create(final String handle, final String text, final Integer descriptionTypeId, final Integer languageId) {
         return new RaidDescriptionRecord()
-                .setRaidName(raidName)
+                .setHandle(handle)
                 .setText(text)
                 .setDescriptionTypeId(descriptionTypeId)
                 .setLanguageId(languageId);

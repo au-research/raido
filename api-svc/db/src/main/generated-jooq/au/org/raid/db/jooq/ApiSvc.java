@@ -35,6 +35,7 @@ import au.org.raid.db.jooq.tables.RaidOrganisationRole;
 import au.org.raid.db.jooq.tables.RaidRelatedObject;
 import au.org.raid.db.jooq.tables.RaidRelatedObjectCategory;
 import au.org.raid.db.jooq.tables.RaidSpatialCoverage;
+import au.org.raid.db.jooq.tables.RaidSpatialCoveragePlace;
 import au.org.raid.db.jooq.tables.RaidSubject;
 import au.org.raid.db.jooq.tables.RaidSubjectKeyword;
 import au.org.raid.db.jooq.tables.RaidTitle;
@@ -157,6 +158,7 @@ public class ApiSvc extends SchemaImpl {
             RaidRelatedObject.RAID_RELATED_OBJECT,
             RaidRelatedObjectCategory.RAID_RELATED_OBJECT_CATEGORY,
             RaidSpatialCoverage.RAID_SPATIAL_COVERAGE,
+            RaidSpatialCoveragePlace.RAID_SPATIAL_COVERAGE_PLACE,
             RaidSubject.RAID_SUBJECT,
             RaidSubjectKeyword.RAID_SUBJECT_KEYWORD,
             RaidTitle.RAID_TITLE,

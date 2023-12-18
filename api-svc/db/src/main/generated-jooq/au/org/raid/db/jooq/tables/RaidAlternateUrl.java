@@ -52,9 +52,9 @@ public class RaidAlternateUrl extends TableImpl<RaidAlternateUrlRecord> {
     }
 
     /**
-     * The column <code>api_svc.raid_alternate_url.raid_name</code>.
+     * The column <code>api_svc.raid_alternate_url.handle</code>.
      */
-    public final TableField<RaidAlternateUrlRecord, String> RAID_NAME = createField(DSL.name("raid_name"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<RaidAlternateUrlRecord, String> HANDLE = createField(DSL.name("handle"), SQLDataType.VARCHAR.nullable(false), this, "");
 
     /**
      * The column <code>api_svc.raid_alternate_url.url</code>.
@@ -106,7 +106,7 @@ public class RaidAlternateUrl extends TableImpl<RaidAlternateUrlRecord> {
 
     @Override
     public List<ForeignKey<RaidAlternateUrlRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_ALTERNATE_URL__FK_RAID_ALTERNATE_URL_RAID_NAME);
+        return Arrays.asList(Keys.RAID_ALTERNATE_URL__FK_RAID_ALTERNATE_URL_HANDLE);
     }
 
     private transient Raid _raid;
@@ -116,7 +116,7 @@ public class RaidAlternateUrl extends TableImpl<RaidAlternateUrlRecord> {
      */
     public Raid raid() {
         if (_raid == null)
-            _raid = new Raid(this, Keys.RAID_ALTERNATE_URL__FK_RAID_ALTERNATE_URL_RAID_NAME);
+            _raid = new Raid(this, Keys.RAID_ALTERNATE_URL__FK_RAID_ALTERNATE_URL_HANDLE);
 
         return _raid;
     }

@@ -51,13 +51,13 @@ alter table api_svc.title_type_new rename to title_type;
 create table api_svc.raid_title
 (
     id            serial primary key,
-    raid_name     varchar not null,
+    handle     varchar not null,
     title_type_id int     not null,
     text          text    not null,
     language_id   int,
     start_date    varchar not null,
     end_date      varchar,
-    constraint fk_title_raid_name foreign key (raid_name) references api_svc.raid (handle),
+    constraint fk_title_handle foreign key (handle) references api_svc.raid (handle),
     constraint fk_title_type foreign key (title_type_id) references api_svc.title_type (id),
     constraint fk_title_language_id foreign key (language_id) references api_svc.language (id)
 );
@@ -83,11 +83,11 @@ alter table api_svc.description_type_new rename to description_type;
 create table api_svc.raid_description
 (
     id                  serial primary key,
-    raid_name           varchar not null,
+    handle           varchar not null,
     description_type_id int     not null,
     text               text    not null,
     language_id         int,
-    constraint fk_description_raid_name foreign key (raid_name) references api_svc.raid (handle),
+    constraint fk_description_handle foreign key (handle) references api_svc.raid (handle),
     constraint fk_description_type foreign key (description_type_id) references api_svc.description_type (id),
     constraint fk_description_language_id foreign key (language_id) references api_svc.language (id)
 );
@@ -148,12 +148,12 @@ create table api_svc.contributor
 create table api_svc.raid_contributor
 (
     id             serial primary key,
-    raid_name      varchar not null,
+    handle      varchar not null,
     contributor_id int     not null,
     leader         boolean,
     contact        boolean,
-    unique (raid_name, contributor_id),
-    constraint fk_raid_contributor_raid_name foreign key (raid_name) references api_svc.raid (handle),
+    unique (handle, contributor_id),
+    constraint fk_raid_contributor_handle foreign key (handle) references api_svc.raid (handle),
     constraint fk_raid_contributor_contributor_id foreign key (contributor_id) references api_svc.contributor (id)
 );
 
@@ -222,9 +222,9 @@ alter table api_svc.organisation_role_new rename to organisation_role;
 create table api_svc.raid_organisation
 (
     id              serial primary key,
-    raid_name       varchar not null,
+    handle       varchar not null,
     organisation_id int     not null,
-    unique(raid_name, organisation_id)
+    unique(handle, organisation_id)
 );
 
 create table api_svc.raid_organisation_role
@@ -296,11 +296,11 @@ create table api_svc.related_object
 create table api_svc.raid_related_object
 (
     id                         serial primary key,
-    raid_name                  varchar not null,
+    handle                  varchar not null,
     related_object_id          int     not null,
     related_object_type_id     int     not null,
-    unique (raid_name, related_object_id, related_object_type_id),
-    constraint fk_raid_related_object_raid_name foreign key (raid_name) references api_svc.raid (handle),
+    unique (handle, related_object_id, related_object_type_id),
+    constraint fk_raid_related_object_handle foreign key (handle) references api_svc.raid (handle),
     constraint fk_raid_related_object_related_object_id foreign key (related_object_id) references api_svc.related_object (id),
     constraint fk_raid_related_object_related_object_type_id foreign key (related_object_type_id) references api_svc.related_object_type (id)
 );
@@ -317,7 +317,7 @@ create table api_svc.raid_related_object_category
 
 insert into api_svc.raid_related_object_category (raid_related_object_id, related_object_category_id)
 select
-    (select rro.id from api_svc.raid_related_object rro join api_svc.related_object ro on rro.related_object_id = ro.id where rro.raid_name = r.handle and ro.pid = r.related_object_id) as raid_related_object_id,
+    (select rro.id from api_svc.raid_related_object rro join api_svc.related_object ro on rro.related_object_id = ro.id where rro.handle = r.handle and ro.pid = r.related_object_id) as raid_related_object_id,
     (select id from api_svc.related_object_category where uri = related_object_category_id) as related_object_category_id
 from (select handle, x.id as related_object_id, xx.id as related_object_category_id
       from api_svc.raid,
@@ -333,11 +333,11 @@ on conflict do nothing;
 
 create table api_svc.raid_alternate_identifier
 (
-    raid_name varchar not null,
+    handle varchar not null,
     id        varchar not null,
     type      varchar not null,
-    primary key (raid_name, id, type),
-    constraint fk_raid_alternate_identifier_raid_name foreign key (raid_name) references api_svc.raid (handle)
+    primary key (handle, id, type),
+    constraint fk_raid_alternate_identifier_handle foreign key (handle) references api_svc.raid (handle)
 );
 
 -- /ALTERNATE IDENTIFIER
@@ -345,10 +345,10 @@ create table api_svc.raid_alternate_identifier
 -- ALTERNATE URL
 create table api_svc.raid_alternate_url
 (
-    raid_name varchar not null,
+    handle varchar not null,
     url       varchar not null,
-    primary key (raid_name, url),
-    constraint fk_raid_alternate_url_raid_name foreign key (raid_name) references api_svc.raid (handle)
+    primary key (handle, url),
+    constraint fk_raid_alternate_url_handle foreign key (handle) references api_svc.raid (handle)
 );
 
 -- /ALTERNATE URL
@@ -371,11 +371,11 @@ alter table api_svc.related_raid_type_new rename to related_raid_type;
 
 create table api_svc.related_raid
 (
-    raid_name            varchar not null,
-    related_raid_name    varchar not null,
+    handle            varchar not null,
+    related_raid_handle    varchar not null,
     related_raid_type_id int     not null,
-    primary key (raid_name, related_raid_name),
-    constraint fk_related_raid_raid_name foreign key (raid_name) references api_svc.raid (handle)
+    primary key (handle, related_raid_handle),
+    constraint fk_related_raid_handle foreign key (handle) references api_svc.raid (handle)
 );
 
 -- /RELATED RAID
@@ -383,6 +383,7 @@ create table api_svc.related_raid
 -- RAID
 
 alter table api_svc.raid
+    add column start_date_string varchar,
     add column end_date            varchar,
     add column license             varchar,
     add column access_type_id      int,
@@ -405,10 +406,10 @@ alter table api_svc.raid
 create table api_svc.raid_subject
 (
     id                  serial primary key,
-    raid_name           varchar not null,
+    handle           varchar not null,
     subject_type_id     varchar not null,
-    unique (raid_name, subject_type_id),
-    constraint fk_raid_subject_raid_name foreign key (raid_name) references api_svc.raid (handle),
+    unique (handle, subject_type_id),
+    constraint fk_raid_subject_handle foreign key (handle) references api_svc.raid (handle),
     constraint fk_raid_subject_subject_id foreign key (subject_type_id) references api_svc.subject_type (id)
 );
 
@@ -448,10 +449,10 @@ alter table api_svc.traditional_knowledge_label_new rename to traditional_knowle
 create table api_svc.raid_traditional_knowledge_label
 (
     id                                    serial primary key,
-    raid_name                             varchar not null,
+    handle                             varchar not null,
     traditional_knowledge_label_id        int,
     traditional_knowledge_label_schema_id int,
-    constraint fk_raid_trad_know_label_raid_name foreign key (raid_name) references api_svc.raid (handle),
+    constraint fk_raid_trad_know_label_handle foreign key (handle) references api_svc.raid (handle),
     constraint fk_raid_trad_know_label_traditional_knowledge_label_id foreign key (traditional_knowledge_label_id) references api_svc.traditional_knowledge_label (id),
     constraint fk_raid_trad_know_label_traditional_knowledge_label_schema_id foreign key (traditional_knowledge_label_schema_id) references api_svc.traditional_knowledge_label_schema (id)
 );
@@ -473,23 +474,30 @@ values ('https://www.openstreetmap.org/'),
 
 create table api_svc.raid_spatial_coverage
 (
-    raid_name   varchar not null,
-    id          varchar not null,
+    id          serial primary key,
+    handle      varchar not null,
+    uri         varchar not null,
     schema_id   int     not null,
-    place       varchar,
-    language_id int,
-    primary key (raid_name, id, schema_id),
-    constraint fk_raid_spatial_coverage_raid_name foreign key (raid_name) references api_svc.raid (handle),
-    constraint fk_raid_spatial_coverage_schema_id foreign key (schema_id) references api_svc.spatial_coverage_schema (id),
-    constraint fk_raid_spatial_coverage_language_id foreign key (language_id) references api_svc.language (id)
+    constraint fk_raid_spatial_coverage_handle foreign key (handle) references api_svc.raid (handle),
+    constraint fk_raid_spatial_coverage_schema_id foreign key (schema_id) references api_svc.spatial_coverage_schema (id)
+);
+
+
+create table api_svc.raid_spatial_coverage_place
+(
+    raid_spatial_coverage_id int not null,
+    place                    varchar,
+    language_id              int,
+    constraint fk_raid_spatial_coverage_place_raid_spatial_coverage_id foreign key (raid_spatial_coverage_id) references api_svc.raid_spatial_coverage (id),
+    constraint fk_raid_spatial_coverage_place_language_id foreign key (language_id) references api_svc.language (id)
 );
 
 -- /SPATIAL COVERAGE
 
 -- INSERT TITLES
 -- METADATA SCHEMA V2
-insert into api_svc.raid_title (raid_name, title_type_id, text, language_id, start_date, end_date)
-select r.handle as raid_name,
+insert into api_svc.raid_title (handle, title_type_id, text, language_id, start_date, end_date)
+select r.handle as handle,
        (select id from api_svc.title_type where uri = r.type::json->> 'id') as title_type_id,
        r.text as text,
        (select id from api_svc.language where code = r.language::json->> 'id') as language_id,
@@ -503,8 +511,8 @@ on conflict do nothing;
 
 
 -- METADATA SCHEMA V2 & LEGACY
-insert into api_svc.raid_title (raid_name, title_type_id, text, start_date, end_date)
-select r.handle as raid_name,
+insert into api_svc.raid_title (handle, title_type_id, text, start_date, end_date)
+select r.handle as handle,
        case when r.type = 'Primary Title' then 2
             else 1 end as title_type_id,
        r.title as text,
@@ -520,8 +528,8 @@ on conflict do nothing;
 
 -- INSERT DESCRIPTIONS
 
-insert into api_svc.raid_description (raid_name, description_type_id, text, language_id)
-select r.handle as raid_name,
+insert into api_svc.raid_description (handle, description_type_id, text, language_id)
+select r.handle as handle,
        (select id from api_svc.description_type where uri = r.type::json->> 'id') as description_type_id,
        r.text as text,
        (select id from api_svc.language where code = r.language::json->> 'id') as language_id
@@ -532,8 +540,8 @@ from (select handle, x.*
 on conflict do nothing;
 
 -- METADATA SCHEMA V2 & LEGACY
-insert into api_svc.raid_description (raid_name, description_type_id, text)
-select r.handle as raid_name,
+insert into api_svc.raid_description (handle, description_type_id, text)
+select r.handle as handle,
        case when r.type = 'Primary Description' then 2
             else 1 end as description_type_id,
        r.description as text
@@ -570,7 +578,7 @@ on conflict do nothing;
 
 
 
-insert into api_svc.raid_contributor (raid_name, contributor_id, leader, contact)
+insert into api_svc.raid_contributor (handle, contributor_id, leader, contact)
 select handle,
        (select id from api_svc.contributor where pid = r.id) as contributor_id,
        leader,
@@ -583,7 +591,7 @@ from (select handle, x.*
       where api_svc.raid.metadata_schema = 'raido-metadata-schema-v2') as r
 on conflict do nothing;
 
-insert into api_svc.raid_contributor (raid_name, contributor_id)
+insert into api_svc.raid_contributor (handle, contributor_id)
 
 select handle,
        (select id from api_svc.contributor where pid = r.id) as contributor_id
@@ -597,7 +605,7 @@ insert into api_svc.raid_contributor_position (raid_contributor_id, contributor_
 select (select id
         from api_svc.raid_contributor
         where contributor_id = (select id from api_svc.contributor where pid = r.orcid)
-          and raid_name = handle)                                     as raid_contributor_id,
+          and handle = r.handle)                                     as raid_contributor_id,
        (select id from api_svc.contributor_position where uri = r.id) as contributor_position_id,
        "startDate"                                                    as start_date,
        "endDate"                                                      as end_date
@@ -615,7 +623,7 @@ insert into api_svc.raid_contributor_position (raid_contributor_id, contributor_
 select (select id
         from api_svc.raid_contributor
         where contributor_id = (select id from api_svc.contributor where pid = r.orcid)
-          and raid_name = handle) as raid_contributor_id,
+          and handle = r.handle) as raid_contributor_id,
        (select case
                    when position = 'Co-Investigator' then 1
                    when position = 'Contact Person' then 2
@@ -636,7 +644,7 @@ insert into api_svc.raid_contributor_role (raid_contributor_id, contributor_role
 select (select id
         from api_svc.raid_contributor
         where contributor_id = (select id from api_svc.contributor where pid = r.orcid)
-          and raid_name = handle)                                     as raid_contributor_id,
+          and handle = r.handle)                                     as raid_contributor_id,
        (select id from api_svc.contributor_role where uri = r.id) as contributor_role_id
 from (select handle, x.id as orcid, xx.*
       from api_svc.raid,
@@ -651,7 +659,7 @@ insert into api_svc.raid_contributor_role (raid_contributor_id, contributor_role
 select (select id
         from api_svc.raid_contributor
         where contributor_id = (select id from api_svc.contributor where pid = r.orcid)
-          and raid_name = handle) as raid_contributor_id,
+          and handle = r.handle) as raid_contributor_id,
        (select id from api_svc.contributor_role where uri like '%' || role || '%')           as contributor_role_id
 from (select handle, x.id as orcid, xx.*
       from api_svc.raid,
@@ -681,7 +689,7 @@ from (select x.*
       where api_svc.raid.metadata_schema <> 'raido-metadata-schema-v2') r
 on conflict do nothing;
 
-insert into api_svc.raid_organisation (raid_name, organisation_id)
+insert into api_svc.raid_organisation (handle, organisation_id)
 select handle,
        (select id from api_svc.organisation where pid = r.id) as organisation_id
 from (select handle, x.*
@@ -690,7 +698,7 @@ from (select handle, x.*
       where api_svc.raid.metadata_schema = 'raido-metadata-schema-v2') as r
 on conflict do nothing;
 
-insert into api_svc.raid_organisation (raid_name, organisation_id)
+insert into api_svc.raid_organisation (handle, organisation_id)
 select handle,
        (select id from api_svc.organisation where pid = r.id) as organisation_id
 from (select handle, x.*
@@ -702,7 +710,7 @@ on conflict do nothing;
 insert into api_svc.raid_organisation_role (raid_organisation_id, organisation_role_id, start_date, end_date)
 select (select id
         from api_svc.raid_organisation
-        where organisation_id = (select id from api_svc.organisation where pid = r.ror) and raid_name = handle) as raid_organisation_id,
+        where organisation_id = (select id from api_svc.organisation where pid = r.ror) and handle = r.handle) as raid_organisation_id,
        (select id from api_svc.organisation_role where uri = r.id) as organisation_role_id,
        "startDate" as start_date,
        "endDate" as end_date
@@ -716,7 +724,7 @@ on conflict do nothing;
 insert into api_svc.raid_organisation_role (raid_organisation_id, organisation_role_id, start_date, end_date)
 select (select id
         from api_svc.raid_organisation
-        where organisation_id = (select id from api_svc.organisation where pid = r.ror) and raid_name = handle) as raid_organisation_id,
+        where organisation_id = (select id from api_svc.organisation where pid = r.ror) and handle = r.handle) as raid_organisation_id,
        (select case
                    when role = 'Contractor' then 1
                    when role = 'Lead Research Organisation' then 2
@@ -757,9 +765,9 @@ from (select x.*
       where api_svc.raid.metadata_schema <> 'raido-metadata-schema-v2' and metadata ->> 'relatedObjects' is not null) r
 on conflict do nothing;
 
-insert into api_svc.raid_related_object (raid_name, related_object_id, related_object_type_id)
+insert into api_svc.raid_related_object (handle, related_object_id, related_object_type_id)
 select
-    handle as raid_name,
+    handle as handle,
     (select id from api_svc.related_object where pid = related_object_id) as related_object_id,
     (select id from api_svc.related_object_type where uri = related_object_type_id) as related_object_type_id
 from (select handle, x.id as related_object_id, xx.id as related_object_type_id
@@ -769,9 +777,9 @@ from (select handle, x.id as related_object_id, xx.id as related_object_type_id
       where api_svc.raid.metadata_schema = 'raido-metadata-schema-v2' and metadata ->> 'relatedObject' is not null) r
 on conflict do nothing;
 
-insert into api_svc.raid_related_object (raid_name, related_object_id, related_object_type_id)
+insert into api_svc.raid_related_object (handle, related_object_id, related_object_type_id)
 select
-    handle as raid_name,
+    handle as handle,
     (select id from api_svc.related_object where pid = related_object_id) as related_object_id,
     (select id from api_svc.related_object_type where uri = related_object_type_id) as related_object_type_id
 from (select handle, "relatedObject" as related_object_id, "relatedObjectType" as related_object_type_id
@@ -783,7 +791,7 @@ on conflict do nothing;
 
 insert into api_svc.raid_related_object_category (raid_related_object_id, related_object_category_id)
 select
-    (select rro.id from api_svc.raid_related_object rro join api_svc.related_object ro on rro.related_object_id = ro.id where rro.raid_name = r.handle and ro.pid = r.related_object_id) as raid_related_object_id,
+    (select rro.id from api_svc.raid_related_object rro join api_svc.related_object ro on rro.related_object_id = ro.id where rro.handle = r.handle and ro.pid = r.related_object_id) as raid_related_object_id,
     (select id from api_svc.related_object_category where uri = related_object_category_id) as related_object_category_id
 from (select handle, x.id as related_object_id, xx.id as related_object_category_id
       from api_svc.raid,
@@ -794,7 +802,7 @@ on conflict do nothing;
 
 insert into api_svc.raid_related_object_category (raid_related_object_id, related_object_category_id)
 select
-    (select rro.id from api_svc.raid_related_object rro join api_svc.related_object ro on rro.related_object_id = ro.id where rro.raid_name = r.handle and ro.pid = r.related_object_id) as raid_related_object_id,
+    (select rro.id from api_svc.raid_related_object rro join api_svc.related_object ro on rro.related_object_id = ro.id where rro.handle = r.handle and ro.pid = r.related_object_id) as raid_related_object_id,
     (select case
                 when related_object_category = 'Input' then 1
                 when related_object_category = 'Output' then 3
@@ -809,7 +817,7 @@ on conflict do nothing;
 -- /INSERT RELATED OBJECTS
 
 -- INSERT ALTERNATE IDENTIFIERS
-insert into api_svc.raid_alternate_identifier (raid_name, id, type)
+insert into api_svc.raid_alternate_identifier (handle, id, type)
 select handle, id,     type
 from (select handle, x.*
       from api_svc.raid,
@@ -817,7 +825,7 @@ from (select handle, x.*
       where api_svc.raid.metadata_schema = 'raido-metadata-schema-v2' and metadata ->> 'alternateIdentifier' is not null) r
 on conflict do nothing;
 
-insert into api_svc.raid_alternate_identifier (raid_name, id, type)
+insert into api_svc.raid_alternate_identifier (handle, id, type)
 select handle, "alternateIdentifier", "alternateIdentifierType"
 from (select handle, x.*
       from api_svc.raid,
@@ -829,7 +837,7 @@ on conflict do nothing;
 -- /INSERT ALTERNATE IDENTIFIERS
 -- INSERT ALTERNATE URLS
 
-insert into api_svc.raid_alternate_url (raid_name, url)
+insert into api_svc.raid_alternate_url (handle, url)
 select handle, "url"
 from (select handle, x.*
       from api_svc.raid,
@@ -838,7 +846,7 @@ from (select handle, x.*
         and metadata ->> 'alternateUrl' is not null) r
 on conflict do nothing;
 
-insert into api_svc.raid_alternate_url (raid_name, url)
+insert into api_svc.raid_alternate_url (handle, url)
 select handle, "url"
 from (select handle, x.*
       from api_svc.raid,
@@ -850,7 +858,7 @@ on conflict do nothing;
 -- /INSERT ALTERNATE URLS
 
 -- INSERT RELATED RAIDS
-insert into api_svc.related_raid (raid_name, related_raid_name, related_raid_type_id)
+insert into api_svc.related_raid (handle, related_raid_handle, related_raid_type_id)
 select handle, id,
        (select id from api_svc.related_raid_type where uri = related_raid_type_id)
 from (select handle, x.id, xx.id as related_raid_type_id
@@ -861,7 +869,7 @@ from (select handle, x.id, xx.id as related_raid_type_id
         and metadata ->> 'relatedRaid' is not null) r
 on conflict do nothing;
 
-insert into api_svc.related_raid (raid_name, related_raid_name, related_raid_type_id)
+insert into api_svc.related_raid (handle, related_raid_handle, related_raid_type_id)
 select handle, id,
        (select id from api_svc.related_raid_type where uri = r.related_raid_type_id)
 from (select handle, x."relatedRaid" as id, "relatedRaidType" as related_raid_type_id
@@ -874,7 +882,7 @@ on conflict do nothing;
 -- /INSERT RELATED RAIDS
 -- INSERT SUBJECTS
 
-insert into api_svc.raid_subject (raid_name, subject_type_id)
+insert into api_svc.raid_subject (handle, subject_type_id)
 select handle,
        (select id from api_svc.subject_type where r.id like '%' || id)
 from (select handle, x.id
@@ -884,7 +892,7 @@ from (select handle, x.id
         and metadata ->> 'subject' is not null) r
 on conflict do nothing;
 
-insert into api_svc.raid_subject (raid_name, subject_type_id)
+insert into api_svc.raid_subject (handle, subject_type_id)
 select handle,
        (select id from api_svc.subject_type where r.id like '%' || id)
 from (select handle, x.subject as id
@@ -897,7 +905,7 @@ on conflict do nothing;
 insert into api_svc.raid_subject_keyword (raid_subject_id, keyword, language_id)
 select (select id
         from api_svc.raid_subject
-        where raid_name = r.handle and r.subject_type_id like '%' || subject_type_id) as raid_subject_id,
+        where handle = r.handle and r.subject_type_id like '%' || subject_type_id) as raid_subject_id,
        r.keyword_text                                                                 as keyword,
        (select id from api_svc.language where code = r.language_code)                 as language_id
 from (select handle, x.id as subject_type_id, xx.text as keyword_text, xxx.id as language_code
@@ -914,7 +922,7 @@ on conflict do nothing;
 insert into api_svc.raid_subject_keyword (raid_subject_id, keyword)
 select (select id
         from api_svc.raid_subject
-        where raid_name = r.handle and r.subject_type_id like '%' || subject_type_id) as raid_subject_id,
+        where handle = r.handle and r.subject_type_id like '%' || subject_type_id) as raid_subject_id,
        r.keyword_text                                                                 as keyword
 from (select handle, subject as subject_type_id, "subjectKeyword" as keyword_text
       from api_svc.raid,
@@ -927,8 +935,8 @@ on conflict do nothing;
 
 -- INSERT TRADITIONAL KNOWLEDGE LABELS
 
-insert into api_svc.raid_traditional_knowledge_label (raid_name, traditional_knowledge_label_id, traditional_knowledge_label_schema_id)
-select handle as raid_name,
+insert into api_svc.raid_traditional_knowledge_label (handle, traditional_knowledge_label_id, traditional_knowledge_label_schema_id)
+select handle as handle,
        case when r.id is null then null
             else (select id from api_svc.traditional_knowledge_label where uri = r.id)
            end as traditional_knowledge_label_id,
@@ -940,8 +948,8 @@ from (select handle, id, "schemaUri"
         and metadata ->> 'traditionalKnowledgeLabel' is not null) r
 on conflict do nothing;
 
-insert into api_svc.raid_traditional_knowledge_label (raid_name, traditional_knowledge_label_schema_id)
-select handle as raid_name,
+insert into api_svc.raid_traditional_knowledge_label (handle, traditional_knowledge_label_schema_id)
+select handle as handle,
        (select id from api_svc.traditional_knowledge_label_schema where uri = r."traditionalKnowledgeLabelSchemeUri") as traditional_knowledge_label_schema_id
 from (select handle, "traditionalKnowledgeLabelSchemeUri"
       from api_svc.raid,
@@ -954,13 +962,11 @@ on conflict do nothing;
 
 -- INSERT SPATIAL COVERAGE
 
-insert into api_svc.raid_spatial_coverage (raid_name, id, schema_id, place, language_id)
-select handle as raid_name,
-       id,
-       (select id from api_svc.spatial_coverage_schema where uri = r."schemaUri") as schema_id,
-       place,
-       (select id from api_svc.language where code = r.language_code) as language_id
-from (select handle, x.id, x."schemaUri", place, xx.id as language_code
+insert into api_svc.raid_spatial_coverage (handle, uri, schema_id)
+select handle as handle,
+       r.uri,
+       (select id from api_svc.spatial_coverage_schema where uri = r."schemaUri") as schema_id
+from (select handle, x.id as uri, x."schemaUri"
       from api_svc.raid,
            jsonb_to_recordset(api_svc.raid.metadata #> '{spatialCoverage}') as x(id text, "schemaUri" text, place text, language jsonb),
            lateral jsonb_to_record(x.language) as xx(id text, "schemaUri" text)
@@ -968,14 +974,45 @@ from (select handle, x.id, x."schemaUri", place, xx.id as language_code
         and metadata ->> 'spatialCoverage' is not null) r
 on conflict do nothing;
 
-insert into api_svc.raid_spatial_coverage (raid_name, id, schema_id, place)
-select handle as raid_name,
+insert into api_svc.raid_spatial_coverage_place (raid_spatial_coverage_id, place, language_id)
+select (select rsc.id from api_svc.raid_spatial_coverage rsc join api_svc.spatial_coverage_schema scs
+                  on rsc.schema_id = scs.id
+                  where handle = r.handle and rsc.uri = r.uri and scs.uri = r."schemaUri") as raid_spatial_coverage_id,
+       place,
+       (select id from api_svc.language where code = r.language_code) as language_id
+from (select handle, x.id as uri, x."schemaUri", place, xx.id as language_code
+      from api_svc.raid,
+           jsonb_to_recordset(api_svc.raid.metadata #> '{spatialCoverage}') as x(id text, "schemaUri" text, place text, language jsonb),
+           lateral jsonb_to_record(x.language) as xx(id text, "schemaUri" text)
+      where api_svc.raid.metadata_schema = 'raido-metadata-schema-v2'
+        and metadata ->> 'spatialCoverage' is not null) r
+on conflict do nothing;
+
+insert into api_svc.raid_spatial_coverage (handle, uri, schema_id)
+select handle as handle,
        "spatialCoverage",
-       (select id from api_svc.spatial_coverage_schema where uri = r."spatialCoverageSchemeUri") as schema_id,
-       "spatialCoveragePlace"
-from (select handle, x."spatialCoverage", x."spatialCoverageSchemeUri", "spatialCoveragePlace"
+       (select id from api_svc.spatial_coverage_schema where uri = r."spatialCoverageSchemeUri") as schema_id
+from (select handle, x."spatialCoverage", x."spatialCoverageSchemeUri"
       from api_svc.raid,
            jsonb_to_recordset(api_svc.raid.metadata #> '{spatialCoverages}') as x("spatialCoverage" text, "spatialCoverageSchemeUri" text, "spatialCoveragePlace" text)
+      where api_svc.raid.metadata_schema <> 'raido-metadata-schema-v2'
+        and metadata ->> 'spatialCoverages' is not null) r
+on conflict do nothing;
+
+insert into api_svc.raid_spatial_coverage_place (raid_spatial_coverage_id, place)
+select (select rsc.id
+        from api_svc.raid_spatial_coverage rsc
+                 join api_svc.spatial_coverage_schema scs
+                      on rsc.schema_id = scs.id
+        where handle = r.handle
+          and rsc.uri = r."spatialCoverage"
+          and scs.uri = r."spatialCoverageSchemeUri") as raid_spatial_coverage_id,
+       r."spatialCoveragePlace"
+from (select handle, x."spatialCoverage", x."spatialCoverageSchemeUri", "spatialCoveragePlace"
+      from api_svc.raid,
+           jsonb_to_recordset(api_svc.raid.metadata #> '{spatialCoverages}') as x("spatialCoverage" text,
+                                                                                  "spatialCoverageSchemeUri" text,
+                                                                                  "spatialCoveragePlace" text)
       where api_svc.raid.metadata_schema <> 'raido-metadata-schema-v2'
         and metadata ->> 'spatialCoverages' is not null) r
 on conflict do nothing;
@@ -1025,6 +1062,7 @@ from (select identifier."identifierOwner" as id
 on conflict do nothing;
 
 update api_svc.raid set
+                        start_date_string = r.start_date,
                         end_date = r.end_date,
                         access_type_id = (select id from api_svc.access_type where uri = r.access_type_id),
                         embargo_expiry = r.embargo_expiry,
@@ -1036,6 +1074,7 @@ update api_svc.raid set
                         license = r.license
 from
     (select handle,
+            date."startDate" as start_date,
             date."endDate" as end_date,
             access_type.id as access_type_id,
             access."embargoExpiry" as embargo_expiry,
@@ -1059,7 +1098,8 @@ from
 where api_svc.raid.handle = r.handle;
 
 update api_svc.raid
-set end_date                            = r.end_date,
+set start_date_string                   = r.start_date,
+    end_date                            = r.end_date,
     access_type_id                      = case
                                               when r.access_type = 'Open' then 1
                                               else 3 end,
@@ -1071,6 +1111,7 @@ set end_date                            = r.end_date,
     owner_organisation_id               = (select id from api_svc.organisation where pid = r.identifier_owner_id),
     license                             = 'Creative Commons CC-0'
 from (select handle,
+             date."startDate"                          as start_date,
              date."endDate"                            as end_date,
              access.type                               as access_type,
              access."accessStatement"                  as access_statement_text,
@@ -1086,6 +1127,8 @@ from (select handle,
            lateral jsonb_to_record(metadata -> 'access') as access(type text, "accessStatement" text)
       where metadata_schema <> 'raido-metadata-schema-v2') r
 where api_svc.raid.handle = r.handle;
+
+
 
 
 

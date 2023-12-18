@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 import static au.org.raid.db.jooq.tables.RaidSubject.RAID_SUBJECT;
 
 @Repository
@@ -14,9 +16,15 @@ public class RaidSubjectRepository {
 
     public RaidSubjectRecord create(final RaidSubjectRecord record) {
         return dslContext.insertInto(RAID_SUBJECT)
-                .set(RAID_SUBJECT.RAID_NAME, record.getRaidName())
+                .set(RAID_SUBJECT.HANDLE, record.getHandle())
                 .set(RAID_SUBJECT.SUBJECT_TYPE_ID, record.getSubjectTypeId())
                 .returning()
                 .fetchOne();
+    }
+
+    public List<RaidSubjectRecord> findAllByHandle(final String handle) {
+        return dslContext.selectFrom(RAID_SUBJECT)
+                .where(RAID_SUBJECT.HANDLE.eq(handle))
+                .fetch();
     }
 }

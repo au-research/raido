@@ -52,14 +52,14 @@ public class RelatedRaid extends TableImpl<RelatedRaidRecord> {
     }
 
     /**
-     * The column <code>api_svc.related_raid.raid_name</code>.
+     * The column <code>api_svc.related_raid.handle</code>.
      */
-    public final TableField<RelatedRaidRecord, String> RAID_NAME = createField(DSL.name("raid_name"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<RelatedRaidRecord, String> HANDLE = createField(DSL.name("handle"), SQLDataType.VARCHAR.nullable(false), this, "");
 
     /**
-     * The column <code>api_svc.related_raid.related_raid_name</code>.
+     * The column <code>api_svc.related_raid.related_raid_handle</code>.
      */
-    public final TableField<RelatedRaidRecord, String> RELATED_RAID_NAME = createField(DSL.name("related_raid_name"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<RelatedRaidRecord, String> RELATED_RAID_HANDLE = createField(DSL.name("related_raid_handle"), SQLDataType.VARCHAR.nullable(false), this, "");
 
     /**
      * The column <code>api_svc.related_raid.related_raid_type_id</code>.
@@ -111,7 +111,7 @@ public class RelatedRaid extends TableImpl<RelatedRaidRecord> {
 
     @Override
     public List<ForeignKey<RelatedRaidRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RELATED_RAID__FK_RELATED_RAID_RAID_NAME);
+        return Arrays.asList(Keys.RELATED_RAID__FK_RELATED_RAID_HANDLE);
     }
 
     private transient Raid _raid;
@@ -121,7 +121,7 @@ public class RelatedRaid extends TableImpl<RelatedRaidRecord> {
      */
     public Raid raid() {
         if (_raid == null)
-            _raid = new Raid(this, Keys.RELATED_RAID__FK_RELATED_RAID_RAID_NAME);
+            _raid = new Raid(this, Keys.RELATED_RAID__FK_RELATED_RAID_HANDLE);
 
         return _raid;
     }

@@ -42,4 +42,12 @@ public class OrganisationRoleFactory {
                 .startDate(startDate)
                 .endDate(endDate);
     }
+
+    public OrganisationRoleWithSchemaUri create(final String id, final String schemaUri, final String startDate, final String endDate) {
+        return new OrganisationRoleWithSchemaUri()
+                .id(id)
+                .schemaUri(schemaUri)
+                .startDate(startDate)
+                .endDate(endDate);
+    }
 }

@@ -37,17 +37,17 @@ public class RaidRelatedObjectRecord extends UpdatableRecordImpl<RaidRelatedObje
     }
 
     /**
-     * Setter for <code>api_svc.raid_related_object.raid_name</code>.
+     * Setter for <code>api_svc.raid_related_object.handle</code>.
      */
-    public RaidRelatedObjectRecord setRaidName(String value) {
+    public RaidRelatedObjectRecord setHandle(String value) {
         set(1, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.raid_related_object.raid_name</code>.
+     * Getter for <code>api_svc.raid_related_object.handle</code>.
      */
-    public String getRaidName() {
+    public String getHandle() {
         return (String) get(1);
     }
 
@@ -113,7 +113,7 @@ public class RaidRelatedObjectRecord extends UpdatableRecordImpl<RaidRelatedObje
 
     @Override
     public Field<String> field2() {
-        return RaidRelatedObject.RAID_RELATED_OBJECT.RAID_NAME;
+        return RaidRelatedObject.RAID_RELATED_OBJECT.HANDLE;
     }
 
     @Override
@@ -133,7 +133,7 @@ public class RaidRelatedObjectRecord extends UpdatableRecordImpl<RaidRelatedObje
 
     @Override
     public String component2() {
-        return getRaidName();
+        return getHandle();
     }
 
     @Override
@@ -153,7 +153,7 @@ public class RaidRelatedObjectRecord extends UpdatableRecordImpl<RaidRelatedObje
 
     @Override
     public String value2() {
-        return getRaidName();
+        return getHandle();
     }
 
     @Override
@@ -174,7 +174,7 @@ public class RaidRelatedObjectRecord extends UpdatableRecordImpl<RaidRelatedObje
 
     @Override
     public RaidRelatedObjectRecord value2(String value) {
-        setRaidName(value);
+        setHandle(value);
         return this;
     }
 
@@ -213,11 +213,11 @@ public class RaidRelatedObjectRecord extends UpdatableRecordImpl<RaidRelatedObje
     /**
      * Create a detached, initialised RaidRelatedObjectRecord
      */
-    public RaidRelatedObjectRecord(Integer id, String raidName, Integer relatedObjectId, Integer relatedObjectTypeId) {
+    public RaidRelatedObjectRecord(Integer id, String handle, Integer relatedObjectId, Integer relatedObjectTypeId) {
         super(RaidRelatedObject.RAID_RELATED_OBJECT);
 
         setId(id);
-        setRaidName(raidName);
+        setHandle(handle);
         setRelatedObjectId(relatedObjectId);
         setRelatedObjectTypeId(relatedObjectTypeId);
     }

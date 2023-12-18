@@ -37,17 +37,17 @@ public class RaidTitleRecord extends UpdatableRecordImpl<RaidTitleRecord> implem
     }
 
     /**
-     * Setter for <code>api_svc.raid_title.raid_name</code>.
+     * Setter for <code>api_svc.raid_title.handle</code>.
      */
-    public RaidTitleRecord setRaidName(String value) {
+    public RaidTitleRecord setHandle(String value) {
         set(1, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.raid_title.raid_name</code>.
+     * Getter for <code>api_svc.raid_title.handle</code>.
      */
-    public String getRaidName() {
+    public String getHandle() {
         return (String) get(1);
     }
 
@@ -156,7 +156,7 @@ public class RaidTitleRecord extends UpdatableRecordImpl<RaidTitleRecord> implem
 
     @Override
     public Field<String> field2() {
-        return RaidTitle.RAID_TITLE.RAID_NAME;
+        return RaidTitle.RAID_TITLE.HANDLE;
     }
 
     @Override
@@ -191,7 +191,7 @@ public class RaidTitleRecord extends UpdatableRecordImpl<RaidTitleRecord> implem
 
     @Override
     public String component2() {
-        return getRaidName();
+        return getHandle();
     }
 
     @Override
@@ -226,7 +226,7 @@ public class RaidTitleRecord extends UpdatableRecordImpl<RaidTitleRecord> implem
 
     @Override
     public String value2() {
-        return getRaidName();
+        return getHandle();
     }
 
     @Override
@@ -262,7 +262,7 @@ public class RaidTitleRecord extends UpdatableRecordImpl<RaidTitleRecord> implem
 
     @Override
     public RaidTitleRecord value2(String value) {
-        setRaidName(value);
+        setHandle(value);
         return this;
     }
 
@@ -322,11 +322,11 @@ public class RaidTitleRecord extends UpdatableRecordImpl<RaidTitleRecord> implem
     /**
      * Create a detached, initialised RaidTitleRecord
      */
-    public RaidTitleRecord(Integer id, String raidName, Integer titleTypeId, String text, Integer languageId, String startDate, String endDate) {
+    public RaidTitleRecord(Integer id, String handle, Integer titleTypeId, String text, Integer languageId, String startDate, String endDate) {
         super(RaidTitle.RAID_TITLE);
 
         setId(id);
-        setRaidName(raidName);
+        setHandle(handle);
         setTitleTypeId(titleTypeId);
         setText(text);
         setLanguageId(languageId);

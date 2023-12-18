@@ -17,7 +17,7 @@ import static au.org.raid.api.util.StringUtil.isBlank;
 @Component
 @RequiredArgsConstructor
 public class SpatialCoverageValidator {
-    private final LanguageValidator languageValidator;
+    private final SpatialCoveragePlaceValidator placeValidator;
     private final Map<String, BiFunction<String, String, List<ValidationFailure>>> spatialCoverageUriValidatorMap;
 
     public List<ValidationFailure> validate(final List<SpatialCoverage> spatialCoverages) {
@@ -52,9 +52,7 @@ public class SpatialCoverageValidator {
                                 .errorType(INVALID_VALUE_TYPE)
                                 .message(INVALID_SCHEMA));
                     }
-                    failures.addAll(
-                            languageValidator.validate(spatialCoverage.getLanguage(), "spatialCoverage[%d]".formatted(i))
-                    );
+                    failures.addAll(placeValidator.validate(spatialCoverage.getPlace(), i));
                 });
 
         return failures;

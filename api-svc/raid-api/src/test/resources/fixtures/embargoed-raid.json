@@ -227,12 +227,12 @@
     {
       "id": "https://www.geonames.org/264371/athens.html",
       "schemaUri": "https://www.geonames.org/",
-      "place": "Athens"
+      "place":[{"text":  "Athens"}]
     },
     {
       "id": "https://www.geonames.org/2147714/sydney.html",
       "schemaUri": "https://www.geonames.org/",
-      "place": "Sydney"
+      "place":[{"text":  "Sydney"}]
     }
   ]
 }

@@ -4,6 +4,7 @@ import au.org.raid.idl.raidv2.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 @Component
@@ -33,5 +34,12 @@ public class AccessFactory {
                         .id(accessBlock.getType() != null ? ACCESS_TYPE_MAP.get(accessBlock.getType()) : null)
                         .schemaUri(ACCESS_SCHEMA_URI)
                 );
+    }
+
+    public Access create(final AccessStatement statement, final AccessTypeWithSchemaUri type, final LocalDate embargoExpiry) {
+        return new Access()
+                .statement(statement)
+                .type(type)
+                .embargoExpiry(embargoExpiry);
     }
 }

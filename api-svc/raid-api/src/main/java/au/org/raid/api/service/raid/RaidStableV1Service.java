@@ -155,10 +155,8 @@ public class RaidStableV1Service {
     }
 
     public RaidDto read(String handle) {
-        final var raidRecord = raidRepository.findByHandle(handle).
-                orElseThrow(() -> new ResourceNotFoundException(handle));
-
-        return raidDtoFactory.create(raidRecord);
+        return raidIngestService.findByHandle(handle)
+                .orElseThrow(() -> new ResourceNotFoundException(handle));
     }
 
     public boolean isEditable(final ApiToken user, final long servicePointId) {

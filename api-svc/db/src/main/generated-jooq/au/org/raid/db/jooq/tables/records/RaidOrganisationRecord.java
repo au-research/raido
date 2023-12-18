@@ -37,17 +37,17 @@ public class RaidOrganisationRecord extends UpdatableRecordImpl<RaidOrganisation
     }
 
     /**
-     * Setter for <code>api_svc.raid_organisation.raid_name</code>.
+     * Setter for <code>api_svc.raid_organisation.handle</code>.
      */
-    public RaidOrganisationRecord setRaidName(String value) {
+    public RaidOrganisationRecord setHandle(String value) {
         set(1, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.raid_organisation.raid_name</code>.
+     * Getter for <code>api_svc.raid_organisation.handle</code>.
      */
-    public String getRaidName() {
+    public String getHandle() {
         return (String) get(1);
     }
 
@@ -96,7 +96,7 @@ public class RaidOrganisationRecord extends UpdatableRecordImpl<RaidOrganisation
 
     @Override
     public Field<String> field2() {
-        return RaidOrganisation.RAID_ORGANISATION.RAID_NAME;
+        return RaidOrganisation.RAID_ORGANISATION.HANDLE;
     }
 
     @Override
@@ -111,7 +111,7 @@ public class RaidOrganisationRecord extends UpdatableRecordImpl<RaidOrganisation
 
     @Override
     public String component2() {
-        return getRaidName();
+        return getHandle();
     }
 
     @Override
@@ -126,7 +126,7 @@ public class RaidOrganisationRecord extends UpdatableRecordImpl<RaidOrganisation
 
     @Override
     public String value2() {
-        return getRaidName();
+        return getHandle();
     }
 
     @Override
@@ -142,7 +142,7 @@ public class RaidOrganisationRecord extends UpdatableRecordImpl<RaidOrganisation
 
     @Override
     public RaidOrganisationRecord value2(String value) {
-        setRaidName(value);
+        setHandle(value);
         return this;
     }
 
@@ -174,11 +174,11 @@ public class RaidOrganisationRecord extends UpdatableRecordImpl<RaidOrganisation
     /**
      * Create a detached, initialised RaidOrganisationRecord
      */
-    public RaidOrganisationRecord(Integer id, String raidName, Integer organisationId) {
+    public RaidOrganisationRecord(Integer id, String handle, Integer organisationId) {
         super(RaidOrganisation.RAID_ORGANISATION);
 
         setId(id);
-        setRaidName(raidName);
+        setHandle(handle);
         setOrganisationId(organisationId);
     }
 }

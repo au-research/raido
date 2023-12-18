@@ -6,10 +6,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RaidAlternateIdentifierRecordFactory {
-    public RaidAlternateIdentifierRecord create(final AlternateIdentifier alternateIdentifier, final String raidName) {
+    public RaidAlternateIdentifierRecord create(final AlternateIdentifier alternateIdentifier, final String handle) {
         return new RaidAlternateIdentifierRecord()
                 .setId(alternateIdentifier.getId())
                 .setType(alternateIdentifier.getType())
-                .setRaidName(raidName);
+                .setHandle(handle);
     }
 }

@@ -549,7 +549,16 @@ components:
       properties:
         id: { type: string }
         schemaUri: { type: string }
-        place: { type: string }
+        place:
+          type: array
+          items:
+            $ref: '#/components/schemas/SpatialCoveragePlace'
+    SpatialCoveragePlace:
+      type: object
+      properties:
+        text: {
+          type: string
+        }
         language:
           $ref: '#/components/schemas/Language'
     TraditionalKnowledgeLabel:

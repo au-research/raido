@@ -15,7 +15,8 @@ class AlternateUrlFactoryTest {
     @Test
     @DisplayName("If AlternateUrlBlock is null returns null")
     void returnsNull() {
-        assertThat(alternateUrlFactory.create(null), nullValue());
+        final AlternateUrlBlock url = null;
+        assertThat(alternateUrlFactory.create(url), nullValue());
     }
 
     @Test

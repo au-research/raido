@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 import static au.org.raid.db.jooq.tables.RaidSubjectKeyword.RAID_SUBJECT_KEYWORD;
 
 @Repository
@@ -19,5 +21,11 @@ public class RaidSubjectKeywordRepository {
                 .set(RAID_SUBJECT_KEYWORD.LANGUAGE_ID, record.getLanguageId())
                 .returning()
                 .fetchOne();
+    }
+
+    public List<RaidSubjectKeywordRecord> findAllByRaidSubjectId(final Integer raidSubjectId) {
+        return dslContext.selectFrom(RAID_SUBJECT_KEYWORD)
+                .where(RAID_SUBJECT_KEYWORD.RAID_SUBJECT_ID.eq(raidSubjectId))
+                .fetch();
     }
 }

@@ -21,4 +21,10 @@ public class RelatedRaidFactory {
                         .id(relatedRaidBlock.getRelatedRaidType())
                         .schemaUri(TYPE_SCHEMA_URI));
     }
+
+    public RelatedRaid create(final String id, final RelatedRaidType type) {
+        return new RelatedRaid()
+                .id(id)
+                .type(type);
+    }
 }

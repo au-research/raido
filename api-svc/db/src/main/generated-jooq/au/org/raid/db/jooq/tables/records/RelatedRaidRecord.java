@@ -22,32 +22,32 @@ public class RelatedRaidRecord extends UpdatableRecordImpl<RelatedRaidRecord> im
     private static final long serialVersionUID = 1L;
 
     /**
-     * Setter for <code>api_svc.related_raid.raid_name</code>.
+     * Setter for <code>api_svc.related_raid.handle</code>.
      */
-    public RelatedRaidRecord setRaidName(String value) {
+    public RelatedRaidRecord setHandle(String value) {
         set(0, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.related_raid.raid_name</code>.
+     * Getter for <code>api_svc.related_raid.handle</code>.
      */
-    public String getRaidName() {
+    public String getHandle() {
         return (String) get(0);
     }
 
     /**
-     * Setter for <code>api_svc.related_raid.related_raid_name</code>.
+     * Setter for <code>api_svc.related_raid.related_raid_handle</code>.
      */
-    public RelatedRaidRecord setRelatedRaidName(String value) {
+    public RelatedRaidRecord setRelatedRaidHandle(String value) {
         set(1, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.related_raid.related_raid_name</code>.
+     * Getter for <code>api_svc.related_raid.related_raid_handle</code>.
      */
-    public String getRelatedRaidName() {
+    public String getRelatedRaidHandle() {
         return (String) get(1);
     }
 
@@ -91,12 +91,12 @@ public class RelatedRaidRecord extends UpdatableRecordImpl<RelatedRaidRecord> im
 
     @Override
     public Field<String> field1() {
-        return RelatedRaid.RELATED_RAID.RAID_NAME;
+        return RelatedRaid.RELATED_RAID.HANDLE;
     }
 
     @Override
     public Field<String> field2() {
-        return RelatedRaid.RELATED_RAID.RELATED_RAID_NAME;
+        return RelatedRaid.RELATED_RAID.RELATED_RAID_HANDLE;
     }
 
     @Override
@@ -106,12 +106,12 @@ public class RelatedRaidRecord extends UpdatableRecordImpl<RelatedRaidRecord> im
 
     @Override
     public String component1() {
-        return getRaidName();
+        return getHandle();
     }
 
     @Override
     public String component2() {
-        return getRelatedRaidName();
+        return getRelatedRaidHandle();
     }
 
     @Override
@@ -121,12 +121,12 @@ public class RelatedRaidRecord extends UpdatableRecordImpl<RelatedRaidRecord> im
 
     @Override
     public String value1() {
-        return getRaidName();
+        return getHandle();
     }
 
     @Override
     public String value2() {
-        return getRelatedRaidName();
+        return getRelatedRaidHandle();
     }
 
     @Override
@@ -136,13 +136,13 @@ public class RelatedRaidRecord extends UpdatableRecordImpl<RelatedRaidRecord> im
 
     @Override
     public RelatedRaidRecord value1(String value) {
-        setRaidName(value);
+        setHandle(value);
         return this;
     }
 
     @Override
     public RelatedRaidRecord value2(String value) {
-        setRelatedRaidName(value);
+        setRelatedRaidHandle(value);
         return this;
     }
 
@@ -174,11 +174,11 @@ public class RelatedRaidRecord extends UpdatableRecordImpl<RelatedRaidRecord> im
     /**
      * Create a detached, initialised RelatedRaidRecord
      */
-    public RelatedRaidRecord(String raidName, String relatedRaidName, Integer relatedRaidTypeId) {
+    public RelatedRaidRecord(String handle, String relatedRaidHandle, Integer relatedRaidTypeId) {
         super(RelatedRaid.RELATED_RAID);
 
-        setRaidName(raidName);
-        setRelatedRaidName(relatedRaidName);
+        setHandle(handle);
+        setRelatedRaidHandle(relatedRaidHandle);
         setRelatedRaidTypeId(relatedRaidTypeId);
     }
 }

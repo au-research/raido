@@ -1,15 +1,18 @@
 package au.org.raid.api.service;
 
+import au.org.raid.api.factory.OrganisationFactory;
 import au.org.raid.api.factory.record.OrganisationRecordFactory;
 import au.org.raid.api.factory.record.RaidOrganisationRecordFactory;
 import au.org.raid.api.repository.OrganisationRepository;
 import au.org.raid.api.repository.OrganisationSchemaRepository;
 import au.org.raid.api.repository.RaidOrganisationRepository;
+import au.org.raid.idl.raidv2.model.Contributor;
 import au.org.raid.idl.raidv2.model.Organisation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,6 +25,7 @@ public class OrganisationService {
     private final OrganisationRecordFactory organisationRecordFactory;
     private final RaidOrganisationRecordFactory raidOrganisationRecordFactory;
     private final OrganisationRoleService organisationRoleService;
+    private final OrganisationFactory organisationFactory;
 
     public void create(final List<Organisation> organisations, final String handle) {
         if (organisations == null) {
@@ -67,4 +71,51 @@ public class OrganisationService {
 
         return organisation.getId();
     }
+
+    public List<Organisation> findAllByHandle(final String handle) {
+        final var organisations = new ArrayList<Organisation>();
+
+        final var records = raidOrganisationRepository.findAllByHandle(handle);
+
+        for (final var record : records) {
+            final var organisationId = record.getOrganisationId();
+
+            final var organisationRecord = organisationRepository.findById(organisationId)
+                    .orElseThrow(() -> new RuntimeException("Organisation not found with id %d".formatted(organisationId)));
+
+            final var schemaId = organisationRecord.getSchemaId();
+
+            final var organisationSchemaRecord = organisationSchemaRepository.findById(schemaId)
+                    .orElseThrow(() -> new RuntimeException("Organisation schema not found with id %d".formatted(schemaId)));
+
+            final var roles = organisationRoleService.findAllByRaidOrganisationId(record.getId());
+
+            organisations.add(organisationFactory.create(
+                    organisationRecord.getPid(),
+                    organisationSchemaRecord.getUri(),
+                    roles
+            ));
+        }
+
+        return organisations;
+    }
+
+    public String findOrganisationUri(final Integer organisationId) {
+        final var record = organisationRepository.findById(organisationId)
+                .orElseThrow(() -> new RuntimeException("Organisation not found with id %d".formatted(organisationId)));
+        return record.getPid();
+    }
+
+    public String findOrganisationSchemaUri(final Integer organisationId) {
+        final var record = organisationRepository.findById(organisationId)
+                .orElseThrow(() -> new RuntimeException("Organisation not found with id %d".formatted(organisationId)));
+
+        final var schemaId = record.getSchemaId();
+
+        final var schemaRecord = organisationSchemaRepository.findById(schemaId)
+                .orElseThrow(() -> new RuntimeException("Organisation schema not found with id %d".formatted(schemaId)));
+
+        return schemaRecord.getUri();
+    }
+
 }

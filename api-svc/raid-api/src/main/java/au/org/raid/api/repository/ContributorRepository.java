@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 import static au.org.raid.db.jooq.tables.Contributor.CONTRIBUTOR;
 
 @Repository
@@ -20,16 +22,17 @@ public class ContributorRepository {
     }
 
     public ContributorRecord findOrCreate(final ContributorRecord contributor) {
-        final var result = dslContext.select(CONTRIBUTOR.fields())
-                .from(CONTRIBUTOR)
+        final var result = dslContext.selectFrom(CONTRIBUTOR)
                 .where(CONTRIBUTOR.PID.eq(contributor.getPid())
                         .and(CONTRIBUTOR.SCHEMA_ID.eq(contributor.getSchemaId())))
-                .fetchOptional(record -> new ContributorRecord()
-                        .setId(CONTRIBUTOR.ID.getValue(record))
-                        .setPid(CONTRIBUTOR.PID.getValue(record))
-                        .setSchemaId(CONTRIBUTOR.SCHEMA_ID.getValue(record))
-                );
+                .fetchOptional();
 
         return result.orElseGet(() -> create(contributor));
+    }
+
+    public Optional<ContributorRecord> findById(final Integer id) {
+        return dslContext.selectFrom(CONTRIBUTOR)
+                .where(CONTRIBUTOR.ID.eq(id))
+                .fetchOptional();
     }
 }

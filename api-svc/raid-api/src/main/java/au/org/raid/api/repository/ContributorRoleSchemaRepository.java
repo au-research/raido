@@ -15,12 +15,14 @@ public class ContributorRoleSchemaRepository {
     private final DSLContext dslContext;
 
     public Optional<ContributorRoleSchemaRecord> findByUri(final String uri) {
-        return dslContext.select(CONTRIBUTOR_ROLE_SCHEMA.fields())
-                .from(CONTRIBUTOR_ROLE_SCHEMA)
+        return dslContext.selectFrom(CONTRIBUTOR_ROLE_SCHEMA)
                 .where(CONTRIBUTOR_ROLE_SCHEMA.URI.eq(uri))
-                .fetchOptional(record -> new ContributorRoleSchemaRecord()
-                        .setId(CONTRIBUTOR_ROLE_SCHEMA.ID.getValue(record))
-                        .setUri(CONTRIBUTOR_ROLE_SCHEMA.URI.getValue(record))
-                );
+                .fetchOptional();
+    }
+
+    public Optional<ContributorRoleSchemaRecord> findById(final Integer id) {
+        return dslContext.selectFrom(CONTRIBUTOR_ROLE_SCHEMA)
+                .where(CONTRIBUTOR_ROLE_SCHEMA.ID.eq(id))
+                .fetchOptional();
     }
 }

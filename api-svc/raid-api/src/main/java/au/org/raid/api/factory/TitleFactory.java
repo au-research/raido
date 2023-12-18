@@ -1,9 +1,7 @@
 package au.org.raid.api.factory;
 
-import au.org.raid.idl.raidv2.model.Title;
-import au.org.raid.idl.raidv2.model.TitleBlock;
-import au.org.raid.idl.raidv2.model.TitleType;
-import au.org.raid.idl.raidv2.model.TitleTypeWithSchemaUri;
+import au.org.raid.db.jooq.tables.records.RaidTitleRecord;
+import au.org.raid.idl.raidv2.model.*;
 import org.springframework.stereotype.Component;
 
 import java.time.format.DateTimeFormatter;
@@ -37,5 +35,18 @@ public class TitleFactory {
                         .id(titleBlock.getType() != null ? TITLE_TYPE_MAP.get(titleBlock.getType()) : null)
                         .schemaUri(TITLE_TYPE_SCHEMA_URI)
                 );
+    }
+
+    public Title create(final RaidTitleRecord record, final String typeId, final String typeSchemaUri, final Language language) {
+        return new Title()
+                .text(record.getText())
+                .startDate(record.getStartDate())
+                .endDate(record.getEndDate())
+                .type(new TitleTypeWithSchemaUri()
+                        .id(typeId)
+                        .schemaUri(typeSchemaUri)
+
+                )
+                .language(language);
     }
 }

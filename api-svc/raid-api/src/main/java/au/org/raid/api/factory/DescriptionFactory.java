@@ -1,9 +1,7 @@
 package au.org.raid.api.factory;
 
-import au.org.raid.idl.raidv2.model.Description;
-import au.org.raid.idl.raidv2.model.DescriptionBlock;
-import au.org.raid.idl.raidv2.model.DescriptionType;
-import au.org.raid.idl.raidv2.model.DescriptionTypeWithSchemaUri;
+import au.org.raid.db.jooq.tables.records.RaidDescriptionRecord;
+import au.org.raid.idl.raidv2.model.*;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -29,5 +27,19 @@ public class DescriptionFactory {
                         .id(descriptionBlock.getType() != null ? DESCRIPTION_TYPE_MAP.get(descriptionBlock.getType()) : null)
                         .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI)
                 );
+    }
+
+    public Description create(
+            final RaidDescriptionRecord record,
+            final String typeId,
+            final String typeSchemaUri,
+            final Language language) {
+        return new Description()
+                .text(record.getText())
+                .type(new DescriptionTypeWithSchemaUri()
+                        .id(typeId)
+                        .schemaUri(typeSchemaUri)
+                )
+                .language(language);
     }
 }

@@ -15,12 +15,14 @@ public class ContributorSchemaRepository {
     private final DSLContext dslContext;
 
     public Optional<ContributorSchemaRecord> findByUri(final String uri) {
-        return dslContext.select(CONTRIBUTOR_SCHEMA.fields())
-                .from(CONTRIBUTOR_SCHEMA)
+        return dslContext.selectFrom(CONTRIBUTOR_SCHEMA)
                 .where(CONTRIBUTOR_SCHEMA.URI.eq(uri))
-                .fetchOptional(record -> new ContributorSchemaRecord()
-                        .setId(CONTRIBUTOR_SCHEMA.ID.getValue(record))
-                        .setUri(CONTRIBUTOR_SCHEMA.URI.getValue(record))
-                );
+                .fetchOptional();
+    }
+
+    public Optional<ContributorSchemaRecord> findById(final Integer id) {
+        return dslContext.selectFrom(CONTRIBUTOR_SCHEMA)
+                .where(CONTRIBUTOR_SCHEMA.ID.eq(id))
+                .fetchOptional();
     }
 }

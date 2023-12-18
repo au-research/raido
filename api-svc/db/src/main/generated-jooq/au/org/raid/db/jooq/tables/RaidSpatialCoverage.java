@@ -14,11 +14,12 @@ import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function5;
+import org.jooq.Function4;
+import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row5;
+import org.jooq.Row4;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -52,29 +53,24 @@ public class RaidSpatialCoverage extends TableImpl<RaidSpatialCoverageRecord> {
     }
 
     /**
-     * The column <code>api_svc.raid_spatial_coverage.raid_name</code>.
-     */
-    public final TableField<RaidSpatialCoverageRecord, String> RAID_NAME = createField(DSL.name("raid_name"), SQLDataType.VARCHAR.nullable(false), this, "");
-
-    /**
      * The column <code>api_svc.raid_spatial_coverage.id</code>.
      */
-    public final TableField<RaidSpatialCoverageRecord, String> ID = createField(DSL.name("id"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<RaidSpatialCoverageRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
+
+    /**
+     * The column <code>api_svc.raid_spatial_coverage.handle</code>.
+     */
+    public final TableField<RaidSpatialCoverageRecord, String> HANDLE = createField(DSL.name("handle"), SQLDataType.VARCHAR.nullable(false), this, "");
+
+    /**
+     * The column <code>api_svc.raid_spatial_coverage.uri</code>.
+     */
+    public final TableField<RaidSpatialCoverageRecord, String> URI = createField(DSL.name("uri"), SQLDataType.VARCHAR.nullable(false), this, "");
 
     /**
      * The column <code>api_svc.raid_spatial_coverage.schema_id</code>.
      */
     public final TableField<RaidSpatialCoverageRecord, Integer> SCHEMA_ID = createField(DSL.name("schema_id"), SQLDataType.INTEGER.nullable(false), this, "");
-
-    /**
-     * The column <code>api_svc.raid_spatial_coverage.place</code>.
-     */
-    public final TableField<RaidSpatialCoverageRecord, String> PLACE = createField(DSL.name("place"), SQLDataType.VARCHAR, this, "");
-
-    /**
-     * The column <code>api_svc.raid_spatial_coverage.language_id</code>.
-     */
-    public final TableField<RaidSpatialCoverageRecord, Integer> LANGUAGE_ID = createField(DSL.name("language_id"), SQLDataType.INTEGER, this, "");
 
     private RaidSpatialCoverage(Name alias, Table<RaidSpatialCoverageRecord> aliased) {
         this(alias, aliased, null);
@@ -117,25 +113,29 @@ public class RaidSpatialCoverage extends TableImpl<RaidSpatialCoverageRecord> {
     }
 
     @Override
+    public Identity<RaidSpatialCoverageRecord, Integer> getIdentity() {
+        return (Identity<RaidSpatialCoverageRecord, Integer>) super.getIdentity();
+    }
+
+    @Override
     public UniqueKey<RaidSpatialCoverageRecord> getPrimaryKey() {
         return Keys.RAID_SPATIAL_COVERAGE_PKEY;
     }
 
     @Override
     public List<ForeignKey<RaidSpatialCoverageRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_RAID_NAME, Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_SCHEMA_ID, Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_LANGUAGE_ID);
+        return Arrays.asList(Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_HANDLE, Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_SCHEMA_ID);
     }
 
     private transient Raid _raid;
     private transient SpatialCoverageSchema _spatialCoverageSchema;
-    private transient Language _language;
 
     /**
      * Get the implicit join path to the <code>api_svc.raid</code> table.
      */
     public Raid raid() {
         if (_raid == null)
-            _raid = new Raid(this, Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_RAID_NAME);
+            _raid = new Raid(this, Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_HANDLE);
 
         return _raid;
     }
@@ -149,16 +149,6 @@ public class RaidSpatialCoverage extends TableImpl<RaidSpatialCoverageRecord> {
             _spatialCoverageSchema = new SpatialCoverageSchema(this, Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_SCHEMA_ID);
 
         return _spatialCoverageSchema;
-    }
-
-    /**
-     * Get the implicit join path to the <code>api_svc.language</code> table.
-     */
-    public Language language() {
-        if (_language == null)
-            _language = new Language(this, Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_LANGUAGE_ID);
-
-        return _language;
     }
 
     @Override
@@ -201,18 +191,18 @@ public class RaidSpatialCoverage extends TableImpl<RaidSpatialCoverageRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row5 type methods
+    // Row4 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row5<String, String, Integer, String, Integer> fieldsRow() {
-        return (Row5) super.fieldsRow();
+    public Row4<Integer, String, String, Integer> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function5<? super String, ? super String, ? super Integer, ? super String, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function4<? super Integer, ? super String, ? super String, ? super Integer, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -220,7 +210,7 @@ public class RaidSpatialCoverage extends TableImpl<RaidSpatialCoverageRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function5<? super String, ? super String, ? super Integer, ? super String, ? super Integer, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function4<? super Integer, ? super String, ? super String, ? super Integer, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

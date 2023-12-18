@@ -15,23 +15,20 @@ public class RelatedRaidTypeRepository {
     private final DSLContext dslContext;
 
     public Optional<RelatedRaidTypeRecord> findByUriAndSchemaId(final String uri, final int schemaId) {
-        return dslContext.select(RELATED_RAID_TYPE.fields())
-                .from(RELATED_RAID_TYPE)
+        return dslContext.selectFrom(RELATED_RAID_TYPE)
                 .where(RELATED_RAID_TYPE.URI.eq(uri).and(RELATED_RAID_TYPE.SCHEMA_ID.eq(schemaId))).
-                fetchOptional(record -> new RelatedRaidTypeRecord()
-                        .setId(RELATED_RAID_TYPE.ID.getValue(record))
-                        .setSchemaId(RELATED_RAID_TYPE.SCHEMA_ID.getValue(record))
-                        .setUri(RELATED_RAID_TYPE.URI.getValue(record))
-                );
+                fetchOptional();
     }
 
     public Optional<RelatedRaidTypeRecord> findByUri(final String uri) {
-        return dslContext.select(RELATED_RAID_TYPE.fields())
-                .from(RELATED_RAID_TYPE)
+        return dslContext.selectFrom(RELATED_RAID_TYPE)
                 .where(RELATED_RAID_TYPE.URI.eq(uri)).
-                fetchOptional(record -> new RelatedRaidTypeRecord()
-                        .setSchemaId(RELATED_RAID_TYPE.SCHEMA_ID.getValue(record))
-                        .setUri(RELATED_RAID_TYPE.URI.getValue(record))
-                );
+                fetchOptional();
+    }
+
+    public Optional<RelatedRaidTypeRecord> findById(final Integer id) {
+        return dslContext.selectFrom(RELATED_RAID_TYPE)
+                .where(RELATED_RAID_TYPE.ID.eq(id))
+                .fetchOptional();
     }
 }

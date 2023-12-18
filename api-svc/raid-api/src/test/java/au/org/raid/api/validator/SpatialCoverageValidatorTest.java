@@ -4,6 +4,7 @@ import au.org.raid.api.util.SchemaValues;
 import au.org.raid.api.util.TestConstants;
 import au.org.raid.idl.raidv2.model.Language;
 import au.org.raid.idl.raidv2.model.SpatialCoverage;
+import au.org.raid.idl.raidv2.model.SpatialCoveragePlace;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,10 +20,10 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 
 class SpatialCoverageValidatorTest {
-    private LanguageValidator languageValidator;
+    private SpatialCoveragePlaceValidator placeValidator;
     @BeforeEach
     void setUp() {
-        languageValidator = mock(LanguageValidator.class);
+        placeValidator = mock(SpatialCoveragePlaceValidator.class);
 
     }
 
@@ -33,52 +34,23 @@ class SpatialCoverageValidatorTest {
                 SchemaValues.GEONAMES_SCHEMA_URI.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> Collections.emptyList()
         );
 
-        final var validationService = new SpatialCoverageValidator(languageValidator, uriValidatorMap);
+        final var validationService = new SpatialCoverageValidator(placeValidator, uriValidatorMap);
 
         final var language = new Language()
                 .id(TestConstants.LANGUAGE_ID)
                 .schemaUri(TestConstants.LANGUAGE_SCHEMA_URI);
 
+        final var places = List.of(new SpatialCoveragePlace()
+                .text("London"));
+
         final var spatialCoverage = new SpatialCoverage()
                 .id("https://www.geonames.org/2643743/london.html")
                 .schemaUri(SchemaValues.GEONAMES_SCHEMA_URI.getUri())
-                .place("London")
-                .language(language);
+                .place(places);
 
         final var failures = validationService.validate(List.of(spatialCoverage));
         assertThat(failures, empty());
-        verify(languageValidator).validate(language, "spatialCoverage[0]");
-    }
-
-    @Test
-    @DisplayName("Adds language validation failures")
-    void addLanguageValidationFailures() {
-        final var uriValidatorMap = Map.of(
-                SchemaValues.GEONAMES_SCHEMA_URI.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> Collections.emptyList()
-        );
-
-        final var validationService = new SpatialCoverageValidator(languageValidator, uriValidatorMap);
-
-        final var language = new Language()
-                .id(TestConstants.LANGUAGE_ID)
-                .schemaUri(TestConstants.LANGUAGE_SCHEMA_URI);
-
-        final var spatialCoverage = new SpatialCoverage()
-                .id("https://www.geonames.org/2643743/london.html")
-                .schemaUri(SchemaValues.GEONAMES_SCHEMA_URI.getUri())
-                .place("London")
-                .language(language);
-
-        final var failure = new ValidationFailure()
-                .fieldId("field-id")
-                .errorType("error-type")
-                .message("_message");
-
-        when(languageValidator.validate(language, "spatialCoverage[0]")).thenReturn(List.of(failure));
-
-        final var failures = validationService.validate(List.of(spatialCoverage));
-        assertThat(failures, is(List.of(failure)));
-        verify(languageValidator).validate(language, "spatialCoverage[0]");
+        verify(placeValidator).validate(places, 0);
     }
 
     @Test
@@ -93,24 +65,15 @@ class SpatialCoverageValidatorTest {
                 SchemaValues.GEONAMES_SCHEMA_URI.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> List.of(failure)
         );
 
-        final var validationService = new SpatialCoverageValidator(languageValidator, uriValidatorMap);
+        final var validationService = new SpatialCoverageValidator(placeValidator, uriValidatorMap);
         final var uri = "https://www.geonames.org/2643743/london.html";
-        final var language = new Language()
-                .id(TestConstants.LANGUAGE_ID)
-                .schemaUri(TestConstants.LANGUAGE_SCHEMA_URI);
 
         final var spatialCoverage = new SpatialCoverage()
                 .id(uri)
-                .schemaUri("https://www.geonames.org/")
-                .place("London")
-                .language(language);
-
-        when(languageValidator.validate(language, "spatialCoverage[0]"))
-                .thenReturn(Collections.emptyList());
+                .schemaUri("https://www.geonames.org/");
 
         final var failures = validationService.validate(List.of(spatialCoverage));
         assertThat(failures, is(List.of(failure)));
-        verify(languageValidator).validate(language, "spatialCoverage[0]");
     }
 
     @Test
@@ -120,10 +83,9 @@ class SpatialCoverageValidatorTest {
                 SchemaValues.GEONAMES_SCHEMA_URI.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> Collections.emptyList()
         );
 
-        final var validationService = new SpatialCoverageValidator(languageValidator, uriValidatorMap);
+        final var validationService = new SpatialCoverageValidator(placeValidator, uriValidatorMap);
         final var spatialCoverage = new SpatialCoverage()
-                .schemaUri("https://www.geonames.org/")
-                .place("London");
+                .schemaUri("https://www.geonames.org/");
 
         final var failures = validationService.validate(List.of(spatialCoverage));
         assertThat(failures, hasSize(1));
@@ -142,12 +104,11 @@ class SpatialCoverageValidatorTest {
                 SchemaValues.GEONAMES_SCHEMA_URI.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> Collections.emptyList()
         );
 
-        final var validationService = new SpatialCoverageValidator(languageValidator, uriValidatorMap);
+        final var validationService = new SpatialCoverageValidator(placeValidator, uriValidatorMap);
 
         final var spatialCoverage = new SpatialCoverage()
                 .id("")
-                .schemaUri("https://www.geonames.org/")
-                .place("London");
+                .schemaUri("https://www.geonames.org/");
 
         final var failures = validationService.validate(List.of(spatialCoverage));
         assertThat(failures, hasSize(1));
@@ -166,11 +127,10 @@ class SpatialCoverageValidatorTest {
                 SchemaValues.GEONAMES_SCHEMA_URI.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> Collections.emptyList()
         );
 
-        final var validationService = new SpatialCoverageValidator(languageValidator, uriValidatorMap);
+        final var validationService = new SpatialCoverageValidator(placeValidator, uriValidatorMap);
 
         final var spatialCoverage = new SpatialCoverage()
-                .id("https://www.geonames.org/2643743/london.html")
-                .place("London");
+                .id("https://www.geonames.org/2643743/london.html");
 
         final var failures = validationService.validate(List.of(spatialCoverage));
         assertThat(failures, hasSize(1));
@@ -189,11 +149,10 @@ class SpatialCoverageValidatorTest {
                 SchemaValues.GEONAMES_SCHEMA_URI.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> Collections.emptyList()
         );
 
-        final var validationService = new SpatialCoverageValidator(languageValidator, uriValidatorMap);
+        final var validationService = new SpatialCoverageValidator(placeValidator, uriValidatorMap);
         final var spatialCoverage = new SpatialCoverage()
                 .id("https://www.geonames.org/2643743/london.html")
-                .schemaUri("")
-                .place("London");
+                .schemaUri("");
 
         final var failures = validationService.validate(List.of(spatialCoverage));
         assertThat(failures, hasSize(1));
@@ -212,11 +171,10 @@ class SpatialCoverageValidatorTest {
                 SchemaValues.GEONAMES_SCHEMA_URI.getUri(), (BiFunction<String, String, List<ValidationFailure>>) (s, s2) -> Collections.emptyList()
         );
 
-        final var validationService = new SpatialCoverageValidator(languageValidator, uriValidatorMap);
+        final var validationService = new SpatialCoverageValidator(placeValidator, uriValidatorMap);
         final var spatialCoverage = new SpatialCoverage()
                 .id("https://www.geonames.org/2643743/london.html")
-                .schemaUri("https://wwwgeonames.org/")
-                .place("London");
+                .schemaUri("https://wwwgeonames.org/");
 
         final var failures = validationService.validate(List.of(spatialCoverage));
         assertThat(failures, hasSize(1));

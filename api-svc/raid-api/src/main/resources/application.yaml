@@ -1,4 +1,5 @@
 raid:
+  name-prefix: http://dev.raid.org/
   db:
     user: not-set
     password: not-set

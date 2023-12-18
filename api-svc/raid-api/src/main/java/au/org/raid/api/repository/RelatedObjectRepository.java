@@ -1,9 +1,13 @@
 package au.org.raid.api.repository;
 
+import au.org.raid.db.jooq.tables.RelatedObject;
 import au.org.raid.db.jooq.tables.records.RelatedObjectRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
 
 import static au.org.raid.db.jooq.tables.RelatedObject.RELATED_OBJECT;
 
@@ -31,5 +35,11 @@ public class RelatedObjectRepository {
                         .setSchemaId(RELATED_OBJECT.SCHEMA_ID.getValue(r)));
 
         return result.orElseGet(() -> create(record));
+    }
+
+    public Optional<RelatedObjectRecord> findById(final Integer id) {
+        return dslContext.selectFrom(RELATED_OBJECT)
+                .where(RELATED_OBJECT.ID.eq(id))
+                .fetchOptional();
     }
 }

@@ -86,7 +86,7 @@ export default function ShowRelatedRaisComponent({
                         <Box>
                           <Typography variant="body2">Category</Typography>
                           <Typography color="text.secondary" variant="body1">
-                            {extractKeyFromIdUri(relatedObject.category?.id)}
+                            {/*{extractKeyFromIdUri(relatedObject.category?.id)}*/}
                           </Typography>
                         </Box>
                       </Grid>

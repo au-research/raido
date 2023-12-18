@@ -2,8 +2,11 @@ package au.org.raid.api.factory;
 
 import au.org.raid.idl.raidv2.model.SpatialCoverage;
 import au.org.raid.idl.raidv2.model.SpatialCoverageBlock;
+import au.org.raid.idl.raidv2.model.SpatialCoveragePlace;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -39,7 +42,7 @@ class SpatialCoverageFactoryTest {
         final var expected = new SpatialCoverage()
                 .id(id)
                 .schemaUri(schemeUri)
-                .place(place);
+                .place(List.of(new SpatialCoveragePlace().text(place)));
 
         assertThat(spatialCoverageFactory.create(spatialCoverage), is(expected));
     }

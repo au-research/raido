@@ -59,10 +59,9 @@ public class RaidTraditionalKnowledgeLabel extends TableImpl<RaidTraditionalKnow
     public final TableField<RaidTraditionalKnowledgeLabelRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
-     * The column
-     * <code>api_svc.raid_traditional_knowledge_label.raid_name</code>.
+     * The column <code>api_svc.raid_traditional_knowledge_label.handle</code>.
      */
-    public final TableField<RaidTraditionalKnowledgeLabelRecord, String> RAID_NAME = createField(DSL.name("raid_name"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<RaidTraditionalKnowledgeLabelRecord, String> HANDLE = createField(DSL.name("handle"), SQLDataType.VARCHAR.nullable(false), this, "");
 
     /**
      * The column
@@ -129,7 +128,7 @@ public class RaidTraditionalKnowledgeLabel extends TableImpl<RaidTraditionalKnow
 
     @Override
     public List<ForeignKey<RaidTraditionalKnowledgeLabelRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__FK_RAID_TRAD_KNOW_LABEL_RAID_NAME, Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__FK_RAID_TRAD_KNOW_LABEL_TRADITIONAL_KNOWLEDGE_LABEL_ID, Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__FK_RAID_TRAD_KNOW_LABEL_TRADITIONAL_KNOWLEDGE_LABEL_SCHEMA_ID);
+        return Arrays.asList(Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__FK_RAID_TRAD_KNOW_LABEL_HANDLE, Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__FK_RAID_TRAD_KNOW_LABEL_TRADITIONAL_KNOWLEDGE_LABEL_ID, Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__FK_RAID_TRAD_KNOW_LABEL_TRADITIONAL_KNOWLEDGE_LABEL_SCHEMA_ID);
     }
 
     private transient Raid _raid;
@@ -141,7 +140,7 @@ public class RaidTraditionalKnowledgeLabel extends TableImpl<RaidTraditionalKnow
      */
     public Raid raid() {
         if (_raid == null)
-            _raid = new Raid(this, Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__FK_RAID_TRAD_KNOW_LABEL_RAID_NAME);
+            _raid = new Raid(this, Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__FK_RAID_TRAD_KNOW_LABEL_HANDLE);
 
         return _raid;
     }

@@ -23,4 +23,10 @@ public class DescriptionTypeSchemaRepository {
                         .setUri(DESCRIPTION_TYPE_SCHEMA.URI.getValue(record))
                 );
     }
+
+    public Optional<DescriptionTypeSchemaRecord> findById(final Integer id) {
+        return dslContext.selectFrom(DESCRIPTION_TYPE_SCHEMA)
+                .where(DESCRIPTION_TYPE_SCHEMA.ID.eq(id))
+                .fetchOptional();
+    }
 }

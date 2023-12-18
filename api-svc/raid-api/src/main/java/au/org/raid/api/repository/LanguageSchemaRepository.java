@@ -15,13 +15,15 @@ public class LanguageSchemaRepository {
     private final DSLContext dslContext;
 
     public Optional<LanguageSchemaRecord> findByUri(final String uri) {
-        return dslContext.select(LANGUAGE_SCHEMA.fields()).
-                from(LANGUAGE_SCHEMA).
-                where(LANGUAGE_SCHEMA.URI.eq(uri)).
-                fetchOptional(record -> new LanguageSchemaRecord()
-                        .setId(LANGUAGE_SCHEMA.ID.getValue(record))
-                        .setUri(LANGUAGE_SCHEMA.URI.getValue(record))
-                );
+        return dslContext
+                .selectFrom(LANGUAGE_SCHEMA)
+                .where(LANGUAGE_SCHEMA.URI.eq(uri))
+                .fetchOptional();
     }
 
+    public Optional<LanguageSchemaRecord> findById(final Integer id) {
+        return dslContext.selectFrom(LANGUAGE_SCHEMA)
+                .where(LANGUAGE_SCHEMA.ID.eq(id))
+                .fetchOptional();
+    }
 }

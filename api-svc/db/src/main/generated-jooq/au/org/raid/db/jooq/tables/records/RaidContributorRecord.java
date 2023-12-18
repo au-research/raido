@@ -37,17 +37,17 @@ public class RaidContributorRecord extends UpdatableRecordImpl<RaidContributorRe
     }
 
     /**
-     * Setter for <code>api_svc.raid_contributor.raid_name</code>.
+     * Setter for <code>api_svc.raid_contributor.handle</code>.
      */
-    public RaidContributorRecord setRaidName(String value) {
+    public RaidContributorRecord setHandle(String value) {
         set(1, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.raid_contributor.raid_name</code>.
+     * Getter for <code>api_svc.raid_contributor.handle</code>.
      */
-    public String getRaidName() {
+    public String getHandle() {
         return (String) get(1);
     }
 
@@ -126,7 +126,7 @@ public class RaidContributorRecord extends UpdatableRecordImpl<RaidContributorRe
 
     @Override
     public Field<String> field2() {
-        return RaidContributor.RAID_CONTRIBUTOR.RAID_NAME;
+        return RaidContributor.RAID_CONTRIBUTOR.HANDLE;
     }
 
     @Override
@@ -151,7 +151,7 @@ public class RaidContributorRecord extends UpdatableRecordImpl<RaidContributorRe
 
     @Override
     public String component2() {
-        return getRaidName();
+        return getHandle();
     }
 
     @Override
@@ -176,7 +176,7 @@ public class RaidContributorRecord extends UpdatableRecordImpl<RaidContributorRe
 
     @Override
     public String value2() {
-        return getRaidName();
+        return getHandle();
     }
 
     @Override
@@ -202,7 +202,7 @@ public class RaidContributorRecord extends UpdatableRecordImpl<RaidContributorRe
 
     @Override
     public RaidContributorRecord value2(String value) {
-        setRaidName(value);
+        setHandle(value);
         return this;
     }
 
@@ -248,11 +248,11 @@ public class RaidContributorRecord extends UpdatableRecordImpl<RaidContributorRe
     /**
      * Create a detached, initialised RaidContributorRecord
      */
-    public RaidContributorRecord(Integer id, String raidName, Integer contributorId, Boolean leader, Boolean contact) {
+    public RaidContributorRecord(Integer id, String handle, Integer contributorId, Boolean leader, Boolean contact) {
         super(RaidContributor.RAID_CONTRIBUTOR);
 
         setId(id);
-        setRaidName(raidName);
+        setHandle(handle);
         setContributorId(contributorId);
         setLeader(leader);
         setContact(contact);

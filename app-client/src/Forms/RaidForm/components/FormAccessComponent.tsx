@@ -31,7 +31,7 @@ export const accessValidationSchema = z.object({
     id: z.enum(accessType.map((type) => type.uri) as [string, ...string[]]),
     schemaUri: z.literal(accessTypeSchema[0].uri),
   }),
-  accessStatement: z.object({
+  statement: z.object({
     text: z.string().nonempty(),
     language: z.object({
       id: z.string().nonempty(),
@@ -47,7 +47,7 @@ export const accessGenerateData = () => {
       id: accessType[1].uri,
       schemaUri: accessTypeSchema[0].uri,
     },
-    accessStatement: {
+    statement: {
       text: `[G]: ${faker.lorem.sentence()}`,
       language: {
         id: "eng",
@@ -103,7 +103,7 @@ export default function FormAccessComponent({
             <Grid container spacing={2}>
               <Grid item xs={12} sm={3} md={4}>
                 <Controller
-                  name="access.accessStatement.text"
+                  name="access.statement.text"
                   control={control}
                   render={({ field }) => (
                     <TextField
@@ -112,10 +112,10 @@ export default function FormAccessComponent({
                       variant="outlined"
                       size="small"
                       fullWidth
-                      error={!!errors?.access?.accessStatement?.text}
+                      error={!!errors?.access?.statement?.text}
                       helperText={
-                        !!errors?.access?.accessStatement?.text
-                          ? errors?.access?.accessStatement?.text?.message
+                        !!errors?.access?.statement?.text
+                          ? errors?.access?.statement?.text?.message
                           : null
                       }
                       {...field}
@@ -125,7 +125,7 @@ export default function FormAccessComponent({
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <Controller
-                  name="access.accessStatement.language.id"
+                  name="access.statement.language.id"
                   control={control}
                   defaultValue=""
                   rules={{ required: true }}
@@ -153,11 +153,11 @@ export default function FormAccessComponent({
                           size="small"
                           label="Access Statement Language"
                           error={
-                            !!errors?.access?.accessStatement?.language?.id
+                            !!errors?.access?.statement?.language?.id
                           }
                           helperText={
-                            !!errors?.access?.accessStatement?.language?.id
-                              ? errors?.access?.accessStatement?.language?.id
+                            !!errors?.access?.statement?.language?.id
+                              ? errors?.access?.statement?.language?.id
                                   ?.message
                               : null
                           }

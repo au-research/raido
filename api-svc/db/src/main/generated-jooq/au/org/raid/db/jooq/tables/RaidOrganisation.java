@@ -58,9 +58,9 @@ public class RaidOrganisation extends TableImpl<RaidOrganisationRecord> {
     public final TableField<RaidOrganisationRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>api_svc.raid_organisation.raid_name</code>.
+     * The column <code>api_svc.raid_organisation.handle</code>.
      */
-    public final TableField<RaidOrganisationRecord, String> RAID_NAME = createField(DSL.name("raid_name"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<RaidOrganisationRecord, String> HANDLE = createField(DSL.name("handle"), SQLDataType.VARCHAR.nullable(false), this, "");
 
     /**
      * The column <code>api_svc.raid_organisation.organisation_id</code>.
@@ -117,7 +117,7 @@ public class RaidOrganisation extends TableImpl<RaidOrganisationRecord> {
 
     @Override
     public List<UniqueKey<RaidOrganisationRecord>> getUniqueKeys() {
-        return Arrays.asList(Keys.RAID_ORGANISATION_RAID_NAME_ORGANISATION_ID_KEY);
+        return Arrays.asList(Keys.RAID_ORGANISATION_HANDLE_ORGANISATION_ID_KEY);
     }
 
     @Override

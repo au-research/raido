@@ -23,26 +23,23 @@ public class OrganisationRepository {
     }
 
     public OrganisationRecord findOrCreate(final OrganisationRecord record) {
-        final var result = dslContext.select(ORGANISATION.fields())
-                .from(ORGANISATION)
+        final var result = dslContext.selectFrom(ORGANISATION)
                 .where(ORGANISATION.PID.eq(record.getPid()))
                 .and(ORGANISATION.SCHEMA_ID.eq(record.getSchemaId()))
-                .fetchOptional(r -> new OrganisationRecord()
-                        .setId(ORGANISATION.ID.getValue(r))
-                        .setPid(ORGANISATION.PID.getValue(r))
-                        .setSchemaId(ORGANISATION.SCHEMA_ID.getValue(r))
-                );
+                .fetchOptional();
 
         return result.orElseGet(() -> create(record));
     }
 
     public Optional<OrganisationRecord> findByUriAndSchemaId(final String uri, final int schemaId) {
-        return dslContext.select(ORGANISATION.fields())
-                .from(ORGANISATION)
+        return dslContext.selectFrom(ORGANISATION)
                 .where(ORGANISATION.PID.eq(uri)).and(ORGANISATION.SCHEMA_ID.eq(schemaId))
-                .fetchOptional(record -> new OrganisationRecord()
-                        .setId(ORGANISATION.ID.getValue(record))
-                        .setPid(ORGANISATION.PID.getValue(record))
-                        .setSchemaId(ORGANISATION.SCHEMA_ID.getValue(record)));
+                .fetchOptional();
+    }
+
+    public Optional<OrganisationRecord> findById(final Integer id) {
+        return dslContext.selectFrom(ORGANISATION)
+                .where(ORGANISATION.ID.eq(id))
+                .fetchOptional();
     }
 }

@@ -34,4 +34,11 @@ public class OrganisationFactory {
                 .schemaUri(identifierSchemeUri)
                 .role(roles);
     }
+
+    public Organisation create(final String pid, final String schemaUri, final List<OrganisationRoleWithSchemaUri> roles) {
+        return new Organisation()
+                .id(pid)
+                .schemaUri(schemaUri)
+                .role(roles);
+    }
 }

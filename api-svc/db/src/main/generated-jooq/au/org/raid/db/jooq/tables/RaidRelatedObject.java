@@ -58,9 +58,9 @@ public class RaidRelatedObject extends TableImpl<RaidRelatedObjectRecord> {
     public final TableField<RaidRelatedObjectRecord, Integer> ID = createField(DSL.name("id"), SQLDataType.INTEGER.nullable(false).identity(true), this, "");
 
     /**
-     * The column <code>api_svc.raid_related_object.raid_name</code>.
+     * The column <code>api_svc.raid_related_object.handle</code>.
      */
-    public final TableField<RaidRelatedObjectRecord, String> RAID_NAME = createField(DSL.name("raid_name"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<RaidRelatedObjectRecord, String> HANDLE = createField(DSL.name("handle"), SQLDataType.VARCHAR.nullable(false), this, "");
 
     /**
      * The column <code>api_svc.raid_related_object.related_object_id</code>.
@@ -125,12 +125,12 @@ public class RaidRelatedObject extends TableImpl<RaidRelatedObjectRecord> {
 
     @Override
     public List<UniqueKey<RaidRelatedObjectRecord>> getUniqueKeys() {
-        return Arrays.asList(Keys.RAID_RELATED_OBJECT_RAID_NAME_RELATED_OBJECT_ID_RELATED_OBJ_KEY);
+        return Arrays.asList(Keys.RAID_RELATED_OBJECT_HANDLE_RELATED_OBJECT_ID_RELATED_OBJECT_KEY);
     }
 
     @Override
     public List<ForeignKey<RaidRelatedObjectRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_RAID_NAME, Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_RELATED_OBJECT_ID, Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_RELATED_OBJECT_TYPE_ID);
+        return Arrays.asList(Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_HANDLE, Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_RELATED_OBJECT_ID, Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_RELATED_OBJECT_TYPE_ID);
     }
 
     private transient Raid _raid;
@@ -142,7 +142,7 @@ public class RaidRelatedObject extends TableImpl<RaidRelatedObjectRecord> {
      */
     public Raid raid() {
         if (_raid == null)
-            _raid = new Raid(this, Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_RAID_NAME);
+            _raid = new Raid(this, Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_HANDLE);
 
         return _raid;
     }
