@@ -1,6 +1,7 @@
 package au.org.raid.api.factory.datacite;
 
 import au.org.raid.api.model.datacite.*;
+import au.org.raid.idl.raidv2.model.Date;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.List;
 public class DataciteAttributesDtoFactory {
     private final DataciteTitleFactory dataciteTitleFactory;
     private final DataciteCreatorFactory dataciteCreatorFactory;
+    private final DataciteDateFactory dataciteDateFactory;
 
     @SneakyThrows
     public DataciteAttributesDto create(RaidCreateRequest request, String handle) {
@@ -35,14 +37,20 @@ public class DataciteAttributesDtoFactory {
             dataciteCreators.add(dataciteCreatorFactory.create(request.getIdentifier().getRegistrationAgency()));
         }
 
+        List<DataciteDate> dataciteDates = null;
+        if (request.getDate() != null) {
+            Date raidDates = request.getDate();
+            dataciteDates.add(dataciteDateFactory.create(raidDates));
+        }
+
         String prefix = handle.split("/")[0];
-        String suffix = handle.split("/")[1];
 
         return new DataciteAttributesDto()
                 .setPrefix(prefix)
                 .setDoi(handle)
                 .setTitles(dataciteTitles)
-                .setCreators(dataciteCreators);
+                .setCreators(dataciteCreators)
+                .setDates(dataciteDates);
     }
 
     @SneakyThrows

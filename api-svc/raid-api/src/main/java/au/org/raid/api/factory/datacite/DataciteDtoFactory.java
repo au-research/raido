@@ -1,9 +1,6 @@
 package au.org.raid.api.factory.datacite;
 
-import au.org.raid.api.model.datacite.DataciteAttributesDto;
-import au.org.raid.api.model.datacite.DataciteDto;
-import au.org.raid.api.model.datacite.DataciteIdentifier;
-import au.org.raid.api.model.datacite.DataciteMintResponse;
+import au.org.raid.api.model.datacite.*;
 import au.org.raid.api.service.datacite.DataciteService;
 import au.org.raid.api.spring.config.DataciteProperties;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
@@ -27,8 +24,9 @@ public class DataciteDtoFactory {
 
         DataciteTitleFactory dataciteTitleFactory = new DataciteTitleFactory();
         DataciteCreatorFactory dataciteCreatorFactory = new DataciteCreatorFactory();
+        DataciteDateFactory dataciteDateFactory = new DataciteDateFactory();
 
-        DataciteAttributesDtoFactory dataciteAttributesDtoFactory = new DataciteAttributesDtoFactory(dataciteTitleFactory, dataciteCreatorFactory);
+        DataciteAttributesDtoFactory dataciteAttributesDtoFactory = new DataciteAttributesDtoFactory(dataciteTitleFactory, dataciteCreatorFactory, dataciteDateFactory);
 
         DataciteAttributesDto dataciteAttributesDto = dataciteAttributesDtoFactory.create(request, handle);
 
@@ -48,8 +46,9 @@ public class DataciteDtoFactory {
 
         DataciteTitleFactory dataciteTitleFactory = new DataciteTitleFactory();
         DataciteCreatorFactory dataciteCreatorFactory = new DataciteCreatorFactory();
+        DataciteDateFactory dataciteDateFactory = new DataciteDateFactory();
 
-        DataciteAttributesDtoFactory dataciteAttributesDtoFactory = new DataciteAttributesDtoFactory(dataciteTitleFactory, dataciteCreatorFactory);
+        DataciteAttributesDtoFactory dataciteAttributesDtoFactory = new DataciteAttributesDtoFactory(dataciteTitleFactory, dataciteCreatorFactory, dataciteDateFactory);
 
         DataciteAttributesDto dataciteAttributesDto = dataciteAttributesDtoFactory.create(request, handle);
 

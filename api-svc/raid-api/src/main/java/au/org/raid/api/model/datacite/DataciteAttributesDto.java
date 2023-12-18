@@ -7,6 +7,8 @@ public class DataciteAttributesDto {
     public String doi;
     private List<DataciteTitle> dataciteTitles;
     public List<DataciteCreator> dataciteCreators;
+    public List<DataciteDate> dataciteDates;
+
 
     public DataciteAttributesDto() {
         super();
@@ -31,6 +33,11 @@ public class DataciteAttributesDto {
 
     public DataciteAttributesDto setCreators(List<DataciteCreator> dataciteCreators) {
         this.dataciteCreators = dataciteCreators;
+        return this;
+    }
+
+    public DataciteAttributesDto setDates(List<DataciteDate> dataciteDates) {
+        this.dataciteDates = dataciteDates;
         return this;
     }
 
