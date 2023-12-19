@@ -30,8 +30,9 @@ public class DataciteDtoFactory {
         DataciteRelatedIdentifierFactory dataciteRelatedIdentifierFactory = new DataciteRelatedIdentifierFactory();
         DataciteRightFactory dataciteRightFactory = new DataciteRightFactory();
         DataciteTypesFactory dataciteTypesFactory = new DataciteTypesFactory();
+        DataciteAlternateIdentifierFactory dataciteAlternateIdentifierFactory = new DataciteAlternateIdentifierFactory();
 
-        DataciteAttributesDtoFactory dataciteAttributesDtoFactory = new DataciteAttributesDtoFactory(dataciteTitleFactory, dataciteCreatorFactory, dataciteDateFactory, dataciteContributorFactory, dataciteDescriptionFactory, dataciteRelatedIdentifierFactory, dataciteRightFactory, dataciteTypesFactory);
+        DataciteAttributesDtoFactory dataciteAttributesDtoFactory = new DataciteAttributesDtoFactory(dataciteTitleFactory, dataciteCreatorFactory, dataciteDateFactory, dataciteContributorFactory, dataciteDescriptionFactory, dataciteRelatedIdentifierFactory, dataciteRightFactory, dataciteTypesFactory, dataciteAlternateIdentifierFactory);
 
         DataciteAttributesDto dataciteAttributesDto = dataciteAttributesDtoFactory.create(request, handle);
 
@@ -56,8 +57,9 @@ public class DataciteDtoFactory {
         DataciteRelatedIdentifierFactory dataciteRelatedIdentifierFactory = new DataciteRelatedIdentifierFactory();
         DataciteRightFactory dataciteRightFactory = new DataciteRightFactory();
         DataciteTypesFactory dataciteTypesFactory = new DataciteTypesFactory();
+        DataciteAlternateIdentifierFactory dataciteAlternateIdentifierFactory = new DataciteAlternateIdentifierFactory();
 
-        DataciteAttributesDtoFactory dataciteAttributesDtoFactory = new DataciteAttributesDtoFactory(dataciteTitleFactory, dataciteCreatorFactory, dataciteDateFactory, dataciteContributorFactory, dataciteDescriptionFactory, dataciteRelatedIdentifierFactory, dataciteRightFactory, dataciteTypesFactory);
+        DataciteAttributesDtoFactory dataciteAttributesDtoFactory = new DataciteAttributesDtoFactory(dataciteTitleFactory, dataciteCreatorFactory, dataciteDateFactory, dataciteContributorFactory, dataciteDescriptionFactory, dataciteRelatedIdentifierFactory, dataciteRightFactory, dataciteTypesFactory, dataciteAlternateIdentifierFactory);
 
         DataciteAttributesDto dataciteAttributesDto = dataciteAttributesDtoFactory.create(request, handle);
 

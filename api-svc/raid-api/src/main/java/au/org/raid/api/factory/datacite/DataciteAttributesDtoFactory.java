@@ -21,6 +21,7 @@ public class DataciteAttributesDtoFactory {
     private final DataciteRelatedIdentifierFactory dataciteRelatedIdentifierFactory;
     private final DataciteRightFactory dataciteRightFactory;
     private final DataciteTypesFactory dataciteTypesFactory;
+    private final DataciteAlternateIdentifierFactory dataciteAlternateIdentifierFactory;
 
     @SneakyThrows
     public DataciteAttributesDto create(RaidCreateRequest request, String handle) {
@@ -159,6 +160,13 @@ public class DataciteAttributesDtoFactory {
             dataciteRights.add(dataciteRight);
         }
 
+        List<DataciteAlternateIdentifier> dataciteAlternateIdentifiers = null;
+        if (request.getAlternateIdentifier() != null) {
+            dataciteAlternateIdentifiers = request.getAlternateIdentifier().stream()
+                    .map(dataciteAlternateIdentifierFactory::create)
+                    .toList();
+        }
+
         DataciteTypes dataciteTypes = dataciteTypesFactory.create("RAiD Project", "Other");
 
 
@@ -176,7 +184,8 @@ public class DataciteAttributesDtoFactory {
                 .setContributors(dataciteContributors)
                 .setDescriptions(dataciteDescriptions)
                 .setRelatedIdentifiers(dataciteRelatedIdentifiers)
-                .setRightsList(dataciteRights);
+                .setRightsList(dataciteRights)
+                .setDataciteAlternateIdentifiers(dataciteAlternateIdentifiers);
     }
 
 }

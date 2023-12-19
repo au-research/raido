@@ -24,6 +24,8 @@ public class DataciteAttributesDto {
     public List<DataciteRight> dataciteRights;
     @JsonProperty("types")
     public DataciteTypes dataciteTypes;
+    @JsonProperty("alternateIdentifiers")
+    public List<DataciteAlternateIdentifier> dataciteAlternateIdentifiers;
 
     public DataciteAttributesDto() {
         super();
@@ -88,6 +90,11 @@ public class DataciteAttributesDto {
 
     public DataciteAttributesDto setDataciteTypes (DataciteTypes dataciteTypes) {
         this.dataciteTypes = dataciteTypes;
+        return this;
+    }
+
+    public DataciteAttributesDto setDataciteAlternateIdentifiers (List<DataciteAlternateIdentifier> dataciteAlternateIdentifiers) {
+        this.dataciteAlternateIdentifiers = dataciteAlternateIdentifiers;
         return this;
     }
 
