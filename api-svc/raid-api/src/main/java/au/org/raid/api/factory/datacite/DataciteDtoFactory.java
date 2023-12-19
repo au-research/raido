@@ -25,8 +25,10 @@ public class DataciteDtoFactory {
         DataciteTitleFactory dataciteTitleFactory = new DataciteTitleFactory();
         DataciteCreatorFactory dataciteCreatorFactory = new DataciteCreatorFactory();
         DataciteDateFactory dataciteDateFactory = new DataciteDateFactory();
+        DataciteContributorFactory dataciteContributorFactory = new DataciteContributorFactory();
+        DataciteDescriptionFactory dataciteDescriptionFactory = new DataciteDescriptionFactory();
 
-        DataciteAttributesDtoFactory dataciteAttributesDtoFactory = new DataciteAttributesDtoFactory(dataciteTitleFactory, dataciteCreatorFactory, dataciteDateFactory);
+        DataciteAttributesDtoFactory dataciteAttributesDtoFactory = new DataciteAttributesDtoFactory(dataciteTitleFactory, dataciteCreatorFactory, dataciteDateFactory, dataciteContributorFactory, dataciteDescriptionFactory);
 
         DataciteAttributesDto dataciteAttributesDto = dataciteAttributesDtoFactory.create(request, handle);
 
@@ -47,8 +49,10 @@ public class DataciteDtoFactory {
         DataciteTitleFactory dataciteTitleFactory = new DataciteTitleFactory();
         DataciteCreatorFactory dataciteCreatorFactory = new DataciteCreatorFactory();
         DataciteDateFactory dataciteDateFactory = new DataciteDateFactory();
+        DataciteContributorFactory dataciteContributorFactory = new DataciteContributorFactory();
+        DataciteDescriptionFactory dataciteDescriptionFactory = new DataciteDescriptionFactory();
 
-        DataciteAttributesDtoFactory dataciteAttributesDtoFactory = new DataciteAttributesDtoFactory(dataciteTitleFactory, dataciteCreatorFactory, dataciteDateFactory);
+        DataciteAttributesDtoFactory dataciteAttributesDtoFactory = new DataciteAttributesDtoFactory(dataciteTitleFactory, dataciteCreatorFactory, dataciteDateFactory, dataciteContributorFactory, dataciteDescriptionFactory);
 
         DataciteAttributesDto dataciteAttributesDto = dataciteAttributesDtoFactory.create(request, handle);
 

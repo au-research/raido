@@ -8,7 +8,8 @@ public class DataciteAttributesDto {
     private List<DataciteTitle> dataciteTitles;
     public List<DataciteCreator> dataciteCreators;
     public List<DataciteDate> dataciteDates;
-
+    public List<DataciteContributor> dataciteContributors;
+    public List<DataciteDescription> dataciteDescriptions;
 
     public DataciteAttributesDto() {
         super();
@@ -38,6 +39,16 @@ public class DataciteAttributesDto {
 
     public DataciteAttributesDto setDates(List<DataciteDate> dataciteDates) {
         this.dataciteDates = dataciteDates;
+        return this;
+    }
+
+    public DataciteAttributesDto setContributors(List<DataciteContributor> dataciteContributors) {
+        this.dataciteContributors = dataciteContributors;
+        return this;
+    }
+
+    public DataciteAttributesDto setDescriptions(List<DataciteDescription> dataciteDescriptions) {
+        this.dataciteDescriptions = dataciteDescriptions;
         return this;
     }
 

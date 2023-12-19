@@ -17,6 +17,9 @@ public class DataciteAttributesDtoFactory {
     private final DataciteTitleFactory dataciteTitleFactory;
     private final DataciteCreatorFactory dataciteCreatorFactory;
     private final DataciteDateFactory dataciteDateFactory;
+    private final DataciteContributorFactory dataciteContributorFactory;
+    private final DataciteDescriptionFactory dataciteDescriptionFactory;
+
 
     @SneakyThrows
     public DataciteAttributesDto create(RaidCreateRequest request, String handle) {
@@ -43,6 +46,27 @@ public class DataciteAttributesDtoFactory {
             dataciteDates.add(dataciteDateFactory.create(raidDates));
         }
 
+        List<DataciteContributor> dataciteContributors = null;
+        if (request.getContributor() != null) {
+            dataciteContributors = request.getContributor().stream()
+                    .map(dataciteContributorFactory::create)
+                    .toList();
+        }
+        if (request.getOrganisation() != null) {
+            dataciteContributors = request.getContributor().stream()
+                    .map(dataciteContributorFactory::create)
+                    .toList();
+        }
+
+        List<DataciteDescription> dataciteDescriptions = null;
+        if (request.getDescription() != null) {
+            dataciteDescriptions = request.getDescription().stream()
+                    .map(dataciteDescriptionFactory::create)
+                    .toList();
+        }
+
+
+
         String prefix = handle.split("/")[0];
 
         return new DataciteAttributesDto()
@@ -50,7 +74,9 @@ public class DataciteAttributesDtoFactory {
                 .setDoi(handle)
                 .setTitles(dataciteTitles)
                 .setCreators(dataciteCreators)
-                .setDates(dataciteDates);
+                .setDates(dataciteDates)
+                .setContributors(dataciteContributors)
+                .setDescriptions(dataciteDescriptions);
     }
 
     @SneakyThrows
