@@ -20,7 +20,7 @@ public class DataciteContributorFactory {
         String raidContributorName = (raidContributor.getId() != null) ? String.format("Name for %s", raidContributorId) : "";
 
         dataciteContributorResult = new DataciteContributor()
-                .dataciteContributor(raidContributorName)
+                .contributor(raidContributorName)
                 .contributorType("Researcher");
 
         return dataciteContributorResult;
@@ -37,7 +37,7 @@ public class DataciteContributorFactory {
         String raidContributorName = (raidOrganisation.getId() != null) ? String.format("Name for %s", raidContributorId) : "";
 
         dataciteContributorResult = new DataciteContributor()
-                .dataciteContributor(raidContributorName)
+                .contributor(raidContributorName)
                 .contributorType("ResearchGroup");
 
         return dataciteContributorResult;

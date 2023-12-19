@@ -28,8 +28,10 @@ public class DataciteDtoFactory {
         DataciteContributorFactory dataciteContributorFactory = new DataciteContributorFactory();
         DataciteDescriptionFactory dataciteDescriptionFactory = new DataciteDescriptionFactory();
         DataciteRelatedIdentifierFactory dataciteRelatedIdentifierFactory = new DataciteRelatedIdentifierFactory();
+        DataciteRightFactory dataciteRightFactory = new DataciteRightFactory();
+        DataciteTypesFactory dataciteTypesFactory = new DataciteTypesFactory();
 
-        DataciteAttributesDtoFactory dataciteAttributesDtoFactory = new DataciteAttributesDtoFactory(dataciteTitleFactory, dataciteCreatorFactory, dataciteDateFactory, dataciteContributorFactory, dataciteDescriptionFactory, dataciteRelatedIdentifierFactory);
+        DataciteAttributesDtoFactory dataciteAttributesDtoFactory = new DataciteAttributesDtoFactory(dataciteTitleFactory, dataciteCreatorFactory, dataciteDateFactory, dataciteContributorFactory, dataciteDescriptionFactory, dataciteRelatedIdentifierFactory, dataciteRightFactory, dataciteTypesFactory);
 
         DataciteAttributesDto dataciteAttributesDto = dataciteAttributesDtoFactory.create(request, handle);
 
@@ -52,17 +54,24 @@ public class DataciteDtoFactory {
         DataciteContributorFactory dataciteContributorFactory = new DataciteContributorFactory();
         DataciteDescriptionFactory dataciteDescriptionFactory = new DataciteDescriptionFactory();
         DataciteRelatedIdentifierFactory dataciteRelatedIdentifierFactory = new DataciteRelatedIdentifierFactory();
+        DataciteRightFactory dataciteRightFactory = new DataciteRightFactory();
+        DataciteTypesFactory dataciteTypesFactory = new DataciteTypesFactory();
 
-        DataciteAttributesDtoFactory dataciteAttributesDtoFactory = new DataciteAttributesDtoFactory(dataciteTitleFactory, dataciteCreatorFactory, dataciteDateFactory, dataciteContributorFactory, dataciteDescriptionFactory, dataciteRelatedIdentifierFactory);
+        DataciteAttributesDtoFactory dataciteAttributesDtoFactory = new DataciteAttributesDtoFactory(dataciteTitleFactory, dataciteCreatorFactory, dataciteDateFactory, dataciteContributorFactory, dataciteDescriptionFactory, dataciteRelatedIdentifierFactory, dataciteRightFactory, dataciteTypesFactory);
 
         DataciteAttributesDto dataciteAttributesDto = dataciteAttributesDtoFactory.create(request, handle);
 
         DataciteIdentifier dataciteIdentifier = new DataciteIdentifier();
         dataciteIdentifier.setIdentifierType("DOI");
+
         dataciteIdentifier.setIdentifier(handle);
 
 
-        return new DataciteDto().setSchemaVersion("http://datacite.org/schema/kernel-4").setType("dois").setAttributes(dataciteAttributesDto).setIdentifier(dataciteIdentifier);
+        return new DataciteDto()
+                .setSchemaVersion("http://datacite.org/schema/kernel-4")
+                .setType("dois")
+                .setAttributes(dataciteAttributesDto)
+                .setIdentifier(dataciteIdentifier);
     }
 
 }

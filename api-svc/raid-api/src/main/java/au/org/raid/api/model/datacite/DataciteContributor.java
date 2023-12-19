@@ -6,8 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class DataciteContributor {
 
     @JsonProperty("name")
-    private String name;
-
+    private String contributor;
     @JsonProperty("contributorType")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String contributorType;
@@ -16,8 +15,9 @@ public class DataciteContributor {
     public DataciteContributor() {
     }
 
-    public DataciteContributor dataciteContributor(String name) {
-        this.name = name;
+
+    public DataciteContributor contributor(String contributor) {
+        this.contributor = contributor;
         return this;
     }
 
@@ -27,9 +27,8 @@ public class DataciteContributor {
     }
 
     public String getContributor() {
-        return name;
+        return contributor;
     }
-
     public String getContributorType() {
         return contributorType;
     }
