@@ -19,6 +19,8 @@ public class DataciteAttributesDtoFactory {
     private final DataciteDateFactory dataciteDateFactory;
     private final DataciteContributorFactory dataciteContributorFactory;
     private final DataciteDescriptionFactory dataciteDescriptionFactory;
+    private final DataciteRelatedIdentifierFactory dataciteRelatedIdentifierFactory;
+
 
 
     @SneakyThrows
@@ -65,7 +67,12 @@ public class DataciteAttributesDtoFactory {
                     .toList();
         }
 
-
+        List<DataciteRelatedIdentifier> dataciteRelatedIdentifiers = null;
+        if (request.getRelatedObject() != null) {
+            dataciteRelatedIdentifiers = request.getRelatedObject().stream()
+                    .map(dataciteRelatedIdentifierFactory::create)
+                    .toList();
+        }
 
         String prefix = handle.split("/")[0];
 
@@ -76,7 +83,8 @@ public class DataciteAttributesDtoFactory {
                 .setCreators(dataciteCreators)
                 .setDates(dataciteDates)
                 .setContributors(dataciteContributors)
-                .setDescriptions(dataciteDescriptions);
+                .setDescriptions(dataciteDescriptions)
+                .setRelatedIdentifiers(dataciteRelatedIdentifiers);
     }
 
     @SneakyThrows

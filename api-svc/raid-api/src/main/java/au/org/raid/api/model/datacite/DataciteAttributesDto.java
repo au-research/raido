@@ -10,6 +10,7 @@ public class DataciteAttributesDto {
     public List<DataciteDate> dataciteDates;
     public List<DataciteContributor> dataciteContributors;
     public List<DataciteDescription> dataciteDescriptions;
+    public List<DataciteRelatedIdentifier> dataciteRelatedIdentifiers;
 
     public DataciteAttributesDto() {
         super();
@@ -49,6 +50,11 @@ public class DataciteAttributesDto {
 
     public DataciteAttributesDto setDescriptions(List<DataciteDescription> dataciteDescriptions) {
         this.dataciteDescriptions = dataciteDescriptions;
+        return this;
+    }
+
+    public DataciteAttributesDto setRelatedIdentifiers(List<DataciteRelatedIdentifier> dataciteRelatedIdentifiers) {
+        this.dataciteRelatedIdentifiers = dataciteRelatedIdentifiers;
         return this;
     }
 
