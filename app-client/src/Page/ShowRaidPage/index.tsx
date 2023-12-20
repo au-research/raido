@@ -191,12 +191,12 @@ function Content() {
 
           {/* <pre>ToDo: Traditional Knowledge Label</pre> */}
 
-          <Box id="spatial-coverage" className="scroll">
-            <ShowSpatialCoverageComponent
-              raid={defaultValues}
-              color={raidColors.get("blue") || ""}
-            />
-          </Box>
+          {/*<Box id="spatial-coverage" className="scroll">*/}
+          {/*  <ShowSpatialCoverageComponent*/}
+          {/*    raid={defaultValues}*/}
+          {/*    color={raidColors.get("blue") || ""}*/}
+          {/*  />*/}
+          {/*</Box>*/}
 
           <Box sx={{ paddingLeft: 2 }}>
             <Card

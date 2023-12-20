@@ -33,6 +33,8 @@ public class RaidWebSecurityConfig {
     public static final String RAID_V1_API = "/v1";
     public static final String RAID_V2_API = "/v2";
     public static final String RAID_STABLE_API = "/raid";
+    public static final String SERVICE_POINT_API = "/service-point";
+    public static final String TEAM_API = "/team";
     public static final String RAID_V2_PUBLIC_API = RAID_V2_API + "/public";
     public static final String PUBLIC = "/public";
     private static final Log log = to(RaidWebSecurityConfig.class);
@@ -46,7 +48,9 @@ public class RaidWebSecurityConfig {
     }
 
     public static boolean isStableApi(HttpServletRequest request) {
-        return request.getServletPath().startsWith(RAID_STABLE_API);
+        return request.getServletPath().startsWith(RAID_STABLE_API) ||
+                request.getServletPath().startsWith(SERVICE_POINT_API) ||
+                request.getServletPath().startsWith(TEAM_API);
     }
 
     /* the name is significant - when prefixed "spring", got error about
@@ -74,6 +78,8 @@ public class RaidWebSecurityConfig {
                         .requestMatchers(RAID_V1_API + "/**").fullyAuthenticated()
                         .requestMatchers(RAID_V2_API + "/**").fullyAuthenticated()
                         .requestMatchers(RAID_STABLE_API + "/**").fullyAuthenticated()
+                        .requestMatchers(SERVICE_POINT_API + "/**").fullyAuthenticated()
+                        .requestMatchers(TEAM_API + "/**").fullyAuthenticated()
                         .anyRequest().denyAll()
         );
 

@@ -5,6 +5,7 @@ import au.org.raid.db.jooq.tables.records.AppUserRecord;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import static au.org.raid.db.jooq.tables.AppUser.APP_USER;
@@ -65,4 +66,9 @@ public class AppUserRepository {
         return db.fetchOptional(APP_USER, APP_USER.ID.eq(appUserId));
     }
 
+    public List<AppUserRecord> findAllByServicePointId(final Long id) {
+        return db.selectFrom(APP_USER)
+                .where(APP_USER.SERVICE_POINT_ID.eq(id))
+                .fetch();
+    }
 }

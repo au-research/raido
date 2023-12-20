@@ -1128,8 +1128,24 @@ from (select handle,
       where metadata_schema <> 'raido-metadata-schema-v2') r
 where api_svc.raid.handle = r.handle;
 
+create table api_svc.team
+(
+    id               varchar primary key,
+    name             varchar not null,
+    prefix           varchar not null,
+    service_point_id bigint  not null,
+    unique(prefix),
+    constraint fk_team_service_point_id foreign key (service_point_id) references api_svc.service_point (id)
+);
 
-
+create table api_svc.team_user
+(
+    app_user_id bigint  not null,
+    team_id     varchar not null,
+    unique (app_user_id, team_id),
+    constraint fk_app_user_team_app_user_id foreign key (app_user_id) references api_svc.app_user (id),
+    constraint fk_app_user_team_team_id foreign key (team_id) references api_svc.team (id)
+);
 
 
 

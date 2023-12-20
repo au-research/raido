@@ -4,7 +4,7 @@ import au.org.raid.api.endpoint.Constant;
 import au.org.raid.api.endpoint.message.ValidationMessage;
 import au.org.raid.api.service.auth.admin.AppUserService;
 import au.org.raid.api.service.auth.admin.AuthzRequestService;
-import au.org.raid.api.service.auth.admin.ServicePointService;
+import au.org.raid.api.service.ServicePointService;
 import au.org.raid.api.service.raid.RaidService;
 import au.org.raid.api.service.raid.ValidationFailureException;
 import au.org.raid.api.service.raid.id.IdentifierParser;

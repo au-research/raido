@@ -1,5 +1,6 @@
 package au.org.raid.api.repository;
 
+import au.org.raid.api.dto.ServicePointDto.ServicePointDto;
 import au.org.raid.db.jooq.tables.records.ServicePointRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -15,19 +16,34 @@ public class ServicePointRepository {
     private final DSLContext dslContext;
 
     public Optional<ServicePointRecord> findById(final long servicePointId) {
-        return dslContext.select(SERVICE_POINT.fields()).
-                from(SERVICE_POINT).
-                where(SERVICE_POINT.ID.eq(servicePointId)).
-                fetchOptional(record -> new ServicePointRecord()
-                        .setId(SERVICE_POINT.ID.getValue(record))
-                        .setIdentifierOwner(SERVICE_POINT.IDENTIFIER_OWNER.getValue(record))
-                        .setName(SERVICE_POINT.NAME.getValue(record))
-                        .setEnabled(SERVICE_POINT.ENABLED.getValue(record))
-                        .setAdminEmail(SERVICE_POINT.ADMIN_EMAIL.getValue(record))
-                        .setTechEmail(SERVICE_POINT.TECH_EMAIL.getValue(record))
-                        .setLowerName(SERVICE_POINT.LOWER_NAME.getValue(record))
-                        .setSearchContent(SERVICE_POINT.SEARCH_CONTENT.getValue(record))
-                        .setAppWritesEnabled(SERVICE_POINT.APP_WRITES_ENABLED.getValue(record))
-                );
+        return dslContext.selectFrom(SERVICE_POINT)
+                .where(SERVICE_POINT.ID.eq(servicePointId))
+                .fetchOptional();
+    }
+
+    public ServicePointRecord create(final ServicePointRecord record) {
+        return dslContext.insertInto(SERVICE_POINT)
+                .set(SERVICE_POINT.NAME, record.getName())
+                .set(SERVICE_POINT.ADMIN_EMAIL, record.getAdminEmail())
+                .set(SERVICE_POINT.ENABLED, record.getEnabled())
+                .set(SERVICE_POINT.APP_WRITES_ENABLED, record.getAppWritesEnabled())
+                .set(SERVICE_POINT.TECH_EMAIL, record.getTechEmail())
+                .set(SERVICE_POINT.IDENTIFIER_OWNER, record.getIdentifierOwner())
+                .set(SERVICE_POINT.SEARCH_CONTENT, record.getSearchContent())
+                .returning()
+                .fetchOne();
+    }
+
+    public ServicePointRecord update(final ServicePointRecord record) {
+        return dslContext.update(SERVICE_POINT)
+                .set(SERVICE_POINT.NAME, record.getName())
+                .set(SERVICE_POINT.ADMIN_EMAIL, record.getAdminEmail())
+                .set(SERVICE_POINT.ENABLED, record.getEnabled())
+                .set(SERVICE_POINT.APP_WRITES_ENABLED, record.getAppWritesEnabled())
+                .set(SERVICE_POINT.TECH_EMAIL, record.getTechEmail())
+                .set(SERVICE_POINT.IDENTIFIER_OWNER, record.getIdentifierOwner())
+                .set(SERVICE_POINT.SEARCH_CONTENT, record.getSearchContent())
+                .returning()
+                .fetchOne();
     }
 }

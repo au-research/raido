@@ -47,11 +47,15 @@ export const spatialCoverageGenerateData = () => {
   return {
     id: "https://www.geonames.org/2766824/salzburg.html",
     schemaUri: "https://www.geonames.org/",
-    place: "Salzburg",
-    language: {
-      id: "eng",
-      schemaUri: languageSchema[0].uri,
-    },
+    place: [
+      {
+        text: "Salzburg",
+        language: {
+          id: "eng",
+          schemaUri: languageSchema[0].uri,
+        },
+      }
+    ],
   };
 };
 

@@ -54,6 +54,8 @@ import au.org.raid.db.jooq.tables.ServicePoint;
 import au.org.raid.db.jooq.tables.SpatialCoverageSchema;
 import au.org.raid.db.jooq.tables.SubjectType;
 import au.org.raid.db.jooq.tables.SubjectTypeSchema;
+import au.org.raid.db.jooq.tables.Team;
+import au.org.raid.db.jooq.tables.TeamUser;
 import au.org.raid.db.jooq.tables.TitleType;
 import au.org.raid.db.jooq.tables.TitleTypeSchema;
 import au.org.raid.db.jooq.tables.Token;
@@ -177,6 +179,8 @@ public class ApiSvc extends SchemaImpl {
             SpatialCoverageSchema.SPATIAL_COVERAGE_SCHEMA,
             SubjectType.SUBJECT_TYPE,
             SubjectTypeSchema.SUBJECT_TYPE_SCHEMA,
+            Team.TEAM,
+            TeamUser.TEAM_USER,
             TitleType.TITLE_TYPE,
             TitleTypeSchema.TITLE_TYPE_SCHEMA,
             Token.TOKEN,

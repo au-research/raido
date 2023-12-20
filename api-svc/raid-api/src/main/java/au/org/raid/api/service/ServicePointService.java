@@ -1,21 +1,41 @@
-package au.org.raid.api.service.auth.admin;
+package au.org.raid.api.service;
 
+import au.org.raid.api.dto.ServicePointDto.ServicePointDto;
+import au.org.raid.api.factory.ServicePointDtoFactory;
+import au.org.raid.api.factory.record.ServicePointRecordFactory;
+import au.org.raid.api.repository.ServicePointRepository;
 import au.org.raid.api.util.Log;
 import au.org.raid.idl.raidv2.model.ServicePoint;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
+import org.springframework.http.ProblemDetail;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 import static au.org.raid.api.util.Log.to;
 import static au.org.raid.db.jooq.tables.ServicePoint.SERVICE_POINT;
 
+@Slf4j
 @Component
+@Transactional
+@RequiredArgsConstructor
 public class ServicePointService {
-    private static final Log log = to(ServicePointService.class);
+    private final ServicePointRepository servicePointRepository;
+    private final ServicePointRecordFactory servicePointRecordFactory;
+    private final ServicePointDtoFactory servicePointDtoFactory;
+    private final DSLContext db;
 
-    private DSLContext db;
+    public ServicePointDto create(final ServicePointDto servicePointDto) {
+        final var record = servicePointRecordFactory.create(servicePointDto);
+        return servicePointDtoFactory.create(servicePointRepository.create(record));
+    }
 
-    public ServicePointService(DSLContext db) {
-        this.db = db;
+    public ServicePointDto update(final ServicePointDto servicePointDto) {
+        final var record = servicePointRecordFactory.create(servicePointDto);
+        return servicePointDtoFactory.create(servicePointRepository.update(record));
     }
 
     public ServicePoint updateServicePoint(
@@ -49,4 +69,11 @@ public class ServicePointService {
                 techEmail(record.getTechEmail()).
                 enabled(record.getEnabled());
     }
+
+    public Optional<ServicePointDto> findById(final Long id) {
+        return servicePointRepository.findById(id)
+                .map(servicePointDtoFactory::create)
+                .or(Optional::empty);
+    }
+
 }

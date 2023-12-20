@@ -66,7 +66,7 @@ export default function ShowSpatialCoverageComponent({
                         <Box>
                           <Typography variant="body2">Place</Typography>
                           <Typography color="text.secondary" variant="body1">
-                            {item.place}
+                            {/*{item.place}*/}
                           </Typography>
                         </Box>
                       </Grid>
