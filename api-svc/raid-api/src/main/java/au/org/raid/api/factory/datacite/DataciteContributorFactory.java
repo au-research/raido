@@ -1,45 +1,40 @@
 package au.org.raid.api.factory.datacite;
 
 import au.org.raid.api.model.datacite.DataciteContributor;
-import au.org.raid.api.model.datacite.DataciteTitle;
 import au.org.raid.idl.raidv2.model.Contributor;
 import au.org.raid.idl.raidv2.model.Organisation;
-import au.org.raid.idl.raidv2.model.Title;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 public class DataciteContributorFactory {
-    public DataciteContributor create(final Contributor raidContributor){
-        if (raidContributor == null) {
-            return null;
-        }
 
-        DataciteContributor dataciteContributorResult;
-
-        String raidContributorId = (raidContributor.getId() != null) ? raidContributor.getId() : "";
-        String raidContributorName = (raidContributor.getId() != null) ? String.format("Name for %s", raidContributorId) : "";
-
-        dataciteContributorResult = new DataciteContributor()
-                .contributor(raidContributorName)
-                .contributorType("Researcher");
-
-        return dataciteContributorResult;
+    public DataciteContributor create(final Contributor raidContributor) {
+        return Optional.ofNullable(raidContributor)
+                .map(rc -> {
+                    DataciteContributor dataciteContributor = new DataciteContributor();
+                    dataciteContributor.setContributor(getContributorName(rc.getId()));
+                    dataciteContributor.setContributorType("Researcher");
+                    return dataciteContributor;
+                })
+                .orElse(null);
     }
 
-    public DataciteContributor create(final Organisation raidOrganisation){
-        if (raidOrganisation == null) {
-            return null;
-        }
+    public DataciteContributor create(final Organisation raidOrganisation) {
+        return Optional.ofNullable(raidOrganisation)
+                .map(ro -> {
+                    DataciteContributor dataciteContributor = new DataciteContributor();
+                    dataciteContributor.setContributor(getContributorName(ro.getId()));
+                    dataciteContributor.setContributorType("ResearchGroup");
+                    return dataciteContributor;
+                })
+                .orElse(null);
+    }
 
-        DataciteContributor dataciteContributorResult;
-
-        String raidContributorId = (raidOrganisation.getId() != null) ? raidOrganisation.getId() : "";
-        String raidContributorName = (raidOrganisation.getId() != null) ? String.format("Name for %s", raidContributorId) : "";
-
-        dataciteContributorResult = new DataciteContributor()
-                .contributor(raidContributorName)
-                .contributorType("ResearchGroup");
-
-        return dataciteContributorResult;
+    private String getContributorName(String id) {
+        return Optional.ofNullable(id)
+                .map(i -> String.format("Name for %s", i))
+                .orElse("");
     }
 }

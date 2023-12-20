@@ -165,8 +165,7 @@ public class DatacitePayloadFactoryTest {
                 "      \"relatedIdentifier\" : \"https://example.com/alternate-url-1\",\n" +
                 "      \"relatedIdentifierType\" : \"IsSourceOf\"\n" +
                 "    }, {\n" +
-                "      \"relatedIdentifier\" : \"https://raid.org.au/raid/1234\",\n" +
-                "      \"relatedIdentifierType\" : \"HasPart\"\n" +
+                "      \"relatedIdentifier\" : \"https://raid.org.au/raid/1234\"\n" +
                 "    } ],\n" +
                 "    \"rightsList\" : [ {\n" +
                 "      \"rights\" : \"https://creativecommons.org/licenses/by/4.0\",\n" +

@@ -18,9 +18,8 @@ public class DataciteDescriptionFactory {
         String description = (raidDescription.getText() != null) ? raidDescription.getText() : "";
         String descriptionType = "Abstract";
 
-        dataciteDescriptionResult = new DataciteDescription()
-                .description(description)
-                .descriptionType(descriptionType);
+        dataciteDescriptionResult = new DataciteDescription().setDescription(description).setDescriptionType(descriptionType);
+
 
         return dataciteDescriptionResult;
     }

@@ -55,6 +55,6 @@ public class DataciteServiceTest {
 
         DataciteData dataciteData = new DataciteData();
         dataciteData.setData(payloadForRequest);
-        assertEquals(dataciteData.getData().getAttributes().getTitles().get(0).getDataciteTitle(), "title1 (2020-01-01 through 2020-12-31)");
+        assertEquals(dataciteData.getData().getAttributes().getDataciteTitles().get(0).getDataciteTitle(), "title1 (2020-01-01 through 2020-12-31)");
     }
 }

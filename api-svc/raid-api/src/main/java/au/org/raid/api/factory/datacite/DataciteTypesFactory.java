@@ -14,8 +14,8 @@ public class DataciteTypesFactory {
 
         DataciteTypes dataciteTypes = new DataciteTypes();
 
-        dataciteTypes.resourceType("RAiD Project");
-        dataciteTypes.resourceTypeGeneral("Other");
+        dataciteTypes.setResourceType("RAiD Project");
+        dataciteTypes.setResourceTypeGeneral("Other");
 
         return dataciteTypes;
     }

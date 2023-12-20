@@ -2,7 +2,11 @@ package au.org.raid.api.model.datacite;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
+@Data
+@Accessors(chain = true)
 public class DataciteRelatedIdentifier {
 
     @JsonProperty("relatedIdentifier")
@@ -15,31 +19,4 @@ public class DataciteRelatedIdentifier {
     @JsonProperty("relationType")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String relationType;
-
-
-    public DataciteRelatedIdentifier() {
-    }
-
-    public DataciteRelatedIdentifier relatedIdentifier(String relatedIdentifier) {
-        this.relatedIdentifier = relatedIdentifier;
-        return this;
-    }
-
-    public DataciteRelatedIdentifier relatedIdentifierType(String relatedIdentifierType) {
-        this.relatedIdentifierType = relatedIdentifierType;
-        return this;
-    }
-
-    public String getRelatedIdentifier() {
-        return relatedIdentifier;
-    }
-
-    public String getRelatedIdentifierType() {
-        return relatedIdentifierType;
-    }
-
-    public String getRelationType() {
-        return relationType;
-    }
-
 }

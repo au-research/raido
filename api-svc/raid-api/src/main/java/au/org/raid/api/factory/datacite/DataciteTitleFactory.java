@@ -21,11 +21,11 @@ public class DataciteTitleFactory {
 
         if(raidTitle.getType() != null && raidTitle.getType().getId().contains("alternative")) {
             dataciteTitleResult = new DataciteTitle()
-                    .dataciteTitle(result)
-                    .titleType("AlternativeTitle");
+                    .setDataciteTitle(result)
+                    .setTitleType("AlternativeTitle");
         } else {
             dataciteTitleResult = new DataciteTitle()
-                    .dataciteTitle(result);
+                    .setDataciteTitle(result);
         }
 
         return dataciteTitleResult;

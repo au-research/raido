@@ -19,7 +19,7 @@ public class DataciteRightFactory {
         String rights = (raidId.getLicense() != null) ? raidId.getLicense() : "";
         String rightsURI = (raidId.getLicense() != null) ? raidId.getLicense() : "";
 
-        dataciteRightResult = new DataciteRight().rights(rights).rightsURI(rightsURI);
+        dataciteRightResult = new DataciteRight().setRights(rights).setRightsURI(rightsURI);
 
         return dataciteRightResult;
     }

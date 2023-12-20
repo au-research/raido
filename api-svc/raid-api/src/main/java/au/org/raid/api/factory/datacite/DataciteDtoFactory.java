@@ -40,7 +40,11 @@ public class DataciteDtoFactory {
         dataciteIdentifier.setIdentifierType("DOI");
         dataciteIdentifier.setIdentifier(handle);
 
-        return new DataciteDto().setSchemaVersion("http://datacite.org/schema/kernel-4").setType("dois").setAttributes(dataciteAttributesDto).setIdentifier(dataciteIdentifier);
+        return new DataciteDto()
+                .setSchemaVersion("http://datacite.org/schema/kernel-4")
+                .setType("dois")
+                .setAttributes(dataciteAttributesDto)
+                .setIdentifier(dataciteIdentifier);
     }
 
     @SneakyThrows

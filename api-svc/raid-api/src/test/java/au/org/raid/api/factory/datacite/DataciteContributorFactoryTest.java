@@ -1,39 +1,44 @@
 package au.org.raid.api.factory.datacite;
 
+import au.org.raid.api.model.datacite.DataciteAlternateIdentifier;
 import au.org.raid.api.model.datacite.DataciteContributor;
-import au.org.raid.api.model.datacite.DataciteTitle;
+import au.org.raid.idl.raidv2.model.AlternateIdentifier;
 import au.org.raid.idl.raidv2.model.Contributor;
 import au.org.raid.idl.raidv2.model.Organisation;
-import au.org.raid.idl.raidv2.model.Title;
-import au.org.raid.idl.raidv2.model.TitleTypeWithSchemaUri;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class DataciteContributorFactoryTest {
 
-    private DataciteContributorFactory dataciteContributorFactory = new DataciteContributorFactory();
+    private DataciteContributorFactory dataciteContributorFactory;
+
+    @BeforeEach
+    public void setUp() {
+        dataciteContributorFactory = new DataciteContributorFactory();
+    }
 
     @Test
-    public void testCreateContributorFromContributor(){
+    public void testCreateWithContributor() {
         Contributor contributor1 = new Contributor();
-        contributor1.setId("contributor1");
+        contributor1.setId("Contributor 1");
 
         DataciteContributor dataciteContributor = dataciteContributorFactory.create(contributor1);
 
-        assertEquals(dataciteContributor.getContributor(), "Name for contributor1");
-        assertEquals(dataciteContributor.getContributorType(), "Researcher");
+        assertEquals("Name for Contributor 1", dataciteContributor.getContributor());
+        assertEquals("Researcher", dataciteContributor.getContributorType());
     }
 
     @Test
-    public void testCreateContributorFromOrganisation(){
+    public void testCreateWithOrganisation() {
         Organisation organisation1 = new Organisation();
-        organisation1.setId("organisation1");
+        organisation1.setId("Organisation 1");
 
         DataciteContributor dataciteContributor = dataciteContributorFactory.create(organisation1);
 
-        assertEquals(dataciteContributor.getContributor(), "Name for organisation1");
-        assertEquals(dataciteContributor.getContributorType(), "ResearchGroup");
+        assertEquals("Name for Organisation 1", dataciteContributor.getContributor());
+        assertEquals("ResearchGroup", dataciteContributor.getContributorType());
     }
-
 }

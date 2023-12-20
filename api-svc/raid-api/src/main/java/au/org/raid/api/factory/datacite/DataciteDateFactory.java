@@ -17,9 +17,7 @@ public class DataciteDateFactory {
 
         String startDate = (raidDate.getStartDate() != null) ? raidDate.getStartDate() : "";
 
-        dataciteDateResult = new DataciteDate()
-                .date(startDate)
-                .dateType("Available");
+        dataciteDateResult = new DataciteDate().setDate(startDate).setDateType("Available");
 
         return dataciteDateResult;
     }

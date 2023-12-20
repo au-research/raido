@@ -1,23 +1,19 @@
 package au.org.raid.api.model.datacite;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
-
+@Data
+@Accessors(chain = true)
 public class DataciteCreator {
-
     @JsonProperty("name")
-    private String name;
+    private String creator;
+    private String dataciteCreator;
 
-    public DataciteCreator() {super();}
 
-    public DataciteCreator dataciteCreator(String name) {
-        this.name = name;
-        return this;
+    public DataciteCreator(String name) {
+        this.creator = name;
+        this.dataciteCreator = name;
     }
-
-
-    public String getDataciteCreator() {
-        return name;
-    }
-
 }
