@@ -4,31 +4,25 @@ import au.org.raid.api.model.datacite.DataciteTitle;
 import au.org.raid.idl.raidv2.model.Title;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class DataciteTitleFactory {
-    public DataciteTitle create(final Title raidTitle){
+
+    public DataciteTitle create(final Title raidTitle) {
         if (raidTitle == null) {
             return null;
         }
 
-        DataciteTitle dataciteTitleResult;
+        String title = Optional.ofNullable(raidTitle.getText()).orElse("");
+        String startDate = Optional.ofNullable(raidTitle.getStartDate()).orElse("tba");
+        String endDate = Optional.ofNullable(raidTitle.getEndDate()).orElse("tba");
 
-        String title = (raidTitle.getText() != null) ? raidTitle.getText() : "";
-        String startDate = (raidTitle.getStartDate() != null) ? raidTitle.getStartDate() : "tba";
-        String endDate = (raidTitle.getEndDate() != null) ? raidTitle.getEndDate() : "tba";
+        String formattedTitle = String.format("%s (%s through %s)", title, startDate, endDate);
+        String titleType = (raidTitle.getType() != null && raidTitle.getType().getId().contains("alternative")) ? "AlternativeTitle" : null;
 
-        String result = String.format("%s (%s through %s)", title, startDate, endDate);
-
-        if(raidTitle.getType() != null && raidTitle.getType().getId().contains("alternative")) {
-            dataciteTitleResult = new DataciteTitle()
-                    .setDataciteTitle(result)
-                    .setTitleType("AlternativeTitle");
-        } else {
-            dataciteTitleResult = new DataciteTitle()
-                    .setDataciteTitle(result);
-        }
-
-        return dataciteTitleResult;
-
+        return new DataciteTitle()
+                .setDataciteTitle(formattedTitle)
+                .setTitleType(titleType);
     }
 }
