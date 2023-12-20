@@ -84,27 +84,27 @@ export const raidColors = new Map([
 
 export const newRaid: RaidCreateRequest = {
   title: [titlesGenerateData()],
-  description: [descriptionsGenerateData()],
+  // description: [descriptionsGenerateData()],
   date: datesGenerateData(),
   access: accessGenerateData(),
-  organisation: [organisationsGenerateData()],
+  // organisation: [organisationsGenerateData()],
   contributor: [contributorsGenerateData()],
-  subject: [subjectsGenerateData()],
-  relatedRaid: [],
-  alternateUrl: [
-    alternateUrlGenerateData(),
-    alternateUrlGenerateData(),
-    alternateUrlGenerateData(),
-  ],
-  spatialCoverage: [spatialCoverageGenerateData()],
-  relatedObject: [
-    relatedObjectGenerateData(),
-    relatedObjectGenerateData(),
-    relatedObjectGenerateData(),
-  ],
-  alternateIdentifier: [
-    alternateIdentifierGenerateData(),
-    alternateIdentifierGenerateData(),
-    alternateIdentifierGenerateData(),
-  ],
+  // subject: [subjectsGenerateData()],
+  // relatedRaid: [],
+  // alternateUrl: [
+  //   alternateUrlGenerateData(),
+  //   alternateUrlGenerateData(),
+  //   alternateUrlGenerateData(),
+  // ],
+  // spatialCoverage: [spatialCoverageGenerateData()],
+  // relatedObject: [
+  //   relatedObjectGenerateData(),
+  //   relatedObjectGenerateData(),
+  //   relatedObjectGenerateData(),
+  // ],
+  // alternateIdentifier: [
+  //   alternateIdentifierGenerateData(),
+  //   alternateIdentifierGenerateData(),
+  //   alternateIdentifierGenerateData(),
+  // ],
 };
