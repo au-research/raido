@@ -1,26 +1,24 @@
 package au.org.raid.api.factory.datacite;
 
 import au.org.raid.api.model.datacite.DataciteRight;
-import au.org.raid.api.model.datacite.DataciteTitle;
 import au.org.raid.idl.raidv2.model.Access;
 import au.org.raid.idl.raidv2.model.Id;
-import au.org.raid.idl.raidv2.model.Title;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 public class DataciteRightFactory {
-    public DataciteRight create(final Access raidAccess, final Id raidId){
-        if (raidAccess == null) {
+
+    public DataciteRight create(final Access raidAccess, final Id raidId) {
+        if (raidAccess == null || raidId == null) {
             return null;
         }
 
-        DataciteRight dataciteRightResult;
+        String license = Optional.ofNullable(raidId.getLicense()).orElse("");
 
-        String rights = (raidId.getLicense() != null) ? raidId.getLicense() : "";
-        String rightsURI = (raidId.getLicense() != null) ? raidId.getLicense() : "";
-
-        dataciteRightResult = new DataciteRight().setRights(rights).setRightsURI(rightsURI);
-
-        return dataciteRightResult;
+        return new DataciteRight()
+                .setRights(license)
+                .setRightsURI(license);
     }
 }
