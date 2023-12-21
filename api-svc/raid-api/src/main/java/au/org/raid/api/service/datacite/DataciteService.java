@@ -80,7 +80,7 @@ public class DataciteService {
         final String dataciteEndpoint = properties.getEndpoint();
         final String endpoint = dataciteEndpoint != null ? dataciteEndpoint + "/dois" : "https://api.test.datacite.org/dois";
 
-        log.atInfo().log("Datacite endpoint: {}", endpoint);
+        log.info("Datacite endpoint: {}", endpoint);
 
         if(properties.getUser() == null) {
             log.error("Datacite user is not set");
