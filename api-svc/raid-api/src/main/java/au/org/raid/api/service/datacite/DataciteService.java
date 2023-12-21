@@ -76,7 +76,10 @@ public class DataciteService {
     }
 
     public String createDataciteRaid(RaidCreateRequest createRequest, String handle) throws JsonProcessingException {
-        final String endpoint = properties.getEndpoint() + "/dois";
+
+        final String dataciteEndpoint = properties.getEndpoint();
+        final String endpoint = dataciteEndpoint != null ? dataciteEndpoint + "/dois" : "https://api.test.datacite.org/dois";
+
         log.atInfo().log("Datacite endpoint: {}", endpoint);
 
         if(properties.getUser() == null) {
