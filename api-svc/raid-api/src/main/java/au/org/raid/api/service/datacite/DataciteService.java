@@ -76,13 +76,15 @@ public class DataciteService {
     }
 
     public String createDataciteRaid(RaidCreateRequest createRequest, String handle) throws JsonProcessingException {
+        final String endpoint = properties.getEndpoint() + "/dois";
+        log.atInfo().log("Datacite endpoint: {}", endpoint);
 
         if(properties.getUser() == null) {
             log.error("Datacite user is not set");
             return "not-set";
         }
 
-        final String endpoint = properties.getEndpoint() + "/dois";
+
         final HttpHeaders headers = generateDataciteRequestHeaders();
 
         final DataciteData dataciteData = createPayloadForRequest(createRequest, handle);
