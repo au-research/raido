@@ -39,4 +39,6 @@ datacite:
   prefix: 10.82841
   password: not-set
   user: NPQS.RKFZRK
-
+logging:
+  level:
+    root: debug
