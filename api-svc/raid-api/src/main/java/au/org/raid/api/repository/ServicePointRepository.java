@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import static au.org.raid.db.jooq.tables.ServicePoint.SERVICE_POINT;
@@ -45,5 +47,9 @@ public class ServicePointRepository {
                 .set(SERVICE_POINT.SEARCH_CONTENT, record.getSearchContent())
                 .returning()
                 .fetchOne();
+    }
+
+    public List<ServicePointRecord> findAll() {
+        return dslContext.selectFrom(SERVICE_POINT).fetch();
     }
 }

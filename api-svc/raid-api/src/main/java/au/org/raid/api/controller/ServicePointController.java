@@ -22,6 +22,11 @@ public class ServicePointController {
     private final ServicePointService servicePointService;
     private final UserService userService;
 
+    @GetMapping(path = "/")
+    public ResponseEntity<List<ServicePointDto>> findAll() {
+        return ResponseEntity.ok(servicePointService.findAll());
+    }
+
     @PostMapping
     public ResponseEntity<ServicePointDto> create(
             @RequestBody final ServicePointDto servicePoint

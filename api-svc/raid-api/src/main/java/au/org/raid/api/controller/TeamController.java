@@ -36,17 +36,14 @@ public class TeamController {
         return ResponseEntity.ok(teams);
     }
 
-    @GetMapping(path = "/service-point/{servicePointId}/team/{id}")
-    public ResponseEntity<TeamDto> findByIdAndServicePointId(
-            @PathVariable final Long servicePointId,
+    @GetMapping(path = "/team/{id}")
+    public ResponseEntity<TeamDto> findById(
             @PathVariable final String id
     ) {
-        final var team = teamService.findByIdAndServicePointId(id, servicePointId);
-
-        return ResponseEntity.of(team);
+        return ResponseEntity.of(teamService.findById(id));
     }
 
-    @PutMapping(path = "/service-point/{servicePointId}/team/{id}")
+    @PutMapping(path = "/team/{id}")
     public ResponseEntity<TeamDto> updateByIdAndServicePointId(
             @PathVariable final Long servicePointId,
             @PathVariable final String id,

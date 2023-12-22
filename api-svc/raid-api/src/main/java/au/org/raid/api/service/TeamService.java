@@ -79,4 +79,11 @@ public class TeamService {
         teamUserRepository.deleteUserFromTeam(teamUserRecordFactory.create(user));
 
     }
+
+    public Optional<TeamDto> findById(final String id) {
+        return teamRepository.findById(id)
+                .map(teamDtoFactory::create)
+                .or(Optional::empty)
+        ;
+    }
 }

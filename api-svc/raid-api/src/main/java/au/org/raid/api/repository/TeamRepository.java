@@ -47,4 +47,10 @@ public class TeamRepository {
                 .returning()
                 .fetchOne();
     }
+
+    public Optional<TeamRecord> findById(final String id) {
+        return dslContext.selectFrom(TEAM)
+                .where(TEAM.ID.eq(id))
+                .fetchOptional();
+    }
 }

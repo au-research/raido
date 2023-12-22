@@ -10,9 +10,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 import static au.org.raid.api.util.Log.to;
@@ -76,4 +78,9 @@ public class ServicePointService {
                 .or(Optional::empty);
     }
 
+    public List<ServicePointDto> findAll() {
+        return servicePointRepository.findAll().stream()
+                .map(servicePointDtoFactory::create)
+                .toList();
+    }
 }
