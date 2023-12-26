@@ -58,4 +58,9 @@ public class SpatialCoverageService {
 
         return spatialCoverages;
     }
+
+    public void update(final List<SpatialCoverage> spatialCoverages, final String handle) {
+        raidSpatialCoverageRepository.deleteAllByHandle(handle);
+        create(spatialCoverages, handle);
+    }
 }

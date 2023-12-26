@@ -39,4 +39,9 @@ public class AlternateIdentifierService {
 
         return alternateIdentifiers;
     }
+
+    public void update(final List<AlternateIdentifier> alternateIdentifiers, final String handle) {
+        raidAlternateIdentifierRepository.deleteAllByHandle(handle);
+        create(alternateIdentifiers, handle);
+    }
 }

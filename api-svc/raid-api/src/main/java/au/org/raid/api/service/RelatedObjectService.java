@@ -91,4 +91,9 @@ public class RelatedObjectService {
         }
         return relatedObjects;
     }
+
+    public void update(final List<RelatedObject> relatedObjects, final String handle) {
+        raidRelatedObjectRepository.deleteAllByHandle(handle);
+        create(relatedObjects, handle);
+    }
 }

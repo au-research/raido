@@ -83,13 +83,26 @@ public class RaidRepository {
                 .fetchOne();
     }
 
-    public int update(final RaidRecord raidRecord) {
+    public int update(final RaidRecord record) {
         return dslContext.update(RAID)
-                .set(RAID.METADATA, raidRecord.getMetadata())
-                .set(RAID.METADATA_SCHEMA, raidRecord.getMetadataSchema())
-                .set(RAID.START_DATE, raidRecord.getStartDate())
-                .set(RAID.CONFIDENTIAL, raidRecord.getConfidential())
-                .where(RAID.HANDLE.eq(raidRecord.getHandle()))
+                .set(RAID.SERVICE_POINT_ID, record.getServicePointId())
+                .set(RAID.METADATA, record.getMetadata())
+                .set(RAID.METADATA_SCHEMA, record.getMetadataSchema())
+                .set(RAID.START_DATE, record.getStartDate())
+                .set(RAID.DATE_CREATED, LocalDateTime.now())
+                .set(RAID.CONFIDENTIAL, record.getConfidential())
+                .set(RAID.VERSION, record.getVersion())
+                .set(RAID.START_DATE_STRING, record.getStartDateString())
+                .set(RAID.END_DATE, record.getEndDate())
+                .set(RAID.LICENSE, record.getLicense())
+                .set(RAID.ACCESS_TYPE_ID, record.getAccessTypeId())
+                .set(RAID.EMBARGO_EXPIRY, record.getEmbargoExpiry())
+                .set(RAID.ACCESS_STATEMENT, record.getAccessStatement())
+                .set(RAID.ACCESS_STATEMENT_LANGUAGE_ID, record.getAccessStatementLanguageId())
+                .set(RAID.SCHEMA_URI, record.getSchemaUri())
+                .set(RAID.REGISTRATION_AGENCY_ORGANISATION_ID, record.getRegistrationAgencyOrganisationId())
+                .set(RAID.OWNER_ORGANISATION_ID, record.getOwnerOrganisationId())
+                .where(RAID.HANDLE.eq(record.getHandle()))
                 .execute();
     }
 

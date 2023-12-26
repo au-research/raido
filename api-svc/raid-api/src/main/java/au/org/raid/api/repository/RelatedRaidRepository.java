@@ -28,4 +28,10 @@ public class RelatedRaidRepository {
                 .where(RELATED_RAID.HANDLE.eq(handle))
                 .fetch();
     }
+
+    public void deleteAllByHandle(final String handle) {
+        dslContext.deleteFrom(RELATED_RAID)
+                .where(RELATED_RAID.HANDLE.eq(handle))
+                .execute();
+    }
 }

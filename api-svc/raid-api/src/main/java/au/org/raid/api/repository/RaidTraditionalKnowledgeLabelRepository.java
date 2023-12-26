@@ -29,4 +29,10 @@ public class RaidTraditionalKnowledgeLabelRepository {
                 .where(RAID_TRADITIONAL_KNOWLEDGE_LABEL.HANDLE.eq(handle))
                 .fetch();
     }
+
+    public void deleteAllByHandle(final String handle) {
+        dslContext.deleteFrom(RAID_TRADITIONAL_KNOWLEDGE_LABEL)
+                .where(RAID_TRADITIONAL_KNOWLEDGE_LABEL.HANDLE.eq(handle))
+                .execute();
+    }
 }

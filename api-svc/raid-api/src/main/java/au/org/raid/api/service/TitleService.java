@@ -65,4 +65,9 @@ public class TitleService {
 
         return titles;
     }
+
+    public void update(final List<Title> title, final String handle) {
+        raidTitleRepository.deleteAllByHandle(handle);
+        create(title, handle);
+    }
 }

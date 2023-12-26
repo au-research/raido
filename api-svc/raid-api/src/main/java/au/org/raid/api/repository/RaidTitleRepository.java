@@ -30,4 +30,10 @@ public class RaidTitleRepository {
                 .where(RAID_TITLE.HANDLE.eq(handle))
                 .fetch();
     }
+
+    public void deleteAllByHandle(final String handle) {
+        dslContext.deleteFrom(RAID_TITLE)
+                .where(RAID_TITLE.HANDLE.eq(handle))
+                .execute();
+    }
 }

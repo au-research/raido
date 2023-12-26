@@ -17,7 +17,6 @@ public class OrganisationRepository {
         return dslContext.insertInto(ORGANISATION)
                 .set(ORGANISATION.PID, record.getPid())
                 .set(ORGANISATION.SCHEMA_ID, record.getSchemaId())
-                .onConflictDoNothing()
                 .returning()
                 .fetchOne();
     }

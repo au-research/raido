@@ -96,17 +96,62 @@ public class RaidIngestService {
         return Optional.of(new RaidDto()
                 .identifier(idService.getId(record))
                 .date(dateFactory.create(record.getStartDateString(), record.getEndDate()))
-                .title(titles)
-                .description(descriptions)
-                .contributor(contributors)
-                .organisation(organisations)
-                .relatedObject(relatedObjects)
-                .alternateIdentifier(alternateIdentifiers)
-                .alternateUrl(alternateUrls)
-                .relatedRaid(relatedRaids)
+                .title(titles.isEmpty() ? null : titles)
+                .description(descriptions.isEmpty() ? null : descriptions)
+                .contributor(contributors.isEmpty() ? null : contributors)
+                .organisation(organisations.isEmpty() ? null: organisations)
+                .relatedObject(relatedObjects.isEmpty() ? null : relatedObjects)
+                .alternateIdentifier(alternateIdentifiers.isEmpty() ? null : alternateIdentifiers)
+                .alternateUrl(alternateUrls.isEmpty() ? null : alternateUrls)
+                .relatedRaid(relatedRaids.isEmpty() ? null : relatedRaids)
                 .access(accessService.getAccess(record))
-                .subject(subjects)
-                .traditionalKnowledgeLabel(traditionalKnowledgeLabels)
-                .spatialCoverage(spatialCoverages));
+                .subject(subjects.isEmpty() ? null : subjects)
+                .traditionalKnowledgeLabel(traditionalKnowledgeLabels.isEmpty() ? null : traditionalKnowledgeLabels)
+                .spatialCoverage(spatialCoverages.isEmpty() ? null : spatialCoverages));
+    }
+
+    public Optional<RaidDto> update(final RaidDto raid) {
+        final var handle = new Handle(raid.getIdentifier().getId()).toString();
+
+        if (raidRepository.findByHandle(handle).isEmpty()) {
+            return Optional.empty();
+        }
+
+        final var accessTypeId = accessService.findAccessTypeId(raid.getAccess());
+
+        Integer accessStatementLanguageId = null;
+        if (raid.getAccess().getStatement() != null) {
+            accessStatementLanguageId = languageService.findLanguageId(raid.getAccess().getStatement().getLanguage());
+        }
+
+        final Integer registrationAgencyOrganisationId = organisationService.findOrCreate(
+                raid.getIdentifier().getRegistrationAgency().getId(),
+                raid.getIdentifier().getRegistrationAgency().getSchemaUri()
+        );
+
+        final Integer ownerOrganisationId = organisationService.findOrCreate(
+                raid.getIdentifier().getOwner().getId(),
+                raid.getIdentifier().getOwner().getSchemaUri()
+        );
+
+        final var raidRecord = raidRecordFactory.create(raid, accessTypeId, accessStatementLanguageId,
+                registrationAgencyOrganisationId, ownerOrganisationId);
+
+        raidRepository.update(raidRecord);
+
+        titleService.update(raid.getTitle(), handle);
+
+        descriptionService.update(raid.getDescription(), handle);
+        contributorService.update(raid.getContributor(), handle);
+        organisationService.update(raid.getOrganisation(), handle);
+        relatedObjectService.update(raid.getRelatedObject(), handle);
+        alternateIdentifierService.update(raid.getAlternateIdentifier(), handle);
+        alternateUrlService.update(raid.getAlternateUrl(), handle);
+        relatedRaidService.update(raid.getRelatedRaid(), handle);
+        subjectService.update(raid.getSubject(), handle);
+        traditionalKnowledgeLabelService.update(raid.getTraditionalKnowledgeLabel(), handle);
+        spatialCoverageService.update(raid.getSpatialCoverage(), handle);
+
+        return Optional.of(raid);
     }
 }

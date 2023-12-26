@@ -46,7 +46,6 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toMap;
 
 /* Be careful with usage of @Transactional, see db-transaction-guideline.md */
-@Deprecated
 @Component
 @RequiredArgsConstructor
 public class RaidService {

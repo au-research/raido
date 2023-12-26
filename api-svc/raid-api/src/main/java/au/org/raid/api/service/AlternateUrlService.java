@@ -39,4 +39,9 @@ public class AlternateUrlService {
         }
         return alternateUrls;
     }
+
+    public void update(final List<AlternateUrl> alternateUrls, final String handle) {
+        raidAlternateUrlRepository.deleteAllByHandle(handle);
+        create(alternateUrls, handle);
+    }
 }

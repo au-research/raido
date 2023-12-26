@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.hamcrest.Matchers;
 import org.jooq.JSONB;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -107,7 +108,6 @@ class RaidStableV1ServiceTest {
         final var servicePointRecord = new ServicePointRecord();
 
         final var raidDto = new RaidDto();
-        final var raidRecord = new RaidRecord();
 
 
         final var id = new Id()
@@ -122,12 +122,12 @@ class RaidStableV1ServiceTest {
                         .servicePoint(servicePointId)
                 );
 
-        when(metadataProps.getHandleUrlPrefix()).thenReturn(urlPrefix);
+//        when(metadataProps.getHandleUrlPrefix()).thenReturn(urlPrefix);
         when(servicePointRepository.findById(servicePointId)).thenReturn(Optional.of(servicePointRecord));
         when(apidsService.mintApidsHandleContentPrefix(any(Function.class))).thenReturn(apidsResponse);
         when(idParser.parseHandle(handle.format())).thenReturn(handle);
-        when(idFactory.create(identifierUrl, servicePointRecord)).thenReturn(id);
-        when(metadataService.getMetaProps()).thenReturn(metadataProps);
+        when(idFactory.create(handle.format(), servicePointRecord)).thenReturn(id);
+//        when(metadataService.getMetaProps()).thenReturn(metadataProps);
         when(raidHistoryService.save(createRaidRequest)).thenReturn(raidDto);
 
         raidStableV1Service.mintRaidSchemaV1(createRaidRequest, servicePointId);
@@ -190,54 +190,34 @@ class RaidStableV1ServiceTest {
     @Test
     @DisplayName("Updating a raid saves changes and returns updated raid")
     void update() throws JsonProcessingException, ValidationFailureException {
-        final var servicePointId = 999L;
+
+        final var handle = "10378.1/1696639";
         final var raidJson = raidJson();
 
         final var updateRequest = objectMapper.readValue(raidJson, RaidUpdateRequest.class);
         final var expected = objectMapper.readValue(raidJson, RaidDto.class);
 
-        final var existingRaid = new RaidRecord();
-        final var updatedRaid = new RaidRecord()
-                .setMetadata(JSONB.valueOf(raidJson));
+        when(raidHistoryService.findByHandle(handle)).thenReturn(Optional.of(expected));
 
-        final var id = new IdentifierParser().parseUrlWithException(updateRequest.getIdentifier().getId());
-        final var handle = id.handle().format();
-
-        final var servicePointRecord = new ServicePointRecord();
-        servicePointRecord.setId(servicePointId);
-
-        when(checksumService.create(existingRaid)).thenReturn("1");
-        when(checksumService.create(updateRequest)).thenReturn("2");
-
-        when(raidRepository.findByHandleAndVersion(handle, 1)).thenReturn(Optional.of(existingRaid));
+        when(checksumService.create(updateRequest)).thenReturn("a");
+        when(checksumService.create(expected)).thenReturn("b");
 
         when(raidHistoryService.save(updateRequest)).thenReturn(expected);
-        when(raidRecordFactory.create(expected)).thenReturn(updatedRaid);
-        when(idParser.parseUrlWithException(id.formatUrl())).thenReturn(id);
-        when(mapper.readValue(raidJson, RaidDto.class)).thenReturn(expected);
-//        when(transactionTemplate.execute(any(TransactionCallback.class))).thenReturn(1);
-        when(raidRepository.findByHandle(handle)).thenReturn(Optional.of(updatedRaid));
-
+        when(raidIngestService.update(expected)).thenReturn(Optional.of(expected));
         final var result = raidStableV1Service.update(updateRequest);
-
-        verify(raidRepository).findByHandleAndVersion(handle, 1);
-//        verify(transactionTemplate).execute(any(TransactionCallback.class));
-
         assertThat(result, Matchers.is(expected));
     }
 
     @Test
     @DisplayName("No update is performed if no diff is detected")
     void noUpdateWhenNoDiff() throws JsonProcessingException, ValidationFailureException {
+
         final var servicePointId = 999L;
         final var raidJson = raidJson();
 
         final var updateRequest = objectMapper.readValue(raidJson, RaidUpdateRequest.class);
         final var expected = objectMapper.readValue(raidJson, RaidDto.class);
 
-        final var existingRaid = new RaidRecord().setMetadata(JSONB.valueOf(raidJson));
-        final var updatedRaid = new RaidRecord()
-                .setMetadata(JSONB.valueOf(raidJson));
 
         final var id = new IdentifierParser().parseUrlWithException(updateRequest.getIdentifier().getId());
         final var handle = id.handle().format();
@@ -245,43 +225,37 @@ class RaidStableV1ServiceTest {
         final var servicePointRecord = new ServicePointRecord();
         servicePointRecord.setId(servicePointId);
 
-        when(checksumService.create(existingRaid)).thenReturn("1");
+        when(checksumService.create(expected)).thenReturn("1");
         when(checksumService.create(updateRequest)).thenReturn("1");
 
-        when(raidRepository.findByHandleAndVersion(handle, 1)).thenReturn(Optional.of(existingRaid));
-        when(idParser.parseUrlWithException(id.formatUrl())).thenReturn(id);
-        when(mapper.readValue(raidJson, RaidDto.class)).thenReturn(expected);
+        when(raidHistoryService.findByHandle(handle)).thenReturn(Optional.of(expected));
 
         final var result = raidStableV1Service.update(updateRequest);
 
-        verifyNoInteractions(raidRecordFactory);
-        verify(raidRepository).findByHandleAndVersion(handle, 1);
-        verifyNoInteractions(transactionTemplate);
-
         assertThat(result, Matchers.is(expected));
+
+        verifyNoInteractions(raidIngestService);
     }
 
     @Test
     @DisplayName("ResourceNotFoundException is thrown on update")
     void noResourceOnUpdate() throws JsonProcessingException, ValidationFailureException {
         final var servicePointId = 999L;
+        final var handle = "10378.1/1696639";
         final var raidJson = raidJson();
 
         final var updateRequest = objectMapper.readValue(raidJson, RaidUpdateRequest.class);
+        final var raidDto = objectMapper.readValue(raidJson, RaidDto.class);
 
-        final var id = new IdentifierParser().parseUrlWithException(updateRequest.getIdentifier().getId());
-        final var handle = id.handle().format();
+        when(checksumService.create(updateRequest)).thenReturn("a");
+        when(checksumService.create(raidDto)).thenReturn("b");
 
-        final var servicePointRecord = new ServicePointRecord();
-        servicePointRecord.setId(servicePointId);
-
-        when(raidRepository.findByHandleAndVersion(handle, 1)).thenReturn(Optional.empty());
-        when(idParser.parseUrlWithException(id.formatUrl())).thenReturn(id);
+        when(raidHistoryService.findByHandle(handle)).thenReturn(Optional.of(raidDto));
+        when(raidHistoryService.save(updateRequest)).thenReturn(raidDto);
+        when(raidIngestService.update(raidDto)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> raidStableV1Service.update(updateRequest));
 
-        verify(raidRepository).findByHandleAndVersion(handle, 1);
-        verifyNoInteractions(transactionTemplate);
     }
 
     private String raidJson() {

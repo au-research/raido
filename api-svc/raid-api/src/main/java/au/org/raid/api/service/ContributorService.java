@@ -94,8 +94,6 @@ public class ContributorService {
             final var positions = contributorPositionService.findAllByRaidContributorId(record.getId());
             final var roles = contributorRoleService.findAllByRaidContributorId(record.getId());
 
-
-
             contributors.add(contributorFactory.create(
                     contributorRecord.getPid(),
                     contributorSchemaRecord.getUri(),
@@ -107,5 +105,10 @@ public class ContributorService {
         }
 
         return contributors;
+    }
+
+    public void update(final List<Contributor> contributors, final String handle) {
+        raidContributorRepository.deleteAllByHandle(handle);
+        create(contributors, handle);
     }
 }

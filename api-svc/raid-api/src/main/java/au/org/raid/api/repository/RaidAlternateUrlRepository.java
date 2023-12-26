@@ -28,4 +28,9 @@ public class RaidAlternateUrlRepository {
                 .fetch();
     }
 
+    public void deleteAllByHandle(final String handle) {
+        dslContext.deleteFrom(RAID_ALTERNATE_URL)
+                .where(RAID_ALTERNATE_URL.HANDLE.eq(handle))
+                .execute();
+    }
 }

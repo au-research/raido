@@ -1,4 +1,11 @@
 raid:
+  identifier:
+    name-prefix: http://raid.local/
+    license: Creative Commons CC-0
+    landing-prefix: http://localhost:7080/handle
+    global-url-prefix: https://hdl.handle.net
+    registration-agency-identifier: https://ror.org/038sjwq14
+    handle-url-prefix: http://localhost:8080
   test:
     api:
       url: http://localhost:${server.port}

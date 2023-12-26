@@ -29,4 +29,10 @@ public class RaidDescriptionRepository {
                 .where(RAID_DESCRIPTION.HANDLE.eq(handle))
                 .fetch();
     }
+
+    public void deleteAllByHandle(final String handle) {
+        dslContext.deleteFrom(RAID_DESCRIPTION)
+                .where(RAID_DESCRIPTION.HANDLE.eq(handle))
+                .execute();
+    }
 }

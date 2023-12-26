@@ -74,4 +74,10 @@ public class TraditionalKnowledgeLabelService {
         }
         return traditionalKnowledgeLabels;
     }
+
+    public void update(final List<TraditionalKnowledgeLabel> traditionalKnowledgeLabels, final String handle) {
+        raidTraditionalKnowledgeLabelRepository.deleteAllByHandle(handle);
+        create(traditionalKnowledgeLabels, handle);
+
+    }
 }

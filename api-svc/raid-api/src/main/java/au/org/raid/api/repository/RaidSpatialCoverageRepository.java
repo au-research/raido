@@ -28,4 +28,10 @@ public class RaidSpatialCoverageRepository {
                 .where(RAID_SPATIAL_COVERAGE.HANDLE.eq(handle))
                 .fetch();
     }
+
+    public void deleteAllByHandle(final String handle) {
+        dslContext.deleteFrom(RAID_SPATIAL_COVERAGE)
+                .where(RAID_SPATIAL_COVERAGE.HANDLE.eq(handle))
+                .execute();
+    }
 }

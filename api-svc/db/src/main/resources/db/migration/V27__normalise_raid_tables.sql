@@ -51,17 +51,13 @@ alter table api_svc.title_type_new rename to title_type;
 create table api_svc.raid_title
 (
     id            serial primary key,
-    handle     varchar not null,
-    title_type_id int     not null,
+    handle        varchar not null references api_svc.raid (handle),
+    title_type_id int     not null references api_svc.title_type (id),
     text          text    not null,
-    language_id   int,
+    language_id   int references api_svc.language (id),
     start_date    varchar not null,
-    end_date      varchar,
-    constraint fk_title_handle foreign key (handle) references api_svc.raid (handle),
-    constraint fk_title_type foreign key (title_type_id) references api_svc.title_type (id),
-    constraint fk_title_language_id foreign key (language_id) references api_svc.language (id)
+    end_date      varchar
 );
-
 
 -- /TITLE
 
@@ -83,14 +79,12 @@ alter table api_svc.description_type_new rename to description_type;
 create table api_svc.raid_description
 (
     id                  serial primary key,
-    handle           varchar not null,
-    description_type_id int     not null,
-    text               text    not null,
-    language_id         int,
-    constraint fk_description_handle foreign key (handle) references api_svc.raid (handle),
-    constraint fk_description_type foreign key (description_type_id) references api_svc.description_type (id),
-    constraint fk_description_language_id foreign key (language_id) references api_svc.language (id)
+    handle              varchar not null references api_svc.raid (handle) on delete cascade,
+    description_type_id int     not null references api_svc.description_type (id),
+    text                text    not null,
+    language_id         int references api_svc.language (id)
 );
+
 
 -- /DESCRIPTION
 
@@ -133,50 +127,40 @@ create table api_svc.contributor_schema
 insert into api_svc.contributor_schema (uri)
 values ('https://orcid.org/');
 
-
-
-
 create table api_svc.contributor
 (
     id        serial primary key,
     pid       varchar not null,
-    schema_id int     not null,
-    unique(pid, schema_id),
-    constraint fk_contributor_schema_id foreign key (schema_id) references contributor_schema (id)
+    schema_id int     not null references contributor_schema (id),
+    unique (pid, schema_id)
 );
 
 create table api_svc.raid_contributor
 (
     id             serial primary key,
-    handle      varchar not null,
-    contributor_id int     not null,
+    handle         varchar not null references api_svc.raid (handle) on delete cascade,
+    contributor_id int     not null references api_svc.contributor (id),
     leader         boolean,
     contact        boolean,
-    unique (handle, contributor_id),
-    constraint fk_raid_contributor_handle foreign key (handle) references api_svc.raid (handle),
-    constraint fk_raid_contributor_contributor_id foreign key (contributor_id) references api_svc.contributor (id)
+    unique (handle, contributor_id)
 );
 
 create table api_svc.raid_contributor_position
 (
     id                      serial primary key,
-    raid_contributor_id     int     not null,
-    contributor_position_id int     not null,
+    raid_contributor_id     int     not null references api_svc.raid_contributor (id) on delete cascade,
+    contributor_position_id int     not null references api_svc.contributor_position (id),
     start_date              varchar not null,
     end_date                varchar,
-    unique(raid_contributor_id, contributor_position_id, start_date, end_date),
-    constraint fk_raid_contributor_position_raid_contributor_id foreign key (raid_contributor_id) references api_svc.raid_contributor (id),
-    constraint fk_raid_contributor_position_contributor_position_id foreign key (contributor_position_id) references api_svc.contributor_position (id)
+    unique(raid_contributor_id, contributor_position_id, start_date, end_date)
 );
 
 create table api_svc.raid_contributor_role
 (
     id                  serial primary key,
-    raid_contributor_id int not null,
-    contributor_role_id int not null,
-    unique(raid_contributor_id, contributor_role_id),
-    constraint fk_raid_contributor_role_raid_contributor_id foreign key (raid_contributor_id) references api_svc.raid_contributor (id),
-    constraint fk_raid_contributor_role_contributor_role_id foreign key (contributor_role_id) references api_svc.contributor_role (id)
+    raid_contributor_id int not null references api_svc.raid_contributor (id) on delete cascade,
+    contributor_role_id int not null references api_svc.contributor_role (id),
+    unique(raid_contributor_id, contributor_role_id)
 );
 
 -- /CONTRIBUTOR
@@ -198,9 +182,8 @@ create table api_svc.organisation
 (
     id        serial primary key,
     pid       varchar not null,
-    schema_id int     not null,
-    unique(pid, schema_id),
-    constraint fk_organisation_schema_id foreign key (schema_id) references organisation_schema (id)
+    schema_id int     not null references organisation_schema (id),
+    unique (pid, schema_id)
 );
 
 create table api_svc.organisation_role_new
@@ -218,7 +201,6 @@ from api_svc.organisation_role;
 drop table api_svc.organisation_role;
 alter table api_svc.organisation_role_new rename to organisation_role;
 
-
 create table api_svc.raid_organisation
 (
     id              serial primary key,
@@ -230,15 +212,12 @@ create table api_svc.raid_organisation
 create table api_svc.raid_organisation_role
 (
     id                   serial primary key,
-    raid_organisation_id int not null,
-    organisation_role_id int not null,
+    raid_organisation_id int not null references api_svc.raid_organisation (id) on delete cascade,
+    organisation_role_id int not null references api_svc.organisation_role (id),
     start_date           varchar,
     end_date             varchar,
-    unique(raid_organisation_id, organisation_role_id, start_date, end_date),
-    constraint fk_raid_organisation_role_raid_organisation_id foreign key (raid_organisation_id) references api_svc.raid_organisation (id),
-    constraint fk_raid_organisation_role_organisation_role_id foreign key (organisation_role_id) references api_svc.organisation_role (id)
+    unique(raid_organisation_id, organisation_role_id, start_date, end_date)
 );
-
 
 -- /ORGANISATION
 
@@ -288,31 +267,25 @@ create table api_svc.related_object
 (
     id        serial primary key,
     pid       varchar not null,
-    schema_id int     not null,
-    unique (pid, schema_id),
-    constraint fk_related_object_schema_id foreign key (schema_id) references related_object_schema (id)
+    schema_id int     not null references related_object_schema (id),
+    unique (pid, schema_id)
 );
 
 create table api_svc.raid_related_object
 (
-    id                         serial primary key,
-    handle                  varchar not null,
-    related_object_id          int     not null,
-    related_object_type_id     int     not null,
-    unique (handle, related_object_id, related_object_type_id),
-    constraint fk_raid_related_object_handle foreign key (handle) references api_svc.raid (handle),
-    constraint fk_raid_related_object_related_object_id foreign key (related_object_id) references api_svc.related_object (id),
-    constraint fk_raid_related_object_related_object_type_id foreign key (related_object_type_id) references api_svc.related_object_type (id)
+    id                     serial primary key,
+    handle                 varchar not null references api_svc.raid (handle) on delete cascade,
+    related_object_id      int     not null references api_svc.related_object (id),
+    related_object_type_id int     not null references api_svc.related_object_type (id),
+    unique (handle, related_object_id, related_object_type_id)
 );
 
 create table api_svc.raid_related_object_category
 (
     id                         serial primary key,
-    raid_related_object_id     int not null,
-    related_object_category_id int not null,
-    unique(raid_related_object_id, related_object_category_id),
-    constraint fk_raid_related_object_category_raid_related_object_id foreign key (raid_related_object_id) references api_svc.raid_related_object (id),
-    constraint fk_raid_related_object_category_related_object_category_id foreign key (related_object_category_id) references api_svc.related_object_category (id)
+    raid_related_object_id     int not null references api_svc.raid_related_object (id) on delete cascade,
+    related_object_category_id int not null references api_svc.related_object_category (id),
+    unique(raid_related_object_id, related_object_category_id)
 );
 
 insert into api_svc.raid_related_object_category (raid_related_object_id, related_object_category_id)
@@ -333,11 +306,10 @@ on conflict do nothing;
 
 create table api_svc.raid_alternate_identifier
 (
-    handle varchar not null,
-    id        varchar not null,
-    type      varchar not null,
-    primary key (handle, id, type),
-    constraint fk_raid_alternate_identifier_handle foreign key (handle) references api_svc.raid (handle)
+    handle varchar not null references api_svc.raid (handle) on delete cascade,
+    id     varchar not null,
+    type   varchar not null,
+    primary key (handle, id, type)
 );
 
 -- /ALTERNATE IDENTIFIER
@@ -345,10 +317,9 @@ create table api_svc.raid_alternate_identifier
 -- ALTERNATE URL
 create table api_svc.raid_alternate_url
 (
-    handle varchar not null,
-    url       varchar not null,
-    primary key (handle, url),
-    constraint fk_raid_alternate_url_handle foreign key (handle) references api_svc.raid (handle)
+    handle varchar not null references api_svc.raid (handle) on delete cascade,
+    url    varchar not null,
+    primary key (handle, url)
 );
 
 -- /ALTERNATE URL
@@ -371,11 +342,10 @@ alter table api_svc.related_raid_type_new rename to related_raid_type;
 
 create table api_svc.related_raid
 (
-    handle            varchar not null,
-    related_raid_handle    varchar not null,
+    handle               varchar not null references api_svc.raid (handle) on delete cascade,
+    related_raid_handle  varchar not null,
     related_raid_type_id int     not null,
-    primary key (handle, related_raid_handle),
-    constraint fk_related_raid_handle foreign key (handle) references api_svc.raid (handle)
+    primary key (handle, related_raid_handle)
 );
 
 -- /RELATED RAID
@@ -389,13 +359,10 @@ alter table api_svc.raid
     add column access_type_id      int,
     add column embargo_expiry      date,
     add column access_statement    text,
-    add column access_statement_language_id int,
+    add column access_statement_language_id int references api_svc.language (id),
     add column schema_uri varchar,
-    add column registration_agency_organisation_id int,
-    add column owner_organisation_id int,
-    add constraint fk_raid_access_statement_language_id foreign key (access_statement_language_id) references api_svc.language (id),
-    add constraint fk_raid_registration_agency_organisation_id foreign key (registration_agency_organisation_id) references api_svc.organisation (id),
-    add constraint fk_raid_owner_organisation_id foreign key (owner_organisation_id) references api_svc.organisation (id),
+    add column registration_agency_organisation_id int references api_svc.organisation (id),
+    add column owner_organisation_id int references api_svc.organisation (id),
     alter column url_index drop not null,
     alter column primary_title drop not null;
 
@@ -405,27 +372,20 @@ alter table api_svc.raid
 
 create table api_svc.raid_subject
 (
-    id                  serial primary key,
-    handle           varchar not null,
-    subject_type_id     varchar not null,
-    unique (handle, subject_type_id),
-    constraint fk_raid_subject_handle foreign key (handle) references api_svc.raid (handle),
-    constraint fk_raid_subject_subject_id foreign key (subject_type_id) references api_svc.subject_type (id)
+    id              serial primary key,
+    handle          varchar not null references api_svc.raid (handle) on delete cascade,
+    subject_type_id varchar not null references api_svc.subject_type (id),
+    unique (handle, subject_type_id)
 );
 
 create table api_svc.raid_subject_keyword
 (
     id              serial primary key,
-    raid_subject_id int not null,
+    raid_subject_id int     not null references api_svc.raid_subject (id),
     keyword         varchar not null,
-    language_id     int,
-    unique (raid_subject_id, keyword, language_id),
-    constraint fk_raid_subject_keyword_raid_subject_id foreign key (raid_subject_id) references api_svc.raid_subject (id),
-    constraint fk_raid_subject_keyword_language_id foreign key (language_id) references api_svc.language (id)
+    language_id     int references api_svc.language (id),
+    unique (raid_subject_id, keyword, language_id)
 );
-
-
-
 
 -- /SUBJECT
 
@@ -449,12 +409,9 @@ alter table api_svc.traditional_knowledge_label_new rename to traditional_knowle
 create table api_svc.raid_traditional_knowledge_label
 (
     id                                    serial primary key,
-    handle                             varchar not null,
-    traditional_knowledge_label_id        int,
-    traditional_knowledge_label_schema_id int,
-    constraint fk_raid_trad_know_label_handle foreign key (handle) references api_svc.raid (handle),
-    constraint fk_raid_trad_know_label_traditional_knowledge_label_id foreign key (traditional_knowledge_label_id) references api_svc.traditional_knowledge_label (id),
-    constraint fk_raid_trad_know_label_traditional_knowledge_label_schema_id foreign key (traditional_knowledge_label_schema_id) references api_svc.traditional_knowledge_label_schema (id)
+    handle                                varchar not null references api_svc.raid (handle) on delete cascade,
+    traditional_knowledge_label_id        int references api_svc.traditional_knowledge_label (id),
+    traditional_knowledge_label_schema_id int references api_svc.traditional_knowledge_label_schema (id)
 );
 
 -- /TRADITIONAL KNOWLEDGE LABEL
@@ -474,22 +431,17 @@ values ('https://www.openstreetmap.org/'),
 
 create table api_svc.raid_spatial_coverage
 (
-    id          serial primary key,
-    handle      varchar not null,
-    uri         varchar not null,
-    schema_id   int     not null,
-    constraint fk_raid_spatial_coverage_handle foreign key (handle) references api_svc.raid (handle),
-    constraint fk_raid_spatial_coverage_schema_id foreign key (schema_id) references api_svc.spatial_coverage_schema (id)
+    id        serial primary key,
+    handle    varchar not null references api_svc.raid (handle) on delete cascade,
+    uri       varchar not null,
+    schema_id int     not null references api_svc.spatial_coverage_schema (id)
 );
-
 
 create table api_svc.raid_spatial_coverage_place
 (
-    raid_spatial_coverage_id int not null,
+    raid_spatial_coverage_id int not null references api_svc.raid_spatial_coverage (id) on delete cascade,
     place                    varchar,
-    language_id              int,
-    constraint fk_raid_spatial_coverage_place_raid_spatial_coverage_id foreign key (raid_spatial_coverage_id) references api_svc.raid_spatial_coverage (id),
-    constraint fk_raid_spatial_coverage_place_language_id foreign key (language_id) references api_svc.language (id)
+    language_id              int references api_svc.language (id)
 );
 
 -- /SPATIAL COVERAGE
@@ -1133,21 +1085,15 @@ create table api_svc.team
     id               varchar primary key,
     name             varchar not null,
     prefix           varchar not null,
-    service_point_id bigint  not null,
-    unique(prefix),
-    constraint fk_team_service_point_id foreign key (service_point_id) references api_svc.service_point (id)
-);
+    service_point_id bigint  not null references api_svc.service_point (id),
+    unique(prefix));
 
 create table api_svc.team_user
 (
-    app_user_id bigint  not null,
-    team_id     varchar not null,
-    unique (app_user_id, team_id),
-    constraint fk_app_user_team_app_user_id foreign key (app_user_id) references api_svc.app_user (id),
-    constraint fk_app_user_team_team_id foreign key (team_id) references api_svc.team (id)
+    app_user_id bigint  not null references api_svc.app_user (id) on delete cascade,
+    team_id     varchar not null references api_svc.team (id) on delete cascade,
+    unique (app_user_id, team_id)
 );
-
-
 
 -- /UPDATE RAID
 

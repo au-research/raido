@@ -71,4 +71,9 @@ public class DescriptionService {
 
         return descriptions;
     }
+
+    public void update(final List<Description> descriptions, final String handle) {
+        raidDescriptionRepository.deleteAllByHandle(handle);
+        create(descriptions, handle);
+    }
 }

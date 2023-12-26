@@ -1,7 +1,6 @@
 package au.org.raid.api.factory;
 
-import au.org.raid.api.service.raid.id.IdentifierUrl;
-import au.org.raid.api.spring.config.environment.MetadataProps;
+import au.org.raid.api.spring.config.IdentifierProperties;
 import au.org.raid.api.util.SchemaValues;
 import au.org.raid.db.jooq.tables.records.ServicePointRecord;
 import au.org.raid.idl.raidv2.model.Id;
@@ -32,9 +31,10 @@ class IdFactoryTest {
     private static final String LICENSE = "raid-license";
     private static final String GLOBAL_URL_PREFIX = "__global-url-prefix__";
     private static final String HANDLE_URL_PREFIX = "__handle-url-prefix__";
+    private static final String NAME_PREFIX = "__name-prefix__";
 
     @Mock
-    private MetadataProps metadataProps;
+    private IdentifierProperties identifierProperties;
 
     @InjectMocks
     private IdFactory idFactory;
@@ -79,21 +79,22 @@ class IdFactoryTest {
         final var urlPrefix = "url-prefix";
         final var prefix = "_prefix_";
         final var suffix = "_suffix_:";
-        final var identifierUrl = new IdentifierUrl(urlPrefix, prefix, suffix);
+        final var handle = "%s/%s".formatted(prefix, suffix);
         final var servicePointRecord = new ServicePointRecord()
                 .setIdentifierOwner(IDENTIFIER_OWNER)
                 .setId(IDENTIFIER_SERVICE_POINT);
         final var rorSchemaUri = "https://ror.org/";
 
-        when(metadataProps.getIdentifierRegistrationAgency()).thenReturn(IDENTIFIER_REGISTRATION_AGENCY);
-        when(metadataProps.getRaidlicense()).thenReturn(LICENSE);
-        when(metadataProps.getGlobalUrlPrefix()).thenReturn(GLOBAL_URL_PREFIX);
-        when(metadataProps.getHandleUrlPrefix()).thenReturn(HANDLE_URL_PREFIX);
+        when(identifierProperties.getRegistrationAgencyIdentifier()).thenReturn(IDENTIFIER_REGISTRATION_AGENCY);
+        when(identifierProperties.getLicense()).thenReturn(LICENSE);
+        when(identifierProperties.getGlobalUrlPrefix()).thenReturn(GLOBAL_URL_PREFIX);
+        when(identifierProperties.getHandleUrlPrefix()).thenReturn(HANDLE_URL_PREFIX);
+        when(identifierProperties.getNamePrefix()).thenReturn(NAME_PREFIX);
 
-        final var id = idFactory.create(identifierUrl, servicePointRecord);
+        final var id = idFactory.create(handle, servicePointRecord);
 
         assertThat(id, is(new Id()
-                .id("%s/%s/%s".formatted(urlPrefix, prefix, suffix))
+                .id("%s%s/%s".formatted(NAME_PREFIX, prefix, suffix))
                 .schemaUri("https://raid.org/")
                 .registrationAgency(new RegistrationAgency()
                         .id(IDENTIFIER_REGISTRATION_AGENCY)
@@ -102,8 +103,8 @@ class IdFactoryTest {
                         .id(IDENTIFIER_OWNER)
                         .schemaUri(rorSchemaUri)
                         .servicePoint(IDENTIFIER_SERVICE_POINT))
-                .globalUrl("%s/%s/%s".formatted(GLOBAL_URL_PREFIX, prefix, suffix))
-                .raidAgencyUrl("%s/%s/%s".formatted(HANDLE_URL_PREFIX, prefix, suffix))
+                .globalUrl("%s%s/%s".formatted(GLOBAL_URL_PREFIX, prefix, suffix))
+                .raidAgencyUrl("%s%s/%s".formatted(HANDLE_URL_PREFIX, prefix, suffix))
                 .license(LICENSE)
                 .version(1)));
     }

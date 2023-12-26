@@ -9,6 +9,7 @@ import au.org.raid.api.factory.RaidDtoFactory;
 import au.org.raid.api.factory.RaidRecordFactory;
 import au.org.raid.api.repository.RaidRepository;
 import au.org.raid.api.repository.ServicePointRepository;
+import au.org.raid.api.service.Handle;
 import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.RaidIngestService;
 import au.org.raid.api.service.apids.ApidsService;
@@ -85,7 +86,7 @@ public class RaidStableV1Service {
         return (IdentifierHandle) parseResult;
     }
 
-    public IdentifierUrl mintRaidSchemaV1(
+    public RaidDto mintRaidSchemaV1(
             final RaidCreateRequest request,
             final long servicePoint
     ) {
@@ -98,14 +99,14 @@ public class RaidStableV1Service {
         final var apidsResponse = apidsSvc.mintApidsHandleContentPrefix(
                 metaSvc::formatRaidoLandingPageUrl);
 
-        IdentifierHandle handle = parseHandleFromApids(apidsResponse);
-        var id = new IdentifierUrl(metaSvc.getMetaProps().getHandleUrlPrefix(), handle);
-        request.setIdentifier(idFactory.create(id, servicePointRecord));
+        IdentifierHandle identifierHandle = parseHandleFromApids(apidsResponse);
+
+        request.setIdentifier(idFactory.create(identifierHandle.format(), servicePointRecord));
 
         final var raidDto = raidHistoryService.save(request);
         raidIngestService.create(raidDto);
 
-        return id;
+        return raidDto;
     }
 
     @SneakyThrows
@@ -117,41 +118,22 @@ public class RaidStableV1Service {
             throw new InvalidVersionException(version);
         }
 
-        final IdentifierUrl identifierUrl;
-        try {
-            identifierUrl = idParser.parseUrlWithException(raid.getIdentifier().getId());
-        } catch (ValidationFailureException e) {
-            // it was already validated, so this shouldn't happen
-            throw new RuntimeException(e);
-        }
-        String handle = identifierUrl.handle().format();
+        final var handle = new Handle(raid.getIdentifier().getId()).toString();
 
-        final var existing = raidRepository.findByHandleAndVersion(handle, version)
+        final var existing = raidHistoryService.findByHandle(handle)
                 .orElseThrow(() -> new ResourceNotFoundException(handle));
-
 
         final var existingChecksum = checksumService.create(existing);
         final var updateChecksum = checksumService.create(raid);
 
         if (updateChecksum.equals(existingChecksum)) {
-            return objectMapper.readValue(
-                    existing.getMetadata().data(), RaidDto.class);
+            return existing;
         }
 
         final var raidDto = raidHistoryService.save(raid);
 
-        final var raidRecord = raidRecordFactory.create(raidDto);
-        raidRepository.updateByHandleAndVersion(raidRecord, version);
-
-        final var result = raidRepository.findByHandle(handle)
-                .orElseThrow(() -> new ResourceNotFoundException(handle));
-
-        try {
-            return objectMapper.readValue(
-                    result.getMetadata().data(), RaidDto.class);
-        } catch (JsonProcessingException e) {
-            throw new InvalidJsonException();
-        }
+        return raidIngestService.update(raidDto)
+                .orElseThrow(() -> new ResourceNotFoundException(raid.getIdentifier().getId()));
     }
 
     public RaidDto read(String handle) {

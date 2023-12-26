@@ -14,6 +14,7 @@ import java.util.stream.IntStream;
 
 import static au.org.raid.inttest.endpoint.raidv2.stable.TestConstants.PRIMARY_TITLE_TYPE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
     @Test
@@ -52,7 +53,7 @@ public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
         final var raidDto = response.getBody();
         assert raidDto != null;
 
-        assertThat(raidDto.getTraditionalKnowledgeLabel()).isEmpty();
+        assertNull(raidDto.getTraditionalKnowledgeLabel());
     }
 
     private Title getPrimaryTitle(final RaidDto raidDto) {

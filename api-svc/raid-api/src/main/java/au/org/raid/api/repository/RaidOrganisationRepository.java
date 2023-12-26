@@ -27,4 +27,10 @@ public class RaidOrganisationRepository {
                 .where(RAID_ORGANISATION.HANDLE.eq(handle))
                 .fetch();
     }
+
+    public void deleteAllByHandle(final String handle) {
+        dslContext.deleteFrom(RAID_ORGANISATION)
+                .where(RAID_ORGANISATION.HANDLE.eq(handle))
+                .execute();
+    }
 }

@@ -79,4 +79,9 @@ public class SubjectService {
         }
         return subjects;
     }
+
+    public void update(final List<Subject> subjects, final String handle) {
+        raidSubjectRepository.deleteAllByHandle(handle);
+        create(subjects, handle);
+    }
 }

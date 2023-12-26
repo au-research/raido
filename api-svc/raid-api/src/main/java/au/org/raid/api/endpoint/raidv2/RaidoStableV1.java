@@ -72,11 +72,9 @@ public class RaidoStableV1 implements RaidoStableV1Api {
             throw new ValidationException(failures);
         }
 
-        IdentifierUrl id = raidService.mintRaidSchemaV1(
-                request, user.getServicePointId());
+        final var raidDto = raidService.mintRaidSchemaV1(request, user.getServicePointId());
 
-        return ResponseEntity.created(URI.create(id.formatUrl()))
-                .body(raidService.read(id.handle().format()));
+        return ResponseEntity.created(URI.create(raidDto.getIdentifier().getId())).body(raidDto);
     }
 
     @Override

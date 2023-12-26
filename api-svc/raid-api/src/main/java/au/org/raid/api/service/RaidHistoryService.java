@@ -17,6 +17,8 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -74,4 +76,18 @@ public class RaidHistoryService {
 
         return objectMapper.readValue(jsonValueFactory.create(history, diff).toString(), RaidDto.class);
     }
+
+    @SneakyThrows
+    public Optional<RaidDto> findByHandle(final String handle) {
+        final var history = raidHistoryRepository.findAllByHandle(handle).stream()
+                .map(RaidHistoryRecord::getDiff)
+                .map(jsonValueFactory::create)
+                .toList();
+
+        if (history.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(objectMapper.readValue(jsonValueFactory.create(history).toString(), RaidDto.class));
+     }
 }

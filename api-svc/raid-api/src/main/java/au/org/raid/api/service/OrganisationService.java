@@ -118,4 +118,9 @@ public class OrganisationService {
         return schemaRecord.getUri();
     }
 
+    public void update(final List<Organisation> organisations, final String handle) {
+        raidOrganisationRepository.deleteAllByHandle(handle);
+        create(organisations, handle);
+
+    }
 }

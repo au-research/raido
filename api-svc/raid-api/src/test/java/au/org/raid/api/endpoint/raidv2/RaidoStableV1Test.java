@@ -220,8 +220,7 @@ class RaidoStableV1Test {
 
             when(validationService.validateForCreate(any(RaidCreateRequest.class))).thenReturn(Collections.emptyList());
 
-            when(raidService.mintRaidSchemaV1(any(RaidCreateRequest.class), eq(servicePointId))).thenReturn(id);
-            when(raidService.read(handle.format())).thenReturn(raidForGet);
+            when(raidService.mintRaidSchemaV1(any(RaidCreateRequest.class), eq(servicePointId))).thenReturn(raidForGet);
 
             mockMvc.perform(post("/raid")
                             .contentType(MediaType.APPLICATION_JSON)

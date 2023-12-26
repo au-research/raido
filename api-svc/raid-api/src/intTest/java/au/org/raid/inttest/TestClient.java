@@ -52,6 +52,7 @@ public class TestClient {
                 .options(
                         new Request.Options(2, TimeUnit.SECONDS, 2, TimeUnit.SECONDS, false)
                 )
+
                 .client(new OkHttpClient())
                 .encoder(new JacksonEncoder(objectMapper))
                 .decoder(new ResponseEntityDecoder(new JacksonDecoder(objectMapper)))

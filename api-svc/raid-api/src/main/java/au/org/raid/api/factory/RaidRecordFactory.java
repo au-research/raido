@@ -43,7 +43,7 @@ public class RaidRecordFactory {
                              ) {
 
 
-        final var handle = new Handle(raid.getIdentifier().getGlobalUrl());
+        final var handle = new Handle(raid.getIdentifier().getId());
 
         final var primaryTitle = raid.getTitle().stream()
                 .filter(title -> title.getType().getId().equals(PRIMARY_TITLE_TYPE))

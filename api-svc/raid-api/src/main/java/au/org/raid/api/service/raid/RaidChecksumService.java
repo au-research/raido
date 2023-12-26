@@ -42,4 +42,9 @@ public class RaidChecksumService {
         return DigestUtils.md5DigestAsHex(objectMapper.writeValueAsString(raid).getBytes());
     }
 
+    @SneakyThrows
+    public String create(final RaidDto raid) {
+        return DigestUtils.md5DigestAsHex(objectMapper.writeValueAsString(raid).getBytes());
+    }
+
 }

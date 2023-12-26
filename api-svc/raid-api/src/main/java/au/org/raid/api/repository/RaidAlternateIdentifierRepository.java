@@ -28,4 +28,9 @@ public class RaidAlternateIdentifierRepository {
                 .fetch();
     }
 
+    public void deleteAllByHandle(final String handle) {
+        dslContext.deleteFrom(RAID_ALTERNATE_IDENTIFIER)
+                .where(RAID_ALTERNATE_IDENTIFIER.HANDLE.eq(handle))
+                .execute();
+    }
 }

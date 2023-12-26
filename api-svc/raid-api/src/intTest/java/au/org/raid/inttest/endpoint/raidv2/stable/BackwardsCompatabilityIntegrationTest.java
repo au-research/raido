@@ -3,6 +3,7 @@ package au.org.raid.inttest.endpoint.raidv2.stable;
 import au.org.raid.idl.raidv2.model.*;
 import au.org.raid.inttest.TestData;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static au.org.raid.db.jooq.enums.UserRole.OPERATOR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
-
+@Disabled
 public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;

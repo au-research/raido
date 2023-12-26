@@ -44,4 +44,9 @@ public class RelatedRaidService {
 
         return relatedRaids;
     }
+
+    public void update(final List<RelatedRaid> relatedRaids, final String handle) {
+        relatedRaidRepository.deleteAllByHandle(handle);
+        create(relatedRaids, handle);
+    }
 }

@@ -2,7 +2,7 @@ package au.org.raid.api.factory;
 
 import au.org.raid.api.service.raid.MetadataService;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
-import au.org.raid.api.spring.config.environment.MetadataProps;
+import au.org.raid.api.spring.config.IdentifierProperties;
 import au.org.raid.api.util.SchemaValues;
 import au.org.raid.db.jooq.tables.records.ServicePointRecord;
 import au.org.raid.idl.raidv2.model.Id;
@@ -15,16 +15,16 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class IdFactory {
-    private final MetadataProps metadataProps;
+    private final IdentifierProperties identifierProperties;
 
-    public Id create(final IdentifierUrl id,
+    public Id create(final String handle,
                      final ServicePointRecord servicePointRecord
     ) {
         return new Id().
-                id(id.formatUrl())
+                id(String.format("%s%s", identifierProperties.getNamePrefix(), handle))
                 .schemaUri(MetadataService.RAID_ID_TYPE_URI)
                 .registrationAgency(new RegistrationAgency()
-                        .id(metadataProps.getIdentifierRegistrationAgency())
+                        .id(identifierProperties.getRegistrationAgencyIdentifier())
                         .schemaUri(SchemaValues.ROR_SCHEMA_URI.getUri())
                 )
                 .owner(new Owner()
@@ -32,9 +32,9 @@ public class IdFactory {
                         .schemaUri(SchemaValues.ROR_SCHEMA_URI.getUri())
                         .servicePoint(servicePointRecord.getId())
                 )
-                .globalUrl(id.handle().format(metadataProps.getGlobalUrlPrefix()))
-                .raidAgencyUrl(id.handle().format(metadataProps.getHandleUrlPrefix()))
-                .license(metadataProps.getRaidlicense())
+                .globalUrl(String.format("%s%s", identifierProperties.getGlobalUrlPrefix(), handle))
+                .raidAgencyUrl(String.format("%s%s", identifierProperties.getHandleUrlPrefix(), handle))
+                .license(identifierProperties.getLicense())
                 .version(1);
     }
 
@@ -56,7 +56,7 @@ public class IdFactory {
                 )
                 .globalUrl(idBlock.getGlobalUrl())
                 .raidAgencyUrl(idBlock.getRaidAgencyUrl())
-                .license(metadataProps.getRaidlicense())
+                .license(identifierProperties.getLicense())
                 .version(idBlock.getVersion());
     }
 }
