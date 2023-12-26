@@ -14,8 +14,8 @@ paths:
       security:
         - bearerAuth: [ ]
       tags:
-        - raido-stable-v1
-      operationId: create-raid-v1
+        - raid
+      operationId: mint
       summary: mint a raid
       requestBody:
         required: true
@@ -40,8 +40,8 @@ paths:
       security:
         - bearerAuth: [ ]
       tags:
-        - raido-stable-v1
-      operationId: list-raids-v1
+        - raid
+      operationId: findAll
       summary: list raids
       parameters:
         - name: servicePointId
@@ -76,8 +76,8 @@ paths:
       security:
         - bearerAuth: [ ]
       tags:
-        - raido-stable-v1
-      operationId: read-raid-v1
+        - raid
+      operationId: read
       summary: read a raid, caller must be authorized
       responses:
         200:
@@ -96,8 +96,8 @@ paths:
       security:
         - bearerAuth: [ ]
       tags:
-        - raido-stable-v1
-      operationId: update-raid-v1
+        - raid
+      operationId: update
       requestBody:
         required: true
         content:

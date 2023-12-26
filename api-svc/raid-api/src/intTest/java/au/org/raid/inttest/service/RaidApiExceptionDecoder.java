@@ -1,4 +1,4 @@
-package au.org.raid.inttest;
+package au.org.raid.inttest.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;

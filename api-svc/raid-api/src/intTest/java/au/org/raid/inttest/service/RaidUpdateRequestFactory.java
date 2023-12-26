@@ -1,4 +1,4 @@
-package au.org.raid.inttest.endpoint.raidv2.stable;
+package au.org.raid.inttest.service;
 
 import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;

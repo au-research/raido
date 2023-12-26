@@ -1,4 +1,4 @@
-package au.org.raid.inttest.endpoint.raidv2.admin;
+package au.org.raid.inttest;
 
 import au.org.raid.idl.raidv2.model.UpdateAuthzRequest;
 import au.org.raid.idl.raidv2.model.UpdateAuthzRequestStatus;

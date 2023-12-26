@@ -1,4 +1,4 @@
-package au.org.raid.inttest.auth;
+package au.org.raid.inttest.service;
 
 import au.org.raid.api.service.auth.RaidV2ApiKeyApiTokenService;
 import au.org.raid.api.service.auth.RaidV2AppUserApiTokenService;

@@ -1,6 +1,6 @@
-package au.org.raid.inttest;
+package au.org.raid.inttest.service;
 
-import au.org.raid.idl.raidv2.api.RaidoStableV1Api;
+import au.org.raid.idl.raidv2.api.RaidApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Contract;
 import feign.Feign;
@@ -14,7 +14,6 @@ import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
 
 import java.util.concurrent.TimeUnit;
 
-import static au.org.raid.api.spring.config.RaidWebSecurityConfig.RAID_V1_API;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 public class TestClient {
@@ -28,7 +27,7 @@ public class TestClient {
         this.apiUrl = apiUrl;
     }
 
-    public RaidoStableV1Api raidApi(
+    public RaidApi raidApi(
             final String token
     ) {
         return Feign.builder()
@@ -42,8 +41,8 @@ public class TestClient {
                 .errorDecoder(new RaidApiExceptionDecoder(objectMapper))
                 .contract(contract)
                 .requestInterceptor(request -> request.header(AUTHORIZATION, "Bearer " + token))
-                .logger(new Slf4jLogger(RaidoStableV1Api.class))
+                .logger(new Slf4jLogger(RaidApi.class))
                 .logLevel(Logger.Level.FULL)
-                .target(RaidoStableV1Api.class, apiUrl);
+                .target(RaidApi.class, apiUrl);
     }
 }

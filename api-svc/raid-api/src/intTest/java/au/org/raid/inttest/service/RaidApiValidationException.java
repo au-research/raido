@@ -1,4 +1,4 @@
-package au.org.raid.inttest;
+package au.org.raid.inttest.service;
 
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import feign.FeignException;

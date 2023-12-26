@@ -1,7 +1,7 @@
-package au.org.raid.inttest.endpoint.raidv2.stable;
+package au.org.raid.inttest;
 
 import au.org.raid.idl.raidv2.model.ValidationFailure;
-import au.org.raid.inttest.RaidApiValidationException;
+import au.org.raid.inttest.service.RaidApiValidationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +17,7 @@ public class TraditionalKnowledgeLabelIntegrationTest extends AbstractIntegratio
         createRequest.getTraditionalKnowledgeLabel().get(0).schemaUri(null);
 
         try {
-            raidApi.createRaidV1(createRequest);
+            raidApi.mint(createRequest);
             fail("No exception thrown");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -38,7 +38,7 @@ public class TraditionalKnowledgeLabelIntegrationTest extends AbstractIntegratio
         createRequest.getTraditionalKnowledgeLabel().get(0).schemaUri("");
 
         try {
-            raidApi.createRaidV1(createRequest);
+            raidApi.mint(createRequest);
             fail("No exception thrown");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -59,7 +59,7 @@ public class TraditionalKnowledgeLabelIntegrationTest extends AbstractIntegratio
         createRequest.getTraditionalKnowledgeLabel().get(0).schemaUri("http://localhost/");
 
         try {
-            raidApi.createRaidV1(createRequest);
+            raidApi.mint(createRequest);
             fail("No exception thrown");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -80,7 +80,7 @@ public class TraditionalKnowledgeLabelIntegrationTest extends AbstractIntegratio
         createRequest.getTraditionalKnowledgeLabel().get(0).id("http://localhost/");
 
         try {
-            raidApi.createRaidV1(createRequest);
+            raidApi.mint(createRequest);
             fail("No exception thrown");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -101,7 +101,7 @@ public class TraditionalKnowledgeLabelIntegrationTest extends AbstractIntegratio
         createRequest.traditionalKnowledgeLabel(Collections.emptyList());
 
         try {
-            raidApi.createRaidV1(createRequest);
+            raidApi.mint(createRequest);
             //pass
         } catch (RaidApiValidationException e) {
             fail("expected no failures");

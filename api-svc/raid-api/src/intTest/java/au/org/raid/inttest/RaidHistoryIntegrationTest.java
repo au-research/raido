@@ -1,18 +1,16 @@
-package au.org.raid.inttest.endpoint.raidv2.stable;
+package au.org.raid.inttest;
 
 import au.org.raid.api.service.Handle;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.Title;
-import au.org.raid.idl.raidv2.model.TitleType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.ResponseEntity;
 
 import java.util.Collections;
 import java.util.Objects;
 import java.util.stream.IntStream;
 
-import static au.org.raid.inttest.endpoint.raidv2.stable.TestConstants.PRIMARY_TITLE_TYPE;
+import static au.org.raid.inttest.service.TestConstants.PRIMARY_TITLE_TYPE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -20,7 +18,7 @@ public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Changes are saved to history table")
     void changesSaved() {
-        final var createResponse = raidApi.createRaidV1(createRequest);
+        final var createResponse = raidApi.mint(createRequest);
 
         Handle handle = new Handle(Objects.requireNonNull(createResponse.getBody()).getIdentifier().getId());
 
@@ -34,9 +32,9 @@ public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
             primaryTitle.setText(text);
             raid.getIdentifier().setVersion(i);
 
-            raidApi.updateRaidV1(handle.getPrefix(), handle.getSuffix(), raidUpdateRequestFactory.create(raid));
+            raidApi.update(handle.getPrefix(), handle.getSuffix(), raidUpdateRequestFactory.create(raid));
 
-            final var response = raidApi.readRaidV1(handle.getPrefix(), handle.getSuffix());
+            final var response = raidApi.read(handle.getPrefix(), handle.getSuffix());
 
             final var raidDto = response.getBody();
             assert raidDto != null;
@@ -47,9 +45,9 @@ public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
 
         raid.setTraditionalKnowledgeLabel(Collections.emptyList());
         raid.getIdentifier().setVersion(7);
-        raidApi.updateRaidV1(handle.getPrefix(), handle.getSuffix(), raidUpdateRequestFactory.create(raid));
+        raidApi.update(handle.getPrefix(), handle.getSuffix(), raidUpdateRequestFactory.create(raid));
 
-        final var response = raidApi.readRaidV1(handle.getPrefix(), handle.getSuffix());
+        final var response = raidApi.read(handle.getPrefix(), handle.getSuffix());
         final var raidDto = response.getBody();
         assert raidDto != null;
 

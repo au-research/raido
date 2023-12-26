@@ -1,14 +1,14 @@
-package au.org.raid.inttest.endpoint.raidv2.stable;
+package au.org.raid.inttest;
 
 import au.org.raid.api.Api;
 import au.org.raid.api.service.raid.id.IdentifierParser;
 import au.org.raid.api.service.stub.util.IdFactory;
-import au.org.raid.idl.raidv2.api.RaidoStableV1Api;
+import au.org.raid.idl.raidv2.api.RaidApi;
 import au.org.raid.idl.raidv2.model.*;
-import au.org.raid.inttest.TestClient;
-import au.org.raid.inttest.auth.BootstrapAuthTokenService;
-import au.org.raid.inttest.client.RaidApi;
 import au.org.raid.inttest.config.IntegrationTestConfig;
+import au.org.raid.inttest.service.BootstrapAuthTokenService;
+import au.org.raid.inttest.service.RaidUpdateRequestFactory;
+import au.org.raid.inttest.service.TestClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Contract;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +24,7 @@ import java.util.List;
 
 import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static au.org.raid.db.jooq.enums.UserRole.OPERATOR;
-import static au.org.raid.inttest.endpoint.raidv2.stable.TestConstants.*;
+import static au.org.raid.inttest.service.TestConstants.*;
 
 @SpringBootTest(classes = Api.class,
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -37,10 +37,8 @@ public class AbstractIntegrationTest {
     protected LocalDate today = LocalDate.now();
     protected RaidCreateRequest createRequest;
 
-    protected RaidoStableV1Api raidApi;
+    protected RaidApi raidApi;
     protected IdentifierParser identifierParser;
-    @Autowired
-    protected RaidApi api;
 
     @Autowired
     protected TestClient testClient;

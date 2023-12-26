@@ -1,4 +1,4 @@
-package au.org.raid.inttest.endpoint.raidv2.stable;
+package au.org.raid.inttest.service;
 
 public class TestConstants {
     public static final String REAL_TEST_ORCID = "https://orcid.org/0009-0006-4129-5257";

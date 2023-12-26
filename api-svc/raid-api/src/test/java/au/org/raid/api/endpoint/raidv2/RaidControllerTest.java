@@ -1,5 +1,6 @@
 package au.org.raid.api.endpoint.raidv2;
 
+import au.org.raid.api.controller.RaidController;
 import au.org.raid.api.exception.CrossAccountAccessException;
 import au.org.raid.api.exception.ResourceNotFoundException;
 import au.org.raid.api.service.RaidIngestService;
@@ -46,7 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-class RaidoStableV1Test {
+class RaidControllerTest {
     private static final String ACCESS_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1";
 
@@ -73,7 +74,7 @@ class RaidoStableV1Test {
     @Mock
     private RaidIngestService raidIngestService;
     @InjectMocks
-    private RaidoStableV1 controller;
+    private RaidController controller;
 
     @BeforeEach
     void setup() {

@@ -1,11 +1,11 @@
-package au.org.raid.inttest.endpoint.raidv2.stable;
+package au.org.raid.inttest;
 
 import au.org.raid.api.service.raid.id.IdentifierHandle;
 import au.org.raid.api.util.SchemaValues;
 import au.org.raid.idl.raidv2.model.ClosedRaid;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
-import au.org.raid.inttest.RaidApiValidationException;
+import au.org.raid.inttest.service.RaidApiValidationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
 import org.junit.jupiter.api.DisplayName;
@@ -26,12 +26,12 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
     @Test
     @DisplayName("Mint a raid")
     void mintRaid() {
-        final var mintedRaid = raidApi.createRaidV1(createRequest).getBody();
+        final var mintedRaid = raidApi.mint(createRequest).getBody();
 
         final var path = URI.create(mintedRaid.getIdentifier().getId()).getPath();
 
         final var handle = (IdentifierHandle) identifierParser.parseHandle(path);
-        final var result = raidApi.readRaidV1(handle.prefix(), handle.suffix()).getBody();
+        final var result = raidApi.read(handle.prefix(), handle.suffix()).getBody();
 
         assertThat(result.getTitle()).isEqualTo(createRequest.getTitle());
         assertThat(result.getDescription()).isEqualTo(createRequest.getDescription());
@@ -44,13 +44,13 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
     @Test
     @DisplayName("Update a raid")
     void updateRaid() {
-        final var mintedRaid = raidApi.createRaidV1(createRequest).getBody();
+        final var mintedRaid = raidApi.mint(createRequest).getBody();
 
         assert mintedRaid != null;
         final var path = URI.create(mintedRaid.getIdentifier().getId()).getPath();
 
         final var handle = (IdentifierHandle) identifierParser.parseHandle(path);
-        final var readResult = raidApi.readRaidV1(handle.prefix(), handle.suffix()).getBody();
+        final var readResult = raidApi.read(handle.prefix(), handle.suffix()).getBody();
 
         assert readResult != null;
         final var updateRequest = mapReadToUpdate(readResult);
@@ -60,7 +60,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
         updateRequest.getTitle().get(0).setText(title);
 
         try {
-            final var updateResult = raidApi.updateRaidV1(handle.prefix(), handle.suffix(), updateRequest).getBody();
+            final var updateResult = raidApi.update(handle.prefix(), handle.suffix(), updateRequest).getBody();
             assert updateResult != null;
             assertThat(updateResult.getTitle().get(0).getText()).isEqualTo(title);
             assertThat(updateResult.getIdentifier().getVersion()).isEqualTo(2);
@@ -68,7 +68,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
             fail("Update failed");
         }
 
-        final var result = raidApi.readRaidV1(handle.prefix(), handle.suffix()).getBody();
+        final var result = raidApi.read(handle.prefix(), handle.suffix()).getBody();
         assert result != null;
         assertThat(result.getTitle().get(0).getText()).isEqualTo(title);
         assertThat(result.getIdentifier().getVersion()).isEqualTo(2);
@@ -77,23 +77,23 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
     @Test
     @DisplayName("Raid does not update if there are no changes")
     void updateRaidNoOp() {
-        final var mintedRaid = raidApi.createRaidV1(createRequest).getBody();
+        final var mintedRaid = raidApi.mint(createRequest).getBody();
 
         final var path = URI.create(mintedRaid.getIdentifier().getId()).getPath();
 
         final var handle = (IdentifierHandle) identifierParser.parseHandle(path);
-        final var readResult = raidApi.readRaidV1(handle.prefix(), handle.suffix()).getBody();
+        final var readResult = raidApi.read(handle.prefix(), handle.suffix()).getBody();
 
         final var updateRequest = mapReadToUpdate(readResult);
 
         try {
-            final var updateResult = raidApi.updateRaidV1(handle.prefix(), handle.suffix(), updateRequest).getBody();
+            final var updateResult = raidApi.update(handle.prefix(), handle.suffix(), updateRequest).getBody();
             assertThat(updateResult.getIdentifier().getVersion()).isEqualTo(1);
         } catch (final Exception e) {
             fail("Update failed");
         }
 
-        final var result = raidApi.readRaidV1(handle.prefix(), handle.suffix()).getBody();
+        final var result = raidApi.read(handle.prefix(), handle.suffix()).getBody();
         assertThat(result.getIdentifier().getVersion()).isEqualTo(1);
     }
 
@@ -101,23 +101,23 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
     @Test
     @DisplayName("Resource not found error returned when raid not found on update")
     void notFound() {
-        final var mintedRaid = raidApi.createRaidV1(createRequest).getBody();
+        final var mintedRaid = raidApi.mint(createRequest).getBody();
 
         final var path = URI.create(mintedRaid.getIdentifier().getId()).getPath();
 
         final var handle = (IdentifierHandle) identifierParser.parseHandle(path);
-        final var readResult = raidApi.readRaidV1(handle.prefix(), handle.suffix()).getBody();
+        final var readResult = raidApi.read(handle.prefix(), handle.suffix()).getBody();
 
         final var updateRequest = mapReadToUpdate(readResult);
 
         try {
-            final var updateResult = raidApi.updateRaidV1(handle.prefix(), handle.suffix(), updateRequest).getBody();
+            final var updateResult = raidApi.update(handle.prefix(), handle.suffix(), updateRequest).getBody();
             assertThat(updateResult.getIdentifier().getVersion()).isEqualTo(1);
         } catch (final Exception e) {
             fail("Update failed");
         }
 
-        final var result = raidApi.readRaidV1(handle.prefix(), handle.suffix()).getBody();
+        final var result = raidApi.read(handle.prefix(), handle.suffix()).getBody();
         assertThat(result.getIdentifier().getVersion()).isEqualTo(1);
     }
 
@@ -125,7 +125,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
     @Test
     @DisplayName("Forbidden response if embargoed raid from other service point is requested")
     void closedRaidOtherServicePoint() throws IOException {
-        final var mintedRaid = raidApi.createRaidV1(createRequest).getBody();
+        final var mintedRaid = raidApi.mint(createRequest).getBody();
         final var path = URI.create(mintedRaid.getIdentifier().getId()).getPath();
         final var handle = (IdentifierHandle) identifierParser.parseHandle(path);
 
@@ -135,7 +135,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
         final var api = testClient.raidApi(token);
 
         try {
-            final var readResult = api.readRaidV1(handle.prefix(), handle.suffix()).getBody();
+            final var readResult = api.read(handle.prefix(), handle.suffix()).getBody();
             fail("Access to embargoed raid should be forbidden from different service point");
         } catch (final FeignException e) {
             assertThat(e.status()).isEqualTo(403);
@@ -153,7 +153,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
     @Test
     @DisplayName("List raid does not show closed raids from other service points")
     void closedRaidsExcludedFromList() {
-        raidApi.createRaidV1(createRequest);
+        raidApi.mint(createRequest);
 
         final var token = bootstrapTokenSvc.bootstrapToken(
                 UQ_SERVICE_POINT_ID, "RdmUqApiToken", OPERATOR);
@@ -161,7 +161,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
         final var api = testClient.raidApi(token);
 
         try {
-            final var raidList = api.listRaidsV1(null).getBody();
+            final var raidList = api.findAll(null).getBody();
 
             assert raidList != null;
 

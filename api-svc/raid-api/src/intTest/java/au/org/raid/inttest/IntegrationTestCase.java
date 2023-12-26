@@ -4,11 +4,12 @@ import au.org.raid.api.Api;
 import au.org.raid.api.service.stub.util.IdFactory;
 import au.org.raid.api.spring.config.environment.EnvironmentProps;
 import au.org.raid.idl.raidv2.api.AdminExperimentalApi;
-import au.org.raid.idl.raidv2.api.RaidoStableV1Api;
+import au.org.raid.idl.raidv2.api.RaidApi;
 import au.org.raid.idl.raidv2.api.UnapprovedExperimentalApi;
-import au.org.raid.inttest.auth.BootstrapAuthTokenService;
 import au.org.raid.inttest.config.IntTestProps;
 import au.org.raid.inttest.config.IntegrationTestConfig;
+import au.org.raid.inttest.service.BootstrapAuthTokenService;
+import au.org.raid.inttest.service.RaidApiExceptionDecoder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Contract;
 import feign.Feign;
@@ -22,16 +23,13 @@ import org.jooq.DSLContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.client.RestTemplate;
 
 import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
-import static au.org.raid.api.spring.config.RaidWebSecurityConfig.RAID_V1_API;
 import static au.org.raid.db.jooq.enums.UserRole.OPERATOR;
-import static au.org.raid.inttest.config.IntegrationTestConfig.REST_TEMPLATE_VALUES_ONLY_ENCODING;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @SpringBootTest(classes = Api.class,
@@ -41,13 +39,10 @@ public abstract class IntegrationTestCase {
     // be careful, 25 char max column length
     public static final String INT_TEST_ROR = "https://ror.org/038sjwq14";
     protected static final IdFactory idFactory = new IdFactory("inttest");
-//    @RegisterExtension
-//    protected static JettyTestServer jettyTestServer = new JettyTestServer();
+
     @Autowired
-    protected RestTemplate rest;
-    @Autowired
-    @Qualifier(REST_TEMPLATE_VALUES_ONLY_ENCODING)
-    protected RestTemplate valuesEncodingRest;
+    protected RestTemplate restTemplate;
+
     @Autowired
     protected IntTestProps props;
     @Autowired
@@ -124,7 +119,7 @@ public abstract class IntegrationTestCase {
     }
 
 
-    public RaidoStableV1Api basicRaidStableClient(String token) {
+    public RaidApi basicRaidStableClient(String token) {
         return Feign.builder().
                 client(new OkHttpClient()).
                 encoder(new JacksonEncoder(mapper)).
@@ -133,12 +128,12 @@ public abstract class IntegrationTestCase {
                 contract(feignContract).
                 requestInterceptor(request ->
                         request.header(AUTHORIZATION, "Bearer " + token)).
-                logger(new Slf4jLogger(RaidoStableV1Api.class)).
+                logger(new Slf4jLogger(RaidApi.class)).
                 logLevel(Logger.Level.FULL).
-                target(RaidoStableV1Api.class, props.getRaidoServerUrl());
+                target(RaidApi.class, props.getRaidoServerUrl());
     }
 
-    public RaidoStableV1Api basicRaidStableClient() {
+    public RaidApi basicRaidStableClient() {
         return basicRaidStableClient(operatorToken);
     }
 }

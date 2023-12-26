@@ -1,4 +1,4 @@
-package au.org.raid.api.endpoint.raidv2;
+package au.org.raid.api.controller;
 
 import au.org.raid.api.exception.ClosedRaidException;
 import au.org.raid.api.exception.InvalidAccessException;
@@ -7,7 +7,7 @@ import au.org.raid.api.service.RaidIngestService;
 import au.org.raid.api.service.raid.RaidStableV1Service;
 import au.org.raid.api.util.SchemaValues;
 import au.org.raid.api.validator.ValidationService;
-import au.org.raid.idl.raidv2.api.RaidoStableV1Api;
+import au.org.raid.idl.raidv2.api.RaidApi;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
@@ -34,13 +34,13 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 @CrossOrigin
 @SecurityScheme(name = "bearerAuth", scheme = "bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 @RequiredArgsConstructor
-public class RaidoStableV1 implements RaidoStableV1Api {
+public class RaidController implements RaidApi {
     private final ValidationService validationService;
     private final RaidStableV1Service raidService;
     private final RaidIngestService raidIngestService;
 
     @Override
-    public ResponseEntity<RaidDto> readRaidV1(final String prefix, final String suffix) {
+    public ResponseEntity<RaidDto> read(final String prefix, final String suffix) {
         var user = getApiToken();
         //return 403 if raid is confidential and doesn't have same service point as user
 
@@ -57,7 +57,7 @@ public class RaidoStableV1 implements RaidoStableV1Api {
 
 
     @Override
-    public ResponseEntity<RaidDto> createRaidV1(final RaidCreateRequest request) {
+    public ResponseEntity<RaidDto> mint(final RaidCreateRequest request) {
         final var user = getApiToken();
 
         if (!raidService.isEditable(user, user.getServicePointId())) {
@@ -76,7 +76,7 @@ public class RaidoStableV1 implements RaidoStableV1Api {
     }
 
     @Override
-    public ResponseEntity<List<RaidDto>> listRaidsV1(final Long servicePoint) {
+    public ResponseEntity<List<RaidDto>> findAll(final Long servicePoint) {
         var user = getApiToken();
 
         return ResponseEntity.ok(Optional.ofNullable(servicePoint)
@@ -85,7 +85,7 @@ public class RaidoStableV1 implements RaidoStableV1Api {
     }
 
     @Override
-    public ResponseEntity<RaidDto> updateRaidV1(final String prefix, final String suffix, RaidUpdateRequest request) {
+    public ResponseEntity<RaidDto> update(final String prefix, final String suffix, RaidUpdateRequest request) {
         final var handle = String.join("/", prefix, suffix);
         var user = getApiToken();
         guardOperatorOrAssociated(user, request.getIdentifier().getOwner().getServicePoint());
