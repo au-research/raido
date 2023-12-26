@@ -3,7 +3,7 @@ package au.org.raid.api.validator;
 import au.org.raid.api.repository.OrganisationRoleRepository;
 import au.org.raid.api.repository.OrganisationRoleSchemaRepository;
 import au.org.raid.api.util.DateUtil;
-import au.org.raid.idl.raidv2.model.OrganisationRoleWithSchemaUri;
+import au.org.raid.idl.raidv2.model.OrganisationRole;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +24,7 @@ public class OrganisationRoleValidator {
     }
 
     public List<ValidationFailure> validate(
-            final OrganisationRoleWithSchemaUri role, final int organisationIndex, final int roleIndex) {
+            final OrganisationRole role, final int organisationIndex, final int roleIndex) {
         final var failures = new ArrayList<ValidationFailure>();
 
         if (isBlank(role.getId())) {

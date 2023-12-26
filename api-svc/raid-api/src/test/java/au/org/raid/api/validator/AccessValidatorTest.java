@@ -32,7 +32,7 @@ class AccessValidatorTest {
     @Test
     @DisplayName("Validation passes on embargoed raid with correct fields")
     void embargoedValidationSucceeds() {
-        final var type = new AccessTypeWithSchemaUri()
+        final var type = new AccessType()
                 .id(TestConstants.EMBARGOED_ACCESS_TYPE_ID)
                 .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
@@ -50,7 +50,7 @@ class AccessValidatorTest {
     @Test
     @DisplayName("Validation fails with closed raid")
     void missingAccessStatement() {
-        final var type = new AccessTypeWithSchemaUri()
+        final var type = new AccessType()
                 .id(TestConstants.CLOSED_ACCESS_TYPE_ID)
                 .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
@@ -70,7 +70,7 @@ class AccessValidatorTest {
     @Test
     @DisplayName("Validation fails with blank accessStatement on embargoed raid")
     void blankStatementEmbargoed() {
-        final var type = new AccessTypeWithSchemaUri()
+        final var type = new AccessType()
                 .id(TestConstants.EMBARGOED_ACCESS_TYPE_ID)
                 .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
@@ -113,7 +113,7 @@ class AccessValidatorTest {
     @Test
     @DisplayName("Validation fails with missing embargoExpiry on embargoed raid")
     void missingEmbargoExpiry() {
-        final var type = new AccessTypeWithSchemaUri()
+        final var type = new AccessType()
                 .id(TestConstants.EMBARGOED_ACCESS_TYPE_ID)
                 .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
@@ -135,7 +135,7 @@ class AccessValidatorTest {
     @Test
     @DisplayName("Validation fails on open raid with invalid access statement")
     void openRaidWithInvalidAccessStatement() {
-        final var type = new AccessTypeWithSchemaUri()
+        final var type = new AccessType()
                 .id(TestConstants.OPEN_ACCESS_TYPE_ID)
                 .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
@@ -162,7 +162,7 @@ class AccessValidatorTest {
     @Test
     @DisplayName("Validation passes on open raid without access statement")
     void openRaidNoAccessStatement() {
-        final var type = new AccessTypeWithSchemaUri()
+        final var type = new AccessType()
                 .id(TestConstants.OPEN_ACCESS_TYPE_ID)
                 .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
@@ -180,7 +180,7 @@ class AccessValidatorTest {
     @Test
     @DisplayName("Validation fails on embargoed raid with embargo expiry over 18 month in future")
     void embargoedInvalidExpiry() {
-        final var type = new AccessTypeWithSchemaUri()
+        final var type = new AccessType()
                 .id(TestConstants.EMBARGOED_ACCESS_TYPE_ID)
                 .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 

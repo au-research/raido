@@ -3,7 +3,7 @@ package au.org.raid.inttest.endpoint.raidv2.stable;
 import au.org.raid.api.Api;
 import au.org.raid.db.jooq.enums.UserRole;
 import au.org.raid.idl.raidv2.model.Title;
-import au.org.raid.idl.raidv2.model.TitleTypeWithSchemaUri;
+import au.org.raid.idl.raidv2.model.TitleType;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import au.org.raid.inttest.RaidApiValidationException;
 import au.org.raid.inttest.config.IntegrationTestConfig;
@@ -195,7 +195,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with no primary title fails")
     void alternativeTitleOnly() {
-        createRequest.getTitle().get(0).setType(new TitleTypeWithSchemaUri()
+        createRequest.getTitle().get(0).setType(new TitleType()
                 .id(TestConstants.ALTERNATIVE_TITLE_TYPE)
                 .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI));
 
@@ -219,7 +219,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with missing schemaUri fails")
     void missingTitleScheme() {
-        createRequest.getTitle().get(0).setType(new TitleTypeWithSchemaUri()
+        createRequest.getTitle().get(0).setType(new TitleType()
                 .id(TestConstants.PRIMARY_TITLE_TYPE)
         );
 
@@ -243,7 +243,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with invalid schemaUri fails")
     void invalidTitleScheme() {
-        createRequest.getTitle().get(0).setType(new TitleTypeWithSchemaUri()
+        createRequest.getTitle().get(0).setType(new TitleType()
                 .id(TestConstants.PRIMARY_TITLE_TYPE)
                 .schemaUri("https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v2"));
 
@@ -271,7 +271,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
 
         titles.add(new Title()
                 .text("Test Title")
-                .type(new TitleTypeWithSchemaUri()
+                .type(new TitleType()
                         .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI)
                 )
                 .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -302,7 +302,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
         final var titles = new ArrayList<>(createRequest.getTitle());
 
         titles.add(new Title()
-                .type(new TitleTypeWithSchemaUri()
+                .type(new TitleType()
                         .id("https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/invalid.json")
                         .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI)
                 )

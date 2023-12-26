@@ -1,7 +1,7 @@
 package au.org.raid.inttest.endpoint.raidv2.stable;
 
 import au.org.raid.idl.raidv2.model.Description;
-import au.org.raid.idl.raidv2.model.DescriptionTypeWithSchemaUri;
+import au.org.raid.idl.raidv2.model.DescriptionType;
 import au.org.raid.idl.raidv2.model.Language;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import au.org.raid.inttest.RaidApiValidationException;
@@ -289,7 +289,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @DisplayName("Validation fails with missing type id")
     void missingId() {
         createRequest.getDescription().add(newDescription()
-                .type(new DescriptionTypeWithSchemaUri()
+                .type(new DescriptionType()
                         .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI))
         );
 
@@ -313,7 +313,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     @DisplayName("Validation fails with empty type id")
     void emptyId() {
         createRequest.getDescription().add(new Description()
-                .type(new DescriptionTypeWithSchemaUri()
+                .type(new DescriptionType()
                         .id("")
                         .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI))
                 .text("Description text...")
@@ -340,7 +340,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     void invalidType() {
         createRequest.getDescription().add(
                 new Description()
-                        .type(new DescriptionTypeWithSchemaUri()
+                        .type(new DescriptionType()
                                 .id("https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/unknown.json")
                                 .schemaUri("https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/")
                         )
@@ -366,7 +366,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
     private Description newDescription() {
         return new Description()
                 .text("New description...")
-                .type(new DescriptionTypeWithSchemaUri()
+                .type(new DescriptionType()
                         .id("https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json")
                         .schemaUri("https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/")
                 )

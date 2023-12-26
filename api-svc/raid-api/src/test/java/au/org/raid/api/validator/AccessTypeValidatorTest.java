@@ -5,7 +5,7 @@ import au.org.raid.api.repository.AccessTypeSchemaRepository;
 import au.org.raid.api.util.TestConstants;
 import au.org.raid.db.jooq.tables.records.AccessTypeRecord;
 import au.org.raid.db.jooq.tables.records.AccessTypeSchemaRecord;
-import au.org.raid.idl.raidv2.model.AccessTypeWithSchemaUri;
+import au.org.raid.idl.raidv2.model.AccessType;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ class AccessTypeValidatorTest {
     @Test
     @DisplayName("Validation passes with valid access type")
     void validAccessType() {
-        final var accessType = new AccessTypeWithSchemaUri()
+        final var accessType = new AccessType()
                 .id(TestConstants.OPEN_ACCESS_TYPE_ID)
                 .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
@@ -63,7 +63,7 @@ class AccessTypeValidatorTest {
     @Test
     @DisplayName("Validation fails when id is null")
     void nullId() {
-        final var accessType = new AccessTypeWithSchemaUri()
+        final var accessType = new AccessType()
                 .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
         when(accessTypeSchemaRepository.findByUri(TestConstants.ACCESS_TYPE_SCHEMA_URI))
@@ -83,7 +83,7 @@ class AccessTypeValidatorTest {
     @Test
     @DisplayName("Validation fails when id is empty string")
     void emptyId() {
-        final var accessType = new AccessTypeWithSchemaUri()
+        final var accessType = new AccessType()
                 .id("")
                 .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
@@ -104,7 +104,7 @@ class AccessTypeValidatorTest {
     @Test
     @DisplayName("Validation fails when schemaUri is null")
     void nullSchemaUri() {
-        final var accessType = new AccessTypeWithSchemaUri()
+        final var accessType = new AccessType()
                 .id(TestConstants.OPEN_ACCESS_TYPE_ID);
 
         final var failures = validationService.validate(accessType);
@@ -121,7 +121,7 @@ class AccessTypeValidatorTest {
     @Test
     @DisplayName("Validation fails when schemaUri is empty")
     void emptySchemaUri() {
-        final var accessType = new AccessTypeWithSchemaUri()
+        final var accessType = new AccessType()
                 .id(TestConstants.OPEN_ACCESS_TYPE_ID)
                 .schemaUri("");
 
@@ -139,7 +139,7 @@ class AccessTypeValidatorTest {
     @Test
     @DisplayName("Validation fails when schemaUri is invalid")
     void invalidSchemaUri() {
-        final var accessType = new AccessTypeWithSchemaUri()
+        final var accessType = new AccessType()
                 .id(TestConstants.OPEN_ACCESS_TYPE_ID)
                 .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
@@ -177,7 +177,7 @@ class AccessTypeValidatorTest {
     @Test
     @DisplayName("Validation fails when id not found in schema")
     void invalidTypeForSchema() {
-        final var accessType = new AccessTypeWithSchemaUri()
+        final var accessType = new AccessType()
                 .id(TestConstants.OPEN_ACCESS_TYPE_ID)
                 .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 

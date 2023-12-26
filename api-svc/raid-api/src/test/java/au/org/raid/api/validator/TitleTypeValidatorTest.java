@@ -5,7 +5,7 @@ import au.org.raid.api.repository.TitleTypeSchemaRepository;
 import au.org.raid.api.util.TestConstants;
 import au.org.raid.db.jooq.tables.records.TitleTypeRecord;
 import au.org.raid.db.jooq.tables.records.TitleTypeSchemaRecord;
-import au.org.raid.idl.raidv2.model.TitleTypeWithSchemaUri;
+import au.org.raid.idl.raidv2.model.TitleType;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ class TitleTypeValidatorTest {
     @Test
     @DisplayName("Validation passes with valid title type")
     void validTitleType() {
-        final var titleType = new TitleTypeWithSchemaUri()
+        final var titleType = new TitleType()
                 .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
                 .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
 
@@ -64,7 +64,7 @@ class TitleTypeValidatorTest {
     @Test
     @DisplayName("Validation fails when id is null")
     void nullId() {
-        final var titleType = new TitleTypeWithSchemaUri()
+        final var titleType = new TitleType()
                 .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
 
         when(titleTypeSchemaRepository.findByUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
@@ -84,7 +84,7 @@ class TitleTypeValidatorTest {
     @Test
     @DisplayName("Validation fails when id is empty string")
     void emptyId() {
-        final var titleType = new TitleTypeWithSchemaUri()
+        final var titleType = new TitleType()
                 .id("")
                 .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
 
@@ -105,7 +105,7 @@ class TitleTypeValidatorTest {
     @Test
     @DisplayName("Validation fails when schemaUri is null")
     void nullSchemaUri() {
-        final var titleType = new TitleTypeWithSchemaUri()
+        final var titleType = new TitleType()
                 .id(TestConstants.PRIMARY_TITLE_TYPE_ID);
 
         final var failures = validationService.validate(titleType, INDEX);
@@ -122,7 +122,7 @@ class TitleTypeValidatorTest {
     @Test
     @DisplayName("Validation fails when schemaUri is empty")
     void emptySchemaUri() {
-        final var titleType = new TitleTypeWithSchemaUri()
+        final var titleType = new TitleType()
                 .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
                 .schemaUri("");
 
@@ -140,7 +140,7 @@ class TitleTypeValidatorTest {
     @Test
     @DisplayName("Validation fails when schemaUri is invalid")
     void invalidSchemaUri() {
-        final var titleType = new TitleTypeWithSchemaUri()
+        final var titleType = new TitleType()
                 .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
                 .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
 
@@ -178,7 +178,7 @@ class TitleTypeValidatorTest {
     @Test
     @DisplayName("Validation fails when id not found in schema")
     void invalidTypeForSchema() {
-        final var titleType = new TitleTypeWithSchemaUri()
+        final var titleType = new TitleType()
                 .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
                 .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
 

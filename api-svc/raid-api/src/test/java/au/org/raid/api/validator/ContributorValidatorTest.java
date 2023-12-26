@@ -2,8 +2,8 @@ package au.org.raid.api.validator;
 
 import au.org.raid.api.util.TestConstants;
 import au.org.raid.idl.raidv2.model.Contributor;
-import au.org.raid.idl.raidv2.model.ContributorPositionWithSchemaUri;
-import au.org.raid.idl.raidv2.model.ContributorRoleWithSchemaUri;
+import au.org.raid.idl.raidv2.model.ContributorPosition;
+import au.org.raid.idl.raidv2.model.ContributorRole;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,7 +40,7 @@ class ContributorValidatorTest {
     @Test
     @DisplayName("Validation fails with missing position")
     void missingPositions() {
-        final var role = new ContributorRoleWithSchemaUri()
+        final var role = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
@@ -66,11 +66,11 @@ class ContributorValidatorTest {
     @Test
     @DisplayName("Validation fails with missing lead position")
     void missingLeadPositions() {
-        final var role = new ContributorRoleWithSchemaUri()
+        final var role = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-        final var position = new ContributorPositionWithSchemaUri()
+        final var position = new ContributorPosition()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/other-participant.json")
                 .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
@@ -132,11 +132,11 @@ class ContributorValidatorTest {
     @Test
     @DisplayName("Validation passes with valid contributor")
     void validContributor() {
-        final var role = new ContributorRoleWithSchemaUri()
+        final var role = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-        final var position = new ContributorPositionWithSchemaUri()
+        final var position = new ContributorPosition()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
                 .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
@@ -158,11 +158,11 @@ class ContributorValidatorTest {
     @Test
     @DisplayName("Failures in validation services are added to return value")
     void roleValidationFailures() {
-        final var role = new ContributorRoleWithSchemaUri()
+        final var role = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-        final var position = new ContributorPositionWithSchemaUri()
+        final var position = new ContributorPosition()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
                 .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
@@ -205,11 +205,11 @@ class ContributorValidatorTest {
     @Test
     @DisplayName("Validation fails with conflicting lead position - year-month-day dates")
     void conflictingLeadPositions() {
-        final var role1 = new ContributorRoleWithSchemaUri()
+        final var role1 = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-        final var position1 = new ContributorPositionWithSchemaUri()
+        final var position1 = new ContributorPosition()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
                 .startDate(LocalDate.now().minusYears(3).format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -221,11 +221,11 @@ class ContributorValidatorTest {
                 .role(List.of(role1))
                 .position(List.of(position1));
 
-        final var role2 = new ContributorRoleWithSchemaUri()
+        final var role2 = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-        final var position2 = new ContributorPositionWithSchemaUri()
+        final var position2 = new ContributorPosition()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
                 .startDate(LocalDate.now().minusYears(3).format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -249,11 +249,11 @@ class ContributorValidatorTest {
     @Test
     @DisplayName("Validation fails with conflicting lead position - year-month dates")
     void conflictingLeadPositionsWithYearMonthDates() {
-        final var role1 = new ContributorRoleWithSchemaUri()
+        final var role1 = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-        final var position1 = new ContributorPositionWithSchemaUri()
+        final var position1 = new ContributorPosition()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
                 .startDate("2021-01")
@@ -265,11 +265,11 @@ class ContributorValidatorTest {
                 .role(List.of(role1))
                 .position(List.of(position1));
 
-        final var role2 = new ContributorRoleWithSchemaUri()
+        final var role2 = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-        final var position2 = new ContributorPositionWithSchemaUri()
+        final var position2 = new ContributorPosition()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
                 .startDate("2022-04")
@@ -292,11 +292,11 @@ class ContributorValidatorTest {
     @Test
     @DisplayName("Validation fails with conflicting lead position - year dates")
     void conflictingLeadPositionsWithYearDates() {
-        final var role1 = new ContributorRoleWithSchemaUri()
+        final var role1 = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-        final var position1 = new ContributorPositionWithSchemaUri()
+        final var position1 = new ContributorPosition()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
                 .startDate("2021")
@@ -308,11 +308,11 @@ class ContributorValidatorTest {
                 .role(List.of(role1))
                 .position(List.of(position1));
 
-        final var role2 = new ContributorRoleWithSchemaUri()
+        final var role2 = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-        final var position2 = new ContributorPositionWithSchemaUri()
+        final var position2 = new ContributorPosition()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
                 .startDate("2022")
@@ -335,11 +335,11 @@ class ContributorValidatorTest {
     @Test
     @DisplayName("Validation passes with multiple lead position - year dates")
     void multipleLeadPositionsWithYearsAsDates() {
-        final var role1 = new ContributorRoleWithSchemaUri()
+        final var role1 = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-        final var position1 = new ContributorPositionWithSchemaUri()
+        final var position1 = new ContributorPosition()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
                 .startDate("2020")
@@ -351,11 +351,11 @@ class ContributorValidatorTest {
                 .role(List.of(role1))
                 .position(List.of(position1));
 
-        final var role2 = new ContributorRoleWithSchemaUri()
+        final var role2 = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-        final var position2 = new ContributorPositionWithSchemaUri()
+        final var position2 = new ContributorPosition()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
                 .startDate("2022")
@@ -375,11 +375,11 @@ class ContributorValidatorTest {
     @Test
     @DisplayName("Validation passes with multiple lead position - year-month dates")
     void multipleLeadPositionsWithYearMonthDates() {
-        final var role1 = new ContributorRoleWithSchemaUri()
+        final var role1 = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-        final var position1 = new ContributorPositionWithSchemaUri()
+        final var position1 = new ContributorPosition()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
                 .startDate("2020-01")
@@ -391,11 +391,11 @@ class ContributorValidatorTest {
                 .role(List.of(role1))
                 .position(List.of(position1));
 
-        final var role2 = new ContributorRoleWithSchemaUri()
+        final var role2 = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-        final var position2 = new ContributorPositionWithSchemaUri()
+        final var position2 = new ContributorPosition()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
                 .startDate("2021-06")
@@ -415,11 +415,11 @@ class ContributorValidatorTest {
     @Test
     @DisplayName("Validation passes with multiple lead position - year-month-day dates")
     void multipleLeadPositionsWithYearMonthDayDates() {
-        final var role1 = new ContributorRoleWithSchemaUri()
+        final var role1 = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-        final var position1 = new ContributorPositionWithSchemaUri()
+        final var position1 = new ContributorPosition()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
                 .startDate("2020-01-01")
@@ -431,11 +431,11 @@ class ContributorValidatorTest {
                 .role(List.of(role1))
                 .position(List.of(position1));
 
-        final var role2 = new ContributorRoleWithSchemaUri()
+        final var role2 = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-        final var position2 = new ContributorPositionWithSchemaUri()
+        final var position2 = new ContributorPosition()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
                 .startDate("2021-06-01")
@@ -457,17 +457,17 @@ class ContributorValidatorTest {
     @Test
     @DisplayName("Validation fails if contributor has overlapping positions - year-month-day dates")
     void overlappingPositions() {
-        final var role1 = new ContributorRoleWithSchemaUri()
+        final var role1 = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-        final var position1 = new ContributorPositionWithSchemaUri()
+        final var position1 = new ContributorPosition()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
                 .startDate("2020-01-01")
                 .endDate("2021-12-31");
 
-        final var position2 = new ContributorPositionWithSchemaUri()
+        final var position2 = new ContributorPosition()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
                 .startDate("2021-06-01")
@@ -493,11 +493,11 @@ class ContributorValidatorTest {
     @Test
     @DisplayName("Validation fails with null schemaUri")
     void nullIdentifierSchemeUri() {
-        final var role = new ContributorRoleWithSchemaUri()
+        final var role = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-        final var position = new ContributorPositionWithSchemaUri()
+        final var position = new ContributorPosition()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
                 .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
@@ -523,11 +523,11 @@ class ContributorValidatorTest {
     @Test
     @DisplayName("Validation fails with empty schemaUri")
     void emptyIdentifierSchemeUri() {
-        final var role = new ContributorRoleWithSchemaUri()
+        final var role = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-        final var position = new ContributorPositionWithSchemaUri()
+        final var position = new ContributorPosition()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
                 .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
@@ -554,11 +554,11 @@ class ContributorValidatorTest {
     @Test
     @DisplayName("Validation fails with invalid schemaUri")
     void invalidIdentifierSchemeUri() {
-        final var role = new ContributorRoleWithSchemaUri()
+        final var role = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-        final var position = new ContributorPositionWithSchemaUri()
+        final var position = new ContributorPosition()
                 .schemaUri(TestConstants.CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(TestConstants.LEADER_CONTRIBUTOR_POSITION)
                 .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));

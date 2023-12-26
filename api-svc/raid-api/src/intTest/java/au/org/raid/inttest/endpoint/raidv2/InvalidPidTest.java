@@ -54,7 +54,7 @@ public class InvalidPidTest extends IntegrationTestCase {
     private static final String CONTRIBUTOR_ROLE_SCHEME_URI = "https://credit.niso.org/";
 
     public static List<Description> descriptions(String description) {
-        final var descriptionType = new DescriptionTypeWithSchemaUri()
+        final var descriptionType = new DescriptionType()
                 .id(PRIMARY_DESCRIPTION_TYPE)
                 .schemaUri(DESCRIPTION_TYPE_SCHEME_URI);
 
@@ -79,7 +79,7 @@ public class InvalidPidTest extends IntegrationTestCase {
                 .organisation(organisations(NONEXISTENT_TEST_ROR))
                 .relatedObject(relatedObjects(NONEXISTENT_TEST_DOI))
                 .access(new Access()
-                        .type(new AccessTypeWithSchemaUri()
+                        .type(new AccessType()
                                 .id(ACCESS_TYPE_OPEN)
                                 .schemaUri(ACCESS_TYPE_SCHEME_URI))
                 )
@@ -104,7 +104,7 @@ public class InvalidPidTest extends IntegrationTestCase {
             String title
     ) {
         return List.of(new Title()
-                .type(new TitleTypeWithSchemaUri()
+                .type(new TitleType()
                         .id(PRIMARY_TITLE_TYPE)
                         .schemaUri(TITLE_TYPE_SCHEME_URI)
                 )
@@ -119,12 +119,12 @@ public class InvalidPidTest extends IntegrationTestCase {
         return List.of(new Contributor()
                 .id(orcid)
                 .schemaUri(CONTRIBUTOR_SCHEME_URI)
-                .position(List.of(new ContributorPositionWithSchemaUri()
+                .position(List.of(new ContributorPosition()
                         .schemaUri(CONTRIBUTOR_POSITION_SCHEME_URI)
                         .id(LEADER_POSITION)
                         .startDate(today.format(DateTimeFormatter.ISO_LOCAL_DATE))))
                 .role(List.of(
-                        new ContributorRoleWithSchemaUri()
+                        new ContributorRole()
                                 .schemaUri(CONTRIBUTOR_ROLE_SCHEME_URI)
                                 .id(SUPERVISION_ROLE))));
     }
@@ -142,7 +142,7 @@ public class InvalidPidTest extends IntegrationTestCase {
                 .id(ror)
                 .schemaUri(ORGANISATION_SCHEME_URI)
                 .role(List.of(
-                        new OrganisationRoleWithSchemaUri()
+                        new OrganisationRole()
                                 .schemaUri(ORGANISATION_ROLE_SCHEME_URI)
                                 .id(role)
                                 .startDate(today.format(DateTimeFormatter.ISO_LOCAL_DATE))));

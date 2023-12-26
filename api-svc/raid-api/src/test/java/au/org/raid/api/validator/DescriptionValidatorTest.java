@@ -2,7 +2,7 @@ package au.org.raid.api.validator;
 
 import au.org.raid.api.util.TestConstants;
 import au.org.raid.idl.raidv2.model.Description;
-import au.org.raid.idl.raidv2.model.DescriptionTypeWithSchemaUri;
+import au.org.raid.idl.raidv2.model.DescriptionType;
 import au.org.raid.idl.raidv2.model.Language;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +34,7 @@ class DescriptionValidatorTest {
     @Test
     @DisplayName("Validation passes with valid description")
     void validDescription() {
-        final var type = new DescriptionTypeWithSchemaUri()
+        final var type = new DescriptionType()
                 .id(TestConstants.PRIMARY_DESCRIPTION_TYPE)
                 .schemaUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI);
 
@@ -58,7 +58,7 @@ class DescriptionValidatorTest {
     @Test
     @DisplayName("Validation fails with missing primary description")
     void missingPrimaryDescription() {
-        final var type = new DescriptionTypeWithSchemaUri()
+        final var type = new DescriptionType()
                 .id(TestConstants.ALTERNATIVE_DESCRIPTION_TYPE)
                 .schemaUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI);
 
@@ -87,7 +87,7 @@ class DescriptionValidatorTest {
     @Test
     @DisplayName("Validation fails with more than one primary description")
     void multiplePrimaryDescriptions() {
-        final var type = new DescriptionTypeWithSchemaUri()
+        final var type = new DescriptionType()
                 .id(TestConstants.PRIMARY_DESCRIPTION_TYPE)
                 .schemaUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI);
 
@@ -117,7 +117,7 @@ class DescriptionValidatorTest {
     @Test
     @DisplayName("Validation fails with null description")
     void nullDescription() {
-        final var type = new DescriptionTypeWithSchemaUri()
+        final var type = new DescriptionType()
                 .id(TestConstants.PRIMARY_DESCRIPTION_TYPE)
                 .schemaUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI);
 
@@ -147,7 +147,7 @@ class DescriptionValidatorTest {
     void emptyDescription() {
         final var description = new Description()
                 .text("")
-                .type(new DescriptionTypeWithSchemaUri()
+                .type(new DescriptionType()
                         .id(TestConstants.PRIMARY_DESCRIPTION_TYPE)
                         .schemaUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI)
                 );
@@ -166,7 +166,7 @@ class DescriptionValidatorTest {
     @Test
     @DisplayName("Type validation failures are returned")
     void typeErrorAreReturned() {
-        final var type = new DescriptionTypeWithSchemaUri()
+        final var type = new DescriptionType()
                 .id(TestConstants.PRIMARY_DESCRIPTION_TYPE)
                 .schemaUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI);
 

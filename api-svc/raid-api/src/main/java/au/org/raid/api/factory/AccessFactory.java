@@ -10,7 +10,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class AccessFactory {
-    public Access create(final AccessStatement statement, final AccessTypeWithSchemaUri type, final LocalDate embargoExpiry) {
+    public Access create(final AccessStatement statement, final AccessType type, final LocalDate embargoExpiry) {
         return new Access()
                 .statement(statement)
                 .type(type)

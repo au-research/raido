@@ -4,7 +4,7 @@ import au.org.raid.api.repository.OrganisationRoleRepository;
 import au.org.raid.api.repository.OrganisationRoleSchemaRepository;
 import au.org.raid.db.jooq.tables.records.OrganisationRoleRecord;
 import au.org.raid.db.jooq.tables.records.OrganisationRoleSchemaRecord;
-import au.org.raid.idl.raidv2.model.OrganisationRoleWithSchemaUri;
+import au.org.raid.idl.raidv2.model.OrganisationRole;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,8 +48,8 @@ class OrganisationRoleValidatorTest {
 
     @Test
     @DisplayName("Validation passes with valid OrganisationRole")
-    void validOrganisationRoleWithSchemaUri() {
-        final var role = new OrganisationRoleWithSchemaUri()
+    void validOrganisationRole() {
+        final var role = new OrganisationRole()
                 .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                 .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                 .startDate("2021");
@@ -69,7 +69,7 @@ class OrganisationRoleValidatorTest {
     @Test
     @DisplayName("Validation fails if end date is before start date")
     void endDateBeforeStartDate() {
-        final var role = new OrganisationRoleWithSchemaUri()
+        final var role = new OrganisationRole()
                 .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                 .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                 .startDate("2021")
@@ -95,7 +95,7 @@ class OrganisationRoleValidatorTest {
     @Test
     @DisplayName("Validation fails with null schemaUri")
     void nullSchemaUri() {
-        final var role = new OrganisationRoleWithSchemaUri()
+        final var role = new OrganisationRole()
                 .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                 .startDate("2021");
 
@@ -116,7 +116,7 @@ class OrganisationRoleValidatorTest {
     @Test
     @DisplayName("Validation fails with empty schemaUri")
     void emptySchemaUri() {
-        final var role = new OrganisationRoleWithSchemaUri()
+        final var role = new OrganisationRole()
                 .schemaUri("")
                 .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                 .startDate("2021");
@@ -138,7 +138,7 @@ class OrganisationRoleValidatorTest {
     @Test
     @DisplayName("Validation fails with invalid schemaUri")
     void invalidSchemaUri() {
-        final var role = new OrganisationRoleWithSchemaUri()
+        final var role = new OrganisationRole()
                 .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                 .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                 .startDate("2021");
@@ -162,7 +162,7 @@ class OrganisationRoleValidatorTest {
     @Test
     @DisplayName("Validation fails with null role")
     void nullRole() {
-        final var role = new OrganisationRoleWithSchemaUri()
+        final var role = new OrganisationRole()
                 .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                 .startDate("2021");
 
@@ -185,7 +185,7 @@ class OrganisationRoleValidatorTest {
     @Test
     @DisplayName("Validation fails with empty role type id")
     void emptyRole() {
-        final var role = new OrganisationRoleWithSchemaUri()
+        final var role = new OrganisationRole()
                 .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                 .id("")
                 .startDate("2021");
@@ -209,7 +209,7 @@ class OrganisationRoleValidatorTest {
     @Test
     @DisplayName("Validation fails with invalid role")
     void invalidRole() {
-        final var role = new OrganisationRoleWithSchemaUri()
+        final var role = new OrganisationRole()
                 .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                 .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                 .startDate("2021");

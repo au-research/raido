@@ -4,7 +4,7 @@ import au.org.raid.api.factory.ContributorPositionFactory;
 import au.org.raid.api.repository.ContributorPositionRepository;
 import au.org.raid.api.repository.ContributorPositionSchemaRepository;
 import au.org.raid.api.repository.RaidContributorPositionRepository;
-import au.org.raid.idl.raidv2.model.ContributorPositionWithSchemaUri;
+import au.org.raid.idl.raidv2.model.ContributorPosition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +21,8 @@ public class ContributorPositionService {
     private final ContributorPositionRepository contributorPositionRepository;
     private final ContributorPositionSchemaRepository contributorPositionSchemaRepository;
 
-    public List<ContributorPositionWithSchemaUri> findAllByRaidContributorId(final Integer raidContributorId) {
-        final var contributorPositions = new ArrayList<ContributorPositionWithSchemaUri>();
+    public List<ContributorPosition> findAllByRaidContributorId(final Integer raidContributorId) {
+        final var contributorPositions = new ArrayList<ContributorPosition>();
 
         final var raidContributorPositions =
                 raidContributorPositionRepository.findAllByRaidContributorId(raidContributorId);

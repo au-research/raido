@@ -1,7 +1,7 @@
 package au.org.raid.inttest.endpoint.raidv2.stable;
 
 import au.org.raid.idl.raidv2.model.Organisation;
-import au.org.raid.idl.raidv2.model.OrganisationRoleWithSchemaUri;
+import au.org.raid.idl.raidv2.model.OrganisationRole;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import au.org.raid.inttest.RaidApiValidationException;
 import org.junit.jupiter.api.DisplayName;
@@ -53,7 +53,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                 new Organisation()
                         .id(VALID_ROR)
                         .role(List.of(
-                                new OrganisationRoleWithSchemaUri()
+                                new OrganisationRole()
                                         .startDate("2021")
                                         .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                         .id(LEAD_RESEARCH_ORGANISATION_ROLE)
@@ -85,7 +85,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                         .schemaUri("")
                         .id(VALID_ROR)
                         .role(List.of(
-                                new OrganisationRoleWithSchemaUri()
+                                new OrganisationRole()
                                         .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                         .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                         .id(LEAD_RESEARCH_ORGANISATION)
@@ -116,7 +116,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                 new Organisation()
                         .schemaUri(ORGANISATION_IDENTIFIER_SCHEMA_URI)
                         .role(List.of(
-                                new OrganisationRoleWithSchemaUri()
+                                new OrganisationRole()
                                         .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                         .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                                         .startDate("2021")
@@ -148,7 +148,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                         .schemaUri(ORGANISATION_IDENTIFIER_SCHEMA_URI)
                         .id("")
                         .role(List.of(
-                                new OrganisationRoleWithSchemaUri()
+                                new OrganisationRole()
                                         .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                         .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                                         .startDate("2021")))
@@ -183,7 +183,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                             .schemaUri(ORGANISATION_IDENTIFIER_SCHEMA_URI)
                             .id("https://ror.org/038sjwqx@")
                             .role(List.of(
-                                    new OrganisationRoleWithSchemaUri()
+                                    new OrganisationRole()
                                             .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                             .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                                             .startDate("2021")
@@ -215,7 +215,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                             .schemaUri(ORGANISATION_IDENTIFIER_SCHEMA_URI)
                             .id("https://ror.org/000000042")
                             .role(List.of(
-                                    new OrganisationRoleWithSchemaUri()
+                                    new OrganisationRole()
                                             .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                             .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                                             .startDate("2021")
@@ -242,7 +242,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
 
     @Nested
     @DisplayName("Role tests...")
-    class OrganisationRoleWithSchemaUriTests {
+    class OrganisationRoleTests {
         @Test
         @DisplayName("Minting a RAiD with missing role schemaUri fails")
         void missingRoleSchemeUri() {
@@ -251,7 +251,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                             .schemaUri(ORGANISATION_IDENTIFIER_SCHEMA_URI)
                             .id(VALID_ROR)
                             .role(List.of(
-                                    new OrganisationRoleWithSchemaUri()
+                                    new OrganisationRole()
                                             .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                                             .startDate("2021")
                             ))
@@ -282,7 +282,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                             .schemaUri(ORGANISATION_IDENTIFIER_SCHEMA_URI)
                             .id(VALID_ROR)
                             .role(List.of(
-                                    new OrganisationRoleWithSchemaUri()
+                                    new OrganisationRole()
                                             .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                             .startDate("2021")
                             ))
@@ -313,7 +313,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                             .schemaUri(ORGANISATION_IDENTIFIER_SCHEMA_URI)
                             .id(VALID_ROR)
                             .role(List.of(
-                                    new OrganisationRoleWithSchemaUri()
+                                    new OrganisationRole()
                                             .id("")
                                             .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                             .startDate("2021")
@@ -345,7 +345,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                             .schemaUri(ORGANISATION_IDENTIFIER_SCHEMA_URI)
                             .id(VALID_ROR)
                             .role(List.of(
-                                    new OrganisationRoleWithSchemaUri()
+                                    new OrganisationRole()
                                             .schemaUri("unknown")
                                             .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                                             .startDate("2021")
@@ -377,7 +377,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
                             .schemaUri(ORGANISATION_IDENTIFIER_SCHEMA_URI)
                             .id(VALID_ROR)
                             .role(List.of(
-                                    new OrganisationRoleWithSchemaUri()
+                                    new OrganisationRole()
                                             .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                             .id("unknown")
                                             .startDate("2021")

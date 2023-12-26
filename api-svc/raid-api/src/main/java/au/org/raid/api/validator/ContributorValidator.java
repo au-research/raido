@@ -2,7 +2,7 @@ package au.org.raid.api.validator;
 
 import au.org.raid.api.util.DateUtil;
 import au.org.raid.idl.raidv2.model.Contributor;
-import au.org.raid.idl.raidv2.model.ContributorPositionWithSchemaUri;
+import au.org.raid.idl.raidv2.model.ContributorPosition;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.springframework.stereotype.Component;
 
@@ -167,7 +167,7 @@ public class ContributorValidator {
         return failures;
     }
 
-    private List<ValidationFailure> validatePositions(final List<ContributorPositionWithSchemaUri> positions, final int contributorIndex) {
+    private List<ValidationFailure> validatePositions(final List<ContributorPosition> positions, final int contributorIndex) {
         final var failures = new ArrayList<ValidationFailure>();
         var sortedPositions = new ArrayList<Map<String, Object>>();
 

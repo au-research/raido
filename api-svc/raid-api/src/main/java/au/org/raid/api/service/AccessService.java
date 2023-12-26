@@ -7,7 +7,7 @@ import au.org.raid.api.repository.AccessTypeSchemaRepository;
 import au.org.raid.db.jooq.tables.records.RaidRecord;
 import au.org.raid.idl.raidv2.model.Access;
 import au.org.raid.idl.raidv2.model.AccessStatement;
-import au.org.raid.idl.raidv2.model.AccessTypeWithSchemaUri;
+import au.org.raid.idl.raidv2.model.AccessType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

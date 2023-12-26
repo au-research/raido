@@ -2,7 +2,7 @@ package au.org.raid.api.validator;
 
 import au.org.raid.api.repository.AccessTypeRepository;
 import au.org.raid.api.repository.AccessTypeSchemaRepository;
-import au.org.raid.idl.raidv2.model.AccessTypeWithSchemaUri;
+import au.org.raid.idl.raidv2.model.AccessType;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +22,7 @@ public class AccessTypeValidator {
         this.accessTypeRepository = accessTypeRepository;
     }
 
-    public List<ValidationFailure> validate(final AccessTypeWithSchemaUri accessType) {
+    public List<ValidationFailure> validate(final AccessType accessType) {
         final var failures = new ArrayList<ValidationFailure>();
 
         if (accessType == null) {

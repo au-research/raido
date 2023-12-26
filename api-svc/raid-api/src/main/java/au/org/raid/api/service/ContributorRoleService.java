@@ -3,8 +3,8 @@ package au.org.raid.api.service;
 import au.org.raid.api.factory.ContributorPositionFactory;
 import au.org.raid.api.factory.ContributorRoleFactory;
 import au.org.raid.api.repository.*;
-import au.org.raid.idl.raidv2.model.ContributorPositionWithSchemaUri;
-import au.org.raid.idl.raidv2.model.ContributorRoleWithSchemaUri;
+import au.org.raid.idl.raidv2.model.ContributorPosition;
+import au.org.raid.idl.raidv2.model.ContributorRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +21,8 @@ public class ContributorRoleService {
     private final ContributorRoleRepository contributorRoleRepository;
     private final ContributorRoleSchemaRepository contributorRoleSchemaRepository;
 
-    public List<ContributorRoleWithSchemaUri> findAllByRaidContributorId(final Integer raidContributorId) {
-        final var contributorRoles = new ArrayList<ContributorRoleWithSchemaUri>();
+    public List<ContributorRole> findAllByRaidContributorId(final Integer raidContributorId) {
+        final var contributorRoles = new ArrayList<ContributorRole>();
 
         final var raidContributorRoles = raidContributorRoleRepository.findAllByRaidContributorId(raidContributorId);
 

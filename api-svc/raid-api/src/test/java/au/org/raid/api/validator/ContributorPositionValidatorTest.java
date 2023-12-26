@@ -4,7 +4,7 @@ import au.org.raid.api.repository.ContributorPositionRepository;
 import au.org.raid.api.repository.ContributorPositionSchemaRepository;
 import au.org.raid.db.jooq.tables.records.ContributorPositionRecord;
 import au.org.raid.db.jooq.tables.records.ContributorPositionSchemaRecord;
-import au.org.raid.idl.raidv2.model.ContributorPositionWithSchemaUri;
+import au.org.raid.idl.raidv2.model.ContributorPosition;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,8 +51,8 @@ class ContributorPositionValidatorTest {
 
     @Test
     @DisplayName("Validation passes with valid ContributorPosition")
-    void validContributorPositionWithSchemaUri() {
-        final var position = new ContributorPositionWithSchemaUri()
+    void validContributorPosition() {
+        final var position = new ContributorPosition()
                 .id(LEADER_CONTRIBUTOR_POSITION)
                 .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -73,7 +73,7 @@ class ContributorPositionValidatorTest {
     @Test
     @DisplayName("Validation fails if end date is before start date")
     void endDateBeforeStartDate() {
-        final var position = new ContributorPositionWithSchemaUri()
+        final var position = new ContributorPosition()
                 .id(LEADER_CONTRIBUTOR_POSITION)
                 .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .startDate("2022-03")
@@ -99,7 +99,7 @@ class ContributorPositionValidatorTest {
     @Test
     @DisplayName("Validation fails with null schemaUri")
     void nullSchemaUri() {
-        final var position = new ContributorPositionWithSchemaUri()
+        final var position = new ContributorPosition()
                 .id(LEADER_CONTRIBUTOR_POSITION)
                 .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .endDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
@@ -121,7 +121,7 @@ class ContributorPositionValidatorTest {
     @Test
     @DisplayName("Validation fails with empty schemaUri")
     void emptySchemaUri() {
-        final var position = new ContributorPositionWithSchemaUri()
+        final var position = new ContributorPosition()
                 .schemaUri("")
                 .id(LEADER_CONTRIBUTOR_POSITION)
                 .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -144,7 +144,7 @@ class ContributorPositionValidatorTest {
     @Test
     @DisplayName("Validation fails with invalid schemaUri")
     void invalidSchemaUri() {
-        final var position = new ContributorPositionWithSchemaUri()
+        final var position = new ContributorPosition()
                 .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(LEADER_CONTRIBUTOR_POSITION)
                 .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -169,7 +169,7 @@ class ContributorPositionValidatorTest {
     @Test
     @DisplayName("Validation fails with null position")
     void nullPosition() {
-        final var position = new ContributorPositionWithSchemaUri()
+        final var position = new ContributorPosition()
                 .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
                 .endDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));
@@ -193,7 +193,7 @@ class ContributorPositionValidatorTest {
     @Test
     @DisplayName("Validation fails with empty position")
     void emptyPosition() {
-        final var position = new ContributorPositionWithSchemaUri()
+        final var position = new ContributorPosition()
                 .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id("")
                 .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -218,7 +218,7 @@ class ContributorPositionValidatorTest {
     @Test
     @DisplayName("Validation fails with invalid position")
     void invalidPosition() {
-        final var position = new ContributorPositionWithSchemaUri()
+        final var position = new ContributorPosition()
                 .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(LEADER_CONTRIBUTOR_POSITION)
                 .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -245,7 +245,7 @@ class ContributorPositionValidatorTest {
     @Test
     @DisplayName("Validation fails with null startDate")
     void nullstartDate() {
-        final var position = new ContributorPositionWithSchemaUri()
+        final var position = new ContributorPosition()
                 .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                 .id(LEADER_CONTRIBUTOR_POSITION)
                 .endDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE));

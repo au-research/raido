@@ -2,7 +2,7 @@ package au.org.raid.api.validator;
 
 import au.org.raid.api.repository.DescriptionTypeRepository;
 import au.org.raid.api.repository.DescriptionTypeSchemaRepository;
-import au.org.raid.idl.raidv2.model.DescriptionTypeWithSchemaUri;
+import au.org.raid.idl.raidv2.model.DescriptionType;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ public class DescriptionTypeValidator {
     private final DescriptionTypeSchemaRepository descriptionTypeSchemaRepository;
     private final DescriptionTypeRepository descriptionTypeRepository;
 
-    public List<ValidationFailure> validate(final DescriptionTypeWithSchemaUri descriptionType, final int index) {
+    public List<ValidationFailure> validate(final DescriptionType descriptionType, final int index) {
         final var failures = new ArrayList<ValidationFailure>();
 
         if (descriptionType == null) {

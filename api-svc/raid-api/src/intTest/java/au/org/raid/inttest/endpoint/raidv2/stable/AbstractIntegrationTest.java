@@ -83,7 +83,7 @@ public class AbstractIntegrationTest {
                 .language(new Language()
                         .schemaUri(LANGUAGE_SCHEMA_URI)
                         .id(LANGUAGE_ID))
-                .type(new DescriptionTypeWithSchemaUri()
+                .type(new DescriptionType()
                         .id(PRIMARY_DESCRIPTION_TYPE)
                         .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI))
                 .text("stuff about the int test raid")
@@ -98,7 +98,7 @@ public class AbstractIntegrationTest {
                                 .schemaUri(LANGUAGE_SCHEMA_URI)
                                 .id(LANGUAGE_ID)
                         )
-                        .type(new TitleTypeWithSchemaUri()
+                        .type(new TitleType()
                                 .id(PRIMARY_TITLE_TYPE)
                                 .schemaUri(TITLE_TYPE_SCHEMA_URI))
                         .text(initialTitle)
@@ -116,7 +116,7 @@ public class AbstractIntegrationTest {
                                 .language(new Language()
                                         .id(LANGUAGE_ID)
                                         .schemaUri(LANGUAGE_SCHEMA_URI)))
-                        .type(new AccessTypeWithSchemaUri()
+                        .type(new AccessType()
                                 .id(EMBARGOED_ACCESS_TYPE)
                                 .schemaUri(ACCESS_TYPE_SCHEMA_URI))
                         .embargoExpiry(LocalDate.now().plusMonths(1)))
@@ -165,12 +165,12 @@ public class AbstractIntegrationTest {
         return new Contributor()
                 .id(orcid)
                 .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
-                .position(List.of(new ContributorPositionWithSchemaUri()
+                .position(List.of(new ContributorPosition()
                         .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                         .id(position)
                         .startDate(startDate.format(DateTimeFormatter.ISO_LOCAL_DATE))))
                 .role(List.of(
-                        new ContributorRoleWithSchemaUri()
+                        new ContributorRole()
                                 .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
                                 .id(role)));
     }
@@ -184,7 +184,7 @@ public class AbstractIntegrationTest {
                 .id(ror)
                 .schemaUri(ORGANISATION_IDENTIFIER_SCHEMA_URI)
                 .role(List.of(
-                        new OrganisationRoleWithSchemaUri()
+                        new OrganisationRole()
                                 .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                                 .id(role)
                                 .startDate(today.format(DateTimeFormatter.ISO_LOCAL_DATE))));

@@ -304,7 +304,7 @@ components:
       properties:
         text: {type: string}
         type:
-          $ref: '#/components/schemas/TitleTypeWithSchemaUri'
+          $ref: '#/components/schemas/TitleType'
         startDate: {
           type: string,
           example: 2023-08-28; 2023-08; 2023
@@ -315,7 +315,7 @@ components:
         }
         language:
           $ref: '#/components/schemas/Language'
-    TitleTypeWithSchemaUri:
+    TitleType:
       type: object
       properties:
         id: {
@@ -332,10 +332,10 @@ components:
       properties:
         text: {type: string}
         type:
-          $ref: '#/components/schemas/DescriptionTypeWithSchemaUri'
+          $ref: '#/components/schemas/DescriptionType'
         language:
           $ref: '#/components/schemas/Language'
-    DescriptionTypeWithSchemaUri:
+    DescriptionType:
       type: object
       required: [id, schemaUri]
       properties:
@@ -352,7 +352,7 @@ components:
       required: ["type"]
       properties:
         type:
-          $ref: '#/components/schemas/AccessTypeWithSchemaUri'
+          $ref: '#/components/schemas/AccessType'
         statement:
           $ref: '#/components/schemas/AccessStatement'
         embargoExpiry: {
@@ -367,7 +367,7 @@ components:
         text: { type: string }
         language:
           $ref: '#/components/schemas/Language'
-    AccessTypeWithSchemaUri:
+    AccessType:
       type: object
       required: [ id, schemaUri ]
       properties:
@@ -392,16 +392,16 @@ components:
         position:
           type: array
           items:
-            $ref: '#/components/schemas/ContributorPositionWithSchemaUri'
+            $ref: '#/components/schemas/ContributorPosition'
         role:
           type: array
           items:
-            $ref: '#/components/schemas/ContributorRoleWithSchemaUri'
+            $ref: '#/components/schemas/ContributorRole'
         leader:
           type: boolean
         contact:
           type: boolean
-    ContributorPositionWithSchemaUri:
+    ContributorPosition:
       type: object
       required: [ schemaUri, id, startDate ]
       properties:
@@ -421,7 +421,7 @@ components:
           type: string,
           example: 2025-08-28; 2025-08; 2025
         }
-    ContributorRoleWithSchemaUri:
+    ContributorRole:
       type: object
       required: [ id, schemaUri ]
       properties:
@@ -445,8 +445,8 @@ components:
         role:
           type: array
           items:
-            $ref: '#/components/schemas/OrganisationRoleWithSchemaUri'
-    OrganisationRoleWithSchemaUri:
+            $ref: '#/components/schemas/OrganisationRole'
+    OrganisationRole:
       type: object
       required: [id, schemaUri, startDate]
       properties:

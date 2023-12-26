@@ -2,7 +2,7 @@ package au.org.raid.api.validator;
 
 import au.org.raid.api.repository.TitleTypeRepository;
 import au.org.raid.api.repository.TitleTypeSchemaRepository;
-import au.org.raid.idl.raidv2.model.TitleTypeWithSchemaUri;
+import au.org.raid.idl.raidv2.model.TitleType;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +22,7 @@ public class TitleTypeValidator {
         this.titleTypeRepository = titleTypeRepository;
     }
 
-    public List<ValidationFailure> validate(final TitleTypeWithSchemaUri titleType, final int index) {
+    public List<ValidationFailure> validate(final TitleType titleType, final int index) {
         final var failures = new ArrayList<ValidationFailure>();
 
         if (titleType == null) {

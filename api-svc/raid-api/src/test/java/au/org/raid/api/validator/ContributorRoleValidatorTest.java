@@ -5,7 +5,7 @@ import au.org.raid.api.repository.ContributorRoleSchemaRepository;
 import au.org.raid.api.util.TestConstants;
 import au.org.raid.db.jooq.tables.records.ContributorRoleRecord;
 import au.org.raid.db.jooq.tables.records.ContributorRoleSchemaRecord;
-import au.org.raid.idl.raidv2.model.ContributorRoleWithSchemaUri;
+import au.org.raid.idl.raidv2.model.ContributorRole;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,8 +46,8 @@ class ContributorRoleValidatorTest {
 
     @Test
     @DisplayName("Validation passes with valid ContributorRole")
-    void validContributorRoleWithSchemaUri() {
-        final var role = new ContributorRoleWithSchemaUri()
+    void validContributorRole() {
+        final var role = new ContributorRole()
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE)
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI);
 
@@ -66,7 +66,7 @@ class ContributorRoleValidatorTest {
     @Test
     @DisplayName("Validation fails with null schemaUri")
     void nullSchemaUri() {
-        final var role = new ContributorRoleWithSchemaUri()
+        final var role = new ContributorRole()
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
         final var failures = validationService.validate(role, 2, 3);
@@ -86,7 +86,7 @@ class ContributorRoleValidatorTest {
     @Test
     @DisplayName("Validation fails with empty schemaUri")
     void emptySchemaUri() {
-        final var role = new ContributorRoleWithSchemaUri()
+        final var role = new ContributorRole()
                 .schemaUri("")
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
@@ -107,7 +107,7 @@ class ContributorRoleValidatorTest {
     @Test
     @DisplayName("Validation fails with invalid schemaUri")
     void invalidSchemaUri() {
-        final var role = new ContributorRoleWithSchemaUri()
+        final var role = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
@@ -130,7 +130,7 @@ class ContributorRoleValidatorTest {
     @Test
     @DisplayName("Validation fails with null role")
     void nullRole() {
-        final var role = new ContributorRoleWithSchemaUri()
+        final var role = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI);
 
         when(contributorRoleSchemaRepository.findByUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI))
@@ -152,7 +152,7 @@ class ContributorRoleValidatorTest {
     @Test
     @DisplayName("Validation fails with empty role")
     void emptyRole() {
-        final var role = new ContributorRoleWithSchemaUri()
+        final var role = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id("");
 
@@ -175,7 +175,7 @@ class ContributorRoleValidatorTest {
     @Test
     @DisplayName("Validation fails with invalid role")
     void invalidRole() {
-        final var role = new ContributorRoleWithSchemaUri()
+        final var role = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 

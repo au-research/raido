@@ -2,7 +2,7 @@ package au.org.raid.api.validator;
 
 import au.org.raid.api.util.TestConstants;
 import au.org.raid.idl.raidv2.model.Organisation;
-import au.org.raid.idl.raidv2.model.OrganisationRoleWithSchemaUri;
+import au.org.raid.idl.raidv2.model.OrganisationRole;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,7 +36,7 @@ class OrganisationValidatorTest {
     @Test
     @DisplayName("Validation passes with valid organisation")
     void validOrganisation() {
-        final var role = new OrganisationRoleWithSchemaUri()
+        final var role = new OrganisationRole()
                 .schemaUri(TestConstants.ORGANISATION_ROLE_SCHEMA_URI)
                 .id(TestConstants.LEAD_RESEARCH_ORGANISATION_ROLE)
                 .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -60,7 +60,7 @@ class OrganisationValidatorTest {
         final var organisation = new Organisation()
                 .id(TestConstants.VALID_ROR)
                 .role(List.of(
-                        new OrganisationRoleWithSchemaUri()
+                        new OrganisationRole()
                                 .schemaUri(TestConstants.ORGANISATION_ROLE_SCHEMA_URI)
                                 .id(TestConstants.LEAD_RESEARCH_ORGANISATION_ROLE)
                                 .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -85,7 +85,7 @@ class OrganisationValidatorTest {
                 .id(TestConstants.VALID_ROR)
                 .schemaUri("")
                 .role(List.of(
-                        new OrganisationRoleWithSchemaUri()
+                        new OrganisationRole()
                                 .schemaUri(TestConstants.ORGANISATION_ROLE_SCHEMA_URI)
                                 .id(TestConstants.LEAD_RESEARCH_ORGANISATION_ROLE)
                                 .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -106,7 +106,7 @@ class OrganisationValidatorTest {
     @Test
     @DisplayName("ROR validation failures are returned")
     void rorValidationFailuresReturned() {
-        final var role = new OrganisationRoleWithSchemaUri()
+        final var role = new OrganisationRole()
                 .schemaUri(TestConstants.ORGANISATION_ROLE_SCHEMA_URI)
                 .id(TestConstants.LEAD_RESEARCH_ORGANISATION_ROLE)
                 .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -137,7 +137,7 @@ class OrganisationValidatorTest {
     @Test
     @DisplayName("Role validation failures are returned")
     void roleValidationFailuresReturned() {
-        final var role = new OrganisationRoleWithSchemaUri()
+        final var role = new OrganisationRole()
                 .schemaUri(TestConstants.ORGANISATION_ROLE_SCHEMA_URI)
                 .id(TestConstants.LEAD_RESEARCH_ORGANISATION_ROLE)
                 .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))

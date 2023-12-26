@@ -2,7 +2,7 @@ package au.org.raid.api.validator;
 
 import au.org.raid.api.repository.ContributorRoleRepository;
 import au.org.raid.api.repository.ContributorRoleSchemaRepository;
-import au.org.raid.idl.raidv2.model.ContributorRoleWithSchemaUri;
+import au.org.raid.idl.raidv2.model.ContributorRole;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +23,7 @@ public class ContributorRoleValidator {
     }
 
     public List<ValidationFailure> validate(
-            final ContributorRoleWithSchemaUri role, final int contributorIndex, final int roleIndex) {
+            final ContributorRole role, final int contributorIndex, final int roleIndex) {
         final var failures = new ArrayList<ValidationFailure>();
 
         if (isBlank(role.getId())) {

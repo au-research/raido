@@ -3,7 +3,7 @@ package au.org.raid.api.validator;
 import au.org.raid.api.util.TestConstants;
 import au.org.raid.idl.raidv2.model.Language;
 import au.org.raid.idl.raidv2.model.Title;
-import au.org.raid.idl.raidv2.model.TitleTypeWithSchemaUri;
+import au.org.raid.idl.raidv2.model.TitleType;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ class TitleValidatorTest {
     @Test
     @DisplayName("Validation passes")
     void validationPasses() {
-        final var type = new TitleTypeWithSchemaUri()
+        final var type = new TitleType()
                 .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
                 .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
 
@@ -59,7 +59,7 @@ class TitleValidatorTest {
     @Test
     @DisplayName("Validation fails if end date is before start date")
     void endDateBeforeStartDate() {
-        final var type = new TitleTypeWithSchemaUri()
+        final var type = new TitleType()
                 .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
                 .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
 
@@ -89,7 +89,7 @@ class TitleValidatorTest {
     @Test
     @DisplayName("Validation fails when primary title is duplicated")
     void duplicatePrimaryTitle() {
-        final var type = new TitleTypeWithSchemaUri()
+        final var type = new TitleType()
                 .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
                 .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
 
@@ -131,7 +131,7 @@ class TitleValidatorTest {
     @Test
     @DisplayName("Validation fails when primary titles overlap")
     void PrimaryTitlesOverlap() {
-        final var type = new TitleTypeWithSchemaUri()
+        final var type = new TitleType()
                 .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
                 .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
 
@@ -179,7 +179,7 @@ class TitleValidatorTest {
     @Test
     @DisplayName("Validation fails if primary title is missing")
     void missingPrimaryTitle() {
-        final var type = new TitleTypeWithSchemaUri()
+        final var type = new TitleType()
                 .id(TestConstants.ALTERNATIVE_TITLE_TYPE)
                 .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
 
@@ -216,7 +216,7 @@ class TitleValidatorTest {
     @DisplayName("Validation fails if title is null")
     void nullTitle() {
         final var title = new Title()
-                .type(new TitleTypeWithSchemaUri()
+                .type(new TitleType()
                         .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
                         .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
                 .startDate(TestConstants.START_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -238,7 +238,7 @@ class TitleValidatorTest {
     @DisplayName("Validation fails if title is blank")
     void blankTitle() {
         final var title = new Title()
-                .type(new TitleTypeWithSchemaUri()
+                .type(new TitleType()
                         .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
                         .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
                 .startDate(TestConstants.START_DATE.format(DateTimeFormatter.ISO_LOCAL_DATE))
@@ -260,7 +260,7 @@ class TitleValidatorTest {
     @DisplayName("Validation fails if start date is missing")
     void missingStartDate() {
         final var title = new Title()
-                .type(new TitleTypeWithSchemaUri()
+                .type(new TitleType()
                         .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
                         .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
                 .text(TestConstants.TITLE)

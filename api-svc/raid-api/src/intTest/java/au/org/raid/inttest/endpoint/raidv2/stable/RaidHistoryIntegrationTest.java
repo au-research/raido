@@ -3,7 +3,7 @@ package au.org.raid.inttest.endpoint.raidv2.stable;
 import au.org.raid.api.service.Handle;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.Title;
-import au.org.raid.idl.raidv2.model.TitleTypeWithSchemaUri;
+import au.org.raid.idl.raidv2.model.TitleType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
