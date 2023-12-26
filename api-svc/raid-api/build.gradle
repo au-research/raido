@@ -38,7 +38,6 @@ version = rootProject.version
    historical upgrade compatibility */
 dependencies{
   implementation project(':api-svc:db')
-  implementation project(':api-svc:idl-raid-v1')
   implementation project(':api-svc:idl-raid-v2')
   implementation 'org.flywaydb:flyway-core:9.22.3'
   // look in settings.gradle for version catalog specs 
@@ -145,7 +144,6 @@ testing{
         implementation project()
         
         implementation project(':api-svc:db')
-        implementation project(':api-svc:idl-raid-v1')
         implementation project(':api-svc:idl-raid-v2')
 
         implementation.bundle libs.bundles.springboot3

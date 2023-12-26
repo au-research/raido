@@ -3,7 +3,6 @@ package au.org.raid.inttest.endpoint.raidv2.stable;
 import au.org.raid.api.Api;
 import au.org.raid.api.service.raid.id.IdentifierParser;
 import au.org.raid.api.service.stub.util.IdFactory;
-import au.org.raid.idl.raidv1.api.RaidV1Api;
 import au.org.raid.idl.raidv2.api.RaidoStableV1Api;
 import au.org.raid.idl.raidv2.model.*;
 import au.org.raid.inttest.TestClient;
@@ -39,8 +38,6 @@ public class AbstractIntegrationTest {
     protected RaidCreateRequest createRequest;
 
     protected RaidoStableV1Api raidApi;
-    protected RaidV1Api legacyApi;
-
     protected IdentifierParser identifierParser;
     @Autowired
     protected RaidApi api;
@@ -66,7 +63,6 @@ public class AbstractIntegrationTest {
 
         createRequest = newCreateRequest();
         raidApi = testClient.raidApi(operatorToken);
-        legacyApi = testClient.legacyApi(raidV1TestToken);
         identifierParser = new IdentifierParser();
     }
 

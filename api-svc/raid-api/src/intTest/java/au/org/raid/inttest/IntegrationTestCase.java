@@ -3,16 +3,9 @@ package au.org.raid.inttest;
 import au.org.raid.api.Api;
 import au.org.raid.api.service.stub.util.IdFactory;
 import au.org.raid.api.spring.config.environment.EnvironmentProps;
-import au.org.raid.api.util.Nullable;
-import au.org.raid.db.jooq.enums.UserRole;
-import au.org.raid.idl.raidv1.api.RaidV1Api;
 import au.org.raid.idl.raidv2.api.AdminExperimentalApi;
 import au.org.raid.idl.raidv2.api.RaidoStableV1Api;
 import au.org.raid.idl.raidv2.api.UnapprovedExperimentalApi;
-import au.org.raid.idl.raidv2.model.ApiKey;
-import au.org.raid.idl.raidv2.model.GenerateApiTokenRequest;
-import au.org.raid.idl.raidv2.model.GenerateApiTokenResponse;
-import au.org.raid.idl.raidv2.model.ServicePoint;
 import au.org.raid.inttest.auth.BootstrapAuthTokenService;
 import au.org.raid.inttest.config.IntTestProps;
 import au.org.raid.inttest.config.IntegrationTestConfig;
@@ -35,14 +28,10 @@ import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDateTime;
-
 import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static au.org.raid.api.spring.config.RaidWebSecurityConfig.RAID_V1_API;
-import static au.org.raid.db.jooq.enums.IdProvider.RAIDO_API;
 import static au.org.raid.db.jooq.enums.UserRole.OPERATOR;
 import static au.org.raid.inttest.config.IntegrationTestConfig.REST_TEMPLATE_VALUES_ONLY_ENCODING;
-import static java.time.ZoneOffset.UTC;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @SpringBootTest(classes = Api.class,
@@ -101,26 +90,6 @@ public abstract class IntegrationTestCase {
         return testInfo.getDisplayName().
                 // the brackets aren't filename safe
                         replaceAll("[()]", "");
-    }
-
-    /**
-     * Once we figure out how to use the token statically, would like to figure
-     * out how to integrate this into Spring better.  Would like to inject
-     * the client as autowired, but not sure how the interceptor would work to
-     * get the auth token, especially as we start wanting to work with multiple
-     * users in the scope of a single test.
-     */
-    public RaidV1Api raidV1Client() {
-        return Feign.builder().
-                client(new OkHttpClient()).
-                encoder(new JacksonEncoder(mapper)).
-                decoder(new JacksonDecoder(mapper)).
-                contract(feignContract).
-                requestInterceptor(request ->
-                        request.header(AUTHORIZATION, "Bearer " + raidV1TestToken)).
-                logger(new Slf4jLogger(RaidV1Api.class)).
-                logLevel(Level.FULL).
-                target(RaidV1Api.class, props.getRaidoServerUrl() + RAID_V1_API);
     }
 
     public UnapprovedExperimentalApi unapprovedClient(String token) {
