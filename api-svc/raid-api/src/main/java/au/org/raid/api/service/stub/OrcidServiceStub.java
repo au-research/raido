@@ -18,12 +18,11 @@ import static au.org.raid.api.util.ObjectUtil.areEqual;
 
 @Slf4j
 public class OrcidServiceStub extends OrcidService {
-    public OrcidServiceStub() {
+    private final Long delayMilliseconds;
+    public OrcidServiceStub(final Long delayMilliseconds) {
         super(null);
+        this.delayMilliseconds = delayMilliseconds;
     }
-
-    @Value("${orcid.in-memory-stub-delay:150}")
-    public long delay;
 
     @Override
     @SneakyThrows
@@ -39,11 +38,11 @@ public class OrcidServiceStub extends OrcidService {
                             .message(INVALID_VALUE_MESSAGE + " - should match %s".formatted(regex))
             );
         } else {
-            log.debug("delay {}", delay);
+            log.debug("delay {}", delayMilliseconds);
             log.debug("simulate ROR validation check");
 
             final var start = Instant.now();
-            Thread.sleep(delay);
+            Thread.sleep(delayMilliseconds);
             final var end = Instant.now();
             Duration duration = Duration.between(start, end);
             log.info("request to {} took {}.{} seconds", uri, duration.getSeconds(), duration.getNano());

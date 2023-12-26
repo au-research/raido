@@ -2,7 +2,6 @@ package au.org.raid.inttest;
 
 import au.org.raid.api.Api;
 import au.org.raid.api.service.stub.util.IdFactory;
-import au.org.raid.api.spring.config.environment.EnvironmentProps;
 import au.org.raid.idl.raidv2.api.AdminExperimentalApi;
 import au.org.raid.idl.raidv2.api.RaidApi;
 import au.org.raid.idl.raidv2.api.UnapprovedExperimentalApi;
@@ -38,7 +37,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public abstract class IntegrationTestCase {
     // be careful, 25 char max column length
     public static final String INT_TEST_ROR = "https://ror.org/038sjwq14";
-    protected static final IdFactory idFactory = new IdFactory("inttest");
+    protected static final IdFactory idFactory = new IdFactory();
 
     @Autowired
     protected RestTemplate restTemplate;
@@ -53,9 +52,6 @@ public abstract class IntegrationTestCase {
     protected Contract feignContract;
     @Autowired
     protected ObjectMapper mapper;
-    @Autowired
-    protected EnvironmentProps env;
-    protected String raidV1TestToken;
     protected String operatorToken;
     private TestInfo testInfo;
 
@@ -66,14 +62,8 @@ public abstract class IntegrationTestCase {
      */
     @BeforeEach
     public void setupTestToken() {
-        if (raidV1TestToken != null) {
-            return;
-        }
-
-        raidV1TestToken = bootstrapTokenSvc.initRaidV1TestToken();
         operatorToken = bootstrapTokenSvc.bootstrapToken(
                 RAIDO_SP_ID, "intTestOperatorApiToken", OPERATOR);
-
     }
 
     @BeforeEach

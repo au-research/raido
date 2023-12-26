@@ -36,13 +36,8 @@ public class IdFactory {
     private static String FILESAFE_MIILLISECOND_DATETIME_FORMAT =
             "yyyyMMdd-HHmmss-SSS";
     private final Object generatorLock = new Object();
-    private final String nodePrefix;
     private volatile String lastGeneratedTimeSuffix = "start";
     private volatile int lastUniqueSuffix = 1;
-
-    public IdFactory(String nodePrefix) {
-        this.nodePrefix = nodePrefix;
-    }
 
     private static Date now() {
         return new Date();
@@ -99,7 +94,9 @@ public class IdFactory {
     }
 
     public String generateUniqueId(boolean separator) {
-        return generateUniqueId(nodePrefix, separator);
+        final var timestamp = new Date().getTime();
+
+        return generateUniqueId(String.valueOf(timestamp), separator);
     }
 
 

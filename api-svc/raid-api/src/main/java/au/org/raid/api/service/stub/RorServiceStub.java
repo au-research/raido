@@ -4,7 +4,6 @@ import au.org.raid.api.service.ror.RorService;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -17,12 +16,12 @@ import static au.org.raid.api.service.stub.InMemoryStubTestData.SERVER_ERROR_TES
 import static au.org.raid.api.util.ObjectUtil.areEqual;
 @Slf4j
 public class RorServiceStub extends RorService {
-    public RorServiceStub() {
-        super(null);
-    }
+    private final Long delayMilliseconds;
 
-    @Value("${ror.in-memory-stub-delay:150}")
-    public long delay;
+    public RorServiceStub(final Long delayMilliseconds) {
+        super(null);
+        this.delayMilliseconds = delayMilliseconds;
+    }
 
     @Override
     @SneakyThrows
@@ -38,11 +37,11 @@ public class RorServiceStub extends RorService {
                             .message(INVALID_VALUE_MESSAGE + " - should match %s".formatted(regex))
             );
         } else {
-            log.debug("delay {}", delay);
+            log.debug("delay {}", delayMilliseconds);
             log.debug("simulate ORCID validation check");
 
             final var start = Instant.now();
-            Thread.sleep(delay);
+            Thread.sleep(delayMilliseconds);
             final var end = Instant.now();
             Duration duration = Duration.between(start, end);
             log.info("request to {} took {}.{} seconds", uri, duration.getSeconds(), duration.getNano());

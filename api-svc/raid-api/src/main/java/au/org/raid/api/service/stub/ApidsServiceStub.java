@@ -4,8 +4,7 @@ import au.org.raid.api.service.apids.ApidsService;
 import au.org.raid.api.service.apids.model.ApidsMintResponse;
 import au.org.raid.api.service.stub.util.IdFactory;
 import au.org.raid.api.spring.bean.LogMetric;
-import au.org.raid.api.spring.config.environment.EnvironmentProps;
-import au.org.raid.api.spring.config.environment.InMemoryStubProps;
+import au.org.raid.api.spring.config.environment.StubProperties;
 import au.org.raid.api.util.Log;
 
 import java.nio.charset.StandardCharsets;
@@ -26,7 +25,7 @@ public class ApidsServiceStub extends ApidsService {
     public static final int MAX_NODE_ID_CHARS = 8;
     public static final String IN_MEMORY_HANDLE_PREFIX = "inmem";
     private static final Log log = to(ApidsServiceStub.class);
-    private InMemoryStubProps stubProps;
+    private StubProperties.Apids stubProperties;
 
     /**
      * prepended to handle suffixes to guarantee uniqueness across nodes
@@ -35,22 +34,14 @@ public class ApidsServiceStub extends ApidsService {
     private IdFactory idFactory;
 
     public ApidsServiceStub(
-            InMemoryStubProps stubProps,
-            EnvironmentProps envProps
+            StubProperties.Apids stubProperties
     ) {
         super(null, null);
-        this.stubProps = stubProps;
+        this.stubProperties = stubProperties;
 
         var digest = getSha1MessageDigest();
-        if (envProps.nodeId.length() <= 8) {
-            nodePrefix = envProps.nodeId;
-        } else {
-            nodePrefix = generateShortenedNodeId(digest, envProps.nodeId);
-        }
-        log.with("nodeId", envProps.nodeId).with("prefix", nodePrefix).
-                info("using prefix for handles");
 
-        idFactory = new IdFactory(nodePrefix);
+        idFactory = new IdFactory();
     }
 
     /**
@@ -105,18 +96,18 @@ public class ApidsServiceStub extends ApidsService {
         resp.identifier.property.index = 1;
         resp.identifier.property.type = "DESC";
 
-        log.with("delay", stubProps.apidsInMemoryStubDelay).
+        log.with("delay", stubProperties.getDelay()).
                 with("handle", resp.identifier.handle).
                 debug("simulate APIDS mint request");
         infoLogExecutionTime(httpLog, LogMetric.APIDS_MINT_WITH_DESC, () -> {
-            sleep(stubProps.apidsInMemoryStubDelay);
+            sleep(stubProperties.getDelay());
             return null;
         });
 
-        log.with("delay", stubProps.apidsInMemoryStubDelay).
+        log.with("delay", stubProperties.getDelay()).
                 debug("simulate APIDS add request");
         infoLogExecutionTime(httpLog, LogMetric.APIDS_ADD_URL_VALUE, () -> {
-            sleep(stubProps.apidsInMemoryStubDelay);
+            sleep(stubProperties.getDelay());
             return null;
         });
 

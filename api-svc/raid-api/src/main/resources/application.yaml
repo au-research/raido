@@ -1,4 +1,23 @@
 raid:
+  stub:
+    geo-names:
+      enabled: true
+      delay: 150
+    orcid:
+      enabled: true
+      delay: 150
+    apids:
+      enabled: true
+      delay: 150
+    ror:
+      enabled: true
+      delay: 150
+    doi:
+      enabled: true
+      delay: 150
+    open-street-map:
+      enabled: true
+      delay: 150
   identifier:
     name-prefix: http://raid.local/
     schema-uri: https://raid.org/

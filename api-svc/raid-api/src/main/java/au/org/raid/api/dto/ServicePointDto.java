@@ -1,4 +1,4 @@
-package au.org.raid.api.dto.ServicePointDto;
+package au.org.raid.api.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;

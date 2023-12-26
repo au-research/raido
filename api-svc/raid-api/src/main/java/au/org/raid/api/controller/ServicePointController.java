@@ -1,10 +1,9 @@
 package au.org.raid.api.controller;
 
-import au.org.raid.api.dto.ServicePointDto.ServicePointDto;
+import au.org.raid.api.dto.ServicePointDto;
 import au.org.raid.api.dto.UserDto;
 import au.org.raid.api.service.ServicePointService;
 import au.org.raid.api.service.UserService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

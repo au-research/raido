@@ -20,7 +20,7 @@ public class IdFactoryTest {
     @Test
     public void shouldNotGenerateDuplicatesWhenExecutedSequentially() {
         int loopCount = 200_000;
-        var id = new IdFactory("unittest");
+        var id = new IdFactory();
 
         // allocate full capacity so it doesn't re-size in the middle of the loop
         var generated = new ArrayList<String>(loopCount);
@@ -61,7 +61,7 @@ public class IdFactoryTest {
     @Test
     public void shouldNotGenerateDuplicatesWhenExecutedConcurrently() {
         int loopCount = 200_000;
-        var id = new IdFactory("unittest");
+        var id = new IdFactory();
         int numberOfThreads = 10;
 
         var exec = newFixedThreadPool(numberOfThreads);

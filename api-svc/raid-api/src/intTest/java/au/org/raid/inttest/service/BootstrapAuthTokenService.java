@@ -2,7 +2,6 @@ package au.org.raid.inttest.service;
 
 import au.org.raid.api.service.auth.RaidV2ApiKeyApiTokenService;
 import au.org.raid.api.service.auth.RaidV2AppUserApiTokenService;
-import au.org.raid.api.service.raidv1.RaidV1AuthService;
 import au.org.raid.api.spring.config.environment.*;
 import au.org.raid.db.jooq.enums.UserRole;
 import au.org.raid.db.jooq.tables.records.TokenRecord;
@@ -47,32 +46,6 @@ public class BootstrapAuthTokenService {
     protected RaidV2AppUserAuthProps authAppUserKeyProps;
     @Autowired
     protected GoogleOidcProps googleOidcProps;
-    @Autowired
-    protected EnvironmentProps env;
-
-    /* v1TestOwner is only used for minting via raidV1 endpoint, which is
-    only designed for use by RDM anyway.  The logic in the endpoint implementation
-    requires it to match an existing service-point, might as well use the real
-    one. */
-    private String v1TestOwner = "RDM@UQ";
-
-
-    @Transactional
-    public String initRaidV1TestToken() {
-
-        var authSvc = new RaidV1AuthService(db, authProps, env);
-
-        TokenRecord record = db.newRecord(TOKEN);
-        String testToken = authSvc.sign(v1TestOwner, INTTEST_ENV);
-        record.setName(v1TestOwner).
-                setEnvironment(INTTEST_ENV).
-                setDateCreated(LocalDateTime.now()).
-                setToken(testToken).
-                setS3Export(JSONB.valueOf("{}")).
-                merge();
-
-        return record.getToken();
-    }
 
     @Transactional
     public String bootstrapToken(long svcPointId, String subject, UserRole role) {

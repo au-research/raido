@@ -1,16 +1,13 @@
 package au.org.raid.api.service;
 
-import au.org.raid.api.dto.ServicePointDto.ServicePointDto;
+import au.org.raid.api.dto.ServicePointDto;
 import au.org.raid.api.factory.ServicePointDtoFactory;
 import au.org.raid.api.factory.record.ServicePointRecordFactory;
 import au.org.raid.api.repository.ServicePointRepository;
-import au.org.raid.api.util.Log;
 import au.org.raid.idl.raidv2.model.ServicePoint;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.DSLContext;
-import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -1,12 +1,10 @@
 package au.org.raid.api.repository;
 
-import au.org.raid.api.dto.ServicePointDto.ServicePointDto;
 import au.org.raid.db.jooq.tables.records.ServicePointRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 

@@ -2,8 +2,6 @@ package au.org.raid.api.spring.config;
 
 import au.org.raid.api.service.auth.RaidV2ApiKeyApiTokenService;
 import au.org.raid.api.service.auth.RaidV2AppUserApiTokenService;
-import au.org.raid.api.service.raidv1.RaidV1AuthService;
-import au.org.raid.api.spring.security.raidv1.RaidV1AuthenticationProvider;
 import au.org.raid.api.spring.security.raidv2.RaidV2AuthenticationProvider;
 import au.org.raid.api.util.ExceptionUtil;
 import au.org.raid.api.util.Log;
@@ -13,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManagerResolver;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -119,19 +116,14 @@ public class RaidWebSecurityConfig {
     @Bean
     public AuthenticationManagerResolver<HttpServletRequest>
     tokenAuthenticationManagerResolver(
-            RaidV1AuthenticationProvider raidV1AuthProvider,
             RaidV2AuthenticationProvider raidV2AuthProvider
     ) {
         return (request) -> {
             if (isRaidV2Api(request)) {
                 return raidV2AuthProvider::authenticate;
-            } else if (isRaidV1Api(request)) {
-                return raidV1AuthProvider::authenticate;
             } else if (isStableApi(request)) {
                 return raidV2AuthProvider::authenticate;
-            }
-
-            else {
+            } else {
         /* client has done a request (probably a POST), with a bearer token,
         but not on a recognised "API path".
         IMPROVE: dig out the token and decode it, so we can log details? */
@@ -150,13 +142,6 @@ public class RaidWebSecurityConfig {
     ) {
         return new RaidV2AuthenticationProvider(
                 appUserApiTokenSvc, apiKeyApiTokenSvc);
-    }
-
-    @Bean
-    public RaidV1AuthenticationProvider raidV1AuthProvider(
-            RaidV1AuthService raid1Svc
-    ) {
-        return new RaidV1AuthenticationProvider(raid1Svc);
     }
 
     @Bean

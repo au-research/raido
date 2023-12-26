@@ -31,7 +31,7 @@ import static au.org.raid.inttest.service.TestConstants.*;
 @ContextConfiguration(classes = IntegrationTestConfig.class)
 public class AbstractIntegrationTest {
     protected static final Long UQ_SERVICE_POINT_ID = 20000002L;
-    protected final IdFactory idFactory = new IdFactory("inttest");
+    protected final IdFactory idFactory = new IdFactory();
     protected String operatorToken;
     protected String raidV1TestToken;
     protected LocalDate today = LocalDate.now();
@@ -54,8 +54,6 @@ public class AbstractIntegrationTest {
 
     @BeforeEach
     public void setupTestToken() {
-        raidV1TestToken = bootstrapTokenSvc.initRaidV1TestToken();
-
         operatorToken = bootstrapTokenSvc.bootstrapToken(
                 RAIDO_SP_ID, "intTestOperatorApiToken", OPERATOR);
 

@@ -4,7 +4,6 @@ import au.org.raid.api.service.doi.DoiService;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -18,12 +17,11 @@ import static au.org.raid.api.util.ObjectUtil.areEqual;
 
 @Slf4j
 public class DoiServiceStub extends DoiService {
-    public DoiServiceStub() {
+    private final Long delayMilliseconds;
+    public DoiServiceStub(final Long delayMilliseconds) {
         super(null);
+        this.delayMilliseconds = delayMilliseconds;
     }
-
-    @Value("${doi.in-memory-stub-delay:150}")
-    public long delay;
 
     @Override
     @SneakyThrows
@@ -39,11 +37,11 @@ public class DoiServiceStub extends DoiService {
                             .message(INVALID_VALUE_MESSAGE + " - should match %s".formatted(regex))
             );
         } else {
-            log.debug("delay {}", delay);
+            log.debug("delay {}", delayMilliseconds);
             log.debug("simulate DOI validation check");
 
             final var start = Instant.now();
-            Thread.sleep(delay);
+            Thread.sleep(delayMilliseconds);
             final var end = Instant.now();
             Duration duration = Duration.between(start, end);
             log.info("request to {} took {}.{} seconds", uri, duration.getSeconds(), duration.getNano());

@@ -6,8 +6,7 @@ import au.org.raid.api.service.orcid.OrcidService;
 import au.org.raid.api.service.ror.RorService;
 import au.org.raid.api.service.stub.*;
 import au.org.raid.api.spring.config.environment.ApidsProps;
-import au.org.raid.api.spring.config.environment.EnvironmentProps;
-import au.org.raid.api.spring.config.environment.InMemoryStubProps;
+import au.org.raid.api.spring.config.environment.StubProperties;
 import au.org.raid.api.util.Guard;
 import au.org.raid.api.util.Log;
 import au.org.raid.api.validator.GeoNamesUriValidator;
@@ -32,18 +31,16 @@ public class ExternalPidService {
     @Bean
     @Primary
     public ApidsService apidsService(
-            EnvironmentProps envConfig,
-            InMemoryStubProps stubProps,
+            StubProperties stubProperties,
             ApidsProps apidsConfig,
             RestTemplate rest
     ) {
         /* IMPROVE: I'm fairly sure I'm not doing this the "spring way" */
-        if (stubProps.apidsInMemoryStub) {
-            Guard.isTrue("Cannot use InMemoryApidsServiceStub in a PROD env",
-                    !envConfig.isProd);
-            log.with("apidsInMemoryStubDelay", stubProps.apidsInMemoryStubDelay).
+        if (stubProperties.getApids().isEnabled()) {
+            log.with("apidsInMemoryStubDelay", stubProperties.getApids().getDelay()).
                     warn("using the in-memory ORCID service");
-            return new ApidsServiceStub(stubProps, envConfig);
+
+            return new ApidsServiceStub(stubProperties.getApids());
         }
 
     /* now we aren't forced to set the secret if we're not using the real 
@@ -56,16 +53,13 @@ public class ExternalPidService {
     @Bean
     @Primary
     public OrcidService orcidService(
-            EnvironmentProps envConfig,
-            InMemoryStubProps stubProps,
+            StubProperties stubProperties,
             RestTemplate rest
     ) {
-        if (stubProps.orcidInMemoryStub) {
-            Guard.isTrue("Cannot use InMemoryOrcidServiceStub in a PROD env",
-                    !envConfig.isProd);
-            log.with("orcidInMemoryStubDelay", stubProps.orcidInMemoryStubDelay).
+        if (stubProperties.getOrcid().isEnabled()) {
+            log.with("orcidInMemoryStubDelay", stubProperties.getOrcid().getDelay()).
                     warn("using the in-memory ORCID service");
-            return new OrcidServiceStub();
+            return new OrcidServiceStub(stubProperties.getOrcid().getDelay());
         }
 
         return new OrcidService(rest);
@@ -74,16 +68,13 @@ public class ExternalPidService {
     @Bean
     @Primary
     public RorService rorService(
-            EnvironmentProps envConfig,
-            InMemoryStubProps stubProps,
+            StubProperties stubProperties,
             RestTemplate restTemplate
     ) {
-        if (stubProps.rorInMemoryStub) {
-            Guard.isTrue("Cannot use InMemoryRorServiceStub in a PROD env",
-                    !envConfig.isProd);
-            log.with("rorInMemoryStubDelay", stubProps.rorInMemoryStubDelay).
+        if (stubProperties.getRor().isEnabled()) {
+            log.with("rorInMemoryStubDelay", stubProperties.getRor().getDelay()).
                     warn("using the in-memory ROR service");
-            return new RorServiceStub();
+            return new RorServiceStub(stubProperties.getRor().getDelay());
         }
 
         return new RorService(restTemplate);
@@ -93,15 +84,12 @@ public class ExternalPidService {
     @Bean
     @Primary
     public DoiService doiService(
-            EnvironmentProps envConfig,
-            InMemoryStubProps stubProps,
+            StubProperties stubProperties,
             RestTemplate restTemplate
     ) {
-        if (stubProps.doiInMemoryStub) {
-            Guard.isTrue("Cannot use InMemoryDoiServiceStub in a PROD env",
-                    !envConfig.isProd);
+        if (stubProperties.getDoi().isEnabled()) {
             log.warn("using the in-memory DOI service");
-            return new DoiServiceStub();
+            return new DoiServiceStub(stubProperties.getDoi().getDelay());
         }
 
         return new DoiService(restTemplate);
@@ -110,16 +98,13 @@ public class ExternalPidService {
     @Bean
     @Primary
     public GeoNamesUriValidator geoNamesUriValidator(
-            final EnvironmentProps envConfig,
-            final InMemoryStubProps stubProps,
+            final StubProperties stubProperties,
             final RestTemplate restTemplate,
             @Value("${raid.validation.geonames.username}") final String username
     ) {
-        if (stubProps.geoNamesInMemoryStub) {
-            Guard.isTrue("Cannot use GeoNamesUriValidatorStub in a PROD env",
-                    !envConfig.isProd);
+        if (stubProperties.getGeoNames().isEnabled()) {
             log.warn("using the in-memory GeoNames validator");
-            return new GeonamesUriValidatorStub();
+            return new GeonamesUriValidatorStub(stubProperties.getGeoNames().getDelay());
         }
 
         return new GeoNamesUriValidator(restTemplate,  username);
@@ -128,15 +113,12 @@ public class ExternalPidService {
     @Bean
     @Primary
     public OpenStreetMapUriValidator openStreetMapUriValidator(
-            final EnvironmentProps envConfig,
-            final InMemoryStubProps stubProps,
+            final StubProperties stubProperties,
             final RestTemplate restTemplate
     ) {
-        if (stubProps.openStreetMapInMemoryStub) {
-            Guard.isTrue("Cannot use OpenStreetMapUriValidatorStub in a PROD env",
-                    !envConfig.isProd);
+        if (stubProperties.getOpenStreetMap().isEnabled()) {
             log.warn("using the in-memory OpenStreetMap validator");
-            return new OpenStreetMapValidatorStub();
+            return new OpenStreetMapValidatorStub(stubProperties.getOpenStreetMap().getDelay());
         }
 
         return new OpenStreetMapUriValidator(restTemplate);
