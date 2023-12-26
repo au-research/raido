@@ -4,7 +4,6 @@ import au.org.raid.api.Api;
 import au.org.raid.api.service.raid.id.IdentifierParser;
 import au.org.raid.api.service.stub.util.IdFactory;
 import au.org.raid.idl.raidv1.api.RaidV1Api;
-import au.org.raid.idl.raidv2.api.BasicRaidExperimentalApi;
 import au.org.raid.idl.raidv2.api.RaidoStableV1Api;
 import au.org.raid.idl.raidv2.model.*;
 import au.org.raid.inttest.TestClient;
@@ -15,12 +14,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Contract;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -30,8 +26,6 @@ import java.util.List;
 import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
 import static au.org.raid.db.jooq.enums.UserRole.OPERATOR;
 import static au.org.raid.inttest.endpoint.raidv2.stable.TestConstants.*;
-import static au.org.raid.inttest.util.MinimalRaidTestData.REAL_TEST_ORCID;
-import static au.org.raid.inttest.util.MinimalRaidTestData.REAL_TEST_ROR;
 
 @SpringBootTest(classes = Api.class,
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -45,8 +39,6 @@ public class AbstractIntegrationTest {
     protected RaidCreateRequest createRequest;
 
     protected RaidoStableV1Api raidApi;
-    protected BasicRaidExperimentalApi experimentalApi;
-
     protected RaidV1Api legacyApi;
 
     protected IdentifierParser identifierParser;
@@ -74,7 +66,6 @@ public class AbstractIntegrationTest {
 
         createRequest = newCreateRequest();
         raidApi = testClient.raidApi(operatorToken);
-        experimentalApi = testClient.basicRaidExperimentalClient((operatorToken));
         legacyApi = testClient.legacyApi(raidV1TestToken);
         identifierParser = new IdentifierParser();
     }

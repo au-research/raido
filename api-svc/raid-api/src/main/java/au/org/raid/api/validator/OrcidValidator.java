@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static au.org.raid.api.endpoint.message.ValidationMessage.*;
+import static au.org.raid.api.util.SchemaValues.ORCID_SCHEMA_URI;
 import static au.org.raid.api.util.StringUtil.isBlank;
-import static au.org.raid.idl.raidv2.model.ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_;
 import static java.util.Collections.emptyList;
 
 @Component
@@ -44,8 +44,8 @@ public class OrcidValidator {
             final int index
     ) {
         String id = orcid.trim();
-        if (!id.startsWith(HTTPS_ORCID_ORG_.getValue())) {
-            return List.of(contribInvalidOrcidFormat(index, String.format("should start with %s", HTTPS_ORCID_ORG_)));
+        if (!id.startsWith(ORCID_SCHEMA_URI.getUri())) {
+            return List.of(contribInvalidOrcidFormat(index, String.format("should start with %s", ORCID_SCHEMA_URI.getUri())));
         }
         if (id.length() > 37) {
             return List.of(contribInvalidOrcidFormat(index, "too long"));
@@ -54,7 +54,7 @@ public class OrcidValidator {
             return List.of(contribInvalidOrcidFormat(index, "too short"));
         }
 
-        String orcidDigits = id.replaceAll(HTTPS_ORCID_ORG_.getValue(), "").replaceAll("-", "");
+        String orcidDigits = id.replaceAll(ORCID_SCHEMA_URI.getUri(), "").replaceAll("-", "");
         String baseDigits = orcidDigits.substring(0, orcidDigits.length() - 1);
         char checkDigit = orcidDigits.substring(orcidDigits.length() - 1).charAt(0);
         var generatedCheckDigit = generateOrcidCheckDigit(baseDigits);

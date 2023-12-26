@@ -52,45 +52,11 @@ security:
 
 paths:
 
-  # region public endpoints (signing in and requesting authz, etc.)
-
-  /v2/public/version:
-    $ref: "public-experimental.yaml#/paths/~1version"
-  /v2/public/list-service-point/v1:
-    $ref: "public-experimental.yaml#/paths/~1public-list-service-point"
-  /v2/public/handle/v3/{handle}:
-    $ref: "public-experimental.yaml#/paths/~1public-read-raid-v3"
-
-  # endregion
-  
-  
-  # region unapproved-user endpoints 
+  # region unapproved-user endpoints
   
   /v2/public/authz-request/v1:
     $ref: "unapproved-user-experimental.yaml#/paths/~1update-authz-request"
 
-  # endregion
-
-
-  # region Basic Raido raid endpoints
-  
-  /v2/experimental/mint-raido-schema/v1:
-    $ref: "raido-metadata-schema.yaml#/paths/~1mint-raido-schema-v1"
-  /v2/experimental/update-raido-schema/v2:
-    $ref: "raido-metadata-schema.yaml#/paths/~1update-raido-schema-v2"
-  /v2/experimental/update-raido-schema/v1:
-    $ref: "raido-metadata-schema.yaml#/paths/~1update-raido-schema-v1"
-  /v2/experimental/read-raid/v2:
-    $ref: "raido-metadata-schema.yaml#/paths/~1read-raid-v2"
-  /v2/experimental/list-raid/v2:
-    $ref: "raido-metadata-schema.yaml#/paths/~1list-raid-v2"
-  /v2/experimental/list-raid/v3:
-    $ref: "raido-metadata-schema.yaml#/paths/~1list-raid-v3"
-  /v2/experimental/migrate-legacy-raid/v1:
-    $ref: "raido-metadata-schema.yaml#/paths/~1migrate-legacy-raid"
-  /v2/experimental/upgrade-legacy-to-raido-schema/v1:
-    $ref: "raido-metadata-schema.yaml#/paths/~1upgrade-legacy-to-raido-schema"
-      
   # endregion
 
   # region Basic Raido raid endpoints
@@ -111,10 +77,6 @@ paths:
     $ref: "admin-experimental.yaml#/paths/~1update-authz-request-status"
   /v2/experimental/admin-authz-request/v1:
     $ref: "admin-experimental.yaml#/paths/~1list-authz-request"
-  /v2/experimental/service-point/v1:
-    $ref: "admin-experimental.yaml#/paths/~1service-point"
-  /v2/experimental/service-point/v1/{servicePointId}:
-    $ref: "admin-experimental.yaml#/paths/~1read-service-point"
   /v2/experimental/service-point/v1/{servicePointId}/list-app-user:
     $ref: "admin-experimental.yaml#/paths/~1list-app-user"
   /v2/experimental/app-user/v1:

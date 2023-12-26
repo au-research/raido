@@ -1,6 +1,9 @@
 package au.org.raid.inttest.endpoint.raidv2.stable;
 
 public class TestConstants {
+    public static final String REAL_TEST_ORCID = "https://orcid.org/0009-0006-4129-5257";
+    public static final String REAL_TEST_ROR = "https://ror.org/038sjwq14";
+
     public static final String INPUT_RELATED_OBJECT_CATEGORY =
             "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json";
     public static final String OUTPUT_RELATED_OBJECT_CATEGORY =

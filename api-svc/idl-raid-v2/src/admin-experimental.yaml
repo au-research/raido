@@ -65,68 +65,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/AuthzRequestExtraV1'
-  /service-point:
-    get:
-      security:
-        - bearerAuth: [ ]
-      tags:
-        - admin-experimental
-      operationId: list-service-point
-      summary: list service point data that authorized users can see
-      description: >
-        Returns both enabled and disabled service-points.  Returns up to
-        MAX_EXPERIMENTAL_RECORDS results.
-      responses:
-        '200':
-          description: all service-point data
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ServicePoint'
-    post:
-      security:
-        - bearerAuth: [ ]
-      tags:
-        - admin-experimental
-      operationId: update-service-point
-      summary: update a service point, create a new one if id not set
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ServicePoint'
-      responses:
-        '200':
-          description: success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ServicePoint'
-  /read-service-point:
-    get:
-      security:
-        - bearerAuth: [ ]
-      tags:
-        - admin-experimental
-      operationId: read-service-point
-      summary: read service point data that authorized users can see
-      parameters:
-        - in: path
-          name: servicePointId
-          schema:
-            $ref: 'shared.yaml#/components/schemas/SurrogateKey'
-          required: true
-          description: Numeric ID of the ServicePoint to get
-      responses:
-        '200':
-          description: data
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ServicePoint'
   /list-app-user:
     get:
       security:

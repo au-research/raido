@@ -4,12 +4,16 @@ import au.org.raid.api.factory.DateFactory;
 import au.org.raid.api.factory.HandleFactory;
 import au.org.raid.api.factory.RaidRecordFactory;
 import au.org.raid.api.repository.RaidRepository;
+import au.org.raid.api.spring.security.raidv2.ApiToken;
+import au.org.raid.db.jooq.tables.records.RaidRecord;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -72,14 +76,34 @@ public class RaidIngestService {
         spatialCoverageService.create(raid.getSpatialCoverage(), handle);
     }
 
-    public Optional<RaidDto> findByHandle(final String handle) {
-        final var raidRecordOptional = raidRepository.findByHandle(handle);
+    public List<RaidDto> findAllByServicePointOrNotConfidentialId(final ApiToken apiToken) {
+        final var servicePointId = apiToken.getServicePointId();
 
-        if (raidRecordOptional.isEmpty()) {
-            return Optional.empty();
+        final var raids = new ArrayList<RaidDto>();
+        final var records = raidRepository.findAllByServicePointOrNotConfidentialId(servicePointId);
+
+        for (final var record : records) {
+            raids.add(build(record));
         }
 
-        final var record = raidRecordOptional.get();
+        return raids;
+
+    }
+
+    public List<RaidDto> findAllByServicePointId(final Long servicePointId) {
+        final var raids = new ArrayList<RaidDto>();
+        final var records = raidRepository.findAllByServicePointId(servicePointId);
+
+        for (final var record : records) {
+            raids.add(build(record));
+        }
+
+        return raids;
+    }
+
+
+    private RaidDto build(final RaidRecord record) {
+        final var handle = record.getHandle();
 
         final var titles = titleService.findAllByHandle(handle);
         final var descriptions = descriptionService.findAllByHandle(handle);
@@ -93,7 +117,7 @@ public class RaidIngestService {
         final var traditionalKnowledgeLabels = traditionalKnowledgeLabelService.findAllByHandle(handle);
         final var spatialCoverages = spatialCoverageService.findAllByHandle(handle);
 
-        return Optional.of(new RaidDto()
+        return new RaidDto()
                 .identifier(idService.getId(record))
                 .date(dateFactory.create(record.getStartDateString(), record.getEndDate()))
                 .title(titles.isEmpty() ? null : titles)
@@ -107,7 +131,13 @@ public class RaidIngestService {
                 .access(accessService.getAccess(record))
                 .subject(subjects.isEmpty() ? null : subjects)
                 .traditionalKnowledgeLabel(traditionalKnowledgeLabels.isEmpty() ? null : traditionalKnowledgeLabels)
-                .spatialCoverage(spatialCoverages.isEmpty() ? null : spatialCoverages));
+                .spatialCoverage(spatialCoverages.isEmpty() ? null : spatialCoverages);
+    }
+
+    public Optional<RaidDto> findByHandle(final String handle) {
+        return raidRepository.findByHandle(handle)
+                .map(this::build)
+                .or(Optional::empty);
     }
 
     public Optional<RaidDto> update(final RaidDto raid) {

@@ -1,6 +1,7 @@
 raid:
   identifier:
     name-prefix: http://raid.local/
+    schema-uri: https://raid.org/
     license: Creative Commons CC-0
     landing-prefix: http://localhost:7080/handle
     global-url-prefix: https://hdl.handle.net

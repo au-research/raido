@@ -1,7 +1,7 @@
 package au.org.raid.api.validator;
 
 import au.org.raid.api.endpoint.message.ValidationMessage;
-import au.org.raid.api.service.raid.ValidationFailureException;
+import au.org.raid.api.exception.ValidationFailureException;
 import au.org.raid.api.service.raid.id.IdentifierHandle;
 import au.org.raid.api.service.raid.id.IdentifierParser;
 import au.org.raid.api.service.raid.id.IdentifierUrl;

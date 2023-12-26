@@ -1,24 +1,19 @@
 package au.org.raid.api.endpoint.raidv2;
 
-import au.org.raid.api.endpoint.Constant;
-import au.org.raid.api.endpoint.message.ValidationMessage;
+import au.org.raid.api.factory.ServicePointFactory;
+import au.org.raid.api.service.ServicePointService;
 import au.org.raid.api.service.auth.admin.AppUserService;
 import au.org.raid.api.service.auth.admin.AuthzRequestService;
-import au.org.raid.api.service.ServicePointService;
-import au.org.raid.api.service.raid.RaidService;
-import au.org.raid.api.service.raid.ValidationFailureException;
-import au.org.raid.api.service.raid.id.IdentifierParser;
-import au.org.raid.api.service.raid.id.IdentifierUrl;
-import au.org.raid.api.service.raid.validation.RaidoSchemaV1ValidationService;
-import au.org.raid.api.service.ror.RorService;
-import au.org.raid.api.util.*;
+import au.org.raid.api.util.ExceptionUtil;
+import au.org.raid.api.util.Guard;
+import au.org.raid.api.util.ObjectUtil;
 import au.org.raid.db.jooq.tables.records.AppUserRecord;
 import au.org.raid.idl.raidv2.api.AdminExperimentalApi;
 import au.org.raid.idl.raidv2.model.*;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import lombok.SneakyThrows;
+import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static au.org.raid.db.jooq.enums.UserRole.OPERATOR;
 import static au.org.raid.db.jooq.tables.AppUser.APP_USER;
-import static au.org.raid.db.jooq.tables.ServicePoint.SERVICE_POINT;
 import static au.org.raid.db.jooq.tables.UserAuthzRequest.USER_AUTHZ_REQUEST;
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 
@@ -40,38 +33,13 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 @Scope(proxyMode = TARGET_CLASS)
 @RestController
 @Transactional
+@RequiredArgsConstructor
 public class AdminExperimental implements AdminExperimentalApi {
-    private final RorService rorService;
-    private AuthzRequestService authzRequestSvc;
-    private ServicePointService servicePointSvc;
-    private AppUserService appUserSvc;
-    private RaidoSchemaV1ValidationService validSvc;
-    private RaidService raidSvc;
-    private BasicRaidExperimental basicRaid;
-    private DSLContext db;
-    private IdentifierParser idParser;
-
-
-    public AdminExperimental(
-            AuthzRequestService authzRequestSvc,
-            ServicePointService servicePointSvc,
-            AppUserService appUserSvc,
-            RaidoSchemaV1ValidationService validSvc,
-            RaidService raidSvc,
-            BasicRaidExperimental basicRaid,
-            DSLContext db,
-            IdentifierParser idParser,
-            final RorService rorService) {
-        this.authzRequestSvc = authzRequestSvc;
-        this.servicePointSvc = servicePointSvc;
-        this.appUserSvc = appUserSvc;
-        this.validSvc = validSvc;
-        this.raidSvc = raidSvc;
-        this.basicRaid = basicRaid;
-        this.db = db;
-        this.idParser = idParser;
-        this.rorService = rorService;
-    }
+    private final AuthzRequestService authzRequestSvc;
+    private final AppUserService appUserSvc;
+    private final DSLContext db;
+    private final ServicePointService servicePointService;
+    private final ServicePointFactory servicePointFactory;
 
     @Override
     public ResponseEntity<List<AuthzRequestExtraV1>> listAuthzRequest() {
@@ -110,56 +78,6 @@ public class AdminExperimental implements AdminExperimentalApi {
     }
 
     @Override
-    public ResponseEntity<List<ServicePoint>> listServicePoint() {
-        var user = AuthzUtil.getApiToken();
-        AuthzUtil.guardOperatorOrSpAdmin(user);
-
-        return ResponseEntity.ok(db.select().from(SERVICE_POINT).
-                orderBy(SERVICE_POINT.NAME.asc()).
-                limit(Constant.MAX_EXPERIMENTAL_RECORDS).
-                fetchInto(ServicePoint.class));
-    }
-
-    /**
-     * IMPROVE: Currently gives a 500 error if not found, 404 might be better?
-     */
-    @Override
-    public ResponseEntity<ServicePoint> readServicePoint(Long servicePointId) {
-        var user = AuthzUtil.getApiToken();
-        AuthzUtil.guardOperatorOrAssociated(user, servicePointId);
-
-        return ResponseEntity.ok(db.select().from(SERVICE_POINT).
-                where(SERVICE_POINT.ID.eq(servicePointId)).
-                fetchSingleInto(ServicePoint.class));
-    }
-
-    @Override
-    @SneakyThrows
-    public ResponseEntity<ServicePoint> updateServicePoint(ServicePoint req) {
-        var user = AuthzUtil.getApiToken();
-        AuthzUtil.guardOperatorOrAssociatedSpAdmin(user, req.getId());
-
-        // IMPROVE: probably time to start doing proper validation
-        Guard.notNull(req);
-        Guard.hasValue("must have a name", req.getName());
-        Guard.hasValue("must have an identifier owner", req.getIdentifierOwner());
-        Guard.notNull("must have adminEmail", req.getAdminEmail());
-        Guard.notNull("must have techEmail", req.getTechEmail());
-        Guard.notNull("must have a enabled flag", req.getEnabled());
-
-        Guard.isTrue(
-                () -> "identifierOwner is too long: %s".formatted(req.getIdentifierOwner()),
-                JooqUtil.valueFits(SERVICE_POINT.IDENTIFIER_OWNER, req.getIdentifierOwner()));
-
-        final var failures = rorService.validate(req.getIdentifierOwner(), "servicePoint.identifierOwner");
-        if (!failures.isEmpty()) {
-            throw new ValidationFailureException(failures);
-        }
-
-        return ResponseEntity.ok(servicePointSvc.updateServicePoint(req));
-    }
-
-    @Override
     public ResponseEntity<AppUser> readAppUser(Long appUserId) {
         var user = AuthzUtil.getApiToken();
         if (ObjectUtil.areEqual(user.getAppUserId(), appUserId)) {
@@ -183,17 +101,21 @@ public class AdminExperimental implements AdminExperimentalApi {
 
         var appUser = readAppUser(appUserId).getBody();
         assert appUser != null;
-        var servicePoint = readServicePoint(appUser.getServicePointId()).getBody();
+//        var servicePoint = readServicePoint(appUser.getServicePointId()).getBody();
+
+        final var servicePointDto = servicePointService.findById(appUser.getServicePointId())
+                .orElseThrow(() -> new RuntimeException(
+                        "Service point not found with id %d".formatted(appUser.getServicePointId())));
 
         var authzRequest = authzRequestSvc.readAuthzRequestForUser(appUser);
 
         // bootstrapped user has no authzRequest, was auto-approved
-        return authzRequest.map(authzRequestExtraV1 -> ResponseEntity.ok(new AppUserExtraV1().
-                appUser(appUser).
-                servicePoint(servicePoint).
-                authzRequest(authzRequestExtraV1))).orElseGet(() -> ResponseEntity.ok(new AppUserExtraV1().
-                appUser(appUser).
-                servicePoint(servicePoint)));
+        return authzRequest.map(authzRequestExtraV1 -> ResponseEntity.ok(new AppUserExtraV1()
+                .appUser(appUser)
+                .servicePoint(servicePointFactory.create(servicePointDto))
+                .authzRequest(authzRequestExtraV1))).orElseGet(() -> ResponseEntity.ok(new AppUserExtraV1()
+                .appUser(appUser)
+                .servicePoint(servicePointFactory.create(servicePointDto))));
 
     }
 
@@ -260,50 +182,5 @@ public class AdminExperimental implements AdminExperimentalApi {
         return ResponseEntity.ok(new GenerateApiTokenResponse().
                 apiKeyId(req.getApiKeyId()).
                 apiToken(apiToken));
-    }
-
-    @Override
-    public ResponseEntity<MintResponse> migrateLegacyRaid(MigrateLegacyRaidRequest req) {
-        var mint = req.getMintRequest();
-        var user = AuthzUtil.getApiToken();
-        /* instead of allowing api-keys to have operator role, we just enforce
-         * that the key is admin role and is for the raido SP. */
-        AuthzUtil.guardRaidoAdminApiKey(user);
-
-        IdBlock idBlock = req.getMetadata().getId();
-
-        var failures = new ArrayList<ValidationFailure>();
-        failures.addAll(validSvc.validateIdBlockForMigration(idBlock));
-        failures.addAll(validSvc.validateLegacySchemaV1(req.getMetadata()));
-        if (req.getMintRequest().getServicePointId() == null) {
-            failures.add(ValidationMessage.fieldNotSet("mintRequest.servicePointId"));
-        }
-        if (req.getMintRequest().getContentIndex() == null) {
-            failures.add(ValidationMessage.fieldNotSet("mintRequest.contentIndex"));
-        }
-        if (req.getMintRequest().getCreateDate() == null) {
-            failures.add(ValidationMessage.fieldNotSet("mintRequest.createDate"));
-        }
-        if (!failures.isEmpty()) {
-            return ResponseEntity.ok(new MintResponse().success(false).failures(failures));
-        }
-
-        // it'll work because IdBlock's already been validated
-        var id = (IdentifierUrl) idParser.parseUrl(idBlock.getIdentifier());
-
-        try {
-            raidSvc.migrateRaidoSchemaV1(
-                    req.getMintRequest().getServicePointId(),
-                    req.getMintRequest().getContentIndex(),
-                    req.getMintRequest().getCreateDate(),
-                    req.getMetadata());
-        } catch (ValidationFailureException e) {
-            return ResponseEntity.ok(new MintResponse().success(false).failures(e.getFailures()));
-        }
-
-        // improve: this is unnecessary overhead - migration scripts don't care
-        // about the response.
-        return ResponseEntity.ok(new MintResponse().success(true).
-                raid(raidSvc.readRaidResponseV2(id.handle().format())));
     }
 }

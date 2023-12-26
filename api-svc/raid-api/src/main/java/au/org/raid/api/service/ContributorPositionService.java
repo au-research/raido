@@ -4,7 +4,6 @@ import au.org.raid.api.factory.ContributorPositionFactory;
 import au.org.raid.api.repository.ContributorPositionRepository;
 import au.org.raid.api.repository.ContributorPositionSchemaRepository;
 import au.org.raid.api.repository.RaidContributorPositionRepository;
-import au.org.raid.idl.raidv2.model.ContributorPosition;
 import au.org.raid.idl.raidv2.model.ContributorPositionWithSchemaUri;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

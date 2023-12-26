@@ -3,8 +3,8 @@ package au.org.raid.api.endpoint.raidv2;
 import au.org.raid.api.exception.ClosedRaidException;
 import au.org.raid.api.exception.InvalidAccessException;
 import au.org.raid.api.exception.ValidationException;
+import au.org.raid.api.service.RaidIngestService;
 import au.org.raid.api.service.raid.RaidStableV1Service;
-import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.util.SchemaValues;
 import au.org.raid.api.validator.ValidationService;
 import au.org.raid.idl.raidv2.api.RaidoStableV1Api;
@@ -14,6 +14,7 @@ import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,14 +33,11 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 @RestController
 @CrossOrigin
 @SecurityScheme(name = "bearerAuth", scheme = "bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
+@RequiredArgsConstructor
 public class RaidoStableV1 implements RaidoStableV1Api {
     private final ValidationService validationService;
     private final RaidStableV1Service raidService;
-
-    public RaidoStableV1(final ValidationService validationService, final RaidStableV1Service raidService) {
-        this.validationService = validationService;
-        this.raidService = raidService;
-    }
+    private final RaidIngestService raidIngestService;
 
     @Override
     public ResponseEntity<RaidDto> readRaidV1(final String prefix, final String suffix) {
@@ -82,8 +80,8 @@ public class RaidoStableV1 implements RaidoStableV1Api {
         var user = getApiToken();
 
         return ResponseEntity.ok(Optional.ofNullable(servicePoint)
-                .map(raidService::list)
-                .orElse(raidService.list(user)));
+                .map(raidIngestService::findAllByServicePointId)
+                .orElse(raidIngestService.findAllByServicePointOrNotConfidentialId(user)));
     }
 
     @Override

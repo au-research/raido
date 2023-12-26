@@ -1,10 +1,8 @@
 package au.org.raid.api.service.raid;
 
-import au.org.raid.db.jooq.enums.Metaschema;
 import au.org.raid.db.jooq.tables.records.RaidRecord;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
-import au.org.raid.idl.raidv2.model.RaidoMetadataSchemaV1;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -23,18 +21,9 @@ public class RaidChecksumService {
         // same order for the checksums to be identical. This relies on MapperFeature.SORT_PROPERTIES_ALPHABETICALLY
         // property set on the ObjectMapper bean
 
-        String json;
-        if (raidRecord.getMetadataSchema() == Metaschema.raido_metadata_schema_v1) {
-            final var raid = objectMapper.readValue(metadata, RaidoMetadataSchemaV1.class);
-            json = objectMapper.writeValueAsString(raid);
-            return DigestUtils.md5DigestAsHex(json.getBytes());
-        } else if (raidRecord.getMetadataSchema() == Metaschema.raido_metadata_schema_v2) {
-            final var raid = objectMapper.readValue(metadata, RaidDto.class);
-            json = objectMapper.writeValueAsString(raid);
-            return DigestUtils.md5DigestAsHex(json.getBytes());
-        }
-
-        return null;
+        final var raid = objectMapper.readValue(metadata, RaidDto.class);
+        final var json = objectMapper.writeValueAsString(raid);
+        return DigestUtils.md5DigestAsHex(json.getBytes());
     }
 
     @SneakyThrows

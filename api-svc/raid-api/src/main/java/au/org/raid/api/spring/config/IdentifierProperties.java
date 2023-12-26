@@ -14,4 +14,5 @@ public class IdentifierProperties {
     private String globalUrlPrefix;
     private String registrationAgencyIdentifier;
     private String handleUrlPrefix;
+    private String schemaUri;
 }

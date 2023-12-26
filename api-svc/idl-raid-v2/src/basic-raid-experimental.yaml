@@ -1,9 +1,0 @@
-# might not need this at all, get rid of it if find no use for it
-# I'm thinking maybe "cross-schema" stuff goes here - like /readRaid
-# which can return any of the schema that raido supports.
-openapi: 3.0.3
-info:
-  title: raid listing and minting endpoints
-  version: 1.0.0
-paths:
-  

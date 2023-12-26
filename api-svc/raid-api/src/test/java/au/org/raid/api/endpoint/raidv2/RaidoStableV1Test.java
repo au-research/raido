@@ -2,6 +2,7 @@ package au.org.raid.api.endpoint.raidv2;
 
 import au.org.raid.api.exception.CrossAccountAccessException;
 import au.org.raid.api.exception.ResourceNotFoundException;
+import au.org.raid.api.service.RaidIngestService;
 import au.org.raid.api.service.raid.RaidStableV1Service;
 import au.org.raid.api.service.raid.id.IdentifierHandle;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
@@ -69,6 +70,8 @@ class RaidoStableV1Test {
     private RaidStableV1Service raidService;
     @Mock
     private ValidationService validationService;
+    @Mock
+    private RaidIngestService raidIngestService;
     @InjectMocks
     private RaidoStableV1 controller;
 
@@ -621,7 +624,7 @@ class RaidoStableV1Test {
             final ApiToken apiToken = mock(ApiToken.class);
             authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
 
-            when(raidService.list(servicePointId)).thenReturn(Collections.singletonList(output));
+            when(raidIngestService.findAllByServicePointId(servicePointId)).thenReturn(Collections.singletonList(output));
 
             mockMvc.perform(get("/raid", handle)
                             .queryParam("servicePointId", servicePointId.toString())

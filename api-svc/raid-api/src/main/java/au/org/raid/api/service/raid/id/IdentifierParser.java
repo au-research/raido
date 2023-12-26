@@ -1,7 +1,7 @@
 package au.org.raid.api.service.raid.id;
 
 import au.org.raid.api.endpoint.message.ValidationMessage;
-import au.org.raid.api.service.raid.ValidationFailureException;
+import au.org.raid.api.exception.ValidationFailureException;
 import au.org.raid.api.util.Nullable;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import org.springframework.stereotype.Component;

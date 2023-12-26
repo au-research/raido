@@ -1,6 +1,5 @@
-package au.org.raid.api.service.raid;
+package au.org.raid.api.exception;
 
-import au.org.raid.api.spring.RedactingExceptionResolver;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 
 import java.util.Arrays;
@@ -20,7 +19,6 @@ import static java.util.List.copyOf;
  * for validation failures
  * - alter exception resolver to transform runtime ex to the structure
  *
- * @see RedactingExceptionResolver
  */
 public class ValidationFailureException extends Exception {
     private List<ValidationFailure> failures;

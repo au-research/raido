@@ -1,8 +1,8 @@
 package au.org.raid.api.service.raid;
 
 import au.org.raid.api.exception.ResourceNotFoundException;
+import au.org.raid.api.exception.ValidationFailureException;
 import au.org.raid.api.factory.IdFactory;
-import au.org.raid.api.factory.RaidDtoFactory;
 import au.org.raid.api.factory.RaidRecordFactory;
 import au.org.raid.api.repository.RaidRepository;
 import au.org.raid.api.repository.ServicePointRepository;
@@ -25,7 +25,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.hamcrest.Matchers;
 import org.jooq.JSONB;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,7 +35,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -74,8 +72,6 @@ class RaidStableV1ServiceTest {
     private IdFactory idFactory;
     @Mock
     private RaidChecksumService checksumService;
-    @Mock
-    private RaidDtoFactory raidDtoFactory;
     @Mock
     private RaidHistoryService raidHistoryService;
     @Mock
@@ -154,24 +150,6 @@ class RaidStableV1ServiceTest {
 
         RaidDto result = raidStableV1Service.read(handle);
         assertThat(result, Matchers.is(expected));
-    }
-
-    @Test
-    @DisplayName("List raids")
-    void listRaidsV1() throws JsonProcessingException {
-        final var raidJson = raidJson();
-        final Long servicePointId = 999L;
-
-        final var raidRecord = new RaidRecord().setMetadata(JSONB.valueOf(raidJson));
-
-        when(raidRepository.findAllByServicePointId(servicePointId)).thenReturn(List.of(raidRecord));
-
-        final var expected = objectMapper.readValue(raidJson, RaidDto.class);
-
-        when(raidDtoFactory.create(raidRecord)).thenReturn(expected);
-
-        List<RaidDto> results = raidStableV1Service.list(servicePointId);
-        assertThat(results.get(0), Matchers.is(expected));
     }
 
     @Test

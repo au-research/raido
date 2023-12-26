@@ -173,32 +173,4 @@ public class AuthzRequestTest extends IntegrationTestCase {
 
     }
 
-    @Test
-    public void updateStatusShouldNotBeCallableByAdminFromOtherSvcPoint() {
-        String subjectUnapproved = idFactory.
-                generateUniqueId("intTestUnapprovedGoogleUser", true);
-        String spUserSubject = idFactory.
-                generateUniqueId("intTestWApprovedApiToken", true);
-        var unapprovedToken = bootstrapTokenSvc.
-                fakeUnapprovedGoogle(subjectUnapproved);
-        var otherSpId = findOtherPublicServicePoint(RAIDO_SP_ID).getId();
-        var approvedSpUser = bootstrapTokenSvc.
-                bootstrapToken(otherSpId, spUserSubject, SP_ADMIN);
-        var unapprovedClient = unapprovedClient(unapprovedToken);
-        var spUserAdminClient = adminExperimentalClientAs(approvedSpUser);
-
-
-        var createResult = unapprovedClient.updateAuthzRequest(
-                new UpdateAuthzRequest().servicePointId(RAIDO_SP_ID).comments("")).getBody();
-
-        assertThatThrownBy(() ->
-                spUserAdminClient.updateAuthzRequestStatus(new UpdateAuthzRequestStatus().
-                        authzRequestId(createResult.getAuthzRequestId()).
-                        role(SP_USER.getLiteral()).
-                        status(APPROVED))
-        ).
-                // again, I reckon it should be a 4xx
-                        isInstanceOf(InternalServerError.class);
-    }
-
 }

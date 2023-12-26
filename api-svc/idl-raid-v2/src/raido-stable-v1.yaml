@@ -35,7 +35,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'components.yaml#/components/schemas/ValidationFailureResponse'
+                $ref: '#/components/schemas/ValidationFailureResponse'
     get:
       security:
         - bearerAuth: [ ]
@@ -116,7 +116,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: 'components.yaml#/components/schemas/ValidationFailureResponse'
+                $ref: '#/components/schemas/ValidationFailureResponse'
 components:
   schemas:
     RaidCreateRequest:
@@ -591,3 +591,28 @@ components:
           $ref: '#/components/schemas/Id'
         access:
           $ref: '#/components/schemas/Access'
+    ValidationFailure:
+      type: object
+      required: [fieldId, errorType, message]
+      properties:
+        fieldId: { type: string }
+        errorType: { type: string }
+        message: { type: string }
+    FailureResponse:
+      type: object
+      required: [type, title, status, detail, instance]
+      properties:
+        type: { type: string }
+        title: { type: string }
+        status: {type: integer }
+        detail: { type: string }
+        instance: { type: string }
+    ValidationFailureResponse:
+      allOf:
+        - $ref: '#/components/schemas/FailureResponse'
+      required: [failures]
+      properties:
+        failures:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationFailure'

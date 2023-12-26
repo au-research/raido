@@ -6,6 +6,7 @@ raid:
     global-url-prefix: https://hdl.handle.net
     registration-agency-identifier: https://ror.org/038sjwq14
     handle-url-prefix: http://localhost:8080
+    schema-uri: https://raid.org/
   test:
     api:
       url: http://localhost:${server.port}

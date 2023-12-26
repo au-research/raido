@@ -106,41 +106,10 @@ public class RaidRepository {
                 .execute();
     }
 
-    public int updateByHandleAndVersion(final RaidRecord raidRecord, final int version) {
-        return dslContext.update(RAID)
-                .set(RAID.METADATA, raidRecord.getMetadata())
-                .set(RAID.METADATA_SCHEMA, raidRecord.getMetadataSchema())
-                .set(RAID.START_DATE, raidRecord.getStartDate())
-                .set(RAID.CONFIDENTIAL, raidRecord.getConfidential())
-                .set(RAID.VERSION, raidRecord.getVersion())
-                .where(RAID.HANDLE.eq(raidRecord.getHandle()))
-                .and(RAID.VERSION.eq(version))
-                .execute();
-    }
-
     public Optional<RaidRecord> findByHandle(final String handle) {
         return dslContext.selectFrom(RAID)
                 .where(RAID.HANDLE.eq(handle)).
                 fetchOptional();
-    }
-
-
-    public Optional<RaidRecord> findByHandleAndVersion(final String handle, final int version) {
-        return dslContext.select(RAID.fields())
-                .from(RAID)
-                .where(RAID.HANDLE.eq(handle)
-                        .and(RAID.VERSION.eq(version))).
-                fetchOptional(record -> new RaidRecord()
-                        .setVersion(RAID.VERSION.getValue(record))
-                        .setHandle(RAID.HANDLE.getValue(record))
-                        .setServicePointId(RAID.SERVICE_POINT_ID.getValue(record))
-                        .setUrl(RAID.URL.getValue(record))
-                        .setMetadataSchema(RAID.METADATA_SCHEMA.getValue(record))
-                        .setMetadata(RAID.METADATA.getValue(record))
-                        .setDateCreated(RAID.DATE_CREATED.getValue(record))
-                        .setStartDate(RAID.START_DATE.getValue(record))
-                        .setConfidential(RAID.CONFIDENTIAL.getValue(record))
-                );
     }
 
     public List<RaidRecord> findAllByServicePointId(final Long servicePointId) {
@@ -166,23 +135,12 @@ public class RaidRepository {
     }
 
     public List<RaidRecord> findAllByServicePointOrNotConfidentialId(Long servicePointId) {
-        return dslContext.select(RAID.fields())
-                .from(RAID)
+        return dslContext.selectFrom(RAID)
                 .where(
                         RAID.SERVICE_POINT_ID.eq(servicePointId).or(RAID.CONFIDENTIAL.equal(false))
                 )
                 .orderBy(RAID.DATE_CREATED.desc())
                 .limit(Constant.MAX_EXPERIMENTAL_RECORDS)
-                .fetch(record -> new RaidRecord()
-                        .setVersion(RAID.VERSION.getValue(record))
-                        .setHandle(RAID.HANDLE.getValue(record))
-                        .setServicePointId(RAID.SERVICE_POINT_ID.getValue(record))
-                        .setUrl(RAID.URL.getValue(record))
-                        .setMetadataSchema(RAID.METADATA_SCHEMA.getValue(record))
-                        .setMetadata(RAID.METADATA.getValue(record))
-                        .setDateCreated(RAID.DATE_CREATED.getValue(record))
-                        .setStartDate(RAID.START_DATE.getValue(record))
-                        .setConfidential(RAID.CONFIDENTIAL.getValue(record))
-                );
+                .fetch();
     }
 }

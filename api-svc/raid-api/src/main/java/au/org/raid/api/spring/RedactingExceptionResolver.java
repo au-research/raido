@@ -3,7 +3,7 @@ package au.org.raid.api.spring;
 import au.org.raid.api.exception.CrossAccountAccessException;
 import au.org.raid.api.exception.ResourceNotFoundException;
 import au.org.raid.api.exception.ValidationException;
-import au.org.raid.api.service.raid.ValidationFailureException;
+import au.org.raid.api.exception.ValidationFailureException;
 import au.org.raid.api.spring.security.ApiSafeException;
 import au.org.raid.api.spring.security.IdProviderException;
 import au.org.raid.api.util.Log;

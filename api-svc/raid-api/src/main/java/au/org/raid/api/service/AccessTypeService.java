@@ -3,7 +3,6 @@ package au.org.raid.api.service;
 import au.org.raid.api.factory.AccessTypeFactory;
 import au.org.raid.api.repository.AccessTypeRepository;
 import au.org.raid.api.repository.AccessTypeSchemaRepository;
-import au.org.raid.idl.raidv2.model.AccessType;
 import au.org.raid.idl.raidv2.model.AccessTypeWithSchemaUri;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

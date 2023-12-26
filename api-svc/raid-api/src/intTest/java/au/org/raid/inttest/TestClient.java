@@ -1,7 +1,6 @@
 package au.org.raid.inttest;
 
 import au.org.raid.idl.raidv1.api.RaidV1Api;
-import au.org.raid.idl.raidv2.api.BasicRaidExperimentalApi;
 import au.org.raid.idl.raidv2.api.RaidoStableV1Api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Contract;
@@ -28,21 +27,6 @@ public class TestClient {
         this.objectMapper = objectMapper;
         this.contract = contract;
         this.apiUrl = apiUrl;
-    }
-
-    public BasicRaidExperimentalApi basicRaidExperimentalClient(
-            final String token
-    ) {
-        return Feign.builder()
-                .client(new OkHttpClient())
-                .encoder(new JacksonEncoder(objectMapper))
-                .decoder(new ResponseEntityDecoder(new JacksonDecoder(objectMapper)))
-                .contract(contract)
-                .requestInterceptor(request ->
-                        request.header(AUTHORIZATION, "Bearer " + token))
-                .logger(new Slf4jLogger(BasicRaidExperimentalApi.class))
-                .logLevel(Logger.Level.FULL)
-                .target(BasicRaidExperimentalApi.class, apiUrl);
     }
 
     public RaidoStableV1Api raidApi(

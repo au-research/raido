@@ -1,6 +1,5 @@
 package au.org.raid.api.spring.config;
 
-import au.org.raid.api.endpoint.raidv1.RaidV1;
 import au.org.raid.api.service.auth.RaidV2ApiKeyApiTokenService;
 import au.org.raid.api.service.auth.RaidV2AppUserApiTokenService;
 import au.org.raid.api.service.raidv1.RaidV1AuthService;
@@ -70,7 +69,6 @@ public class RaidWebSecurityConfig {
                         .requestMatchers("/swagger-ui*/**").permitAll()
                         .requestMatchers("/docs/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers(RAID_V1_API + RaidV1.HANDLE_URL_PREFIX + "/**").permitAll()
                         .requestMatchers(RAID_V2_PUBLIC_API + "/**").permitAll()
                         .requestMatchers(IDP_URL).permitAll()
                         /* Used only for the status endpoint; either make this explicit (no
