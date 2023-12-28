@@ -58,7 +58,7 @@ public class RaidWebSecurityConfig {
                         .requestMatchers("/swagger-ui*/**").permitAll()
                         .requestMatchers("/docs/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, SERVICE_POINT_API + "/").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/v2/public/list-service-point/v1").permitAll()
                         .requestMatchers(IDP_URL).permitAll()
                         .requestMatchers(RAID_V2_API + "/**").fullyAuthenticated()
                         .requestMatchers(RAID_STABLE_API + "/**").fullyAuthenticated()

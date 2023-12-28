@@ -25,8 +25,7 @@ import { TextSpan } from "Component/TextSpan";
 import jwtDecode from "jwt-decode";
 import { signOutUser } from "Auth/Authz";
 import { assert } from "Util/TypeUtil";
-import { useAuthApi } from "Api/AuthApi";
-import { unapprovedApi } from "Api/SimpleApi";
+import { publicApi, unapprovedApi } from "Api/SimpleApi";
 import { mapClientIdToIdProvider } from "Component/IdProviderDisplay";
 import { SupportMailLink } from "Component/ExternalLink";
 import { UpdateAuthzRequestRequest } from "Generated/Raidv2/apis/UnapprovedExperimentalApi";
@@ -56,14 +55,14 @@ export function NotAuthorizedContent({accessToken}: {accessToken: string}){
 function InfoContainer({accessToken}: {accessToken: string}){
   return <ContainerCard title={"Sign in"}>
     <Typography paragraph>
-      "Sign in" again if you want to sign in as a different user, or use 
+      "Sign in" again if you want to sign in as a different user, or use
       a different ID Provider.
     </Typography>
     <Grid container justifyContent={"center"}>
-      {/* From our perspective, it's "sign out", because user is technically 
-      already signed in, and we're signing them out to force them to sign in 
-      again (to force a new token to be generated that will included their 
-      authorization approval, if they've been approved). 
+      {/* From our perspective, it's "sign out", because user is technically
+      already signed in, and we're signing them out to force them to sign in
+      again (to force a new token to be generated that will included their
+      authorization approval, if they've been approved).
       But to the user - we're just forcing them to "sign in" again. */}
       <SecondaryButton onClick={async () => {
         await signOutUser();
@@ -80,14 +79,14 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
   const [institution] = inst;
   const [comments, setComments] = React.useState("");
   const unAppApi = unapprovedApi(accessToken);
-  const api = useAuthApi();
+  const pubApi = publicApi();
   const jwt = jwtDecode(accessToken) as any;
-  
+
   const {email, clientId, sub} = jwt;
 
   const queryName = 'listPublicServicePoint';
   const query: RqQuery<InstData[]> = useQuery([queryName], async () => {
-    return (await api.servicePoint.findAllServicePoints()).map(i => {
+    return (await pubApi.publicListServicePoint()).map(i => {
       //throw new Error("intended error");
       return ({
         id: i.id,
@@ -97,9 +96,9 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
   });
 
   const submitRequest = useMutation((data: UpdateAuthzRequestRequest) => {
-      //throw new Error("intended error");
-      return unAppApi.updateAuthzRequest(data);
-    }
+        //throw new Error("intended error");
+        return unAppApi.updateAuthzRequest(data);
+      }
   );
 
   let requested = false;
@@ -115,13 +114,13 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
       console.error("unknown request status", submitRequest.data);
     }
   }
-  
+
   return <ContainerCard title={"Request RAiD Authorisation"}
-    // improve:sto shouldn't need this any more, delete after testing in  
-    // demo with the sign-out container present. 
-    // minHeight so the autocomplete drop box has lots of space
-    //contentStyle={{minHeight: "60vh"}}
-    action={<AuthRequestHelp/>}
+      // improve:sto shouldn't need this any more, delete after testing in
+      // demo with the sign-out container present.
+      // minHeight so the autocomplete drop box has lots of space
+      //contentStyle={{minHeight: "60vh"}}
+                        action={<AuthRequestHelp/>}
   >
     <Typography>
       You have identified yourself as: <HelpChip label={email}/>
@@ -150,9 +149,9 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
         </FormControl>
         <FormControl fullWidth>
           <TextField id="reqeust-text" label="Comments / Information"
-            multiline rows={4} variant="outlined"
-            value={comments}
-            onChange={(e) => setComments(e.target.value)}
+                     multiline rows={4} variant="outlined"
+                     value={comments}
+                     onChange={(e) => setComments(e.target.value)}
           />
         </FormControl>
         { requested && <>
@@ -160,24 +159,24 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
             <Typography>
               Your authorisation request has been submitted.
             </Typography>
-            <Typography> 
-              After your Service Point support team informs you that your 
+            <Typography>
+              After your Service Point support team informs you that your
               request is approved you will be able to use the system.
             </Typography>
           </Alert>
           <Alert severity="warning">
             <Typography>
-              Our notification system is not yet implemented.  
-              Please send an email to <SupportMailLink/> so we can approve 
+              Our notification system is not yet implemented.
+              Please send an email to <SupportMailLink/> so we can approve
               your request.
             </Typography>
           </Alert>
         </>}
         <PrimaryActionButton context={"submitting authorization request"}
-          disabled={!institution || submitRequest.isLoading}
-          type={"submit"} isLoading={submitRequest.isLoading}
-          error={submitRequest.error}
-          fullWidth style={{marginTop: "2em"}}
+                             disabled={!institution || submitRequest.isLoading}
+                             type={"submit"} isLoading={submitRequest.isLoading}
+                             error={submitRequest.error}
+                             fullWidth style={{marginTop: "2em"}}
         >
           Submit request
         </PrimaryActionButton>
@@ -187,12 +186,12 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
 }
 
 function InstitutionAutocomplete({state, query}: {
-    state: [
-      institution: InstData | null,
-      setInstitution: (inst: InstData | null) => void,
-    ],
-    query: RqQuery<InstData[]>,
-  }
+                                   state: [
+                                     institution: InstData | null,
+                                     setInstitution: (inst: InstData | null) => void,
+                                   ],
+                                   query: RqQuery<InstData[]>,
+                                 }
 ){
   const [institution, setInstitution] = state;
 
@@ -205,16 +204,16 @@ function InstitutionAutocomplete({state, query}: {
   }
 
   return <Autocomplete id="inst-select"
-    selectOnFocus clearOnEscape disablePortal
-    multiple={false}
-    loading={query.isLoading}
-    options={query.data || []}
-    value={institution}
-    onChange={handleChange}
-    renderInput={(params) =>
-      <TextField {...params} required label="Institution"
-        autoFocus={true}/>
-    }
+                       selectOnFocus clearOnEscape disablePortal
+                       multiple={false}
+                       loading={query.isLoading}
+                       options={query.data || []}
+                       value={institution}
+                       onChange={handleChange}
+                       renderInput={(params) =>
+                           <TextField {...params} required label="Institution"
+                                      autoFocus={true}/>
+                       }
   />;
 }
 
@@ -249,4 +248,3 @@ interface InstData {
   label: string,
   id: number,
 }
-

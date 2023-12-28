@@ -1,5 +1,5 @@
 import {
-  Configuration,
+  Configuration, PublicExperimentalApi,
   UnapprovedExperimentalApi
 } from "Generated/Raidv2";
 import { Config } from "Config";
@@ -11,5 +11,12 @@ export function unapprovedApi(accessToken: string){
     accessToken: () => accessToken,
   });
   return new UnapprovedExperimentalApi(config);
+}
+
+export function publicApi(): PublicExperimentalApi{
+  const config = new Configuration({
+    basePath: Config.raidoApiSvc,
+  });
+  return new PublicExperimentalApi(config);
 }
 
