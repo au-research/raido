@@ -125,7 +125,9 @@ openApiGenerate {
           dateLibrary          : "java8",
 
           delegatePattern      : "false",
-  ]  
+          removeOperationIdPrefix: "true",
+          removeOperationIdSuffix: "true",
+  ]
 }
 tasks.openApiGenerate{
   // make sure task is re-run if templates are changed

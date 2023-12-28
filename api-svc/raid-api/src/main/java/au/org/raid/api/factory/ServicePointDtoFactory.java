@@ -6,15 +6,5 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ServicePointDtoFactory {
-    public ServicePointDto create(final ServicePointRecord servicePointRecord) {
-        return ServicePointDto.builder()
-                .id(servicePointRecord.getId())
-                .name(servicePointRecord.getName())
-                .adminEmail(servicePointRecord.getAdminEmail())
-                .appWritesEnabled(servicePointRecord.getAppWritesEnabled())
-                .enabled(servicePointRecord.getEnabled())
-                .identifier(servicePointRecord.getIdentifierOwner())
-                .techEmail(servicePointRecord.getTechEmail())
-                .build();
-    }
+
 }

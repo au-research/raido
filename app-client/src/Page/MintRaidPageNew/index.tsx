@@ -1,13 +1,8 @@
-import { th } from "@faker-js/faker";
-import { Container } from "@mui/material";
-import { useMutation } from "@tanstack/react-query";
-import { useAuthApi } from "Api/AuthApi";
-import { raidoTitle } from "Component/Util";
-import {
-  NavPathResult,
-  NavTransition,
-  isPagePath,
-} from "Design/NavigationProvider";
+import {Container} from "@mui/material";
+import {useMutation} from "@tanstack/react-query";
+import {useAuthApi} from "Api/AuthApi";
+import {raidoTitle} from "Component/Util";
+import {isPagePath, NavPathResult, NavTransition,} from "Design/NavigationProvider";
 import RaidForm from "Forms/RaidForm";
 import {
   Access,
@@ -27,7 +22,7 @@ import {
   TraditionalKnowledgeLabel,
 } from "Generated/Raidv2";
 
-import { newRaid } from "utils";
+import {newRaid} from "utils";
 
 const pageUrl = "/mint-raid-new";
 
@@ -38,7 +33,7 @@ export function isMintRaidPagePath(pathname: string): NavPathResult {
 function Content() {
   const handleRaidCreate = async (data: RaidDto): Promise<RaidDto> => {
     try {
-      return await api.raid.createRaidV1({
+      return await api.raid.mintRaid({
         raidCreateRequest: {
           identifier: data?.identifier || ({} as Id),
           description: data?.description || ([] as Description[]),
@@ -83,12 +78,10 @@ function Content() {
     },
   });
 
-  const defaultValues = newRaid;
-
   return (
     <Container maxWidth="lg" sx={{ py: 2 }}>
       <RaidForm
-        defaultValues={defaultValues}
+        defaultValues={newRaid}
         onSubmit={async (data) => {
           mintRequest.mutate(data);
         }}

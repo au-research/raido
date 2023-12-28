@@ -25,7 +25,8 @@ import { TextSpan } from "Component/TextSpan";
 import jwtDecode from "jwt-decode";
 import { signOutUser } from "Auth/Authz";
 import { assert } from "Util/TypeUtil";
-import { publicApi, unapprovedApi } from "Api/SimpleApi";
+import { useAuthApi } from "Api/AuthApi";
+import { unapprovedApi } from "Api/SimpleApi";
 import { mapClientIdToIdProvider } from "Component/IdProviderDisplay";
 import { SupportMailLink } from "Component/ExternalLink";
 import { UpdateAuthzRequestRequest } from "Generated/Raidv2/apis/UnapprovedExperimentalApi";
@@ -79,14 +80,14 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
   const [institution] = inst;
   const [comments, setComments] = React.useState("");
   const unAppApi = unapprovedApi(accessToken);
-  const pubApi = publicApi();
+  const api = useAuthApi();
   const jwt = jwtDecode(accessToken) as any;
   
   const {email, clientId, sub} = jwt;
 
   const queryName = 'listPublicServicePoint';
   const query: RqQuery<InstData[]> = useQuery([queryName], async () => {
-    return (await pubApi.publicListServicePoint()).map(i => {
+    return (await api.servicePoint.findAllServicePoints()).map(i => {
       //throw new Error("intended error");
       return ({
         id: i.id,

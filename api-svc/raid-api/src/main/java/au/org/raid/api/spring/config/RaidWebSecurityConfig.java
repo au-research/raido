@@ -13,8 +13,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManagerResolver;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.firewall.*;
+import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
 
 import java.io.IOException;
 
@@ -26,19 +28,11 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity
 @Configuration
 public class RaidWebSecurityConfig {
-    public static final String ROOT_PATH = "/";
-    public static final String RAID_V1_API = "/v1";
     public static final String RAID_V2_API = "/v2";
     public static final String RAID_STABLE_API = "/raid";
     public static final String SERVICE_POINT_API = "/service-point";
     public static final String TEAM_API = "/team";
-    public static final String RAID_V2_PUBLIC_API = RAID_V2_API + "/public";
-    public static final String PUBLIC = "/public";
     private static final Log log = to(RaidWebSecurityConfig.class);
-
-    public static boolean isRaidV1Api(HttpServletRequest request) {
-        return request.getServletPath().startsWith(RAID_V1_API);
-    }
 
     public static boolean isRaidV2Api(HttpServletRequest request) {
         return request.getServletPath().startsWith(RAID_V2_API);
@@ -57,8 +51,6 @@ public class RaidWebSecurityConfig {
             HttpSecurity http,
             AuthenticationManagerResolver<HttpServletRequest> tokenResolver
     ) throws Exception {
-        log.info("securityFilterChain()");
-
         // order is important, more specific has to come before more general
         http.authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
@@ -66,12 +58,8 @@ public class RaidWebSecurityConfig {
                         .requestMatchers("/swagger-ui*/**").permitAll()
                         .requestMatchers("/docs/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers(RAID_V2_PUBLIC_API + "/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, SERVICE_POINT_API + "/").permitAll()
                         .requestMatchers(IDP_URL).permitAll()
-                        /* Used only for the status endpoint; either make this explicit (no
-                        wildcard, like IDP_URL) or better, move status endpoint under `/v2`.
-                        Remember to update ASG health check, ALB rules, cloudfront rules. */.requestMatchers(PUBLIC + "/**").permitAll()
-                        .requestMatchers(RAID_V1_API + "/**").fullyAuthenticated()
                         .requestMatchers(RAID_V2_API + "/**").fullyAuthenticated()
                         .requestMatchers(RAID_STABLE_API + "/**").fullyAuthenticated()
                         .requestMatchers(SERVICE_POINT_API + "/**").fullyAuthenticated()
@@ -95,20 +83,15 @@ public class RaidWebSecurityConfig {
                 We would have to build the infrastructure for it - which would be an
                 unworkable amount of effort given the current threat model and our
                 available infrastructure resourcing constraints. */
-        http.httpBasic()
-                .disable()
-                .csrf()
-                .disable()
-                .sessionManagement()
-                .sessionCreationPolicy(STATELESS);
+        http.httpBasic(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(STATELESS));
 
                 /* https://www.baeldung.com/spring-prevent-xss */
-        http.headers()
-                .xssProtection()
-                .and()
-                /* No real point in doing this - api-svc only serves data.
-                Added to avoid arguments and false-positives on security scans. */
-                .contentSecurityPolicy("script-src 'self'");
+        http.headers(headers -> headers.xssProtection(
+                        xssProtection -> xssProtection.headerValue(XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK)
+                ).contentSecurityPolicy(contentSecurityPolicy -> contentSecurityPolicy.policyDirectives("script-src 'self'"))
+        );
 
         return http.build();
     }

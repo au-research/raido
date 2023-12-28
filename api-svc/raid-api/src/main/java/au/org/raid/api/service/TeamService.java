@@ -1,21 +1,20 @@
 package au.org.raid.api.service;
 
-import au.org.raid.api.dto.TeamDto;
 import au.org.raid.api.dto.TeamUserDto;
-import au.org.raid.api.exception.ValidationException;
-import au.org.raid.api.factory.TeamDtoFactory;
+import au.org.raid.api.factory.TeamFactory;
 import au.org.raid.api.factory.TeamRecordFactory;
 import au.org.raid.api.factory.TeamUserDtoFactory;
 import au.org.raid.api.factory.record.TeamUserRecordFactory;
 import au.org.raid.api.repository.TeamRepository;
 import au.org.raid.api.repository.TeamUserRepository;
+import au.org.raid.idl.raidv2.model.TeamCreateRequest;
+import au.org.raid.idl.raidv2.model.Team;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -23,44 +22,40 @@ import java.util.UUID;
 public class TeamService {
     private final TeamRepository teamRepository;
     private final TeamRecordFactory teamRecordFactory;
-    private final TeamDtoFactory teamDtoFactory;
+    private final TeamFactory teamFactory;
     private final TeamUserRepository teamUserRepository;
     private final TeamUserRecordFactory teamUserRecordFactory;
     private final TeamUserDtoFactory teamUserDtoFactory;
 
-    public TeamDto create(final TeamDto teamDto, final Long servicePointId) {
-        teamDto.setId(UUID.randomUUID().toString());
-        teamDto.setServicePointId(servicePointId);
-        final var record = teamRepository.create(teamRecordFactory.create(teamDto));
-        return teamDtoFactory.create(record);
+    public Team create(final TeamCreateRequest createRequest, final Long servicePointId) {
+        final var record = teamRepository.create(teamRecordFactory.create(createRequest, servicePointId));
+        return teamFactory.create(record);
     }
 
-    public List<TeamDto> findAllByServicePointId(final Long servicePointId) {
+    public List<Team> findAllByServicePointId(final Long servicePointId) {
         return teamRepository.findAllByServicePointId(servicePointId)
                 .stream()
-                .map(teamDtoFactory::create)
+                .map(teamFactory::create)
                 .toList();
     }
 
-    public Optional<TeamDto> findByIdAndServicePointId(final String id, final Long servicePointId) {
+    public Optional<Team> findByIdAndServicePointId(final String id, final Long servicePointId) {
         return teamRepository.findByIdAndServicePointId(id, servicePointId)
-                .map(teamDtoFactory::create)
+                .map(teamFactory::create)
                 .or(Optional::empty);
     }
 
-    public Optional<TeamDto> updateByIdAndServicePointId(
+    public Optional<Team> updateById(
             final String id,
-            final Long servicePointId,
-            final TeamDto teamDto) {
+            final Team teamDto) {
 
-        if ( teamRepository.findByIdAndServicePointId(id, servicePointId).isEmpty()) {
+        if ( teamRepository.findById(id).isEmpty()) {
             return Optional.empty();
         }
 
-        final var record = teamRepository.updateByIdAndServicePointId(id, servicePointId,
-                teamRecordFactory.create(teamDto));
+        final var record = teamRepository.updateById(id, teamRecordFactory.create(teamDto));
 
-        return Optional.of(teamDtoFactory.create(record));
+        return Optional.of(teamFactory.create(record));
     }
 
     public void addUserToTeam(final String teamId, final TeamUserDto user) {
@@ -80,9 +75,9 @@ public class TeamService {
 
     }
 
-    public Optional<TeamDto> findById(final String id) {
+    public Optional<Team> findById(final String id) {
         return teamRepository.findById(id)
-                .map(teamDtoFactory::create)
+                .map(teamFactory::create)
                 .or(Optional::empty)
         ;
     }

@@ -22,7 +22,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useAuthApi } from "Api/AuthApi";
 import { useAuth } from "Auth/AuthProvider";
-import { ListRaidsV1Request, RaidDto } from "Generated/Raidv2";
+import {FindAllRaidsRequest} from "Generated/Raidv2/apis/RaidApi";
 import { RqQuery } from "Util/ReactQueryUtil";
 import {
   Control,
@@ -34,6 +34,7 @@ import {
 import relatedRaidType from "../../../References/related_raid_type.json";
 import relatedRaidTypeSchema from "../../../References/related_raid_type_schema.json";
 import { z } from "zod";
+import {RaidDto} from "../../../Generated/Raidv2";
 
 export const relatedRaidValidationSchema = z.array(
   z.object({
@@ -72,8 +73,8 @@ export default function FormRelatedRaidsComponent({
   } = useAuth();
 
   const servicePointId = user?.servicePointId || 20000000;
-  const listRaids = async ({ servicePointId }: ListRaidsV1Request) => {
-    return await api.raid.listRaidsV1({
+  const listRaids = async ({ servicePointId }: FindAllRaidsRequest) => {
+    return await api.raid.findAllRaids({
       servicePointId,
     });
   };

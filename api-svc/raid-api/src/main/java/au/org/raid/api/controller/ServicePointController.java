@@ -1,34 +1,32 @@
 package au.org.raid.api.controller;
 
-import au.org.raid.api.dto.ServicePointDto;
 import au.org.raid.api.dto.UserDto;
 import au.org.raid.api.service.ServicePointService;
 import au.org.raid.api.service.UserService;
+import au.org.raid.idl.raidv2.api.ServicePointApi;
+import au.org.raid.idl.raidv2.model.ServicePointCreateRequest;
+import au.org.raid.idl.raidv2.model.ServicePoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
 
-@Validated
-@RequestMapping("/service-point")
-@RestController
+@Controller
 @RequiredArgsConstructor
-public class ServicePointController {
-
+public class ServicePointController implements ServicePointApi {
     private final ServicePointService servicePointService;
     private final UserService userService;
 
-    @GetMapping(path = "/")
-    public ResponseEntity<List<ServicePointDto>> findAll() {
+    public ResponseEntity<List<ServicePoint>> findAllServicePoints() {
         return ResponseEntity.ok(servicePointService.findAll());
     }
 
-    @PostMapping
-    public ResponseEntity<ServicePointDto> create(
-            @RequestBody final ServicePointDto servicePoint
+    public ResponseEntity<ServicePoint> createServicePoint(
+            final ServicePointCreateRequest servicePoint
     ) {
 
         final var created = servicePointService.create(servicePoint);
@@ -38,24 +36,18 @@ public class ServicePointController {
                 .body(created);
     }
 
-    @PutMapping(path = "/{id}")
-    public ResponseEntity<ServicePointDto> update(
-            @PathVariable final Long id,
-            @RequestBody final ServicePointDto servicePoint
+    public ResponseEntity<ServicePoint> updateServicePoint(
+            final Long id,
+            final ServicePoint servicePoint
     ) {
         return ResponseEntity.ok(servicePointService.update(servicePoint));
     }
 
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<ServicePointDto> findById(
-            @PathVariable final Long id
-    ) {
+    public ResponseEntity<ServicePoint> findServicePointById(final Long id) {
         return ResponseEntity.of(servicePointService.findById(id));
     }
-    @GetMapping(path = "/{id}/user/")
-    public ResponseEntity<List<UserDto>> findUsersByServicePointId(
-            @PathVariable final Long id
-    ) {
+
+    public ResponseEntity<List<UserDto>> findUsersByServicePointId(final Long id) {
         return ResponseEntity.ok(userService.findAllByServicePointId(id));
     }
 }

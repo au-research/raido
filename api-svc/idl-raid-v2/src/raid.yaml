@@ -1,13 +1,9 @@
 openapi: 3.0.3
 info:
-  title: stable-api-endpoints
+  title: RAiD API
   version: 1.0.0
   description: >
-    The first metadata schema supported by Raido.
-    The stuff in this "raido-metadata" file is "Raido" specific, as compared to
-    the more standard "Raid" stuff defined in the "raid-metadata" file.
-    This is what all raids imported from the legacy application were imported
-    as.
+    Implementation of RAiD Metadata Schema 1.0. See https://metadata.raid.org/en/latest/index.html
 paths:
   /raid:
     post:
@@ -15,7 +11,7 @@ paths:
         - bearerAuth: [ ]
       tags:
         - raid
-      operationId: mint
+      operationId: mintRaid
       summary: mint a raid
       requestBody:
         required: true
@@ -35,13 +31,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationFailureResponse'
+                $ref: 'shared.yaml#/components/schemas/ValidationFailureResponse'
     get:
       security:
         - bearerAuth: [ ]
       tags:
         - raid
-      operationId: findAll
+      operationId: findAllRaids
       summary: list raids
       parameters:
         - name: servicePointId
@@ -77,7 +73,7 @@ paths:
         - bearerAuth: [ ]
       tags:
         - raid
-      operationId: read
+      operationId: findRaidByName
       summary: read a raid, caller must be authorized
       responses:
         200:
@@ -97,7 +93,7 @@ paths:
         - bearerAuth: [ ]
       tags:
         - raid
-      operationId: update
+      operationId: updateRaid
       requestBody:
         required: true
         content:
@@ -116,7 +112,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationFailureResponse'
+                $ref: 'shared.yaml#/components/schemas/ValidationFailureResponse'
 components:
   schemas:
     RaidCreateRequest:
@@ -591,28 +587,3 @@ components:
           $ref: '#/components/schemas/Id'
         access:
           $ref: '#/components/schemas/Access'
-    ValidationFailure:
-      type: object
-      required: [fieldId, errorType, message]
-      properties:
-        fieldId: { type: string }
-        errorType: { type: string }
-        message: { type: string }
-    FailureResponse:
-      type: object
-      required: [type, title, status, detail, instance]
-      properties:
-        type: { type: string }
-        title: { type: string }
-        status: {type: integer }
-        detail: { type: string }
-        instance: { type: string }
-    ValidationFailureResponse:
-      allOf:
-        - $ref: '#/components/schemas/FailureResponse'
-      required: [failures]
-      properties:
-        failures:
-          type: array
-          items:
-            $ref: '#/components/schemas/ValidationFailure'

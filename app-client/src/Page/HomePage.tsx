@@ -23,8 +23,7 @@ import {
   NavTransition,
 } from "Design/NavigationProvider";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
-import { RaidDto } from "Generated/Raidv2";
-import { ListRaidsV1Request } from "Generated/Raidv2/apis/RaidoStableV1Api";
+import {FindAllRaidsRequest, RaidDto} from "Generated/Raidv2";
 import React, { SyntheticEvent } from "react";
 import { RqQuery } from "Util/ReactQueryUtil";
 
@@ -129,11 +128,11 @@ function RaidCurrentUser() {
     session: { payload: user },
   } = useAuth();
   const spQuery = useQuery(
-    ["readServicePoint", user.servicePointId],
-    async () =>
-      await api.admin.readServicePoint({
-        servicePointId: user.servicePointId,
-      })
+      ["readServicePoint", user.servicePointId],
+      async () =>
+          await api.servicePoint.findServicePointById({
+            id: user.servicePointId
+          })
   );
   return (
     <Card
@@ -185,7 +184,7 @@ function RaidCurrentUser() {
   );
 }
 
-export function RaidTableContainerV2({ servicePointId }: ListRaidsV1Request) {
+export function RaidTableContainerV2({ servicePointId }: FindAllRaidsRequest) {
   const [handleCopied, setHandleCopied] = React.useState(
     undefined as undefined | string
   );
@@ -195,8 +194,8 @@ export function RaidTableContainerV2({ servicePointId }: ListRaidsV1Request) {
     session: { payload: user },
   } = useAuth();
 
-  const listRaids = async ({ servicePointId }: ListRaidsV1Request) => {
-    return await api.raid.listRaidsV1({
+  const listRaids = async ({ servicePointId }: FindAllRaidsRequest) => {
+    return await api.raid.findAllRaids({
       servicePointId,
     });
   };
@@ -209,8 +208,8 @@ export function RaidTableContainerV2({ servicePointId }: ListRaidsV1Request) {
   const spQuery = useQuery(
     ["readServicePoint", user.servicePointId],
     async () =>
-      await api.admin.readServicePoint({
-        servicePointId: user.servicePointId,
+      await api.servicePoint.findServicePointById({
+        id: user.servicePointId,
       })
   );
 

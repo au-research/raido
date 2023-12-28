@@ -1,0 +1,125 @@
+openapi: 3.0.3
+info:
+  title: Service Point API
+  version: 1.0.0
+  description: >
+    Endpoints for service point and team management
+paths:
+  /service-point/{servicePointId}/team/:
+    parameters:
+      - name: servicePointId
+        in: path
+        schema:
+          type: integer
+          format: int64
+    post:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - team
+      operationId: createTeam
+      summary: Add a new team to a service point
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+                $ref: '#/components/schemas/TeamCreateRequest'
+      responses:
+        201:
+          description: The service point was successfully created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        400:
+          description: There was a problem with the message sent to the server.
+          content:
+            application/json:
+              schema:
+                $ref: 'shared.yaml#/components/schemas/ValidationFailureResponse'
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - team
+      operationId: findAllTeamsByServicePointId
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
+  /team/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: The id of the tea,
+        schema:
+          type: string
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - team
+      operationId: findTeamById
+      responses:
+        200:
+          description: data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+    put:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - team
+      operationId: updateTeam
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+                $ref: '#/components/schemas/Team'
+      responses:
+        200:
+          description: The service point was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        400:
+          description: Bad request. There was a problem with the message sent to the server.
+          content:
+            application/json:
+              schema:
+                $ref: 'shared.yaml#/components/schemas/ValidationFailureResponse'
+components:
+  schemas:
+    TeamCreateRequest:
+      type: object
+      required:
+        - name
+        - prefix
+      properties:
+        name:
+          type: string
+        prefix:
+          type: string
+        servicePointId:
+          type: integer
+          format: int64
+    Team:
+      allOf:
+         - $ref: '#/components/schemas/TeamCreateRequest'
+      required:
+        - id
+        - servicePointId
+      properties:
+          id:
+            type: string

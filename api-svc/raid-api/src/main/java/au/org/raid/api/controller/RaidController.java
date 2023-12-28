@@ -40,7 +40,7 @@ public class RaidController implements RaidApi {
     private final RaidIngestService raidIngestService;
 
     @Override
-    public ResponseEntity<RaidDto> read(final String prefix, final String suffix) {
+    public ResponseEntity<RaidDto> findRaidByName(final String prefix, final String suffix) {
         var user = getApiToken();
         //return 403 if raid is confidential and doesn't have same service point as user
 
@@ -57,7 +57,7 @@ public class RaidController implements RaidApi {
 
 
     @Override
-    public ResponseEntity<RaidDto> mint(final RaidCreateRequest request) {
+    public ResponseEntity<RaidDto> mintRaid(final RaidCreateRequest request) {
         final var user = getApiToken();
 
         if (!raidService.isEditable(user, user.getServicePointId())) {
@@ -76,7 +76,7 @@ public class RaidController implements RaidApi {
     }
 
     @Override
-    public ResponseEntity<List<RaidDto>> findAll(final Long servicePoint) {
+    public ResponseEntity<List<RaidDto>> findAllRaids(final Long servicePoint) {
         var user = getApiToken();
 
         return ResponseEntity.ok(Optional.ofNullable(servicePoint)
@@ -85,7 +85,7 @@ public class RaidController implements RaidApi {
     }
 
     @Override
-    public ResponseEntity<RaidDto> update(final String prefix, final String suffix, RaidUpdateRequest request) {
+    public ResponseEntity<RaidDto> updateRaid(final String prefix, final String suffix, RaidUpdateRequest request) {
         final var handle = String.join("/", prefix, suffix);
         var user = getApiToken();
         guardOperatorOrAssociated(user, request.getIdentifier().getOwner().getServicePoint());

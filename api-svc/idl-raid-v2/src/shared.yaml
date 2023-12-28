@@ -9,4 +9,44 @@ paths:
   
 components:
   schemas:
-    SurrogateKey: { type: integer, format: int64}
+    SurrogateKey:
+      type: integer
+      format: int64
+    ValidationFailure:
+      type: object
+      required: [ fieldId, errorType, message ]
+      properties:
+        fieldId: { type: string }
+        errorType: { type: string }
+        message: { type: string }
+    FailureResponse:
+      type: object
+      required: [ type, title, status, detail, instance ]
+      properties:
+        type: { type: string }
+        title: { type: string }
+        status: { type: integer }
+        detail: { type: string }
+        instance: { type: string }
+    ValidationFailureResponse:
+      allOf:
+        - $ref: '#/components/schemas/FailureResponse'
+      required: [ failures ]
+      properties:
+        failures:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationFailure'
+    ServicePoint:
+      description: data that any member of service-point and operators can see
+      type: object
+      required: [id, name, identifierOwner, adminEmail, techEmail, enabled]
+      properties:
+        id: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
+        name: {type: string}
+        identifierOwner: { type: string }
+        searchContent: {type: string}
+        techEmail: {type: string}
+        adminEmail: {type: string}
+        enabled: {type: boolean}
+        appWritesEnabled: { type: boolean }

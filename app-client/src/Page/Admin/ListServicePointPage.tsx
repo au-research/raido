@@ -49,7 +49,7 @@ function Content(){
 function ServicePointListTable(){
   const api = useAuthApi();
   const query: RqQuery<ServicePoint[]> = useQuery(
-    ['listServicePoint'], async () => await api.admin.listServicePoint());
+    ['listServicePoint'], async () => await api.servicePoint.findAllServicePoints());
 
   if( query.error ){
     return <CompactErrorPanel error={query.error}/>

@@ -59,7 +59,7 @@ function AppUserListTable({servicePointId}: {
   const apiKeysQuery = useQuery(['listApiKey', servicePointId], 
     async () => await api.admin.listApiKey({servicePointId}) );
   const servicePointQuery = useQuery(['readServicePoint', servicePointId], 
-    async () => await api.admin.readServicePoint({servicePointId}) );
+    async () => await api.servicePoint.findServicePointById({id: servicePointId}) );
 
   if( apiKeysQuery.error ){
     return <CompactErrorPanel error={apiKeysQuery.error}/>

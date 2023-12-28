@@ -58,15 +58,34 @@ paths:
 
   # endregion
 
-  # region Basic Raido raid endpoints
-  /raid:
+  # region raid endpoints
+  /raid/:
     $ref: "raid.yaml#/paths/~1raid"
   /raid/{prefix}/{suffix}:
     $ref: "raid.yaml#/paths/~1raid~1{prefix}~1{suffix}"
 
   # endregion
 
-  # region Admin endpoints
+  # region service point endpoints
+
+  /service-point/:
+    $ref: "service-point.yaml#/paths/~1service-point"
+  /service-point/{id}:
+    $ref: "service-point.yaml#/paths/~1service-point~1{id}"
+
+  # endregion
+
+  # region team endpoints
+
+  /service-point/{servicePointId}/team/:
+    $ref: "team.yaml#/paths/~1service-point~1{servicePointId}~1team~1"
+  /team/{id}:
+    $ref: "team.yaml#/paths/~1team~1{id}"
+
+      # endregion
+
+
+      # region Admin endpoints
             
   # IMPROVE: `/v2/public/` is wrong, this is an authorised endpoint  
   # Should be under /v2/experimental/              

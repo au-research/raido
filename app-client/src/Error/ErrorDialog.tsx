@@ -7,7 +7,6 @@ import { ErrorInfo } from "Error/ErrorUtil";
 import Divider from "@mui/material/Divider";
 import { ErrorInfoComponent } from "Error/ErrorInforComponent";
 import { PrimaryButton } from "Component/AppButton";
-import { ClientPanel } from "Page/Public/AboutAppPage";
 import { ContainerCard } from "Design/ContainerCard";
 import { TextSpan } from "Component/TextSpan";
 import { InfoField, InfoFieldList } from "Component/InfoField";
@@ -166,7 +165,6 @@ function ErrorDialog(props:{
     <SmallScreenMain>
       <SignInDetails/>
       <br/>
-      <VersionDetails/>
     </SmallScreenMain>
 
   </Dialog>
@@ -210,8 +208,4 @@ function SignInDetails(){
   return <ContainerCard title="Signed-in user">
     {details}
   </ContainerCard>;  
-}
-
-function VersionDetails(){
-  return <ClientPanel/>
 }

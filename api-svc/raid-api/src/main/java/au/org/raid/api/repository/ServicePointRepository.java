@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,6 +49,7 @@ public class ServicePointRepository {
     }
 
     public List<ServicePointRecord> findAll() {
-        return dslContext.selectFrom(SERVICE_POINT).fetch();
+        return dslContext.selectFrom(SERVICE_POINT)
+                .fetch();
     }
 }

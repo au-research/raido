@@ -1,9 +1,10 @@
 package au.org.raid.api.controller;
 
-import au.org.raid.api.dto.TeamDto;
 import au.org.raid.api.dto.TeamUserDto;
-import au.org.raid.api.dto.UserDto;
 import au.org.raid.api.service.TeamService;
+import au.org.raid.idl.raidv2.api.TeamApi;
+import au.org.raid.idl.raidv2.model.Team;
+import au.org.raid.idl.raidv2.model.TeamCreateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,42 +15,37 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-public class TeamController {
+public class TeamController implements TeamApi {
     private final TeamService teamService;
 
-    @PostMapping(path = "/service-point/{servicePointId}/team/")
-    public ResponseEntity<TeamDto> create(
+    public ResponseEntity<Team> createTeam(
             @PathVariable final Long servicePointId,
-            @RequestBody final TeamDto teamDto) {
-        final var saved = teamService.create(teamDto, servicePointId);
+            @RequestBody final TeamCreateRequest createRequest) {
+        final var team = teamService.create(createRequest, servicePointId);
 
-        final var uri = "/service-point/%d/team/%s".formatted(servicePointId, teamDto.getId());
+        final var uri = "/service-point/%d/team/%s".formatted(servicePointId, team.getId());
 
-        return ResponseEntity.created(URI.create(uri)).body(saved);
+        return ResponseEntity.created(URI.create(uri)).body(team);
     }
 
-    @GetMapping(path = "/service-point/{servicePointId}/team/")
-    public ResponseEntity<List<TeamDto>> findAllByServicePointId(
+    public ResponseEntity<List<Team>> findAllTeamsByServicePointId(
             @PathVariable final Long servicePointId) {
         final var teams = teamService.findAllByServicePointId(servicePointId);
 
         return ResponseEntity.ok(teams);
     }
 
-    @GetMapping(path = "/team/{id}")
-    public ResponseEntity<TeamDto> findById(
+    public ResponseEntity<Team> findTeamById(
             @PathVariable final String id
     ) {
         return ResponseEntity.of(teamService.findById(id));
     }
 
-    @PutMapping(path = "/team/{id}")
-    public ResponseEntity<TeamDto> updateByIdAndServicePointId(
-            @PathVariable final Long servicePointId,
+    public ResponseEntity<Team> updateTeam(
             @PathVariable final String id,
-            @RequestBody final TeamDto teamDto
+            @RequestBody final Team team
     ) {
-        final var saved = teamService.updateByIdAndServicePointId(id, servicePointId, teamDto);
+        final var saved = teamService.updateById(id, team);
 
         return ResponseEntity.of(saved);
     }
@@ -71,11 +67,11 @@ public class TeamController {
         teamService.deleteUserFromTeam(teamId, user);
         return ResponseEntity.ok(teamService.findAllTeamUsers(teamId));
     }
+
     @GetMapping(path = "/team/{teamId}/user/")
     public ResponseEntity<List<TeamUserDto>> deleteUserFromTeam(
             @PathVariable final String teamId
     ) {
         return ResponseEntity.ok(teamService.findAllTeamUsers(teamId));
     }
-
 }

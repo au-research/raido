@@ -315,26 +315,13 @@ components:
         role: 
           type: string
           description: role is required if status == APPROVED
-    ServicePoint:
-      description: data that any member of service-point and operators can see
-      type: object
-      required: [id, name, identifierOwner, adminEmail, techEmail, enabled]
-      properties:
-        id: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
-        name: {type: string}
-        identifierOwner: { type: string }
-        searchContent: {type: string}
-        techEmail: {type: string}
-        adminEmail: {type: string}
-        enabled: {type: boolean}
-        appWritesEnabled: { type: boolean }
     AppUserExtraV1:
       type: object
       required: [appUser, servicePoint]
       description: bootstrapped users have no authzRequest or approvingUser
       properties:
         appUser: {$ref: '#/components/schemas/AppUser' }
-        servicePoint: {$ref: '#/components/schemas/ServicePoint' }
+        servicePoint: {$ref: 'shared.yaml#/components/schemas/ServicePoint' }
         authzRequest: {$ref: '#/components/schemas/AuthzRequestExtraV1' }
     GenerateApiTokenRequest:
       type: object

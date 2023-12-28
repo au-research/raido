@@ -1,6 +1,5 @@
 package au.org.raid.api.repository;
 
-import au.org.raid.api.dto.TeamUserDto;
 import au.org.raid.db.jooq.tables.records.TeamRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -38,12 +37,11 @@ public class TeamRepository {
                 .fetchOptional();
     }
 
-    public TeamRecord updateByIdAndServicePointId(final String id, final Long servicePointId, final TeamRecord record) {
+    public TeamRecord updateById(final String id, final TeamRecord record) {
         return dslContext.update(TEAM)
                 .set(TEAM.NAME, record.getName())
                 .set(TEAM.PREFIX, record.getPrefix())
                 .where(TEAM.ID.eq(id))
-                .and(TEAM.SERVICE_POINT_ID.eq(servicePointId))
                 .returning()
                 .fetchOne();
     }

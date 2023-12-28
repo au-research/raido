@@ -17,15 +17,8 @@ import { ListApiKeyPage } from "Page/Admin/ListApiKeyPage";
 import { ListAppUserPage } from "Page/Admin/ListAppUserPage";
 import { ListServicePointPage } from "Page/Admin/ListServicePointPage";
 import { ServicePointPage } from "Page/Admin/ServicePointPage";
-import { EditRaidPage } from "Page/EditRaidPage";
 import { HomePage } from "Page/HomePage";
-import { MintRaidPage } from "Page/MintRaidPage";
 import MintRaidPageNew from 'Page/MintRaidPageNew';
-import { AboutAppPage } from "Page/Public/AboutAppPage";
-import {
-  isRaidLandingPagePath,
-  RaidLandingPage
-} from "Page/Public/RaidLandingPage";
 import ShowRaidPage from "Page/ShowRaidPage";
 import { AboutRaidPage, isAboutRaidPagePath } from "Page/Unauth/AboutRaidPage";
 import { isPrivacyPagePath, PrivacyPage } from "Page/Unauth/PrivacyPage";
@@ -81,8 +74,7 @@ export function App(){
             <LocationSearchProvider>
               {/* authentication and authorization */}
               <AuthProvider unauthenticatedPaths={[
-                isPrivacyPagePath, isUsageTermsPagePath, isAboutRaidPagePath,
-                isRaidLandingPagePath,
+                isPrivacyPagePath, isUsageTermsPagePath, isAboutRaidPagePath
               ]}>
                 {/* re-bind a new ErrorDialog context where the auth context is 
                 available. Any errors in components above this will call the 
@@ -105,7 +97,6 @@ export function App(){
                       <Box sx={{pt:7}}></Box>
                       {/* Navigable, authenticated pages, self-routed */}
                       <HomePage/>
-                      <AboutAppPage/>
                       <AdminAuthzRequestPage/>
                       <AuthzRespondPage/>
                       <ListServicePointPage/>
@@ -114,10 +105,8 @@ export function App(){
                       <AppUserPage/>
                       <ListApiKeyPage/>
                       <ApiKeyPage/>
-                      <EditRaidPage/>
                       <EditRaidPageNew />
                       <ShowRaidPage/>
-                      <MintRaidPage/>
                       <MintRaidPageNew/>
   
                     </NavigationProvider>
@@ -129,7 +118,6 @@ export function App(){
               <PrivacyPage/>
               <UsageTermsPage/>
               <AboutRaidPage/>
-              <RaidLandingPage/>
 
             </LocationSearchProvider>
           </LocationPathnameProvider>

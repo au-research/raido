@@ -63,7 +63,7 @@ function Content() {
   const [prefix, suffix] = handle.split("/");
 
   const getRaid = async (): Promise<RaidDto> => {
-    return await api.raid.readRaidV1({ prefix, suffix });
+    return await api.raid.findRaidByName({ prefix, suffix });
   };
 
   const useGetRaid = () => {

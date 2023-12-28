@@ -103,7 +103,7 @@ public class AdminExperimental implements AdminExperimentalApi {
         assert appUser != null;
 //        var servicePoint = readServicePoint(appUser.getServicePointId()).getBody();
 
-        final var servicePointDto = servicePointService.findById(appUser.getServicePointId())
+        final var servicePoint = servicePointService.findById(appUser.getServicePointId())
                 .orElseThrow(() -> new RuntimeException(
                         "Service point not found with id %d".formatted(appUser.getServicePointId())));
 
@@ -112,10 +112,10 @@ public class AdminExperimental implements AdminExperimentalApi {
         // bootstrapped user has no authzRequest, was auto-approved
         return authzRequest.map(authzRequestExtraV1 -> ResponseEntity.ok(new AppUserExtraV1()
                 .appUser(appUser)
-                .servicePoint(servicePointFactory.create(servicePointDto))
+                .servicePoint(servicePoint)
                 .authzRequest(authzRequestExtraV1))).orElseGet(() -> ResponseEntity.ok(new AppUserExtraV1()
                 .appUser(appUser)
-                .servicePoint(servicePointFactory.create(servicePointDto))));
+                .servicePoint(servicePointFactory.create(servicePoint))));
 
     }
 

@@ -74,8 +74,8 @@ function ServicePointContainer({servicePointId, onCreate}: {
     [queryName, servicePointId],
     async () => {
       if( servicePointId ){
-        let servicePoint = await api.admin.readServicePoint({
-          servicePointId: servicePointId
+        let servicePoint = await api.servicePoint.findServicePointById({
+          id: servicePointId
         });
         setFormData(servicePoint);
         return servicePoint;
@@ -87,7 +87,7 @@ function ServicePointContainer({servicePointId, onCreate}: {
   );
   const updateRequest = useMutation(
     async (data: UpdateServicePointRequest) => {
-      const result = await api.admin.updateServicePoint(data);
+      const result = await api.servicePoint.updateServicePoint(data);
       if( !servicePointId ){
         onCreate(result.id);
       }
@@ -118,7 +118,10 @@ function ServicePointContainer({servicePointId, onCreate}: {
   return <ContainerCard title={"Service point"}>
     <form autoComplete="off" onSubmit={(e) => {
       e.preventDefault();
-      updateRequest.mutate({servicePoint: formData});
+      updateRequest.mutate({
+        id: formData.id,
+        servicePoint: formData
+      });
     }}>
     <Stack spacing={2}>
       <FormControl focused autoCorrect="off" autoCapitalize="on">
