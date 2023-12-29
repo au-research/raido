@@ -17,7 +17,7 @@ public class TraditionalKnowledgeLabelIntegrationTest extends AbstractIntegratio
         createRequest.getTraditionalKnowledgeLabel().get(0).schemaUri(null);
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -38,7 +38,7 @@ public class TraditionalKnowledgeLabelIntegrationTest extends AbstractIntegratio
         createRequest.getTraditionalKnowledgeLabel().get(0).schemaUri("");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -59,7 +59,7 @@ public class TraditionalKnowledgeLabelIntegrationTest extends AbstractIntegratio
         createRequest.getTraditionalKnowledgeLabel().get(0).schemaUri("http://localhost/");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -80,7 +80,7 @@ public class TraditionalKnowledgeLabelIntegrationTest extends AbstractIntegratio
         createRequest.getTraditionalKnowledgeLabel().get(0).id("http://localhost/");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -101,7 +101,7 @@ public class TraditionalKnowledgeLabelIntegrationTest extends AbstractIntegratio
         createRequest.traditionalKnowledgeLabel(Collections.emptyList());
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             //pass
         } catch (RaidApiValidationException e) {
             fail("expected no failures");

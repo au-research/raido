@@ -18,7 +18,7 @@ public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Changes are saved to history table")
     void changesSaved() {
-        final var createResponse = raidApi.mint(createRequest);
+        final var createResponse = raidApi.mintRaid(createRequest);
 
         Handle handle = new Handle(Objects.requireNonNull(createResponse.getBody()).getIdentifier().getId());
 
@@ -32,9 +32,9 @@ public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
             primaryTitle.setText(text);
             raid.getIdentifier().setVersion(i);
 
-            raidApi.update(handle.getPrefix(), handle.getSuffix(), raidUpdateRequestFactory.create(raid));
+            raidApi.updateRaid(handle.getPrefix(), handle.getSuffix(), raidUpdateRequestFactory.create(raid));
 
-            final var response = raidApi.read(handle.getPrefix(), handle.getSuffix());
+            final var response = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix());
 
             final var raidDto = response.getBody();
             assert raidDto != null;
@@ -45,9 +45,9 @@ public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
 
         raid.setTraditionalKnowledgeLabel(Collections.emptyList());
         raid.getIdentifier().setVersion(7);
-        raidApi.update(handle.getPrefix(), handle.getSuffix(), raidUpdateRequestFactory.create(raid));
+        raidApi.updateRaid(handle.getPrefix(), handle.getSuffix(), raidUpdateRequestFactory.create(raid));
 
-        final var response = raidApi.read(handle.getPrefix(), handle.getSuffix());
+        final var response = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix());
         final var raidDto = response.getBody();
         assert raidDto != null;
 

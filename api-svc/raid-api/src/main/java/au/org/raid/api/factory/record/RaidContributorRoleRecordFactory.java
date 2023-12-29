@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class RaidContributorRoleRecordFactory {
     public RaidContributorRoleRecord create(final int raidContributorId, final int contributorRoleId) {
         return new RaidContributorRoleRecord()

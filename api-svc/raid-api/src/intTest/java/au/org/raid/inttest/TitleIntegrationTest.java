@@ -24,7 +24,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
         createRequest.getTitle().get(0).getLanguage().schemaUri(null);
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing title");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -45,7 +45,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
         createRequest.getTitle().get(0).getLanguage().schemaUri("");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing title");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -66,7 +66,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
         createRequest.getTitle().get(0).getLanguage().setId("");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing title");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -87,7 +87,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
         createRequest.getTitle().get(0).getLanguage().setId(null);
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing title");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -108,7 +108,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
         createRequest.getTitle().get(0).getLanguage().setId("xxx");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing title");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -129,7 +129,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
         createRequest.getTitle().get(0).getLanguage().schemaUri("http://localhost");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing title");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -150,7 +150,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
         createRequest.setTitle(null);
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing title");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -171,7 +171,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
         createRequest.setTitle(Collections.emptyList());
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing title");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -194,7 +194,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
                 .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI));
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing primary title");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -218,7 +218,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
         );
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing schemaUri");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -242,7 +242,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
                 .schemaUri("https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v2"));
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with invalid schemaUri");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -274,7 +274,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
         createRequest.setTitle(titles);
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing title type");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -307,7 +307,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
         createRequest.setTitle(titles);
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing invalid title type id");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -329,7 +329,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
         createRequest.getTitle().get(0).setStartDate(null);
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing startDate");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();

@@ -14,25 +14,26 @@ import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
 import au.org.raid.idl.raidv2.model.Title;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jooq.JSONB;
 import org.springframework.stereotype.Component;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 
-//TODO: write a test for this
 @Component
+@RequiredArgsConstructor
 public class RaidRecordFactory {
     private static final String ACCESS_TYPE_OPEN =
             "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json";
 
     private static final String PRIMARY_TITLE_TYPE =
             "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
-    private final ObjectMapper objectMapper;
 
-    public RaidRecordFactory(final ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
+    private final Clock clock;
+    private final ObjectMapper objectMapper;
+    private final HandleFactory handleFactory;
 
     @SneakyThrows
     public RaidRecord create(final RaidDto raid,
@@ -42,13 +43,7 @@ public class RaidRecordFactory {
                              final Integer ownerOrganisationId
                              ) {
 
-
-        final var handle = new Handle(raid.getIdentifier().getId());
-
-        final var primaryTitle = raid.getTitle().stream()
-                .filter(title -> title.getType().getId().equals(PRIMARY_TITLE_TYPE))
-                .findFirst()
-                .orElseThrow(() -> new InvalidTitleException(null));
+        final var handle = handleFactory.create(raid.getIdentifier().getId());
 
         String accessStatement = null;
         if (raid.getAccess().getStatement() != null) {
@@ -58,13 +53,8 @@ public class RaidRecordFactory {
         return new RaidRecord()
                 .setHandle(handle.toString())
                 .setServicePointId(raid.getIdentifier().getOwner().getServicePoint())
-                .setUrl(raid.getIdentifier().getGlobalUrl())
-                .setPrimaryTitle(primaryTitle.getText())
-                .setConfidential(!raid.getAccess().getType().getId().equals(ACCESS_TYPE_OPEN))
                 .setMetadataSchema(Metaschema.raido_metadata_schema_v2)
-                .setMetadata(JSONB.valueOf(objectMapper.writeValueAsString(raid)))
-                .setStartDate(DateUtil.parseDate(raid.getDate().getStartDate()))
-                .setDateCreated(LocalDateTime.now())
+                .setDateCreated(LocalDateTime.now(clock))
                 .setVersion(raid.getIdentifier().getVersion())
                 .setStartDateString(raid.getDate().getStartDate())
                 .setEndDate(raid.getDate().getEndDate())
@@ -76,87 +66,5 @@ public class RaidRecordFactory {
                 .setSchemaUri(raid.getIdentifier().getSchemaUri())
                 .setRegistrationAgencyOrganisationId(registrationAgencyOrganisationId)
                 .setOwnerOrganisationId(ownerOrganisationId);
-    }
-
-    @SneakyThrows
-    public RaidRecord create(final RaidDto raid) {
-        final var handle = new Handle(raid.getIdentifier().getGlobalUrl());
-
-        final var primaryTitle = raid.getTitle().stream()
-                .filter(title -> title.getType().getId().equals(PRIMARY_TITLE_TYPE))
-                .findFirst()
-                .orElseThrow(() -> new InvalidTitleException(null));
-
-        return new RaidRecord()
-                .setVersion(raid.getIdentifier().getVersion())
-                .setHandle(handle.toString())
-                .setPrimaryTitle(primaryTitle.getText())
-                .setServicePointId(raid.getIdentifier().getOwner().getServicePoint())
-                .setUrl(raid.getIdentifier().getGlobalUrl())
-                .setMetadata(JSONB.valueOf(objectMapper.writeValueAsString(raid)))
-                .setMetadataSchema(Metaschema.raido_metadata_schema_v2)
-                .setStartDate(DateUtil.parseDate(raid.getDate().getStartDate()))
-                .setDateCreated(LocalDateTime.now())
-                .setConfidential(!raid.getAccess().getType().getId().equals(ACCESS_TYPE_OPEN));
-    }
-
-    public RaidRecord create(
-            final RaidCreateRequest raid,
-            final ApidsMintResponse apidsMintResponse,
-            final ServicePointRecord servicePointRecord) {
-
-        final var primaryTitle = raid.getTitle().stream()
-                .filter(title -> title.getType().getId().equals(PRIMARY_TITLE_TYPE))
-                .findFirst()
-                .map(Title::getText)
-                .orElse("");
-
-        final String raidJson;
-        try {
-            raidJson = objectMapper.writeValueAsString(raid);
-        } catch (JsonProcessingException e) {
-            throw new InvalidJsonException();
-        }
-
-        return new RaidRecord()
-                .setVersion(raid.getIdentifier().getVersion())
-                .setPrimaryTitle(primaryTitle)
-                .setHandle(apidsMintResponse.identifier.handle)
-                .setServicePointId(servicePointRecord.getId())
-                .setUrl(apidsMintResponse.identifier.property.value)
-                .setMetadata(JSONB.valueOf(raidJson))
-                .setMetadataSchema(Metaschema.raido_metadata_schema_v2)
-                .setStartDate(DateUtil.parseDate(raid.getDate().getStartDate()))
-                .setDateCreated(LocalDateTime.now())
-                .setConfidential(!raid.getAccess().getType().getId().equals(ACCESS_TYPE_OPEN));
-    }
-
-    public RaidRecord merge(final RaidUpdateRequest raid, final RaidRecord existing) {
-
-        final var primaryTitle = raid.getTitle().stream()
-                .filter(title -> title.getType().getId().equals(PRIMARY_TITLE_TYPE))
-                .findFirst()
-                .orElseThrow(() -> new InvalidTitleException("One title with a titleType of 'Primary' should be specified."))
-                .getText();
-
-//        final var newVersion = raid.getIdentifier().getVersion() + 1;
-//        raid.getIdentifier().version(newVersion);
-
-        final String raidJson;
-        try {
-            raidJson = objectMapper.writeValueAsString(raid);
-        } catch (JsonProcessingException e) {
-            throw new InvalidJsonException();
-        }
-
-        return new RaidRecord()
-                .setVersion(existing.getVersion())
-                .setHandle(existing.getHandle())
-                .setServicePointId(existing.getServicePointId())
-                .setUrl(existing.getUrl())
-                .setMetadata(JSONB.valueOf(raidJson))
-                .setMetadataSchema(Metaschema.raido_metadata_schema_v2)
-                .setStartDate(DateUtil.parseDate(raid.getDate().getStartDate()))
-                .setConfidential(!raid.getAccess().getType().getId().equals(ACCESS_TYPE_OPEN));
     }
 }

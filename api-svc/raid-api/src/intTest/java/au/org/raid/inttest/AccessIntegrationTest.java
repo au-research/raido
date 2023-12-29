@@ -21,7 +21,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
         createRequest.getAccess().getStatement().getLanguage().setId("xxx");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
@@ -42,7 +42,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
         createRequest.getAccess().getStatement().getLanguage().schemaUri("http://localhost");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
@@ -63,7 +63,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
         createRequest.getAccess().getStatement().getLanguage().schemaUri(null);
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
@@ -84,7 +84,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
         createRequest.getAccess().getStatement().getLanguage().schemaUri("");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
@@ -105,7 +105,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
         createRequest.getAccess().getStatement().getLanguage().setId("");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
@@ -126,7 +126,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
         createRequest.getAccess().getStatement().getLanguage().setId(null);
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
@@ -151,7 +151,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
                 );
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
         } catch (Exception e) {
             fail("Mint should be successful");
         }
@@ -169,7 +169,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
                 .embargoExpiry(LocalDate.now())
                 .statement(new AccessStatement().text("Embargoed"));
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
         } catch (Exception e) {
             fail("Mint should be successful");
         }
@@ -185,7 +185,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
                 )
                 .statement(new AccessStatement().text("Embargoed"));
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
@@ -211,7 +211,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
                 .statement(new AccessStatement().text("Closed"));
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
@@ -235,7 +235,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
                 );
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
@@ -259,7 +259,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
                         .schemaUri("")
                 );
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
@@ -282,7 +282,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
                         .schemaUri(ACCESS_TYPE_SCHEMA_URI)
                 );
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);
@@ -306,7 +306,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
                         .schemaUri(ACCESS_TYPE_SCHEMA_URI)
                 );
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
             assertThat(failures).hasSize(1);

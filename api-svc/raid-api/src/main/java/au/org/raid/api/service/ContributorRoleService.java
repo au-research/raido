@@ -2,7 +2,9 @@ package au.org.raid.api.service;
 
 import au.org.raid.api.factory.ContributorPositionFactory;
 import au.org.raid.api.factory.ContributorRoleFactory;
+import au.org.raid.api.factory.record.RaidContributorRoleRecordFactory;
 import au.org.raid.api.repository.*;
+import au.org.raid.db.jooq.tables.records.RaidContributorRoleRecord;
 import au.org.raid.idl.raidv2.model.ContributorPosition;
 import au.org.raid.idl.raidv2.model.ContributorRole;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ContributorRoleService {
     private final RaidContributorRoleRepository raidContributorRoleRepository;
+    private final RaidContributorRoleRecordFactory raidContributorRoleRecordFactory;
     private final ContributorRoleFactory contributorRoleFactory;
     private final ContributorRoleRepository contributorRoleRepository;
     private final ContributorRoleSchemaRepository contributorRoleSchemaRepository;
@@ -46,5 +49,22 @@ public class ContributorRoleService {
             );
         }
         return contributorRoles;
+    }
+
+    public void create(final List<ContributorRole> roles, final int raidContributorId) {
+        for (final var contributorRole : roles) {
+            final var roleSchema = contributorRoleSchemaRepository.findByUri(contributorRole.getSchemaUri())
+                    .orElseThrow(() ->
+                            new RuntimeException("Role schema not found %s".formatted(contributorRole.getSchemaUri())));
+
+            final var role = contributorRoleRepository.findByUriAndSchemaId(contributorRole.getId(), roleSchema.getId())
+                    .orElseThrow(() ->
+                            new RuntimeException("Role not found %s with schema %s".formatted(contributorRole.getId(), contributorRole.getSchemaUri())));
+
+            final var raidContributorRoleRecord = raidContributorRoleRecordFactory.create(
+                    raidContributorId, role.getId());
+
+            raidContributorRoleRepository.create(raidContributorRoleRecord);
+        }
     }
 }

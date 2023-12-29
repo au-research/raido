@@ -4,7 +4,7 @@ import au.org.raid.api.controller.RaidController;
 import au.org.raid.api.exception.CrossAccountAccessException;
 import au.org.raid.api.exception.ResourceNotFoundException;
 import au.org.raid.api.service.RaidIngestService;
-import au.org.raid.api.service.raid.RaidStableV1Service;
+import au.org.raid.api.service.raid.RaidService;
 import au.org.raid.api.service.raid.id.IdentifierHandle;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.spring.security.raidv2.ApiToken;
@@ -68,7 +68,7 @@ class RaidControllerTest {
     final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule()).setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
     private MockMvc mockMvc;
     @Mock
-    private RaidStableV1Service raidService;
+    private RaidService raidService;
     @Mock
     private ValidationService validationService;
     @Mock
@@ -99,7 +99,7 @@ class RaidControllerTest {
             doThrow(DataAccessException.class)
                     .when(raidService).mintRaidSchemaV1(any(RaidCreateRequest.class), eq(servicePointId));
 
-            mockMvc.perform(post("/raid")
+            mockMvc.perform(post("/raid/")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(raid))
                             .characterEncoding("utf-8"))
@@ -132,7 +132,7 @@ class RaidControllerTest {
 
             when(raidService.isEditable(user, servicePointId)).thenReturn(false);
 
-            mockMvc.perform(post("/raid")
+            mockMvc.perform(post("/raid/")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(raidForPost))
                             .characterEncoding("utf-8"))
@@ -171,7 +171,7 @@ class RaidControllerTest {
             when(validationService.validateForCreate(any(RaidCreateRequest.class)))
                     .thenReturn(List.of(validationFailure));
 
-            final MvcResult mvcResult = mockMvc.perform(post("/raid")
+            final MvcResult mvcResult = mockMvc.perform(post("/raid/")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(raid))
                             .characterEncoding("utf-8"))
@@ -226,7 +226,7 @@ class RaidControllerTest {
 
             when(raidService.mintRaidSchemaV1(any(RaidCreateRequest.class), eq(servicePointId))).thenReturn(raidForGet);
 
-            mockMvc.perform(post("/raid")
+            mockMvc.perform(post("/raid/")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(raidForPost))
                             .characterEncoding("utf-8"))
@@ -239,7 +239,6 @@ class RaidControllerTest {
                     .andExpect(jsonPath("$.identifier.owner.id", Matchers.is("https://ror.org/02stey378")))
                     .andExpect(jsonPath("$.identifier.owner.schemaUri", Matchers.is("https://ror.org/")))
                     .andExpect(jsonPath("$.identifier.owner.servicePoint", Matchers.is(20000001)))
-                    .andExpect(jsonPath("$.identifier.globalUrl", Matchers.is("https://hdl.handle.net/" + handle.format())))
                     .andExpect(jsonPath("$.identifier.raidAgencyUrl", Matchers.is(id.formatUrl())))
                     .andExpect(jsonPath("$.title[0].text", Matchers.is(title)))
                     .andExpect(jsonPath("$.title[0].type.id", Matchers.is("https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json")))
@@ -627,7 +626,7 @@ class RaidControllerTest {
 
             when(raidIngestService.findAllByServicePointId(servicePointId)).thenReturn(Collections.singletonList(output));
 
-            mockMvc.perform(get("/raid", handle)
+            mockMvc.perform(get("/raid/", handle)
                             .queryParam("servicePointId", servicePointId.toString())
                             .characterEncoding("utf-8"))
                     .andDo(print())

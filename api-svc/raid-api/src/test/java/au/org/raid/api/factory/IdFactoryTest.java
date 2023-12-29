@@ -18,13 +18,10 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class IdFactoryTest {
-    private static final String IDENTIFIER = "_identifier";
     private static final String SCHEMA_URI = "__schema-uri__";
     private static final String IDENTIFIER_REGISTRATION_AGENCY = "identifier-registration-agency";
     private static final String IDENTIFIER_OWNER = "identifier-owner";
     private static final Long IDENTIFIER_SERVICE_POINT = 999L;
-    private static final String GLOBAL_URL = "global-url";
-    private static final String RAID_AGENCY_URL = "raid-agency-url";
     private static final String LICENSE = "raid-license";
     private static final String GLOBAL_URL_PREFIX = "__global-url-prefix__";
     private static final String HANDLE_URL_PREFIX = "__handle-url-prefix__";
@@ -39,7 +36,6 @@ class IdFactoryTest {
     @Test
     @DisplayName("Sets all fields when creating from IdentifierUrl and ServicePointRecord")
     void createFromIdentifierUrlAndServicePointRecord() {
-        final var urlPrefix = "url-prefix";
         final var prefix = "_prefix_";
         final var suffix = "_suffix_:";
         final var handle = "%s/%s".formatted(prefix, suffix);
@@ -50,7 +46,6 @@ class IdFactoryTest {
 
         when(identifierProperties.getRegistrationAgencyIdentifier()).thenReturn(IDENTIFIER_REGISTRATION_AGENCY);
         when(identifierProperties.getLicense()).thenReturn(LICENSE);
-        when(identifierProperties.getGlobalUrlPrefix()).thenReturn(GLOBAL_URL_PREFIX);
         when(identifierProperties.getHandleUrlPrefix()).thenReturn(HANDLE_URL_PREFIX);
         when(identifierProperties.getNamePrefix()).thenReturn(NAME_PREFIX);
         when(identifierProperties.getSchemaUri()).thenReturn(SCHEMA_URI);
@@ -67,7 +62,6 @@ class IdFactoryTest {
                         .id(IDENTIFIER_OWNER)
                         .schemaUri(rorSchemaUri)
                         .servicePoint(IDENTIFIER_SERVICE_POINT))
-                .globalUrl("%s%s/%s".formatted(GLOBAL_URL_PREFIX, prefix, suffix))
                 .raidAgencyUrl("%s%s/%s".formatted(HANDLE_URL_PREFIX, prefix, suffix))
                 .license(LICENSE)
                 .version(1)));

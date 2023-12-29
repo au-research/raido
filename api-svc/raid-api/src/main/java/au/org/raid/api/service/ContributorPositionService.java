@@ -1,6 +1,7 @@
 package au.org.raid.api.service;
 
 import au.org.raid.api.factory.ContributorPositionFactory;
+import au.org.raid.api.factory.record.RaidContributorPositionRecordFactory;
 import au.org.raid.api.repository.ContributorPositionRepository;
 import au.org.raid.api.repository.ContributorPositionSchemaRepository;
 import au.org.raid.api.repository.RaidContributorPositionRepository;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ContributorPositionService {
     private final RaidContributorPositionRepository raidContributorPositionRepository;
+    private final RaidContributorPositionRecordFactory raidContributorPositionRecordFactory;
     private final ContributorPositionFactory contributorPositionFactory;
     private final ContributorPositionRepository contributorPositionRepository;
     private final ContributorPositionSchemaRepository contributorPositionSchemaRepository;
@@ -48,5 +50,22 @@ public class ContributorPositionService {
             );
         }
         return contributorPositions;
+    }
+
+    public void create(final List<ContributorPosition> positions, final int raidContributorId) {
+        for (final var position : positions) {
+            final var positionSchema = contributorPositionSchemaRepository.findByUri(position.getSchemaUri())
+                    .orElseThrow(() ->
+                            new RuntimeException("Position schema not found %s".formatted(position.getSchemaUri())));
+
+            final var contributorPosition = contributorPositionRepository.findByUriAndSchemaId(position.getId(), positionSchema.getId())
+                    .orElseThrow(() ->
+                            new RuntimeException("Position not found %s with schema %s".formatted(position.getId(), position.getSchemaUri())));
+
+            final var raidContributorPositionRecord = raidContributorPositionRecordFactory.create(
+                    position, raidContributorId, contributorPosition.getId());
+
+            raidContributorPositionRepository.create(raidContributorPositionRecord);
+        }
     }
 }

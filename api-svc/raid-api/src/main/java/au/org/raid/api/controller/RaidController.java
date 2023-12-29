@@ -4,7 +4,7 @@ import au.org.raid.api.exception.ClosedRaidException;
 import au.org.raid.api.exception.InvalidAccessException;
 import au.org.raid.api.exception.ValidationException;
 import au.org.raid.api.service.RaidIngestService;
-import au.org.raid.api.service.raid.RaidStableV1Service;
+import au.org.raid.api.service.raid.RaidService;
 import au.org.raid.api.util.SchemaValues;
 import au.org.raid.api.validator.ValidationService;
 import au.org.raid.idl.raidv2.api.RaidApi;
@@ -36,7 +36,7 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 @RequiredArgsConstructor
 public class RaidController implements RaidApi {
     private final ValidationService validationService;
-    private final RaidStableV1Service raidService;
+    private final RaidService raidService;
     private final RaidIngestService raidIngestService;
 
     @Override

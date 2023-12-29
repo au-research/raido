@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 public class RaidSubjectKeywordRecordFactory {
     public RaidSubjectKeywordRecord create(final int raidSubjectId, final String keyword, final Integer languageId) {
         return new RaidSubjectKeywordRecord()
-                .setKeyword(keyword)
                 .setRaidSubjectId(raidSubjectId)
+                .setKeyword(keyword)
                 .setLanguageId(languageId);
     }
 }

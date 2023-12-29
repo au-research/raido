@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
 public class ContributorFactory {
     public Contributor create(final String id, final String schemaUri, final Boolean leader, final Boolean contact, final List<ContributorPosition> positions, final List<ContributorRole> roles) {
         return new Contributor()

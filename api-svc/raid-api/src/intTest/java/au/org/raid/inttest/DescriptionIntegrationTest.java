@@ -22,7 +22,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
         createRequest.getDescription().get(0).getLanguage().schemaUri(null);
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing description");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -43,7 +43,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
         createRequest.getDescription().get(0).getLanguage().schemaUri("");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing description");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -64,7 +64,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
         createRequest.getDescription().get(0).getLanguage().setId("");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing description");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -85,7 +85,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
         createRequest.getDescription().get(0).getLanguage().setId(null);
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing description");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -106,7 +106,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
         createRequest.getDescription().get(0).getLanguage().setId("xxx");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing description");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -127,7 +127,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
         createRequest.getDescription().get(0).getLanguage().schemaUri("http://localhost");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing description");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -149,7 +149,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
         createRequest.setDescription(Collections.emptyList());
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
         } catch (Exception e) {
             fail("Description should be optional");
         }
@@ -161,7 +161,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
         createRequest.getDescription().get(0).getType().schemaUri(null);
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing schemaUri");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -184,7 +184,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
                 .schemaUri("https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v2");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with invalid schemaUri");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -205,7 +205,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
         createRequest.getDescription().get(0).getType().schemaUri("");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with blank schemaUri");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -227,7 +227,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
         createRequest.getDescription().get(0).text(null);
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing description");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -248,7 +248,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
         createRequest.getDescription().get(0).text("");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with blank description");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -270,7 +270,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
                 .text("New description"));
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing type");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -294,7 +294,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
         );
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing type id");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -320,7 +320,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
         );
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing description type id");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -348,7 +348,7 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
                 );
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown when id not found in schema");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();

@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 public class RaidSpatialCoverageRecordFactory {
     public RaidSpatialCoverageRecord create(final String uri, final String handle, final Integer schemaId) {
         return new RaidSpatialCoverageRecord()
+                .setUri(uri)
                 .setHandle(handle)
-                .setSchemaId(schemaId)
-                .setUri(uri);
+                .setSchemaId(schemaId);
     }
 }

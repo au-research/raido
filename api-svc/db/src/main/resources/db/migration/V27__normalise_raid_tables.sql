@@ -363,7 +363,11 @@ alter table api_svc.raid
     add column schema_uri varchar,
     add column registration_agency_organisation_id int references api_svc.organisation (id),
     add column owner_organisation_id int references api_svc.organisation (id),
+    alter column url drop not null,
     alter column url_index drop not null,
+    alter column confidential drop not null,
+    alter column start_date drop not null,
+    alter column metadata drop not null,
     alter column primary_title drop not null;
 
 -- /RAID

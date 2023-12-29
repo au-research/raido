@@ -25,7 +25,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         createRequest.setContributor(null);
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with no contributors");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -47,7 +47,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         createRequest.setContributor(Collections.emptyList());
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with empty contributor");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -83,7 +83,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         ));
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing schemaUri");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -120,7 +120,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         ));
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with empty schemaUri");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -156,7 +156,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         ));
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing contributor id");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -193,7 +193,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         ));
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with empty contributor id");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -224,7 +224,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         ));
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with null position");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -256,7 +256,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         ));
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with empty position");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -292,7 +292,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
         ));
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing leader position");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -332,7 +332,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             ));
 
             try {
-                raidApi.mint(createRequest);
+                raidApi.mintRaid(createRequest);
                 fail("No exception thrown with invalid orcid pattern");
             } catch (RaidApiValidationException e) {
                 assertThat(e.getFailures()).isEqualTo(List.of(
@@ -367,7 +367,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             ));
 
             try {
-                raidApi.mint(createRequest);
+                raidApi.mintRaid(createRequest);
                 fail("No exception thrown with invalid orcid checksum");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
@@ -404,7 +404,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             ));
 
             try {
-                raidApi.mint(createRequest);
+                raidApi.mintRaid(createRequest);
                 fail("No exception thrown with non-existent orcid");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
@@ -443,7 +443,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             ));
 
             try {
-                raidApi.mint(createRequest);
+                raidApi.mintRaid(createRequest);
                 fail("No exception thrown with missing contributor schemaUri");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
@@ -483,7 +483,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             ));
 
             try {
-                raidApi.mint(createRequest);
+                raidApi.mintRaid(createRequest);
                 fail("No exception thrown with missing contributor schemaUri");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
@@ -524,7 +524,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             ));
 
             try {
-                raidApi.mint(createRequest);
+                raidApi.mintRaid(createRequest);
                 fail("No exception thrown with missing contributor schemaUri");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
@@ -565,7 +565,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             ));
 
             try {
-                raidApi.mint(createRequest);
+                raidApi.mintRaid(createRequest);
                 fail("No exception thrown with missing contributor schemaUri");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
@@ -606,7 +606,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             ));
 
             try {
-                raidApi.mint(createRequest);
+                raidApi.mintRaid(createRequest);
                 fail("No exception thrown with missing contributor schemaUri");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
@@ -658,7 +658,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             ));
 
             try {
-                raidApi.mint(createRequest);
+                raidApi.mintRaid(createRequest);
                 fail("No exception thrown with missing contributor schemaUri");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
@@ -699,7 +699,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             ));
 
             try {
-                raidApi.mint(createRequest);
+                raidApi.mintRaid(createRequest);
                 fail("No exception thrown with missing role schemaUri");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
@@ -739,7 +739,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             ));
 
             try {
-                raidApi.mint(createRequest);
+                raidApi.mintRaid(createRequest);
                 fail("No exception thrown with missing role type");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
@@ -780,7 +780,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             ));
 
             try {
-                raidApi.mint(createRequest);
+                raidApi.mintRaid(createRequest);
                 fail("No exception thrown with invalid role schemaUri");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
@@ -821,7 +821,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
             ));
 
             try {
-                raidApi.mint(createRequest);
+                raidApi.mintRaid(createRequest);
                 fail("No exception thrown with invalid type for role schema");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();

@@ -13,7 +13,6 @@ public class UserDtoFactory {
 
         return UserDto.builder()
                 .id(record.getId())
-                .created(record.getDateCreated().toLocalDate())
                 .role(record.getRole().getLiteral())
                 .clientId(record.getClientId())
                 .email(record.getEmail())

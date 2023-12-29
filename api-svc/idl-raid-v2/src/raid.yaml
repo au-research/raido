@@ -227,12 +227,6 @@ components:
           $ref: '#/components/schemas/RegistrationAgency'
         owner:
           $ref: '#/components/schemas/Owner'
-        globalUrl:
-          type: string
-          description: >
-            The URL for the raid via the CNRI handle system, e.g 
-            https://hdl.handle.net/xxx.yyy/zzz
-          example: https://hdl.handle.net/xxx.yyy/zzz
         raidAgencyUrl:
           type: string
           description: >

@@ -17,7 +17,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
         createRequest.getSpatialCoverage().get(0).setId("http://localhost");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -39,7 +39,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
         createRequest.getSpatialCoverage().get(0).setSchemaUri("https://www.openstreetmap.org/");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -60,7 +60,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
         createRequest.getSpatialCoverage().get(0).setId(NONEXISTENT_TEST_GEONAMES_URI);
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -81,7 +81,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
         createRequest.getSpatialCoverage().get(0).setId(SERVER_ERROR_TEST_GEONAMES_URI);
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -102,7 +102,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
         createRequest.getSpatialCoverage().get(0).getPlace().get(0).getLanguage().schemaUri(null);
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -123,7 +123,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
         createRequest.getSpatialCoverage().get(0).getPlace().get(0).getLanguage().schemaUri("");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -144,7 +144,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
         createRequest.getSpatialCoverage().get(0).getPlace().get(0).getLanguage().setId(null);
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -165,7 +165,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
         createRequest.getSpatialCoverage().get(0).getPlace().get(0).getLanguage().setId("");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -186,7 +186,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
         createRequest.getSpatialCoverage().get(0).getPlace().get(0).getLanguage().setId("xxx");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -208,7 +208,7 @@ public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
         createRequest.getSpatialCoverage().get(0).getPlace().get(0).getLanguage().schemaUri("xxx");
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();

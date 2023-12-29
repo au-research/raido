@@ -25,11 +25,10 @@ import org.springframework.stereotype.Component;
 import static au.org.raid.api.util.ExceptionUtil.runtimeException;
 import static au.org.raid.api.util.Log.to;
 
-/* Be careful with usage of @Transactional, see db-transaction-guideline.md */
 @Component
 @RequiredArgsConstructor
-public class RaidStableV1Service {
-    private static final Log log = to(RaidStableV1Service.class);
+public class RaidService {
+    private static final Log log = to(RaidService.class);
     private final ApidsService apidsSvc;
     private final MetadataService metaSvc;
     private final ServicePointRepository servicePointRepository;

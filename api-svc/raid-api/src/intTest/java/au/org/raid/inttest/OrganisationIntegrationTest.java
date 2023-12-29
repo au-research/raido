@@ -24,7 +24,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         createRequest.setOrganisation(null);
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
         } catch (RaidApiValidationException e) {
             fail("No validation failures expected");
         } catch (Exception e) {
@@ -38,7 +38,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         createRequest.setOrganisation(Collections.emptyList());
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
         } catch (RaidApiValidationException e) {
             fail("No validation failures expected");
         } catch (Exception e) {
@@ -61,7 +61,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         ));
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing schemaUri");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -93,7 +93,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         ));
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with empty schemaUri");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -124,7 +124,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         ));
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with missing organisation id");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -156,7 +156,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
         ));
 
         try {
-            raidApi.mint(createRequest);
+            raidApi.mintRaid(createRequest);
             fail("No exception thrown with empty organisation id");
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
@@ -191,7 +191,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
             ));
 
             try {
-                raidApi.mint(createRequest);
+                raidApi.mintRaid(createRequest);
                 fail("No exception thrown with invalid ror pattern");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
@@ -223,7 +223,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
             ));
 
             try {
-                raidApi.mint(createRequest);
+                raidApi.mintRaid(createRequest);
                 fail("No exception thrown with non-existent ror");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
@@ -258,7 +258,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
             ));
 
             try {
-                raidApi.mint(createRequest);
+                raidApi.mintRaid(createRequest);
                 fail("No exception thrown with missing role schemaUri");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
@@ -289,7 +289,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
             ));
 
             try {
-                raidApi.mint(createRequest);
+                raidApi.mintRaid(createRequest);
                 fail("No exception thrown with missing role type");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
@@ -321,7 +321,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
             ));
 
             try {
-                raidApi.mint(createRequest);
+                raidApi.mintRaid(createRequest);
                 fail("No exception thrown with empty role type");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
@@ -353,7 +353,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
             ));
 
             try {
-                raidApi.mint(createRequest);
+                raidApi.mintRaid(createRequest);
                 fail("No exception thrown with invalid role schemaUri");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();
@@ -385,7 +385,7 @@ public class OrganisationIntegrationTest extends AbstractIntegrationTest {
             ));
 
             try {
-                raidApi.mint(createRequest);
+                raidApi.mintRaid(createRequest);
                 fail("No exception thrown with invalid type for role schema");
             } catch (RaidApiValidationException e) {
                 final var failures = e.getFailures();

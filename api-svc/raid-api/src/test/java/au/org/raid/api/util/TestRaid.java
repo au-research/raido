@@ -1,0 +1,192 @@
+package au.org.raid.api.util;
+
+import au.org.raid.idl.raidv2.model.*;
+
+import java.time.LocalDate;
+import java.util.List;
+
+public class TestRaid {
+    public static final String HANDLE = "10.25.1.1/abcde";
+    public static final String RAID_NAME = "https://raid.org/" + HANDLE;
+    public static final String RAID_SCHEMA_URI = "https://raid.org/";
+    public static final String RAID_AGENCY_URL = "https://static.raid.org.au/10.25.1.1/abcde";
+    public static final int VERSION = 3;
+    public static final String OWNER_ID = "https://ror.org/038sjwq14";
+    public static final String ROR_SCHEMA_URI = "https://ror.org/";
+    public static final long SERVICE_POINT_ID = 20_000_000;
+    public static final String REGISTRATION_AGENCY_ID = "https://ror.org/038sjwq14";
+    public static final String LICENSE = "Creative Commons CC-0";
+    public static final String START_DATE = "2021";
+    public static final String END_DATE = "2022";
+    public static final String TITLE_TEXT = "Raid Title Text";
+    public static final String TITLE_START_DATE = "2021-01";
+    public static final String TITLE_END_DATE = "2021-06";
+    public static final String DESCRIPTION_TEXT = "Raid Title Text";
+    public static final String LANGUAGE_CODE = "eng";
+    public static final String LANGUAGE_SCHEMA_URI = "https://www.iso.org/standard/39534.html";
+    public static final String CONTRIBUTOR_ID = "https://orcid.org/0009-0006-4129-5257";
+    public static final String ORCID_SCHEMA_URI = "https://orcid.org/";
+    public static final boolean IS_LEADER = true;
+    public static final boolean IS_CONTACT = true;
+    public static final String PRINCIPAL_INVESTIGATOR_POSITION_ID =
+            "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/principal-investigator.json";
+    public static final String CONTRIBUTOR_POSITION_SCHEMA_URI =
+            "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1";
+    public static final String CONTRIBUTOR_POSITION_START_DATE = "2021-06-01";
+    public static final String CONTRIBUTOR_POSITION_END_DATE = "2022-06-01";
+    public static final String CONCEPTUALISATION_CONTRIBUTOR_ROLE_ID =
+            "https://credit.niso.org/contributor-roles/conceptualization/";
+    public static final String CONTRIBUTOR_ROLE_SCHEMA_URI = "https://credit.niso.org/";
+    public static final String ORGANISATION_ID = "https://ror.org/038sjwq14";
+    public static final String ORGANISATION_SCHEMA_URI = "https://ror.org/";
+    public static final String ORGANISATION_ROLE_START_DATE = "2021-07-12";
+    public static final String ORGANISATION_ROLE_END_DATE = "2022";
+    public static final String LEAD_RESEARCH_ORGANISATION_ROLE_ID =
+            "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json";
+    public static final String ORGANISATION_ROLE_SCHEMA_URI =
+            "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1";
+    public static final String RELATED_OBJECT_ID = "https://doi.org/10.1000/182";
+    public static final String RELATED_OBJECT_SCHEMA_URI = "https://doi.org/";
+    public static final String RELATED_OBJECT_TYPE_ID =
+            "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/type/v1/audiovisual.json";
+    public static final String RELATED_OBJECT_TYPE_SCHEMA_URI =
+            "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/type/v1";
+    public static final String RELATED_OBJECT_CATEGORY_ID =
+            "https://github.com/au-research/raid-metadata/blob/main/scheme/related-object/category/v1/input.json";
+    public static final String RELATED_OBJECT_CATEGORY_SCHEMA_URI =
+            "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1";
+    public static final String ALTERNATE_IDENTIFIER_ID = "1ec0c785-7608-417b-8d75-9fa5b75d74ce";
+    public static final String ALTERNATE_IDENTIFIER_TYPE = "UUID";
+    public static final String ALTERNATE_URL = "https://static.raid.org.au/10.25.1.1/abcde";
+    public static final String RELATED_RAID_ID = "https://raid.org/10.25.1.1/bcdef";
+    public static final String RELATED_RAID_TYPE_ID =
+            "https://github.com/au-research/raid-metadata/blob/main/scheme/related-raid/type/v1/continues.json";
+    public static final String RELATED_RAID_TYPE_SCHEMA_URI =
+            "https://github.com/au-research/raid-metadata/tree/main/scheme/related-raid/type/v1/";
+    public static final LocalDate EMBARGO_EXPIRY = LocalDate.now();
+    public static final String ACCESS_STATEMENT_TEXT = "Access statement";
+    public static final String ACCESS_TYPE_ID =
+            "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json";
+    public static final String ACCESS_TYPE_SCHEMA_URI =
+            "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1";
+    public static final String SUBJECT_ID = "https://linked.data.gov.au/def/anzsrc-for/2020/401099";
+    public static final String SUBJECT_SCHEMA_URI = "https://linked.data.gov.au/def/anzsrc-for/2020/";
+    public static final String SUBJECT_KEYWORD_TEXT =
+            "unconstrained keyword or key phrase describing the project or activity";
+    public static final String TRADITIONAL_KNOWLEDGE_LABEL_ID = "https://localcontexts.org/label/tk-attribution/";
+    public static final String TRADITIONAL_KNOWLEDGE_LABEL_SCHEMA_URI =
+            "https://localcontexts.org/labels/traditional-knowledge-labels/";
+    public static final String SPATIAL_COVERAGE_ID = "https://www.openstreetmap.org/relation/62422";
+    public static final String SPATIAL_COVERAGE_SCHEMA_URI = "https://www.openstreetmap.org/";
+    public static final String SPATIAL_COVERAGE_PLACE_TEXT = "Berliner Urstromtal";
+    public static final String TITLE_TYPE_ID = "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
+    public static final String TITLE_TYPE_SCHEMA_URI = "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1";
+
+    public static final RaidDto RAID_DTO = new RaidDto()
+            .identifier(new Id()
+                    .id(RAID_NAME)
+                    .schemaUri(RAID_SCHEMA_URI)
+                    .raidAgencyUrl(RAID_AGENCY_URL)
+                    .registrationAgency(new RegistrationAgency()
+                            .id(REGISTRATION_AGENCY_ID)
+                            .schemaUri(ROR_SCHEMA_URI))
+                    .owner(new Owner()
+                            .id(OWNER_ID)
+                            .schemaUri(ROR_SCHEMA_URI)
+                            .servicePoint(SERVICE_POINT_ID))
+                    .license(LICENSE)
+                    .version(VERSION))
+            .date(new Date()
+                    .startDate(START_DATE)
+                    .endDate(END_DATE))
+            .title(List.of(new Title()
+                    .type(new TitleType()
+                            .id(TITLE_TYPE_ID)
+                            .schemaUri(TITLE_TYPE_SCHEMA_URI))
+                    .text(TITLE_TEXT)
+                    .startDate(TITLE_START_DATE)
+                    .endDate(TITLE_END_DATE)
+                    .language(new Language()
+                            .id(LANGUAGE_CODE)
+                            .schemaUri(LANGUAGE_SCHEMA_URI))))
+            .description(List.of(new Description()
+                    .text(DESCRIPTION_TEXT)
+                    .language(new Language()
+                            .id(LANGUAGE_CODE)
+                            .schemaUri(LANGUAGE_SCHEMA_URI))))
+            .contributor(List.of(new Contributor()
+                    .id(CONTRIBUTOR_ID)
+                    .schemaUri(ORCID_SCHEMA_URI)
+                    .leader(IS_LEADER)
+                    .contact(IS_CONTACT)
+                    .position(List.of(new ContributorPosition()
+                            .id(PRINCIPAL_INVESTIGATOR_POSITION_ID)
+                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
+                            .startDate(CONTRIBUTOR_POSITION_START_DATE)
+                            .endDate(CONTRIBUTOR_POSITION_END_DATE)
+                    ))
+                    .role(List.of(new ContributorRole()
+                            .id(CONCEPTUALISATION_CONTRIBUTOR_ROLE_ID)
+                            .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)))))
+            .organisation(List.of(new Organisation()
+                    .id(ORGANISATION_ID)
+                    .schemaUri(ORGANISATION_SCHEMA_URI)
+                    .role(List.of(new OrganisationRole()
+                            .id(LEAD_RESEARCH_ORGANISATION_ROLE_ID)
+                            .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
+                            .startDate(ORGANISATION_ROLE_START_DATE)
+                            .endDate(ORGANISATION_ROLE_END_DATE)))))
+            .relatedObject(List.of(new RelatedObject()
+                    .id(RELATED_OBJECT_ID)
+                    .schemaUri(RELATED_OBJECT_SCHEMA_URI)
+                    .type(new RelatedObjectType()
+                            .id(RELATED_OBJECT_TYPE_ID)
+                            .schemaUri(RELATED_OBJECT_TYPE_SCHEMA_URI))
+                    .category(List.of(new RelatedObjectCategory()
+                            .id(RELATED_OBJECT_CATEGORY_ID)
+                            .schemaUri(RELATED_OBJECT_CATEGORY_SCHEMA_URI)))))
+            .alternateIdentifier(List.of(new AlternateIdentifier()
+                    .id(ALTERNATE_IDENTIFIER_ID)
+                    .type(ALTERNATE_IDENTIFIER_TYPE)))
+            .alternateUrl(List.of(new AlternateUrl()
+                    .url(ALTERNATE_URL)))
+            .relatedRaid(List.of(new RelatedRaid()
+                    .id(RELATED_RAID_ID)
+                    .type(new RelatedRaidType()
+                            .id(RELATED_RAID_TYPE_ID)
+                            .schemaUri(RELATED_RAID_TYPE_SCHEMA_URI))))
+            .access(new Access()
+                    .embargoExpiry(EMBARGO_EXPIRY)
+                    .type(new AccessType()
+                            .id(ACCESS_TYPE_ID)
+                            .schemaUri(ACCESS_TYPE_SCHEMA_URI))
+                    .statement(new AccessStatement()
+                            .text(ACCESS_STATEMENT_TEXT)
+                            .language(new Language()
+                                    .id(LANGUAGE_CODE)
+                                    .schemaUri(LANGUAGE_SCHEMA_URI))))
+            .subject(List.of(new Subject()
+                    .id(SUBJECT_ID)
+                    .schemaUri(SUBJECT_SCHEMA_URI)
+                    .keyword(List.of(new SubjectKeyword()
+                            .text(SUBJECT_KEYWORD_TEXT)
+                            .language(new Language()
+                                    .id(LANGUAGE_CODE)
+                                    .schemaUri(LANGUAGE_SCHEMA_URI))))))
+            .traditionalKnowledgeLabel(List.of(new TraditionalKnowledgeLabel()
+                    .id(TRADITIONAL_KNOWLEDGE_LABEL_ID)
+                    .schemaUri(TRADITIONAL_KNOWLEDGE_LABEL_SCHEMA_URI)))
+            .spatialCoverage(List.of(new SpatialCoverage()
+                    .id(SPATIAL_COVERAGE_ID)
+                    .schemaUri(SPATIAL_COVERAGE_SCHEMA_URI)
+                    .place(List.of(new SpatialCoveragePlace()
+                            .text(SPATIAL_COVERAGE_PLACE_TEXT)
+                            .language(new Language()
+                                    .id(LANGUAGE_CODE)
+                                    .schemaUri(LANGUAGE_SCHEMA_URI))))));
+
+
+
+
+
+}

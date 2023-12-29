@@ -45,7 +45,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class RaidStableV1ServiceTest {
+class RaidServiceTest {
     private final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
             .setDateFormat(new SimpleDateFormat("yyyy-MM-dd"))
@@ -78,7 +78,7 @@ class RaidStableV1ServiceTest {
     private RaidIngestService raidIngestService;
 
     @InjectMocks
-    private RaidStableV1Service raidStableV1Service;
+    private RaidService raidService;
 
     @Test
     @DisplayName("Mint a raid")
@@ -126,7 +126,7 @@ class RaidStableV1ServiceTest {
 //        when(metadataService.getMetaProps()).thenReturn(metadataProps);
         when(raidHistoryService.save(createRaidRequest)).thenReturn(raidDto);
 
-        raidStableV1Service.mintRaidSchemaV1(createRaidRequest, servicePointId);
+        raidService.mintRaidSchemaV1(createRaidRequest, servicePointId);
         verify(raidIngestService).create(raidDto);
     }
 
@@ -148,7 +148,7 @@ class RaidStableV1ServiceTest {
 
 //        when(raidDtoFactory.create(raidRecord)).thenReturn(expected);
 
-        RaidDto result = raidStableV1Service.read(handle);
+        RaidDto result = raidService.read(handle);
         assertThat(result, Matchers.is(expected));
     }
 
@@ -162,7 +162,7 @@ class RaidStableV1ServiceTest {
 
         when(raidIngestService.findByHandle(handle)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> raidStableV1Service.read(handle));
+        assertThrows(ResourceNotFoundException.class, () -> raidService.read(handle));
     }
 
     @Test
@@ -182,7 +182,7 @@ class RaidStableV1ServiceTest {
 
         when(raidHistoryService.save(updateRequest)).thenReturn(expected);
         when(raidIngestService.update(expected)).thenReturn(Optional.of(expected));
-        final var result = raidStableV1Service.update(updateRequest);
+        final var result = raidService.update(updateRequest);
         assertThat(result, Matchers.is(expected));
     }
 
@@ -208,7 +208,7 @@ class RaidStableV1ServiceTest {
 
         when(raidHistoryService.findByHandle(handle)).thenReturn(Optional.of(expected));
 
-        final var result = raidStableV1Service.update(updateRequest);
+        final var result = raidService.update(updateRequest);
 
         assertThat(result, Matchers.is(expected));
 
@@ -232,7 +232,7 @@ class RaidStableV1ServiceTest {
         when(raidHistoryService.save(updateRequest)).thenReturn(raidDto);
         when(raidIngestService.update(raidDto)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> raidStableV1Service.update(updateRequest));
+        assertThrows(ResourceNotFoundException.class, () -> raidService.update(updateRequest));
 
     }
 
