@@ -1,5 +1,7 @@
 package au.org.raid.api.service;
 
+import au.org.raid.api.exception.AccessTypeNotFoundException;
+import au.org.raid.api.exception.AccessTypeSchemaNotFoundException;
 import au.org.raid.api.factory.AccessTypeFactory;
 import au.org.raid.api.repository.AccessTypeRepository;
 import au.org.raid.api.repository.AccessTypeSchemaRepository;
@@ -17,12 +19,12 @@ public class AccessTypeService {
     private final AccessTypeFactory accessTypeFactory;
     public AccessType findById(final Integer id) {
         final var record = accessTypeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Access type not found with id %d".formatted(id)));
+                .orElseThrow(() -> new AccessTypeNotFoundException(id));
 
         final var schemaId = record.getSchemaId();
 
         final var schemaRecord = accessTypeSchemaRepository.findById(schemaId)
-                .orElseThrow(() -> new RuntimeException("Access type schema not found with id %d".formatted(schemaId)));
+                .orElseThrow(() -> new AccessTypeSchemaNotFoundException(schemaId));
 
         return accessTypeFactory.create(record.getUri(), schemaRecord.getUri());
     }

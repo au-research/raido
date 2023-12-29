@@ -1,18 +1,16 @@
 package au.org.raid.api.service;
 
+import au.org.raid.api.exception.AccessTypeNotFoundException;
+import au.org.raid.api.exception.AccessTypeSchemaNotFoundException;
 import au.org.raid.api.factory.AccessFactory;
 import au.org.raid.api.factory.AccessStatementFactory;
 import au.org.raid.api.repository.AccessTypeRepository;
 import au.org.raid.api.repository.AccessTypeSchemaRepository;
 import au.org.raid.db.jooq.tables.records.RaidRecord;
 import au.org.raid.idl.raidv2.model.Access;
-import au.org.raid.idl.raidv2.model.AccessStatement;
-import au.org.raid.idl.raidv2.model.AccessType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -30,12 +28,10 @@ public class AccessService {
         final var accessTypeUri = access.getType().getId();
 
         final var accessTypeSchemaRecord = accessTypeSchemaRepository.findByUri(accessTypeSchemaUri)
-                .orElseThrow(() -> new RuntimeException("Access type schema not found %s".formatted(accessTypeSchemaUri)));
+                .orElseThrow(() -> new AccessTypeSchemaNotFoundException(accessTypeSchemaUri));
 
         final var accessTypeRecord = accessTypeRepository.findByUriAndSchemaId(accessTypeUri, accessTypeSchemaRecord.getId())
-                .orElseThrow(() -> new RuntimeException("Access type %s not found in schema %s".formatted(
-                        accessTypeUri, accessTypeSchemaUri
-                )));
+                .orElseThrow(() -> new AccessTypeNotFoundException(accessTypeUri, accessTypeSchemaUri));
 
         return accessTypeRecord.getId();
     }
