@@ -1,5 +1,7 @@
 package au.org.raid.api.service;
 
+import au.org.raid.api.exception.ContributorNotFoundException;
+import au.org.raid.api.exception.ContributorSchemaNotFoundException;
 import au.org.raid.api.factory.ContributorFactory;
 import au.org.raid.api.factory.record.ContributorRecordFactory;
 import au.org.raid.api.factory.record.RaidContributorRecordFactory;
@@ -28,10 +30,13 @@ public class ContributorService {
     private final ContributorSchemaRepository contributorSchemaRepository;
 
     public void create(final List<Contributor> contributors, final String handle) {
+        if (contributors == null) {
+            return;
+        }
+
         for (var contributor : contributors) {
             final var contributorSchema = contributorSchemaRepository.findByUri(contributor.getSchemaUri())
-                    .orElseThrow(() -> new RuntimeException(
-                            "Contributor schema not found with URI %s".formatted(contributor.getSchemaUri())));
+                    .orElseThrow(() -> new ContributorSchemaNotFoundException(contributor.getSchemaUri()));
 
             final var contributorRecord = contributorRecordFactory.create(contributor, contributorSchema.getId());
             final var contributorId = contributorRepository.findOrCreate(contributorRecord).getId();
@@ -53,12 +58,12 @@ public class ContributorService {
             final var contributorId = record.getContributorId();
 
             final var contributorRecord = contributorRepository.findById(contributorId)
-                    .orElseThrow(() -> new RuntimeException("Contributor not found with id %d".formatted(contributorId)));
+                    .orElseThrow(() -> new ContributorNotFoundException(contributorId));
 
             final var schemaId = contributorRecord.getSchemaId();
 
             final var contributorSchemaRecord = contributorSchemaRepository.findById(schemaId)
-                    .orElseThrow(() -> new RuntimeException("Contributor schema not found with id %d".formatted(schemaId)));
+                    .orElseThrow(() -> new ContributorSchemaNotFoundException(schemaId));
 
             final var positions = contributorPositionService.findAllByRaidContributorId(record.getId());
             final var roles = contributorRoleService.findAllByRaidContributorId(record.getId());
