@@ -1,5 +1,7 @@
 package au.org.raid.api.service;
 
+import au.org.raid.api.exception.ContributorRoleNotFoundException;
+import au.org.raid.api.exception.ContributorRoleSchemaNotFoundException;
 import au.org.raid.api.factory.ContributorPositionFactory;
 import au.org.raid.api.factory.ContributorRoleFactory;
 import au.org.raid.api.factory.record.RaidContributorRoleRecordFactory;
@@ -34,14 +36,12 @@ public class ContributorRoleService {
 
             final var contributorRoleRecord = contributorRoleRepository
                     .findById(raidContributorRole.getContributorRoleId())
-                    .orElseThrow(() -> new RuntimeException(
-                            "Contributor role not found with id %d".formatted(contributorRoleId)));
+                    .orElseThrow(() -> new ContributorRoleNotFoundException(contributorRoleId));
 
             final var schemaId = contributorRoleRecord.getSchemaId();
 
             final var contributorRoleSchemaRecord = contributorRoleSchemaRepository.findById(schemaId)
-                    .orElseThrow(() -> new RuntimeException(
-                            "Contributor role schema not found with id %d".formatted(schemaId)));
+                    .orElseThrow(() -> new ContributorRoleSchemaNotFoundException(schemaId));
 
             contributorRoles.add(contributorRoleFactory.create(
                     contributorRoleRecord.getUri(),
@@ -52,14 +52,18 @@ public class ContributorRoleService {
     }
 
     public void create(final List<ContributorRole> roles, final int raidContributorId) {
+        if (roles == null) {
+            return;
+        }
+
         for (final var contributorRole : roles) {
             final var roleSchema = contributorRoleSchemaRepository.findByUri(contributorRole.getSchemaUri())
                     .orElseThrow(() ->
-                            new RuntimeException("Role schema not found %s".formatted(contributorRole.getSchemaUri())));
+                            new ContributorRoleSchemaNotFoundException(contributorRole.getSchemaUri()));
 
             final var role = contributorRoleRepository.findByUriAndSchemaId(contributorRole.getId(), roleSchema.getId())
                     .orElseThrow(() ->
-                            new RuntimeException("Role not found %s with schema %s".formatted(contributorRole.getId(), contributorRole.getSchemaUri())));
+                            new ContributorRoleNotFoundException(contributorRole.getId(), contributorRole.getSchemaUri()));
 
             final var raidContributorRoleRecord = raidContributorRoleRecordFactory.create(
                     raidContributorId, role.getId());
