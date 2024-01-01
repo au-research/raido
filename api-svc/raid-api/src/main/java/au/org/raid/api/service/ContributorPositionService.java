@@ -1,5 +1,6 @@
 package au.org.raid.api.service;
 
+import au.org.raid.api.exception.ContributorPositionSchemaNotFoundException;
 import au.org.raid.api.factory.ContributorPositionFactory;
 import au.org.raid.api.factory.record.RaidContributorPositionRecordFactory;
 import au.org.raid.api.repository.ContributorPositionRepository;
@@ -9,6 +10,7 @@ import au.org.raid.idl.raidv2.model.ContributorPosition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import au.org.raid.api.exception.ContributorPositionNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,15 +35,13 @@ public class ContributorPositionService {
             final var contributorPositionId = raidContributorPosition.getContributorPositionId();
 
             final var contributorPositionRecord = contributorPositionRepository
-                    .findById(raidContributorPosition.getContributorPositionId())
-                    .orElseThrow(() -> new RuntimeException(
-                            "Contributor position not found with id %d".formatted(contributorPositionId)));
+                    .findById(contributorPositionId)
+                    .orElseThrow(() -> new ContributorPositionNotFoundException(contributorPositionId));
 
             final var schemaId = contributorPositionRecord.getSchemaId();
 
             final var contributorPositionSchemaRecord = contributorPositionSchemaRepository.findById(schemaId)
-                    .orElseThrow(() -> new RuntimeException(
-                            "Contributor position schema not found with id %d".formatted(schemaId)));
+                    .orElseThrow(() -> new ContributorPositionSchemaNotFoundException(schemaId));
 
             contributorPositions.add(contributorPositionFactory.create(
                     raidContributorPosition,
@@ -53,14 +53,17 @@ public class ContributorPositionService {
     }
 
     public void create(final List<ContributorPosition> positions, final int raidContributorId) {
+        if (positions == null) {
+            return;
+        }
+
         for (final var position : positions) {
             final var positionSchema = contributorPositionSchemaRepository.findByUri(position.getSchemaUri())
-                    .orElseThrow(() ->
-                            new RuntimeException("Position schema not found %s".formatted(position.getSchemaUri())));
+                    .orElseThrow(() -> new ContributorPositionSchemaNotFoundException(position.getSchemaUri()));
 
             final var contributorPosition = contributorPositionRepository.findByUriAndSchemaId(position.getId(), positionSchema.getId())
                     .orElseThrow(() ->
-                            new RuntimeException("Position not found %s with schema %s".formatted(position.getId(), position.getSchemaUri())));
+                            new ContributorPositionNotFoundException(position.getId(), position.getSchemaUri()));
 
             final var raidContributorPositionRecord = raidContributorPositionRecordFactory.create(
                     position, raidContributorId, contributorPosition.getId());
