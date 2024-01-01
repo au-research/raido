@@ -50,7 +50,7 @@ class DescriptionTypeValidatorTest {
 
         when(descriptionTypeSchemaRepository.findByUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.of(DESCRIPTION_TYPE_SCHEMA_RECORD));
-        when(descriptionTypeRepository.findByUriAndSchemeId(TestConstants.PRIMARY_DESCRIPTION_TYPE, DESCRIPTION_TYPE_SCHEMA_ID))
+        when(descriptionTypeRepository.findByUriAndSchemaId(TestConstants.PRIMARY_DESCRIPTION_TYPE, DESCRIPTION_TYPE_SCHEMA_ID))
                 .thenReturn(Optional.of(DESCRIPTION_TYPE_RECORD));
 
         final var failures = validationService.validate(descriptionType, INDEX);
@@ -58,7 +58,7 @@ class DescriptionTypeValidatorTest {
         assertThat(failures, empty());
 
         verify(descriptionTypeSchemaRepository).findByUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI);
-        verify(descriptionTypeRepository).findByUriAndSchemeId(TestConstants.PRIMARY_DESCRIPTION_TYPE, DESCRIPTION_TYPE_SCHEMA_ID);
+        verify(descriptionTypeRepository).findByUriAndSchemaId(TestConstants.PRIMARY_DESCRIPTION_TYPE, DESCRIPTION_TYPE_SCHEMA_ID);
     }
 
     @Test
@@ -185,7 +185,7 @@ class DescriptionTypeValidatorTest {
         when(descriptionTypeSchemaRepository.findByUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.of(DESCRIPTION_TYPE_SCHEMA_RECORD));
 
-        when(descriptionTypeRepository.findByUriAndSchemeId(TestConstants.PRIMARY_DESCRIPTION_TYPE, DESCRIPTION_TYPE_SCHEMA_ID))
+        when(descriptionTypeRepository.findByUriAndSchemaId(TestConstants.PRIMARY_DESCRIPTION_TYPE, DESCRIPTION_TYPE_SCHEMA_ID))
                 .thenReturn(Optional.empty());
 
         final var failures = validationService.validate(descriptionType, INDEX);

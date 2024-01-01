@@ -54,7 +54,7 @@ public class DescriptionTypeValidator {
                         .errorType(INVALID_VALUE_TYPE)
                         .message(INVALID_SCHEMA));
             } else if (!isBlank(descriptionType.getId()) &&
-                    descriptionTypeRepository.findByUriAndSchemeId(descriptionType.getId(), descriptionTypeScheme.get().getId()).isEmpty()) {
+                    descriptionTypeRepository.findByUriAndSchemaId(descriptionType.getId(), descriptionTypeScheme.get().getId()).isEmpty()) {
                 failures.add(new ValidationFailure()
                         .fieldId("description[%d].type.id".formatted(index))
                         .errorType(INVALID_VALUE_TYPE)

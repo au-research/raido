@@ -1,5 +1,7 @@
 package au.org.raid.api.service;
 
+import au.org.raid.api.exception.DescriptionTypeNotFoundException;
+import au.org.raid.api.exception.DescriptionTypeSchemaNotFoundException;
 import au.org.raid.api.factory.DescriptionFactory;
 import au.org.raid.api.factory.record.RaidDescriptionRecordFactory;
 import au.org.raid.api.repository.DescriptionTypeRepository;
@@ -25,18 +27,21 @@ public class DescriptionService {
     private final DescriptionFactory descriptionFactory;
 
     public void create(final List<Description> descriptions, final String handle) {
+        if (descriptions == null) {
+            return;
+        }
+
         for (final var description : descriptions) {
             final var descriptionType = description.getType();
 
             final var descriptionTypeSchemaRecord = descriptionTypeSchemaRepository
                     .findByUri(descriptionType.getSchemaUri())
-                    .orElseThrow(() -> new RuntimeException(
-                            "Description type schema not found %s".formatted(descriptionType.getSchemaUri())));
+                    .orElseThrow(() -> new DescriptionTypeSchemaNotFoundException(descriptionType.getSchemaUri()));
 
             final var descriptionTypeRecord = descriptionTypeRepository
-                    .findByUriAndSchemeId(descriptionType.getId(), descriptionTypeSchemaRecord.getId())
-                    .orElseThrow(() -> new RuntimeException(
-                            "Description type %s not found in schema %s".formatted(descriptionType.getId(), descriptionType.getSchemaUri())));
+                    .findByUriAndSchemaId(descriptionType.getId(), descriptionTypeSchemaRecord.getId())
+                    .orElseThrow(() -> new DescriptionTypeNotFoundException(
+                            descriptionType.getId(), descriptionType.getSchemaUri()));
 
             final var languageId = languageService.findLanguageId(description.getLanguage());
 
@@ -58,11 +63,11 @@ public class DescriptionService {
             final var typeId = record.getDescriptionTypeId();
 
             final var typeRecord = descriptionTypeRepository.findById(typeId)
-                    .orElseThrow(() -> new RuntimeException("Description type id not found: %d".formatted(typeId)));
+                    .orElseThrow(() -> new DescriptionTypeNotFoundException(typeId));
 
             final var typeSchemaId = typeRecord.getSchemaId();
             final var typeSchemaRecord = descriptionTypeSchemaRepository.findById(typeSchemaId)
-                    .orElseThrow(() -> new RuntimeException("Description type schema id not found: %d"));
+                    .orElseThrow(() -> new DescriptionTypeSchemaNotFoundException(typeSchemaId));
 
             final var language = languageService.findById(record.getLanguageId());
 
