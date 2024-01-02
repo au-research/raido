@@ -1,5 +1,7 @@
 package au.org.raid.api.service;
 
+import au.org.raid.api.exception.OrganisationRoleNotFoundException;
+import au.org.raid.api.exception.OrganisationRoleSchemaNotFoundException;
 import au.org.raid.api.factory.OrganisationRoleFactory;
 import au.org.raid.api.factory.record.RaidOrganisationRecordFactory;
 import au.org.raid.api.factory.record.RaidOrganisationRoleRecordFactory;
@@ -28,11 +30,11 @@ public class OrganisationRoleService {
     public void create(final OrganisationRole organisationRole, final int raidOrganisationId) {
         final var organisationRoleSchemaRecord =
                 organisationRoleSchemaRepository.findByUri(organisationRole.getSchemaUri())
-                        .orElseThrow(() -> new RuntimeException("Organisation role schema not found %s".formatted(organisationRole.getSchemaUri())));
+                        .orElseThrow(() -> new OrganisationRoleSchemaNotFoundException(organisationRole.getSchemaUri()));
 
         final var organisationRoleRecord = organisationRoleRepository.findByUriAndSchemaId(organisationRole.getId(), organisationRoleSchemaRecord.getId())
                 .orElseThrow(() ->
-                        new RuntimeException("Organisation role not found %s with schema %s".formatted(organisationRole.getId(), organisationRole.getSchemaUri())));
+                        new OrganisationRoleNotFoundException(organisationRole.getId(), organisationRole.getSchemaUri()));
 
         final var raidOrganisationRoleRecord = raidOrganisationRoleRecordFactory.create(
                 raidOrganisationId,
@@ -54,14 +56,12 @@ public class OrganisationRoleService {
 
             final var organisationRoleRecord = organisationRoleRepository
                     .findById(raidOrganisationRole.getOrganisationRoleId())
-                    .orElseThrow(() -> new RuntimeException(
-                            "Organisation role not found with id %d".formatted(organisationRoleId)));
+                    .orElseThrow(() -> new OrganisationRoleNotFoundException(organisationRoleId));
 
             final var schemaId = organisationRoleRecord.getSchemaId();
 
             final var organisationRoleSchemaRecord = organisationRoleSchemaRepository.findById(schemaId)
-                    .orElseThrow(() -> new RuntimeException(
-                            "Organisation role schema not found with id %d".formatted(schemaId)));
+                    .orElseThrow(() -> new OrganisationRoleSchemaNotFoundException(schemaId));
 
             organisationRoles.add(organisationRoleFactory.create(
                     organisationRoleRecord.getUri(),
