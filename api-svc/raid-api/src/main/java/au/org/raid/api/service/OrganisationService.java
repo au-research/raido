@@ -1,5 +1,7 @@
 package au.org.raid.api.service;
 
+import au.org.raid.api.exception.OrganisationNotFoundException;
+import au.org.raid.api.exception.OrganisationSchemaNotFoundException;
 import au.org.raid.api.factory.OrganisationFactory;
 import au.org.raid.api.factory.record.OrganisationRecordFactory;
 import au.org.raid.api.factory.record.RaidOrganisationRecordFactory;
@@ -35,7 +37,7 @@ public class OrganisationService {
         for (final var organisation : organisations) {
             final var organisationSchemaRecord = organisationSchemaRepository.findByUri(organisation.getSchemaUri())
                     .orElseThrow(() ->
-                            new RuntimeException("Contributor role schema not found %s".formatted(organisation.getSchemaUri())));
+                            new OrganisationSchemaNotFoundException(organisation.getSchemaUri()));
 
             final var organisationRecord = organisationRecordFactory.create(organisation, organisationSchemaRecord.getId());
             final var savedOrganisation = organisationRepository.findOrCreate(organisationRecord);
@@ -49,21 +51,9 @@ public class OrganisationService {
         }
     }
 
-    public Integer findOrganisationId(final String organisationUri, final String schemaUri) {
-        final var organisationSchemaRecord = organisationSchemaRepository.findByUri(schemaUri)
-                .orElseThrow(() -> new RuntimeException("Organisation schema not found %s".formatted(schemaUri)));
-
-        final var organisationRecord = organisationRepository.findByUriAndSchemaId(
-                        organisationUri, organisationSchemaRecord.getId())
-                .orElseThrow(() -> new RuntimeException(
-                        "Organisation %s not found in schema %s".formatted(organisationUri, schemaUri)));
-
-        return organisationRecord.getId();
-    }
-
     public Integer findOrCreate(final String pid, final String schemaUri) {
         final var organisationSchemaRecord = organisationSchemaRepository.findByUri(schemaUri)
-                .orElseThrow(() -> new RuntimeException("Organisation schema not found %s".formatted(schemaUri)));
+                .orElseThrow(() -> new OrganisationSchemaNotFoundException("Organisation schema not found %s".formatted(schemaUri)));
 
         final var organisationRecord = organisationRecordFactory.create(pid, organisationSchemaRecord.getId());
 
@@ -81,12 +71,12 @@ public class OrganisationService {
             final var organisationId = record.getOrganisationId();
 
             final var organisationRecord = organisationRepository.findById(organisationId)
-                    .orElseThrow(() -> new RuntimeException("Organisation not found with id %d".formatted(organisationId)));
+                    .orElseThrow(() -> new OrganisationNotFoundException(organisationId));
 
             final var schemaId = organisationRecord.getSchemaId();
 
             final var organisationSchemaRecord = organisationSchemaRepository.findById(schemaId)
-                    .orElseThrow(() -> new RuntimeException("Organisation schema not found with id %d".formatted(schemaId)));
+                    .orElseThrow(() -> new OrganisationSchemaNotFoundException(schemaId));
 
             final var roles = organisationRoleService.findAllByRaidOrganisationId(record.getId());
 
@@ -102,18 +92,18 @@ public class OrganisationService {
 
     public String findOrganisationUri(final Integer organisationId) {
         final var record = organisationRepository.findById(organisationId)
-                .orElseThrow(() -> new RuntimeException("Organisation not found with id %d".formatted(organisationId)));
+                .orElseThrow(() -> new OrganisationNotFoundException(organisationId));
         return record.getPid();
     }
 
     public String findOrganisationSchemaUri(final Integer organisationId) {
         final var record = organisationRepository.findById(organisationId)
-                .orElseThrow(() -> new RuntimeException("Organisation not found with id %d".formatted(organisationId)));
+                .orElseThrow(() -> new OrganisationNotFoundException(organisationId));
 
         final var schemaId = record.getSchemaId();
 
         final var schemaRecord = organisationSchemaRepository.findById(schemaId)
-                .orElseThrow(() -> new RuntimeException("Organisation schema not found with id %d".formatted(schemaId)));
+                .orElseThrow(() -> new OrganisationSchemaNotFoundException(schemaId));
 
         return schemaRecord.getUri();
     }
@@ -121,6 +111,5 @@ public class OrganisationService {
     public void update(final List<Organisation> organisations, final String handle) {
         raidOrganisationRepository.deleteAllByHandle(handle);
         create(organisations, handle);
-
     }
 }
