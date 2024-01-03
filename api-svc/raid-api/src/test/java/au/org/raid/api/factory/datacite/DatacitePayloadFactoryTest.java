@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,6 +133,8 @@ public class DatacitePayloadFactoryTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(dataciteDto);
 
+        String currentYear = String.valueOf(LocalDate.now().getYear());
+
         String expected = "{\n" +
                 "  \"schemaVersion\" : \"http://datacite.org/schema/kernel-4\",\n" +
                 "  \"type\" : \"dois\",\n" +
@@ -139,7 +142,7 @@ public class DatacitePayloadFactoryTest {
                 "    \"prefix\" : \"10.82841\",\n" +
                 "    \"doi\" : \"10.82841/abc123\",\n" +
                 "    \"publisher\" : \"ARDC\",\n" +
-                "    \"publicationYear\" : \"2023\",\n" +
+                "    \"publicationYear\" : \""+currentYear+"\",\n" +
                 "    \"creators\" : [ {\n" +
                 "      \"dataciteCreator\" : \"https://ror.org/038sjwq14\",\n" +
                 "      \"name\" : \"https://ror.org/038sjwq14\"\n" +
