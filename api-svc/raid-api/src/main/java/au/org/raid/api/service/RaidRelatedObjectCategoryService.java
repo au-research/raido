@@ -1,5 +1,7 @@
 package au.org.raid.api.service;
 
+import au.org.raid.api.exception.RelatedObjectCategoryNotFoundException;
+import au.org.raid.api.exception.RelatedObjectCategorySchemaNotFoundException;
 import au.org.raid.api.factory.RelatedObjectCategoryFactory;
 import au.org.raid.api.factory.record.RaidRelatedObjectCategoryRecordFactory;
 import au.org.raid.api.repository.RaidRelatedObjectCategoryRepository;
@@ -25,13 +27,11 @@ public class RaidRelatedObjectCategoryService {
 
     public void create(final RelatedObjectCategory category, final Integer raidRelatedObjectId) {
         final var schemaRecord = relatedObjectCategorySchemaRepository.findByUri(category.getSchemaUri())
-                .orElseThrow(() -> new RuntimeException(
-                        "Related object category schema not found %s".formatted(category.getSchemaUri())));
+                .orElseThrow(() -> new RelatedObjectCategorySchemaNotFoundException(category.getSchemaUri()));
 
         final var categoryRecord = relatedObjectCategoryRepository
                 .findByUriAndSchemaId(category.getId(), schemaRecord.getId())
-                .orElseThrow(() -> new RuntimeException(
-                        "Related object category %s not found in schema %s".formatted(category.getId(), category.getSchemaUri())));
+                .orElseThrow(() -> new RelatedObjectCategoryNotFoundException(category.getId(), category.getSchemaUri()));
 
         final var raidRelatedObjectCategoryRecord =
                 raidRelatedObjectCategoryRecordFactory.create(raidRelatedObjectId, categoryRecord.getId());
@@ -47,12 +47,12 @@ public class RaidRelatedObjectCategoryService {
         for (final var record : records) {
             final var categoryId = record.getRelatedObjectCategoryId();
             final var categoryRecord = relatedObjectCategoryRepository.findById(categoryId)
-                    .orElseThrow(() -> new RuntimeException("Related object category not found with id %d".formatted(categoryId)));
+                    .orElseThrow(() -> new RelatedObjectCategoryNotFoundException(categoryId));
 
             final var schemaId = categoryRecord.getSchemaId();
 
             final var categorySchemaRecord = relatedObjectCategorySchemaRepository.findById(schemaId)
-                    .orElseThrow(() -> new RuntimeException("Related object category schema not found with id %d".formatted(schemaId)));
+                    .orElseThrow(() -> new RelatedObjectCategorySchemaNotFoundException(schemaId));
 
             categories.add(relatedObjectCategoryFactory.create(categoryRecord.getUri(), categorySchemaRecord.getUri()));
         }
