@@ -1,5 +1,6 @@
 package au.org.raid.api.service;
 
+import au.org.raid.api.exception.ResourceNotFoundException;
 import au.org.raid.api.factory.DateFactory;
 import au.org.raid.api.factory.HandleFactory;
 import au.org.raid.api.factory.RaidRecordFactory;
@@ -11,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -76,18 +76,17 @@ public class RaidIngestService {
         spatialCoverageService.create(raid.getSpatialCoverage(), handle);
     }
 
-    public List<RaidDto> findAllByServicePointOrNotConfidentialId(final ApiToken apiToken) {
+    public List<RaidDto> findAllByServicePointIdOrNotConfidential(final ApiToken apiToken) {
         final var servicePointId = apiToken.getServicePointId();
 
         final var raids = new ArrayList<RaidDto>();
-        final var records = raidRepository.findAllByServicePointOrNotConfidentialId(servicePointId);
+        final var records = raidRepository.findAllByServicePointIdOrNotConfidential(servicePointId);
 
         for (final var record : records) {
             raids.add(build(record));
         }
 
         return raids;
-
     }
 
     public List<RaidDto> findAllByServicePointId(final Long servicePointId) {
@@ -140,11 +139,11 @@ public class RaidIngestService {
                 .or(Optional::empty);
     }
 
-    public Optional<RaidDto> update(final RaidDto raid) {
-        final var handle = new Handle(raid.getIdentifier().getId()).toString();
+    public RaidDto update(final RaidDto raid) {
+        final var handle = handleFactory.create(raid.getIdentifier().getId()).toString();
 
         if (raidRepository.findByHandle(handle).isEmpty()) {
-            return Optional.empty();
+            throw new ResourceNotFoundException(raid.getIdentifier().getId());
         }
 
         final var accessTypeId = accessService.findAccessTypeId(raid.getAccess());
@@ -170,7 +169,6 @@ public class RaidIngestService {
         raidRepository.update(raidRecord);
 
         titleService.update(raid.getTitle(), handle);
-
         descriptionService.update(raid.getDescription(), handle);
         contributorService.update(raid.getContributor(), handle);
         organisationService.update(raid.getOrganisation(), handle);
@@ -182,6 +180,6 @@ public class RaidIngestService {
         traditionalKnowledgeLabelService.update(raid.getTraditionalKnowledgeLabel(), handle);
         spatialCoverageService.update(raid.getSpatialCoverage(), handle);
 
-        return Optional.of(raid);
+        return raid;
     }
 }

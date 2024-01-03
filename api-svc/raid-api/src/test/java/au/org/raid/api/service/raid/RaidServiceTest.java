@@ -181,7 +181,7 @@ class RaidServiceTest {
         when(checksumService.create(expected)).thenReturn("b");
 
         when(raidHistoryService.save(updateRequest)).thenReturn(expected);
-        when(raidIngestService.update(expected)).thenReturn(Optional.of(expected));
+        when(raidIngestService.update(expected)).thenReturn(expected);
         final var result = raidService.update(updateRequest);
         assertThat(result, Matchers.is(expected));
     }
@@ -213,27 +213,6 @@ class RaidServiceTest {
         assertThat(result, Matchers.is(expected));
 
         verifyNoInteractions(raidIngestService);
-    }
-
-    @Test
-    @DisplayName("ResourceNotFoundException is thrown on update")
-    void noResourceOnUpdate() throws JsonProcessingException, ValidationFailureException {
-        final var servicePointId = 999L;
-        final var handle = "10378.1/1696639";
-        final var raidJson = raidJson();
-
-        final var updateRequest = objectMapper.readValue(raidJson, RaidUpdateRequest.class);
-        final var raidDto = objectMapper.readValue(raidJson, RaidDto.class);
-
-        when(checksumService.create(updateRequest)).thenReturn("a");
-        when(checksumService.create(raidDto)).thenReturn("b");
-
-        when(raidHistoryService.findByHandle(handle)).thenReturn(Optional.of(raidDto));
-        when(raidHistoryService.save(updateRequest)).thenReturn(raidDto);
-        when(raidIngestService.update(raidDto)).thenReturn(Optional.empty());
-
-        assertThrows(ResourceNotFoundException.class, () -> raidService.update(updateRequest));
-
     }
 
     private String raidJson() {

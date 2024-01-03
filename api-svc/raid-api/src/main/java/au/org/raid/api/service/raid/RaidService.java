@@ -78,10 +78,9 @@ public class RaidService {
     }
 
     @SneakyThrows
-    public RaidDto update(
-            final RaidUpdateRequest raid
-    ) {
+    public RaidDto update(final RaidUpdateRequest raid) {
         final Integer version = raid.getIdentifier().getVersion();
+
         if (version == null) {
             throw new InvalidVersionException(version);
         }
@@ -100,8 +99,7 @@ public class RaidService {
 
         final var raidDto = raidHistoryService.save(raid);
 
-        return raidIngestService.update(raidDto)
-                .orElseThrow(() -> new ResourceNotFoundException(raid.getIdentifier().getId()));
+        return raidIngestService.update(raidDto);
     }
 
     public RaidDto read(String handle) {

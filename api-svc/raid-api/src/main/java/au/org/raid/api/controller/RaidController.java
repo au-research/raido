@@ -81,7 +81,7 @@ public class RaidController implements RaidApi {
 
         return ResponseEntity.ok(Optional.ofNullable(servicePoint)
                 .map(raidIngestService::findAllByServicePointId)
-                .orElse(raidIngestService.findAllByServicePointOrNotConfidentialId(user)));
+                .orElse(raidIngestService.findAllByServicePointIdOrNotConfidential(user)));
     }
 
     @Override
