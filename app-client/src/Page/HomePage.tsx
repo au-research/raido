@@ -4,7 +4,7 @@ import {raidoTitle} from "Component/Util";
 import {isPagePath, NavPathResult, NavTransition,} from "Design/NavigationProvider";
 import React from "react";
 import RaidCurrentUser from "./Homepage/components/RaidCurrentUser";
-import RaidTableContainerV2 from "./Homepage/components/RaidTableContainerV2";
+import RaidTable from "./Homepage/components/RaidTable";
 
 const pageUrl = "/home";
 
@@ -48,12 +48,10 @@ function Content() {
     session: { payload: user },
   } = useAuth();
   return (
-    <Container maxWidth="lg">
       <Stack gap={2}>
         <RaidCurrentUser />
-        <RaidTableContainerV2 servicePointId={user.servicePointId} />
+        <RaidTable servicePointId={user.servicePointId} />
       </Stack>
-    </Container>
   );
 }
 

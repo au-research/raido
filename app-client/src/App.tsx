@@ -1,4 +1,4 @@
-import { Box, createTheme, CssBaseline, useMediaQuery } from "@mui/material";
+import {Box, Container, createTheme, CssBaseline, useMediaQuery} from "@mui/material";
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { AuthApiProvider } from "Api/AuthApi";
@@ -103,6 +103,7 @@ export function App(){
                       <AppNavBarNew/>
   
                       <Box sx={{pt:7}}></Box>
+                      <Container maxWidth="lg">
                       {/* Navigable, authenticated pages, self-routed */}
                       <HomePage/>
                       <AboutAppPage/>
@@ -119,6 +120,7 @@ export function App(){
                       <ShowRaidPage/>
                       <MintRaidPage/>
                       <MintRaidPageNew/>
+                      </Container>
   
                     </NavigationProvider>
                   </AuthApiProvider>
