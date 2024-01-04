@@ -1,5 +1,9 @@
 package au.org.raid.api.service;
 
+import au.org.raid.api.exception.RelatedObjectNotFoundException;
+import au.org.raid.api.exception.RelatedObjectSchemaNotFoundException;
+import au.org.raid.api.exception.RelatedObjectTypeNotFoundException;
+import au.org.raid.api.exception.RelatedObjectTypeSchemaNotFoundException;
 import au.org.raid.api.factory.RelatedObjectFactory;
 import au.org.raid.api.factory.record.RaidRelatedObjectRecordFactory;
 import au.org.raid.api.factory.record.RelatedObjectRecordFactory;
@@ -34,8 +38,7 @@ public class RelatedObjectService {
 
         for (final var relatedObject : relatedObjects) {
             final var relatedObjectSchemaRecord = relatedObjectSchemaRepository.findByUri(relatedObject.getSchemaUri())
-                    .orElseThrow(() -> new RuntimeException(
-                            "Related object schema not found %s".formatted(relatedObject.getSchemaUri())));
+                    .orElseThrow(() -> new RelatedObjectSchemaNotFoundException(relatedObject.getSchemaUri()));
 
             final var relatedObjectRecord =
                     relatedObjectRecordFactory.create(relatedObject.getId(), relatedObjectSchemaRecord.getId());
@@ -44,14 +47,13 @@ public class RelatedObjectService {
 
             final var relatedObjectTypeSchemaRecord =
                     relatedObjectTypeSchemaRepository.findByUri(relatedObject.getType().getSchemaUri())
-                            .orElseThrow(() -> new RuntimeException(
-                                    "Related object schema not found %s".formatted(relatedObject.getSchemaUri())));
+                            .orElseThrow(() ->
+                                    new RelatedObjectTypeSchemaNotFoundException(relatedObject.getSchemaUri()));
 
             final var relatedObjectTypeRecord = relatedObjectTypeRepository.findByUriAndSchemaId(
                     relatedObject.getType().getId(),
-                    relatedObjectTypeSchemaRecord.getId()
-            ).orElseThrow(() -> new RuntimeException("Related object type %s not found in schema %s"
-                    .formatted(relatedObject.getId(), relatedObject.getSchemaUri())));
+                    relatedObjectTypeSchemaRecord.getId()).orElseThrow(() ->
+                        new RelatedObjectTypeNotFoundException(relatedObject.getId(), relatedObject.getSchemaUri()));
 
             final var raidRelatedObjectRecord = raidRelatedObjectRepository.create(raidRelatedObjectRecordFactory.create(
                     handle, savedRelatedObjectRecord.getId(), relatedObjectTypeRecord.getId()));
@@ -70,13 +72,12 @@ public class RelatedObjectService {
             final var relatedObjectId = record.getRelatedObjectId();
 
             final var relatedObjectRecord = relatedObjectRepository.findById(relatedObjectId)
-                    .orElseThrow(() -> new RuntimeException(
-                            "Related object not found with id %d".formatted(relatedObjectId)));
+                    .orElseThrow(() -> new RelatedObjectNotFoundException(relatedObjectId));
 
             final var schemaId = relatedObjectRecord.getSchemaId();
 
             final var relatedObjectSchemaRecord = relatedObjectSchemaRepository.findById(schemaId)
-                    .orElseThrow(() -> new RuntimeException("Related object schema not found with id %d".formatted(schemaId)));
+                    .orElseThrow(() -> new RelatedObjectSchemaNotFoundException(schemaId));
 
             final var type = relatedObjectTypeService.findById(record.getRelatedObjectTypeId());
             final var categories = raidRelatedObjectCategoryService.findAllByRaidRelatedObjectId(record.getId());
