@@ -72,7 +72,15 @@ paths:
         description: Suffix of the raid handle
         schema:
           type: string
+
     get:
+      parameters:
+        - name: version
+          in: query
+          required: false
+          description: The version of the raid
+          schema:
+            type: integer
       security:
         - bearerAuth: [ ]
       tags:

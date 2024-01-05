@@ -35,7 +35,7 @@ public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
 
             raidApi.updateRaidV1(handle.getPrefix(), handle.getSuffix(), raidUpdateRequestFactory.create(raid));
 
-            final var response = raidApi.readRaidV1(handle.getPrefix(), handle.getSuffix());
+            final var response = raidApi.readRaidV1(handle.getPrefix(), handle.getSuffix(), null);
 
             final var raidDto = response.getBody();
             assert raidDto != null;
@@ -48,7 +48,7 @@ public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
         raid.getIdentifier().setVersion(7);
         raidApi.updateRaidV1(handle.getPrefix(), handle.getSuffix(), raidUpdateRequestFactory.create(raid));
 
-        final var response = raidApi.readRaidV1(handle.getPrefix(), handle.getSuffix());
+        final var response = raidApi.readRaidV1(handle.getPrefix(), handle.getSuffix(), null);
         final var raidDto = response.getBody();
         assert raidDto != null;
 

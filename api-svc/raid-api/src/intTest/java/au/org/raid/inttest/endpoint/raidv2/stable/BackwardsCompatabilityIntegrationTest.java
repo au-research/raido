@@ -35,7 +35,7 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
             final var prefix = split[0];
             final var suffix = split[1];
 
-            final RaidDto raidDto = raidApi.readRaidV1(prefix, suffix).getBody();
+            final RaidDto raidDto = raidApi.readRaidV1(prefix, suffix, null).getBody();
 
             final var expected = new RaidDto()
                     .identifier(new Id()
@@ -236,7 +236,7 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
 
         final var raidApi = testClient.raidApi(token);
 
-        final RaidDto raidDto = raidApi.readRaidV1(prefix, suffix).getBody();
+        final RaidDto raidDto = raidApi.readRaidV1(prefix, suffix, null).getBody();
 
         assertThat(raidDto.getIdentifier()).isEqualTo(new Id()
                 .id("http://localhost:8080/" + raidModel.getHandle())

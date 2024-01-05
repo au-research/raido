@@ -1,12 +1,14 @@
 package au.org.raid.api.service;
 
 import au.org.raid.api.entity.ChangeType;
+import au.org.raid.api.exception.ResourceNotFoundException;
 import au.org.raid.api.factory.HandleFactory;
 import au.org.raid.api.factory.JsonPatchFactory;
 import au.org.raid.api.factory.JsonValueFactory;
 import au.org.raid.api.factory.RaidHistoryRecordFactory;
 import au.org.raid.api.repository.RaidHistoryRepository;
 import au.org.raid.api.spring.RaidHistoryProperties;
+import au.org.raid.db.jooq.tables.Raid;
 import au.org.raid.db.jooq.tables.records.RaidHistoryRecord;
 import au.org.raid.idl.raidv2.model.Id;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
@@ -25,10 +27,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -199,6 +203,45 @@ class RaidHistoryServiceTest {
             verify(raidHistoryRepository).insert(patchRaidHistoryRecord);
             verify(raidHistoryRepository).insert(baselineRaidHistoryRecord);
         }
+    }
 
+    @Test
+    @DisplayName("read() returns raid at correct version")
+    void read() throws JsonProcessingException {
+        final var version = 2;
+        final var handle = "_handle";
+        final var diff = "[]";
+        final var raidString = "{}";
+
+        final var raidHistoryRecord = new RaidHistoryRecord()
+                .setDiff(diff);
+        final var jsonValue = mock(JsonValue.class);
+
+        final var raidJsonValue = mock(JsonValue.class);
+        when(raidJsonValue.toString()).thenReturn(raidString);
+
+        final var raidDto = new RaidDto();
+
+        when(raidHistoryRepository.findAllByHandleAndVersion(handle, version)).thenReturn(List.of(raidHistoryRecord));
+        when(jsonValueFactory.create(diff)).thenReturn(jsonValue);
+        when(objectMapper.readValue(raidString, RaidDto.class)).thenReturn(raidDto);
+        when(jsonValueFactory.create(List.of(jsonValue))).thenReturn(raidJsonValue);
+
+        assertThat(raidHistoryService.read(handle, version), is(raidDto));
+    }
+
+    @Test
+    @DisplayName("read() throws ResourceNotFoundException")
+    void readThrowsResourceNotFoundException() {
+        final var version = 2;
+        final var handle = "_handle";
+
+        when(raidHistoryRepository.findAllByHandleAndVersion(handle, version)).thenReturn(Collections.emptyList());
+
+        assertThrows(ResourceNotFoundException.class, () -> raidHistoryService.read(handle, version));
+
+        verifyNoInteractions(jsonValueFactory);
+        verifyNoInteractions(objectMapper);
+        verifyNoInteractions(jsonValueFactory);
     }
 }

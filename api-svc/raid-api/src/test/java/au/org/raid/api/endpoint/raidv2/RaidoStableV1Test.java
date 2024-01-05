@@ -2,6 +2,7 @@ package au.org.raid.api.endpoint.raidv2;
 
 import au.org.raid.api.exception.CrossAccountAccessException;
 import au.org.raid.api.exception.ResourceNotFoundException;
+import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.datacite.DataciteService;
 import au.org.raid.api.service.raid.RaidStableV1Service;
 import au.org.raid.api.service.raid.id.IdentifierHandle;
@@ -72,6 +73,8 @@ class RaidoStableV1Test {
     private ValidationService validationService;
     @Mock
     private DataciteService dataciteService;
+    @Mock
+    private RaidHistoryService raidHistoryService;
     @InjectMocks
     private RaidoStableV1 controller;
 
@@ -507,6 +510,67 @@ class RaidoStableV1Test {
             final RaidDto result = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), RaidDto.class);
 
             assertThat(result, Matchers.is(raid));
+        }
+    }
+
+    @Test
+    @DisplayName("Returns raid at given version")
+    void readRaidV1_ReturnsRaidAtVersion() throws Exception {
+        final var prefix = "10378.1";
+        final var suffix = "1696639";
+        final var startDate = LocalDate.now().minusYears(1);
+        final var title = "test-title";
+        final var raid = createRaidForGet(title, startDate);
+        final var version = 9;
+
+        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
+            final ApiToken apiToken = mock(ApiToken.class);
+            when(apiToken.getServicePointId()).thenReturn(20000001L);
+            authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
+
+            when(raidService.read(String.join("/", prefix, suffix))).thenReturn(raid);
+            when(raidHistoryService.read(String.join("/", prefix, suffix), version)).thenReturn(raid);
+
+            final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
+                            .queryParam("version", String.valueOf(version))
+                            .characterEncoding("utf-8")
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            final RaidDto result = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), RaidDto.class);
+
+            assertThat(result, Matchers.is(raid));
+        }
+    }
+
+    @Test
+    @DisplayName("Returns 404 when no raid found at given version")
+    void readRaidV1_ReturnsNotFoundIfVersionNotFound() throws Exception {
+        final var prefix = "10378.1";
+        final var suffix = "1696639";
+        final var startDate = LocalDate.now().minusYears(1);
+        final var title = "test-title";
+        final var raid = createRaidForGet(title, startDate);
+        final var version = 9;
+
+        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
+            final ApiToken apiToken = mock(ApiToken.class);
+            when(apiToken.getServicePointId()).thenReturn(20000001L);
+            authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
+
+            when(raidService.read(String.join("/", prefix, suffix))).thenReturn(raid);
+            when(raidHistoryService.read(String.join("/", prefix, suffix), version))
+                    .thenThrow(ResourceNotFoundException.class);
+
+            mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
+                            .queryParam("version", String.valueOf(version))
+                            .characterEncoding("utf-8")
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andExpect(status().isNotFound())
+                    .andReturn();
         }
     }
 

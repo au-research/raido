@@ -1,6 +1,7 @@
 package au.org.raid.api.service;
 
 import au.org.raid.api.entity.ChangeType;
+import au.org.raid.api.exception.ResourceNotFoundException;
 import au.org.raid.api.factory.HandleFactory;
 import au.org.raid.api.factory.JsonPatchFactory;
 import au.org.raid.api.factory.JsonValueFactory;
@@ -16,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -73,5 +76,19 @@ public class RaidHistoryService {
         }
 
         return objectMapper.readValue(jsonValueFactory.create(history, diff).toString(), RaidDto.class);
+    }
+
+    @SneakyThrows
+    public RaidDto read(final String handle, final Integer version) {
+        final var history = raidHistoryRepository.findAllByHandleAndVersion(handle, version).stream()
+                .map(RaidHistoryRecord::getDiff)
+                .map(jsonValueFactory::create)
+                .toList();
+
+        if (history.isEmpty()) {
+            throw new ResourceNotFoundException(handle);
+        }
+
+        return objectMapper.readValue(jsonValueFactory.create(history).toString(), RaidDto.class);
     }
 }

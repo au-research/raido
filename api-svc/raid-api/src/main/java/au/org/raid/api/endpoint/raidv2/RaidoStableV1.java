@@ -3,6 +3,7 @@ package au.org.raid.api.endpoint.raidv2;
 import au.org.raid.api.exception.ClosedRaidException;
 import au.org.raid.api.exception.InvalidAccessException;
 import au.org.raid.api.exception.ValidationException;
+import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.raid.RaidStableV1Service;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.util.SchemaValues;
@@ -15,6 +16,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,17 +35,14 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 @RestController
 @CrossOrigin
 @SecurityScheme(name = "bearerAuth", scheme = "bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
+@RequiredArgsConstructor
 public class RaidoStableV1 implements RaidoStableV1Api {
     private final ValidationService validationService;
     private final RaidStableV1Service raidService;
-
-    public RaidoStableV1(final ValidationService validationService, final RaidStableV1Service raidService) {
-        this.validationService = validationService;
-        this.raidService = raidService;
-    }
+    private final RaidHistoryService raidHistoryService;
 
     @Override
-    public ResponseEntity<RaidDto> readRaidV1(final String prefix, final String suffix) {
+    public ResponseEntity<RaidDto> readRaidV1(final String prefix, final String suffix, final Integer version) {
         var user = getApiToken();
         //return 403 if raid is confidential and doesn't have same service point as user
 
@@ -53,6 +52,10 @@ public class RaidoStableV1 implements RaidoStableV1Api {
         if (!raid.getIdentifier().getOwner().getServicePoint().equals(user.getServicePointId())
                 && !raid.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri())) {
             throw new ClosedRaidException(raid);
+        }
+
+        if (version != null) {
+            raid = raidHistoryService.read(handle, version);
         }
 
         return ResponseEntity.ok(raid);
