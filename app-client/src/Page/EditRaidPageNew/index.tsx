@@ -31,7 +31,7 @@ import {
 
 import { useState } from "react";
 
-const pageUrl = "/edit-raid-new";
+const pageUrl = "/edit-raid";
 
 export function isEditRaidPagePath(pathname: string): NavPathResult {
   return isPagePath(pathname, pageUrl);
