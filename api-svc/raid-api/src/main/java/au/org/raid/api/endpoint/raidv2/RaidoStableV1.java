@@ -3,16 +3,17 @@ package au.org.raid.api.endpoint.raidv2;
 import au.org.raid.api.exception.ClosedRaidException;
 import au.org.raid.api.exception.InvalidAccessException;
 import au.org.raid.api.exception.ValidationException;
+import au.org.raid.api.service.Handle;
 import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.raid.RaidStableV1Service;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
 import au.org.raid.api.util.SchemaValues;
 import au.org.raid.api.validator.ValidationService;
 import au.org.raid.idl.raidv2.api.RaidoStableV1Api;
+import au.org.raid.idl.raidv2.model.RaidChange;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
@@ -109,5 +110,21 @@ public class RaidoStableV1 implements RaidoStableV1Api {
         }
 
         return ResponseEntity.ok(raidService.update(request));
+    }
+
+    @Override
+    public ResponseEntity<List<RaidChange>> raidHistory(final String prefix, final String suffix) {
+        //TODO: Need to check permissions
+        // If raid is embargoed only show to users of service point
+        final var handle = prefix + "/" + suffix;
+
+        final var raid = raidService.read(handle);
+
+//        if (accessService.isEmbargoed(raid)) {
+//            var user = getApiToken();
+//            guardOperatorOrAssociated(user, raid.getIdentifier().getOwner().getServicePoint());
+//        }
+
+        return ResponseEntity.ok(raidHistoryService.findAllChangesByHandle(handle));
     }
 }

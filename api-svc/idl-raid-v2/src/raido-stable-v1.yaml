@@ -72,7 +72,6 @@ paths:
         description: Suffix of the raid handle
         schema:
           type: string
-
     get:
       parameters:
         - name: version
@@ -125,6 +124,43 @@ paths:
             application/json:
               schema:
                 $ref: 'components.yaml#/components/schemas/ValidationFailureResponse'
+
+  /raid/{prefix}/{suffix}/history:
+    parameters:
+      - name: prefix
+        in: path
+        required: true
+        description: Prefix of the raid handle
+        schema:
+          type: string
+      - name: suffix
+        in: path
+        required: true
+        description: Suffix of the raid handle
+        schema:
+          type: string
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - raido-stable-v1
+      operationId: raid-history
+      summary: A list of the changes to the raid
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RaidChange'
+        403:
+          description: Closed or Embargoed raids return a 403 response with an access statement
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClosedRaid'
 components:
   schemas:
     RaidCreateRequest:
@@ -588,3 +624,23 @@ components:
           $ref: '#/components/schemas/Id'
         access:
           $ref: '#/components/schemas/Access'
+    RaidChange:
+      type: object
+      properties:
+        handle: {
+          type: string,
+          example: 10.25.1.1/abcde
+        }
+        version: {
+          type: integer
+        }
+        diff: {
+          type: string,
+          description: A base64 encoded json patch (RFC 6902) representation of a change to the raid.
+        }
+        timestamp: {
+          type: string,
+          format: date-time,
+          description: A timestamp of the change
+        }
+

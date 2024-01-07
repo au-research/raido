@@ -98,6 +98,8 @@ paths:
     $ref: "raido-stable-v1.yaml#/paths/~1raid"
   /raid/{prefix}/{suffix}:
     $ref: "raido-stable-v1.yaml#/paths/~1raid~1{prefix}~1{suffix}"
+  /raid/{prefix}/{suffix}/history:
+    $ref: "raido-stable-v1.yaml#/paths/~1raid~1{prefix}~1{suffix}~1history"
 
   # endregion
 

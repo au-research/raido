@@ -48,6 +48,14 @@ public class RaidHistoryRepository {
                 );
     }
 
+    public List<RaidHistoryRecord> findAllByHandleAndChangeType(final String handle, final String changeType) {
+        return dslContext.selectFrom(RAID_HISTORY)
+                .where(RAID_HISTORY.HANDLE.eq(handle))
+                .and(RAID_HISTORY.CHANGE_TYPE.eq(changeType))
+                .orderBy(RAID_HISTORY.REVISION)
+                .fetch();
+    }
+
 
     public List<RaidHistoryRecord> findAllByHandleAndVersion(final String handle, final Integer version) {
         return dslContext.selectFrom(RAID_HISTORY)

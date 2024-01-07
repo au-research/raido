@@ -55,6 +55,12 @@ public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
 
         assertThat(raidDto.getIdentifier().getVersion()).isEqualTo(version);
         assertThat(raidDto.getTitle().get(0).getText()).isEqualTo("Version %d".formatted(version));
+
+        final var historyResponse = raidApi.raidHistory(handle.getPrefix(), handle.getSuffix());
+
+        final var history = historyResponse.getBody();
+
+        assertThat(history).hasSize(7);
     }
 
     private Title getPrimaryTitle(final RaidDto raidDto) {
