@@ -105,7 +105,7 @@ function Content() {
         color="primary"
         sx={{ position: "fixed", bottom: "16px", right: "16px" }}
         component="a"
-        href={`/edit-raid-new/${handle}`}
+        href={`/edit-raid/${handle}`}
       >
         <EditIcon sx={{ mr: 1 }} />
         Edit RAiD

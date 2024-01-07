@@ -45,7 +45,7 @@ import { IconButton } from "@mui/material";
 
 const log = console;
 
-const pageUrl = "/edit-raid";
+const pageUrl = "/edit-raid-old";
 
 export function getEditRaidPageLink(handle: string): string{
   return `${pageUrl}/${handle}`;
