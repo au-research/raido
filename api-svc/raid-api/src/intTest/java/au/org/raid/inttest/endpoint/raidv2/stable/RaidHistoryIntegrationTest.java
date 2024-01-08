@@ -19,6 +19,9 @@ public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Changes are saved to history table")
     void changesSaved() {
+
+        createRequest.getTitle().get(0).setText("Version 1");
+
         final var createResponse = raidApi.createRaidV1(createRequest);
 
         Handle handle = new Handle(Objects.requireNonNull(createResponse.getBody()).getIdentifier().getId());
@@ -26,7 +29,7 @@ public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
         var raid = createResponse.getBody();
 
         IntStream.range(1,7).forEach(i -> {
-            final var text = "Title %d".formatted(i);
+            final var text = "Version %d".formatted(i + 1);
 
             final var primaryTitle = getPrimaryTitle(raid);
 
@@ -44,15 +47,20 @@ public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
             assertThat(getPrimaryTitle(raidDto).getText()).isEqualTo(text);
         });
 
-        raid.setTraditionalKnowledgeLabel(Collections.emptyList());
-        raid.getIdentifier().setVersion(7);
-        raidApi.updateRaidV1(handle.getPrefix(), handle.getSuffix(), raidUpdateRequestFactory.create(raid));
+        final var version = 3;
 
-        final var response = raidApi.readRaidV1(handle.getPrefix(), handle.getSuffix(), null);
+        final var response = raidApi.readRaidV1(handle.getPrefix(), handle.getSuffix(), version);
         final var raidDto = response.getBody();
         assert raidDto != null;
 
-        assertThat(raidDto.getTraditionalKnowledgeLabel()).isEmpty();
+        assertThat(raidDto.getIdentifier().getVersion()).isEqualTo(version);
+        assertThat(raidDto.getTitle().get(0).getText()).isEqualTo("Version %d".formatted(version));
+
+        final var historyResponse = raidApi.raidHistory(handle.getPrefix(), handle.getSuffix());
+
+        final var history = historyResponse.getBody();
+
+        assertThat(history).hasSize(7);
     }
 
     private Title getPrimaryTitle(final RaidDto raidDto) {

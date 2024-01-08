@@ -2,13 +2,11 @@ package au.org.raid.api.service;
 
 import au.org.raid.api.entity.ChangeType;
 import au.org.raid.api.exception.ResourceNotFoundException;
-import au.org.raid.api.factory.HandleFactory;
-import au.org.raid.api.factory.JsonPatchFactory;
-import au.org.raid.api.factory.JsonValueFactory;
-import au.org.raid.api.factory.RaidHistoryRecordFactory;
+import au.org.raid.api.factory.*;
 import au.org.raid.api.repository.RaidHistoryRepository;
 import au.org.raid.api.spring.RaidHistoryProperties;
 import au.org.raid.db.jooq.tables.records.RaidHistoryRecord;
+import au.org.raid.idl.raidv2.model.RaidChange;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
@@ -32,6 +30,7 @@ public class RaidHistoryService {
     private final HandleFactory handleFactory;
     private final RaidHistoryRecordFactory raidHistoryRecordFactory;
     private final RaidHistoryProperties properties;
+    private final RaidChangeFactory raidChangeFactory;
 
     @SneakyThrows
     public RaidDto save(final RaidCreateRequest request) {
@@ -90,5 +89,11 @@ public class RaidHistoryService {
         }
 
         return objectMapper.readValue(jsonValueFactory.create(history).toString(), RaidDto.class);
+    }
+
+    public List<RaidChange> findAllChangesByHandle(final String handle) {
+        return raidHistoryRepository.findAllByHandleAndChangeType(handle, ChangeType.PATCH.toString()).stream()
+                .map(raidChangeFactory::create)
+                .toList();
     }
 }

@@ -2,6 +2,7 @@ package au.org.raid.api.endpoint.raidv2;
 
 import au.org.raid.api.exception.CrossAccountAccessException;
 import au.org.raid.api.exception.ResourceNotFoundException;
+import au.org.raid.api.service.Handle;
 import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.datacite.DataciteService;
 import au.org.raid.api.service.raid.RaidStableV1Service;
@@ -34,6 +35,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
@@ -731,6 +734,34 @@ class RaidoStableV1Test {
                     .andExpect(jsonPath("$[0].organisation[0].id", Matchers.is("https://ror.org/04qw24q55")))
                     .andExpect(jsonPath("$[0].organisation[0].schemaUri", Matchers.is("https://ror.org/")));
         }
+    }
+
+    @Test
+    @DisplayName("Raid history endpoint returns list of changes")
+    void raidHistory() throws Exception {
+        final var prefix = "_prefix";
+        final var suffix = "_suffix";
+        final var handle = prefix + "/" + suffix;
+        final var version = 1;
+        final var diff = "_diff";
+        final var timestamp = LocalDateTime.now().atOffset(ZoneOffset.UTC);
+
+        final var raidChange = new RaidChange()
+                .handle(handle)
+                .version(version)
+                .diff(diff)
+                .timestamp(timestamp);
+
+        when(raidHistoryService.findAllChangesByHandle(handle)).thenReturn(List.of(raidChange));
+
+        mockMvc.perform(get(String.format("/raid/%s/%s/history", prefix, suffix), handle)
+                        .characterEncoding("utf-8"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].handle", Matchers.is(handle)))
+                .andExpect(jsonPath("$[0].version", Matchers.is(version)))
+                .andExpect(jsonPath("$[0].diff", Matchers.is(diff)))
+                .andExpect(jsonPath("$[0].timestamp", Matchers.is(timestamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))));
     }
 
     private RaidDto createRaidForGet(final String title, final LocalDate startDate) throws IOException {
