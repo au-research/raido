@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.List;
 
-import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
+import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAID_AU_SP_ID;
 import static au.org.raid.idl.raidv2.model.AccessType.OPEN;
 import static au.org.raid.idl.raidv2.model.DescriptionType.ALTERNATIVE_DESCRIPTION;
 import static au.org.raid.idl.raidv2.model.DescriptionType.PRIMARY_DESCRIPTION;
@@ -37,7 +37,7 @@ public class RaidoSchemaMultiElementTest extends IntegrationTestCase {
         var mintResult = raidApi.mintRaidoSchemaV1(
                 new MintRaidoSchemaV1Request().
                         mintRequest(new MintRaidoSchemaV1RequestMintRequest().
-                                servicePointId(RAIDO_SP_ID)).
+                                servicePointId(RAID_AU_SP_ID)).
                         metadata(new RaidoMetadataSchemaV1().
                                 metadataSchema(RAIDOMETADATASCHEMAV1).
                                 titles(List.of(

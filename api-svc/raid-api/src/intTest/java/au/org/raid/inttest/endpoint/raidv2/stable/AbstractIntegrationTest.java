@@ -15,20 +15,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Contract;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
-import static au.org.raid.db.jooq.enums.UserRole.OPERATOR;
+import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAID_AU_SP_ID;
+import static au.org.raid.db.jooq.enums.UserRole.SP_USER;
 import static au.org.raid.inttest.endpoint.raidv2.stable.TestConstants.*;
 import static au.org.raid.inttest.util.MinimalRaidTestData.REAL_TEST_ORCID;
 import static au.org.raid.inttest.util.MinimalRaidTestData.REAL_TEST_ROR;
@@ -39,7 +36,7 @@ import static au.org.raid.inttest.util.MinimalRaidTestData.REAL_TEST_ROR;
 public class AbstractIntegrationTest {
     protected static final Long UQ_SERVICE_POINT_ID = 20000002L;
     protected final IdFactory idFactory = new IdFactory("inttest");
-    protected String operatorToken;
+    protected String raidAuUserToken;
     protected String raidV1TestToken;
     protected LocalDate today = LocalDate.now();
     protected RaidCreateRequest createRequest;
@@ -69,12 +66,12 @@ public class AbstractIntegrationTest {
     public void setupTestToken() {
         raidV1TestToken = bootstrapTokenSvc.initRaidV1TestToken();
 
-        operatorToken = bootstrapTokenSvc.bootstrapToken(
-                RAIDO_SP_ID, "intTestOperatorApiToken", OPERATOR);
+        raidAuUserToken = bootstrapTokenSvc.bootstrapToken(
+                RAID_AU_SP_ID, "int-test-sp-user", SP_USER);
 
         createRequest = newCreateRequest();
-        raidApi = testClient.raidApi(operatorToken);
-        experimentalApi = testClient.basicRaidExperimentalClient((operatorToken));
+        raidApi = testClient.raidApi(raidAuUserToken);
+        experimentalApi = testClient.basicRaidExperimentalClient((raidAuUserToken));
         legacyApi = testClient.legacyApi(raidV1TestToken);
         identifierParser = new IdentifierParser();
     }

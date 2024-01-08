@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
+import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAID_AU_SP_ID;
 import static au.org.raid.api.util.IdeUtil.formatClickable;
 import static au.org.raid.api.util.IoUtil.lines;
 import static au.org.raid.idl.raidv2.model.AccessType.CLOSED;
@@ -41,12 +41,12 @@ public class AgencyPublicDataExportTest extends IntegrationTestCase {
         Path testFilePath = Files.createTempFile(getName(), ".ndjson");
 
         var openRaidMint = raidApi.mintRaidoSchemaV1(
-                createMintRequest(createMinimalSchemaV1(openTitle), RAIDO_SP_ID));
+                createMintRequest(createMinimalSchemaV1(openTitle), RAID_AU_SP_ID));
         RaidoMetadataSchemaV1 closedMintData = createMinimalSchemaV1(closedTitle);
         closedMintData.getAccess().setType(CLOSED);
         closedMintData.getAccess().setAccessStatement("closed for int test");
         var closedRaidMint = raidApi.mintRaidoSchemaV1(
-                createMintRequest(closedMintData, RAIDO_SP_ID));
+                createMintRequest(closedMintData, RAID_AU_SP_ID));
 
         /* only need to do a few records to make sure it works */
         AgencyPublicDataExport.export(testFilePath.toString(), 10);

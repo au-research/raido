@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
+import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAID_AU_SP_ID;
 import static au.org.raid.db.jooq.enums.IdProvider.RAIDO_API;
 import static au.org.raid.db.jooq.enums.UserRole.SP_USER;
 import static java.time.ZoneOffset.UTC;
@@ -33,11 +33,11 @@ public class ApiKeyTest extends IntegrationTestCase {
 
         assertThatThrownBy(() ->
                 basicApiAsSpUser.listRaidV2(new RaidListRequestV2().
-                        servicePointId(RAIDO_SP_ID))
+                        servicePointId(RAID_AU_SP_ID))
         ).
                 isInstanceOf(Forbidden.class).
                 hasMessageContaining("You don't have permission to access RAiDs with a" +
-                        " service point of " + RAIDO_SP_ID);
+                        " service point of " + RAID_AU_SP_ID);
     }
 
     @Test

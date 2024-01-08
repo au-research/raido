@@ -3,7 +3,6 @@ package au.org.raid.api.endpoint.raidv2;
 import au.org.raid.api.exception.ClosedRaidException;
 import au.org.raid.api.exception.InvalidAccessException;
 import au.org.raid.api.exception.ValidationException;
-import au.org.raid.api.service.Handle;
 import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.raid.RaidStableV1Service;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
@@ -114,16 +113,14 @@ public class RaidoStableV1 implements RaidoStableV1Api {
 
     @Override
     public ResponseEntity<List<RaidChange>> raidHistory(final String prefix, final String suffix) {
-        //TODO: Need to check permissions
-        // If raid is embargoed only show to users of service point
         final var handle = prefix + "/" + suffix;
 
         final var raid = raidService.read(handle);
 
-//        if (accessService.isEmbargoed(raid)) {
-//            var user = getApiToken();
-//            guardOperatorOrAssociated(user, raid.getIdentifier().getOwner().getServicePoint());
-//        }
+        if (!raid.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri())) {
+            var user = getApiToken();
+            guardOperatorOrAssociated(user, raid.getIdentifier().getOwner().getServicePoint());
+        }
 
         return ResponseEntity.ok(raidHistoryService.findAllChangesByHandle(handle));
     }

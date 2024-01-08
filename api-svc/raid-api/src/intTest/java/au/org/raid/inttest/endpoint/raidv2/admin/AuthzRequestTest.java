@@ -6,7 +6,7 @@ import au.org.raid.inttest.IntegrationTestCase;
 import feign.FeignException.InternalServerError;
 import org.junit.jupiter.api.Test;
 
-import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
+import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAID_AU_SP_ID;
 import static au.org.raid.db.jooq.enums.UserRole.SP_ADMIN;
 import static au.org.raid.db.jooq.enums.UserRole.SP_USER;
 import static au.org.raid.idl.raidv2.model.AuthzRequestStatus.*;
@@ -44,7 +44,7 @@ public class AuthzRequestTest extends IntegrationTestCase {
 
         var createResult = unapprovedClient.updateAuthzRequest(
                 new UpdateAuthzRequest().
-                        servicePointId(RAIDO_SP_ID).
+                        servicePointId(RAID_AU_SP_ID).
                         comments("intTest")).getBody();
 
         var authzRequest = admin.readRequestAuthz(createResult.getAuthzRequestId()).getBody();
@@ -58,7 +58,7 @@ public class AuthzRequestTest extends IntegrationTestCase {
             assertThat(i.getStatus()).isEqualTo(REQUESTED);
         });
 
-        var users = admin.listAppUser(RAIDO_SP_ID).getBody();
+        var users = admin.listAppUser(RAID_AU_SP_ID).getBody();
         assertThat(users).noneSatisfy(i ->
                 assertThat(i.getSubject()).isEqualTo(subject));
 
@@ -73,7 +73,7 @@ public class AuthzRequestTest extends IntegrationTestCase {
         assertThat(authzRequest.getSubject()).isEqualTo(subject);
         assertThat(authzRequest.getStatus()).isEqualTo(APPROVED);
 
-        users = admin.listAppUser(RAIDO_SP_ID).getBody();
+        users = admin.listAppUser(RAID_AU_SP_ID).getBody();
         assertThat(users).anySatisfy(i -> {
             assertThat(i.getSubject()).isEqualTo(subject);
             assertThat(i.getRole()).isEqualTo(SP_USER.getLiteral());
@@ -92,10 +92,10 @@ public class AuthzRequestTest extends IntegrationTestCase {
 
         var createResult = unapprovedClient.updateAuthzRequest(
                 new UpdateAuthzRequest().
-                        servicePointId(RAIDO_SP_ID).
+                        servicePointId(RAID_AU_SP_ID).
                         comments("intTest")).getBody();
 
-        var users = admin.listAppUser(RAIDO_SP_ID).getBody();
+        var users = admin.listAppUser(RAID_AU_SP_ID).getBody();
         assertThat(users).noneSatisfy(i -> {
             assertThat(i.getSubject()).isEqualTo(subject);
         });
@@ -116,7 +116,7 @@ public class AuthzRequestTest extends IntegrationTestCase {
             assertThat(i.getStatus()).isEqualTo(REJECTED);
         });
 
-        users = admin.listAppUser(RAIDO_SP_ID).getBody();
+        users = admin.listAppUser(RAID_AU_SP_ID).getBody();
         assertThat(users).noneSatisfy(i ->
                 assertThat(i.getSubject()).isEqualTo(subject));
     }
@@ -132,7 +132,7 @@ public class AuthzRequestTest extends IntegrationTestCase {
 
         var createResult = unapprovedClient.updateAuthzRequest(
                 new UpdateAuthzRequest().
-                        servicePointId(RAIDO_SP_ID).
+                        servicePointId(RAID_AU_SP_ID).
                         comments("intTest")).getBody();
 
         assertThatThrownBy(() ->
@@ -154,13 +154,13 @@ public class AuthzRequestTest extends IntegrationTestCase {
         var unapprovedToken = bootstrapTokenSvc.
                 fakeUnapprovedGoogle(subjectUnapproved);
         var approvedSpUser = bootstrapTokenSvc.
-                bootstrapToken(RAIDO_SP_ID, spUserSubject, SP_USER);
+                bootstrapToken(RAID_AU_SP_ID, spUserSubject, SP_USER);
         var unapprovedClient = unapprovedClient(unapprovedToken);
         var spUserAdminClient = adminExperimentalClientAs(approvedSpUser);
 
 
         var createResult = unapprovedClient.updateAuthzRequest(
-                new UpdateAuthzRequest().servicePointId(RAIDO_SP_ID).comments("")).getBody();
+                new UpdateAuthzRequest().servicePointId(RAID_AU_SP_ID).comments("")).getBody();
 
         assertThatThrownBy(() ->
                 spUserAdminClient.updateAuthzRequestStatus(new UpdateAuthzRequestStatus().
@@ -181,7 +181,7 @@ public class AuthzRequestTest extends IntegrationTestCase {
                 generateUniqueId("intTestWApprovedApiToken", true);
         var unapprovedToken = bootstrapTokenSvc.
                 fakeUnapprovedGoogle(subjectUnapproved);
-        var otherSpId = findOtherPublicServicePoint(RAIDO_SP_ID).getId();
+        var otherSpId = findOtherPublicServicePoint(RAID_AU_SP_ID).getId();
         var approvedSpUser = bootstrapTokenSvc.
                 bootstrapToken(otherSpId, spUserSubject, SP_ADMIN);
         var unapprovedClient = unapprovedClient(unapprovedToken);
@@ -189,7 +189,7 @@ public class AuthzRequestTest extends IntegrationTestCase {
 
 
         var createResult = unapprovedClient.updateAuthzRequest(
-                new UpdateAuthzRequest().servicePointId(RAIDO_SP_ID).comments("")).getBody();
+                new UpdateAuthzRequest().servicePointId(RAID_AU_SP_ID).comments("")).getBody();
 
         assertThatThrownBy(() ->
                 spUserAdminClient.updateAuthzRequestStatus(new UpdateAuthzRequestStatus().
