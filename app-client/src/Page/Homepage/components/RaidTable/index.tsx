@@ -8,20 +8,20 @@ import {CompactErrorPanel} from "../../../../Error/CompactErrorPanel";
 import {DataGrid, GridColDef} from "@mui/x-data-grid";
 
 import {
-    OpenInNew as OpenInNewIcon,
-    Visibility as VisibilityIcon,
-    Edit as EditIcon,
     Add as AddIcon,
-    MoreVert as MoreVertIcon
+    Edit as EditIcon,
+    Menu as MenuIcon,
+    OpenInNew as OpenInNewIcon,
+    Visibility as VisibilityIcon
 } from "@mui/icons-material"
 
 import {
     Alert,
-    Button,
     Card,
     CardContent,
     CardHeader,
     Fab,
+    IconButton,
     ListItemIcon,
     ListItemText,
     Menu,
@@ -34,9 +34,6 @@ import {handleColumn} from "./columns/handleColumn";
 import {titleColumn} from "./columns/titleColumn";
 import {startDateColumn} from "./columns/startDateColumn";
 import {endDateColumn} from "./columns/endDateColumn";
-
-
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ContentCopy from '@mui/icons-material/ContentCopy';
 import copy from "clipboard-copy";
 import Divider from "@mui/material/Divider";
@@ -109,22 +106,15 @@ export default function RaidTable({servicePointId}: ListRaidsV1Request) {
             field: "_",
             headerName: "",
             disableColumnMenu: true,
-            width: 125,
+            width: 25,
             renderCell: (params) => {
                 const [_, suffix] = new URL(params.row.identifier.id).pathname
                     .substring(1)
                     .split("/");
                 return (
-                    <Button
-                        variant="text"
-                        endIcon={<MoreVertIcon/>}
-                        aria-controls={open ? 'basic-menu' : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={open ? 'true' : undefined}
-                        onClick={(event) => handleClick(event, params.row)}
-                    >
-                        Actions
-                    </Button>
+                    <IconButton aria-label="more actions" onClick={(event) => handleClick(event, params.row)}>
+                        <MenuIcon/>
+                    </IconButton>
                 );
             },
             sortable: false,
@@ -174,7 +164,7 @@ export default function RaidTable({servicePointId}: ListRaidsV1Request) {
                 }}>
 
                     <ListItemIcon>
-                        <EditIcon fontSize="small" />
+                        <EditIcon fontSize="small"/>
                     </ListItemIcon>
                     <ListItemText>Edit RAiD</ListItemText>
 
