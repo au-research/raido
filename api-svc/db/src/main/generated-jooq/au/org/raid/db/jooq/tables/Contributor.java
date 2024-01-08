@@ -122,7 +122,7 @@ public class Contributor extends TableImpl<ContributorRecord> {
 
     @Override
     public List<ForeignKey<ContributorRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.CONTRIBUTOR__FK_CONTRIBUTOR_SCHEMA_ID);
+        return Arrays.asList(Keys.CONTRIBUTOR__CONTRIBUTOR_SCHEMA_ID_FKEY);
     }
 
     private transient ContributorSchema _contributorSchema;
@@ -133,7 +133,7 @@ public class Contributor extends TableImpl<ContributorRecord> {
      */
     public ContributorSchema contributorSchema() {
         if (_contributorSchema == null)
-            _contributorSchema = new ContributorSchema(this, Keys.CONTRIBUTOR__FK_CONTRIBUTOR_SCHEMA_ID);
+            _contributorSchema = new ContributorSchema(this, Keys.CONTRIBUTOR__CONTRIBUTOR_SCHEMA_ID_FKEY);
 
         return _contributorSchema;
     }

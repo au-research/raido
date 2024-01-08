@@ -122,7 +122,7 @@ public class Organisation extends TableImpl<OrganisationRecord> {
 
     @Override
     public List<ForeignKey<OrganisationRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.ORGANISATION__FK_ORGANISATION_SCHEMA_ID);
+        return Arrays.asList(Keys.ORGANISATION__ORGANISATION_SCHEMA_ID_FKEY);
     }
 
     private transient OrganisationSchema _organisationSchema;
@@ -133,7 +133,7 @@ public class Organisation extends TableImpl<OrganisationRecord> {
      */
     public OrganisationSchema organisationSchema() {
         if (_organisationSchema == null)
-            _organisationSchema = new OrganisationSchema(this, Keys.ORGANISATION__FK_ORGANISATION_SCHEMA_ID);
+            _organisationSchema = new OrganisationSchema(this, Keys.ORGANISATION__ORGANISATION_SCHEMA_ID_FKEY);
 
         return _organisationSchema;
     }

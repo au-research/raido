@@ -121,7 +121,7 @@ public class Team extends TableImpl<TeamRecord> {
 
     @Override
     public List<ForeignKey<TeamRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.TEAM__FK_TEAM_SERVICE_POINT_ID);
+        return Arrays.asList(Keys.TEAM__TEAM_SERVICE_POINT_ID_FKEY);
     }
 
     private transient ServicePoint _servicePoint;
@@ -132,7 +132,7 @@ public class Team extends TableImpl<TeamRecord> {
      */
     public ServicePoint servicePoint() {
         if (_servicePoint == null)
-            _servicePoint = new ServicePoint(this, Keys.TEAM__FK_TEAM_SERVICE_POINT_ID);
+            _servicePoint = new ServicePoint(this, Keys.TEAM__TEAM_SERVICE_POINT_ID_FKEY);
 
         return _servicePoint;
     }

@@ -128,7 +128,7 @@ public class RaidRelatedObjectCategory extends TableImpl<RaidRelatedObjectCatego
 
     @Override
     public List<ForeignKey<RaidRelatedObjectCategoryRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_RELATED_OBJECT_CATEGORY__FK_RAID_RELATED_OBJECT_CATEGORY_RAID_RELATED_OBJECT_ID, Keys.RAID_RELATED_OBJECT_CATEGORY__FK_RAID_RELATED_OBJECT_CATEGORY_RELATED_OBJECT_CATEGORY_ID);
+        return Arrays.asList(Keys.RAID_RELATED_OBJECT_CATEGORY__RAID_RELATED_OBJECT_CATEGORY_RAID_RELATED_OBJECT_ID_FKEY, Keys.RAID_RELATED_OBJECT_CATEGORY__RAID_RELATED_OBJECT_CATEGORY_RELATED_OBJECT_CATEGORY_ID_FKEY);
     }
 
     private transient RaidRelatedObject _raidRelatedObject;
@@ -140,7 +140,7 @@ public class RaidRelatedObjectCategory extends TableImpl<RaidRelatedObjectCatego
      */
     public RaidRelatedObject raidRelatedObject() {
         if (_raidRelatedObject == null)
-            _raidRelatedObject = new RaidRelatedObject(this, Keys.RAID_RELATED_OBJECT_CATEGORY__FK_RAID_RELATED_OBJECT_CATEGORY_RAID_RELATED_OBJECT_ID);
+            _raidRelatedObject = new RaidRelatedObject(this, Keys.RAID_RELATED_OBJECT_CATEGORY__RAID_RELATED_OBJECT_CATEGORY_RAID_RELATED_OBJECT_ID_FKEY);
 
         return _raidRelatedObject;
     }
@@ -151,7 +151,7 @@ public class RaidRelatedObjectCategory extends TableImpl<RaidRelatedObjectCatego
      */
     public RelatedObjectCategory relatedObjectCategory() {
         if (_relatedObjectCategory == null)
-            _relatedObjectCategory = new RelatedObjectCategory(this, Keys.RAID_RELATED_OBJECT_CATEGORY__FK_RAID_RELATED_OBJECT_CATEGORY_RELATED_OBJECT_CATEGORY_ID);
+            _relatedObjectCategory = new RelatedObjectCategory(this, Keys.RAID_RELATED_OBJECT_CATEGORY__RAID_RELATED_OBJECT_CATEGORY_RELATED_OBJECT_CATEGORY_ID_FKEY);
 
         return _relatedObjectCategory;
     }

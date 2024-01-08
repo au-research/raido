@@ -126,7 +126,7 @@ public class RaidContributorRole extends TableImpl<RaidContributorRoleRecord> {
 
     @Override
     public List<ForeignKey<RaidContributorRoleRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_CONTRIBUTOR_ROLE__FK_RAID_CONTRIBUTOR_ROLE_RAID_CONTRIBUTOR_ID, Keys.RAID_CONTRIBUTOR_ROLE__FK_RAID_CONTRIBUTOR_ROLE_CONTRIBUTOR_ROLE_ID);
+        return Arrays.asList(Keys.RAID_CONTRIBUTOR_ROLE__RAID_CONTRIBUTOR_ROLE_RAID_CONTRIBUTOR_ID_FKEY, Keys.RAID_CONTRIBUTOR_ROLE__RAID_CONTRIBUTOR_ROLE_CONTRIBUTOR_ROLE_ID_FKEY);
     }
 
     private transient RaidContributor _raidContributor;
@@ -138,7 +138,7 @@ public class RaidContributorRole extends TableImpl<RaidContributorRoleRecord> {
      */
     public RaidContributor raidContributor() {
         if (_raidContributor == null)
-            _raidContributor = new RaidContributor(this, Keys.RAID_CONTRIBUTOR_ROLE__FK_RAID_CONTRIBUTOR_ROLE_RAID_CONTRIBUTOR_ID);
+            _raidContributor = new RaidContributor(this, Keys.RAID_CONTRIBUTOR_ROLE__RAID_CONTRIBUTOR_ROLE_RAID_CONTRIBUTOR_ID_FKEY);
 
         return _raidContributor;
     }
@@ -149,7 +149,7 @@ public class RaidContributorRole extends TableImpl<RaidContributorRoleRecord> {
      */
     public ContributorRole contributorRole() {
         if (_contributorRole == null)
-            _contributorRole = new ContributorRole(this, Keys.RAID_CONTRIBUTOR_ROLE__FK_RAID_CONTRIBUTOR_ROLE_CONTRIBUTOR_ROLE_ID);
+            _contributorRole = new ContributorRole(this, Keys.RAID_CONTRIBUTOR_ROLE__RAID_CONTRIBUTOR_ROLE_CONTRIBUTOR_ROLE_ID_FKEY);
 
         return _contributorRole;
     }

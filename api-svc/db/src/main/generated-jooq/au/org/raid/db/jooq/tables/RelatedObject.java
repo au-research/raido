@@ -122,7 +122,7 @@ public class RelatedObject extends TableImpl<RelatedObjectRecord> {
 
     @Override
     public List<ForeignKey<RelatedObjectRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RELATED_OBJECT__FK_RELATED_OBJECT_SCHEMA_ID);
+        return Arrays.asList(Keys.RELATED_OBJECT__RELATED_OBJECT_SCHEMA_ID_FKEY);
     }
 
     private transient RelatedObjectSchema _relatedObjectSchema;
@@ -133,7 +133,7 @@ public class RelatedObject extends TableImpl<RelatedObjectRecord> {
      */
     public RelatedObjectSchema relatedObjectSchema() {
         if (_relatedObjectSchema == null)
-            _relatedObjectSchema = new RelatedObjectSchema(this, Keys.RELATED_OBJECT__FK_RELATED_OBJECT_SCHEMA_ID);
+            _relatedObjectSchema = new RelatedObjectSchema(this, Keys.RELATED_OBJECT__RELATED_OBJECT_SCHEMA_ID_FKEY);
 
         return _relatedObjectSchema;
     }

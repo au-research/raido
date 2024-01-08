@@ -132,7 +132,7 @@ public class RaidContributor extends TableImpl<RaidContributorRecord> {
 
     @Override
     public List<ForeignKey<RaidContributorRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_CONTRIBUTOR__FK_RAID_CONTRIBUTOR_HANDLE, Keys.RAID_CONTRIBUTOR__FK_RAID_CONTRIBUTOR_CONTRIBUTOR_ID);
+        return Arrays.asList(Keys.RAID_CONTRIBUTOR__RAID_CONTRIBUTOR_HANDLE_FKEY, Keys.RAID_CONTRIBUTOR__RAID_CONTRIBUTOR_CONTRIBUTOR_ID_FKEY);
     }
 
     private transient Raid _raid;
@@ -143,7 +143,7 @@ public class RaidContributor extends TableImpl<RaidContributorRecord> {
      */
     public Raid raid() {
         if (_raid == null)
-            _raid = new Raid(this, Keys.RAID_CONTRIBUTOR__FK_RAID_CONTRIBUTOR_HANDLE);
+            _raid = new Raid(this, Keys.RAID_CONTRIBUTOR__RAID_CONTRIBUTOR_HANDLE_FKEY);
 
         return _raid;
     }
@@ -153,7 +153,7 @@ public class RaidContributor extends TableImpl<RaidContributorRecord> {
      */
     public Contributor contributor() {
         if (_contributor == null)
-            _contributor = new Contributor(this, Keys.RAID_CONTRIBUTOR__FK_RAID_CONTRIBUTOR_CONTRIBUTOR_ID);
+            _contributor = new Contributor(this, Keys.RAID_CONTRIBUTOR__RAID_CONTRIBUTOR_CONTRIBUTOR_ID_FKEY);
 
         return _contributor;
     }

@@ -136,7 +136,7 @@ public class RaidOrganisationRole extends TableImpl<RaidOrganisationRoleRecord> 
 
     @Override
     public List<ForeignKey<RaidOrganisationRoleRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_ORGANISATION_ROLE__FK_RAID_ORGANISATION_ROLE_RAID_ORGANISATION_ID, Keys.RAID_ORGANISATION_ROLE__FK_RAID_ORGANISATION_ROLE_ORGANISATION_ROLE_ID);
+        return Arrays.asList(Keys.RAID_ORGANISATION_ROLE__RAID_ORGANISATION_ROLE_RAID_ORGANISATION_ID_FKEY, Keys.RAID_ORGANISATION_ROLE__RAID_ORGANISATION_ROLE_ORGANISATION_ROLE_ID_FKEY);
     }
 
     private transient RaidOrganisation _raidOrganisation;
@@ -148,7 +148,7 @@ public class RaidOrganisationRole extends TableImpl<RaidOrganisationRoleRecord> 
      */
     public RaidOrganisation raidOrganisation() {
         if (_raidOrganisation == null)
-            _raidOrganisation = new RaidOrganisation(this, Keys.RAID_ORGANISATION_ROLE__FK_RAID_ORGANISATION_ROLE_RAID_ORGANISATION_ID);
+            _raidOrganisation = new RaidOrganisation(this, Keys.RAID_ORGANISATION_ROLE__RAID_ORGANISATION_ROLE_RAID_ORGANISATION_ID_FKEY);
 
         return _raidOrganisation;
     }
@@ -159,7 +159,7 @@ public class RaidOrganisationRole extends TableImpl<RaidOrganisationRoleRecord> 
      */
     public OrganisationRole organisationRole() {
         if (_organisationRole == null)
-            _organisationRole = new OrganisationRole(this, Keys.RAID_ORGANISATION_ROLE__FK_RAID_ORGANISATION_ROLE_ORGANISATION_ROLE_ID);
+            _organisationRole = new OrganisationRole(this, Keys.RAID_ORGANISATION_ROLE__RAID_ORGANISATION_ROLE_ORGANISATION_ROLE_ID_FKEY);
 
         return _organisationRole;
     }

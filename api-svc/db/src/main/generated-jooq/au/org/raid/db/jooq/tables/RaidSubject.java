@@ -122,7 +122,7 @@ public class RaidSubject extends TableImpl<RaidSubjectRecord> {
 
     @Override
     public List<ForeignKey<RaidSubjectRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_SUBJECT__FK_RAID_SUBJECT_HANDLE, Keys.RAID_SUBJECT__FK_RAID_SUBJECT_SUBJECT_ID);
+        return Arrays.asList(Keys.RAID_SUBJECT__RAID_SUBJECT_HANDLE_FKEY, Keys.RAID_SUBJECT__RAID_SUBJECT_SUBJECT_TYPE_ID_FKEY);
     }
 
     private transient Raid _raid;
@@ -133,7 +133,7 @@ public class RaidSubject extends TableImpl<RaidSubjectRecord> {
      */
     public Raid raid() {
         if (_raid == null)
-            _raid = new Raid(this, Keys.RAID_SUBJECT__FK_RAID_SUBJECT_HANDLE);
+            _raid = new Raid(this, Keys.RAID_SUBJECT__RAID_SUBJECT_HANDLE_FKEY);
 
         return _raid;
     }
@@ -144,7 +144,7 @@ public class RaidSubject extends TableImpl<RaidSubjectRecord> {
      */
     public SubjectType subjectType() {
         if (_subjectType == null)
-            _subjectType = new SubjectType(this, Keys.RAID_SUBJECT__FK_RAID_SUBJECT_SUBJECT_ID);
+            _subjectType = new SubjectType(this, Keys.RAID_SUBJECT__RAID_SUBJECT_SUBJECT_TYPE_ID_FKEY);
 
         return _subjectType;
     }

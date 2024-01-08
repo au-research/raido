@@ -106,7 +106,7 @@ public class RaidAlternateUrl extends TableImpl<RaidAlternateUrlRecord> {
 
     @Override
     public List<ForeignKey<RaidAlternateUrlRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_ALTERNATE_URL__FK_RAID_ALTERNATE_URL_HANDLE);
+        return Arrays.asList(Keys.RAID_ALTERNATE_URL__RAID_ALTERNATE_URL_HANDLE_FKEY);
     }
 
     private transient Raid _raid;
@@ -116,7 +116,7 @@ public class RaidAlternateUrl extends TableImpl<RaidAlternateUrlRecord> {
      */
     public Raid raid() {
         if (_raid == null)
-            _raid = new Raid(this, Keys.RAID_ALTERNATE_URL__FK_RAID_ALTERNATE_URL_HANDLE);
+            _raid = new Raid(this, Keys.RAID_ALTERNATE_URL__RAID_ALTERNATE_URL_HANDLE_FKEY);
 
         return _raid;
     }

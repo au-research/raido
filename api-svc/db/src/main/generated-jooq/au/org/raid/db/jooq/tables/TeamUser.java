@@ -106,7 +106,7 @@ public class TeamUser extends TableImpl<TeamUserRecord> {
 
     @Override
     public List<ForeignKey<TeamUserRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.TEAM_USER__FK_APP_USER_TEAM_APP_USER_ID, Keys.TEAM_USER__FK_APP_USER_TEAM_TEAM_ID);
+        return Arrays.asList(Keys.TEAM_USER__TEAM_USER_APP_USER_ID_FKEY, Keys.TEAM_USER__TEAM_USER_TEAM_ID_FKEY);
     }
 
     private transient AppUser _appUser;
@@ -117,7 +117,7 @@ public class TeamUser extends TableImpl<TeamUserRecord> {
      */
     public AppUser appUser() {
         if (_appUser == null)
-            _appUser = new AppUser(this, Keys.TEAM_USER__FK_APP_USER_TEAM_APP_USER_ID);
+            _appUser = new AppUser(this, Keys.TEAM_USER__TEAM_USER_APP_USER_ID_FKEY);
 
         return _appUser;
     }
@@ -127,7 +127,7 @@ public class TeamUser extends TableImpl<TeamUserRecord> {
      */
     public Team team() {
         if (_team == null)
-            _team = new Team(this, Keys.TEAM_USER__FK_APP_USER_TEAM_TEAM_ID);
+            _team = new Team(this, Keys.TEAM_USER__TEAM_USER_TEAM_ID_FKEY);
 
         return _team;
     }

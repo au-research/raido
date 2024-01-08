@@ -137,7 +137,7 @@ public class RaidTitle extends TableImpl<RaidTitleRecord> {
 
     @Override
     public List<ForeignKey<RaidTitleRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_TITLE__FK_TITLE_HANDLE, Keys.RAID_TITLE__FK_TITLE_TYPE, Keys.RAID_TITLE__FK_TITLE_LANGUAGE_ID);
+        return Arrays.asList(Keys.RAID_TITLE__RAID_TITLE_HANDLE_FKEY, Keys.RAID_TITLE__RAID_TITLE_TITLE_TYPE_ID_FKEY, Keys.RAID_TITLE__RAID_TITLE_LANGUAGE_ID_FKEY);
     }
 
     private transient Raid _raid;
@@ -149,7 +149,7 @@ public class RaidTitle extends TableImpl<RaidTitleRecord> {
      */
     public Raid raid() {
         if (_raid == null)
-            _raid = new Raid(this, Keys.RAID_TITLE__FK_TITLE_HANDLE);
+            _raid = new Raid(this, Keys.RAID_TITLE__RAID_TITLE_HANDLE_FKEY);
 
         return _raid;
     }
@@ -159,7 +159,7 @@ public class RaidTitle extends TableImpl<RaidTitleRecord> {
      */
     public TitleType titleType() {
         if (_titleType == null)
-            _titleType = new TitleType(this, Keys.RAID_TITLE__FK_TITLE_TYPE);
+            _titleType = new TitleType(this, Keys.RAID_TITLE__RAID_TITLE_TITLE_TYPE_ID_FKEY);
 
         return _titleType;
     }
@@ -169,7 +169,7 @@ public class RaidTitle extends TableImpl<RaidTitleRecord> {
      */
     public Language language() {
         if (_language == null)
-            _language = new Language(this, Keys.RAID_TITLE__FK_TITLE_LANGUAGE_ID);
+            _language = new Language(this, Keys.RAID_TITLE__RAID_TITLE_LANGUAGE_ID_FKEY);
 
         return _language;
     }

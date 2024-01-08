@@ -129,7 +129,7 @@ public class RaidSubjectKeyword extends TableImpl<RaidSubjectKeywordRecord> {
 
     @Override
     public List<ForeignKey<RaidSubjectKeywordRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_SUBJECT_KEYWORD__FK_RAID_SUBJECT_KEYWORD_RAID_SUBJECT_ID, Keys.RAID_SUBJECT_KEYWORD__FK_RAID_SUBJECT_KEYWORD_LANGUAGE_ID);
+        return Arrays.asList(Keys.RAID_SUBJECT_KEYWORD__RAID_SUBJECT_KEYWORD_RAID_SUBJECT_ID_FKEY, Keys.RAID_SUBJECT_KEYWORD__RAID_SUBJECT_KEYWORD_LANGUAGE_ID_FKEY);
     }
 
     private transient RaidSubject _raidSubject;
@@ -141,7 +141,7 @@ public class RaidSubjectKeyword extends TableImpl<RaidSubjectKeywordRecord> {
      */
     public RaidSubject raidSubject() {
         if (_raidSubject == null)
-            _raidSubject = new RaidSubject(this, Keys.RAID_SUBJECT_KEYWORD__FK_RAID_SUBJECT_KEYWORD_RAID_SUBJECT_ID);
+            _raidSubject = new RaidSubject(this, Keys.RAID_SUBJECT_KEYWORD__RAID_SUBJECT_KEYWORD_RAID_SUBJECT_ID_FKEY);
 
         return _raidSubject;
     }
@@ -151,7 +151,7 @@ public class RaidSubjectKeyword extends TableImpl<RaidSubjectKeywordRecord> {
      */
     public Language language() {
         if (_language == null)
-            _language = new Language(this, Keys.RAID_SUBJECT_KEYWORD__FK_RAID_SUBJECT_KEYWORD_LANGUAGE_ID);
+            _language = new Language(this, Keys.RAID_SUBJECT_KEYWORD__RAID_SUBJECT_KEYWORD_LANGUAGE_ID_FKEY);
 
         return _language;
     }

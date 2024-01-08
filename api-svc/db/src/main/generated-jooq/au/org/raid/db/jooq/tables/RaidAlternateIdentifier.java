@@ -113,7 +113,7 @@ public class RaidAlternateIdentifier extends TableImpl<RaidAlternateIdentifierRe
 
     @Override
     public List<ForeignKey<RaidAlternateIdentifierRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_ALTERNATE_IDENTIFIER__FK_RAID_ALTERNATE_IDENTIFIER_HANDLE);
+        return Arrays.asList(Keys.RAID_ALTERNATE_IDENTIFIER__RAID_ALTERNATE_IDENTIFIER_HANDLE_FKEY);
     }
 
     private transient Raid _raid;
@@ -123,7 +123,7 @@ public class RaidAlternateIdentifier extends TableImpl<RaidAlternateIdentifierRe
      */
     public Raid raid() {
         if (_raid == null)
-            _raid = new Raid(this, Keys.RAID_ALTERNATE_IDENTIFIER__FK_RAID_ALTERNATE_IDENTIFIER_HANDLE);
+            _raid = new Raid(this, Keys.RAID_ALTERNATE_IDENTIFIER__RAID_ALTERNATE_IDENTIFIER_HANDLE_FKEY);
 
         return _raid;
     }

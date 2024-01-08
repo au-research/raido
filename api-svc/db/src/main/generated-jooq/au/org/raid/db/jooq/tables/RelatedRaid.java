@@ -111,7 +111,7 @@ public class RelatedRaid extends TableImpl<RelatedRaidRecord> {
 
     @Override
     public List<ForeignKey<RelatedRaidRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RELATED_RAID__FK_RELATED_RAID_HANDLE);
+        return Arrays.asList(Keys.RELATED_RAID__RELATED_RAID_HANDLE_FKEY);
     }
 
     private transient Raid _raid;
@@ -121,7 +121,7 @@ public class RelatedRaid extends TableImpl<RelatedRaidRecord> {
      */
     public Raid raid() {
         if (_raid == null)
-            _raid = new Raid(this, Keys.RELATED_RAID__FK_RELATED_RAID_HANDLE);
+            _raid = new Raid(this, Keys.RELATED_RAID__RELATED_RAID_HANDLE_FKEY);
 
         return _raid;
     }

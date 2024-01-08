@@ -127,7 +127,7 @@ public class RaidDescription extends TableImpl<RaidDescriptionRecord> {
 
     @Override
     public List<ForeignKey<RaidDescriptionRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_DESCRIPTION__FK_DESCRIPTION_HANDLE, Keys.RAID_DESCRIPTION__FK_DESCRIPTION_TYPE, Keys.RAID_DESCRIPTION__FK_DESCRIPTION_LANGUAGE_ID);
+        return Arrays.asList(Keys.RAID_DESCRIPTION__RAID_DESCRIPTION_HANDLE_FKEY, Keys.RAID_DESCRIPTION__RAID_DESCRIPTION_DESCRIPTION_TYPE_ID_FKEY, Keys.RAID_DESCRIPTION__RAID_DESCRIPTION_LANGUAGE_ID_FKEY);
     }
 
     private transient Raid _raid;
@@ -139,7 +139,7 @@ public class RaidDescription extends TableImpl<RaidDescriptionRecord> {
      */
     public Raid raid() {
         if (_raid == null)
-            _raid = new Raid(this, Keys.RAID_DESCRIPTION__FK_DESCRIPTION_HANDLE);
+            _raid = new Raid(this, Keys.RAID_DESCRIPTION__RAID_DESCRIPTION_HANDLE_FKEY);
 
         return _raid;
     }
@@ -150,7 +150,7 @@ public class RaidDescription extends TableImpl<RaidDescriptionRecord> {
      */
     public DescriptionType descriptionType() {
         if (_descriptionType == null)
-            _descriptionType = new DescriptionType(this, Keys.RAID_DESCRIPTION__FK_DESCRIPTION_TYPE);
+            _descriptionType = new DescriptionType(this, Keys.RAID_DESCRIPTION__RAID_DESCRIPTION_DESCRIPTION_TYPE_ID_FKEY);
 
         return _descriptionType;
     }
@@ -160,7 +160,7 @@ public class RaidDescription extends TableImpl<RaidDescriptionRecord> {
      */
     public Language language() {
         if (_language == null)
-            _language = new Language(this, Keys.RAID_DESCRIPTION__FK_DESCRIPTION_LANGUAGE_ID);
+            _language = new Language(this, Keys.RAID_DESCRIPTION__RAID_DESCRIPTION_LANGUAGE_ID_FKEY);
 
         return _language;
     }

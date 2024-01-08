@@ -109,7 +109,7 @@ public class RaidSpatialCoveragePlace extends TableImpl<RaidSpatialCoveragePlace
 
     @Override
     public List<ForeignKey<RaidSpatialCoveragePlaceRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_SPATIAL_COVERAGE_PLACE__FK_RAID_SPATIAL_COVERAGE_PLACE_RAID_SPATIAL_COVERAGE_ID, Keys.RAID_SPATIAL_COVERAGE_PLACE__FK_RAID_SPATIAL_COVERAGE_PLACE_LANGUAGE_ID);
+        return Arrays.asList(Keys.RAID_SPATIAL_COVERAGE_PLACE__RAID_SPATIAL_COVERAGE_PLACE_RAID_SPATIAL_COVERAGE_ID_FKEY, Keys.RAID_SPATIAL_COVERAGE_PLACE__RAID_SPATIAL_COVERAGE_PLACE_LANGUAGE_ID_FKEY);
     }
 
     private transient RaidSpatialCoverage _raidSpatialCoverage;
@@ -121,7 +121,7 @@ public class RaidSpatialCoveragePlace extends TableImpl<RaidSpatialCoveragePlace
      */
     public RaidSpatialCoverage raidSpatialCoverage() {
         if (_raidSpatialCoverage == null)
-            _raidSpatialCoverage = new RaidSpatialCoverage(this, Keys.RAID_SPATIAL_COVERAGE_PLACE__FK_RAID_SPATIAL_COVERAGE_PLACE_RAID_SPATIAL_COVERAGE_ID);
+            _raidSpatialCoverage = new RaidSpatialCoverage(this, Keys.RAID_SPATIAL_COVERAGE_PLACE__RAID_SPATIAL_COVERAGE_PLACE_RAID_SPATIAL_COVERAGE_ID_FKEY);
 
         return _raidSpatialCoverage;
     }
@@ -131,7 +131,7 @@ public class RaidSpatialCoveragePlace extends TableImpl<RaidSpatialCoveragePlace
      */
     public Language language() {
         if (_language == null)
-            _language = new Language(this, Keys.RAID_SPATIAL_COVERAGE_PLACE__FK_RAID_SPATIAL_COVERAGE_PLACE_LANGUAGE_ID);
+            _language = new Language(this, Keys.RAID_SPATIAL_COVERAGE_PLACE__RAID_SPATIAL_COVERAGE_PLACE_LANGUAGE_ID_FKEY);
 
         return _language;
     }

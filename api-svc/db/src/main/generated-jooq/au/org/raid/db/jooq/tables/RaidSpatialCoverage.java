@@ -124,7 +124,7 @@ public class RaidSpatialCoverage extends TableImpl<RaidSpatialCoverageRecord> {
 
     @Override
     public List<ForeignKey<RaidSpatialCoverageRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_HANDLE, Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_SCHEMA_ID);
+        return Arrays.asList(Keys.RAID_SPATIAL_COVERAGE__RAID_SPATIAL_COVERAGE_HANDLE_FKEY, Keys.RAID_SPATIAL_COVERAGE__RAID_SPATIAL_COVERAGE_SCHEMA_ID_FKEY);
     }
 
     private transient Raid _raid;
@@ -135,7 +135,7 @@ public class RaidSpatialCoverage extends TableImpl<RaidSpatialCoverageRecord> {
      */
     public Raid raid() {
         if (_raid == null)
-            _raid = new Raid(this, Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_HANDLE);
+            _raid = new Raid(this, Keys.RAID_SPATIAL_COVERAGE__RAID_SPATIAL_COVERAGE_HANDLE_FKEY);
 
         return _raid;
     }
@@ -146,7 +146,7 @@ public class RaidSpatialCoverage extends TableImpl<RaidSpatialCoverageRecord> {
      */
     public SpatialCoverageSchema spatialCoverageSchema() {
         if (_spatialCoverageSchema == null)
-            _spatialCoverageSchema = new SpatialCoverageSchema(this, Keys.RAID_SPATIAL_COVERAGE__FK_RAID_SPATIAL_COVERAGE_SCHEMA_ID);
+            _spatialCoverageSchema = new SpatialCoverageSchema(this, Keys.RAID_SPATIAL_COVERAGE__RAID_SPATIAL_COVERAGE_SCHEMA_ID_FKEY);
 
         return _spatialCoverageSchema;
     }

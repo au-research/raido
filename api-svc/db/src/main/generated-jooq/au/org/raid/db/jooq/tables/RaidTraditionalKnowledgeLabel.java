@@ -128,7 +128,7 @@ public class RaidTraditionalKnowledgeLabel extends TableImpl<RaidTraditionalKnow
 
     @Override
     public List<ForeignKey<RaidTraditionalKnowledgeLabelRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__FK_RAID_TRAD_KNOW_LABEL_HANDLE, Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__FK_RAID_TRAD_KNOW_LABEL_TRADITIONAL_KNOWLEDGE_LABEL_ID, Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__FK_RAID_TRAD_KNOW_LABEL_TRADITIONAL_KNOWLEDGE_LABEL_SCHEMA_ID);
+        return Arrays.asList(Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__RAID_TRADITIONAL_KNOWLEDGE_LABEL_HANDLE_FKEY, Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__RAID_TRADITIONAL_KNOWLEDGE_LA_TRADITIONAL_KNOWLEDGE_LABEL__FKEY, Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__RAID_TRADITIONAL_KNOWLEDGE_L_TRADITIONAL_KNOWLEDGE_LABEL__FKEY1);
     }
 
     private transient Raid _raid;
@@ -140,7 +140,7 @@ public class RaidTraditionalKnowledgeLabel extends TableImpl<RaidTraditionalKnow
      */
     public Raid raid() {
         if (_raid == null)
-            _raid = new Raid(this, Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__FK_RAID_TRAD_KNOW_LABEL_HANDLE);
+            _raid = new Raid(this, Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__RAID_TRADITIONAL_KNOWLEDGE_LABEL_HANDLE_FKEY);
 
         return _raid;
     }
@@ -151,7 +151,7 @@ public class RaidTraditionalKnowledgeLabel extends TableImpl<RaidTraditionalKnow
      */
     public TraditionalKnowledgeLabel traditionalKnowledgeLabel() {
         if (_traditionalKnowledgeLabel == null)
-            _traditionalKnowledgeLabel = new TraditionalKnowledgeLabel(this, Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__FK_RAID_TRAD_KNOW_LABEL_TRADITIONAL_KNOWLEDGE_LABEL_ID);
+            _traditionalKnowledgeLabel = new TraditionalKnowledgeLabel(this, Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__RAID_TRADITIONAL_KNOWLEDGE_LA_TRADITIONAL_KNOWLEDGE_LABEL__FKEY);
 
         return _traditionalKnowledgeLabel;
     }
@@ -162,7 +162,7 @@ public class RaidTraditionalKnowledgeLabel extends TableImpl<RaidTraditionalKnow
      */
     public TraditionalKnowledgeLabelSchema traditionalKnowledgeLabelSchema() {
         if (_traditionalKnowledgeLabelSchema == null)
-            _traditionalKnowledgeLabelSchema = new TraditionalKnowledgeLabelSchema(this, Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__FK_RAID_TRAD_KNOW_LABEL_TRADITIONAL_KNOWLEDGE_LABEL_SCHEMA_ID);
+            _traditionalKnowledgeLabelSchema = new TraditionalKnowledgeLabelSchema(this, Keys.RAID_TRADITIONAL_KNOWLEDGE_LABEL__RAID_TRADITIONAL_KNOWLEDGE_L_TRADITIONAL_KNOWLEDGE_LABEL__FKEY1);
 
         return _traditionalKnowledgeLabelSchema;
     }

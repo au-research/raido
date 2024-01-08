@@ -130,7 +130,7 @@ public class RaidRelatedObject extends TableImpl<RaidRelatedObjectRecord> {
 
     @Override
     public List<ForeignKey<RaidRelatedObjectRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_HANDLE, Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_RELATED_OBJECT_ID, Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_RELATED_OBJECT_TYPE_ID);
+        return Arrays.asList(Keys.RAID_RELATED_OBJECT__RAID_RELATED_OBJECT_HANDLE_FKEY, Keys.RAID_RELATED_OBJECT__RAID_RELATED_OBJECT_RELATED_OBJECT_ID_FKEY, Keys.RAID_RELATED_OBJECT__RAID_RELATED_OBJECT_RELATED_OBJECT_TYPE_ID_FKEY);
     }
 
     private transient Raid _raid;
@@ -142,7 +142,7 @@ public class RaidRelatedObject extends TableImpl<RaidRelatedObjectRecord> {
      */
     public Raid raid() {
         if (_raid == null)
-            _raid = new Raid(this, Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_HANDLE);
+            _raid = new Raid(this, Keys.RAID_RELATED_OBJECT__RAID_RELATED_OBJECT_HANDLE_FKEY);
 
         return _raid;
     }
@@ -153,7 +153,7 @@ public class RaidRelatedObject extends TableImpl<RaidRelatedObjectRecord> {
      */
     public RelatedObject relatedObject() {
         if (_relatedObject == null)
-            _relatedObject = new RelatedObject(this, Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_RELATED_OBJECT_ID);
+            _relatedObject = new RelatedObject(this, Keys.RAID_RELATED_OBJECT__RAID_RELATED_OBJECT_RELATED_OBJECT_ID_FKEY);
 
         return _relatedObject;
     }
@@ -164,7 +164,7 @@ public class RaidRelatedObject extends TableImpl<RaidRelatedObjectRecord> {
      */
     public RelatedObjectType relatedObjectType() {
         if (_relatedObjectType == null)
-            _relatedObjectType = new RelatedObjectType(this, Keys.RAID_RELATED_OBJECT__FK_RAID_RELATED_OBJECT_RELATED_OBJECT_TYPE_ID);
+            _relatedObjectType = new RelatedObjectType(this, Keys.RAID_RELATED_OBJECT__RAID_RELATED_OBJECT_RELATED_OBJECT_TYPE_ID_FKEY);
 
         return _relatedObjectType;
     }

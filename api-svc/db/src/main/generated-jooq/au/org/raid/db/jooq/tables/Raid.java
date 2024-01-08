@@ -77,7 +77,7 @@ public class Raid extends TableImpl<RaidRecord> {
      * `https://hdl.handle.net/123.456/789`) 
      *   will redirect to this value.
      */
-    public final TableField<RaidRecord, String> URL = createField(DSL.name("url"), SQLDataType.VARCHAR(512).nullable(false), this, "The value that we set as the `URL` property via ARDC APIDS.\n  Example: `https://demo.raido-infra.com/raid/123.456/789`. \n  The global handle regisrty url (e.g. `https://hdl.handle.net/123.456/789`) \n  will redirect to this value.");
+    public final TableField<RaidRecord, String> URL = createField(DSL.name("url"), SQLDataType.VARCHAR(512), this, "The value that we set as the `URL` property via ARDC APIDS.\n  Example: `https://demo.raido-infra.com/raid/123.456/789`. \n  The global handle regisrty url (e.g. `https://hdl.handle.net/123.456/789`) \n  will redirect to this value.");
 
     /**
      * The column <code>api_svc.raid.url_index</code>. The `index` of the URL
@@ -94,7 +94,7 @@ public class Raid extends TableImpl<RaidRecord> {
     /**
      * The column <code>api_svc.raid.confidential</code>.
      */
-    public final TableField<RaidRecord, Boolean> CONFIDENTIAL = createField(DSL.name("confidential"), SQLDataType.BOOLEAN.nullable(false), this, "");
+    public final TableField<RaidRecord, Boolean> CONFIDENTIAL = createField(DSL.name("confidential"), SQLDataType.BOOLEAN, this, "");
 
     /**
      * The column <code>api_svc.raid.metadata_schema</code>. Identifies the
@@ -105,12 +105,12 @@ public class Raid extends TableImpl<RaidRecord> {
     /**
      * The column <code>api_svc.raid.metadata</code>.
      */
-    public final TableField<RaidRecord, JSONB> METADATA = createField(DSL.name("metadata"), SQLDataType.JSONB.nullable(false), this, "");
+    public final TableField<RaidRecord, JSONB> METADATA = createField(DSL.name("metadata"), SQLDataType.JSONB, this, "");
 
     /**
      * The column <code>api_svc.raid.start_date</code>.
      */
-    public final TableField<RaidRecord, LocalDate> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATE.nullable(false).defaultValue(DSL.field(DSL.raw("transaction_timestamp()"), SQLDataType.LOCALDATE)), this, "");
+    public final TableField<RaidRecord, LocalDate> START_DATE = createField(DSL.name("start_date"), SQLDataType.LOCALDATE.defaultValue(DSL.field(DSL.raw("transaction_timestamp()"), SQLDataType.LOCALDATE)), this, "");
 
     /**
      * The column <code>api_svc.raid.date_created</code>.
@@ -222,13 +222,13 @@ public class Raid extends TableImpl<RaidRecord> {
 
     @Override
     public List<ForeignKey<RaidRecord, ?>> getReferences() {
-        return Arrays.asList(Keys.RAID__RAID_SERVICE_POINT_ID_FKEY, Keys.RAID__FK_RAID_ACCESS_STATEMENT_LANGUAGE_ID, Keys.RAID__FK_RAID_REGISTRATION_AGENCY_ORGANISATION_ID, Keys.RAID__FK_RAID_OWNER_ORGANISATION_ID);
+        return Arrays.asList(Keys.RAID__RAID_SERVICE_POINT_ID_FKEY, Keys.RAID__RAID_ACCESS_STATEMENT_LANGUAGE_ID_FKEY, Keys.RAID__RAID_REGISTRATION_AGENCY_ORGANISATION_ID_FKEY, Keys.RAID__RAID_OWNER_ORGANISATION_ID_FKEY);
     }
 
     private transient ServicePoint _servicePoint;
     private transient Language _language;
-    private transient Organisation _fkRaidRegistrationAgencyOrganisationId;
-    private transient Organisation _fkRaidOwnerOrganisationId;
+    private transient Organisation _raidRegistrationAgencyOrganisationIdFkey;
+    private transient Organisation _raidOwnerOrganisationIdFkey;
 
     /**
      * Get the implicit join path to the <code>api_svc.service_point</code>
@@ -246,32 +246,32 @@ public class Raid extends TableImpl<RaidRecord> {
      */
     public Language language() {
         if (_language == null)
-            _language = new Language(this, Keys.RAID__FK_RAID_ACCESS_STATEMENT_LANGUAGE_ID);
+            _language = new Language(this, Keys.RAID__RAID_ACCESS_STATEMENT_LANGUAGE_ID_FKEY);
 
         return _language;
     }
 
     /**
      * Get the implicit join path to the <code>api_svc.organisation</code>
-     * table, via the <code>fk_raid_registration_agency_organisation_id</code>
+     * table, via the <code>raid_registration_agency_organisation_id_fkey</code>
      * key.
      */
-    public Organisation fkRaidRegistrationAgencyOrganisationId() {
-        if (_fkRaidRegistrationAgencyOrganisationId == null)
-            _fkRaidRegistrationAgencyOrganisationId = new Organisation(this, Keys.RAID__FK_RAID_REGISTRATION_AGENCY_ORGANISATION_ID);
+    public Organisation raidRegistrationAgencyOrganisationIdFkey() {
+        if (_raidRegistrationAgencyOrganisationIdFkey == null)
+            _raidRegistrationAgencyOrganisationIdFkey = new Organisation(this, Keys.RAID__RAID_REGISTRATION_AGENCY_ORGANISATION_ID_FKEY);
 
-        return _fkRaidRegistrationAgencyOrganisationId;
+        return _raidRegistrationAgencyOrganisationIdFkey;
     }
 
     /**
      * Get the implicit join path to the <code>api_svc.organisation</code>
-     * table, via the <code>fk_raid_owner_organisation_id</code> key.
+     * table, via the <code>raid_owner_organisation_id_fkey</code> key.
      */
-    public Organisation fkRaidOwnerOrganisationId() {
-        if (_fkRaidOwnerOrganisationId == null)
-            _fkRaidOwnerOrganisationId = new Organisation(this, Keys.RAID__FK_RAID_OWNER_ORGANISATION_ID);
+    public Organisation raidOwnerOrganisationIdFkey() {
+        if (_raidOwnerOrganisationIdFkey == null)
+            _raidOwnerOrganisationIdFkey = new Organisation(this, Keys.RAID__RAID_OWNER_ORGANISATION_ID_FKEY);
 
-        return _fkRaidOwnerOrganisationId;
+        return _raidOwnerOrganisationIdFkey;
     }
 
     @Override
