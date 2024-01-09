@@ -1,5 +1,6 @@
 package au.org.raid.api.service;
 
+import au.org.raid.api.exception.SpatialCoverageSchemaNotFoundException;
 import au.org.raid.api.factory.SpatialCoverageFactory;
 import au.org.raid.api.factory.record.RaidSpatialCoverageRecordFactory;
 import au.org.raid.api.repository.RaidSpatialCoverageRepository;
@@ -30,8 +31,7 @@ public class SpatialCoverageService {
         for (final var spatialCoverage : spatialCoverages) {
 
             final var spatialCoverageSchemaRecord = spatialCoverageSchemaRepository.findByUri(spatialCoverage.getSchemaUri())
-                    .orElseThrow(() -> new RuntimeException(
-                            "Spatial coverage schema not found %s".formatted(spatialCoverage.getSchemaUri())));
+                    .orElseThrow(() -> new SpatialCoverageSchemaNotFoundException(spatialCoverage.getSchemaUri()));
 
             final var record = raidSpatialCoverageRepository.create(raidSpatialCoverageRecordFactory.create(
                     spatialCoverage.getId(),
@@ -49,8 +49,7 @@ public class SpatialCoverageService {
         for (final var record : records) {
             final var schemaId = record.getSchemaId();
             final var schemaRecord = spatialCoverageSchemaRepository.findById(schemaId)
-                    .orElseThrow(() -> new RuntimeException(
-                            "Spatial coverage schema not found with id %d".formatted(schemaId)));
+                    .orElseThrow(() -> new SpatialCoverageSchemaNotFoundException(schemaId));
 
             final var places = raidSpatialCoveragePlaceService.findAllByRaidSpatialCoverageId(record.getId());
             spatialCoverages.add(spatialCoverageFactory.create(record.getUri(), schemaRecord.getUri(), places));
