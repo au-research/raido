@@ -27,8 +27,8 @@ public class ServicePointService {
         return servicePointFactory.create(servicePointRepository.create(record));
     }
 
-    public ServicePoint update(final ServicePoint servicePointDto) {
-        final var record = servicePointRecordFactory.create(servicePointDto);
+    public ServicePoint update(final ServicePoint servicePoint) {
+        final var record = servicePointRecordFactory.create(servicePoint);
         return servicePointFactory.create(servicePointRepository.update(record));
     }
 
