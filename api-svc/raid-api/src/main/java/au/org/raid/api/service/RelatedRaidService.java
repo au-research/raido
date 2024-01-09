@@ -39,7 +39,7 @@ public class RelatedRaidService {
 
         for (final var record : records) {
             final var type = relatedRaidTypeService.findById(record.getRelatedRaidTypeId());
-            relatedRaidFactory.create(record.getRelatedRaidHandle(), type);
+            relatedRaids.add(relatedRaidFactory.create(record.getRelatedRaidHandle(), type));
         }
 
         return relatedRaids;
