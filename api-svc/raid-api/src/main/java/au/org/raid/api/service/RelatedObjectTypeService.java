@@ -1,5 +1,7 @@
 package au.org.raid.api.service;
 
+import au.org.raid.api.exception.RelatedObjectTypeNotFoundException;
+import au.org.raid.api.exception.RelatedObjectTypeSchemaNotFoundException;
 import au.org.raid.api.factory.RelatedObjectTypeFactory;
 import au.org.raid.api.repository.RelatedObjectTypeRepository;
 import au.org.raid.api.repository.RelatedObjectTypeSchemaRepository;
@@ -18,12 +20,11 @@ public class RelatedObjectTypeService {
 
     public RelatedObjectType findById(final Integer id) {
         final var typeRecord = relatedObjectTypeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Related object schema not found with id %d".formatted(id)));
+                .orElseThrow(() -> new RelatedObjectTypeNotFoundException(id));
 
         final var typeSchemaId = typeRecord.getSchemaId();
         final var typeSchemaRecord = relatedObjectTypeSchemaRepository.findById(typeSchemaId)
-                .orElseThrow(() -> new RuntimeException(
-                        "Related object type schema not found with id %d".formatted(typeSchemaId)));
+                .orElseThrow(() -> new RelatedObjectTypeSchemaNotFoundException(typeSchemaId));
 
         return relatedObjectTypeFactory.create(typeRecord.getUri(), typeSchemaRecord.getUri());
     }
