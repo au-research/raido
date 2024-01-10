@@ -1,11 +1,12 @@
 package au.org.raid.api.service;
 
+import au.org.raid.api.exception.TraditionalKnowledgeLabelNotFoundException;
+import au.org.raid.api.exception.TraditionalKnowledgeLabelSchemaNotFoundException;
 import au.org.raid.api.factory.TraditionalKnowledgeLabelFactory;
 import au.org.raid.api.factory.record.RaidTraditionalKnowledgeLabelRecordFactory;
 import au.org.raid.api.repository.RaidTraditionalKnowledgeLabelRepository;
 import au.org.raid.api.repository.TraditionalKnowledgeLabelRepository;
 import au.org.raid.api.repository.TraditionalKnowledgeLabelSchemaRepository;
-import au.org.raid.db.jooq.tables.records.TraditionalKnowledgeLabelRecord;
 import au.org.raid.idl.raidv2.model.TraditionalKnowledgeLabel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,25 +25,29 @@ public class TraditionalKnowledgeLabelService {
     private final RaidTraditionalKnowledgeLabelRepository raidTraditionalKnowledgeLabelRepository;
     private final TraditionalKnowledgeLabelFactory traditionalKnowledgeLabelFactory;
 
-    public void create(final List<TraditionalKnowledgeLabel> traditionalKnowledgeLabels, final String handle) {
-        if (traditionalKnowledgeLabels == null) {
+    public void create(final List<TraditionalKnowledgeLabel> labels, final String handle) {
+        if (labels == null) {
             return;
         }
 
-        for (final var traditionalKnowledgeLabel : traditionalKnowledgeLabels) {
-            final var traditionalKnowledgeLabelSchemaRecord =
-                    traditionalKnowledgeLabelSchemaRepository.findByUri(traditionalKnowledgeLabel.getSchemaUri())
-                            .orElseThrow(() -> new RuntimeException(
-                                    "Traditional knowledge label schema not found %s".formatted(
-                                            traditionalKnowledgeLabel.getSchemaUri())));
+        for (final var label : labels) {
+            final var schemaRecord =
+                    traditionalKnowledgeLabelSchemaRepository.findByUri(label.getSchemaUri())
+                            .orElseThrow(() ->
+                                    new TraditionalKnowledgeLabelSchemaNotFoundException(label.getSchemaUri()));
 
-            final var traditionalKnowledgeLabelId = traditionalKnowledgeLabelRepository
-                    .findByUriAndSchemaId(traditionalKnowledgeLabel.getId(), traditionalKnowledgeLabelSchemaRecord.getId())
-                    .map(TraditionalKnowledgeLabelRecord::getId)
-                    .orElse(null);
+            Integer id = null;
+
+            if (label.getId() != null) {
+                final var record = traditionalKnowledgeLabelRepository
+                        .findByUriAndSchemaId(label.getId(), schemaRecord.getId())
+                        .orElseThrow(() -> new TraditionalKnowledgeLabelNotFoundException(label.getId()));
+
+                id = record.getId();
+            }
 
             final var raidTraditionalKnowledgeLabelRecord = raidTraditionalKnowledgeLabelRecordFactory.create(
-                    handle, traditionalKnowledgeLabelId, traditionalKnowledgeLabelSchemaRecord.getId()
+                    handle, id, schemaRecord.getId()
             );
 
             raidTraditionalKnowledgeLabelRepository.create(raidTraditionalKnowledgeLabelRecord);
@@ -60,7 +65,7 @@ public class TraditionalKnowledgeLabelService {
 
             if (id != null) {
                 final var labelRecord = traditionalKnowledgeLabelRepository.findById(id)
-                        .orElseThrow(() -> new RuntimeException("Traditional knowledge label not found with id %d".formatted(id)));
+                        .orElseThrow(() -> new TraditionalKnowledgeLabelNotFoundException(id));
 
                 labelUri = labelRecord.getUri();
             }
@@ -68,7 +73,7 @@ public class TraditionalKnowledgeLabelService {
             final var schemaId = record.getTraditionalKnowledgeLabelSchemaId();
 
             final var schemaRecord = traditionalKnowledgeLabelSchemaRepository.findById(schemaId)
-                    .orElseThrow(() -> new RuntimeException("Traditional knowledge label schema not found with id %d".formatted(schemaId)));
+                    .orElseThrow(() -> new TraditionalKnowledgeLabelSchemaNotFoundException(schemaId));
 
             traditionalKnowledgeLabels.add(traditionalKnowledgeLabelFactory.create(labelUri, schemaRecord.getUri()));
         }
