@@ -1,5 +1,7 @@
 package au.org.raid.api.service;
 
+import au.org.raid.api.exception.SubjectTypeNotFoundException;
+import au.org.raid.api.exception.SubjectTypeSchemaNotFoundException;
 import au.org.raid.api.factory.SubjectFactory;
 import au.org.raid.api.factory.record.RaidSubjectKeywordRecordFactory;
 import au.org.raid.api.factory.record.RaidSubjectRecordFactory;
@@ -40,7 +42,7 @@ public class SubjectService {
             final var subjectId = subject.getId().substring(subject.getId().lastIndexOf('/') + 1);
 
             final var subjectTypeRecord = subjectTypeRepository.findById(subjectId)
-                    .orElseThrow(() -> new RuntimeException("Subject type not found %s".formatted(subject.getId())));
+                    .orElseThrow(() -> new SubjectTypeNotFoundException(subject.getId()));
 
             final var raidSubjectRecord = raidSubjectRecordFactory.create(handle, subjectTypeRecord.getId());
 
@@ -66,12 +68,12 @@ public class SubjectService {
 
         for (final var record : records) {
             final var typeRecord = subjectTypeRepository.findById(record.getSubjectTypeId())
-                    .orElseThrow(() -> new RuntimeException("Subject type not found with id %s".formatted(record.getSubjectTypeId())));
+                    .orElseThrow(() -> new SubjectTypeNotFoundException(record.getSubjectTypeId()));
 
             final var schemaId = typeRecord.getSchemaId();
 
             final var typeSchemaRecord = subjectTypeSchemaRepository.findById(schemaId)
-                    .orElseThrow(() -> new RuntimeException("Subject type schema not found with id %d".formatted(schemaId)));
+                    .orElseThrow(() -> new SubjectTypeSchemaNotFoundException(schemaId));
 
             final var keywords = subjectKeywordService.findAllByRaidSubjectId(record.getId());
 
