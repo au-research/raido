@@ -1,5 +1,7 @@
 package au.org.raid.api.service;
 
+import au.org.raid.api.exception.TitleTypeNotFoundException;
+import au.org.raid.api.exception.TitleTypeSchemaNotFoundException;
 import au.org.raid.api.factory.TitleFactory;
 import au.org.raid.api.factory.record.RaidTitleRecordFactory;
 import au.org.raid.api.repository.RaidTitleRepository;
@@ -28,11 +30,10 @@ public class TitleService {
 
         for (final var title : titles) {
             final var titleTypeSchema = titleTypeSchemaRepository.findByUri(title.getType().getSchemaUri())
-                    .orElseThrow(() ->
-                            new RuntimeException("Title type schema not found %s".formatted(title.getType().getSchemaUri())));
+                    .orElseThrow(() -> new TitleTypeSchemaNotFoundException(title.getType().getSchemaUri()));
 
             final var titleType = titleTypeRepository.findByUriAndSchemaId(title.getType().getId(), titleTypeSchema.getId())
-                    .orElseThrow(() -> new RuntimeException("Title type %s not found in schema %s".formatted(title.getType().getId(), title.getType().getSchemaUri())));
+                    .orElseThrow(() -> new TitleTypeNotFoundException(title.getType().getId(), title.getType().getSchemaUri()));;
 
             final var languageId = languageService.findLanguageId(title.getLanguage());
 
@@ -50,13 +51,11 @@ public class TitleService {
             final var titleTypeId = record.getTitleTypeId();
 
             final var titleTypeRecord = titleTypeRepository.findById(titleTypeId)
-                    .orElseThrow(() -> new RuntimeException(
-                            "Title type not found with id %d".formatted(titleTypeId)));
+                    .orElseThrow(() -> new TitleTypeNotFoundException(titleTypeId));
 
             final var titleTypeSchemaId = titleTypeRecord.getSchemaId();
             final var titleTypeSchemaRecord = titleTypeSchemaRepository.findById(titleTypeSchemaId)
-                    .orElseThrow(() -> new RuntimeException(
-                            "Title type schema not found with id %s".formatted(titleTypeSchemaId)));
+                    .orElseThrow(() -> new TitleTypeSchemaNotFoundException(titleTypeSchemaId));
 
             final var language = languageService.findById(record.getLanguageId());
 
