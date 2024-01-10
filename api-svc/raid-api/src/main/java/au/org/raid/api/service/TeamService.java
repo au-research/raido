@@ -39,21 +39,15 @@ public class TeamService {
                 .toList();
     }
 
-    public Optional<Team> findByIdAndServicePointId(final String id, final Long servicePointId) {
-        return teamRepository.findByIdAndServicePointId(id, servicePointId)
-                .map(teamFactory::create)
-                .or(Optional::empty);
-    }
-
     public Optional<Team> updateById(
             final String id,
-            final Team teamDto) {
+            final Team team) {
 
         if ( teamRepository.findById(id).isEmpty()) {
             return Optional.empty();
         }
 
-        final var record = teamRepository.updateById(id, teamRecordFactory.create(teamDto));
+        final var record = teamRepository.updateById(id, teamRecordFactory.create(team));
 
         return Optional.of(teamFactory.create(record));
     }
