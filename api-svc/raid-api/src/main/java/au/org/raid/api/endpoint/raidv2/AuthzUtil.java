@@ -5,7 +5,6 @@ import au.org.raid.api.exception.CrossAccountAccessException;
 import au.org.raid.api.spring.security.raidv2.ApiToken;
 import au.org.raid.api.util.ExceptionUtil;
 import au.org.raid.api.util.Guard;
-import au.org.raid.api.util.Log;
 import au.org.raid.api.util.ObjectUtil;
 import au.org.raid.db.jooq.enums.IdProvider;
 
@@ -16,7 +15,7 @@ import static org.springframework.security.core.context.SecurityContextHolder.ge
 public class AuthzUtil {
     /* Hardcoded, we know this statically because we hardcoded the sequence to
      20M and raido is the first SP inserted via flyway. */
-    public static final long RAIDO_SP_ID = 20_000_000;
+    public static final long RAID_AU_SP_ID = 20_000_000;
 
     /**
      * This will fail if the authentication is not a AuthzTokenPayload
@@ -47,7 +46,7 @@ public class AuthzUtil {
             throw ExceptionUtil.iae(RaidApiMessage.ONLY_RAIDO_ADMIN);
         }
 
-        if (!ObjectUtil.areEqual(user.getServicePointId(), RAIDO_SP_ID)) {
+        if (!ObjectUtil.areEqual(user.getServicePointId(), RAID_AU_SP_ID)) {
             throw ExceptionUtil.iae(RaidApiMessage.ONLY_RAIDO_ADMIN);
         }
     }

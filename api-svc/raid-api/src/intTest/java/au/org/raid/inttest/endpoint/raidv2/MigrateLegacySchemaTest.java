@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
+import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAID_AU_SP_ID;
 import static au.org.raid.api.service.raid.MetadataService.RAID_ID_TYPE_URI;
 import static au.org.raid.idl.raidv2.model.RaidoMetaschema.LEGACYMETADATASCHEMAV1;
 import static au.org.raid.idl.raidv2.model.RaidoMetaschema.RAIDOMETADATASCHEMAV1;
@@ -43,7 +43,7 @@ public class MigrateLegacySchemaTest extends IntegrationTestCase {
         GenerateApiTokenResponse notreDameAdmin = createApiKeyUser(
                 notreDame.getId(), handle + "-notreDame", UserRole.SP_ADMIN);
         GenerateApiTokenResponse raidoAdmin = createApiKeyUser(
-                RAIDO_SP_ID, handle + "-raido", UserRole.SP_ADMIN);
+                RAID_AU_SP_ID, handle + "-raido", UserRole.SP_ADMIN);
 
         var basicApiAsNotreDame = basicRaidExperimentalClient(notreDameAdmin.getApiToken());
         var adminApiAsRaido = adminExperimentalClientAs(raidoAdmin.getApiToken());

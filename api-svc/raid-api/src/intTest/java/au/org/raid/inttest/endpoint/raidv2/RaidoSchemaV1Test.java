@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.List;
 
-import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
+import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAID_AU_SP_ID;
 import static au.org.raid.idl.raidv2.model.AccessType.CLOSED;
 import static au.org.raid.idl.raidv2.model.AccessType.OPEN;
 import static au.org.raid.idl.raidv2.model.ContributorIdentifierSchemeType.HTTPS_ORCID_ORG_;
@@ -80,7 +80,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
         var mintResult = raidApi.mintRaidoSchemaV1(
                 new MintRaidoSchemaV1Request()
                         .mintRequest(new MintRaidoSchemaV1RequestMintRequest()
-                                .servicePointId(RAIDO_SP_ID))
+                                .servicePointId(RAID_AU_SP_ID))
                         .metadata(new RaidoMetadataSchemaV1()
                                 .metadataSchema(RAIDOMETADATASCHEMAV1)
                                 .titles(List.of(new TitleBlock()
@@ -119,7 +119,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
                 publicReadRaidV3(mintedRaid.getHandle()).getBody();
         assertThat(v3Read).isNotNull();
         assertThat(v3Read.getCreateDate()).isNotNull();
-        assertThat(v3Read.getServicePointId()).isEqualTo(RAIDO_SP_ID);
+        assertThat(v3Read.getServicePointId()).isEqualTo(RAID_AU_SP_ID);
 
         assertThat(v3Read.getHandle()).isEqualTo(mintedRaid.getHandle());
 
@@ -142,7 +142,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
 
         /* list by unique name to prevent eventual pagination issues */
         var listResult = raidApi.listRaidV2(new RaidListRequestV2().
-                servicePointId(RAIDO_SP_ID).primaryTitle(initialTitle)).getBody();
+                servicePointId(RAID_AU_SP_ID).primaryTitle(initialTitle)).getBody();
         assertThat(listResult).singleElement().satisfies(i -> {
             assertThat(i.getHandle()).isEqualTo(mintedRaid.getHandle());
             assertThat(i.getPrimaryTitle()).isEqualTo(initialTitle);
@@ -207,7 +207,7 @@ public class RaidoSchemaV1Test extends IntegrationTestCase {
         var mintResult = raidApi.mintRaidoSchemaV1(
                 new MintRaidoSchemaV1Request()
                         .mintRequest(new MintRaidoSchemaV1RequestMintRequest()
-                                .servicePointId(RAIDO_SP_ID))
+                                .servicePointId(RAID_AU_SP_ID))
                         .metadata(new RaidoMetadataSchemaV1()
                                 .metadataSchema(RAIDOMETADATASCHEMAV1)
                                 .titles(List.of(new TitleBlock()

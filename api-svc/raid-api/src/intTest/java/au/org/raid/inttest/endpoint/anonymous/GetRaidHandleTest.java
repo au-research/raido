@@ -10,7 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.HttpClientErrorException;
 
-import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
+import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAID_AU_SP_ID;
 import static au.org.raid.api.spring.config.RaidWebSecurityConfig.ROOT_PATH;
 import static au.org.raid.inttest.util.MinimalRaidTestData.createMinimalSchemaV1;
 import static au.org.raid.inttest.util.MinimalRaidTestData.createMintRequest;
@@ -29,7 +29,7 @@ public class GetRaidHandleTest extends IntegrationTestCase {
 
 
         var mintResult = raidApi.mintRaidoSchemaV1(
-                createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID)).getBody();
+                createMintRequest(createMinimalSchemaV1(title), RAID_AU_SP_ID)).getBody();
 
 
         HttpHeaders headers = new HttpHeaders();
@@ -66,7 +66,7 @@ public class GetRaidHandleTest extends IntegrationTestCase {
 
 
         var mintResult = raidApi.mintRaidoSchemaV1(
-                createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID)).getBody();
+                createMintRequest(createMinimalSchemaV1(title), RAID_AU_SP_ID)).getBody();
 
 
         HttpHeaders headers = new HttpHeaders();
@@ -88,7 +88,7 @@ public class GetRaidHandleTest extends IntegrationTestCase {
         String title = getName() + idFactory.generateUniqueId();
 
         var mintResult = raidApi.mintRaidoSchemaV1(
-                createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID)).getBody();
+                createMintRequest(createMinimalSchemaV1(title), RAID_AU_SP_ID)).getBody();
 
         final var uri = raidoApiServerUrl(ROOT_PATH) + "/" + mintResult.getRaid().getHandle();
         var res = rest.getForEntity(uri, PublicReadRaidResponseV3.class);
@@ -104,7 +104,7 @@ public class GetRaidHandleTest extends IntegrationTestCase {
         String title = getName() + idFactory.generateUniqueId();
 
         var mintResult = raidApi.mintRaidoSchemaV1(
-                createMintRequest(createMinimalSchemaV1(title), RAIDO_SP_ID)).getBody();
+                createMintRequest(createMinimalSchemaV1(title), RAID_AU_SP_ID)).getBody();
 
         HttpHeaders headers = new HttpHeaders();
     /* RestTemplate appears to default to 

@@ -257,7 +257,8 @@ class RaidoStableV1Test {
                     .andExpect(jsonPath("$.description[0].text", Matchers.is("Genome sequencing and assembly project at WUR of the C. Japonicum. ")))
                     .andExpect(jsonPath("$.description[0].type.id", Matchers.is(PRIMARY_DESCRIPTION_TYPE)))
                     .andExpect(jsonPath("$.description[0].type.schemaUri", Matchers.is(DESCRIPTION_TYPE_SCHEMA_URI)))
-                    .andExpect(jsonPath("$.access.type.id", Matchers.is(ACCESS_TYPE_CLOSED)))
+                    .andExpect(jsonPath("$.access.type.id", Matchers.is(SchemaValues.ACCESS_TYPE_EMBARGOED.getUri())))
+                    .andExpect(jsonPath("$.access.embargoExpiry", Matchers.is("2024-01-01")))
                     .andExpect(jsonPath("$.access.type.schemaUri", Matchers.is(ACCESS_SCHEMA_URI)))
                     .andExpect(jsonPath("$.access.accessStatement.text", Matchers.is("This RAiD is closed")))
                     .andExpect(jsonPath("$.contributor[0].id", Matchers.is("https://orcid.org/0000-0002-4368-8058")))
@@ -399,7 +400,7 @@ class RaidoStableV1Test {
                     .andExpect(jsonPath("$.description[0].text", Matchers.is("Genome sequencing and assembly project at WUR of the C. Japonicum. ")))
                     .andExpect(jsonPath("$.description[0].type.id", Matchers.is(PRIMARY_DESCRIPTION_TYPE)))
                     .andExpect(jsonPath("$.description[0].type.schemaUri", Matchers.is(DESCRIPTION_TYPE_SCHEMA_URI)))
-                    .andExpect(jsonPath("$.access.type.id", Matchers.is(ACCESS_TYPE_CLOSED)))
+                    .andExpect(jsonPath("$.access.type.id", Matchers.is(SchemaValues.ACCESS_TYPE_EMBARGOED.getUri())))
                     .andExpect(jsonPath("$.access.type.schemaUri", Matchers.is(ACCESS_SCHEMA_URI)))
                     .andExpect(jsonPath("$.access.accessStatement.text", Matchers.is("This RAiD is closed")))
                     .andExpect(jsonPath("$.contributor[0].id", Matchers.is("https://orcid.org/0000-0002-4368-8058")))
@@ -633,7 +634,7 @@ class RaidoStableV1Test {
                     .andDo(print())
                     .andExpect(status().isForbidden())
                     .andExpect(jsonPath("$.identifier.id", Matchers.is("https://raid.org.au/10378.1/1696639")))
-                    .andExpect(jsonPath("$.access.type.id", Matchers.is(SchemaValues.ACCESS_TYPE_CLOSED.getUri())))
+                    .andExpect(jsonPath("$.access.type.id", Matchers.is(SchemaValues.ACCESS_TYPE_EMBARGOED.getUri())))
                     .andExpect(jsonPath("$.access.accessStatement.text", Matchers.is("This RAiD is closed")))
                     .andExpect(jsonPath("$.access.accessStatement.language.id", Matchers.is("eng")))
                     .andExpect(jsonPath("$.access.accessStatement.language.schemaUri", Matchers.is("https://www.iso.org/standard/39534.html")))
@@ -716,7 +717,7 @@ class RaidoStableV1Test {
                     .andExpect(jsonPath("$[0].description[0].text", Matchers.is("Genome sequencing and assembly project at WUR of the C. Japonicum. ")))
                     .andExpect(jsonPath("$[0].description[0].type.id", Matchers.is(PRIMARY_DESCRIPTION_TYPE)))
                     .andExpect(jsonPath("$[0].description[0].type.schemaUri", Matchers.is(DESCRIPTION_TYPE_SCHEMA_URI)))
-                    .andExpect(jsonPath("$[0].access.type.id", Matchers.is(ACCESS_TYPE_CLOSED)))
+                    .andExpect(jsonPath("$[0].access.type.id", Matchers.is(SchemaValues.ACCESS_TYPE_EMBARGOED.getUri())))
                     .andExpect(jsonPath("$[0].access.type.schemaUri", Matchers.is(ACCESS_SCHEMA_URI)))
                     .andExpect(jsonPath("$[0].access.accessStatement.text", Matchers.is("This RAiD is closed")))
                     .andExpect(jsonPath("$[0].contributor[0].id", Matchers.is("https://orcid.org/0000-0002-4368-8058")))
@@ -746,11 +747,16 @@ class RaidoStableV1Test {
         final var diff = "_diff";
         final var timestamp = LocalDateTime.now().atOffset(ZoneOffset.UTC);
 
+        final var raid = createRaidForGet("title", LocalDate.now());
+        raid.getAccess().getType().setId(SchemaValues.ACCESS_TYPE_OPEN.getUri());
+
         final var raidChange = new RaidChange()
                 .handle(handle)
                 .version(version)
                 .diff(diff)
                 .timestamp(timestamp);
+
+        when(raidService.read(handle)).thenReturn(raid);
 
         when(raidHistoryService.findAllChangesByHandle(handle)).thenReturn(List.of(raidChange));
 
@@ -762,6 +768,31 @@ class RaidoStableV1Test {
                 .andExpect(jsonPath("$[0].version", Matchers.is(version)))
                 .andExpect(jsonPath("$[0].diff", Matchers.is(diff)))
                 .andExpect(jsonPath("$[0].timestamp", Matchers.is(timestamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))));
+    }
+
+    @Test
+    @DisplayName("Raid history returns 403 if raid is embargoed and user is from different service point")
+    void raidHistoryEmbargoed() throws Exception {
+        final var prefix = "_prefix";
+        final var suffix = "_suffix";
+        final var handle = prefix + "/" + suffix;
+        final var raid = createRaidForGet("title", LocalDate.now());
+        final Long servicePointId = 20000001L;
+
+        when(raidService.read(handle)).thenReturn(raid);
+
+        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
+            final ApiToken apiToken = mock(ApiToken.class);
+            authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
+
+            authzUtil.when(() -> AuthzUtil.guardOperatorOrAssociated(apiToken, servicePointId))
+                    .thenThrow(new CrossAccountAccessException(servicePointId));
+
+            mockMvc.perform(get(String.format("/raid/%s/%s/history", prefix, suffix), handle)
+                            .characterEncoding("utf-8"))
+                    .andDo(print())
+                    .andExpect(status().isForbidden());
+        }
     }
 
     private RaidDto createRaidForGet(final String title, final LocalDate startDate) throws IOException {

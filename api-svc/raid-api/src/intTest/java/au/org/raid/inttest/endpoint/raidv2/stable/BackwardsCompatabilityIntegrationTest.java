@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
+import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAID_AU_SP_ID;
 import static au.org.raid.db.jooq.enums.UserRole.OPERATOR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -27,7 +27,7 @@ public class BackwardsCompatabilityIntegrationTest extends AbstractIntegrationTe
     void readExperimentalRaid() {
         final var today = LocalDate.now();
         try {
-            final MintResponse mintResponse = experimentalApi.mintRaidoSchemaV1(TestData.mintRaidoSchemaV1Request(RAIDO_SP_ID)).getBody();
+            final MintResponse mintResponse = experimentalApi.mintRaidoSchemaV1(TestData.mintRaidoSchemaV1Request(RAID_AU_SP_ID)).getBody();
 
             final var metadata = objectMapper.readValue((String) mintResponse.getRaid().getMetadata(), RaidoMetadataSchemaV1.class);
 

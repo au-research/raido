@@ -1,9 +1,11 @@
 package au.org.raid.inttest.endpoint.raidv2.stable;
 
 import au.org.raid.api.service.Handle;
+import au.org.raid.db.jooq.enums.UserRole;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.Title;
 import au.org.raid.idl.raidv2.model.TitleTypeWithSchemaUri;
+import feign.FeignException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import java.util.stream.IntStream;
 
 import static au.org.raid.inttest.endpoint.raidv2.stable.TestConstants.PRIMARY_TITLE_TYPE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
     @Test
@@ -61,6 +64,25 @@ public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
         final var history = historyResponse.getBody();
 
         assertThat(history).hasSize(7);
+    }
+
+    @Test
+    @DisplayName("History of embargoed raid is not accessible by user from different service point")
+    void embargoedRaid() {
+        final var createResponse = raidApi.createRaidV1(createRequest);
+
+        Handle handle = new Handle(Objects.requireNonNull(createResponse.getBody()).getIdentifier().getId());
+
+        final var token = bootstrapTokenSvc.bootstrapToken(UQ_SERVICE_POINT_ID, "int-test-uq-user", UserRole.SP_USER);
+
+        final var otherClient = testClient.raidApi(token);
+
+        try {
+            otherClient.raidHistory(handle.getPrefix(), handle.getSuffix());
+            fail("Should return 403 status");
+        } catch (Exception e) {
+            assertThat(e).isInstanceOf(FeignException.Forbidden.class);
+        }
     }
 
     private Title getPrimaryTitle(final RaidDto raidDto) {

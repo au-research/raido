@@ -23,20 +23,18 @@ import feign.slf4j.Slf4jLogger;
 import org.jooq.DSLContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
+import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAID_AU_SP_ID;
 import static au.org.raid.api.spring.config.RaidWebSecurityConfig.RAID_V1_API;
 import static au.org.raid.db.jooq.enums.IdProvider.RAIDO_API;
 import static au.org.raid.db.jooq.enums.UserRole.OPERATOR;
@@ -100,7 +98,7 @@ public abstract class IntegrationTestCase {
 
         raidV1TestToken = bootstrapTokenSvc.initRaidV1TestToken();
         operatorToken = bootstrapTokenSvc.bootstrapToken(
-                RAIDO_SP_ID, "intTestOperatorApiToken", OPERATOR);
+                RAID_AU_SP_ID, "intTestOperatorApiToken", OPERATOR);
 
         raidoApi = new RaidoApiUtil(publicExperimentalClient(), mapper);
     }
