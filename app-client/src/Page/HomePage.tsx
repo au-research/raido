@@ -1,7 +1,11 @@
-import {Container, Stack,} from "@mui/material";
-import {useAuth} from "Auth/AuthProvider";
-import {raidoTitle} from "Component/Util";
-import {isPagePath, NavPathResult, NavTransition,} from "Design/NavigationProvider";
+import { Container, Stack } from "@mui/material";
+import { useAuth } from "Auth/AuthProvider";
+import { raidoTitle } from "Component/Util";
+import {
+  isPagePath,
+  NavPathResult,
+  NavTransition,
+} from "Design/NavigationProvider";
 import React from "react";
 import RaidCurrentUser from "./Homepage/components/RaidCurrentUser";
 import RaidTable from "./Homepage/components/RaidTable";
@@ -14,6 +18,7 @@ export function getHomePageLink(): string {
 
 export function isHomePagePath(pathname: string): NavPathResult {
   const pathResult = isPagePath(pathname, pageUrl);
+
   if (pathResult.isPath) {
     return pathResult;
   }
@@ -48,10 +53,11 @@ function Content() {
     session: { payload: user },
   } = useAuth();
   return (
+    <Container>
       <Stack gap={2}>
         <RaidCurrentUser />
         <RaidTable servicePointId={user.servicePointId} />
       </Stack>
+    </Container>
   );
 }
-

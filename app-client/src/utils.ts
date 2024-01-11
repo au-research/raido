@@ -15,7 +15,7 @@ import { RaidCreateRequest } from "Generated/Raidv2";
 import dayjs, { Dayjs } from "dayjs";
 
 export const extractPrefixAndSuffixFromIdentifier = (
-  identifier: string
+  identifier: string,
 ): { prefix: string; suffix: string } => {
   const pattern = /\/([^/]+)\/([^/]+)$/;
   const matches = identifier.match(pattern);
@@ -70,13 +70,13 @@ export const extractLastUrlSegment = (inputUri: string = ""): string => {
  *   threeYearsFromDate('2020-01-01'); // returns '2023-01-01'
  */
 export const threeYearsFromDate = (
-  inputDate: string = dayjs().format()
+  inputDate: string = dayjs().format(),
 ): Dayjs => {
   return dayjs(inputDate).add(3, "year");
 };
 
 export const raidColors = new Map([
-  ["blue", "#00B0D5"],
+  ["blue", "#0284c7"],
   ["pink", "#E51875"],
   ["yellow", "#F8B20E"],
   ["purple", "#8E489B"],

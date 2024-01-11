@@ -7,25 +7,19 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { RaidDto } from "Generated/Raidv2";
+import { RaidDto, type Title } from "Generated/Raidv2";
 import { dateDisplayFormatter } from "date-utils";
-import { extractKeyFromIdUri } from "utils";
+import { extractKeyFromIdUri, raidColors } from "utils";
 import language from "../../../References/language.json";
 
-export default function ShowTitleComponent({
-  raid,
-  color,
-}: {
-  raid: RaidDto;
-  color: string;
-}) {
+export default function ShowTitleComponent({ titles }: { titles: Title[] }) {
   return (
     <Box sx={{ paddingLeft: 2 }}>
       <Card
         variant="outlined"
         sx={{
           borderLeft: "solid",
-          borderLeftColor: color,
+          borderLeftColor: raidColors.get("blue"),
           borderLeftWidth: 3,
         }}
       >
@@ -40,7 +34,7 @@ export default function ShowTitleComponent({
         <CardContent>
           <Stack gap={3}>
             <Box>
-              {raid?.title?.length === 0 && (
+              {titles?.length === 0 && (
                 <Typography
                   variant="body2"
                   color={"text.secondary"}
@@ -50,10 +44,10 @@ export default function ShowTitleComponent({
                 </Typography>
               )}
             </Box>
-            {raid?.title?.map((title, index) => {
+            {titles?.map((title, index) => {
               const titleType = extractKeyFromIdUri(title.type.id || "");
               const lang = language.find(
-                (language) => language.id === title?.language?.id
+                (language) => language.id === title?.language?.id,
               );
 
               return (
@@ -67,7 +61,7 @@ export default function ShowTitleComponent({
                     className="animated-tile animated-tile-reverse"
                   >
                     <Grid container spacing={2}>
-                      <Grid item xs={12} sm={12} md={7}>
+                      <Grid item xs={12} sm={12} md={12}>
                         <Box>
                           <Typography variant="body2">Title</Typography>
                           <Typography color="text.secondary" variant="body1">
@@ -75,7 +69,7 @@ export default function ShowTitleComponent({
                           </Typography>
                         </Box>
                       </Grid>
-                      <Grid item xs={12} sm={6} md={2}>
+                      <Grid item xs={12} sm={6} md={6}>
                         <Box>
                           <Typography variant="body2">Type</Typography>
                           <Typography color="text.secondary" variant="body1">
