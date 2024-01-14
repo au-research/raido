@@ -30,6 +30,8 @@ raid:
   test:
     api:
       url: http://localhost:${server.port}
+      raid-au-user-token: not-set
+      uq-admin-token: not-set
   db:
     user: postgres
     password: changeme

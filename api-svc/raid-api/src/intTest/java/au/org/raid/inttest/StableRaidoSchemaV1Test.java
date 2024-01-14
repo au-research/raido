@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.net.URI;
 
-import static au.org.raid.db.jooq.enums.UserRole.OPERATOR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
@@ -129,10 +128,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
         final var path = URI.create(mintedRaid.getIdentifier().getId()).getPath();
         final var handle = (IdentifierHandle) identifierParser.parseHandle(path);
 
-        final var token = bootstrapTokenSvc.bootstrapToken(
-                UQ_SERVICE_POINT_ID, "RdmUqApiToken", OPERATOR);
-
-        final var api = testClient.raidApi(token);
+        final var api = testClient.raidApi(uqAdminToken);
 
         try {
             final var readResult = api.findRaidByName(handle.prefix(), handle.suffix()).getBody();
@@ -155,10 +151,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
     void closedRaidsExcludedFromList() {
         raidApi.mintRaid(createRequest);
 
-        final var token = bootstrapTokenSvc.bootstrapToken(
-                UQ_SERVICE_POINT_ID, "RdmUqApiToken", OPERATOR);
-
-        final var api = testClient.raidApi(token);
+        final var api = testClient.raidApi(uqAdminToken);
 
         try {
             final var raidList = api.findAllRaids(null).getBody();

@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +43,7 @@ public class ServicePointRepository {
                 .set(SERVICE_POINT.TECH_EMAIL, record.getTechEmail())
                 .set(SERVICE_POINT.IDENTIFIER_OWNER, record.getIdentifierOwner())
                 .set(SERVICE_POINT.SEARCH_CONTENT, record.getSearchContent())
+                .where(SERVICE_POINT.ID.eq(record.getId()))
                 .returning()
                 .fetchOne();
     }

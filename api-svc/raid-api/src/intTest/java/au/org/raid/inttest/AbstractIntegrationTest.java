@@ -1,6 +1,5 @@
 package au.org.raid.inttest;
 
-import au.org.raid.api.Api;
 import au.org.raid.api.service.raid.id.IdentifierParser;
 import au.org.raid.api.service.stub.util.IdFactory;
 import au.org.raid.idl.raidv2.api.RaidApi;
@@ -14,31 +13,31 @@ import feign.Contract;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
-import static au.org.raid.db.jooq.enums.UserRole.OPERATOR;
 import static au.org.raid.inttest.service.TestConstants.*;
 
-@SpringBootTest(classes = Api.class,
-        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@ContextConfiguration(classes = IntegrationTestConfig.class)
+@SpringBootTest(classes = IntegrationTestConfig.class)
 public class AbstractIntegrationTest {
     protected static final Long UQ_SERVICE_POINT_ID = 20000002L;
     protected final IdFactory idFactory = new IdFactory();
-    protected String operatorToken;
-    protected String raidV1TestToken;
     protected LocalDate today = LocalDate.now();
     protected RaidCreateRequest createRequest;
 
     protected RaidApi raidApi;
     protected IdentifierParser identifierParser;
+
+    @Value("${raid.test.api.raid-au-user-token}")
+    private String raidAuUserToken;
+
+    @Value("${raid.test.api.uq-admin-token}")
+    protected String uqAdminToken;
 
     @Autowired
     protected TestClient testClient;
@@ -54,11 +53,8 @@ public class AbstractIntegrationTest {
 
     @BeforeEach
     public void setupTestToken() {
-        operatorToken = bootstrapTokenSvc.bootstrapToken(
-                RAIDO_SP_ID, "intTestOperatorApiToken", OPERATOR);
-
         createRequest = newCreateRequest();
-        raidApi = testClient.raidApi(operatorToken);
+        raidApi = testClient.raidApi(raidAuUserToken);
         identifierParser = new IdentifierParser();
     }
 

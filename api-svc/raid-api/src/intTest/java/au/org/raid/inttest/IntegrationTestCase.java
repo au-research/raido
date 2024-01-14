@@ -22,13 +22,12 @@ import org.jooq.DSLContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.client.RestTemplate;
 
-import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
-import static au.org.raid.db.jooq.enums.UserRole.OPERATOR;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @SpringBootTest(classes = Api.class,
@@ -52,6 +51,8 @@ public abstract class IntegrationTestCase {
     protected Contract feignContract;
     @Autowired
     protected ObjectMapper mapper;
+
+    @Value("${raid.test.api.raid-au-user-token}")
     protected String operatorToken;
     private TestInfo testInfo;
 
@@ -60,11 +61,6 @@ public abstract class IntegrationTestCase {
      * part of the first tests execution time.  But need to figure out how to
      * obtain the test's spring context in a static context.
      */
-    @BeforeEach
-    public void setupTestToken() {
-        operatorToken = bootstrapTokenSvc.bootstrapToken(
-                RAIDO_SP_ID, "intTestOperatorApiToken", OPERATOR);
-    }
 
     @BeforeEach
     public void init(TestInfo testInfo) {

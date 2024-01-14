@@ -10,22 +10,18 @@ import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
 import feign.slf4j.Slf4jLogger;
+import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
 
 import java.util.concurrent.TimeUnit;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
+@RequiredArgsConstructor
 public class TestClient {
     private final ObjectMapper objectMapper;
     private final Contract contract;
     private final String apiUrl;
-
-    public TestClient(final ObjectMapper objectMapper, final Contract contract, final String apiUrl) {
-        this.objectMapper = objectMapper;
-        this.contract = contract;
-        this.apiUrl = apiUrl;
-    }
 
     public RaidApi raidApi(
             final String token
