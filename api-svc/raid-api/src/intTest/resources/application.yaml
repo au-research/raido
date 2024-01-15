@@ -34,7 +34,7 @@ raid:
       uq-admin-token: not-set
   db:
     user: postgres
-    password: changeme
+    password: supersecret
     host: localhost
     port: 7432
   spatial-coverage:

@@ -1,17 +1,11 @@
 package au.org.raid.api.service;
 
 import au.org.raid.api.entity.ChangeType;
-import au.org.raid.api.factory.HandleFactory;
-import au.org.raid.api.factory.JsonPatchFactory;
-import au.org.raid.api.factory.JsonValueFactory;
-import au.org.raid.api.factory.RaidHistoryRecordFactory;
+import au.org.raid.api.factory.*;
 import au.org.raid.api.repository.RaidHistoryRepository;
 import au.org.raid.api.spring.RaidHistoryProperties;
 import au.org.raid.db.jooq.tables.records.RaidHistoryRecord;
-import au.org.raid.idl.raidv2.model.Id;
-import au.org.raid.idl.raidv2.model.RaidCreateRequest;
-import au.org.raid.idl.raidv2.model.RaidDto;
-import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
+import au.org.raid.idl.raidv2.model.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.json.JsonPatch;
@@ -48,6 +42,8 @@ class RaidHistoryServiceTest {
     private RaidHistoryRecordFactory raidHistoryRecordFactory;
     @Mock
     private RaidHistoryProperties raidHistoryProperties;
+    @Mock
+    private RaidChangeFactory raidChangeFactory;
     @InjectMocks
     private RaidHistoryService raidHistoryService;
     @Nested
@@ -199,6 +195,45 @@ class RaidHistoryServiceTest {
             verify(raidHistoryRepository).insert(patchRaidHistoryRecord);
             verify(raidHistoryRepository).insert(baselineRaidHistoryRecord);
         }
+    }
 
+    @Test
+    @DisplayName("read() returns raid at correct version")
+    void read() throws JsonProcessingException {
+        final var version = 2;
+        final var handle = "_handle";
+        final var diff = "[]";
+        final var raidString = "{}";
+
+        final var raidHistoryRecord = new RaidHistoryRecord()
+                .setDiff(diff);
+        final var jsonValue = mock(JsonValue.class);
+
+        final var raidJsonValue = mock(JsonValue.class);
+        when(raidJsonValue.toString()).thenReturn(raidString);
+
+        final var raidDto = new RaidDto();
+
+        when(raidHistoryRepository.findAllByHandleAndVersion(handle, version)).thenReturn(List.of(raidHistoryRecord));
+        when(jsonValueFactory.create(diff)).thenReturn(jsonValue);
+        when(objectMapper.readValue(raidString, RaidDto.class)).thenReturn(raidDto);
+        when(jsonValueFactory.create(List.of(jsonValue))).thenReturn(raidJsonValue);
+
+        assertThat(raidHistoryService.findByHandleAndVersion(handle, version).get(), is(raidDto));
+    }
+
+    @Test
+    @DisplayName("findAllByHandleAndChangeType returns list of changes")
+    void findAllByHandleAndChangeType() {
+        final var handle = "_handle";
+        final var changeType = "PATCH";
+
+        final var raidHistoryRecord = new RaidHistoryRecord();
+        final var change = new RaidChange();
+
+        when(raidHistoryRepository.findAllByHandleAndChangeType(handle, changeType)).thenReturn(List.of(raidHistoryRecord));
+        when(raidChangeFactory.create(raidHistoryRecord)).thenReturn(change);
+
+        assertThat(raidHistoryService.findAllChangesByHandle(handle), is(List.of(change)));
     }
 }

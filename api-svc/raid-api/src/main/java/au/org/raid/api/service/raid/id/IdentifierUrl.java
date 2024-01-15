@@ -14,4 +14,8 @@ public record IdentifierUrl(
     public String formatUrl() {
         return handle.format(urlPrefix);
     }
+
+    public String getHandle() {
+        return handle.format();
+    }
 }

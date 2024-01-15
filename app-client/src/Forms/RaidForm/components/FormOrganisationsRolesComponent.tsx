@@ -1,33 +1,28 @@
 import {
-  AddCircleOutline as AddCircleOutlineIcon,
-  RemoveCircleOutline as RemoveCircleOutlineIcon,
+    AddCircleOutline as AddCircleOutlineIcon,
+    RemoveCircleOutline as RemoveCircleOutlineIcon,
 } from "@mui/icons-material";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  Grid,
-  IconButton,
-  MenuItem,
-  Stack,
-  TextField,
-  Tooltip,
-  Typography,
+    Card,
+    CardContent,
+    CardHeader,
+    Grid,
+    IconButton,
+    MenuItem,
+    Stack,
+    TextField,
+    Tooltip,
+    Typography,
 } from "@mui/material";
-import { RaidDto } from "Generated/Raidv2";
+import {RaidDto} from "Generated/Raidv2";
 import organisationRole from "References/organisation_role.json";
 import dayjs from "dayjs";
-import {
-  Control,
-  Controller,
-  FieldErrors,
-  useFieldArray,
-} from "react-hook-form";
+import {Control, Controller, FieldErrors, useFieldArray,} from "react-hook-form";
 
 import organisationRoleSchema from "References/organisation_role_schema.json";
-import { extractKeyFromIdUri } from "utils";
+import {extractKeyFromIdUri} from "utils";
 
-import { dateHelperTextRequired } from "../../../date-utils";
+import {dateHelperTextRequired} from "../../../date-utils";
 
 export default function FormOrganisationsRolesComponent({
   control,
@@ -66,8 +61,8 @@ export default function FormOrganisationsRolesComponent({
             <Card variant={"outlined"} sx={{ bgcolor: "transparent" }}>
               <CardHeader
                 action={
-                  <Tooltip title="Add Role" placement="right">
-                    <IconButton aria-label="Add Role" onClick={handleAddRole}>
+                  <Tooltip title="Add role (max. 1)" placement="right">
+                    <IconButton aria-label="Add Role" onClick={handleAddRole} disabled={organisationRolesArray.fields.length > 0}>
                       <AddCircleOutlineIcon />
                     </IconButton>
                   </Tooltip>

@@ -27,8 +27,8 @@ raid:
     registration-agency-identifier: https://ror.org/038sjwq14
     handle-url-prefix: http://localhost:8080
   db:
-    user: not-set
-    password: not-set
+    user: postgres
+    password: supersecret
     host: localhost
     port: 7432
   spatial-coverage:
@@ -61,4 +61,8 @@ springdoc:
     enabled: true
   api-docs:
     path: /docs
-
+datacite:
+  endpoint: https://api.test.datacite.org
+  prefix: 10.82841
+  password: not-set
+  user: NPQS.RKFZRK

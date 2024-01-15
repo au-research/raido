@@ -54,8 +54,9 @@
     }
   ],
   "access": {
+    "embargoExpiry": "2024-01-01",
     "type": {
-      "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json",
+      "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json",
       "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1"
     },
     "statement": {
@@ -64,7 +65,8 @@
         "id": "eng",
         "schemaUri": "https://www.iso.org/standard/39534.html"
       }
-    }  },
+    }
+  },
   "contributor": [
     {
       "id": "https://orcid.org/0000-0002-4368-8058",

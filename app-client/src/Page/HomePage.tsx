@@ -1,4 +1,3 @@
-import AddIcon from "@mui/icons-material/Add";
 import {
   Alert,
   Box,
@@ -11,68 +10,37 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Stack
 } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
-import { useAuthApi } from "Api/AuthApi";
-import { useAuth } from "Auth/AuthProvider";
-import { TextSpan } from "Component/TextSpan";
-import { raidoTitle, RoleDisplay } from "Component/Util";
-import {
-  isPagePath,
-  NavPathResult,
-  NavTransition,
-} from "Design/NavigationProvider";
-import { CompactErrorPanel } from "Error/CompactErrorPanel";
-import {FindAllRaidsRequest, RaidDto} from "Generated/Raidv2";
-import React, { SyntheticEvent } from "react";
-import { RqQuery } from "Util/ReactQueryUtil";
+import {useAuth} from "Auth/AuthProvider";
 
-import { ContentCopy, FileDownload, Settings } from "@mui/icons-material";
+import {raidoTitle, RoleDisplay} from "Component/Util";
+import {isPagePath, NavPathResult, NavTransition,} from "Design/NavigationProvider";
+import {CompactErrorPanel} from "Error/CompactErrorPanel";
+import {FindAllRaidsRequest, RaidDto} from "Generated/Raidv2";
+import React, {SyntheticEvent} from "react";
+import {RqQuery} from "Util/ReactQueryUtil";
+
+import {Add as AddIcon, ContentCopy, FileDownload, Settings} from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { IdProviderDisplay } from "Component/IdProviderDisplay";
-import { RaidoLink } from "Component/RaidoLink";
-import { RefreshIconButton } from "Component/RefreshIconButton";
-import {
-  formatLocalDateAsFileSafeIsoShortDateTime,
-  formatLocalDateAsIso,
-} from "Util/DateUtil";
-import { escapeCsvField } from "Util/DownloadUtil";
-import { assert } from "Util/TypeUtil";
+import {DataGrid, GridColDef} from "@mui/x-data-grid";
+import {IdProviderDisplay} from "Component/IdProviderDisplay";
+import {RaidoLink} from "Component/RaidoLink";
+import {RefreshIconButton} from "Component/RefreshIconButton";
+import {formatLocalDateAsFileSafeIsoShortDateTime,} from "Util/DateUtil";
+import {escapeCsvField} from "Util/DownloadUtil";
+import {assert} from "Util/TypeUtil";
+
+// import RaidCurrentUser from "./Homepage/components/RaidCurrentUser";
+import RaidTable from "./Homepage/components/RaidTable";
+import {useAuthApi} from "../Api/AuthApi";
+import {useQuery} from "@tanstack/react-query";
+import {TextSpan} from "../Component/TextSpan";
+import {extractValuesFromRaid} from "./Homepage/utils";
 
 const log = console;
 
 const pageUrl = "/home";
-
-const extractValuesFromRaid = (
-  raid: RaidDto
-): {
-  title: string;
-  handle: string;
-  startDate: string;
-  endDate: string;
-} => {
-  const title = raid?.title ? raid?.title[0]?.text || "" : "";
-
-  const handle = raid?.identifier?.id
-    ? new URL(raid?.identifier?.id).pathname.substring(1)
-    : "";
-
-  const startDate = raid?.date?.startDate
-    ? formatLocalDateAsIso(new Date(raid.date.startDate))
-    : "";
-
-  const endDate = raid?.date?.endDate
-    ? formatLocalDateAsIso(new Date(raid.date.endDate))
-    : "";
-
-  return {
-    title,
-    handle,
-    startDate,
-    endDate,
-  };
-};
 
 export function getHomePageLink(): string {
   return pageUrl;
@@ -80,6 +48,7 @@ export function getHomePageLink(): string {
 
 export function isHomePagePath(pathname: string): NavPathResult {
   const pathResult = isPagePath(pathname, pageUrl);
+
   if (pathResult.isPath) {
     return pathResult;
   }
@@ -114,10 +83,11 @@ function Content() {
     session: { payload: user },
   } = useAuth();
   return (
-    <Container maxWidth="lg">
-      <RaidCurrentUser />
-      <br />
-      <RaidTableContainerV2 servicePointId={user.servicePointId} />
+    <Container>
+      <Stack gap={2}>
+        <RaidCurrentUser />
+        <RaidTable servicePointId={user.servicePointId} />
+      </Stack>
     </Container>
   );
 }
@@ -472,3 +442,4 @@ function SettingsMenu({ raidData }: { raidData: RaidDto[] | undefined }) {
     </>
   );
 }
+

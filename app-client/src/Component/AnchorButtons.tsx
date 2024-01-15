@@ -1,5 +1,5 @@
-import { Grid, Button, Box, Chip } from "@mui/material";
-import { RaidDto } from "Generated/Raidv2";
+import {Box, Button, Chip, Grid} from "@mui/material";
+import {RaidDto} from "Generated/Raidv2";
 
 export default function AnchorButtons({
   defaultValues,
@@ -85,7 +85,7 @@ export default function AnchorButtons({
       <Grid container spacing={1}>
         {anchorButtonsDefinition.map((anchorButton, index) => {
           return (
-            <Grid item xs={6} sm={3} md={2} key={index}>
+            <Grid item xs={6} sm={6} md={3} key={index}>
               <Button
                 key={index}
                 onClick={() => {
@@ -104,6 +104,7 @@ export default function AnchorButtons({
                   borderLeftStyle: "solid",
                   borderLeftColor: anchorButton.errors ? "red" : "#f0ab00",
                   borderLeftWidth: 2,
+                  overflow: "hidden",
                   textTransform: "none",
                   alignItems: "start",
                   justifyContent: "flex-start",

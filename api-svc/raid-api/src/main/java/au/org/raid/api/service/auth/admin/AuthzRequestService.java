@@ -19,7 +19,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAIDO_SP_ID;
+import static au.org.raid.api.endpoint.raidv2.AuthzUtil.RAID_AU_SP_ID;
 import static au.org.raid.api.service.auth.admin.AppUserService.mapRestRole2Jq;
 import static au.org.raid.api.util.ExceptionUtil.iae;
 import static au.org.raid.api.util.Log.to;
@@ -146,7 +146,7 @@ public class AuthzRequestService {
         IdProvider idProvider = userAuthSvc.mapIdProvider(clientId);
         if (
             // we only promote raido SP users to operator
-                req.getServicePointId() == RAIDO_SP_ID &&
+                req.getServicePointId() == RAID_AU_SP_ID &&
         /* this is probably temporary, helps me test easily, no specific need
         to restrict it. */
                         idProvider == IdProvider.GOOGLE &&

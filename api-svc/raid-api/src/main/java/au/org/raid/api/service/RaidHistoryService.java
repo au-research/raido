@@ -1,13 +1,11 @@
 package au.org.raid.api.service;
 
 import au.org.raid.api.entity.ChangeType;
-import au.org.raid.api.factory.HandleFactory;
-import au.org.raid.api.factory.JsonPatchFactory;
-import au.org.raid.api.factory.JsonValueFactory;
-import au.org.raid.api.factory.RaidHistoryRecordFactory;
+import au.org.raid.api.factory.*;
 import au.org.raid.api.repository.RaidHistoryRepository;
 import au.org.raid.api.spring.RaidHistoryProperties;
 import au.org.raid.db.jooq.tables.records.RaidHistoryRecord;
+import au.org.raid.idl.raidv2.model.RaidChange;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
@@ -17,6 +15,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,6 +30,7 @@ public class RaidHistoryService {
     private final HandleFactory handleFactory;
     private final RaidHistoryRecordFactory raidHistoryRecordFactory;
     private final RaidHistoryProperties properties;
+    private final RaidChangeFactory raidChangeFactory;
 
     @SneakyThrows
     public RaidDto save(final RaidCreateRequest request) {
@@ -78,8 +78,8 @@ public class RaidHistoryService {
     }
 
     @SneakyThrows
-    public Optional<RaidDto> findByHandle(final String handle) {
-        final var history = raidHistoryRepository.findAllByHandle(handle).stream()
+    public Optional<RaidDto> findByHandleAndVersion(final String handle, final Integer version) {
+        final var history = raidHistoryRepository.findAllByHandleAndVersion(handle, version).stream()
                 .map(RaidHistoryRecord::getDiff)
                 .map(jsonValueFactory::create)
                 .toList();
@@ -90,4 +90,10 @@ public class RaidHistoryService {
 
         return Optional.of(objectMapper.readValue(jsonValueFactory.create(history).toString(), RaidDto.class));
      }
+
+    public List<RaidChange> findAllChangesByHandle(final String handle) {
+        return raidHistoryRepository.findAllByHandleAndChangeType(handle, ChangeType.PATCH.toString()).stream()
+                .map(raidChangeFactory::create)
+                .toList();
+    }
 }

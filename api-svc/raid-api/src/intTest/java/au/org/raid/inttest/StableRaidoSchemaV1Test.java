@@ -30,7 +30,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
         final var path = URI.create(mintedRaid.getIdentifier().getId()).getPath();
 
         final var handle = (IdentifierHandle) identifierParser.parseHandle(path);
-        final var result = raidApi.findRaidByName(handle.prefix(), handle.suffix()).getBody();
+        final var result = raidApi.findRaidByName(handle.prefix(), handle.suffix(), null).getBody();
 
         assertThat(result.getTitle()).isEqualTo(createRequest.getTitle());
         assertThat(result.getDescription()).isEqualTo(createRequest.getDescription());
@@ -49,7 +49,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
         final var path = URI.create(mintedRaid.getIdentifier().getId()).getPath();
 
         final var handle = (IdentifierHandle) identifierParser.parseHandle(path);
-        final var readResult = raidApi.findRaidByName(handle.prefix(), handle.suffix()).getBody();
+        final var readResult = raidApi.findRaidByName(handle.prefix(), handle.suffix(), null).getBody();
 
         assert readResult != null;
         final var updateRequest = mapReadToUpdate(readResult);
@@ -67,7 +67,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
             fail("Update failed");
         }
 
-        final var result = raidApi.findRaidByName(handle.prefix(), handle.suffix()).getBody();
+        final var result = raidApi.findRaidByName(handle.prefix(), handle.suffix(), null).getBody();
         assert result != null;
         assertThat(result.getTitle().get(0).getText()).isEqualTo(title);
         assertThat(result.getIdentifier().getVersion()).isEqualTo(2);
@@ -81,7 +81,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
         final var path = URI.create(mintedRaid.getIdentifier().getId()).getPath();
 
         final var handle = (IdentifierHandle) identifierParser.parseHandle(path);
-        final var readResult = raidApi.findRaidByName(handle.prefix(), handle.suffix()).getBody();
+        final var readResult = raidApi.findRaidByName(handle.prefix(), handle.suffix(), null).getBody();
 
         final var updateRequest = mapReadToUpdate(readResult);
 
@@ -92,7 +92,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
             fail("Update failed");
         }
 
-        final var result = raidApi.findRaidByName(handle.prefix(), handle.suffix()).getBody();
+        final var result = raidApi.findRaidByName(handle.prefix(), handle.suffix(), null).getBody();
         assertThat(result.getIdentifier().getVersion()).isEqualTo(1);
     }
 
@@ -105,7 +105,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
         final var path = URI.create(mintedRaid.getIdentifier().getId()).getPath();
 
         final var handle = (IdentifierHandle) identifierParser.parseHandle(path);
-        final var readResult = raidApi.findRaidByName(handle.prefix(), handle.suffix()).getBody();
+        final var readResult = raidApi.findRaidByName(handle.prefix(), handle.suffix(), null).getBody();
 
         final var updateRequest = mapReadToUpdate(readResult);
 
@@ -116,7 +116,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
             fail("Update failed");
         }
 
-        final var result = raidApi.findRaidByName(handle.prefix(), handle.suffix()).getBody();
+        final var result = raidApi.findRaidByName(handle.prefix(), handle.suffix(), null).getBody();
         assertThat(result.getIdentifier().getVersion()).isEqualTo(1);
     }
 
@@ -131,7 +131,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
         final var api = testClient.raidApi(uqAdminToken);
 
         try {
-            final var readResult = api.findRaidByName(handle.prefix(), handle.suffix()).getBody();
+            final var readResult = api.findRaidByName(handle.prefix(), handle.suffix(), null).getBody();
             fail("Access to embargoed raid should be forbidden from different service point");
         } catch (final FeignException e) {
             assertThat(e.status()).isEqualTo(403);

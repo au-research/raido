@@ -129,25 +129,6 @@ public class AbstractIntegrationTest {
                                 .schemaUri("https://localcontexts.org/labels/biocultural-labels/")
                 ));
     }
-
-    private RaidUpdateRequest mapReadToUpdate(RaidDto read) {
-        return new RaidUpdateRequest()
-                .identifier(read.getIdentifier())
-                .title(read.getTitle())
-                .date(read.getDate())
-                .description(read.getDescription())
-                .access(read.getAccess())
-                .alternateUrl(read.getAlternateUrl())
-                .contributor(read.getContributor())
-                .organisation(read.getOrganisation())
-                .subject(read.getSubject())
-                .relatedRaid(read.getRelatedRaid())
-                .relatedObject(read.getRelatedObject())
-                .alternateIdentifier(read.getAlternateIdentifier())
-                .spatialCoverage(read.getSpatialCoverage())
-                .traditionalKnowledgeLabel(read.getTraditionalKnowledgeLabel());
-    }
-
     public Contributor contributor(
             final String orcid,
             final String position,
@@ -156,6 +137,8 @@ public class AbstractIntegrationTest {
     ) {
         return new Contributor()
                 .id(orcid)
+                .contact(true)
+                .leader(true)
                 .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .position(List.of(new ContributorPosition()
                         .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)

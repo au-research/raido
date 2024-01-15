@@ -1,21 +1,13 @@
-import { accessGenerateData } from "Forms/RaidForm/components/FormAccessComponent";
-import { alternateIdentifierGenerateData } from "Forms/RaidForm/components/FormAlternateIdentifiersComponent";
-import { alternateUrlGenerateData } from "Forms/RaidForm/components/FormAlternateUrlsComponent";
-import { contributorsGenerateData } from "Forms/RaidForm/components/FormContributorsComponent";
+import {accessGenerateData} from "Forms/RaidForm/components/FormAccessComponent";
+import {contributorsGenerateData} from "Forms/RaidForm/components/FormContributorsComponent";
 
-import { datesGenerateData } from "Forms/RaidForm/components/FormDatesComponent";
-import { descriptionsGenerateData } from "Forms/RaidForm/components/FormDescriptionsComponent";
-import { organisationsGenerateData } from "Forms/RaidForm/components/FormOrganisationsComponent";
-import { relatedObjectGenerateData } from "Forms/RaidForm/components/FormRelatedObjectsComponent";
-import { relatedRaidGenerateData } from "Forms/RaidForm/components/FormRelatedRaidsComponent";
-import { spatialCoverageGenerateData } from "Forms/RaidForm/components/FormSpatialCoveragesComponent";
-import { subjectsGenerateData } from "Forms/RaidForm/components/FormSubjectsComponent";
-import { titlesGenerateData } from "Forms/RaidForm/components/FormTitlesComponent";
-import { RaidCreateRequest } from "Generated/Raidv2";
-import dayjs, { Dayjs } from "dayjs";
+import {datesGenerateData} from "Forms/RaidForm/components/FormDatesComponent";
+import {titlesGenerateData} from "Forms/RaidForm/components/FormTitlesComponent";
+import {RaidCreateRequest} from "Generated/Raidv2";
+import dayjs, {Dayjs} from "dayjs";
 
 export const extractPrefixAndSuffixFromIdentifier = (
-  identifier: string
+  identifier: string,
 ): { prefix: string; suffix: string } => {
   const pattern = /\/([^/]+)\/([^/]+)$/;
   const matches = identifier.match(pattern);
@@ -70,13 +62,13 @@ export const extractLastUrlSegment = (inputUri: string = ""): string => {
  *   threeYearsFromDate('2020-01-01'); // returns '2023-01-01'
  */
 export const threeYearsFromDate = (
-  inputDate: string = dayjs().format()
+  inputDate: string = dayjs().format(),
 ): Dayjs => {
   return dayjs(inputDate).add(3, "year");
 };
 
 export const raidColors = new Map([
-  ["blue", "#00B0D5"],
+  ["blue", "#0284c7"],
   ["pink", "#E51875"],
   ["yellow", "#F8B20E"],
   ["purple", "#8E489B"],
@@ -84,27 +76,27 @@ export const raidColors = new Map([
 
 export const newRaid: RaidCreateRequest = {
   title: [titlesGenerateData()],
-  description: [descriptionsGenerateData()],
+  // description: [descriptionsGenerateData()],
   date: datesGenerateData(),
   access: accessGenerateData(),
-  organisation: [organisationsGenerateData()],
+  // organisation: [organisationsGenerateData()],
   contributor: [contributorsGenerateData()],
-  subject: [subjectsGenerateData()],
-  relatedRaid: [],
-  alternateUrl: [
-    alternateUrlGenerateData(),
-    alternateUrlGenerateData(),
-    alternateUrlGenerateData(),
-  ],
-  spatialCoverage: [spatialCoverageGenerateData()],
-  relatedObject: [
-    relatedObjectGenerateData(),
-    relatedObjectGenerateData(),
-    relatedObjectGenerateData(),
-  ],
-  alternateIdentifier: [
-    alternateIdentifierGenerateData(),
-    alternateIdentifierGenerateData(),
-    alternateIdentifierGenerateData(),
-  ],
+  // subject: [subjectsGenerateData()],
+  // relatedRaid: [],
+  // alternateUrl: [
+  //   alternateUrlGenerateData(),
+  //   alternateUrlGenerateData(),
+  //   alternateUrlGenerateData(),
+  // ],
+  // spatialCoverage: [spatialCoverageGenerateData()],
+  // relatedObject: [
+  //   relatedObjectGenerateData(),
+  //   relatedObjectGenerateData(),
+  //   relatedObjectGenerateData(),
+  // ],
+  // alternateIdentifier: [
+  //   alternateIdentifierGenerateData(),
+  //   alternateIdentifierGenerateData(),
+  //   alternateIdentifierGenerateData(),
+  // ],
 };

@@ -1,37 +1,37 @@
-import { Container } from "@mui/material";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useAuthApi } from "Api/AuthApi";
-import { raidoTitle } from "Component/Util";
+import {Container} from "@mui/material";
+import {useMutation, useQuery} from "@tanstack/react-query";
+import {useAuthApi} from "Api/AuthApi";
+import {raidoTitle} from "Component/Util";
 import {
-  NavPathResult,
-  NavTransition,
-  NavigationState,
-  isPagePath,
-  parsePageSuffixParams,
-  useNavigation,
+    isPagePath,
+    NavigationState,
+    NavPathResult,
+    NavTransition,
+    parsePageSuffixParams,
+    useNavigation,
 } from "Design/NavigationProvider";
 import RaidForm from "Forms/RaidForm";
 import {
-  Access,
-  AlternateIdentifier,
-  AlternateUrl,
-  Contributor,
-  Description,
-  Id,
-  ModelDate,
-  Organisation,
-  RaidDto,
-  RelatedObject,
-  RelatedRaid,
-  SpatialCoverage,
-  Subject,
-  Title,
-  TraditionalKnowledgeLabel,
+    Access,
+    AlternateIdentifier,
+    AlternateUrl,
+    Contributor,
+    Description,
+    Id,
+    ModelDate,
+    Organisation,
+    RaidDto,
+    RelatedObject,
+    RelatedRaid,
+    SpatialCoverage,
+    Subject,
+    Title,
+    TraditionalKnowledgeLabel,
 } from "Generated/Raidv2";
 
-import { useState } from "react";
+import {useState} from "react";
 
-const pageUrl = "/edit-raid-new";
+const pageUrl = "/edit-raid";
 
 export function isEditRaidPagePath(pathname: string): NavPathResult {
   return isPagePath(pathname, pageUrl);

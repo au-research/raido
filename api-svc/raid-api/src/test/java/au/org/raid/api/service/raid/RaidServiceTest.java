@@ -1,24 +1,23 @@
 package au.org.raid.api.service.raid;
 
-import au.org.raid.api.exception.ResourceNotFoundException;
 import au.org.raid.api.exception.ValidationFailureException;
+import au.org.raid.api.factory.HandleFactory;
 import au.org.raid.api.factory.IdFactory;
 import au.org.raid.api.factory.RaidRecordFactory;
 import au.org.raid.api.repository.RaidRepository;
 import au.org.raid.api.repository.ServicePointRepository;
+import au.org.raid.api.service.Handle;
 import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.RaidIngestService;
-import au.org.raid.api.service.apids.ApidsService;
-import au.org.raid.api.service.apids.model.ApidsMintResponse;
-import au.org.raid.api.service.raid.id.IdentifierHandle;
+import au.org.raid.api.service.datacite.DataciteService;
 import au.org.raid.api.service.raid.id.IdentifierParser;
-import au.org.raid.api.service.raid.id.IdentifierUrl;
-import au.org.raid.api.spring.config.environment.MetadataProps;
 import au.org.raid.api.util.FileUtil;
-import au.org.raid.api.util.SchemaValues;
 import au.org.raid.db.jooq.tables.records.RaidRecord;
 import au.org.raid.db.jooq.tables.records.ServicePointRecord;
-import au.org.raid.idl.raidv2.model.*;
+import au.org.raid.idl.raidv2.model.Id;
+import au.org.raid.idl.raidv2.model.RaidCreateRequest;
+import au.org.raid.idl.raidv2.model.RaidDto;
+import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,17 +30,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Optional;
-import java.util.function.Function;
 
-import static au.org.raid.api.service.raid.MetadataService.RAID_ID_TYPE_URI;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,21 +45,11 @@ class RaidServiceTest {
             .setDateFormat(new SimpleDateFormat("yyyy-MM-dd"))
             .setSerializationInclusion(JsonInclude.Include.NON_NULL);
     @Mock
-    private ApidsService apidsService;
-    @Mock
-    private MetadataService metadataService;
-    @Mock
     private RaidRepository raidRepository;
     @Mock
     private ServicePointRepository servicePointRepository;
     @Mock
     private RaidRecordFactory raidRecordFactory;
-    @Mock
-    private IdentifierParser idParser;
-    @Mock
-    private MetadataProps metadataProps;
-    @Mock
-    private TransactionTemplate transactionTemplate;
     @Mock
     private ObjectMapper mapper;
     @Mock
@@ -76,57 +60,36 @@ class RaidServiceTest {
     private RaidHistoryService raidHistoryService;
     @Mock
     private RaidIngestService raidIngestService;
-
+    @Mock
+    private DataciteService dataciteService;
+    @Mock
+    private HandleFactory handleFactory;
     @InjectMocks
     private RaidService raidService;
 
     @Test
     @DisplayName("Mint a raid")
     void mintRaidV1() throws IOException {
-        final var urlPrefix = "https://raid.org.au/";
         final long servicePointId = 123;
-        final var handle = new IdentifierHandle("10378.1", "1696639");
-        final var identifierUrl = new IdentifierUrl(urlPrefix, handle);
-        final var urlIndex = 456;
+        final var prefix = "_prefix";
+        final var suffix = "_suffix";
+        final var handle = new Handle(prefix, suffix);
         final var createRaidRequest = createRaidRequest();
-        final var registrationAgency = "registration-agency";
-        final var identifierOwner = "identifier-owner";
-
-        final var apidsResponse = new ApidsMintResponse();
-        final var apidsIdentifier = new ApidsMintResponse.Identifier();
-        final var apidsIdentifierProperty = new ApidsMintResponse.Identifier.Property();
-        apidsIdentifier.handle = handle.format();
-        apidsIdentifierProperty.index = urlIndex;
-        apidsIdentifierProperty.value = identifierUrl.formatUrl();
-        apidsIdentifier.property = apidsIdentifierProperty;
-        apidsResponse.identifier = apidsIdentifier;
 
         final var servicePointRecord = new ServicePointRecord();
 
         final var raidDto = new RaidDto();
 
+        final var id = new Id();
 
-        final var id = new Id()
-                .id(identifierUrl.formatUrl())
-                .schemaUri(RAID_ID_TYPE_URI)
-                .registrationAgency(new RegistrationAgency()
-                        .id(registrationAgency)
-                        .schemaUri(SchemaValues.ROR_SCHEMA_URI.getUri()))
-                .owner(new Owner()
-                        .id(identifierOwner)
-                        .schemaUri(SchemaValues.ROR_SCHEMA_URI.getUri())
-                        .servicePoint(servicePointId)
-                );
-
-//        when(metadataProps.getHandleUrlPrefix()).thenReturn(urlPrefix);
         when(servicePointRepository.findById(servicePointId)).thenReturn(Optional.of(servicePointRecord));
-        when(apidsService.mintApidsHandleContentPrefix(any(Function.class))).thenReturn(apidsResponse);
-        when(idParser.parseHandle(handle.format())).thenReturn(handle);
-        when(idFactory.create(handle.format(), servicePointRecord)).thenReturn(id);
-//        when(metadataService.getMetaProps()).thenReturn(metadataProps);
+        when(dataciteService.getDatacitePrefix()).thenReturn(prefix);
+        when(handleFactory.createWithPrefix(prefix)).thenReturn(handle);
+
+        when(idFactory.create(handle.toString(), servicePointRecord)).thenReturn(id);
         when(raidHistoryService.save(createRaidRequest)).thenReturn(raidDto);
 
-        raidService.mintRaidSchemaV1(createRaidRequest, servicePointId);
+        raidService.mint(createRaidRequest, servicePointId);
         verify(raidIngestService).create(raidDto);
     }
 
@@ -142,27 +105,14 @@ class RaidServiceTest {
 
         raidRecord.setMetadata(JSONB.valueOf(raidJson));
 
-
         final var expected = objectMapper.readValue(raidJson(), RaidDto.class);
         when(raidIngestService.findByHandle(handle)).thenReturn(Optional.of(expected));
 
 //        when(raidDtoFactory.create(raidRecord)).thenReturn(expected);
 
-        RaidDto result = raidService.read(handle);
-        assertThat(result, Matchers.is(expected));
-    }
+        final var result = raidService.findByHandle(handle);
+        assertThat(result.get(), Matchers.is(expected));
 
-    @Test
-    @DisplayName("ResourceNotFoundException is thrown when raid not found on read")
-    void readRaidV1_throwsResourceNoFoundException() {
-        final String handle = "test-handle";
-        final Long servicePointId = 999L;
-        final ServicePointRecord servicePointRecord = new ServicePointRecord();
-        servicePointRecord.setId(servicePointId);
-
-        when(raidIngestService.findByHandle(handle)).thenReturn(Optional.empty());
-
-        assertThrows(ResourceNotFoundException.class, () -> raidService.read(handle));
     }
 
     @Test
@@ -175,7 +125,7 @@ class RaidServiceTest {
         final var updateRequest = objectMapper.readValue(raidJson, RaidUpdateRequest.class);
         final var expected = objectMapper.readValue(raidJson, RaidDto.class);
 
-        when(raidHistoryService.findByHandle(handle)).thenReturn(Optional.of(expected));
+        when(raidHistoryService.findByHandleAndVersion(handle, 1)).thenReturn(Optional.of(expected));
 
         when(checksumService.create(updateRequest)).thenReturn("a");
         when(checksumService.create(expected)).thenReturn("b");
@@ -206,7 +156,7 @@ class RaidServiceTest {
         when(checksumService.create(expected)).thenReturn("1");
         when(checksumService.create(updateRequest)).thenReturn("1");
 
-        when(raidHistoryService.findByHandle(handle)).thenReturn(Optional.of(expected));
+        when(raidHistoryService.findByHandleAndVersion(handle, 1)).thenReturn(Optional.of(expected));
 
         final var result = raidService.update(updateRequest);
 

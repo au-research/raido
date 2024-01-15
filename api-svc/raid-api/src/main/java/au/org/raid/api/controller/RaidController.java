@@ -3,11 +3,13 @@ package au.org.raid.api.controller;
 import au.org.raid.api.exception.ClosedRaidException;
 import au.org.raid.api.exception.InvalidAccessException;
 import au.org.raid.api.exception.ValidationException;
+import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.RaidIngestService;
 import au.org.raid.api.service.raid.RaidService;
 import au.org.raid.api.util.SchemaValues;
 import au.org.raid.api.validator.ValidationService;
 import au.org.raid.idl.raidv2.api.RaidApi;
+import au.org.raid.idl.raidv2.model.RaidChange;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
@@ -38,21 +40,32 @@ public class RaidController implements RaidApi {
     private final ValidationService validationService;
     private final RaidService raidService;
     private final RaidIngestService raidIngestService;
+    private final RaidHistoryService raidHistoryService;
+
 
     @Override
-    public ResponseEntity<RaidDto> findRaidByName(final String prefix, final String suffix) {
+    public ResponseEntity<RaidDto> findRaidByName(final String prefix, final String suffix, final Integer version) {
         var user = getApiToken();
         //return 403 if raid is confidential and doesn't have same service point as user
 
         final var handle = String.join("/", prefix, suffix);
-        var raid = raidService.read(handle);
+        var raidOptional = raidService.findByHandle(handle)
+                .or(Optional::empty);
 
-        if (!raid.getIdentifier().getOwner().getServicePoint().equals(user.getServicePointId())
-                && !raid.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri())) {
-            throw new ClosedRaidException(raid);
+        if (raidOptional.isPresent()) {
+            final var raid = raidOptional.get();
+
+            if (!raid.getIdentifier().getOwner().getServicePoint().equals(user.getServicePointId())
+                    && !raid.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri())) {
+                throw new ClosedRaidException(raid);
+            }
         }
 
-        return ResponseEntity.ok(raid);
+        if (version != null) {
+            raidOptional = raidHistoryService.findByHandleAndVersion(handle, version);
+        }
+
+        return ResponseEntity.of(raidOptional);
     }
 
 
@@ -70,7 +83,7 @@ public class RaidController implements RaidApi {
             throw new ValidationException(failures);
         }
 
-        final var raidDto = raidService.mintRaidSchemaV1(request, user.getServicePointId());
+        final var raidDto = raidService.mint(request, user.getServicePointId());
 
         return ResponseEntity.created(URI.create(raidDto.getIdentifier().getId())).body(raidDto);
     }
@@ -101,5 +114,24 @@ public class RaidController implements RaidApi {
         }
 
         return ResponseEntity.ok(raidService.update(request));
+    }
+
+    @Override
+    public ResponseEntity<List<RaidChange>> raidHistory(final String prefix, final String suffix) {
+        final var handle = prefix + "/" + suffix;
+
+        final var raidOptional = raidService.findByHandle(handle);
+
+        if (raidOptional.isPresent()) {
+            final var raid = raidOptional.get();
+
+            if (!raid.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri())) {
+                var user = getApiToken();
+                guardOperatorOrAssociated(user, raid.getIdentifier().getOwner().getServicePoint());
+            }
+        }
+
+
+        return ResponseEntity.ok(raidHistoryService.findAllChangesByHandle(handle));
     }
 }

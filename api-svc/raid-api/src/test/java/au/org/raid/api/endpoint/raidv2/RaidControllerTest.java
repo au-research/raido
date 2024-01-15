@@ -3,7 +3,9 @@ package au.org.raid.api.endpoint.raidv2;
 import au.org.raid.api.controller.RaidController;
 import au.org.raid.api.exception.CrossAccountAccessException;
 import au.org.raid.api.exception.ResourceNotFoundException;
+import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.RaidIngestService;
+import au.org.raid.api.service.datacite.DataciteService;
 import au.org.raid.api.service.raid.RaidService;
 import au.org.raid.api.service.raid.id.IdentifierHandle;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
@@ -34,9 +36,12 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static au.org.raid.api.util.FileUtil.resourceContent;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -73,6 +78,9 @@ class RaidControllerTest {
     private ValidationService validationService;
     @Mock
     private RaidIngestService raidIngestService;
+    private DataciteService dataciteService;
+    @Mock
+    private RaidHistoryService raidHistoryService;
     @InjectMocks
     private RaidController controller;
 
@@ -97,7 +105,7 @@ class RaidControllerTest {
             when(raidService.isEditable(any(ApiToken.class), anyLong())).thenReturn(true);
 
             doThrow(DataAccessException.class)
-                    .when(raidService).mintRaidSchemaV1(any(RaidCreateRequest.class), eq(servicePointId));
+                    .when(raidService).mint(any(RaidCreateRequest.class), eq(servicePointId));
 
             mockMvc.perform(post("/raid/")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -189,8 +197,8 @@ class RaidControllerTest {
             assertThat(validationFailureResponse.getFailures().get(0).getErrorType(), Matchers.is(validationFailureType));
             assertThat(validationFailureResponse.getFailures().get(0).getMessage(), Matchers.is(validationFailureMessage));
 
-            verify(raidService, never()).mintRaidSchemaV1(any(RaidCreateRequest.class), eq(servicePointId));
-            verify(raidService, never()).read(anyString());
+            verify(raidService, never()).mint(any(RaidCreateRequest.class), eq(servicePointId));
+            verify(raidService, never()).findByHandle(anyString());
         }
     }
 
@@ -224,7 +232,7 @@ class RaidControllerTest {
 
             when(validationService.validateForCreate(any(RaidCreateRequest.class))).thenReturn(Collections.emptyList());
 
-            when(raidService.mintRaidSchemaV1(any(RaidCreateRequest.class), eq(servicePointId))).thenReturn(raidForGet);
+            when(raidService.mint(any(RaidCreateRequest.class), eq(servicePointId))).thenReturn(raidForGet);
 
             mockMvc.perform(post("/raid/")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -250,7 +258,8 @@ class RaidControllerTest {
                     .andExpect(jsonPath("$.description[0].text", Matchers.is("Genome sequencing and assembly project at WUR of the C. Japonicum. ")))
                     .andExpect(jsonPath("$.description[0].type.id", Matchers.is(PRIMARY_DESCRIPTION_TYPE)))
                     .andExpect(jsonPath("$.description[0].type.schemaUri", Matchers.is(DESCRIPTION_TYPE_SCHEMA_URI)))
-                    .andExpect(jsonPath("$.access.type.id", Matchers.is(ACCESS_TYPE_CLOSED)))
+                    .andExpect(jsonPath("$.access.type.id", Matchers.is(SchemaValues.ACCESS_TYPE_EMBARGOED.getUri())))
+                    .andExpect(jsonPath("$.access.embargoExpiry", Matchers.is("2024-01-01")))
                     .andExpect(jsonPath("$.access.type.schemaUri", Matchers.is(ACCESS_SCHEMA_URI)))
                     .andExpect(jsonPath("$.access.statement.text", Matchers.is("This RAiD is closed")))
                     .andExpect(jsonPath("$.contributor[0].id", Matchers.is("https://orcid.org/0000-0002-4368-8058")))
@@ -392,7 +401,7 @@ class RaidControllerTest {
                     .andExpect(jsonPath("$.description[0].text", Matchers.is("Genome sequencing and assembly project at WUR of the C. Japonicum. ")))
                     .andExpect(jsonPath("$.description[0].type.id", Matchers.is(PRIMARY_DESCRIPTION_TYPE)))
                     .andExpect(jsonPath("$.description[0].type.schemaUri", Matchers.is(DESCRIPTION_TYPE_SCHEMA_URI)))
-                    .andExpect(jsonPath("$.access.type.id", Matchers.is(ACCESS_TYPE_CLOSED)))
+                    .andExpect(jsonPath("$.access.type.id", Matchers.is(SchemaValues.ACCESS_TYPE_EMBARGOED.getUri())))
                     .andExpect(jsonPath("$.access.type.schemaUri", Matchers.is(ACCESS_SCHEMA_URI)))
                     .andExpect(jsonPath("$.access.statement.text", Matchers.is("This RAiD is closed")))
                     .andExpect(jsonPath("$.contributor[0].id", Matchers.is("https://orcid.org/0000-0002-4368-8058")))
@@ -494,7 +503,7 @@ class RaidControllerTest {
             when(apiToken.getServicePointId()).thenReturn(20000001L);
             authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
 
-            when(raidService.read(String.join("/", prefix, suffix))).thenReturn(raid);
+            when(raidService.findByHandle(String.join("/", prefix, suffix))).thenReturn(Optional.of(raid));
 
             final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
                             .characterEncoding("utf-8")
@@ -510,6 +519,68 @@ class RaidControllerTest {
     }
 
     @Test
+    @DisplayName("Returns raid at given version")
+    void readRaidV1_ReturnsRaidAtVersion() throws Exception {
+        final var prefix = "10378.1";
+        final var suffix = "1696639";
+        final var startDate = LocalDate.now().minusYears(1);
+        final var title = "test-title";
+        final var raid = createRaidForGet(title, startDate);
+        final var version = 9;
+
+        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
+            final ApiToken apiToken = mock(ApiToken.class);
+            when(apiToken.getServicePointId()).thenReturn(20000001L);
+            authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
+
+            when(raidService.findByHandle(String.join("/", prefix, suffix))).thenReturn(Optional.of(raid));
+            when(raidHistoryService.findByHandleAndVersion(String.join("/", prefix, suffix), version))
+                    .thenReturn(Optional.of(raid));
+
+            final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
+                            .queryParam("version", String.valueOf(version))
+                            .characterEncoding("utf-8")
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andExpect(status().isOk())
+                    .andReturn();
+
+            final RaidDto result = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), RaidDto.class);
+
+            assertThat(result, Matchers.is(raid));
+        }
+    }
+
+    @Test
+    @DisplayName("Returns 404 when no raid found at given version")
+    void readRaidV1_ReturnsNotFoundIfVersionNotFound() throws Exception {
+        final var prefix = "10378.1";
+        final var suffix = "1696639";
+        final var startDate = LocalDate.now().minusYears(1);
+        final var title = "test-title";
+        final var raid = createRaidForGet(title, startDate);
+        final var version = 9;
+
+        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
+            final ApiToken apiToken = mock(ApiToken.class);
+            when(apiToken.getServicePointId()).thenReturn(20000001L);
+            authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
+
+            when(raidService.findByHandle(String.join("/", prefix, suffix))).thenReturn(Optional.of(raid));
+            when(raidHistoryService.findByHandleAndVersion(String.join("/", prefix, suffix), version))
+                    .thenThrow(ResourceNotFoundException.class);
+
+            mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
+                            .queryParam("version", String.valueOf(version))
+                            .characterEncoding("utf-8")
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andExpect(status().isNotFound())
+                    .andReturn();
+        }
+    }
+
+    @Test
     void readRaidV1_ReturnsNotFound() throws Exception {
         final var prefix = "10.38";
         final var suffix = "99999";
@@ -519,7 +590,7 @@ class RaidControllerTest {
             final ApiToken apiToken = mock(ApiToken.class);
             authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
 
-            doThrow(new ResourceNotFoundException(handle)).when(raidService).read(handle);
+            doThrow(new ResourceNotFoundException(handle)).when(raidService).findByHandle(handle);
 
             final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
                             .characterEncoding("utf-8")
@@ -558,14 +629,14 @@ class RaidControllerTest {
 
             authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
 
-            when(raidService.read(String.join("/", prefix, suffix))).thenReturn(raid);
+            when(raidService.findByHandle(String.join("/", prefix, suffix))).thenReturn(Optional.of(raid));
 
             mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
                             .characterEncoding("utf-8"))
                     .andDo(print())
                     .andExpect(status().isForbidden())
                     .andExpect(jsonPath("$.identifier.id", Matchers.is("https://raid.org.au/10378.1/1696639")))
-                    .andExpect(jsonPath("$.access.type.id", Matchers.is(SchemaValues.ACCESS_TYPE_CLOSED.getUri())))
+                    .andExpect(jsonPath("$.access.type.id", Matchers.is(SchemaValues.ACCESS_TYPE_EMBARGOED.getUri())))
                     .andExpect(jsonPath("$.access.statement.text", Matchers.is("This RAiD is closed")))
                     .andExpect(jsonPath("$.access.statement.language.id", Matchers.is("eng")))
                     .andExpect(jsonPath("$.access.statement.language.schemaUri", Matchers.is("https://www.iso.org/standard/39534.html")))
@@ -593,7 +664,7 @@ class RaidControllerTest {
 
             authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
 
-            when(raidService.read(String.join("/", prefix, suffix))).thenReturn(raid);
+            when(raidService.findByHandle(String.join("/", prefix, suffix))).thenReturn(Optional.of(raid));
 
             mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
                             .characterEncoding("utf-8"))
@@ -648,7 +719,7 @@ class RaidControllerTest {
                     .andExpect(jsonPath("$[0].description[0].text", Matchers.is("Genome sequencing and assembly project at WUR of the C. Japonicum. ")))
                     .andExpect(jsonPath("$[0].description[0].type.id", Matchers.is(PRIMARY_DESCRIPTION_TYPE)))
                     .andExpect(jsonPath("$[0].description[0].type.schemaUri", Matchers.is(DESCRIPTION_TYPE_SCHEMA_URI)))
-                    .andExpect(jsonPath("$[0].access.type.id", Matchers.is(ACCESS_TYPE_CLOSED)))
+                    .andExpect(jsonPath("$[0].access.type.id", Matchers.is(SchemaValues.ACCESS_TYPE_EMBARGOED.getUri())))
                     .andExpect(jsonPath("$[0].access.type.schemaUri", Matchers.is(ACCESS_SCHEMA_URI)))
                     .andExpect(jsonPath("$[0].access.statement.text", Matchers.is("This RAiD is closed")))
                     .andExpect(jsonPath("$[0].contributor[0].id", Matchers.is("https://orcid.org/0000-0002-4368-8058")))
@@ -665,6 +736,64 @@ class RaidControllerTest {
                     .andExpect(jsonPath("$[0].organisation[0].role[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
                     .andExpect(jsonPath("$[0].organisation[0].id", Matchers.is("https://ror.org/04qw24q55")))
                     .andExpect(jsonPath("$[0].organisation[0].schemaUri", Matchers.is("https://ror.org/")));
+        }
+    }
+
+    @Test
+    @DisplayName("Raid history endpoint returns list of changes")
+    void raidHistory() throws Exception {
+        final var prefix = "_prefix";
+        final var suffix = "_suffix";
+        final var handle = prefix + "/" + suffix;
+        final var version = 1;
+        final var diff = "_diff";
+        final var timestamp = LocalDateTime.now().atOffset(ZoneOffset.UTC);
+
+        final var raid = createRaidForGet("title", LocalDate.now());
+        raid.getAccess().getType().setId(SchemaValues.ACCESS_TYPE_OPEN.getUri());
+
+        final var raidChange = new RaidChange()
+                .handle(handle)
+                .version(version)
+                .diff(diff)
+                .timestamp(timestamp);
+
+        when(raidService.findByHandle(handle)).thenReturn(Optional.of(raid));
+
+        when(raidHistoryService.findAllChangesByHandle(handle)).thenReturn(List.of(raidChange));
+
+        mockMvc.perform(get(String.format("/raid/%s/%s/history", prefix, suffix), handle)
+                        .characterEncoding("utf-8"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].handle", Matchers.is(handle)))
+                .andExpect(jsonPath("$[0].version", Matchers.is(version)))
+                .andExpect(jsonPath("$[0].diff", Matchers.is(diff)))
+                .andExpect(jsonPath("$[0].timestamp", Matchers.is(timestamp.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))));
+    }
+
+    @Test
+    @DisplayName("Raid history returns 403 if raid is embargoed and user is from different service point")
+    void raidHistoryEmbargoed() throws Exception {
+        final var prefix = "_prefix";
+        final var suffix = "_suffix";
+        final var handle = prefix + "/" + suffix;
+        final var raid = createRaidForGet("title", LocalDate.now());
+        final Long servicePointId = 20000001L;
+
+        when(raidService.findByHandle(handle)).thenReturn(Optional.of(raid));
+
+        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
+            final ApiToken apiToken = mock(ApiToken.class);
+            authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
+
+            authzUtil.when(() -> AuthzUtil.guardOperatorOrAssociated(apiToken, servicePointId))
+                    .thenThrow(new CrossAccountAccessException(servicePointId));
+
+            mockMvc.perform(get(String.format("/raid/%s/%s/history", prefix, suffix), handle)
+                            .characterEncoding("utf-8"))
+                    .andDo(print())
+                    .andExpect(status().isForbidden());
         }
     }
 

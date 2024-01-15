@@ -1,33 +1,28 @@
 import {
-  AddCircleOutline as AddCircleOutlineIcon,
-  RemoveCircleOutline as RemoveCircleOutlineIcon,
+    AddCircleOutline as AddCircleOutlineIcon,
+    RemoveCircleOutline as RemoveCircleOutlineIcon,
 } from "@mui/icons-material";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  Grid,
-  IconButton,
-  MenuItem,
-  Stack,
-  TextField,
-  Tooltip,
-  Typography,
+    Card,
+    CardContent,
+    CardHeader,
+    Grid,
+    IconButton,
+    MenuItem,
+    Stack,
+    TextField,
+    Tooltip,
+    Typography,
 } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers";
-import { RaidDto } from "Generated/Raidv2";
-import dayjs, { isDayjs } from "dayjs";
-import {
-  Control,
-  Controller,
-  FieldErrors,
-  useFieldArray,
-} from "react-hook-form";
+import {RaidDto} from "Generated/Raidv2";
+import dayjs from "dayjs";
+import {Control, Controller, FieldErrors, useFieldArray,} from "react-hook-form";
 import contributorPosition from "References/contributor_position.json";
 import contributorPositionSchema from "References/contributor_position_schema.json";
-import { extractKeyFromIdUri } from "utils";
+import {extractKeyFromIdUri} from "utils";
 
-import { dateHelperTextRequired } from "../../../date-utils";
+
+import {dateHelperTextRequired} from "../../../date-utils";
 
 export default function FormContributorsPositionsComponent({
   control,
@@ -65,10 +60,11 @@ export default function FormContributorsPositionsComponent({
             <Card variant={"outlined"} sx={{ bgcolor: "transparent" }}>
               <CardHeader
                 action={
-                  <Tooltip title="Add Position" placement="right">
+                  <Tooltip title="Add position (max. 1)" placement="right">
                     <IconButton
                       aria-label="Add Position"
                       onClick={handleAddPosition}
+                      disabled={contributorPositionsArray.fields.length > 0}
                     >
                       <AddCircleOutlineIcon />
                     </IconButton>
@@ -129,7 +125,7 @@ export default function FormContributorsPositionsComponent({
                                     ]);
                                   }}
                                 >
-                                  {contributorPosition.map((position) => (
+                                  {contributorPosition.filter(el=>!el.uri.includes('leader.json') && !el.uri.includes('contact-person.json')).map((position) => (
                                     <MenuItem
                                       key={position.uri}
                                       value={position.uri}

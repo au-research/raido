@@ -1,5 +1,6 @@
 package au.org.raid.api.repository;
 
+import au.org.raid.api.entity.ChangeType;
 import au.org.raid.db.jooq.tables.records.RaidHistoryRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -45,6 +46,24 @@ public class RaidHistoryRepository {
                         .setCreated(RAID_HISTORY.CREATED.getValue(record))
 
                 );
+    }
+
+    public List<RaidHistoryRecord> findAllByHandleAndChangeType(final String handle, final String changeType) {
+        return dslContext.selectFrom(RAID_HISTORY)
+                .where(RAID_HISTORY.HANDLE.eq(handle))
+                .and(RAID_HISTORY.CHANGE_TYPE.eq(changeType))
+                .orderBy(RAID_HISTORY.REVISION)
+                .fetch();
+    }
+
+
+    public List<RaidHistoryRecord> findAllByHandleAndVersion(final String handle, final Integer version) {
+        return dslContext.selectFrom(RAID_HISTORY)
+                .where(RAID_HISTORY.HANDLE.eq(handle))
+                .and(RAID_HISTORY.REVISION.lessOrEqual(version))
+                .and(RAID_HISTORY.CHANGE_TYPE.eq(ChangeType.PATCH.toString()))
+                .orderBy(RAID_HISTORY.REVISION)
+                .fetch();
     }
 
     public Optional<Integer> findMaxBaseline(final String handle) {

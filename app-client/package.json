@@ -33,6 +33,7 @@
     "@types/node": "16.18.8",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
+    "clipboard-copy": "^4.0.1",
     "dayjs": "^1.11.7",
     "generate-avatar": "^1.4.10",
     "json5": ">=2.2.2",
@@ -50,6 +51,7 @@
     "@playwright/test": "^1.39.0",
     "cross-env": "7.0.3",
     "json5": ">=2.2.2",
+    "prettier": "^3.1.1",
     "source-map-explorer": "2.5.3"
   },
   "eslintConfig": {

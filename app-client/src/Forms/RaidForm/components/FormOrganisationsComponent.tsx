@@ -1,35 +1,28 @@
 import {
-  AddCircleOutline as AddCircleOutlineIcon,
-  RemoveCircleOutline as RemoveCircleOutlineIcon,
+    AddCircleOutline as AddCircleOutlineIcon,
+    RemoveCircleOutline as RemoveCircleOutlineIcon,
 } from "@mui/icons-material";
 import {
-  Box,
-  Card,
-  CardContent,
-  CardHeader,
-  Grid,
-  IconButton,
-  Stack,
-  TextField,
-  Tooltip,
-  Typography,
+    Box,
+    Card,
+    CardContent,
+    CardHeader,
+    Grid,
+    IconButton,
+    Stack,
+    TextField,
+    Tooltip,
+    Typography,
 } from "@mui/material";
-import { RaidDto } from "Generated/Raidv2";
+import {RaidDto} from "Generated/Raidv2";
 import dayjs from "dayjs";
-import {
-  Control,
-  Controller,
-  FieldErrors,
-  UseFieldArrayReturn,
-  UseFormTrigger,
-  useFieldArray,
-} from "react-hook-form";
+import {Control, Controller, FieldErrors, useFieldArray, UseFieldArrayReturn, UseFormTrigger,} from "react-hook-form";
 
 import organisationRole from "References/organisation_role.json";
 import organisationRoleSchema from "References/organisation_role_schema.json";
 
-import { combinedPattern } from "date-utils";
-import { z } from "zod";
+import {combinedPattern} from "date-utils";
+import {z} from "zod";
 import FormOrganisationsRolesComponent from "./FormOrganisationsRolesComponent";
 
 export const organisationsValidationSchema = z.array(
@@ -45,7 +38,7 @@ export const organisationsValidationSchema = z.array(
         startDate: z.string().regex(combinedPattern).nonempty(),
         endDate: z.string().regex(combinedPattern).optional().nullable(),
       })
-    ),
+    ).max(1),
   })
 );
 
