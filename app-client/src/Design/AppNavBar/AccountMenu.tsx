@@ -1,4 +1,3 @@
-import {useNavigation} from "Design/NavigationProvider";
 import React from "react";
 import {IconButton, ListItemIcon, Menu, MenuItem,} from "@mui/material";
 import {AccountCircle, Logout,} from "@mui/icons-material";
@@ -14,12 +13,7 @@ export default function AccountMenu() {
     const auth = useAuth();
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
     const menuAnchorRef = React.useRef<HTMLButtonElement>(null!);
-    const nav = useNavigation();
     const session = auth.session;
-
-    function onClose() {
-        setIsMenuOpen(false);
-    }
 
     return (
         <>
