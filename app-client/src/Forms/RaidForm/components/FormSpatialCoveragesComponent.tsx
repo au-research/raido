@@ -9,7 +9,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Divider,
   Grid,
   IconButton,
   Stack,
@@ -17,29 +16,28 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { RaidDto } from "Generated/Raidv2";
-import {
-  Control,
-  Controller,
-  FieldErrors,
-  UseFormTrigger,
-  useFieldArray,
-} from "react-hook-form";
+import {RaidDto} from "Generated/Raidv2";
+import {Control, Controller, FieldErrors, useFieldArray, UseFormTrigger,} from "react-hook-form";
 import fieldData from "../../../fieldData.json";
 import language from "References/language.json";
 import languageSchema from "References/language_schema.json";
 
-import { z } from "zod";
+import {z} from "zod";
 
 export const spatialCoverageValidationSchema = z.array(
   z.object({
     id: z.string().nonempty(),
     schemaUri: z.string().nonempty(),
-    place: z.string().nonempty(),
-    language: z.object({
-      id: z.string().nonempty(),
-      schemaUri: z.string().nonempty(),
-    }),
+    place: z.array(
+        z.object({
+              text: z.string().nonempty(),
+              language: z.object({
+                id: z.string().nonempty(),
+                schemaUri: z.string().nonempty(),
+              }),
+            }
+        )
+    ),
   })
 );
 
