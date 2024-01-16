@@ -3,8 +3,40 @@ import {contributorsGenerateData} from "Forms/RaidForm/components/FormContributo
 
 import {datesGenerateData} from "Forms/RaidForm/components/FormDatesComponent";
 import {titlesGenerateData} from "Forms/RaidForm/components/FormTitlesComponent";
-import {RaidCreateRequest} from "Generated/Raidv2";
+import {
+  Access, AlternateIdentifier,
+  AlternateUrl, Contributor,
+  Description,
+  Id,
+  ModelDate, Organisation,
+  RaidCreateRequest,
+  RaidDto, RelatedObject,
+  RelatedRaid, SpatialCoverage, Subject,
+  Title, TraditionalKnowledgeLabel
+} from "Generated/Raidv2";
 import dayjs, {Dayjs} from "dayjs";
+
+export const raidRequest = (data: RaidDto) => {
+  return {
+    identifier: data?.identifier || ({} as Id),
+    description: data?.description || ([] as Description[]),
+    title: data?.title || ([] as Title[]),
+    access: data?.access || ({} as Access),
+    alternateUrl: data?.alternateUrl || ({} as AlternateUrl[]),
+    relatedRaid: data?.relatedRaid || ([] as RelatedRaid[]),
+    date: data?.date || ({} as ModelDate),
+    contributor: data?.contributor || ([] as Contributor[]),
+    alternateIdentifier:
+        data?.alternateIdentifier || ([] as AlternateIdentifier[]),
+    organisation: data?.organisation || ([] as Organisation[]),
+    relatedObject: data?.relatedObject || ([] as RelatedObject[]),
+    spatialCoverage: data?.spatialCoverage || ([] as SpatialCoverage[]),
+    subject: data?.subject || ([] as Subject[]),
+    traditionalKnowledgeLabel:
+        data?.traditionalKnowledgeLabel ||
+        ([] as TraditionalKnowledgeLabel[])
+  }
+}
 
 export const extractPrefixAndSuffixFromIdentifier = (
   identifier: string,
