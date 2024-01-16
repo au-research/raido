@@ -16,22 +16,12 @@ import { SignInContainer } from "Auth/SignInContainer";
 import { useLocationPathname } from "Util/Hook/LocationPathname";
 import { SignInContext } from "Auth/SignInContext";
 import { NotAuthorizedContent } from "Auth/NotAuthorizedContent";
-import { EnvironmentBanner } from "Design/AppNavBar";
+import EnvironmentBanner from "Design/AppNavBar/EnvironmentBanner";
 
 export interface AuthState {
   signOut: () => void,
   session: AuthorizedSession,
 }
-
-export function isAuthState(obj: any): obj is AuthState {
-  return (
-    obj !== null &&
-    typeof obj === 'object' &&
-    typeof obj.signOut === 'function' &&
-    isAuthorizedSession(obj.session) 
-  );
-}
-
 export interface AuthorizedSession {
   payload: AuthzTokenPayload,
   accessTokenExpiry: Date,
@@ -42,17 +32,6 @@ export interface AuthorizedSession {
   https://blog.ropnop.com/storing-tokens-in-browser/#global-variable */
   accessToken: string,
 }
-
-export function isAuthorizedSession(obj: any): obj is AuthorizedSession {
-  return (
-    !!obj &&
-    isAuthzTokenPayload(obj.payload) &&
-    obj.accessTokenExpiry instanceof Date &&
-    obj.accessTokenIssuedAt instanceof Date &&
-    typeof obj.accessToken === "string"
-  );
-}
-
 const AuthContext = React.createContext(
   undefined as unknown as AuthState);
 
