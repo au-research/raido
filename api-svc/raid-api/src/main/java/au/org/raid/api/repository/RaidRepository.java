@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static au.org.raid.db.jooq.tables.Raid.RAID;
-import static au.org.raid.db.jooq.tables.ServicePoint.SERVICE_POINT;
 
 @Repository
 @RequiredArgsConstructor
@@ -68,30 +67,16 @@ public class RaidRepository {
 
     public Optional<RaidRecord> findByHandle(final String handle) {
         return dslContext.selectFrom(RAID)
-                .where(RAID.HANDLE.eq(handle)).
-                fetchOptional();
+                .where(RAID.HANDLE.eq(handle))
+                .fetchOptional();
     }
 
     public List<RaidRecord> findAllByServicePointId(final Long servicePointId) {
-        return dslContext.select(RAID.fields()).
-                select(SERVICE_POINT.fields()).
-                from(RAID).join(SERVICE_POINT).onKey().
-                where(
-                        RAID.SERVICE_POINT_ID.eq(servicePointId)
-                ).
-                orderBy(RAID.DATE_CREATED.desc()).
-                limit(Constant.MAX_EXPERIMENTAL_RECORDS).
-                fetch(record -> new RaidRecord()
-                        .setVersion(RAID.VERSION.getValue(record))
-                        .setHandle(RAID.HANDLE.getValue(record))
-                        .setServicePointId(RAID.SERVICE_POINT_ID.getValue(record))
-                        .setUrl(RAID.URL.getValue(record))
-                        .setMetadataSchema(RAID.METADATA_SCHEMA.getValue(record))
-                        .setMetadata(RAID.METADATA.getValue(record))
-                        .setDateCreated(RAID.DATE_CREATED.getValue(record))
-                        .setStartDate(RAID.START_DATE.getValue(record))
-                        .setConfidential(RAID.CONFIDENTIAL.getValue(record))
-                );
+        return dslContext.selectFrom(RAID)
+                .where(RAID.SERVICE_POINT_ID.eq(servicePointId))
+                .orderBy(RAID.DATE_CREATED.desc())
+                .limit(Constant.MAX_EXPERIMENTAL_RECORDS)
+                .fetch();
     }
 
     public List<RaidRecord> findAllByServicePointIdOrNotConfidential(Long servicePointId) {

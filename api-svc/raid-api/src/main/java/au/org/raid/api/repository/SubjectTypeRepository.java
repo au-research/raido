@@ -15,14 +15,8 @@ public class SubjectTypeRepository {
     private final DSLContext dslContext;
 
     public Optional<SubjectTypeRecord> findById(final String subjectId) {
-        return dslContext.select(SUBJECT_TYPE.fields()).
-                from(SUBJECT_TYPE).
-                where(SUBJECT_TYPE.ID.eq(subjectId)).
-                fetchOptional(record -> new SubjectTypeRecord()
-                        .setId(SUBJECT_TYPE.ID.getValue(record))
-                        .setName(SUBJECT_TYPE.NAME.getValue(record))
-                        .setDescription(SUBJECT_TYPE.DESCRIPTION.getValue(record))
-                        .setNote(SUBJECT_TYPE.NOTE.getValue(record))
-                );
+        return dslContext.selectFrom(SUBJECT_TYPE)
+                .where(SUBJECT_TYPE.ID.eq(subjectId))
+                .fetchOptional();
     }
 }

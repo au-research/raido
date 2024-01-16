@@ -31,6 +31,7 @@ raid:
     password: supersecret
     host: localhost
     port: 7432
+    name: raido
   spatial-coverage:
     schema-uri:
       geonames: https://www.geonames.org/
@@ -47,7 +48,7 @@ spring:
       write-dates-as-timestamps: false
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${raid.db.host}:${raid.db.port}/raido
+    url: jdbc:postgresql://${raid.db.host}:${raid.db.port}/${raid.db.name}
     username: ${raid.db.user}
     password: ${raid.db.password}
   jooq:
@@ -56,6 +57,9 @@ spring:
     default-schema: api_svc
     create-schemas: true
     baseline-version: 25
+    locations:
+      - classpath:db/migration
+      - classpath:db/env/api_user
 springdoc:
   swagger-ui:
     enabled: true

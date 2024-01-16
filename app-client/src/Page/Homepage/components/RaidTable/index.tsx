@@ -228,7 +228,7 @@ export default function RaidTable({servicePointId}: FindAllRaidsRequest) {
                             density="compact"
                             autoHeight
                             isRowSelectable={(params) => false}
-                            getRowId={(row) => row.identifier.globalUrl}
+                            getRowId={(row) => row.identifier.id}
                             initialState={{
                                 pagination: {paginationModel: {pageSize: 10}},
                                 columns: {

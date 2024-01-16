@@ -288,18 +288,6 @@ create table api_svc.raid_related_object_category
     unique(raid_related_object_id, related_object_category_id)
 );
 
-insert into api_svc.raid_related_object_category (raid_related_object_id, related_object_category_id)
-select
-    (select rro.id from api_svc.raid_related_object rro join api_svc.related_object ro on rro.related_object_id = ro.id where rro.handle = r.handle and ro.pid = r.related_object_id) as raid_related_object_id,
-    (select id from api_svc.related_object_category where uri = related_object_category_id) as related_object_category_id
-from (select handle, x.id as related_object_id, xx.id as related_object_category_id
-      from api_svc.raid,
-           jsonb_to_recordset(api_svc.raid.metadata #> '{relatedObject}') as x(id text, "schemaUri" text, type jsonb, category jsonb),
-           lateral jsonb_to_record(category) as xx(id text, "schemaUri" text)
-      where api_svc.raid.metadata_schema = 'raido-metadata-schema-v2' and metadata ->> 'relatedObject' is not null) r
-on conflict do nothing;
-
-
 -- /RELATED OBJECT
 
 -- ALTERNATE IDENTIFIER
@@ -725,7 +713,7 @@ insert into api_svc.raid_related_object (handle, related_object_id, related_obje
 select
     handle as handle,
     (select id from api_svc.related_object where pid = related_object_id) as related_object_id,
-    (select id from api_svc.related_object_type where uri = related_object_type_id) as related_object_type_id
+    (select id from api_svc.related_object_type where uri = r.related_object_type_id) as related_object_type_id
 from (select handle, x.id as related_object_id, xx.id as related_object_type_id
       from api_svc.raid,
            jsonb_to_recordset(api_svc.raid.metadata #> '{relatedObject}') as x(id text, "schemaUri" text, type jsonb, category jsonb),
@@ -741,34 +729,62 @@ select
 from (select handle, "relatedObject" as related_object_id, "relatedObjectType" as related_object_type_id
       from api_svc.raid,
            jsonb_to_recordset(api_svc.raid.metadata #> '{relatedObjects}') as x("relatedObject" text, "relatedObjectType" text, "relatedObjectCategory" text, "relatedObjectSchemeUri" text, "relatedObjectTypeSchemeUri" text)
-
       where api_svc.raid.metadata_schema <> 'raido-metadata-schema-v2' and metadata ->> 'relatedObjects' is not null) r
 on conflict do nothing;
 
 insert into api_svc.raid_related_object_category (raid_related_object_id, related_object_category_id)
-select
-    (select rro.id from api_svc.raid_related_object rro join api_svc.related_object ro on rro.related_object_id = ro.id where rro.handle = r.handle and ro.pid = r.related_object_id) as raid_related_object_id,
-    (select id from api_svc.related_object_category where uri = related_object_category_id) as related_object_category_id
-from (select handle, x.id as related_object_id, xx.id as related_object_category_id
+select (select rro.id
+        from api_svc.raid_related_object rro
+                 join api_svc.related_object ro on rro.related_object_id = ro.id
+                 join api_svc.related_object_type rot on rro.related_object_type_id = rot.id
+        where rro.handle = r.handle
+          and ro.pid = r.related_object_id
+          and rot.uri = r.related_object_type_id) as raid_related_object_id,
+       (select id
+        from api_svc.related_object_category
+        where uri = related_object_category_id)   as related_object_category_id
+from (select handle,
+             x.id        as related_object_id,
+             category.id as related_object_category_id,
+             type.id     as related_object_type_id
       from api_svc.raid,
            jsonb_to_recordset(api_svc.raid.metadata #> '{relatedObject}') as x(id text, "schemaUri" text, type jsonb, category jsonb),
-           lateral jsonb_to_record(category) as xx(id text, "schemaUri" text)
-      where api_svc.raid.metadata_schema = 'raido-metadata-schema-v2' and metadata ->> 'relatedObject' is not null) r
+           lateral jsonb_to_record(category) as category(id text, "schemaUri" text),
+           lateral jsonb_to_record(type) as type(id text, "schemaUri" text)
+      where api_svc.raid.metadata_schema = 'raido-metadata-schema-v2'
+        and metadata ->> 'relatedObject' is not null) r
 on conflict do nothing;
 
+
+
 insert into api_svc.raid_related_object_category (raid_related_object_id, related_object_category_id)
-select
-    (select rro.id from api_svc.raid_related_object rro join api_svc.related_object ro on rro.related_object_id = ro.id where rro.handle = r.handle and ro.pid = r.related_object_id) as raid_related_object_id,
-    (select case
-                when related_object_category = 'Input' then 1
-                when related_object_category = 'Output' then 3
-                else 2
-                end) as related_object_category_id
-from (select handle, "relatedObject" as related_object_id, "relatedObjectCategory" as related_object_category
+select (select rro.id
+        from api_svc.raid_related_object rro
+                 join api_svc.related_object ro on rro.related_object_id = ro.id
+                 join api_svc.related_object_type rot on rro.related_object_type_id = rot.id
+        where rro.handle = r.handle
+          and ro.pid = r.related_object_id
+          and rot.uri = r.related_object_type) as raid_related_object_id,
+       (select case
+                   when related_object_category = 'Input' then 1
+                   when related_object_category = 'Output' then 3
+                   else 2
+                   end)                        as related_object_category_id
+from (select handle,
+             "relatedObject"         as related_object_id,
+             "relatedObjectCategory" as related_object_category,
+             x."relatedObjectType"   as related_object_type
       from api_svc.raid,
-           jsonb_to_recordset(api_svc.raid.metadata #> '{relatedObjects}') as x("relatedObject" text, "relatedObjectType" text, "relatedObjectCategory" text, "relatedObjectSchemeUri" text, "relatedObjectTypeSchemeUri" text)
-      where api_svc.raid.metadata_schema <> 'raido-metadata-schema-v2' and metadata ->> 'relatedObjects' is not null) r
+           jsonb_to_recordset(api_svc.raid.metadata #> '{relatedObjects}') as x("relatedObject" text,
+                                                                                "relatedObjectType" text,
+                                                                                "relatedObjectCategory" text,
+                                                                                "relatedObjectSchemeUri" text,
+                                                                                "relatedObjectTypeSchemeUri" text)
+      where api_svc.raid.metadata_schema <> 'raido-metadata-schema-v2'
+        and metadata ->> 'relatedObjects' is not null) r
 on conflict do nothing;
+
+
 
 -- /INSERT RELATED OBJECTS
 
