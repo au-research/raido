@@ -10,14 +10,14 @@ import React from "react";
 export default function RaidCurrentUser() {
     const api = useAuthApi();
     const {
-        session: { payload: user },
+        session: {payload: user},
     } = useAuth();
     const spQuery = useQuery(
         ["readServicePoint", user.servicePointId],
         async () =>
             await api.servicePoint.findServicePointById({
-                id: user.servicePointId,
-            }),
+                id: user.servicePointId
+            })
     );
     return (
         <Card
@@ -28,7 +28,7 @@ export default function RaidCurrentUser() {
                 borderLeftWidth: 3,
             }}
         >
-            <CardHeader title="Signed-in user" />
+            <CardHeader title="Signed-in user"/>
             <CardContent>
                 <Grid container>
                     <Grid item xs={12} sm={6} md={6}>
@@ -43,7 +43,7 @@ export default function RaidCurrentUser() {
                         <Box>
                             <Typography variant="body2">ID provider</Typography>
                             <Typography color="text.secondary" variant="body1">
-                                <IdProviderDisplay payload={user} />
+                                <IdProviderDisplay payload={user}/>
                             </Typography>
                         </Box>
                     </Grid>
@@ -59,7 +59,7 @@ export default function RaidCurrentUser() {
                         <Box>
                             <Typography variant="body2">Role</Typography>
                             <Typography color="text.secondary" variant="body1">
-                                <RoleDisplay role={user.role} />
+                                <RoleDisplay role={user.role}/>
                             </Typography>
                         </Box>
                     </Grid>
