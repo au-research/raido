@@ -16,7 +16,7 @@ import {ListApiKeyPage} from "Page/Admin/ListApiKeyPage";
 import {ListAppUserPage} from "Page/Admin/ListAppUserPage";
 import {ListServicePointPage} from "Page/Admin/ListServicePointPage";
 import {ServicePointPage} from "Page/Admin/ServicePointPage";
-import {HomePage} from "Page/HomePage";
+import HomePage from "Page/Homepage";
 import MintRaidPageNew from "Page/MintRaidPage";
 import ShowRaidPage from "Page/ShowRaidPage";
 import {AboutRaidPage, isAboutRaidPagePath} from "Page/Unauth/AboutRaidPage";

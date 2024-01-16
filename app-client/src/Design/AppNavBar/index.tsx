@@ -5,7 +5,7 @@ import {Home as HomeIcon, Menu as MenuIcon,} from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
 import {AppDrawer} from "Design/AppDrawer";
 import {RaidoLogoSvg} from "Component/Icon";
-import {getHomePageLink} from "Page/HomePage";
+import {getHomePageLink} from "Page/Homepage";
 import {Color} from "Design/RaidoTheme";
 import {Config} from "Config";
 import AccountMenu from "./AccountMenu";
