@@ -60,6 +60,7 @@ spring:
     locations:
       - classpath:db/migration
       - classpath:db/env/api_user
+      - classpath:db/env/demo
 springdoc:
   swagger-ui:
     enabled: true

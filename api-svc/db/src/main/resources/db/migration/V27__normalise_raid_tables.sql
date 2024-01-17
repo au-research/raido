@@ -473,27 +473,32 @@ on conflict do nothing;
 -- INSERT DESCRIPTIONS
 
 insert into api_svc.raid_description (handle, description_type_id, text, language_id)
-select r.handle as handle,
-       (select id from api_svc.description_type where uri = r.type::json->> 'id') as description_type_id,
-       r.text as text,
-       (select id from api_svc.language where code = r.language::json->> 'id') as language_id
+select r.handle                                                                    as handle,
+       (select id from api_svc.description_type where uri = r.type::json ->> 'id') as description_type_id,
+       r.text                                                                      as text,
+       (select id from api_svc.language where code = r.language::json ->> 'id')    as language_id
 from (select handle, x.*
       from api_svc.raid,
-           jsonb_to_recordset(api_svc.raid.metadata #> '{description}') as x(type text, "text" text,  language text)
-      where api_svc.raid.metadata_schema = 'raido-metadata-schema-v2') as r
+           jsonb_to_recordset(api_svc.raid.metadata #> '{description}') as x(type text, "text" text, language text)
+      where api_svc.raid.metadata_schema = 'raido-metadata-schema-v2'
+        and metadata ->> 'description' is not null) as r
 on conflict do nothing;
+
 
 -- METADATA SCHEMA V2 & LEGACY
 insert into api_svc.raid_description (handle, description_type_id, text)
-select r.handle as handle,
-       case when r.type = 'Primary Description' then 2
-            else 1 end as description_type_id,
-       r.description as text
+select r.handle       as handle,
+       case
+           when r.type = 'Primary Description' then 2
+           else 1 end as description_type_id,
+       r.description  as text
 from (select handle, x.*
       from api_svc.raid,
            jsonb_to_recordset(api_svc.raid.metadata #> '{descriptions}') as x(type text, "description" text)
-      where api_svc.raid.metadata_schema <> 'raido-metadata-schema-v2') as r
+      where api_svc.raid.metadata_schema <> 'raido-metadata-schema-v2'
+        and metadata ->> 'description' is not null) as r
 on conflict do nothing;
+
 
 -- /INSERT DESCRIPTIONS
 
@@ -622,7 +627,8 @@ select distinct id,
 from (select x.*
       from api_svc.raid,
            jsonb_to_recordset(api_svc.raid.metadata #> '{organisation}') as x(id text, "schemaUri" text, "role" jsonb)
-      where api_svc.raid.metadata_schema = 'raido-metadata-schema-v2') r
+      where api_svc.raid.metadata_schema = 'raido-metadata-schema-v2'
+        and metadata ->> 'organisation' is not null) r
 on conflict do nothing;
 
 insert into api_svc.organisation (pid, schema_id)
@@ -630,7 +636,8 @@ select distinct id, 1 as schema_id
 from (select x.*
       from api_svc.raid,
            jsonb_to_recordset(api_svc.raid.metadata #> '{organisations}') as x(id text, "roleSchemeUri" text, "roles" jsonb)
-      where api_svc.raid.metadata_schema <> 'raido-metadata-schema-v2') r
+      where api_svc.raid.metadata_schema <> 'raido-metadata-schema-v2'
+        and metadata ->> 'organisations' is not null) r
 on conflict do nothing;
 
 insert into api_svc.raid_organisation (handle, organisation_id)
@@ -639,7 +646,8 @@ select handle,
 from (select handle, x.*
       from api_svc.raid,
            jsonb_to_recordset(api_svc.raid.metadata #> '{organisation}') as x(id text, "schemaUri" text, "role" jsonb)
-      where api_svc.raid.metadata_schema = 'raido-metadata-schema-v2') as r
+      where api_svc.raid.metadata_schema = 'raido-metadata-schema-v2'
+        and metadata ->> 'organisation' is not null) as r
 on conflict do nothing;
 
 insert into api_svc.raid_organisation (handle, organisation_id)
@@ -648,7 +656,8 @@ select handle,
 from (select handle, x.*
       from api_svc.raid,
            jsonb_to_recordset(api_svc.raid.metadata #> '{organisations}') as x(id text, "roleSchemeUri" text, "roles" jsonb)
-      where api_svc.raid.metadata_schema <> 'raido-metadata-schema-v2') r
+      where api_svc.raid.metadata_schema <> 'raido-metadata-schema-v2'
+        and metadata ->> 'organisations' is not null) r
 on conflict do nothing;
 
 insert into api_svc.raid_organisation_role (raid_organisation_id, organisation_role_id, start_date, end_date)
@@ -662,7 +671,8 @@ from (select handle, x.id as ror, xx.*
       from api_svc.raid,
            jsonb_to_recordset(api_svc.raid.metadata #> '{organisation}') as x(id text, "schemaUri" text, "role" jsonb),
            lateral jsonb_to_recordset(x.role) as xx(id text, "schemaUri" text, "startDate" text, "endDate" text)
-      where api_svc.raid.metadata_schema = 'raido-metadata-schema-v2') r
+      where api_svc.raid.metadata_schema = 'raido-metadata-schema-v2'
+        and metadata ->> 'organisation' is not null) r
 on conflict do nothing;
 
 insert into api_svc.raid_organisation_role (raid_organisation_id, organisation_role_id, start_date, end_date)
@@ -683,7 +693,8 @@ from (select handle, x.id as ror, xx.*
       from api_svc.raid,
            jsonb_to_recordset(api_svc.raid.metadata #> '{organisations}') as x(id text, "identifierSchemeUri" text, "roles" jsonb),
            lateral jsonb_to_recordset(x.roles) as xx(role text, "roleSchemeUri" text, "startDate" text, "endDate" text)
-      where api_svc.raid.metadata_schema <> 'raido-metadata-schema-v2') r
+      where api_svc.raid.metadata_schema <> 'raido-metadata-schema-v2'
+        and metadata ->> 'organisations' is not null) r
 on conflict do nothing;
 
 -- /INSERT ORGANISATIONS
@@ -842,14 +853,21 @@ from (select handle, x.id, xx.id as related_raid_type_id
 on conflict do nothing;
 
 insert into api_svc.related_raid (handle, related_raid_handle, related_raid_type_id)
-select handle, id,
-       (select id from api_svc.related_raid_type where uri = r.related_raid_type_id)
-from (select handle, x."relatedRaid" as id, "relatedRaidType" as related_raid_type_id
+select r.handle,
+       r.related_raid_handle,
+       (select id
+        from api_svc.related_raid_type
+        where uri like '%' || right(r.related_raid_type_id,
+                                    position('/' in reverse(r.related_raid_type_id)))) as related_raid_type_id
+from (select handle, x."relatedRaid" as related_raid_handle, "relatedRaidType" as related_raid_type_id
       from api_svc.raid,
-           jsonb_to_recordset(api_svc.raid.metadata #> '{relatedRaids}') as x("relatedRaid" text, "relatedRaidType" text, "relatedRaidTypeSchemeUri" text)
+           jsonb_to_recordset(api_svc.raid.metadata #> '{relatedRaids}') as x("relatedRaid" text,
+                                                                              "relatedRaidType" text,
+                                                                              "relatedRaidTypeSchemeUri" text)
       where api_svc.raid.metadata_schema <> 'raido-metadata-schema-v2'
         and metadata ->> 'relatedRaids' is not null) r
 on conflict do nothing;
+
 
 -- /INSERT RELATED RAIDS
 -- INSERT SUBJECTS
@@ -900,7 +918,8 @@ from (select handle, subject as subject_type_id, "subjectKeyword" as keyword_tex
       from api_svc.raid,
            jsonb_to_recordset(api_svc.raid.metadata #> '{subjects}') as x(subject text, "subjectKeyword" text, "subjectSchemeUri" text)
       where api_svc.raid.metadata_schema <> 'raido-metadata-schema-v2'
-        and metadata ->> 'subjects' is not null) r
+        and metadata ->> 'subjects' is not null
+      and x."subjectKeyword" is not null) r
 on conflict do nothing;
 
 -- /INSERT SUBJECTS
