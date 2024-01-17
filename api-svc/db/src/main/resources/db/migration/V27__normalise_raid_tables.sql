@@ -1136,4 +1136,8 @@ create table api_svc.team_user
 
 -- /UPDATE RAID
 
+update api_svc.subject_type
+set schema_id = 1;
+
+
 END TRANSACTION;
