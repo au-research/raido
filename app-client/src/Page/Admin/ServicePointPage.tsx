@@ -13,7 +13,12 @@ import {TextSpan} from "Component/TextSpan";
 import React, {useState} from "react";
 import {RqQuery} from "Util/ReactQueryUtil";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {ServicePoint, UpdateServicePointRequest} from "Generated/Raidv2";
+import {
+  CreateServicePointRequest,
+  ServicePoint,
+  type ServicePointCreateRequest,
+  UpdateServicePointRequest
+} from "Generated/Raidv2";
 import {useAuthApi} from "Api/AuthApi";
 import {CompactErrorPanel} from "Error/CompactErrorPanel";
 import {Checkbox, FormControl, FormControlLabel, Stack, TextField} from "@mui/material";
@@ -99,6 +104,47 @@ function ServicePointContainer({servicePointId, onCreate}: {
     }
   );
 
+  const createRequest = useMutation(
+      async (data: CreateServicePointRequest) => {
+        const result = await api.servicePoint.createServicePoint(data);
+        if( !servicePointId ){
+          onCreate(result.id);
+        }
+      },
+      {
+        onSuccess: async () => {
+          await queryClient.invalidateQueries([queryName]);
+        },
+      }
+  );
+
+  const createNewServicePoint = (formData: ServicePoint) => {
+
+    const servicePointCreateRequest: ServicePointCreateRequest = {
+      ...formData
+    }
+
+    const createServicePointRequest: CreateServicePointRequest ={
+      servicePointCreateRequest
+    }
+
+    createRequest.mutate(createServicePointRequest);
+  }
+
+  const updateExistingServicePoint = (formData: ServicePoint) => {
+
+    const updateServicePointRequest: UpdateServicePointRequest = {
+        id: formData.id,
+        servicePoint: formData
+    }
+
+    updateRequest.mutate(updateServicePointRequest);
+  }
+
+  const handleFormSubmit =  (formData:ServicePoint) => {
+    formData.id ? updateExistingServicePoint(formData) : createNewServicePoint(formData)
+  }
+
   if( query.error ){
     return <CompactErrorPanel error={query.error}/>
   }
@@ -118,10 +164,7 @@ function ServicePointContainer({servicePointId, onCreate}: {
   return <ContainerCard title={"Service point"}>
     <form autoComplete="off" onSubmit={(e) => {
       e.preventDefault();
-      updateRequest.mutate({
-        id: formData.id,
-        servicePoint: formData
-      });
+      handleFormSubmit(formData)
     }}>
     <Stack spacing={2}>
       <FormControl focused autoCorrect="off" autoCapitalize="on">
@@ -168,7 +211,7 @@ function ServicePointContainer({servicePointId, onCreate}: {
           style={{
             /* by default, MUI lays this out as <checkbox><label>.
              Doing `labelPlacement=start`, flips that around, but ends up 
-             right-justigying the content, so `marginRight=auto` pushes it back 
+             right-justifying the content, so `marginRight=auto` pushes it back
              across to the left and `marginLeft=0` aligns nicely. */
             marginLeft: 0,
             marginRight: "auto", 
@@ -192,7 +235,7 @@ function ServicePointContainer({servicePointId, onCreate}: {
           style={{
             /* by default, MUI lays this out as <checkbox><label>.
              Doing `labelPlacement=start`, flips that around, but ends up
-             right-justigying the content, so `marginRight=auto` pushes it back
+             right-justifying the content, so `marginRight=auto` pushes it back
              across to the left and `marginLeft=0` aligns nicely. */
             marginLeft: 0,
             marginRight: "auto",
