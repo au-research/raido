@@ -1,7 +1,6 @@
 package au.org.raid.inttest;
 
 import au.org.raid.api.service.Handle;
-import au.org.raid.db.jooq.enums.UserRole;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.Title;
 import feign.FeignException;
@@ -69,9 +68,7 @@ public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
 
         Handle handle = new Handle(Objects.requireNonNull(createResponse.getBody()).getIdentifier().getId());
 
-        final var token = bootstrapTokenSvc.bootstrapToken(UQ_SERVICE_POINT_ID, "int-test-uq-user", UserRole.SP_USER);
-
-        final var otherClient = testClient.raidApi(token);
+        final var otherClient = testClient.raidApi(uqAdminToken);
 
         try {
             otherClient.raidHistory(handle.getPrefix(), handle.getSuffix());
@@ -87,5 +84,4 @@ public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("No primary title :("));
     }
-
 }

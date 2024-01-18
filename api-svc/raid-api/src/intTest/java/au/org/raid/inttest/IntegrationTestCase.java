@@ -7,7 +7,6 @@ import au.org.raid.idl.raidv2.api.RaidApi;
 import au.org.raid.idl.raidv2.api.UnapprovedExperimentalApi;
 import au.org.raid.inttest.config.IntTestProps;
 import au.org.raid.inttest.config.IntegrationTestConfig;
-import au.org.raid.inttest.service.BootstrapAuthTokenService;
 import au.org.raid.inttest.service.RaidApiExceptionDecoder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Contract;
@@ -45,8 +44,6 @@ public abstract class IntegrationTestCase {
     protected IntTestProps props;
     @Autowired
     protected DSLContext db;
-    @Autowired
-    protected BootstrapAuthTokenService bootstrapTokenSvc;
     @Autowired
     protected Contract feignContract;
     @Autowired

@@ -5,7 +5,6 @@ import au.org.raid.api.service.stub.util.IdFactory;
 import au.org.raid.idl.raidv2.api.RaidApi;
 import au.org.raid.idl.raidv2.model.*;
 import au.org.raid.inttest.config.IntegrationTestConfig;
-import au.org.raid.inttest.service.BootstrapAuthTokenService;
 import au.org.raid.inttest.service.RaidUpdateRequestFactory;
 import au.org.raid.inttest.service.TestClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,8 +44,6 @@ public class AbstractIntegrationTest {
     protected ObjectMapper mapper;
     @Autowired
     protected Contract feignContract;
-    @Autowired
-    protected BootstrapAuthTokenService bootstrapTokenSvc;
     @Autowired
     protected RaidUpdateRequestFactory raidUpdateRequestFactory;
     private TestInfo testInfo;
