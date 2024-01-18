@@ -1,6 +1,5 @@
-package au.org.raid.inttest.endpoint.raidv2;
+package au.org.raid.inttest;
 
-import au.org.raid.inttest.AbstractIntegrationTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatusCode;

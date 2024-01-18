@@ -5,12 +5,13 @@ import au.org.raid.inttest.service.RaidApiValidationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static au.org.raid.api.service.stub.InMemoryStubTestData.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class SpatialCoverageIntegrationTest extends AbstractIntegrationTest {
-
+    public static String NONEXISTENT_TEST_GEONAMES_URI = "https://www.geonames.org/0/not-found.html";
+    public static String SERVER_ERROR_TEST_GEONAMES_URI = "https://www.geonames.org/0/server-error.html";
+    public static String NONEXISTENT_TEST_OPENSTREETMAP_URI = "https://www.openstreetmap.org/not-found";
     @Test
     @DisplayName("Minting a RAiD with a spatial coverage with an invalid uri fails")
     void invalidId() {

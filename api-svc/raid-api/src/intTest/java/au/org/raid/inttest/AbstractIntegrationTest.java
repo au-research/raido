@@ -1,7 +1,5 @@
 package au.org.raid.inttest;
 
-import au.org.raid.api.service.raid.id.IdentifierParser;
-import au.org.raid.api.service.stub.util.IdFactory;
 import au.org.raid.idl.raidv2.api.RaidApi;
 import au.org.raid.idl.raidv2.model.*;
 import au.org.raid.inttest.config.IntegrationTestConfig;
@@ -19,18 +17,19 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static au.org.raid.inttest.service.TestConstants.*;
 
 @SpringBootTest(classes = IntegrationTestConfig.class)
 public class AbstractIntegrationTest {
     protected static final Long UQ_SERVICE_POINT_ID = 20000002L;
-    protected final IdFactory idFactory = new IdFactory();
+//    protected final IdFactory idFactory = new IdFactory();
     protected LocalDate today = LocalDate.now();
     protected RaidCreateRequest createRequest;
 
     protected RaidApi raidApi;
-    protected IdentifierParser identifierParser;
+//    protected IdentifierParser identifierParser;
 
     @Value("${raid.test.api.raid-au-user-token}")
     private String raidAuUserToken;
@@ -41,7 +40,7 @@ public class AbstractIntegrationTest {
     @Autowired
     protected TestClient testClient;
     @Autowired
-    protected ObjectMapper mapper;
+    protected ObjectMapper objectMapper;
     @Autowired
     protected Contract feignContract;
     @Autowired
@@ -52,7 +51,6 @@ public class AbstractIntegrationTest {
     public void setupTestToken() {
         createRequest = newCreateRequest();
         raidApi = testClient.raidApi(raidAuUserToken);
-        identifierParser = new IdentifierParser();
     }
 
     @BeforeEach
@@ -65,8 +63,7 @@ public class AbstractIntegrationTest {
     }
 
     protected RaidCreateRequest newCreateRequest() {
-        String initialTitle = getClass().getSimpleName() + "." + getName() +
-                idFactory.generateUniqueId();
+        String initialTitle = UUID.randomUUID().toString();
         final var descriptions = new ArrayList<Description>();
         descriptions.add(new Description()
                 .language(new Language()

@@ -141,9 +141,9 @@ testing{
       testType = TestSuiteType.INTEGRATION_TEST
       dependencies{
         // this brings the actual prod code
-        implementation project()
+//        implementation project()
         
-        implementation project(':api-svc:db')
+//        implementation project(':api-svc:db')
         implementation project(':api-svc:idl-raid-v2')
 
         implementation.bundle libs.bundles.springboot3
@@ -156,21 +156,14 @@ testing{
         // for PostConstruct/PreDestroy - pkg: jakarta.annotation (used to be javax)
         implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
         
-        implementation( 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.4'){
-          /* Not a huge deal to pull in spring-boot, since it's only the
-          integration tests - but still I don't want to deal with it.
-          - avoids having to ignore all the confusing and unused
-          implementations of Spring interfaces that it includes.
-          - avoids any "it was already included" arguments. */
-          exclude group: 'org.springframework.boot'
-        }
+        implementation( 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.4')
         implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3"
 
-        implementation 'com.auth0:java-jwt:4.0.0'
+//        implementation 'com.auth0:java-jwt:4.0.0'
 
-        implementation 'io.micrometer:micrometer-core:1.10.6'
-        implementation 'io.micrometer:micrometer-registry-jmx:1.10.6'
-        implementation "com.zaxxer:HikariCP:5.0.0"
+//        implementation 'io.micrometer:micrometer-core:1.10.6'
+//        implementation 'io.micrometer:micrometer-registry-jmx:1.10.6'
+//        implementation "com.zaxxer:HikariCP:5.0.0"
 
         compileOnly 'org.projectlombok:lombok:1.18.28'
         annotationProcessor 'org.projectlombok:lombok:1.18.28'

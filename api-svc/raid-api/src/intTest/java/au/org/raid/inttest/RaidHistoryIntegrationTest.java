@@ -1,8 +1,8 @@
 package au.org.raid.inttest;
 
-import au.org.raid.api.service.Handle;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.Title;
+import au.org.raid.inttest.service.Handle;
 import feign.FeignException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

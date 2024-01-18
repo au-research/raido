@@ -25,4 +25,12 @@ public class IntegrationTestConfig {
     ) {
         return new TestClient(objectMapper, contract, apiUrl);
     }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        final var objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
+
+        return objectMapper;
+    }
 }
