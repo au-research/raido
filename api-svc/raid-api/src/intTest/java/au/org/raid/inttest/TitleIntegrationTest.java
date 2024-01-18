@@ -35,7 +35,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
                     .message("field must be set")
             );
         } catch (Exception e) {
-            fail("Expected RaidApiValidationException");
+            throw new RuntimeException(e);
         }
     }
 
@@ -56,7 +56,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
                     .message("field must be set")
             );
         } catch (Exception e) {
-            fail("Expected RaidApiValidationException");
+            throw new RuntimeException(e);
         }
     }
 
@@ -77,7 +77,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
                     .message("field must be set")
             );
         } catch (Exception e) {
-            fail("Expected RaidApiValidationException");
+            throw new RuntimeException(e);
         }
     }
 
@@ -98,7 +98,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
                     .message("field must be set")
             );
         } catch (Exception e) {
-            fail("Expected RaidApiValidationException");
+            throw new RuntimeException(e);
         }
     }
 
@@ -119,7 +119,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
                     .message("id does not exist within the given schema")
             );
         } catch (Exception e) {
-            fail("Expected RaidApiValidationException");
+            throw new RuntimeException(e);
         }
     }
 
@@ -140,7 +140,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
                     .message("schema is unknown/unsupported")
             );
         } catch (Exception e) {
-            fail("Expected RaidApiValidationException");
+            throw new RuntimeException(e);
         }
     }
 
@@ -161,7 +161,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
                     .message("field must be set")
             );
         } catch (Exception e) {
-            fail("Expected RaidApiValidationException");
+            throw new RuntimeException(e);
         }
     }
 
@@ -182,7 +182,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
                     .message("at least one primaryTitle entry must be provided")
             );
         } catch (Exception e) {
-            fail("Expected RaidApiValidationException");
+            throw new RuntimeException(e);
         }
     }
 
@@ -206,7 +206,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
                             .message("at least one primaryTitle entry must be provided")
             );
         } catch (Exception e) {
-            fail("Expected RaidApiValidationException");
+            throw new RuntimeException(e);
         }
     }
 
@@ -230,7 +230,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
                             .message("field must be set")
             );
         } catch (Exception e) {
-            fail("Expected RaidApiValidationException");
+            throw new RuntimeException(e);
         }
     }
 
@@ -254,7 +254,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
                             .message("schema is unknown/unsupported")
             );
         } catch (Exception e) {
-            fail("Expected RaidApiValidationException");
+            throw new RuntimeException(e);
         }
     }
 
@@ -286,7 +286,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
                             .errorType("notSet")
             );
         } catch (Exception e) {
-            fail("Expected RaidApiValidationException");
+            throw new RuntimeException(e);
         }
     }
 
@@ -319,7 +319,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
                             .errorType("invalidValue")
             );
         } catch (Exception e) {
-            fail("Expected RaidApiValidationException");
+            throw new RuntimeException(e);
         }
     }
 
@@ -342,7 +342,7 @@ public class TitleIntegrationTest extends AbstractIntegrationTest {
                             .message("field must be set")
             );
         } catch (Exception e) {
-            fail("Expected RaidApiValidationException");
+            throw new RuntimeException(e);
         }
     }
 }
