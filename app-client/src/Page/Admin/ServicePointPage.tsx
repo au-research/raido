@@ -24,6 +24,7 @@ import {CompactErrorPanel} from "Error/CompactErrorPanel";
 import {Checkbox, FormControl, FormControlLabel, Stack, TextField} from "@mui/material";
 import {PrimaryActionButton, SecondaryButton} from "Component/AppButton";
 import {navBrowserBack} from "Util/WindowUtil";
+import {useParams} from "react-router-dom";
 
 const log = console;
 
@@ -42,24 +43,24 @@ export function getServicePointIdFromPathname(nav: NavigationState): number{
 }
 
 export function ServicePointPage(){
-  return <NavTransition isPagePath={(pathname)=>isPagePath(pathname, pageUrl)}
-    title={raidoTitle("Service point")}
-  >
-    <Content/>
-  </NavTransition>
+  return <Content/>
 }
 
 
 function Content(){
   const nav = useNavigation()
-  const [servicePointId, setServicePointId] = 
-    useState(getServicePointIdFromPathname(nav));
+  const {servicePointId: servicePointIdParam} = useParams() as { servicePointId: string };
+
+  const [servicePointId, setServicePointId] =
+    useState(servicePointIdParam);
+
+
 
   return <LargeContentMain>
-    <ServicePointContainer servicePointId={servicePointId}
+    <ServicePointContainer servicePointId={+servicePointId}
       onCreate={(createdId)=>{
         nav.replace(getServicePointPageLink(createdId));
-        setServicePointId(createdId);
+        setServicePointId(createdId.toString());
       }}
     />
   </LargeContentMain>

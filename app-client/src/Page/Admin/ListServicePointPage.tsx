@@ -32,11 +32,7 @@ export function isListServicePointPagePath(path: string): boolean{
 }
 
 export function ListServicePointPage(){
-  return <NavTransition isPagePath={(pathname) => isPagePath(pathname, pageUrl)}
-    title={raidoTitle("Service points")}
-  >
-    <Content/>
-  </NavTransition>
+  return <Content/>
 }
 
 
