@@ -20,6 +20,7 @@ import {RaidoLink} from "Component/RaidoLink";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 import {getCreateApiKeyPageLink, getViewApiKeyPageLink} from "Page/Admin/ApiKeyPage";
 import {RaidoAddFab} from "Component/AppButton";
+import {useParams} from "react-router-dom";
 
 const log = console;
 
@@ -38,17 +39,14 @@ export function getServicePointIdFromPathname(nav: NavigationState): number {
 }
 
 export function ListApiKeyPage(){
-  return <NavTransition isPagePath={(pathname)=>isPagePath(pathname, pageUrl)} 
-    title={raidoTitle("API keys")}
-  >
-    <Content/>
-  </NavTransition>
+  return <Content/>
 }
 
 function Content(){
   const nav = useNavigation()
+  const {servicePointId} = useParams() as { servicePointId: string }
   return <LargeContentMain>
-    <AppUserListTable servicePointId={getServicePointIdFromPathname(nav)}/>
+    <AppUserListTable servicePointId={+servicePointId}/>
   </LargeContentMain>
 }
 
@@ -79,7 +77,7 @@ function AppUserListTable({servicePointId}: {
     action={<>
       <RefreshIconButton refreshing={apiKeysQuery.isLoading} 
         onClick={()=>apiKeysQuery.refetch()} />
-      <RaidoAddFab disabled={false} href={getCreateApiKeyPageLink(servicePointId)}/>
+      <RaidoAddFab disabled={false} href={`${getCreateApiKeyPageLink(servicePointId)}?servicePointId=${servicePointId}`}/>
     </>}
   >
     <TableContainer>
@@ -100,7 +98,7 @@ function AppUserListTable({servicePointId}: {
               sx={{'&:last-child td, &:last-child th': {border: 0}}}
             >
               <TableCell>
-                <RaidoLink href={getViewApiKeyPageLink(row.id)}>
+                <RaidoLink href={`${getViewApiKeyPageLink(row.id)}?servicePointId=${servicePointId}`}>
                   {row.subject}
                 </RaidoLink>
               </TableCell>
