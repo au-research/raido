@@ -25,6 +25,7 @@ import {
   getListApiKeyPageLink,
   isListApiKeyPagePath
 } from "Page/Admin/ListApiKeyPage";
+import {useNavigate} from "react-router";
 
 
 export function AppDrawer(props: {
@@ -107,6 +108,7 @@ function ListNavButton(props: {
 }){
   // const authz = useAuthz();
   const nav = useNavigation();
+  const navigate = useNavigate()
 
 
   // if( props.adminOnly && !authz.isAdmin() ){
@@ -122,7 +124,7 @@ function ListNavButton(props: {
 
   return <ListItemButton href={props.href}
     onClick={event=>{
-      nav.navigateTo(props.href, event)
+      navigate(props.href)
     }}
   >
     { props.icon &&
