@@ -45,11 +45,7 @@ export function isAuthzRespondPagePath(path: string): boolean{
 }
 
 export function AuthzRespondPage(){
-  return <NavTransition isPagePath={(pathname)=>isPagePath(pathname, pageUrl)}
-    title={raidoTitle("Authorisation request response")}
-  >
-    <Content/>
-  </NavTransition>
+  return<Content/>
 }
 
 
