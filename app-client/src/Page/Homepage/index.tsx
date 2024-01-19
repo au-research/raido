@@ -41,9 +41,7 @@ export function isHomePagePath(pathname: string): NavPathResult {
 
 export default function HomePage() {
     return (
-        <NavTransition isPagePath={isHomePagePath} title={raidoTitle("Home")}>
             <Content/>
-        </NavTransition>
     );
 }
 
