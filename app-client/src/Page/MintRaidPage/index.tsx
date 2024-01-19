@@ -57,11 +57,6 @@ function Content() {
 
 export default function MintRaidPage() {
     return (
-        <NavTransition
-            isPagePath={isMintRaidPagePath}
-            title={raidoTitle("Mint RAiD")}
-        >
             <Content/>
-        </NavTransition>
     );
 }
