@@ -26,6 +26,7 @@ import { RefreshIconButton } from "Component/RefreshIconButton";
 import { RaidoLink } from "Component/RaidoLink";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { getAppUserPageLink } from "Page/Admin/AppUserPage";
+import {useParams} from "react-router-dom";
 
 const log = console;
 
@@ -44,17 +45,14 @@ export function getServicePointIdFromPathname(nav: NavigationState): number {
 }
 
 export function ListAppUserPage(){
-  return <NavTransition isPagePath={(pathname)=>isPagePath(pathname, pageUrl)} 
-    title={raidoTitle("Users")}
-  >
-    <Content/>
-  </NavTransition>
+  return <Content/>
 }
 
 function Content(){
+  const {servicePointId} = useParams() as { servicePointId: string };
   const nav = useNavigation()
   return <LargeContentMain>
-    <AppUserListTable servicePointId={getServicePointIdFromPathname(nav)}/>
+    <AppUserListTable servicePointId={+servicePointId}/>
   </LargeContentMain>
 }
 
