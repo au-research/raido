@@ -14,6 +14,8 @@ export function getSocialRedirectIdToken(): string|undefined{
   // just doing `window.location.hash = ""` leaves the hash in the url;
   window.history.pushState("", document.title, 
     window.location.pathname + window.location.search);
+
+  window.location.href="/home"
   
   return idToken;
 }

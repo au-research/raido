@@ -187,7 +187,7 @@ export function AuthProvider({unauthenticatedPaths = [], children}: {
         return null;
     }
 
-    window.document.title = "Raido - sign in";
+    window.document.title = "RAiD App";
 
     if (state.current === "init" || state.current === "authenticating") {
         return <SmallPageSpinner message={"Signing in"}/>
