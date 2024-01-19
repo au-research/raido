@@ -20,11 +20,6 @@ export function isUsageTermsPagePath(path: string): boolean{
 }
 
 export function UsageTermsPage(){
-  const {pathname} = useLocationPathname();
-  if( !isUsageTermsPagePath(pathname) ){
-    return null;
-  }
-  window.document.title = raidoTitle("Terms & conditions");
   return <Content/>;
 }
 

@@ -38,6 +38,7 @@ import { NewWindowLink, orcidUrl } from "Component/ExternalLink";
 import { orcidBrand } from "Component/OrcidField";
 import { mapClientIdToIdProvider } from "Component/IdProviderDisplay";
 import { isOperator } from "Auth/Authz";
+import {useParams} from "react-router-dom";
 
 const log = console;
 
@@ -56,20 +57,16 @@ export function getAppUserIdFromPathname(nav: NavigationState): number{
 }
 
 export function AppUserPage(){
-  return <NavTransition isPagePath={isAppUserPagePath}
-    title={raidoTitle("Service point")}
-  >
-    <Content/>
-  </NavTransition>
+  return <Content/>
 }
 
 
 function Content(){
   const nav = useNavigation()
-  const [appUserId] = useState(getAppUserIdFromPathname(nav));
+  const {appUserId} = useParams() as { appUserId: string }
 
   return <LargeContentMain>
-    <AppUserContainer appUserId={appUserId}/>
+    <AppUserContainer appUserId={+appUserId}/>
   </LargeContentMain>
 }
 

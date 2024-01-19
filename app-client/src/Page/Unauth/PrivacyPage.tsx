@@ -20,11 +20,7 @@ export function isPrivacyPagePath(path: string): boolean{
 }
 
 export function PrivacyPage(){
-  const {pathname} = useLocationPathname();
-  if( !isPrivacyPagePath(pathname) ){
-    return null;
-  }
-  window.document.title = raidoTitle("Privacy");  
+  console.log('PrivacyPage')
   return <Content/>;
 }
 

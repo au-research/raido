@@ -35,11 +35,7 @@ export function isAdminAuthzRequestPagePath(path: string): boolean{
 }
 
 export function AdminAuthzRequestPage(){
-  return <NavTransition isPagePath={(pathname)=>isPagePath(pathname, pageUrl)}
-    title={raidoTitle("Authorisation requests")}
-  >
-    <Content/>
-  </NavTransition> 
+  return <Content/>
 }
 
 

@@ -15,6 +15,7 @@ import {RaidDto,} from "Generated/Raidv2";
 
 import {useState} from "react";
 import {raidRequest} from "../../utils";
+import {useParams} from "react-router-dom";
 
 const pageUrl = "/edit-raid";
 
@@ -27,11 +28,9 @@ function getRaidHandleFromPathname(nav: NavigationState): string {
 }
 
 function Content() {
-    const nav = useNavigation();
     const api = useAuthApi();
 
-    const [handle] = useState(getRaidHandleFromPathname(nav));
-    const [prefix, suffix] = handle.split("/");
+    const {prefix, suffix} = useParams() as { prefix: string, suffix: string };
 
     const getRaid = async (): Promise<RaidDto> => {
         return await api.raid.findRaidByName({prefix, suffix});
@@ -85,11 +84,6 @@ function Content() {
 
 export default function EditRaidPage() {
     return (
-        <NavTransition
-            isPagePath={isEditRaidPagePath}
-            title={raidoTitle(`Edit RAiD`)}
-        >
-            <Content/>
-        </NavTransition>
+        <Content/>
     );
 }

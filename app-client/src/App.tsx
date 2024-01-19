@@ -26,88 +26,20 @@ import {LocationPathnameProvider} from "Util/Hook/LocationPathname";
 import {LocationSearchProvider} from "Util/Hook/LocationSearch";
 import "./App.css";
 import EditRaidPage from "Page/EditRaidPage";
-
-function AuthenticatedPages() {
-    return (
-        <>
-            <HomePage/>
-            <AdminAuthzRequestPage/>
-            <AuthzRespondPage/>
-            <ListServicePointPage/>
-            <ServicePointPage/>
-            <ListAppUserPage/>
-            <AppUserPage/>
-            <ListApiKeyPage/>
-            <ApiKeyPage/>
-            <EditRaidPage/>
-            <ShowRaidPage/>
-            <MintRaidPageNew/>
-        </>
-    )
-}
-
-function UnauthenticatedPages() {
-    return (
-        <>
-            <PrivacyPage/>
-            <UsageTermsPage/>
-            <AboutRaidPage/>
-        </>
-    )
-}
+import {Outlet} from "react-router-dom";
 
 export function App() {
-    /* theme defines the basic color palette and styling, etc. */
     return (
         <RaidoTheme>
-            {/* force browser defaults for consistent display behaviour */}
             <CssBaseline/>
-            {/* deal with "unhandled" errors from bad rendering logic */}
             <ReactErrorBoundary>
-                {/* deal with "handled" errors as a global, generic modal dialog  */}
                 <ErrorDialogProvider>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        {/* https://mui.com/x/react-date-pickers/getting-started/ */}
-
-                        {/* manages window.location for routing */}
                         <LocationPathnameProvider>
                             <LocationSearchProvider>
-                                {/* authentication and authorization */}
-                                <AuthProvider unauthenticatedPaths={[
-                                    isPrivacyPagePath, isUsageTermsPagePath, isAboutRaidPagePath
-                                ]}>
-                                    {/* re-bind a new ErrorDialog context where the auth context is
-                                        available. Any errors in components above this will call the
-                                        error handler on the "top" ErrorDialog where auth is not
-                                        available, any below will have auth available.
-                                        By using a second instance of the *same* ErrorDialog context,
-                                        it means that the "handeError" context function is re-bound so
-                                        that calling components don't need to worry about which
-                                        ErrorDialog context is handling their error.
-                                     */}
-
-                                    {/* binds authentication stuff to OpenAPI stuff */}
-                                    <AuthApiProvider>
-
-                                        {/* transition animation and delegates to location infra */}
-                                        <NavigationProvider>
-                                            {/* NavBar across the top of screen and sliding drawer */}
-                                            {/* <AppNavBar/> */}
-                                            <AppNavBar />
-
-                                            {/* spacing for NavBar */}
-                                            <Box sx={{pt: 7}}></Box>
-
-                                            {/* Navigable, authenticated pages, self-routed */}
-                                            <AuthenticatedPages/>
-
-                                        </NavigationProvider>
-                                    </AuthApiProvider>
-                                </AuthProvider>
-
-                                {/* unauthenticated pages, self-routed */}
-                                <UnauthenticatedPages/>
-
+                                <AppNavBar />
+                                <Box sx={{pt: 7}}></Box>
+                                <Outlet />
                             </LocationSearchProvider>
                         </LocationPathnameProvider>
                     </LocalizationProvider>

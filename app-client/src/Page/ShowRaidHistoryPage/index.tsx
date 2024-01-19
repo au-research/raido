@@ -35,6 +35,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ShowTitleComponent from "../ShowRaidPage/components/ShowTitleComponent";
 import Tooltip from "@mui/material/Tooltip";
+import {useParams} from "react-router-dom";
 
 const pageUrl = "/show-raid-history";
 
@@ -63,8 +64,8 @@ function Content() {
     new Map(),
   );
 
-  const [handle] = useState(getRaidHandleFromPathname(nav));
-  const [prefix, suffix] = handle.split("/");
+  const {prefix, suffix} = useParams() as { prefix: string, suffix: string };
+  const handle = `${prefix}/${suffix}`
 
   const raidHistoryRequest: RaidHistoryRequest = {
     prefix,
@@ -406,11 +407,6 @@ function Content() {
 
 export default function ShowRaidHistoryPage() {
   return (
-    <NavTransition
-      isPagePath={isShowRaidHistoryPagePath}
-      title={raidoTitle("Show RAiD History")}
-    >
       <Content />
-    </NavTransition>
   );
 }

@@ -13,6 +13,7 @@ import {FindRaidByNameRequest, RaidDto} from "Generated/Raidv2";
 import "react18-json-view/src/style.css";
 import ShowRaidPageContent from "./pages/ShowRaidPageContent";
 import {useState} from "react";
+import {useParams} from "react-router-dom";
 
 const pageUrl = "/show-raid";
 
@@ -28,8 +29,8 @@ export function ShowRaidActual({ version }: { version?: number }) {
   const nav = useNavigation();
   const api = useAuthApi();
 
-  const [handle] = useState(getRaidHandleFromPathname(nav));
-  const [prefix, suffix] = handle.split("/");
+    const {prefix, suffix} = useParams() as { prefix: string, suffix: string };
+    const handle = `${prefix}/${suffix}`
 
   const requestParameters: FindRaidByNameRequest = version
     ? {
@@ -71,11 +72,6 @@ function Content() {
 
 export default function ShowRaidPage() {
   return (
-    <NavTransition
-      isPagePath={isShowRaidPagePath}
-      title={raidoTitle("Show RAiD")}
-    >
       <Content />
-    </NavTransition>
   );
 }

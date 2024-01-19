@@ -39,6 +39,8 @@ import { HelpChip, HelpPopover } from "Component/HelpPopover";
 import { ContentCopy, West } from "@mui/icons-material";
 import { addDays, formatLocalDateAsIsoShortDateTime } from "Util/DateUtil";
 import { RqQuery } from "Util/ReactQueryUtil";
+import {useParams, useSearchParams} from "react-router-dom";
+import {useNavigate} from "react-router";
 
 const log = console;
 
@@ -78,26 +80,29 @@ export function isEitherPagePath(pathname: string): NavPathResult{
 }
 
 export function ApiKeyPage(){
-  return <NavTransition isPagePath={isEitherPagePath}
-    title={raidoTitle("API key")}
-  >
-    <Content/>
-  </NavTransition>
+  return <Content/>
 }
 
 
 function Content(){
   const nav = useNavigation()
-  const [apiKeyId, setApiKeyId] =
-    useState(getApiKeyIdFromPathname(nav));
-  const [servicePointId, setServicePointId] = 
-    useState(getServicePointIdFromPathname(nav));
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams();
+  const servicePointId = searchParams.get('servicePointId') || 0;
+  const {apiKeyId:apiKeyIdParams} = useParams() as { apiKeyId: string };
+  const [apiKeyId, setApiKeyId] = useState<number>();
+
+  React.useEffect(()=>{
+    if( apiKeyIdParams ){
+      setApiKeyId(+apiKeyIdParams);
+    }
+  },[apiKeyIdParams])
 
   return <LargeContentMain>
     <ApiKeyContainer apiKeyId={apiKeyId}
-      servicePointId={servicePointId}
+      servicePointId={+servicePointId}
       onCreate={(createdId)=>{
-        nav.replace(getViewApiKeyPageLink(createdId));
+        navigate(`${getViewApiKeyPageLink(createdId)}?servicePointId=${servicePointId}`, {replace: true});
         setApiKeyId(createdId);
       }}
     />
@@ -193,8 +198,8 @@ function ApiKeyContainer({apiKeyId, servicePointId, onCreate}: {
     !isWorking && !hasChanged && !updateRequest.isLoading && !!apiKeyId;
   const canSubmitUpdate = 
     !isWorking && hasChanged && isValid && !updateRequest.isLoading;
-  
-  return <ContainerCard title={"API Key"} action={<ApiKeyHelp/>}>
+  const servicePointIdFormatted = Intl.NumberFormat().format(+servicePointId!).replace(/,/g, ' ');
+  return <ContainerCard title={`API Key (SP ${servicePointIdFormatted})`} action={<ApiKeyHelp/>}>
     <form autoComplete="off" onSubmit={(e) => {
       e.preventDefault();
       updateRequest.mutate({apiKey: {...formData}});
