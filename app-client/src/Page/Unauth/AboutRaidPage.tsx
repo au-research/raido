@@ -21,11 +21,6 @@ export function isAboutRaidPagePath(path: string): boolean{
 }
 
 export function AboutRaidPage(){
-  const {pathname} = useLocationPathname();
-  if( !isAboutRaidPagePath(pathname) ){
-    return null;
-  }
-  window.document.title = raidoTitle("About RAiD");  
   return <Content/>;
 }
 
