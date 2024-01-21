@@ -15,18 +15,8 @@ import ShowRaidPageContent from "./pages/ShowRaidPageContent";
 import {useState} from "react";
 import {useParams} from "react-router-dom";
 
-const pageUrl = "/show-raid";
 
-export function isShowRaidPagePath(pathname: string): NavPathResult {
-  return isPagePath(pathname, pageUrl);
-}
-
-function getRaidHandleFromPathname(nav: NavigationState): string {
-  return parsePageSuffixParams<string>(nav, isShowRaidPagePath, String);
-}
-
-export function ShowRaidActual({ version }: { version?: number }) {
-  const nav = useNavigation();
+export default function ShowRaidPage({ version }: { version?: number }) {
   const api = useAuthApi();
 
     const {prefix, suffix} = useParams() as { prefix: string, suffix: string };
@@ -44,7 +34,7 @@ export function ShowRaidActual({ version }: { version?: number }) {
       };
 
   const getRaid = async (): Promise<RaidDto> => {
-    return await api.raid.findRaidByName({ prefix, suffix });
+    return await api.raid.findRaidByName(requestParameters);
   };
 
   const readQuery = useQuery<RaidDto>(["raids"], getRaid);
@@ -59,19 +49,7 @@ export function ShowRaidActual({ version }: { version?: number }) {
 
   const raidData = readQuery.data;
 
-  console.log("raidData", raidData);
-
   return (
       <ShowRaidPageContent defaultValues={raidData} handle={handle} />
-  );
-}
-
-function Content() {
-  return <ShowRaidActual />;
-}
-
-export default function ShowRaidPage() {
-  return (
-      <Content />
   );
 }

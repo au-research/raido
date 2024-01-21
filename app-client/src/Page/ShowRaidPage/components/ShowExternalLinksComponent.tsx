@@ -11,13 +11,7 @@ import {
 } from "@mui/material";
 import {History as HistoryIcon, OpenInNew as OpenInNewIcon,} from "@mui/icons-material";
 import {raidColors} from "utils";
-import {NavigationState, parsePageSuffixParams,} from "../../../Design/NavigationProvider";
-import {isShowRaidPagePath} from "../index";
 import List from "@mui/material/List";
-
-function getRaidHandleFromPathname(nav: NavigationState): string {
-  return parsePageSuffixParams<string>(nav, isShowRaidPagePath, String);
-}
 
 export default function ShowExternalLinksComponent({
   prefix,
