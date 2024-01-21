@@ -49,6 +49,7 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@playwright/test": "^1.39.0",
     "cross-env": "7.0.3",
     "json5": ">=2.2.2",
