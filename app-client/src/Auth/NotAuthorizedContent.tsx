@@ -26,7 +26,7 @@ import jwtDecode from "jwt-decode";
 import { signOutUser } from "Auth/Authz";
 import { assert } from "Util/TypeUtil";
 import { publicApi, unapprovedApi } from "Api/SimpleApi";
-import { mapClientIdToIdProvider } from "Component/IdProviderDisplay";
+import { getIdProvider } from "Component/GetIdProvider";
 import { SupportMailLink } from "Component/ExternalLink";
 import { UpdateAuthzRequestRequest } from "Generated/Raidv2/apis/UnapprovedExperimentalApi";
 
@@ -124,7 +124,7 @@ function AuthzRequestContainer({accessToken}: {accessToken: string}){
   >
     <Typography>
       You have identified yourself as: <HelpChip label={email}/>
-      via{' '}<HelpChip label={mapClientIdToIdProvider(clientId)}/>
+      via{' '}<HelpChip label={getIdProvider(clientId)}/>
     </Typography>
     <Typography paragraph>
       You have not yet been authorised to use the application.

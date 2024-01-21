@@ -6,7 +6,7 @@ import {
   parsePageSuffixParams,
   useNavigation
 } from "Design/NavigationProvider";
-import {DateTimeDisplay, raidoTitle, RoleDisplay} from "Component/Util";
+import {DateTimeDisplay, raidoTitle, getRoleForKey} from "Component/Util";
 import {LargeContentMain} from "Design/LayoutMain";
 import {ContainerCard} from "Design/ContainerCard";
 import {TextSpan} from "Component/TextSpan";
@@ -103,7 +103,7 @@ function AppUserListTable({servicePointId}: {
                 </RaidoLink>
               </TableCell>
               <TableCell>
-                <RoleDisplay role={row.role}/>
+                {getRoleForKey(row.role)}
               </TableCell>
               <TableCell>
                 <DateTimeDisplay date={row.tokenCutoff}/>

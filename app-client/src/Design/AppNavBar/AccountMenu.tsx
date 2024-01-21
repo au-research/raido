@@ -3,7 +3,7 @@ import {IconButton, ListItemIcon, Menu, MenuItem,} from "@mui/material";
 import {AccountCircle, Logout,} from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
 import {useAuth} from "Auth/AuthProvider";
-import {IdProviderDisplay} from "Component/IdProviderDisplay";
+import {getIdProvider} from "Component/GetIdProvider";
 import {formatShortTime} from "Util/DateUtil";
 import {InfoField} from "Component/InfoField";
 import InfoMenuItem from "./InfoMenuItem"
@@ -40,7 +40,7 @@ export default function AccountMenu() {
                         <InfoField label="Identity" value={session.payload.email}/>
                         <InfoField
                             label={"ID provider"}
-                            value={<IdProviderDisplay payload={session.payload}/>}
+                            value={getIdProvider(session.payload.clientId)}
                         />
                         <InfoField
                             label="Signed in"
