@@ -10,8 +10,8 @@ import { PrimaryButton } from "Component/AppButton";
 import { ContainerCard } from "Design/ContainerCard";
 import { TextSpan } from "Component/TextSpan";
 import { InfoField, InfoFieldList } from "Component/InfoField";
-import { IdProviderDisplay } from "Component/IdProviderDisplay";
-import { RoleDisplay } from "Component/Util";
+import { getIdProvider } from "Component/GetIdProvider";
+import { getRoleForKey } from "Component/Util";
 import { formatLocalDateAsIsoShortDateTime } from "Util/DateUtil";
 import { useAuthInAnyContext } from "Auth/AuthProvider";
 import { SmallScreenMain } from "Design/LayoutMain";
@@ -189,7 +189,7 @@ function SignInDetails(){
     details = <InfoFieldList>
       <InfoField id={"email"} label={"Identity"} value={user.email}/>
       <InfoField id={"idProvider"} label={"ID provider"}
-        value={<IdProviderDisplay payload={user}/> }/>
+        value={getIdProvider(user.clientId) }/>
       
       <InfoField id={"sessionSignIn"} label={"Signed in at"}
         value={formatLocalDateAsIsoShortDateTime(session.accessTokenIssuedAt)}/>
@@ -200,9 +200,7 @@ function SignInDetails(){
         }
       />
        
-      <InfoField id={"role"} label={"Role"} value={
-        <RoleDisplay role={user.role}/>
-      }/>
+      <InfoField id={"role"} label={"Role"} value={getRoleForKey(user.role)}/>
     </InfoFieldList>
   }
   return <ContainerCard title="Signed-in user">
