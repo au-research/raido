@@ -36,7 +36,7 @@ import Divider from "@mui/material/Divider";
 import { InfoFieldList, InfoField } from "Component/InfoField";
 import { NewWindowLink, orcidUrl } from "Component/ExternalLink";
 import { orcidBrand } from "Component/OrcidField";
-import { mapClientIdToIdProvider } from "Component/IdProviderDisplay";
+import { getIdProvider } from "Component/GetIdProvider";
 import { isOperator } from "Auth/Authz";
 import {useParams} from "react-router-dom";
 
@@ -253,8 +253,8 @@ export function SubjectField({data, id, label}:{
   id: string,
   label: string,
 }){
-  const idp = mapClientIdToIdProvider(data.clientId);
-  if( idp === orcidBrand ){
+  const idp = getIdProvider(data.clientId);
+  if( idp === "ORCID" ){
     return <InfoField id={id} label={label}
       value={
         <NewWindowLink href={`${orcidUrl}/${data.subject}`}>
