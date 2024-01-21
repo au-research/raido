@@ -3,31 +3,25 @@ import {useAuth} from "../../../Auth/AuthProvider";
 import {useQuery} from "@tanstack/react-query";
 import {Box, Card, CardContent, CardHeader, Grid} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {IdProviderDisplay} from "../../../Component/IdProviderDisplay";
-import {RoleDisplay} from "../../../Component/Util";
+import {getIdProvider} from "../../../Component/GetIdProvider";
+import {getRoleForKey} from "../../../Component/Util";
 import React from "react";
 
 export default function RaidCurrentUser() {
     const api = useAuthApi();
-    const {
-        session: {payload: user},
-    } = useAuth();
+    const auth = useAuth();
+    const {email, role, servicePointId, clientId} = auth.session.payload;
+
+
     const spQuery = useQuery(
-        ["readServicePoint", user.servicePointId],
+        ["readServicePoint", servicePointId],
         async () =>
             await api.servicePoint.findServicePointById({
-                id: user.servicePointId
+                id: servicePointId
             })
     );
     return (
-        <Card
-            sx={{
-                mt: 3,
-                borderLeft: "solid",
-                borderLeftColor: "primary.main",
-                borderLeftWidth: 3,
-            }}
-        >
+        <Card className="raid-card">
             <CardHeader title="Signed-in user"/>
             <CardContent>
                 <Grid container>
@@ -35,7 +29,7 @@ export default function RaidCurrentUser() {
                         <Box>
                             <Typography variant="body2">Identity</Typography>
                             <Typography color="text.secondary" variant="body1">
-                                {user.email}
+                                {email}
                             </Typography>
                         </Box>
                     </Grid>
@@ -43,7 +37,7 @@ export default function RaidCurrentUser() {
                         <Box>
                             <Typography variant="body2">ID provider</Typography>
                             <Typography color="text.secondary" variant="body1">
-                                <IdProviderDisplay payload={user}/>
+                                {getIdProvider(clientId)}
                             </Typography>
                         </Box>
                     </Grid>
@@ -59,7 +53,7 @@ export default function RaidCurrentUser() {
                         <Box>
                             <Typography variant="body2">Role</Typography>
                             <Typography color="text.secondary" variant="body1">
-                                <RoleDisplay role={user.role}/>
+                                {getRoleForKey(role)}
                             </Typography>
                         </Box>
                     </Grid>

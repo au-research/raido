@@ -40,18 +40,17 @@ import Divider from "@mui/material/Divider";
 
 
 export default function RaidTable({servicePointId}: FindAllRaidsRequest) {
+    const api = useAuthApi();
 
-    const [additionalData, setAdditionalData] = React.useState<RaidDto>({} as RaidDto);
     const [prefix, setPrefix] = React.useState<string>("")
     const [suffix, setSuffix] = React.useState<string>("")
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>, additionalDataPayload: RaidDto) => {
-        const identifierSplit = additionalDataPayload?.identifier?.id.split("/") || []
+    const handleContextMenuClick = (event: React.MouseEvent<HTMLButtonElement>, rowData: RaidDto) => {
+        const identifierSplit = rowData?.identifier?.id.split("/") || []
         const suffix = identifierSplit[identifierSplit.length - 1] || "";
         const prefix = identifierSplit[identifierSplit.length - 2] || "";
 
-        setAdditionalData(additionalDataPayload)
         setPrefix(prefix)
         setSuffix(suffix)
         setAnchorEl(event.currentTarget);
@@ -59,18 +58,12 @@ export default function RaidTable({servicePointId}: FindAllRaidsRequest) {
     const handleClose = () => {
         setAnchorEl(null);
         setTimeout(() => {
-            setAdditionalData({} as RaidDto)
             setPrefix("")
             setSuffix("")
         }, 500)
 
     };
 
-
-    const api = useAuthApi();
-    const {
-        session: {payload: user},
-    } = useAuth();
 
     const listRaids = async ({servicePointId}: FindAllRaidsRequest) => {
         return await api.raid.findAllRaids({
@@ -84,10 +77,10 @@ export default function RaidTable({servicePointId}: FindAllRaidsRequest) {
     );
 
     const spQuery = useQuery(
-        ["readServicePoint", user.servicePointId],
+        ["readServicePoint", servicePointId],
         async () =>
             await api.servicePoint.findServicePointById({
-                id: user.servicePointId,
+                id: servicePointId!,
             }),
     );
 
@@ -108,11 +101,8 @@ export default function RaidTable({servicePointId}: FindAllRaidsRequest) {
             disableColumnMenu: true,
             width: 25,
             renderCell: (params) => {
-                const [_, suffix] = new URL(params.row.identifier.id).pathname
-                    .substring(1)
-                    .split("/");
                 return (
-                    <IconButton aria-label="more actions" onClick={(event) => handleClick(event, params.row)}>
+                    <IconButton aria-label="more actions" onClick={(event) => handleContextMenuClick(event, params.row)}>
                         <MenuIcon/>
                     </IconButton>
                 );
