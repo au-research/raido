@@ -18,5 +18,14 @@ code {
 
 
 .scroll-start {
-  scroll-margin-top: 0px;
+  scroll-margin-top: 0;
+}
+
+.active {
+  background: #eee !important;
+  font-weight: bold;
+}
+
+.raid-card {
+  border-left: 3px solid #5594d8;
 }
