@@ -1,22 +1,11 @@
 import {RaidDto} from "../../../Generated/Raidv2";
-import {
-    Box,
-    Card,
-    CardContent,
-    CardHeader,
-    Container,
-    SpeedDial,
-    SpeedDialAction,
-    Stack,
-    Typography,
-} from "@mui/material";
+import {Box, Card, CardContent, CardHeader, Container, SpeedDial, SpeedDialAction, Stack,} from "@mui/material";
 import {
     Edit as EditIcon,
     History as HistoryIcon,
     KeyboardArrowUp as KeyboardArrowUpIcon,
     Menu as MenuIcon,
 } from "@mui/icons-material";
-import {raidColors} from "../../../utils";
 import AnchorButtons from "../../../Component/AnchorButtons";
 import ShowDateComponent from "../components/ShowDateComponent";
 import ShowTitleComponent from "../components/ShowTitleComponent";
@@ -89,126 +78,68 @@ export default function ShowRaidPageContent({defaultValues, handle, titleSuffix,
                     <AnchorButtons defaultValues={defaultValues}/>
 
                     <Box id="dates" className="scroll">
-                        <ShowDateComponent raid={defaultValues}/>
+                        <ShowDateComponent date={defaultValues?.date}/>
                     </Box>
 
                     <Box id="titles" className="scroll">
-                        <ShowTitleComponent titles={defaultValues.title || []}/>
+                        <ShowTitleComponent titles={defaultValues.title}/>
                     </Box>
 
                     <Box id="descriptions" className="scroll">
-                        <ShowDescriptionComponent
-                            raid={defaultValues}
-                            color={raidColors.get("blue") || ""}
-                        />
+                        <ShowDescriptionComponent description={defaultValues.description} />
                     </Box>
 
                     <Box id="contributors" className="scroll">
-                        <ShowContributorComponent
-                            raid={defaultValues}
-                            color={raidColors.get("blue") || ""}
-                        />
+                        <ShowContributorComponent contributor={defaultValues.contributor} />
                     </Box>
 
                     <Box id="organisations" className="scroll">
-                        <ShowOrganisationComponent
-                            raid={defaultValues}
-                            color={raidColors.get("blue") || ""}
-                        />
+                        <ShowOrganisationComponent organisation={defaultValues.organisation} />
                     </Box>
 
                     <Box id="related-objects" className="scroll">
-                        <ShowRelatedObjectComponent
-                            raid={defaultValues}
-                            color={raidColors.get("blue") || ""}
-                        />
+                        <ShowRelatedObjectComponent relatedObject={defaultValues.relatedObject} />
                     </Box>
 
                     <Box id="alternate-identifiers" className="scroll">
-                        <ShowAlternateIdentifierComponent
-                            raid={defaultValues}
-                            color={raidColors.get("blue") || ""}
-                        />
+                        <ShowAlternateIdentifierComponent alternateIdentifier={defaultValues.alternateIdentifier} />
                     </Box>
 
                     <Box id="alternate-urls" className="scroll">
-                        <ShowAlternateUrlComponent
-                            raid={defaultValues}
-                            color={raidColors.get("blue") || ""}
-                        />
+                        <ShowAlternateUrlComponent alternateUrl={defaultValues.alternateUrl} />
                     </Box>
 
                     <Box id="related-raids" className="scroll">
-                        <ShowRelatedRaidComponent
-                            raid={defaultValues}
-                            color={raidColors.get("blue") || ""}
-                        />
+                        <ShowRelatedRaidComponent relatedRaid={defaultValues.relatedRaid} />
                     </Box>
 
                     <Box id="access" className="scroll">
-                        <ShowAccessComponent
-                            raid={defaultValues}
-                            color={raidColors.get("blue") || ""}
-                        />
+                        <ShowAccessComponent access={defaultValues.access} />
                     </Box>
 
                     <Box id="subjects" className="scroll">
-                        <ShowSubjectComponent
-                            raid={defaultValues}
-                            color={raidColors.get("blue") || ""}
-                        />
+                        <ShowSubjectComponent subject={defaultValues.subject} />
                     </Box>
 
                     {/* <pre>ToDo: Traditional Knowledge Label</pre> */}
 
                     <Box id="spatial-coverage" className="scroll">
-                        <ShowSpatialCoverageComponent
-                            raid={defaultValues}
-                            color={raidColors.get("blue") || ""}
-                        />
+                        <ShowSpatialCoverageComponent spatialCoverage={defaultValues.spatialCoverage} />
                     </Box>
 
                     <Box id="external-links" className="scroll">
                         <ShowExternalLinksComponent prefix={prefix} suffix={suffix}/>
                     </Box>
 
-                    <Box sx={{paddingLeft: 2}}>
-                        <Card
-                            variant="outlined"
-                            sx={{
-                                borderLeft: "solid",
-                                borderLeftColor: raidColors.get("blue") || "",
-                                borderLeftWidth: 3,
-                            }}
-                        >
-                            <CardHeader
-                                title={
-                                    <Typography variant="h6" component="div">
-                                        Raw Data
-                                    </Typography>
-                                }
-                            />
 
+                        <Card className="raid-card">
+                            <CardHeader title="Raw Data" />
                             <CardContent>
                                 <JsonView src={defaultValues}/>
                             </CardContent>
                         </Card>
-                    </Box>
                 </Stack>
             </Container>
-            {/*<Fab*/}
-            {/*  color="primary"*/}
-            {/*  sx={{ position: "fixed", bottom: "78px", right: "16px" }}*/}
-            {/*  onClick={() => {*/}
-            {/*    document.getElementById("start")?.scrollIntoView({*/}
-            {/*      behavior: "smooth",*/}
-            {/*      block: "start",*/}
-            {/*      inline: "start",*/}
-            {/*    });*/}
-            {/*  }}*/}
-            {/*>*/}
-            {/*  <KeyboardArrowUpIcon />*/}
-            {/*</Fab>*/}
         </>
     );
 }

@@ -266,7 +266,7 @@ function PageHideListener({onPageHide, children}: {
     onPageHide: () => void,
     children: ReactNode
 }) {
-    const onPageHideCb = useCallback((ev: PageTransitionEvent) => {
+    const onPageHideCb = useCallback(() => {
         onPageHide();
     }, [onPageHide]);
 

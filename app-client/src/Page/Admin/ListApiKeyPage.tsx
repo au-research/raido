@@ -19,7 +19,7 @@ import {
 import {RefreshIconButton} from "Component/RefreshIconButton";
 import {RaidoLink} from "Component/RaidoLink";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
-import {getCreateApiKeyPageLink, getViewApiKeyPageLink} from "Page/Admin/ApiKeyPage";
+import {getViewApiKeyPageLink} from "Page/Admin/ApiKeyPage";
 import {RaidoAddFab} from "Component/AppButton";
 import {useParams} from "react-router-dom";
 

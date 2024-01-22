@@ -1,7 +1,6 @@
 import {FindAllRaidsRequest, RaidDto} from "../../../../Generated/Raidv2";
 import React from "react";
 import {useAuthApi} from "../../../../Api/AuthApi";
-import {useAuth} from "../../../../Auth/AuthProvider";
 import {RqQuery} from "../../../../Util/ReactQueryUtil";
 import {useQuery} from "@tanstack/react-query";
 import {CompactErrorPanel} from "../../../../Error/CompactErrorPanel";
@@ -118,7 +117,7 @@ export default function RaidTable({servicePointId}: FindAllRaidsRequest) {
                 open={open}
                 onClose={handleClose}
             >
-                <MenuItem onClick={async (event) => {
+                <MenuItem onClick={async () => {
                     await copy(`${suffix}`);
                     handleClose()
                 }}>
@@ -127,7 +126,7 @@ export default function RaidTable({servicePointId}: FindAllRaidsRequest) {
                     </ListItemIcon>
                     <ListItemText primary="Copy Suffix" secondary={`${suffix}`}/>
                 </MenuItem>
-                <MenuItem onClick={async (event) => {
+                <MenuItem onClick={async () => {
                     await copy(`${prefix}/${suffix}`);
                     handleClose()
                 }}>
@@ -191,13 +190,7 @@ export default function RaidTable({servicePointId}: FindAllRaidsRequest) {
                 Mint new RAiD
             </Fab>
 
-            <Card
-                sx={{
-                    borderLeft: "solid",
-                    borderLeftColor: "primary.main",
-                    borderLeftWidth: 3,
-                }}
-            >
+            <Card className="raid-card">
                 <CardHeader
                     title="Recently minted RAiD data"
                     action={
@@ -217,7 +210,7 @@ export default function RaidTable({servicePointId}: FindAllRaidsRequest) {
                             columns={columns}
                             density="compact"
                             autoHeight
-                            isRowSelectable={(params) => false}
+                            isRowSelectable={() => false}
                             getRowId={(row) => row.identifier.id}
                             initialState={{
                                 pagination: {paginationModel: {pageSize: 10}},

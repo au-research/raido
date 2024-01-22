@@ -16,7 +16,6 @@ code {
   scroll-margin-top: 60px;
 }
 
-
 .scroll-start {
   scroll-margin-top: 0;
 }
@@ -26,6 +25,18 @@ code {
   font-weight: bold;
 }
 
+@media (prefers-color-scheme: dark) {
+  .active {
+    background: #666 !important;
+  }
+}
+
 .raid-card {
   border-left: 3px solid #5594d8;
+}
+
+.raid-card-well {
+  background: rgba(0, 0, 0, 0.02);
+  padding: 16px;
+  border-radius: 8px;
 }

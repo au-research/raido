@@ -24,7 +24,7 @@ const isYearMonthDayFormattedString = (input: string): boolean => {
 };
 
 export const dateDisplayFormatter = (input?: string) => {
-  if (!input || input === "") {
+  if (!input || input === "" || input === undefined) {
     return "";
   }
 

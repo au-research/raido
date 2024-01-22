@@ -1,7 +1,6 @@
 import {DateTimeDisplay} from "Component/Util";
 import {TextSpan} from "Component/TextSpan";
 import React, {useState} from "react";
-import {normalisePath} from "Util/Location";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {UpdateAuthzRequestStatusRequest} from "Generated/Raidv2";
 import {useAuthApi} from "Api/AuthApi";
