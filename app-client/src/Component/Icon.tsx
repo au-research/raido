@@ -1,6 +1,5 @@
-import { SvgIcon, SvgIconProps } from "@mui/material";
-import React, { SVGProps } from "react";
-import { Color } from "Design/RaidoTheme";
+import {SvgIcon, SvgIconProps, useTheme} from "@mui/material";
+import React, {SVGProps} from "react";
 
 // https://uxwing.com/google-round-icon/
 export function Google(props: SvgIconProps){
@@ -64,13 +63,8 @@ https://orcid.figshare.com/articles/figure/ORCID_iD_icon_graphics/5008697
 https://orcid.figshare.com/articles/figure/ORCID_iD_icon_graphics/5008697?file=8439059
 ORCIDiD_iconBwVector.svg
  */
-export function OrcidSvgIcon({circleColor, letterColor}: {
-  circleColor?: string, letterColor?: string
-}){
-  // currentColor is some kind of SVG keyword for "color"
-  circleColor = circleColor ?? "currentColor";
-  // can't figure out what "background" equivalent of currentColor is
-  letterColor = letterColor ?? Color.lotion;
+export function OrcidSvgIcon(){
+    const theme = useTheme();
 
   /* Pretty sure we want to get rid of the text/css style and do normal fill,
   but trying to keep SVG content as close as possible to the source for now. */
@@ -79,8 +73,8 @@ export function OrcidSvgIcon({circleColor, letterColor}: {
     xmlSpace={"preserve"}
   >
     <style type="text/css">{`
-      .st0{fill:${circleColor};}
-      .st1{fill:${letterColor};}
+      .st0{fill:${theme.palette.background.default};}
+      .st1{fill:${theme.palette.text.secondary};}
     `}</style>
     <path className="st0"
       d="M256,128c0,70.7-57.3,128-128,128C57.3,256,0,198.7,0,128C0,57.3,57.3,0,128,0C198.7,0,256,57.3,256,128z"/>

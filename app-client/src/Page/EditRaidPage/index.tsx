@@ -1,31 +1,10 @@
 import {Container} from "@mui/material";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import {useAuthApi} from "Api/AuthApi";
-import {raidoTitle} from "Component/Util";
-import {
-    isPagePath,
-    NavigationState,
-    NavPathResult,
-    NavTransition,
-    parsePageSuffixParams,
-    useNavigation,
-} from "Design/NavigationProvider";
 import RaidForm from "Forms/RaidForm";
 import {RaidDto,} from "Generated/Raidv2";
-
-import {useState} from "react";
 import {raidRequest} from "../../utils";
 import {useParams} from "react-router-dom";
-
-const pageUrl = "/edit-raid";
-
-export function isEditRaidPagePath(pathname: string): NavPathResult {
-    return isPagePath(pathname, pageUrl);
-}
-
-function getRaidHandleFromPathname(nav: NavigationState): string {
-    return parsePageSuffixParams<string>(nav, isEditRaidPagePath, String);
-}
 
 function Content() {
     const api = useAuthApi();

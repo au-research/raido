@@ -1,5 +1,4 @@
 import React, {ReactNode, useCallback, useContext, useEffect} from "react";
-import {LargeContentMain, SmallContentMain} from "Design/LayoutMain";
 import {SmallPageSpinner} from "Component/SmallPageSpinner";
 import {ErrorInfoComponent} from "Error/ErrorInforComponent";
 import {ErrorInfo} from "Error/ErrorUtil";
@@ -12,6 +11,7 @@ import {useLocationPathname} from "Util/Hook/LocationPathname";
 import {SignInContext} from "Auth/SignInContext";
 import {NotAuthorizedContent} from "Auth/NotAuthorizedContent";
 import EnvironmentBanner from "Design/AppNavBar/EnvironmentBanner";
+import {Container, Stack} from "@mui/material";
 
 export interface AuthState {
     signOut: () => void,
@@ -240,23 +240,26 @@ function NotSignedInContent({onSignInSucceeded}: {
     const [signInAction, setSignInAction] = React.useState(
         undefined as string | undefined);
 
-    return <LargeContentMain>
-        <EnvironmentBanner/>
-        <IntroContainer/>
-        <SmallContentMain>
-            <SignInContext.Provider value={{
-                action: signInAction,
-                setAction: setSignInAction
-            }}>
-                {/* Need to reset the action when page unloaded because if user hits
-         back button on hte IDP page, the browser BF-cache will restore the 
+    return (
+        <Stack gap={3} sx={{mt: 3}}>
+            <EnvironmentBanner/>
+            <IntroContainer/>
+            <Container maxWidth="sm">
+
+                <SignInContext.Provider value={{
+                    action: signInAction,
+                    setAction: setSignInAction
+                }}>
+                    {/* Need to reset the action when page unloaded because if user hits
+         back button on hte IDP page, the browser BF-cache will restore the
          React state and buttons just sit there spinning/disabled. */}
-                <PageHideListener onPageHide={() => setSignInAction(undefined)}>
-                    <SignInContainer/>
-                </PageHideListener>
-            </SignInContext.Provider>
-        </SmallContentMain>
-    </LargeContentMain>
+                    <PageHideListener onPageHide={() => setSignInAction(undefined)}>
+                        <SignInContainer/>
+                    </PageHideListener>
+                </SignInContext.Provider>
+            </Container>
+        </Stack>
+    )
 }
 
 function PageHideListener({onPageHide, children}: {

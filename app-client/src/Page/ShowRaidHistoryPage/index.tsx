@@ -1,5 +1,4 @@
 import * as React from "react";
-import {useState} from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -16,19 +15,10 @@ import {
 
 import {useQuery} from "@tanstack/react-query";
 import {useAuthApi} from "Api/AuthApi";
-import {
-  isPagePath,
-  NavigationState,
-  NavPathResult,
-  NavTransition,
-  parsePageSuffixParams,
-  useNavigation,
-} from "Design/NavigationProvider";
 
 import {FindRaidByNameRequest, RaidChange, RaidDto, RaidHistoryRequest, Title,} from "Generated/Raidv2";
 import {Button, Card, IconButton, Stack, Typography} from "@mui/material";
 import {ChangeOp, decodeAndParseChange} from "./utils";
-import {raidoTitle} from "../../Component/Util";
 import ShowRaidPageContent from "../ShowRaidPage/pages/ShowRaidPageContent";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -37,16 +27,6 @@ import ShowTitleComponent from "../ShowRaidPage/components/ShowTitleComponent";
 import Tooltip from "@mui/material/Tooltip";
 import {useParams} from "react-router-dom";
 
-const pageUrl = "/show-raid-history";
-
-export function isShowRaidHistoryPagePath(pathname: string): NavPathResult {
-  return isPagePath(pathname, pageUrl);
-}
-
-function getRaidHandleFromPathname(nav: NavigationState): string {
-  return parsePageSuffixParams<string>(nav, isShowRaidHistoryPagePath, String);
-}
-
 const getOpIcon = {
   add: <AddIcon />,
   remove: <RemoveIcon />,
@@ -54,7 +34,6 @@ const getOpIcon = {
 };
 
 function Content() {
-  const nav = useNavigation();
   const api = useAuthApi();
 
   // NEW
@@ -91,7 +70,7 @@ function Content() {
   };
 
   const handleVersionClick = (el: RaidChange) => {
-    if (el?.version && typeof el.version === "number")
+    if (el?.version)
       setCurrentVersion(el.version);
   };
 

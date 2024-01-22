@@ -1,6 +1,5 @@
-import React, { ReactNode } from "react";
-import { Link } from "@mui/material";
-import { useNavigation } from "Design/NavigationProvider";
+import React, {ReactNode} from "react";
+import {Link} from "@mui/material";
 import {useNavigate} from "react-router";
 
 export function RaidoLink({href, children}: {
@@ -9,6 +8,6 @@ export function RaidoLink({href, children}: {
 }){
   const navigate = useNavigate();
   return <Link href={href}
-    onClick={event => navigate(href)}
+    onClick={()=> navigate(href)}
   >{children}</Link>
 }

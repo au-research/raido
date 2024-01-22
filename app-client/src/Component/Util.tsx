@@ -3,11 +3,6 @@ import {TextSpan} from "Component/TextSpan";
 import {formatLocalDateAsIsoShortDateTime} from "Util/DateUtil";
 import React from "react";
 
-
-export function raidoTitle(pageName: string) {
-    return `RAiD - ${pageName}`;
-}
-
 export function getRoleForKey(role:string) {
     const roleMap = {
         SP_ADMIN: "Administrator",

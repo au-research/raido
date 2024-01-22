@@ -1,11 +1,9 @@
-import {useNavigation} from "Design/NavigationProvider";
 import React, {useState} from "react";
 import {AppBar, Chip, IconButton, Toolbar, Tooltip,} from "@mui/material";
 import {Home as HomeIcon, Menu as MenuIcon,} from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
 import {AppDrawer} from "Design/AppDrawer";
 import {RaidoLogoSvg} from "Component/Icon";
-import {Color} from "Design/RaidoTheme";
 import {Config} from "Config";
 import AccountMenu from "./AccountMenu";
 import {useNavigate} from "react-router";
@@ -13,7 +11,6 @@ import {AuthApiProvider} from "../../Api/AuthApi";
 import {AuthProvider} from "../../Auth/AuthProvider";
 
 export default function AppNavBar() {
-    const nav = useNavigation();
     const navigate = useNavigate()
 
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -25,12 +22,12 @@ export default function AppNavBar() {
                     <Toolbar variant={"dense"}>
                         <IconButton
                             color="inherit"
-                            onClick={(event) => navigate('/home')}
+                            onClick={() => navigate('/home')}
                             size="small"
                             sx={{p: 0, maxHeight: "2em"}}
                         >
                             <RaidoLogoSvg
-                                color={Color.lotion}
+                                color="#fafafa"
                                 style={{scale: "50%"}}
                             />
                         </IconButton>
@@ -41,7 +38,7 @@ export default function AppNavBar() {
                                 edge="start"
                                 color="inherit"
                                 aria-label="go home"
-                                onClick={(event) => navigate('/home')}
+                                onClick={() => navigate('/home')}
                                 sx={{mx: 2}}
                             >
                                 <HomeIcon/>
