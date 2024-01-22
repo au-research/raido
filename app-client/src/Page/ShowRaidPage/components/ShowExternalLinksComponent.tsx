@@ -1,5 +1,4 @@
 import {
-    Box,
     Card,
     CardContent,
     CardHeader,
@@ -10,7 +9,6 @@ import {
     Typography,
 } from "@mui/material";
 import {History as HistoryIcon, OpenInNew as OpenInNewIcon,} from "@mui/icons-material";
-import {raidColors} from "utils";
 import List from "@mui/material/List";
 
 export default function ShowExternalLinksComponent({
@@ -21,15 +19,7 @@ export default function ShowExternalLinksComponent({
   suffix: string;
 }) {
   return (
-    <Box sx={{ paddingLeft: 2 }}>
-      <Card
-        variant="outlined"
-        sx={{
-          borderLeft: "solid",
-          borderLeftColor: raidColors.get("blue"),
-          borderLeftWidth: 3,
-        }}
-      >
+      <Card className="raid-card">
         <CardHeader
           title={
             <Typography variant="h6" component="div">
@@ -73,6 +63,5 @@ export default function ShowExternalLinksComponent({
           </List>
         </CardContent>
       </Card>
-    </Box>
   );
 }

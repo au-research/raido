@@ -4,8 +4,8 @@ import React, {CSSProperties} from "react";
 import Button from "@mui/material/Button";
 import LinearProgress from "@mui/material/LinearProgress";
 import {CompactErrorPanel} from "Error/CompactErrorPanel";
-import {useNavigation} from "Design/NavigationProvider";
 import {Add} from "@mui/icons-material";
+import {useNavigate} from "react-router";
 
 
 export const primaryButtonProps: ButtonProps = {
@@ -92,10 +92,10 @@ export function SecondaryButton({isLoading, error, children, ...buttonProps}:
 }
 
 export function RaidoAddFab({href, disabled=false}: {href: string, disabled: boolean}){
-  const nav = useNavigation();
+  const navigate = useNavigate()
   return <Fab disabled={disabled} href={href} color="primary"
-    onClick={e=>{
-      nav.navigateTo(href, e);
+    onClick={()=>{
+      navigate(href)
     }}
     size="small"
   >

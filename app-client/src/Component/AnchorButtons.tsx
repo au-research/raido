@@ -1,4 +1,4 @@
-import {Box, Button, Chip, Grid} from "@mui/material";
+import {Box, Button, Chip, Grid, useTheme} from "@mui/material";
 import {RaidDto} from "Generated/Raidv2";
 
 export default function AnchorButtons({
@@ -8,6 +8,7 @@ export default function AnchorButtons({
   defaultValues?: RaidDto;
   errors?: any;
 }) {
+  const theme = useTheme();
   const anchorButtonsDefinition = [
     {
       label: "Dates",
@@ -99,8 +100,8 @@ export default function AnchorButtons({
                 variant="contained"
                 fullWidth
                 sx={{
-                  background: anchorButton.errors ? "#fcf1f1" : "#fff",
-                  color: "#000",
+                  background: anchorButton.errors ? theme.palette.error.main : theme.palette.background.default,
+                  color: theme.palette.text.primary,
                   borderLeftStyle: "solid",
                   borderLeftColor: anchorButton.errors ? "red" : "#f0ab00",
                   borderLeftWidth: 2,
@@ -109,7 +110,7 @@ export default function AnchorButtons({
                   alignItems: "start",
                   justifyContent: "flex-start",
                   "&:hover": {
-                    backgroundColor: anchorButton.errors ? "#f8dcdc" : "#eee",
+                    backgroundColor: anchorButton.errors ? theme.palette.error.dark : theme.palette.action.hover,
                   },
                 }}
               >

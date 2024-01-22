@@ -1,31 +1,10 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  CardHeader,
-  Grid,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { RaidDto } from "Generated/Raidv2";
+import {Box, Card, CardContent, CardHeader, Grid, Stack, Typography,} from "@mui/material";
+import {AlternateUrl} from "Generated/Raidv2";
 
-export default function ShowAlternateUrlComponent({
-  raid,
-  color,
-}: {
-  raid: RaidDto;
-  color: string;
-}) {
+export default function ShowAlternateUrlComponent({alternateUrl}: { alternateUrl: AlternateUrl[] | undefined }) {
   return (
-    <Box sx={{ paddingLeft: 2 }}>
-      <Card
-        variant="outlined"
-        sx={{
-          borderLeft: "solid",
-          borderLeftColor: color,
-          borderLeftWidth: 3,
-        }}
-      >
+    <Box>
+      <Card className="raid-card">
         <CardHeader
           title={
             <Typography variant="h6" component="div">
@@ -37,7 +16,7 @@ export default function ShowAlternateUrlComponent({
         <CardContent>
           <Stack gap={3}>
             <Box>
-              {raid?.alternateUrl?.length === 0 && (
+              {alternateUrl?.length === 0 || alternateUrl === undefined && (
                 <Typography
                   variant="body2"
                   color={"text.secondary"}
@@ -47,17 +26,10 @@ export default function ShowAlternateUrlComponent({
                 </Typography>
               )}
             </Box>
-            {raid?.alternateUrl?.map((alternateUrl, index) => {
+            {alternateUrl?.map((alternateUrl, index) => {
               return (
                 <Stack sx={{ paddingLeft: 2 }} spacing={2} key={index}>
-                  <Box
-                    sx={{
-                      bgcolor: "rgba(0, 0, 0, 0.02)",
-                      p: 2,
-                      borderRadius: 2,
-                    }}
-                    className="animated-tile animated-tile-reverse"
-                  >
+                  <Box className="raid-card-well">
                     <Grid container spacing={2}>
                       <Grid item xs={12} sm={12} md={12}>
                         <Box>

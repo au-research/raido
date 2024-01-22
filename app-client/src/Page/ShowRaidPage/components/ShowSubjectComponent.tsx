@@ -1,51 +1,30 @@
 import {
-  Box,
-  Card,
-  CardContent,
-  CardHeader,
-  Chip,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  Stack,
-  Typography,
+    Box,
+    Card,
+    CardContent,
+    CardHeader,
+    Grid,
+    List,
+    ListItem,
+    ListItemText,
+    Stack,
+    Typography,
 } from "@mui/material";
-import { RaidDto } from "Generated/Raidv2";
-import { dateDisplayFormatter } from "date-utils";
-import { extractKeyFromIdUri } from "utils";
+import {Subject} from "Generated/Raidv2";
 import language from "References/language.json";
 import subjectType from "References/subject_type.json";
 
-export default function ShowSubjectComponent({
-  raid,
-  color,
+export default function ShowSubjectComponent({subject,
 }: {
-  raid: RaidDto;
-  color: string;
+    subject: Subject[] | undefined
 }) {
   return (
-    <Box sx={{ paddingLeft: 2 }}>
-      <Card
-        variant="outlined"
-        sx={{
-          borderLeft: "solid",
-          borderLeftColor: color,
-          borderLeftWidth: 3,
-        }}
-      >
-        <CardHeader
-          title={
-            <Typography variant="h6" component="div">
-              Subjects
-            </Typography>
-          }
-        />
-
+      <Card className="raid-card">
+        <CardHeader title="Subjects" />
         <CardContent>
           <Stack gap={3}>
             <Box>
-              {raid?.subject?.length === 0 && (
+              {subject?.length === 0 || subject === undefined && (
                 <Typography
                   variant="body2"
                   color={"text.secondary"}
@@ -55,21 +34,14 @@ export default function ShowSubjectComponent({
                 </Typography>
               )}
             </Box>
-            {raid?.subject?.map((subject, index) => {
+            {subject?.map((subject, index) => {
               const subjectTitle = subjectType.find(
                 (el) => el.id === subject.id
               );
 
               return (
                 <Stack spacing={2} key={index}>
-                  <Box
-                    sx={{
-                      bgcolor: "rgba(0, 0, 0, 0.02)",
-                      p: 2,
-                      borderRadius: 2,
-                    }}
-                    className="animated-tile animated-tile-reverse"
-                  >
+                  <Box className="raid-card-well">
                     <Grid container spacing={2}>
                       <Grid item xs={12} sm={12} md={12}>
                         <Box>
@@ -106,6 +78,5 @@ export default function ShowSubjectComponent({
           </Stack>
         </CardContent>
       </Card>
-    </Box>
   );
 }

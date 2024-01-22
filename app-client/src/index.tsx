@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import {App} from "./App";
-import {RouterProvider, createBrowserRouter, RouteObject, Outlet, Navigate} from "react-router-dom";
+import {createBrowserRouter, RouteObject, RouterProvider} from "react-router-dom";
 import HomePage from "./Page/Homepage";
 import MintRaidPage from "./Page/MintRaidPage";
 import ShowRaidPage from "./Page/ShowRaidPage";
@@ -16,14 +16,12 @@ import {ListAppUserPage} from "./Page/Admin/ListAppUserPage";
 import {AppUserPage} from "./Page/Admin/AppUserPage";
 import {ListApiKeyPage} from "./Page/Admin/ListApiKeyPage";
 import {ApiKeyPage} from "./Page/Admin/ApiKeyPage";
-import {isPrivacyPagePath, PrivacyPage} from "./Page/Unauth/PrivacyPage";
-import {isUsageTermsPagePath, UsageTermsPage} from "./Page/Unauth/UsageTermsPage";
-import {AboutRaidPage, isAboutRaidPagePath} from "./Page/Unauth/AboutRaidPage";
+import {PrivacyPage} from "./Page/Unauth/PrivacyPage";
+import {UsageTermsPage} from "./Page/Unauth/UsageTermsPage";
+import {AboutRaidPage} from "./Page/Unauth/AboutRaidPage";
 import ShowRaidHistoryPage from "./Page/ShowRaidHistoryPage";
 import {AuthProvider} from "./Auth/AuthProvider";
 import {AuthApiProvider} from "./Api/AuthApi";
-import AppNavBar from "./Design/AppNavBar";
-import {Box} from "@mui/material";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement

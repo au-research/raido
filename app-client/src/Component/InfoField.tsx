@@ -60,26 +60,3 @@ export function InfoFieldList({children}:{children: ReactNode}){
     {children}
   </div>
 }
-
-//// expermental
-//export function InfoFieldGrid({children}:{children: ReactNode}){
-//  return <div style={{
-//    display: "grid",
-//    //gridAutoColumns: "minmax(0, 1fr)",
-//    gridAutoColumns: "1fr",
-//    gridAutoFlow: "column",
-//    gap: "1em",
-//  }}>
-//    {children}
-//  </div>
-//}
-//
-//export function InfoFieldColumnContainer({children}:{children: ReactNode}){
-//  return <div style={{
-//    columnCount: "2",
-//  }}>
-//    {children}
-//  </div>
-//}
-//
-//

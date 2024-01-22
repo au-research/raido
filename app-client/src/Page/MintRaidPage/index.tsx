@@ -1,18 +1,10 @@
 import {Container} from "@mui/material";
 import {useMutation} from "@tanstack/react-query";
 import {useAuthApi} from "Api/AuthApi";
-import {raidoTitle} from "Component/Util";
-import {isPagePath, NavPathResult, NavTransition,} from "Design/NavigationProvider";
 import RaidForm from "Forms/RaidForm";
 import {RaidDto,} from "Generated/Raidv2";
 
 import {newRaid, raidRequest} from "utils";
-
-const pageUrl = "/mint-raid-new";
-
-export function isMintRaidPagePath(pathname: string): NavPathResult {
-    return isPagePath(pathname, pageUrl);
-}
 
 function Content() {
     const handleRaidCreate = async (data: RaidDto): Promise<RaidDto> => {

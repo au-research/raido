@@ -1,32 +1,10 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  CardHeader,
-  Grid,
-  Stack,
-  Typography,
-} from "@mui/material";
-import { RaidDto } from "Generated/Raidv2";
-import { extractKeyFromIdUri } from "utils";
+import {Box, Card, CardContent, CardHeader, Grid, Stack, Typography,} from "@mui/material";
+import {RelatedObject} from "Generated/Raidv2";
+import {extractKeyFromIdUri} from "utils";
 
-export default function ShowRelatedRaisComponent({
-  raid,
-  color,
-}: {
-  raid: RaidDto;
-  color: string;
-}) {
+export default function ShowRelatedObjectComponent({relatedObject}: { relatedObject: RelatedObject[] | undefined }) {
   return (
-    <Box sx={{ paddingLeft: 2 }}>
-      <Card
-        variant="outlined"
-        sx={{
-          borderLeft: "solid",
-          borderLeftColor: color,
-          borderLeftWidth: 3,
-        }}
-      >
+      <Card className="raid-card">
         <CardHeader
           title={
             <Typography variant="h6" component="div">
@@ -38,7 +16,7 @@ export default function ShowRelatedRaisComponent({
         <CardContent>
           <Stack gap={3}>
             <Box>
-              {raid?.relatedObject?.length === 0 && (
+              {relatedObject?.length === 0 && (
                 <Typography
                   variant="body2"
                   color={"text.secondary"}
@@ -48,17 +26,10 @@ export default function ShowRelatedRaisComponent({
                 </Typography>
               )}
             </Box>
-            {raid?.relatedObject?.map((relatedObject, index) => {
+            {relatedObject?.map((relatedObject, index) => {
               return (
                 <Stack sx={{ paddingLeft: 2 }} spacing={2} key={index}>
-                  <Box
-                    sx={{
-                      bgcolor: "rgba(0, 0, 0, 0.02)",
-                      p: 2,
-                      borderRadius: 2,
-                    }}
-                    className="animated-tile animated-tile-reverse"
-                  >
+                  <Box className="raid-card-well">
                     <Grid container spacing={2}>
                       <Grid item xs={12} sm={12} md={6}>
                         <Box>
@@ -86,7 +57,7 @@ export default function ShowRelatedRaisComponent({
                         <Box>
                           <Typography variant="body2">Category</Typography>
                           <Typography color="text.secondary" variant="body1">
-                            {/*{extractKeyFromIdUri(relatedObject.category?.id)}*/}
+                            {relatedObject.category?.map(el=>extractKeyFromIdUri(el.id)).join(", ")}
                           </Typography>
                         </Box>
                       </Grid>
@@ -98,6 +69,5 @@ export default function ShowRelatedRaisComponent({
           </Stack>
         </CardContent>
       </Card>
-    </Box>
   );
 }
