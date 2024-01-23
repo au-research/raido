@@ -1,4 +1,3 @@
-import {DateTimeDisplay} from "Component/Util";
 import {TextSpan} from "Component/TextSpan";
 import React, {useState} from "react";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
@@ -104,7 +103,13 @@ function AuthzResponseContainer({authzRequestId}: { authzRequestId: number }) {
         <InfoField id={"responderEmail"} label={"Responder"}
                    value={query.data.respondingUserEmail}/>
         <InfoField id={"respondedDate"} label={"Responded"}
-                   value={<DateTimeDisplay date={query.data.dateResponded}/>}/>
+                   value={
+                       Intl.DateTimeFormat("en-AU",{
+                       dateStyle: "medium",
+                       timeStyle: "short",
+                       hour12: false,
+                   }).format(query.data.dateResponded)
+        }/>
     </InfoFieldList>
 
     return (
@@ -120,7 +125,14 @@ function AuthzResponseContainer({authzRequestId}: { authzRequestId: number }) {
                                    value={query.data.idProvider}/>
                         <SubjectField id="subject" label="Subject" data={query.data}/>
                         <InfoField id="requestedDate" label="Requested"
-                                   value={<DateTimeDisplay date={query.data.dateRequested}/>}/>
+                                   value={
+                                       Intl.DateTimeFormat("en-AU",{
+                                           dateStyle: "medium",
+                                           timeStyle: "short",
+                                           hour12: false,
+                                       }).format(query.data.dateRequested)
+                                   }
+                        />
                         <InfoField id="status" label="Status" value={query.data.status}/>
                     </InfoFieldList>
                     <TextField id="reqeust-text" label="Comments / Information"

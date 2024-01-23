@@ -57,21 +57,6 @@ export function removeListener(fn: Function){
   changeListeners.splice(index, 1);
 }
 
-export function uninstallBrowserHistoryStateHandler(){
-  if( !originalFunctions ){
-    console.warn("uninstallBrowserHistoryStateHandler() called, but never installed");
-    return;
-  }
-  
-  window.removeEventListener(
-    StandardEventId.popstate, notifyListeners);
-  window.history.pushState = originalFunctions.pushStateFn;
-  window.history.replaceState = originalFunctions.replaceStateFn;
-  
-  // clear the array - https://stackoverflow.com/a/1232046/924597
-  changeListeners.length = 0;
-}
-
 /** Sets up the browser history object so that the handler will be called when 
  any code calls pushState() or replaceState() or the user takes an action that
  fires the "popstate" event.

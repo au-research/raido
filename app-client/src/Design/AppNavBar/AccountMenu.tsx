@@ -4,7 +4,6 @@ import {AccountCircle, Logout,} from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
 import {useAuth} from "Auth/AuthProvider";
 import {getIdProvider} from "Component/GetIdProvider";
-import {formatShortTime} from "Util/DateUtil";
 import {InfoField} from "Component/InfoField";
 import InfoMenuItem from "./InfoMenuItem"
 
@@ -44,11 +43,21 @@ export default function AccountMenu() {
                         />
                         <InfoField
                             label="Signed in"
-                            value={formatShortTime(session.accessTokenIssuedAt)}
+                            value={
+                                Intl.DateTimeFormat("en-AU", {
+                                    timeStyle: "short",
+                                    hour12: false,
+                                }).format(session.accessTokenIssuedAt)
+                            }
                         />
                         <InfoField
                             label="Session expiry"
-                            value={formatShortTime(session.accessTokenExpiry)}
+                            value={
+                                Intl.DateTimeFormat("en-AU", {
+                                    timeStyle: "short",
+                                    hour12: false,
+                                }).format(session.accessTokenExpiry)
+                            }
                         />
                     </div>
                 </InfoMenuItem>

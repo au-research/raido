@@ -11,7 +11,6 @@ import {TextSpan} from "Component/TextSpan";
 import {InfoField, InfoFieldList} from "Component/InfoField";
 import {getIdProvider} from "Component/GetIdProvider";
 import {getRoleForKey} from "Component/Util";
-import {formatLocalDateAsIsoShortDateTime} from "Util/DateUtil";
 import {useAuthInAnyContext} from "Auth/AuthProvider";
 
 const log = console;
@@ -184,9 +183,14 @@ function SignInDetails() {
         const {session} = auth;
         const {payload: user} = session;
         const expiry = session.accessTokenExpiry;
-        const formattedExpiry = formatLocalDateAsIsoShortDateTime(expiry);
+        const formattedExpiry = Intl.DateTimeFormat("en-AU", {
+            dateStyle: "medium",
+            timeStyle: "short",
+            hour12: false,
+        }).format(expiry)
         const isSessionExpired = expiry.getTime() <= new Date().getTime();
         const expiryFieldColor = isSessionExpired ? "red" : "inherit";
+
 
         details = <InfoFieldList>
             <InfoField id={"email"} label={"Identity"} value={user.email}/>
@@ -194,7 +198,13 @@ function SignInDetails() {
                        value={getIdProvider(user.clientId)}/>
 
             <InfoField id={"sessionSignIn"} label={"Signed in at"}
-                       value={formatLocalDateAsIsoShortDateTime(session.accessTokenIssuedAt)}/>
+                       value={
+                           Intl.DateTimeFormat("en-AU", {
+                               dateStyle: "medium",
+                               timeStyle: "short",
+                               hour12: false,
+                           }).format(session.accessTokenIssuedAt)
+                       }/>
 
             <InfoField id={"sessionExpiry"} label="Sign-in expiry"
                        value={
