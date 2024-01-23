@@ -1,13 +1,4 @@
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    ListItem,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-    Typography,
-} from "@mui/material";
+import {Card, CardContent, CardHeader, ListItem, ListItemButton, ListItemIcon, ListItemText,} from "@mui/material";
 import {History as HistoryIcon, OpenInNew as OpenInNewIcon,} from "@mui/icons-material";
 import List from "@mui/material/List";
 

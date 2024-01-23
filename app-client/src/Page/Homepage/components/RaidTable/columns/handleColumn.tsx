@@ -7,14 +7,13 @@ export const handleColumn: GridColDef = {
     headerName: "Handle",
     width: 150,
     renderCell: (params) => {
-        const formattedDate = dateDisplayFormatter(
+        return dateDisplayFormatter(
             params.row.date.endDate ? dayjs(params.row.date.endDate).format(
                 "YYYY-MM-DD"
             ) : "tba"
         )
-        return formattedDate;
     },
-    sortComparator: (v1, v2, param1, param2) => {
+    sortComparator: (v1, v2) => {
         return new Date(v1.endDate).getTime() - new Date(v2.endDate).getTime();
     },
     sortable: true

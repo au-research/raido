@@ -7,14 +7,13 @@ export const startDateColumn: GridColDef = {
     headerName: "Start Date",
     width: 100,
     renderCell: (params) => {
-        const formattedDate = dateDisplayFormatter(
+        return dateDisplayFormatter(
             params.row.date.startDate ? dayjs(params.row.date.startDate).format(
                 "YYYY-MM-DD"
             ) : "tba"
         )
-        return formattedDate;
     },
-    sortComparator: (v1, v2, param1, param2) => {
+    sortComparator: (v1, v2) => {
         return new Date(v1.startDate).getTime() - new Date(v2.startDate).getTime();
     },
     sortable: true,
