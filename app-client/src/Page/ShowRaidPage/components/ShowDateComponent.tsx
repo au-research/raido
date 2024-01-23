@@ -1,7 +1,6 @@
 import {ModelDate} from "Generated/Raidv2";
 import {Box, Card, CardContent, CardHeader, Grid, Stack, Typography} from "@mui/material";
 import {dateDisplayFormatter} from "../../../date-utils";
-import dayjs from "dayjs";
 
 export default function ShowDateComponent({date}: { date: ModelDate | undefined }) {
     return (

@@ -1,6 +1,5 @@
 import {GridColDef} from "@mui/x-data-grid";
 import {dateDisplayFormatter} from "../../../../../date-utils";
-import dayjs from "dayjs";
 
 export const endDateColumn: GridColDef = {
     field: "date.endDate",
