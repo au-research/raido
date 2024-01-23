@@ -8,11 +8,9 @@ export const titleColumn: GridColDef = {
     sortComparator: (a, b) => {
         return a[0].text.localeCompare(b[0].text);
     },
-
     renderCell: (params) => {
         return params.row.title.map((title: any, index: number) => {
             return title.text + (index < params.row.title.length - 1 ? ", " : "");
         });
-
     }
 }
