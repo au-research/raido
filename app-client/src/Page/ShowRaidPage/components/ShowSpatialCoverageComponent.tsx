@@ -11,7 +11,7 @@ export default function ShowSpatialCoverageComponent({spatialCoverage
         <CardContent>
           <Stack gap={3}>
             <Box>
-              {spatialCoverage?.length === 0 || spatialCoverage === undefined && (
+              {(spatialCoverage?.length === 0 || spatialCoverage === undefined) && (
                 <Typography
                   variant="body2"
                   color={"text.secondary"}

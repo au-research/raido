@@ -374,7 +374,7 @@ function Content() {
           )}
 
           <ShowRaidPageContent
-            defaultValues={fetchRaidQuery.data}
+            raidData={fetchRaidQuery.data}
             handle={handle}
             titleSuffix={`(Version ${currentVersion})`}
           />

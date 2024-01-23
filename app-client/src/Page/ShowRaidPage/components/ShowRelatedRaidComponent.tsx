@@ -8,11 +8,10 @@ export default function ShowRelatedRaidComponent({relatedRaid}: {
     return (
         <Card className="raid-card">
             <CardHeader title="Related RAiDs"/>
-
             <CardContent>
                 <Stack gap={3}>
                     <Box>
-                        {relatedRaid?.length === 0 || relatedRaid === undefined && (
+                        {(relatedRaid?.length === 0 || relatedRaid === undefined) && (
                             <Typography
                                 variant="body2"
                                 color={"text.secondary"}

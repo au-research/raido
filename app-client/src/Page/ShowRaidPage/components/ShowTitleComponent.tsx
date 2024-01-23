@@ -11,7 +11,7 @@ export default function ShowTitleComponent({titles}: { titles: Title[] | undefin
             <CardContent>
                 <Stack gap={3}>
                     <Box>
-                        {titles?.length === 0 && (
+                        {(titles?.length === 0 || titles === undefined) && (
                             <Typography
                                 variant="body2"
                                 color={"text.secondary"}

@@ -5,18 +5,11 @@ export default function ShowAlternateUrlComponent({alternateUrl}: { alternateUrl
   return (
     <Box>
       <Card className="raid-card">
-        <CardHeader
-          title={
-            <Typography variant="h6" component="div">
-              Alternate URLs
-            </Typography>
-          }
-        />
-
+        <CardHeader title="Alternate URLs" />
         <CardContent>
           <Stack gap={3}>
             <Box>
-              {alternateUrl?.length === 0 || alternateUrl === undefined && (
+              {(alternateUrl?.length === 0 || alternateUrl === undefined) && (
                 <Typography
                   variant="body2"
                   color={"text.secondary"}

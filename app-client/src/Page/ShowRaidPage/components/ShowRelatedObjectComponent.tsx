@@ -5,18 +5,11 @@ import {extractKeyFromIdUri} from "utils";
 export default function ShowRelatedObjectComponent({relatedObject}: { relatedObject: RelatedObject[] | undefined }) {
   return (
       <Card className="raid-card">
-        <CardHeader
-          title={
-            <Typography variant="h6" component="div">
-              Related Objects
-            </Typography>
-          }
-        />
-
+        <CardHeader title="Related Objects" />
         <CardContent>
           <Stack gap={3}>
             <Box>
-              {relatedObject?.length === 0 && (
+              {(relatedObject?.length === 0 || relatedObject === undefined) && (
                 <Typography
                   variant="body2"
                   color={"text.secondary"}

@@ -7,7 +7,6 @@ export default function ShowDescriptionComponent({description}: { description: D
     return (
         <Card className="raid-card">
             <CardHeader title="Descriptions"/>
-
             <CardContent>
                 <Stack gap={3}>
                     <Box>

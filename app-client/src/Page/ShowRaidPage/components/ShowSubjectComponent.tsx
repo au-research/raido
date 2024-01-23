@@ -24,7 +24,7 @@ export default function ShowSubjectComponent({subject,
         <CardContent>
           <Stack gap={3}>
             <Box>
-              {subject?.length === 0 || subject === undefined && (
+              {(subject?.length === 0 || subject === undefined) && (
                 <Typography
                   variant="body2"
                   color={"text.secondary"}

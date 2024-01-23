@@ -6,22 +6,15 @@ export default function ShowAlternateIdentifierComponent({alternateIdentifier}: 
 }) {
     return (
         <Card className="raid-card">
-            <CardHeader
-                title={
-                    <Typography variant="h6" component="div">
-                        Alternate Identifiers
-                    </Typography>
-                }
-            />
-
+            <CardHeader title="Alternate Identifiers" />
             <CardContent>
                 <Stack gap={3}>
                     <Box>
-                        {alternateIdentifier?.length === 0 || alternateIdentifier === undefined && (
+                        {(alternateIdentifier?.length === 0 || alternateIdentifier === undefined) && (
                             <Typography
                                 variant="body2"
-                                color={"text.secondary"}
-                                textAlign={"center"}
+                                color="text.secondary"
+                                textAlign="center"
                             >
                                 No alternate identifiers defined
                             </Typography>

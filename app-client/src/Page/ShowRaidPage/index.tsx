@@ -6,40 +6,40 @@ import ShowRaidPageContent from "./pages/ShowRaidPageContent";
 import {useParams} from "react-router-dom";
 
 
-export default function ShowRaidPage({ version }: { version?: number }) {
-  const api = useAuthApi();
+export default function ShowRaidPage({version}: { version?: number }) {
+    const api = useAuthApi();
 
     const {prefix, suffix} = useParams() as { prefix: string, suffix: string };
     const handle = `${prefix}/${suffix}`
 
-  const requestParameters: FindRaidByNameRequest = version
-    ? {
-        prefix: prefix,
-        suffix: suffix,
-        version: version,
-      }
-    : {
-        prefix: prefix,
-        suffix: suffix,
-      };
+    const requestParameters: FindRaidByNameRequest = version
+        ? {
+            prefix: prefix,
+            suffix: suffix,
+            version: version,
+        }
+        : {
+            prefix: prefix,
+            suffix: suffix,
+        };
 
-  const getRaid = async (): Promise<RaidDto> => {
-    return await api.raid.findRaidByName(requestParameters);
-  };
+    const getRaid = async (): Promise<RaidDto> => {
+        return await api.raid.findRaidByName(requestParameters);
+    };
 
-  const readQuery = useQuery<RaidDto>(["raids"], getRaid);
+    const readQuery = useQuery<RaidDto>(["raids", prefix, suffix], getRaid);
 
-  if (readQuery.isLoading) {
-    return <div>Loading...</div>;
-  }
+    if (readQuery.isLoading) {
+        return <div>Loading...</div>;
+    }
 
-  if (readQuery.isError) {
-    return <div>Error...</div>;
-  }
+    if (readQuery.isError) {
+        return <div>Error...</div>;
+    }
 
-  const raidData = readQuery.data;
+    const raidData = readQuery.data;
 
-  return (
-      <ShowRaidPageContent defaultValues={raidData} handle={handle} />
-  );
+    return (
+        <ShowRaidPageContent raidData={raidData} handle={handle}/>
+    );
 }

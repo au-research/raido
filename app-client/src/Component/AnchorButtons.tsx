@@ -2,10 +2,10 @@ import {Box, Button, Chip, Grid, useTheme} from "@mui/material";
 import {RaidDto} from "Generated/Raidv2";
 
 export default function AnchorButtons({
-  defaultValues,
+  raidData,
   errors,
 }: {
-  defaultValues?: RaidDto;
+  raidData?: RaidDto;
   errors?: any;
 }) {
   const theme = useTheme();
@@ -18,49 +18,49 @@ export default function AnchorButtons({
     {
       label: "Titles",
       anchor: "titles",
-      count: defaultValues?.title?.length,
+      count: raidData?.title?.length,
       errors: errors?.title,
     },
     {
       label: "Descriptions",
       anchor: "descriptions",
-      count: defaultValues?.description?.length,
+      count: raidData?.description?.length,
       errors: errors?.description,
     },
     {
       label: `Contributors`,
       anchor: "contributors",
-      count: defaultValues?.contributor?.length,
+      count: raidData?.contributor?.length,
       errors: errors?.contributor,
     },
     {
       label: "Organisations",
       anchor: "organisations",
-      count: defaultValues?.organisation?.length,
+      count: raidData?.organisation?.length,
       errors: errors?.organisation,
     },
     {
       label: "Related Objects",
       anchor: "related-objects",
-      count: defaultValues?.relatedObject?.length,
+      count: raidData?.relatedObject?.length,
       errors: errors?.relatedObject,
     },
     {
       label: "Alternate Identifiers",
       anchor: "alternate-identifiers",
-      count: defaultValues?.alternateIdentifier?.length,
+      count: raidData?.alternateIdentifier?.length,
       errors: errors?.alternateIdentifier,
     },
     {
       label: "Alternate URLs",
       anchor: "alternate-urls",
-      count: defaultValues?.alternateUrl?.length,
+      count: raidData?.alternateUrl?.length,
       errors: errors?.alternateUrl,
     },
     {
       label: "Related RAiDs",
       anchor: "related-raids",
-      count: defaultValues?.relatedRaid?.length,
+      count: raidData?.relatedRaid?.length,
       errors: errors?.relatedRaids,
     },
     {
@@ -71,13 +71,13 @@ export default function AnchorButtons({
     {
       label: "Subjects",
       anchor: "subjects",
-      count: defaultValues?.subject?.length,
+      count: raidData?.subject?.length,
       errors: errors?.subject,
     },
     {
       label: "Spatial Coverage",
       anchor: "spatial-coverage",
-      count: defaultValues?.spatialCoverage?.length,
+      count: raidData?.spatialCoverage?.length,
       errors: errors?.spatialCoverage,
     },
   ];

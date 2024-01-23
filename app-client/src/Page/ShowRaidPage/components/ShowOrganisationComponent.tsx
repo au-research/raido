@@ -22,18 +22,11 @@ import {extractKeyFromIdUri} from "utils";
 export default function ShowOrganisationComponent({organisation}: { organisation: Organisation[] | undefined }) {
     return (
         <Card className="raid-card">
-            <CardHeader
-                title={
-                    <Typography variant="h6" component="div">
-                        Organisations
-                    </Typography>
-                }
-            />
-
+            <CardHeader title="Organisations" />
             <CardContent>
                 <Stack gap={3}>
                     <Box>
-                        {organisation?.length === 0 && (
+                        {(organisation?.length === 0 || organisation === undefined) && (
                             <Typography
                                 variant="body2"
                                 color={"text.secondary"}
@@ -60,7 +53,7 @@ export default function ShowOrganisationComponent({organisation}: { organisation
                                             <Box>
                                                 <Typography variant="body2">Roles</Typography>
 
-                                                {organisation.role.length === 0 && (
+                                                {(organisation.role.length === 0 || organisation.role === undefined) && (
                                                     <Typography
                                                         variant="body2"
                                                         color={"text.secondary"}

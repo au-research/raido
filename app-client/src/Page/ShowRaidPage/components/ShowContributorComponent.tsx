@@ -24,14 +24,7 @@ import {extractKeyFromIdUri, extractLastUrlSegment} from "utils";
 export default function ShowContributorComponent({contributor}: { contributor: Contributor[] | undefined }) {
     return (
         <Card className="raid-card">
-            <CardHeader
-                title={
-                    <Typography variant="h6" component="div">
-                        Contributors
-                    </Typography>
-                }
-            />
-
+            <CardHeader title="Contributors" />
             <CardContent>
                 <Stack gap={3}>
                     <Box>

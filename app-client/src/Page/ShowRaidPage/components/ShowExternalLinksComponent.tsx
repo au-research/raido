@@ -20,14 +20,7 @@ export default function ShowExternalLinksComponent({
 }) {
   return (
       <Card className="raid-card">
-        <CardHeader
-          title={
-            <Typography variant="h6" component="div">
-              Links
-            </Typography>
-          }
-        />
-
+        <CardHeader title="Links" />
         <CardContent>
           <List>
             <ListItem disablePadding>

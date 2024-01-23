@@ -23,8 +23,8 @@ import ShowExternalLinksComponent from "../components/ShowExternalLinksComponent
 import JsonView from "react18-json-view";
 import {useNavigate} from "react-router";
 
-export default function ShowRaidPageContent({defaultValues, handle, titleSuffix,}: {
-    defaultValues: RaidDto;
+export default function ShowRaidPageContent({raidData, handle, titleSuffix,}: {
+    raidData: RaidDto;
     handle: string;
     titleSuffix?: string;
 }) {
@@ -75,67 +75,65 @@ export default function ShowRaidPageContent({defaultValues, handle, titleSuffix,
                         />
                     </Card>
 
-                    <AnchorButtons defaultValues={defaultValues}/>
+                    <AnchorButtons raidData={raidData}/>
 
                     <Box id="dates" className="scroll">
-                        <ShowDateComponent date={defaultValues?.date}/>
+                        <ShowDateComponent date={raidData.date}/>
                     </Box>
 
                     <Box id="titles" className="scroll">
-                        <ShowTitleComponent titles={defaultValues.title}/>
+                        <ShowTitleComponent titles={raidData.title}/>
                     </Box>
 
                     <Box id="descriptions" className="scroll">
-                        <ShowDescriptionComponent description={defaultValues.description} />
+                        <ShowDescriptionComponent description={raidData.description} />
                     </Box>
 
                     <Box id="contributors" className="scroll">
-                        <ShowContributorComponent contributor={defaultValues.contributor} />
+                        <ShowContributorComponent contributor={raidData.contributor} />
                     </Box>
 
                     <Box id="organisations" className="scroll">
-                        <ShowOrganisationComponent organisation={defaultValues.organisation} />
+                        <ShowOrganisationComponent organisation={raidData.organisation} />
                     </Box>
 
                     <Box id="related-objects" className="scroll">
-                        <ShowRelatedObjectComponent relatedObject={defaultValues.relatedObject} />
+                        <ShowRelatedObjectComponent relatedObject={raidData.relatedObject} />
                     </Box>
 
                     <Box id="alternate-identifiers" className="scroll">
-                        <ShowAlternateIdentifierComponent alternateIdentifier={defaultValues.alternateIdentifier} />
+                        <ShowAlternateIdentifierComponent alternateIdentifier={raidData.alternateIdentifier} />
                     </Box>
 
                     <Box id="alternate-urls" className="scroll">
-                        <ShowAlternateUrlComponent alternateUrl={defaultValues.alternateUrl} />
+                        <ShowAlternateUrlComponent alternateUrl={raidData.alternateUrl} />
                     </Box>
 
                     <Box id="related-raids" className="scroll">
-                        <ShowRelatedRaidComponent relatedRaid={defaultValues.relatedRaid} />
+                        <ShowRelatedRaidComponent relatedRaid={raidData.relatedRaid} />
                     </Box>
 
                     <Box id="access" className="scroll">
-                        <ShowAccessComponent access={defaultValues.access} />
+                        <ShowAccessComponent access={raidData.access} />
                     </Box>
 
                     <Box id="subjects" className="scroll">
-                        <ShowSubjectComponent subject={defaultValues.subject} />
+                        <ShowSubjectComponent subject={raidData.subject} />
                     </Box>
 
                     {/* <pre>ToDo: Traditional Knowledge Label</pre> */}
 
                     <Box id="spatial-coverage" className="scroll">
-                        <ShowSpatialCoverageComponent spatialCoverage={defaultValues.spatialCoverage} />
+                        <ShowSpatialCoverageComponent spatialCoverage={raidData.spatialCoverage} />
                     </Box>
 
                     <Box id="external-links" className="scroll">
                         <ShowExternalLinksComponent prefix={prefix} suffix={suffix}/>
                     </Box>
-
-
                         <Card className="raid-card">
                             <CardHeader title="Raw Data" />
                             <CardContent>
-                                <JsonView src={defaultValues}/>
+                                <JsonView src={raidData}/>
                             </CardContent>
                         </Card>
                 </Stack>
