@@ -4,7 +4,7 @@ import {useAuthApi} from "../../../../Api/AuthApi";
 import {RqQuery} from "../../../../Util/ReactQueryUtil";
 import {useQuery} from "@tanstack/react-query";
 import {CompactErrorPanel} from "../../../../Error/CompactErrorPanel";
-import {DataGrid, GridColDef} from "@mui/x-data-grid";
+import {DataGrid, GridColDef, GridToolbar} from "@mui/x-data-grid";
 
 import {
     Add as AddIcon,
@@ -26,9 +26,6 @@ import {
     Menu,
     MenuItem
 } from "@mui/material";
-
-import {RefreshIconButton} from "../../../../Component/RefreshIconButton";
-import SettingsMenu from "../SettingsMenu";
 import {handleColumn} from "./columns/handleColumn";
 import {titleColumn} from "./columns/titleColumn";
 import {startDateColumn} from "./columns/startDateColumn";
@@ -104,6 +101,10 @@ export default function RaidTable() {
             headerName: "",
             disableColumnMenu: true,
             width: 25,
+            disableExport: true,
+            disableReorder: true,
+            filterable: false,
+            hideable: false,
             renderCell: (params) => {
                 return (
                     <IconButton aria-label="more actions"
@@ -197,21 +198,12 @@ export default function RaidTable() {
             </Fab>
 
             <Card className="raid-card">
-                <CardHeader
-                    title="Recently minted RAiD data"
-                    action={
-                        <>
-                            <SettingsMenu raidData={raidQuery.data}/>
-                            <RefreshIconButton
-                                onClick={() => raidQuery.refetch()}
-                                refreshing={raidQuery.isLoading || raidQuery.isRefetching}
-                            />
-                        </>
-                    }
-                />
+                <CardHeader title="Recently minted RAiD data" />
                 <CardContent>
                     {raidQuery.data && (
                         <DataGrid
+                            slots={{ toolbar: GridToolbar }}
+                            slotProps={{ toolbar: { printOptions: { disableToolbarButton: true } } }}
                             rows={raidQuery.data}
                             columns={columns}
                             density="compact"

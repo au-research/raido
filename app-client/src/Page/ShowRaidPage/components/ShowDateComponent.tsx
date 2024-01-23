@@ -15,11 +15,7 @@ export default function ShowDateComponent({date}: { date: ModelDate | undefined 
                                 <Box>
                                     <Typography variant="body2">Start Date</Typography>
                                     <Typography color="text.secondary" variant="body1">
-                                        {dateDisplayFormatter(
-                                            date?.startDate ? dayjs(date?.startDate).format(
-                                                "YYYY-MM-DD"
-                                            ) : "tba"
-                                        )}
+                                        {dateDisplayFormatter(date?.startDate)}
                                     </Typography>
                                 </Box>
                             </Grid>
@@ -27,11 +23,7 @@ export default function ShowDateComponent({date}: { date: ModelDate | undefined 
                                 <Box>
                                     <Typography variant="body2">End Date</Typography>
                                     <Typography color="text.secondary" variant="body1">
-                                        {dateDisplayFormatter(
-                                            date?.endDate ? dayjs(date?.endDate).format(
-                                                "YYYY-MM-DD"
-                                            ) : "tba"
-                                        )}
+                                        {dateDisplayFormatter(date?.endDate)}
                                     </Typography>
                                 </Box>
                             </Grid>
