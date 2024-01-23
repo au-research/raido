@@ -41,6 +41,8 @@ export const dateDisplayFormatter = (input?: string) => {
     const [year, month, day] = input.split("-");
     return dayjs(`${year}-${month}-${day}`).format("DD-MMM-YYYY");
   }
+
+  return ""
 };
 
 export const dateHelperTextRequired = "YYYY or YYYY-MM or YYYY-MM-DD";
