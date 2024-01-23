@@ -26,7 +26,7 @@ import {
 import {PrimaryActionButton, SecondaryButton} from "Component/AppButton";
 import {navBrowserBack} from "Util/WindowUtil";
 import {HelpChip, HelpPopover} from "Component/HelpPopover";
-import {addDays, formatLocalDateAsIsoShortDateTime} from "Util/DateUtil";
+import {addDays} from "Util/DateUtil";
 import {RqQuery} from "Util/ReactQueryUtil";
 import {useParams, useSearchParams} from "react-router-dom";
 import {useNavigate} from "react-router";
@@ -202,7 +202,11 @@ function ApiKeyContainer({apiKeyId, servicePointId, onCreate}: {
                             <Stack direction={"row"} spacing={2} alignItems={"center"}>
                                 <TextField id="expires" label="Expire"
                                            variant="outlined" disabled
-                                           value={formatLocalDateAsIsoShortDateTime(formData.tokenCutoff)}
+                                           value={Intl.DateTimeFormat("en-AU",{
+                                                  dateStyle: "medium",
+                                                  timeStyle: "short",
+                                                    hour12: false,
+                                           }).format(formData.tokenCutoff)}
                                 />
                                 <West/>
                                 <SecondaryButton onClick={(e) => {

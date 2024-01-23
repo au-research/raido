@@ -1,4 +1,4 @@
-import {DateTimeDisplay, getRoleForKey} from "Component/Util";
+import {getRoleForKey} from "Component/Util";
 import {TextSpan} from "Component/TextSpan";
 import React from "react";
 import {useQuery} from "@tanstack/react-query";
@@ -85,7 +85,13 @@ export function ListApiKeyPage() {
                                             {getRoleForKey(row.role)}
                                         </TableCell>
                                         <TableCell>
-                                            <DateTimeDisplay date={row.tokenCutoff}/>
+                                            {
+                                                Intl.DateTimeFormat("en-AU",{
+                                                    dateStyle: "medium",
+                                                    timeStyle: "short",
+                                                    hour12: false,
+                                                }).format(row.tokenCutoff)
+                                            }
                                         </TableCell>
                                         <TableCell align="center">
                                             {row.enabled ?

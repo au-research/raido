@@ -24,7 +24,6 @@ import {navBrowserBack} from "Util/WindowUtil";
 import {useAuth} from "Auth/AuthProvider";
 import {HelpChip, HelpPopover} from "Component/HelpPopover";
 import {West} from "@mui/icons-material";
-import {formatLocalDateAsIsoShortDateTime} from "Util/DateUtil";
 import Divider from "@mui/material/Divider";
 import {InfoField, InfoFieldList} from "Component/InfoField";
 import {NewWindowLink, orcidUrl} from "Component/ExternalLink";
@@ -112,8 +111,11 @@ function AppUserContainer({appUserId}: {
                     />
                     <InfoField id="approvedOn" label="Approved on"
                                value={
-                                   formatLocalDateAsIsoShortDateTime(
-                                       query.data.authzRequest?.dateResponded) || 'Auto-approved'
+                                   Intl.DateTimeFormat("en-AU", {
+                                       dateStyle: "medium",
+                                       timeStyle: "short",
+                                       hour12: false,
+                                   }).format(query.data.authzRequest?.dateResponded) || 'Auto-approved'
                                }
                     />
                 </InfoFieldList>
@@ -147,7 +149,12 @@ function AppUserContainer({appUserId}: {
                                 <Stack direction={"row"} spacing={2} alignItems={"center"}>
                                     <TextField id="tokenCutoff" label="Sign-in cutoff"
                                                variant="outlined" disabled
-                                               value={formatLocalDateAsIsoShortDateTime(formData.tokenCutoff)}
+                                               value={Intl.DateTimeFormat("en-AU", {
+                                                   dateStyle: "medium",
+                                                   timeStyle: "short",
+                                                   hour12: false,
+                                               }).format(formData.tokenCutoff)
+                                               }
                                     />
                                     <West/>
                                     <SecondaryButton onClick={(e) => {

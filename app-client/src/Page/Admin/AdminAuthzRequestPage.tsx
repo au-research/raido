@@ -15,7 +15,6 @@ import {
     TableHead,
     TableRow
 } from "@mui/material";
-import {formatLocalDateAsIsoShortDateTime} from "Util/DateUtil";
 import {RefreshIconButton} from "Component/RefreshIconButton";
 import {RaidoLink} from "Component/RaidoLink";
 
@@ -73,7 +72,13 @@ export function AdminAuthzRequestPage() {
                                         <TableCell>{row.email}</TableCell>
                                         <TableCell>{row.idProvider}</TableCell>
                                         <TableCell>
-                                            {formatLocalDateAsIsoShortDateTime(row.dateRequested)}
+                                            {
+                                                Intl.DateTimeFormat("en-AU", {
+                                                    dateStyle: "medium",
+                                                    timeStyle: "short",
+                                                    hour12: false,
+                                                }).format(row.dateRequested)
+                                            }
                                         </TableCell>
                                         <TableCell>
                                             <RaidoLink href={`/authz-respond?authzRequestId=${row.id}`}>
