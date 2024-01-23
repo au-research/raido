@@ -1,10 +1,7 @@
-import { TextSpan } from "Component/TextSpan";
-import { List, ListItemText } from "@mui/material";
-import { safeStringify } from "Util/ObjectUtil";
+import {TextSpan} from "Component/TextSpan";
 import * as React from "react";
-import { ErrorInfo, } from "Error/ErrorUtil";
-import { isNonEmptyArrayOfString } from "Util/TypeUtil";
-import { SecondaryButton } from "Component/AppButton";
+import {ErrorInfo,} from "Error/ErrorUtil";
+import {SecondaryButton} from "Component/AppButton";
 
 const log = console;
 
@@ -23,21 +20,9 @@ export function ErrorInfoComponent(props: {
       <br/>
       <ErrorMoreDetailsExpando error={problem}/>
     </span>
-  }
-  else if( isNonEmptyArrayOfString(problem) ){
-    log.debug("problem type: string[]");
-    // don't need the error screen, there's no further detail to give
-    detailsErrorContent = <List>{problem.map((it, index) =>
-      <ListItemText key={index}>{it}</ListItemText>
-    )}</List>
-  }
-  else if( !problem ){
-    detailsErrorContent = undefined;
-  }
-  else {
-    log.debug("problem type: unknown", problem);
+  } else {
     detailsErrorContent = <TextSpan>
-      {safeStringify(problem)}
+      {JSON.stringify(problem)}
     </TextSpan>
   }
 
@@ -98,7 +83,7 @@ function ErrorStack(props: {error: Error}){
     return <pre>empty error stack</pre>;
   }
 
-  const stackString = safeStringify(stack);
+  const stackString = JSON.stringify(stack);
   if( !stackString ){
     return  <pre>couldn't stringify error</pre>;
   }

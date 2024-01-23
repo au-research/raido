@@ -1,5 +1,4 @@
 import React, {EventHandler, SyntheticEvent} from "react";
-import {stopClick} from "Util/EventUtil";
 import {IconButton, keyframes} from "@mui/material";
 import {Refresh} from "@mui/icons-material";
 
@@ -14,9 +13,10 @@ export function RefreshIconButton(props:{
   refreshing?: boolean,
   onClick?: EventHandler<SyntheticEvent>,
 }){
-  const handleOnClick = (event: SyntheticEvent)=>{
-    stopClick(event);
-    props.onClick?.(event);
+  const handleOnClick = (e: SyntheticEvent)=>{
+    e.preventDefault();
+    e.stopPropagation();
+    props.onClick?.(e);
   };
 
   let isDisabled = props.disabled;
