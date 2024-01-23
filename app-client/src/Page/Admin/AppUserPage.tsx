@@ -20,7 +20,6 @@ import {
     TextField
 } from "@mui/material";
 import {PrimaryActionButton, SecondaryButton} from "Component/AppButton";
-import {navBrowserBack} from "Util/WindowUtil";
 import {useAuth} from "Auth/AuthProvider";
 import {HelpChip, HelpPopover} from "Component/HelpPopover";
 import {West} from "@mui/icons-material";
@@ -190,7 +189,7 @@ function AppUserContainer({appUserId}: {
                             />
                         </FormControl>
                         <Stack direction={"row"} spacing={2}>
-                            <SecondaryButton onClick={navBrowserBack}
+                            <SecondaryButton onClick={()=>window.history.back()}
                                              disabled={updateRequest.isLoading}>
                                 Back
                             </SecondaryButton>

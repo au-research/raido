@@ -22,7 +22,6 @@ import {
     TextField
 } from "@mui/material";
 import {PrimaryActionButton, SecondaryButton} from "Component/AppButton";
-import {navBrowserBack} from "Util/WindowUtil";
 import {useParams} from "react-router-dom";
 import {useNavigate} from "react-router";
 
@@ -236,7 +235,7 @@ function ServicePointContainer({servicePointId, onCreate}: {
                         </FormControl>
 
                         <Stack direction={"row"} spacing={2}>
-                            <SecondaryButton onClick={navBrowserBack}
+                            <SecondaryButton onClick={()=>window.history.back()}
                                              disabled={updateRequest.isLoading}>
                                 Back
                             </SecondaryButton>

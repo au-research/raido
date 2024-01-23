@@ -1,15 +1,7 @@
 import * as React from "react";
-import {
-  Chip,
-  ChipProps,
-  IconButton,
-  Popover,
-  Typography
-} from "@mui/material";
-import {stopClick} from "Util/EventUtil";
 import {CSSProperties, ReactNode} from "react";
-import { Help } from "@mui/icons-material";
-import { TextSpan } from "Component/TextSpan";
+import {Chip, ChipProps, IconButton, Popover} from "@mui/material";
+import {Help} from "@mui/icons-material";
 
 export const helpStyle: CSSProperties = {
   padding: "1em",
@@ -27,7 +19,8 @@ export function HelpPopover({content, icon}: {
 
   return <>
     <IconButton color="inherit" onClick={(e) => {
-      stopClick(e);
+      e.preventDefault();
+      e.stopPropagation();
       setOpen(true);
       setAnchor(e.currentTarget);
     }}>

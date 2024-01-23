@@ -1,8 +1,7 @@
-import { AuthzTokenPayload, } from "Shared/ApiTypes";
+import {AuthzTokenPayload,} from "Shared/ApiTypes";
 import jwtDecode from "jwt-decode";
-import { parseJwtDate } from "Util/DateUtil";
-import { AuthorizedSession, AuthState } from "Auth/AuthProvider";
-import { clearLocation } from "Util/WindowUtil";
+import {parseJwtDate} from "Util/DateUtil";
+import {AuthorizedSession, AuthState} from "Auth/AuthProvider";
 
 const accessTokenStorageKey = "raidoAccessToken";
 
@@ -157,7 +156,7 @@ export async function signOutUser(): Promise<void>{
   before signing out.  That's not "wrong", I guess - but it was never what I 
   wanted to do.  When I've done "sign-out" I'm trying to "reset" or swap to 
   a different user - so keeping the location is never what I wanted. */
-  clearLocation(); 
+  window.location.href = "/";
 }
 
 export function isOperator(authState: AuthState){

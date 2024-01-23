@@ -1,11 +1,8 @@
 import * as React from "react"
-import {CSSProperties, useEffect} from "react"
+import {CSSProperties} from "react"
 
-import {Link, Paper} from "@mui/material";
-import {TextSpan} from "Component/TextSpan";
+import {Paper} from "@mui/material";
 import {isErrorInfo,} from "Error/ErrorUtil";
-import {useOpenErrorDialog} from "Error/ErrorDialog";
-import {isNonEmptyArrayOfString} from "Util/TypeUtil";
 
 const log = console;
 
@@ -32,13 +29,9 @@ const log = console;
 export function CompactErrorPanel({
   error,
   border = "redline",
-  errorLink = "add",
-  sendEvent = "send",
 }:{
   error?: any,
   border?: "redline" | "paper" | "h-pad",
-  errorLink?: "add"|"skip",
-  sendEvent?: "send"|"skip"
 }){
   // unwrap to shallow, stable values so useEffect() doesn't fire unexpectedly
   const {problem, message} = unwrapError(error);
@@ -50,30 +43,11 @@ export function CompactErrorPanel({
 
   log.debug("compact error panel rendered: ", message, problem);
 
-  let detailsErrorContent = <TextSpan>
-    {message}
-  </TextSpan>;
-
-  if( isNonEmptyArrayOfString(problem) ){
-    detailsErrorContent = <TextSpan>
-      {problem.map((i, index)=>
-        <React.Fragment key={index}>{i}&nbsp;</React.Fragment>
-      )}
-    </TextSpan>;
-  }
-
-  // wrap content in link
-  if( errorLink !== "skip" ){
-    detailsErrorContent = <ErrorLink problem={problem} message={message}>
-      {detailsErrorContent}
-    </ErrorLink>;
-  }
-
   let compactPanel = <span id="compactMessage">
-    {detailsErrorContent}
+    <pre>JSON.stringify(problem)</pre>
   </span>;
 
-  if( border === "redline" ){
+  if (border === "redline") {
     compactPanel = <span style={{...RedBorderStyle}}>{compactPanel}</span>
   }
   else if( border === "paper" ){
@@ -84,17 +58,6 @@ export function CompactErrorPanel({
   }
 
   return compactPanel;
-}
-
-function ErrorLink({problem, message, children}: {
-  problem: any, message: string, children: React.ReactNode,
-}){
-  const handleError = useOpenErrorDialog();
-  return <Link onClick={() =>{
-    handleError({type: "handleError", error: {problem, message}})
-  }}>
-    {children}
-  </Link>
 }
 
 function unwrapError(error?: any):{
