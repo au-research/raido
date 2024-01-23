@@ -7,7 +7,6 @@ import {getAuthSessionFromStorage, parseAccessToken, saveAccessTokenToStorage, s
 import {findSignInIdToken} from "Auth/Authn";
 import {IntroContainer} from "Auth/IntroContainer";
 import {SignInContainer} from "Auth/SignInContainer";
-import {useLocationPathname} from "Util/Hook/LocationPathname";
 import {SignInContext} from "Auth/SignInContext";
 import {NotAuthorizedContent} from "Auth/NotAuthorizedContent";
 import EnvironmentBanner from "Design/AppNavBar/EnvironmentBanner";
@@ -72,13 +71,7 @@ type ProviderState =
 /**
  * Handles both Authentication and Authorization.
  */
-export function AuthProvider({unauthenticatedPaths = [], children}: {
-                                 unauthenticatedPaths?: ((pathname: string) => boolean)[]
-                                 children: React.ReactNode,
-                             }
-) {
-    //const serverInfo = useServerInfo();
-    const {pathname} = useLocationPathname();
+export function AuthProvider({children}: { children: React.ReactNode }) {
     const [state, setState] = React.useState<ProviderState>({current: "init"});
     const stateCache = React.useRef({} as AuthState);
 
@@ -182,10 +175,6 @@ export function AuthProvider({unauthenticatedPaths = [], children}: {
         //   noinspection JSIgnoredPromiseFromCall
         checkLoginState();
     }, [checkLoginState]);
-
-    if (unauthenticatedPaths.some(it => it(pathname))) {
-        return null;
-    }
 
     window.document.title = "RAiD App";
 

@@ -21,7 +21,6 @@ import {HelpChip, HelpPopover} from "Component/HelpPopover";
 import {TextSpan} from "Component/TextSpan";
 import jwtDecode from "jwt-decode";
 import {signOutUser} from "Auth/Authz";
-import {assert} from "Util/TypeUtil";
 import {publicApi, unapprovedApi} from "Api/SimpleApi";
 import {getIdProvider} from "Component/GetIdProvider";
 import {SupportMailLink} from "Component/ExternalLink";
@@ -132,8 +131,10 @@ function AuthzRequestContainer({accessToken}: { accessToken: string }) {
 
                 <form onSubmit={async (e) => {
                     e.preventDefault();
-                    assert(institution);
-                    await submitRequest.mutate({
+                    if (!institution) {
+                        throw new Error('institution must be defined');
+                    }
+                    submitRequest.mutate({
                         updateAuthzRequest: {
                             servicePointId: institution.id,
                             comments,

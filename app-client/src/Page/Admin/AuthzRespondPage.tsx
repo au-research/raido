@@ -18,7 +18,6 @@ import {
     TextField
 } from "@mui/material";
 import {PrimaryActionButton, PrimaryButton, SecondaryButton} from "Component/AppButton";
-import {navBrowserBack} from "Util/WindowUtil";
 import {InfoField, InfoFieldList} from "Component/InfoField";
 import {SubjectField} from "./AppUserPage";
 
@@ -147,7 +146,7 @@ function AuthzResponseContainer({authzRequestId}: { authzRequestId: number }) {
                     {query.data.status === "REQUESTED" ? roleSelect : responseInfo}
 
                     <Stack direction={"row"} spacing={2}>
-                        <SecondaryButton onClick={navBrowserBack}
+                        <SecondaryButton onClick={()=>window.history.back()}
                                          disabled={updateRequest.isLoading}>
                             Back
                         </SecondaryButton>

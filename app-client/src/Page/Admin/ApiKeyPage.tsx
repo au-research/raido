@@ -24,7 +24,6 @@ import {
     Typography
 } from "@mui/material";
 import {PrimaryActionButton, SecondaryButton} from "Component/AppButton";
-import {navBrowserBack} from "Util/WindowUtil";
 import {HelpChip, HelpPopover} from "Component/HelpPopover";
 import {addDays} from "Util/DateUtil";
 import {RqQuery} from "Util/ReactQueryUtil";
@@ -244,7 +243,7 @@ function ApiKeyContainer({apiKeyId, servicePointId, onCreate}: {
                             />
                         </FormControl>
                         <Stack direction={"row"} spacing={2}>
-                            <SecondaryButton onClick={navBrowserBack}
+                            <SecondaryButton onClick={()=>window.history.back()}
                                              disabled={updateRequest.isLoading}>
                                 Back
                             </SecondaryButton>

@@ -1,7 +1,5 @@
 import React from "react";
-import {navBrowserByAssign} from "Util/WindowUtil";
 import {RaidoOAuthState} from "Shared/ApiTypes";
-import {encodeBase64} from "Util/Encoding";
 import {useSignInContext} from "Auth/SignInContext";
 import {oauthCodeGrantFlow} from "Auth/Constant";
 import {Config} from "Config";
@@ -36,7 +34,7 @@ export function SignInContainer() {
                 the browser back to whatever is in the state.redirectUri */
                 `&redirect_uri=${Config.raidoIssuer}/idpresponse` +
                 `&state=${formatStateValue(state)}`;
-            navBrowserByAssign(loginUrl);
+            window.location.assign(loginUrl);
         } catch (err) {
             signInContext.setAction(undefined);
             throw err;
@@ -58,7 +56,7 @@ export function SignInContainer() {
                 `&response_type=${oauthCodeGrantFlow}` +
                 `&redirect_uri=${Config.raidoIssuer}/idpresponse` +
                 `&state=${formatStateValue(state)}`;
-            navBrowserByAssign(loginUrl);
+            window.location.assign(loginUrl);
         } catch (err) {
             signInContext.setAction(undefined);
             throw err;
@@ -85,7 +83,7 @@ export function SignInContainer() {
                 `&response_type=${oauthCodeGrantFlow}` +
                 `&redirect_uri=${redirectUri}` +
                 `&state=${formatStateValue(state)}`;
-            navBrowserByAssign(loginUrl);
+            window.location.assign(loginUrl);
         } catch (err) {
             signInContext.setAction(undefined);
             throw err;
@@ -139,6 +137,15 @@ export function SignInContainer() {
             </CardContent>
         </Card>
     )
+}
+
+function encodeBase64(plainText: string, encodeUri = false): string{
+    let base64Encoded = btoa(plainText);
+    if( !encodeUri ){
+        return base64Encoded;
+    }
+
+    return encodeURIComponent(base64Encoded);
 }
 
 function formatStateValue(state: RaidoOAuthState): string {
