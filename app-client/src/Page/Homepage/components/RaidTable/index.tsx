@@ -36,13 +36,18 @@ import {endDateColumn} from "./columns/endDateColumn";
 import ContentCopy from '@mui/icons-material/ContentCopy';
 import copy from "clipboard-copy";
 import Divider from "@mui/material/Divider";
+import {useAuth} from "../../../../Auth/AuthProvider";
 
 
-export default function RaidTable({servicePointId}: FindAllRaidsRequest) {
+export default function RaidTable() {
     const api = useAuthApi();
+    const auth = useAuth();
+
+    const servicePointId = auth.session.payload.servicePointId
 
     const [prefix, setPrefix] = React.useState<string>("")
     const [suffix, setSuffix] = React.useState<string>("")
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleContextMenuClick = (event: React.MouseEvent<HTMLButtonElement>, rowData: RaidDto) => {
@@ -101,7 +106,8 @@ export default function RaidTable({servicePointId}: FindAllRaidsRequest) {
             width: 25,
             renderCell: (params) => {
                 return (
-                    <IconButton aria-label="more actions" onClick={(event) => handleContextMenuClick(event, params.row)}>
+                    <IconButton aria-label="more actions"
+                                onClick={(event) => handleContextMenuClick(event, params.row)}>
                         <MenuIcon/>
                     </IconButton>
                 );
@@ -222,6 +228,15 @@ export default function RaidTable({servicePointId}: FindAllRaidsRequest) {
                                 },
                             }}
                             pageSizeOptions={[10, 25, 50, 100]}
+                            sx={{// Neutralize the hover colour (causing a flash)
+                                "& .MuiDataGrid-row.Mui-hovered": {
+                                    backgroundColor: "transparent",
+                                },
+                                // Take out the hover colour
+                                "& .MuiDataGrid-row:hover": {
+                                    backgroundColor: "transparent",
+                                },
+                            }}
                         />
                     )}
                 </CardContent>
