@@ -1,39 +1,40 @@
 import {
-  AddCircleOutline as AddCircleOutlineIcon,
-  InfoOutlined as InfoOutlinedIcon,
-  RemoveCircleOutline as RemoveCircleOutlineIcon,
+    AddCircleOutline as AddCircleOutlineIcon,
+    InfoOutlined as InfoOutlinedIcon,
+    RemoveCircleOutline as RemoveCircleOutlineIcon,
 } from "@mui/icons-material";
 import {
-  Autocomplete,
-  Box,
-  Card,
-  CardContent,
-  CardHeader,
-  Grid,
-  IconButton,
-  Stack,
-  TextField,
-  Tooltip,
-  Typography,
+    Autocomplete,
+    Box,
+    Card,
+    CardContent,
+    CardHeader,
+    Grid,
+    IconButton,
+    Stack,
+    TextField,
+    Tooltip,
+    Typography,
 } from "@mui/material";
 import {RaidDto} from "Generated/Raidv2";
-import {Control, Controller, FieldErrors, useFieldArray, UseFormTrigger,} from "react-hook-form";
+import {Control, Controller, useFieldArray,} from "react-hook-form";
 import fieldData from "../../../fieldData.json";
 import language from "References/language.json";
 import languageSchema from "References/language_schema.json";
 
 import {z} from "zod";
+import {raidColors} from "../../../utils";
 
 export const spatialCoverageValidationSchema = z.array(
   z.object({
-    id: z.string().nonempty(),
-    schemaUri: z.string().nonempty(),
+    id: z.string().min(1),
+    schemaUri: z.string().min(1),
     place: z.array(
         z.object({
-              text: z.string().nonempty(),
+              text: z.string().min(1),
               language: z.object({
-                id: z.string().nonempty(),
-                schemaUri: z.string().nonempty(),
+                id: z.string().min(1),
+                schemaUri: z.string().min(1)
               }),
             }
         )
@@ -59,14 +60,8 @@ export const spatialCoverageGenerateData = () => {
 
 export default function FormSpatialCoveragesComponent({
   control,
-  errors,
-  color,
-  trigger,
 }: {
-  control: Control<RaidDto, any>;
-  errors: FieldErrors<RaidDto>;
-  color: string;
-  trigger: UseFormTrigger<RaidDto>;
+  control: Control<RaidDto>;
 }) {
   const spatialCoveragesFieldArray = useFieldArray({
     control,
@@ -82,7 +77,7 @@ export default function FormSpatialCoveragesComponent({
       variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: color,
+        borderLeftColor: raidColors.get("blue"),
         borderLeftWidth: 3,
       }}
     >

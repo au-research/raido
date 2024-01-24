@@ -29,7 +29,7 @@ export default function FormContributorsPositionsComponent({
   contributorsArrayIndex,
   errors,
 }: {
-  control: Control<RaidDto, any>;
+  control: Control<RaidDto>;
   contributorsArrayIndex: number;
   errors: FieldErrors<RaidDto>;
 }) {
@@ -39,7 +39,7 @@ export default function FormContributorsPositionsComponent({
     keyName: "formFieldGeneratedId",
   });
 
-  const handleAddPosition = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleAddPosition = () => {
     contributorPositionsArray.append({
       schemaUri: contributorPositionSchema[0].uri,
       id: contributorPosition[0].uri,
@@ -53,21 +53,21 @@ export default function FormContributorsPositionsComponent({
       control={control}
       name={`contributor.${contributorsArrayIndex}.position`}
       render={({ field: { onChange, ...controllerField } }) => {
-        const contributorTitle =
-          controllerField?.value || `Contributor ${contributorsArrayIndex + 1}`;
         return (
           <>
             <Card variant={"outlined"} sx={{ bgcolor: "transparent" }}>
               <CardHeader
                 action={
                   <Tooltip title="Add position (max. 1)" placement="right">
-                    <IconButton
-                      aria-label="Add Position"
-                      onClick={handleAddPosition}
-                      disabled={contributorPositionsArray.fields.length > 0}
-                    >
-                      <AddCircleOutlineIcon />
-                    </IconButton>
+                      <div>
+                        <IconButton
+                          aria-label="Add Position"
+                          onClick={handleAddPosition}
+                          disabled={contributorPositionsArray.fields.length > 0}
+                        >
+                          <AddCircleOutlineIcon />
+                        </IconButton>
+                      </div>
                   </Tooltip>
                 }
                 title={
@@ -233,7 +233,7 @@ export default function FormContributorsPositionsComponent({
                               <IconButton
                                 size="small"
                                 aria-label="close"
-                                onClick={(event) => {
+                                onClick={() => {
                                   contributorPositionsArray.remove(
                                     positionIndex
                                   );

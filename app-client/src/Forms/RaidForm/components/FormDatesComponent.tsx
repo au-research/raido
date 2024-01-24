@@ -1,29 +1,13 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  CardHeader,
-  Grid,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { RaidDto } from "Generated/Raidv2";
-import {
-  dateHelperText,
-  dateHelperTextRequired,
-  combinedPattern,
-} from "date-utils";
+import {Box, Card, CardContent, CardHeader, Grid, TextField, Typography,} from "@mui/material";
+import {RaidDto} from "Generated/Raidv2";
+import {combinedPattern, dateHelperText, dateHelperTextRequired,} from "date-utils";
 import dayjs from "dayjs";
-import {
-  Control,
-  Controller,
-  FieldErrors,
-  UseFormTrigger,
-} from "react-hook-form";
-import { z } from "zod";
+import {Control, Controller, FieldErrors,} from "react-hook-form";
+import {z} from "zod";
+import {raidColors} from "../../../utils";
 
 export const datesValidationSchema = z.object({
-  startDate: z.string().regex(combinedPattern).nonempty(),
+  startDate: z.string().regex(combinedPattern).min(1),
   endDate: z.string().regex(combinedPattern).optional(),
 });
 
@@ -37,20 +21,16 @@ export const datesGenerateData = () => {
 export default function FormDatesComponent({
   control,
   errors,
-  color,
-  trigger,
 }: {
-  control: Control<RaidDto, any>;
+  control: Control<RaidDto>;
   errors: FieldErrors<RaidDto>;
-  color: string;
-  trigger: UseFormTrigger<RaidDto>;
 }) {
   return (
     <Card
       variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: errors.date ? "red" : color,
+        borderLeftColor: errors.date ? "red" : raidColors.get("blue"),
         borderLeftWidth: errors.date ? 5 : 3,
       }}
     >

@@ -29,7 +29,7 @@ export default function FormOrganisationsRolesComponent({
   organisationsArrayIndex,
   errors,
 }: {
-  control: Control<RaidDto, any>;
+  control: Control<RaidDto>;
   organisationsArrayIndex: number;
   errors: FieldErrors<RaidDto>;
 }) {
@@ -39,7 +39,7 @@ export default function FormOrganisationsRolesComponent({
     keyName: "formFieldGeneratedId",
   });
 
-  const handleAddRole = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleAddRole = () => {
     organisationRolesArray.append({
       schemaUri: organisationRoleSchema[0].uri,
       id: organisationRole[0].uri,
@@ -53,9 +53,6 @@ export default function FormOrganisationsRolesComponent({
       control={control}
       name={`organisation.${organisationsArrayIndex}.role`}
       render={({ field: { onChange, ...controllerField } }) => {
-        const organisationTitle =
-          controllerField?.value ||
-          `Organisation ${organisationsArrayIndex + 1}`;
         return (
           <>
             <Card variant={"outlined"} sx={{ bgcolor: "transparent" }}>
@@ -233,7 +230,7 @@ export default function FormOrganisationsRolesComponent({
                               <IconButton
                                 size="small"
                                 aria-label="close"
-                                onClick={(event) => {
+                                onClick={() => {
                                   organisationRolesArray.remove(
                                     organisationIndex
                                   );

@@ -1,13 +1,13 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CategoryHeader } from "helper-components";
-import { extractPrefixAndSuffixFromIdentifier, raidColors } from "utils";
-import { ValidationFormSchema } from "validation";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {CategoryHeader} from "helper-components";
+import {extractPrefixAndSuffixFromIdentifier, raidColors} from "utils";
+import {ValidationFormSchema} from "validation";
 import AnchorButtons from "Component/AnchorButtons";
 
-import { Close as CloseIcon, Save as SaveIcon } from "@mui/icons-material";
-import { Box, Fab, Stack, Tooltip } from "@mui/material";
-import { RaidCreateRequest, RaidDto } from "Generated/Raidv2";
-import { FormProvider, useForm } from "react-hook-form";
+import {Close as CloseIcon, Save as SaveIcon} from "@mui/icons-material";
+import {Box, Fab, Stack, Tooltip} from "@mui/material";
+import {RaidCreateRequest, RaidDto} from "Generated/Raidv2";
+import {FormProvider, useForm} from "react-hook-form";
 
 import FormAlternateIdentifiersComponent from "./components/FormAlternateIdentifiersComponent";
 import FormAlternateUrlsComponent from "./components/FormAlternateUrlsComponent";
@@ -18,9 +18,7 @@ import FormRelatedRaidsComponent from "./components/FormRelatedRaidsComponent";
 import FormSpatialCoveragesComponent from "./components/FormSpatialCoveragesComponent";
 
 // import FormTraditionalKnowledgeIdentifiersComponent from "./components/FormTraditionalKnowledgeIdentifiersComponent";
-
 // make sure this is the last import
-
 import FormSubjectsComponent from "./components/FormSubjectsComponent";
 import FormTitlesComponent from "./components/FormTitlesComponent";
 import FormAccessComponent from "./components/FormAccessComponent";
@@ -43,7 +41,6 @@ export default function RaidForm({
   const {
     control,
     handleSubmit,
-    reset,
     trigger,
     formState: { errors },
   } = useForm<RaidDto>({
@@ -52,11 +49,6 @@ export default function RaidForm({
     mode: "onChange",
     reValidateMode: "onChange",
   });
-
-  const handleFormReset = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-    reset(defaultValues);
-  };
 
   const methods = useForm();
 
@@ -116,8 +108,6 @@ export default function RaidForm({
                 <FormDatesComponent
                   control={control}
                   errors={errors}
-                  color={raidColors.get("blue")!}
-                  trigger={trigger}
                 />
               </Box>
 
@@ -125,7 +115,6 @@ export default function RaidForm({
                 <FormTitlesComponent
                   control={control}
                   errors={errors}
-                  color={raidColors.get("blue")!}
                   trigger={trigger}
                 />
               </Box>
@@ -134,7 +123,6 @@ export default function RaidForm({
                 <FormDescriptionsComponent
                   control={control}
                   errors={errors}
-                  color={raidColors.get("blue")!}
                   trigger={trigger}
                 />
               </Box>
@@ -143,7 +131,6 @@ export default function RaidForm({
                 <FormContributorsComponent
                   control={control}
                   errors={errors}
-                  color={raidColors.get("blue")!}
                   trigger={trigger}
                 />
               </Box>
@@ -152,8 +139,6 @@ export default function RaidForm({
                 <FormOrganisationsComponent
                   control={control}
                   errors={errors}
-                  color={raidColors.get("blue")!}
-                  trigger={trigger}
                 />
               </Box>
 
@@ -161,8 +146,6 @@ export default function RaidForm({
                 <FormRelatedObjectsComponent
                   control={control}
                   errors={errors}
-                  color={raidColors.get("blue")!}
-                  trigger={trigger}
                 />
               </Box>
 
@@ -170,8 +153,6 @@ export default function RaidForm({
                 <FormAlternateIdentifiersComponent
                   control={control}
                   errors={errors}
-                  color={raidColors.get("blue")!}
-                  trigger={trigger}
                 />
               </Box>
 
@@ -179,8 +160,6 @@ export default function RaidForm({
                 <FormAlternateUrlsComponent
                   control={control}
                   errors={errors}
-                  color={raidColors.get("blue")!}
-                  trigger={trigger}
                 />
               </Box>
 
@@ -188,8 +167,6 @@ export default function RaidForm({
                 <FormRelatedRaidsComponent
                   control={control}
                   errors={errors}
-                  color={raidColors.get("blue")!}
-                  trigger={trigger}
                 />
               </Box>
 
@@ -197,8 +174,6 @@ export default function RaidForm({
                 <FormAccessComponent
                   control={control}
                   errors={errors}
-                  color={raidColors.get("blue")!}
-                  trigger={trigger}
                 />
               </Box>
 
@@ -206,8 +181,6 @@ export default function RaidForm({
                 <FormSubjectsComponent
                   control={control}
                   errors={errors}
-                  color={raidColors.get("blue")!}
-                  trigger={trigger}
                 />
               </Box>
 
@@ -223,9 +196,6 @@ export default function RaidForm({
               <Box id="spatial-coverage" className="scroll">
                 <FormSpatialCoveragesComponent
                   control={control}
-                  errors={errors}
-                  color={raidColors.get("blue")!}
-                  trigger={trigger}
                 />
               </Box>
 

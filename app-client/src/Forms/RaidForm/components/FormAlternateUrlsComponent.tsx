@@ -1,4 +1,4 @@
-import { faker } from "@faker-js/faker";
+import {faker} from "@faker-js/faker";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
@@ -8,7 +8,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Divider,
   Grid,
   IconButton,
   Stack,
@@ -16,19 +15,14 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { RaidDto } from "Generated/Raidv2";
-import {
-  Control,
-  Controller,
-  FieldErrors,
-  UseFormTrigger,
-  useFieldArray,
-} from "react-hook-form";
-import { z } from "zod";
+import {RaidDto} from "Generated/Raidv2";
+import {Control, Controller, FieldErrors, useFieldArray,} from "react-hook-form";
+import {z} from "zod";
+import {raidColors} from "../../../utils";
 
 export const alternateUrlValidationSchema = z.array(
   z.object({
-    url: z.string().url().nonempty(),
+    url: z.string().url().min(1),
   })
 );
 
@@ -41,13 +35,9 @@ export const alternateUrlGenerateData = () => {
 export default function FormAlternateUrlsComponent({
   control,
   errors,
-  color,
-  trigger,
 }: {
-  control: Control<RaidDto, any>;
+  control: Control<RaidDto>;
   errors: FieldErrors<RaidDto>;
-  color: string;
-  trigger: UseFormTrigger<RaidDto>;
 }) {
   const alternateUrlsFieldArray = useFieldArray({
     control,
@@ -63,7 +53,7 @@ export default function FormAlternateUrlsComponent({
       variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: errors.alternateUrl ? "red" : color,
+        borderLeftColor: errors.alternateUrl ? "red" : raidColors.get("blue"),
         borderLeftWidth: errors.alternateUrl ? 5 : 3,
       }}
     >

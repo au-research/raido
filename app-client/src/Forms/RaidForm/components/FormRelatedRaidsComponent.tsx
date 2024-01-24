@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
@@ -9,36 +8,29 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Divider,
   Grid,
   IconButton,
   MenuItem,
-  Paper,
   Stack,
   TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
-import { useAuthApi } from "Api/AuthApi";
-import { useAuth } from "Auth/AuthProvider";
+import {useQuery} from "@tanstack/react-query";
+import {useAuthApi} from "Api/AuthApi";
+import {useAuth} from "Auth/AuthProvider";
 import {FindAllRaidsRequest} from "Generated/Raidv2/apis/RaidApi";
-import { RqQuery } from "Util/ReactQueryUtil";
-import {
-  Control,
-  Controller,
-  FieldErrors,
-  UseFormTrigger,
-  useFieldArray,
-} from "react-hook-form";
+import {RqQuery} from "Util/ReactQueryUtil";
+import {Control, Controller, FieldErrors, useFieldArray,} from "react-hook-form";
 import relatedRaidType from "../../../References/related_raid_type.json";
 import relatedRaidTypeSchema from "../../../References/related_raid_type_schema.json";
-import { z } from "zod";
+import {z} from "zod";
 import {RaidDto} from "../../../Generated/Raidv2";
+import {raidColors} from "../../../utils";
 
 export const relatedRaidValidationSchema = z.array(
   z.object({
-    id: z.string().nonempty(),
+    id: z.string().min(1),
     type: z.object({
       id: z.string(),
       schemaUri: z.string(),
@@ -58,14 +50,10 @@ export const relatedRaidGenerateData = () => {
 
 export default function FormRelatedRaidsComponent({
   control,
-  errors,
-  color,
-  trigger,
+    errors
 }: {
-  control: Control<RaidDto, any>;
+  control: Control<RaidDto>;
   errors: FieldErrors<RaidDto>;
-  color: string;
-  trigger: UseFormTrigger<RaidDto>;
 }) {
   const api = useAuthApi();
   const {
@@ -106,8 +94,8 @@ export default function FormRelatedRaidsComponent({
       variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: color,
-        borderLeftWidth: 3,
+        borderLeftColor: errors.relatedRaid ? "red" : raidColors.get("blue"),
+        borderLeftWidth: errors.relatedRaid ? 5 : 3,
       }}
     >
       <CardHeader
@@ -191,7 +179,7 @@ export default function FormRelatedRaidsComponent({
                                 defaultValue=""
                                 rules={{ required: true }}
                                 render={({
-                                  field: { onChange, value },
+                                  field: { onChange },
                                   fieldState: { error },
                                 }) => (
                                   <Autocomplete

@@ -1,26 +1,11 @@
-import { faker } from "@faker-js/faker";
-import {
-  Autocomplete,
-  Box,
-  Card,
-  CardContent,
-  CardHeader,
-  Grid,
-  MenuItem,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers";
-import { RaidDto } from "Generated/Raidv2";
+import {faker} from "@faker-js/faker";
+import {Autocomplete, Box, Card, CardContent, CardHeader, Grid, MenuItem, TextField, Typography,} from "@mui/material";
+import {DatePicker} from "@mui/x-date-pickers";
+import {RaidDto} from "Generated/Raidv2";
 import dayjs from "dayjs";
-import {
-  Control,
-  Controller,
-  FieldErrors,
-  UseFormTrigger,
-} from "react-hook-form";
-import { extractKeyFromIdUri } from "utils";
-import { z } from "zod";
+import {Control, Controller, FieldErrors,} from "react-hook-form";
+import {extractKeyFromIdUri, raidColors} from "utils";
+import {z} from "zod";
 import accessType from "../../../References/access_type.json";
 import accessTypeSchema from "../../../References/access_type_schema.json";
 import language from "../../../References/language.json";
@@ -32,9 +17,9 @@ export const accessValidationSchema = z.object({
     schemaUri: z.literal(accessTypeSchema[0].uri),
   }),
   statement: z.object({
-    text: z.string().nonempty(),
+    text: z.string().min(1),
     language: z.object({
-      id: z.string().nonempty(),
+      id: z.string().min(1),
       schemaUri: z.literal(languageSchema[0].uri),
     }),
   }),
@@ -61,13 +46,9 @@ export const accessGenerateData = () => {
 export default function FormAccessComponent({
   control,
   errors,
-  color,
-  trigger,
 }: {
-  control: Control<RaidDto, any>;
+  control: Control<RaidDto>;
   errors: FieldErrors<RaidDto>;
-  color: string;
-  trigger: UseFormTrigger<RaidDto>;
 }) {
   return (
     <>
@@ -75,7 +56,7 @@ export default function FormAccessComponent({
         variant="outlined"
         sx={{
           borderLeft: "solid",
-          borderLeftColor: errors.access ? "red" : color,
+          borderLeftColor: errors.access ? "red" : raidColors.get("blue"),
           borderLeftWidth: errors.access ? 5 : 3,
         }}
       >
@@ -131,7 +112,6 @@ export default function FormAccessComponent({
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error },
                   }) => (
                     <Autocomplete
                       options={language}

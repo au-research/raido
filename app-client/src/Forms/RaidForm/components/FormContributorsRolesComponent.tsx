@@ -14,26 +14,19 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { RaidDto } from "Generated/Raidv2";
-import {
-  Control,
-  Controller,
-  FieldErrors,
-  useFieldArray,
-} from "react-hook-form";
+import {RaidDto} from "Generated/Raidv2";
+import {Control, Controller, useFieldArray,} from "react-hook-form";
 import contributorRole from "References/contributor_role.json";
 import contributorRoleSchema from "References/contributor_role_schema.json";
 
-import { extractLastUrlSegment } from "utils";
+import {extractLastUrlSegment} from "utils";
 
 export default function FormContributorsRolesComponent({
   control,
   contributorsArrayIndex,
-  errors,
 }: {
-  control: Control<RaidDto, any>;
+  control: Control<RaidDto>;
   contributorsArrayIndex: number;
-  errors: FieldErrors<RaidDto>;
 }) {
   const contributorRolesArray = useFieldArray({
     control,
@@ -41,7 +34,7 @@ export default function FormContributorsRolesComponent({
     keyName: "formFieldGeneratedId",
   });
 
-  const handleAddRole = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleAddRole = () => {
     contributorRolesArray.append({
       schemaUri: contributorRoleSchema[0].uri,
       id: contributorRole[Math.floor(Math.random() * contributorRole.length)].uri,
@@ -125,7 +118,7 @@ export default function FormContributorsRolesComponent({
                             <IconButton
                               size="small"
                               aria-label="close"
-                              onClick={(event) => {
+                              onClick={() => {
                                 contributorRolesArray.remove(roleIndex);
                               }}
                             >

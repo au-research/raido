@@ -30,6 +30,7 @@ import contributorRoleSchema from "References/contributor_role_schema.json";
 
 import {z} from "zod";
 import {combinedPattern} from "date-utils";
+import {raidColors} from "../../../utils";
 
 const contributorSchema = z.object({
   id: z
@@ -42,7 +43,7 @@ const contributorSchema = z.object({
       z.object({
         id: z.string(),
         schemaUri: z.literal(contributorPositionSchema[0].uri),
-        startDate: z.string().regex(combinedPattern).nonempty(),
+        startDate: z.string().regex(combinedPattern).min(1),
         endDate: z.string().regex(combinedPattern).optional().nullable(),
       })
   ).max(1),
@@ -101,7 +102,7 @@ function ContributorRootField({
     "contributor",
     "formFieldGeneratedId"
   >;
-  control: Control<RaidDto, any>;
+  control: Control<RaidDto>;
   contributorsArrayIndex: number;
   errors: FieldErrors<RaidDto>;
   trigger: UseFormTrigger<RaidDto>;
@@ -205,7 +206,6 @@ function ContributorRootField({
                   <FormContributorsRolesComponent
                     control={control}
                     contributorsArrayIndex={contributorsArrayIndex}
-                    errors={errors}
                   />
                 </Stack>
               </CardContent>
@@ -220,12 +220,10 @@ function ContributorRootField({
 export default function FormContributorsComponent({
   control,
   errors,
-  color,
   trigger,
 }: {
-  control: Control<RaidDto, any>;
+  control: Control<RaidDto>;
   errors: FieldErrors<RaidDto>;
-  color: string;
   trigger: UseFormTrigger<RaidDto>;
 }) {
   const contributorsArray = useFieldArray({
@@ -234,7 +232,7 @@ export default function FormContributorsComponent({
     keyName: "formFieldGeneratedId",
   });
 
-  const handleAddContributor = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleAddContributor = () => {
     contributorsArray.append(contributorsGenerateData());
   };
 
@@ -243,7 +241,7 @@ export default function FormContributorsComponent({
       variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: errors.contributor ? "red" : color,
+        borderLeftColor: errors.contributor ? "red" : raidColors.get("blue"),
         borderLeftWidth: errors.contributor ? 5 : 3,
       }}
     >

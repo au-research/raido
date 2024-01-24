@@ -2,7 +2,6 @@ import * as React from "react"
 import {CSSProperties} from "react"
 
 import {Paper} from "@mui/material";
-import {isErrorInfo,} from "Error/ErrorUtil";
 
 const log = console;
 
@@ -44,7 +43,7 @@ export function CompactErrorPanel({
   log.debug("compact error panel rendered: ", message, problem);
 
   let compactPanel = <span id="compactMessage">
-    <pre>JSON.stringify(problem)</pre>
+    <pre>{JSON.stringify(problem)}</pre>
   </span>;
 
   if (border === "redline") {
@@ -69,14 +68,7 @@ function unwrapError(error?: any):{
       problem: undefined,
       message: "no error",
     }
-  }
-  else if( isErrorInfo(error) ){
-    return {
-      problem: error.problem ?? "no problem",
-      message: error.message ?? "no message",
-    }
-  }
-  else {
+  } else {
     return {
       message: error.message ?? "any error",
       problem: error

@@ -1,4 +1,4 @@
-import { faker } from "@faker-js/faker";
+import {faker} from "@faker-js/faker";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
@@ -11,30 +11,22 @@ import {
   CardHeader,
   Grid,
   IconButton,
-  MenuItem,
   Stack,
   TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
-import { RaidDto } from "Generated/Raidv2";
-import {
-  Control,
-  Controller,
-  FieldErrors,
-  UseFieldArrayReturn,
-  UseFormTrigger,
-  useFieldArray,
-} from "react-hook-form";
+import {RaidDto} from "Generated/Raidv2";
+import {Control, Controller, FieldErrors, useFieldArray, UseFieldArrayReturn,} from "react-hook-form";
 
 import languageSchema from "References/language_schema.json";
 
 import subjectType from "References/subject_type.json";
 import subjectTypeSchema from "References/subject_type_schema.json";
 
-import { z } from "zod";
+import {z} from "zod";
 import FormSubjectsKeywordsComponent from "./FormSubjectsKeywordsComponent";
-import { extractLastUrlSegment } from "utils";
+import {extractLastUrlSegment, raidColors} from "utils";
 
 export const subjectsValidationSchema = z.array(
   z.object({
@@ -44,9 +36,9 @@ export const subjectsValidationSchema = z.array(
     schemaUri: z.literal(subjectTypeSchema[0].uri),
     keyword: z.array(
       z.object({
-        text: z.string().nonempty(),
+        text: z.string().min(1),
         language: z.object({
-          id: z.string().nonempty(),
+          id: z.string().min(1),
           schemaUri: z.literal(languageSchema[0].uri),
         }),
       })
@@ -89,7 +81,7 @@ function SubjectRootField({
     "subject",
     "formFieldGeneratedId"
   >;
-  control: Control<RaidDto, any>;
+  control: Control<RaidDto>;
   subjectsArrayIndex: number;
   errors: FieldErrors<RaidDto>;
 }) {
@@ -178,13 +170,9 @@ function SubjectRootField({
 export default function FormSubjectsComponent({
   control,
   errors,
-  color,
-  trigger,
 }: {
-  control: Control<RaidDto, any>;
+  control: Control<RaidDto>;
   errors: FieldErrors<RaidDto>;
-  color: string;
-  trigger: UseFormTrigger<RaidDto>;
 }) {
   const subjectsArray = useFieldArray({
     control,
@@ -192,7 +180,7 @@ export default function FormSubjectsComponent({
     keyName: "formFieldGeneratedId",
   });
 
-  const handleAddSubject = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleAddSubject = () => {
     subjectsArray.append(subjectsGenerateData());
   };
 
@@ -201,7 +189,7 @@ export default function FormSubjectsComponent({
       variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: errors.subject ? "red" : color,
+        borderLeftColor: errors.subject ? "red" : raidColors.get("blue"),
         borderLeftWidth: errors.subject ? 5 : 3,
       }}
     >

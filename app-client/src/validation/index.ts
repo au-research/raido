@@ -15,19 +15,19 @@ import {spatialCoverageValidationSchema} from "Forms/RaidForm/components/FormSpa
 export const ValidationFormSchema = z.object({
   identifier: z
     .object({
-      id: z.string().nonempty(),
+      id: z.string().min(1),
       owner: z.object({
-        id: z.string().nonempty(),
-        schemaUri: z.string().nonempty(),
+        id: z.string().min(1),
+        schemaUri: z.string().min(1),
         servicePoint: z.number().int(),
       }),
-      license: z.string().nonempty(),
+      license: z.string().min(1),
       version: z.number().int(),
-      schemaUri: z.string().nonempty(),
-      raidAgencyUrl: z.string().nonempty(),
+      schemaUri: z.string().min(1),
+      raidAgencyUrl: z.string().min(1),
       registrationAgency: z.object({
-        id: z.string().nonempty(),
-        schemaUri: z.string().nonempty(),
+        id: z.string().min(1),
+        schemaUri: z.string().min(1),
       }),
     })
     .optional(),

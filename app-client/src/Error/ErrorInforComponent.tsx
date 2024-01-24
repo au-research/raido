@@ -21,9 +21,9 @@ export function ErrorInfoComponent(props: {
       <ErrorMoreDetailsExpando error={problem}/>
     </span>
   } else {
-    detailsErrorContent = <TextSpan>
+    detailsErrorContent = <pre>
       {JSON.stringify(problem)}
-    </TextSpan>
+    </pre>
   }
 
   return <TextSpan>

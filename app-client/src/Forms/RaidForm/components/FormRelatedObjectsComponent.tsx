@@ -16,8 +16,8 @@ import {
     Typography,
 } from "@mui/material";
 import {RaidDto} from "Generated/Raidv2";
-import {Control, Controller, FieldErrors, useFieldArray, UseFormTrigger,} from "react-hook-form";
-import {extractKeyFromIdUri} from "utils";
+import {Control, Controller, FieldErrors, useFieldArray,} from "react-hook-form";
+import {extractKeyFromIdUri, raidColors} from "utils";
 import relatedObjectCategories from "../../../References/related_object_category.json";
 import relatedObjectCategoriesSchema from "../../../References/related_object_category_schema.json";
 import relatedObjectTypes from "../../../References/related_object_type.json";
@@ -26,8 +26,8 @@ import {z} from "zod";
 
 export const relatedObjectValidationSchema = z.array(
     z.object({
-        id: z.string().nonempty(),
-        schemaUri: z.string().nonempty(),
+        id: z.string().min(1),
+        schemaUri: z.string().min(1),
         type: z.object({
             id: z.string(),
             schemaUri: z.string(),
@@ -58,11 +58,9 @@ export const relatedObjectGenerateData = () => {
     };
 };
 
-export default function FormRelatedObjectsComponent({control, errors, color, trigger,}: {
-    control: Control<RaidDto, any>;
+export default function FormRelatedObjectsComponent({control, errors}: {
+    control: Control<RaidDto>;
     errors: FieldErrors<RaidDto>;
-    color: string;
-    trigger: UseFormTrigger<RaidDto>;
 }) {
     const relatedObjectsFieldArray = useFieldArray({
         control,
@@ -78,7 +76,7 @@ export default function FormRelatedObjectsComponent({control, errors, color, tri
             variant="outlined"
             sx={{
                 borderLeft: "solid",
-                borderLeftColor: errors.relatedObject ? "red" : color,
+                borderLeftColor: errors.relatedObject ? "red" : raidColors.get("blue"),
                 borderLeftWidth: errors.relatedObject ? 5 : 3,
             }}
         >

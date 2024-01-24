@@ -7,7 +7,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Divider,
   Grid,
   IconButton,
   MenuItem,
@@ -16,14 +15,8 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { RaidDto } from "Generated/Raidv2";
-import {
-  Control,
-  Controller,
-  FieldErrors,
-  UseFormTrigger,
-  useFieldArray,
-} from "react-hook-form";
+import {RaidDto} from "Generated/Raidv2";
+import {Control, Controller, useFieldArray,} from "react-hook-form";
 
 export const identifierTypes = [
   "https://localcontexts.org/labels/traditional-knowledge-labels/",
@@ -32,14 +25,10 @@ export const identifierTypes = [
 
 export default function FormTraditionalKnowledgeIdentifiersComponent({
   control,
-  errors,
   color,
-  trigger,
 }: {
-  control: Control<RaidDto, any>;
-  errors: FieldErrors<RaidDto>;
+  control: Control<RaidDto>;
   color: string;
-  trigger: UseFormTrigger<RaidDto>;
 }) {
   const tradionalKnowledgeIdentifierArray = useFieldArray({
     control,

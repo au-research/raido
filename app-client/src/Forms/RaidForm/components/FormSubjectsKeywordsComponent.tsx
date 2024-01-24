@@ -25,15 +25,13 @@ import {
 import language from "References/language.json";
 import languageSchema from "References/language_schema.json";
 
-import { dateHelperTextRequired } from "../../../date-utils";
-
 
 export default function FormSubjectsKeywordsComponent({
   control,
   subjectsArrayIndex,
   errors,
 }: {
-  control: Control<RaidDto, any>;
+  control: Control<RaidDto>;
   subjectsArrayIndex: number;
   errors: FieldErrors<RaidDto>;
 }) {
@@ -43,7 +41,7 @@ export default function FormSubjectsKeywordsComponent({
     keyName: "formFieldGeneratedId",
   });
 
-  const handleAddKeyword = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleAddKeyword = () => {
     subjectKeywordsArray.append({
       text: faker.lorem.sentence(),
       language: {
@@ -58,8 +56,6 @@ export default function FormSubjectsKeywordsComponent({
       control={control}
       name={`subject.${subjectsArrayIndex}.keyword`}
       render={({ field: { onChange, ...controllerField } }) => {
-        const subjectTitle =
-          controllerField?.value || `Subject ${subjectsArrayIndex + 1}`;
         return (
           <>
             <Card variant={"outlined"} sx={{ bgcolor: "transparent" }}>
@@ -193,7 +189,7 @@ export default function FormSubjectsKeywordsComponent({
                               <IconButton
                                 size="small"
                                 aria-label="close"
-                                onClick={(event) => {
+                                onClick={() => {
                                   subjectKeywordsArray.remove(
                                     subjectKeywordIndex
                                   );

@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import {RaidDto} from "Generated/Raidv2";
 import dayjs from "dayjs";
-import {Control, Controller, FieldErrors, useFieldArray, UseFieldArrayReturn, UseFormTrigger,} from "react-hook-form";
+import {Control, Controller, FieldErrors, useFieldArray, UseFieldArrayReturn,} from "react-hook-form";
 
 import organisationRole from "References/organisation_role.json";
 import organisationRoleSchema from "References/organisation_role_schema.json";
@@ -24,18 +24,19 @@ import organisationRoleSchema from "References/organisation_role_schema.json";
 import {combinedPattern} from "date-utils";
 import {z} from "zod";
 import FormOrganisationsRolesComponent from "./FormOrganisationsRolesComponent";
+import {raidColors} from "../../../utils";
 
 export const organisationsValidationSchema = z.array(
   z.object({
-    id: z.string().nonempty(),
-    schemaUri: z.string().nonempty(),
+    id: z.string().min(1),
+    schemaUri: z.string().min(1),
     role: z.array(
       z.object({
         id: z.enum(
           organisationRole.map((role) => role.uri) as [string, ...string[]]
         ),
         schemaUri: z.literal(organisationRoleSchema[0].uri),
-        startDate: z.string().regex(combinedPattern).nonempty(),
+        startDate: z.string().regex(combinedPattern).min(1),
         endDate: z.string().regex(combinedPattern).optional().nullable(),
       })
     ).max(1),
@@ -67,7 +68,7 @@ function OrganisationRootField({
     "organisation",
     "formFieldGeneratedId"
   >;
-  control: Control<RaidDto, any>;
+  control: Control<RaidDto>;
   organisationsArrayIndex: number;
   errors: FieldErrors<RaidDto>;
 }) {
@@ -138,13 +139,9 @@ function OrganisationRootField({
 export default function FormOrganisationsComponent({
   control,
   errors,
-  color,
-  trigger,
 }: {
-  control: Control<RaidDto, any>;
+  control: Control<RaidDto>;
   errors: FieldErrors<RaidDto>;
-  color: string;
-  trigger: UseFormTrigger<RaidDto>;
 }) {
   const organisationsArray = useFieldArray({
     control,
@@ -152,9 +149,7 @@ export default function FormOrganisationsComponent({
     keyName: "formFieldGeneratedId",
   });
 
-  const handleAddOrganisation = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleAddOrganisation = () => {
     organisationsArray.append(organisationsGenerateData());
   };
 
@@ -163,7 +158,7 @@ export default function FormOrganisationsComponent({
       variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: errors.organisation ? "red" : color,
+        borderLeftColor: errors.organisation ? "red" : raidColors.get("blue"),
         borderLeftWidth: errors.organisation ? 5 : 3,
       }}
     >

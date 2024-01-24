@@ -32,7 +32,7 @@ import {
   UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
-import { extractKeyFromIdUri } from "utils";
+import {extractKeyFromIdUri, raidColors} from "utils";
 import { z } from "zod";
 import language from "References/language.json";
 import languageSchema from "References/language_schema.json";
@@ -42,23 +42,23 @@ import titleTypeSchema from "References/title_type_schema.json";
 export const titlesValidationSchema: any = z
   .array(
     z.object({
-      text: z.string().nonempty(),
+      text: z.string().min(1),
       type: z.object({
         id: z.enum(titleType.map((type) => type.uri) as [string, ...string[]]),
         schemaUri: z.literal(titleTypeSchema[0].uri),
       }),
       language: z.object({
-        id: z.string().nonempty(),
+        id: z.string().min(1),
         schemaUri: z.literal(languageSchema[0].uri),
       }),
-      startDate: z.string().regex(combinedPattern).nonempty(),
+      startDate: z.string().regex(combinedPattern).min(1),
       endDate: z.string().regex(combinedPattern).optional(),
     })
   )
   .min(1);
 
 export const titlesGenerateData = (
-  titlesFieldArray?: UseFieldArrayReturn<RaidDto, "title", "id">
+  titlesFieldArray?: UseFieldArrayReturn<RaidDto, "title">
 ) => {
   const typeId =
     titlesFieldArray?.fields && titlesFieldArray?.fields?.length > 0
@@ -82,12 +82,10 @@ export const titlesGenerateData = (
 export default function FormTitlesComponent({
   control,
   errors,
-  color,
   trigger,
 }: {
-  control: Control<RaidDto, any>;
+  control: Control<RaidDto>;
   errors: FieldErrors<RaidDto>;
-  color: string;
   trigger: UseFormTrigger<RaidDto>;
 }) {
   const titlesFieldArray = useFieldArray({
@@ -105,7 +103,7 @@ export default function FormTitlesComponent({
       variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: errors.title ? "red" : color,
+        borderLeftColor: errors.title ? "red" : raidColors.get("blue"),
         borderLeftWidth: errors.title ? 5 : 3,
       }}
     >

@@ -1,4 +1,4 @@
-import {ModelDate} from "../../../../app-client/src/Generated/Raidv2";
+import {ModelDate} from "../../Generated/Raidv2";
 
 export default function RaidDatesComponentShared({
   dates,

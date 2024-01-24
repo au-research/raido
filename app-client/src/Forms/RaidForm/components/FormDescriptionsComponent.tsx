@@ -27,7 +27,7 @@ import {
   useFieldArray,
 } from "react-hook-form";
 
-import { extractKeyFromIdUri } from "utils";
+import {extractKeyFromIdUri, raidColors} from "utils";
 import { z } from "zod";
 import descriptionType from "../../../References/description_type.json";
 import descriptionTypeSchema from "../../../References/description_type_schema.json";
@@ -36,7 +36,7 @@ import languageSchema from "../../../References/language_schema.json";
 
 export const descriptionsValidationSchema = z.array(
   z.object({
-    text: z.string().nonempty(),
+    text: z.string().min(1),
     type: z.object({
       id: z.enum(
         descriptionType.map((type) => type.uri) as [string, ...string[]]
@@ -44,14 +44,14 @@ export const descriptionsValidationSchema = z.array(
       schemaUri: z.literal(descriptionTypeSchema[0].uri),
     }),
     language: z.object({
-      id: z.string().nonempty(),
+      id: z.string().min(1),
       schemaUri: z.literal(languageSchema[0].uri),
     }),
   })
 );
 
 export const descriptionsGenerateData = (
-  descriptionsFieldArray?: UseFieldArrayReturn<RaidDto, "description", "id">
+  descriptionsFieldArray?: UseFieldArrayReturn<RaidDto, "description">
 ) => {
   const typeId =
     descriptionsFieldArray?.fields && descriptionsFieldArray?.fields?.length > 0
@@ -73,12 +73,10 @@ export const descriptionsGenerateData = (
 export default function FormDescriptionsComponent({
   control,
   errors,
-  color,
   trigger,
 }: {
-  control: Control<RaidDto, any>;
+  control: Control<RaidDto>;
   errors: FieldErrors<RaidDto>;
-  color: string;
   trigger: UseFormTrigger<RaidDto>;
 }) {
   const descriptionsFieldArray = useFieldArray({
@@ -99,7 +97,7 @@ export default function FormDescriptionsComponent({
         variant="outlined"
         sx={{
           borderLeft: "solid",
-          borderLeftColor: errors.description ? "red" : color,
+          borderLeftColor: errors.description ? "red" : raidColors.get("blue"),
           borderLeftWidth: errors.description ? 5 : 3,
         }}
       >
@@ -226,7 +224,6 @@ export default function FormDescriptionsComponent({
                                   rules={{ required: true }}
                                   render={({
                                     field: { onChange, value },
-                                    fieldState: { error },
                                   }) => (
                                     <Autocomplete
                                       options={language}
