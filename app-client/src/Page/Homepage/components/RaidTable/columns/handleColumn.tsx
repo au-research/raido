@@ -16,7 +16,7 @@ export const handleColumn: GridColDef = {
     renderCell: ({value}) => {
         return (
             <NavLink to={`/show-raid/${value}`}>
-                <Button variant="outlined" size="small" fullWidth={true} sx={{textTransform:"none", minWidth:"85px"}}>{value}</Button>
+                <Button variant="outlined" size="small" fullWidth={true} sx={{textTransform:"none", minWidth:"150px"}}>{value}</Button>
             </NavLink>
         );
     },
