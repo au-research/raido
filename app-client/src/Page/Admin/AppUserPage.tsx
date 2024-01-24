@@ -30,19 +30,8 @@ import {getIdProvider} from "Component/GetIdProvider";
 import {isOperator} from "Auth/Authz";
 import {useParams} from "react-router-dom";
 
-const pageUrl = "/app-user";
-
-export function getAppUserPageLink(appUserId: number | undefined): string {
-    return `${pageUrl}/${appUserId}`;
-}
-
 export function AppUserPage() {
-    return <Content/>
-}
-
-function Content() {
     const {appUserId} = useParams() as { appUserId: string }
-
     return (
         <Container>
             <AppUserContainer appUserId={+appUserId}/>

@@ -4,6 +4,7 @@ import {useQuery} from "@tanstack/react-query";
 import {useAuthApi} from "Api/AuthApi";
 import {CompactErrorPanel} from "Error/CompactErrorPanel";
 import {
+    Button,
     Card,
     CardContent,
     CardHeader,
@@ -16,7 +17,7 @@ import {
     TableRow
 } from "@mui/material";
 import {RefreshIconButton} from "Component/RefreshIconButton";
-import {RaidoLink} from "Component/RaidoLink";
+import {NavLink} from "react-router-dom";
 
 
 export function AdminAuthzRequestPage() {
@@ -81,9 +82,11 @@ export function AdminAuthzRequestPage() {
                                             }
                                         </TableCell>
                                         <TableCell>
-                                            <RaidoLink href={`/authz-respond?authzRequestId=${row.id}`}>
-                                                {row.status}
-                                            </RaidoLink>
+                                            <NavLink to={`/authz-respond?authzRequestId=${row.id}`}>
+                                                <Button variant="text" sx={{textTransform:"none"}}>
+                                                    {row.status}
+                                                </Button>
+                                            </NavLink>
                                         </TableCell>
                                     </TableRow>
                                 ))}

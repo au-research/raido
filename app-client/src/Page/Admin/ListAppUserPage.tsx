@@ -4,6 +4,7 @@ import {useQuery} from "@tanstack/react-query";
 import {useAuthApi} from "Api/AuthApi";
 import {CompactErrorPanel} from "Error/CompactErrorPanel";
 import {
+    Button,
     Card,
     CardContent,
     CardHeader,
@@ -16,10 +17,8 @@ import {
     TableRow
 } from "@mui/material";
 import {RefreshIconButton} from "Component/RefreshIconButton";
-import {RaidoLink} from "Component/RaidoLink";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
-import {getAppUserPageLink} from "Page/Admin/AppUserPage";
-import {useParams} from "react-router-dom";
+import {NavLink, useParams} from "react-router-dom";
 
 export function ListAppUserPage() {
     const {servicePointId} = useParams() as { servicePointId: string };
@@ -71,9 +70,11 @@ export function ListAppUserPage() {
                                         sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                     >
                                         <TableCell>
-                                            <RaidoLink href={getAppUserPageLink(row.id)}>
-                                                {row.email}
-                                            </RaidoLink>
+                                            <NavLink to={`/app-user/${row.id}`}>
+                                                <Button variant="text" sx={{textTransform:"none"}}>
+                                                    {row.email}
+                                                </Button>
+                                            </NavLink>
                                         </TableCell>
                                         <TableCell>
                                             {row.idProvider}

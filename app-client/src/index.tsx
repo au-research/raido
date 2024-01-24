@@ -15,13 +15,14 @@ import {ServicePointPage} from "./Page/Admin/ServicePointPage";
 import {ListAppUserPage} from "./Page/Admin/ListAppUserPage";
 import {AppUserPage} from "./Page/Admin/AppUserPage";
 import {ListApiKeyPage} from "./Page/Admin/ListApiKeyPage";
-import {ApiKeyPage} from "./Page/Admin/ApiKeyPage";
 import {PrivacyPage} from "./Page/Unauth/PrivacyPage";
 import {UsageTermsPage} from "./Page/Unauth/UsageTermsPage";
 import {AboutRaidPage} from "./Page/Unauth/AboutRaidPage";
 import ShowRaidHistoryPage from "./Page/ShowRaidHistoryPage";
 import {AuthProvider} from "./Auth/AuthProvider";
 import {AuthApiProvider} from "./Api/AuthApi";
+import {CreateApiKeyPage} from "./Page/Admin/CreateApiKeyPage";
+import {EditApiKeyPage} from "./Page/Admin/EditApiKeyPage";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -71,6 +72,14 @@ const raidPageRoutes: RouteObject[] = [
     },
 ]
 
+
+// edit api key
+// api-key/1000000001?servicePointId=20000000
+
+// create api key
+// create-api-key/20000000?servicePointId=20000000
+
+
 const apiKeyRoutes: RouteObject[] = [
     {
         path: "/list-api-key/:servicePointId",
@@ -78,11 +87,11 @@ const apiKeyRoutes: RouteObject[] = [
     },
     {
         path: "/api-key/:apiKeyId",
-        element: routeWithAuthentication(<ApiKeyPage/>),
+        element: routeWithAuthentication(<EditApiKeyPage/>),
     },
     {
         path: "/create-api-key/:servicePointId",
-        element: routeWithAuthentication(<ApiKeyPage/>),
+        element: routeWithAuthentication(<CreateApiKeyPage/>),
     },
 ]
 

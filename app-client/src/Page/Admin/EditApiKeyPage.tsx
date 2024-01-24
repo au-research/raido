@@ -27,28 +27,16 @@ import {PrimaryActionButton, SecondaryButton} from "Component/AppButton";
 import {HelpChip, HelpPopover} from "Component/HelpPopover";
 import {addDays} from "Util/DateUtil";
 import {RqQuery} from "Util/ReactQueryUtil";
-import {useParams, useSearchParams} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {useNavigate} from "react-router";
+import {useAuth} from "../../Auth/AuthProvider";
 
-const viewPageUrl = "/api-key";
-const createPageUrl = "/create-api-key";
-
-export function getViewApiKeyPageLink(apiKeyId: number): string {
-    return `${viewPageUrl}/${apiKeyId}`;
-}
-
-export function getCreateApiKeyPageLink(servicePointId: number): string {
-    return `${createPageUrl}/${servicePointId}`;
-}
-
-export function ApiKeyPage() {
-    return <Content/>
-}
-
-function Content() {
+export function EditApiKeyPage() {
     const navigate = useNavigate()
-    const [searchParams] = useSearchParams();
-    const servicePointId = searchParams.get('servicePointId') || 0;
+    const auth = useAuth();
+
+    const servicePointId = auth.session.payload.servicePointId
+
     const {apiKeyId: apiKeyIdParams} = useParams() as { apiKeyId: string };
     const [apiKeyId, setApiKeyId] = useState<number>();
 
@@ -57,14 +45,13 @@ function Content() {
             setApiKeyId(+apiKeyIdParams);
         }
     }, [apiKeyIdParams])
-
     return (
         <Container>
             <ApiKeyContainer
                 apiKeyId={apiKeyId}
                 servicePointId={+servicePointId}
                 onCreate={(createdId) => {
-                    navigate(`${getViewApiKeyPageLink(createdId)}?servicePointId=${servicePointId}`, {replace: true});
+                    navigate(`/api-key/${createdId}`, {replace: true});
                     setApiKeyId(createdId);
                 }}
             />
@@ -166,7 +153,7 @@ function ApiKeyContainer({apiKeyId, servicePointId, onCreate}: {
             <CardHeader action={
                 <ApiKeyHelp/>
             }
-                        title="API Key"
+                        title="Edit API Key"
                         subheader={`Service point ${servicePointIdFormatted}`}/>
 
 

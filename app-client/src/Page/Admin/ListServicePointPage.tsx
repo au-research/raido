@@ -6,6 +6,7 @@ import {ServicePoint} from "Generated/Raidv2";
 import {useAuthApi} from "Api/AuthApi";
 import {CompactErrorPanel} from "Error/CompactErrorPanel";
 import {
+    Button,
     Card,
     CardContent,
     CardHeader,
@@ -21,6 +22,7 @@ import {RefreshIconButton} from "Component/RefreshIconButton";
 import {RaidoLink} from "Component/RaidoLink";
 import {Key, People, Visibility, VisibilityOff} from "@mui/icons-material";
 import {RaidoAddFab} from "Component/AppButton";
+import {NavLink} from "react-router-dom";
 
 
 export function ListServicePointPage() {
@@ -70,9 +72,11 @@ export function ListServicePointPage() {
                                         sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                     >
                                         <TableCell scope="row">
-                                            <RaidoLink href={`/service-point/${row.id}`}>
-                                                {row.name}
-                                            </RaidoLink>
+                                            <NavLink to={`/service-point/${row.id}`}>
+                                                <Button variant="text" sx={{textTransform:"none"}}>
+                                                    {row.name}
+                                                </Button>
+                                            </NavLink>
                                         </TableCell>
                                         <TableCell align="center">
                                             <RaidoLink href={`/list-app-user/${row.id}`}>
