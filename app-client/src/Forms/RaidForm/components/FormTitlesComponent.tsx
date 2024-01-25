@@ -38,8 +38,9 @@ import language from "References/language.json";
 import languageSchema from "References/language_schema.json";
 import titleType from "References/title_type.json";
 import titleTypeSchema from "References/title_type_schema.json";
+import {titleGenerator} from "../../../generators/title-generator";
 
-export const titlesValidationSchema: any = z
+export const titlesValidationSchema  = z
   .array(
     z.object({
       text: z.string().min(1),
@@ -57,27 +58,7 @@ export const titlesValidationSchema: any = z
   )
   .min(1);
 
-export const titlesGenerateData = (
-  titlesFieldArray?: UseFieldArrayReturn<RaidDto, "title">
-) => {
-  const typeId =
-    titlesFieldArray?.fields && titlesFieldArray?.fields?.length > 0
-      ? titleType.find((el) => el.uri.includes("alternative"))?.uri
-      : titleType.find((el) => el.uri.includes("primary"))?.uri;
-  return {
-    text: `[G] ${faker.lorem.sentence()}`,
-    type: {
-      id: typeId || "",
-      schemaUri: titleTypeSchema[0].uri,
-    },
-    language: {
-      id: "eng",
-      schemaUri: languageSchema[0].uri,
-    },
-    startDate: dayjs(new Date()).format("YYYY-MM-DD"),
-    endDate: undefined,
-  };
-};
+
 
 export default function FormTitlesComponent({
   control,
@@ -94,7 +75,7 @@ export default function FormTitlesComponent({
   });
 
   const handleAddTitle = () => {
-    titlesFieldArray.append(titlesGenerateData(titlesFieldArray));
+    titlesFieldArray.append(titleGenerator(titlesFieldArray));
     trigger("title");
   };
 

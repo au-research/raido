@@ -2,67 +2,55 @@ import {Container} from "@mui/material";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import {useAuthApi} from "Api/AuthApi";
 import RaidForm from "Forms/RaidForm";
-import {RaidDto,} from "Generated/Raidv2";
 import {raidRequest} from "../../utils";
 import {useParams} from "react-router-dom";
+import React, {useCallback, useMemo} from "react";
 
-function Content() {
+export default function EditRaidPage() {
     const api = useAuthApi();
+    const { prefix, suffix } = useParams();
+    if(!prefix || !suffix) {
+        throw new Error("prefix and suffix are required");
+    }
+    const raidQueryKey = useMemo(() => ["raids", prefix, suffix], [prefix, suffix]);
 
-    const {prefix, suffix} = useParams() as { prefix: string, suffix: string };
+    const getRaid = useCallback(async () => {
+        return await api.raid.findRaidByName({ prefix, suffix });
+    }, [api, prefix, suffix]);
 
-    const getRaid = async (): Promise<RaidDto> => {
-        return await api.raid.findRaidByName({prefix, suffix});
-    };
+    const { data, isLoading, isError } = useQuery(raidQueryKey, getRaid);
 
-    const useGetRaid = () => {
-        return useQuery<RaidDto>(["raids"], getRaid);
-    };
-
-    const readQuery = useGetRaid();
-
-    const handleRaidUpdate = async (data: RaidDto): Promise<RaidDto> => {
+    const handleRaidUpdate = useCallback(async (data:any) => {
         return await api.raid.updateRaid({
             prefix,
             suffix,
             raidUpdateRequest: raidRequest(data),
         });
-    };
+    }, [api, prefix, suffix]);
 
     const updateRequest = useMutation(handleRaidUpdate, {
         onSuccess: (updateResult) => {
             console.log("updateResult", updateResult);
-            window.location.href = `/show-raid/${prefix}/${suffix}`;
+            // use navigate from react-router-dom here
         },
         onError: (error) => {
             console.log("error", error);
+            // possibly more detailed error handling
         },
     });
 
-    if (readQuery.isLoading) {
-        return <div>Loading...</div>;
-    }
-
-    if (readQuery.isError) {
-        return <div>Error...</div>;
-    }
+    if (isLoading) return <div>Loading...</div>;
+    if (isError) return <div>Error...</div>;
 
     return (
-        <Container maxWidth="lg" sx={{py: 2}}>
+        <Container maxWidth="lg" sx={{ py: 2 }}>
             <RaidForm
-                defaultValues={readQuery.data}
-                onSubmit={async (data) => {
-                    console.log(JSON.stringify(data, null, 2));
-                    updateRequest.mutate(data);
-                }}
+                prefix={prefix}
+                suffix={suffix}
+                raidData={data}
+                onSubmit={updateRequest.mutate}
                 isSubmitting={updateRequest.isLoading}
             />
         </Container>
-    );
-}
-
-export default function EditRaidPage() {
-    return (
-        <Content/>
     );
 }
