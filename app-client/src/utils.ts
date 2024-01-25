@@ -1,20 +1,27 @@
 import {accessGenerateData} from "Forms/RaidForm/components/FormAccessComponent";
 import {contributorsGenerateData} from "Forms/RaidForm/components/FormContributorsComponent";
 
-import {datesGenerateData} from "Forms/RaidForm/components/FormDatesComponent";
-import {titlesGenerateData} from "Forms/RaidForm/components/FormTitlesComponent";
 import {
-  Access, AlternateIdentifier,
-  AlternateUrl, Contributor,
+  Access,
+  AlternateIdentifier,
+  AlternateUrl,
+  Contributor,
   Description,
   Id,
-  ModelDate, Organisation,
+  ModelDate,
+  Organisation,
   RaidCreateRequest,
-  RaidDto, RelatedObject,
-  RelatedRaid, SpatialCoverage, Subject,
-  Title, TraditionalKnowledgeLabel
+  RaidDto,
+  RelatedObject,
+  RelatedRaid,
+  SpatialCoverage,
+  Subject,
+  Title,
+  TraditionalKnowledgeLabel
 } from "Generated/Raidv2";
 import dayjs, {Dayjs} from "dayjs";
+import {titleGenerator} from "./generators/title-generator";
+import {dateGenerator} from "./generators/date-generator";
 
 export const raidRequest = (data: RaidDto) => {
   return {
@@ -107,9 +114,9 @@ export const raidColors = new Map([
 ]);
 
 export const newRaid: RaidCreateRequest = {
-  title: [titlesGenerateData()],
+  title: [titleGenerator()],
   // description: [descriptionsGenerateData()],
-  date: datesGenerateData(),
+  date: dateGenerator(),
   access: accessGenerateData(),
   // organisation: [organisationsGenerateData()],
   contributor: [contributorsGenerateData()],
