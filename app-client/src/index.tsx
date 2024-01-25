@@ -28,7 +28,7 @@ const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 
-const routeWithAuthentication = (el:ReactNode) =>{
+const routeWithAuthentication = (el: ReactNode) => {
     return (
         <AuthProvider>
             <AuthApiProvider>
@@ -71,14 +71,6 @@ const raidPageRoutes: RouteObject[] = [
         element: routeWithAuthentication(<EditRaidPage/>),
     },
 ]
-
-
-// edit api key
-// api-key/1000000001?servicePointId=20000000
-
-// create api key
-// create-api-key/20000000?servicePointId=20000000
-
 
 const apiKeyRoutes: RouteObject[] = [
     {
@@ -123,6 +115,10 @@ const otherRoutes: RouteObject[] = [
         element: routeWithAuthentication(<HomePage/>),
     },
     {
+        path: "/",
+        element: routeWithAuthentication(<HomePage/>),
+    },
+    {
         path: "/privacy",
         element: <PrivacyPage/>
     },
@@ -146,10 +142,9 @@ const router = createBrowserRouter([
 ]);
 
 root.render(
-    // strict mode is annoying because of the double-render
-    //<React.StrictMode>
-    <RouterProvider router={router}/>
-    //</React.StrictMode>
+    <React.StrictMode>
+        <RouterProvider router={router}/>
+    </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
