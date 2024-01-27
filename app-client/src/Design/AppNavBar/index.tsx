@@ -18,7 +18,7 @@ export default function AppNavBar() {
     return (
         <AuthProvider>
             <AuthApiProvider>
-                <AppBar position="fixed">
+                <AppBar position="fixed" sx={{background:"rgb(52, 58, 64)"}}>
                     <Toolbar variant={"dense"}>
                         <IconButton
                             color="inherit"

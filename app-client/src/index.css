@@ -2,10 +2,6 @@
   --raido-blue-dark: #5594d8;
 }
 
-
-
-
-
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -13,6 +9,13 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #fafafa !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #1b1b1b !important;
+  }
 }
 
 code {

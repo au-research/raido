@@ -23,13 +23,13 @@ import dayjs, {Dayjs} from "dayjs";
 import {titleGenerator} from "./generators/title-generator";
 import {dateGenerator} from "./generators/date-generator";
 
-export const raidRequest = (data: RaidDto) => {
+export const raidRequest = (data: RaidDto): RaidDto => {
   return {
     identifier: data?.identifier || ({} as Id),
     description: data?.description || ([] as Description[]),
     title: data?.title || ([] as Title[]),
     access: data?.access || ({} as Access),
-    alternateUrl: data?.alternateUrl || ({} as AlternateUrl[]),
+    alternateUrl: data?.alternateUrl || ([] as AlternateUrl[]),
     relatedRaid: data?.relatedRaid || ([] as RelatedRaid[]),
     date: data?.date || ({} as ModelDate),
     contributor: data?.contributor || ([] as Contributor[]),
@@ -44,25 +44,6 @@ export const raidRequest = (data: RaidDto) => {
         ([] as TraditionalKnowledgeLabel[])
   }
 }
-
-export const extractPrefixAndSuffixFromIdentifier = (
-  identifier: string,
-): { prefix: string; suffix: string } => {
-  const pattern = /\/([^/]+)\/([^/]+)$/;
-  const matches = identifier.match(pattern);
-
-  if (matches && matches.length === 3) {
-    return {
-      prefix: matches[1],
-      suffix: matches[2],
-    };
-  }
-
-  return {
-    prefix: "",
-    suffix: "",
-  };
-};
 
 export const extractKeyFromIdUri = (inputUri: string = ""): string => {
   let result = "";
@@ -85,8 +66,6 @@ export const extractLastUrlSegment = (inputUri: string = ""): string => {
   }
   return result;
 };
-
-// Expected output: "formal-analysis"
 
 /**
  * Calculates the date that is three years from the given input date.
@@ -122,11 +101,7 @@ export const newRaid: RaidCreateRequest = {
   contributor: [contributorsGenerateData()],
   // subject: [subjectsGenerateData()],
   // relatedRaid: [],
-  // alternateUrl: [
-  //   alternateUrlGenerateData(),
-  //   alternateUrlGenerateData(),
-  //   alternateUrlGenerateData(),
-  // ],
+  alternateUrl: [],
   // spatialCoverage: [spatialCoverageGenerateData()],
   // relatedObject: [
   //   relatedObjectGenerateData(),

@@ -5,7 +5,7 @@ import {Button} from "@mui/material";
 export const handleColumn: GridColDef = {
     field: "identifier",
     headerName: "Handle",
-    width: 175,
+    width: 160,
     valueGetter: ({value}) => {
         const url = Array.isArray(value) ? value[0].id : value.id
         const urlSplit = url.substring(1).split("/");

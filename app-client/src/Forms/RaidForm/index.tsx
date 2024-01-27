@@ -24,16 +24,20 @@ import FormContributorsComponent from "./components/FormContributorsComponent";
 import FormDescriptionsComponent from "./components/FormDescriptionsComponent";
 import FormOrganisationsComponent from "./components/FormOrganisationsComponent";
 import FormRelatedObjectsComponent from "./components/FormRelatedObjectsComponent";
+import {useEffect, useState} from "react";
 
 type FormProps = {
     raidData: RaidCreateRequest;
     onSubmit(data: RaidDto): void;
     isSubmitting: boolean;
+    onDirty: (isDirty: boolean) => void;
     prefix?: string;
     suffix?: string;
 };
 
-export default function RaidForm({raidData, onSubmit, isSubmitting, prefix, suffix}: FormProps) {
+export default function RaidForm({raidData, onSubmit, onDirty, isSubmitting, prefix, suffix}: FormProps) {
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
+
 
     const formMethods = useForm<RaidDto>({
         defaultValues: raidData,
@@ -41,6 +45,22 @@ export default function RaidForm({raidData, onSubmit, isSubmitting, prefix, suff
         mode: "onChange",
         reValidateMode: "onChange",
     });
+
+    useEffect(() => {
+        // Skip the first render (initial load)
+        if (isInitialLoad) {
+            setIsInitialLoad(false);
+            return;
+        }
+
+        if(formMethods.formState.isDirty) {
+            console.log("formMethods.formState.dirtyFields", JSON.stringify(formMethods.formState.dirtyFields))
+        }
+
+
+        // Call onDirty function when isDirty changes after the initial load
+        onDirty(formMethods.formState.isDirty);
+    }, [formMethods.formState.isDirty, onDirty, isInitialLoad]);
 
 
     const {control, trigger} = formMethods
@@ -166,15 +186,6 @@ export default function RaidForm({raidData, onSubmit, isSubmitting, prefix, suff
                                 errors={errors}
                             />
                         </Box>
-
-                        {/* <Box id="traditional-knowledge-identifiers" className="scroll">
-                <FormTraditionalKnowledgeIdentifiersComponent
-                  control={control}
-                  errors={errors}
-                  color={raidColors.get("blue")!}
-                  trigger={trigger}
-                />
-              </Box> */}
 
                         <Box id="spatial-coverage" className="scroll">
                             <FormSpatialCoveragesComponent

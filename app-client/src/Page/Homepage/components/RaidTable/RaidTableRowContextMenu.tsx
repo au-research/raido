@@ -1,7 +1,7 @@
 import {RaidDto} from "../../../../Generated/Raidv2";
 import React from "react";
 
-import {Edit as EditIcon, Menu as MenuIcon, OpenInNew as OpenInNewIcon} from "@mui/icons-material"
+import {Edit as EditIcon, Menu as MenuIcon, OpenInNew as OpenInNewIcon, Visibility as VisibilityIcon} from "@mui/icons-material"
 
 import {IconButton, ListItemIcon, ListItemText, Menu, MenuItem} from "@mui/material";
 import ContentCopy from '@mui/icons-material/ContentCopy';
@@ -64,7 +64,7 @@ export default function RaidTableRowContextMenu({row}: { row: any }) {
                 }}>
 
                     <ListItemIcon>
-                        <MenuIcon fontSize="small"/>
+                        <VisibilityIcon fontSize="small"/>
                     </ListItemIcon>
                     <ListItemText>Show RAiD</ListItemText>
 

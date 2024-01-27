@@ -96,12 +96,12 @@ export function SignInContainer() {
                 action={
                     <Tooltip title={
                         <>
-                            <Typography sx={{mb: 2}}>
+                            <Typography variant="body2" gutterBottom>
                                 You can sign in either directly with your personal Google
                                 or ORCID account,
                                 or via the AAF if your organisation has an agreement.
                             </Typography>
-                            <Typography>
+                            <Typography variant="body2">
                                 Once you've signed in and authenticated yourself, you will be able to
                                 submit a request for a specific institution to authorize your usage of
                                 the RAiD app with their data.
@@ -114,7 +114,8 @@ export function SignInContainer() {
 
                     </Tooltip>
                 }
-                title="Sign-in"
+                title="RAiD Sign-in"
+                subheader="Please select your preferred sign-in method"
             />
             <CardContent>
                 <Grid container direction="row" spacing={2} justifyContent="center" alignItems="center">

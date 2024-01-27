@@ -1,5 +1,4 @@
 import React, {ReactNode, useCallback, useContext, useEffect} from "react";
-import {SmallPageSpinner} from "Component/SmallPageSpinner";
 import {ErrorInfoComponent} from "Error/ErrorInforComponent";
 import {ErrorInfo} from "Error/ErrorUtil";
 import {AuthzTokenPayload} from "Shared/ApiTypes";
@@ -9,8 +8,8 @@ import {IntroContainer} from "Auth/IntroContainer";
 import {SignInContainer} from "Auth/SignInContainer";
 import {SignInContext} from "Auth/SignInContext";
 import {NotAuthorizedContent} from "Auth/NotAuthorizedContent";
-import EnvironmentBanner from "Design/AppNavBar/EnvironmentBanner";
-import {Container, Stack} from "@mui/material";
+import {Container, LinearProgress, Stack} from "@mui/material";
+import Typography from "@mui/material/Typography";
 
 export interface AuthState {
     signOut: () => void,
@@ -179,7 +178,14 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
     window.document.title = "RAiD App";
 
     if (state.current === "init" || state.current === "authenticating") {
-        return <SmallPageSpinner message={"Signing in"}/>
+        return (
+            <Container maxWidth="sm">
+                <Typography paragraph>
+                    Signing in
+                </Typography>
+                <LinearProgress variant="indeterminate" />
+            </Container>
+        )
     }
 
     //if( state.current === "authorizing" ){
@@ -187,7 +193,14 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
     //}
 
     if (state.current === "signing-out") {
-        return <SmallPageSpinner message={"Signing out"}/>
+        return (
+            <Container maxWidth="sm">
+                <Typography paragraph>
+                    Signing out
+                </Typography>
+                <LinearProgress variant="indeterminate" />
+            </Container>
+        )
     }
 
     if (state.current === "error") {
@@ -230,8 +243,7 @@ function NotSignedInContent({onSignInSucceeded}: {
         undefined as string | undefined);
 
     return (
-        <Stack gap={3} sx={{mt: 3}}>
-            <EnvironmentBanner/>
+        <Stack gap={3}>
             <IntroContainer/>
             <Container maxWidth="sm">
 

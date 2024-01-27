@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
@@ -17,23 +16,11 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { RaidDto } from "Generated/Raidv2";
-import {
-  dateHelperText,
-  dateHelperTextRequired,
-  combinedPattern,
-} from "date-utils";
-import dayjs from "dayjs";
-import {
-  Control,
-  Controller,
-  FieldErrors,
-  UseFieldArrayReturn,
-  UseFormTrigger,
-  useFieldArray,
-} from "react-hook-form";
+import {RaidDto} from "Generated/Raidv2";
+import {combinedPattern, dateHelperText, dateHelperTextRequired,} from "date-utils";
+import {Control, Controller, FieldErrors, useFieldArray, UseFormTrigger,} from "react-hook-form";
 import {extractKeyFromIdUri, raidColors} from "utils";
-import { z } from "zod";
+import {z} from "zod";
 import language from "References/language.json";
 import languageSchema from "References/language_schema.json";
 import titleType from "References/title_type.json";
@@ -127,15 +114,7 @@ export default function FormTitlesComponent({
           </Box>
           {titlesFieldArray.fields.map((field, index) => {
             return (
-              <Box
-                sx={{
-                  bgcolor: "rgba(0, 0, 0, 0.02)",
-                  p: 2,
-                  borderRadius: 2,
-                }}
-                key={field.id}
-                className="animated-tile animated-tile-reverse"
-              >
+              <Box className="raid-card-well" key={field.id}>
                 <Controller
                   control={control}
                   name={`title.${index}`}

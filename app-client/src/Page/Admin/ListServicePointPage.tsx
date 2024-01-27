@@ -19,7 +19,6 @@ import {
     TableRow
 } from "@mui/material";
 import {RefreshIconButton} from "Component/RefreshIconButton";
-import {RaidoLink} from "Component/RaidoLink";
 import {Key, People, Visibility, VisibilityOff} from "@mui/icons-material";
 import {RaidoAddFab} from "Component/AppButton";
 import {NavLink} from "react-router-dom";
@@ -79,14 +78,14 @@ export function ListServicePointPage() {
                                             </NavLink>
                                         </TableCell>
                                         <TableCell align="center">
-                                            <RaidoLink href={`/list-app-user/${row.id}`}>
+                                            <NavLink to={`/list-app-user/${row.id}`}>
                                                 <People/>
-                                            </RaidoLink>
+                                            </NavLink>
                                         </TableCell>
                                         <TableCell align="center">
-                                            <RaidoLink href={`/list-api-key/${row.id}`}>
+                                            <NavLink to={`/list-api-key/${row.id}`}>
                                                 <Key/>
-                                            </RaidoLink>
+                                            </NavLink>
                                         </TableCell>
                                         <TableCell align="center">
                                             {row.enabled ?

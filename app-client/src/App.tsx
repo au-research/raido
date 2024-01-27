@@ -2,9 +2,9 @@ import {Box, createTheme, CssBaseline, ThemeProvider, useMediaQuery} from "@mui/
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import AppNavBar from "Design/AppNavBar"
+import AppNavBarUnauthenticated from "Design/AppNavBarUnauthenticated"
 import {ErrorDialogProvider} from "Error/ErrorDialog";
 import {ReactErrorBoundary} from "Error/ReactErrorBoundary";
-import "./App.css";
 import {Outlet} from "react-router-dom";
 import React from "react";
 
@@ -28,7 +28,8 @@ export function App() {
             <ReactErrorBoundary>
                 <ErrorDialogProvider>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <AppNavBar/>
+                        {/*TODO: Add proper solution once auth is refactored*/}
+                        {localStorage.getItem("raidoAccessToken") ? <AppNavBar/> : <AppNavBarUnauthenticated />}
                         <Box sx={{pt: 7}}></Box>
                         <Outlet/>
                     </LocalizationProvider>

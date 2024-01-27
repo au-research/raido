@@ -38,6 +38,7 @@ function Content() {
         <Container maxWidth="lg" sx={{py: 2}}>
             <RaidForm
                 raidData={newRaid}
+                onDirty={()=>true}
                 onSubmit={async (data) => {
                     mintRequest.mutate(data);
                 }}
