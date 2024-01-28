@@ -60,7 +60,7 @@ export default function RaidForm({raidData, onSubmit, onDirty, isSubmitting, pre
 
         // Call onDirty function when isDirty changes after the initial load
         onDirty(formMethods.formState.isDirty);
-    }, [formMethods.formState.isDirty, onDirty, isInitialLoad]);
+    }, [formMethods.formState.isDirty,formMethods.formState.dirtyFields , onDirty, isInitialLoad]);
 
 
     const {control, trigger} = formMethods

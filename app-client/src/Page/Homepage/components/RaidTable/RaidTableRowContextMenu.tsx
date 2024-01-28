@@ -8,7 +8,7 @@ import ContentCopy from '@mui/icons-material/ContentCopy';
 import copy from "clipboard-copy";
 import Divider from "@mui/material/Divider";
 
-export default function RaidTableRowContextMenu({row}: { row: any }) {
+export default function RaidTableRowContextMenu({row}: { row: RaidDto }) {
     const [prefix, setPrefix] = React.useState<string>("")
     const [suffix, setSuffix] = React.useState<string>("")
 

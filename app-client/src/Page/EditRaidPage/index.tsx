@@ -9,11 +9,11 @@ import {useNavigate} from "react-router";
 
 export default function EditRaidPage() {
     const navigate = useNavigate()
-    // const [isDirty, setIsDirty] = React.useState(false);
-    //
-    // const handleDirty = (isDirty: boolean) => {
-    //     setIsDirty(isDirty);
-    // };
+    const [isDirty, setIsDirty] = React.useState(false);
+
+    const handleDirty = (isDirty: boolean) => {
+        setIsDirty(isDirty);
+    };
 
     const api = useAuthApi();
     const {prefix, suffix} = useParams();
