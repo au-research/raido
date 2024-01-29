@@ -173,11 +173,13 @@ public class AdminExperimental implements AdminExperimentalApi {
             GenerateApiTokenRequest req
     ) {
         var invokingUser = AuthzUtil.getApiToken();
-        AppUserRecord apiKey = db.
-                fetchSingle(APP_USER, APP_USER.ID.eq(req.getApiKeyId()));
-        AuthzUtil.guardOperatorOrAssociatedSpAdmin(invokingUser, apiKey.getServicePointId());
 
-        String apiToken = appUserSvc.generateApiToken(apiKey);
+        //TODO: get team here
+        AppUserRecord user = db.fetchSingle(APP_USER, APP_USER.ID.eq(req.getApiKeyId()));
+        AuthzUtil.guardOperatorOrAssociatedSpAdmin(invokingUser, user.getServicePointId());
+
+
+        String apiToken = appUserSvc.generateApiToken(user);
 
         return ResponseEntity.ok(new GenerateApiTokenResponse().
                 apiKeyId(req.getApiKeyId()).

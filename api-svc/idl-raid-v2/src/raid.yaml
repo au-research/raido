@@ -45,6 +45,14 @@ paths:
           schema:
             type: integer
             format: int64
+        - name: includeFields
+          description: The top level fields to include in each RAiD in the response body. Excludes all other fields.
+          example: identifier,title,date
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         200:
           description: success

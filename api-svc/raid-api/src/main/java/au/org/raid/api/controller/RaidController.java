@@ -17,6 +17,8 @@ import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -89,12 +91,18 @@ public class RaidController implements RaidApi {
     }
 
     @Override
-    public ResponseEntity<List<RaidDto>> findAllRaids(final Long servicePoint) {
+    public ResponseEntity<List<RaidDto>> findAllRaids(final Long servicePoint, final List<String> includeFields) {
         var user = getApiToken();
 
-        return ResponseEntity.ok(Optional.ofNullable(servicePoint)
+        final var raids = Optional.ofNullable(servicePoint)
                 .map(raidIngestService::findAllByServicePointId)
-                .orElse(raidIngestService.findAllByServicePointIdOrNotConfidential(user)));
+                .orElse(raidIngestService.findAllByServicePointIdOrNotConfidential(user));
+
+        if (includeFields != null && !includeFields.isEmpty()) {
+            return ResponseEntity.ok(filterFields(raids, includeFields));
+        }
+
+        return ResponseEntity.ok(raids);
     }
 
     @Override
@@ -134,4 +142,33 @@ public class RaidController implements RaidApi {
 
         return ResponseEntity.ok(raidHistoryService.findAllChangesByHandle(handle));
     }
+
+    private List<RaidDto> filterFields(final List<RaidDto> raids, final List<String> includeFields) {
+        final var filteredList = new ArrayList<RaidDto>();
+
+        for (final var raid : raids) {
+            filteredList.add(filterRaid(raid, includeFields));
+        }
+
+        return filteredList;
+    }
+
+    @SneakyThrows
+    private RaidDto filterRaid(final RaidDto raidDto, final List<String> includeFields) {
+        final var filtered = new RaidDto();
+
+        for (final var fieldName : includeFields) {
+            final var getter = "get%s".formatted(StringUtils.capitalize(fieldName));
+            final var setter = "set%s".formatted(StringUtils.capitalize(fieldName));
+
+            final var method = raidDto.getClass().getMethod(getter);
+
+            final var value = method.invoke(raidDto);
+
+            filtered.getClass().getMethod(setter, method.getReturnType()).invoke(filtered, method.getReturnType().cast(value));
+        }
+
+        return filtered;
+    }
 }
+

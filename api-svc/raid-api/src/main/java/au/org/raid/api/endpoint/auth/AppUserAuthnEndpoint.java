@@ -145,11 +145,11 @@ public class AppUserAuthnEndpoint {
             // valid: authenticated via an IdP but not authorized/approved as a user
             res.sendRedirect("%s#id_token=%s".formatted(
                     state.redirectUri,
-                    userAuthzSvc.sign(UnapprovedUserApiToken.UnapprovedUserApiTokenBuilder.anUnapprovedUserApiToken().
-                            withSubject(idProviderJwt.getSubject()).
-                            withClientId(state.clientId).
-                            withEmail(email).
-                            build()
+                    userAuthzSvc.sign(UnapprovedUserApiToken.UnapprovedUserApiTokenBuilder.anUnapprovedUserApiToken()
+                            .withSubject(idProviderJwt.getSubject())
+                            .withClientId(state.clientId)
+                            .withEmail(email)
+                            .build()
                     )
             ));
             return;

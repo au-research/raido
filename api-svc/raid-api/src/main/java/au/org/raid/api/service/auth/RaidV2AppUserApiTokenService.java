@@ -136,10 +136,8 @@ public class RaidV2AppUserApiTokenService {
                     build());
         }
 
-        Long appUserId = verifiedJwt.
-                getClaim(RaidoClaim.APP_USER_ID.getId()).asLong();
-        Long servicePointId = verifiedJwt.getClaim(
-                RaidoClaim.SERVICE_POINT_ID.getId()).asLong();
+        Long appUserId = verifiedJwt.getClaim(RaidoClaim.APP_USER_ID.getId()).asLong();
+        Long servicePointId = verifiedJwt.getClaim(RaidoClaim.SERVICE_POINT_ID.getId()).asLong();
         String role = verifiedJwt.getClaim(RaidoClaim.ROLE.getId()).asString();
         Guard.notNull(appUserId);
         Guard.hasValue(role);

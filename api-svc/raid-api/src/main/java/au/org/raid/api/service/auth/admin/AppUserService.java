@@ -195,35 +195,34 @@ public class AppUserService {
     }
 
     public String generateApiToken(
-            AppUserRecord apiKey
+            AppUserRecord user
     ) {
-        if (apiKey.getIdProvider() != RAIDO_API) {
+        if (user.getIdProvider() != RAIDO_API) {
             var iae = iae(NO_APP_USER_WITH_API_KEY_ENDPOINT);
-            log.with("appUserIdProvider", apiKey.getIdProvider()).
+            log.with("appUserIdProvider", user.getIdProvider()).
                     error(iae.getMessage());
             throw iae;
         }
 
-        if (!apiKey.getEnabled()) {
+        if (!user.getEnabled()) {
             var iae = iae(CANT_GENERATE_DISABLED_KEY);
-            log.with("appUserIdProvider", apiKey.getIdProvider()).
+            log.with("appUserIdProvider", user.getIdProvider()).
                     error(iae.getMessage());
             throw iae;
         }
 
 
-        var apiToken = apiAuthSvc.sign(
+        return apiAuthSvc.sign(
                 anApiToken().
-                        withAppUserId(apiKey.getId()).
-                        withServicePointId(apiKey.getServicePointId()).
-                        withSubject(apiKey.getSubject()).
-                        withClientId(apiKey.getClientId()).
-                        withEmail(apiKey.getEmail()).
-                        withRole(apiKey.getRole().getLiteral()).
+                        withAppUserId(user.getId()).
+                        withServicePointId(user.getServicePointId()).
+                        withSubject(user.getSubject()).
+                        withClientId(user.getClientId()).
+                        withEmail(user.getEmail()).
+                        withRole(user.getRole().getLiteral()).
                         build(),
-                local2Instant(apiKey.getTokenCutoff())
+                local2Instant(user.getTokenCutoff())
         );
-        return apiToken;
     }
 
 }
