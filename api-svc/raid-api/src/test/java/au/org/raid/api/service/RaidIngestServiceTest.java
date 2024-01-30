@@ -59,6 +59,8 @@ class RaidIngestServiceTest {
     private IdService idService;
     @Mock
     private DateFactory dateFactory;
+    @Mock
+    private CacheableRaidService cacheableRaidService;
     @InjectMocks
     private RaidIngestService raidIngestService;
 
@@ -115,8 +117,7 @@ class RaidIngestServiceTest {
                 .setEndDate(END_DATE);
 
         when(raidRepository.findAllByServicePointIdOrNotConfidential(servicePointId)).thenReturn(List.of(raidRecord));
-
-        mockBuild(raidRecord);
+        when(cacheableRaidService.build(raidRecord)).thenReturn(RAID_DTO);
 
         final var result = raidIngestService.findAllByServicePointIdOrNotConfidential(apiToken);
 
@@ -134,8 +135,7 @@ class RaidIngestServiceTest {
                 .setEndDate(END_DATE);
 
         when(raidRepository.findAllByServicePointId(servicePointId)).thenReturn(List.of(raidRecord));
-
-        mockBuild(raidRecord);
+        when(cacheableRaidService.build(raidRecord)).thenReturn(RAID_DTO);
 
         final var result = raidIngestService.findAllByServicePointId(servicePointId);
 
@@ -151,7 +151,7 @@ class RaidIngestServiceTest {
                 .setEndDate(END_DATE);
 
         when(raidRepository.findByHandle(HANDLE)).thenReturn(Optional.of(raidRecord));
-        mockBuild(raidRecord);
+        when(cacheableRaidService.build(raidRecord)).thenReturn(RAID_DTO);
 
         assertThat(raidIngestService.findByHandle(HANDLE), is(Optional.of(RAID_DTO)));
     }

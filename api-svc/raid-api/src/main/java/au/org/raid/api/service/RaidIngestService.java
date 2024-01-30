@@ -1,12 +1,10 @@
 package au.org.raid.api.service;
 
 import au.org.raid.api.exception.ResourceNotFoundException;
-import au.org.raid.api.factory.DateFactory;
 import au.org.raid.api.factory.HandleFactory;
 import au.org.raid.api.factory.RaidRecordFactory;
 import au.org.raid.api.repository.RaidRepository;
 import au.org.raid.api.spring.security.raidv2.ApiToken;
-import au.org.raid.db.jooq.tables.records.RaidRecord;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,8 +34,7 @@ public class RaidIngestService {
     private final AccessService accessService;
     private final LanguageService languageService;
     private final HandleFactory handleFactory;
-    private final IdService idService;
-    private final DateFactory dateFactory;
+    private final CacheableRaidService cacheableRaidService;
     public void create(final RaidDto raid) {
         final var handle = handleFactory.create(raid.getIdentifier().getId()).toString();
 
@@ -83,7 +80,7 @@ public class RaidIngestService {
         final var records = raidRepository.findAllByServicePointIdOrNotConfidential(servicePointId);
 
         for (final var record : records) {
-            raids.add(build(record));
+            raids.add(cacheableRaidService.build(record));
         }
 
         return raids;
@@ -94,48 +91,15 @@ public class RaidIngestService {
         final var records = raidRepository.findAllByServicePointId(servicePointId);
 
         for (final var record : records) {
-            raids.add(build(record));
+            raids.add(cacheableRaidService.build(record));
         }
 
         return raids;
     }
 
-
-    private RaidDto build(final RaidRecord record) {
-        final var handle = record.getHandle();
-
-        final var titles = titleService.findAllByHandle(handle);
-        final var descriptions = descriptionService.findAllByHandle(handle);
-        final var contributors = contributorService.findAllByHandle(handle);
-        final var organisations = organisationService.findAllByHandle(handle);
-        final var relatedObjects = relatedObjectService.findAllByHandle(handle);
-        final var alternateIdentifiers = alternateIdentifierService.findAllByHandle(handle);
-        final var alternateUrls = alternateUrlService.findAllByHandle(handle);
-        final var relatedRaids = relatedRaidService.findAllByHandle(handle);
-        final var subjects = subjectService.findAllByHandle(handle);
-        final var traditionalKnowledgeLabels = traditionalKnowledgeLabelService.findAllByHandle(handle);
-        final var spatialCoverages = spatialCoverageService.findAllByHandle(handle);
-
-        return new RaidDto()
-                .identifier(idService.getId(record))
-                .date(dateFactory.create(record.getStartDateString(), record.getEndDate()))
-                .title(titles.isEmpty() ? null : titles)
-                .description(descriptions.isEmpty() ? null : descriptions)
-                .contributor(contributors.isEmpty() ? null : contributors)
-                .organisation(organisations.isEmpty() ? null: organisations)
-                .relatedObject(relatedObjects.isEmpty() ? null : relatedObjects)
-                .alternateIdentifier(alternateIdentifiers.isEmpty() ? null : alternateIdentifiers)
-                .alternateUrl(alternateUrls.isEmpty() ? null : alternateUrls)
-                .relatedRaid(relatedRaids.isEmpty() ? null : relatedRaids)
-                .access(accessService.getAccess(record))
-                .subject(subjects.isEmpty() ? null : subjects)
-                .traditionalKnowledgeLabel(traditionalKnowledgeLabels.isEmpty() ? null : traditionalKnowledgeLabels)
-                .spatialCoverage(spatialCoverages.isEmpty() ? null : spatialCoverages);
-    }
-
     public Optional<RaidDto> findByHandle(final String handle) {
         return raidRepository.findByHandle(handle)
-                .map(this::build)
+                .map(cacheableRaidService::build)
                 .or(Optional::empty);
     }
 

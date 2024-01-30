@@ -35,6 +35,7 @@ dependencyResolutionManagement{
       library('spring-boot-starter-oauth2-resource-server', 'org.springframework.boot', 'spring-boot-starter-oauth2-resource-server').versionRef('springboot3')
       library('spring-boot-starter-jooq', 'org.springframework.boot', 'spring-boot-starter-jooq').versionRef('springboot3')
       library('spring-boot-starter-actuator', 'org.springframework.boot', 'spring-boot-starter-actuator').versionRef('springboot3')
+      library('spring-boot-starter-cache', 'org.springframework.boot', 'spring-boot-starter-cache').versionRef('springboot3')
 
       bundle('springboot3', [
               'spring-boot-starter-web',
@@ -42,6 +43,7 @@ dependencyResolutionManagement{
               'spring-boot-starter-oauth2-resource-server',
               'spring-boot-starter-jooq',
               'spring-boot-starter-actuator',
+              'spring-boot-starter-cache'
       ])
 
       library('spring-boot-starter-test', 'org.springframework.boot', 'spring-boot-starter-test').versionRef('springboot3')

@@ -159,12 +159,6 @@ testing{
         implementation( 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.4')
         implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3"
 
-//        implementation 'com.auth0:java-jwt:4.0.0'
-
-//        implementation 'io.micrometer:micrometer-core:1.10.6'
-//        implementation 'io.micrometer:micrometer-registry-jmx:1.10.6'
-//        implementation "com.zaxxer:HikariCP:5.0.0"
-
         compileOnly 'org.projectlombok:lombok:1.18.28'
         annotationProcessor 'org.projectlombok:lombok:1.18.28'
 

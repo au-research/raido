@@ -150,7 +150,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
         final var api = testClient.raidApi(uqAdminToken);
 
         try {
-            final var raidList = api.findAllRaids(null).getBody();
+            final var raidList = api.findAllRaids(null, null).getBody();
 
             assert raidList != null;
 
