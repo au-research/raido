@@ -23,6 +23,9 @@ import {AuthProvider} from "./Auth/AuthProvider";
 import {AuthApiProvider} from "./Api/AuthApi";
 import {CreateApiKeyPage} from "./Page/Admin/CreateApiKeyPage";
 import {EditApiKeyPage} from "./Page/Admin/EditApiKeyPage";
+import AppNavBar from "./Design/AppNavBar";
+import {Box} from "@mui/material";
+import AppNavBarUnauthenticated from "./Design/AppNavBarUnauthenticated";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -32,6 +35,8 @@ const routeWithAuthentication = (el: ReactNode) => {
     return (
         <AuthProvider>
             <AuthApiProvider>
+                <AppNavBar/>
+                <Box sx={{pt: 7}}></Box>
                 {el}
             </AuthApiProvider>
         </AuthProvider>
@@ -120,15 +125,30 @@ const otherRoutes: RouteObject[] = [
     },
     {
         path: "/privacy",
-        element: <PrivacyPage/>
+        element: (
+            <>
+                <AppNavBarUnauthenticated/>
+                <PrivacyPage/>
+            </>
+        )
     },
     {
         path: "/terms",
-        element: <UsageTermsPage/>
+        element: (
+                <>
+                    <AppNavBarUnauthenticated/>
+                    <UsageTermsPage/>
+                </>
+        )
     },
     {
         path: "/about-raid",
-        element: <AboutRaidPage/>
+        element: (
+            <>
+                <AppNavBarUnauthenticated/>
+                <AboutRaidPage/>
+            </>
+        )
     },
 ]
 
