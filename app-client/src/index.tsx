@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import {App} from "./App";
-import {createBrowserRouter, RouteObject, RouterProvider} from "react-router-dom";
+import {createBrowserRouter, Navigate, RouteObject, RouterProvider} from "react-router-dom";
 import HomePage from "./Page/Homepage";
 import MintRaidPage from "./Page/MintRaidPage";
 import ShowRaidPage from "./Page/ShowRaidPage";
@@ -116,7 +116,7 @@ const otherRoutes: RouteObject[] = [
     },
     {
         path: "/",
-        element: routeWithAuthentication(<HomePage/>),
+        element: <Navigate to="/home"/>,
     },
     {
         path: "/privacy",
@@ -142,9 +142,9 @@ const router = createBrowserRouter([
 ]);
 
 root.render(
-    <React.StrictMode>
+    // <React.StrictMode>
         <RouterProvider router={router}/>
-    </React.StrictMode>
+    // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
