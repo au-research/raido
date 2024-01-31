@@ -21,7 +21,7 @@ import {Control, Controller, FieldErrors, useFieldArray, UseFieldArrayReturn,} f
 import organisationRole from "References/organisation_role.json";
 import organisationRoleSchema from "References/organisation_role_schema.json";
 
-import {combinedPattern} from "date-utils";
+import {combinedPattern} from "../../../Util/DateUtil";
 import {z} from "zod";
 import FormOrganisationsRolesComponent from "./FormOrganisationsRolesComponent";
 import {raidColors} from "../../../utils";

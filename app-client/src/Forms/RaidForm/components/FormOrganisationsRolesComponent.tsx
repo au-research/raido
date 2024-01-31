@@ -22,7 +22,8 @@ import {Control, Controller, FieldErrors, useFieldArray,} from "react-hook-form"
 import organisationRoleSchema from "References/organisation_role_schema.json";
 import {extractKeyFromIdUri} from "utils";
 
-import {dateHelperTextRequired} from "../../../date-utils";
+import {dateHelperTextRequired} from "../../../Util/DateUtil";
+
 
 export default function FormOrganisationsRolesComponent({
   control,

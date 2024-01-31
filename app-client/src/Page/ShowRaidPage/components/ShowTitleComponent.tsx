@@ -1,6 +1,6 @@
 import {Box, Card, CardContent, CardHeader, Grid, Stack, Typography,} from "@mui/material";
 import {type Title} from "Generated/Raidv2";
-import {dateDisplayFormatter} from "date-utils";
+import {dateDisplayFormatter} from "../../../Util/DateUtil";
 import {extractKeyFromIdUri} from "utils";
 import language from "../../../References/language.json";
 

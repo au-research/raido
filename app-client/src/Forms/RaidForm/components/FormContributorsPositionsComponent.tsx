@@ -21,8 +21,7 @@ import contributorPosition from "References/contributor_position.json";
 import contributorPositionSchema from "References/contributor_position_schema.json";
 import {extractKeyFromIdUri} from "utils";
 
-
-import {dateHelperTextRequired} from "../../../date-utils";
+import {dateHelperTextRequired} from "../../../Util/DateUtil";
 
 export default function FormContributorsPositionsComponent({
   control,

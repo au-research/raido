@@ -16,7 +16,7 @@ import {
     Typography,
 } from "@mui/material";
 import {Organisation} from "Generated/Raidv2";
-import {dateDisplayFormatter} from "date-utils";
+import {dateDisplayFormatter} from "../../../Util/DateUtil";
 import {extractKeyFromIdUri} from "utils";
 
 export default function ShowOrganisationComponent({organisation}: { organisation: Organisation[] | undefined }) {

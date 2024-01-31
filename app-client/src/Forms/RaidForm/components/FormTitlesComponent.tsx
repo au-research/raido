@@ -17,7 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 import {RaidDto} from "Generated/Raidv2";
-import {combinedPattern, dateHelperText, dateHelperTextRequired,} from "date-utils";
+import {combinedPattern, dateHelperText, dateHelperTextRequired,} from "../../../Util/DateUtil";
 import {Control, Controller, FieldErrors, useFieldArray, UseFormTrigger,} from "react-hook-form";
 import {extractKeyFromIdUri, raidColors} from "utils";
 import {z} from "zod";

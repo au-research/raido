@@ -1,6 +1,6 @@
 import {Box, Card, CardContent, CardHeader, Grid, Stack, Typography,} from "@mui/material";
 import {Access} from "Generated/Raidv2";
-import {dateDisplayFormatter} from "date-utils";
+import {dateDisplayFormatter} from "../../../Util/DateUtil";
 import dayjs from "dayjs";
 import {extractKeyFromIdUri} from "utils";
 import language from "../../../References/language.json";

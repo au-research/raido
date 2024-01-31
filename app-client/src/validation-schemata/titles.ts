@@ -2,7 +2,8 @@ import {z} from "zod";
 import titleType from "../References/title_type.json";
 import titleTypeSchema from "../References/title_type_schema.json";
 import languageSchema from "../References/language_schema.json";
-import {combinedPattern} from "../date-utils";
+
+import {combinedPattern} from "../Util/DateUtil";
 
 const nonEmptyString = z.string().min(1);
 const regexString = z.string().regex(combinedPattern).min(1);

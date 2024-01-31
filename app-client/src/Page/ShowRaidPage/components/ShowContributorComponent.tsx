@@ -18,7 +18,7 @@ import {
     Typography,
 } from "@mui/material";
 import {Contributor} from "Generated/Raidv2";
-import {dateDisplayFormatter} from "date-utils";
+import {dateDisplayFormatter} from "../../../Util/DateUtil";
 import {extractKeyFromIdUri, extractLastUrlSegment} from "utils";
 
 export default function ShowContributorComponent({contributor}: { contributor: Contributor[] | undefined }) {

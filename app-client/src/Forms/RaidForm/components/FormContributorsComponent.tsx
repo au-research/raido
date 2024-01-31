@@ -29,7 +29,7 @@ import contributorRole from "References/contributor_role.json";
 import contributorRoleSchema from "References/contributor_role_schema.json";
 
 import {z} from "zod";
-import {combinedPattern} from "date-utils";
+import {combinedPattern} from "../../../Util/DateUtil";
 import {raidColors} from "../../../utils";
 
 const contributorSchema = z.object({
