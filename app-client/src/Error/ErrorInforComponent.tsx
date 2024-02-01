@@ -1,99 +1,101 @@
-import {TextSpan} from "Component/TextSpan";
+import { Typography } from "@mui/material";
+import { SecondaryButton } from "Component/AppButton";
+import { ErrorInfo } from "Error/ErrorUtil";
 import * as React from "react";
-import {ErrorInfo,} from "Error/ErrorUtil";
-import {SecondaryButton} from "Component/AppButton";
 
 const log = console;
 
-export function ErrorInfoComponent(props: {
-  error: ErrorInfo;
-}){
+export function ErrorInfoComponent(props: { error: ErrorInfo }) {
   // explicitly calling out that it's "any" to remind that you can't just
   // dump the object into the HTML, need to at least stringify.
   let problem: any = props.error.problem;
 
   let detailsErrorContent;
-  if( problem instanceof Error ){
+  if (problem instanceof Error) {
     log.debug("problem type: Error");
-    detailsErrorContent = <span>
-      <TextSpan>{problem.name} - {problem.message}</TextSpan>
-      <br/>
-      <ErrorMoreDetailsExpando error={problem}/>
-    </span>
+    detailsErrorContent = (
+      <span>
+        <Typography>
+          {problem.name} - {problem.message}
+        </Typography>
+        <br />
+        <ErrorMoreDetailsExpando error={problem} />
+      </span>
+    );
   } else {
-    detailsErrorContent = <pre>
-      {JSON.stringify(problem)}
-    </pre>
+    detailsErrorContent = <pre>{JSON.stringify(problem)}</pre>;
   }
 
-  return <TextSpan>
-    <TextSpan>{props.error.message}</TextSpan>
-    <br/>
-    {detailsErrorContent}
-  </TextSpan>;
+  return (
+    <Typography>
+      <span>{props.error.message}</span>
+      <br />
+      {detailsErrorContent}
+    </Typography>
+  );
 }
 
-function ErrorMoreDetailsExpando(props:{error: Error}){
+function ErrorMoreDetailsExpando(props: { error: Error }) {
   const [showMore, setShowMore] = React.useState(false);
 
-  if( !props.error ){
-    return <div><pre>empty error</pre></div>
+  if (!props.error) {
+    return (
+      <div>
+        <pre>empty error</pre>
+      </div>
+    );
   }
 
-  return <div>
-    <SecondaryButton size="small" onClick={()=> setShowMore(!showMore)}>
-      More
-    </SecondaryButton>
-    { showMore &&
+  return (
     <div>
-      <ErrorMessage error={props.error}/>
-      <ErrorStack error={props.error}/>
+      <SecondaryButton size="small" onClick={() => setShowMore(!showMore)}>
+        More
+      </SecondaryButton>
+      {showMore && (
+        <div>
+          <ErrorMessage error={props.error} />
+          <ErrorStack error={props.error} />
+        </div>
+      )}
     </div>
-    }
-  </div>
+  );
 }
 
-function ErrorMessage(props:{error: Error}){
-  if( !props.error ){
+function ErrorMessage(props: { error: Error }) {
+  if (!props.error) {
     return null;
   }
 
-  // if( props.error instanceof InvalidJsonError ){
-  //   return <TextSpan>
-  //     <pre>{props.error.validationError.message}</pre>
-  //     <pre>{props.error.validationError.code}</pre>
-  //     <pre>{props.error.validationError.dataPath}</pre>
-  //     <pre>{props.error.validationError.schemaPath}</pre>
-  //   </TextSpan>;
-  // }
-
-  return <TextSpan>
-    <pre>{props.error.message}</pre>
-  </TextSpan>;
+  return (
+    <Typography>
+      <pre>{props.error.message}</pre>
+    </Typography>
+  );
 }
 
-function ErrorStack(props: {error: Error}){
-  if( !props.error ){
+function ErrorStack(props: { error: Error }) {
+  if (!props.error) {
     return null;
   }
 
   const stack = getErrorStack(props.error);
 
-  if( !stack ){
+  if (!stack) {
     return <pre>empty error stack</pre>;
   }
 
   const stackString = JSON.stringify(stack);
-  if( !stackString ){
-    return  <pre>couldn't stringify error</pre>;
+  if (!stackString) {
+    return <pre>couldn't stringify error</pre>;
   }
 
   return (
-    <pre>{
-      stackString.replace(new RegExp(/\\n/, 'g'), "\n").
+    <pre>
+      {stackString
+        .replace(new RegExp(/\\n/, "g"), "\n")
         // weird format from TV4
-        replace(new RegExp(/@https/, 'g'), "\n@https")
-    }</pre>
+        .replace(new RegExp(/@https/, "g"), "\n@https")}
+    </pre>
   );
 }
 

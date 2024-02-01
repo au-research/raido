@@ -1,5 +1,5 @@
-import React, { ReactNode } from "react";
-import { TextSpan } from "Component/TextSpan";
+import { Typography } from "@mui/material";
+import { ReactNode } from "react";
 
 /**
  Initial used mui <TextField/> for this, set to non-editable.  But it had a few
@@ -16,47 +16,61 @@ import { TextSpan } from "Component/TextSpan";
  Maybe re-think the whole approach, but I dunno what a better "info display"
  widget would look like.  
  */
-export function InfoField(
-  {id, label, value}:{
-    id?: string,
-    label: string,
-    value: string | ReactNode | undefined,
-  }
-){
-  return <fieldset style={{
-    borderRadius: ".5em", borderWidth: "1px", 
-    // default is groove, doesn't work well with a 1px border
-    borderStyle:"solid", 
-    borderColor: "lightgrey",
-    /* margin and padding are just about keeping the field "tight", this might
+export function InfoField({
+  id,
+  label,
+  value,
+}: {
+  id?: string;
+  label: string;
+  value: string | ReactNode | undefined;
+}) {
+  return (
+    <fieldset
+      style={{
+        borderRadius: ".5em",
+        borderWidth: "1px",
+        // default is groove, doesn't work well with a 1px border
+        borderStyle: "solid",
+        borderColor: "lightgrey",
+        /* margin and padding are just about keeping the field "tight", this might
     be my developer bias kicking in - this "tightness" might actually be 
     hurting readability. */
-    margin: ".2em", 
-    padding: "0 .35em 0 .5em", // trbl
-  }}>
-    <legend style={{
-      // I just think it looks nice, no reason.
-      fontSize: ".8em",
-      /* when the label is longer than the content, this makes the label be 
+        margin: ".2em",
+        padding: "0 .35em 0 .5em", // trbl
+      }}
+    >
+      <legend
+        style={{
+          // I just think it looks nice, no reason.
+          fontSize: ".8em",
+          /* when the label is longer than the content, this makes the label be 
       just a little bit more one the left side, which looks nicer to me. */
-      marginRight: ".5em"
-    }}>{label}</legend>
-    <TextSpan id={id}>{value || ''}</TextSpan>
-  </fieldset>
+          marginRight: ".5em",
+        }}
+      >
+        {label}
+      </legend>
+      <Typography id={id}>{value || ""}</Typography>
+    </fieldset>
+  );
 }
-
 
 /**
  "List" does seem like the best model of what we're actually trying to do: 
  present a list of info fields.
  */
-export function InfoFieldList({children}:{children: ReactNode}){
-  return <div style={{
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    alignContent: "space-between",
-  }}>
-    {children}
-  </div>
+export function InfoFieldList({ children }: { children: ReactNode }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        justifyContent: "space-between",
+        alignContent: "space-between",
+      }}
+    >
+      {children}
+    </div>
+  );
 }
