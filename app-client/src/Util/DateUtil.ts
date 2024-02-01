@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export function parseJwtDate(
   date: string | number | undefined
 ): Date | undefined {
@@ -12,8 +14,6 @@ export function addDays(d: Date | undefined, days: number): Date {
   date.setDate(date.getDate() + days);
   return date;
 }
-
-import dayjs from "dayjs";
 
 export const combinedPattern =
   /^(?:\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|02-(?:0[1-9]|1\d|2[0-8]))|\d{4}-(?:0[1-9]|1[0-2])|\d{4})?$/;
