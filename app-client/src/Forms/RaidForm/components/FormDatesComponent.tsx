@@ -1,22 +1,26 @@
-import {Box, Card, CardContent, CardHeader, Grid, TextField, Typography,} from "@mui/material";
-import {RaidDto} from "Generated/Raidv2";
-import {combinedPattern, dateHelperText, dateHelperTextRequired,} from "../../../Util/DateUtil";
-import dayjs from "dayjs";
-import {Control, Controller, FieldErrors,} from "react-hook-form";
-import {z} from "zod";
-import {raidColors} from "../../../utils";
+import {
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { RaidDto } from "Generated/Raidv2";
+import { Control, Controller, FieldErrors } from "react-hook-form";
+import { z } from "zod";
+import {
+  combinedPattern,
+  dateHelperText,
+  dateHelperTextRequired,
+} from "../../../Util/DateUtil";
+import { raidColors } from "../../../utils";
 
 export const datesValidationSchema = z.object({
   startDate: z.string().regex(combinedPattern).min(1),
   endDate: z.string().regex(combinedPattern).optional(),
 });
-
-export const datesGenerateData = () => {
-  return {
-    startDate: dayjs(new Date()).format("YYYY-MM-DD"),
-    endDate: undefined,
-  };
-};
 
 export default function FormDatesComponent({
   control,
@@ -67,8 +71,8 @@ export default function FormDatesComponent({
                       !errors?.date?.startDate
                         ? dateHelperTextRequired
                         : !!errors?.date?.startDate
-                        ? errors?.date?.startDate?.message
-                        : null
+                          ? errors?.date?.startDate?.message
+                          : null
                     }
                   />
                 )}
@@ -91,8 +95,8 @@ export default function FormDatesComponent({
                       !errors?.date?.endDate
                         ? dateHelperText
                         : !!errors?.date?.endDate
-                        ? errors?.date?.endDate?.message
-                        : null
+                          ? errors?.date?.endDate?.message
+                          : null
                     }
                   />
                 )}

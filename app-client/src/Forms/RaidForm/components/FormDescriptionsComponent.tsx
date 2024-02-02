@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
@@ -15,60 +14,21 @@ import {
   Stack,
   TextField,
   Tooltip,
-  Typography
+  Typography,
 } from "@mui/material";
 import { RaidDto } from "Generated/Raidv2";
 import {
   Control,
   Controller,
   FieldErrors,
-  UseFieldArrayReturn,
   UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
 
-import {extractKeyFromIdUri, raidColors} from "utils";
-import { z } from "zod";
+import { descriptionGenerator } from "entities/description/description-generator";
+import { extractKeyFromIdUri, raidColors } from "utils";
 import descriptionType from "../../../References/description_type.json";
-import descriptionTypeSchema from "../../../References/description_type_schema.json";
 import language from "../../../References/language.json";
-import languageSchema from "../../../References/language_schema.json";
-
-export const descriptionsValidationSchema = z.array(
-  z.object({
-    text: z.string().min(1),
-    type: z.object({
-      id: z.enum(
-        descriptionType.map((type) => type.uri) as [string, ...string[]]
-      ),
-      schemaUri: z.literal(descriptionTypeSchema[0].uri),
-    }),
-    language: z.object({
-      id: z.string().min(1),
-      schemaUri: z.literal(languageSchema[0].uri),
-    }),
-  })
-);
-
-export const descriptionsGenerateData = (
-  descriptionsFieldArray?: UseFieldArrayReturn<RaidDto, "description">
-) => {
-  const typeId =
-    descriptionsFieldArray?.fields && descriptionsFieldArray?.fields?.length > 0
-      ? descriptionType.find((el) => el.uri.includes("alternative"))?.uri
-      : descriptionType.find((el) => el.uri.includes("primary"))?.uri;
-  return {
-    text: `[G] ${faker.lorem.sentence()}`,
-    type: {
-      id: typeId || "",
-      schemaUri: descriptionTypeSchema[0].uri,
-    },
-    language: {
-      id: "eng",
-      schemaUri: languageSchema[0].uri,
-    },
-  };
-};
 
 export default function FormDescriptionsComponent({
   control,
@@ -85,9 +45,7 @@ export default function FormDescriptionsComponent({
   });
 
   const handleAddDescription = () => {
-    descriptionsFieldArray.append(
-      descriptionsGenerateData(descriptionsFieldArray)
-    );
+    descriptionsFieldArray.append(descriptionGenerator(descriptionsFieldArray));
     trigger("description");
   };
 
@@ -102,11 +60,7 @@ export default function FormDescriptionsComponent({
         }}
       >
         <CardHeader
-          title={
-            <Typography variant="h6" component="div">
-              Descriptions
-            </Typography>
-          }
+          title="Descriptions"
           action={
             <Tooltip title="Add Description" placement="right">
               <IconButton
@@ -222,9 +176,7 @@ export default function FormDescriptionsComponent({
                                   control={control}
                                   defaultValue=""
                                   rules={{ required: true }}
-                                  render={({
-                                    field: { onChange, value },
-                                  }) => (
+                                  render={({ field: { onChange, value } }) => (
                                     <Autocomplete
                                       options={language}
                                       getOptionLabel={(option) =>

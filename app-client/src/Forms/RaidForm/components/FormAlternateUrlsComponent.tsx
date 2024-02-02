@@ -1,4 +1,3 @@
-import {faker} from "@faker-js/faker";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
@@ -15,22 +14,15 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import {RaidDto} from "Generated/Raidv2";
-import {Control, Controller, FieldErrors, useFieldArray,} from "react-hook-form";
-import {z} from "zod";
-import {raidColors} from "../../../utils";
-
-export const alternateUrlValidationSchema = z.array(
-  z.object({
-    url: z.string().url().min(1),
-  })
-);
-
-export const alternateUrlGenerateData = () => {
-  return {
-    url: faker.internet.url(),
-  };
-};
+import { RaidDto } from "Generated/Raidv2";
+import { alternateUrlGenerator } from "entities/alternate-url/alternate-url-generator";
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  useFieldArray,
+} from "react-hook-form";
+import { raidColors } from "../../../utils";
 
 export default function FormAlternateUrlsComponent({
   control,
@@ -45,7 +37,7 @@ export default function FormAlternateUrlsComponent({
   });
 
   const handleAddAlternateUrls = () => {
-    alternateUrlsFieldArray.append(alternateUrlGenerateData());
+    alternateUrlsFieldArray.append(alternateUrlGenerator());
   };
 
   return (

@@ -1,47 +1,21 @@
-import {faker} from "@faker-js/faker";
-import {Autocomplete, Box, Card, CardContent, CardHeader, Grid, MenuItem, TextField, Typography,} from "@mui/material";
-import {DatePicker} from "@mui/x-date-pickers";
-import {RaidDto} from "Generated/Raidv2";
+import {
+  Autocomplete,
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  MenuItem,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers";
+import { RaidDto } from "Generated/Raidv2";
+import accessType from "References/access_type.json";
+import language from "References/language.json";
 import dayjs from "dayjs";
-import {Control, Controller, FieldErrors,} from "react-hook-form";
-import {extractKeyFromIdUri, raidColors} from "utils";
-import {z} from "zod";
-import accessType from "../../../References/access_type.json";
-import accessTypeSchema from "../../../References/access_type_schema.json";
-import language from "../../../References/language.json";
-import languageSchema from "../../../References/language_schema.json";
-
-export const accessValidationSchema = z.object({
-  type: z.object({
-    id: z.enum(accessType.map((type) => type.uri) as [string, ...string[]]),
-    schemaUri: z.literal(accessTypeSchema[0].uri),
-  }),
-  statement: z.object({
-    text: z.string().min(1),
-    language: z.object({
-      id: z.string().min(1),
-      schemaUri: z.literal(languageSchema[0].uri),
-    }),
-  }),
-  embargoExpiry: z.date().optional(),
-});
-
-export const accessGenerateData = () => {
-  return {
-    type: {
-      id: accessType[1].uri,
-      schemaUri: accessTypeSchema[0].uri,
-    },
-    statement: {
-      text: `[G]: ${faker.lorem.sentence()}`,
-      language: {
-        id: "eng",
-        schemaUri: languageSchema[0].uri,
-      },
-    },
-    embargoExpiry: dayjs().add(180, "day").toDate(),
-  };
-};
+import { Control, Controller, FieldErrors } from "react-hook-form";
+import { extractKeyFromIdUri, raidColors } from "utils";
 
 export default function FormAccessComponent({
   control,
@@ -110,9 +84,7 @@ export default function FormAccessComponent({
                   control={control}
                   defaultValue=""
                   rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                  }) => (
+                  render={({ field: { onChange, value } }) => (
                     <Autocomplete
                       options={language}
                       getOptionLabel={(option) =>
@@ -132,13 +104,10 @@ export default function FormAccessComponent({
                           {...params}
                           size="small"
                           label="Access Statement Language"
-                          error={
-                            !!errors?.access?.statement?.language?.id
-                          }
+                          error={!!errors?.access?.statement?.language?.id}
                           helperText={
                             !!errors?.access?.statement?.language?.id
-                              ? errors?.access?.statement?.language?.id
-                                  ?.message
+                              ? errors?.access?.statement?.language?.id?.message
                               : null
                           }
                         />

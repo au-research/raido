@@ -1,6 +1,3 @@
-import {accessGenerateData} from "Forms/RaidForm/components/FormAccessComponent";
-import {contributorsGenerateData} from "Forms/RaidForm/components/FormContributorsComponent";
-
 import {
   Access,
   AlternateIdentifier,
@@ -17,11 +14,13 @@ import {
   SpatialCoverage,
   Subject,
   Title,
-  TraditionalKnowledgeLabel
+  TraditionalKnowledgeLabel,
 } from "Generated/Raidv2";
-import dayjs, {Dayjs} from "dayjs";
-import {titleGenerator} from "./generators/title-generator";
-import {dateGenerator} from "./generators/date-generator";
+import dayjs, { Dayjs } from "dayjs";
+import { accessGenerator } from "entities/access/access-generator";
+import { contributorGenerator } from "entities/contributor/contributor-generator";
+import { dateGenerator } from "entities/date/date-generator";
+import { titleGenerator } from "./generators/title-generator";
 
 export const raidRequest = (data: RaidDto): RaidDto => {
   return {
@@ -34,16 +33,15 @@ export const raidRequest = (data: RaidDto): RaidDto => {
     date: data?.date || ({} as ModelDate),
     contributor: data?.contributor || ([] as Contributor[]),
     alternateIdentifier:
-        data?.alternateIdentifier || ([] as AlternateIdentifier[]),
+      data?.alternateIdentifier || ([] as AlternateIdentifier[]),
     organisation: data?.organisation || ([] as Organisation[]),
     relatedObject: data?.relatedObject || ([] as RelatedObject[]),
     spatialCoverage: data?.spatialCoverage || ([] as SpatialCoverage[]),
     subject: data?.subject || ([] as Subject[]),
     traditionalKnowledgeLabel:
-        data?.traditionalKnowledgeLabel ||
-        ([] as TraditionalKnowledgeLabel[])
-  }
-}
+      data?.traditionalKnowledgeLabel || ([] as TraditionalKnowledgeLabel[]),
+  };
+};
 
 export const extractKeyFromIdUri = (inputUri: string = ""): string => {
   let result = "";
@@ -80,7 +78,7 @@ export const extractLastUrlSegment = (inputUri: string = ""): string => {
  *   threeYearsFromDate('2020-01-01'); // returns '2023-01-01'
  */
 export const threeYearsFromDate = (
-  inputDate: string = dayjs().format(),
+  inputDate: string = dayjs().format()
 ): Dayjs => {
   return dayjs(inputDate).add(3, "year");
 };
@@ -94,23 +92,23 @@ export const raidColors = new Map([
 
 export const newRaid: RaidCreateRequest = {
   title: [titleGenerator()],
-  // description: [descriptionsGenerateData()],
+  // description: [descriptionGenerator()],
   date: dateGenerator(),
-  access: accessGenerateData(),
-  // organisation: [organisationsGenerateData()],
-  contributor: [contributorsGenerateData()],
-  // subject: [subjectsGenerateData()],
+  access: accessGenerator(),
+  // organisation: [organisationGenerator()],
+  contributor: [contributorGenerator()],
+  // subject: [subjectGenerator()],
   // relatedRaid: [],
   alternateUrl: [],
-  // spatialCoverage: [spatialCoverageGenerateData()],
+  // spatialCoverage: [spatialCoverageGenerator()],
   // relatedObject: [
-  //   relatedObjectGenerateData(),
-  //   relatedObjectGenerateData(),
-  //   relatedObjectGenerateData(),
+  //   relatedObjectGenerator(),
+  //   relatedObjectGenerator(),
+  //   relatedObjectGenerator(),
   // ],
   // alternateIdentifier: [
-  //   alternateIdentifierGenerateData(),
-  //   alternateIdentifierGenerateData(),
-  //   alternateIdentifierGenerateData(),
+  //   alternateIdentifierGenerator(),
+  //   alternateIdentifierGenerator(),
+  //   alternateIdentifierGenerator(),
   // ],
 };

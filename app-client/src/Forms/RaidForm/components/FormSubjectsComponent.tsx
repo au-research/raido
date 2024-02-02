@@ -1,4 +1,3 @@
-import {faker} from "@faker-js/faker";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
@@ -16,59 +15,20 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import {RaidDto} from "Generated/Raidv2";
-import {Control, Controller, FieldErrors, useFieldArray, UseFieldArrayReturn,} from "react-hook-form";
-
-import languageSchema from "References/language_schema.json";
+import { RaidDto } from "Generated/Raidv2";
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  UseFieldArrayReturn,
+  useFieldArray,
+} from "react-hook-form";
 
 import subjectType from "References/subject_type.json";
-import subjectTypeSchema from "References/subject_type_schema.json";
 
-import {z} from "zod";
+import { subjectGenerator } from "entities/subject/subject-generator";
+import { extractLastUrlSegment, raidColors } from "utils";
 import FormSubjectsKeywordsComponent from "./FormSubjectsKeywordsComponent";
-import {extractLastUrlSegment, raidColors} from "utils";
-
-export const subjectsValidationSchema = z.array(
-  z.object({
-    id: z
-      .string()
-      .regex(/https:\/\/linked\.data\.gov\.au\/def\/anzsrc-for\/2020\/\d+/),
-    schemaUri: z.literal(subjectTypeSchema[0].uri),
-    keyword: z.array(
-      z.object({
-        text: z.string().min(1),
-        language: z.object({
-          id: z.string().min(1),
-          schemaUri: z.literal(languageSchema[0].uri),
-        }),
-      })
-    ),
-  })
-);
-
-export const subjectsGenerateData = () => {
-  const randomIndex = Math.floor(Math.random() * subjectType.length);
-  return {
-    id: subjectType[randomIndex].id,
-    schemaUri: subjectTypeSchema[0].uri,
-    keyword: [
-      {
-        text: `[G] ${faker.lorem.sentence()}`,
-        language: {
-          id: "eng",
-          schemaUri: languageSchema[0].uri,
-        },
-      },
-      {
-        text: `[G] ${faker.lorem.sentence()}`,
-        language: {
-          id: "deu",
-          schemaUri: languageSchema[0].uri,
-        },
-      },
-    ],
-  };
-};
 
 function SubjectRootField({
   subjectsArray,
@@ -181,7 +141,7 @@ export default function FormSubjectsComponent({
   });
 
   const handleAddSubject = () => {
-    subjectsArray.append(subjectsGenerateData());
+    subjectsArray.append(subjectGenerator());
   };
 
   return (

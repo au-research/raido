@@ -1,101 +1,43 @@
 import {
-    AddCircleOutline as AddCircleOutlineIcon,
-    RemoveCircleOutline as RemoveCircleOutlineIcon,
+  AddCircleOutline as AddCircleOutlineIcon,
+  RemoveCircleOutline as RemoveCircleOutlineIcon,
 } from "@mui/icons-material";
 import {
-    Box,
-    Card,
-    CardContent,
-    CardHeader,
-    Checkbox,
-    FormControlLabel,
-    FormGroup,
-    Grid,
-    IconButton,
-    Stack,
-    TextField,
-    Tooltip,
-    Typography,
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Grid,
+  IconButton,
+  Stack,
+  TextField,
+  Tooltip,
+  Typography,
 } from "@mui/material";
-import {RaidDto} from "Generated/Raidv2";
-import contributorPosition from "References/contributor_position.json";
-import contributorPositionSchema from "References/contributor_position_schema.json";
-import dayjs from "dayjs";
-import {Control, Controller, FieldErrors, useFieldArray, UseFieldArrayReturn, UseFormTrigger,} from "react-hook-form";
+import { RaidDto } from "Generated/Raidv2";
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  UseFieldArrayReturn,
+  UseFormTrigger,
+  useFieldArray,
+} from "react-hook-form";
 import FormContributorsPositionsComponent from "./FormContributorsPositionsComponent";
 import FormContributorsRolesComponent from "./FormContributorsRolesComponent";
 
-import contributorRole from "References/contributor_role.json";
-import contributorRoleSchema from "References/contributor_role_schema.json";
-
-import {z} from "zod";
-import {combinedPattern} from "../../../Util/DateUtil";
-import {raidColors} from "../../../utils";
-
-const contributorSchema = z.object({
-  id: z
-      .string()
-      .regex(new RegExp("^https://orcid.org/\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]$")),
-  leader: z.boolean(),
-  contact: z.boolean(),
-  schemaUri: z.literal("https://orcid.org/"),
-  position: z.array(
-      z.object({
-        id: z.string(),
-        schemaUri: z.literal(contributorPositionSchema[0].uri),
-        startDate: z.string().regex(combinedPattern).min(1),
-        endDate: z.string().regex(combinedPattern).optional().nullable(),
-      })
-  ).max(1),
-  role: z.array(
-      z.object({
-        id: z.string(),
-        schemaUri: z.literal(contributorRoleSchema[0].uri),
-      })
-  ),
-});
-
-export const contributorsValidationSchema = z.array(contributorSchema).refine(data => {
-  const hasLeader = data.some(contributor => contributor.leader);
-  const hasContact = data.some(contributor => contributor.contact);
-  return hasLeader && hasContact;
-}, {
-  message: "There must be at least one leader and one contact in the contributors."
-});
-
-
-export const contributorsGenerateData = () => {
-  const otherIndex = contributorPosition.findIndex((el) =>
-    el.uri.includes("other")
-  );
-  return {
-    id: "https://orcid.org/0009-0000-9306-3120",
-    leader: true,
-    contact: true,
-    schemaUri: "https://orcid.org/",
-    position: [
-      {
-        schemaUri: contributorPositionSchema[0].uri,
-        id: contributorPosition[otherIndex].uri,
-        startDate: dayjs().format("YYYY-MM-DD"),
-      },
-    ],
-    role: [
-      {
-        schemaUri: contributorRoleSchema[0].uri,
-        id: contributorRole[Math.floor(Math.random() * contributorRole.length)]
-          .uri,
-      },
-    ],
-  };
-};
+import { contributorGenerator } from "entities/contributor/contributor-generator";
+import { raidColors } from "../../../utils";
 
 function ContributorRootField({
   contributorsArray,
   control,
   contributorsArrayIndex,
   errors,
-  trigger
+  trigger,
 }: {
   contributorsArray: UseFieldArrayReturn<
     RaidDto,
@@ -188,13 +130,11 @@ function ContributorRootField({
                           }}
                         />
                       </FormGroup>
-
                     </Grid>
 
                     <Grid item xs={12} sm={12} md={12}>
                       {errors?.contributor?.root?.message}
                     </Grid>
-
                   </Grid>
 
                   <FormContributorsPositionsComponent
@@ -233,7 +173,7 @@ export default function FormContributorsComponent({
   });
 
   const handleAddContributor = () => {
-    contributorsArray.append(contributorsGenerateData());
+    contributorsArray.append(contributorGenerator());
   };
 
   return (

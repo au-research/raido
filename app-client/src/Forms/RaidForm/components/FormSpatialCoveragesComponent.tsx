@@ -1,62 +1,28 @@
 import {
-    AddCircleOutline as AddCircleOutlineIcon,
-    InfoOutlined as InfoOutlinedIcon,
-    RemoveCircleOutline as RemoveCircleOutlineIcon,
+  AddCircleOutline as AddCircleOutlineIcon,
+  InfoOutlined as InfoOutlinedIcon,
+  RemoveCircleOutline as RemoveCircleOutlineIcon,
 } from "@mui/icons-material";
 import {
-    Autocomplete,
-    Box,
-    Card,
-    CardContent,
-    CardHeader,
-    Grid,
-    IconButton,
-    Stack,
-    TextField,
-    Tooltip,
-    Typography,
+  Autocomplete,
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  IconButton,
+  Stack,
+  TextField,
+  Tooltip,
+  Typography,
 } from "@mui/material";
-import {RaidDto} from "Generated/Raidv2";
-import {Control, Controller, useFieldArray,} from "react-hook-form";
-import fieldData from "../../../fieldData.json";
+import { RaidDto } from "Generated/Raidv2";
 import language from "References/language.json";
-import languageSchema from "References/language_schema.json";
+import { Control, Controller, useFieldArray } from "react-hook-form";
+import fieldData from "../../../fieldData.json";
 
-import {z} from "zod";
-import {raidColors} from "../../../utils";
-
-export const spatialCoverageValidationSchema = z.array(
-  z.object({
-    id: z.string().min(1),
-    schemaUri: z.string().min(1),
-    place: z.array(
-        z.object({
-              text: z.string().min(1),
-              language: z.object({
-                id: z.string().min(1),
-                schemaUri: z.string().min(1)
-              }),
-            }
-        )
-    ),
-  })
-);
-
-export const spatialCoverageGenerateData = () => {
-  return {
-    id: "https://www.geonames.org/2766824/salzburg.html",
-    schemaUri: "https://www.geonames.org/",
-    place: [
-      {
-        text: "Salzburg",
-        language: {
-          id: "eng",
-          schemaUri: languageSchema[0].uri,
-        },
-      }
-    ],
-  };
-};
+import { spatialCoverageGenerator } from "entities/spatial-coverage/spatial-coverage-generator";
+import { raidColors } from "../../../utils";
 
 export default function FormSpatialCoveragesComponent({
   control,
@@ -69,7 +35,7 @@ export default function FormSpatialCoveragesComponent({
   });
 
   const handleAddSpatialCoverage = () => {
-    spatialCoveragesFieldArray.append(spatialCoverageGenerateData());
+    spatialCoveragesFieldArray.append(spatialCoverageGenerator());
   };
 
   return (

@@ -1,52 +1,33 @@
-import {z} from "zod";
-import {titlesValidationSchema} from "./titles";
-import {datesValidationSchema} from "Forms/RaidForm/components/FormDatesComponent";
-import {descriptionsValidationSchema} from "Forms/RaidForm/components/FormDescriptionsComponent";
-import {accessValidationSchema} from "Forms/RaidForm/components/FormAccessComponent";
-import {contributorsValidationSchema} from "Forms/RaidForm/components/FormContributorsComponent";
-import {organisationsValidationSchema} from "Forms/RaidForm/components/FormOrganisationsComponent";
-import {subjectsValidationSchema} from "Forms/RaidForm/components/FormSubjectsComponent";
-import {alternateUrlValidationSchema} from "Forms/RaidForm/components/FormAlternateUrlsComponent";
-import {relatedRaidValidationSchema} from "Forms/RaidForm/components/FormRelatedRaidsComponent";
-import {relatedObjectValidationSchema} from "Forms/RaidForm/components/FormRelatedObjectsComponent";
-import {alternateIdentifierValidationSchema} from "Forms/RaidForm/components/FormAlternateIdentifiersComponent";
-import {spatialCoverageValidationSchema} from "Forms/RaidForm/components/FormSpatialCoveragesComponent";
+import { accessValidationSchema } from "entities/access/access-validation-schema";
+import { alternateIdentifierValidationSchema } from "entities/alternate-identifier/alternate-identifier-validation-schema";
+import { alternateUrlValidationSchema } from "entities/alternate-url/alternate-url-validation-schema";
+import { contributorValidationSchema } from "entities/contributor/contributor-validation-schema";
+import { dateValidationSchema } from "entities/date/date-validation-schema";
+import { descriptionValidationSchema } from "entities/description/description-validation-schema";
+import { identifierValidationSchema } from "entities/identifier/identifier-validation-schema";
+import { organisationValidationSchema } from "entities/organisation/organisation-validation-schema";
+import { relatedObjectValidationSchema } from "entities/related-object/related-object-validation-schema";
+import { relatedRaidValidationSchema } from "entities/related-raid/related-raid-validation-schema";
+import { spatialCoverageValidationSchema } from "entities/spatial-coverage/spatial-coverage-validation-schema";
+import { subjectValidationSchema } from "entities/subject/subject-validation-schema";
+import { titleValidationSchema } from "entities/title/title-validation-schema";
+import { traditionalKnowledgeIdentifiersValidationSchema } from "entities/traditional-knowledge-identifier/traditional-knowledge-identifier-validation-schema";
+import { z } from "zod";
 
 export const ValidationFormSchema = z.object({
-    identifier: z
-        .object({
-            id: z.string().min(1),
-            owner: z.object({
-                id: z.string().min(1),
-                schemaUri: z.string().min(1),
-                servicePoint: z.number().int(),
-            }),
-            license: z.string().min(1),
-            version: z.number().int(),
-            schemaUri: z.string().min(1),
-            raidAgencyUrl: z.string().min(1),
-            registrationAgency: z.object({
-                id: z.string().min(1),
-                schemaUri: z.string().min(1),
-            }),
-        })
-        .optional(),
-    title: titlesValidationSchema,
-    date: datesValidationSchema,
-    description: descriptionsValidationSchema,
-    access: accessValidationSchema,
-    alternateUrl: alternateUrlValidationSchema,
-    contributor: contributorsValidationSchema,
-    organisation: organisationsValidationSchema,
-    subject: subjectsValidationSchema,
-    relatedRaid: relatedRaidValidationSchema,
-    relatedObject: relatedObjectValidationSchema,
-    alternateIdentifier: alternateIdentifierValidationSchema,
-    spatialCoverage: spatialCoverageValidationSchema,
-    // traditionalKnowledgeLabel: z.array(
-    //   z.object({
-    //     id: z.string().nonempty(),
-    //     schemaUri: z.string().nonempty(),
-    //   })
-    // ),
+  identifier: identifierValidationSchema,
+  title: titleValidationSchema,
+  date: dateValidationSchema,
+  description: descriptionValidationSchema,
+  access: accessValidationSchema,
+  alternateUrl: alternateUrlValidationSchema,
+  contributor: contributorValidationSchema,
+  organisation: organisationValidationSchema,
+  subject: subjectValidationSchema,
+  relatedRaid: relatedRaidValidationSchema,
+  relatedObject: relatedObjectValidationSchema,
+  alternateIdentifier: alternateIdentifierValidationSchema,
+  spatialCoverage: spatialCoverageValidationSchema,
+  traditionalKnowledgeIdentifier:
+    traditionalKnowledgeIdentifiersValidationSchema,
 });

@@ -1,4 +1,3 @@
-import {faker} from "@faker-js/faker";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
@@ -15,24 +14,15 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import {RaidDto} from "Generated/Raidv2";
-import {Control, Controller, FieldErrors, useFieldArray,} from "react-hook-form";
-import {z} from "zod";
-import {raidColors} from "../../../utils";
-
-export const alternateIdentifierValidationSchema = z.array(
-  z.object({
-    id: z.string().min(1),
-    type: z.string().min(1),
-  })
-);
-
-export const alternateIdentifierGenerateData = () => {
-  return {
-    id: faker.lorem.words(3),
-    type: faker.lorem.words(3),
-  };
-};
+import { RaidDto } from "Generated/Raidv2";
+import { alternateIdentifierGenerator } from "entities/alternate-identifier/alternate-identifier-generator";
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  useFieldArray,
+} from "react-hook-form";
+import { raidColors } from "utils";
 
 export default function FormAlternateIdentifiersComponent({
   control,
@@ -47,7 +37,7 @@ export default function FormAlternateIdentifiersComponent({
   });
 
   const handleAddAlternateIdentifiers = () => {
-    alternateIdentifiersFieldArray.append(alternateIdentifierGenerateData());
+    alternateIdentifiersFieldArray.append(alternateIdentifierGenerator());
   };
 
   return (
@@ -55,7 +45,9 @@ export default function FormAlternateIdentifiersComponent({
       variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: errors.alternateIdentifier ? "red" : raidColors.get("blue"),
+        borderLeftColor: errors.alternateIdentifier
+          ? "red"
+          : raidColors.get("blue"),
         borderLeftWidth: errors.alternateIdentifier ? 5 : 3,
       }}
     >

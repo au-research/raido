@@ -1,61 +1,31 @@
 import {
-    AddCircleOutline as AddCircleOutlineIcon,
-    RemoveCircleOutline as RemoveCircleOutlineIcon,
+  AddCircleOutline as AddCircleOutlineIcon,
+  RemoveCircleOutline as RemoveCircleOutlineIcon,
 } from "@mui/icons-material";
 import {
-    Box,
-    Card,
-    CardContent,
-    CardHeader,
-    Grid,
-    IconButton,
-    Stack,
-    TextField,
-    Tooltip,
-    Typography,
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  IconButton,
+  Stack,
+  TextField,
+  Tooltip,
+  Typography,
 } from "@mui/material";
-import {RaidDto} from "Generated/Raidv2";
-import dayjs from "dayjs";
-import {Control, Controller, FieldErrors, useFieldArray, UseFieldArrayReturn,} from "react-hook-form";
+import { RaidDto } from "Generated/Raidv2";
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  UseFieldArrayReturn,
+  useFieldArray,
+} from "react-hook-form";
 
-import organisationRole from "References/organisation_role.json";
-import organisationRoleSchema from "References/organisation_role_schema.json";
-
-import {combinedPattern} from "../../../Util/DateUtil";
-import {z} from "zod";
+import { organisationGenerator } from "entities/organisation/organisation-generator";
+import { raidColors } from "../../../utils";
 import FormOrganisationsRolesComponent from "./FormOrganisationsRolesComponent";
-import {raidColors} from "../../../utils";
-
-export const organisationsValidationSchema = z.array(
-  z.object({
-    id: z.string().min(1),
-    schemaUri: z.string().min(1),
-    role: z.array(
-      z.object({
-        id: z.enum(
-          organisationRole.map((role) => role.uri) as [string, ...string[]]
-        ),
-        schemaUri: z.literal(organisationRoleSchema[0].uri),
-        startDate: z.string().regex(combinedPattern).min(1),
-        endDate: z.string().regex(combinedPattern).optional().nullable(),
-      })
-    ).max(1),
-  })
-);
-
-export const organisationsGenerateData = () => {
-  return {
-    id: "https://ror.org/038sjwq14",
-    schemaUri: "https://ror.org/",
-    role: [
-      {
-        id: organisationRole[0].uri,
-        schemaUri: organisationRoleSchema[0].uri,
-        startDate: dayjs().format("YYYY-MM-DD"),
-      },
-    ],
-  };
-};
 
 function OrganisationRootField({
   organisationsArray,
@@ -150,7 +120,7 @@ export default function FormOrganisationsComponent({
   });
 
   const handleAddOrganisation = () => {
-    organisationsArray.append(organisationsGenerateData());
+    organisationsArray.append(organisationGenerator());
   };
 
   return (
