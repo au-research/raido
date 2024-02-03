@@ -62,3 +62,8 @@ code {
     background: rgba(255, 255, 255, 0.05);
   }
 }
+
+.icon {
+  color: currentColor;
+  filter: invert(100%);
+}
