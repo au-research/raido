@@ -1,17 +1,28 @@
+import {
+  Language,
+  SpatialCoverage,
+  SpatialCoveragePlace,
+} from "Generated/Raidv2";
 import languageSchema from "References/language_schema.json";
 
-export const spatialCoverageGenerator = () => {
+const spatialCoveragePlaceLanguageGenerator = (): Language => {
+  return {
+    id: "eng",
+    schemaUri: languageSchema[0].uri,
+  };
+};
+
+const spatialCoveragePlaceGenerator = (): SpatialCoveragePlace => {
+  return {
+    text: "Salzburg",
+    language: spatialCoveragePlaceLanguageGenerator(),
+  };
+};
+
+export const spatialCoverageGenerator = (): SpatialCoverage => {
   return {
     id: "https://www.geonames.org/2766824/salzburg.html",
     schemaUri: "https://www.geonames.org/",
-    place: [
-      {
-        text: "Salzburg",
-        language: {
-          id: "eng",
-          schemaUri: languageSchema[0].uri,
-        },
-      },
-    ],
+    place: [spatialCoveragePlaceGenerator()],
   };
 };

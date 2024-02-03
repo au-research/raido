@@ -20,7 +20,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { accessGenerator } from "entities/access/access-generator";
 import { contributorGenerator } from "entities/contributor/contributor-generator";
 import { dateGenerator } from "entities/date/date-generator";
-import { titleGenerator } from "./generators/title-generator";
+import { titleGenerator } from "entities/title/title-generator";
 
 export const raidRequest = (data: RaidDto): RaidDto => {
   return {

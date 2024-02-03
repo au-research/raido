@@ -16,18 +16,28 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import {RaidDto} from "Generated/Raidv2";
-import {combinedPattern, dateHelperText, dateHelperTextRequired,} from "../../../Util/DateUtil";
-import {Control, Controller, FieldErrors, useFieldArray, UseFormTrigger,} from "react-hook-form";
-import {extractKeyFromIdUri, raidColors} from "utils";
-import {z} from "zod";
+import { RaidDto } from "Generated/Raidv2";
 import language from "References/language.json";
 import languageSchema from "References/language_schema.json";
 import titleType from "References/title_type.json";
 import titleTypeSchema from "References/title_type_schema.json";
-import {titleGenerator} from "../../../generators/title-generator";
+import {
+  combinedPattern,
+  dateHelperText,
+  dateHelperTextRequired,
+} from "Util/DateUtil";
+import { titleGenerator } from "entities/title/title-generator";
+import {
+  Control,
+  Controller,
+  FieldErrors,
+  UseFormTrigger,
+  useFieldArray,
+} from "react-hook-form";
+import { extractKeyFromIdUri, raidColors } from "utils";
+import { z } from "zod";
 
-export const titlesValidationSchema  = z
+export const titlesValidationSchema = z
   .array(
     z.object({
       text: z.string().min(1),
@@ -44,8 +54,6 @@ export const titlesValidationSchema  = z
     })
   )
   .min(1);
-
-
 
 export default function FormTitlesComponent({
   control,
@@ -227,8 +235,9 @@ export default function FormTitlesComponent({
                                   !errors?.title?.[index]?.startDate
                                     ? dateHelperTextRequired
                                     : !!errors?.title?.[index]?.startDate
-                                    ? errors?.title?.[index]?.startDate?.message
-                                    : null
+                                      ? errors?.title?.[index]?.startDate
+                                          ?.message
+                                      : null
                                 }
                                 onChange={(event) => {
                                   onChange({
@@ -250,8 +259,8 @@ export default function FormTitlesComponent({
                                   !errors?.title?.[index]?.endDate
                                     ? dateHelperText
                                     : !!errors?.title?.[index]?.endDate
-                                    ? errors?.title?.[index]?.endDate?.message
-                                    : null
+                                      ? errors?.title?.[index]?.endDate?.message
+                                      : null
                                 }
                                 onChange={(event) => {
                                   onChange({
