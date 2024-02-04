@@ -1,6 +1,5 @@
 :root {
   --raido-blue-dark: #5594d8;
-  --raido-red: red;
 }
 
 body {
@@ -48,7 +47,7 @@ code {
 }
 
 .raid-card-error {
-  border-left: 3px solid var(--raido-blue-error);
+  border-left: 3px solid red;
 }
 
 .raid-card-well {
