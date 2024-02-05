@@ -7,7 +7,7 @@ import titleType from "../../References/title_type.json";
 import titleTypeSchema from "../../References/title_type_schema.json";
 
 const titleTypeGenerator = (
-  titlesFieldArray?: UseFieldArrayReturn<RaidDto, "title">
+  titlesFieldArray?: UseFieldArrayReturn<RaidDto, "title">,
 ): TitleType => {
   const typeId =
     (titlesFieldArray?.fields && titlesFieldArray?.fields?.length > 0
@@ -27,7 +27,7 @@ const titleLanguageGenerator = (): Language => {
 };
 
 export const titleGenerator = (
-  titlesFieldArray?: UseFieldArrayReturn<RaidDto, "title">
+  titlesFieldArray?: UseFieldArrayReturn<RaidDto, "title">,
 ): Title => {
   const todaysDate = dayjs(new Date()).format("YYYY-MM-DD");
 

@@ -47,14 +47,16 @@ export default function ShowRaidPageContent({
   return (
     <>
       <SpeedDial
-        ariaLabel="SpeedDial basic example"
+        ariaLabel="raid speeddial"
         sx={{ position: "fixed", bottom: 16, right: 16 }}
         icon={<MenuIcon />}
+        data-testid="raid-speeddial"
       >
         <SpeedDialAction
           icon={<EditIcon />}
           tooltipTitle="Edit RAiD"
           onClick={() => navigate(`/edit-raid/${handle}`)}
+          data-testid="edit-raid-button"
         />
         <SpeedDialAction
           icon={<HistoryIcon />}

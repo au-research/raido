@@ -111,13 +111,14 @@ export default function RaidForm({
                 isSubmitting ||
                 Object.keys(formMethods.formState.errors).length > 0
               }
+              data-testid="save-raid-button"
             >
               <SaveIcon sx={{ mr: 1 }} />
               {isSubmitting ? "Saving..." : "Save"}
             </Fab>
           </Tooltip>
 
-          <Stack spacing={2}>
+          <Stack spacing={2} data-testid="raid-form">
             <Card className="raid-card">
               <CardHeader
                 title={`${

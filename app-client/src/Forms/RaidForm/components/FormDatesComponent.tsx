@@ -60,8 +60,10 @@ export default function FormDatesComponent({
                 control={control}
                 render={({ field }) => (
                   <TextField
+                    data-testid="start-date-field"
                     label="Start Date"
                     variant="outlined"
+                    placeholder="RAiD start date"
                     size="small"
                     fullWidth
                     {...field}

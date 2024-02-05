@@ -18,6 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useAuth } from "Auth/AuthProvider";
+import { Link } from "react-router-dom";
 import RaidTableRowContextMenu from "./RaidTableRowContextMenu";
 import { endDateColumn } from "./columns/endDateColumn";
 import { handleColumn } from "./columns/handleColumn";
@@ -89,11 +90,13 @@ export default function RaidTable() {
         color="primary"
         sx={{ position: "fixed", bottom: "16px", right: "16px" }}
         component="button"
-        type="submit"
-        href={`/mint-raid-new/${servicePointId}`}
+        type="button"
+        data-testid="mint-raid-button"
       >
-        <AddIcon sx={{ mr: 1 }} />
-        Mint new RAiD
+        <Link to={`/mint-raid-new/${servicePointId}`}>
+          <AddIcon sx={{ mr: 1 }} />
+          Mint new RAiD
+        </Link>
       </Fab>
 
       <Card className="raid-card">

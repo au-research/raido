@@ -13,6 +13,8 @@
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "end": "",
     "e2e": "npx playwright test",
+    "e2e:headed": "npx playwright test --headed",
+    "e2e:ui": "npx playwright test --ui",
     "test": "vitest"
   },
   "dependencies": {

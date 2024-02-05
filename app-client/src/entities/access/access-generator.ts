@@ -6,9 +6,9 @@ import {
   Language,
 } from "Generated/Raidv2";
 import dayjs from "dayjs";
-import accessType from "../../References/access_type.json";
-import accessTypeSchema from "../../References/access_type_schema.json";
-import languageSchema from "../../References/language_schema.json";
+import accessType from "References/access_type.json";
+import accessTypeSchema from "References/access_type_schema.json";
+import languageSchema from "References/language_schema.json";
 
 const accessTypeGenerator = (): AccessType => {
   return {

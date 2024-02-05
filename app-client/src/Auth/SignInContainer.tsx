@@ -99,7 +99,7 @@ export function SignInContainer() {
   }
 
   return (
-    <Card>
+    <Card data-testid="sign-in-container">
       <CardHeader
         action={
           <Tooltip
