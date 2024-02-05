@@ -37,7 +37,7 @@ export function ServicePointPage() {
       <ServicePointContainer
         servicePointId={+servicePointId}
         onCreate={(createdId) => {
-          navigate(`service-point/${createdId}`, {
+          navigate(`/service-point/${createdId}`, {
             replace: true,
           });
           setServicePointId(createdId.toString());

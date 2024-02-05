@@ -56,6 +56,10 @@ const servicePointRoutes: RouteObject[] = [
         path: "/service-point/:servicePointId",
         element: routeWithAuthentication(<ServicePointPage/>),
     },
+    {
+        path: "/service-point",
+        element: routeWithAuthentication(<ServicePointPage/>),
+    },
 ]
 
 const raidPageRoutes: RouteObject[] = [
