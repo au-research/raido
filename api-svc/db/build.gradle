@@ -117,41 +117,36 @@ task cleanJooqGeneratedSrc(type: Delete){
 
 jooq{
   version = '3.18.0'
-  configurations{
-    main{  // name of the jOOQ configuration
+  configurations {
+    main {  // name of the jOOQ configuration
       generateSchemaSourceOnCompilation = false
 
-      generationTool{
-        jdbc{
+      generationTool {
+        jdbc {
           driver = 'org.postgresql.Driver'
           url = apiSvcPgUrl
           user = apiSvcPgUser
           password = apiSvcPgPassword
         }
-        generator{
+        generator {
           name = 'org.jooq.codegen.DefaultGenerator'
-          database{
+          database {
             name = 'org.jooq.meta.postgres.PostgresDatabase'
-            schemata{
-              schema{
+            schemata {
+              schema {
                 inputSchema = apiSvcPgSchema
-              }
-              schema{
-                // weird error about "project"
-//                inputSchema = project(":api-svc:v1-ddb-migration").ext.raidV1PgSchema
-                inputSchema = 'raid_v1_import'
               }
             }
           }
 
-          generate{
+          generate {
             deprecated = false
             records = true
             immutablePojos = false
             fluentSetters = true
             globalTableReferences = false
           }
-          target{
+          target {
             // gets blown away by the clean task each it's run
             directory = jooqGeneratedSrcDir
             packageName = jooqGeneratedPkg
