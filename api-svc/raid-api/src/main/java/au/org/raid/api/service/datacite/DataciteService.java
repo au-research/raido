@@ -18,7 +18,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Base64;
 import java.util.Collections;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -36,20 +35,6 @@ public class DataciteService {
         String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
         headers.add("Authorization", "Basic " + encodedAuth);
         return headers;
-    }
-
-    // TODO: Prefix needs to be assigned from service point team
-    public String getDatacitePrefix(){
-        if(properties.getPrefix() == null) {
-            return "10.82841";
-        }
-        return properties.getPrefix();
-    }
-
-    private String getDataciteSuffix(){
-        // TODO: This is a temporary solution to create a random identifier for the datacite handle
-        // This should be replaced with a proper solution
-        return UUID.randomUUID().toString().split("-")[0];
     }
 
     @SneakyThrows

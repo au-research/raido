@@ -30,6 +30,9 @@ public class ServicePointRepository {
                 .set(SERVICE_POINT.TECH_EMAIL, record.getTechEmail())
                 .set(SERVICE_POINT.IDENTIFIER_OWNER, record.getIdentifierOwner())
                 .set(SERVICE_POINT.SEARCH_CONTENT, record.getSearchContent())
+                .set(SERVICE_POINT.REPOSITORY_ID, record.getRepositoryId())
+                .set(SERVICE_POINT.PREFIX, record.getPrefix())
+                .set(SERVICE_POINT.PASSWORD, record.getPassword())
                 .returning()
                 .fetchOne();
     }
@@ -43,6 +46,9 @@ public class ServicePointRepository {
                 .set(SERVICE_POINT.TECH_EMAIL, record.getTechEmail())
                 .set(SERVICE_POINT.IDENTIFIER_OWNER, record.getIdentifierOwner())
                 .set(SERVICE_POINT.SEARCH_CONTENT, record.getSearchContent())
+                .set(SERVICE_POINT.REPOSITORY_ID, record.getRepositoryId())
+                .set(SERVICE_POINT.PREFIX, record.getPrefix())
+                .set(SERVICE_POINT.PASSWORD, record.getPassword())
                 .where(SERVICE_POINT.ID.eq(record.getId()))
                 .returning()
                 .fetchOne();
