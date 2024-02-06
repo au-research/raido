@@ -1,10 +1,10 @@
-import { Key, People, Visibility, VisibilityOff } from "@mui/icons-material";
+import {Add, Key, People, Visibility, VisibilityOff} from "@mui/icons-material";
 import {
   Button,
   Card,
   CardContent,
   CardHeader,
-  Container,
+  Container, Fab,
   Table,
   TableBody,
   TableCell,
@@ -20,7 +20,7 @@ import { RefreshIconButton } from "Component/RefreshIconButton";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import { ServicePoint } from "Generated/Raidv2";
 import { RqQuery } from "Util/ReactQueryUtil";
-import { NavLink } from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 
 export function ListServicePointPage() {
   const api = useAuthApi();
@@ -52,7 +52,14 @@ export function ListServicePointPage() {
                 refreshing={query.isLoading}
                 onClick={() => query.refetch()}
               />
-              <RaidoAddFab disabled={false} href="/service-point" />
+              <Link to="/service-point">
+                <Fab
+                    color="primary"
+                    size="small"
+                >
+                  <Add />
+                </Fab>
+              </Link>
             </>
           }
         />

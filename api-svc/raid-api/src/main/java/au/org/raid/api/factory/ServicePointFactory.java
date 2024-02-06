@@ -12,6 +12,9 @@ public class ServicePointFactory {
                 .name(servicePointDto.getName())
                 .adminEmail(servicePointDto.getAdminEmail())
                 .techEmail(servicePointDto.getTechEmail())
+                .repositoryId(servicePointDto.getRepositoryId())
+                .prefix(servicePointDto.getPrefix())
+                .password(servicePointDto.getPassword())
                 .enabled(servicePointDto.getEnabled())
                 .appWritesEnabled(servicePointDto.getAppWritesEnabled());
     }
@@ -24,6 +27,9 @@ public class ServicePointFactory {
                 .appWritesEnabled(servicePointRecord.getAppWritesEnabled())
                 .enabled(servicePointRecord.getEnabled())
                 .identifierOwner(servicePointRecord.getIdentifierOwner())
-                .techEmail(servicePointRecord.getTechEmail());
+                .techEmail(servicePointRecord.getTechEmail())
+                .repositoryId(servicePointRecord.getRepositoryId())
+                .prefix(servicePointRecord.getPrefix())
+                .password(servicePointRecord.getPassword());
     }
 }
