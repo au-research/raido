@@ -37,10 +37,11 @@ export function ServicePointPage() {
       <ServicePointContainer
         servicePointId={+servicePointId}
         onCreate={(createdId) => {
+          console.log("SP created: ", createdId)
+          setServicePointId(createdId.toString());
           navigate(`/service-point/${createdId}`, {
             replace: true,
           });
-          setServicePointId(createdId.toString());
         }}
       />
     </Container>
@@ -62,6 +63,9 @@ function ServicePointContainer({
     adminEmail: "",
     enabled: true,
     appWritesEnabled: true,
+    repositoryId: "",
+    prefix: "",
+    password: "",
   } as ServicePoint);
   const query: RqQuery<ServicePoint> = useQuery(
     [queryName, servicePointId],
@@ -172,6 +176,32 @@ function ServicePointContainer({
               />
             </FormControl>
 
+            <FormControl focused autoCorrect="off" autoCapitalize="off">
+              <TextField
+                  id="repositoryId"
+                  label="Repository Id"
+                  variant="outlined"
+                  disabled={isWorking}
+                  value={formData.repositoryId || ""}
+                  onChange={(e) => {
+                    setFormData({ ...formData, repositoryId: e.target.value });
+                  }}
+              />
+            </FormControl>
+
+            <FormControl focused autoCorrect="off" autoCapitalize="off">
+              <TextField
+                  id="prefix"
+                  label="Prefix"
+                  variant="outlined"
+                  disabled={isWorking}
+                  value={formData.prefix || ""}
+                  onChange={(e) => {
+                    setFormData({ ...formData, prefix: e.target.value });
+                  }}
+              />
+            </FormControl>
+
             <FormControl focused autoCorrect="off" autoCapitalize="on">
               <TextField
                 id="identifierOwner"
@@ -197,16 +227,31 @@ function ServicePointContainer({
                 }}
               />
             </FormControl>
-            <TextField
-              id="techEmail"
-              label="Tech email"
-              variant="outlined"
-              disabled={isWorking}
-              value={formData.techEmail || ""}
-              onChange={(e) => {
-                setFormData({ ...formData, techEmail: e.target.value });
-              }}
-            />
+            <FormControl>
+              <TextField
+                id="techEmail"
+                label="Tech email"
+                variant="outlined"
+                disabled={isWorking}
+                value={formData.techEmail || ""}
+                onChange={(e) => {
+                  setFormData({ ...formData, techEmail: e.target.value });
+                }}
+              />
+              </FormControl>
+            <FormControl focused autoCorrect="off" autoCapitalize="off">
+              <TextField
+                  type="password"
+                  id="password"
+                  label="Password"
+                  variant="outlined"
+                  disabled={isWorking}
+                  value={formData.password || ""}
+                  onChange={(e) => {
+                    setFormData({ ...formData, password: e.target.value });
+                  }}
+              />
+            </FormControl>
             <FormControl>
               <FormControlLabel
                 disabled={isWorking}
