@@ -41,14 +41,14 @@ public class RaidService {
                 servicePointRepository.findById(servicePoint).orElseThrow(() ->
                         new UnknownServicePointException(servicePoint));
 
-        final var handle = handleFactory.createWithPrefix(dataciteSvc.getDatacitePrefix());
+        final var handle = handleFactory.createWithPrefix(servicePointRecord.getPrefix());
 
         request.setIdentifier(idFactory.create(handle.toString(), servicePointRecord));
 
+        dataciteSvc.createDataciteRaid(request, handle.toString());
+
         final var raidDto = raidHistoryService.save(request);
         raidIngestService.create(raidDto);
-
-        dataciteSvc.createDataciteRaid(request, handle.toString());
 
         return raidDto;
     }

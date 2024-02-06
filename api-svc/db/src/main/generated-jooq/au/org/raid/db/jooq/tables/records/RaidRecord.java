@@ -6,16 +6,11 @@ package au.org.raid.db.jooq.tables.records;
 
 import au.org.raid.db.jooq.enums.Metaschema;
 import au.org.raid.db.jooq.tables.Raid;
+import org.jooq.*;
+import org.jooq.impl.UpdatableRecordImpl;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-import org.jooq.Field;
-import org.jooq.JSONB;
-import org.jooq.Record1;
-import org.jooq.Record21;
-import org.jooq.Row21;
-import org.jooq.impl.UpdatableRecordImpl;
 
 
 /**

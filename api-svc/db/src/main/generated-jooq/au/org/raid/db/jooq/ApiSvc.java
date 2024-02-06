@@ -4,72 +4,14 @@
 package au.org.raid.db.jooq;
 
 
-import au.org.raid.db.jooq.tables.AccessType;
-import au.org.raid.db.jooq.tables.AccessTypeSchema;
-import au.org.raid.db.jooq.tables.AppUser;
-import au.org.raid.db.jooq.tables.Contributor;
-import au.org.raid.db.jooq.tables.ContributorPosition;
-import au.org.raid.db.jooq.tables.ContributorPositionSchema;
-import au.org.raid.db.jooq.tables.ContributorRole;
-import au.org.raid.db.jooq.tables.ContributorRoleSchema;
-import au.org.raid.db.jooq.tables.ContributorSchema;
-import au.org.raid.db.jooq.tables.DescriptionType;
-import au.org.raid.db.jooq.tables.DescriptionTypeSchema;
-import au.org.raid.db.jooq.tables.FlywaySchemaHistory;
-import au.org.raid.db.jooq.tables.Language;
-import au.org.raid.db.jooq.tables.LanguageSchema;
-import au.org.raid.db.jooq.tables.Organisation;
-import au.org.raid.db.jooq.tables.OrganisationRole;
-import au.org.raid.db.jooq.tables.OrganisationRoleSchema;
-import au.org.raid.db.jooq.tables.OrganisationSchema;
-import au.org.raid.db.jooq.tables.Raid;
-import au.org.raid.db.jooq.tables.RaidAlternateIdentifier;
-import au.org.raid.db.jooq.tables.RaidAlternateUrl;
-import au.org.raid.db.jooq.tables.RaidContributor;
-import au.org.raid.db.jooq.tables.RaidContributorPosition;
-import au.org.raid.db.jooq.tables.RaidContributorRole;
-import au.org.raid.db.jooq.tables.RaidDescription;
-import au.org.raid.db.jooq.tables.RaidHistory;
-import au.org.raid.db.jooq.tables.RaidOrganisation;
-import au.org.raid.db.jooq.tables.RaidOrganisationRole;
-import au.org.raid.db.jooq.tables.RaidRelatedObject;
-import au.org.raid.db.jooq.tables.RaidRelatedObjectCategory;
-import au.org.raid.db.jooq.tables.RaidSpatialCoverage;
-import au.org.raid.db.jooq.tables.RaidSpatialCoveragePlace;
-import au.org.raid.db.jooq.tables.RaidSubject;
-import au.org.raid.db.jooq.tables.RaidSubjectKeyword;
-import au.org.raid.db.jooq.tables.RaidTitle;
-import au.org.raid.db.jooq.tables.RaidTraditionalKnowledgeLabel;
-import au.org.raid.db.jooq.tables.RaidoOperator;
-import au.org.raid.db.jooq.tables.RelatedObject;
-import au.org.raid.db.jooq.tables.RelatedObjectCategory;
-import au.org.raid.db.jooq.tables.RelatedObjectCategorySchema;
-import au.org.raid.db.jooq.tables.RelatedObjectSchema;
-import au.org.raid.db.jooq.tables.RelatedObjectType;
-import au.org.raid.db.jooq.tables.RelatedObjectTypeSchema;
-import au.org.raid.db.jooq.tables.RelatedRaid;
-import au.org.raid.db.jooq.tables.RelatedRaidType;
-import au.org.raid.db.jooq.tables.RelatedRaidTypeSchema;
-import au.org.raid.db.jooq.tables.ServicePoint;
-import au.org.raid.db.jooq.tables.SpatialCoverageSchema;
-import au.org.raid.db.jooq.tables.SubjectType;
-import au.org.raid.db.jooq.tables.SubjectTypeSchema;
-import au.org.raid.db.jooq.tables.Team;
-import au.org.raid.db.jooq.tables.TeamUser;
-import au.org.raid.db.jooq.tables.TitleType;
-import au.org.raid.db.jooq.tables.TitleTypeSchema;
-import au.org.raid.db.jooq.tables.Token;
-import au.org.raid.db.jooq.tables.TraditionalKnowledgeLabel;
-import au.org.raid.db.jooq.tables.TraditionalKnowledgeLabelSchema;
-import au.org.raid.db.jooq.tables.UserAuthzRequest;
-
-import java.util.Arrays;
-import java.util.List;
-
+import au.org.raid.db.jooq.tables.*;
 import org.jooq.Catalog;
 import org.jooq.Sequence;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 /**

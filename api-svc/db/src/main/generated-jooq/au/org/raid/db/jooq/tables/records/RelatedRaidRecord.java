@@ -5,7 +5,6 @@ package au.org.raid.db.jooq.tables.records;
 
 
 import au.org.raid.db.jooq.tables.RelatedRaid;
-
 import org.jooq.Field;
 import org.jooq.Record2;
 import org.jooq.Record3;

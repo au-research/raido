@@ -5,7 +5,6 @@ package au.org.raid.db.jooq.tables.records;
 
 
 import au.org.raid.db.jooq.tables.OrganisationRoleSchema;
-
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record2;

@@ -8,7 +8,6 @@ import au.org.raid.db.jooq.tables.AppUser;
 import au.org.raid.db.jooq.tables.FlywaySchemaHistory;
 import au.org.raid.db.jooq.tables.Raid;
 import au.org.raid.db.jooq.tables.UserAuthzRequest;
-
 import org.jooq.Index;
 import org.jooq.OrderField;
 import org.jooq.impl.DSL;
