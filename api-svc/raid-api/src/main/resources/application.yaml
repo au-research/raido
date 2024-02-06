@@ -63,7 +63,4 @@ springdoc:
   api-docs:
     path: /docs
 datacite:
-  endpoint: https://api.test.datacite.org
-  prefix: 10.82841
-  password: not-set
-  user: NPQS.RKFZRK
+  endpoint: https://api.test.datacite.org/dois

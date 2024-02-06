@@ -121,7 +121,7 @@ public class RaidController implements RaidApi {
             throw new ValidationException(failures);
         }
 
-        return ResponseEntity.ok(raidService.update(request));
+        return ResponseEntity.ok(raidService.update(request, user.getServicePointId()));
     }
 
     @Override

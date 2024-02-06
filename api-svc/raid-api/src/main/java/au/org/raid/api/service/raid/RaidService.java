@@ -35,17 +35,17 @@ public class RaidService {
 
     public RaidDto mint(
             final RaidCreateRequest request,
-            final long servicePoint
+            final long servicePointId
     ) {
         final var servicePointRecord =
-                servicePointRepository.findById(servicePoint).orElseThrow(() ->
-                        new UnknownServicePointException(servicePoint));
+                servicePointRepository.findById(servicePointId).orElseThrow(() ->
+                        new UnknownServicePointException(servicePointId));
 
         final var handle = handleFactory.createWithPrefix(servicePointRecord.getPrefix());
 
         request.setIdentifier(idFactory.create(handle.toString(), servicePointRecord));
 
-        dataciteSvc.createDataciteRaid(request, handle.toString());
+        dataciteSvc.mint(request, handle.toString(), servicePointRecord.getRepositoryId(), servicePointRecord.getPassword());
 
         final var raidDto = raidHistoryService.save(request);
         raidIngestService.create(raidDto);
@@ -54,7 +54,11 @@ public class RaidService {
     }
 
     @SneakyThrows
-    public RaidDto update(final RaidUpdateRequest raid) {
+    public RaidDto update(final RaidUpdateRequest raid, final long servicePointId) {
+        final var servicePointRecord =
+                servicePointRepository.findById(servicePointId).orElseThrow(() ->
+                        new UnknownServicePointException(servicePointId));
+
         final Integer version = raid.getIdentifier().getVersion();
 
         if (version == null) {
@@ -75,7 +79,7 @@ public class RaidService {
 
         final var raidDto = raidHistoryService.save(raid);
 
-        dataciteSvc.updateDataciteRaid(raid, handle);
+        dataciteSvc.update(raid, handle, servicePointRecord.getRepositoryId(), servicePointRecord.getPassword());
 
         return raidIngestService.update(raidDto);
     }
