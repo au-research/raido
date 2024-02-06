@@ -1,11 +1,12 @@
 import {
+  Button,
   Card,
   CardContent,
   CardHeader,
   Checkbox,
   Container,
   FormControl,
-  FormControlLabel,
+  FormControlLabel, Snackbar,
   Stack,
   TextField,
   Typography,
@@ -21,7 +22,7 @@ import {
   type ServicePointCreateRequest,
 } from "Generated/Raidv2";
 import { RqQuery } from "Util/ReactQueryUtil";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { useParams } from "react-router-dom";
 
@@ -32,13 +33,34 @@ export function ServicePointPage() {
   };
 
   const [servicePointId, setServicePointId] = useState(servicePointIdParam);
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
   return (
     <Container>
+      <Snackbar
+          open={open}
+          autoHideDuration={2000}
+          onClose={handleClose}
+          message="✅ Service point created."
+      />
       <ServicePointContainer
         servicePointId={+servicePointId}
         onCreate={(createdId) => {
-          console.log("SP created: ", createdId)
           setServicePointId(createdId.toString());
+          setOpen(true);
           navigate(`/service-point/${createdId}`, {
             replace: true,
           });
@@ -55,6 +77,10 @@ function ServicePointContainer({
   servicePointId: number | undefined;
   onCreate: (servicePointId: number) => void;
 }) {
+
+
+
+
   const api = useAuthApi();
   const queryClient = useQueryClient();
   const queryName = "readServicePoint";
@@ -153,7 +179,11 @@ function ServicePointContainer({
 
   return (
     <Card>
-      <CardHeader title="Service point" />
+      <CardHeader title={
+        servicePointId
+          ? `Service Point ${servicePointId}`
+          : "Create Service Point"
+      } />
       <CardContent>
         <form
           autoComplete="off"
@@ -163,7 +193,7 @@ function ServicePointContainer({
           }}
         >
           <Stack spacing={2}>
-            <FormControl focused autoCorrect="off" autoCapitalize="on">
+            <FormControl>
               <TextField
                 id="name"
                 label="Name"
@@ -176,7 +206,7 @@ function ServicePointContainer({
               />
             </FormControl>
 
-            <FormControl focused autoCorrect="off" autoCapitalize="off">
+            <FormControl>
               <TextField
                   id="repositoryId"
                   label="Repository Id"
@@ -189,7 +219,7 @@ function ServicePointContainer({
               />
             </FormControl>
 
-            <FormControl focused autoCorrect="off" autoCapitalize="off">
+            <FormControl>
               <TextField
                   id="prefix"
                   label="Prefix"
@@ -202,7 +232,7 @@ function ServicePointContainer({
               />
             </FormControl>
 
-            <FormControl focused autoCorrect="off" autoCapitalize="on">
+            <FormControl>
               <TextField
                 id="identifierOwner"
                 label="Identifier Owner"
@@ -212,6 +242,7 @@ function ServicePointContainer({
                 onChange={(e) => {
                   setFormData({ ...formData, identifierOwner: e.target.value });
                 }}
+                helperText="Research Organization Registry Identifier. e.g. https://ror.org/038sjwq14"
               />
             </FormControl>
 
@@ -239,8 +270,9 @@ function ServicePointContainer({
                 }}
               />
               </FormControl>
-            <FormControl focused autoCorrect="off" autoCapitalize="off">
+            <FormControl>
               <TextField
+                  autoComplete="off"
                   type="password"
                   id="password"
                   label="Password"
