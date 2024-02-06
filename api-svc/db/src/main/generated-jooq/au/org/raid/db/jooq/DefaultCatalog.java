@@ -4,14 +4,12 @@
 package au.org.raid.db.jooq;
 
 
-import au.org.raid.db.jooq.api_svc.ApiSvc;
-import au.org.raid.db.jooq.raid_v1_import.RaidV1Import;
+import java.util.Arrays;
+import java.util.List;
+
 import org.jooq.Constants;
 import org.jooq.Schema;
 import org.jooq.impl.CatalogImpl;
-
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -33,11 +31,6 @@ public class DefaultCatalog extends CatalogImpl {
     public final ApiSvc API_SVC = ApiSvc.API_SVC;
 
     /**
-     * The schema <code>raid_v1_import</code>.
-     */
-    public final RaidV1Import RAID_V1_IMPORT = RaidV1Import.RAID_V1_IMPORT;
-
-    /**
      * No further instances allowed
      */
     private DefaultCatalog() {
@@ -47,8 +40,7 @@ public class DefaultCatalog extends CatalogImpl {
     @Override
     public final List<Schema> getSchemas() {
         return Arrays.asList(
-            ApiSvc.API_SVC,
-            RaidV1Import.RAID_V1_IMPORT
+            ApiSvc.API_SVC
         );
     }
 
