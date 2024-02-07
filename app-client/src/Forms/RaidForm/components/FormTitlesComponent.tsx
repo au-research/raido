@@ -91,7 +91,7 @@ export default function FormTitlesComponent({
         }
         action={
           <Tooltip title="Add Title" placement="right">
-            <IconButton aria-label="Add Title" onClick={handleAddTitle}>
+            <IconButton aria-label="Add title" onClick={handleAddTitle}>
               <AddCircleOutlineIcon />
             </IconButton>
           </Tooltip>
@@ -136,6 +136,7 @@ export default function FormTitlesComponent({
                                 {...controllerField}
                                 value={controllerField?.value?.text}
                                 size="small"
+                                placeholder="RAiD title"
                                 required
                                 fullWidth
                                 label="Title"
