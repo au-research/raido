@@ -1,15 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// require('dotenv').config();
-
-/**
- * See https://playwright.dev/docs/test-configuration.
- */
 export default defineConfig({
+  globalSetup: require.resolve("./global-setup"),
+  // globalTeardown: require.resolve('./global-teardown'),
   testDir: "./e2e",
   // Glob patterns or regular expressions that match test files.
   testIgnore: "**/*.test.ts",
@@ -26,10 +19,8 @@ export default defineConfig({
   reporter: "html",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: 'http://127.0.0.1:3000',
-
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
+    baseURL: "http://localhost:7080/",
+    storageState: "state.json",
     trace: "on-first-retry",
     video: "on",
   },

@@ -1,38 +1,15 @@
 import { expect, test } from "@playwright/test";
 require("dotenv").config({ path: "./.env.local" });
 
-const BASE_URL = "http://localhost:7080/";
-const { RAIDO_ACCESS_TOKEN } = process.env;
-
-if (!RAIDO_ACCESS_TOKEN) {
-  throw new Error("RAIDO_ACCESS_TOKEN environment variable is not set.");
-}
-
-test.beforeEach(async ({ page }) => {
-  // Navigate once and perform initial setup.
-  await page.goto(BASE_URL);
-  await page.evaluate(() => localStorage.clear());
-  await page.reload();
-});
-
 test.describe("Mint RAiD", () => {
-  test.beforeEach(async ({ page }) => {
-    // Navigate once and perform initial setup.
-    await page.goto(BASE_URL);
-    await page.evaluate(() => localStorage.clear());
-    await page.reload();
-    await page.evaluate((token) => {
-      localStorage.setItem("raidoAccessToken", token);
-    }, RAIDO_ACCESS_TOKEN);
-    await page.reload();
-  });
-
   test("user should be able to mint new raid", async ({ page }) => {
+    const baseURL = process.env.BASE_URL!;
+
     const testDate = {
       unformatted: "2033-05-23",
       formatted: "23-May-2033",
     };
-    await page.goto(BASE_URL);
+    await page.goto(baseURL);
 
     // locate mint raid button and click
     const mintRaidButton = page.locator('[data-testid="mint-raid-button"]');
@@ -65,10 +42,10 @@ test.describe("Mint RAiD", () => {
     await saveRaidButton02.waitFor({ state: "visible" });
     await saveRaidButton02.click();
 
-    await page.waitForTimeout(3000);
-
     // back to homepage
-    await page.goto(BASE_URL);
+    await page.goto(baseURL!);
+
+    await page.waitForTimeout(1000);
 
     // locate first raid navlink from table and click
     const raidNavlink = page.locator('[data-testid="raid-navlink"]').first();

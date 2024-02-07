@@ -196,7 +196,8 @@ function ServicePointContainer({
             <FormControl>
               <TextField
                 id="name"
-                label="Name"
+                label="Service point name"
+                placeholder="Service point name"
                 variant="outlined"
                 disabled={isWorking}
                 value={formData.name || ""}
@@ -235,8 +236,9 @@ function ServicePointContainer({
             <FormControl>
               <TextField
                 id="identifierOwner"
-                label="Identifier Owner"
+                label="Identifier owner"
                 variant="outlined"
+                placeholder="Identifier owner"
                 disabled={isWorking}
                 value={formData.identifierOwner || ""}
                 onChange={(e) => {
@@ -345,6 +347,11 @@ function ServicePointContainer({
               <PrimaryActionButton
                 type="submit"
                 context={"update service point"}
+                aria-label={
+                  servicePointId
+                    ? "Update service point"
+                    : "Create service point"
+                }
                 disabled={
                   isWorking || !formData.name || !formData.identifierOwner
                 }

@@ -1,10 +1,17 @@
-import {Add, Key, People, Visibility, VisibilityOff} from "@mui/icons-material";
+import {
+  Add,
+  Key,
+  People,
+  Visibility,
+  VisibilityOff,
+} from "@mui/icons-material";
 import {
   Button,
   Card,
   CardContent,
   CardHeader,
-  Container, Fab,
+  Container,
+  Fab,
   Table,
   TableBody,
   TableCell,
@@ -15,12 +22,11 @@ import {
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthApi } from "Api/AuthApi";
-import { RaidoAddFab } from "Component/AppButton";
 import { RefreshIconButton } from "Component/RefreshIconButton";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import { ServicePoint } from "Generated/Raidv2";
 import { RqQuery } from "Util/ReactQueryUtil";
-import {Link, NavLink} from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 export function ListServicePointPage() {
   const api = useAuthApi();
@@ -54,8 +60,9 @@ export function ListServicePointPage() {
               />
               <Link to="/service-point">
                 <Fab
-                    color="primary"
-                    size="small"
+                  color="primary"
+                  size="small"
+                  aria-label="create new service point"
                 >
                   <Add />
                 </Fab>
@@ -65,7 +72,7 @@ export function ListServicePointPage() {
         />
         <CardContent>
           <TableContainer>
-            <Table>
+            <Table data-testid="service-points-table">
               <TableHead>
                 <TableRow>
                   <TableCell>Service point</TableCell>
