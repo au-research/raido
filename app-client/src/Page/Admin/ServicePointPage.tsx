@@ -1,12 +1,12 @@
 import {
-  Button,
   Card,
   CardContent,
   CardHeader,
   Checkbox,
   Container,
   FormControl,
-  FormControlLabel, Snackbar,
+  FormControlLabel,
+  Snackbar,
   Stack,
   TextField,
   Typography,
@@ -40,8 +40,11 @@ export function ServicePointPage() {
     setOpen(true);
   };
 
-  const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
+  const handleClose = (
+    event: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
       return;
     }
 
@@ -51,10 +54,10 @@ export function ServicePointPage() {
   return (
     <Container>
       <Snackbar
-          open={open}
-          autoHideDuration={2000}
-          onClose={handleClose}
-          message="✅ Service point created."
+        open={open}
+        autoHideDuration={2000}
+        onClose={handleClose}
+        message="✅ Service point created."
       />
       <ServicePointContainer
         servicePointId={+servicePointId}
@@ -77,14 +80,10 @@ function ServicePointContainer({
   servicePointId: number | undefined;
   onCreate: (servicePointId: number) => void;
 }) {
-
-
-
-
   const api = useAuthApi();
   const queryClient = useQueryClient();
   const queryName = "readServicePoint";
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<ServicePoint>({
     name: "",
     repositoryId: "",
     prefix: "",
@@ -93,8 +92,6 @@ function ServicePointContainer({
     adminEmail: "",
     enabled: true,
     appWritesEnabled: true,
-    repositoryId: "",
-    prefix: "",
     password: "",
   } as ServicePoint);
   const query: RqQuery<ServicePoint> = useQuery(
@@ -183,11 +180,13 @@ function ServicePointContainer({
 
   return (
     <Card>
-      <CardHeader title={
-        servicePointId
-          ? `Service Point ${servicePointId}`
-          : "Create Service Point"
-      } />
+      <CardHeader
+        title={
+          servicePointId
+            ? `Service Point ${servicePointId}`
+            : "Create Service Point"
+        }
+      />
       <CardContent>
         <form
           autoComplete="off"
@@ -212,27 +211,27 @@ function ServicePointContainer({
 
             <FormControl>
               <TextField
-                  id="repositoryId"
-                  label="Repository Id"
-                  variant="outlined"
-                  disabled={isWorking}
-                  value={formData.repositoryId || ""}
-                  onChange={(e) => {
-                    setFormData({ ...formData, repositoryId: e.target.value });
-                  }}
+                id="repositoryId"
+                label="Repository Id"
+                variant="outlined"
+                disabled={isWorking}
+                value={formData.repositoryId || ""}
+                onChange={(e) => {
+                  setFormData({ ...formData, repositoryId: e.target.value });
+                }}
               />
             </FormControl>
 
             <FormControl>
               <TextField
-                  id="prefix"
-                  label="Prefix"
-                  variant="outlined"
-                  disabled={isWorking}
-                  value={formData.prefix || ""}
-                  onChange={(e) => {
-                    setFormData({ ...formData, prefix: e.target.value });
-                  }}
+                id="prefix"
+                label="Prefix"
+                variant="outlined"
+                disabled={isWorking}
+                value={formData.prefix || ""}
+                onChange={(e) => {
+                  setFormData({ ...formData, prefix: e.target.value });
+                }}
               />
             </FormControl>
 
@@ -273,19 +272,19 @@ function ServicePointContainer({
                   setFormData({ ...formData, techEmail: e.target.value });
                 }}
               />
-              </FormControl>
+            </FormControl>
             <FormControl>
               <TextField
-                  autoComplete="off"
-                  type="password"
-                  id="password"
-                  label="Password"
-                  variant="outlined"
-                  disabled={isWorking}
-                  value={formData.password || ""}
-                  onChange={(e) => {
-                    setFormData({ ...formData, password: e.target.value });
-                  }}
+                autoComplete="off"
+                type="password"
+                id="password"
+                label="Password"
+                variant="outlined"
+                disabled={isWorking}
+                value={formData.password || ""}
+                onChange={(e) => {
+                  setFormData({ ...formData, password: e.target.value });
+                }}
               />
             </FormControl>
             <FormControl>
