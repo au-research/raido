@@ -30,12 +30,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -75,15 +78,19 @@ class RaidServiceTest {
         final var suffix = "_suffix";
         final var handle = new Handle(prefix, suffix);
         final var createRaidRequest = createRaidRequest();
+        final var repositoryId = "repository-id";
+        final var password = "_password";
 
-        final var servicePointRecord = new ServicePointRecord();
+        final var servicePointRecord = new ServicePointRecord()
+                .setPrefix(prefix)
+                .setRepositoryId(repositoryId)
+                .setPassword(password);
 
         final var raidDto = new RaidDto();
 
         final var id = new Id();
 
         when(servicePointRepository.findById(servicePointId)).thenReturn(Optional.of(servicePointRecord));
-        when(dataciteService.getDatacitePrefix()).thenReturn(prefix);
         when(handleFactory.createWithPrefix(prefix)).thenReturn(handle);
 
         when(idFactory.create(handle.toString(), servicePointRecord)).thenReturn(id);
@@ -91,6 +98,7 @@ class RaidServiceTest {
 
         raidService.mint(createRaidRequest, servicePointId);
         verify(raidIngestService).create(raidDto);
+        verify(dataciteService).mint(createRaidRequest, handle.toString(), repositoryId, password);
     }
 
     @Test
@@ -108,8 +116,6 @@ class RaidServiceTest {
         final var expected = objectMapper.readValue(raidJson(), RaidDto.class);
         when(raidIngestService.findByHandle(handle)).thenReturn(Optional.of(expected));
 
-//        when(raidDtoFactory.create(raidRecord)).thenReturn(expected);
-
         final var result = raidService.findByHandle(handle);
         assertThat(result.get(), Matchers.is(expected));
 
@@ -117,10 +123,17 @@ class RaidServiceTest {
 
     @Test
     @DisplayName("Updating a raid saves changes and returns updated raid")
-    void update() throws JsonProcessingException, ValidationFailureException {
+    void update() throws JsonProcessingException {
 
         final var handle = "10378.1/1696639";
         final var raidJson = raidJson();
+        final var servicePointId = 123L;
+        final var repositoryId = "repository-id";
+        final var password = "_password";
+
+        final var servicePointRecord = new ServicePointRecord()
+                .setRepositoryId(repositoryId)
+                .setPassword(password);
 
         final var updateRequest = objectMapper.readValue(raidJson, RaidUpdateRequest.class);
         final var expected = objectMapper.readValue(raidJson, RaidDto.class);
@@ -132,8 +145,13 @@ class RaidServiceTest {
 
         when(raidHistoryService.save(updateRequest)).thenReturn(expected);
         when(raidIngestService.update(expected)).thenReturn(expected);
-        final var result = raidService.update(updateRequest);
+
+        when(servicePointRepository.findById(servicePointId)).thenReturn(Optional.of(servicePointRecord));
+
+        final var result = raidService.update(updateRequest, servicePointId);
         assertThat(result, Matchers.is(expected));
+
+        verify(dataciteService).update(updateRequest, handle, repositoryId, password);
     }
 
     @Test
@@ -142,6 +160,13 @@ class RaidServiceTest {
 
         final var servicePointId = 999L;
         final var raidJson = raidJson();
+        final var repositoryId = "repository-id";
+        final var password = "_password";
+
+        final var servicePointRecord = new ServicePointRecord()
+                .setId(servicePointId)
+                .setRepositoryId(repositoryId)
+                .setPassword(password);
 
         final var updateRequest = objectMapper.readValue(raidJson, RaidUpdateRequest.class);
         final var expected = objectMapper.readValue(raidJson, RaidDto.class);
@@ -150,20 +175,59 @@ class RaidServiceTest {
         final var id = new IdentifierParser().parseUrlWithException(updateRequest.getIdentifier().getId());
         final var handle = id.handle().format();
 
-        final var servicePointRecord = new ServicePointRecord();
-        servicePointRecord.setId(servicePointId);
+        when(servicePointRepository.findById(servicePointId)).thenReturn(Optional.of(servicePointRecord));
 
         when(checksumService.create(expected)).thenReturn("1");
         when(checksumService.create(updateRequest)).thenReturn("1");
 
         when(raidHistoryService.findByHandleAndVersion(handle, 1)).thenReturn(Optional.of(expected));
 
-        final var result = raidService.update(updateRequest);
+        final var result = raidService.update(updateRequest, servicePointId);
 
         assertThat(result, Matchers.is(expected));
 
+        verifyNoInteractions(dataciteService);
         verifyNoInteractions(raidIngestService);
     }
+
+    @Test
+    @DisplayName("Retries minting handle with Datacite if handle is already in use")
+    void retriesMint() throws IOException {
+        final long servicePointId = 123;
+        final var prefix = "_prefix";
+        final var suffix = "_suffix";
+        final var handle = new Handle(prefix, suffix);
+        final var createRaidRequest = createRaidRequest();
+        final var repositoryId = "repository-id";
+        final var password = "_password";
+
+        final var servicePointRecord = new ServicePointRecord()
+                .setPrefix(prefix)
+                .setRepositoryId(repositoryId)
+                .setPassword(password);
+
+        final var id = new Id();
+
+        final var exception = new HttpClientErrorException(HttpStatusCode.valueOf(422));
+
+        when(servicePointRepository.findById(servicePointId)).thenReturn(Optional.of(servicePointRecord));
+        when(handleFactory.createWithPrefix(prefix)).thenReturn(handle);
+
+        when(idFactory.create(handle.toString(), servicePointRecord)).thenReturn(id);
+
+        doThrow(exception)
+                .when(dataciteService).mint(createRaidRequest, handle.toString(), repositoryId, password);
+
+        assertThrows(exception.getClass(), () -> raidService.mint(createRaidRequest, servicePointId));
+
+        verifyNoInteractions(raidIngestService);
+        verifyNoInteractions(raidHistoryService);
+
+        verify(handleFactory, times(3)).createWithPrefix(prefix);
+        verify(dataciteService, times(3)).mint(createRaidRequest, handle.toString(), repositoryId, password);
+    }
+
+
 
     private String raidJson() {
         return FileUtil.resourceContent("/fixtures/raid.json");

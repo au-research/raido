@@ -281,6 +281,7 @@ class RaidControllerTest {
 
     @Test
     void updateRaidV1_ReturnsBadRequest() throws Exception {
+        final var servicePointId = 123L;
         final var prefix = "10.38";
         final var suffix = "99999";
         final var handle = String.join("/", prefix, suffix);
@@ -299,7 +300,6 @@ class RaidControllerTest {
             final ApiToken apiToken = mock(ApiToken.class);
             authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
             when(raidService.isEditable(any(ApiToken.class), anyLong())).thenReturn(true);
-
 
             when(validationService.validateForUpdate(eq(handle), any(RaidUpdateRequest.class))).thenReturn(List.of(validationFailure));
 
@@ -322,7 +322,7 @@ class RaidControllerTest {
             assertThat(validationFailureResponse.getFailures().get(0).getErrorType(), Matchers.is(validationFailureType));
             assertThat(validationFailureResponse.getFailures().get(0).getMessage(), Matchers.is(validationFailureMessage));
 
-            verify(raidService, never()).update(input);
+            verifyNoMoreInteractions(raidService);
         }
     }
 
@@ -370,13 +370,14 @@ class RaidControllerTest {
 
         try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
             final ApiToken apiToken = mock(ApiToken.class);
+            when(apiToken.getServicePointId()).thenReturn(servicePointId);
             authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
             when(raidService.isEditable(any(ApiToken.class), anyLong())).thenReturn(true);
 
             when(validationService.validateForUpdate(String.join("/", prefix, suffix), input))
                     .thenReturn(Collections.emptyList());
 
-            when(raidService.update(input)).thenReturn(output);
+            when(raidService.update(input, servicePointId)).thenReturn(output);
 
             mockMvc.perform(put(String.format("/raid/%s/%s", prefix, suffix))
                             .contentType(MediaType.APPLICATION_JSON)
@@ -423,6 +424,7 @@ class RaidControllerTest {
 
     @Test
     void updateRaidV1_Returns404IfNotFound() throws Exception {
+        final var servicePointId = 123L;
         final var prefix = "10378.1";
         final var suffix = "1696639";
         final var handle = String.join("/", prefix, suffix);
@@ -430,13 +432,14 @@ class RaidControllerTest {
 
         try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
             final ApiToken apiToken = mock(ApiToken.class);
+            when(apiToken.getServicePointId()).thenReturn(servicePointId);
             authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
             when(raidService.isEditable(any(ApiToken.class), anyLong())).thenReturn(true);
 
             when(validationService.validateForUpdate(eq(handle), any(RaidUpdateRequest.class))).thenReturn(Collections.emptyList());
 
             doThrow(new ResourceNotFoundException(handle))
-                    .when(raidService).update(input);
+                    .when(raidService).update(input, servicePointId);
 
             final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/%s/%s", prefix, suffix))
                             .contentType(MediaType.APPLICATION_JSON)

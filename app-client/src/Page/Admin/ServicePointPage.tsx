@@ -1,11 +1,12 @@
 import {
+  Button,
   Card,
   CardContent,
   CardHeader,
   Checkbox,
   Container,
   FormControl,
-  FormControlLabel,
+  FormControlLabel, Snackbar,
   Stack,
   TextField,
   Typography,
@@ -21,7 +22,7 @@ import {
   type ServicePointCreateRequest,
 } from "Generated/Raidv2";
 import { RqQuery } from "Util/ReactQueryUtil";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import { useParams } from "react-router-dom";
 
@@ -32,15 +33,37 @@ export function ServicePointPage() {
   };
 
   const [servicePointId, setServicePointId] = useState(servicePointIdParam);
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
   return (
     <Container>
+      <Snackbar
+          open={open}
+          autoHideDuration={2000}
+          onClose={handleClose}
+          message="✅ Service point created."
+      />
       <ServicePointContainer
         servicePointId={+servicePointId}
         onCreate={(createdId) => {
+          setServicePointId(createdId.toString());
+          setOpen(true);
           navigate(`/service-point/${createdId}`, {
             replace: true,
           });
-          setServicePointId(createdId.toString());
         }}
       />
     </Container>
@@ -54,6 +77,10 @@ function ServicePointContainer({
   servicePointId: number | undefined;
   onCreate: (servicePointId: number) => void;
 }) {
+
+
+
+
   const api = useAuthApi();
   const queryClient = useQueryClient();
   const queryName = "readServicePoint";
@@ -66,6 +93,9 @@ function ServicePointContainer({
     adminEmail: "",
     enabled: true,
     appWritesEnabled: true,
+    repositoryId: "",
+    prefix: "",
+    password: "",
   } as ServicePoint);
   const query: RqQuery<ServicePoint> = useQuery(
     [queryName, servicePointId],
@@ -153,7 +183,11 @@ function ServicePointContainer({
 
   return (
     <Card>
-      <CardHeader title="Service point" />
+      <CardHeader title={
+        servicePointId
+          ? `Service Point ${servicePointId}`
+          : "Create Service Point"
+      } />
       <CardContent>
         <form
           autoComplete="off"
@@ -163,7 +197,7 @@ function ServicePointContainer({
           }}
         >
           <Stack spacing={2}>
-            <FormControl focused autoCorrect="off" autoCapitalize="on">
+            <FormControl>
               <TextField
                 id="name"
                 label="Name"
@@ -176,7 +210,33 @@ function ServicePointContainer({
               />
             </FormControl>
 
-            <FormControl focused autoCorrect="off" autoCapitalize="on">
+            <FormControl>
+              <TextField
+                  id="repositoryId"
+                  label="Repository Id"
+                  variant="outlined"
+                  disabled={isWorking}
+                  value={formData.repositoryId || ""}
+                  onChange={(e) => {
+                    setFormData({ ...formData, repositoryId: e.target.value });
+                  }}
+              />
+            </FormControl>
+
+            <FormControl>
+              <TextField
+                  id="prefix"
+                  label="Prefix"
+                  variant="outlined"
+                  disabled={isWorking}
+                  value={formData.prefix || ""}
+                  onChange={(e) => {
+                    setFormData({ ...formData, prefix: e.target.value });
+                  }}
+              />
+            </FormControl>
+
+            <FormControl>
               <TextField
                 id="identifierOwner"
                 label="Identifier Owner"
@@ -186,6 +246,7 @@ function ServicePointContainer({
                 onChange={(e) => {
                   setFormData({ ...formData, identifierOwner: e.target.value });
                 }}
+                helperText="Research Organization Registry Identifier. e.g. https://ror.org/038sjwq14"
               />
             </FormControl>
 
@@ -201,16 +262,32 @@ function ServicePointContainer({
                 }}
               />
             </FormControl>
-            <TextField
-              id="techEmail"
-              label="Tech email"
-              variant="outlined"
-              disabled={isWorking}
-              value={formData.techEmail || ""}
-              onChange={(e) => {
-                setFormData({ ...formData, techEmail: e.target.value });
-              }}
-            />
+            <FormControl>
+              <TextField
+                id="techEmail"
+                label="Tech email"
+                variant="outlined"
+                disabled={isWorking}
+                value={formData.techEmail || ""}
+                onChange={(e) => {
+                  setFormData({ ...formData, techEmail: e.target.value });
+                }}
+              />
+              </FormControl>
+            <FormControl>
+              <TextField
+                  autoComplete="off"
+                  type="password"
+                  id="password"
+                  label="Password"
+                  variant="outlined"
+                  disabled={isWorking}
+                  value={formData.password || ""}
+                  onChange={(e) => {
+                    setFormData({ ...formData, password: e.target.value });
+                  }}
+              />
+            </FormControl>
             <FormControl>
               <FormControlLabel
                 disabled={isWorking}

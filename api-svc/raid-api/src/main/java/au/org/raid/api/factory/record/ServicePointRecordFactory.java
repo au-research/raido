@@ -15,7 +15,10 @@ public class ServicePointRecordFactory {
                 .setAdminEmail(servicePoint.getAdminEmail())
                 .setTechEmail(servicePoint.getTechEmail())
                 .setAppWritesEnabled(servicePoint.getAppWritesEnabled())
-                .setEnabled(servicePoint.getEnabled());
+                .setEnabled(servicePoint.getEnabled())
+                .setRepositoryId(servicePoint.getRepositoryId())
+                .setPrefix(servicePoint.getPrefix())
+                .setPassword(servicePoint.getPassword());
     }
 
     public ServicePointRecord create(final ServicePointCreateRequest servicePoint) {
@@ -25,6 +28,9 @@ public class ServicePointRecordFactory {
                 .setAdminEmail(servicePoint.getAdminEmail())
                 .setTechEmail(servicePoint.getTechEmail())
                 .setAppWritesEnabled(servicePoint.getAppWritesEnabled())
-                .setEnabled(servicePoint.getEnabled());
+                .setEnabled(servicePoint.getEnabled())
+                .setRepositoryId(servicePoint.getRepositoryId())
+                .setPrefix(servicePoint.getPrefix())
+                .setPassword(servicePoint.getPassword());
     }
 }
