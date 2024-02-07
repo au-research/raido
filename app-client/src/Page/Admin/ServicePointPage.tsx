@@ -58,6 +58,10 @@ function ServicePointContainer({
   const queryClient = useQueryClient();
   const queryName = "readServicePoint";
   const [formData, setFormData] = useState({
+    name: "",
+    repositoryId: "",
+    prefix: "",
+    identifierOwner: "",
     techEmail: "",
     adminEmail: "",
     enabled: true,
