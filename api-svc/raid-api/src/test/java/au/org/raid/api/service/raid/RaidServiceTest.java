@@ -30,12 +30,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -186,6 +189,45 @@ class RaidServiceTest {
         verifyNoInteractions(dataciteService);
         verifyNoInteractions(raidIngestService);
     }
+
+    @Test
+    @DisplayName("Retries minting handle with Datacite if handle is already in use")
+    void retriesMint() throws IOException {
+        final long servicePointId = 123;
+        final var prefix = "_prefix";
+        final var suffix = "_suffix";
+        final var handle = new Handle(prefix, suffix);
+        final var createRaidRequest = createRaidRequest();
+        final var repositoryId = "repository-id";
+        final var password = "_password";
+
+        final var servicePointRecord = new ServicePointRecord()
+                .setPrefix(prefix)
+                .setRepositoryId(repositoryId)
+                .setPassword(password);
+
+        final var id = new Id();
+
+        final var exception = new HttpClientErrorException(HttpStatusCode.valueOf(422));
+
+        when(servicePointRepository.findById(servicePointId)).thenReturn(Optional.of(servicePointRecord));
+        when(handleFactory.createWithPrefix(prefix)).thenReturn(handle);
+
+        when(idFactory.create(handle.toString(), servicePointRecord)).thenReturn(id);
+
+        doThrow(exception)
+                .when(dataciteService).mint(createRaidRequest, handle.toString(), repositoryId, password);
+
+        assertThrows(exception.getClass(), () -> raidService.mint(createRaidRequest, servicePointId));
+
+        verifyNoInteractions(raidIngestService);
+        verifyNoInteractions(raidHistoryService);
+
+        verify(handleFactory, times(3)).createWithPrefix(prefix);
+        verify(dataciteService, times(3)).mint(createRaidRequest, handle.toString(), repositoryId, password);
+    }
+
+
 
     private String raidJson() {
         return FileUtil.resourceContent("/fixtures/raid.json");
