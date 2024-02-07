@@ -7,13 +7,26 @@ package au.org.raid.db.jooq.tables;
 import au.org.raid.db.jooq.ApiSvc;
 import au.org.raid.db.jooq.Keys;
 import au.org.raid.db.jooq.tables.records.ContributorSchemaRecord;
+
+import java.util.function.Function;
+
+import org.jooq.Field;
+import org.jooq.ForeignKey;
+import org.jooq.Function2;
+import org.jooq.Identity;
+import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.*;
+import org.jooq.Records;
+import org.jooq.Row2;
+import org.jooq.Schema;
+import org.jooq.SelectField;
+import org.jooq.Table;
+import org.jooq.TableField;
+import org.jooq.TableOptions;
+import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
-
-import java.util.function.Function;
 
 
 /**

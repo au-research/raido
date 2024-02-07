@@ -5,13 +5,14 @@ package au.org.raid.db.jooq.tables.records;
 
 
 import au.org.raid.db.jooq.tables.RaidHistory;
+
+import java.time.LocalDateTime;
+
 import org.jooq.Field;
 import org.jooq.Record3;
 import org.jooq.Record5;
 import org.jooq.Row5;
 import org.jooq.impl.UpdatableRecordImpl;
-
-import java.time.LocalDateTime;
 
 
 /**

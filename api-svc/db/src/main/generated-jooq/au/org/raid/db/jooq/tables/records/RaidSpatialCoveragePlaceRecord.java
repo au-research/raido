@@ -5,6 +5,7 @@ package au.org.raid.db.jooq.tables.records;
 
 
 import au.org.raid.db.jooq.tables.RaidSpatialCoveragePlace;
+
 import org.jooq.Field;
 import org.jooq.Record3;
 import org.jooq.Row3;
