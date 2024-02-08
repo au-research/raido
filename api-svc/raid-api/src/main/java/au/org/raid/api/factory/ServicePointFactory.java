@@ -14,7 +14,6 @@ public class ServicePointFactory {
                 .techEmail(servicePointDto.getTechEmail())
                 .repositoryId(servicePointDto.getRepositoryId())
                 .prefix(servicePointDto.getPrefix())
-                .password(servicePointDto.getPassword())
                 .enabled(servicePointDto.getEnabled())
                 .appWritesEnabled(servicePointDto.getAppWritesEnabled());
     }
@@ -29,7 +28,6 @@ public class ServicePointFactory {
                 .identifierOwner(servicePointRecord.getIdentifierOwner())
                 .techEmail(servicePointRecord.getTechEmail())
                 .repositoryId(servicePointRecord.getRepositoryId())
-                .prefix(servicePointRecord.getPrefix())
-                .password(servicePointRecord.getPassword());
+                .prefix(servicePointRecord.getPrefix());
     }
 }
