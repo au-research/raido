@@ -4,13 +4,12 @@ import au.org.raid.api.dto.UserDto;
 import au.org.raid.api.service.ServicePointService;
 import au.org.raid.api.service.UserService;
 import au.org.raid.idl.raidv2.api.ServicePointApi;
-import au.org.raid.idl.raidv2.model.ServicePointCreateRequest;
 import au.org.raid.idl.raidv2.model.ServicePoint;
+import au.org.raid.idl.raidv2.model.ServicePointCreateRequest;
+import au.org.raid.idl.raidv2.model.ServicePointUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
@@ -38,7 +37,7 @@ public class ServicePointController implements ServicePointApi {
 
     public ResponseEntity<ServicePoint> updateServicePoint(
             final Long id,
-            final ServicePoint servicePoint
+            final ServicePointUpdateRequest servicePoint
     ) {
         return ResponseEntity.ok(servicePointService.update(servicePoint));
     }

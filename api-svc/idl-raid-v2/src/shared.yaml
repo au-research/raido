@@ -53,9 +53,6 @@ components:
           type: string
           description: The prefix used in the handle when minting RAiDs. Assigned when the repository is created.
           example: 10.82481
-        password:
-          type: string
-          description: The password of the repository in Datacite.
         searchContent: {type: string}
         techEmail: {type: string}
         adminEmail: {type: string}

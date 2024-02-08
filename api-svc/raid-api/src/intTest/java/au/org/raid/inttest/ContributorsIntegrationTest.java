@@ -531,10 +531,6 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                                     new ContributorPosition()
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
-                                            .id(LEADER_POSITION),
-                                    new ContributorPosition()
-                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
-                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                             ))
                             .role(List.of(
                                     new ContributorRole()
@@ -551,7 +547,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributor[0].position[1].id")
+                                .fieldId("contributor[0].position[0].id")
                                 .errorType("notSet")
                                 .message("field must be set")
                 );
@@ -572,10 +568,6 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                             .position(List.of(
                                     new ContributorPosition()
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
-                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
-                                            .id(LEADER_POSITION),
-                                    new ContributorPosition()
-                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri("https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v2")
                                             .id(OTHER_PARTICIPANT_POSITION)
                             ))
@@ -594,7 +586,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributor[0].position[1].schemaUri")
+                                .fieldId("contributor[0].position[0].schemaUri")
                                 .errorType("invalidValue")
                                 .message("schema is unknown/unsupported")
                 );
@@ -616,10 +608,6 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                                     new ContributorPosition()
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
-                                            .id(LEADER_POSITION),
-                                    new ContributorPosition()
-                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
-                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/unknown.json")
                             ))
                             .role(List.of(
@@ -637,7 +625,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                 assertThat(failures).hasSize(1);
                 assertThat(failures).contains(
                         new ValidationFailure()
-                                .fieldId("contributor[0].position[1].id")
+                                .fieldId("contributor[0].position[0].id")
                                 .errorType("invalidValue")
                                 .message("id does not exist within the given schema")
                 );
@@ -798,10 +786,6 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                                     new ContributorPosition()
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
-                                            .id(LEADER_POSITION),
-                                    new ContributorPosition()
-                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
-                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .id(OTHER_PARTICIPANT_POSITION)
                             ))
                             .role(List.of(
@@ -837,10 +821,6 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                             .leader(true)
                             .id("https://orcid.org/0000-0000-0000-0001")
                             .position(List.of(
-                                    new ContributorPosition()
-                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
-                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
-                                            .id(LEADER_POSITION),
                                     new ContributorPosition()
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
@@ -880,10 +860,6 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                             .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                             .id("https://orcid.org/0000-0000-0000-0001")
                             .position(List.of(
-                                    new ContributorPosition()
-                                            .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
-                                            .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
-                                            .id(LEADER_POSITION),
                                     new ContributorPosition()
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)

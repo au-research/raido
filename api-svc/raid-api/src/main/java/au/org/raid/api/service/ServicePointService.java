@@ -5,6 +5,7 @@ import au.org.raid.api.factory.record.ServicePointRecordFactory;
 import au.org.raid.api.repository.ServicePointRepository;
 import au.org.raid.idl.raidv2.model.ServicePoint;
 import au.org.raid.idl.raidv2.model.ServicePointCreateRequest;
+import au.org.raid.idl.raidv2.model.ServicePointUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -27,7 +28,7 @@ public class ServicePointService {
         return servicePointFactory.create(servicePointRepository.create(record));
     }
 
-    public ServicePoint update(final ServicePoint servicePoint) {
+    public ServicePoint update(final ServicePointUpdateRequest servicePoint) {
         final var record = servicePointRecordFactory.create(servicePoint);
         return servicePointFactory.create(servicePointRepository.update(record));
     }
