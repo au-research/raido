@@ -1,10 +1,18 @@
-import {Add, Key, People, Visibility, VisibilityOff} from "@mui/icons-material";
 import {
+  Add,
+  Key,
+  People,
+  Visibility,
+  VisibilityOff,
+} from "@mui/icons-material";
+import {
+  Breadcrumbs,
   Button,
   Card,
   CardContent,
   CardHeader,
-  Container, Fab,
+  Container,
+  Fab,
   Table,
   TableBody,
   TableCell,
@@ -15,12 +23,11 @@ import {
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthApi } from "Api/AuthApi";
-import { RaidoAddFab } from "Component/AppButton";
 import { RefreshIconButton } from "Component/RefreshIconButton";
 import { CompactErrorPanel } from "Error/CompactErrorPanel";
 import { ServicePoint } from "Generated/Raidv2";
 import { RqQuery } from "Util/ReactQueryUtil";
-import {Link, NavLink} from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 export function ListServicePointPage() {
   const api = useAuthApi();
@@ -43,6 +50,10 @@ export function ListServicePointPage() {
   }
   return (
     <Container>
+      <Breadcrumbs aria-label="breadcrumb" sx={{ py: 3 }}>
+        <Link to="/">Home</Link>
+        <Typography color="text.primary">Service points</Typography>
+      </Breadcrumbs>
       <Card>
         <CardHeader
           title={"Service points"}
@@ -53,10 +64,7 @@ export function ListServicePointPage() {
                 onClick={() => query.refetch()}
               />
               <Link to="/service-point">
-                <Fab
-                    color="primary"
-                    size="small"
-                >
+                <Fab color="primary" size="small">
                   <Add />
                 </Fab>
               </Link>

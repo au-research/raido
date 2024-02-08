@@ -1,4 +1,5 @@
 import {
+  Breadcrumbs,
   Card,
   CardContent,
   CardHeader,
@@ -24,7 +25,7 @@ import {
 import { RqQuery } from "Util/ReactQueryUtil";
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export function ServicePointPage() {
   const navigate = useNavigate();
@@ -179,187 +180,204 @@ function ServicePointContainer({
   const isWorking = query.isLoading || updateRequest.isLoading;
 
   return (
-    <Card>
-      <CardHeader
-        title={
-          servicePointId
+    <>
+      <Breadcrumbs aria-label="breadcrumb" sx={{ py: 3 }}>
+        <Link to="/">Home</Link>
+        <Link to="/list-service-point">Service points</Link>
+        <Typography color="text.primary">
+          {servicePointId
             ? `Service Point ${servicePointId}`
-            : "Create Service Point"
-        }
-      />
-      <CardContent>
-        <form
-          autoComplete="off"
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleFormSubmit(formData);
-          }}
-        >
-          <Stack spacing={2}>
-            <FormControl>
-              <TextField
-                id="name"
-                label="Name"
-                variant="outlined"
-                disabled={isWorking}
-                value={formData.name || ""}
-                onChange={(e) => {
-                  setFormData({ ...formData, name: e.target.value });
-                }}
-              />
-            </FormControl>
+            : "Create Service Point"}
+        </Typography>
+      </Breadcrumbs>
+      <Card>
+        <CardHeader
+          title={
+            servicePointId
+              ? `Service Point ${servicePointId}`
+              : "Create Service Point"
+          }
+        />
+        <CardContent>
+          <form
+            autoComplete="off"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleFormSubmit(formData);
+            }}
+          >
+            <Stack spacing={2}>
+              <FormControl>
+                <TextField
+                  id="name"
+                  label="Name"
+                  variant="outlined"
+                  disabled={isWorking}
+                  value={formData.name || ""}
+                  onChange={(e) => {
+                    setFormData({ ...formData, name: e.target.value });
+                  }}
+                />
+              </FormControl>
 
-            <FormControl>
-              <TextField
-                id="repositoryId"
-                label="Repository Id"
-                variant="outlined"
-                disabled={isWorking}
-                value={formData.repositoryId || ""}
-                onChange={(e) => {
-                  setFormData({ ...formData, repositoryId: e.target.value });
-                }}
-              />
-            </FormControl>
+              <FormControl>
+                <TextField
+                  id="repositoryId"
+                  label="Repository Id"
+                  variant="outlined"
+                  disabled={isWorking}
+                  value={formData.repositoryId || ""}
+                  onChange={(e) => {
+                    setFormData({ ...formData, repositoryId: e.target.value });
+                  }}
+                />
+              </FormControl>
 
-            <FormControl>
-              <TextField
-                id="prefix"
-                label="Prefix"
-                variant="outlined"
-                disabled={isWorking}
-                value={formData.prefix || ""}
-                onChange={(e) => {
-                  setFormData({ ...formData, prefix: e.target.value });
-                }}
-              />
-            </FormControl>
+              <FormControl>
+                <TextField
+                  id="prefix"
+                  label="Prefix"
+                  variant="outlined"
+                  disabled={isWorking}
+                  value={formData.prefix || ""}
+                  onChange={(e) => {
+                    setFormData({ ...formData, prefix: e.target.value });
+                  }}
+                />
+              </FormControl>
 
-            <FormControl>
-              <TextField
-                id="identifierOwner"
-                label="Identifier Owner"
-                variant="outlined"
-                disabled={isWorking}
-                value={formData.identifierOwner || ""}
-                onChange={(e) => {
-                  setFormData({ ...formData, identifierOwner: e.target.value });
-                }}
-                helperText="Research Organization Registry Identifier. e.g. https://ror.org/038sjwq14"
-              />
-            </FormControl>
+              <FormControl>
+                <TextField
+                  id="identifierOwner"
+                  label="Identifier Owner"
+                  variant="outlined"
+                  disabled={isWorking}
+                  value={formData.identifierOwner || ""}
+                  onChange={(e) => {
+                    setFormData({
+                      ...formData,
+                      identifierOwner: e.target.value,
+                    });
+                  }}
+                  helperText="Research Organization Registry Identifier. e.g. https://ror.org/038sjwq14"
+                />
+              </FormControl>
 
-            <FormControl>
-              <TextField
-                id="adminEmail"
-                label="Admin email"
-                variant="outlined"
-                disabled={isWorking}
-                value={formData.adminEmail || ""}
-                onChange={(e) => {
-                  setFormData({ ...formData, adminEmail: e.target.value });
-                }}
-              />
-            </FormControl>
-            <FormControl>
-              <TextField
-                id="techEmail"
-                label="Tech email"
-                variant="outlined"
-                disabled={isWorking}
-                value={formData.techEmail || ""}
-                onChange={(e) => {
-                  setFormData({ ...formData, techEmail: e.target.value });
-                }}
-              />
-            </FormControl>
-            <FormControl>
-              <TextField
-                autoComplete="off"
-                type="password"
-                id="password"
-                label="Password"
-                variant="outlined"
-                disabled={isWorking}
-                value={formData.password || ""}
-                onChange={(e) => {
-                  setFormData({ ...formData, password: e.target.value });
-                }}
-              />
-            </FormControl>
-            <FormControl>
-              <FormControlLabel
-                disabled={isWorking}
-                label="Enabled"
-                labelPlacement="start"
-                style={{
-                  /* by default, MUI lays this out as <checkbox><label>.
+              <FormControl>
+                <TextField
+                  id="adminEmail"
+                  label="Admin email"
+                  variant="outlined"
+                  disabled={isWorking}
+                  value={formData.adminEmail || ""}
+                  onChange={(e) => {
+                    setFormData({ ...formData, adminEmail: e.target.value });
+                  }}
+                />
+              </FormControl>
+              <FormControl>
+                <TextField
+                  id="techEmail"
+                  label="Tech email"
+                  variant="outlined"
+                  disabled={isWorking}
+                  value={formData.techEmail || ""}
+                  onChange={(e) => {
+                    setFormData({ ...formData, techEmail: e.target.value });
+                  }}
+                />
+              </FormControl>
+              <FormControl>
+                <TextField
+                  autoComplete="off"
+                  type="password"
+                  id="password"
+                  label="Password"
+                  variant="outlined"
+                  disabled={isWorking}
+                  value={formData.password || ""}
+                  onChange={(e) => {
+                    setFormData({ ...formData, password: e.target.value });
+                  }}
+                />
+              </FormControl>
+              <FormControl>
+                <FormControlLabel
+                  disabled={isWorking}
+                  label="Enabled"
+                  labelPlacement="start"
+                  style={{
+                    /* by default, MUI lays this out as <checkbox><label>.
                                      Doing `labelPlacement=start`, flips that around, but ends up
                                      right-justifying the content, so `marginRight=auto` pushes it back
                                      across to the left and `marginLeft=0` aligns nicely. */
-                  marginLeft: 0,
-                  marginRight: "auto",
-                }}
-                control={
-                  <Checkbox
-                    checked={formData.enabled ?? true}
-                    onChange={() => {
-                      setFormData({ ...formData, enabled: !formData.enabled });
-                    }}
-                  />
-                }
-              />
-            </FormControl>
+                    marginLeft: 0,
+                    marginRight: "auto",
+                  }}
+                  control={
+                    <Checkbox
+                      checked={formData.enabled ?? true}
+                      onChange={() => {
+                        setFormData({
+                          ...formData,
+                          enabled: !formData.enabled,
+                        });
+                      }}
+                    />
+                  }
+                />
+              </FormControl>
 
-            <FormControl>
-              <FormControlLabel
-                disabled={isWorking}
-                label="Enable editing in app"
-                labelPlacement="start"
-                style={{
-                  /* by default, MUI lays this out as <checkbox><label>.
+              <FormControl>
+                <FormControlLabel
+                  disabled={isWorking}
+                  label="Enable editing in app"
+                  labelPlacement="start"
+                  style={{
+                    /* by default, MUI lays this out as <checkbox><label>.
                                      Doing `labelPlacement=start`, flips that around, but ends up
                                      right-justifying the content, so `marginRight=auto` pushes it back
                                      across to the left and `marginLeft=0` aligns nicely. */
-                  marginLeft: 0,
-                  marginRight: "auto",
-                }}
-                control={
-                  <Checkbox
-                    checked={formData.appWritesEnabled ?? true}
-                    onChange={() => {
-                      setFormData({
-                        ...formData,
-                        appWritesEnabled: !formData.appWritesEnabled,
-                      });
-                    }}
-                  />
-                }
-              />
-            </FormControl>
+                    marginLeft: 0,
+                    marginRight: "auto",
+                  }}
+                  control={
+                    <Checkbox
+                      checked={formData.appWritesEnabled ?? true}
+                      onChange={() => {
+                        setFormData({
+                          ...formData,
+                          appWritesEnabled: !formData.appWritesEnabled,
+                        });
+                      }}
+                    />
+                  }
+                />
+              </FormControl>
 
-            <Stack direction={"row"} spacing={2}>
-              <SecondaryButton
-                onClick={() => window.history.back()}
-                disabled={updateRequest.isLoading}
-              >
-                Back
-              </SecondaryButton>
-              <PrimaryActionButton
-                type="submit"
-                context={"update service point"}
-                disabled={
-                  isWorking || !formData.name || !formData.identifierOwner
-                }
-                isLoading={updateRequest.isLoading}
-                error={updateRequest.error}
-              >
-                {servicePointId ? "Update" : "Create"}
-              </PrimaryActionButton>
+              <Stack direction={"row"} spacing={2}>
+                <SecondaryButton
+                  onClick={() => window.history.back()}
+                  disabled={updateRequest.isLoading}
+                >
+                  Back
+                </SecondaryButton>
+                <PrimaryActionButton
+                  type="submit"
+                  context={"update service point"}
+                  disabled={
+                    isWorking || !formData.name || !formData.identifierOwner
+                  }
+                  isLoading={updateRequest.isLoading}
+                  error={updateRequest.error}
+                >
+                  {servicePointId ? "Update" : "Create"}
+                </PrimaryActionButton>
+              </Stack>
             </Stack>
-          </Stack>
-        </form>
-      </CardContent>
-    </Card>
+          </form>
+        </CardContent>
+      </Card>
+    </>
   );
 }
