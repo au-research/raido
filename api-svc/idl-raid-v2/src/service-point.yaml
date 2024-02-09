@@ -79,7 +79,7 @@ paths:
         content:
           application/json:
             schema:
-                $ref: 'shared.yaml#/components/schemas/ServicePoint'
+                $ref: '#/components/schemas/ServicePointUpdateRequest'
       responses:
         200:
           description: The service point was successfully updated.
@@ -132,4 +132,15 @@ components:
         enabled:
           type: boolean
           description: Whether the service point is able to create or update RAiDs
-
+    ServicePointUpdateRequest:
+      allOf:
+        - $ref: '#/components/schemas/ServicePointCreateRequest'
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: The name of the service point
+          example: Australian Research Data Commons

@@ -26,3 +26,4 @@ src/Generated
 /test-results/
 /playwright-report/
 /playwright/.cache/
+/state.json
