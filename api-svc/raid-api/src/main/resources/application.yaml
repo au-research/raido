@@ -32,6 +32,7 @@ raid:
     host: localhost
     port: 7432
     name: raido
+    encryption-key: not-set
   spatial-coverage:
     schema-uri:
       geonames: https://www.geonames.org/

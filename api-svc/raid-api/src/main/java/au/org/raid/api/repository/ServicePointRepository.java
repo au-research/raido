@@ -1,11 +1,13 @@
 package au.org.raid.api.repository;
 
+import au.org.raid.api.security.EncryptionConverter;
 import au.org.raid.db.jooq.tables.records.ServicePointRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static au.org.raid.db.jooq.tables.ServicePoint.SERVICE_POINT;
@@ -14,11 +16,31 @@ import static au.org.raid.db.jooq.tables.ServicePoint.SERVICE_POINT;
 @RequiredArgsConstructor
 public class ServicePointRepository {
     private final DSLContext dslContext;
+    private final EncryptionConverter encryptionConverter;
 
     public Optional<ServicePointRecord> findById(final long servicePointId) {
         return dslContext.selectFrom(SERVICE_POINT)
                 .where(SERVICE_POINT.ID.eq(servicePointId))
-                .fetchOptional();
+                .fetchOptional(r -> {
+                    String password = null;
+                    if (SERVICE_POINT.PASSWORD.getValue(r) != null) {
+                        password = encryptionConverter.from(Objects.requireNonNull(SERVICE_POINT.PASSWORD.getValue(r)));
+                    }
+
+                    return new ServicePointRecord()
+                            .setId(SERVICE_POINT.ID.getValue(r))
+                            .setName(SERVICE_POINT.NAME.getValue(r))
+                            .setAdminEmail(SERVICE_POINT.ADMIN_EMAIL.getValue(r))
+                            .setEnabled(SERVICE_POINT.ENABLED.getValue(r))
+                            .setAppWritesEnabled(SERVICE_POINT.APP_WRITES_ENABLED.getValue(r))
+                            .setTechEmail(SERVICE_POINT.TECH_EMAIL.getValue(r))
+                            .setIdentifierOwner(SERVICE_POINT.IDENTIFIER_OWNER.getValue(r))
+                            .setSearchContent(SERVICE_POINT.SEARCH_CONTENT.getValue(r))
+                            .setRepositoryId(SERVICE_POINT.REPOSITORY_ID.getValue(r))
+                            .setPrefix(SERVICE_POINT.PREFIX.getValue(r))
+                            .setPassword(password);
+                        }
+                );
     }
 
     public ServicePointRecord create(final ServicePointRecord record) {
@@ -32,7 +54,7 @@ public class ServicePointRepository {
                 .set(SERVICE_POINT.SEARCH_CONTENT, record.getSearchContent())
                 .set(SERVICE_POINT.REPOSITORY_ID, record.getRepositoryId())
                 .set(SERVICE_POINT.PREFIX, record.getPrefix())
-                .set(SERVICE_POINT.PASSWORD, record.getPassword())
+                .set(SERVICE_POINT.PASSWORD, encryptionConverter.to(record.getPassword()))
                 .returning()
                 .fetchOne();
     }
@@ -48,7 +70,7 @@ public class ServicePointRepository {
                 .set(SERVICE_POINT.SEARCH_CONTENT, record.getSearchContent())
                 .set(SERVICE_POINT.REPOSITORY_ID, record.getRepositoryId())
                 .set(SERVICE_POINT.PREFIX, record.getPrefix())
-                .set(SERVICE_POINT.PASSWORD, record.getPassword())
+                .set(SERVICE_POINT.PASSWORD, encryptionConverter.to(record.getPassword()))
                 .where(SERVICE_POINT.ID.eq(record.getId()))
                 .returning()
                 .fetchOne();
