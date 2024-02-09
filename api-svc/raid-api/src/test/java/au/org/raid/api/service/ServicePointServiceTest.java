@@ -1,12 +1,12 @@
 package au.org.raid.api.service;
 
-import au.org.raid.api.dto.ServicePointDto;
 import au.org.raid.api.factory.ServicePointFactory;
 import au.org.raid.api.factory.record.ServicePointRecordFactory;
 import au.org.raid.api.repository.ServicePointRepository;
 import au.org.raid.db.jooq.tables.records.ServicePointRecord;
 import au.org.raid.idl.raidv2.model.ServicePoint;
 import au.org.raid.idl.raidv2.model.ServicePointCreateRequest;
+import au.org.raid.idl.raidv2.model.ServicePointUpdateRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +20,6 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
@@ -55,7 +54,7 @@ class ServicePointServiceTest {
     @Test
     @DisplayName("update()")
     void update() {
-        final var input = new ServicePoint();
+        final var input = new ServicePointUpdateRequest();
         final var record = new ServicePointRecord();
         final var updated = new ServicePointRecord()
                 .setId(123L);
