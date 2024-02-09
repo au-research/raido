@@ -39,6 +39,7 @@ export default function ServicePointUpdateForm({
       prefix: z.string(),
       repositoryId: z.string(),
       appWritesEnabled: z.boolean(),
+      password: z.string(),
     }),
   });
 
@@ -65,6 +66,7 @@ export default function ServicePointUpdateForm({
   const updateServicePoint = async (
     servicePoint: UpdateServicePointRequest
   ) => {
+    console.log("servicePoint", servicePoint)
     return await api.servicePoint.updateServicePoint(servicePoint);
   };
 
@@ -142,7 +144,7 @@ export default function ServicePointUpdateForm({
               control={form.control}
               render={({ field }) => (
                 <TextField
-                  label="Identifier Owner"
+                  label="Identifier owner"
                   variant="outlined"
                   helperText="ROR Identifier. e.g. https://ror.org/038sjwq14"
                   size="small"
@@ -194,7 +196,7 @@ export default function ServicePointUpdateForm({
               control={form.control}
               render={({ field }) => (
                 <TextField
-                  label="Password"
+                  label="Change password"
                   type="password"
                   variant="outlined"
                   size="small"
