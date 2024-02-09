@@ -29,7 +29,7 @@ export default function ServicePointUpdateForm({
 
   const updateServicePointRequestValidationSchema = z.object({
     id: z.number(),
-    servicePoint: z.object({
+    servicePointUpdateRequest: z.object({
       id: z.number(),
       name: z.string().min(3),
       identifierOwner: z.string(),
