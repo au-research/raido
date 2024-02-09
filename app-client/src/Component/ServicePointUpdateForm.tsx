@@ -24,7 +24,7 @@ export default function ServicePointUpdateForm({
 
   const initalServicePointValues: UpdateServicePointRequest = {
     id: servicePoint.id,
-    servicePoint: { ...servicePoint },
+    servicePointUpdateRequest: { ...servicePoint },
   };
 
   const updateServicePointRequestValidationSchema = z.object({
@@ -36,7 +36,6 @@ export default function ServicePointUpdateForm({
       adminEmail: z.string(),
       techEmail: z.string(),
       enabled: z.boolean(),
-      password: z.string(),
       prefix: z.string(),
       repositoryId: z.string(),
       appWritesEnabled: z.boolean(),
@@ -85,13 +84,13 @@ export default function ServicePointUpdateForm({
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6} md={4}>
             <Controller
-              name="servicePoint.name"
+              name="servicePointUpdateRequest.name"
               control={form.control}
               render={({ field }) => (
                 <TextField
-                  error={!!form.formState.errors?.servicePoint?.name}
+                  error={!!form.formState.errors?.servicePointUpdateRequest?.name}
                   helperText={
-                    form.formState.errors?.servicePoint?.name?.message
+                    form.formState.errors?.servicePointUpdateRequest?.name?.message
                   }
                   label="Service point name"
                   variant="outlined"
@@ -105,7 +104,7 @@ export default function ServicePointUpdateForm({
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <Controller
-              name="servicePoint.repositoryId"
+              name="servicePointUpdateRequest.repositoryId"
               control={form.control}
               render={({ field }) => (
                 <TextField
@@ -115,14 +114,14 @@ export default function ServicePointUpdateForm({
                   fullWidth
                   {...field}
                   value={field.value}
-                  error={!!form.formState.errors?.servicePoint?.repositoryId}
+                  error={!!form.formState.errors?.servicePointUpdateRequest?.repositoryId}
                 />
               )}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <Controller
-              name="servicePoint.prefix"
+              name="servicePointUpdateRequest.prefix"
               control={form.control}
               render={({ field }) => (
                 <TextField
@@ -132,14 +131,14 @@ export default function ServicePointUpdateForm({
                   fullWidth
                   {...field}
                   value={field.value}
-                  error={!!form.formState.errors?.servicePoint?.prefix}
+                  error={!!form.formState.errors?.servicePointUpdateRequest?.prefix}
                 />
               )}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <Controller
-              name="servicePoint.identifierOwner"
+              name="servicePointUpdateRequest.identifierOwner"
               control={form.control}
               render={({ field }) => (
                 <TextField
@@ -150,14 +149,14 @@ export default function ServicePointUpdateForm({
                   fullWidth
                   {...field}
                   value={field.value}
-                  error={!!form.formState.errors?.servicePoint?.identifierOwner}
+                  error={!!form.formState.errors?.servicePointUpdateRequest?.identifierOwner}
                 />
               )}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <Controller
-              name="servicePoint.adminEmail"
+              name="servicePointUpdateRequest.adminEmail"
               control={form.control}
               render={({ field }) => (
                 <TextField
@@ -167,14 +166,14 @@ export default function ServicePointUpdateForm({
                   fullWidth
                   {...field}
                   value={field.value}
-                  error={!!form.formState.errors?.servicePoint?.adminEmail}
+                  error={!!form.formState.errors?.servicePointUpdateRequest?.adminEmail}
                 />
               )}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <Controller
-              name="servicePoint.techEmail"
+              name="servicePointUpdateRequest.techEmail"
               control={form.control}
               render={({ field }) => (
                 <TextField
@@ -184,14 +183,14 @@ export default function ServicePointUpdateForm({
                   fullWidth
                   {...field}
                   value={field.value}
-                  error={!!form.formState.errors?.servicePoint?.techEmail}
+                  error={!!form.formState.errors?.servicePointUpdateRequest?.techEmail}
                 />
               )}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
             <Controller
-              name="servicePoint.password"
+              name="servicePointUpdateRequest.password"
               control={form.control}
               render={({ field }) => (
                 <TextField
@@ -202,14 +201,14 @@ export default function ServicePointUpdateForm({
                   fullWidth
                   {...field}
                   value={field.value}
-                  error={!!form.formState.errors?.servicePoint?.password}
+                  error={!!form.formState.errors?.servicePointUpdateRequest?.password}
                 />
               )}
             />
           </Grid>
           <Grid item xs={12} sm={12} md={12}>
             <Controller
-              name="servicePoint.enabled"
+              name="servicePointUpdateRequest.enabled"
               control={form.control}
               render={({ field }) => (
                 <FormGroup>
@@ -225,7 +224,7 @@ export default function ServicePointUpdateForm({
           </Grid>
           <Grid item xs={12} sm={12} md={12}>
             <Controller
-              name="servicePoint.appWritesEnabled"
+              name="servicePointUpdateRequest.appWritesEnabled"
               control={form.control}
               render={({ field }) => (
                 <FormGroup>

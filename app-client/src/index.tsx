@@ -22,8 +22,6 @@ import { CreateApiKeyPage } from "./Page/Admin/CreateApiKeyPage";
 import { EditApiKeyPage } from "./Page/Admin/EditApiKeyPage";
 import { ListApiKeyPage } from "./Page/Admin/ListApiKeyPage";
 import { ListAppUserPage } from "./Page/Admin/ListAppUserPage";
-import { ListServicePointPage } from "./Page/Admin/ListServicePointPage";
-import { ServicePointPage } from "./Page/Admin/ServicePointPage";
 import EditRaidPage from "./Page/EditRaidPage";
 import HomePage from "./Page/Homepage";
 import MintRaidPage from "./Page/MintRaidPage";
@@ -51,22 +49,6 @@ const routeWithAuthentication = (el: ReactNode) => {
 };
 
 const servicePointRoutes: RouteObject[] = [
-  {
-    path: "/list-service-point",
-    element: routeWithAuthentication(<ListServicePointPage />),
-  },
-  {
-    path: "/list-service-point/:servicePointId",
-    element: routeWithAuthentication(<ListServicePointPage />),
-  },
-  {
-    path: "/service-point/:servicePointId",
-    element: routeWithAuthentication(<ServicePointPage />),
-  },
-  {
-    path: "/service-point",
-    element: routeWithAuthentication(<ServicePointPage />),
-  },
   {
     path: "/service-points",
     element: routeWithAuthentication(<ServicePoints />),
