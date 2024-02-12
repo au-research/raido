@@ -41,7 +41,7 @@ export default function ServicePointCreateForm() {
       adminEmail: z.string(),
       techEmail: z.string(),
       enabled: z.boolean(),
-      password: z.string(),
+      password: z.string().min(8),
       prefix: z.string(),
       repositoryId: z.string(),
       appWritesEnabled: z.boolean(),
@@ -59,8 +59,7 @@ export default function ServicePointCreateForm() {
     queryClient.invalidateQueries({ queryKey: ["servicePoints"] });
     console.log("✅ Item created");
     form.reset();
-    setOpen(true);
-    // navigate(`/items/${item.id}`);
+    setSnackbarOpen(true);
   };
 
   const handleCreateError = (error: Error) => {
@@ -83,13 +82,9 @@ export default function ServicePointCreateForm() {
     createServicePointMutation.mutate(item);
   };
 
-  const [open, setOpen] = React.useState(false);
+  const [snackbarOpen, setSnackbarOpen] = React.useState<boolean>(false);
 
-  const handleClick = () => {
-    setOpen(true);
-  };
-
-  const handleClose = (
+  const handleSnackbarClose = (
     event: React.SyntheticEvent | Event,
     reason?: string
   ) => {
@@ -97,7 +92,7 @@ export default function ServicePointCreateForm() {
       return;
     }
 
-    setOpen(false);
+    setSnackbarOpen(false);
   };
 
   return (
@@ -245,6 +240,10 @@ export default function ServicePointCreateForm() {
                       !!form.formState.errors?.servicePointCreateRequest
                         ?.password
                     }
+                    helperText={
+                        form.formState.errors?.servicePointCreateRequest?.password
+                            ?.message
+                    }
                   />
                 )}
               />
@@ -282,15 +281,15 @@ export default function ServicePointCreateForm() {
               />
             </Grid>
           </Grid>
-          <Button variant="outlined" type="submit" sx={{ mt: 3 }}>
+          <Button variant="outlined" type="submit" sx={{ mt: 3 }} disabled={Object.keys(form.formState.errors).length > 0}>
             Create service point
           </Button>
         </form>
       </FormProvider>
       <Snackbar
-        open={open}
+        open={snackbarOpen}
         autoHideDuration={3000}
-        onClose={handleClose}
+        onClose={handleSnackbarClose}
         message="✅ Service point created successfully"
       />
     </>
