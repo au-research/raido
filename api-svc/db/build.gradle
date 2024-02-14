@@ -76,7 +76,7 @@ flyway{
   url = apiSvcPgUrl
   user = apiSvcPgUser
   password = apiSvcPgPassword
-  schemas = [apiSvcPgSchema]
+  schemas = [apiSvcPgSchema,'keycloak']
   failOnMissingLocations = true
   locations = ['classpath:db/migration'] + apiSvcExtraLocations
   placeholders = [
