@@ -4,7 +4,8 @@ services:
     image: raid-keycloak:202402131
     ports:
       - 8000:8443
-    command: 'start'
+      - 8001:8080
+    command: 'start-dev'
     environment:
       KC_HEALTH_ENABLED: false
       KC_DB: postgres
