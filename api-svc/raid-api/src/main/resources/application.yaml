@@ -58,6 +58,21 @@ spring:
     default-schema: api_svc
     create-schemas: true
     baseline-version: 25
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8001/realms/SpringBootKeycloak
+      client:
+        registration:
+          keycloak:
+            client-id: login-app
+            authorization-grant-type: authorization_code
+            scope: openid
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8001/realms/SpringBootKeycloak
+            user-name-attribute: preferred_username
 springdoc:
   swagger-ui:
     enabled: true

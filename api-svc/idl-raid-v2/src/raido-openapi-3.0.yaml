@@ -51,13 +51,6 @@ security:
 
 paths:
 
-  # region unapproved-user endpoints
-  
-  /v2/public/authz-request/v1:
-    $ref: "unapproved-user-experimental.yaml#/paths/~1update-authz-request"
-
-  # endregion
-
   # region raid endpoints
   /raid/:
     $ref: "raid.yaml#/paths/~1raid"
@@ -95,31 +88,6 @@ paths:
 
       # region Admin endpoints
             
-  # IMPROVE: `/v2/public/` is wrong, this is an authorised endpoint  
-  # Should be under /v2/experimental/              
-  /v2/public/request-authz/v1/{authzRequestId}:
-    $ref: "admin-experimental.yaml#/paths/~1read-request-authz"
-  /v2/experimental/update-authz-request-status/v1:
-    $ref: "admin-experimental.yaml#/paths/~1update-authz-request-status"
-  /v2/experimental/admin-authz-request/v1:
-    $ref: "admin-experimental.yaml#/paths/~1list-authz-request"
-  /v2/experimental/service-point/v1/{servicePointId}/list-app-user:
-    $ref: "admin-experimental.yaml#/paths/~1list-app-user"
-  /v2/experimental/app-user/v1:
-    $ref: "admin-experimental.yaml#/paths/~1update-app-user"
-  /v2/experimental/app-user/v1/{appUserId}:
-    $ref: "admin-experimental.yaml#/paths/~1read-app-user"
-  /v2/experimental/service-point/v1/{servicePointId}/list-api-key:
-    $ref: "admin-experimental.yaml#/paths/~1list-api-key"
-  /v2/experimental/api-key/v1:
-    $ref: "admin-experimental.yaml#/paths/~1update-api-key"
-  /v2/experimental/api-key/v1/{apiKeyId}:
-    $ref: "admin-experimental.yaml#/paths/~1read-api-key"
-  /v2/experimental/app-user-extra/v1/{appUserId}:
-    $ref: "admin-experimental.yaml#/paths/~1read-app-user-extra"
-  /v2/experimental/generate-api-token/v1:
-    $ref: "admin-experimental.yaml#/paths/~1generate-api-token"
-
   # endregion
 
 

@@ -4,19 +4,21 @@ services:
     image: raid-keycloak:202402131
     ports:
       - 8000:8443
-    command: 'start'
+      - 8001:8080
+    command: ['start-dev', '--log-level=DEBUG']
     environment:
-      KC_HEALTH_ENABLED: false
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HEALTH_ENABLED: true
+      KC_HOSTNAME: localhost
       KC_DB: postgres
       KC_DB_USERNAME: keycloak
       KC_DB_PASSWORD: keycloak
-      KC_HOSTNAME: localhost
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
       KC_DB_URL_DATABASE: keycloak
       KC_DB_URL_HOST: postgres
       KC_DB_URL_PORT: 5432
       KC_DB_SCHEMA: public
+      KC_HOSTNAME_STRICT_HTTPS: false
   postgres:
     image: postgres:16.2
     ports:

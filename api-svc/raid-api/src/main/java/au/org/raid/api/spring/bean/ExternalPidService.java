@@ -1,13 +1,10 @@
 package au.org.raid.api.spring.bean;
 
-import au.org.raid.api.service.apids.ApidsService;
 import au.org.raid.api.service.doi.DoiService;
 import au.org.raid.api.service.orcid.OrcidService;
 import au.org.raid.api.service.ror.RorService;
 import au.org.raid.api.service.stub.*;
-import au.org.raid.api.spring.config.environment.ApidsProps;
 import au.org.raid.api.spring.config.environment.StubProperties;
-import au.org.raid.api.util.Guard;
 import au.org.raid.api.util.Log;
 import au.org.raid.api.validator.GeoNamesUriValidator;
 import au.org.raid.api.validator.OpenStreetMapUriValidator;
@@ -27,28 +24,6 @@ import static au.org.raid.api.util.Log.to;
 @Component
 public class ExternalPidService {
     private static final Log log = to(ExternalPidService.class);
-
-    @Bean
-    @Primary
-    public ApidsService apidsService(
-            StubProperties stubProperties,
-            ApidsProps apidsConfig,
-            RestTemplate rest
-    ) {
-        /* IMPROVE: I'm fairly sure I'm not doing this the "spring way" */
-        if (stubProperties.getApids().isEnabled()) {
-            log.with("apidsInMemoryStubDelay", stubProperties.getApids().getDelay()).
-                    warn("using the in-memory ORCID service");
-
-            return new ApidsServiceStub(stubProperties.getApids());
-        }
-
-    /* now we aren't forced to set the secret if we're not using the real 
-    APIDS service - unexpected benefit! */
-        Guard.allHaveValue("must set ApidsProps values",
-                apidsConfig.secret, apidsConfig.appId, apidsConfig.serviceUrl);
-        return new ApidsService(apidsConfig, rest);
-    }
 
     @Bean
     @Primary

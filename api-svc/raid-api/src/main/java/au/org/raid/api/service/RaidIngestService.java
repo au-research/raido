@@ -4,7 +4,6 @@ import au.org.raid.api.exception.ResourceNotFoundException;
 import au.org.raid.api.factory.HandleFactory;
 import au.org.raid.api.factory.RaidRecordFactory;
 import au.org.raid.api.repository.RaidRepository;
-import au.org.raid.api.spring.security.raidv2.ApiToken;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -73,18 +72,16 @@ public class RaidIngestService {
         spatialCoverageService.create(raid.getSpatialCoverage(), handle);
     }
 
-    public List<RaidDto> findAllByServicePointIdOrNotConfidential(final ApiToken apiToken) {
-        final var servicePointId = apiToken.getServicePointId();
-
-        final var raids = new ArrayList<RaidDto>();
-        final var records = raidRepository.findAllByServicePointIdOrNotConfidential(servicePointId);
-
-        for (final var record : records) {
-            raids.add(cacheableRaidService.build(record));
-        }
-
-        return raids;
-    }
+//    public List<RaidDto> findAllByServicePointIdOrNotConfidential(final Long servicePointId) {
+//        final var raids = new ArrayList<RaidDto>();
+//        final var records = raidRepository.findAllByServicePointIdOrNotConfidential(servicePointId);
+//
+//        for (final var record : records) {
+//            raids.add(cacheableRaidService.build(record));
+//        }
+//
+//        return raids;
+//    }
 
     public List<RaidDto> findAllByServicePointId(final Long servicePointId) {
         final var raids = new ArrayList<RaidDto>();
