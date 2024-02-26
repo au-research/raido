@@ -72,16 +72,16 @@ public class RaidIngestService {
         spatialCoverageService.create(raid.getSpatialCoverage(), handle);
     }
 
-//    public List<RaidDto> findAllByServicePointIdOrNotConfidential(final Long servicePointId) {
-//        final var raids = new ArrayList<RaidDto>();
-//        final var records = raidRepository.findAllByServicePointIdOrNotConfidential(servicePointId);
-//
-//        for (final var record : records) {
-//            raids.add(cacheableRaidService.build(record));
-//        }
-//
-//        return raids;
-//    }
+    public List<RaidDto> findAllByServicePointIdOrNotConfidential(final Long servicePointId) {
+        final var raids = new ArrayList<RaidDto>();
+        final var records = raidRepository.findAllByServicePointIdOrNotConfidential(servicePointId);
+
+        for (final var record : records) {
+            raids.add(cacheableRaidService.build(record));
+        }
+
+        return raids;
+    }
 
     public List<RaidDto> findAllByServicePointId(final Long servicePointId) {
         final var raids = new ArrayList<RaidDto>();

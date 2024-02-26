@@ -31,6 +31,16 @@ raid:
       url: http://localhost:${server.port}
       raid-au-user-token: not-set
       uq-admin-token: not-set
+    auth:
+      client-id: raid-api
+      grant-type: password
+      token-uri: http://localhost:8001/realms/raid/protocol/openid-connect/token
+      raid-au:
+        user: rob
+        password: password
+      uq:
+        user: uq
+        password: password
   db:
     user: postgres
     password: supersecret

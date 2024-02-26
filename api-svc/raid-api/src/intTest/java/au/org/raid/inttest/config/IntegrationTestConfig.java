@@ -7,6 +7,7 @@ import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 @ComponentScan(basePackages = {
@@ -24,6 +25,11 @@ public class IntegrationTestConfig {
                                  @Value("${raid.test.api.url}") final String apiUrl
     ) {
         return new TestClient(objectMapper, contract, apiUrl);
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
     @Bean

@@ -1,10 +1,12 @@
 package au.org.raid.api.controller;
 
-import au.org.raid.api.exception.InvalidAccessException;
+import au.org.raid.api.exception.ClosedRaidException;
+import au.org.raid.api.exception.CrossAccountAccessException;
 import au.org.raid.api.exception.ValidationException;
 import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.RaidIngestService;
 import au.org.raid.api.service.raid.RaidService;
+import au.org.raid.api.util.SchemaValues;
 import au.org.raid.api.validator.ValidationService;
 import au.org.raid.idl.raidv2.api.RaidApi;
 import au.org.raid.idl.raidv2.model.RaidChange;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
 
@@ -44,40 +47,34 @@ public class RaidController implements RaidApi {
 
     @Override
     public ResponseEntity<RaidDto> findRaidByName(final String prefix, final String suffix, final Integer version) {
-//        var user = getApiToken();
-//        //return 403 if raid is confidential and doesn't have same service point as user
-//
-//        final var handle = String.join("/", prefix, suffix);
-//        var raidOptional = raidService.findByHandle(handle)
-//                .or(Optional::empty);
-//
-//        if (raidOptional.isPresent()) {
-//            final var raid = raidOptional.get();
-//
-//            if (!raid.getIdentifier().getOwner().getServicePoint().equals(user.getServicePointId())
-//                    && !raid.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri())) {
-//                throw new ClosedRaidException(raid);
-//            }
-//        }
-//
-//        if (version != null) {
-//            raidOptional = raidHistoryService.findByHandleAndVersion(handle, version);
-//        }
-//
-//        return ResponseEntity.of(raidOptional);
+        final var token = ((JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getToken();
+        final var servicePointId = (Long) token.getClaims().get("service_point");        //return 403 if raid is confidential and doesn't have same service point as user
 
-        return null;
+        final var handle = String.join("/", prefix, suffix);
+        var raidOptional = raidService.findByHandle(handle)
+                .or(Optional::empty);
+
+        if (raidOptional.isPresent()) {
+            final var raid = raidOptional.get();
+
+            if (!raid.getIdentifier().getOwner().getServicePoint().equals(servicePointId)
+                    && !raid.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri())) {
+                throw new ClosedRaidException(raid);
+            }
+        }
+
+        if (version != null) {
+            raidOptional = raidHistoryService.findByHandleAndVersion(handle, version);
+        }
+
+        return ResponseEntity.of(raidOptional);
     }
 
 
     @Override
     public ResponseEntity<RaidDto> mintRaid(final RaidCreateRequest request) {
         final var token = ((JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getToken();
-        final var servicePointId = (Long) token.getClaims().get("service-point");
-
-        if (!raidService.isEditable(servicePointId)) {
-            throw new InvalidAccessException("This service point does not allow Raids to be edited in the app.");
-        }
+        final var servicePointId = (Long) token.getClaims().get("service_point");
 
         final var failures = new ArrayList<>(validationService.validateForCreate(request));
 
@@ -92,58 +89,61 @@ public class RaidController implements RaidApi {
 
     @Override
     public ResponseEntity<List<RaidDto>> findAllRaids(final Long servicePoint, final List<String> includeFields) {
-//        var user = getApiToken();
-//
-//        final var raids = Optional.ofNullable(servicePoint)
-//                .map(raidIngestService::findAllByServicePointId)
-//                .orElse(raidIngestService.findAllByServicePointIdOrNotConfidential(user));
-//
-//        if (includeFields != null && !includeFields.isEmpty()) {
-//            return ResponseEntity.ok(filterFields(raids, includeFields));
-//        }
-//
-//        return ResponseEntity.ok(raids);
-        return null;
+        final var token = ((JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getToken();
+        final var servicePointId = (Long) token.getClaims().get("service_point");
+
+        final var raids = Optional.ofNullable(servicePoint)
+                .map(raidIngestService::findAllByServicePointId)
+                .orElse(raidIngestService.findAllByServicePointIdOrNotConfidential(servicePointId));
+
+        if (includeFields != null && !includeFields.isEmpty()) {
+            return ResponseEntity.ok(filterFields(raids, includeFields));
+        }
+
+        return ResponseEntity.ok(raids);
     }
 
     @Override
     public ResponseEntity<RaidDto> updateRaid(final String prefix, final String suffix, RaidUpdateRequest request) {
-//        final var handle = String.join("/", prefix, suffix);
-//        var user = getApiToken();
-//        guardOperatorOrAssociated(user, request.getIdentifier().getOwner().getServicePoint());
-//
-//        if (!raidService.isEditable(user, request.getIdentifier().getOwner().getServicePoint())) {
-//            throw new InvalidAccessException("This service point does not allow Raids to be edited in the app.");
-//        }
-//
-//        final var failures = new ArrayList<>(validationService.validateForUpdate(handle, request));
-//
-//        if (!failures.isEmpty()) {
-//            throw new ValidationException(failures);
-//        }
-//
-//        return ResponseEntity.ok(raidService.update(request, user.getServicePointId()));
-        return null;
+        final var token = ((JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getToken();
+        final var servicePointId = (Long) token.getClaims().get("service_point");
+
+        if (!request.getIdentifier().getOwner().getServicePoint().equals(servicePointId)) {
+            throw new CrossAccountAccessException(servicePointId);
+        }
+
+        final var handle = String.join("/", prefix, suffix);
+
+        final var failures = new ArrayList<>(validationService.validateForUpdate(handle, request));
+
+        if (!failures.isEmpty()) {
+            throw new ValidationException(failures);
+        }
+
+        return ResponseEntity.ok(raidService.update(request, servicePointId));
     }
 
     @Override
     public ResponseEntity<List<RaidChange>> raidHistory(final String prefix, final String suffix) {
-//        final var handle = prefix + "/" + suffix;
-//
-//        final var raidOptional = raidService.findByHandle(handle);
-//
-//        if (raidOptional.isPresent()) {
-//            final var raid = raidOptional.get();
-//
-//            if (!raid.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri())) {
-//                var user = getApiToken();
-//                guardOperatorOrAssociated(user, raid.getIdentifier().getOwner().getServicePoint());
-//            }
-//        }
-//
-//
-//        return ResponseEntity.ok(raidHistoryService.findAllChangesByHandle(handle));
-        return null;
+
+        final var handle = prefix + "/" + suffix;
+
+        final var raidOptional = raidService.findByHandle(handle);
+
+        if (raidOptional.isPresent()) {
+            final var raid = raidOptional.get();
+
+            if (!raid.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri())) {
+                final var token = ((JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getToken();
+                final var servicePointId = (Long) token.getClaims().get("service_point");
+
+                if (!raid.getIdentifier().getOwner().getServicePoint().equals(servicePointId)) {
+                    throw new CrossAccountAccessException(servicePointId);
+                }
+            }
+        }
+
+        return ResponseEntity.ok(raidHistoryService.findAllChangesByHandle(handle));
     }
 
     private List<RaidDto> filterFields(final List<RaidDto> raids, final List<String> includeFields) {

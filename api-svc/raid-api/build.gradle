@@ -120,6 +120,7 @@ dependencies{
 
   // needed for jsonpath testing in Spring MVC tests
   testImplementation 'com.jayway.jsonpath:json-path'
+  testImplementation 'org.springframework.security:spring-security-test:6.2.2'
 
 }
 

@@ -122,7 +122,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
         assert mintedRaid != null;
         final var handle = new Handle(mintedRaid.getIdentifier().getId());
 
-        final var api = testClient.raidApi(uqAdminToken);
+        final var api = testClient.raidApi(uqToken);
 
         try {
             final var readResult = api.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
@@ -147,7 +147,7 @@ public class StableRaidoSchemaV1Test extends AbstractIntegrationTest {
         final var ACCESS_TYPE_CLOSED = "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json";
         final var ACCESS_TYPE_EMBARGOED = "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json";
 
-        final var api = testClient.raidApi(uqAdminToken);
+        final var api = testClient.raidApi(uqToken);
 
         try {
             final var raidList = api.findAllRaids(null, null).getBody();

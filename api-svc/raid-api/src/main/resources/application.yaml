@@ -62,16 +62,16 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8001/realms/SpringBootKeycloak
+          issuer-uri: http://localhost:8001/realms/raid
       client:
         registration:
           keycloak:
-            client-id: login-app
+            client-id: raid-api
             authorization-grant-type: authorization_code
             scope: openid
         provider:
           keycloak:
-            issuer-uri: http://localhost:8001/realms/SpringBootKeycloak
+            issuer-uri: http://localhost:8001/realms/raid
             user-name-attribute: preferred_username
 springdoc:
   swagger-ui:

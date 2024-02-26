@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class RaidWebSecurityConfig {
-    private static final String USER_ROLE = "user";
+    private static final String USER_ROLE = "service-point-user";
     private static final String GROUPS = "groups";
     private static final String REALM_ACCESS_CLAIM = "realm_access";
     private static final String ROLES_CLAIM = "roles";

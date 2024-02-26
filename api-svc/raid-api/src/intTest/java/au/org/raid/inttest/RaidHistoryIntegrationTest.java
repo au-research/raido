@@ -68,7 +68,7 @@ public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
 
         Handle handle = new Handle(Objects.requireNonNull(createResponse.getBody()).getIdentifier().getId());
 
-        final var otherClient = testClient.raidApi(uqAdminToken);
+        final var otherClient = testClient.raidApi(uqToken);
 
         try {
             otherClient.raidHistory(handle.getPrefix(), handle.getSuffix());
