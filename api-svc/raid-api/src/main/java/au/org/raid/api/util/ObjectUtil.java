@@ -1,10 +1,8 @@
 package au.org.raid.api.util;
 
 
-import au.org.raid.api.spring.bean.Shared;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.client.ClientHttpRequestFactory;
 
 import java.util.*;
 import java.util.function.Function;
@@ -28,7 +26,6 @@ public final class ObjectUtil {
      * logic could also get fancy with this too, as long as we use `with()`).
      * This is just for usage in the context of `toString()` - wire serialisation
      * for these objects is handled by Spring,
-     * see {@link Shared#restTemplate(ClientHttpRequestFactory)}.
      */
     private static ObjectMapper jsonToStringMapper = new ObjectMapper().
             // so it can do LocalDateTime, etc.
