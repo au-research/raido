@@ -98,7 +98,7 @@ public class RaidWebSecurityConfig {
                     var roles = (Collection) realmAccess.get(ROLES_CLAIM);
                     mappedAuthorities.addAll(generateAuthoritiesFromClaim(roles));
                 } else if (userInfo.hasClaim(GROUPS)) {
-                    Collection roles = (Collection) userInfo.getClaim(
+                    Collection roles = userInfo.getClaim(
                             GROUPS);
                     mappedAuthorities.addAll(generateAuthoritiesFromClaim(roles));
                 }

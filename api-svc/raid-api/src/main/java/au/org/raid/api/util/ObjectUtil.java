@@ -27,7 +27,7 @@ public final class ObjectUtil {
      * This is just for usage in the context of `toString()` - wire serialisation
      * for these objects is handled by Spring,
      */
-    private static ObjectMapper jsonToStringMapper = new ObjectMapper().
+    private static final ObjectMapper jsonToStringMapper = new ObjectMapper().
             // so it can do LocalDateTime, etc.
                     findAndRegisterModules();
 
@@ -145,11 +145,7 @@ public final class ObjectUtil {
         if (c == null) {
             return false;
         }
-        if (c.isEmpty()) {
-            return false;
-        }
-
-        return true;
+        return !c.isEmpty();
     }
 
     public static String jsonToString(Object value) {

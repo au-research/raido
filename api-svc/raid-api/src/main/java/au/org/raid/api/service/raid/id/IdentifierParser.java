@@ -4,6 +4,7 @@ import au.org.raid.api.endpoint.message.ValidationMessage;
 import au.org.raid.api.exception.ValidationFailureException;
 import au.org.raid.api.util.Nullable;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import java.net.MalformedURLException;
@@ -208,9 +209,10 @@ public class IdentifierParser {
             permits IdentifierHandle, ParseProblems {
     }
 
+    @Getter
     public static final class ParseProblems
             implements ParseUrlResult, ParseHandleResult {
-        private List<String> problems;
+        private final List<String> problems;
 
         public ParseProblems(List<String> problems) {
             this.problems = problems;
@@ -222,9 +224,6 @@ public class IdentifierParser {
             this.problems.addAll(Arrays.asList(otherProblems));
         }
 
-        public List<String> getProblems() {
-            return problems;
-        }
     }
 
 }

@@ -180,11 +180,7 @@ public class ExceptionUtil {
         }
 
         final Throwable cause = throwable.getCause();
-        if (cause != null) {
-            return cause;
-        }
-
-        return null;
+        return cause;
     }
 
 }

@@ -33,7 +33,7 @@ public class TitleService {
                     .orElseThrow(() -> new TitleTypeSchemaNotFoundException(title.getType().getSchemaUri()));
 
             final var titleType = titleTypeRepository.findByUriAndSchemaId(title.getType().getId(), titleTypeSchema.getId())
-                    .orElseThrow(() -> new TitleTypeNotFoundException(title.getType().getId(), title.getType().getSchemaUri()));;
+                    .orElseThrow(() -> new TitleTypeNotFoundException(title.getType().getId(), title.getType().getSchemaUri()));
 
             final var languageId = languageService.findLanguageId(title.getLanguage());
 

@@ -27,7 +27,7 @@ public class IdProviderException
     public static IdProviderException idpException(
             String message, Object... args
     ) {
-        log.error(message.formatted((Object[]) args));
+        log.error(message.formatted(args));
         return new IdProviderException();
     }
 

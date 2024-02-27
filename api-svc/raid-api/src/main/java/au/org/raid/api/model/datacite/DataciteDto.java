@@ -1,5 +1,7 @@
 package au.org.raid.api.model.datacite;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,16 +9,13 @@ import java.util.List;
 public class DataciteDto {
     public String schemaVersion;
     public String type;
+    @Getter
     private DataciteAttributesDto attributes;
 
-    private List<DataciteIdentifier> dataciteIdentifiers = new ArrayList<>();
+    private final List<DataciteIdentifier> dataciteIdentifiers = new ArrayList<>();
 
     public DataciteDto() {
         super();
-    }
-
-    public DataciteAttributesDto getAttributes() {
-        return attributes;
     }
 
     public DataciteDto setAttributes(DataciteAttributesDto dataciteAttributes) {

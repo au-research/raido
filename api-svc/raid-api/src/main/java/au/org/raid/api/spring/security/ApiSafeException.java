@@ -3,6 +3,7 @@ package au.org.raid.api.spring.security;
 
 import au.org.raid.api.util.ExceptionUtil;
 import au.org.raid.api.util.Log;
+import lombok.Getter;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -28,12 +29,13 @@ import static java.util.Collections.emptyList;
  * "Unsafe" here means all sorts of things: sensitive personal information,
  * authentication information, code structure, infrastructure information, etc.
  */
+@Getter
 public class ApiSafeException extends RuntimeException {
-    private static Log log = to(ApiSafeException.class);
+    private static final Log log = to(ApiSafeException.class);
 
-    private int httpStatus;
+    private final int httpStatus;
 
-    private boolean logStack;
+    private final boolean logStack;
 
     /**
      * Remember  this is explicitly intended to be returned to the client,
@@ -41,7 +43,7 @@ public class ApiSafeException extends RuntimeException {
      * Do not put sensitivie info in here.
      * It's intended for validation errors, etc..
      */
-    private List<String> detail;
+    private final List<String> detail;
 
     public ApiSafeException(String message) {
         this(message, 500, emptyList(), false);
@@ -137,15 +139,4 @@ public class ApiSafeException extends RuntimeException {
         return new ApiSafeException(String.format(format, args));
     }
 
-    public int getHttpStatus() {
-        return httpStatus;
-    }
-
-    public List<String> getDetail() {
-        return detail;
-    }
-
-    public boolean isLogStack() {
-        return logStack;
-    }
 }

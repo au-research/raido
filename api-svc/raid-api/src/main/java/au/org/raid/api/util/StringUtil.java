@@ -277,7 +277,7 @@ public final class StringUtil {
      * @see #hasValue(String)
      */
     public static boolean anyElementHasValue(@Nullable String... values) {
-        if (values == null || values.length == 0) {
+        if (values == null) {
             return false;
         }
 
