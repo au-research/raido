@@ -36,10 +36,10 @@ raid:
       grant-type: password
       token-uri: http://localhost:8001/realms/raid/protocol/openid-connect/token
       raid-au:
-        user: rob
+        user: raid-test-user
         password: password
       uq:
-        user: uq
+        user: uq-test-user
         password: password
   db:
     user: postgres

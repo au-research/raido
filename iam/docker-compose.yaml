@@ -5,7 +5,9 @@ services:
     ports:
       - 8000:8443
       - 8001:8080
-    command: ['start-dev', '--log-level=DEBUG']
+    command: ['start-dev', '--import-realm']
+    volumes:
+      - './realms:/opt/keycloak/data/import'
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin

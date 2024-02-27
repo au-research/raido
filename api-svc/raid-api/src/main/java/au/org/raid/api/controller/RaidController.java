@@ -39,6 +39,7 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 @SecurityScheme(name = "bearerAuth", scheme = "bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 @RequiredArgsConstructor
 public class RaidController implements RaidApi {
+    public static final String SERVICE_POINT_CLAIM = "service_point";
     private final ValidationService validationService;
     private final RaidService raidService;
     private final RaidIngestService raidIngestService;
@@ -47,8 +48,7 @@ public class RaidController implements RaidApi {
 
     @Override
     public ResponseEntity<RaidDto> findRaidByName(final String prefix, final String suffix, final Integer version) {
-        final var token = ((JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getToken();
-        final var servicePointId = (Long) token.getClaims().get("service_point");        //return 403 if raid is confidential and doesn't have same service point as user
+        final var servicePointId = getUserServicePointId();
 
         final var handle = String.join("/", prefix, suffix);
         var raidOptional = raidService.findByHandle(handle)
@@ -73,8 +73,7 @@ public class RaidController implements RaidApi {
 
     @Override
     public ResponseEntity<RaidDto> mintRaid(final RaidCreateRequest request) {
-        final var token = ((JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getToken();
-        final var servicePointId = (Long) token.getClaims().get("service_point");
+        final var servicePointId = getUserServicePointId();
 
         final var failures = new ArrayList<>(validationService.validateForCreate(request));
 
@@ -89,8 +88,7 @@ public class RaidController implements RaidApi {
 
     @Override
     public ResponseEntity<List<RaidDto>> findAllRaids(final Long servicePoint, final List<String> includeFields) {
-        final var token = ((JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getToken();
-        final var servicePointId = (Long) token.getClaims().get("service_point");
+        final var servicePointId = getUserServicePointId();
 
         final var raids = Optional.ofNullable(servicePoint)
                 .map(raidIngestService::findAllByServicePointId)
@@ -105,8 +103,7 @@ public class RaidController implements RaidApi {
 
     @Override
     public ResponseEntity<RaidDto> updateRaid(final String prefix, final String suffix, RaidUpdateRequest request) {
-        final var token = ((JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getToken();
-        final var servicePointId = (Long) token.getClaims().get("service_point");
+        final var servicePointId = getUserServicePointId();
 
         if (!request.getIdentifier().getOwner().getServicePoint().equals(servicePointId)) {
             throw new CrossAccountAccessException(servicePointId);
@@ -134,8 +131,7 @@ public class RaidController implements RaidApi {
             final var raid = raidOptional.get();
 
             if (!raid.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri())) {
-                final var token = ((JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getToken();
-                final var servicePointId = (Long) token.getClaims().get("service_point");
+                final var servicePointId = getUserServicePointId();
 
                 if (!raid.getIdentifier().getOwner().getServicePoint().equals(servicePointId)) {
                     throw new CrossAccountAccessException(servicePointId);
@@ -144,6 +140,12 @@ public class RaidController implements RaidApi {
         }
 
         return ResponseEntity.ok(raidHistoryService.findAllChangesByHandle(handle));
+    }
+
+    private long getUserServicePointId() {
+        final var token = ((JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getToken();
+        return (Long) token.getClaims().get(SERVICE_POINT_CLAIM);
+
     }
 
     private List<RaidDto> filterFields(final List<RaidDto> raids, final List<String> includeFields) {
