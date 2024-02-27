@@ -5,6 +5,6 @@ both have the `service-point-user` role necessary to mint RAiDs. Both have the p
 
 If you make any changes to the realm and want to save them to the configuration, run the command...
 ```
-docker exec -it 74de075c7a49 bin/kc.sh export --realm raid --file /opt/keycloak/data/import/local-raid-realm.json
+docker exec -it [container-id] bin/kc.sh export --realm raid --file /opt/keycloak/data/import/local-raid-realm.json
 ```
 and commit the changes.
