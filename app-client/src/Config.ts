@@ -270,8 +270,8 @@ const demoConfig: EnvironmentConfig = {
 const prodConfig: EnvironmentConfig = {
   environmentName: "prod",
   isProd: true,
-  raidoIssuer: "https://api.prod.raid.org.au",
-  raidoLandingPage: "https://prod.raid.org.au",
+  raidoIssuer: "https://api.prod.didgickle.com",
+  raidoLandingPage: "https://prod.didgickle.com",
   supportEmail: "contact@raid.org",
   raidoApiSvc: "",
   aaf: {
