@@ -8,3 +8,5 @@ If you make any changes to the realm and want to save them to the configuration,
 docker exec -it [container-id] bin/kc.sh export --realm raid --file /opt/keycloak/data/import/local-raid-realm.json
 ```
 and commit the changes.
+
+See https://www.keycloak.org/server/importExport
