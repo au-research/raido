@@ -39,9 +39,21 @@ public class RaidWebSecurityConfig {
     }
 
     public static boolean isStableApi(HttpServletRequest request) {
-        return request.getServletPath().startsWith(RAID_STABLE_API) ||
-                request.getServletPath().startsWith(SERVICE_POINT_API) ||
-                request.getServletPath().startsWith(TEAM_API);
+        if (request.getServletPath().startsWith(RAID_STABLE_API)) {
+            return true;
+        }
+        log.info("%s does not start with %s", request.getServletPath(), RAID_STABLE_API);
+
+        if (request.getServletPath().startsWith(SERVICE_POINT_API)) {
+            return true;
+        }
+        log.info("%s does not start with %s", request.getServletPath(), SERVICE_POINT_API);
+
+        if (request.getServletPath().startsWith(TEAM_API)) {
+            return true;
+        }
+        log.info("%s does not start with %s", request.getServletPath(), TEAM_API);
+        return false;
     }
 
     /* the name is significant - when prefixed "spring", got error about
