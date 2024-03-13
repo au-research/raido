@@ -1,6 +1,7 @@
 version: '3.4'
 services:
   keycloak:
+    container_name: keycloak
     image: raid-keycloak:202402131
     ports:
       - 8000:8443
@@ -22,6 +23,7 @@ services:
       KC_DB_SCHEMA: public
       KC_HOSTNAME_STRICT_HTTPS: false
   postgres:
+    container_name: keycloak-postgres
     image: postgres:16.2
     ports:
       - 5432:5432
