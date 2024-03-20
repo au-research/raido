@@ -82,6 +82,14 @@
       "clientRole" : false,
       "containerId" : "aacef42c-ba11-42f6-89de-89f3c8126f00",
       "attributes" : { }
+    }, {
+      "id" : "8966e61b-8a29-499a-9a5b-1de29135568e",
+      "name" : "raid-au-group-admin",
+      "description" : "",
+      "composite" : false,
+      "clientRole" : false,
+      "containerId" : "aacef42c-ba11-42f6-89de-89f3c8126f00",
+      "attributes" : { }
     } ],
     "client" : {
       "raid-api" : [ ],
@@ -246,7 +254,7 @@
         "composite" : true,
         "composites" : {
           "client" : {
-            "realm-management" : [ "view-events", "manage-realm", "query-users", "manage-clients", "manage-users", "query-clients", "query-groups", "impersonation", "manage-identity-providers", "view-users", "view-identity-providers", "view-authorization", "manage-authorization", "view-clients", "view-realm", "create-client", "manage-events", "query-realms" ]
+            "realm-management" : [ "view-events", "manage-realm", "manage-clients", "query-users", "manage-users", "query-clients", "impersonation", "query-groups", "manage-identity-providers", "view-users", "view-identity-providers", "manage-authorization", "view-authorization", "view-clients", "view-realm", "create-client", "manage-events", "query-realms" ]
           }
         },
         "clientRole" : true,
@@ -254,7 +262,17 @@
         "attributes" : { }
       } ],
       "security-admin-console" : [ ],
-      "admin-cli" : [ ],
+      "admin-cli" : [ {
+        "id" : "4ce06340-c943-493b-986a-053f9328720e",
+        "name" : "test-role",
+        "description" : "",
+        "composite" : false,
+        "clientRole" : true,
+        "containerId" : "5cd2f36b-b528-421a-9612-a0b2814958ff",
+        "attributes" : {
+          "test-attribute" : [ "1" ]
+        }
+      } ],
       "account-console" : [ ],
       "broker" : [ {
         "id" : "a2a3cfdc-7c9d-490a-b99a-3c145362d646",
@@ -342,7 +360,28 @@
       } ]
     }
   },
-  "groups" : [ ],
+  "groups" : [ {
+    "id" : "ba0b01a6-726f-464f-b501-454a10096826",
+    "name" : "University of Queensland",
+    "path" : "/University of Queensland",
+    "subGroups" : [ ],
+    "attributes" : {
+      "servicePointId" : [ "20000001" ]
+    },
+    "realmRoles" : [ ],
+    "clientRoles" : { }
+  }, {
+    "id" : "169bd3f3-dd42-4ac0-b89a-fb49648e5eff",
+    "name" : "raid-au",
+    "path" : "/raid-au",
+    "subGroups" : [ ],
+    "attributes" : {
+      "servicePointId" : [ "20000000" ],
+      "x-raid-service-point-id" : [ "20000000" ]
+    },
+    "realmRoles" : [ ],
+    "clientRoles" : { }
+  } ],
   "defaultRole" : {
     "id" : "2821b506-1af4-4d91-9cda-c1b42bd8f38f",
     "name" : "default-roles-raid",
@@ -384,13 +423,35 @@
   "webAuthnPolicyPasswordlessAcceptableAaguids" : [ ],
   "webAuthnPolicyPasswordlessExtraOrigins" : [ ],
   "users" : [ {
+    "id" : "8f901ed4-0545-497c-b654-3109dfe9128e",
+    "createdTimestamp" : 1710893824712,
+    "username" : "another-user",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "firstName" : "Henry",
+    "lastName" : "James",
+    "email" : "somebody@example.org",
+    "attributes" : {
+      "servicePointAccessGranted" : [ "20000001" ]
+    },
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-raid" ],
+    "notBefore" : 0,
+    "groups" : [ "/University of Queensland" ]
+  }, {
     "id" : "466a8eab-6325-49aa-ab34-ff7b62213c53",
     "createdTimestamp" : 1708990713006,
     "username" : "raid-test-user",
     "enabled" : true,
     "totp" : false,
     "emailVerified" : true,
+    "firstName" : "Dave",
+    "lastName" : "Smith",
     "attributes" : {
+      "servicePointAdmin" : [ "169bd3f3-dd42-4ac0-b89a-fb49648e5eff", "ba0b01a6-726f-464f-b501-454a10096826" ],
       "service_point" : [ "20000000" ]
     },
     "credentials" : [ {
@@ -403,9 +464,9 @@
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
-    "realmRoles" : [ "service-point-user", "default-roles-raid" ],
+    "realmRoles" : [ "service-point-user", "default-roles-raid", "raid-au-group-admin" ],
     "notBefore" : 0,
-    "groups" : [ ]
+    "groups" : [ "/University of Queensland", "/raid-au" ]
   }, {
     "id" : "cd4ea22d-5ee1-4649-b456-9f23287e9bc2",
     "createdTimestamp" : 1708990756378,
@@ -428,7 +489,22 @@
     "requiredActions" : [ ],
     "realmRoles" : [ "service-point-user", "default-roles-raid" ],
     "notBefore" : 0,
-    "groups" : [ ]
+    "groups" : [ "/University of Queensland" ]
+  }, {
+    "id" : "5c01b38f-61e1-4334-9e0e-3b0e632e957a",
+    "createdTimestamp" : 1710826118856,
+    "username" : "user1",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "firstName" : "Mary",
+    "lastName" : "Jones",
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-raid" ],
+    "notBefore" : 0,
+    "groups" : [ "/raid-au" ]
   } ],
   "clients" : [ {
     "id" : "87759f11-38a7-47de-9a2c-f4a7bfdaaeb8",
@@ -519,7 +595,9 @@
     "publicClient" : true,
     "frontchannelLogout" : false,
     "protocol" : "openid-connect",
-    "attributes" : { },
+    "attributes" : {
+      "post.logout.redirect.uris" : "+"
+    },
     "authenticationFlowBindingOverrides" : { },
     "fullScopeAllowed" : false,
     "nodeReRegistrationTimeout" : 0,
@@ -545,7 +623,9 @@
     "publicClient" : false,
     "frontchannelLogout" : false,
     "protocol" : "openid-connect",
-    "attributes" : { },
+    "attributes" : {
+      "post.logout.redirect.uris" : "+"
+    },
     "authenticationFlowBindingOverrides" : { },
     "fullScopeAllowed" : false,
     "nodeReRegistrationTimeout" : 0,
@@ -577,6 +657,7 @@
     "protocol" : "openid-connect",
     "attributes" : {
       "oidc.ciba.grant.enabled" : "false",
+      "post.logout.redirect.uris" : "+",
       "oauth2.device.authorization.grant.enabled" : "false",
       "backchannel.logout.session.required" : "true",
       "backchannel.logout.revoke.offline.tokens" : "false"
@@ -606,7 +687,9 @@
     "publicClient" : false,
     "frontchannelLogout" : false,
     "protocol" : "openid-connect",
-    "attributes" : { },
+    "attributes" : {
+      "post.logout.redirect.uris" : "+"
+    },
     "authenticationFlowBindingOverrides" : { },
     "fullScopeAllowed" : false,
     "nodeReRegistrationTimeout" : 0,
@@ -761,7 +844,8 @@
       "config" : {
         "id.token.claim" : "true",
         "introspection.token.claim" : "true",
-        "access.token.claim" : "true"
+        "access.token.claim" : "true",
+        "userinfo.token.claim" : "true"
       }
     } ]
   }, {
@@ -782,6 +866,7 @@
       "config" : {
         "introspection.token.claim" : "true",
         "multivalued" : "true",
+        "userinfo.token.claim" : "true",
         "user.attribute" : "foo",
         "id.token.claim" : "true",
         "access.token.claim" : "true",
@@ -872,6 +957,32 @@
         "user.attribute.region" : "region",
         "access.token.claim" : "true",
         "user.attribute.locality" : "locality"
+      }
+    } ]
+  }, {
+    "id" : "5a3c056b-8263-40a3-af1b-1bc60e442788",
+    "name" : "x-raid-service-point-id",
+    "description" : "",
+    "protocol" : "openid-connect",
+    "attributes" : {
+      "include.in.token.scope" : "true",
+      "display.on.consent.screen" : "true",
+      "gui.order" : "",
+      "consent.screen.text" : ""
+    },
+    "protocolMappers" : [ {
+      "id" : "4e78258b-1e3a-4e0b-8f3e-26f8128565db",
+      "name" : "x-raid-service-point-id",
+      "protocol" : "openid-connect",
+      "protocolMapper" : "oidc-group-membership-mapper",
+      "consentRequired" : false,
+      "config" : {
+        "full.path" : "true",
+        "introspection.token.claim" : "true",
+        "userinfo.token.claim" : "true",
+        "id.token.claim" : "true",
+        "access.token.claim" : "true",
+        "claim.name" : "x-raid-service-point-id"
       }
     } ]
   }, {
@@ -1215,7 +1326,7 @@
       "subType" : "authenticated",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "saml-user-property-mapper", "saml-user-attribute-mapper", "oidc-usermodel-property-mapper", "oidc-full-name-mapper", "oidc-address-mapper", "oidc-sha256-pairwise-sub-mapper", "saml-role-list-mapper", "oidc-usermodel-attribute-mapper" ]
+        "allowed-protocol-mapper-types" : [ "oidc-usermodel-property-mapper", "oidc-full-name-mapper", "saml-user-property-mapper", "saml-user-attribute-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-address-mapper", "saml-role-list-mapper", "oidc-usermodel-attribute-mapper" ]
       }
     }, {
       "id" : "1ce6f027-c6ef-4d20-a151-2cdb10cbffbc",
@@ -1266,7 +1377,7 @@
       "subType" : "anonymous",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "saml-role-list-mapper", "oidc-sha256-pairwise-sub-mapper", "saml-user-property-mapper", "oidc-usermodel-attribute-mapper", "oidc-usermodel-property-mapper", "oidc-address-mapper", "saml-user-attribute-mapper", "oidc-full-name-mapper" ]
+        "allowed-protocol-mapper-types" : [ "oidc-sha256-pairwise-sub-mapper", "oidc-address-mapper", "saml-user-attribute-mapper", "oidc-usermodel-attribute-mapper", "oidc-usermodel-property-mapper", "oidc-full-name-mapper", "saml-role-list-mapper", "saml-user-property-mapper" ]
       }
     } ],
     "org.keycloak.keys.KeyProvider" : [ {
@@ -1849,8 +1960,12 @@
     "cibaExpiresIn" : "120",
     "cibaAuthRequestedUserHint" : "login_hint",
     "oauth2DeviceCodeLifespan" : "600",
+    "clientOfflineSessionMaxLifespan" : "0",
     "oauth2DevicePollingInterval" : "5",
+    "clientSessionIdleTimeout" : "0",
     "parRequestUriLifespan" : "60",
+    "clientSessionMaxLifespan" : "0",
+    "clientOfflineSessionIdleTimeout" : "0",
     "cibaInterval" : "5",
     "realmReusableOtpCode" : "false"
   },

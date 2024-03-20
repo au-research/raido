@@ -21,8 +21,10 @@ RUN keytool -import -storepass password -noprompt -trustcacerts -alias prod.raid
 
 RUN /opt/keycloak/bin/kc.sh build
 
-FROM quay.io/keycloak/keycloak:latest
+FROM quay.io/keycloak/keycloak:24.0.1
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
+
+COPY build/libs/raid-iam.jar /opt/keycloak/providers/
 
 WORKDIR /opt/keycloak
 
