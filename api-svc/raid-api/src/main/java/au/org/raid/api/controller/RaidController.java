@@ -144,7 +144,7 @@ public class RaidController implements RaidApi {
 
     private long getUserServicePointId() {
         final var token = ((JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getToken();
-        return (Long) token.getClaims().get(SERVICE_POINT_CLAIM);
+        return (Long) ((List<?>)token.getClaims().get(SERVICE_POINT_CLAIM)).get(0);
 
     }
 

@@ -29,20 +29,21 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class RaidWebSecurityConfig {
+public class SecurityConfig {
     private static final String USER_ROLE = "service-point-user";
+    private static final String OPERATOR_ROLE = "operator";
     private static final String GROUPS = "groups";
     private static final String REALM_ACCESS_CLAIM = "realm_access";
     private static final String ROLES_CLAIM = "roles";
 
     private final KeycloakLogoutHandler keycloakLogoutHandler;
     public static final String RAID_V2_API = "/v2";
-    public static final String RAID_STABLE_API = "/raid";
+    public static final String RAID_API = "/raid";
     public static final String SERVICE_POINT_API = "/service-point";
     public static final String TEAM_API = "/team";
 
     public static boolean isStableApi(HttpServletRequest request) {
-        return request.getServletPath().startsWith(RAID_STABLE_API) ||
+        return request.getServletPath().startsWith(RAID_API) ||
                 request.getServletPath().startsWith(SERVICE_POINT_API) ||
                 request.getServletPath().startsWith(TEAM_API);
     }
@@ -55,16 +56,12 @@ public class RaidWebSecurityConfig {
                         .requestMatchers("/swagger-ui*/**").permitAll()
                         .requestMatchers("/docs/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/v2/public/list-service-point/v1").permitAll()
 
-                        .requestMatchers(new AntPathRequestMatcher(RAID_V2_API + "/**"))
-                        .hasRole(USER_ROLE)
-
-                        .requestMatchers(new AntPathRequestMatcher(RAID_STABLE_API + "/**"))
+                        .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**"))
                         .hasRole(USER_ROLE)
 
                         .requestMatchers(new AntPathRequestMatcher(SERVICE_POINT_API + "/**"))
-                        .hasRole(USER_ROLE)
+                        .hasRole(OPERATOR_ROLE)
 
                         .anyRequest().denyAll()
         );

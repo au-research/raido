@@ -20,6 +20,7 @@ public class ServicePointController {
 
     private static final String SERVICE_POINT_ACCESS_GRANTED_ATTRIBUTE_NAME = "servicePointAccessGranted";
     private static final String SERVICE_POINT_ID_ATTRIBUTE_NAME = "servicePointId";
+    public static final String SERVICE_POINT_ADMIN_ATTRIBUTE_NAME = "servicePointAdmin";
     private final AuthenticationManager.AuthResult auth;
 
     private final KeycloakSession session;
@@ -44,7 +45,7 @@ public class ServicePointController {
 
         final var responseBody = new HashMap<String, Object>();
 
-        final var adminGroups = user.getAttributeStream("servicePointAdmin").toList();
+        final var adminGroups = user.getAttributeStream(SERVICE_POINT_ADMIN_ATTRIBUTE_NAME).toList();
 
         final var groups = user.getGroupsStream()
                 .filter(g -> adminGroups.contains(g.getId()))
@@ -87,7 +88,7 @@ public class ServicePointController {
             throw new NotAuthorizedException("Bearer");
         }
 
-        final var userAdminGroups = user.getAttributeStream("servicePointAdmin").toList();
+        final var userAdminGroups = user.getAttributeStream(SERVICE_POINT_ADMIN_ATTRIBUTE_NAME).toList();
 
         if (!userAdminGroups.contains(grant.getGroupId())) {
             throw new NotAuthorizedException("User does not have admin permission for group");
@@ -119,7 +120,7 @@ public class ServicePointController {
             throw new NotAuthorizedException("Bearer");
         }
 
-        final var userAdminGroups = user.getAttributeStream("servicePointAdmin").toList();
+        final var userAdminGroups = user.getAttributeStream(SERVICE_POINT_ADMIN_ATTRIBUTE_NAME).toList();
 
         if (!userAdminGroups.contains(grant.getGroupId())) {
             throw new NotAuthorizedException("User does not have admin permission for group");

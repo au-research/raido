@@ -32,7 +32,6 @@ dependencyResolutionManagement{
 
       library('spring-boot-starter-web', 'org.springframework.boot', 'spring-boot-starter-web').versionRef('springboot3')
       library('spring-boot-starter-jdbc', 'org.springframework.boot', 'spring-boot-starter-jdbc').versionRef('springboot3')
-      library('spring-boot-starter-oauth2-resource-server', 'org.springframework.boot', 'spring-boot-starter-oauth2-resource-server').versionRef('springboot3')
       library('spring-boot-starter-jooq', 'org.springframework.boot', 'spring-boot-starter-jooq').versionRef('springboot3')
       library('spring-boot-starter-actuator', 'org.springframework.boot', 'spring-boot-starter-actuator').versionRef('springboot3')
       library('spring-boot-starter-cache', 'org.springframework.boot', 'spring-boot-starter-cache').versionRef('springboot3')

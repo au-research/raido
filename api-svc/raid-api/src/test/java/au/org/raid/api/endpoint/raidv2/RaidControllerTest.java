@@ -112,12 +112,7 @@ class RaidControllerTest {
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = Jwt.withTokenValue("token")
-                    .header("alg", "none")
-                    .claim(JwtClaimNames.SUB, "user")
-                    .claim("scope", "read")
-                    .claim("service_point", servicePointId)
-                    .build();
+            final var jwt = getJwt(servicePointId);
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -156,12 +151,7 @@ class RaidControllerTest {
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = Jwt.withTokenValue("token")
-                    .header("alg", "none")
-                    .claim(JwtClaimNames.SUB, "user")
-                    .claim("scope", "read")
-                    .claim("service_point", servicePointId)
-                    .build();
+            final var jwt = getJwt(servicePointId);
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -216,12 +206,7 @@ class RaidControllerTest {
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = Jwt.withTokenValue("token")
-                    .header("alg", "none")
-                    .claim(JwtClaimNames.SUB, "user")
-                    .claim("scope", "read")
-                    .claim("service_point", servicePointId)
-                    .build();
+            final var jwt = getJwt(servicePointId);
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -296,12 +281,7 @@ class RaidControllerTest {
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = Jwt.withTokenValue("token")
-                    .header("alg", "none")
-                    .claim(JwtClaimNames.SUB, "user")
-                    .claim("scope", "read")
-                    .claim("service_point", servicePointId)
-                    .build();
+            final var jwt = getJwt(servicePointId);
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -352,12 +332,7 @@ class RaidControllerTest {
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = Jwt.withTokenValue("token")
-                    .header("alg", "none")
-                    .claim(JwtClaimNames.SUB, "user")
-                    .claim("scope", "read")
-                    .claim("service_point", servicePointId)
-                    .build();
+            final var jwt = getJwt(servicePointId);
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -425,12 +400,7 @@ class RaidControllerTest {
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = Jwt.withTokenValue("token")
-                    .header("alg", "none")
-                    .claim(JwtClaimNames.SUB, "user")
-                    .claim("scope", "read")
-                    .claim("service_point", servicePointId)
-                    .build();
+            final var jwt = getJwt(servicePointId);
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -472,12 +442,7 @@ class RaidControllerTest {
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = Jwt.withTokenValue("token")
-                    .header("alg", "none")
-                    .claim(JwtClaimNames.SUB, "user")
-                    .claim("scope", "read")
-                    .claim("service_point", servicePointId)
-                    .build();
+            final var jwt = getJwt(servicePointId);
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -518,12 +483,7 @@ class RaidControllerTest {
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = Jwt.withTokenValue("token")
-                    .header("alg", "none")
-                    .claim(JwtClaimNames.SUB, "user")
-                    .claim("scope", "read")
-                    .claim("service_point", servicePointId)
-                    .build();
+            final var jwt = getJwt(servicePointId);
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -561,12 +521,7 @@ class RaidControllerTest {
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = Jwt.withTokenValue("token")
-                    .header("alg", "none")
-                    .claim(JwtClaimNames.SUB, "user")
-                    .claim("scope", "read")
-                    .claim("service_point", servicePointId)
-                    .build();
+            final var jwt = getJwt(servicePointId);
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -607,12 +562,7 @@ class RaidControllerTest {
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = Jwt.withTokenValue("token")
-                    .header("alg", "none")
-                    .claim(JwtClaimNames.SUB, "user")
-                    .claim("scope", "read")
-                    .claim("service_point", servicePointId)
-                    .build();
+            final var jwt = getJwt(servicePointId);
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -645,12 +595,7 @@ class RaidControllerTest {
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = Jwt.withTokenValue("token")
-                    .header("alg", "none")
-                    .claim(JwtClaimNames.SUB, "user")
-                    .claim("scope", "read")
-                    .claim("service_point", servicePointId)
-                    .build();
+            final var jwt = getJwt(servicePointId);
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -689,12 +634,7 @@ class RaidControllerTest {
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = Jwt.withTokenValue("token")
-                    .header("alg", "none")
-                    .claim(JwtClaimNames.SUB, "user")
-                    .claim("scope", "read")
-                    .claim("service_point", servicePointId)
-                    .build();
+            final var jwt = getJwt(servicePointId);
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -729,12 +669,7 @@ class RaidControllerTest {
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = Jwt.withTokenValue("token")
-                    .header("alg", "none")
-                    .claim(JwtClaimNames.SUB, "user")
-                    .claim("scope", "read")
-                    .claim("service_point", servicePointId)
-                    .build();
+            final var jwt = getJwt(servicePointId);
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -773,12 +708,7 @@ class RaidControllerTest {
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = Jwt.withTokenValue("token")
-                    .header("alg", "none")
-                    .claim(JwtClaimNames.SUB, "user")
-                    .claim("scope", "read")
-                    .claim("service_point", servicePointId)
-                    .build();
+            final var jwt = getJwt(servicePointId);
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -879,12 +809,7 @@ class RaidControllerTest {
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = Jwt.withTokenValue("token")
-                    .header("alg", "none")
-                    .claim(JwtClaimNames.SUB, "user")
-                    .claim("scope", "read")
-                    .claim("service_point", servicePointId)
-                    .build();
+            final var jwt = getJwt(servicePointId);
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -945,5 +870,14 @@ class RaidControllerTest {
     private RaidCreateRequest createRaidForPost() throws IOException {
         final String json = resourceContent("/fixtures/create-raid.json");
         return objectMapper.readValue(json, RaidCreateRequest.class);
+    }
+
+    private Jwt getJwt(final long servicePointId) {
+        return Jwt.withTokenValue("token")
+                .header("alg", "none")
+                .claim(JwtClaimNames.SUB, "user")
+                .claim("scope", "read")
+                .claim("service_point", List.of(servicePointId))
+                .build();
     }
 }
