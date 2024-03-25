@@ -7,7 +7,7 @@ import org.keycloak.services.resource.RealmResourceProvider;
 import org.keycloak.services.resource.RealmResourceProviderFactory;
 
 public class ServicePointResourceProviderFactory implements RealmResourceProviderFactory {
-    public static final String ID = "service-point";
+    public static final String ID = "group";
 
     @Override
     public RealmResourceProvider create(KeycloakSession session) {
