@@ -1,7 +1,7 @@
 package au.org.raid.api.service.datacite;
 
+import au.org.raid.api.config.properties.DataciteProperties;
 import au.org.raid.api.factory.datacite.DataciteRequestFactory;
-import au.org.raid.api.spring.config.DataciteProperties;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

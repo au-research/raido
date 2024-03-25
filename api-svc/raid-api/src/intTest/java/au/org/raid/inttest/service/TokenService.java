@@ -18,12 +18,6 @@ public class TokenService {
     @Value("${raid.test.auth.client-id}")
     private String clientId;
 
-    @Value("${raid.test.auth.user}")
-    private String username;
-
-    @Value("${raid.test.auth.password}")
-    private String password;
-
     @Value("${raid.test.auth.grant-type}")
     private String grantType = "password";
 

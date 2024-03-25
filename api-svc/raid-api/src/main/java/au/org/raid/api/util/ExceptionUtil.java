@@ -1,7 +1,7 @@
 package au.org.raid.api.util;
 
 
-import au.org.raid.api.spring.security.ApiSvcAuthenticationException;
+import au.org.raid.api.config.security.ApiSvcAuthenticationException;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;

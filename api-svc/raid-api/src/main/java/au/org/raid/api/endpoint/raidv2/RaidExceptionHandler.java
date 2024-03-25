@@ -1,8 +1,6 @@
 package au.org.raid.api.endpoint.raidv2;
 
 import au.org.raid.api.exception.*;
-import au.org.raid.api.spring.RedactingExceptionResolver;
-import au.org.raid.api.spring.security.ApiSafeException;
 import au.org.raid.idl.raidv2.model.ClosedRaid;
 import au.org.raid.idl.raidv2.model.FailureResponse;
 import au.org.raid.idl.raidv2.model.ValidationFailureResponse;
@@ -141,18 +139,18 @@ public class RaidExceptionHandler extends ResponseEntityExceptionHandler {
     /*
     Added this to fix LegacyRaidV1MintTest. Can probably be deleted once new error handling is supported by the app.
      */
-    @ExceptionHandler(ApiSafeException.class)
-    public ResponseEntity<RedactingExceptionResolver.ErrorJson> handleApiSafeException(Exception e) {
-
-        final var errorJson = new RedactingExceptionResolver.ErrorJson();
-        errorJson.detail = ((ApiSafeException) e).getDetail();
-        errorJson.status = ((ApiSafeException) e).getHttpStatus();
-        errorJson.message = e.getMessage();
-
-        return ResponseEntity
-                .badRequest()
-                .body(errorJson);
-    }
+//    @ExceptionHandler(ApiSafeException.class)
+//    public ResponseEntity<RedactingExceptionResolver.ErrorJson> handleApiSafeException(Exception e) {
+//
+//        final var errorJson = new RedactingExceptionResolver.ErrorJson();
+//        errorJson.detail = ((ApiSafeException) e).getDetail();
+//        errorJson.status = ((ApiSafeException) e).getHttpStatus();
+//        errorJson.message = e.getMessage();
+//
+//        return ResponseEntity
+//                .badRequest()
+//                .body(errorJson);
+//    }
 
     @ExceptionHandler(InvalidAccessException.class)
     public ResponseEntity<FailureResponse> handleInvalidAccessException(final Exception e) {

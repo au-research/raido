@@ -30,18 +30,26 @@ public class AbstractIntegrationTest {
 
     protected RaidApi raidApi;
 
+    @Value("${raid.test.auth.admin.user}")
+    protected String adminUser;
+
+    @Value("${raid.test.auth.admin.password}")
+    protected String adminPassword;
+
     @Value("${raid.test.auth.raid-au.user}")
-    private String raidAuUser;
+    protected String raidAuUser;
 
     @Value("${raid.test.auth.raid-au.password}")
-    private String raidAuPassword;
+    protected String raidAuPassword;
 
     @Value("${raid.test.auth.uq.user}")
     private String uqUser;
 
     @Value("${raid.test.auth.uq.password}")
     private String uqPassword;
-    private String raidAuToken;
+    protected String raidAuToken;
+
+    protected String adminToken;
     protected String uqToken;
 
     @Autowired
@@ -59,6 +67,7 @@ public class AbstractIntegrationTest {
 
     @BeforeEach
     public void setupTestToken() {
+        adminToken = tokenService.getToken(adminUser, adminPassword);
         raidAuToken = tokenService.getToken(raidAuUser, raidAuPassword);
         uqToken = tokenService.getToken(uqUser, uqPassword);
         createRequest = newCreateRequest();

@@ -35,6 +35,9 @@ raid:
       client-id: raid-api
       grant-type: password
       token-uri: http://localhost:8001/realms/raid/protocol/openid-connect/token
+      admin:
+        user: raid-au-group-admin
+        password: password
       raid-au:
         user: raid-test-user
         password: password

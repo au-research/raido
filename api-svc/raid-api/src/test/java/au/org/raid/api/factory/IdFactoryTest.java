@@ -1,6 +1,6 @@
 package au.org.raid.api.factory;
 
-import au.org.raid.api.spring.config.IdentifierProperties;
+import au.org.raid.api.config.properties.IdentifierProperties;
 import au.org.raid.db.jooq.tables.records.ServicePointRecord;
 import au.org.raid.idl.raidv2.model.Id;
 import au.org.raid.idl.raidv2.model.Owner;

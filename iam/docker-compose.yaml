@@ -2,7 +2,7 @@ version: '3.4'
 services:
   keycloak:
     container_name: keycloak
-    image: raid-keycloak:20240320.4
+    image: raid-keycloak:20240325.6
     ports:
       - 8000:8443
       - 8001:8080

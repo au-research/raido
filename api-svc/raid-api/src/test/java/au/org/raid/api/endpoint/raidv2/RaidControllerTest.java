@@ -4,7 +4,7 @@ import au.org.raid.api.controller.RaidController;
 import au.org.raid.api.exception.ResourceNotFoundException;
 import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.RaidIngestService;
-import au.org.raid.api.service.datacite.DataciteService;
+import au.org.raid.api.service.ServicePointService;
 import au.org.raid.api.service.raid.RaidService;
 import au.org.raid.api.service.raid.id.IdentifierHandle;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
@@ -45,8 +45,9 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Supplier;
 
 import static au.org.raid.api.util.FileUtil.resourceContent;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -60,29 +61,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class RaidControllerTest {
     private static final String ACCESS_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1";
-
-    private static final String ACCESS_TYPE_CLOSED =
-            "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json";
-
     private static final String PRIMARY_TITLE_TYPE =
             "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
-
     private static final String TITLE_TYPE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1";
-
     private static final String PRIMARY_DESCRIPTION_TYPE =
             "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json";
-
     private static final String DESCRIPTION_TYPE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1";
-
-    private static final Jwt JWT = Jwt.withTokenValue("token")
-            .header("alg", "none")
-            .claim(JwtClaimNames.SUB, "user")
-            .claim("scope", "read")
-            .claim("service_point", 20_000_000)
-            .claim("realm_access", Map.of("roles", List.of("user")))
-            .build();
+    private static final String SERVICE_POINT_GROUP_ID = UUID.randomUUID().toString();
+    private static final Long SERVICE_POINT_ID = 20_000_000L;
+    private static final String PREFIX = "10378.1";
+    private static final String SUFFIX = "1696639";
     final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule()).setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
     private MockMvc mockMvc;
     @Mock
@@ -91,9 +81,10 @@ class RaidControllerTest {
     private ValidationService validationService;
     @Mock
     private RaidIngestService raidIngestService;
-    private DataciteService dataciteService;
     @Mock
     private RaidHistoryService raidHistoryService;
+    @Mock
+    private ServicePointService servicePointService;
     @InjectMocks
     private RaidController controller;
 
@@ -107,12 +98,12 @@ class RaidControllerTest {
 
     @Test
     void mintRaidV1_ReturnsRedactedInternalServerErrorOnDataAccessException() throws Exception {
-        final var servicePointId = 999L;
         final var raid = createRaidForPost();
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = getJwt(servicePointId);
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -122,7 +113,7 @@ class RaidControllerTest {
 
             securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
             doThrow(DataAccessException.class)
-                    .when(raidService).mint(any(RaidCreateRequest.class), eq(servicePointId));
+                    .when(raidService).mint(any(RaidCreateRequest.class), eq(SERVICE_POINT_ID));
 
             mockMvc.perform(post("/raid/")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -132,12 +123,13 @@ class RaidControllerTest {
                     .andExpect(status().isInternalServerError())
                     .andExpect(content().string(""))
                     .andReturn();
+
+            verifyFindServicePointId.get();
         }
     }
 
     @Test
     void mintRaidV1_ReturnsBadRequest() throws Exception {
-        final var servicePointId = 999L;
         final var validationFailureMessage = "validation failure message";
         final var validationFailureType = "validation failure type";
         final var validationFailureFieldId = "validation failure id";
@@ -151,7 +143,8 @@ class RaidControllerTest {
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = getJwt(servicePointId);
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -182,7 +175,8 @@ class RaidControllerTest {
             assertThat(validationFailureResponse.getFailures().get(0).getErrorType(), Matchers.is(validationFailureType));
             assertThat(validationFailureResponse.getFailures().get(0).getMessage(), Matchers.is(validationFailureMessage));
 
-            verify(raidService, never()).mint(any(RaidCreateRequest.class), eq(servicePointId));
+            verifyFindServicePointId.get();
+            verify(raidService, never()).mint(any(RaidCreateRequest.class), eq(SERVICE_POINT_ID));
             verify(raidService, never()).findByHandle(anyString());
         }
     }
@@ -190,7 +184,6 @@ class RaidControllerTest {
     @Test
     @WithMockUser(authorities = {"user"})
     void mintRaidV1_ReturnsOk() throws Exception {
-        final Long servicePointId = 999L;
         final var title = "test-title";
         final var startDate = LocalDate.now();
         final var handle = new IdentifierHandle("10378.1", "1696639");
@@ -202,11 +195,12 @@ class RaidControllerTest {
 
         when(validationService.validateForCreate(any(RaidCreateRequest.class))).thenReturn(Collections.emptyList());
 
-        when(raidService.mint(any(RaidCreateRequest.class), eq(servicePointId))).thenReturn(raidForGet);
+        when(raidService.mint(any(RaidCreateRequest.class), eq(SERVICE_POINT_ID))).thenReturn(raidForGet);
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = getJwt(servicePointId);
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -228,7 +222,7 @@ class RaidControllerTest {
                     .andExpect(jsonPath("$.identifier.registrationAgency.schemaUri", Matchers.is("https://ror.org/")))
                     .andExpect(jsonPath("$.identifier.owner.id", Matchers.is("https://ror.org/02stey378")))
                     .andExpect(jsonPath("$.identifier.owner.schemaUri", Matchers.is("https://ror.org/")))
-                    .andExpect(jsonPath("$.identifier.owner.servicePoint", Matchers.is(20000001)))
+                    .andExpect(jsonPath("$.identifier.owner.servicePoint", Matchers.is(SERVICE_POINT_ID.intValue())))
                     .andExpect(jsonPath("$.identifier.raidAgencyUrl", Matchers.is(id.formatUrl())))
                     .andExpect(jsonPath("$.title[0].text", Matchers.is(title)))
                     .andExpect(jsonPath("$.title[0].type.id", Matchers.is("https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json")))
@@ -259,15 +253,13 @@ class RaidControllerTest {
                     .andExpect(jsonPath("$.organisation[0].id", Matchers.is("https://ror.org/04qw24q55")))
                     .andExpect(jsonPath("$.organisation[0].schemaUri", Matchers.is("https://ror.org/")));
 
+            verifyFindServicePointId.get();
         }
     }
 
     @Test
     void updateRaidV1_ReturnsBadRequest() throws Exception {
-        final var servicePointId = 20_000_001L;
-        final var prefix = "10.38";
-        final var suffix = "99999";
-        final var handle = String.join("/", prefix, suffix);
+        final var handle = String.join("/", PREFIX, SUFFIX);
         final var validationFailureMessage = "validation failure message";
         final var validationFailureType = "validation failure type";
         final var validationFailureFieldId = "validation failure id";
@@ -280,8 +272,8 @@ class RaidControllerTest {
         validationFailure.setErrorType(validationFailureType);
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
-
-            final var jwt = getJwt(servicePointId);
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -293,7 +285,7 @@ class RaidControllerTest {
 
             when(validationService.validateForUpdate(eq(handle), any(RaidUpdateRequest.class))).thenReturn(List.of(validationFailure));
 
-            final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/%s/%s", prefix, suffix))
+            final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/%s/%s", PREFIX, SUFFIX))
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(input))
                             .characterEncoding("utf-8"))
@@ -312,18 +304,17 @@ class RaidControllerTest {
             assertThat(validationFailureResponse.getFailures().get(0).getErrorType(), Matchers.is(validationFailureType));
             assertThat(validationFailureResponse.getFailures().get(0).getMessage(), Matchers.is(validationFailureMessage));
 
+            verifyFindServicePointId.get();
+
             verifyNoMoreInteractions(raidService);
         }
     }
 
     @Test
     void updateRaidV1_ReturnsOk() throws Exception {
-        final var prefix = "10378.1";
-        final var suffix = "1696639";
-        final Long servicePointId = 20000001L;
         final var title = "test-title";
         final var startDate = LocalDate.now();
-        final var handle = new IdentifierHandle(prefix, suffix);
+        final var handle = new IdentifierHandle(PREFIX, SUFFIX);
         final var id = new IdentifierUrl("https://raid.org.au", handle);
         final var endDate = startDate.plusMonths(6);
 
@@ -332,7 +323,8 @@ class RaidControllerTest {
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = getJwt(servicePointId);
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -342,12 +334,12 @@ class RaidControllerTest {
 
             securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
 
-            when(validationService.validateForUpdate(String.join("/", prefix, suffix), input))
+            when(validationService.validateForUpdate(String.join("/", PREFIX, SUFFIX), input))
                     .thenReturn(Collections.emptyList());
 
-            when(raidService.update(input, servicePointId)).thenReturn(output);
+            when(raidService.update(input, SERVICE_POINT_ID)).thenReturn(output);
 
-            mockMvc.perform(put(String.format("/raid/%s/%s", prefix, suffix))
+            mockMvc.perform(put(String.format("/raid/%s/%s", PREFIX, SUFFIX))
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(input))
                             .characterEncoding("utf-8"))
@@ -359,7 +351,7 @@ class RaidControllerTest {
                     .andExpect(jsonPath("$.identifier.registrationAgency.schemaUri", Matchers.is("https://ror.org/")))
                     .andExpect(jsonPath("$.identifier.owner.id", Matchers.is("https://ror.org/02stey378")))
                     .andExpect(jsonPath("$.identifier.owner.schemaUri", Matchers.is("https://ror.org/")))
-                    .andExpect(jsonPath("$.identifier.owner.servicePoint", Matchers.is(servicePointId.intValue())))
+                    .andExpect(jsonPath("$.identifier.owner.servicePoint", Matchers.is(SERVICE_POINT_ID.intValue())))
                     .andExpect(jsonPath("$.title[0].text", Matchers.is(title)))
                     .andExpect(jsonPath("$.title[0].type.id", Matchers.is(PRIMARY_TITLE_TYPE)))
                     .andExpect(jsonPath("$.title[0].type.schemaUri", Matchers.is(TITLE_TYPE_SCHEMA_URI)))
@@ -387,20 +379,19 @@ class RaidControllerTest {
                     .andExpect(jsonPath("$.organisation[0].role[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
                     .andExpect(jsonPath("$.organisation[0].id", Matchers.is("https://ror.org/04qw24q55")))
                     .andExpect(jsonPath("$.organisation[0].schemaUri", Matchers.is("https://ror.org/")));
+            verifyFindServicePointId.get();
         }
     }
 
     @Test
     void updateRaidV1_Returns404IfNotFound() throws Exception {
-        final var servicePointId = 20_000_001L;
-        final var prefix = "10378.1";
-        final var suffix = "1696639";
-        final var handle = String.join("/", prefix, suffix);
+        final var handle = String.join("/", PREFIX, SUFFIX);
         final var input = createRaidForPut();
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = getJwt(servicePointId);
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -413,9 +404,9 @@ class RaidControllerTest {
             when(validationService.validateForUpdate(eq(handle), any(RaidUpdateRequest.class))).thenReturn(Collections.emptyList());
 
             doThrow(new ResourceNotFoundException(handle))
-                    .when(raidService).update(input, servicePointId);
+                    .when(raidService).update(input, SERVICE_POINT_ID);
 
-            final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/%s/%s", prefix, suffix))
+            final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/%s/%s", PREFIX, SUFFIX))
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(input))
                             .characterEncoding("utf-8"))
@@ -430,19 +421,19 @@ class RaidControllerTest {
             assertThat(failureResponse.getStatus(), Matchers.is(404));
             assertThat(failureResponse.getDetail(), Matchers.is("No RAiD was found with handle 10378.1/1696639."));
             assertThat(failureResponse.getInstance(), Matchers.is("https://raid.org.au"));
+            verifyFindServicePointId.get();
         }
     }
 
     @Test
-    void updateRaidsV1_ReturnsForbiddenWithInvalidServicePoint() throws Exception {
-        final var prefix = "10378.1";
-        final var suffix = "1696639";
-        final Long servicePointId = 123L;
+    void updateRaids_ReturnsForbiddenWithInvalidServicePoint() throws Exception {
         final var input = createRaidForGet("", LocalDate.now());
+        final var servicePointId = 20_000_001L;
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = getJwt(servicePointId);
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId(servicePointId);
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -452,7 +443,7 @@ class RaidControllerTest {
 
             securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
 
-            final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/%s/%s", prefix, suffix))
+            final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/%s/%s", PREFIX, SUFFIX))
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(input))
                             .characterEncoding("utf-8"))
@@ -468,22 +459,21 @@ class RaidControllerTest {
             assertThat(failureResponse.getDetail(), Matchers.is("You don't have permission to access RAiDs with a service point of " + servicePointId));
             assertThat(failureResponse.getInstance(), Matchers.is("https://raid.org.au"));
 
+            verifyFindServicePointId.get();
             verifyNoInteractions(raidService);
         }
     }
 
     @Test
-    void readRaidV1_ReturnsOk() throws Exception {
-        final var servicePointId = 20_000_001L;
-        final var prefix = "10378.1";
-        final var suffix = "1696639";
+    void readRaid_ReturnsOk() throws Exception {
         final var startDate = LocalDate.now().minusYears(1);
         final var title = "test-title";
         final var raid = createRaidForGet(title, startDate);
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = getJwt(servicePointId);
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -493,9 +483,9 @@ class RaidControllerTest {
 
             securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
 
-            when(raidService.findByHandle(String.join("/", prefix, suffix))).thenReturn(Optional.of(raid));
+            when(raidService.findByHandle(String.join("/", PREFIX, SUFFIX))).thenReturn(Optional.of(raid));
 
-            final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
+            final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", PREFIX, SUFFIX))
                             .characterEncoding("utf-8")
                             .accept(MediaType.APPLICATION_JSON))
                     .andDo(print())
@@ -505,15 +495,13 @@ class RaidControllerTest {
             final RaidDto result = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), RaidDto.class);
 
             assertThat(result, Matchers.is(raid));
+            verifyFindServicePointId.get();
         }
     }
 
     @Test
     @DisplayName("Returns raid at given version")
-    void readRaidV1_ReturnsRaidAtVersion() throws Exception {
-        final var servicePointId = 20_000_001L;
-        final var prefix = "10378.1";
-        final var suffix = "1696639";
+    void readRaid_ReturnsRaidAtVersion() throws Exception {
         final var startDate = LocalDate.now().minusYears(1);
         final var title = "test-title";
         final var raid = createRaidForGet(title, startDate);
@@ -521,7 +509,8 @@ class RaidControllerTest {
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = getJwt(servicePointId);
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -531,11 +520,11 @@ class RaidControllerTest {
 
             securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
 
-            when(raidService.findByHandle(String.join("/", prefix, suffix))).thenReturn(Optional.of(raid));
-            when(raidHistoryService.findByHandleAndVersion(String.join("/", prefix, suffix), version))
+            when(raidService.findByHandle(String.join("/", PREFIX, SUFFIX))).thenReturn(Optional.of(raid));
+            when(raidHistoryService.findByHandleAndVersion(String.join("/", PREFIX, SUFFIX), version))
                     .thenReturn(Optional.of(raid));
 
-            final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
+            final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", PREFIX, SUFFIX))
                             .queryParam("version", String.valueOf(version))
                             .characterEncoding("utf-8")
                             .accept(MediaType.APPLICATION_JSON))
@@ -546,23 +535,21 @@ class RaidControllerTest {
             final RaidDto result = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), RaidDto.class);
 
             assertThat(result, Matchers.is(raid));
+            verifyFindServicePointId.get();
         }
     }
 
     @Test
     @DisplayName("Returns 404 when no raid found at given version")
-    void readRaidV1_ReturnsNotFoundIfVersionNotFound() throws Exception {
-        final var servicePointId = 20_000_001L;
-        final var prefix = "10378.1";
-        final var suffix = "1696639";
+    void readRaid_ReturnsNotFoundIfVersionNotFound() throws Exception {
         final var startDate = LocalDate.now().minusYears(1);
         final var title = "test-title";
         final var raid = createRaidForGet(title, startDate);
         final var version = 9;
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
-
-            final var jwt = getJwt(servicePointId);
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -572,30 +559,28 @@ class RaidControllerTest {
 
             securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
 
-            when(raidService.findByHandle(String.join("/", prefix, suffix))).thenReturn(Optional.of(raid));
-            when(raidHistoryService.findByHandleAndVersion(String.join("/", prefix, suffix), version))
+            when(raidService.findByHandle(String.join("/", PREFIX, SUFFIX))).thenReturn(Optional.of(raid));
+            when(raidHistoryService.findByHandleAndVersion(String.join("/", PREFIX, SUFFIX), version))
                     .thenThrow(ResourceNotFoundException.class);
 
-            mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
+            mockMvc.perform(get(String.format("/raid/%s/%s", PREFIX, SUFFIX))
                             .queryParam("version", String.valueOf(version))
                             .characterEncoding("utf-8")
                             .accept(MediaType.APPLICATION_JSON))
                     .andDo(print())
                     .andExpect(status().isNotFound())
                     .andReturn();
+            verifyFindServicePointId.get();
         }
     }
 
     @Test
-    void readRaidV1_ReturnsNotFound() throws Exception {
-        final var servicePointId = 123L;
-        final var prefix = "10.38";
-        final var suffix = "99999";
-        final var handle = String.join("/", prefix, suffix);
+    void readRaid_ReturnsNotFound() throws Exception {
+        final var handle = String.join("/", PREFIX, SUFFIX);
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
-
-            final var jwt = getJwt(servicePointId);
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -607,7 +592,7 @@ class RaidControllerTest {
 
             doThrow(new ResourceNotFoundException(handle)).when(raidService).findByHandle(handle);
 
-            final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
+            final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", PREFIX, SUFFIX))
                             .characterEncoding("utf-8")
                             .accept(MediaType.APPLICATION_JSON))
                     .andDo(print())
@@ -619,22 +604,22 @@ class RaidControllerTest {
             assertThat(failureResponse.getType(), Matchers.is("https://raid.org.au/errors#ResourceNotFoundException"));
             assertThat(failureResponse.getTitle(), Matchers.is("The resource was not found."));
             assertThat(failureResponse.getStatus(), Matchers.is(404));
-            assertThat(failureResponse.getDetail(), Matchers.is("No RAiD was found with handle 10.38/99999."));
+            assertThat(failureResponse.getDetail(), Matchers.is("No RAiD was found with handle %s/%s.".formatted(PREFIX, SUFFIX)));
             assertThat(failureResponse.getInstance(), Matchers.is("https://raid.org.au"));
+
+            verifyFindServicePointId.get();
         }
     }
 
     @Test
     @DisplayName("Requesting a closed raid with a different service point returns forbidden response")
     void forbiddenWithClosedRaidAndDifferentServicePoint() throws Exception {
-        final var prefix = "10378.1";
-        final var suffix = "1696639";
-        final Long servicePointId = 123L;
         final var raid = createRaidForGet("", LocalDate.now());
+        final var servicePointId = 20_000_001L;
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
-
-            final var jwt = getJwt(servicePointId);
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId(servicePointId);
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -644,9 +629,9 @@ class RaidControllerTest {
 
             securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
 
-            when(raidService.findByHandle(String.join("/", prefix, suffix))).thenReturn(Optional.of(raid));
+            when(raidService.findByHandle(String.join("/", PREFIX, SUFFIX))).thenReturn(Optional.of(raid));
 
-            mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
+            mockMvc.perform(get(String.format("/raid/%s/%s", PREFIX, SUFFIX))
                             .characterEncoding("utf-8"))
                     .andDo(print())
                     .andExpect(status().isForbidden())
@@ -656,20 +641,20 @@ class RaidControllerTest {
                     .andExpect(jsonPath("$.access.statement.language.id", Matchers.is("eng")))
                     .andExpect(jsonPath("$.access.statement.language.schemaUri", Matchers.is("https://www.iso.org/standard/39534.html")))
                     .andReturn();
+
+            verifyFindServicePointId.get();
         }
     }
 
     @Test
     @DisplayName("Requesting an embargoed raid with a different service point returns forbidden response")
     void forbiddenWithEmbargoedRaidAndDifferentServicePoint() throws Exception {
-        final var prefix = "10378.1";
-        final var suffix = "1696639";
-        final Long servicePointId = 123L;
         final var raid = embargoedRaid();
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = getJwt(servicePointId);
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -679,9 +664,9 @@ class RaidControllerTest {
 
             securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
 
-            when(raidService.findByHandle(String.join("/", prefix, suffix))).thenReturn(Optional.of(raid));
+            when(raidService.findByHandle(String.join("/", PREFIX, SUFFIX))).thenReturn(Optional.of(raid));
 
-            mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
+            mockMvc.perform(get(String.format("/raid/%s/%s", PREFIX, SUFFIX))
                             .characterEncoding("utf-8"))
                     .andDo(print())
                     .andExpect(status().isForbidden())
@@ -692,12 +677,13 @@ class RaidControllerTest {
                     .andExpect(jsonPath("$.access.statement.language.id", Matchers.is("eng")))
                     .andExpect(jsonPath("$.access.statement.language.schemaUri", Matchers.is("https://www.iso.org/standard/39534.html")))
                     .andReturn();
+
+            verifyFindServicePointId.get();
         }
     }
 
     @Test
-    void listRaidsV1_ReturnsOk() throws Exception {
-        final Long servicePointId = 20000001L;
+    void listRaids_ReturnsOk() throws Exception {
         final var title = "C. Japonicum Genome";
         final var startDate = LocalDate.now();
         final var handle = new IdentifierHandle("10378.1", "1696639");
@@ -708,7 +694,8 @@ class RaidControllerTest {
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            final var jwt = getJwt(servicePointId);
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -717,12 +704,11 @@ class RaidControllerTest {
             when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
 
             securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
-
-
-            when(raidIngestService.findAllByServicePointId(servicePointId)).thenReturn(Collections.singletonList(output));
+            
+            when(raidIngestService.findAllByServicePointId(SERVICE_POINT_ID)).thenReturn(Collections.singletonList(output));
 
             mockMvc.perform(get("/raid/", handle)
-                            .queryParam("servicePointId", servicePointId.toString())
+                            .queryParam("servicePointId", SERVICE_POINT_ID.toString())
                             .characterEncoding("utf-8"))
                     .andDo(print())
                     .andExpect(status().isOk())
@@ -732,7 +718,7 @@ class RaidControllerTest {
                     .andExpect(jsonPath("$[0].identifier.registrationAgency.schemaUri", Matchers.is("https://ror.org/")))
                     .andExpect(jsonPath("$[0].identifier.owner.id", Matchers.is("https://ror.org/02stey378")))
                     .andExpect(jsonPath("$[0].identifier.owner.schemaUri", Matchers.is("https://ror.org/")))
-                    .andExpect(jsonPath("$[0].identifier.owner.servicePoint", Matchers.is(20000001)))
+                    .andExpect(jsonPath("$[0].identifier.owner.servicePoint", Matchers.is(SERVICE_POINT_ID.intValue())))
                     .andExpect(jsonPath("$[0].title[0].text", Matchers.is(title)))
                     .andExpect(jsonPath("$[0].title[0].type.id", Matchers.is(PRIMARY_TITLE_TYPE)))
                     .andExpect(jsonPath("$[0].title[0].type.schemaUri", Matchers.is(TITLE_TYPE_SCHEMA_URI)))
@@ -760,15 +746,14 @@ class RaidControllerTest {
                     .andExpect(jsonPath("$[0].organisation[0].role[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
                     .andExpect(jsonPath("$[0].organisation[0].id", Matchers.is("https://ror.org/04qw24q55")))
                     .andExpect(jsonPath("$[0].organisation[0].schemaUri", Matchers.is("https://ror.org/")));
+            verifyFindServicePointId.get();
         }
     }
 
     @Test
     @DisplayName("Raid history endpoint returns list of changes")
     void raidHistory() throws Exception {
-        final var prefix = "_prefix";
-        final var suffix = "_suffix";
-        final var handle = prefix + "/" + suffix;
+        final var handle = PREFIX + "/" + SUFFIX;
         final var version = 1;
         final var diff = "_diff";
         final var timestamp = LocalDateTime.now().atOffset(ZoneOffset.UTC);
@@ -786,7 +771,7 @@ class RaidControllerTest {
 
         when(raidHistoryService.findAllChangesByHandle(handle)).thenReturn(List.of(raidChange));
 
-        mockMvc.perform(get(String.format("/raid/%s/%s/history", prefix, suffix), handle)
+        mockMvc.perform(get(String.format("/raid/%s/%s/history", PREFIX, SUFFIX), handle)
                         .characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -799,17 +784,15 @@ class RaidControllerTest {
     @Test
     @DisplayName("Raid history returns 403 if raid is embargoed and user is from different service point")
     void raidHistoryEmbargoed() throws Exception {
-        final var prefix = "_prefix";
-        final var suffix = "_suffix";
-        final var handle = prefix + "/" + suffix;
+        final var handle = PREFIX + "/" + SUFFIX;
         final var raid = createRaidForGet("title", LocalDate.now());
-        final Long servicePointId = 123L;
+        final var servicePointId = 20_000_001L;
 
         when(raidService.findByHandle(handle)).thenReturn(Optional.of(raid));
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
-
-            final var jwt = getJwt(servicePointId);
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId(servicePointId);
 
             final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
             when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
@@ -819,10 +802,11 @@ class RaidControllerTest {
 
             securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
 
-            mockMvc.perform(get(String.format("/raid/%s/%s/history", prefix, suffix), handle)
+            mockMvc.perform(get(String.format("/raid/%s/%s/history", PREFIX, SUFFIX), handle)
                             .characterEncoding("utf-8"))
                     .andDo(print())
                     .andExpect(status().isForbidden());
+            verifyFindServicePointId.get();
         }
     }
 
@@ -872,12 +856,26 @@ class RaidControllerTest {
         return objectMapper.readValue(json, RaidCreateRequest.class);
     }
 
-    private Jwt getJwt(final long servicePointId) {
+    private Jwt getJwt() {
         return Jwt.withTokenValue("token")
                 .header("alg", "none")
                 .claim(JwtClaimNames.SUB, "user")
                 .claim("scope", "read")
-                .claim("service_point", List.of(servicePointId))
+                .claim("service_point_group_id", SERVICE_POINT_GROUP_ID)
                 .build();
+    }
+
+    private Supplier<Void> mockFindServicePointId() {
+        return mockFindServicePointId(SERVICE_POINT_ID);
+    }
+
+    private Supplier<Void> mockFindServicePointId(final long servicePointId) {
+        when(servicePointService.findByGroupId(SERVICE_POINT_GROUP_ID))
+                .thenReturn(Optional.of(new ServicePoint().id(servicePointId)));
+
+        return () -> {
+            verify(servicePointService).findByGroupId(SERVICE_POINT_GROUP_ID);
+            return null;
+        };
     }
 }

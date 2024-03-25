@@ -2,9 +2,11 @@ package au.org.raid.api.controller;
 
 import au.org.raid.api.exception.ClosedRaidException;
 import au.org.raid.api.exception.CrossAccountAccessException;
+import au.org.raid.api.exception.ServicePointNotFoundException;
 import au.org.raid.api.exception.ValidationException;
 import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.RaidIngestService;
+import au.org.raid.api.service.ServicePointService;
 import au.org.raid.api.service.raid.RaidService;
 import au.org.raid.api.util.SchemaValues;
 import au.org.raid.api.validator.ValidationService;
@@ -39,16 +41,16 @@ import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLAS
 @SecurityScheme(name = "bearerAuth", scheme = "bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 @RequiredArgsConstructor
 public class RaidController implements RaidApi {
-    public static final String SERVICE_POINT_CLAIM = "service_point";
+    public static final String SERVICE_POINT_GROUP_ID_CLAIM = "service_point_group_id";
     private final ValidationService validationService;
     private final RaidService raidService;
     private final RaidIngestService raidIngestService;
     private final RaidHistoryService raidHistoryService;
-
+    private final ServicePointService servicePointService;
 
     @Override
     public ResponseEntity<RaidDto> findRaidByName(final String prefix, final String suffix, final Integer version) {
-        final var servicePointId = getUserServicePointId();
+        final var servicePointId = getServicePointId();
 
         final var handle = String.join("/", prefix, suffix);
         var raidOptional = raidService.findByHandle(handle)
@@ -73,7 +75,7 @@ public class RaidController implements RaidApi {
 
     @Override
     public ResponseEntity<RaidDto> mintRaid(final RaidCreateRequest request) {
-        final var servicePointId = getUserServicePointId();
+        final var servicePointId = getServicePointId();
 
         final var failures = new ArrayList<>(validationService.validateForCreate(request));
 
@@ -88,7 +90,7 @@ public class RaidController implements RaidApi {
 
     @Override
     public ResponseEntity<List<RaidDto>> findAllRaids(final Long servicePoint, final List<String> includeFields) {
-        final var servicePointId = getUserServicePointId();
+        final var servicePointId = getServicePointId();
 
         final var raids = Optional.ofNullable(servicePoint)
                 .map(raidIngestService::findAllByServicePointId)
@@ -103,7 +105,7 @@ public class RaidController implements RaidApi {
 
     @Override
     public ResponseEntity<RaidDto> updateRaid(final String prefix, final String suffix, RaidUpdateRequest request) {
-        final var servicePointId = getUserServicePointId();
+        final var servicePointId = getServicePointId();
 
         if (!request.getIdentifier().getOwner().getServicePoint().equals(servicePointId)) {
             throw new CrossAccountAccessException(servicePointId);
@@ -131,7 +133,7 @@ public class RaidController implements RaidApi {
             final var raid = raidOptional.get();
 
             if (!raid.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri())) {
-                final var servicePointId = getUserServicePointId();
+                final var servicePointId = getServicePointId();
 
                 if (!raid.getIdentifier().getOwner().getServicePoint().equals(servicePointId)) {
                     throw new CrossAccountAccessException(servicePointId);
@@ -142,10 +144,14 @@ public class RaidController implements RaidApi {
         return ResponseEntity.ok(raidHistoryService.findAllChangesByHandle(handle));
     }
 
-    private long getUserServicePointId() {
+    private long getServicePointId() {
         final var token = ((JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getToken();
-        return (Long) ((List<?>)token.getClaims().get(SERVICE_POINT_CLAIM)).get(0);
+        final var groupId = (String) token.getClaims().get(SERVICE_POINT_GROUP_ID_CLAIM);
 
+        final var servicePoint = servicePointService.findByGroupId(groupId)
+                .orElseThrow(() -> new ServicePointNotFoundException(groupId));
+
+        return servicePoint.getId();
     }
 
     private List<RaidDto> filterFields(final List<RaidDto> raids, final List<String> includeFields) {
