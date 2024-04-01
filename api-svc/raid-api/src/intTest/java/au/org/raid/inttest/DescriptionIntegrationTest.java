@@ -5,11 +5,13 @@ import au.org.raid.idl.raidv2.model.DescriptionType;
 import au.org.raid.idl.raidv2.model.Language;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import au.org.raid.inttest.service.RaidApiValidationException;
+import au.org.raid.inttest.service.TestConstants;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
+import static au.org.raid.inttest.service.TestConstants.ALTERNATIVE_DESCRIPTION_TYPE;
 import static au.org.raid.inttest.service.TestConstants.DESCRIPTION_TYPE_SCHEMA_URI;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -367,11 +369,11 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
         return new Description()
                 .text("New description...")
                 .type(new DescriptionType()
-                        .id("https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json")
-                        .schemaUri("https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/")
+                        .id(ALTERNATIVE_DESCRIPTION_TYPE)
+                        .schemaUri(DESCRIPTION_TYPE_SCHEMA_URI)
                 )
                 .language(new Language()
-                        .schemaUri("https://iso639-3.sil.org")
+                        .schemaUri(TestConstants.LANGUAGE_SCHEMA_URI)
                         .id("eng")
                 );
     }

@@ -35,7 +35,7 @@ public class DescriptionValidator {
         final var primaryDescriptions = descriptions.stream()
                 .filter(description -> description.getType() != null)
                 .filter(description -> description.getType().getId() != null)
-                .filter(description -> description.getType().getId().equals(SchemaValues.PRIMARY_DESCRIPTION.getUri()))
+                .filter(description -> description.getType().getId().equals(SchemaValues.PRIMARY_DESCRIPTION_TYPE.getUri()))
                 .toList();
 
         if (primaryDescriptions.isEmpty()) {
@@ -51,7 +51,7 @@ public class DescriptionValidator {
                     .forEach(i -> {
                         final var description = descriptions.get(i);
                         if (description.getType() != null &&
-                                description.getType().getId().equals(SchemaValues.PRIMARY_DESCRIPTION.getUri())) {
+                                description.getType().getId().equals(SchemaValues.PRIMARY_DESCRIPTION_TYPE.getUri())) {
                             primaryPositions.add("description[%d].type.id".formatted(i));
                         }
                     });

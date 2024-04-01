@@ -3,8 +3,8 @@
     {
       "text": "C. Japonicum Genome",
       "type": {
-        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json",
-        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1"
+        "id": "https://vocabulary.raid.org/title.type.schema/5",
+        "schemaUri": "https://vocabulary.raid.org/title.type.schema/376"
       },
       "startDate": "2020-10-07"
     }
@@ -16,15 +16,15 @@
     {
       "text": "Genome sequencing and assembly project at WUR of the C. Japonicum. ",
       "type": {
-        "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json",
-        "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1"
+        "id": "https://vocabulary.raid.org/description.type.schema/318",
+        "schemaUri": "https://vocabulary.raid.org/description.type.schema/320"
       }
     }
   ],
   "access": {
     "type": {
-      "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json",
-      "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1"
+      "id": "https://vocabularies.coar-repositories.org/access_rights/c_abf2/",
+      "schemaUri": "https://vocabularies.coar-repositories.org/access_rights/"
     },
     "statement": {
       "text": "This RAiD is closed",
@@ -40,8 +40,8 @@
       "schemaUri": "https://orcid.org/",
       "position": [
         {
-          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1",
-          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json",
+          "schemaUri": "https://vocabulary.raid.org/contributor.position.schema/305",
+          "id": "https://vocabulary.raid.org/contributor.position.schema/307",
           "startDate": "2020-10-07"
         }
       ],
@@ -59,8 +59,8 @@
       "schemaUri": "https://ror.org/",
       "role": [
         {
-          "schemaUri": "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1",
-          "id": "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json",
+          "schemaUri": "https://vocabulary.raid.org/organisation.role.schema/359",
+          "id": "https://vocabulary.raid.org/organisation.role.schema/182",
           "startDate": "2020-10-07"
         }
       ]

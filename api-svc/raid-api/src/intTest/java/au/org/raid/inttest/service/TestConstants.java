@@ -11,59 +11,53 @@ public class TestConstants {
     public static final String RELATED_OBJECT_CATEGORY_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/category/v1/";
     public static final String LEAD_RESEARCH_ORGANISATION =
-            "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json";
+            "https://vocabulary.raid.org/organisation.role.schema/182";
 
     public static final String ORGANISATION_ROLE_SCHEMA_URI =
-            "https://github.com/au-research/raid-metadata/tree/main/scheme/organisation/role/v1/";
+            "https://vocabulary.raid.org/organisation.role.schema/359";
 
     public static final String ORGANISATION_IDENTIFIER_SCHEMA_URI = "https://ror.org/";
 
     public static final String OPEN_ACCESS_TYPE =
-            "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/open.json";
+            "https://vocabularies.coar-repositories.org/access_rights/c_abf2/";
 
     public static final String CLOSED_ACCESS_TYPE =
             "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json";
 
     public static final String EMBARGOED_ACCESS_TYPE =
-            "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json";
+            "https://vocabularies.coar-repositories.org/access_rights/c_f1cf/";
 
     public static final String ACCESS_TYPE_SCHEMA_URI =
-            "https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/";
+            "https://vocabularies.coar-repositories.org/access_rights/";
 
     public static final String PRIMARY_TITLE_TYPE =
-            "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
+            "https://vocabulary.raid.org/title.type.schema/5";
 
     public static final String ALTERNATIVE_TITLE_TYPE =
-            "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/alternative.json";
+            "https://vocabulary.raid.org/title.type.schema/4";
 
     public static final String TITLE_TYPE_SCHEMA_URI =
-            "https://github.com/au-research/raid-metadata/tree/main/scheme/title/type/v1/";
+            "https://vocabulary.raid.org/title.type.schema/376";
 
     public static final String PRIMARY_DESCRIPTION_TYPE =
-            "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/primary.json";
+            "https://vocabulary.raid.org/description.type.schema/318";
 
     public static final String ALTERNATIVE_DESCRIPTION_TYPE =
-            "https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/alternative.json";
+            "https://vocabulary.raid.org/description.type.schema/319";
 
     public static final String DESCRIPTION_TYPE_SCHEMA_URI =
-            "https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/";
+            "https://vocabulary.raid.org/description.type.schema/320";
 
     public static final String CONTRIBUTOR_IDENTIFIER_SCHEMA_URI = "https://orcid.org/";
 
     public static final String CONTRIBUTOR_POSITION_SCHEMA_URI =
-            "https://github.com/au-research/raid-metadata/tree/main/scheme/contributor/position/v1/";
-
-    public static final String LEADER_POSITION =
-            "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json";
+            "https://vocabulary.raid.org/contributor.position.schema/305";
 
     public static final String PRINCIPAL_INVESTIGATOR_POSITION =
-            "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/principal-investigator.json";
+            "https://vocabulary.raid.org/contributor.position.schema/307";
 
     public static final String OTHER_PARTICIPANT_POSITION =
-            "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/other-participant.json";
-
-    public static final String CONTACT_PERSON_POSITION =
-            "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/contact-person.json";
+            "https://vocabulary.raid.org/contributor.position.schema/311";
 
     public static final String CONTRIBUTOR_ROLE_SCHEMA_URI = "https://credit.niso.org/";
 
@@ -78,20 +72,20 @@ public class TestConstants {
     public static final String CONCEPTUALIZATION_CONTRIBUTOR_ROLE =
             "https://credit.niso.org/contributor-roles/conceptualization/";
     public static final String LEAD_RESEARCH_ORGANISATION_ROLE =
-            "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/lead-research-organisation.json";
+            "https://vocabulary.raid.org/organisation.role.schema/182";
 
     public static final String PARTNER_ORGANISATION_ROLE =
-            "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/partner-organisation.json";
+            "https://vocabulary.raid.org/organisation.role.schema/184";
 
     public static final String OTHER_ORGANISATION_ROLE =
-            "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/other-organisation.json";
+            "https://vocabulary.raid.org/organisation.role.schema/188";
 
     public static final String CONTRACTOR_ORGANISATION_ROLE =
-            "https://github.com/au-research/raid-metadata/blob/main/scheme/organisation/role/v1/contractor.json";
+            "https://vocabulary.raid.org/organisation.role.schema/185";
 
     public static final String VALID_ROR = "https://ror.org/038sjwq14";
 
-    public static final String LANGUAGE_SCHEMA_URI = "https://iso639-3.sil.org";
+    public static final String LANGUAGE_SCHEMA_URI = "https://www.iso.org/standard/74575.html";
     public static final String LANGUAGE_ID = "eng";
 
     public static final String GEONAMES_MELBOURNE = "https://www.geonames.org/2158177/melbourne.html";

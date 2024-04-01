@@ -1,6 +1,7 @@
 package au.org.raid.api.validator;
 
 import au.org.raid.api.util.DateUtil;
+import au.org.raid.api.util.SchemaValues;
 import au.org.raid.idl.raidv2.model.Title;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import lombok.RequiredArgsConstructor;
@@ -13,17 +14,12 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static au.org.raid.api.endpoint.message.ValidationMessage.*;
-import static au.org.raid.api.util.JooqUtil.valueFits;
 import static au.org.raid.api.util.StringUtil.isBlank;
-import static au.org.raid.db.jooq.tables.Raid.RAID;
 import static java.util.Collections.emptyList;
 
 @Service
 @RequiredArgsConstructor
 public class TitleValidator {
-    private static final String PRIMARY_TITLE_TYPE =
-            "https://github.com/au-research/raid-metadata/blob/main/scheme/title/type/v1/primary.json";
-
     private final TitleTypeValidator titleTypeValidationService;
     private final LanguageValidator languageValidator;
 
@@ -80,7 +76,7 @@ public class TitleValidator {
 
     public List<Title> getPrimaryTitles(List<Title> titles) {
         return titles.stream().filter(title ->
-                title.getType().getId() != null && title.getType().getId().equals(PRIMARY_TITLE_TYPE)
+                title.getType().getId() != null && title.getType().getId().equals(SchemaValues.PRIMARY_TITLE_TYPE.getUri())
         ).toList();
     }
 
@@ -89,7 +85,7 @@ public class TitleValidator {
         final var today = LocalDate.now();
 
         var primaryTitles = titles.stream()
-                .filter(title -> title.getType().getId().equals(PRIMARY_TITLE_TYPE))
+                .filter(title -> title.getType().getId().equals(SchemaValues.PRIMARY_TITLE_TYPE.getUri()))
                 .sorted((o1, o2) -> {
                     if (o1.getStartDate().equals(o2.getStartDate())) {
                         final var o1EndDate = o1.getEndDate() == null ? LocalDate.now() : DateUtil.parseDate(o1.getEndDate());

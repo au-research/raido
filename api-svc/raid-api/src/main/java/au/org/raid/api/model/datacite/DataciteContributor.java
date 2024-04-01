@@ -1,19 +1,17 @@
 package au.org.raid.api.model.datacite;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 @Data
 @Accessors(chain = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DataciteContributor {
-
-    @JsonProperty("name")
-    private String contributor;
-
-    @JsonProperty("contributorType")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String name;
     private String contributorType;
-
+    private String nameType;
+    private List<NameIdentifier> nameIdentifiers;
 }

@@ -1,5 +1,6 @@
 package au.org.raid.api.validator;
 
+import au.org.raid.api.util.SchemaValues;
 import au.org.raid.api.util.TestConstants;
 import au.org.raid.idl.raidv2.model.Description;
 import au.org.raid.idl.raidv2.model.DescriptionType;
@@ -35,12 +36,12 @@ class DescriptionValidatorTest {
     @DisplayName("Validation passes with valid description")
     void validDescription() {
         final var type = new DescriptionType()
-                .id(TestConstants.PRIMARY_DESCRIPTION_TYPE)
-                .schemaUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI);
+                .id(SchemaValues.PRIMARY_DESCRIPTION_TYPE.getUri())
+                .schemaUri(SchemaValues.DESCRIPTION_TYPE_SCHEMA.getUri());
 
         final var language = new Language()
                 .id(TestConstants.LANGUAGE_ID)
-                .schemaUri(TestConstants.LANGUAGE_SCHEMA_URI);
+                .schemaUri(SchemaValues.LANGUAGE_SCHEMA.getUri());
 
         final var description = new Description()
                 .text(DESCRIPTION_VALUE)
@@ -59,12 +60,12 @@ class DescriptionValidatorTest {
     @DisplayName("Validation fails with missing primary description")
     void missingPrimaryDescription() {
         final var type = new DescriptionType()
-                .id(TestConstants.ALTERNATIVE_DESCRIPTION_TYPE)
-                .schemaUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI);
+                .id(SchemaValues.ALTERNATIVE_DESCRIPTION_TYPE.getUri())
+                .schemaUri(SchemaValues.DESCRIPTION_TYPE_SCHEMA.getUri());
 
         final var language = new Language()
                 .id(TestConstants.LANGUAGE_ID)
-                .schemaUri(TestConstants.LANGUAGE_SCHEMA_URI);
+                .schemaUri(SchemaValues.LANGUAGE_SCHEMA.getUri());
 
         final var description = new Description()
                 .text(DESCRIPTION_VALUE)
@@ -88,12 +89,12 @@ class DescriptionValidatorTest {
     @DisplayName("Validation fails with more than one primary description")
     void multiplePrimaryDescriptions() {
         final var type = new DescriptionType()
-                .id(TestConstants.PRIMARY_DESCRIPTION_TYPE)
-                .schemaUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI);
+                .id(SchemaValues.PRIMARY_DESCRIPTION_TYPE.getUri())
+                .schemaUri(SchemaValues.DESCRIPTION_TYPE_SCHEMA.getUri());
 
         final var language = new Language()
                 .id(TestConstants.LANGUAGE_ID)
-                .schemaUri(TestConstants.LANGUAGE_SCHEMA_URI);
+                .schemaUri(SchemaValues.LANGUAGE_SCHEMA.getUri());
 
         final var description1 = new Description()
                 .text(DESCRIPTION_VALUE)
@@ -118,12 +119,12 @@ class DescriptionValidatorTest {
     @DisplayName("Validation fails with null description")
     void nullDescription() {
         final var type = new DescriptionType()
-                .id(TestConstants.PRIMARY_DESCRIPTION_TYPE)
-                .schemaUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI);
+                .id(SchemaValues.PRIMARY_DESCRIPTION_TYPE.getUri())
+                .schemaUri(SchemaValues.DESCRIPTION_TYPE_SCHEMA.getUri());
 
         final var language = new Language()
                 .id(TestConstants.LANGUAGE_ID)
-                .schemaUri(TestConstants.LANGUAGE_SCHEMA_URI);
+                .schemaUri(SchemaValues.LANGUAGE_SCHEMA.getUri());
 
         final var description = new Description()
                 .type(type)
@@ -148,8 +149,8 @@ class DescriptionValidatorTest {
         final var description = new Description()
                 .text("")
                 .type(new DescriptionType()
-                        .id(TestConstants.PRIMARY_DESCRIPTION_TYPE)
-                        .schemaUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI)
+                        .id(SchemaValues.PRIMARY_DESCRIPTION_TYPE.getUri())
+                        .schemaUri(SchemaValues.DESCRIPTION_TYPE_SCHEMA.getUri())
                 );
 
         final var failures = validationService.validate(List.of(description));
@@ -167,8 +168,8 @@ class DescriptionValidatorTest {
     @DisplayName("Type validation failures are returned")
     void typeErrorAreReturned() {
         final var type = new DescriptionType()
-                .id(TestConstants.PRIMARY_DESCRIPTION_TYPE)
-                .schemaUri(TestConstants.DESCRIPTION_TYPE_SCHEMA_URI);
+                .id(SchemaValues.PRIMARY_DESCRIPTION_TYPE.getUri())
+                .schemaUri(SchemaValues.DESCRIPTION_TYPE_SCHEMA.getUri());
 
         final var description = new Description()
                 .text(DESCRIPTION_VALUE)

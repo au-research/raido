@@ -1,65 +1,58 @@
 package au.org.raid.api.factory.datacite;
 
-import au.org.raid.api.model.datacite.DataciteTitle;
 import au.org.raid.idl.raidv2.model.Title;
 import au.org.raid.idl.raidv2.model.TitleType;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public class DataciteTitleFactoryTest {
 
     private DataciteTitleFactory dataciteTitleFactory = new DataciteTitleFactory();
 
     @Test
-    public void testCreateWithMinimumPayload(){
-        Title title1 = new Title();
-        title1.setText("Title 1");
+    @DisplayName("Create Title with 'Alternative' type")
+    public void alternativeTitleType(){
+        final var text = "_text";
 
-        DataciteTitle dataciteTitle = dataciteTitleFactory.create(title1);
+        final var title = new Title()
+                .text(text)
+                .type(new TitleType().id("https://vocabulary.raid.org/title.type.schema/4"));
 
-        assertEquals(dataciteTitle.getDataciteTitle(), "Title 1 (tba through tba)");
+        final var result = dataciteTitleFactory.create(title);
+
+        assertThat(result.getTitleType(), is("AlternativeTitle"));
+        assertThat(result.getTitle(), is(text));
+    }
+    @Test
+    @DisplayName("Create Title with 'Short' type")
+    public void shortTitleType(){
+        final var text = "_text";
+
+        final var title = new Title()
+                .text(text)
+                .type(new TitleType().id("https://vocabulary.raid.org/title.type.schema/157"));
+
+        final var result = dataciteTitleFactory.create(title);
+
+        assertThat(result.getTitleType(), is("Other"));
+        assertThat(result.getTitle(), is(text));
     }
 
     @Test
-    public void testCreateWithAlternativeTitleType(){
-        Title title1 = new Title();
+    @DisplayName("Create Title with 'Acronym' type")
+    public void acronymTitleType(){
+        final var text = "_text";
 
-        title1.setText("Title 1");
+        final var title = new Title()
+                .text(text)
+                .type(new TitleType().id("https://vocabulary.raid.org/title.type.schema/157"));
 
-        TitleType titleType1 = new TitleType();
-        titleType1.setId("alternative");
-        title1.setType(titleType1);
+        final var result = dataciteTitleFactory.create(title);
 
-        DataciteTitle dataciteTitle = dataciteTitleFactory.create(title1);
-
-        assertEquals(dataciteTitle.getTitleType(), "AlternativeTitle");
+        assertThat(result.getTitleType(), is("Other"));
+        assertThat(result.getTitle(), is(text));
     }
-
-    @Test
-    public void testCreateWithStart(){
-        Title title1 = new Title();
-
-        title1.setText("Title 1");
-
-        title1.setStartDate("2020-01-01");
-
-        DataciteTitle dataciteTitle = dataciteTitleFactory.create(title1);
-
-        assertEquals(dataciteTitle.getDataciteTitle(), "Title 1 (2020-01-01 through tba)");
-    }
-    @Test
-    public void testCreateWithStartAndEnd(){
-        Title title1 = new Title();
-
-        title1.setText("Title 1");
-
-        title1.setStartDate("2020-01-01");
-        title1.setEndDate("2020-12-31");
-
-        DataciteTitle dataciteTitle = dataciteTitleFactory.create(title1);
-
-        assertEquals(dataciteTitle.getDataciteTitle(), "Title 1 (2020-01-01 through 2020-12-31)");
-    }
-
 }

@@ -76,7 +76,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                                 new ContributorPosition()
                                         .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                         .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
-                                        .id(LEADER_POSITION)
+                                        .id(PRINCIPAL_INVESTIGATOR_POSITION)
                         ))
                         .role(List.of(
                                 new ContributorRole()
@@ -115,7 +115,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                                 new ContributorPosition()
                                         .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                         .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
-                                        .id(LEADER_POSITION)
+                                        .id(PRINCIPAL_INVESTIGATOR_POSITION)
                         ))
                         .role(List.of(
                                 new ContributorRole()
@@ -153,7 +153,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                                 new ContributorPosition()
                                         .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                         .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
-                                        .id(LEADER_POSITION)
+                                        .id(PRINCIPAL_INVESTIGATOR_POSITION)
                         ))
                         .role(List.of(
                                 new ContributorRole()
@@ -192,7 +192,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                                 new ContributorPosition()
                                         .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                         .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
-                                        .id(LEADER_POSITION)
+                                        .id(PRINCIPAL_INVESTIGATOR_POSITION)
                         ))
                         .role(List.of(
                                 new ContributorRole()
@@ -375,7 +375,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                                     new ContributorPosition()
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
-                                            .id(LEADER_POSITION)
+                                            .id(PRINCIPAL_INVESTIGATOR_POSITION)
                             ))
                             .role(List.of(
                                     new ContributorRole()
@@ -412,7 +412,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                                     new ContributorPosition()
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
-                                            .id(LEADER_POSITION)
+                                            .id(PRINCIPAL_INVESTIGATOR_POSITION)
                             ))
                             .role(List.of(
                                     new ContributorRole()
@@ -451,7 +451,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                                     new ContributorPosition()
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
-                                            .id(LEADER_POSITION)
+                                            .id(PRINCIPAL_INVESTIGATOR_POSITION)
                             ))
                             .role(List.of(
                                     new ContributorRole()
@@ -493,7 +493,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                             .position(List.of(
                                     new ContributorPosition()
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
-                                            .id(LEADER_POSITION)
+                                            .id(PRINCIPAL_INVESTIGATOR_POSITION)
                             )).role(List.of(
                                     new ContributorRole()
                                             .schemaUri(CONTRIBUTOR_ROLE_SCHEMA_URI)
@@ -645,11 +645,11 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                             .id("https://orcid.org/0000-0000-0000-0001")
                             .position(List.of(
                                     new ContributorPosition()
-                                            .id(LEADER_POSITION)
+                                            .id(PRINCIPAL_INVESTIGATOR_POSITION)
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .startDate(LocalDate.now().minusYears(2).format(DateTimeFormatter.ISO_LOCAL_DATE)),
                                     new ContributorPosition()
-                                            .id("https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/co-investigator.json")
+                                            .id("https://vocabulary.raid.org/contributor.position.schema/308")
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
                             ))
@@ -687,7 +687,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                             .id("https://orcid.org/0000-0000-0000-0001")
                             .position(List.of(
                                     new ContributorPosition()
-                                            .id(LEADER_POSITION)
+                                            .id(PRINCIPAL_INVESTIGATOR_POSITION)
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .startDate(LocalDate.now().minusYears(2).format(DateTimeFormatter.ISO_LOCAL_DATE))
                             ))
@@ -701,7 +701,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                             .id("https://orcid.org/0000-0000-0000-0001")
                             .position(List.of(
                                     new ContributorPosition()
-                                            .id(LEADER_POSITION)
+                                            .id(PRINCIPAL_INVESTIGATOR_POSITION)
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .startDate(LocalDate.now().minusYears(1).format(DateTimeFormatter.ISO_LOCAL_DATE))
                                     ))
@@ -747,7 +747,7 @@ public class ContributorsIntegrationTest extends AbstractIntegrationTest {
                                     new ContributorPosition()
                                             .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)
                                             .startDate(LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
-                                            .id(LEADER_POSITION)
+                                            .id(PRINCIPAL_INVESTIGATOR_POSITION)
                             ))
                             .role(List.of(
                                     new ContributorRole()

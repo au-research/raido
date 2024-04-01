@@ -4,25 +4,30 @@ import au.org.raid.api.model.datacite.DataciteTitle;
 import au.org.raid.idl.raidv2.model.Title;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+import java.util.Map;
 
 @Component
 public class DataciteTitleFactory {
 
-    public DataciteTitle create(final Title raidTitle) {
-        if (raidTitle == null) {
-            return null;
+    public DataciteTitle create(final Title title) {
+        final var dataciteTitle =  new DataciteTitle()
+                .setTitle(title.getText());
+
+        // Don't set title type of raid title type is primary
+        if (TITLE_TYPE_MAP.containsKey(title.getType().getId())) {
+            dataciteTitle.setTitleType(TITLE_TYPE_MAP.get(title.getType().getId()));
         }
 
-        String title = Optional.ofNullable(raidTitle.getText()).orElse("");
-        String startDate = Optional.ofNullable(raidTitle.getStartDate()).orElse("tba");
-        String endDate = Optional.ofNullable(raidTitle.getEndDate()).orElse("tba");
+        if (title.getLanguage() != null) {
+            dataciteTitle.setLang(title.getLanguage().getId());
+        }
 
-        String formattedTitle = String.format("%s (%s through %s)", title, startDate, endDate);
-        String titleType = (raidTitle.getType() != null && raidTitle.getType().getId().contains("alternative")) ? "AlternativeTitle" : null;
-
-        return new DataciteTitle()
-                .setDataciteTitle(formattedTitle)
-                .setTitleType(titleType);
+        return dataciteTitle;
     }
+
+    private static final Map<String, String> TITLE_TYPE_MAP = Map.of(
+            "https://vocabulary.raid.org/title.type.schema/4", "AlternativeTitle",
+            "https://vocabulary.raid.org/title.type.schema/156", "Other",
+            "https://vocabulary.raid.org/title.type.schema/157", "Other"
+            );
 }

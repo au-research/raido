@@ -4,16 +4,18 @@ import au.org.raid.api.model.datacite.DataciteDate;
 import au.org.raid.idl.raidv2.model.Date;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
 public class DataciteDateFactory {
 
-    public DataciteDate create(final Date raidDate) {
-        return Optional.ofNullable(raidDate)
-                .map(date -> new DataciteDate()
-                        .setDate(Optional.ofNullable(date.getStartDate()).orElse(""))
-                        .setDateType("Available"))
-                .orElse(null);
+    public DataciteDate create(final Date date) {
+        var d = date.getStartDate();
+
+        if (date.getEndDate() != null) {
+            d = d.concat("/").concat(date.getEndDate());
+        }
+
+        return new DataciteDate()
+                .setDate(d)
+                .setDateType("Other");
     }
 }

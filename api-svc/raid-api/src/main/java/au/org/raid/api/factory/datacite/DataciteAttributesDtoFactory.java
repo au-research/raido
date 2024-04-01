@@ -1,6 +1,7 @@
 package au.org.raid.api.factory.datacite;
 
 import au.org.raid.api.model.datacite.*;
+import au.org.raid.api.util.SchemaValues;
 import au.org.raid.idl.raidv2.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -21,14 +22,34 @@ public class DataciteAttributesDtoFactory {
     private final DataciteRightFactory dataciteRightFactory;
     private final DataciteTypesFactory dataciteTypesFactory;
     private final DataciteAlternateIdentifierFactory dataciteAlternateIdentifierFactory;
+    private final DatacitePublisherFactory datacitePublisherFactory;
 
     @SneakyThrows
     public DataciteAttributesDto create(RaidCreateRequest request, String handle) {
-        if (request == null) {
-            return null;
+        final var contributors = new ArrayList<DataciteContributor>();
+
+        contributors.add(dataciteContributorFactory.registrationAgencyContributor(
+                request.getIdentifier().getRegistrationAgency()
+        ));
+
+        if (request.getOrganisation() != null) {
+            contributors.addAll(request.getOrganisation().stream()
+                    .map(dataciteContributorFactory::create)
+                    .toList());
         }
 
+        final var publisher = datacitePublisherFactory.create(request.getIdentifier().getOwner());
+
         List<DataciteTitle> dataciteTitles = new ArrayList<>();
+
+        final var primaryTitle = request.getTitle().stream()
+                .filter(t -> t.getType().getId().equals(SchemaValues.PRIMARY_TITLE_TYPE.getUri()))
+                .findFirst()
+                .orElseThrow();
+
+        dataciteTitles.add(dataciteTitleFactory.create(primaryTitle));
+//        request.getTitle().remove(primaryTitle);
+
         if (request.getTitle() != null) {
             dataciteTitles = request.getTitle().stream()
                     .map(dataciteTitleFactory::create)
@@ -36,30 +57,15 @@ public class DataciteAttributesDtoFactory {
         }
 
         List<DataciteCreator> dataciteCreators = new ArrayList<>();
-        if (request.getIdentifier() != null) {
-            dataciteCreators = new ArrayList<>();
-            dataciteCreators.add(dataciteCreatorFactory.create(request.getIdentifier().getRegistrationAgency()));
-        }
+//        if (request.getIdentifier() != null) {
+//            dataciteCreators = new ArrayList<>();
+//            dataciteCreators.add(dataciteCreatorFactory.create(request.getIdentifier().getRegistrationAgency()));
+//        }
 
-        List<DataciteDate> dataciteDates = new ArrayList<>();
-        if (request.getDate() != null) {
-            Date raidDates = request.getDate();
-            dataciteDates.add(dataciteDateFactory.create(raidDates));
-        }
-
-        List<DataciteContributor> dataciteContributors = new ArrayList<>();
-        if (request.getContributor() != null) {
-            dataciteContributors.addAll(request.getContributor().stream()
-                    .map(dataciteContributorFactory::create)
-                    .toList());
-        }
-        if (request.getOrganisation() != null) {
-            dataciteContributors.addAll(request.getOrganisation().stream()
-                    .map(dataciteContributorFactory::create)
-                    .toList());
-        }
+        List<DataciteDate> dataciteDates = List.of(dataciteDateFactory.create(request.getDate()));
 
         List<DataciteDescription> dataciteDescriptions = new ArrayList<>();
+
         if (request.getDescription() != null) {
             dataciteDescriptions = request.getDescription().stream()
                     .map(dataciteDescriptionFactory::create)
@@ -109,24 +115,34 @@ public class DataciteAttributesDtoFactory {
         return new DataciteAttributesDto()
                 .setPrefix(prefix)
                 .setDoi(handle)
-                .setPublisher("ARDC")
-                .setPublicationYear(String.valueOf(java.time.Year.now()))
-                .setDataciteTypes(dataciteTypes)
-                .setDataciteTitles(dataciteTitles)
-                .setDataciteCreators(dataciteCreators)
-                .setDataciteDates(dataciteDates)
-                .setDataciteContributors(dataciteContributors)
-                .setDataciteDescriptions(dataciteDescriptions)
-                .setDataciteRelatedIdentifiers(dataciteRelatedIdentifiers)
-                .setDataciteRights(dataciteRights)
-                .setDataciteAlternateIdentifiers(dataciteAlternateIdentifiers);
+                .setPublisher(publisher) // $.identifier.registrationAgency
+                .setPublicationYear(String.valueOf(java.time.Year.now())) // TODO: year of start date
+                .setTypes(dataciteTypes)
+                .setTitles(dataciteTitles)
+                .setCreators(dataciteCreators)
+                .setDates(dataciteDates)
+                .setContributors(contributors)
+                .setDescriptions(dataciteDescriptions)
+                .setRelatedIdentifiers(dataciteRelatedIdentifiers)
+                .setRightsList(dataciteRights)
+                .setAlternateIdentifiers(dataciteAlternateIdentifiers);
     }
 
     @SneakyThrows
     public DataciteAttributesDto create(RaidUpdateRequest request, String handle) {
-        if (request == null) {
-            return null;
-        }
+
+        List<DataciteContributor> contributors = new ArrayList<>();
+
+        contributors.add(dataciteContributorFactory.registrationAgencyContributor(
+                request.getIdentifier().getRegistrationAgency()
+        ));
+
+        contributors.addAll(request.getOrganisation().stream()
+                .map(dataciteContributorFactory::create)
+                .toList());
+
+
+
 
         List<DataciteTitle> dataciteTitles = new ArrayList<>();
         if (request.getTitle() != null) {
@@ -135,29 +151,19 @@ public class DataciteAttributesDtoFactory {
                     .toList();
         }
 
-        List<DataciteCreator> dataciteCreators = new ArrayList<>();
-        if (request.getIdentifier() != null) {
-            dataciteCreators = new ArrayList<>();
-            dataciteCreators.add(dataciteCreatorFactory.create(request.getIdentifier().getRegistrationAgency()));
-        }
+        List<DataciteCreator> dataciteCreators =
+                request.getContributor().stream()
+                        .map(dataciteCreatorFactory::create)
+                        .toList();
 
+        
         List<DataciteDate> dataciteDates = new ArrayList<>();
         if (request.getDate() != null) {
             Date raidDates = request.getDate();
             dataciteDates.add(dataciteDateFactory.create(raidDates));
         }
 
-        List<DataciteContributor> dataciteContributors = new ArrayList<>();
-        if (request.getContributor() != null) {
-            dataciteContributors.addAll(request.getContributor().stream()
-                    .map(dataciteContributorFactory::create)
-                    .toList());
-        }
-        if (request.getOrganisation() != null) {
-            dataciteContributors.addAll(request.getOrganisation().stream()
-                    .map(dataciteContributorFactory::create)
-                    .toList());
-        }
+
 
         List<DataciteDescription> dataciteDescriptions = new ArrayList<>();
         if (request.getDescription() != null) {
@@ -203,23 +209,22 @@ public class DataciteAttributesDtoFactory {
 
         DataciteTypes dataciteTypes = dataciteTypesFactory.create("RAiD Project", "Other");
 
-
         String prefix = handle.split("/")[0];
 
         return new DataciteAttributesDto()
                 .setPrefix(prefix)
                 .setDoi(handle)
-                .setPublisher("ARDC")
+//                .setPublisher("ARDC")
                 .setPublicationYear(String.valueOf(java.time.Year.now()))
-                .setDataciteTypes(dataciteTypes)
-                .setDataciteTitles(dataciteTitles)
-                .setDataciteCreators(dataciteCreators)
-                .setDataciteDates(dataciteDates)
-                .setDataciteContributors(dataciteContributors)
-                .setDataciteDescriptions(dataciteDescriptions)
-                .setDataciteRelatedIdentifiers(dataciteRelatedIdentifiers)
-                .setDataciteRights(dataciteRights)
-                .setDataciteAlternateIdentifiers(dataciteAlternateIdentifiers);
+                .setTypes(dataciteTypes)
+                .setTitles(dataciteTitles)
+                .setCreators(dataciteCreators)
+                .setDates(dataciteDates)
+                .setContributors(contributors)
+                .setDescriptions(dataciteDescriptions)
+                .setRelatedIdentifiers(dataciteRelatedIdentifiers)
+                .setRightsList(dataciteRights)
+                .setAlternateIdentifiers(dataciteAlternateIdentifiers);
     }
 
 }

@@ -1,5 +1,6 @@
 package au.org.raid.api.repository;
 
+import au.org.raid.db.jooq.enums.SchemaStatus;
 import au.org.raid.db.jooq.tables.records.LanguageSchemaRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -18,6 +19,7 @@ public class LanguageSchemaRepository {
         return dslContext
                 .selectFrom(LANGUAGE_SCHEMA)
                 .where(LANGUAGE_SCHEMA.URI.eq(uri))
+                .and(LANGUAGE_SCHEMA.STATUS.eq(SchemaStatus.active))
                 .fetchOptional();
     }
 

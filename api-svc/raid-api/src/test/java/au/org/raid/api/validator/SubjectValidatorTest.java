@@ -132,7 +132,7 @@ class SubjectValidatorTest {
                 new ValidationFailure()
                         .fieldId("subject[0].schemaUri")
                         .errorType("invalidValue")
-                        .message("must be https://linked.data.gov.au/def/anzsrc-for/2020/.")
+                        .message("must be https://vocabs.ardc.edu.au/viewById/316.")
         )));
     }
 
@@ -149,7 +149,7 @@ class SubjectValidatorTest {
         final List<ValidationFailure> validationFailures = validationService.validate(Collections.singletonList(subject));
 
         assertThat(validationFailures.size(), is(1));
-        assertThat(validationFailures.get(0).getMessage(), is("must be https://linked.data.gov.au/def/anzsrc-for/2020/."));
+        assertThat(validationFailures.get(0).getMessage(), is("must be https://vocabs.ardc.edu.au/viewById/316."));
         assertThat(validationFailures.get(0).getErrorType(), is("invalidValue"));
         assertThat(validationFailures.get(0).getFieldId(), is("subject[0].schemaUri"));
     }
@@ -169,7 +169,7 @@ class SubjectValidatorTest {
                 new ValidationFailure()
                         .fieldId("subject[0].schemaUri")
                         .errorType("invalidValue")
-                        .message("must be https://linked.data.gov.au/def/anzsrc-for/2020/."),
+                        .message("must be https://vocabs.ardc.edu.au/viewById/316."),
                 new ValidationFailure()
                         .fieldId("subject[0].id")
                         .errorType("invalidValue")
