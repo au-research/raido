@@ -343,8 +343,8 @@ public class DescriptionIntegrationTest extends AbstractIntegrationTest {
         createRequest.getDescription().add(
                 new Description()
                         .type(new DescriptionType()
-                                .id("https://github.com/au-research/raid-metadata/blob/main/scheme/description/type/v1/unknown.json")
-                                .schemaUri("https://github.com/au-research/raid-metadata/tree/main/scheme/description/type/v1/")
+                                .id("https://vocabulary.raid.org/description.type.schema/60")
+                                .schemaUri("https://vocabulary.raid.org/description.type.schema/320")
                         )
                         .text("description text...")
                 );

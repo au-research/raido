@@ -58,7 +58,7 @@ public class ContributorPositionValidator {
             );
         } else {
             final var positionScheme =
-                    contributorPositionSchemaRepository.findByUri(position.getSchemaUri());
+                    contributorPositionSchemaRepository.findActiveByUri(position.getSchemaUri());
 
             if (positionScheme.isEmpty()) {
                 failures.add(

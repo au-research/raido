@@ -52,7 +52,7 @@ class RelatedObjectTypeValidatorTest {
                 .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
                 .schemaUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
 
-        when(relatedObjectTypeSchemaRepository.findByUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI))
+        when(relatedObjectTypeSchemaRepository.findActiveByUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.of(RELATED_OBJECT_TYPE_SCHEMA_RECORD));
 
         when(relatedObjectTypeRepository
@@ -70,7 +70,7 @@ class RelatedObjectTypeValidatorTest {
         var relatedObjectType = new RelatedObjectType()
                 .schemaUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
 
-        when(relatedObjectTypeSchemaRepository.findByUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI))
+        when(relatedObjectTypeSchemaRepository.findActiveByUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.of(RELATED_OBJECT_TYPE_SCHEMA_RECORD));
 
         final var failures = validationService.validate(relatedObjectType, INDEX);
@@ -93,7 +93,7 @@ class RelatedObjectTypeValidatorTest {
                 .id("")
                 .schemaUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
 
-        when(relatedObjectTypeSchemaRepository.findByUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI))
+        when(relatedObjectTypeSchemaRepository.findActiveByUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.of(RELATED_OBJECT_TYPE_SCHEMA_RECORD));
 
         final var failures = validationService.validate(relatedObjectType, INDEX);
@@ -154,7 +154,7 @@ class RelatedObjectTypeValidatorTest {
                 .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
                 .schemaUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
 
-        when(relatedObjectTypeSchemaRepository.findByUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI))
+        when(relatedObjectTypeSchemaRepository.findActiveByUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.empty());
 
         final var failures = validationService.validate(relatedObjectType, INDEX);
@@ -175,7 +175,7 @@ class RelatedObjectTypeValidatorTest {
                 .id(TestConstants.BOOK_CHAPTER_RELATED_OBJECT_TYPE)
                 .schemaUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI);
 
-        when(relatedObjectTypeSchemaRepository.findByUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI))
+        when(relatedObjectTypeSchemaRepository.findActiveByUri(TestConstants.RELATED_OBJECT_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.of(RELATED_OBJECT_TYPE_SCHEMA_RECORD));
 
         when(relatedObjectTypeRepository

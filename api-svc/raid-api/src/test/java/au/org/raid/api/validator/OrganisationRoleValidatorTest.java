@@ -54,7 +54,7 @@ class OrganisationRoleValidatorTest {
                 .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                 .startDate("2021");
 
-        when(contributorRoleSchemaRepository.findByUri(ORGANISATION_ROLE_SCHEMA_URI))
+        when(contributorRoleSchemaRepository.findActiveByUri(ORGANISATION_ROLE_SCHEMA_URI))
                 .thenReturn(Optional.of(ORGANISATION_ROLE_SCHEMA_RECORD));
 
         when(contributorRoleRepository
@@ -75,7 +75,7 @@ class OrganisationRoleValidatorTest {
                 .startDate("2021")
                 .endDate("2020");
 
-        when(contributorRoleSchemaRepository.findByUri(ORGANISATION_ROLE_SCHEMA_URI))
+        when(contributorRoleSchemaRepository.findActiveByUri(ORGANISATION_ROLE_SCHEMA_URI))
                 .thenReturn(Optional.of(ORGANISATION_ROLE_SCHEMA_RECORD));
 
         when(contributorRoleRepository
@@ -143,7 +143,7 @@ class OrganisationRoleValidatorTest {
                 .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                 .startDate("2021");
 
-        when(contributorRoleSchemaRepository.findByUri(ORGANISATION_ROLE_SCHEMA_URI))
+        when(contributorRoleSchemaRepository.findActiveByUri(ORGANISATION_ROLE_SCHEMA_URI))
                 .thenReturn(Optional.empty());
 
         final var failures = validationService.validate(role, 2, 3);
@@ -166,7 +166,7 @@ class OrganisationRoleValidatorTest {
                 .schemaUri(ORGANISATION_ROLE_SCHEMA_URI)
                 .startDate("2021");
 
-        when(contributorRoleSchemaRepository.findByUri(ORGANISATION_ROLE_SCHEMA_URI))
+        when(contributorRoleSchemaRepository.findActiveByUri(ORGANISATION_ROLE_SCHEMA_URI))
                 .thenReturn(Optional.of(ORGANISATION_ROLE_SCHEMA_RECORD));
 
         final var failures = validationService.validate(role, 2, 3);
@@ -190,7 +190,7 @@ class OrganisationRoleValidatorTest {
                 .id("")
                 .startDate("2021");
 
-        when(contributorRoleSchemaRepository.findByUri(ORGANISATION_ROLE_SCHEMA_URI))
+        when(contributorRoleSchemaRepository.findActiveByUri(ORGANISATION_ROLE_SCHEMA_URI))
                 .thenReturn(Optional.of(ORGANISATION_ROLE_SCHEMA_RECORD));
 
         final var failures = validationService.validate(role, 2, 3);
@@ -214,7 +214,7 @@ class OrganisationRoleValidatorTest {
                 .id(LEAD_RESEARCH_ORGANISATION_ROLE)
                 .startDate("2021");
 
-        when(contributorRoleSchemaRepository.findByUri(ORGANISATION_ROLE_SCHEMA_URI))
+        when(contributorRoleSchemaRepository.findActiveByUri(ORGANISATION_ROLE_SCHEMA_URI))
                 .thenReturn(Optional.of(ORGANISATION_ROLE_SCHEMA_RECORD));
 
         when(contributorRoleRepository

@@ -19,6 +19,12 @@ public class LanguageSchemaRepository {
         return dslContext
                 .selectFrom(LANGUAGE_SCHEMA)
                 .where(LANGUAGE_SCHEMA.URI.eq(uri))
+                .fetchOptional();
+    }
+    public Optional<LanguageSchemaRecord> findActiveByUri(final String uri) {
+        return dslContext
+                .selectFrom(LANGUAGE_SCHEMA)
+                .where(LANGUAGE_SCHEMA.URI.eq(uri))
                 .and(LANGUAGE_SCHEMA.STATUS.eq(SchemaStatus.active))
                 .fetchOptional();
     }

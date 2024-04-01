@@ -47,7 +47,7 @@ class RelatedRaidTypeValidatorTest {
                 .id(TestConstants.CONTINUES_RELATED_RAID_TYPE)
                 .schemaUri(TestConstants.RELATED_RAID_TYPE_SCHEMA_URI);
 
-        when(relatedRaidTypeSchemaRepository.findByUri(TestConstants.RELATED_RAID_TYPE_SCHEMA_URI))
+        when(relatedRaidTypeSchemaRepository.findActiveByUri(TestConstants.RELATED_RAID_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.of(RELATED_RAID_TYPE_SCHEMA_RECORD));
         when(relatedRaidTypeRepository.findByUriAndSchemaId(TestConstants.CONTINUES_RELATED_RAID_TYPE, RELATED_RAID_TYPE_SCHEMA_ID))
                 .thenReturn(Optional.of(RELATED_RAID_TYPE_RECORD));
@@ -56,7 +56,7 @@ class RelatedRaidTypeValidatorTest {
 
         assertThat(failures, empty());
 
-        verify(relatedRaidTypeSchemaRepository).findByUri(TestConstants.RELATED_RAID_TYPE_SCHEMA_URI);
+        verify(relatedRaidTypeSchemaRepository).findActiveByUri(TestConstants.RELATED_RAID_TYPE_SCHEMA_URI);
         verify(relatedRaidTypeRepository).findByUriAndSchemaId(TestConstants.CONTINUES_RELATED_RAID_TYPE, RELATED_RAID_TYPE_SCHEMA_ID);
     }
 
@@ -66,7 +66,7 @@ class RelatedRaidTypeValidatorTest {
         final var relatedRaidType = new RelatedRaidType()
                 .schemaUri(TestConstants.RELATED_RAID_TYPE_SCHEMA_URI);
 
-        when(relatedRaidTypeSchemaRepository.findByUri(TestConstants.RELATED_RAID_TYPE_SCHEMA_URI))
+        when(relatedRaidTypeSchemaRepository.findActiveByUri(TestConstants.RELATED_RAID_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.of(RELATED_RAID_TYPE_SCHEMA_RECORD));
 
         final var failures = validationService.validate(relatedRaidType, INDEX);
@@ -87,7 +87,7 @@ class RelatedRaidTypeValidatorTest {
                 .id("")
                 .schemaUri(TestConstants.RELATED_RAID_TYPE_SCHEMA_URI);
 
-        when(relatedRaidTypeSchemaRepository.findByUri(TestConstants.RELATED_RAID_TYPE_SCHEMA_URI))
+        when(relatedRaidTypeSchemaRepository.findActiveByUri(TestConstants.RELATED_RAID_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.of(RELATED_RAID_TYPE_SCHEMA_RECORD));
 
         final var failures = validationService.validate(relatedRaidType, INDEX);
@@ -143,7 +143,7 @@ class RelatedRaidTypeValidatorTest {
                 .id(TestConstants.CONTINUES_RELATED_RAID_TYPE)
                 .schemaUri(TestConstants.RELATED_RAID_TYPE_SCHEMA_URI);
 
-        when(relatedRaidTypeSchemaRepository.findByUri(TestConstants.RELATED_RAID_TYPE_SCHEMA_URI))
+        when(relatedRaidTypeSchemaRepository.findActiveByUri(TestConstants.RELATED_RAID_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.empty());
 
         final var failures = validationService.validate(relatedRaidType, INDEX);
@@ -181,7 +181,7 @@ class RelatedRaidTypeValidatorTest {
                 .id(TestConstants.CONTINUES_RELATED_RAID_TYPE)
                 .schemaUri(TestConstants.RELATED_RAID_TYPE_SCHEMA_URI);
 
-        when(relatedRaidTypeSchemaRepository.findByUri(TestConstants.RELATED_RAID_TYPE_SCHEMA_URI))
+        when(relatedRaidTypeSchemaRepository.findActiveByUri(TestConstants.RELATED_RAID_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.of(RELATED_RAID_TYPE_SCHEMA_RECORD));
 
         when(relatedRaidTypeRepository.findByUriAndSchemaId(TestConstants.CONTINUES_RELATED_RAID_TYPE, RELATED_RAID_TYPE_SCHEMA_ID))

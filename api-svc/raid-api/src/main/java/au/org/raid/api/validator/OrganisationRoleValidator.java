@@ -44,7 +44,7 @@ public class OrganisationRoleValidator {
             );
         } else {
             final var roleScheme =
-                    organisationRoleSchemaRepository.findByUri(role.getSchemaUri());
+                    organisationRoleSchemaRepository.findActiveByUri(role.getSchemaUri());
 
             if (roleScheme.isEmpty()) {
                 failures.add(

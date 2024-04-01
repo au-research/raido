@@ -49,7 +49,7 @@ public class AccessTypeValidator {
             );
         } else {
             final var accessTypeScheme =
-                    accessTypeSchemaRepository.findByUri(accessType.getSchemaUri());
+                    accessTypeSchemaRepository.findActiveByUri(accessType.getSchemaUri());
 
             if (accessTypeScheme.isEmpty()) {
                 failures.add(new ValidationFailure()

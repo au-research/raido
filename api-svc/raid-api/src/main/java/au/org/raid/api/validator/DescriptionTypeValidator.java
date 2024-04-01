@@ -46,7 +46,7 @@ public class DescriptionTypeValidator {
             );
         } else {
             final var descriptionTypeScheme =
-                    descriptionTypeSchemaRepository.findByUri(descriptionType.getSchemaUri());
+                    descriptionTypeSchemaRepository.findActiveByUri(descriptionType.getSchemaUri());
 
             if (descriptionTypeScheme.isEmpty()) {
                 failures.add(new ValidationFailure()

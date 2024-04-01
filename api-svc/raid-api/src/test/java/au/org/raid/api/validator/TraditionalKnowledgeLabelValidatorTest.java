@@ -65,7 +65,7 @@ class TraditionalKnowledgeLabelValidatorTest {
         final var traditionalKnowledgeLabel = new TraditionalKnowledgeLabel()
                 .schemaUri(SCHEMA_URI);
 
-        when(labelSchemaRepository.findByUri(schemaUri))
+        when(labelSchemaRepository.findActiveByUri(schemaUri))
                 .thenReturn(Optional.of(TRADITIONAL_KNOWLEDGE_LABEL_SCHEMA_RECORD));
 
         final var failures = validatorService.validate(
@@ -82,7 +82,7 @@ class TraditionalKnowledgeLabelValidatorTest {
                 .id(LABEL_ID)
                 .schemaUri(SCHEMA_URI);
 
-        when(labelSchemaRepository.findByUri(SCHEMA_URI))
+        when(labelSchemaRepository.findActiveByUri(SCHEMA_URI))
                 .thenReturn(Optional.of(TRADITIONAL_KNOWLEDGE_LABEL_SCHEMA_RECORD));
 
         when(labelRepository.findByUriAndSchemaId(LABEL_ID, SCHEMA_ID))
@@ -102,7 +102,7 @@ class TraditionalKnowledgeLabelValidatorTest {
                 .id(LABEL_ID)
                 .schemaUri(SCHEMA_URI);
 
-        when(labelSchemaRepository.findByUri(SCHEMA_URI))
+        when(labelSchemaRepository.findActiveByUri(SCHEMA_URI))
                 .thenReturn(Optional.of(TRADITIONAL_KNOWLEDGE_LABEL_SCHEMA_RECORD));
 
         when(labelRepository.findByUriAndSchemaId(LABEL_ID, SCHEMA_ID))

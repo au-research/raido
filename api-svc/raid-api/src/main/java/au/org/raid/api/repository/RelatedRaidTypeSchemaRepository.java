@@ -1,5 +1,6 @@
 package au.org.raid.api.repository;
 
+import au.org.raid.db.jooq.enums.SchemaStatus;
 import au.org.raid.db.jooq.tables.records.RelatedRaidTypeSchemaRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -17,6 +18,13 @@ public class RelatedRaidTypeSchemaRepository {
     public Optional<RelatedRaidTypeSchemaRecord> findByUri(final String uri) {
         return dslContext.selectFrom(RELATED_RAID_TYPE_SCHEMA)
                 .where(RELATED_RAID_TYPE_SCHEMA.URI.eq(uri))
+                .fetchOptional();
+    }
+
+    public Optional<RelatedRaidTypeSchemaRecord> findActiveByUri(final String uri) {
+        return dslContext.selectFrom(RELATED_RAID_TYPE_SCHEMA)
+                .where(RELATED_RAID_TYPE_SCHEMA.URI.eq(uri))
+                .and(RELATED_RAID_TYPE_SCHEMA.STATUS.eq(SchemaStatus.active))
                 .fetchOptional();
     }
 

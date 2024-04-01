@@ -18,6 +18,12 @@ public class AccessTypeSchemaRepository {
     public Optional<AccessTypeSchemaRecord> findByUri(final String uri) {
         return dslContext.selectFrom(ACCESS_TYPE_SCHEMA)
                 .where(ACCESS_TYPE_SCHEMA.URI.eq(uri))
+                .fetchOptional();
+    }
+
+    public Optional<AccessTypeSchemaRecord> findActiveByUri(final String uri) {
+        return dslContext.selectFrom(ACCESS_TYPE_SCHEMA)
+                .where(ACCESS_TYPE_SCHEMA.URI.eq(uri))
                 .and(ACCESS_TYPE_SCHEMA.STATUS.eq(SchemaStatus.active))
                 .fetchOptional();
     }

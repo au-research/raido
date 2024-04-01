@@ -47,7 +47,7 @@ class AccessTypeValidatorTest {
                 .id(TestConstants.OPEN_ACCESS_TYPE_ID)
                 .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
-        when(accessTypeSchemaRepository.findByUri(TestConstants.ACCESS_TYPE_SCHEMA_URI))
+        when(accessTypeSchemaRepository.findActiveByUri(TestConstants.ACCESS_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.of(ACCESS_TYPE_SCHEMA_RECORD));
         when(accessTypeRepository.findByUriAndSchemaId(TestConstants.OPEN_ACCESS_TYPE_ID, ACCESS_TYPE_SCHEMA_ID))
                 .thenReturn(Optional.of(ACCESS_TYPE_RECORD));
@@ -56,7 +56,7 @@ class AccessTypeValidatorTest {
 
         assertThat(failures, empty());
 
-        verify(accessTypeSchemaRepository).findByUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
+        verify(accessTypeSchemaRepository).findActiveByUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
         verify(accessTypeRepository).findByUriAndSchemaId(TestConstants.OPEN_ACCESS_TYPE_ID, ACCESS_TYPE_SCHEMA_ID);
     }
 
@@ -66,7 +66,7 @@ class AccessTypeValidatorTest {
         final var accessType = new AccessType()
                 .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
-        when(accessTypeSchemaRepository.findByUri(TestConstants.ACCESS_TYPE_SCHEMA_URI))
+        when(accessTypeSchemaRepository.findActiveByUri(TestConstants.ACCESS_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.of(ACCESS_TYPE_SCHEMA_RECORD));
 
         final var failures = validationService.validate(accessType);
@@ -87,7 +87,7 @@ class AccessTypeValidatorTest {
                 .id("")
                 .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
-        when(accessTypeSchemaRepository.findByUri(TestConstants.ACCESS_TYPE_SCHEMA_URI))
+        when(accessTypeSchemaRepository.findActiveByUri(TestConstants.ACCESS_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.of(ACCESS_TYPE_SCHEMA_RECORD));
 
         final var failures = validationService.validate(accessType);
@@ -143,7 +143,7 @@ class AccessTypeValidatorTest {
                 .id(TestConstants.OPEN_ACCESS_TYPE_ID)
                 .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
-        when(accessTypeSchemaRepository.findByUri(TestConstants.ACCESS_TYPE_SCHEMA_URI))
+        when(accessTypeSchemaRepository.findActiveByUri(TestConstants.ACCESS_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.empty());
 
         final var failures = validationService.validate(accessType);
@@ -181,7 +181,7 @@ class AccessTypeValidatorTest {
                 .id(TestConstants.OPEN_ACCESS_TYPE_ID)
                 .schemaUri(TestConstants.ACCESS_TYPE_SCHEMA_URI);
 
-        when(accessTypeSchemaRepository.findByUri(TestConstants.ACCESS_TYPE_SCHEMA_URI))
+        when(accessTypeSchemaRepository.findActiveByUri(TestConstants.ACCESS_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.of(ACCESS_TYPE_SCHEMA_RECORD));
 
         when(accessTypeRepository.findByUriAndSchemaId(TestConstants.OPEN_ACCESS_TYPE_ID, ACCESS_TYPE_SCHEMA_ID))

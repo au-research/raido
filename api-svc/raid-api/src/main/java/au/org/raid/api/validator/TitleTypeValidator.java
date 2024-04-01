@@ -49,7 +49,7 @@ public class TitleTypeValidator {
             );
         } else {
             final var titleTypeScheme =
-                    titleTypeSchemaRepository.findByUri(titleType.getSchemaUri());
+                    titleTypeSchemaRepository.findActiveByUri(titleType.getSchemaUri());
 
             if (titleTypeScheme.isEmpty()) {
                 failures.add(new ValidationFailure()

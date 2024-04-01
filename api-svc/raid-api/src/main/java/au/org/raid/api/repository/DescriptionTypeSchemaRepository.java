@@ -1,5 +1,6 @@
 package au.org.raid.api.repository;
 
+import au.org.raid.db.jooq.enums.SchemaStatus;
 import au.org.raid.db.jooq.tables.records.DescriptionTypeSchemaRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -15,13 +16,15 @@ public class DescriptionTypeSchemaRepository {
     private final DSLContext dslContext;
 
     public Optional<DescriptionTypeSchemaRecord> findByUri(final String uri) {
-        return dslContext.select(DESCRIPTION_TYPE_SCHEMA.fields()).
-                from(DESCRIPTION_TYPE_SCHEMA).
-                where(DESCRIPTION_TYPE_SCHEMA.URI.eq(uri)).
-                fetchOptional(record -> new DescriptionTypeSchemaRecord()
-                        .setId(DESCRIPTION_TYPE_SCHEMA.ID.getValue(record))
-                        .setUri(DESCRIPTION_TYPE_SCHEMA.URI.getValue(record))
-                );
+        return dslContext.selectFrom(DESCRIPTION_TYPE_SCHEMA)
+                .where(DESCRIPTION_TYPE_SCHEMA.URI.eq(uri))
+                .fetchOptional();
+    }
+    public Optional<DescriptionTypeSchemaRecord> findActiveByUri(final String uri) {
+        return dslContext.selectFrom(DESCRIPTION_TYPE_SCHEMA)
+                .where(DESCRIPTION_TYPE_SCHEMA.URI.eq(uri))
+                .and(DESCRIPTION_TYPE_SCHEMA.STATUS.eq(SchemaStatus.active))
+                .fetchOptional();
     }
 
     public Optional<DescriptionTypeSchemaRecord> findById(final Integer id) {

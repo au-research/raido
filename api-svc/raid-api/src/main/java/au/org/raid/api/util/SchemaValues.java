@@ -12,7 +12,7 @@ public enum SchemaValues {
     SUBJECT_SCHEMA_URI("https://vocabs.ardc.edu.au/viewById/316"),
     ACCESS_TYPE_OPEN("https://vocabularies.coar-repositories.org/access_rights/c_abf2/"),
     ACCESS_TYPE_EMBARGOED("https://vocabularies.coar-repositories.org/access_rights/c_f1cf/"),
-    ACCESS_TYPE_SCHEMA_URI("https://vocabularies.coar-repositories.org/access_rights/"),
+    ACCESS_TYPE_SCHEMA("https://vocabularies.coar-repositories.org/access_rights/"),
     PRIMARY_DESCRIPTION_TYPE("https://vocabulary.raid.org/description.type.schema/318"),
     ALTERNATIVE_DESCRIPTION_TYPE("https://vocabulary.raid.org/description.type.schema/319"),
     DESCRIPTION_TYPE_SCHEMA("https://vocabulary.raid.org/description.type.schema/320"),

@@ -43,7 +43,7 @@ public class ContributorRoleValidator {
             );
         } else {
             final var roleScheme =
-                    contributorRoleSchemaRepository.findByUri(role.getSchemaUri());
+                    contributorRoleSchemaRepository.findActiveByUri(role.getSchemaUri());
 
             if (roleScheme.isEmpty()) {
                 failures.add(

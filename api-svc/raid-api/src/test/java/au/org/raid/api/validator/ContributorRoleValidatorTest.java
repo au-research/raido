@@ -51,7 +51,7 @@ class ContributorRoleValidatorTest {
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE)
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI);
 
-        when(contributorRoleSchemaRepository.findByUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI))
+        when(contributorRoleSchemaRepository.findActiveByUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI))
                 .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_SCHEMA_RECORD));
 
         when(contributorRoleRepository
@@ -111,7 +111,7 @@ class ContributorRoleValidatorTest {
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-        when(contributorRoleSchemaRepository.findByUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI))
+        when(contributorRoleSchemaRepository.findActiveByUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI))
                 .thenReturn(Optional.empty());
 
         final var failures = validationService.validate(role, 2, 3);
@@ -133,7 +133,7 @@ class ContributorRoleValidatorTest {
         final var role = new ContributorRole()
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI);
 
-        when(contributorRoleSchemaRepository.findByUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI))
+        when(contributorRoleSchemaRepository.findActiveByUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI))
                 .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_SCHEMA_RECORD));
 
         final var failures = validationService.validate(role, 2, 3);
@@ -156,7 +156,7 @@ class ContributorRoleValidatorTest {
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id("");
 
-        when(contributorRoleSchemaRepository.findByUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI))
+        when(contributorRoleSchemaRepository.findActiveByUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI))
                 .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_SCHEMA_RECORD));
 
         final var failures = validationService.validate(role, 2, 3);
@@ -179,7 +179,7 @@ class ContributorRoleValidatorTest {
                 .schemaUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI)
                 .id(TestConstants.SUPERVISION_CONTRIBUTOR_ROLE);
 
-        when(contributorRoleSchemaRepository.findByUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI))
+        when(contributorRoleSchemaRepository.findActiveByUri(TestConstants.CONTRIBUTOR_ROLE_SCHEMA_URI))
                 .thenReturn(Optional.of(CONTRIBUTOR_ROLE_TYPE_SCHEMA_RECORD));
 
         when(contributorRoleRepository

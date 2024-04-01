@@ -56,7 +56,7 @@ class LanguageValidatorTest {
     void nullId() {
         final var language = new Language().id(null).schemaUri(LANGUAGE_SCHEMA_URI);
 
-        when(languageSchemaRepository.findByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.of(LANGUAGE_SCHEMA_RECORD));
+        when(languageSchemaRepository.findActiveByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.of(LANGUAGE_SCHEMA_RECORD));
 
         final var failures = languageValidator.validate(language, "parent");
 
@@ -73,7 +73,7 @@ class LanguageValidatorTest {
     void emptyId() {
         final var language = new Language().id("").schemaUri(LANGUAGE_SCHEMA_URI);
 
-        when(languageSchemaRepository.findByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.of(LANGUAGE_SCHEMA_RECORD));
+        when(languageSchemaRepository.findActiveByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.of(LANGUAGE_SCHEMA_RECORD));
 
         final var failures = languageValidator.validate(language, "parent");
 
@@ -122,7 +122,7 @@ class LanguageValidatorTest {
                 .id("eng")
                 .schemaUri(LANGUAGE_SCHEMA_URI);
 
-        when(languageSchemaRepository.findByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.empty());
+        when(languageSchemaRepository.findActiveByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.empty());
 
         final var failures = languageValidator.validate(language, "parent");
 
@@ -143,7 +143,7 @@ class LanguageValidatorTest {
 
         final var languageSchema = new LanguageSchemaRecord().setId(LANGUAGE_SCHEMA_ID);
 
-        when(languageSchemaRepository.findByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.of(languageSchema));
+        when(languageSchemaRepository.findActiveByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.of(languageSchema));
         when(languageRepository.findByIdAndSchemaId(LANGUAGE_ID, LANGUAGE_SCHEMA_ID)).thenReturn(Optional.empty());
 
         final var failures = languageValidator.validate(language, "parent");
@@ -163,7 +163,7 @@ class LanguageValidatorTest {
                 .id(LANGUAGE_ID)
                 .schemaUri(LANGUAGE_SCHEMA_URI);
 
-        when(languageSchemaRepository.findByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.of(LANGUAGE_SCHEMA_RECORD));
+        when(languageSchemaRepository.findActiveByUri(LANGUAGE_SCHEMA_URI)).thenReturn(Optional.of(LANGUAGE_SCHEMA_RECORD));
         when(languageRepository.findByIdAndSchemaId(LANGUAGE_ID, LANGUAGE_SCHEMA_ID))
                 .thenReturn(Optional.of(LANGUAGE_RECORD));
 

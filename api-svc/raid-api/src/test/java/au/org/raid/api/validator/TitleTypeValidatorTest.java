@@ -48,7 +48,7 @@ class TitleTypeValidatorTest {
                 .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
                 .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
 
-        when(titleTypeSchemaRepository.findByUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
+        when(titleTypeSchemaRepository.findActiveByUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.of(TITLE_TYPE_SCHEMA_RECORD));
         when(titleTypeRepository.findByUriAndSchemaId(TestConstants.PRIMARY_TITLE_TYPE_ID, TITLE_TYPE_SCHEMA_ID))
                 .thenReturn(Optional.of(TITLE_TYPE_RECORD));
@@ -57,7 +57,7 @@ class TitleTypeValidatorTest {
 
         assertThat(failures, empty());
 
-        verify(titleTypeSchemaRepository).findByUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
+        verify(titleTypeSchemaRepository).findActiveByUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
         verify(titleTypeRepository).findByUriAndSchemaId(TestConstants.PRIMARY_TITLE_TYPE_ID, TITLE_TYPE_SCHEMA_ID);
     }
 
@@ -67,7 +67,7 @@ class TitleTypeValidatorTest {
         final var titleType = new TitleType()
                 .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
 
-        when(titleTypeSchemaRepository.findByUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
+        when(titleTypeSchemaRepository.findActiveByUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.of(TITLE_TYPE_SCHEMA_RECORD));
 
         final var failures = validationService.validate(titleType, INDEX);
@@ -88,7 +88,7 @@ class TitleTypeValidatorTest {
                 .id("")
                 .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
 
-        when(titleTypeSchemaRepository.findByUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
+        when(titleTypeSchemaRepository.findActiveByUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.of(TITLE_TYPE_SCHEMA_RECORD));
 
         final var failures = validationService.validate(titleType, INDEX);
@@ -144,7 +144,7 @@ class TitleTypeValidatorTest {
                 .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
                 .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
 
-        when(titleTypeSchemaRepository.findByUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
+        when(titleTypeSchemaRepository.findActiveByUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.empty());
 
         final var failures = validationService.validate(titleType, INDEX);
@@ -182,7 +182,7 @@ class TitleTypeValidatorTest {
                 .id(TestConstants.PRIMARY_TITLE_TYPE_ID)
                 .schemaUri(TestConstants.TITLE_TYPE_SCHEMA_URI);
 
-        when(titleTypeSchemaRepository.findByUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
+        when(titleTypeSchemaRepository.findActiveByUri(TestConstants.TITLE_TYPE_SCHEMA_URI))
                 .thenReturn(Optional.of(TITLE_TYPE_SCHEMA_RECORD));
 
         when(titleTypeRepository.findByUriAndSchemaId(TestConstants.PRIMARY_TITLE_TYPE_ID, TITLE_TYPE_SCHEMA_ID))

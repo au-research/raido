@@ -39,7 +39,7 @@ public class TraditionalKnowledgeLabelValidator {
                                 .errorType(NOT_SET_TYPE)
                                 .message(NOT_SET_MESSAGE));
                     } else {
-                        final var schema = labelSchemaRepository.findByUri(label.getSchemaUri());
+                        final var schema = labelSchemaRepository.findActiveByUri(label.getSchemaUri());
 
                         if (schema.isEmpty()) {
                             failures.add(new ValidationFailure()

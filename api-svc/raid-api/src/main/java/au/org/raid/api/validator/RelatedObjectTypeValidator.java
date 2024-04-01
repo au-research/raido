@@ -41,7 +41,7 @@ public class RelatedObjectTypeValidator {
             );
         } else {
             final var relatedObjectTypeScheme =
-                    relatedObjectTypeSchemaRepository.findByUri(relatedObjectType.getSchemaUri());
+                    relatedObjectTypeSchemaRepository.findActiveByUri(relatedObjectType.getSchemaUri());
 
             if (relatedObjectTypeScheme.isEmpty()) {
                 failures.add(new ValidationFailure()

@@ -69,6 +69,13 @@ values ('https://vocabulary.raid.org/description.type.schema/3', 2),
        ('https://vocabulary.raid.org/description.type.schema/8', 2),
        ('https://vocabulary.raid.org/description.type.schema/9', 2);
 
+alter table api_svc.organisation_schema
+    add column status schema_status;
+
+update api_svc.organisation_schema
+set status = 'active'
+where id = 1;
+
 alter table api_svc.organisation_role_schema
     add column status schema_status;
 
@@ -199,6 +206,13 @@ values ('https://vocabulary.raid.org/title.type.schema/156', 2),
        ('https://vocabulary.raid.org/title.type.schema/157', 2),
        ('https://vocabulary.raid.org/title.type.schema/4', 2),
        ('https://vocabulary.raid.org/title.type.schema/5', 2);
+
+alter table api_svc.traditional_knowledge_label_schema
+    add column status schema_status;
+
+update api_svc.traditional_knowledge_label_schema
+set status = 'active'
+where id in (1,2);
 
 create table api_svc.traditional_knowledge_notice_schema
 (

@@ -46,7 +46,7 @@ public class RelatedRaidTypeValidator {
             );
         } else {
             final var relatedRaidTypeScheme =
-                    relatedRaidTypeSchemaRepository.findByUri(relatedRaidType.getSchemaUri());
+                    relatedRaidTypeSchemaRepository.findActiveByUri(relatedRaidType.getSchemaUri());
 
             if (relatedRaidTypeScheme.isEmpty()) {
                 failures.add(new ValidationFailure()

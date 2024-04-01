@@ -40,7 +40,7 @@ public class LanguageValidator {
                     .message(NOT_SET_MESSAGE)
             );
         } else {
-            final var languageScheme = languageSchemaRepository.findByUri(language.getSchemaUri());
+            final var languageScheme = languageSchemaRepository.findActiveByUri(language.getSchemaUri());
 
             if (languageScheme.isEmpty()) {
                 failures.add(new ValidationFailure()
