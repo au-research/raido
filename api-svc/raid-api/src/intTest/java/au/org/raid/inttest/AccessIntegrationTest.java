@@ -205,8 +205,8 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
     void blankAccessStatement() {
         createRequest.getAccess()
                 .type(new AccessType()
-                        .id(CLOSED_ACCESS_TYPE)
-                        .schemaUri(ACCESS_TYPE_SCHEMA_URI)
+                        .id("https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json")
+                        .schemaUri("https://github.com/au-research/raid-metadata/tree/main/scheme/access/type/v1/")
                 )
                 .statement(new AccessStatement().text("Closed"));
 
@@ -214,9 +214,13 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
             raidApi.mintRaid(createRequest);
         } catch (RaidApiValidationException e) {
             final var failures = e.getFailures();
-            assertThat(failures).hasSize(1);
+            assertThat(failures).hasSize(2);
             assertThat(failures).contains(
                     new ValidationFailure()
+                            .fieldId("access.type.schemaUri")
+                            .errorType("invalidValue")
+                            .message("schema is unknown/unsupported"),
+            new ValidationFailure()
                             .fieldId("access.type.id")
                             .errorType("invalidValue")
                             .message("Creating closed Raids is no longer supported")
