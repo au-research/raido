@@ -19,19 +19,25 @@ public class DataciteDtoFactory {
 
     @SneakyThrows
     public DataciteDto create(RaidCreateRequest request, String handle) {
-        return new DataciteDto()
+        final var dto =  new DataciteDto()
                 .setSchemaVersion(SCHEMA_VERSION)
                 .setType(TYPE)
-                .setAttributes(dataciteAttributesDtoFactory.create(request, handle))
-                .setIdentifier(dataciteIdentifierFactory.create(handle, IDENTIFIER_TYPE));
+                .setAttributes(dataciteAttributesDtoFactory.create(request, handle));
+
+        dto.getDataciteIdentifiers().add(dataciteIdentifierFactory.create(handle, IDENTIFIER_TYPE));
+
+        return dto;
     }
 
     @SneakyThrows
     public DataciteDto create(RaidUpdateRequest request, String handle) {
-        return new DataciteDto()
+        final var dto =  new DataciteDto()
                 .setSchemaVersion(SCHEMA_VERSION)
                 .setType(TYPE)
-                .setAttributes(dataciteAttributesDtoFactory.create(request, handle))
-                .setIdentifier(dataciteIdentifierFactory.create(handle, IDENTIFIER_TYPE));
+                .setAttributes(dataciteAttributesDtoFactory.create(request, handle));
+
+        dto.getDataciteIdentifiers().add(dataciteIdentifierFactory.create(handle, IDENTIFIER_TYPE));
+
+        return dto;
     }
 }

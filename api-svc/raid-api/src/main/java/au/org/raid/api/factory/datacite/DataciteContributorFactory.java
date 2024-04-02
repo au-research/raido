@@ -14,7 +14,7 @@ public class DataciteContributorFactory {
     private static final String NAME_IDENTIFIER_SCHEME = "ROR";
     private static final String ORGANISATIONAL_NAME_TYPE = "Organizational";
 
-    public DataciteContributor registrationAgencyContributor(final RegistrationAgency registrationAgency) {
+    public DataciteContributor create(final RegistrationAgency registrationAgency) {
         return new DataciteContributor()
                 .setContributorType("RegistrationAgency")
                 .setName("RAiD AU") // move to config

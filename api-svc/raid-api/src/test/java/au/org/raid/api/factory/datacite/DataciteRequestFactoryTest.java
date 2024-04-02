@@ -50,6 +50,4 @@ class DataciteRequestFactoryTest {
 
         assertThat(result.getData(), is(dataciteDto));
     }
-
-
 }

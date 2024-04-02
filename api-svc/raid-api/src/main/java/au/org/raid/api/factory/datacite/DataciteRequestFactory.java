@@ -14,17 +14,14 @@ public class DataciteRequestFactory {
     public DataciteRequest create(RaidCreateRequest createRequest, String handle) {
         DataciteDto dataciteDto = dataciteDtoFactory.create(createRequest, handle);
 
-        return DataciteRequest.builder()
-                .data(dataciteDto)
-                .build();
+        return new DataciteRequest()
+                .setData(dataciteDto);
     }
 
     public DataciteRequest create(RaidUpdateRequest updateRequest, String handle) {
         DataciteDto dataciteDto = dataciteDtoFactory.create(updateRequest, handle);
 
-        return DataciteRequest.builder()
-                .data(dataciteDto)
-                .build();
+        return new DataciteRequest()
+                .setData(dataciteDto);
     }
-
 }

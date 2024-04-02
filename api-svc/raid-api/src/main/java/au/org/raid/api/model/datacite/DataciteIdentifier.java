@@ -7,7 +7,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class DataciteIdentifier {
     private String identifier;
-
     private String identifierType;
 
 }
