@@ -53,7 +53,7 @@ class RelatedObjectCategoryValidatorTest {
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
                 .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI));
 
-        when(relatedObjectCategorySchemaRepository.findByUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI))
+        when(relatedObjectCategorySchemaRepository.findActiveByUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI))
                 .thenReturn(Optional.of(RELATED_OBJECT_CATEGORY_SCHEMA_RECORD));
 
         when(relatedObjectCategoryRepository
@@ -71,7 +71,7 @@ class RelatedObjectCategoryValidatorTest {
         var categories = List.of(new RelatedObjectCategory()
                 .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI));
 
-        when(relatedObjectCategorySchemaRepository.findByUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI))
+        when(relatedObjectCategorySchemaRepository.findActiveByUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI))
                 .thenReturn(Optional.of(RELATED_OBJECT_CATEGORY_SCHEMA_RECORD));
 
         final var failures = validationService.validate(categories, INDEX);
@@ -94,7 +94,7 @@ class RelatedObjectCategoryValidatorTest {
                 .id("")
                 .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI));
 
-        when(relatedObjectCategorySchemaRepository.findByUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI))
+        when(relatedObjectCategorySchemaRepository.findActiveByUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI))
                 .thenReturn(Optional.of(RELATED_OBJECT_CATEGORY_SCHEMA_RECORD));
 
         final var failures = validationService.validate(categories, INDEX);
@@ -156,7 +156,7 @@ class RelatedObjectCategoryValidatorTest {
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
                 .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI));
 
-        when(relatedObjectCategorySchemaRepository.findByUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI))
+        when(relatedObjectCategorySchemaRepository.findActiveByUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI))
                 .thenReturn(Optional.empty());
 
         final var failures = validationService.validate(categories, INDEX);
@@ -177,7 +177,7 @@ class RelatedObjectCategoryValidatorTest {
                 .id(TestConstants.INPUT_RELATED_OBJECT_CATEGORY)
                 .schemaUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI));
 
-        when(relatedObjectCategorySchemaRepository.findByUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI))
+        when(relatedObjectCategorySchemaRepository.findActiveByUri(TestConstants.RELATED_OBJECT_CATEGORY_SCHEMA_URI))
                 .thenReturn(Optional.of(RELATED_OBJECT_CATEGORY_SCHEMA_RECORD));
 
         when(relatedObjectCategoryRepository

@@ -1,5 +1,6 @@
 package au.org.raid.api.repository;
 
+import au.org.raid.db.jooq.enums.SchemaStatus;
 import au.org.raid.db.jooq.tables.records.RelatedObjectCategorySchemaRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -17,6 +18,13 @@ public class RelatedObjectCategorySchemaRepository {
     public Optional<RelatedObjectCategorySchemaRecord> findByUri(final String uri) {
         return dslContext.selectFrom(RELATED_OBJECT_CATEGORY_SCHEMA)
                 .where(RELATED_OBJECT_CATEGORY_SCHEMA.URI.eq(uri))
+                .fetchOptional();
+    }
+
+    public Optional<RelatedObjectCategorySchemaRecord> findActiveByUri(final String uri) {
+        return dslContext.selectFrom(RELATED_OBJECT_CATEGORY_SCHEMA)
+                .where(RELATED_OBJECT_CATEGORY_SCHEMA.URI.eq(uri))
+                .and(RELATED_OBJECT_CATEGORY_SCHEMA.STATUS.eq(SchemaStatus.active))
                 .fetchOptional();
     }
 

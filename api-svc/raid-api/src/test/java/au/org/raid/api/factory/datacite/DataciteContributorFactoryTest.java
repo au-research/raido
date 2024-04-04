@@ -1,6 +1,7 @@
 package au.org.raid.api.factory.datacite;
 
 import au.org.raid.api.model.datacite.DataciteContributor;
+import au.org.raid.api.util.SchemaValues;
 import au.org.raid.idl.raidv2.model.Organisation;
 import au.org.raid.idl.raidv2.model.OrganisationRole;
 import au.org.raid.idl.raidv2.model.RegistrationAgency;
@@ -38,14 +39,108 @@ public class DataciteContributorFactoryTest {
     }
 
     @Test
-    public void testCreateWithOrganisation() {
+    @DisplayName("Create organisation contributor with 'Lead Research Organisation' role")
+    public void leadResearchOrganisation() {
+        final var id = "_id";
+
         Organisation organisation = new Organisation()
-                .id("Organisation 1")
-                .role(List.of(new OrganisationRole().id("https://vocabulary.raid.org/organisation.role.schema/182")));
+                .id(id)
+                .role(List.of(
+                        new OrganisationRole().id(SchemaValues.FUNDER_ORGANISATION_ROLE.getUri()),
+                        new OrganisationRole().id(SchemaValues.LEAD_RESEARCH_ORGANISATION_ROLE.getUri())
+                ));
 
         DataciteContributor dataciteContributor = dataciteContributorFactory.create(organisation);
 
-        assertEquals("Organisation 1", dataciteContributor.getName());
+        assertEquals(id, dataciteContributor.getName());
         assertEquals("HostingInstitution", dataciteContributor.getContributorType());
+    }
+
+    @Test
+    @DisplayName("Create organisation contributor with 'Other Research Organisation' role")
+    public void otherResearchOrganisation() {
+        final var id = "_id";
+
+        Organisation organisation = new Organisation()
+                .id(id)
+                .role(List.of(
+                        new OrganisationRole().id(SchemaValues.FUNDER_ORGANISATION_ROLE.getUri()),
+                        new OrganisationRole().id(SchemaValues.OTHER_RESEARCH_ORGANISATION_ROLE.getUri())
+                ));
+
+        DataciteContributor dataciteContributor = dataciteContributorFactory.create(organisation);
+
+        assertEquals(id, dataciteContributor.getName());
+        assertEquals("Other", dataciteContributor.getContributorType());
+    }
+    @Test
+    @DisplayName("Create organisation contributor with 'Partner' role")
+    public void partnerOrganisation() {
+        final var id = "_id";
+
+        Organisation organisation = new Organisation()
+                .id(id)
+                .role(List.of(
+                        new OrganisationRole().id(SchemaValues.FUNDER_ORGANISATION_ROLE.getUri()),
+                        new OrganisationRole().id(SchemaValues.PARTNER_ORGANISATION_ROLE.getUri())
+                ));
+
+        DataciteContributor dataciteContributor = dataciteContributorFactory.create(organisation);
+
+        assertEquals(id, dataciteContributor.getName());
+        assertEquals("Other", dataciteContributor.getContributorType());
+    }
+    @Test
+    @DisplayName("Create organisation contributor with 'Contractor' role")
+    public void contractorOrganisation() {
+        final var id = "_id";
+
+        Organisation organisation = new Organisation()
+                .id(id)
+                .role(List.of(
+                        new OrganisationRole().id(SchemaValues.FUNDER_ORGANISATION_ROLE.getUri()),
+                        new OrganisationRole().id(SchemaValues.CONTRACTOR_ORGANISATION_ROLE.getUri())
+                ));
+
+        DataciteContributor dataciteContributor = dataciteContributorFactory.create(organisation);
+
+        assertEquals(id, dataciteContributor.getName());
+        assertEquals("Other", dataciteContributor.getContributorType());
+    }
+
+    @Test
+    @DisplayName("Create organisation contributor with 'Facility' role")
+    public void facilityOrganisation() {
+        final var id = "_id";
+
+        Organisation organisation = new Organisation()
+                .id(id)
+                .role(List.of(
+                        new OrganisationRole().id(SchemaValues.FUNDER_ORGANISATION_ROLE.getUri()),
+                        new OrganisationRole().id(SchemaValues.FACILITY_RESEARCH_ORGANISATION_ROLE.getUri())
+                ));
+
+        DataciteContributor dataciteContributor = dataciteContributorFactory.create(organisation);
+
+        assertEquals(id, dataciteContributor.getName());
+        assertEquals("Sponsor", dataciteContributor.getContributorType());
+    }
+
+    @Test
+    @DisplayName("Create organisation contributor with 'Other Organisation' role")
+    public void otherOrganisation() {
+        final var id = "_id";
+
+        Organisation organisation = new Organisation()
+                .id(id)
+                .role(List.of(
+                        new OrganisationRole().id(SchemaValues.FUNDER_ORGANISATION_ROLE.getUri()),
+                        new OrganisationRole().id(SchemaValues.OTHER_ORGANISATION_ROLE.getUri())
+                ));
+
+        DataciteContributor dataciteContributor = dataciteContributorFactory.create(organisation);
+
+        assertEquals(id, dataciteContributor.getName());
+        assertEquals("Other", dataciteContributor.getContributorType());
     }
 }

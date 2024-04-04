@@ -21,4 +21,5 @@ public class DataciteAttributesDto {
     private List<DataciteRight> rightsList;
     private DataciteTypes types;
     private List<DataciteAlternateIdentifier> alternateIdentifiers;
+    private List<DataciteFundingReference> fundingReferences;
 }

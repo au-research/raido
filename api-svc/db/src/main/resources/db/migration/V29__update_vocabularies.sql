@@ -149,6 +149,20 @@ values ('https://vocabulary.raid.org/relatedObject.type.schema/247', 2),
        ('https://vocabulary.raid.org/relatedObject.type.schema/273', 2),
        ('https://vocabulary.raid.org/relatedObject.type.schema/274', 2);
 
+alter table api_svc.related_object_category_schema
+    add column status schema_status;
+
+update api_svc.related_object_category_schema
+set status = 'inactive'
+where id = 1;
+
+insert into api_svc.related_object_category_schema (uri, status)
+values ('https://vocabulary.raid.org/relatedObject.category.schemaUri/386', 'active');
+
+insert into api_svc.related_object_category (uri, schema_id)
+values ('https://vocabulary.raid.org/relatedObject.category.id/190', 2),
+       ('https://vocabulary.raid.org/relatedObject.category.id/191', 2),
+       ('https://vocabulary.raid.org/relatedObject.category.id/192', 2);
 
 alter table api_svc.related_raid_type_schema
     add column status schema_status;

@@ -1,17 +1,13 @@
 package au.org.raid.api.model.datacite;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 @Data
+@Accessors(chain = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class DataciteAlternateIdentifier {
-
-    @JsonProperty("alternateIdentifier")
-    private final String alternateIdentifier;
-
-    @JsonProperty("alternateIdentifierType")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private final String alternateIdentifierType;
-
+    private String alternateIdentifier;
+    private String alternateIdentifierType;
 }

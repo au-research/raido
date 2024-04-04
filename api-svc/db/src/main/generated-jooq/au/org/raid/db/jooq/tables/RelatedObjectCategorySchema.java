@@ -6,27 +6,15 @@ package au.org.raid.db.jooq.tables;
 
 import au.org.raid.db.jooq.ApiSvc;
 import au.org.raid.db.jooq.Keys;
+import au.org.raid.db.jooq.enums.SchemaStatus;
 import au.org.raid.db.jooq.tables.records.RelatedObjectCategorySchemaRecord;
-
-import java.util.function.Function;
-
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Function2;
-import org.jooq.Identity;
-import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Records;
-import org.jooq.Row2;
-import org.jooq.Schema;
-import org.jooq.SelectField;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.jooq.impl.SQLDataType;
 import org.jooq.impl.TableImpl;
+
+import java.util.function.Function;
 
 
 /**
@@ -60,6 +48,11 @@ public class RelatedObjectCategorySchema extends TableImpl<RelatedObjectCategory
      * The column <code>api_svc.related_object_category_schema.uri</code>.
      */
     public final TableField<RelatedObjectCategorySchemaRecord, String> URI = createField(DSL.name("uri"), SQLDataType.VARCHAR.nullable(false), this, "");
+
+    /**
+     * The column <code>api_svc.related_object_category_schema.status</code>.
+     */
+    public final TableField<RelatedObjectCategorySchemaRecord, SchemaStatus> STATUS = createField(DSL.name("status"), SQLDataType.VARCHAR.asEnumDataType(au.org.raid.db.jooq.enums.SchemaStatus.class), this, "");
 
     private RelatedObjectCategorySchema(Name alias, Table<RelatedObjectCategorySchemaRecord> aliased) {
         this(alias, aliased, null);
@@ -152,18 +145,18 @@ public class RelatedObjectCategorySchema extends TableImpl<RelatedObjectCategory
     }
 
     // -------------------------------------------------------------------------
-    // Row2 type methods
+    // Row3 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row2<Integer, String> fieldsRow() {
-        return (Row2) super.fieldsRow();
+    public Row3<Integer, String, SchemaStatus> fieldsRow() {
+        return (Row3) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function2<? super Integer, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function3<? super Integer, ? super String, ? super SchemaStatus, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -171,7 +164,7 @@ public class RelatedObjectCategorySchema extends TableImpl<RelatedObjectCategory
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function2<? super Integer, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function3<? super Integer, ? super String, ? super SchemaStatus, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

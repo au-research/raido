@@ -2,6 +2,7 @@ package au.org.raid.api.factory.datacite;
 
 import au.org.raid.api.model.datacite.DataciteContributor;
 import au.org.raid.api.model.datacite.NameIdentifier;
+import au.org.raid.api.util.SchemaValues;
 import au.org.raid.idl.raidv2.model.Organisation;
 import au.org.raid.idl.raidv2.model.RegistrationAgency;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,7 @@ public class DataciteContributorFactory {
 
     public DataciteContributor create(final Organisation organisation) {
         final var latestRole = organisation.getRole().stream()
+                .filter(role -> !role.getId().equals(SchemaValues.FUNDER_ORGANISATION_ROLE.getUri()))
                 .max((o1, o2) -> o2.getStartDate().compareTo(o1.getStartDate()))
                 .orElse(null);
 
@@ -51,12 +53,11 @@ public class DataciteContributorFactory {
 
 
     private static final Map<String, String> ORGANISATION_ROLE_MAP = Map.of(
-            "https://vocabulary.raid.org/organisation.role.schema/185", "Other",
-            "https://vocabulary.raid.org/organisation.role.schema/182", "HostingInstitution",
-            "https://vocabulary.raid.org/organisation.role.schema/188", "Other",
-            "https://vocabulary.raid.org/organisation.role.schema/183", "Other",
-            "https://vocabulary.raid.org/organisation.role.schema/184", "Other",
-            "https://vocabulary.raid.org/organisation.role.schema/187", "Sponsor"
-
+            SchemaValues.LEAD_RESEARCH_ORGANISATION_ROLE.getUri(), "HostingInstitution",
+            SchemaValues.OTHER_RESEARCH_ORGANISATION_ROLE.getUri(), "Other",
+            SchemaValues.PARTNER_ORGANISATION_ROLE.getUri(), "Other",
+            SchemaValues.CONTRACTOR_ORGANISATION_ROLE.getUri(), "Other",
+            SchemaValues.FACILITY_RESEARCH_ORGANISATION_ROLE.getUri(), "Sponsor",
+            SchemaValues.OTHER_ORGANISATION_ROLE.getUri(), "Other"
     );
 }

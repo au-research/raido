@@ -1,36 +1,26 @@
 package au.org.raid.api.factory.datacite;
 
-import au.org.raid.api.model.datacite.DataciteAlternateIdentifier;
 import au.org.raid.idl.raidv2.model.AlternateIdentifier;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public class DataciteAlternateIdentifierFactoryTest {
 
-    private DataciteAlternateIdentifierFactory dataciteAlternateIdentifierFactory;
-
-    @BeforeEach
-    public void setUp() {
-        dataciteAlternateIdentifierFactory = new DataciteAlternateIdentifierFactory();
-    }
-
+    private DataciteAlternateIdentifierFactory dataciteAlternateIdentifierFactory = new DataciteAlternateIdentifierFactory();
     @Test
-    public void testCreateWithValidAlternateIdentifier() {
-        AlternateIdentifier alternateIdentifier1 = new AlternateIdentifier();
-        alternateIdentifier1.setId("Alternate Identifier 1");
+    @DisplayName("Create set all fields")
+    public void create() {
+        final var id = "_id";
 
-        DataciteAlternateIdentifier dataciteAlternateIdentifier = dataciteAlternateIdentifierFactory.create(alternateIdentifier1);
+        final var alternateIdentifier = new AlternateIdentifier()
+                .id(id);
 
-        assertEquals("Alternate Identifier 1", dataciteAlternateIdentifier.getAlternateIdentifier());
-    }
+        final var result = dataciteAlternateIdentifierFactory.create(alternateIdentifier);
 
-    @Test
-    public void testCreateWithNullAlternateIdentifier() {
-        DataciteAlternateIdentifier result = dataciteAlternateIdentifierFactory.create(null);
-
-        assertNull(result);
+        assertThat(result.getAlternateIdentifier(), is(id));
+        assertThat(result.getAlternateIdentifierType(), is("URL"));
     }
 }

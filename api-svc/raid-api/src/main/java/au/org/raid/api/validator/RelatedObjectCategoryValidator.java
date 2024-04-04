@@ -44,7 +44,7 @@ public class RelatedObjectCategoryValidator {
                 );
             } else {
                 final var relatedObjectCategoryScheme =
-                        relatedObjectCategorySchemaRepository.findByUri(relatedObjectCategory.getSchemaUri());
+                        relatedObjectCategorySchemaRepository.findActiveByUri(relatedObjectCategory.getSchemaUri());
 
                 if (relatedObjectCategoryScheme.isEmpty()) {
                     failures.add(new ValidationFailure()

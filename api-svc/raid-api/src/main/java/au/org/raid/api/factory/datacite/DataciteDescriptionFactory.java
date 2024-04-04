@@ -8,7 +8,6 @@ import java.util.Map;
 
 @Component
 public class DataciteDescriptionFactory {
-
     public DataciteDescription create(final Description description) {
         final var dataciteDescription =  new DataciteDescription()
                         .setDescription(description.getText())
@@ -29,6 +28,5 @@ public class DataciteDescriptionFactory {
             "https://vocabulary.raid.org/description.type.schema/8", "Methods",
             "https://vocabulary.raid.org/description.type.schema/7", "Other",
             "https://vocabulary.raid.org/description.type.schema/6", "Other"
-
     );
 }
