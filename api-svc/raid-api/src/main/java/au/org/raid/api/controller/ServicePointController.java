@@ -8,11 +8,13 @@ import au.org.raid.idl.raidv2.model.ServicePointUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.net.URI;
 import java.util.List;
 
 @Controller
+@CrossOrigin
 @RequiredArgsConstructor
 public class ServicePointController implements ServicePointApi {
     private final ServicePointService servicePointService;
