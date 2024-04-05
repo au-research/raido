@@ -42,6 +42,8 @@ raid:
       username: geonames
   history:
     baseline-interval: 5
+  iam:
+    realm-uri: http://localhost:8001/realms/raid
 spring:
   jackson:
     default-property-inclusion: non_null
@@ -62,7 +64,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8001/realms/raid
+          issuer-uri: ${raid.iam.realm-uri}
       client:
         registration:
           keycloak:
@@ -71,7 +73,7 @@ spring:
             scope: openid
         provider:
           keycloak:
-            issuer-uri: http://localhost:8001/realms/raid
+            issuer-uri: ${raid.iam.realm-uri}
             user-name-attribute: preferred_username
 springdoc:
   swagger-ui:
