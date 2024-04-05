@@ -121,8 +121,6 @@ public class ApiSvc extends SchemaImpl {
             SpatialCoverageSchema.SPATIAL_COVERAGE_SCHEMA,
             SubjectType.SUBJECT_TYPE,
             SubjectTypeSchema.SUBJECT_TYPE_SCHEMA,
-            Team.TEAM,
-            TeamUser.TEAM_USER,
             TitleType.TITLE_TYPE,
             TitleTypeSchema.TITLE_TYPE_SCHEMA,
             Token.TOKEN,

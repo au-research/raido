@@ -12,7 +12,7 @@ paths:
       tags:
         - raid
       operationId: mintRaid
-      summary: mint a raid
+      summary: Mint a raid
       requestBody:
         required: true
         content:
@@ -38,7 +38,7 @@ paths:
       tags:
         - raid
       operationId: findAllRaids
-      summary: list raids
+      summary: List raids
       parameters:
         - name: servicePointId
           in: query
@@ -89,7 +89,7 @@ paths:
       tags:
         - raid
       operationId: findRaidByName
-      summary: read a raid, caller must be authorized
+      summary: Read a raid
       responses:
         200:
           description: data
@@ -109,6 +109,7 @@ paths:
       tags:
         - raid
       operationId: updateRaid
+      summary: Update a raid
       requestBody:
         required: true
         content:
@@ -148,7 +149,7 @@ paths:
       tags:
         - raid
       operationId: raid-history
-      summary: A list of the changes to the raid
+      summary: A list of base64 encoded changes to the raid in JSON Patch (RFC 6902) format.
       responses:
         200:
           description: success

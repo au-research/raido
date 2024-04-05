@@ -1,9 +1,9 @@
 package au.org.raid.api.service.datacite;
 
+import au.org.raid.api.config.properties.DataciteProperties;
 import au.org.raid.api.factory.HttpEntityFactory;
 import au.org.raid.api.factory.datacite.DataciteRequestFactory;
 import au.org.raid.api.model.datacite.DataciteRequest;
-import au.org.raid.api.spring.config.DataciteProperties;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
 import com.fasterxml.jackson.databind.JsonNode;

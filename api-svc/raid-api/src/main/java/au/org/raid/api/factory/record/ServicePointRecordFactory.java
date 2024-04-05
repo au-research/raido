@@ -18,7 +18,8 @@ public class ServicePointRecordFactory {
                 .setEnabled(servicePoint.getEnabled())
                 .setRepositoryId(servicePoint.getRepositoryId())
                 .setPrefix(servicePoint.getPrefix())
-                .setPassword(servicePoint.getPassword());
+                .setPassword(servicePoint.getPassword())
+                .setGroupId(servicePoint.getGroupId());
     }
 
     public ServicePointRecord create(final ServicePointCreateRequest servicePoint) {
@@ -31,6 +32,7 @@ public class ServicePointRecordFactory {
                 .setEnabled(servicePoint.getEnabled())
                 .setRepositoryId(servicePoint.getRepositoryId())
                 .setPrefix(servicePoint.getPrefix())
-                .setPassword(servicePoint.getPassword());
+                .setPassword(servicePoint.getPassword())
+                .setGroupId(servicePoint.getGroupId());
     }
 }

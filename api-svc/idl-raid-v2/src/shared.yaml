@@ -37,24 +37,3 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ValidationFailure'
-    ServicePoint:
-      description: data that any member of service-point and operators can see
-      type: object
-      required: [id, name, identifierOwner, adminEmail, techEmail, enabled]
-      properties:
-        id: {$ref: 'shared.yaml#/components/schemas/SurrogateKey' }
-        name: {type: string}
-        identifierOwner: { type: string }
-        repositoryId:
-          type: string
-          description: The Datacite repository id. This needs to be created in Fabrica.
-          example: VBGR.QJYTRX
-        prefix:
-          type: string
-          description: The prefix used in the handle when minting RAiDs. Assigned when the repository is created.
-          example: 10.82481
-        searchContent: {type: string}
-        techEmail: {type: string}
-        adminEmail: {type: string}
-        enabled: {type: boolean}
-        appWritesEnabled: { type: boolean }

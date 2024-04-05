@@ -44,4 +44,11 @@ public class ServicePointService {
                 .map(servicePointFactory::create)
                 .toList();
     }
+
+    public Optional<ServicePoint> findByGroupId(final String groupId) {
+        return servicePointRepository.findByGroupId(groupId)
+                .map(servicePointFactory::create)
+                .or(Optional::empty);
+
+    }
 }

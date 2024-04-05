@@ -15,7 +15,8 @@ public class ServicePointFactory {
                 .repositoryId(servicePointDto.getRepositoryId())
                 .prefix(servicePointDto.getPrefix())
                 .enabled(servicePointDto.getEnabled())
-                .appWritesEnabled(servicePointDto.getAppWritesEnabled());
+                .appWritesEnabled(servicePointDto.getAppWritesEnabled())
+                .groupId(servicePointDto.getGroupId());
     }
 
     public ServicePoint create(final ServicePointRecord servicePointRecord) {
@@ -28,6 +29,7 @@ public class ServicePointFactory {
                 .identifierOwner(servicePointRecord.getIdentifierOwner())
                 .techEmail(servicePointRecord.getTechEmail())
                 .repositoryId(servicePointRecord.getRepositoryId())
-                .prefix(servicePointRecord.getPrefix());
+                .prefix(servicePointRecord.getPrefix())
+                .groupId(servicePointRecord.getGroupId());
     }
 }

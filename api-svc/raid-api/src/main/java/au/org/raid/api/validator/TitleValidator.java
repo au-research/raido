@@ -51,7 +51,6 @@ public class TitleValidator {
         failures.addAll(validatePrimaryTitle(titles));
 
         IntStream.range(0, titles.size()).forEach(index -> {
-            ;
             var title = titles.get(index);
 
             if (isBlank(title.getText())) {

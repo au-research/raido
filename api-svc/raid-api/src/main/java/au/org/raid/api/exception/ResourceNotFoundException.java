@@ -2,7 +2,7 @@ package au.org.raid.api.exception;
 
 public class ResourceNotFoundException extends RaidApiException {
     private static final String TITLE = "The resource was not found.";
-    private static int STATUS = 404;
+    private static final int STATUS = 404;
     private final String handle;
 
     public ResourceNotFoundException(final String handle) {

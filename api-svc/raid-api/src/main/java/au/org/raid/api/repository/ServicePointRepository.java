@@ -21,26 +21,7 @@ public class ServicePointRepository {
     public Optional<ServicePointRecord> findById(final long servicePointId) {
         return dslContext.selectFrom(SERVICE_POINT)
                 .where(SERVICE_POINT.ID.eq(servicePointId))
-                .fetchOptional(r -> {
-                    String password = null;
-                    if (SERVICE_POINT.PASSWORD.getValue(r) != null) {
-                        password = encryptionConverter.from(Objects.requireNonNull(SERVICE_POINT.PASSWORD.getValue(r)));
-                    }
-
-                    return new ServicePointRecord()
-                            .setId(SERVICE_POINT.ID.getValue(r))
-                            .setName(SERVICE_POINT.NAME.getValue(r))
-                            .setAdminEmail(SERVICE_POINT.ADMIN_EMAIL.getValue(r))
-                            .setEnabled(SERVICE_POINT.ENABLED.getValue(r))
-                            .setAppWritesEnabled(SERVICE_POINT.APP_WRITES_ENABLED.getValue(r))
-                            .setTechEmail(SERVICE_POINT.TECH_EMAIL.getValue(r))
-                            .setIdentifierOwner(SERVICE_POINT.IDENTIFIER_OWNER.getValue(r))
-                            .setSearchContent(SERVICE_POINT.SEARCH_CONTENT.getValue(r))
-                            .setRepositoryId(SERVICE_POINT.REPOSITORY_ID.getValue(r))
-                            .setPrefix(SERVICE_POINT.PREFIX.getValue(r))
-                            .setPassword(password);
-                        }
-                );
+                .fetchOptional(this::fetch);
     }
 
     public ServicePointRecord create(final ServicePointRecord record) {
@@ -55,6 +36,7 @@ public class ServicePointRepository {
                 .set(SERVICE_POINT.REPOSITORY_ID, record.getRepositoryId())
                 .set(SERVICE_POINT.PREFIX, record.getPrefix())
                 .set(SERVICE_POINT.PASSWORD, encryptionConverter.to(record.getPassword()))
+                .set(SERVICE_POINT.GROUP_ID, record.getGroupId())
                 .returning()
                 .fetchOne();
     }
@@ -71,6 +53,7 @@ public class ServicePointRepository {
                 .set(SERVICE_POINT.REPOSITORY_ID, record.getRepositoryId())
                 .set(SERVICE_POINT.PREFIX, record.getPrefix())
                 .set(SERVICE_POINT.PASSWORD, encryptionConverter.to(record.getPassword()))
+                .set(SERVICE_POINT.GROUP_ID, record.getGroupId())
                 .where(SERVICE_POINT.ID.eq(record.getId()))
                 .returning()
                 .fetchOne();
@@ -79,5 +62,32 @@ public class ServicePointRepository {
     public List<ServicePointRecord> findAll() {
         return dslContext.selectFrom(SERVICE_POINT)
                 .fetch();
+    }
+
+    public Optional<ServicePointRecord> findByGroupId(final String groupId) {
+        return dslContext.selectFrom(SERVICE_POINT)
+                .where(SERVICE_POINT.GROUP_ID.eq(groupId))
+                .fetchOptional(this::fetch);
+    }
+
+    private ServicePointRecord fetch(ServicePointRecord r) {
+        String password = null;
+        if (SERVICE_POINT.PASSWORD.getValue(r) != null) {
+            password = encryptionConverter.from(Objects.requireNonNull(SERVICE_POINT.PASSWORD.getValue(r)));
+        }
+
+        return new ServicePointRecord()
+                .setId(SERVICE_POINT.ID.getValue(r))
+                .setName(SERVICE_POINT.NAME.getValue(r))
+                .setAdminEmail(SERVICE_POINT.ADMIN_EMAIL.getValue(r))
+                .setEnabled(SERVICE_POINT.ENABLED.getValue(r))
+                .setAppWritesEnabled(SERVICE_POINT.APP_WRITES_ENABLED.getValue(r))
+                .setTechEmail(SERVICE_POINT.TECH_EMAIL.getValue(r))
+                .setIdentifierOwner(SERVICE_POINT.IDENTIFIER_OWNER.getValue(r))
+                .setSearchContent(SERVICE_POINT.SEARCH_CONTENT.getValue(r))
+                .setRepositoryId(SERVICE_POINT.REPOSITORY_ID.getValue(r))
+                .setPrefix(SERVICE_POINT.PREFIX.getValue(r))
+                .setPassword(password)
+                .setGroupId(SERVICE_POINT.GROUP_ID.getValue(r));
     }
 }

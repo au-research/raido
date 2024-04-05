@@ -48,7 +48,7 @@ import java.util.function.Supplier;
  */
 public class Log {
 
-    private Logger log;
+    private final Logger log;
 
     private Log(Logger log) {
         this.log = log;
@@ -91,7 +91,7 @@ public class Log {
      * or test setup method before logging is even configured).
      */
     public static void staticLog(String msg, Object... args) {
-        System.out.println(String.format(msg, args));
+        System.out.printf((msg) + "%n", args);
     }
 
     public static String formatArgValue(Object value) {

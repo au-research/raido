@@ -1,9 +1,9 @@
 package au.org.raid.api.service;
 
+import au.org.raid.api.config.properties.RaidHistoryProperties;
 import au.org.raid.api.entity.ChangeType;
 import au.org.raid.api.factory.*;
 import au.org.raid.api.repository.RaidHistoryRepository;
-import au.org.raid.api.spring.RaidHistoryProperties;
 import au.org.raid.db.jooq.tables.records.RaidHistoryRecord;
 import au.org.raid.idl.raidv2.model.*;
 import com.fasterxml.jackson.core.JsonProcessingException;

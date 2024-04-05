@@ -1,24 +1,30 @@
 version: '3.4'
 services:
   keycloak:
-    image: raid-keycloak:202402131
+    container_name: keycloak
+    image: raid-keycloak:20240326.0
     ports:
       - 8000:8443
       - 8001:8080
-    command: 'start-dev'
+    command: ['start-dev', '--import-realm']
+    volumes:
+      - './realms:/opt/keycloak/data/import'
     environment:
-      KC_HEALTH_ENABLED: false
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HEALTH_ENABLED: true
+      KC_HOSTNAME: localhost
       KC_DB: postgres
       KC_DB_USERNAME: keycloak
       KC_DB_PASSWORD: keycloak
-      KC_HOSTNAME: localhost
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
       KC_DB_URL_DATABASE: keycloak
       KC_DB_URL_HOST: postgres
       KC_DB_URL_PORT: 5432
       KC_DB_SCHEMA: public
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_LOG_LEVEL: info,io.vertx.ext.web:trace
   postgres:
+    container_name: keycloak-postgres
     image: postgres:16.2
     ports:
       - 5432:5432

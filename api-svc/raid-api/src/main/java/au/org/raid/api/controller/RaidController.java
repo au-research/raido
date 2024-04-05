@@ -1,10 +1,12 @@
 package au.org.raid.api.controller;
 
 import au.org.raid.api.exception.ClosedRaidException;
-import au.org.raid.api.exception.InvalidAccessException;
+import au.org.raid.api.exception.CrossAccountAccessException;
+import au.org.raid.api.exception.ServicePointNotFoundException;
 import au.org.raid.api.exception.ValidationException;
 import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.RaidIngestService;
+import au.org.raid.api.service.ServicePointService;
 import au.org.raid.api.service.raid.RaidService;
 import au.org.raid.api.util.SchemaValues;
 import au.org.raid.api.validator.ValidationService;
@@ -13,14 +15,12 @@ import au.org.raid.idl.raidv2.model.RaidChange;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,26 +29,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static au.org.raid.api.endpoint.raidv2.AuthzUtil.getApiToken;
-import static au.org.raid.api.endpoint.raidv2.AuthzUtil.guardOperatorOrAssociated;
-import static org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS;
-
-@Scope(proxyMode = TARGET_CLASS)
 @RestController
 @CrossOrigin
-@SecurityScheme(name = "bearerAuth", scheme = "bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 @RequiredArgsConstructor
 public class RaidController implements RaidApi {
+    public static final String SERVICE_POINT_GROUP_ID_CLAIM = "service_point_group_id";
     private final ValidationService validationService;
     private final RaidService raidService;
     private final RaidIngestService raidIngestService;
     private final RaidHistoryService raidHistoryService;
-
+    private final ServicePointService servicePointService;
 
     @Override
     public ResponseEntity<RaidDto> findRaidByName(final String prefix, final String suffix, final Integer version) {
-        var user = getApiToken();
-        //return 403 if raid is confidential and doesn't have same service point as user
+        final var servicePointId = getServicePointId();
 
         final var handle = String.join("/", prefix, suffix);
         var raidOptional = raidService.findByHandle(handle)
@@ -57,7 +51,7 @@ public class RaidController implements RaidApi {
         if (raidOptional.isPresent()) {
             final var raid = raidOptional.get();
 
-            if (!raid.getIdentifier().getOwner().getServicePoint().equals(user.getServicePointId())
+            if (!raid.getIdentifier().getOwner().getServicePoint().equals(servicePointId)
                     && !raid.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri())) {
                 throw new ClosedRaidException(raid);
             }
@@ -73,11 +67,7 @@ public class RaidController implements RaidApi {
 
     @Override
     public ResponseEntity<RaidDto> mintRaid(final RaidCreateRequest request) {
-        final var user = getApiToken();
-
-        if (!raidService.isEditable(user, user.getServicePointId())) {
-            throw new InvalidAccessException("This service point does not allow Raids to be edited in the app.");
-        }
+        final var servicePointId = getServicePointId();
 
         final var failures = new ArrayList<>(validationService.validateForCreate(request));
 
@@ -85,18 +75,18 @@ public class RaidController implements RaidApi {
             throw new ValidationException(failures);
         }
 
-        final var raidDto = raidService.mint(request, user.getServicePointId());
+        final var raidDto = raidService.mint(request, servicePointId);
 
         return ResponseEntity.created(URI.create(raidDto.getIdentifier().getId())).body(raidDto);
     }
 
     @Override
     public ResponseEntity<List<RaidDto>> findAllRaids(final Long servicePoint, final List<String> includeFields) {
-        var user = getApiToken();
+        final var servicePointId = getServicePointId();
 
         final var raids = Optional.ofNullable(servicePoint)
                 .map(raidIngestService::findAllByServicePointId)
-                .orElse(raidIngestService.findAllByServicePointIdOrNotConfidential(user));
+                .orElse(raidIngestService.findAllByServicePointIdOrNotConfidential(servicePointId));
 
         if (includeFields != null && !includeFields.isEmpty()) {
             return ResponseEntity.ok(filterFields(raids, includeFields));
@@ -107,13 +97,13 @@ public class RaidController implements RaidApi {
 
     @Override
     public ResponseEntity<RaidDto> updateRaid(final String prefix, final String suffix, RaidUpdateRequest request) {
-        final var handle = String.join("/", prefix, suffix);
-        var user = getApiToken();
-        guardOperatorOrAssociated(user, request.getIdentifier().getOwner().getServicePoint());
+        final var servicePointId = getServicePointId();
 
-        if (!raidService.isEditable(user, request.getIdentifier().getOwner().getServicePoint())) {
-            throw new InvalidAccessException("This service point does not allow Raids to be edited in the app.");
+        if (!request.getIdentifier().getOwner().getServicePoint().equals(servicePointId)) {
+            throw new CrossAccountAccessException(servicePointId);
         }
+
+        final var handle = String.join("/", prefix, suffix);
 
         final var failures = new ArrayList<>(validationService.validateForUpdate(handle, request));
 
@@ -121,11 +111,12 @@ public class RaidController implements RaidApi {
             throw new ValidationException(failures);
         }
 
-        return ResponseEntity.ok(raidService.update(request, user.getServicePointId()));
+        return ResponseEntity.ok(raidService.update(request, servicePointId));
     }
 
     @Override
     public ResponseEntity<List<RaidChange>> raidHistory(final String prefix, final String suffix) {
+
         final var handle = prefix + "/" + suffix;
 
         final var raidOptional = raidService.findByHandle(handle);
@@ -134,13 +125,25 @@ public class RaidController implements RaidApi {
             final var raid = raidOptional.get();
 
             if (!raid.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri())) {
-                var user = getApiToken();
-                guardOperatorOrAssociated(user, raid.getIdentifier().getOwner().getServicePoint());
+                final var servicePointId = getServicePointId();
+
+                if (!raid.getIdentifier().getOwner().getServicePoint().equals(servicePointId)) {
+                    throw new CrossAccountAccessException(servicePointId);
+                }
             }
         }
 
-
         return ResponseEntity.ok(raidHistoryService.findAllChangesByHandle(handle));
+    }
+
+    private long getServicePointId() {
+        final var token = ((JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getToken();
+        final var groupId = (String) token.getClaims().get(SERVICE_POINT_GROUP_ID_CLAIM);
+
+        final var servicePoint = servicePointService.findByGroupId(groupId)
+                .orElseThrow(() -> new ServicePointNotFoundException(groupId));
+
+        return servicePoint.getId();
     }
 
     private List<RaidDto> filterFields(final List<RaidDto> raids, final List<String> includeFields) {

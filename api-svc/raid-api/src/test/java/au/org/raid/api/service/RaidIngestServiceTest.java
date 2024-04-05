@@ -4,7 +4,6 @@ import au.org.raid.api.factory.DateFactory;
 import au.org.raid.api.factory.HandleFactory;
 import au.org.raid.api.factory.RaidRecordFactory;
 import au.org.raid.api.repository.RaidRepository;
-import au.org.raid.api.spring.security.raidv2.ApiToken;
 import au.org.raid.db.jooq.tables.records.RaidRecord;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,8 @@ import java.util.Optional;
 import static au.org.raid.api.util.TestRaid.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class RaidIngestServiceTest {
@@ -103,26 +103,26 @@ class RaidIngestServiceTest {
         verify(spatialCoverageService).create(RAID_DTO.getSpatialCoverage(), HANDLE);
     }
 
-    @Test
-    @DisplayName("findAllByServicePointIdOrNotConfidential()")
-    void findAllByServicePointIdOrNotConfidential() {
-        final var servicePointId = 123L;
-
-        final var apiToken = mock(ApiToken.class);
-        when(apiToken.getServicePointId()).thenReturn(servicePointId);
-
-        final var raidRecord = new RaidRecord()
-                .setHandle(HANDLE)
-                .setStartDateString(START_DATE)
-                .setEndDate(END_DATE);
-
-        when(raidRepository.findAllByServicePointIdOrNotConfidential(servicePointId)).thenReturn(List.of(raidRecord));
-        when(cacheableRaidService.build(raidRecord)).thenReturn(RAID_DTO);
-
-        final var result = raidIngestService.findAllByServicePointIdOrNotConfidential(apiToken);
-
-        assertThat(result, is(List.of(RAID_DTO)));
-    }
+//    @Test
+//    @DisplayName("findAllByServicePointIdOrNotConfidential()")
+//    void findAllByServicePointIdOrNotConfidential() {
+//        final var servicePointId = 123L;
+//
+//        final var apiToken = mock(ApiToken.class);
+//        when(apiToken.getServicePointId()).thenReturn(servicePointId);
+//
+//        final var raidRecord = new RaidRecord()
+//                .setHandle(HANDLE)
+//                .setStartDateString(START_DATE)
+//                .setEndDate(END_DATE);
+//
+//        when(raidRepository.findAllByServicePointIdOrNotConfidential(servicePointId)).thenReturn(List.of(raidRecord));
+//        when(cacheableRaidService.build(raidRecord)).thenReturn(RAID_DTO);
+//
+//        final var result = raidIngestService.findAllByServicePointIdOrNotConfidential(apiToken);
+//
+//        assertThat(result, is(List.of(RAID_DTO)));
+//    }
 
     @Test
     @DisplayName("findAllByServicePointId()")

@@ -31,9 +31,9 @@ import java.util.TimeZone;
  */
 public class IdFactory {
     public static final String SEPARATOR = "u";
-    private static String COMPACT_MIILLISECOND_DATETIME_FORMAT =
+    private static final String COMPACT_MIILLISECOND_DATETIME_FORMAT =
             "yyyyMMddHHmmssSSS";
-    private static String FILESAFE_MIILLISECOND_DATETIME_FORMAT =
+    private static final String FILESAFE_MIILLISECOND_DATETIME_FORMAT =
             "yyyyMMdd-HHmmss-SSS";
     private final Object generatorLock = new Object();
     private volatile String lastGeneratedTimeSuffix = "start";

@@ -1,6 +1,7 @@
 package au.org.raid.api.exception;
 
 import au.org.raid.idl.raidv2.model.ValidationFailure;
+import lombok.Getter;
 
 import java.util.Collection;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.stream.Collectors;
 
 import static java.util.List.copyOf;
 
+@Getter
 public class ValidationException extends RaidApiException {
     private static final String TITLE = "There were validation failures.";
     private static final int STATUS = 400;
@@ -16,10 +18,6 @@ public class ValidationException extends RaidApiException {
     public ValidationException(Collection<ValidationFailure> failures) {
         super();
         this.failures = copyOf(failures);
-    }
-
-    public List<ValidationFailure> getFailures() {
-        return failures;
     }
 
     public String getTitle() {

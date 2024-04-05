@@ -10,7 +10,6 @@ import au.org.raid.api.service.Handle;
 import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.RaidIngestService;
 import au.org.raid.api.service.datacite.DataciteService;
-import au.org.raid.api.spring.security.raidv2.ApiToken;
 import au.org.raid.db.jooq.tables.records.ServicePointRecord;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
 import au.org.raid.idl.raidv2.model.RaidDto;
@@ -105,10 +104,10 @@ public class RaidService {
         return raidIngestService.findByHandle(handle);
     }
 
-    public boolean isEditable(final ApiToken user, final long servicePointId) {
+    public boolean isEditable(final long servicePointId) {
         final var servicePoint = servicePointRepository.findById(servicePointId)
                 .orElseThrow(() -> new UnknownServicePointException(servicePointId));
 
-        return user.getClientId().equals("RAIDO_API") || servicePoint.getAppWritesEnabled();
+        return servicePoint.getAppWritesEnabled();
     }
 }

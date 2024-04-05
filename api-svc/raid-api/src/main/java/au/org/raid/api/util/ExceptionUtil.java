@@ -1,7 +1,7 @@
 package au.org.raid.api.util;
 
 
-import au.org.raid.api.spring.security.ApiSvcAuthenticationException;
+import au.org.raid.api.config.security.ApiSvcAuthenticationException;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -180,11 +180,7 @@ public class ExceptionUtil {
         }
 
         final Throwable cause = throwable.getCause();
-        if (cause != null) {
-            return cause;
-        }
-
-        return null;
+        return cause;
     }
 
 }

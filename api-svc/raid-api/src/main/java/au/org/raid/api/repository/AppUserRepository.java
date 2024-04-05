@@ -12,7 +12,7 @@ import static au.org.raid.db.jooq.tables.AppUser.APP_USER;
 
 @Repository
 public class AppUserRepository {
-    private DSLContext db;
+    private final DSLContext db;
 
     public AppUserRepository(DSLContext db) {
         this.db = db;

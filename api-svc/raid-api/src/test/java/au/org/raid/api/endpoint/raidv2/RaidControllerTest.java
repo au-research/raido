@@ -1,15 +1,13 @@
 package au.org.raid.api.endpoint.raidv2;
 
 import au.org.raid.api.controller.RaidController;
-import au.org.raid.api.exception.CrossAccountAccessException;
 import au.org.raid.api.exception.ResourceNotFoundException;
 import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.RaidIngestService;
-import au.org.raid.api.service.datacite.DataciteService;
+import au.org.raid.api.service.ServicePointService;
 import au.org.raid.api.service.raid.RaidService;
 import au.org.raid.api.service.raid.id.IdentifierHandle;
 import au.org.raid.api.service.raid.id.IdentifierUrl;
-import au.org.raid.api.spring.security.raidv2.ApiToken;
 import au.org.raid.api.util.FileUtil;
 import au.org.raid.api.util.SchemaValues;
 import au.org.raid.api.validator.ValidationService;
@@ -29,6 +27,12 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtClaimNames;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -42,10 +46,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.function.Supplier;
 
 import static au.org.raid.api.util.FileUtil.resourceContent;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -55,6 +61,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class RaidControllerTest {
     public static final String REGISTRATION_AGENCY_ID = "https://ror.org/038sjwq14";
     public static final String IDENTIFIER_OWNER_ID = "https://ror.org/02stey378";
+
+    private static final String SERVICE_POINT_GROUP_ID = UUID.randomUUID().toString();
+    private static final Long SERVICE_POINT_ID = 20_000_000L;
+    private static final String PREFIX = "10378.1";
+    private static final String SUFFIX = "1696639";
+
     final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule()).setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
     private MockMvc mockMvc;
     @Mock
@@ -63,9 +75,10 @@ class RaidControllerTest {
     private ValidationService validationService;
     @Mock
     private RaidIngestService raidIngestService;
-    private DataciteService dataciteService;
     @Mock
     private RaidHistoryService raidHistoryService;
+    @Mock
+    private ServicePointService servicePointService;
     @InjectMocks
     private RaidController controller;
 
@@ -79,18 +92,22 @@ class RaidControllerTest {
 
     @Test
     void mintRaidV1_ReturnsRedactedInternalServerErrorOnDataAccessException() throws Exception {
-        final var servicePointId = 999L;
         final var raid = createRaidForPost();
 
-        final ApiToken apiToken = mock(ApiToken.class);
-        when(apiToken.getServicePointId()).thenReturn(servicePointId);
+        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-            authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
-            when(raidService.isEditable(any(ApiToken.class), anyLong())).thenReturn(true);
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
 
+            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
+            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
+
+            final var securityContext = mock(SecurityContext.class);
+            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
+
+            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
             doThrow(DataAccessException.class)
-                    .when(raidService).mint(any(RaidCreateRequest.class), eq(servicePointId));
+                    .when(raidService).mint(any(RaidCreateRequest.class), eq(SERVICE_POINT_ID));
 
             mockMvc.perform(post("/raid/")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -100,49 +117,13 @@ class RaidControllerTest {
                     .andExpect(status().isInternalServerError())
                     .andExpect(content().string(""))
                     .andReturn();
-        }
-    }
 
-    @Test
-    void mintRaidV1_ReturnsForbiddenWhenEditingInAppAndDisabledInServicePoint() throws Exception {
-        final Long servicePointId = 999L;
-
-        final var raidForPost = createRaidForPost();
-
-        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-            final var user = ApiToken.ApiTokenBuilder
-                    .anApiToken()
-                    .withAppUserId(0L)
-                    .withEmail("user-email")
-                    .withRole("user-role")
-                    .withSubject("user-subject")
-                    .withAppUserId(1L)
-                    .withServicePointId(servicePointId)
-                    .withClientId("user-client-id")
-                    .build();
-
-            authzUtil.when(AuthzUtil::getApiToken).thenReturn(user);
-
-            when(raidService.isEditable(user, servicePointId)).thenReturn(false);
-
-            mockMvc.perform(post("/raid/")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(raidForPost))
-                            .characterEncoding("utf-8"))
-                    .andDo(print())
-                    .andExpect(status().isForbidden())
-                    .andExpect(jsonPath("$.type", Matchers.is("https://raid.org.au/errors#InvalidAccessException")))
-                    .andExpect(jsonPath("$.title", Matchers.is("Forbidden")))
-                    .andExpect(jsonPath("$.status", Matchers.is(403)))
-                    .andExpect(jsonPath("$.detail", Matchers.is("This service point does not allow Raids to be edited in the app.")))
-                    .andExpect(jsonPath("$.instance", Matchers.is("https://raid.org.au")))
-            ;
+            verifyFindServicePointId.get();
         }
     }
 
     @Test
     void mintRaidV1_ReturnsBadRequest() throws Exception {
-        final var servicePointId = 999L;
         final var validationFailureMessage = "validation failure message";
         final var validationFailureType = "validation failure type";
         final var validationFailureFieldId = "validation failure id";
@@ -154,12 +135,18 @@ class RaidControllerTest {
         validationFailure.setMessage(validationFailureMessage);
         validationFailure.setErrorType(validationFailureType);
 
-        final ApiToken apiToken = mock(ApiToken.class);
+        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-            authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
-            when(raidService.isEditable(any(ApiToken.class), anyLong())).thenReturn(true);
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
 
+            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
+            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
+
+            final var securityContext = mock(SecurityContext.class);
+            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
+
+            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
 
             when(validationService.validateForCreate(any(RaidCreateRequest.class)))
                     .thenReturn(List.of(validationFailure));
@@ -182,14 +169,15 @@ class RaidControllerTest {
             assertThat(validationFailureResponse.getFailures().get(0).getErrorType(), Matchers.is(validationFailureType));
             assertThat(validationFailureResponse.getFailures().get(0).getMessage(), Matchers.is(validationFailureMessage));
 
-            verify(raidService, never()).mint(any(RaidCreateRequest.class), eq(servicePointId));
+            verifyFindServicePointId.get();
+            verify(raidService, never()).mint(any(RaidCreateRequest.class), eq(SERVICE_POINT_ID));
             verify(raidService, never()).findByHandle(anyString());
         }
     }
 
     @Test
+    @WithMockUser(authorities = {"user"})
     void mintRaidV1_ReturnsOk() throws Exception {
-        final Long servicePointId = 999L;
         final var title = "test-title";
         final var startDate = LocalDate.now();
         final var handle = new IdentifierHandle("10378.1", "1696639");
@@ -199,25 +187,22 @@ class RaidControllerTest {
         final var raidForPost = createRaidForPost();
         final var raidForGet = createRaidForGet(title, startDate);
 
-        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-            final var user = ApiToken.ApiTokenBuilder
-                    .anApiToken()
-                    .withAppUserId(0L)
-                    .withEmail("user-email")
-                    .withRole("user-role")
-                    .withSubject("user-subject")
-                    .withAppUserId(1L)
-                    .withServicePointId(servicePointId)
-                    .withClientId("user-client-id")
-                    .build();
+        when(validationService.validateForCreate(any(RaidCreateRequest.class))).thenReturn(Collections.emptyList());
 
-            authzUtil.when(AuthzUtil::getApiToken).thenReturn(user);
-            when(raidService.isEditable(any(ApiToken.class), anyLong())).thenReturn(true);
+        when(raidService.mint(any(RaidCreateRequest.class), eq(SERVICE_POINT_ID))).thenReturn(raidForGet);
 
+        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            when(validationService.validateForCreate(any(RaidCreateRequest.class))).thenReturn(Collections.emptyList());
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
 
-            when(raidService.mint(any(RaidCreateRequest.class), eq(servicePointId))).thenReturn(raidForGet);
+            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
+            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
+
+            final var securityContext = mock(SecurityContext.class);
+            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
+
+            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
 
             mockMvc.perform(post("/raid/")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -231,7 +216,7 @@ class RaidControllerTest {
                     .andExpect(jsonPath("$.identifier.registrationAgency.schemaUri", Matchers.is(SchemaValues.ROR_SCHEMA_URI.getUri())))
                     .andExpect(jsonPath("$.identifier.owner.id", Matchers.is(IDENTIFIER_OWNER_ID)))
                     .andExpect(jsonPath("$.identifier.owner.schemaUri", Matchers.is(SchemaValues.ROR_SCHEMA_URI.getUri())))
-                    .andExpect(jsonPath("$.identifier.owner.servicePoint", Matchers.is(20000001)))
+                    .andExpect(jsonPath("$.identifier.owner.servicePoint", Matchers.is(SERVICE_POINT_ID.intValue())))
                     .andExpect(jsonPath("$.identifier.raidAgencyUrl", Matchers.is(id.formatUrl())))
                     .andExpect(jsonPath("$.title[0].text", Matchers.is(title)))
                     .andExpect(jsonPath("$.title[0].type.id", Matchers.is(SchemaValues.PRIMARY_TITLE_TYPE.getUri())))
@@ -261,15 +246,14 @@ class RaidControllerTest {
                     .andExpect(jsonPath("$.organisation[0].role[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
                     .andExpect(jsonPath("$.organisation[0].id", Matchers.is("https://ror.org/04qw24q55")))
                     .andExpect(jsonPath("$.organisation[0].schemaUri", Matchers.is(SchemaValues.ROR_SCHEMA_URI.getUri())));
+
+            verifyFindServicePointId.get();
         }
     }
 
     @Test
     void updateRaidV1_ReturnsBadRequest() throws Exception {
-        final var servicePointId = 123L;
-        final var prefix = "10.38";
-        final var suffix = "99999";
-        final var handle = String.join("/", prefix, suffix);
+        final var handle = String.join("/", PREFIX, SUFFIX);
         final var validationFailureMessage = "validation failure message";
         final var validationFailureType = "validation failure type";
         final var validationFailureFieldId = "validation failure id";
@@ -281,14 +265,21 @@ class RaidControllerTest {
         validationFailure.setMessage(validationFailureMessage);
         validationFailure.setErrorType(validationFailureType);
 
-        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-            final ApiToken apiToken = mock(ApiToken.class);
-            authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
-            when(raidService.isEditable(any(ApiToken.class), anyLong())).thenReturn(true);
+        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
+
+            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
+            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
+
+            final var securityContext = mock(SecurityContext.class);
+            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
+
+            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
 
             when(validationService.validateForUpdate(eq(handle), any(RaidUpdateRequest.class))).thenReturn(List.of(validationFailure));
 
-            final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/%s/%s", prefix, suffix))
+            final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/%s/%s", PREFIX, SUFFIX))
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(input))
                             .characterEncoding("utf-8"))
@@ -307,64 +298,42 @@ class RaidControllerTest {
             assertThat(validationFailureResponse.getFailures().get(0).getErrorType(), Matchers.is(validationFailureType));
             assertThat(validationFailureResponse.getFailures().get(0).getMessage(), Matchers.is(validationFailureMessage));
 
+            verifyFindServicePointId.get();
+
             verifyNoMoreInteractions(raidService);
         }
     }
 
     @Test
-    void updateRaidV1_ReturnsForbiddenWhenEditingInAppAndDisabledInServicePoint() throws Exception {
-        final var prefix = "10378.1";
-        final var suffix = "1696639";
-        final var servicePointId = 20000001L;
-
-        final var input = createRaidForPut();
-
-        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-            final ApiToken user = mock(ApiToken.class);
-            authzUtil.when(AuthzUtil::getApiToken).thenReturn(user);
-
-            when(raidService.isEditable(user, servicePointId)).thenReturn(false);
-
-            mockMvc.perform(put(String.format("/raid/%s/%s", prefix, suffix))
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(input))
-                            .characterEncoding("utf-8"))
-                    .andDo(print())
-                    .andExpect(status().isForbidden())
-                    .andExpect(jsonPath("$.type", Matchers.is("https://raid.org.au/errors#InvalidAccessException")))
-                    .andExpect(jsonPath("$.title", Matchers.is("Forbidden")))
-                    .andExpect(jsonPath("$.status", Matchers.is(403)))
-                    .andExpect(jsonPath("$.detail", Matchers.is("This service point does not allow Raids to be edited in the app.")))
-                    .andExpect(jsonPath("$.instance", Matchers.is("https://raid.org.au")));
-        }
-    }
-
-    @Test
     void updateRaidV1_ReturnsOk() throws Exception {
-        final var prefix = "10378.1";
-        final var suffix = "1696639";
-        final Long servicePointId = 20000001L;
         final var title = "test-title";
         final var startDate = LocalDate.now();
-        final var handle = new IdentifierHandle(prefix, suffix);
+        final var handle = new IdentifierHandle(PREFIX, SUFFIX);
         final var id = new IdentifierUrl("https://raid.org.au", handle);
         final var endDate = startDate.plusMonths(6);
 
         final var input = createRaidForPut();
         final var output = createRaidForGet(title, startDate);
 
-        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-            final ApiToken apiToken = mock(ApiToken.class);
-            when(apiToken.getServicePointId()).thenReturn(servicePointId);
-            authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
-            when(raidService.isEditable(any(ApiToken.class), anyLong())).thenReturn(true);
+        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            when(validationService.validateForUpdate(String.join("/", prefix, suffix), input))
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
+
+            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
+            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
+
+            final var securityContext = mock(SecurityContext.class);
+            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
+
+            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+
+            when(validationService.validateForUpdate(String.join("/", PREFIX, SUFFIX), input))
                     .thenReturn(Collections.emptyList());
 
-            when(raidService.update(input, servicePointId)).thenReturn(output);
+            when(raidService.update(input, SERVICE_POINT_ID)).thenReturn(output);
 
-            mockMvc.perform(put(String.format("/raid/%s/%s", prefix, suffix))
+            mockMvc.perform(put(String.format("/raid/%s/%s", PREFIX, SUFFIX))
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(input))
                             .characterEncoding("utf-8"))
@@ -376,7 +345,7 @@ class RaidControllerTest {
                     .andExpect(jsonPath("$.identifier.registrationAgency.schemaUri", Matchers.is(SchemaValues.ROR_SCHEMA_URI.getUri())))
                     .andExpect(jsonPath("$.identifier.owner.id", Matchers.is(IDENTIFIER_OWNER_ID)))
                     .andExpect(jsonPath("$.identifier.owner.schemaUri", Matchers.is(SchemaValues.ROR_SCHEMA_URI.getUri())))
-                    .andExpect(jsonPath("$.identifier.owner.servicePoint", Matchers.is(servicePointId.intValue())))
+                    .andExpect(jsonPath("$.identifier.owner.servicePoint", Matchers.is(SERVICE_POINT_ID.intValue())))
                     .andExpect(jsonPath("$.title[0].text", Matchers.is(title)))
                     .andExpect(jsonPath("$.title[0].type.id", Matchers.is(SchemaValues.PRIMARY_TITLE_TYPE.getUri())))
                     .andExpect(jsonPath("$.title[0].type.schemaUri", Matchers.is(SchemaValues.TITLE_TYPE_SCHEMA.getUri())))
@@ -404,29 +373,34 @@ class RaidControllerTest {
                     .andExpect(jsonPath("$.organisation[0].role[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
                     .andExpect(jsonPath("$.organisation[0].id", Matchers.is("https://ror.org/04qw24q55")))
                     .andExpect(jsonPath("$.organisation[0].schemaUri", Matchers.is(SchemaValues.ROR_SCHEMA_URI.getUri())));
+            verifyFindServicePointId.get();
         }
     }
 
     @Test
     void updateRaidV1_Returns404IfNotFound() throws Exception {
-        final var servicePointId = 123L;
-        final var prefix = "10378.1";
-        final var suffix = "1696639";
-        final var handle = String.join("/", prefix, suffix);
+        final var handle = String.join("/", PREFIX, SUFFIX);
         final var input = createRaidForPut();
 
-        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-            final ApiToken apiToken = mock(ApiToken.class);
-            when(apiToken.getServicePointId()).thenReturn(servicePointId);
-            authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
-            when(raidService.isEditable(any(ApiToken.class), anyLong())).thenReturn(true);
+        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
+
+            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
+            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
+
+            final var securityContext = mock(SecurityContext.class);
+            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
+
+            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
 
             when(validationService.validateForUpdate(eq(handle), any(RaidUpdateRequest.class))).thenReturn(Collections.emptyList());
 
             doThrow(new ResourceNotFoundException(handle))
-                    .when(raidService).update(input, servicePointId);
+                    .when(raidService).update(input, SERVICE_POINT_ID);
 
-            final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/%s/%s", prefix, suffix))
+            final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/%s/%s", PREFIX, SUFFIX))
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(input))
                             .characterEncoding("utf-8"))
@@ -441,24 +415,29 @@ class RaidControllerTest {
             assertThat(failureResponse.getStatus(), Matchers.is(404));
             assertThat(failureResponse.getDetail(), Matchers.is("No RAiD was found with handle 10378.1/1696639."));
             assertThat(failureResponse.getInstance(), Matchers.is("https://raid.org.au"));
+            verifyFindServicePointId.get();
         }
     }
 
     @Test
-    void updateRaidsV1_ReturnsForbiddenWithInvalidServicePoint() throws Exception {
-        final var prefix = "10378.1";
-        final var suffix = "1696639";
-        final Long servicePointId = 20000001L;
+    void updateRaids_ReturnsForbiddenWithInvalidServicePoint() throws Exception {
         final var input = createRaidForGet("", LocalDate.now());
+        final var servicePointId = 20_000_001L;
 
-        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-            final ApiToken apiToken = mock(ApiToken.class);
-            authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
+        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            authzUtil.when(() -> AuthzUtil.guardOperatorOrAssociated(apiToken, servicePointId))
-                    .thenThrow(new CrossAccountAccessException(servicePointId));
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId(servicePointId);
 
-            final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/%s/%s", prefix, suffix))
+            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
+            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
+
+            final var securityContext = mock(SecurityContext.class);
+            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
+
+            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+
+            final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/%s/%s", PREFIX, SUFFIX))
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(input))
                             .characterEncoding("utf-8"))
@@ -474,26 +453,33 @@ class RaidControllerTest {
             assertThat(failureResponse.getDetail(), Matchers.is("You don't have permission to access RAiDs with a service point of " + servicePointId));
             assertThat(failureResponse.getInstance(), Matchers.is("https://raid.org.au"));
 
+            verifyFindServicePointId.get();
             verifyNoInteractions(raidService);
         }
     }
 
     @Test
-    void readRaidV1_ReturnsOk() throws Exception {
-        final var prefix = "10378.1";
-        final var suffix = "1696639";
+    void readRaid_ReturnsOk() throws Exception {
         final var startDate = LocalDate.now().minusYears(1);
         final var title = "test-title";
         final var raid = createRaidForGet(title, startDate);
 
-        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-            final ApiToken apiToken = mock(ApiToken.class);
-            when(apiToken.getServicePointId()).thenReturn(20000001L);
-            authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
+        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            when(raidService.findByHandle(String.join("/", prefix, suffix))).thenReturn(Optional.of(raid));
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
 
-            final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
+            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
+            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
+
+            final var securityContext = mock(SecurityContext.class);
+            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
+
+            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+
+            when(raidService.findByHandle(String.join("/", PREFIX, SUFFIX))).thenReturn(Optional.of(raid));
+
+            final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", PREFIX, SUFFIX))
                             .characterEncoding("utf-8")
                             .accept(MediaType.APPLICATION_JSON))
                     .andDo(print())
@@ -503,29 +489,36 @@ class RaidControllerTest {
             final RaidDto result = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), RaidDto.class);
 
             assertThat(result, Matchers.is(raid));
+            verifyFindServicePointId.get();
         }
     }
 
     @Test
     @DisplayName("Returns raid at given version")
-    void readRaidV1_ReturnsRaidAtVersion() throws Exception {
-        final var prefix = "10378.1";
-        final var suffix = "1696639";
+    void readRaid_ReturnsRaidAtVersion() throws Exception {
         final var startDate = LocalDate.now().minusYears(1);
         final var title = "test-title";
         final var raid = createRaidForGet(title, startDate);
         final var version = 9;
 
-        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-            final ApiToken apiToken = mock(ApiToken.class);
-            when(apiToken.getServicePointId()).thenReturn(20000001L);
-            authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
+        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            when(raidService.findByHandle(String.join("/", prefix, suffix))).thenReturn(Optional.of(raid));
-            when(raidHistoryService.findByHandleAndVersion(String.join("/", prefix, suffix), version))
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
+
+            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
+            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
+
+            final var securityContext = mock(SecurityContext.class);
+            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
+
+            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+
+            when(raidService.findByHandle(String.join("/", PREFIX, SUFFIX))).thenReturn(Optional.of(raid));
+            when(raidHistoryService.findByHandleAndVersion(String.join("/", PREFIX, SUFFIX), version))
                     .thenReturn(Optional.of(raid));
 
-            final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
+            final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", PREFIX, SUFFIX))
                             .queryParam("version", String.valueOf(version))
                             .characterEncoding("utf-8")
                             .accept(MediaType.APPLICATION_JSON))
@@ -536,51 +529,64 @@ class RaidControllerTest {
             final RaidDto result = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), RaidDto.class);
 
             assertThat(result, Matchers.is(raid));
+            verifyFindServicePointId.get();
         }
     }
 
     @Test
     @DisplayName("Returns 404 when no raid found at given version")
-    void readRaidV1_ReturnsNotFoundIfVersionNotFound() throws Exception {
-        final var prefix = "10378.1";
-        final var suffix = "1696639";
+    void readRaid_ReturnsNotFoundIfVersionNotFound() throws Exception {
         final var startDate = LocalDate.now().minusYears(1);
         final var title = "test-title";
         final var raid = createRaidForGet(title, startDate);
         final var version = 9;
 
-        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-            final ApiToken apiToken = mock(ApiToken.class);
-            when(apiToken.getServicePointId()).thenReturn(20000001L);
-            authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
+        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
 
-            when(raidService.findByHandle(String.join("/", prefix, suffix))).thenReturn(Optional.of(raid));
-            when(raidHistoryService.findByHandleAndVersion(String.join("/", prefix, suffix), version))
+            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
+            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
+
+            final var securityContext = mock(SecurityContext.class);
+            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
+
+            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+
+            when(raidService.findByHandle(String.join("/", PREFIX, SUFFIX))).thenReturn(Optional.of(raid));
+            when(raidHistoryService.findByHandleAndVersion(String.join("/", PREFIX, SUFFIX), version))
                     .thenThrow(ResourceNotFoundException.class);
 
-            mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
+            mockMvc.perform(get(String.format("/raid/%s/%s", PREFIX, SUFFIX))
                             .queryParam("version", String.valueOf(version))
                             .characterEncoding("utf-8")
                             .accept(MediaType.APPLICATION_JSON))
                     .andDo(print())
                     .andExpect(status().isNotFound())
                     .andReturn();
+            verifyFindServicePointId.get();
         }
     }
 
     @Test
-    void readRaidV1_ReturnsNotFound() throws Exception {
-        final var prefix = "10.38";
-        final var suffix = "99999";
-        final var handle = String.join("/", prefix, suffix);
+    void readRaid_ReturnsNotFound() throws Exception {
+        final var handle = String.join("/", PREFIX, SUFFIX);
 
-        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-            final ApiToken apiToken = mock(ApiToken.class);
-            authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
+        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
+
+            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
+            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
+
+            final var securityContext = mock(SecurityContext.class);
+            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
+
+            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
 
             doThrow(new ResourceNotFoundException(handle)).when(raidService).findByHandle(handle);
 
-            final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
+            final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", PREFIX, SUFFIX))
                             .characterEncoding("utf-8")
                             .accept(MediaType.APPLICATION_JSON))
                     .andDo(print())
@@ -592,33 +598,34 @@ class RaidControllerTest {
             assertThat(failureResponse.getType(), Matchers.is("https://raid.org.au/errors#ResourceNotFoundException"));
             assertThat(failureResponse.getTitle(), Matchers.is("The resource was not found."));
             assertThat(failureResponse.getStatus(), Matchers.is(404));
-            assertThat(failureResponse.getDetail(), Matchers.is("No RAiD was found with handle 10.38/99999."));
+            assertThat(failureResponse.getDetail(), Matchers.is("No RAiD was found with handle %s/%s.".formatted(PREFIX, SUFFIX)));
             assertThat(failureResponse.getInstance(), Matchers.is("https://raid.org.au"));
+
+            verifyFindServicePointId.get();
         }
     }
 
     @Test
     @DisplayName("Requesting a closed raid with a different service point returns forbidden response")
     void forbiddenWithClosedRaidAndDifferentServicePoint() throws Exception {
-        final var prefix = "10378.1";
-        final var suffix = "1696639";
         final var raid = embargoedRaid();
+        final var servicePointId = 20_000_001L;
 
-        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-            final var apiToken = ApiToken.ApiTokenBuilder.anApiToken()
-                    .withAppUserId(1L)
-                    .withServicePointId(999L)
-                    .withClientId("_clientId")
-                    .withSubject("_subject")
-                    .withEmail("_email")
-                    .withRole("_role")
-                    .build();
+        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId(servicePointId);
 
-            authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
+            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
+            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
 
-            when(raidService.findByHandle(String.join("/", prefix, suffix))).thenReturn(Optional.of(raid));
+            final var securityContext = mock(SecurityContext.class);
+            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
 
-            mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
+            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+
+            when(raidService.findByHandle(String.join("/", PREFIX, SUFFIX))).thenReturn(Optional.of(raid));
+
+            mockMvc.perform(get(String.format("/raid/%s/%s", PREFIX, SUFFIX))
                             .characterEncoding("utf-8"))
                     .andDo(print())
                     .andExpect(status().isForbidden())
@@ -628,32 +635,33 @@ class RaidControllerTest {
                     .andExpect(jsonPath("$.access.statement.language.id", Matchers.is("eng")))
                     .andExpect(jsonPath("$.access.statement.language.schemaUri", Matchers.is("https://www.iso.org/standard/39534.html")))
                     .andReturn();
+
+            verifyFindServicePointId.get();
         }
     }
 
     @Test
     @DisplayName("Requesting an embargoed raid with a different service point returns forbidden response")
     void forbiddenWithEmbargoedRaidAndDifferentServicePoint() throws Exception {
-        final var prefix = "10378.1";
-        final var suffix = "1696639";
-        final Long servicePointId = 20000001L;
         final var raid = embargoedRaid();
+        final var servicePoint = 20_000_001L;
 
-        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-            final var apiToken = ApiToken.ApiTokenBuilder.anApiToken()
-                    .withAppUserId(1L)
-                    .withServicePointId(999L)
-                    .withClientId("_clientId")
-                    .withSubject("_subject")
-                    .withEmail("_email")
-                    .withRole("_role")
-                    .build();
+        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId(servicePoint);
 
-            when(raidService.findByHandle(String.join("/", prefix, suffix))).thenReturn(Optional.of(raid));
+            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
+            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
 
-            mockMvc.perform(get(String.format("/raid/%s/%s", prefix, suffix))
+            final var securityContext = mock(SecurityContext.class);
+            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
+
+            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+
+            when(raidService.findByHandle(String.join("/", PREFIX, SUFFIX))).thenReturn(Optional.of(raid));
+
+            mockMvc.perform(get(String.format("/raid/%s/%s", PREFIX, SUFFIX))
                             .characterEncoding("utf-8"))
                     .andDo(print())
                     .andExpect(status().isForbidden())
@@ -664,12 +672,13 @@ class RaidControllerTest {
                     .andExpect(jsonPath("$.access.statement.language.id", Matchers.is("eng")))
                     .andExpect(jsonPath("$.access.statement.language.schemaUri", Matchers.is("https://www.iso.org/standard/39534.html")))
                     .andReturn();
+
+            verifyFindServicePointId.get();
         }
     }
 
     @Test
-    void listRaidsV1_ReturnsOk() throws Exception {
-        final Long servicePointId = 20000001L;
+    void listRaids_ReturnsOk() throws Exception {
         final var title = "C. Japonicum Genome";
         final var startDate = LocalDate.now();
         final var handle = new IdentifierHandle("10378.1", "1696639");
@@ -678,14 +687,23 @@ class RaidControllerTest {
 
         final var output = createRaidForGet(title, startDate);
 
-        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-            final ApiToken apiToken = mock(ApiToken.class);
-            authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
+        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
 
-            when(raidIngestService.findAllByServicePointId(servicePointId)).thenReturn(Collections.singletonList(output));
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId();
+
+            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
+            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
+
+            final var securityContext = mock(SecurityContext.class);
+            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
+
+            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            
+            when(raidIngestService.findAllByServicePointId(SERVICE_POINT_ID)).thenReturn(Collections.singletonList(output));
 
             mockMvc.perform(get("/raid/", handle)
-                            .queryParam("servicePointId", servicePointId.toString())
+                            .queryParam("servicePointId", SERVICE_POINT_ID.toString())
                             .characterEncoding("utf-8"))
                     .andDo(print())
                     .andExpect(status().isOk())
@@ -695,7 +713,7 @@ class RaidControllerTest {
                     .andExpect(jsonPath("$[0].identifier.registrationAgency.schemaUri", Matchers.is(SchemaValues.ROR_SCHEMA_URI.getUri())))
                     .andExpect(jsonPath("$[0].identifier.owner.id", Matchers.is(IDENTIFIER_OWNER_ID)))
                     .andExpect(jsonPath("$[0].identifier.owner.schemaUri", Matchers.is(SchemaValues.ROR_SCHEMA_URI.getUri())))
-                    .andExpect(jsonPath("$[0].identifier.owner.servicePoint", Matchers.is(20000001)))
+                    .andExpect(jsonPath("$[0].identifier.owner.servicePoint", Matchers.is(SERVICE_POINT_ID.intValue())))
                     .andExpect(jsonPath("$[0].title[0].text", Matchers.is(title)))
                     .andExpect(jsonPath("$[0].title[0].type.id", Matchers.is(SchemaValues.PRIMARY_TITLE_TYPE.getUri())))
                     .andExpect(jsonPath("$[0].title[0].type.schemaUri", Matchers.is(SchemaValues.TITLE_TYPE_SCHEMA.getUri())))
@@ -723,15 +741,14 @@ class RaidControllerTest {
                     .andExpect(jsonPath("$[0].organisation[0].role[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
                     .andExpect(jsonPath("$[0].organisation[0].id", Matchers.is("https://ror.org/04qw24q55")))
                     .andExpect(jsonPath("$[0].organisation[0].schemaUri", Matchers.is(SchemaValues.ROR_SCHEMA_URI.getUri())));
+            verifyFindServicePointId.get();
         }
     }
 
     @Test
     @DisplayName("Raid history endpoint returns list of changes")
     void raidHistory() throws Exception {
-        final var prefix = "_prefix";
-        final var suffix = "_suffix";
-        final var handle = prefix + "/" + suffix;
+        final var handle = PREFIX + "/" + SUFFIX;
         final var version = 1;
         final var diff = "_diff";
         final var timestamp = LocalDateTime.now().atOffset(ZoneOffset.UTC);
@@ -749,7 +766,7 @@ class RaidControllerTest {
 
         when(raidHistoryService.findAllChangesByHandle(handle)).thenReturn(List.of(raidChange));
 
-        mockMvc.perform(get(String.format("/raid/%s/%s/history", prefix, suffix), handle)
+        mockMvc.perform(get(String.format("/raid/%s/%s/history", PREFIX, SUFFIX), handle)
                         .characterEncoding("utf-8"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -764,23 +781,29 @@ class RaidControllerTest {
     void raidHistoryEmbargoed() throws Exception {
         final var prefix = "_prefix";
         final var suffix = "_suffix";
-        final var handle = prefix + "/" + suffix;
         final var raid = embargoedRaid();
-        final Long servicePointId = 20000001L;
+        final var handle = PREFIX + "/" + SUFFIX;
+        final var servicePointId = 20_000_001L;
 
         when(raidService.findByHandle(handle)).thenReturn(Optional.of(raid));
 
-        try (MockedStatic<AuthzUtil> authzUtil = Mockito.mockStatic(AuthzUtil.class)) {
-            final ApiToken apiToken = mock(ApiToken.class);
-            authzUtil.when(AuthzUtil::getApiToken).thenReturn(apiToken);
+        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+            final var jwt = getJwt();
+            final var verifyFindServicePointId = mockFindServicePointId(servicePointId);
 
-            authzUtil.when(() -> AuthzUtil.guardOperatorOrAssociated(apiToken, servicePointId))
-                    .thenThrow(new CrossAccountAccessException(servicePointId));
+            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
+            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
 
-            mockMvc.perform(get(String.format("/raid/%s/%s/history", prefix, suffix), handle)
+            final var securityContext = mock(SecurityContext.class);
+            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
+
+            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+
+            mockMvc.perform(get(String.format("/raid/%s/%s/history", PREFIX, SUFFIX), handle)
                             .characterEncoding("utf-8"))
                     .andDo(print())
                     .andExpect(status().isForbidden());
+            verifyFindServicePointId.get();
         }
     }
 
@@ -828,5 +851,28 @@ class RaidControllerTest {
     private RaidCreateRequest createRaidForPost() throws IOException {
         final String json = resourceContent("/fixtures/create-raid.json");
         return objectMapper.readValue(json, RaidCreateRequest.class);
+    }
+
+    private Jwt getJwt() {
+        return Jwt.withTokenValue("token")
+                .header("alg", "none")
+                .claim(JwtClaimNames.SUB, "user")
+                .claim("scope", "read")
+                .claim("service_point_group_id", SERVICE_POINT_GROUP_ID)
+                .build();
+    }
+
+    private Supplier<Void> mockFindServicePointId() {
+        return mockFindServicePointId(SERVICE_POINT_ID);
+    }
+
+    private Supplier<Void> mockFindServicePointId(final long servicePointId) {
+        when(servicePointService.findByGroupId(SERVICE_POINT_GROUP_ID))
+                .thenReturn(Optional.of(new ServicePoint().id(servicePointId)));
+
+        return () -> {
+            verify(servicePointService).findByGroupId(SERVICE_POINT_GROUP_ID);
+            return null;
+        };
     }
 }

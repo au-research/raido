@@ -1,6 +1,14 @@
+FROM registry.access.redhat.com/ubi9 AS ubi-micro-build
+RUN mkdir -p /mnt/rootfs
+RUN dnf install --installroot /mnt/rootfs curl --releasever 9 --setopt install_weak_deps=false --nodocs -y && \
+    dnf --installroot /mnt/rootfs clean all && \
+    rpm --root /mnt/rootfs -e --nodeps setup
+
 FROM quay.io/keycloak/keycloak:latest as builder
+COPY --from=ubi-micro-build /mnt/rootfs /
 
 WORKDIR /opt/keycloak
+
 
 COPY certs/test-raid-org-au.pem .
 COPY certs/demo-raid-org-au.pem .
@@ -13,9 +21,10 @@ RUN keytool -import -storepass password -noprompt -trustcacerts -alias prod.raid
 
 RUN /opt/keycloak/bin/kc.sh build
 
-FROM quay.io/keycloak/keycloak:latest
+FROM quay.io/keycloak/keycloak:24.0.1
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 
+COPY build/libs/raid-iam.jar /opt/keycloak/providers/
 
 WORKDIR /opt/keycloak
 

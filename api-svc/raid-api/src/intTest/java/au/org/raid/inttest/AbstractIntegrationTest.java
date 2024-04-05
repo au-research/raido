@@ -5,6 +5,7 @@ import au.org.raid.idl.raidv2.model.*;
 import au.org.raid.inttest.config.IntegrationTestConfig;
 import au.org.raid.inttest.service.RaidUpdateRequestFactory;
 import au.org.raid.inttest.service.TestClient;
+import au.org.raid.inttest.service.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Contract;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,18 +25,32 @@ import static au.org.raid.inttest.service.TestConstants.*;
 @SpringBootTest(classes = IntegrationTestConfig.class)
 public class AbstractIntegrationTest {
     protected static final Long UQ_SERVICE_POINT_ID = 20000002L;
-//    protected final IdFactory idFactory = new IdFactory();
     protected LocalDate today = LocalDate.now();
     protected RaidCreateRequest createRequest;
 
     protected RaidApi raidApi;
-//    protected IdentifierParser identifierParser;
 
-    @Value("${raid.test.api.raid-au-user-token}")
-    private String raidAuUserToken;
+    @Value("${raid.test.auth.admin.user}")
+    protected String adminUser;
 
-    @Value("${raid.test.api.uq-admin-token}")
-    protected String uqAdminToken;
+    @Value("${raid.test.auth.admin.password}")
+    protected String adminPassword;
+
+    @Value("${raid.test.auth.raid-au.user}")
+    protected String raidAuUser;
+
+    @Value("${raid.test.auth.raid-au.password}")
+    protected String raidAuPassword;
+
+    @Value("${raid.test.auth.uq.user}")
+    private String uqUser;
+
+    @Value("${raid.test.auth.uq.password}")
+    private String uqPassword;
+    protected String raidAuToken;
+
+    protected String adminToken;
+    protected String uqToken;
 
     @Autowired
     protected TestClient testClient;
@@ -45,12 +60,18 @@ public class AbstractIntegrationTest {
     protected Contract feignContract;
     @Autowired
     protected RaidUpdateRequestFactory raidUpdateRequestFactory;
+
+    @Autowired
+    private TokenService tokenService;
     private TestInfo testInfo;
 
     @BeforeEach
     public void setupTestToken() {
+        adminToken = tokenService.getToken(adminUser, adminPassword);
+        raidAuToken = tokenService.getToken(raidAuUser, raidAuPassword);
+        uqToken = tokenService.getToken(uqUser, uqPassword);
         createRequest = newCreateRequest();
-        raidApi = testClient.raidApi(raidAuUserToken);
+        raidApi = testClient.raidApi(raidAuToken);
     }
 
     @BeforeEach

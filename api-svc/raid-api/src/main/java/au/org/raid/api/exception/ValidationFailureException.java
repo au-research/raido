@@ -1,6 +1,7 @@
 package au.org.raid.api.exception;
 
 import au.org.raid.idl.raidv2.model.ValidationFailure;
+import lombok.Getter;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -20,8 +21,9 @@ import static java.util.List.copyOf;
  * - alter exception resolver to transform runtime ex to the structure
  *
  */
+@Getter
 public class ValidationFailureException extends Exception {
-    private List<ValidationFailure> failures;
+    private final List<ValidationFailure> failures;
 
     public ValidationFailureException(Collection<ValidationFailure> failures) {
         this.failures = copyOf(failures);
@@ -31,7 +33,4 @@ public class ValidationFailureException extends Exception {
         this.failures = copyOf(Arrays.stream(failures).toList());
     }
 
-    public List<ValidationFailure> getFailures() {
-        return failures;
-    }
 }

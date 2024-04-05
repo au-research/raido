@@ -17,43 +17,6 @@ a real deployment environment.
 # so you can see errors more easily in network responses
 redactErrorDetails=false
 
-# connection details for your local DB
-DatasourceConfig.url=jdbc:postgresql://localhost:7432/raido
-DatasourceConfig.username=api_user
-DatasourceConfig.password=<same value as you put in apiSvcRolePassword>
-
-# For legacy V1 endpoints
-# just set it to any value
-# Secret can be found in BitWarden under /legacy-raid-v1/Raid legacy JWT secret
-RaidV1Auth.jwtSecret=<JWT secret>
-
-# used for signing and verifying authz tokens
-# set it to any sufficiently long string
-# comma separated, but you only need one - just don't use a comma in a secret 
-RaidV2Auth.jwtSecrets=<authz secrets>
-
-# the secret for your AAF OIDC client
-# If you want to use your own client: https://support.aaf.edu.au/support/solutions/articles/19000099312-how-to-connect-your-services-to-the-aaf-
-# Secret can be found in BitWarden under /oauth-services/AAF DEMO OAuth client
-AafOidc.clientSecret=<AAF client secret>
-
-# the secret for your Google OIDC client
-# If you want to use your own client: https://developers.google.com/identity/openid-connect/openid-connect
-# Secret can be found in the google credentials console 
-# Google account details are in BitWarden under: 
-# /Shared RAiD & Services Credentials/RAID Services Google Account
-GoogleOidc.clientSecret=<Google client secret>
-
-# The secret for the APIDS service (for minting handles).
-# If you want to use your own account: https://ardc.edu.au/services/ardc-identifier-services/ardc-handle-service
-# Secret can be found in BitWarden under:
-# `/ardc-services/APIDS demo API secret`
-Apids.secret=<APIDS API secret>
-
-
-# code is currently defaulted to https to make int tests work
-# because it forces RestTemplate to not follow redirects
-EnvironmentConfig.raidoLandingPage=http://localhost:7080/handle
 
 ```
 
