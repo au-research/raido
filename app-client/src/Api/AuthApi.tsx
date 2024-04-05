@@ -1,19 +1,14 @@
-import React, { useContext } from "react";
-import {
-  AdminExperimentalApi,
-  Configuration,
-  RaidApi, ServicePointApi, TeamApi,
-} from "Generated/Raidv2";
-import { Config } from "Config";
-import { useAuth } from "Auth/AuthProvider";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { useOpenErrorDialog } from "Error/ErrorDialog";
+import React, {useContext} from "react";
+import {AdminExperimentalApi, Configuration, RaidApi, ServicePointApi,} from "Generated/Raidv2";
+import {Config} from "Config";
+import {useAuth} from "Auth/AuthProvider";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import {ReactQueryDevtools} from '@tanstack/react-query-devtools';
+import {useOpenErrorDialog} from "Error/ErrorDialog";
 
 export interface AuthApiState {
   raid: RaidApi,
   servicePoint: ServicePointApi,
-  team: TeamApi,
   admin: AdminExperimentalApi,
 }
 
@@ -67,7 +62,6 @@ export function AuthApiProvider({children}: {
   return <AuthApiContext.Provider value={{
     raid: new RaidApi(config),
     servicePoint: new ServicePointApi(config),
-    team: new TeamApi(config),
     admin: new AdminExperimentalApi(config),
   }}>
     <QueryClientProvider client={queryClient}>
