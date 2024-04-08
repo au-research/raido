@@ -1,0 +1,23 @@
+#!/usr/bin/env java --source 17
+
+import javax.crypto.KeyGenerator;
+import java.util.Base64;
+
+
+public class Main {
+
+    public static void main(String[] args) {
+        try {
+            KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+            keyGen.init(256);
+
+            System.out.println();
+            System.out.println();
+            System.out.println(Base64.getEncoder().encodeToString(keyGen.generateKey().getEncoded()));
+            System.out.println();
+            System.out.println();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+}
