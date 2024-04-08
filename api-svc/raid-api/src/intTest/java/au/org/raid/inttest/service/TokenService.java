@@ -2,6 +2,7 @@ package au.org.raid.inttest.service;
 
 import au.org.raid.inttest.dto.TokenResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -11,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Objects;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class TokenService {
@@ -35,6 +37,7 @@ public class TokenService {
         final var httpEntity = new HttpEntity<>(body, headers);
 
         final var tokenResponse = restTemplate.postForEntity(tokenUri, httpEntity, TokenResponse.class);
+        log.info("Token request returned {} for user {}", tokenResponse.getStatusCode(), username);
 
         return Objects.requireNonNull(tokenResponse.getBody()).getAccessToken();
     }
