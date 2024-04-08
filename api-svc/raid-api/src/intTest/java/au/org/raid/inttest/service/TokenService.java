@@ -34,6 +34,8 @@ public class TokenService {
 
         final var body = "client_id=%s&username=%s&password=%s&grant_type=%s".formatted(clientId, username, password, grantType);
 
+        log.info("Requesting token with body {}", body);
+
         final var httpEntity = new HttpEntity<>(body, headers);
 
         final var tokenResponse = restTemplate.postForEntity(tokenUri, httpEntity, TokenResponse.class);
