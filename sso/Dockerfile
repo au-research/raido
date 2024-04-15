@@ -6,6 +6,7 @@ RUN microdnf upgrade -y && microdnf update -y && microdnf install -y curl mod_ss
 
 RUN mkdir /var/www/html/secure
 
+COPY files/etc/shibboleth/shibboleth2.xml /etc/shibboleth/shibboleth2.xml
 COPY files/var/www/html/secure/environment.php /var/www/html/secure/environment.php
 COPY files/etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf
 COPY files/etc/pki/tls/certs/localhost.crt /etc/pki/tls/certs/localhost.crt
