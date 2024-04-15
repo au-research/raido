@@ -44,7 +44,7 @@
             <Handler type="MetadataGenerator" Location="/Metadata" signing="false"/>
 
             <!-- Status reporting service. -->
-            <Handler type="Status" Location="/Status" acl="127.0.0.1 172.17.0.0/16 ::1"/>
+            <Handler type="Status" Location="/Status" acl="127.0.0.1 10.10.0.0/16 ::1"/>
 
             <!-- Session diagnostic service. -->
             <Handler type="Session" Location="/Session" showAttributeValues="false"/>
