@@ -1,0 +1,9 @@
+[shibboleth]
+name=Shibboleth (CentOS_8)
+# Please report any problems to https://shibboleth.atlassian.net/jira
+type=rpm-md
+mirrorlist=https://shibboleth.net/cgi-bin/mirrorlist.cgi/CentOS_8
+gpgcheck=1
+gpgkey=https://shibboleth.net/downloads/service-provider/RPMS/repomd.xml.key
+        https://shibboleth.net/downloads/service-provider/RPMS/cantor.repomd.xml.key
+enabled=1
