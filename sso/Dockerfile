@@ -6,11 +6,11 @@ RUN microdnf upgrade -y && microdnf update -y && microdnf install -y curl mod_ss
 
 RUN mkdir /var/www/html/secure
 
+RUN openssl req -newkey rsa:2048 -batch -new -nodes -x509 -days 3650 -keyout /etc/pki/tls/private/localhost.key -out /etc/pki/tls/certs/localhost.crt
+
 COPY files/etc/shibboleth/shibboleth2.xml /etc/shibboleth/shibboleth2.xml
 COPY files/var/www/html/secure/environment.php /var/www/html/secure/environment.php
 COPY files/etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf
-COPY files/etc/pki/tls/certs/localhost.crt /etc/pki/tls/certs/localhost.crt
-COPY files/etc/pki/tls/private/localhost.key etc/pki/tls/private/localhost.key
 
 WORKDIR /etc/shibboleth
 
