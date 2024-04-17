@@ -9,7 +9,7 @@
     -->
 
     <!-- The ApplicationDefaults element is where most of Shibboleth's SAML bits are defined. -->
-    <ApplicationDefaults entityID="https://test.raid.org.au/shibboleth"
+    <ApplicationDefaults entityID="https://test.raid.org.au/sp/Idid shibboleth"
                          REMOTE_USER="eppn subject-id pairwise-id persistent-id"
                          cipherSuites="DEFAULT:!EXP:!LOW:!aNULL:!eNULL:!DES:!IDEA:!SEED:!RC4:!3DES:!kRSA:!SSLv2:!SSLv3:!TLSv1:!TLSv1.1">
 
@@ -44,7 +44,7 @@
             <Handler type="MetadataGenerator" Location="/Metadata" signing="false"/>
 
             <!-- Status reporting service. -->
-            <Handler type="Status" Location="/Status" acl="127.0.0.1 172.17.0.1 10.10.0.0/16 ::1"/>
+            <Handler type="Status" Location="/Status" acl="127.0.0.1 172.17.0.1 10.10.0.0/16 10.20.0.0/16 10.30.0.0/16 ::1"/>
 
             <!-- Session diagnostic service. -->
             <Handler type="Session" Location="/Session" showAttributeValues="false"/>
