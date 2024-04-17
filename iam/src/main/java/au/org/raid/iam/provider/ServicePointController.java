@@ -31,6 +31,44 @@ public class ServicePointController {
         this.auth = new AppAuthManager.BearerTokenAuthenticator(session).authenticate();
     }
 
+    private static ObjectMapper objectMapper = new ObjectMapper();
+
+    // Updated method to include an optional response body
+    private static Response createCorsResponse(Object responseBody) throws JsonProcessingException {
+        Response.ResponseBuilder responseBuilder = Response.ok();
+
+        if (responseBody != null) {
+            // Convert the responseBody to JSON string
+            responseBuilder.entity(objectMapper.writeValueAsString(responseBody));
+        }
+
+        return responseBuilder
+                .header("Access-Control-Allow-Origin", "https://app.demo.raid.org.au/")
+                .header("Access-Control-Allow-Credentials", "true")
+                .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                .build();
+    }
+
+    @OPTIONS
+    @Path("")
+    public Response getOptions() throws JsonProcessingException {
+        return createCorsResponse(null);
+    }
+
+    @OPTIONS
+    @Path("/grant")
+    public Response putGrantOptions() throws JsonProcessingException {
+        return createCorsResponse(null);
+    }
+
+    @OPTIONS
+    @Path("/revoke")
+    public Response putRevokeOptions() throws JsonProcessingException {
+        return createCorsResponse(null);
+    }
+
+
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
@@ -69,7 +107,7 @@ public class ServicePointController {
 
         responseBody.put("members", members);
 
-        return Response.ok().entity(objectMapper.writeValueAsString(responseBody)).build();
+        return createCorsResponse(objectMapper.writeValueAsString(responseBody));
     }
 
     @PUT
@@ -104,7 +142,7 @@ public class ServicePointController {
 
         groupUser.grantRole(servicePointUserRole);
 
-        return Response.ok().entity("{}").build();
+        return createCorsResponse(objectMapper.writeValueAsString("{}"));
     }
 
     @PUT
@@ -138,7 +176,7 @@ public class ServicePointController {
 
         groupUser.deleteRoleMapping(servicePointUserRole);
 
-        return Response.ok().entity("{}").build();
+        return createCorsResponse(objectMapper.writeValueAsString("{}"));
     }
 
     private boolean isGroupAdmin(final UserModel user) {
