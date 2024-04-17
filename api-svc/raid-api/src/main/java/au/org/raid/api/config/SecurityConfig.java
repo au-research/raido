@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private static final String USER_ROLE = "service-point-user";
+    private static final String SERVICE_POINT_USER_ROLE = "service-point-user";
     private static final String OPERATOR_ROLE = "operator";
     private static final String GROUPS = "groups";
     private static final String REALM_ACCESS_CLAIM = "realm_access";
@@ -56,13 +56,14 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui*/**").permitAll()
                         .requestMatchers("/docs/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
-
                         .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**"))
-                        .hasRole(USER_ROLE)
-
-                        .requestMatchers(new AntPathRequestMatcher(SERVICE_POINT_API + "/**"))
+                        .hasRole(SERVICE_POINT_USER_ROLE)
+                        .requestMatchers(new AntPathRequestMatcher(SERVICE_POINT_API + "/**", "PUT"))
                         .hasRole(OPERATOR_ROLE)
-
+                        .requestMatchers(new AntPathRequestMatcher(SERVICE_POINT_API + "/**", "POST"))
+                        .hasRole(OPERATOR_ROLE)
+                        .requestMatchers(new AntPathRequestMatcher(SERVICE_POINT_API + "/**", "GET"))
+                        .hasRole(SERVICE_POINT_USER_ROLE)
                         .anyRequest().denyAll()
         );
         http.oauth2ResourceServer((oauth2) -> oauth2
