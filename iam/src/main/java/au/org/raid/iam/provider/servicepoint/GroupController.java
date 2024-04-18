@@ -1,6 +1,7 @@
-package au.org.raid.iam.provider;
+package au.org.raid.iam.provider.servicepoint;
 
-import au.org.raid.iam.provider.dto.Grant;
+import au.org.raid.iam.provider.servicepoint.dto.Grant;
+import au.org.raid.iam.provider.servicepoint.dto.GroupJoinRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.*;
@@ -8,76 +9,51 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RoleModel;
 import org.keycloak.models.UserModel;
+import org.keycloak.services.cors.Cors;
 import org.keycloak.services.managers.AppAuthManager;
 import org.keycloak.services.managers.AuthenticationManager;
 
 import javax.management.relation.RoleNotFoundException;
 import java.util.HashMap;
-
+@Slf4j
 @Provider
-public class ServicePointController {
+public class GroupController {
     private static final String GROUP_ADMIN_ROLE_NAME = "group-admin";
     private static final String SERVICE_POINT_USER_ROLE = "service-point-user";
     private final AuthenticationManager.AuthResult auth;
 
     private final KeycloakSession session;
-    public ServicePointController(final KeycloakSession session) {
+    public GroupController(final KeycloakSession session) {
         this.session = session;
         this.auth = new AppAuthManager.BearerTokenAuthenticator(session).authenticate();
     }
 
-    private static ObjectMapper objectMapper = new ObjectMapper();
-
-    // Updated method to include an optional response body
-    private static Response createCorsResponse(Object responseBody) throws JsonProcessingException {
-        Response.ResponseBuilder responseBuilder = Response.ok();
-
-        if (responseBody != null) {
-            // Convert the responseBody to JSON string
-            responseBuilder.entity(objectMapper.writeValueAsString(responseBody));
-        }
-
-        return responseBuilder
-                // TODO: Create method to dynamically update Access-Control-Allow-Origin, based on current environment
-                .header("Access-Control-Allow-Origin", "http://localhost:7080")
-                .header("Access-Control-Allow-Credentials", "true")
-                .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization, contenttype")
-                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                .header("Content-Type", "application/json")
-                .build();
+    private Cors addCorsHeaders(final String... allowedMethods) {
+        final var cors = session.getProvider(Cors.class);
+        cors.exposedHeaders("Access-Control-Allow-Origin");
+        cors.allowedMethods(allowedMethods);
+        return cors;
     }
 
     @OPTIONS
     @Path("")
-    public Response getOptions() throws JsonProcessingException {
-        return createCorsResponse(null);
+    public Response preflight() {
+        return Response.fromResponse(addCorsHeaders("GET")
+                        .preflight()
+                        .builder(Response.ok())
+                        .build())
+                .build();
     }
 
-    @OPTIONS
-    @Path("/join")
-    public Response putJoinOptions() throws JsonProcessingException {
-        return createCorsResponse(null);
-    }
-
-    @OPTIONS
-    @Path("/grant")
-    public Response putGrantOptions() throws JsonProcessingException {
-        return createCorsResponse(null);
-    }
-
-    @OPTIONS
-    @Path("/revoke")
-    public Response putRevokeOptions() throws JsonProcessingException {
-        return createCorsResponse(null);
-    }
-    
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
     public Response get() throws JsonProcessingException {
+        log.debug("Getting members of group");
 
         final var objectMapper = new ObjectMapper();
 
@@ -112,7 +88,24 @@ public class ServicePointController {
 
         responseBody.put("members", members);
 
-        return createCorsResponse(responseBody);
+        return Response.fromResponse(addCorsHeaders("GET")
+                        .preflight()
+                        .builder(
+                                Response.ok()
+                                        .entity(objectMapper.writeValueAsString(responseBody))
+                        )
+                        .build())
+                .build();
+    }
+
+    @OPTIONS
+    @Path("/grant")
+    public Response grantPreflight() {
+        return Response.fromResponse(addCorsHeaders("PUT")
+                        .preflight()
+                        .builder(Response.ok())
+                        .build())
+                .build();
     }
 
     @PUT
@@ -147,8 +140,23 @@ public class ServicePointController {
 
         groupUser.grantRole(servicePointUserRole);
 
-        return createCorsResponse("{}");
+        return Response.fromResponse(
+                        addCorsHeaders("PUT")
+                                .builder(Response.ok())
+                                .build()
+                )
+                .entity("{}}")
+                .build();
     }
+
+    @OPTIONS
+    @Path("/revoke")
+    public Response revokePreflight() {
+        return Response.fromResponse(addCorsHeaders("PUT")
+                        .preflight()
+                        .builder(Response.ok())
+                        .build())
+                .build();    }
 
     @PUT
     @Path("/revoke")
@@ -181,7 +189,13 @@ public class ServicePointController {
 
         groupUser.deleteRoleMapping(servicePointUserRole);
 
-        return createCorsResponse("{}");
+        return Response.fromResponse(
+                addCorsHeaders("PUT")
+                        .builder(Response.ok())
+                        .build()
+                )
+                .entity("{}}")
+                .build();
     }
 
     private boolean isGroupAdmin(final UserModel user) {
@@ -203,7 +217,13 @@ public class ServicePointController {
     public Response join(GroupJoinRequest request) {
         final var user = auth.getSession().getUser();
         user.joinGroup(session.groups().getGroupById(session.getContext().getRealm(), request.getGroupId()));
-        return createCorsResponse("{}");
+        return Response.fromResponse(
+                addCorsHeaders("PUT")
+                        .builder(Response.ok())
+                        .build()
+                )
+                .entity("{}}")
+                .build();
     }
 
 }

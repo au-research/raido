@@ -1,21 +1,21 @@
-package au.org.raid.iam.provider;
+package au.org.raid.iam.provider.servicepoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.ext.Provider;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.services.resource.RealmResourceProvider;
 @Provider
-public class ServicePointResourceProvider implements RealmResourceProvider {
+public class GroupControllerResourceProvider implements RealmResourceProvider {
     private KeycloakSession session;
     private ObjectMapper objectMapper;
 
-    public ServicePointResourceProvider(final KeycloakSession session) {
+    public GroupControllerResourceProvider(final KeycloakSession session) {
         this.session = session;
     }
 
     @Override
     public Object getResource() {
-        return new ServicePointController(session);
+        return new GroupController(session);
     }
 
     @Override
