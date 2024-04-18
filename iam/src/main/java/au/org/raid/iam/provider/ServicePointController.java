@@ -21,8 +21,6 @@ import java.util.HashMap;
 public class ServicePointController {
     private static final String GROUP_ADMIN_ROLE_NAME = "group-admin";
     private static final String SERVICE_POINT_USER_ROLE = "service-point-user";
-    private static final String SERVICE_POINT_ID_ATTRIBUTE_NAME = "servicePointId";
-    public static final String SERVICE_POINT_ADMIN_ATTRIBUTE_NAME = "servicePointAdmin";
     private final AuthenticationManager.AuthResult auth;
 
     private final KeycloakSession session;
@@ -43,16 +41,24 @@ public class ServicePointController {
         }
 
         return responseBuilder
-                .header("Access-Control-Allow-Origin", "https://app.demo.raid.org.au/")
+                // TODO: Create method to dynamically update Access-Control-Allow-Origin, based on current environment
+                .header("Access-Control-Allow-Origin", "http://localhost:7080")
                 .header("Access-Control-Allow-Credentials", "true")
-                .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+                .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization, contenttype")
                 .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+                .header("Content-Type", "application/json")
                 .build();
     }
 
     @OPTIONS
     @Path("")
     public Response getOptions() throws JsonProcessingException {
+        return createCorsResponse(null);
+    }
+
+    @OPTIONS
+    @Path("/join")
+    public Response putJoinOptions() throws JsonProcessingException {
         return createCorsResponse(null);
     }
 
@@ -67,8 +73,7 @@ public class ServicePointController {
     public Response putRevokeOptions() throws JsonProcessingException {
         return createCorsResponse(null);
     }
-
-
+    
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
@@ -107,7 +112,7 @@ public class ServicePointController {
 
         responseBody.put("members", members);
 
-        return createCorsResponse(objectMapper.writeValueAsString(responseBody));
+        return createCorsResponse(responseBody);
     }
 
     @PUT
@@ -142,7 +147,7 @@ public class ServicePointController {
 
         groupUser.grantRole(servicePointUserRole);
 
-        return createCorsResponse(objectMapper.writeValueAsString("{}"));
+        return createCorsResponse("{}");
     }
 
     @PUT
@@ -176,7 +181,7 @@ public class ServicePointController {
 
         groupUser.deleteRoleMapping(servicePointUserRole);
 
-        return createCorsResponse(objectMapper.writeValueAsString("{}"));
+        return createCorsResponse("{}");
     }
 
     private boolean isGroupAdmin(final UserModel user) {
@@ -189,6 +194,16 @@ public class ServicePointController {
         return !user.getGroupsStream()
                 .filter(g -> g.getId().equals(groupId))
                 .toList().isEmpty();
+    }
+
+    @PUT
+    @Path("/join")
+    @SneakyThrows
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response join(GroupJoinRequest request) {
+        final var user = auth.getSession().getUser();
+        user.joinGroup(session.groups().getGroupById(session.getContext().getRealm(), request.getGroupId()));
+        return createCorsResponse("{}");
     }
 
 }
