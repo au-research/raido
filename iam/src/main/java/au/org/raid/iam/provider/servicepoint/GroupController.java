@@ -146,7 +146,7 @@ public class GroupController {
                                 .builder(Response.ok())
                                 .build()
                 )
-                .entity("{}}")
+                .entity("{}")
                 .build();
     }
 
@@ -197,7 +197,7 @@ public class GroupController {
                         .builder(Response.ok())
                         .build()
                 )
-                .entity("{}}")
+                .entity("{}")
                 .build();
     }
 
@@ -223,7 +223,7 @@ public class GroupController {
                         .builder(Response.ok())
                         .build()
                 )
-                .entity("{}}")
+                .entity("{}")
                 .build();
     }
 
