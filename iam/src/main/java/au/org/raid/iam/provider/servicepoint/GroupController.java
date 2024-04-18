@@ -157,7 +157,8 @@ public class GroupController {
                         .preflight()
                         .builder(Response.ok())
                         .build())
-                .build();    }
+                .build();
+    }
 
     @PUT
     @Path("/revoke")
@@ -200,18 +201,15 @@ public class GroupController {
                 .build();
     }
 
-    private boolean isGroupAdmin(final UserModel user) {
-        return !user.getRoleMappingsStream()
-                .filter(r -> r.getName().equals(GROUP_ADMIN_ROLE_NAME))
-                .toList().isEmpty();
+    @OPTIONS
+    @Path("/join")
+    public Response joinPreflight() {
+        return Response.fromResponse(addCorsHeaders("PUT")
+                        .preflight()
+                        .builder(Response.ok())
+                        .build())
+                .build();
     }
-
-    private boolean isGroupMember(final UserModel user, final String groupId) {
-        return !user.getGroupsStream()
-                .filter(g -> g.getId().equals(groupId))
-                .toList().isEmpty();
-    }
-
     @PUT
     @Path("/join")
     @SneakyThrows
@@ -227,5 +225,17 @@ public class GroupController {
                 )
                 .entity("{}}")
                 .build();
+    }
+
+    private boolean isGroupAdmin(final UserModel user) {
+        return !user.getRoleMappingsStream()
+                .filter(r -> r.getName().equals(GROUP_ADMIN_ROLE_NAME))
+                .toList().isEmpty();
+    }
+
+    private boolean isGroupMember(final UserModel user, final String groupId) {
+        return !user.getGroupsStream()
+                .filter(g -> g.getId().equals(groupId))
+                .toList().isEmpty();
     }
 }
