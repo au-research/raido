@@ -1,6 +1,7 @@
-package au.org.raid.iam.provider;
+package au.org.raid.iam.provider.servicepoint;
 
-import au.org.raid.iam.provider.dto.Grant;
+import au.org.raid.iam.provider.servicepoint.dto.Grant;
+import au.org.raid.iam.provider.servicepoint.dto.GroupJoinRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.*;
@@ -8,33 +9,51 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RoleModel;
 import org.keycloak.models.UserModel;
+import org.keycloak.services.cors.Cors;
 import org.keycloak.services.managers.AppAuthManager;
 import org.keycloak.services.managers.AuthenticationManager;
 
 import javax.management.relation.RoleNotFoundException;
 import java.util.HashMap;
-
+@Slf4j
 @Provider
-public class ServicePointController {
+public class GroupController {
     private static final String GROUP_ADMIN_ROLE_NAME = "group-admin";
     private static final String SERVICE_POINT_USER_ROLE = "service-point-user";
-    private static final String SERVICE_POINT_ID_ATTRIBUTE_NAME = "servicePointId";
-    public static final String SERVICE_POINT_ADMIN_ATTRIBUTE_NAME = "servicePointAdmin";
     private final AuthenticationManager.AuthResult auth;
 
     private final KeycloakSession session;
-    public ServicePointController(final KeycloakSession session) {
+    public GroupController(final KeycloakSession session) {
         this.session = session;
         this.auth = new AppAuthManager.BearerTokenAuthenticator(session).authenticate();
+    }
+
+    private Cors addCorsHeaders(final String... allowedMethods) {
+        final var cors = session.getProvider(Cors.class);
+        cors.exposedHeaders("Access-Control-Allow-Origin");
+        cors.allowedMethods(allowedMethods);
+        return cors;
+    }
+
+    @OPTIONS
+    @Path("")
+    public Response preflight() {
+        return Response.fromResponse(addCorsHeaders("GET")
+                        .preflight()
+                        .builder(Response.ok())
+                        .build())
+                .build();
     }
 
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
     public Response get() throws JsonProcessingException {
+        log.debug("Getting members of group");
 
         final var objectMapper = new ObjectMapper();
 
@@ -69,7 +88,24 @@ public class ServicePointController {
 
         responseBody.put("members", members);
 
-        return Response.ok().entity(objectMapper.writeValueAsString(responseBody)).build();
+        return Response.fromResponse(addCorsHeaders("GET")
+                        .preflight()
+                        .builder(
+                                Response.ok()
+                                        .entity(objectMapper.writeValueAsString(responseBody))
+                        )
+                        .build())
+                .build();
+    }
+
+    @OPTIONS
+    @Path("/grant")
+    public Response grantPreflight() {
+        return Response.fromResponse(addCorsHeaders("PUT")
+                        .preflight()
+                        .builder(Response.ok())
+                        .build())
+                .build();
     }
 
     @PUT
@@ -104,8 +140,23 @@ public class ServicePointController {
 
         groupUser.grantRole(servicePointUserRole);
 
-        return Response.ok().entity("{}").build();
+        return Response.fromResponse(
+                        addCorsHeaders("PUT")
+                                .builder(Response.ok())
+                                .build()
+                )
+                .entity("{}}")
+                .build();
     }
+
+    @OPTIONS
+    @Path("/revoke")
+    public Response revokePreflight() {
+        return Response.fromResponse(addCorsHeaders("PUT")
+                        .preflight()
+                        .builder(Response.ok())
+                        .build())
+                .build();    }
 
     @PUT
     @Path("/revoke")
@@ -138,7 +189,13 @@ public class ServicePointController {
 
         groupUser.deleteRoleMapping(servicePointUserRole);
 
-        return Response.ok().entity("{}").build();
+        return Response.fromResponse(
+                addCorsHeaders("PUT")
+                        .builder(Response.ok())
+                        .build()
+                )
+                .entity("{}}")
+                .build();
     }
 
     private boolean isGroupAdmin(final UserModel user) {
@@ -151,6 +208,22 @@ public class ServicePointController {
         return !user.getGroupsStream()
                 .filter(g -> g.getId().equals(groupId))
                 .toList().isEmpty();
+    }
+
+    @PUT
+    @Path("/join")
+    @SneakyThrows
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response join(GroupJoinRequest request) {
+        final var user = auth.getSession().getUser();
+        user.joinGroup(session.groups().getGroupById(session.getContext().getRealm(), request.getGroupId()));
+        return Response.fromResponse(
+                addCorsHeaders("PUT")
+                        .builder(Response.ok())
+                        .build()
+                )
+                .entity("{}}")
+                .build();
     }
 
 }
