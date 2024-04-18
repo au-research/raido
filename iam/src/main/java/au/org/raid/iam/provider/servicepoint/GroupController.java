@@ -34,7 +34,6 @@ public class GroupController {
 
     private Cors addCorsHeaders(final String... allowedMethods) {
         final var cors = session.getProvider(Cors.class);
-        cors.exposedHeaders("Access-Control-Allow-Origin");
         cors.allowedMethods(allowedMethods);
         cors.auth();
         return cors;
@@ -143,6 +142,7 @@ public class GroupController {
 
         return Response.fromResponse(
                         addCorsHeaders("PUT")
+                                .preflight()
                                 .builder(Response.ok())
                                 .build()
                 )
@@ -192,6 +192,7 @@ public class GroupController {
 
         return Response.fromResponse(
                 addCorsHeaders("PUT")
+                        .preflight()
                         .builder(Response.ok())
                         .build()
                 )
@@ -220,11 +221,11 @@ public class GroupController {
         user.joinGroup(session.groups().getGroupById(session.getContext().getRealm(), request.getGroupId()));
         return Response.fromResponse(
                 addCorsHeaders("PUT")
+                        .preflight()
                         .builder(Response.ok())
                         .build()
                 )
                 .entity("{}}")
                 .build();
     }
-
 }
