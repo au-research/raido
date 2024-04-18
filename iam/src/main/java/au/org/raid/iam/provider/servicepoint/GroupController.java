@@ -36,6 +36,7 @@ public class GroupController {
         final var cors = session.getProvider(Cors.class);
         cors.exposedHeaders("Access-Control-Allow-Origin");
         cors.allowedMethods(allowedMethods);
+        cors.auth();
         return cors;
     }
 
