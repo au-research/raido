@@ -19,9 +19,11 @@ import org.keycloak.services.managers.AuthenticationManager;
 
 import javax.management.relation.RoleNotFoundException;
 import java.util.HashMap;
+
 @Slf4j
 @Provider
 public class GroupController {
+    private static final String CLIENT_ID_HEADER = "X-Client-Id";
     private static final String GROUP_ADMIN_ROLE_NAME = "group-admin";
     private static final String SERVICE_POINT_USER_ROLE = "service-point-user";
     private final AuthenticationManager.AuthResult auth;
@@ -32,9 +34,21 @@ public class GroupController {
         this.auth = new AppAuthManager.BearerTokenAuthenticator(session).authenticate();
     }
 
-    private Cors addCorsHeaders(final String... allowedMethods) {
+    private Cors addCorsHeaders(final String clientId, final String... allowedMethods) {
         final var cors = session.getProvider(Cors.class);
-        cors.allowedOrigins(session, auth.getClient());
+
+//        final var realm = session.getContext().getRealm();
+//
+//        realm.getClientsStream()
+//                .filter(client -> client.getId().equals(clientId))
+//                .findFirst()
+//                .ifPresentOrElse(clientModel -> {
+//                    log.debug("Setting allowed origins from client config for {}", clientId);
+//                    cors.allowedOrigins(session, clientModel);
+//                }, () -> log.debug("Could not find client id {}", clientId));
+
+        cors.allowedOrigins("http://localhost:7080", "https://app.test.raid.org.au", "https://app.demo.raid.org.au", "https://app.prod.raid.org.au");
+
         cors.allowedMethods(allowedMethods);
         cors.auth();
         return cors;
@@ -42,8 +56,8 @@ public class GroupController {
 
     @OPTIONS
     @Path("")
-    public Response preflight() {
-        return Response.fromResponse(addCorsHeaders("GET")
+    public Response preflight(@HeaderParam(CLIENT_ID_HEADER) final String clientId) {
+        return Response.fromResponse(addCorsHeaders(clientId, "GET")
                         .preflight()
                         .builder(Response.ok())
                         .build())
@@ -53,10 +67,14 @@ public class GroupController {
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get() throws JsonProcessingException {
+    public Response get(@HeaderParam(CLIENT_ID_HEADER) final String clientId) throws JsonProcessingException {
         log.debug("Getting members of group");
 
         final var objectMapper = new ObjectMapper();
+
+        if (this.auth == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
 
         final var user = auth.getSession().getUser();
         final var realm = session.getContext().getRealm();
@@ -100,7 +118,7 @@ public class GroupController {
 
     @OPTIONS
     @Path("/grant")
-    public Response grantPreflight() {
+    public Response grantPreflight(@HeaderParam(CLIENT_ID_HEADER) final String clientId) {
         return Response.fromResponse(addCorsHeaders("PUT")
                         .preflight()
                         .builder(Response.ok())
@@ -114,6 +132,11 @@ public class GroupController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response grant(final Grant grant) {
         // check permissions of admin user
+
+        if (this.auth == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
         final var user = auth.getSession().getUser();
 
         if (user == null) {
@@ -163,7 +186,10 @@ public class GroupController {
     @Path("/revoke")
     @SneakyThrows
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response revoke(final Grant grant) throws JsonProcessingException {
+    public Response revoke(final Grant grant) {
+        if (this.auth == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
         final var user = auth.getSession().getUser();
 
         if (user == null) {
@@ -213,6 +239,9 @@ public class GroupController {
     @SneakyThrows
     @Consumes(MediaType.APPLICATION_JSON)
     public Response join(GroupJoinRequest request) {
+        if (this.auth == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
         final var user = auth.getSession().getUser();
         user.joinGroup(session.groups().getGroupById(session.getContext().getRealm(), request.getGroupId()));
         return Response.fromResponse(
