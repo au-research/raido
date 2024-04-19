@@ -2,11 +2,12 @@ version: '3.4'
 services:
   keycloak:
     container_name: keycloak
-    image: raid-keycloak:20240418.19
+    image: raid-keycloak:20240419.19
     ports:
       - 8000:8443
       - 8001:8080
-    command: ['start-dev', '--import-realm']
+      - 9000:9000
+    command: ['start-dev', '--import-realm', '--debug']
     volumes:
       - './realms:/opt/keycloak/data/import'
     environment:
@@ -22,7 +23,9 @@ services:
       KC_DB_URL_PORT: 5432
       KC_DB_SCHEMA: public
       KC_HOSTNAME_STRICT_HTTPS: false
-      KC_LOG_LEVEL: info,io.vertx.ext.web:trace,au.org.raid.iam:debug
+      DEBUG: true
+      DEBUG_PORT: '*:9000'
+      KC_LOG_LEVEL: info,au.org.raid.iam:debug,org.keycloak.services.cors:debug
   postgres:
     container_name: keycloak-postgres
     image: postgres:16.2

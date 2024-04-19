@@ -23,7 +23,6 @@ import java.util.HashMap;
 @Slf4j
 @Provider
 public class GroupController {
-    private static final String CLIENT_ID_HEADER = "X-Client-Id";
     private static final String GROUP_ADMIN_ROLE_NAME = "group-admin";
     private static final String SERVICE_POINT_USER_ROLE = "service-point-user";
     private final AuthenticationManager.AuthResult auth;
@@ -34,30 +33,21 @@ public class GroupController {
         this.auth = new AppAuthManager.BearerTokenAuthenticator(session).authenticate();
     }
 
-    private Cors addCorsHeaders(final String clientId, final String... allowedMethods) {
+    private Cors addCorsHeaders(final String... allowedMethods) {
+        log.debug("Calling Cors");
         final var cors = session.getProvider(Cors.class);
 
-//        final var realm = session.getContext().getRealm();
-//
-//        realm.getClientsStream()
-//                .filter(client -> client.getId().equals(clientId))
-//                .findFirst()
-//                .ifPresentOrElse(clientModel -> {
-//                    log.debug("Setting allowed origins from client config for {}", clientId);
-//                    cors.allowedOrigins(session, clientModel);
-//                }, () -> log.debug("Could not find client id {}", clientId));
-
         cors.allowedOrigins("http://localhost:7080", "https://app.test.raid.org.au", "https://app.demo.raid.org.au", "https://app.prod.raid.org.au");
-
         cors.allowedMethods(allowedMethods);
         cors.auth();
+
         return cors;
     }
 
     @OPTIONS
     @Path("")
-    public Response preflight(@HeaderParam(CLIENT_ID_HEADER) final String clientId) {
-        return Response.fromResponse(addCorsHeaders(clientId, "GET")
+    public Response preflight() {
+        return Response.fromResponse(addCorsHeaders( "GET", "PUT", "OPTIONS")
                         .preflight()
                         .builder(Response.ok())
                         .build())
@@ -67,7 +57,7 @@ public class GroupController {
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@HeaderParam(CLIENT_ID_HEADER) final String clientId) throws JsonProcessingException {
+    public Response get() throws JsonProcessingException {
         log.debug("Getting members of group");
 
         final var objectMapper = new ObjectMapper();
@@ -118,7 +108,8 @@ public class GroupController {
 
     @OPTIONS
     @Path("/grant")
-    public Response grantPreflight(@HeaderParam(CLIENT_ID_HEADER) final String clientId) {
+    public Response grantPreflight() {
+        log.debug("Calling grant with OPTIONS method");
         return Response.fromResponse(addCorsHeaders("PUT")
                         .preflight()
                         .builder(Response.ok())
