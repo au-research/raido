@@ -169,7 +169,6 @@
     "realmRoles": [],
     "clientRoles": {}
   },
-
   {
     "env": "prod",
     "id": "95f51e01-6387-4acf-b570-c2c6d41ffbfe",
