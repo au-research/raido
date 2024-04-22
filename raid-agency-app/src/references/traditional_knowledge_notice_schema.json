@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "uri": "https://localcontexts.org/notice/open-to-collaborate/",
+    "status": "active"
+  },
+  {
+    "id": 2,
+    "uri": "https://localcontexts.org/notices/cc-notices/",
+    "status": "active"
+  },
+  {
+    "id": 3,
+    "uri": "https://localcontexts.org/notices/disclosure-notices/",
+    "status": "active"
+  }
+]

@@ -1,0 +1,17 @@
+[
+  {
+    "id": 10,
+    "uri": "https://localcontexts.org/notice/attribution-incomplete/",
+    "schema_id": 3
+  },
+  {
+    "id": 11,
+    "uri": "https://localcontexts.org/notice/bc-notice/",
+    "schema_id": 3
+  },
+  {
+    "id": 12,
+    "uri": "https://localcontexts.org/notice/tk-notice/",
+    "schema_id": 3
+  }
+]

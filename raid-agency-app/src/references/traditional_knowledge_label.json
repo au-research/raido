@@ -1,0 +1,52 @@
+[
+  {
+    "id": 21,
+    "uri": "https://localcontexts.org/label/bc-provenance/",
+    "schema_id": 2
+  },
+  {
+    "id": 22,
+    "uri": "https://localcontexts.org/label/bc-multiple-communities/",
+    "schema_id": 2
+  },
+  {
+    "id": 23,
+    "uri": "https://localcontexts.org/label/bc-clan/",
+    "schema_id": 2
+  },
+  {
+    "id": 24,
+    "uri": "https://localcontexts.org/label/bc-consent-verified/",
+    "schema_id": 2
+  },
+  {
+    "id": 25,
+    "uri": "https://localcontexts.org/label/bc-consent-non-verified/",
+    "schema_id": 2
+  },
+  {
+    "id": 26,
+    "uri": "https://localcontexts.org/label/bc-research-use/",
+    "schema_id": 2
+  },
+  {
+    "id": 27,
+    "uri": "https://localcontexts.org/label/bc-open-to-collaboration/",
+    "schema_id": 2
+  },
+  {
+    "id": 28,
+    "uri": "https://localcontexts.org/label/bc-open-to-commercialization/",
+    "schema_id": 2
+  },
+  {
+    "id": 29,
+    "uri": "https://localcontexts.org/label/bc-outreach/",
+    "schema_id": 2
+  },
+  {
+    "id": 30,
+    "uri": "https://localcontexts.org/label/bc-non-commercial/",
+    "schema_id": 2
+  }
+]

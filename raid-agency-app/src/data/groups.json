@@ -1,0 +1,172 @@
+[
+  {
+    "env": "dev",
+    "id": "ba0b01a6-726f-464f-b501-454a10096826",
+    "name": "University of Queensland",
+    "path": "/University of Queensland",
+    "subGroups": [],
+    "attributes": {
+      "groupId": ["ba0b01a6-726f-464f-b501-454a10096826"]
+    },
+    "realmRoles": [],
+    "clientRoles": {}
+  },
+  {
+    "env": "dev",
+    "id": "169bd3f3-dd42-4ac0-b89a-fb49648e5eff",
+    "name": "raid-au",
+    "path": "/raid-au",
+    "subGroups": [],
+    "attributes": {
+      "groupId": ["169bd3f3-dd42-4ac0-b89a-fb49648e5eff"]
+    },
+    "realmRoles": [],
+    "clientRoles": {}
+  },
+  {
+    "env": "demo",
+    "id": "4c1fb7aa-1783-4a8c-b529-49c42cd1d4ec",
+    "name": "Australian Research Data Commons",
+    "path": "/Australian Research Data Commons",
+    "subGroups": [],
+    "attributes": {
+      "groupId": ["4c1fb7aa-1783-4a8c-b529-49c42cd1d4ec"]
+    },
+    "realmRoles": [],
+    "clientRoles": {}
+  },
+  {
+    "env": "demo",
+    "id": "9c9fb8b8-42a3-425b-9bcd-4b896dce5cdc",
+    "name": "Charles Darwin University",
+    "path": "/Charles Darwin University",
+    "subGroups": [],
+    "attributes": {
+      "groupId": ["9c9fb8b8-42a3-425b-9bcd-4b896dce5cdc"]
+    },
+    "realmRoles": [],
+    "clientRoles": {}
+  },
+  {
+    "env": "demo",
+    "id": "3c9c34fc-7555-4dea-a3b4-ddaed1ef4e02",
+    "name": "Deutsches Klimarechenzentrum GmbH",
+    "path": "/Deutsches Klimarechenzentrum GmbH",
+    "subGroups": [],
+    "attributes": {
+      "groupId": ["3c9c34fc-7555-4dea-a3b4-ddaed1ef4e02"]
+    },
+    "realmRoles": [],
+    "clientRoles": {}
+  },
+  {
+    "env": "demo",
+    "id": "2565676a-9410-4d07-91ac-7e5892935e93",
+    "name": "EOSC-MP",
+    "path": "/EOSC-MP",
+    "subGroups": [],
+    "attributes": {
+      "groupId": ["2565676a-9410-4d07-91ac-7e5892935e93"]
+    },
+    "realmRoles": [],
+    "clientRoles": {}
+  },
+  {
+    "env": "demo",
+    "id": "54682d9d-ef1a-497b-af8e-547a420da87e",
+    "name": "Queensland University of Technology - Research Infrastructure",
+    "path": "/Queensland University of Technology - Research Infrastructure",
+    "subGroups": [],
+    "attributes": {
+      "groupId": ["54682d9d-ef1a-497b-af8e-547a420da87e"]
+    },
+    "realmRoles": [],
+    "clientRoles": {}
+  },
+  {
+    "env": "demo",
+    "id": "f4faea76-66d0-4d5b-826d-ccb9cefc60ba",
+    "name": "Raid AU",
+    "path": "/Raid AU",
+    "subGroups": [],
+    "attributes": {
+      "groupId": ["f4faea76-66d0-4d5b-826d-ccb9cefc60ba"]
+    },
+    "realmRoles": [],
+    "clientRoles": {}
+  },
+  {
+    "env": "demo",
+    "id": "47f2b9b1-6bf4-473f-9042-9501e68d19e0",
+    "name": "Research.fi",
+    "path": "/Research.fi",
+    "subGroups": [],
+    "attributes": {
+      "groupId": ["47f2b9b1-6bf4-473f-9042-9501e68d19e0"]
+    },
+    "realmRoles": [],
+    "clientRoles": {}
+  },
+  {
+    "env": "demo",
+    "id": "45f64c39-b5ae-49a3-8841-cf8811eda2b7",
+    "name": "SURF",
+    "path": "/SURF",
+    "subGroups": [],
+    "attributes": {
+      "groupId": ["45f64c39-b5ae-49a3-8841-cf8811eda2b7"]
+    },
+    "realmRoles": [],
+    "clientRoles": {}
+  },
+  {
+    "env": "demo",
+    "id": "f855dc0f-b9be-48e4-8b7e-b2830b553319",
+    "name": "The University of Notre Dame Australia",
+    "path": "/The University of Notre Dame Australia",
+    "subGroups": [],
+    "attributes": {
+      "groupId": ["f855dc0f-b9be-48e4-8b7e-b2830b553319"]
+    },
+    "realmRoles": [],
+    "clientRoles": {}
+  },
+  {
+    "env": "demo",
+    "id": "df068dc2-40e1-4999-8c6c-a984721bf64c",
+    "name": "University of Auckland",
+    "path": "/University of Auckland",
+    "subGroups": [],
+    "attributes": {
+      "groupId": ["df068dc2-40e1-4999-8c6c-a984721bf64c"]
+    },
+    "realmRoles": [],
+    "clientRoles": {}
+  },
+  {
+    "env": "test",
+    "id": "3313890a-0b75-4ff7-a13a-6d9742c3ea97",
+    "name": "raid-au",
+    "path": "/raid-au",
+    "subGroupCount": 0,
+    "subGroups": [],
+    "attributes": {
+      "groupId": ["3313890a-0b75-4ff7-a13a-6d9742c3ea97"]
+    },
+    "realmRoles": [],
+    "clientRoles": {}
+  },
+  {
+    "env": "test",
+    "id": "8e3cca35-ccc6-4f40-ba2a-101f0dd5bf37",
+    "name": "uq",
+    "path": "/uq",
+    "subGroupCount": 0,
+    "subGroups": [],
+    "attributes": {
+      "groupId": ["8e3cca35-ccc6-4f40-ba2a-101f0dd5bf37"]
+    },
+    "realmRoles": [],
+    "clientRoles": {}
+  }
+]

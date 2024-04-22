@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "uri": "https://credit.niso.org/contributor-roles/conceptualization/",
+    "schema_id": 1
+  },
+  {
+    "id": 2,
+    "uri": "https://credit.niso.org/contributor-roles/data-curation/",
+    "schema_id": 1
+  },
+  {
+    "id": 3,
+    "uri": "https://credit.niso.org/contributor-roles/formal-analysis/",
+    "schema_id": 1
+  },
+  {
+    "id": 4,
+    "uri": "https://credit.niso.org/contributor-roles/funding-acquisition/",
+    "schema_id": 1
+  },
+  {
+    "id": 5,
+    "uri": "https://credit.niso.org/contributor-roles/investigation/",
+    "schema_id": 1
+  },
+  {
+    "id": 6,
+    "uri": "https://credit.niso.org/contributor-roles/methodology/",
+    "schema_id": 1
+  },
+  {
+    "id": 7,
+    "uri": "https://credit.niso.org/contributor-roles/project-administration/",
+    "schema_id": 1
+  },
+  {
+    "id": 8,
+    "uri": "https://credit.niso.org/contributor-roles/resources/",
+    "schema_id": 1
+  },
+  {
+    "id": 9,
+    "uri": "https://credit.niso.org/contributor-roles/software/",
+    "schema_id": 1
+  },
+  {
+    "id": 10,
+    "uri": "https://credit.niso.org/contributor-roles/supervision/",
+    "schema_id": 1
+  },
+  {
+    "id": 11,
+    "uri": "https://credit.niso.org/contributor-roles/validation/",
+    "schema_id": 1
+  },
+  {
+    "id": 12,
+    "uri": "https://credit.niso.org/contributor-roles/visualization/",
+    "schema_id": 1
+  },
+  {
+    "id": 13,
+    "uri": "https://credit.niso.org/contributor-roles/writing-original-draft/",
+    "schema_id": 1
+  },
+  {
+    "id": 14,
+    "uri": "https://credit.niso.org/contributor-roles/writing-review-editing/",
+    "schema_id": 1
+  }
+]

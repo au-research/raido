@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "uri": "https://localcontexts.org/labels/traditional-knowledge-labels/",
+    "status": "active"
+  },
+  {
+    "id": 2,
+    "uri": "https://localcontexts.org/labels/biocultural-labels/",
+    "status": "active"
+  }
+]

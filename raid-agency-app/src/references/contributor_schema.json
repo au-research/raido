@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "uri": "https://orcid.org/",
+    "status": "active"
+  },
+  {
+    "id": 2,
+    "uri": "https://isni.org/",
+    "status": "active"
+  }
+]
