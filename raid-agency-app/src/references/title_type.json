@@ -1,0 +1,22 @@
+[
+  {
+    "id": 3,
+    "uri": "https://vocabulary.raid.org/title.type.schema/156",
+    "schema_id": 2
+  },
+  {
+    "id": 4,
+    "uri": "https://vocabulary.raid.org/title.type.schema/157",
+    "schema_id": 2
+  },
+  {
+    "id": 5,
+    "uri": "https://vocabulary.raid.org/title.type.schema/4",
+    "schema_id": 2
+  },
+  {
+    "id": 6,
+    "uri": "https://vocabulary.raid.org/title.type.schema/5",
+    "schema_id": 2
+  }
+]

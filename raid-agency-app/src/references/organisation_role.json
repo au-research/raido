@@ -1,0 +1,37 @@
+[
+  {
+    "id": 6,
+    "uri": "https://vocabulary.raid.org/organisation.role.schema/182",
+    "schema_id": 2
+  },
+  {
+    "id": 7,
+    "uri": "https://vocabulary.raid.org/organisation.role.schema/183",
+    "schema_id": 2
+  },
+  {
+    "id": 8,
+    "uri": "https://vocabulary.raid.org/organisation.role.schema/184",
+    "schema_id": 2
+  },
+  {
+    "id": 9,
+    "uri": "https://vocabulary.raid.org/organisation.role.schema/185",
+    "schema_id": 2
+  },
+  {
+    "id": 10,
+    "uri": "https://vocabulary.raid.org/organisation.role.schema/186",
+    "schema_id": 2
+  },
+  {
+    "id": 11,
+    "uri": "https://vocabulary.raid.org/organisation.role.schema/187",
+    "schema_id": 2
+  },
+  {
+    "id": 12,
+    "uri": "https://vocabulary.raid.org/organisation.role.schema/188",
+    "schema_id": 2
+  }
+]

@@ -1,0 +1,12 @@
+[
+  {
+    "id": 2,
+    "uri": "https://id.loc.gov/authorities/subject.html",
+    "status": "active"
+  },
+  {
+    "id": 3,
+    "uri": "https://vocabs.ardc.edu.au/viewById/316",
+    "status": "active"
+  }
+]

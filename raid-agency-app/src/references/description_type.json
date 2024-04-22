@@ -1,0 +1,37 @@
+[
+  {
+    "id": 3,
+    "uri": "https://vocabulary.raid.org/description.type.schema/3",
+    "schema_id": 2
+  },
+  {
+    "id": 4,
+    "uri": "https://vocabulary.raid.org/description.type.schema/318",
+    "schema_id": 2
+  },
+  {
+    "id": 5,
+    "uri": "https://vocabulary.raid.org/description.type.schema/319",
+    "schema_id": 2
+  },
+  {
+    "id": 6,
+    "uri": "https://vocabulary.raid.org/description.type.schema/6",
+    "schema_id": 2
+  },
+  {
+    "id": 7,
+    "uri": "https://vocabulary.raid.org/description.type.schema/7",
+    "schema_id": 2
+  },
+  {
+    "id": 8,
+    "uri": "https://vocabulary.raid.org/description.type.schema/8",
+    "schema_id": 2
+  },
+  {
+    "id": 9,
+    "uri": "https://vocabulary.raid.org/description.type.schema/9",
+    "schema_id": 2
+  }
+]
