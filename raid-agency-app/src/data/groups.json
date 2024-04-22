@@ -171,7 +171,7 @@
   },
 
   {
-    "environment": "prod",
+    "env": "prod",
     "id": "95f51e01-6387-4acf-b570-c2c6d41ffbfe",
     "name": "Australian Research Data Commons",
     "path": "/Australian Research Data Commons",
@@ -184,7 +184,7 @@
     "clientRoles": {}
   },
   {
-    "environment": "prod",
+    "env": "prod",
     "id": "54198e80-5e6d-4b26-aa39-1821298bfed0",
     "name": "Charles Darwin University",
     "path": "/Charles Darwin University",
@@ -197,7 +197,7 @@
     "clientRoles": {}
   },
   {
-    "environment": "prod",
+    "env": "prod",
     "id": "be8c5887-cb20-48ff-80c1-e4d36a4d0779",
     "name": "Deutsches Klimarechenzentrum GmbH",
     "path": "/Deutsches Klimarechenzentrum GmbH",
@@ -210,7 +210,7 @@
     "clientRoles": {}
   },
   {
-    "environment": "prod",
+    "env": "prod",
     "id": "c86a12dc-4348-49d2-ba34-733c035b8c7f",
     "name": "EOSC-MP",
     "path": "/EOSC-MP",
@@ -223,7 +223,7 @@
     "clientRoles": {}
   },
   {
-    "environment": "prod",
+    "env": "prod",
     "id": "5306b5ad-9e39-4527-89b2-d021a2833ed3",
     "name": "Queensland University of Technology - Research Infrastructure",
     "path": "/Queensland University of Technology - Research Infrastructure",
@@ -236,7 +236,7 @@
     "clientRoles": {}
   },
   {
-    "environment": "prod",
+    "env": "prod",
     "id": "aed7b298-9455-4fc8-bf6a-f84814666be7",
     "name": "Raid AU",
     "path": "/Raid AU",
@@ -249,7 +249,7 @@
     "clientRoles": {}
   },
   {
-    "environment": "prod",
+    "env": "prod",
     "id": "0becd3fc-45db-4a52-9a46-c9f799a55b8f",
     "name": "Research.fi",
     "path": "/Research.fi",
@@ -262,7 +262,7 @@
     "clientRoles": {}
   },
   {
-    "environment": "prod",
+    "env": "prod",
     "id": "c53e7f0d-93fe-40fe-8729-973b172a083d",
     "name": "SURF",
     "path": "/SURF",
@@ -275,7 +275,7 @@
     "clientRoles": {}
   },
   {
-    "environment": "prod",
+    "env": "prod",
     "id": "1a6c4ecf-81b2-422d-8061-cee62aa21141",
     "name": "The University of Notre Dame Australia",
     "path": "/The University of Notre Dame Australia",
@@ -288,7 +288,7 @@
     "clientRoles": {}
   },
   {
-    "environment": "prod",
+    "env": "prod",
     "id": "5487744e-51c0-41cd-973a-214b9d9cdb83",
     "name": "University of Auckland",
     "path": "/University of Auckland",
