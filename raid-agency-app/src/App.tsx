@@ -11,13 +11,13 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ReactKeycloakProvider } from "@react-keycloak/web";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Keycloak from "keycloak-js";
 import React from "react";
 import { Outlet } from "react-router-dom";
-import { SnackbarProvider } from "./components/Snackbar/SnackbarProvider";
-import { ReactErrorBoundary } from "./error/ReactErrorBoundary";
-import { DialogProvider } from "./providers/DialogProvider";
-import { RaidApiProvider } from "./providers/RaidApiProvider";
+import { SnackbarProvider } from "@/components/Snackbar/SnackbarProvider";
+import { ReactErrorBoundary } from "@/error/ReactErrorBoundary";
+import { DialogProvider } from "@/providers/DialogProvider";
+import { RaidApiProvider } from "@/providers/RaidApiProvider";
+import getKeycloakInstance from "@/KeycloakSingleton";
 
 const url = import.meta.env.VITE_KEYCLOAK_URL;
 const realm = import.meta.env.VITE_KEYCLOAK_REALM;
@@ -67,16 +67,10 @@ export function App() {
       <SnackbarProvider>
         <RaidApiProvider>
           <ReactKeycloakProvider
-            authClient={
-              new Keycloak({
-                url,
-                realm,
-                clientId:
-                  tempClientId ||
-                  localStorage.getItem("client_id") ||
-                  "raid-api",
-              })
-            }
+            authClient={getKeycloakInstance()}
+            initOptions={{
+              pkceMethod: "S256",
+            }}
           >
             <KeycloakProvider>
               <QueryClientProvider client={queryClient}>
