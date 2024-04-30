@@ -10,13 +10,15 @@ import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import LoadingPage from "@/pages/LoadingPage";
 import { Breadcrumb } from "@/types";
 import { Home as HomeIcon, Hub as HubIcon } from "@mui/icons-material";
-import { Card, CardContent, CardHeader, Container } from "@mui/material";
+import { Alert, Card, CardContent, CardHeader, Container } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import ServicePointUpdateForm from "./components/ServicePointUpdateForm";
-import ServicePointUsers from "./components/ServicePointUsers";
+import ServicePointUpdateForm from "@/pages/ServicePoint/components/ServicePointUpdateForm";
+import ServicePointUsers from "@/pages/ServicePoint/components/ServicePointUsers";
+import { useAuthHelper } from "@/components/useAuthHelper";
 
 export default function ServicePoint() {
+  const { isOperator } = useAuthHelper();
   const servicePointApi = SingletonServicePointApi.getInstance();
 
   const { keycloak, initialized } = useCustomKeycloak();
@@ -35,18 +37,18 @@ export default function ServicePoint() {
     });
   };
 
-  const query = useQuery<ServicePoint>({
+  const servicePointQuery = useQuery<ServicePoint>({
     queryKey: ["servicePoints", servicePointId.toString()],
     queryFn: async () => getServicepointData(),
     enabled: initialized && keycloak.authenticated,
   });
 
-  if (query.isPending) {
+  if (servicePointQuery.isPending) {
     return <LoadingPage />;
   }
 
-  if (query.isError) {
-    return <ErrorAlertComponent error={query.error} />;
+  if (servicePointQuery.isError) {
+    return <ErrorAlertComponent error={servicePointQuery.error} />;
   }
 
   // Use spaces as decimal separator for thousands
@@ -78,16 +80,25 @@ export default function ServicePoint() {
   return (
     <Container>
       <BreadcrumbsBar breadcrumbs={breadcrumbs} />
-      <Card variant="outlined" sx={{ mt: 2 }}>
+      <Card hidden={!isOperator} variant="outlined" sx={{ mt: 2 }}>
         <CardHeader title="Update service point" />
         <CardContent>
-          <ServicePointUpdateForm servicePoint={query.data!} />
+          <ServicePointUpdateForm servicePoint={servicePointQuery.data!} />
         </CardContent>
       </Card>
       <Card variant="outlined" sx={{ mt: 2 }}>
         <CardHeader title="Service point users" />
         <CardContent>
-          <ServicePointUsers servicePoint={query.data} />
+          {(servicePointQuery.data.groupId &&
+            (isOperator ||
+              keycloak?.tokenParsed?.service_point_group_id ===
+                servicePointQuery.data.groupId) && (
+              <ServicePointUsers servicePoint={servicePointQuery.data} />
+            )) || (
+            <Alert severity="warning">
+              No group id set or access not allowed
+            </Alert>
+          )}
         </CardContent>
       </Card>
     </Container>
