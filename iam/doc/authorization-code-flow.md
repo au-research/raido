@@ -64,7 +64,7 @@ client_id=test-client
 ```
 
 ## 4. An access token is returned
-An access token is returned as part of the JSON response body. This can be used in requests to the RAiD API. 
+An access token is returned as part of the JSON response body. 
 
 ```json
 {
@@ -78,4 +78,9 @@ An access token is returned as part of the JSON response body. This can be used 
   "session_state": "53aacf4a-1d1f-40c3-b244-0a9986ae5b60",
   "scope": "openid"
 }
+```
+
+The access token can then be used in requests to the RAiD API by including it in the Authorization header...
+```
+Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJuZkMtdmoybkE4aGVEN25oMkFDeWI5Nk5ZYUVkTlZuQWVHV2x3bUw0bFEwIn0.eyJleHAiOjE3MTQ0NTQ4MDAsImlhdCI6MTcxNDQ1MzMwMCwiYXV0aF90aW1lIjoxNzE0NDUzMTQzLCJqdGkiOiJjNWQ1YjNhYi03NWViLTRlMGYtYmY0Zi1kYzQyZDAwZjg4NzciLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwMDEvcmVhbG1zL3JhaWQiLCJhdWQiOiJhY2NvdW50Iiwic3ViIjoiZmYzMzlhMjYtNzU0Yy00ZjlmLWIzY2EtYzRhN2ViOTNhMmEzIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoidGVzdC1jbGllbnQiLCJub25jZSI6Inh4eCIsInNlc3Npb25fc3RhdGUiOiI1M2FhY2Y0YS0xZDFmLTQwYzMtYjI0NC0wYTk5ODZhZTViNjAiLCJhY3IiOiIwIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iLCJkZWZhdWx0LXJvbGVzLXJhaWQiXX0sInJlc291cmNlX2FjY2VzcyI6eyJhY2NvdW50Ijp7InJvbGVzIjpbIm1hbmFnZS1hY2NvdW50IiwibWFuYWdlLWFjY291bnQtbGlua3MiLCJ2aWV3LXByb2ZpbGUiXX19LCJzY29wZSI6Im9wZW5pZCIsInNpZCI6IjUzYWFjZjRhLTFkMWYtNDBjMy1iMjQ0LTBhOTk4NmFlNWI2MCJ9.PF6_iGEs3sTwkQ1t_qix-e8JOLgK3k4WIzVvBraNF7FBjb8BhUCkXBaW9qZaZwUJebRHY7dMOEwa11uiXGootMoynbiBzsL2wZntXaoycLWL819P2mjWTd-xVmfRA09PlGTieaPJerod_sj6lmYAIV776i4kssOraOxT_B4ki3vYD777ISDx86idZzV7PdexUDf4V4dr4XhiUchX5MwEL5GfoSNBsW2O4fnOcojzoy1kr8MtHLY5gSMboYWv0Q1n_FWnQ0oLsvb33N1L_FJttzLqJ6M_H2Jfz8mURdgPCmrRG3MQXNm5WjaVAoYuO_JH0UiSn7rUwrCQylKzhTDAig
 ```
