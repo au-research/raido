@@ -1,0 +1,27 @@
+[
+  {
+    "id": 6,
+    "uri": "https://vocabulary.raid.org/contributor.position.schema/307",
+    "schema_id": 2
+  },
+  {
+    "id": 7,
+    "uri": "https://vocabulary.raid.org/contributor.position.schema/308",
+    "schema_id": 2
+  },
+  {
+    "id": 8,
+    "uri": "https://vocabulary.raid.org/contributor.position.schema/309",
+    "schema_id": 2
+  },
+  {
+    "id": 9,
+    "uri": "https://vocabulary.raid.org/contributor.position.schema/310",
+    "schema_id": 2
+  },
+  {
+    "id": 10,
+    "uri": "https://vocabulary.raid.org/contributor.position.schema/311",
+    "schema_id": 2
+  }
+]

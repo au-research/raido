@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "uri": "https://doi.org/",
+    "status": "active"
+  },
+  {
+    "id": 2,
+    "uri": "http://hdl.handle.net/",
+    "status": "active"
+  },
+  {
+    "id": 3,
+    "uri": "https://archive.org/",
+    "status": "active"
+  },
+  {
+    "id": 4,
+    "uri": "https://arks.org/",
+    "status": "active"
+  },
+  {
+    "id": 5,
+    "uri": "https://scicrunch.org/resolver/",
+    "status": "active"
+  },
+  {
+    "id": 6,
+    "uri": "https://www.isbn-international.org/",
+    "status": "active"
+  }
+]

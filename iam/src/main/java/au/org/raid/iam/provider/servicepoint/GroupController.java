@@ -45,6 +45,60 @@ public class GroupController {
     }
 
     @OPTIONS
+    @Path("/all")
+    public Response getGroupsPreflight() {
+        return Response.fromResponse(addCorsHeaders( "GET", "PUT", "OPTIONS")
+                        .preflight()
+                        .builder(Response.ok())
+                        .build())
+                .build();
+    }
+
+    @GET
+    @Path("/all")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getGroups() throws JsonProcessingException {
+        log.debug("Getting all groups");
+
+        final var objectMapper = new ObjectMapper();
+
+        if (this.auth == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
+        final var user = auth.getSession().getUser();
+        final var realm = session.getContext().getRealm();
+        final var groups = session.groups().getGroupsStream(realm)
+                .map(g -> {
+                    final var map = new HashMap<String, Object>();
+                    map.put("id", g.getId());
+                    map.put("name", g.getName());
+                    map.put("attributes", g.getAttributes());
+                    return map;
+                })
+                .toList();
+
+        if (user == null) {
+            throw new NotAuthorizedException("Bearer");
+        }
+
+
+        final var responseBody = new HashMap<String, Object>();
+
+        responseBody.put("groups", groups);
+
+        return Response.fromResponse(addCorsHeaders("GET")
+                        .builder(
+                                Response.ok()
+                                        .entity(objectMapper.writeValueAsString(responseBody))
+                        )
+                        .build())
+                .build();
+    }
+
+
+
+    @OPTIONS
     @Path("")
     public Response preflight() {
         return Response.fromResponse(addCorsHeaders( "GET", "PUT", "OPTIONS")
@@ -225,6 +279,7 @@ public class GroupController {
                         .build())
                 .build();
     }
+
     @PUT
     @Path("/join")
     @SneakyThrows
