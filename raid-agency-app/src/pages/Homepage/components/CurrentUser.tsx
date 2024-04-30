@@ -1,27 +1,37 @@
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
-import { Box, Card, CardContent, CardHeader, Grid } from "@mui/material";
-import Typography from "@mui/material/Typography";
+import {
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Chip,
+  Grid,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { Circle as CircleIcon } from "@mui/icons-material";
 import { KeycloakTokenParsed } from "keycloak-js";
 
-function getRoleFromToken({
+const keycloakInternalRoles = [
+  "default-roles-raid",
+  "offline_access",
+  "uma_authorization",
+];
+function getRolesFromToken({
   tokenParsed,
 }: {
   tokenParsed: KeycloakTokenParsed | undefined;
-}) {
-  let highestRole = "";
-  if (tokenParsed?.realm_access?.roles.includes("service-point-user")) {
-    highestRole = "service-point-user";
-  }
-  if (tokenParsed?.realm_access?.roles.includes("group-admin")) {
-    highestRole = "group-admin";
-  }
-  return highestRole;
+}): string[] | undefined {
+  return tokenParsed?.realm_access?.roles.filter(
+    (el) => !keycloakInternalRoles.includes(el)
+  );
 }
 
 export default function CurrentUser() {
   const { keycloak } = useCustomKeycloak();
-  const role = getRoleFromToken({ tokenParsed: keycloak.tokenParsed });
+  const roles = getRolesFromToken({ tokenParsed: keycloak.tokenParsed });
   const clientId = keycloak.tokenParsed?.azp;
+
   return (
     <Card
       data-testid="signed-in-user"
@@ -54,12 +64,20 @@ export default function CurrentUser() {
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={2} md={2}>
+          <Grid item xs={12} sm={12} md={12}>
             <Box>
-              <Typography variant="body2">Role</Typography>
-              <Typography color="text.secondary" variant="body1">
-                {role}
-              </Typography>
+              <Typography variant="body2">Roles</Typography>
+              <Stack direction="row" gap={1}>
+                {roles?.sort().map((el: string) => (
+                  <Chip
+                    variant="outlined"
+                    color="primary"
+                    size="small"
+                    icon={<CircleIcon color="success" sx={{ height: 8 }} />}
+                    label={el}
+                  />
+                ))}
+              </Stack>
             </Box>
           </Grid>
         </Grid>
