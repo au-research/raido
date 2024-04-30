@@ -1,4 +1,3 @@
-import groups from "@/data/groups.json";
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import {
   Alert,
