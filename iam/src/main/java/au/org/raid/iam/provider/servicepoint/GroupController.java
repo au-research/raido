@@ -23,6 +23,7 @@ import java.util.HashMap;
 @Slf4j
 @Provider
 public class GroupController {
+    private static final String OPERATOR_ROLE_NAME = "operator";
     private static final String GROUP_ADMIN_ROLE_NAME = "group-admin";
     private static final String SERVICE_POINT_USER_ROLE = "service-point-user";
     private final AuthenticationManager.AuthResult auth;
@@ -111,7 +112,7 @@ public class GroupController {
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get() throws JsonProcessingException {
+    public Response get(@QueryParam("groupId") String groupId) throws JsonProcessingException {
         log.debug("Getting members of group");
 
         final var objectMapper = new ObjectMapper();
@@ -127,11 +128,18 @@ public class GroupController {
             throw new NotAuthorizedException("Bearer");
         }
 
-        if (!isGroupAdmin(user)){
+        // Check if the user is neither a group admin nor an operator.
+        if (!isGroupAdmin(user) && !isOperator(user)){
             throw new NotAuthorizedException("Permission denied");
         }
 
-        final var group = user.getGroupsStream().toList().get(0);
+        /* If the 'groupId' parameter is set and the user is an operator,
+            set the group to the one specified by 'groupId'.
+            Otherwise, set it to the group ID from the user's profile. */
+        var group = (groupId != null && isOperator(user))
+                ? session.groups().getGroupById(realm, groupId)
+                : user.getGroupsStream().toList().get(0);
+
         final var responseBody = new HashMap<String, Object>();
 
         responseBody.put("id", group.getId());
@@ -188,11 +196,11 @@ public class GroupController {
             throw new NotAuthorizedException("Bearer");
         }
 
-        if (!isGroupAdmin(user)){
+        if (!isGroupAdmin(user) && !isOperator(user)){
             throw new NotAuthorizedException("Permission denied - not a group admin");
         }
 
-        if (!isGroupMember(user, grant.getGroupId())){
+        if (!isGroupMember(user, grant.getGroupId()) && !isOperator(user)){
             throw new NotAuthorizedException("Permission denied - not a group member");
         }
 
@@ -241,11 +249,11 @@ public class GroupController {
             throw new NotAuthorizedException("Bearer");
         }
 
-        if (!isGroupAdmin(user)){
+        if (!isGroupAdmin(user) && !isOperator(user)){
             throw new NotAuthorizedException("Permission denied - not a group admin");
         }
 
-        if (!isGroupMember(user, grant.getGroupId())){
+        if (!isGroupMember(user, grant.getGroupId()) && !isOperator(user)){
             throw new NotAuthorizedException("Permission denied - not a group member");
         }
 
@@ -308,6 +316,12 @@ public class GroupController {
     private boolean isGroupMember(final UserModel user, final String groupId) {
         return !user.getGroupsStream()
                 .filter(g -> g.getId().equals(groupId))
+                .toList().isEmpty();
+    }
+
+    private boolean isOperator(final UserModel user) {
+        return !user.getRoleMappingsStream()
+                .filter(r -> r.getName().equals(OPERATOR_ROLE_NAME))
                 .toList().isEmpty();
     }
 }
