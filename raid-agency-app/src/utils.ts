@@ -20,6 +20,7 @@ import { accessGenerator } from "@/entities/access/access-generator";
 import { contributorGenerator } from "@/entities/contributor/contributor-generator";
 import { dateGenerator } from "@/entities/date/date-generator";
 import { titleGenerator } from "@/entities/title/title-generator";
+import { dateCleaner } from "@/entities/date/date-cleaner";
 
 export const raidRequest = (data: RaidDto): RaidDto => {
   return {
@@ -29,7 +30,7 @@ export const raidRequest = (data: RaidDto): RaidDto => {
     access: data?.access || ({} as Access),
     alternateUrl: data?.alternateUrl || ([] as AlternateUrl[]),
     relatedRaid: data?.relatedRaid || ([] as RelatedRaid[]),
-    date: data?.date || ({} as ModelDate),
+    date: dateCleaner(data?.date) || ({} as ModelDate),
     contributor: data?.contributor || ([] as Contributor[]),
     alternateIdentifier:
       data?.alternateIdentifier || ([] as AlternateIdentifier[]),
