@@ -2,7 +2,7 @@ import contributorRoleSchema from "@/references/contributor_role_schema.json";
 
 import contributorPositionSchema from "@/references/contributor_position_schema.json";
 
-import { combinedPattern } from "@/Util/DateUtil";
+import { combinedPattern } from "@/utils/date-utils/date-utils";
 import { z } from "zod";
 
 const contributorPositionValidationSchema = z

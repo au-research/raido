@@ -1,4 +1,4 @@
-import { dateHelperText, dateHelperTextRequired } from "@/Util/DateUtil";
+import { dateHelperText, dateHelperTextRequired } from "@/utils/date-utils/date-utils";
 import { titleGenerator } from "@/entities/title/title-generator";
 import { RaidDto } from "@/generated/raid";
 import titleType from "@/references/title_type.json";

@@ -1,5 +1,5 @@
 import { ModelDate } from "@/generated/raid";
-import { dateDisplayFormatter } from "@/Util/DateUtil";
+import { dateDisplayFormatter } from "@/utils/date-utils/date-utils";
 import {
   Box,
   Card,

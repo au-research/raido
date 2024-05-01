@@ -1,6 +1,6 @@
 import { organisationRoles } from "@/entities/organisation/organisation-mapping";
 import { Organisation } from "@/generated/raid";
-import { dateDisplayFormatter } from "@/Util/DateUtil";
+import { dateDisplayFormatter } from "@/utils/date-utils/date-utils";
 import {
   Box,
   Card,
