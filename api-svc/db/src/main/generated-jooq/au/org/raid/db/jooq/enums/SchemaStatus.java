@@ -5,6 +5,7 @@ package au.org.raid.db.jooq.enums;
 
 
 import au.org.raid.db.jooq.ApiSvc;
+
 import org.jooq.Catalog;
 import org.jooq.EnumType;
 import org.jooq.Schema;
