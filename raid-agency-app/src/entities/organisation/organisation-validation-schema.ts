@@ -22,7 +22,7 @@ const organisationRoleValidationSchema = z
 
 export const organisationValidationSchema = z.array(
   z.object({
-    id: z.literal(organisation[0].pid),
+    id: z.string(),
     schemaUri: z.literal(organisationSchema[0].uri),
     role: organisationRoleValidationSchema,
   })
