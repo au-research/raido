@@ -70,6 +70,7 @@ export default function CurrentUser() {
               <Stack direction="row" gap={1}>
                 {roles?.sort().map((el: string) => (
                   <Chip
+                    key={el}
                     variant="outlined"
                     color="primary"
                     size="small"
