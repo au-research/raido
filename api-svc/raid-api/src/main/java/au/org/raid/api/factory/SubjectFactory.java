@@ -1,5 +1,6 @@
 package au.org.raid.api.factory;
 
+import au.org.raid.api.util.SchemaValues;
 import au.org.raid.idl.raidv2.model.Subject;
 import au.org.raid.idl.raidv2.model.SubjectKeyword;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,7 @@ import java.util.List;
 public class SubjectFactory {
     public Subject create(final String id, final String schemaUri, final List<SubjectKeyword> keywords) {
         return new Subject()
-                .id(id)
+                .id(SchemaValues.SUBJECT_ID_PREFIX.getUri() + id)
                 .schemaUri(schemaUri)
                 .keyword(keywords);
     }

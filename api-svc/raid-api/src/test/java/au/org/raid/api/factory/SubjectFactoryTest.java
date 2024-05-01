@@ -1,5 +1,6 @@
 package au.org.raid.api.factory;
 
+import au.org.raid.api.util.SchemaValues;
 import au.org.raid.idl.raidv2.model.SubjectKeyword;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ class SubjectFactoryTest {
 
         final var result = factory.create(id, schemaUri, keywords);
 
-        assertThat(result.getId(), is(id));
+        assertThat(result.getId(), is(SchemaValues.SUBJECT_ID_PREFIX.getUri() + id));
         assertThat(result.getSchemaUri(), is(schemaUri));
         assertThat(result.getKeyword(), is(keywords));
     }

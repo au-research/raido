@@ -70,8 +70,7 @@ public enum SchemaValues {
     INPUT_RELATED_OBJECT_CATEGORY("https://vocabulary.raid.org/relatedObject.category.id/191"),
     INTERNAL_PROCESS_DOCUMENT_RELATED_OBJECT_CATEGORY("https://vocabulary.raid.org/relatedObject.category.id/192"),
 
-
-
+    SUBJECT_ID_PREFIX("https://linked.data.gov.au/def/anzsrc-for/2020/"),
 
     ;
 

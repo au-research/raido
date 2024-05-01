@@ -18,7 +18,6 @@ import static au.org.raid.api.endpoint.message.ValidationMessage.*;
 @Component
 @RequiredArgsConstructor
 public class SubjectValidator {
-    private static final String SUBJECT_PREFIX = "https://linked.data.gov.au/def/anzsrc-for/2020/";
 
     private final SubjectTypeRepository subjectTypeRepository;
     private final SubjectKeywordValidator subjectKeywordValidator;
@@ -53,7 +52,7 @@ public class SubjectValidator {
             } else {
                 final var subjectId = subject.getId().substring(subject.getId().lastIndexOf('/') + 1);
 
-                if (!subject.getId().startsWith(SUBJECT_PREFIX) || subjectId.matches(".*\\D.*")) {
+                if (!subject.getId().startsWith(SchemaValues.SUBJECT_ID_PREFIX.getUri()) || subjectId.matches(".*\\D.*")) {
                     final var failure = new ValidationFailure();
                     failure.setFieldId(String.format("subject[%d].id", subjectIndex));
                     failure.setMessage(String.format("%s is not a valid field of research", subject.getId()));
