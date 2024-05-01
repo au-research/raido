@@ -1,5 +1,6 @@
 import { Subject } from "@/generated/raid";
 import language from "@/references/language.json";
+import subjectTypeReference from "@/references/subject_type.json";
 import {
   Box,
   Card,
@@ -35,6 +36,16 @@ export default function ShowSubjectComponent({
             )}
           </Box>
           {subject?.map((subject, index) => {
+            const extractedSubjectId = subject?.id
+              ?.toString()
+              .replace("https://linked.data.gov.au/def/anzsrc-for/2020/", "");
+
+            const subjectReferenceResult = subjectTypeReference.find(
+              (el) => el.id.toString() === extractedSubjectId
+            );
+
+            const subjectTitle = `${subjectReferenceResult?.name} (${subjectReferenceResult?.id})`;
+
             return (
               <Stack spacing={2} key={index}>
                 <Box className="raid-card-well">
@@ -43,7 +54,7 @@ export default function ShowSubjectComponent({
                       <Box>
                         <Typography variant="body2">Subject</Typography>
                         <Typography color="text.secondary" variant="body1">
-                          {subject.id}
+                          {subjectTitle}
                         </Typography>
                       </Box>
                     </Grid>

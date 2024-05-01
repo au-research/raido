@@ -12,7 +12,7 @@ import ShowOrganisationComponent from "@/pages/ShowRaidPage/components/ShowOrgan
 import ShowRelatedObjectComponent from "@/pages/ShowRaidPage/components/ShowRelatedObjectComponent";
 import ShowRelatedRaidComponent from "@/pages/ShowRaidPage/components/ShowRelatedRaidComponent";
 // import ShowSpatialCoverageComponent from "@/pages/ShowRaidPage/components/ShowSpatialCoverageComponent";
-// import ShowSubjectComponent from "@/pages/ShowRaidPage/components/ShowSubjectComponent";
+import ShowSubjectComponent from "@/pages/ShowRaidPage/components/ShowSubjectComponent";
 import ShowTitleComponent from "@/pages/ShowRaidPage/components/ShowTitleComponent";
 import type { Breadcrumb } from "@/types";
 import {
@@ -112,9 +112,9 @@ export default function ShowRaidPageContent({
             <ShowAccessComponent access={raidData.access} />
           </Box>
 
-          {/* <Box id="subjects" className="scroll">
+          <Box id="subjects" className="scroll">
             <ShowSubjectComponent subject={raidData.subject} />
-          </Box> */}
+          </Box>
 
           {/* <pre>ToDo: Traditional Knowledge Label</pre> */}
 

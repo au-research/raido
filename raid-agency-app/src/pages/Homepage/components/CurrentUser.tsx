@@ -1,4 +1,5 @@
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
+import { Circle as CircleIcon } from "@mui/icons-material";
 import {
   Box,
   Card,
@@ -9,7 +10,6 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { Circle as CircleIcon } from "@mui/icons-material";
 import { KeycloakTokenParsed } from "keycloak-js";
 
 const keycloakInternalRoles = [
@@ -70,6 +70,7 @@ export default function CurrentUser() {
               <Stack direction="row" gap={1}>
                 {roles?.sort().map((el: string) => (
                   <Chip
+                    key={el}
                     variant="outlined"
                     color="primary"
                     size="small"

@@ -16,9 +16,8 @@ import FormDescriptionsComponent from "./components/FormDescriptionsComponent";
 import FormOrganisationsComponent from "./components/FormOrganisationsComponent";
 import FormRelatedObjectsComponent from "./components/FormRelatedObjectsComponent";
 import FormRelatedRaidsComponent from "./components/FormRelatedRaidsComponent";
+import FormSubjectsComponent from "./components/FormSubjectsComponent";
 import FormTitlesComponent from "./components/FormTitlesComponent";
-
-// import FormSubjectsComponent from "./components/FormSubjectsComponent";
 // import FormSpatialCoveragesComponent from "./components/FormSpatialCoveragesComponent";
 
 const formFields = [
@@ -62,10 +61,10 @@ const formFields = [
     id: "access",
     component: FormAccessComponent,
   },
-  // {
-  //   id: "subjects",
-  //   component: FormSubjectsComponent,
-  // },
+  {
+    id: "subjects",
+    component: FormSubjectsComponent,
+  },
   // {
   //   id: "spatial-coverage",
   //   component: FormSpatialCoveragesComponent,

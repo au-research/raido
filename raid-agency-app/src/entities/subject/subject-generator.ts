@@ -20,7 +20,7 @@ export const subjectKeywordGenerator = (): SubjectKeyword => {
 export const subjectGenerator = (): Subject => {
   const randomIndex = Math.floor(Math.random() * subjectType.length);
   return {
-    id: subjectType[randomIndex].id,
+    id: `https://linked.data.gov.au/def/anzsrc-for/2020/${subjectType[randomIndex].id}`,
     schemaUri: `https://vocabs.ardc.edu.au/viewById/316`,
     keyword: [subjectKeywordGenerator()],
   };
