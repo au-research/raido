@@ -6,6 +6,7 @@ package au.org.raid.db.jooq.tables.records;
 
 import au.org.raid.db.jooq.enums.SchemaStatus;
 import au.org.raid.db.jooq.tables.OrganisationSchema;
+
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record3;

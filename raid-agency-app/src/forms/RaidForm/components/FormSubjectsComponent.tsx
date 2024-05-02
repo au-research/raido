@@ -1,4 +1,4 @@
-import { RaidDto } from "@/generated/raid";
+import { RaidDto, Subject } from "@/generated/raid";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
@@ -24,7 +24,7 @@ import {
   useFieldArray,
 } from "react-hook-form";
 
-import subjectType from "@/references/subject_type.json";
+import subjectTypeReference from "@/references/subject_type.json";
 
 import { subjectGenerator } from "@/entities/subject/subject-generator";
 import { useCallback } from "react";
@@ -56,12 +56,17 @@ function SubjectRootField({
     <Controller
       control={control}
       name={`subject.${subjectsArrayIndex}`}
+      defaultValue={{} as Subject}
       render={({ field: { onChange, ...controllerField } }) => {
-        const subjectTitle = controllerField?.value?.id
-          ? subjectType.find(
-              (type) => type.id.toString() === controllerField?.value?.id
-            )?.name
-          : `Subject ${subjectsArrayIndex + 1}`;
+        const extractedSubjectId = controllerField?.value?.id
+          ?.toString()
+          .replace("https://linked.data.gov.au/def/anzsrc-for/2020/", "");
+
+        const subjectReferenceResult = subjectTypeReference.find(
+          (el) => el.id.toString() === extractedSubjectId
+        );
+
+        const subjectTitle = `${subjectReferenceResult?.name} (${subjectReferenceResult?.id})`;
 
         return (
           <>
@@ -85,53 +90,44 @@ function SubjectRootField({
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={12} md={12}>
                       <Autocomplete
-                        options={subjectType}
-                        value={subjectType.find(
-                          (el) => el.id === controllerField?.value?.id
-                        )}
-                        getOptionLabel={(option) => option.name}
-                        onChange={(_, newValue) => onChange(newValue)}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            key={params.id}
-                            size="small"
-                            label="Subject ID"
-                          />
-                        )}
-                      />
-                      {/* <Autocomplete
-                        options={subjectType.sort((a, b) =>
-                          a.name.localeCompare(b.name)
-                        )}
-                        getOptionLabel={(option) => {
-                          return `${option.id}: ${option.name}`;
-                        }}
+                        options={subjectTypeReference}
                         value={
-                          subjectType.find(
-                            (type) =>
-                              type.id.toString() === `https://linked.data.gov.au/def/anzsrc-for/2020/${controllerField?.value?.id}`
-                          ) || null
+                          subjectTypeReference.find((el) => {
+                            return (
+                              el.id ===
+                              controllerField?.value?.id.replace(
+                                "https://linked.data.gov.au/def/anzsrc-for/2020/",
+                                ""
+                              )
+                            );
+                          }) || null
                         }
+                        getOptionLabel={(option) => {
+                          return `${option.id.split("/").pop()}: ${
+                            option.name
+                          }`;
+                        }}
                         onChange={(_, newValue) => {
-                          const updatedValue = {
+                          console.log("+++ newValue", newValue);
+                          onChange({
                             ...controllerField?.value,
-                            id: newValue?.id.replace("https://linked.data.gov.au/def/anzsrc-for/2020/", ""),
-                          };
-                          onChange(updatedValue);
+                            id: `https://linked.data.gov.au/def/anzsrc-for/2020/${newValue?.id}`,
+                          });
                         }}
                         isOptionEqualToValue={(option, value) => {
                           return option.id === value.id;
                         }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            key={params.id}
-                            size="small"
-                            label="Subject ID"
-                          />
-                        )}
-                      /> */}
+                        renderInput={(params) => {
+                          return (
+                            <TextField
+                              {...params}
+                              key={params.id}
+                              size="small"
+                              label="Subject ID"
+                            />
+                          );
+                        }}
+                      />
                     </Grid>
                   </Grid>
 
