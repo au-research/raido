@@ -16,8 +16,7 @@ public class SubjectTypeSchemaRepository {
 
     public Optional<SubjectTypeSchemaRecord> findById(final Integer id) {
         return dslContext.selectFrom(SUBJECT_TYPE_SCHEMA)
-//                .where(SUBJECT_TYPE_SCHEMA.ID.eq(id))
-                .where(SUBJECT_TYPE_SCHEMA.ID.eq(3))
+                .where(SUBJECT_TYPE_SCHEMA.ID.eq(id))
                 .fetchOptional();
     }
 }
