@@ -1,9 +1,9 @@
 import organisationRole from "@/references/organisation_role.json";
 import organisationRoleSchema from "@/references/organisation_role_schema.json";
 
-import organisationSchema from "@/references/organisation_schema.json";
+import organisationSchemaReference from "@/references/organisation_schema.json";
 
-import { combinedPattern } from "@/Util/DateUtil";
+import { combinedPattern } from "@/utils/date-utils/date-utils";
 import { z } from "zod";
 
 const organisationRoleValidationSchema = z
@@ -22,7 +22,7 @@ const organisationRoleValidationSchema = z
 export const organisationValidationSchema = z.array(
   z.object({
     id: z.string(),
-    schemaUri: z.literal(organisationSchema[0].uri),
+    schemaUri: z.literal(organisationSchemaReference[0].uri),
     role: organisationRoleValidationSchema,
   })
 );

@@ -1,7 +1,7 @@
 import { titleMapping } from "@/entities/title/title-mapping";
 import { type Title } from "@/generated/raid";
 import language from "@/references/language.json";
-import { dateDisplayFormatter } from "@/Util/DateUtil";
+import { dateDisplayFormatter } from "@/utils/date-utils/date-utils";
 import {
   Box,
   Card,

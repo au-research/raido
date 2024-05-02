@@ -1,5 +1,9 @@
 import { describe, expect, it, test } from "vitest";
-import { addDays, dateDisplayFormatter, parseJwtDate } from "./DateUtil";
+import {
+  addDays,
+  dateDisplayFormatter,
+  parseJwtDate,
+} from "@/utils/date-utils/date-utils";
 
 describe("parseJwtDate", () => {
   it("should return a Date object for valid numeric string input", () => {
@@ -43,7 +47,7 @@ describe("addDays", () => {
     const expectedDate = new Date();
     expectedDate.setDate(expectedDate.getDate() + daysToAdd);
     expect(result.toISOString().split("T")[0]).toBe(
-      expectedDate.toISOString().split("T")[0],
+      expectedDate.toISOString().split("T")[0]
     );
   });
 

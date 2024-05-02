@@ -25,7 +25,7 @@ import {
   useFieldArray,
 } from "react-hook-form";
 
-import { dateHelperTextRequired } from "@/Util/DateUtil";
+import { dateHelperTextRequired } from "@/utils/date-utils/date-utils";
 import { useCallback } from "react";
 import { contributorMapping } from "@/entities/contributor/contributor-mapping";
 

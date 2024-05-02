@@ -1,4 +1,4 @@
-import { combinedPattern } from "@/Util/DateUtil";
+import { combinedPattern } from "@/utils/date-utils/date-utils";
 import { z } from "zod";
 
 export const dateValidationSchema = z.object({

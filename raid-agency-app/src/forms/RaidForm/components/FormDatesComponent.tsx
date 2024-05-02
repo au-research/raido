@@ -1,5 +1,8 @@
 import { RaidDto } from "@/generated/raid";
-import { dateHelperText, dateHelperTextRequired } from "@/Util/DateUtil";
+import {
+  dateHelperText,
+  dateHelperTextRequired,
+} from "@/utils/date-utils/date-utils";
 import {
   Box,
   Card,
@@ -79,7 +82,7 @@ export default function FormDatesComponent({
                     size="small"
                     fullWidth
                     {...field}
-                    value={field.value}
+                    value={field.value || ""}
                     error={!!errors?.date?.endDate}
                     helperText={
                       !errors?.date?.endDate
