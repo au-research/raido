@@ -1,1 +1,17 @@
-[]
+[
+  {
+    "id": 1,
+    "pid": "https://orcid.org/0009-0000-9306-3120",
+    "schema_id": 1
+  },
+  {
+    "id": 2,
+    "pid": "https://orcid.org/0009-0006-4129-5257",
+    "schema_id": 1
+  },
+  {
+    "id": 3,
+    "pid": "https://orcid.org/0009-0001-8177-319X",
+    "schema_id": 1
+  }
+]
