@@ -1,10 +1,9 @@
-import { FindAllRaidsRequest, RaidDto } from "@/generated/raid";
+import { RaidDto } from "@/generated/raid";
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
-
-import SingletonRaidApi from "@/SingletonRaidApi";
 import LoadingPage from "@/pages/LoadingPage";
+import { fetchRaids } from "@/services/raid";
 import {
   Alert,
   Card,
@@ -22,34 +21,23 @@ import { startDateColumn } from "./columns/startDateColumn";
 import { titleColumn } from "./columns/titleColumn";
 
 export default function RaidTable({ title }: { title?: string }) {
-  const raidApi = SingletonRaidApi.getInstance();
   const { keycloak, initialized } = useCustomKeycloak();
 
-  const servicePointId = keycloak.tokenParsed?.service_point;
-
-  const listRaids = async ({ servicePointId }: FindAllRaidsRequest) => {
-    const findAllRaidsRequest: FindAllRaidsRequest = {
-      servicePointId: servicePointId,
-    };
-
-    return raidApi.findAllRaids(findAllRaidsRequest, {
-      headers: {
-        Authorization: `Bearer ${keycloak.token}`,
-      },
-    });
-  };
-
   const raidQuery = useQuery<RaidDto[]>({
-    queryKey: ["listRaids", servicePointId],
-    queryFn: () => listRaids({ servicePointId }),
+    queryKey: ["listRaids"],
+    queryFn: () =>
+      fetchRaids({
+        fields: ["identifier", "title", "date"],
+        keycloak: keycloak,
+      }),
     enabled: initialized && keycloak.authenticated,
   });
+
+  const appWritesEnabled = true;
 
   if (raidQuery.isPending) {
     return <LoadingPage />;
   }
-
-  const appWritesEnabled = true;
 
   if (raidQuery.isError) {
     return <Typography variant="h6">No data.</Typography>;

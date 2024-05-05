@@ -20,7 +20,7 @@ import { handleColumn } from "./columns/handleColumn";
 import { startDateColumn } from "./columns/startDateColumn";
 import { titleColumn } from "./columns/titleColumn";
 
-export default function RaidTable({ title }: { title?: string }) {
+export default function RaidTablePage({ title }: { title?: string }) {
   const { keycloak, initialized } = useCustomKeycloak();
 
   const raidQuery = useQuery<RaidDto[]>({
