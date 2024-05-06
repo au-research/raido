@@ -1,6 +1,6 @@
-import SingletonServicePointApi from "@/SingletonServicePointApi";
 import type { CreateServicePointRequest } from "@/generated/raid";
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
+import { createServicePoint } from "@/services/service-points";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,
@@ -18,7 +18,6 @@ import { z } from "zod";
 
 export default function ServicePointCreateForm() {
   const queryClient = useQueryClient();
-  const api = SingletonServicePointApi.getInstance();
   const { keycloak } = useCustomKeycloak();
 
   const initalServicePointValues: CreateServicePointRequest = {
@@ -68,19 +67,25 @@ export default function ServicePointCreateForm() {
     console.log("error", error);
   };
 
-  const createServicePoint = async (
+  const createServicePointHandler = async (
     servicePoint: CreateServicePointRequest
   ) => {
-    return await api.createServicePoint(servicePoint, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${keycloak.token}`,
+    createServicePoint({
+      data: {
+        servicePointCreateRequest: servicePoint.servicePointCreateRequest,
       },
+      token: keycloak.token || "",
     });
+    // return await api.createServicePoint(servicePoint, {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: `Bearer ${keycloak.token}`,
+    //   },
+    // });
   };
 
   const createServicePointMutation = useMutation({
-    mutationFn: createServicePoint,
+    mutationFn: createServicePointHandler,
     onError: handleCreateError,
     onSuccess: handleCreateSuccess,
   });

@@ -1,45 +1,36 @@
-import SingletonServicePointApi from "@/SingletonServicePointApi";
 import BreadcrumbsBar from "@/components/BreadcrumbsBar";
 import ErrorAlertComponent from "@/components/ErrorAlertComponent";
-import type {
-  FindServicePointByIdRequest,
-  ServicePoint,
-} from "@/generated/raid";
+import type { ServicePoint } from "@/generated/raid";
 
+import { useAuthHelper } from "@/components/useAuthHelper";
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import LoadingPage from "@/pages/LoadingPage";
+import ServicePointUpdateForm from "@/pages/ServicePoint/components/ServicePointUpdateForm";
+import ServicePointUsers from "@/pages/ServicePoint/components/ServicePointUsers";
+import { fetchServicePoint } from "@/services/service-points";
 import { Breadcrumb } from "@/types";
 import { Home as HomeIcon, Hub as HubIcon } from "@mui/icons-material";
 import { Alert, Card, CardContent, CardHeader, Container } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import ServicePointUpdateForm from "@/pages/ServicePoint/components/ServicePointUpdateForm";
-import ServicePointUsers from "@/pages/ServicePoint/components/ServicePointUsers";
-import { useAuthHelper } from "@/components/useAuthHelper";
 
 export default function ServicePoint() {
   const { isOperator } = useAuthHelper();
-  const servicePointApi = SingletonServicePointApi.getInstance();
 
   const { keycloak, initialized } = useCustomKeycloak();
 
   const { servicePointId } = useParams() as { servicePointId: string };
 
-  const findServicePointByIdRequest: FindServicePointByIdRequest = {
-    id: +servicePointId,
-  };
-
-  const getServicepointData = async () => {
-    return servicePointApi.findServicePointById(findServicePointByIdRequest, {
-      headers: {
-        Authorization: `Bearer ${keycloak.token}`,
-      },
+  const getServicePoint = async () => {
+    return await fetchServicePoint({
+      id: +servicePointId,
+      token: keycloak.token || "",
     });
   };
 
   const servicePointQuery = useQuery<ServicePoint>({
     queryKey: ["servicePoints", servicePointId.toString()],
-    queryFn: async () => getServicepointData(),
+    queryFn: getServicePoint,
     enabled: initialized && keycloak.authenticated,
   });
 
