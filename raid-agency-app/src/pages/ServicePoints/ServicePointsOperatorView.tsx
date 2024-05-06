@@ -1,27 +1,24 @@
-import SingletonServicePointApi from "@/SingletonServicePointApi";
 import ErrorAlertComponent from "@/components/ErrorAlertComponent";
 import ServicePointsTable from "@/components/ServicePointsTable";
 import { ServicePoint } from "@/generated/raid";
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import LoadingPage from "@/pages/LoadingPage";
 import ServicePointCreateForm from "@/pages/ServicePoint/components/ServicePointCreateForm";
+import { fetchServicePoints } from "@/services/service-points";
 import { Card, CardContent, CardHeader, Stack } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 
 export default function ServicePointsOperatorView() {
   const { keycloak, initialized } = useCustomKeycloak();
-  const servicePointApi = SingletonServicePointApi.getInstance();
 
-  const fetchServicePoints = async () => {
-    return await servicePointApi.findAllServicePoints({
-      headers: {
-        Authorization: `Bearer ${keycloak.token}`,
-      },
+  const getServicePoints = async () => {
+    return await fetchServicePoints({
+      token: keycloak.token || "",
     });
   };
 
   const query = useQuery<ServicePoint[]>({
-    queryFn: fetchServicePoints,
+    queryFn: getServicePoints,
     queryKey: ["servicePoints"],
     enabled: initialized && keycloak.authenticated,
   });

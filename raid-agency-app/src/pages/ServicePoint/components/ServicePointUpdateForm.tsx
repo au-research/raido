@@ -1,6 +1,6 @@
 import type { ServicePoint, UpdateServicePointRequest } from "@/generated/raid";
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
-import SingletonServicePointApi from "@/SingletonServicePointApi";
+import { updateServicePoint } from "@/services/service-points";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,
@@ -22,7 +22,6 @@ export default function ServicePointUpdateForm({
   servicePoint: ServicePoint;
 }) {
   const queryClient = useQueryClient();
-  const api = SingletonServicePointApi.getInstance();
   const { keycloak } = useCustomKeycloak();
 
   const initalServicePointValues: UpdateServicePointRequest = {
@@ -71,19 +70,27 @@ export default function ServicePointUpdateForm({
     console.log("error", error);
   };
 
-  const updateServicePoint = async (
+  const updateServicePointHandler = async (
     servicePoint: UpdateServicePointRequest
   ) => {
-    return await api.updateServicePoint(servicePoint, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${keycloak.token}`,
+    return await updateServicePoint({
+      id: servicePoint.id,
+      data: {
+        id: servicePoint.id,
+        servicePointUpdateRequest: servicePoint.servicePointUpdateRequest,
       },
+      token: keycloak.token || "",
     });
+    // return await api.updateServicePoint(servicePoint, {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: `Bearer ${keycloak.token}`,
+    //   },
+    // });
   };
 
   const updateServicePointMutation = useMutation({
-    mutationFn: updateServicePoint,
+    mutationFn: updateServicePointHandler,
     onError: handleCreateError,
     onSuccess: handleUpdateSuccess,
   });
@@ -185,7 +192,8 @@ export default function ServicePointUpdateForm({
                     {...field}
                     value={field.value}
                     error={
-                      !!form.formState.errors?.servicePointUpdateRequest?.groupId
+                      !!form.formState.errors?.servicePointUpdateRequest
+                        ?.groupId
                     }
                   />
                 )}
