@@ -71,7 +71,16 @@
         <!--
         <MetadataProvider type="XML" validate="true"
                           url="https://md.test.aaf.edu.au/aaf-test-metadata.xml"
-                          backingFilePath="federation-metadata.xml" maxRefreshDelay="7200">
+                          backingFilePath="aaf-metadata.xml" maxRefreshDelay="7200">
+            <MetadataFilter type="RequireValidUntil" maxValidityInterval="2419200"/>
+            <MetadataFilter type="Signature" certificate="aaf-metadata-certificate.pem" verifyBackup="false"/>
+            <DiscoveryFilter type="Blacklist" matcher="EntityAttributes" trimTags="true"
+                             attributeName="http://macedir.org/entity-category"
+                             attributeNameFormat="urn:oasis:names:tc:SAML:3.0:attrname-format:uri"
+                             attributeValue="http://refeds.org/category/hide-from-discovery" />
+        </MetadataProvider>
+
+        <MetadataProvider type="XML" validate="true" file="aaf-metadata.xml">
             <MetadataFilter type="RequireValidUntil" maxValidityInterval="2419200"/>
             <MetadataFilter type="Signature" certificate="aaf-metadata-certificate.pem" verifyBackup="false"/>
             <DiscoveryFilter type="Blacklist" matcher="EntityAttributes" trimTags="true"
@@ -81,14 +90,9 @@
         </MetadataProvider>
         -->
 
-        <MetadataProvider type="XML" validate="true" file="federation-metadata.xml">
-            <MetadataFilter type="RequireValidUntil" maxValidityInterval="2419200"/>
-            <MetadataFilter type="Signature" certificate="aaf-metadata-certificate.pem" verifyBackup="false"/>
-            <DiscoveryFilter type="Blacklist" matcher="EntityAttributes" trimTags="true"
-                             attributeName="http://macedir.org/entity-category"
-                             attributeNameFormat="urn:oasis:names:tc:SAML:3.0:attrname-format:uri"
-                             attributeValue="http://refeds.org/category/hide-from-discovery" />
+        <MetadataProvider type="XML" validate="false" file="aaf-metadata.xml">
         </MetadataProvider>
+
 
         <!-- Example of remotely supplied "on-demand" signed metadata. -->
         <!--
