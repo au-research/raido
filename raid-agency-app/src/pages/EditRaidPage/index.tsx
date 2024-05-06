@@ -1,9 +1,10 @@
 import BreadcrumbsBar from "@/components/BreadcrumbsBar";
 import ErrorAlertComponent from "@/components/ErrorAlertComponent";
 import RaidForm from "@/forms/RaidForm";
-import { FindRaidByNameRequest, RaidApi, RaidDto } from "@/generated/raid";
+import { RaidDto } from "@/generated/raid";
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import LoadingPage from "@/pages/LoadingPage";
+import { fetchRaid, updateRaid } from "@/services/raid";
 import type { Breadcrumb } from "@/types";
 import { raidRequest } from "@/utils";
 import {
@@ -14,12 +15,11 @@ import {
 } from "@mui/icons-material";
 import { Container, Stack } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import React, { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function EditRaidPage() {
   const { keycloak, initialized } = useCustomKeycloak();
-  const raidApi = useMemo(() => new RaidApi(), []);
   const navigate = useNavigate();
 
   const { prefix, suffix } = useParams() as { prefix: string; suffix: string };
@@ -28,49 +28,18 @@ export default function EditRaidPage() {
   }
   const queryKey = useMemo(() => ["raids", prefix, suffix], [prefix, suffix]);
 
-  const requestParameters: FindRaidByNameRequest = React.useMemo(
-    () => ({
-      prefix,
-      suffix,
-    }),
-    [prefix, suffix]
-  );
-
-  const getRaid = async (): Promise<RaidDto> => {
-    return await raidApi.findRaidByName(requestParameters, {
-      headers: {
-        Authorization: `Bearer ${keycloak.token}`,
-      },
-    });
-  };
-
   const query = useQuery<RaidDto>({
     queryKey: queryKey,
-    queryFn: getRaid,
+    queryFn: () =>
+      fetchRaid({
+        id: `${prefix}/${suffix}`,
+        token: keycloak.token || "",
+      }),
     enabled: initialized && keycloak.authenticated,
   });
 
-  const handleRaidUpdate = useCallback(
-    async (data: RaidDto) => {
-      return await raidApi.updateRaid(
-        {
-          prefix,
-          suffix,
-          raidUpdateRequest: raidRequest(data),
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${keycloak.token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-    },
-    [raidApi, prefix, suffix]
-  );
-
   const updateRequest = useMutation({
-    mutationFn: handleRaidUpdate,
+    mutationFn: updateRaid,
     onSuccess: () => {
       navigate(`/raids/${prefix}/${suffix}`);
     },
@@ -118,7 +87,13 @@ export default function EditRaidPage() {
           prefix={prefix}
           suffix={suffix}
           raidData={query.data}
-          onSubmit={updateRequest.mutate}
+          onSubmit={async (data) => {
+            updateRequest.mutate({
+              id: `${prefix}/${suffix}`,
+              data: raidRequest(data),
+              token: keycloak.token || "",
+            });
+          }}
           isSubmitting={updateRequest.isPending}
         />
       </Stack>

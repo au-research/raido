@@ -1,40 +1,25 @@
-import { FindRaidByNameRequest, RaidDto } from "@/generated/raid";
-import SingletonRaidApi from "@/SingletonRaidApi";
 import ErrorAlertComponent from "@/components/ErrorAlertComponent";
+import { RaidDto } from "@/generated/raid";
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import LoadingPage from "@/pages/LoadingPage";
+import { fetchRaid } from "@/services/raid";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
 import { useParams } from "react-router-dom";
 import ShowRaidPageContent from "./pages/ShowRaidPageContent";
 
-export default function ShowRaidPage({ version }: { version?: number }) {
+export default function ShowRaidPage() {
   const { keycloak, initialized } = useCustomKeycloak();
-  const raidApi = SingletonRaidApi.getInstance();
 
   const { prefix, suffix } = useParams() as { prefix: string; suffix: string };
   const handle = `${prefix}/${suffix}`;
 
-  const requestParameters: FindRaidByNameRequest = React.useMemo(
-    () => ({
-      prefix,
-      suffix,
-      version,
-    }),
-    [prefix, suffix, version]
-  );
-
-  const getRaid = async (): Promise<RaidDto> => {
-    return await raidApi.findRaidByName(requestParameters, {
-      headers: {
-        Authorization: `Bearer ${keycloak.token}`,
-      },
-    });
-  };
-
   const readQuery = useQuery<RaidDto>({
     queryKey: ["raids", prefix, suffix],
-    queryFn: getRaid,
+    queryFn: () =>
+      fetchRaid({
+        id: handle,
+        token: keycloak.token || "",
+      }),
     enabled: initialized && keycloak.authenticated,
   });
 
