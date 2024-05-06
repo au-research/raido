@@ -13,6 +13,9 @@ COPY files/etc/shibboleth/shibboleth2.xml /etc/shibboleth/shibboleth2.xml
 COPY files/var/www/html/secure/environment.php /var/www/html/secure/environment.php
 COPY files/etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf
 
+RUN chown -R shibd:shibd /etc/shibboleth/
+RUN chown -R shibd:shibd /var/cache/shibboleth/
+
 WORKDIR /etc/shibboleth
 
 RUN ./keygen.sh -h app.test.raid.org.au -e https://app.test.raid.org.au/shibboleth -f -y 10
