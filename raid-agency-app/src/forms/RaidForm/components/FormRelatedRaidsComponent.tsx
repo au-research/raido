@@ -1,11 +1,10 @@
-import { RaidDto } from "@/generated/raid";
-import { FindAllRaidsRequest } from "@/generated/raid/apis/RaidApi";
-import SingletonRaidApi from "@/SingletonRaidApi";
 import ErrorAlertComponent from "@/components/ErrorAlertComponent";
 import { relatedRaidGenerator } from "@/entities/related-raid/related-raid-generator";
+import { RaidDto } from "@/generated/raid";
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import LoadingPage from "@/pages/LoadingPage";
 import relatedRaidType from "@/references/related_raid_type.json";
+import { fetchRaids } from "@/services/raid";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
@@ -41,19 +40,7 @@ export default function FormRelatedRaidsComponent({
   errors: FieldErrors<RaidDto>;
 }) {
   const { keycloak, initialized } = useCustomKeycloak();
-  const raidApi = SingletonRaidApi.getInstance();
   const servicePointId = keycloak.tokenParsed?.service_point;
-
-  const listRaids = async ({ servicePointId }: FindAllRaidsRequest) => {
-    const findAllRaidsRequest: FindAllRaidsRequest = {
-      servicePointId: servicePointId || 20000000,
-    };
-    return raidApi.findAllRaids(findAllRaidsRequest, {
-      headers: {
-        Authorization: `Bearer ${keycloak.token}`,
-      },
-    });
-  };
 
   const relatedRaidsFieldArray = useFieldArray({
     control,
@@ -62,7 +49,11 @@ export default function FormRelatedRaidsComponent({
 
   const query = useQuery<RaidDto[]>({
     queryKey: ["listRaids", servicePointId],
-    queryFn: () => listRaids({ servicePointId }),
+    queryFn: () =>
+      fetchRaids({
+        fields: [],
+        keycloak: keycloak,
+      }),
   });
 
   const handleAddRelatedRaids = useCallback(() => {

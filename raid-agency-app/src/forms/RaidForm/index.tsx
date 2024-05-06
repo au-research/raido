@@ -7,7 +7,6 @@ import { Box, Fab, Stack, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import FormAccessComponent from "./components/FormAccessComponent";
 import FormAlternateIdentifiersComponent from "./components/FormAlternateIdentifiersComponent";
 import FormAlternateUrlsComponent from "./components/FormAlternateUrlsComponent";
 import FormContributorsComponent from "./components/FormContributorsComponent";
@@ -18,6 +17,7 @@ import FormRelatedObjectsComponent from "./components/FormRelatedObjectsComponen
 import FormRelatedRaidsComponent from "./components/FormRelatedRaidsComponent";
 import FormSubjectsComponent from "./components/FormSubjectsComponent";
 import FormTitlesComponent from "./components/FormTitlesComponent";
+// import FormAccessComponent from "./components/FormAccessComponent";
 // import FormSpatialCoveragesComponent from "./components/FormSpatialCoveragesComponent";
 
 const formFields = [
@@ -57,10 +57,10 @@ const formFields = [
     id: "related-raids",
     component: FormRelatedRaidsComponent,
   },
-  {
-    id: "access",
-    component: FormAccessComponent,
-  },
+  // {
+  //   id: "access",
+  //   component: FormAccessComponent,
+  // },
   {
     id: "subjects",
     component: FormSubjectsComponent,
