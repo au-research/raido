@@ -29,6 +29,7 @@ export default function RaidTablePage({ title }: { title?: string }) {
       fetchRaids({
         fields: ["identifier", "title", "date"],
         keycloak: keycloak,
+        spOnly: false,
       }),
     enabled: initialized && keycloak.authenticated,
   });

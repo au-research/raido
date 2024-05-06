@@ -1,36 +1,56 @@
 import { RaidDto } from "@/generated/raid";
 import { getApiEndpoint } from "@/utils/api-utils/api-utils";
+import type Keycloak from "keycloak-js";
+import { fetchServicePoints } from "@/services/service-points";
 
 const endpoint = getApiEndpoint();
 
 export const fetchRaids = async ({
-  servicePointId,
   fields,
-  token,
+  keycloak,
+  spOnly,
 }: {
-  servicePointId: number | undefined;
   fields?: string[];
-  token: string;
+  keycloak: Keycloak;
+  spOnly?: boolean;
 }): Promise<RaidDto[]> => {
   const url = new URL(`${endpoint}/raid/`);
 
-  console.log("servicePointId", servicePointId);
+  const { service_point_group_id: servicePointGroupId } =
+    keycloak.tokenParsed || {};
 
-  // Check if fields are provided and need to be included
+  if (servicePointGroupId && spOnly) {
+    try {
+      const servicePoints = await fetchServicePoints({
+        token: keycloak.token || "",
+      });
+
+      const userServicePoint = servicePoints.find(
+        ({ groupId }) => groupId === servicePointGroupId
+      );
+
+      if (userServicePoint?.id) {
+        url.searchParams.set("servicePointId", userServicePoint?.id.toString());
+      }
+
+      console.log(userServicePoint);
+    } catch (error) {
+      console.error("Failed to fetch service points:", error);
+    }
+  } else {
+    console.warn("No service point group ID provided");
+  }
+
   if (fields && fields.length > 0) {
     const fieldsQuery = fields.join(",");
     url.searchParams.set("includeFields", fieldsQuery);
-  }
-
-  if (servicePointId) {
-    url.searchParams.set("servicePointId", servicePointId.toString());
   }
 
   const response = await fetch(url, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${keycloak.token}`,
     },
   });
   return await response.json();
