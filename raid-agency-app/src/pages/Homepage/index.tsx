@@ -1,10 +1,10 @@
 import { useAuthHelper } from "@/components/useAuthHelper";
+import RaidTablePage from "@/pages/RaidTablePage";
 import { Add as AddIcon } from "@mui/icons-material";
 import { Alert, Container, Fab, Stack, Tooltip } from "@mui/material";
 import { Link } from "react-router-dom";
 import CurrentUser from "./components/CurrentUser";
 import GroupSelector from "./components/GroupSelector";
-import RaidTable from "./components/RaidTable";
 
 export default function HomePage() {
   const { hasServicePointGroup, isServicePointUser } = useAuthHelper();
@@ -34,9 +34,7 @@ export default function HomePage() {
           </>
         )}
         {!hasServicePointGroup && <GroupSelector />}
-        {hasServicePointGroup && isServicePointUser && (
-          <RaidTable title="Recently minted RAiDs" />
-        )}
+        {hasServicePointGroup && isServicePointUser && <RaidTablePage />}
       </Stack>
     </Container>
   );

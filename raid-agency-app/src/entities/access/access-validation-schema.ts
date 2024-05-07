@@ -25,5 +25,5 @@ const accessStatementValidationSchema = z.object({
 export const accessValidationSchema = z.object({
   type: accessTypeValidationSchema,
   statement: accessStatementValidationSchema,
-  embargoExpiry: z.date().optional(),
+  embargoExpiry: z.date().or(z.string()).optional(),
 });

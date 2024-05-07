@@ -6,7 +6,7 @@ import {
 import BreadcrumbsBar from "@/components/BreadcrumbsBar";
 import type { Breadcrumb } from "@/types";
 import { Container, Stack } from "@mui/material";
-import RaidTable from "./Homepage/components/RaidTable";
+import RaidTablePage from "./RaidTablePage";
 
 export default function RaidsPage() {
   const breadcrumbs: Breadcrumb[] = [
@@ -26,7 +26,7 @@ export default function RaidsPage() {
     <Container maxWidth="lg">
       <Stack gap={2}>
         <BreadcrumbsBar breadcrumbs={breadcrumbs} />
-        <RaidTable />
+        <RaidTablePage />
       </Stack>
     </Container>
   );
