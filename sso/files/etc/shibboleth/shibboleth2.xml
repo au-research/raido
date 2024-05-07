@@ -90,8 +90,7 @@
         </MetadataProvider>
         -->
 
-        <MetadataProvider type="XML" validate="false" file="aaf-metadata.xml">
-        </MetadataProvider>
+        <MetadataProvider type="XML" validate="false" file="aaf-test-metadata.xml"/>
 
 
         <!-- Example of remotely supplied "on-demand" signed metadata. -->

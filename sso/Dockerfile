@@ -13,6 +13,7 @@ RUN openssl req -newkey rsa:2048 -batch -new -nodes -x509 -days 3650 -keyout /et
 COPY files/etc/shibboleth/aaf-metadata-certificate.pem /etc/shibboleth/aaf-metadata-certificate.pem
 COPY files/etc/shibboleth/aaf-metadata.xml /etc/shibboleth/aaf-test-metadata.xml
 COPY files/etc/shibboleth/shibboleth2.xml /etc/shibboleth/shibboleth2.xml
+COPY files/etc/shibboleth/shibd.logger /etc/shibboleth/shibd.logger
 COPY files/var/www/html/secure/environment.php /var/www/html/secure/environment.php
 COPY files/etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf
 
