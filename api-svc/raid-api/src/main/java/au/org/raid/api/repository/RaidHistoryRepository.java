@@ -17,13 +17,14 @@ import static org.jooq.impl.DSL.max;
 @RequiredArgsConstructor
 public class RaidHistoryRepository {
     private final DSLContext dslContext;
-    public void insert(final RaidHistoryRecord raidHistoryRecord) {
-        dslContext.insertInto(RAID_HISTORY)
+    public int insert(final RaidHistoryRecord raidHistoryRecord) {
+        return dslContext.insertInto(RAID_HISTORY)
                 .set(RAID_HISTORY.HANDLE, raidHistoryRecord.getHandle())
                 .set(RAID_HISTORY.REVISION, raidHistoryRecord.getRevision())
                 .set(RAID_HISTORY.DIFF, raidHistoryRecord.getDiff())
                 .set(RAID_HISTORY.CHANGE_TYPE, raidHistoryRecord.getChangeType())
                 .set(RAID_HISTORY.CREATED, LocalDateTime.now())
+                .onConflictDoNothing()
                 .execute();
     }
 

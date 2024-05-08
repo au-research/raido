@@ -2,6 +2,7 @@ package au.org.raid.api.service;
 
 import au.org.raid.api.config.properties.RaidHistoryProperties;
 import au.org.raid.api.entity.ChangeType;
+import au.org.raid.api.exception.InvalidVersionException;
 import au.org.raid.api.factory.*;
 import au.org.raid.api.repository.RaidHistoryRepository;
 import au.org.raid.db.jooq.tables.records.RaidHistoryRecord;
@@ -62,9 +63,13 @@ public class RaidHistoryService {
 
         final var diff = jsonPatchFactory.create(jsonValueFactory.create(history).toString(), raidString);
 
-        raidHistoryRepository.insert(
+        final var recordsUpdated = raidHistoryRepository.insert(
                 raidHistoryRecordFactory.create(handle, newVersion, ChangeType.PATCH, diff)
         );
+
+        if (recordsUpdated < 1) {
+            throw new InvalidVersionException(version);
+        }
 
         if (newVersion % properties.getBaselineInterval() == 0) {
             final var baselineDiff = jsonPatchFactory.create(EMPTY_JSON, raidString);

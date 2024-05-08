@@ -2,6 +2,7 @@ package au.org.raid.api.service;
 
 import au.org.raid.api.config.properties.RaidHistoryProperties;
 import au.org.raid.api.entity.ChangeType;
+import au.org.raid.api.exception.InvalidVersionException;
 import au.org.raid.api.factory.*;
 import au.org.raid.api.repository.RaidHistoryRepository;
 import au.org.raid.db.jooq.tables.records.RaidHistoryRecord;
@@ -23,6 +24,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -46,6 +48,51 @@ class RaidHistoryServiceTest {
     private RaidChangeFactory raidChangeFactory;
     @InjectMocks
     private RaidHistoryService raidHistoryService;
+
+    @Test
+    @DisplayName("Throws InvalidVersionException if version already exists")
+    void throwsInvalidVersionException() throws JsonProcessingException {
+        final var revision = 123;
+        final var request = new RaidUpdateRequest();
+        final var identifier = mock(Id.class);
+        request.setIdentifier(identifier);
+        final var raidJson = "{}";
+        final var handleString = "123.456/abcde";
+        final var handle = new Handle(handleString);
+        final var diff = mock(JsonPatch.class);
+        final var patchRaidHistoryRecord = new RaidHistoryRecord();
+        final var history1 = new RaidHistoryRecord();
+        final var history2 = new RaidHistoryRecord();
+        final var diffString1 = "diff1";
+        final var diffString2 = "diff2";
+        history1.setDiff(diffString1);
+        history2.setDiff(diffString2);
+        final var history1Diff = mock(JsonValue.class);
+        final var history2Diff = mock(JsonValue.class);
+        final var existingRaid = mock(JsonValue.class);
+        final var existingRaidString = "existing-raid";
+
+        when(jsonValueFactory.create(diffString1)).thenReturn(history1Diff);
+        when(jsonValueFactory.create(diffString2)).thenReturn(history2Diff);
+
+        when(jsonValueFactory.create(List.of(history1Diff, history2Diff))).thenReturn(existingRaid);
+        when(existingRaid.toString()).thenReturn(existingRaidString);
+
+        when(objectMapper.writeValueAsString(request)).thenReturn(raidJson);
+        when(identifier.getId()).thenReturn(handleString);
+        when(identifier.getVersion()).thenReturn(revision);
+        when(handleFactory.create(handleString)).thenReturn(handle);
+
+        when(raidHistoryRepository.findAllByHandle(handleString)).thenReturn(List.of(history1, history2));
+        when(jsonPatchFactory.create(existingRaidString, raidJson)).thenReturn(diff);
+        when(raidHistoryRecordFactory.create(eq(handle), eq(124), eq(ChangeType.PATCH), eq(diff))).thenReturn(patchRaidHistoryRecord);
+
+        when(raidHistoryRepository.insert(patchRaidHistoryRecord)).thenReturn(0);
+
+        assertThrows(InvalidVersionException.class, () -> raidHistoryService.save(request));
+
+        verify(raidHistoryRepository).insert(patchRaidHistoryRecord);
+    }
     @Nested
     class CreateTests {
         @Test
@@ -131,6 +178,7 @@ class RaidHistoryServiceTest {
             when(jsonValueFactory.create(List.of(history1Diff, history2Diff), diff)).thenReturn(raidJsonValue);
             when(raidJsonValue.toString()).thenReturn(raidJsonValueAsString);
             when(objectMapper.readValue(eq(raidJsonValueAsString), eq(RaidDto.class))).thenReturn(raidDto);
+            when(raidHistoryRepository.insert(patchRaidHistoryRecord)).thenReturn(1);
 
             final var result = raidHistoryService.save(request);
 
@@ -138,6 +186,7 @@ class RaidHistoryServiceTest {
 
             verify(raidHistoryRepository).insert(patchRaidHistoryRecord);
         }
+
         @Test
         @DisplayName("Saves baseline on update")
         void saveBaselineOnUpdate() throws JsonProcessingException {
@@ -187,6 +236,8 @@ class RaidHistoryServiceTest {
             when(jsonValueFactory.create(List.of(history1Diff, history2Diff), diff)).thenReturn(raidJsonValue);
             when(raidJsonValue.toString()).thenReturn(raidJsonValueAsString);
             when(objectMapper.readValue(eq(raidJsonValueAsString), eq(RaidDto.class))).thenReturn(raidDto);
+
+            when(raidHistoryRepository.insert(patchRaidHistoryRecord)).thenReturn(1);
 
             final var result = raidHistoryService.save(request);
 

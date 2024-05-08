@@ -26,22 +26,28 @@ public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
 
         var raid = createResponse.getBody();
 
-        IntStream.range(1,7).forEach(i -> {
-            final var text = "Version %d".formatted(i + 1);
+        IntStream.range(1,7).forEach(oldVersion -> {
+            final var newVersion = oldVersion + 1;
+            final var text = "Version %d".formatted(newVersion);
 
             final var primaryTitle = getPrimaryTitle(raid);
 
             primaryTitle.setText(text);
-            raid.getIdentifier().setVersion(i);
+            raid.getIdentifier().setVersion(oldVersion);
 
             raidApi.updateRaid(handle.getPrefix(), handle.getSuffix(), raidUpdateRequestFactory.create(raid));
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
 
-            final var response = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null);
+            final var response = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), newVersion);
 
             final var raidDto = response.getBody();
             assert raidDto != null;
 
-            assertThat(raidDto.getIdentifier().getVersion()).isEqualTo(i + 1);
+            assertThat(raidDto.getIdentifier().getVersion()).isEqualTo(newVersion);
             assertThat(getPrimaryTitle(raidDto).getText()).isEqualTo(text);
         });
 

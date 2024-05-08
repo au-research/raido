@@ -61,6 +61,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
             assertThat(updateResult.getIdentifier().getVersion()).isEqualTo(2);
         } catch (final Exception e) {
             fail("Update failed");
+            throw new RuntimeException(e);
         }
 
         final var result = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
