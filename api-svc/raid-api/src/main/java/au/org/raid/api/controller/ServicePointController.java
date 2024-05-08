@@ -5,6 +5,9 @@ import au.org.raid.idl.raidv2.api.ServicePointApi;
 import au.org.raid.idl.raidv2.model.ServicePoint;
 import au.org.raid.idl.raidv2.model.ServicePointCreateRequest;
 import au.org.raid.idl.raidv2.model.ServicePointUpdateRequest;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,6 +19,7 @@ import java.util.List;
 @Controller
 @CrossOrigin
 @RequiredArgsConstructor
+@SecurityScheme(name = "bearerAuth", scheme = "bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 public class ServicePointController implements ServicePointApi {
     private final ServicePointService servicePointService;
 

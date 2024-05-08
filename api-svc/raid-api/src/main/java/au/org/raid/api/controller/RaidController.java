@@ -15,6 +15,9 @@ import au.org.raid.idl.raidv2.model.RaidChange;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
@@ -28,10 +31,10 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-@RestController
 @CrossOrigin
+@RestController
 @RequiredArgsConstructor
+@SecurityScheme(name = "bearerAuth", scheme = "bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 public class RaidController implements RaidApi {
     public static final String SERVICE_POINT_GROUP_ID_CLAIM = "service_point_group_id";
     private final ValidationService validationService;
