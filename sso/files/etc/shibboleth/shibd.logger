@@ -1,12 +1,12 @@
 # set overall behavior
-log4j.rootCategory=DEBUG, shibd_log, warn_log
+log4j.rootCategory=INFO, shibd_log, warn_log
 
 # fairly verbose for DEBUG, so generally leave at INFO
-log4j.category.XMLTooling.XMLObject=DEBUG
-log4j.category.XMLTooling.XMLObjectBuilder=DEBUG
-log4j.category.XMLTooling.KeyInfoResolver=DEBUG
-log4j.category.Shibboleth.IPRange=DEBUG
-log4j.category.Shibboleth.PropertySet=DEBUG
+log4j.category.XMLTooling.XMLObject=INFO
+log4j.category.XMLTooling.XMLObjectBuilder=INFO
+log4j.category.XMLTooling.KeyInfoResolver=INFO
+log4j.category.Shibboleth.IPRange=INFO
+log4j.category.Shibboleth.PropertySet=INFO
 
 # raise for low-level tracing of SOAP client HTTP/SSL behavior
 log4j.category.XMLTooling.libcurl=DEBUG
