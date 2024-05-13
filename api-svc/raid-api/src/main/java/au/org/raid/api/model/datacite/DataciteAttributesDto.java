@@ -22,4 +22,6 @@ public class DataciteAttributesDto {
     private DataciteTypes types;
     private List<DataciteAlternateIdentifier> alternateIdentifiers;
     private List<DataciteFundingReference> fundingReferences;
+    private String event;
+    private String url;
 }

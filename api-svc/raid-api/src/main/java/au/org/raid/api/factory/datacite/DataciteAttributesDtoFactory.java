@@ -1,5 +1,6 @@
 package au.org.raid.api.factory.datacite;
 
+import au.org.raid.api.config.properties.IdentifierProperties;
 import au.org.raid.api.model.datacite.*;
 import au.org.raid.api.util.SchemaValues;
 import au.org.raid.idl.raidv2.model.OrganisationRole;
@@ -27,9 +28,15 @@ public class DataciteAttributesDtoFactory {
     private final DataciteAlternateIdentifierFactory alternateIdentifierFactory;
     private final DatacitePublisherFactory publisherFactory;
     private final DataciteFundingReferenceFactory fundingReferenceFactory;
+    private final IdentifierProperties identifierProperties;
 
     @SneakyThrows
     public DataciteAttributesDto create(RaidCreateRequest request, String handle) {
+        final var url = identifierProperties.getLandingPrefix() + handle;
+
+        final var event = request.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri()) ?
+                "publish" : null;
+
         final var contributors = new ArrayList<DataciteContributor>();
 
         contributors.add(contributorFactory.create(
@@ -141,11 +148,17 @@ public class DataciteAttributesDtoFactory {
                 .setDescriptions(descriptions)
                 .setRelatedIdentifiers(relatedIdentifiers)
                 .setAlternateIdentifiers(alternateIdentifiers)
-                .setFundingReferences(fundingReferences);
+                .setFundingReferences(fundingReferences)
+                .setEvent(event)
+                .setUrl(url);
     }
 
     @SneakyThrows
     public DataciteAttributesDto create(RaidUpdateRequest request, String handle) {
+        final var url = identifierProperties.getLandingPrefix() + handle;
+
+        final var event = request.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri()) ?
+                "publish" : null;
         final var contributors = new ArrayList<DataciteContributor>();
 
         contributors.add(contributorFactory.create(
@@ -257,7 +270,9 @@ public class DataciteAttributesDtoFactory {
                 .setDescriptions(descriptions)
                 .setRelatedIdentifiers(relatedIdentifiers)
                 .setAlternateIdentifiers(alternateIdentifiers)
-                .setFundingReferences(fundingReferences);
+                .setFundingReferences(fundingReferences)
+                .setUrl(url)
+                .setEvent(event);
     }
 
 }
