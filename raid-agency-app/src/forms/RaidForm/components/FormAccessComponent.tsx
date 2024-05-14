@@ -8,12 +8,13 @@ import {
   Grid,
   MenuItem,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { Control, Controller, FieldErrors } from "react-hook-form";
 import LanguageSelector from "./reusable-inputs/LanguageSelector";
+import { accessMapping } from "@/entities/access/access-mapping";
 
 export default function FormAccessComponent({
   control,
@@ -97,7 +98,11 @@ export default function FormAccessComponent({
                     >
                       {accessType.map((accessType) => (
                         <MenuItem key={accessType.uri} value={accessType.uri}>
-                          {accessType.uri}
+                          {
+                            accessMapping.accessType[
+                              accessType.uri as keyof typeof accessMapping.accessType
+                            ]
+                          }
                         </MenuItem>
                       ))}
                     </TextField>

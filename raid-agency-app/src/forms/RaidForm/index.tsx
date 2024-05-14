@@ -17,7 +17,7 @@ import FormRelatedObjectsComponent from "./components/FormRelatedObjectsComponen
 import FormRelatedRaidsComponent from "./components/FormRelatedRaidsComponent";
 import FormSubjectsComponent from "./components/FormSubjectsComponent";
 import FormTitlesComponent from "./components/FormTitlesComponent";
-// import FormAccessComponent from "./components/FormAccessComponent";
+import FormAccessComponent from "./components/FormAccessComponent";
 // import FormSpatialCoveragesComponent from "./components/FormSpatialCoveragesComponent";
 
 const formFields = [
@@ -57,10 +57,10 @@ const formFields = [
     id: "related-raids",
     component: FormRelatedRaidsComponent,
   },
-  // {
-  //   id: "access",
-  //   component: FormAccessComponent,
-  // },
+  {
+    id: "access",
+    component: FormAccessComponent,
+  },
   {
     id: "subjects",
     component: FormSubjectsComponent,
