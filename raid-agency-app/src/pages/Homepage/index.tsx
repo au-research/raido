@@ -26,12 +26,10 @@ export default function HomePage() {
         </Tooltip>
         <CurrentUser />
         {hasServicePointGroup && !isServicePointUser && (
-          <>
-            <Alert severity="error">
-              You successfully logged in, but the admin of the service point
-              group has not granted you access yet.
-            </Alert>
-          </>
+          <Alert severity="error">
+            You successfully logged in, but the admin of the service point group
+            has not granted you access yet.
+          </Alert>
         )}
         {!hasServicePointGroup && <GroupSelector />}
         {hasServicePointGroup && isServicePointUser && <RaidTablePage />}

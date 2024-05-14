@@ -15,8 +15,9 @@ export const handleColumn: GridColDef = {
   },
   renderCell: ({ value }) => {
     return (
-      <NavLink to={`/raids/${value}`} data-testid="raid-navlink">
+      <NavLink to={`/raids/${value}`}>
         <Button
+          data-testid="raid-navlink"
           variant="outlined"
           size="small"
           fullWidth={true}
