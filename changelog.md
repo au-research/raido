@@ -9,13 +9,34 @@ _Not yet scheduled_
 * none
  
 ## API
-* updates to experimental API to align terminology
-  * unapproved-user-experimental.yaml renamed from "unauthz"
 
 ## Infrastructure
-* AgencyPublicDataExport - see [/doc/data-export](/doc/data-export).
-* moved docker build project from api-svc/docker to api-svc/docker/ecs
-** DEMO env is updated and deployed, but PROD infra must be updated
+# 2.0.1
+
+_2024-05-14_
+
+## App-client UI
+* Minor bug fixes
+
+## API
+* Bug fix to allow RAiDs to be findable in Datacite
+
+---
+# 2.0.0
+
+_2024-04-22_
+
+## App-client UI
+* All new UI
+
+## API
+* Handles replaced with DOIs
+* RAiD versioning and history
+* Removal of auth endpoints from API
+* Removal of experimental API
+
+## Infrastructure
+* Shared stack templates across environments
 
 ---
 # 1.2.1
