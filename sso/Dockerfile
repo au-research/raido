@@ -9,10 +9,12 @@ RUN mkdir /var/www/html/secure
 RUN openssl req -newkey rsa:2048 -batch -new -nodes -x509 -days 3650 -keyout /etc/pki/tls/private/localhost.key -out /etc/pki/tls/certs/localhost.crt
 
 COPY files/etc/shibboleth/aaf-metadata-certificate.pem /etc/shibboleth/aaf-metadata-certificate.pem
-COPY files/etc/shibboleth/shibboleth2.xml /etc/shibboleth/shibboleth2.xml
+COPY files/etc/shibboleth/shibboleth2.test.xml /etc/shibboleth/shibboleth2.test.xml
+COPY files/etc/shibboleth/shibboleth2.prod.xml /etc/shibboleth/shibboleth2.prod.xml
 COPY files/etc/shibboleth/shibd.logger /etc/shibboleth/shibd.logger
 COPY files/var/www/html/secure/environment.php /var/www/html/secure/environment.php
 COPY files/etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf
+COPY files/opt/entrypoint.sh /opt/entrypoint.sh
 
 WORKDIR /etc/shibboleth
 
@@ -24,5 +26,5 @@ RUN chown -R shibd:shibd /var/cache/shibboleth/
 EXPOSE 80
 EXPOSE 443
 
-ENTRYPOINT httpd && shibd -Fu shibd
+ENTRYPOINT ["/opt/entrypoint.sh"]
 
