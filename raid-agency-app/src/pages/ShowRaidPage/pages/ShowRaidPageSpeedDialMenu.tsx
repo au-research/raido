@@ -35,6 +35,7 @@ export default function ShowRaidPageSpeedDialMenu({
           sx={{ position: "fixed", bottom: "16px", right: "16px" }}
           component={Link}
           to={`/raids/${handle}/edit`}
+          data-testid="edit-raid-button"
         >
           <EditIcon sx={{ mr: 1 }} />
           Edit
