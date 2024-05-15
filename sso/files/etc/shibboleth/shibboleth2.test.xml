@@ -1,11 +1,12 @@
 <SPConfig xmlns="urn:mace:shibboleth:3.0:native:sp:config"
           clockSkew="180">
 
-    <RequestMapping>
+
+    <RequestMapper>
         <RequestMap>
             <Host name="sso.test.raid.org.au" REMOTE_ADDR="X-Forwarded-For" />
         </RequestMap>
-    </RequestMapping>
+    </RequestMapper>
 
     <OutOfProcess tranLogFormat="%u|%s|%IDP|%i|%ac|%t|%attr|%n|%b|%E|%S|%SS|%L|%UA|%a" />
 
