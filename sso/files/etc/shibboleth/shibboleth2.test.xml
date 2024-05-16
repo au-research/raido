@@ -1,4 +1,5 @@
 <SPConfig xmlns="urn:mace:shibboleth:3.0:native:sp:config"
+          xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
           clockSkew="180">
 
     <OutOfProcess tranLogFormat="%u|%s|%IDP|%i|%ac|%t|%attr|%n|%b|%E|%S|%SS|%L|%UA|%a" />
@@ -61,7 +62,7 @@
             <!-- JSON feed of discovery information. -->
             <Handler type="DiscoveryFeed" Location="/DiscoFeed"/>
 
-            <AssertionConsumerService
+            <md:AssertionConsumerService
                     index="1"
                     Location="https://iam.test.raid.org.au/realms/raid/broker/shibboleth/endpoint"
                     Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
