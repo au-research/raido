@@ -133,6 +133,7 @@ export default function FormTitlesComponent({
                                       text: event.target.value,
                                     });
                                   }}
+                                  data-testid="title-input"
                                 />
                               </>
                             </Grid>
