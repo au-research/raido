@@ -16,6 +16,10 @@ COPY files/var/www/html/secure/environment.php /var/www/html/secure/environment.
 COPY files/etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf
 COPY files/opt/entrypoint.sh /opt/entrypoint.sh
 
+RUN ln -s /proc/self/fd/1 /var/log/httpd/ssl_access_log
+RUN ln -s /proc/self/fd/1 /var/log/httpd/ssl_request_log
+RUN ln -s /proc/self/fd/2 /var/log/httpd/ssl_error_log
+
 WORKDIR /etc/shibboleth
 
 RUN ./keygen.sh -h app.test.raid.org.au -e https://app.test.raid.org.au/shibboleth -f -y 10

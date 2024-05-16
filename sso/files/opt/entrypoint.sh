@@ -10,8 +10,6 @@ else
   ln -s /etc/shibboleth/shibboleth2.test.xml /etc/shibboleth/shibboleth2.xml
 fi
 
-echo "$SSO_SIGNING_KEY"
-
 if [ -z "$SSO_SIGNING_KEY" ]; then
   echo "ERROR: Signing key not set";
   exit 1;
