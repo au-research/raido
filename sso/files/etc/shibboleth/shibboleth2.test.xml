@@ -60,6 +60,12 @@
 
             <!-- JSON feed of discovery information. -->
             <Handler type="DiscoveryFeed" Location="/DiscoFeed"/>
+
+            <AssertionConsumerService
+                    index="1"
+                    Location="https://iam.test.raid.org.au/realms/raid/broker/shibboleth/endpoint"
+                    Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                    isDefault="true"/>
         </Sessions>
 
         <!--
