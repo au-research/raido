@@ -15,9 +15,13 @@ const organisationRoleGenerator = (): OrganisationRole => {
   };
 };
 
-export const organisationGenerator = (): Organisation => {
+export const organisationGenerator = ({
+  alternativeId,
+}: {
+  alternativeId?: string;
+}): Organisation => {
   return {
-    id: organisation[0].pid,
+    id: alternativeId ? alternativeId : organisation[0].pid,
     schemaUri: organisationSchema[0].uri,
     role: [organisationRoleGenerator()],
   };
