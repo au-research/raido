@@ -18,43 +18,45 @@ import FormRelatedRaidsComponent from "./components/FormRelatedRaidsComponent";
 import FormSubjectsComponent from "./components/FormSubjectsComponent";
 import FormTitlesComponent from "./components/FormTitlesComponent";
 import FormAccessComponent from "./components/FormAccessComponent";
+import { Failure } from "@/types";
+import { removeNumberInBrackets } from "@/utils/string-utils/string-utils";
 // import FormSpatialCoveragesComponent from "./components/FormSpatialCoveragesComponent";
 
 const formFields = [
   {
-    id: "dates",
+    id: "date",
     component: FormDatesComponent,
   },
   {
-    id: "titles",
+    id: "title",
     component: FormTitlesComponent,
   },
   {
-    id: "descriptions",
+    id: "description",
     component: FormDescriptionsComponent,
   },
   {
-    id: "contributors",
+    id: "contributor",
     component: FormContributorsComponent,
   },
   {
-    id: "organisations",
+    id: "organisation",
     component: FormOrganisationsComponent,
   },
   {
-    id: "related-objects",
+    id: "relatedBbject",
     component: FormRelatedObjectsComponent,
   },
   {
-    id: "alternate-identifiers",
+    id: "alternateIdentifier",
     component: FormAlternateIdentifiersComponent,
   },
   {
-    id: "alternate-urls",
+    id: "alternateUrl",
     component: FormAlternateUrlsComponent,
   },
   {
-    id: "related-raids",
+    id: "relatedRaid",
     component: FormRelatedRaidsComponent,
   },
   {
@@ -62,7 +64,7 @@ const formFields = [
     component: FormAccessComponent,
   },
   {
-    id: "subjects",
+    id: "subject",
     component: FormSubjectsComponent,
   },
   // {
@@ -78,6 +80,7 @@ type FormProps = {
   onDirty?: (isDirty: boolean) => void;
   prefix?: string;
   suffix?: string;
+  apiValidationErrors?: Failure[];
 };
 
 export default function RaidForm({
@@ -86,6 +89,7 @@ export default function RaidForm({
   isSubmitting,
   prefix,
   suffix,
+  apiValidationErrors,
 }: FormProps) {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
@@ -106,6 +110,22 @@ export default function RaidForm({
 
   const { control, trigger } = formMethods;
   const { errors } = formMethods.formState;
+
+  console.log("apiValidationErrors", apiValidationErrors);
+  const apiValidationErrorsMap = new Map<string, Failure[]>();
+
+  if (apiValidationErrors) {
+    apiValidationErrors.forEach((error) => {
+      const id = removeNumberInBrackets(error.fieldId.split(".")[0]);
+      if (apiValidationErrorsMap.has(id)) {
+        apiValidationErrorsMap.get(id)?.push(error);
+      } else {
+        apiValidationErrorsMap.set(id, [error]);
+      }
+    });
+  }
+
+  console.log("apiValidationErrorsMap", [...apiValidationErrorsMap.entries()]);
 
   return (
     <>
@@ -157,6 +177,7 @@ export default function RaidForm({
                       control={control}
                       errors={errors}
                       trigger={trigger}
+                      apiValidationErrors={apiValidationErrorsMap.get(field.id)}
                     />
                   </Box>
                 );
@@ -165,7 +186,6 @@ export default function RaidForm({
           </Stack>
         </form>
       </FormProvider>
-      <pre>{JSON.stringify(errors, null, 2)}</pre>
     </>
   );
 }
