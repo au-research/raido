@@ -14,9 +14,8 @@ export interface KeycloakContextValue {
   initialized: boolean;
 }
 
-export interface CurrentUserInterface {
-  userName: string;
-  clientId: string;
-  servicePointName: string;
-  role: string;
-}
+export type Failure = {
+  fieldId: string;
+  errorType: string;
+  message: string;
+};

@@ -1,4 +1,5 @@
 import { RaidDto } from "@/generated/raid";
+import { Failure } from "@/types";
 import {
   dateHelperText,
   dateHelperTextRequired,
@@ -17,16 +18,20 @@ import { Control, Controller, FieldErrors } from "react-hook-form";
 export default function FormDatesComponent({
   control,
   errors,
+  apiValidationErrors,
 }: {
   control: Control<RaidDto>;
   errors: FieldErrors<RaidDto>;
+  apiValidationErrors?: Failure[];
 }) {
+  console.log("apiValidationErrors - date", apiValidationErrors);
   return (
     <Card
       variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: errors.date ? "error.main" : "primary.main",
+        borderLeftColor:
+          errors.date || apiValidationErrors ? "error.main" : "primary.main",
       }}
     >
       <CardHeader

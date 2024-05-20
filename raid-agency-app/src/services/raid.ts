@@ -32,8 +32,6 @@ export const fetchRaids = async ({
       if (userServicePoint?.id) {
         url.searchParams.set("servicePointId", userServicePoint?.id.toString());
       }
-
-      console.log(userServicePoint);
     } catch (error) {
       console.error("Failed to fetch service points:", error);
     }
@@ -88,6 +86,10 @@ export const createRaid = async ({
     },
     body: JSON.stringify(data),
   });
+  if (!response.ok) {
+    const errorResponse = await response.text();
+    throw new Error(errorResponse);
+  }
   return await response.json();
 };
 
@@ -108,5 +110,10 @@ export const updateRaid = async ({
     },
     body: JSON.stringify(data),
   });
+  if (!response.ok) {
+    const errorResponse = await response.text();
+    throw new Error(errorResponse);
+  }
+
   return await response.json();
 };
