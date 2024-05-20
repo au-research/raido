@@ -28,7 +28,7 @@ public class TestClient {
     ) {
         return Feign.builder()
                 .options(
-                        new Request.Options(2, TimeUnit.SECONDS, 2, TimeUnit.SECONDS, false)
+                        new Request.Options(10, TimeUnit.SECONDS, 10, TimeUnit.SECONDS, false)
                 )
 
                 .client(new OkHttpClient())
