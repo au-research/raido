@@ -1,5 +1,5 @@
-import { describe, expect, it, test } from "vitest";
 import { removeNumberInBrackets } from "@/utils/string-utils/string-utils";
+import { describe, expect, test } from "vitest";
 
 describe("removeNumberInBrackets", () => {
   test("removes number in brackets", () => {
