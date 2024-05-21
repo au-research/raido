@@ -68,7 +68,7 @@ export default function ShowRaidPageContent({
           <BreadcrumbsBar breadcrumbs={breadcrumbs} />
           <AnchorButtons raidData={raidData} />
 
-          <Box id="dates" className="scroll">
+          <Box id="date" className="scroll">
             <ShowDateComponent date={raidData.date} />
           </Box>
 

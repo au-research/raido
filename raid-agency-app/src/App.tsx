@@ -1,6 +1,5 @@
 import { SnackbarProvider } from "@/components/Snackbar/SnackbarProvider";
 import { ReactErrorBoundary } from "@/error/ReactErrorBoundary";
-import { DialogProvider } from "@/providers/DialogProvider";
 import {
   Box,
   createTheme,
@@ -61,14 +60,12 @@ export function App() {
         >
           <KeycloakProvider>
             <QueryClientProvider client={queryClient}>
-              <DialogProvider>
-                <ReactErrorBoundary>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <Box sx={{ pt: 3 }}></Box>
-                    <Outlet />
-                  </LocalizationProvider>
-                </ReactErrorBoundary>
-              </DialogProvider>
+              <ReactErrorBoundary>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <Box sx={{ pt: 3 }}></Box>
+                  <Outlet />
+                </LocalizationProvider>
+              </ReactErrorBoundary>
             </QueryClientProvider>
           </KeycloakProvider>
         </ReactKeycloakProvider>

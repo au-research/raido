@@ -108,7 +108,6 @@ function SubjectRootField({
                           }`;
                         }}
                         onChange={(_, newValue) => {
-                          console.log("+++ newValue", newValue);
                           onChange({
                             ...controllerField?.value,
                             id: `https://linked.data.gov.au/def/anzsrc-for/2020/${newValue?.id}`,

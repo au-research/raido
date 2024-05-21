@@ -1,4 +1,4 @@
-import { RaidDto } from "@/generated/raid";
+import { RaidDto, ServicePoint } from "@/generated/raid";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
@@ -24,7 +24,10 @@ import {
 } from "react-hook-form";
 
 import { organisationGenerator } from "@/entities/organisation/organisation-generator";
-import { useCallback } from "react";
+import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
+import { fetchServicePoints } from "@/services/service-points";
+import { useQuery } from "@tanstack/react-query";
+import { useCallback, useEffect, useState } from "react";
 import FormOrganisationsRolesComponent from "./FormOrganisationsRolesComponent";
 
 function OrganisationRootField({
@@ -120,6 +123,26 @@ export default function FormOrganisationsComponent({
   control: Control<RaidDto>;
   errors: FieldErrors<RaidDto>;
 }) {
+  const { keycloak } = useCustomKeycloak();
+  const [servicePoints, setServicePoints] = useState<ServicePoint[] | null>(
+    null
+  );
+
+  const servicePointsQuery = useQuery<ServicePoint[]>({
+    queryKey: ["service-points"],
+    queryFn: async () => {
+      return await fetchServicePoints({
+        token: keycloak.token || "",
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (servicePointsQuery.isSuccess) {
+      setServicePoints(servicePointsQuery.data);
+    }
+  }, [servicePointsQuery.isSuccess, servicePointsQuery.data]);
+
   const organisationsArray = useFieldArray({
     control,
     name: `organisation`,
@@ -127,8 +150,24 @@ export default function FormOrganisationsComponent({
   });
 
   const handleAddOrganisation = useCallback(() => {
-    organisationsArray.append(organisationGenerator());
+    const userServicePoint = servicePoints?.find(
+      (el) => el.groupId === keycloak.tokenParsed?.service_point_group_id
+    );
+
+    organisationsArray.append(
+      organisationGenerator({
+        alternativeId: userServicePoint?.identifierOwner || "",
+      })
+    );
   }, [organisationsArray]);
+
+  if (servicePointsQuery.isPending) {
+    return "Loading...";
+  }
+
+  if (servicePointsQuery.isError) {
+    return "Error...";
+  }
 
   return (
     <Card
