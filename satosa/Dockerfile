@@ -3,14 +3,16 @@ FROM satosa:8-alpine
 USER root
 
 RUN apk upgrade
+RUN pip install gunicorn_worker_healthcheck
+
+COPY files/usr/local/bin/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY files/usr/local/bin/gunicorn.conf.py /usr/local/bin/gunicorn.conf.py
+
+EXPOSE 8080
+EXPOSE 8081
+
+RUN chown satosa:satosa /usr/local/bin/gunicorn.conf.py
 
 USER satosa:satosa
 
-# COPY files/etc/satosa/plugins/backends/saml2_backend.yaml /etc/satosa/plugins/backends/saml2_backend.yaml
-# COPY files/etc/satosa/plugins/frontends/saml2_frontend.yaml /etc/satosa/plugins/frontends/saml2_frontend.yaml
-# COPY files/etc/satosa/plugins/frontends/ping_frontend.yaml /etc/satosa/plugins/frontends/ping_frontend.yaml
-
-COPY files/usr/local/bin/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-
-EXPOSE 8080
-
+CMD ["gunicorn", "-c/usr/local/bin/gunicorn.conf.py", "-w 4", "-b0.0.0.0:8080", "satosa.wsgi:app"]
