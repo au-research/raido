@@ -24,7 +24,6 @@ export default function FormDatesComponent({
   errors: FieldErrors<RaidDto>;
   apiValidationErrors?: Failure[];
 }) {
-  console.log("apiValidationErrors - date", apiValidationErrors);
   return (
     <Card
       variant="outlined"

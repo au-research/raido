@@ -111,7 +111,6 @@ export default function RaidForm({
   const { control, trigger } = formMethods;
   const { errors } = formMethods.formState;
 
-  console.log("apiValidationErrors", apiValidationErrors);
   const apiValidationErrorsMap = new Map<string, Failure[]>();
 
   if (apiValidationErrors) {
@@ -124,8 +123,6 @@ export default function RaidForm({
       }
     });
   }
-
-  console.log("apiValidationErrorsMap", [...apiValidationErrorsMap.entries()]);
 
   return (
     <>
