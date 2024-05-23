@@ -111,6 +111,13 @@ function docker_create_config() {
 		del(.config.acr_mapping, .config.idp_blacklist_file, .config.sp_config.metadata.local)
 			| .config.disco_srv = $ENV.SAML2_BACKEND_DISCO_SRV
 			| .config.sp_config.metadata.remote = [{ "url": $ENV.SAML2_BACKEND_METADATA_URL }]
+			| .config.sp_config.name = "Research Activity Identifier (RAiD)"
+			| .config.sp_config.description = "Time-saving research project identification, tracking and sharing"
+			| .config.sp_config.organization = { "display_name": "ARDC", "name": "Australian Research Data Commons", "url": "https://ardc.edu.au" }
+			| .config.sp_config.contact_person = [{ "contact_type": "technical", "email_address": "raid.services@ardc.edu.au", "given_name": "Technical" },{ "contact_type" : "support", "email_address": "contact@raid.org", "given_name": "Support" },{ "contact_type" : "other", "email_address": "contact@raid.org", "given_name": "Other" }]
+			| .config.sp_config.service.sp.ui_info.display_name = [{"lang": "en", "text": "Research Activity Identifier (RAiD)"}]
+			| .config.sp_config.service.sp.ui_info.description = [{"lang": "en", "text": "Time-saving research project identification, tracking and sharing"}]
+			| .config.sp_config.service.sp.ui_info.information_url = [{"lang": "en", "text": "https://raid.org"}]
 	'
 	if [ -n "${SAML2_BACKEND_CERT}" -a -n "${SAML2_BACKEND_KEY}" ]; then
 		_make_conffile backend.crt '$ENV.SAML2_BACKEND_CERT'
