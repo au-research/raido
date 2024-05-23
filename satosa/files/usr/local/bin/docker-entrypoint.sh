@@ -89,7 +89,7 @@ function docker_setup_env() {
 	file_env SAML2_BACKEND_KEY           ''
 	file_env SAML2_FRONTEND_CERT         ''
 	file_env SAML2_FRONTEND_KEY          ''
-	file_env SAML2_FRONTEND_METADATA_URL 'https://iam.test.raid.org.au/realms/raid/protocol/saml/descriptor'
+	file_env SAML2_FRONTEND_METADATA_URL 'https://iam.test.raid.org.au/realms/raid/broker/satosa/endpoint/descriptor'
 	file_env SAML2_BACKEND_METADATA_URL  'https://md.test.aaf.edu.au/aaf-test-metadata.xml'
 	export HOSTNAME="$(echo "${BASE_URL}" | sed -E -e 's/https?:\/\///')"
 }
