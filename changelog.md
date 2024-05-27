@@ -1,14 +1,12 @@
 See the [Changelog audience](#changelog-audience) section for info about 
  the expected audience and content of the changelog.
 
-# Next version
-
-_Not yet scheduled_
-
+# 2.0.2
 ## App-client UI
 * none
  
-## API
+## IAM
+* Added SATOSA as a SAML proxy to allow for eduGAIN integration
 
 ## Infrastructure
 # 2.0.1
