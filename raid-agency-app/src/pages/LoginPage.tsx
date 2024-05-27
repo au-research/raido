@@ -156,11 +156,10 @@ export default function LoginPage() {
               </Button>
               <Button
                 startIcon={<AustraliaIcon />}
-                disabled
                 variant="contained"
                 onClick={() =>
                   keycloak.login({
-                    idpHint: "edugain",
+                    idpHint: "satosa",
                     scope: "openid",
                   })
                 }
