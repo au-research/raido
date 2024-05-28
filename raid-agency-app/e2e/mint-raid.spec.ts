@@ -1,8 +1,12 @@
-import { expect, test } from "@playwright/test";
+import {expect, test} from "@playwright/test";
 import "dotenv/config";
 import login from "./utils/login";
 
-const BASE_URL = "http://localhost:7080/";
+const BASE_URL = process.env.BASE_URL;
+
+if (!BASE_URL) {
+  throw new Error("BASE_URL is not set");
+}
 
 const SELECTORS = {
   raidRow: ".MuiDataGrid-row",
