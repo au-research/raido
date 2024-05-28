@@ -1,4 +1,4 @@
-FROM satosa:8-alpine
+FROM public.ecr.aws/docker/library/satosa:8-alpine
 
 USER root
 
