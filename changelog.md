@@ -1,12 +1,15 @@
 See the [Changelog audience](#changelog-audience) section for info about 
  the expected audience and content of the changelog.
 
-# 2.0.2
+# 2.1.0
 ## App-client UI
-* none
+* Added API validation error messages to the frontend
+* Added service point selector
+* Added additional end-to-end tests
+* Removed unused legacy code
  
 ## IAM
-* Added SATOSA as a SAML proxy to allow for eduGAIN integration
+* SAML authentication with AAF 
 
 ## Infrastructure
 # 2.0.1
