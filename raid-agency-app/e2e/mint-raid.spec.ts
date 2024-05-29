@@ -1,4 +1,4 @@
-import {expect, test} from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import "dotenv/config";
 import login from "./utils/login";
 
@@ -20,30 +20,26 @@ test.beforeEach(async ({ page }) => {
 
 test.describe("Mint RAiD", () => {
   test("user should be able to mint new raid", async ({ page }) => {
-    await page.goto(BASE_URL);
+    await page.goto(`${BASE_URL}/raids/new`);
 
-    // Wait for the raid table to load and store initial row count for verification later
-    await page.waitForSelector(SELECTORS.raidRow);
-    const firstRowTexts = await page
-      .locator(SELECTORS.raidRow)
-      .first()
-      .allInnerTexts();
+    // // Wait for the raid table to load and store initial row count for verification later
+    // await page.waitForSelector(SELECTORS.raidRow);
+    // const firstRowTexts = await page
+    //   .locator(SELECTORS.raidRow)
+    //   .first()
+    //   .allInnerTexts();
 
-    // Click the 'mint raid' button to start the raid creation process
-    await page.locator(SELECTORS.mintRaidButton).click();
+    // // Click the 'mint raid' button to start the raid creation process
+    // await page.locator(SELECTORS.mintRaidButton).click();
 
+    await page.waitForSelector(SELECTORS.saveRaidButton);
     // Click the 'save raid' button to finalize the raid creation
     await page.locator(SELECTORS.saveRaidButton).click();
 
-    // Wait for the raid table to update
-    await page.waitForSelector(SELECTORS.raidRow);
+    // wait for navigation
+    await page.waitForURL(BASE_URL);
 
-    // Wait for the raid table to load and compare the updated row count
-    const firstRowTextsUpdated = await page
-      .locator(SELECTORS.raidRow)
-      .first()
-      .allInnerTexts();
-
-    expect(firstRowTexts).not.toBe(firstRowTextsUpdated);
+    // expect page address to be BASE_URL
+    expect(page.url().replace(/\/$/, "")).toStrictEqual(BASE_URL);
   });
 });
