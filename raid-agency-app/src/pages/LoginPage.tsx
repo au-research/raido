@@ -159,7 +159,7 @@ export default function LoginPage() {
                 variant="contained"
                 onClick={() =>
                   keycloak.login({
-                    idpHint: "satosa",
+                    idpHint: "aaf-saml",
                     scope: "openid",
                   })
                 }
