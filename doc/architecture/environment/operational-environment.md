@@ -49,7 +49,6 @@ server beyond just serving the static files and taking care of TLS.
 
 * [AWS CloudFront](https://docs.aws.amazon.com/cloudfront/index.html)
 * [https://github.com/au-research/raido-v2-aws-private/blob/main/raido-root/lib/prod/app-client/AppClientCloudFront.ts](https://github.com/au-research/raido-v2-aws-private/tree/main/lib/raid/construct/cloudfront)
-* [architecture decision log](/app-client/doc/adr)
 
 
 ###  Load balancing
