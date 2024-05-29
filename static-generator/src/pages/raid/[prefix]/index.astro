@@ -1,0 +1,37 @@
+---
+import raids from "../../../data/raids.json";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+
+export function getStaticPaths() {
+  const uniquePrefixes = new Set(
+    raids.map((el) => {
+      const [_, prefix] = new URL(el.identifier.id).pathname.split("/");
+      return prefix;
+    })
+  );
+
+  const data = Array.from(uniquePrefixes).map((prefix) => {
+    return {
+      params: {
+        prefix,
+      },
+      props: {
+        filteredRaids: raids.filter((el) => {
+          const [_, raidPrefix] = new URL(el.identifier.id).pathname.split("/");
+          return prefix === raidPrefix;
+        }),
+      },
+    };
+  });
+
+  return data;
+}
+
+const { prefix } = Astro.params;
+const { filteredRaids } = Astro.props;
+---
+
+<BaseLayout title="Home Page">
+  <h1 class="text-3xl font-bold underline">Prefix {prefix}</h1>
+  <pre>{filteredRaids.length}</pre>
+</BaseLayout>

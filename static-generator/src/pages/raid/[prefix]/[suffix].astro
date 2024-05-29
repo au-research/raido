@@ -1,0 +1,77 @@
+---
+import type { RaidDto } from "../../../models/RaidDto";
+import raids from "../../../data/raids.json";
+
+import Entity from "../../../components/Entity.astro";
+import Breadcrumbs from "../../../components/Breadcrumbs.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+
+export function getStaticPaths() {
+  return raids.map((el) => {
+    const [_, prefix, suffix] = new URL(el.identifier.id).pathname.split("/");
+    return {
+      params: {
+        prefix,
+        suffix,
+      },
+      props: {
+        raid: el,
+      },
+    };
+  });
+}
+
+interface Props {
+  raid: RaidDto;
+}
+
+const { raid } = Astro.props;
+const { prefix, suffix } = Astro.params;
+
+const entities = [
+  "title",
+  "date",
+  "description",
+  "access",
+  "alternateUrl",
+  "contributor",
+  "organisation",
+  "relatedObject",
+  "alternateIdentifier",
+];
+---
+
+<BaseLayout title="Home Page">
+  <Breadcrumbs
+    elements={[
+      {
+        label: "RAiD",
+        link: "/raid",
+      },
+      {
+        label: `${prefix}`,
+        link: `/prefix/${prefix}`,
+      },
+      {
+        label: `${suffix}`,
+        link: `/raid/${prefix}/${suffix}`,
+      },
+    ]}
+  />
+  <div class="flex flex-col gap-4">
+    {
+      entities.map((entity: string) => {
+        const capitalisedHeader =
+          entity.charAt(0).toUpperCase() + entity.slice(1);
+        return (
+          raid[entity as keyof RaidDto] && (
+            <Entity
+              data={raid[entity as keyof RaidDto]}
+              header={capitalisedHeader}
+            />
+          )
+        );
+      })
+    }
+  </div>
+</BaseLayout>

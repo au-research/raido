@@ -1,9 +1,8 @@
 {
-  "name": "raid-static-generator",
+  "name": "static-generator",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "prebuild": "node ./src/scripts/chart-creator.cjs",
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro check && astro build",
@@ -11,31 +10,10 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/check": "^0.3.1",
-    "@astrojs/react": "^3.0.4",
-    "@astrojs/tailwind": "^5.0.2",
-    "@radix-ui/react-navigation-menu": "^1.1.4",
-    "@radix-ui/react-separator": "^1.0.3",
-    "@radix-ui/react-slot": "^1.0.2",
-    "@types/react": "^18.2.37",
-    "@types/react-dom": "^18.2.15",
-    "astro": "^3.5.3",
-    "class-variance-authority": "^0.7.0",
-    "clsx": "^2.0.0",
-    "fs": "^0.0.1-security",
-    "lucide-react": "^0.292.0",
-    "node-fetch": "^3.3.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react18-json-view": "^0.2.6",
-    "tailwind": "^4.0.0",
-    "tailwind-merge": "^2.0.0",
-    "tailwindcss": "^3.3.5",
-    "tailwindcss-animate": "^1.0.7",
-    "typescript": "^5.2.2"
-  },
-  "devDependencies": {
-    "@types/node": "^20.9.0",
-    "ts-node": "^10.9.1"
+    "@astrojs/check": "^0.7.0",
+    "@astrojs/tailwind": "^5.1.0",
+    "astro": "^4.8.6",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.4.5"
   }
 }

@@ -1,47 +1,76 @@
 ---
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import type { RaidDto } from "../models";
 
-import { getPrefixFromUrl, getSuffixFromUrl } from "@/utils";
-import raids from "../../data/raids.json";
+const { raids } = Astro.props;
 ---
 
-<Table>
-  <TableHeader>
-    <TableRow>
-      <TableHead className="w-[100px]">Handle</TableHead>
-      <TableHead className="w-[100px]">Start Date</TableHead>
-      <TableHead className="w-[100px]">End Date</TableHead>
-      <TableHead className="w-[300px]">Title</TableHead>
-    </TableRow>
-  </TableHeader>
-  <TableBody>
+<table class="min-w-full divide-y divide-gray-300">
+  <thead class="bg-gray-50">
+    <tr>
+      <th
+        scope="col"
+        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+      >
+        Prefix
+      </th>
+      <th
+        scope="col"
+        class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+      >
+        Suffix
+      </th>
+
+      <th
+        scope="col"
+        class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+      >
+        Title
+      </th>
+      <th
+        scope="col"
+        class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+      >
+        Start Date
+      </th>
+      <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+        <span class="sr-only">Open</span>
+      </th>
+    </tr>
+  </thead>
+  <tbody class="divide-y divide-gray-200 bg-white">
     {
-      raids.map((raid) => {
-        const prefix = getPrefixFromUrl(raid.identifier.id);
-        const suffix = getSuffixFromUrl(raid.identifier.id);
+      raids.map((el: RaidDto) => {
+        const idElements = el.identifier.id.split("/");
+        const prefix = idElements[idElements.length - 2];
+        const suffix = idElements[idElements.length - 1];
         return (
-          <TableRow key={raid.identifier.id}>
-            <TableCell className="font-medium">
-              <a href={`/raids/${suffix}`}>
-                {prefix}/{suffix}
+          <tr>
+            <td class="whitespace-nowrap max-w-8 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+              {prefix}
+            </td>
+            <td class="whitespace-nowrap max-w-8 px-3 py-4 text-sm text-gray-500">
+              {suffix}
+            </td>
+            <td class="whitespace-nowrap max-w-48 px-3 py-4 text-sm text-gray-500 truncate">
+              {el.title && el.title[0].text}
+            </td>
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+              {el.date && el.date.startDate}
+            </td>
+            <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+              <a
+                href={`/raid/${prefix}/${suffix}`}
+                class="text-sky-600 hover:text-sky-900"
+              >
+                Open
+                <span class="sr-only">
+                  , {prefix}/{suffix}
+                </span>
               </a>
-            </TableCell>
-
-            <TableCell className="truncate">{raid.date.startDate}</TableCell>
-
-            <TableCell className="truncate">
-              {raid.title.map((title) => title.text).join(", ")}
-            </TableCell>
-          </TableRow>
+            </td>
+          </tr>
         );
       })
     }
-  </TableBody>
-</Table>
+  </tbody>
+</table>
