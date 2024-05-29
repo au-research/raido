@@ -56,7 +56,6 @@ maintain/operate it on an on-going basis (a financial challenge).
 Major architectural decisions are documented in the Architecture Decision Log:
 * [high level](../adr)
 * [api-svc](../../api-svc/doc/adr)
-* [app-client](../../app-client/doc/adr)
 
 
 # Technology

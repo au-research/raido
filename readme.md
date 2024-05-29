@@ -62,7 +62,7 @@ which outlines how we use AWS services for the operation of Raido.
     * the OpenAPI definition of the API that the api-svc serves
   * [/api-svc/load-test](./api-svc/load-test/readme.md)
     * the load-tests and their results 
-* [/app-client](/app-client/readme.md)
+* [/raid-agency-app](/raid-agency-app/README.md)
   * The default Raido UI that uses api-svc 
 * `/doc`
   * Various high-level technical documentation topics for Raido

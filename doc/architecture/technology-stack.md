@@ -89,7 +89,7 @@ We use OpenApi with an “API first” approach, Java and TypeScript code is
 generated from the OpenApi definition.
 
 * [/api-svc/idl-raid-v2](/api-svc/idl-raid-v2)
-* [/app-client](/app-client)
+* [/raid-agency-app](/raid-agency-app)
 
 
 # Miscellaneous

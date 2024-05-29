@@ -60,7 +60,7 @@ Follow the spring [readme](/api-svc/spring/readme.md) sections
 
 ## Run the development Node.js web server
 
-Follow the app-client [readme](/app-client/readme.md) sections
+Follow the raid-agency-app [readme](/raid-agency-app/README.md) sections
 "Running a local Node.js server in IDEA" or 
 "Running a local Node.js server from command line".
 
