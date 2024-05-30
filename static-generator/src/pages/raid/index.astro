@@ -1,0 +1,37 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import raids from "../../data/raids.json";
+import RaidTable from "../../components/RaidTable.astro";
+
+const prefixes = new Map();
+for (const raid of raids) {
+  const [_, prefix, suffix] = new URL(raid.identifier.id).pathname.split("/");
+  if (!prefixes.has(prefix)) {
+    prefixes.set(prefix, []);
+  }
+  prefixes.get(prefix).push(suffix);
+}
+
+const prefixesArray = Array.from(prefixes);
+---
+
+<BaseLayout title="Home Page">
+  <Breadcrumbs
+    elements={[
+      {
+        label: "RAiDs",
+        link: "/raid",
+      },
+    ]}
+  />
+
+  <div
+    class="divide-y divide-gray-200 overflow-hidden rounded-lg bg-white shadow"
+  >
+    <div class="px-4 py-5 sm:px-6">RAiDs</div>
+    <div class="px-4 py-5 sm:p-6">
+      <RaidTable raids={raids} />
+    </div>
+  </div>
+</BaseLayout>

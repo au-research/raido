@@ -1,0 +1,57 @@
+---
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import raids from "../../data/raids.json";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const prefixes = new Map();
+for (const raid of raids) {
+  const [_, prefix, suffix] = new URL(raid.identifier.id).pathname.split("/");
+  if (!prefixes.has(prefix)) {
+    prefixes.set(prefix, []);
+  }
+  prefixes.get(prefix).push(suffix);
+}
+
+const prefixArray = Array.from(prefixes);
+---
+
+<BaseLayout title="Prefix Page">
+  <Breadcrumbs elements={[{ label: "Prefix", link: "/prefix" }]} />
+
+  <div class="grid sm:grid-cols-1 grid-cols-1 gap-4">
+    <div class="overflow-hidden rounded-lg bg-white shadow border-l-4 border-l-sky-500">
+      <div class="px-4 py-5 sm:px-6">
+        <p class="text-xl font-semibold">Prefixes</p>
+      </div>
+      <div class="overflow-hidden rounded-md bg-white shadow">
+        <div class="p-4">
+          <nav class="flex flex-1 flex-col" aria-label="Sidebar">
+            <ul role="list" class="-mx-2 space-y-1">
+              {
+                prefixArray.map((el) => {
+                  const [prefix, raids] = el;
+                  return (
+                    <li>
+                      <a
+                        href={`/prefix/${prefix}`}
+                        class="text-gray-700 hover:text-blue-600 hover:bg-gray-50 group flex gap-x-3 rounded-md p-2 pl-3 text-sm leading-6 font-semibold"
+                      >
+                        {prefix}
+                        <span
+                          class="ml-auto w-9 min-w-max whitespace-nowrap rounded-full bg-white px-2.5 py-0.5 text-center text-xs font-medium leading-5 text-gray-600 ring-1 ring-inset ring-gray-200"
+                          aria-hidden="true"
+                        >
+                          {raids.length}
+                        </span>
+                      </a>
+                    </li>
+                  );
+                })
+              }
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,19 @@
+---
+import Navbar from "../components/Navbar.astro";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>RAiD</title>
+  </head>
+  <body class="bg-gray-100">
+    <Navbar />
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      <slot />
+    </div>
+  </body>
+</html>

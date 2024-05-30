@@ -1,0 +1,11 @@
+---
+import SelfRenderer from "./SelfRenderer.astro";
+
+const { el } = Astro.props;
+---
+
+<div class="px-4 py-5 sm:p-6">
+  <div class="overflow-hidden sm:rounded-lg">
+    {el && <SelfRenderer value={el} level={0} />}
+  </div>
+</div>

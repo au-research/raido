@@ -1,0 +1,35 @@
+---
+import { formatCamelCase } from "../utils/string-utils";
+
+const { value, level } = Astro.props;
+---
+
+<div>
+  {
+    Object.entries(value).map(([key, value2]) => (
+      <dl class="bg-gray-50 mb-4 rounded-lg">
+        {value2 instanceof Object ? (
+          <div class={`px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6`}>
+            <dt class="text-sm font-medium text-gray-900">
+              {formatCamelCase(key)}
+            </dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+              <Astro.self value={value2} level={level + 1} />
+            </dd>
+          </div>
+        ) : (
+          <div class={`px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6`}>
+            <dt
+              class={`text-sm font-medium text-gray-900 ml-${level * 8} ${level > 0 ? "font-extrafine" : "font-extrabold"}`}
+            >
+              {formatCamelCase(key)}
+            </dt>
+            <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+              {value2}
+            </dd>
+          </div>
+        )}
+      </dl>
+    ))
+  }
+</div>
