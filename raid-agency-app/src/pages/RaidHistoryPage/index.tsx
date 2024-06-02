@@ -1,9 +1,18 @@
+import BreadcrumbsBar from "@/components/BreadcrumbsBar";
 import ErrorAlertComponent from "@/components/ErrorAlertComponent";
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import { fetchRaidHistory } from "@/services/raid";
 import { Breadcrumb, RaidHistoryElementType, RaidHistoryType } from "@/types";
 import {
+  DocumentScanner as DocumentScannerIcon,
+  HistoryEdu as HistoryEduIcon,
+  History as HistoryIcon,
+  Home as HomeIcon,
+  SettingsBackupRestore as SettingsBackupRestoreIcon,
+} from "@mui/icons-material";
+import {
   Box,
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -15,13 +24,6 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import LoadingPage from "../LoadingPage";
-import BreadcrumbsBar from "@/components/BreadcrumbsBar";
-import {
-  DocumentScanner as DocumentScannerIcon,
-  HistoryEdu as HistoryEduIcon,
-  Home as HomeIcon,
-  History as HistoryIcon,
-} from "@mui/icons-material";
 
 export default function RaidHistoryPage() {
   const { keycloak, initialized } = useCustomKeycloak();
@@ -87,6 +89,18 @@ export default function RaidHistoryPage() {
                   <CardHeader
                     title={`Version ${el.version}`}
                     subheader={`${new Date(el.timestamp).toLocaleString()} UTC`}
+                    action={
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={() => {
+                          alert("Feature not supported yet.");
+                        }}
+                      >
+                        <SettingsBackupRestoreIcon sx={{ mr: 1 }} />
+                        Restore
+                      </Button>
+                    }
                   />
                   <CardContent>
                     <Stack gap={3}>
@@ -114,7 +128,7 @@ export default function RaidHistoryPage() {
                                   </Typography>
                                 </Box>
                               </Grid>
-                              <Grid item xs={12} sm={6} md={1}>
+                              <Grid item xs={12} sm={6} md={2}>
                                 <Box>
                                   <Typography variant="body2">Path</Typography>
                                   <Typography
@@ -126,7 +140,7 @@ export default function RaidHistoryPage() {
                                   </Typography>
                                 </Box>
                               </Grid>
-                              <Grid item xs={12} sm={6} md={10}>
+                              <Grid item xs={12} sm={6} md={9}>
                                 <Box sx={{ overflow: "auto" }}>
                                   <Typography variant="body2">Value</Typography>
                                   <pre>{JSON.stringify(el.value, null, 2)}</pre>
