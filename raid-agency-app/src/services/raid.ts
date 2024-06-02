@@ -2,6 +2,7 @@ import { RaidDto } from "@/generated/raid";
 import { getApiEndpoint } from "@/utils/api-utils/api-utils";
 import type Keycloak from "keycloak-js";
 import { fetchServicePoints } from "@/services/service-points";
+import { RaidHistoryType } from "@/types";
 
 const endpoint = getApiEndpoint();
 
@@ -62,6 +63,22 @@ export const fetchRaid = async ({
   token: string;
 }): Promise<RaidDto> => {
   const response = await fetch(`${endpoint}/raid/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return await response.json();
+};
+export const fetchRaidHistory = async ({
+  id,
+  token,
+}: {
+  id: string;
+  token: string;
+}): Promise<RaidHistoryType[]> => {
+  const response = await fetch(`${endpoint}/raid/${id}/history`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

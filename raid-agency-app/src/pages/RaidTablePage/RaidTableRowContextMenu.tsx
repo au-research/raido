@@ -3,9 +3,9 @@ import React from "react";
 
 import {
   Edit as EditIcon,
+  History as HistoryIcon,
   Menu as MenuIcon,
-  OpenInNew as OpenInNewIcon,
-  Visibility as VisibilityIcon,
+  Visibility as VisibilityIcon
 } from "@mui/icons-material";
 
 import ContentCopy from "@mui/icons-material/ContentCopy";
@@ -88,7 +88,7 @@ export default function RaidTableRowContextMenu({ row }: { row: RaidDto }) {
           <ListItemText>Edit RAiD</ListItemText>
         </MenuItem>
         <Divider />
-        <MenuItem
+        {/* <MenuItem
           onClick={() => {
             handleClose();
             window.location.href = `https://doi.test.datacite.org/dois/${prefix}%2F${suffix}`;
@@ -100,6 +100,15 @@ export default function RaidTableRowContextMenu({ row }: { row: RaidDto }) {
           <ListItemText
             primary="Open in Datacite"
             secondary="Must be signed in to Fabrica to display"
+          />
+        </MenuItem> */}
+        <MenuItem component={Link} to={`/raids/${prefix}/${suffix}/history`}>
+          <ListItemIcon>
+            <HistoryIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText
+            primary="RAiD History"
+            secondary="Show history of this RAiD"
           />
         </MenuItem>
       </Menu>
