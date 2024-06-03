@@ -109,7 +109,9 @@ export default function ShowRaidPageContent({
           </Box>
 
           <Box id="access" className="scroll">
-            <ShowAccessComponent access={raidData.access} />
+            {raidData.access && (
+              <ShowAccessComponent access={raidData.access} />
+            )}
           </Box>
 
           <Box id="subjects" className="scroll">

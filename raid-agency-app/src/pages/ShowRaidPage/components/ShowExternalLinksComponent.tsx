@@ -1,7 +1,4 @@
-import {
-  History as HistoryIcon,
-  OpenInNew as OpenInNewIcon,
-} from "@mui/icons-material";
+import { History as HistoryIcon } from "@mui/icons-material";
 import {
   Card,
   CardContent,
@@ -12,6 +9,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import List from "@mui/material/List";
+import { Link } from "react-router-dom";
 
 export default function ShowExternalLinksComponent({
   prefix,
@@ -25,7 +23,7 @@ export default function ShowExternalLinksComponent({
       <CardHeader title="Links" />
       <CardContent>
         <List>
-          <ListItem disablePadding>
+          {/* <ListItem disablePadding>
             <ListItemButton
               href={`https://doi.test.datacite.org/dois/${prefix}%2F${suffix}`}
               target="_blank"
@@ -39,12 +37,11 @@ export default function ShowExternalLinksComponent({
                 secondary="Must be logged in to view"
               />
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
           <ListItem disablePadding>
             <ListItemButton
-              href={`/show-raid-history/${prefix}/${suffix}`}
-              target="_blank"
-              rel="noopener noreferrer"
+              component={Link}
+              to={`/raids/${prefix}/${suffix}/history`}
             >
               <ListItemIcon>
                 <HistoryIcon />
