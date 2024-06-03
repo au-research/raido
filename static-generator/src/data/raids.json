@@ -1,6 +1,87 @@
 [
   {
     "identifier": {
+      "id": "http://raid.local/10.82841/f4632eb2",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "raidAgencyUrl": "http://localhost:808010.82841/f4632eb2",
+      "license": "Creative Commons CC-0",
+      "version": 4
+    },
+    "title": [
+      {
+        "text": "Demo Research Project",
+        "type": {
+          "id": "https://vocabulary.raid.org/title.type.schema/5",
+          "schemaUri": "https://vocabulary.raid.org/title.type.schema/376"
+        },
+        "startDate": "2024-05-14",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://www.iso.org/standard/74575.html"
+        }
+      }
+    ],
+    "date": { "startDate": "2024-05-14", "endDate": "2026" },
+    "description": [
+      {
+        "text": "Description for demo research project",
+        "type": {
+          "id": "https://vocabulary.raid.org/description.type.schema/318",
+          "schemaUri": "https://vocabulary.raid.org/description.type.schema/320"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://www.iso.org/standard/74575.html"
+        }
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://vocabularies.coar-repositories.org/access_rights/c_abf2/",
+        "schemaUri": "https://vocabularies.coar-repositories.org/access_rights/"
+      },
+      "statement": {
+        "text": "Access statement example text...",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://www.iso.org/standard/74575.html"
+        }
+      },
+      "embargoExpiry": "2025-05-14"
+    },
+    "contributor": [
+      {
+        "id": "https://orcid.org/0009-0000-9306-3120",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://vocabulary.raid.org/contributor.position.schema/305",
+            "id": "https://vocabulary.raid.org/contributor.position.schema/311",
+            "startDate": "2024-05-14"
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/software/"
+          }
+        ],
+        "leader": true,
+        "contact": true
+      }
+    ]
+  },
+  {
+    "identifier": {
       "id": "http://raid.local/10.82841/ee406615",
       "schemaUri": "https://raid.org/",
       "registrationAgency": {
@@ -220,74 +301,6 @@
           {
             "schemaUri": "https://credit.niso.org/",
             "id": "https://credit.niso.org/contributor-roles/data-curation/"
-          }
-        ],
-        "leader": true,
-        "contact": true
-      }
-    ]
-  },
-  {
-    "identifier": {
-      "id": "http://raid.local/10.82841/f4632eb2",
-      "schemaUri": "https://raid.org/",
-      "registrationAgency": {
-        "id": "https://ror.org/038sjwq14",
-        "schemaUri": "https://ror.org/"
-      },
-      "owner": {
-        "id": "https://ror.org/038sjwq14",
-        "schemaUri": "https://ror.org/",
-        "servicePoint": 20000000
-      },
-      "raidAgencyUrl": "http://localhost:808010.82841/f4632eb2",
-      "license": "Creative Commons CC-0",
-      "version": 1
-    },
-    "title": [
-      {
-        "text": "Example title... 10:45:01 am",
-        "type": {
-          "id": "https://vocabulary.raid.org/title.type.schema/5",
-          "schemaUri": "https://vocabulary.raid.org/title.type.schema/376"
-        },
-        "startDate": "2024-05-14",
-        "language": {
-          "id": "eng",
-          "schemaUri": "https://www.iso.org/standard/74575.html"
-        }
-      }
-    ],
-    "date": { "startDate": "2024-05-14" },
-    "access": {
-      "type": {
-        "id": "https://vocabularies.coar-repositories.org/access_rights/c_abf2/",
-        "schemaUri": "https://vocabularies.coar-repositories.org/access_rights/"
-      },
-      "statement": {
-        "text": "Access statement example text...",
-        "language": {
-          "id": "eng",
-          "schemaUri": "https://www.iso.org/standard/74575.html"
-        }
-      },
-      "embargoExpiry": "2025-05-14"
-    },
-    "contributor": [
-      {
-        "id": "https://orcid.org/0009-0000-9306-3120",
-        "schemaUri": "https://orcid.org/",
-        "position": [
-          {
-            "schemaUri": "https://vocabulary.raid.org/contributor.position.schema/305",
-            "id": "https://vocabulary.raid.org/contributor.position.schema/311",
-            "startDate": "2024-05-14"
-          }
-        ],
-        "role": [
-          {
-            "schemaUri": "https://credit.niso.org/",
-            "id": "https://credit.niso.org/contributor-roles/software/"
           }
         ],
         "leader": true,
