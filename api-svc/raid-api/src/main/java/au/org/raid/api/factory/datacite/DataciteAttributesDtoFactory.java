@@ -111,6 +111,7 @@ public class DataciteAttributesDtoFactory {
                     .toList());
         }
 
+
         if (request.getAlternateUrl() != null) {
             relatedIdentifiers.addAll(request.getAlternateUrl().stream()
                     .map(relatedIdentifierFactory::create)
@@ -124,6 +125,7 @@ public class DataciteAttributesDtoFactory {
         }
 
         final var alternateIdentifiers = new ArrayList<DataciteAlternateIdentifier>();
+        alternateIdentifiers.add(alternateIdentifierFactory.create(request.getIdentifier()));
 
         if (request.getAlternateIdentifier() != null) {
             alternateIdentifiers.addAll(request.getAlternateIdentifier().stream()
@@ -246,6 +248,7 @@ public class DataciteAttributesDtoFactory {
         }
 
         final var alternateIdentifiers = new ArrayList<DataciteAlternateIdentifier>();
+        alternateIdentifiers.add(alternateIdentifierFactory.create(request.getIdentifier()));
 
         if (request.getAlternateIdentifier() != null) {
             alternateIdentifiers.addAll(request.getAlternateIdentifier().stream()

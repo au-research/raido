@@ -25,7 +25,7 @@ raid:
     landing-prefix: https://raid.org/
     global-url-prefix: https://hdl.handle.net
     registration-agency-identifier: https://ror.org/038sjwq14
-    handle-url-prefix: http://localhost:8080
+    handle-url-prefix: http://test.static.raid.org.au/
   db:
     user: postgres
     password: supersecret

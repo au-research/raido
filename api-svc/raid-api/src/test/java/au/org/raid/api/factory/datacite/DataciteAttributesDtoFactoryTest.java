@@ -61,6 +61,7 @@ class DataciteAttributesDtoFactoryTest {
         final var primaryTitleText = "primary-title";
         final var alternativeTitleText = "alternative-title";
         final var languageId = "eng";
+        final var raidAgencyUrl = "raid-agency-url";
 
         final var primaryTitle = new Title()
                 .text(primaryTitleText)
@@ -110,6 +111,7 @@ class DataciteAttributesDtoFactoryTest {
                 .identifier(new Id()
                         .registrationAgency(registrationAgency)
                         .owner(owner)
+                        .raidAgencyUrl(raidAgencyUrl)
                 )
                 .organisation(List.of(organisation, funder))
                 .title(List.of(alternativeTitle, primaryTitle))
@@ -137,6 +139,7 @@ class DataciteAttributesDtoFactoryTest {
         final var fundingReference = new DataciteFundingReference();
         final var relatedIdentifier = new DataciteRelatedIdentifier();
         final var dataciteAlternateIdentifier = new DataciteAlternateIdentifier();
+        final var dataciteRaidAgencyUrl = new DataciteAlternateIdentifier().setAlternateIdentifier(raidAgencyUrl).setAlternateIdentifierType("RaidAgencyUrl");
         final var relatedRaidIdentifier = new DataciteRelatedIdentifier();
         final var types = new DataciteTypes();
         final var landingPrefix = "landing-prefix/";
@@ -153,6 +156,7 @@ class DataciteAttributesDtoFactoryTest {
         when(fundingReferenceFactory.create(funder)).thenReturn(fundingReference);
         when(relatedIdentifierFactory.create(relatedObject)).thenReturn(relatedIdentifier);
         when(alternateIdentifierFactory.create(alternateIdentifier)).thenReturn(dataciteAlternateIdentifier);
+        when(alternateIdentifierFactory.create(request.getIdentifier())).thenReturn(dataciteRaidAgencyUrl);
         when(relatedIdentifierFactory.create(relatedRaid)).thenReturn(relatedRaidIdentifier);
         when(typesFactory.create()).thenReturn(types);
         when(identifierProperties.getLandingPrefix()).thenReturn(landingPrefix);
@@ -167,7 +171,7 @@ class DataciteAttributesDtoFactoryTest {
         assertThat(result.getCreators(), is(List.of(creator)));
         assertThat(result.getFundingReferences(), is(List.of(fundingReference)));
         assertThat(result.getRelatedIdentifiers(), is(List.of(relatedIdentifier, relatedRaidIdentifier)));
-        assertThat(result.getAlternateIdentifiers(), is(List.of(dataciteAlternateIdentifier)));
+        assertThat(result.getAlternateIdentifiers(), is(List.of(dataciteRaidAgencyUrl, dataciteAlternateIdentifier)));
         assertThat(result.getTypes(), is(types));
         assertThat(result.getUrl(), is(landingPrefix + handle));
         assertThat(result.getEvent(), is("publish"));
@@ -187,6 +191,7 @@ class DataciteAttributesDtoFactoryTest {
         final var primaryTitleText = "primary-title";
         final var alternativeTitleText = "alternative-title";
         final var languageId = "eng";
+        final var raidAgencyUrl = "raid-agency-url";
 
         final var primaryTitle = new Title()
                 .text(primaryTitleText)
@@ -236,6 +241,7 @@ class DataciteAttributesDtoFactoryTest {
                 .identifier(new Id()
                         .registrationAgency(registrationAgency)
                         .owner(owner)
+                        .raidAgencyUrl(raidAgencyUrl)
                 )
                 .organisation(List.of(organisation, funder))
                 .title(List.of(alternativeTitle, primaryTitle))
@@ -263,6 +269,7 @@ class DataciteAttributesDtoFactoryTest {
         final var fundingReference = new DataciteFundingReference();
         final var relatedIdentifier = new DataciteRelatedIdentifier();
         final var dataciteAlternateIdentifier = new DataciteAlternateIdentifier();
+        final var dataciteRaidAgencyUrl = new DataciteAlternateIdentifier().setAlternateIdentifier(raidAgencyUrl).setAlternateIdentifierType("RaidAgencyUrl");
         final var relatedRaidIdentifier = new DataciteRelatedIdentifier();
         final var types = new DataciteTypes();
         final var landingPrefix = "landing-prefix/";
@@ -279,6 +286,8 @@ class DataciteAttributesDtoFactoryTest {
         when(fundingReferenceFactory.create(funder)).thenReturn(fundingReference);
         when(relatedIdentifierFactory.create(relatedObject)).thenReturn(relatedIdentifier);
         when(alternateIdentifierFactory.create(alternateIdentifier)).thenReturn(dataciteAlternateIdentifier);
+        when(alternateIdentifierFactory.create(request.getIdentifier())).thenReturn(dataciteRaidAgencyUrl);
+
         when(relatedIdentifierFactory.create(relatedRaid)).thenReturn(relatedRaidIdentifier);
         when(typesFactory.create()).thenReturn(types);
         when(identifierProperties.getLandingPrefix()).thenReturn(landingPrefix);
@@ -293,7 +302,7 @@ class DataciteAttributesDtoFactoryTest {
         assertThat(result.getCreators(), is(List.of(creator)));
         assertThat(result.getFundingReferences(), is(List.of(fundingReference)));
         assertThat(result.getRelatedIdentifiers(), is(List.of(relatedIdentifier, relatedRaidIdentifier)));
-        assertThat(result.getAlternateIdentifiers(), is(List.of(dataciteAlternateIdentifier)));
+        assertThat(result.getAlternateIdentifiers(), is(List.of(dataciteRaidAgencyUrl, dataciteAlternateIdentifier)));
         assertThat(result.getTypes(), is(types));
         assertThat(result.getUrl(), is(landingPrefix + handle));
         assertThat(result.getEvent(), is(nullValue()));

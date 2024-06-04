@@ -283,7 +283,7 @@ components:
           type: string
           description: >
             The URL for the raid via the minting raid agency system
-          example: https://raid.org.au/10378.1/1695863
+          example: https://static.raid.org.au/raid/10378.1/1695863
         license:
           type: string
           description: The license under which the RAiD Metadata Record associated with this Identifier has been issued.
