@@ -2,6 +2,7 @@ package au.org.raid.iam.provider.servicepoint;
 
 import au.org.raid.iam.provider.servicepoint.dto.Grant;
 import au.org.raid.iam.provider.servicepoint.dto.GroupJoinRequest;
+import au.org.raid.iam.provider.servicepoint.dto.SetActiveGroupRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.*;
@@ -10,6 +11,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.keycloak.models.GroupModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RoleModel;
 import org.keycloak.models.UserModel;
@@ -19,6 +21,7 @@ import org.keycloak.services.managers.AuthenticationManager;
 
 import javax.management.relation.RoleNotFoundException;
 import java.util.HashMap;
+import java.util.List;
 
 @Slf4j
 @Provider
@@ -305,6 +308,41 @@ public class GroupController {
                 )
                 .entity("{}")
                 .build();
+    }
+
+    @OPTIONS
+    @Path("/active-group")
+    public Response setActiveGroupPreflight() {
+        return Response.fromResponse(addCorsHeaders("PUT")
+                        .preflight()
+                        .builder(Response.ok())
+                        .build())
+                .build();
+    }
+
+    @PUT
+    @Path("/active-group")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response setActiveGroup(SetActiveGroupRequest request) {
+        if (this.auth == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        final var user = auth.getSession().getUser();
+
+        final var userGroups = user.getGroupsStream().map(GroupModel::getId).toList();
+
+        if (userGroups.contains(request.getActiveGroupId())) {
+            user.setAttribute("activeGroupId", List.of(request.getActiveGroupId()));
+            return Response.fromResponse(
+                            addCorsHeaders("PUT")
+                                    .builder(Response.ok())
+                                    .build()
+                    )
+                    .entity("{}")
+                    .build();
+        } else {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
     }
 
     private boolean isGroupAdmin(final UserModel user) {
