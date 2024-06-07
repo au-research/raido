@@ -30,6 +30,8 @@ public class GroupController {
     private static final String GROUP_ADMIN_ROLE_NAME = "group-admin";
     private static final String SERVICE_POINT_USER_ROLE = "service-point-user";
     private final AuthenticationManager.AuthResult auth;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
 
     private final KeycloakSession session;
     public GroupController(final KeycloakSession session) {
@@ -63,8 +65,6 @@ public class GroupController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getGroups() throws JsonProcessingException {
         log.debug("Getting all groups");
-
-        final var objectMapper = new ObjectMapper();
 
         if (this.auth == null) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -345,6 +345,38 @@ public class GroupController {
         }
     }
 
+    @OPTIONS
+    @Path("/")
+    public Response userGroupsPreflight() {
+        return Response.fromResponse(addCorsHeaders("GET")
+                        .preflight()
+                        .builder(Response.ok())
+                        .build())
+                .build();
+    }
+
+    @GET
+    @Path("/")
+    @SneakyThrows
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response userGroups() {
+        if (this.auth == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+        final var user = auth.getSession().getUser();
+
+        final var userGroups = user.getGroupsStream().map(g -> new GroupDetails(g.getId(),g.getName())).toList();
+
+        return Response.fromResponse(
+                        addCorsHeaders("GET")
+                                .builder(Response.ok())
+                                .build()
+                )
+                .entity(objectMapper.writeValueAsString(userGroups))
+                .build();
+    }
+
+    private record GroupDetails(String id, String name) {}
     private boolean isGroupAdmin(final UserModel user) {
         return !user.getRoleMappingsStream()
                 .filter(r -> r.getName().equals(GROUP_ADMIN_ROLE_NAME))
