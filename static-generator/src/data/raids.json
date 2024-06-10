@@ -1,6 +1,165 @@
 [
   {
     "identifier": {
+      "id": "http://raid.local/10.82841/054fded3",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000000
+      },
+      "raidAgencyUrl": "http://localhost:808010.82841/054fded3",
+      "license": "Creative Commons CC-0",
+      "version": 2
+    },
+    "title": [
+      {
+        "text": "Tundzha Regional Archaeology Project",
+        "type": {
+          "id": "https://vocabulary.raid.org/title.type.schema/5",
+          "schemaUri": "https://vocabulary.raid.org/title.type.schema/376"
+        },
+        "startDate": "2008-01-01",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://www.iso.org/standard/74575.html"
+        }
+      },
+      {
+        "text": "TRAP",
+        "type": {
+          "id": "https://vocabulary.raid.org/title.type.schema/156",
+          "schemaUri": "https://vocabulary.raid.org/title.type.schema/376"
+        },
+        "startDate": "2008-01-01",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://www.iso.org/standard/74575.html"
+        }
+      }
+    ],
+    "date": { "startDate": "2008-01-01" },
+    "description": [
+      {
+        "text": "The Tundzha Regional Archaeology Project (TRAP), a cooperative effort including Australian, Bulgarian, and Czech investigators, undertook large-scale archaeological and palaeoenvironmental field research between 2008-2011. In this work, we focused on two study areas: the intermontane Kazanlak Valley along the Upper Tundzha River of central Bulgaria and the Thracian Plain along the Middle Tundzha River south of the city of Yambol in southeastern Bulgaria. Major field activities included over 100 sq km of systematic pedestrian survey, satellite image analysis, legacy data verification and mapping, trial excavations, artefact analysis, and environmental sampling in and around the study areas. Through this research, we inventoried over 100 surface artefact concentrations and 800 burial mounds. During and after this fieldwork, we analysed soil samples to characterise erosion and agricultural productivity in the Kazanlak Valley, and used palaeoecological samples to build a 30,000-year environmental history of the northern Thracian Plain. Bone and palaeobotanical samples from Yambol allowed us to explore diet and subsistence strategies among past local communities. In the years since, we carried on with specialised studies. In the Yambol region we analysed trade and explored shifting Roman habitation patterns through targeted excavation and ceramics analysis, and used historical maps to locate additional features that were verified via ground truthing. Recently, human teeth from one of our burial sites were used for DNA analysis and contributed to a major re-evaluation of archaeogenetics in southeastern Europe. Throughout, the project has pioneered digital research methods, from field recording using mobile devices to the use of machine learning to extract features from maps (promising) and satellite images (less so). TRAP continues to publish based on data collected during past fieldwork. ",
+        "type": {
+          "id": "https://vocabulary.raid.org/description.type.schema/318",
+          "schemaUri": "https://vocabulary.raid.org/description.type.schema/320"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://www.iso.org/standard/74575.html"
+        }
+      },
+      {
+        "text": "The Tundzha Regional Archaeological Project (TRAP) is a long-term, international, multi-disciplinary project exploring the landscape archaeology and palaeo-environments of the upper and middle Tundzha (Tonzos) river valley from the Kazanlak region in the northwest through the Yambol region in the southeast.",
+        "type": {
+          "id": "https://vocabulary.raid.org/description.type.schema/3",
+          "schemaUri": "https://vocabulary.raid.org/description.type.schema/320"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://www.iso.org/standard/74575.html"
+        }
+      },
+      {
+        "text": "Investigate how Thrace fit into its broader Balkan and eastern Mediterranean context from prehistory through Roman times (trade; cultural influence).",
+        "type": {
+          "id": "https://vocabulary.raid.org/description.type.schema/7",
+          "schemaUri": "https://vocabulary.raid.org/description.type.schema/320"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://www.iso.org/standard/74575.html"
+        }
+      },
+      {
+        "text": "Re-evaluate historical narratives about prehistoric migrations (e.g., Yamnaya culture) and the rise of an Odrysian ‘kingdom’",
+        "type": {
+          "id": "https://vocabulary.raid.org/description.type.schema/7",
+          "schemaUri": "https://vocabulary.raid.org/description.type.schema/320"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://www.iso.org/standard/74575.html"
+        }
+      },
+      {
+        "text": "Investigate the nature of the subsistence economy and its environmental context.",
+        "type": {
+          "id": "https://vocabulary.raid.org/description.type.schema/7",
+          "schemaUri": "https://vocabulary.raid.org/description.type.schema/320"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://www.iso.org/standard/74575.html"
+        }
+      },
+      {
+        "text": "Systematic pedestrian survey; ground-based remote sensing (magnetometry); satellite remote sensing; excavation; digital methods; palaeoecology; palynology; palaeobotany; bioarchaeology; stable isotope analysis (human remains)",
+        "type": {
+          "id": "https://vocabulary.raid.org/description.type.schema/8",
+          "schemaUri": "https://vocabulary.raid.org/description.type.schema/320"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://www.iso.org/standard/74575.html"
+        }
+      },
+      {
+        "text": "The Tundzha Regional Archaeology Project (TRAP) is a joint Australian, Bulgarian and Czech project working on two separate areas in the Tundzha River valley in Bulgaria: the upper valley, surrounded by mountains, and lower down a part of the Thracian plain. Initial research from 2008 to 2011 focused on both archaeology and the ancient environment. Project members surveyed over 100 sq km on foot, as well as using satellite imagery, legacy data, trial excavations, artefact analysis, and environmental sampling.\n\nWith this broad range of evidence, the project built a 30,000-year environmental history of the northern Thracian plain and explored diet and subsistence strategies among past local communities. Among many specialised studies, the team has analysed subsistence strategies, habitation patterns, and trade. ",
+        "type": {
+          "id": "https://vocabulary.raid.org/description.type.schema/319",
+          "schemaUri": "https://vocabulary.raid.org/description.type.schema/320"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://www.iso.org/standard/74575.html"
+        }
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://vocabularies.coar-repositories.org/access_rights/c_abf2/",
+        "schemaUri": "https://vocabularies.coar-repositories.org/access_rights/"
+      },
+      "statement": {
+        "text": "Access statement example text...",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://www.iso.org/standard/74575.html"
+        }
+      },
+      "embargoExpiry": "2025-06-10"
+    },
+    "contributor": [
+      {
+        "id": "https://orcid.org/0009-0000-9306-3120",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://vocabulary.raid.org/contributor.position.schema/305",
+            "id": "https://vocabulary.raid.org/contributor.position.schema/308",
+            "startDate": "2024-06-10"
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/writing-review-editing/"
+          }
+        ],
+        "leader": true,
+        "contact": true
+      }
+    ]
+  },
+  {
+    "identifier": {
       "id": "http://raid.local/10.82841/f4632eb2",
       "schemaUri": "https://raid.org/",
       "registrationAgency": {
@@ -14,7 +173,7 @@
       },
       "raidAgencyUrl": "http://localhost:808010.82841/f4632eb2",
       "license": "Creative Commons CC-0",
-      "version": 4
+      "version": 5
     },
     "title": [
       {
@@ -65,7 +224,7 @@
         "position": [
           {
             "schemaUri": "https://vocabulary.raid.org/contributor.position.schema/305",
-            "id": "https://vocabulary.raid.org/contributor.position.schema/311",
+            "id": "https://vocabulary.raid.org/contributor.position.schema/307",
             "startDate": "2024-05-14"
           }
         ],
