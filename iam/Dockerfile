@@ -4,11 +4,10 @@ RUN dnf install --installroot /mnt/rootfs curl --releasever 9 --setopt install_w
     dnf --installroot /mnt/rootfs clean all && \
     rpm --root /mnt/rootfs -e --nodeps setup
 
-FROM quay.io/keycloak/keycloak:latest as builder
+FROM quay.io/keycloak/keycloak:24.0.1 as builder
 COPY --from=ubi-micro-build /mnt/rootfs /
 
 WORKDIR /opt/keycloak
-
 
 COPY certs/test-raid-org-au.pem .
 COPY certs/demo-raid-org-au.pem .
@@ -20,9 +19,6 @@ RUN keytool -import -storepass password -noprompt -trustcacerts -alias demo.raid
 RUN keytool -import -storepass password -noprompt -trustcacerts -alias prod.raid.org.au -file test-raid-org-au.pem -keystore conf/server.keystore
 
 RUN /opt/keycloak/bin/kc.sh build
-
-FROM quay.io/keycloak/keycloak:24.0.1
-COPY --from=builder /opt/keycloak/ /opt/keycloak/
 
 COPY build/libs/raid-iam.jar /opt/keycloak/providers/
 
