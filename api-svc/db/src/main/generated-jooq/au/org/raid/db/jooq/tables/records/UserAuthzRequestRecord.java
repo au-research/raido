@@ -7,14 +7,13 @@ package au.org.raid.db.jooq.tables.records;
 import au.org.raid.db.jooq.enums.AuthRequestStatus;
 import au.org.raid.db.jooq.enums.IdProvider;
 import au.org.raid.db.jooq.tables.UserAuthzRequest;
-
-import java.time.LocalDateTime;
-
 import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Record12;
 import org.jooq.Row12;
 import org.jooq.impl.UpdatableRecordImpl;
+
+import java.time.LocalDateTime;
 
 
 /**
@@ -151,7 +150,7 @@ public class UserAuthzRequestRecord extends UpdatableRecordImpl<UserAuthzRequest
 
     /**
      * Setter for <code>api_svc.user_authz_request.approved_user</code>. the
-     * user that was approved, set when request is approved and the 
+     * user that was approved, set when request is approved and the
      *   user is created or updated
      */
     public UserAuthzRequestRecord setApprovedUser(Long value) {
@@ -161,7 +160,7 @@ public class UserAuthzRequestRecord extends UpdatableRecordImpl<UserAuthzRequest
 
     /**
      * Getter for <code>api_svc.user_authz_request.approved_user</code>. the
-     * user that was approved, set when request is approved and the 
+     * user that was approved, set when request is approved and the
      *   user is created or updated
      */
     public Long getApprovedUser() {

@@ -9,31 +9,17 @@ import au.org.raid.db.jooq.Indexes;
 import au.org.raid.db.jooq.Keys;
 import au.org.raid.db.jooq.enums.Metaschema;
 import au.org.raid.db.jooq.tables.records.RaidRecord;
+import org.jooq.Record;
+import org.jooq.*;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Function21;
-import org.jooq.Index;
-import org.jooq.JSONB;
-import org.jooq.Name;
-import org.jooq.Record;
-import org.jooq.Records;
-import org.jooq.Row21;
-import org.jooq.Schema;
-import org.jooq.SelectField;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 
 /**
@@ -72,12 +58,12 @@ public class Raid extends TableImpl<RaidRecord> {
     /**
      * The column <code>api_svc.raid.url</code>. The value that we set as the
      * `URL` property via ARDC APIDS.
-     *   Example: `https://demo.raido-infra.com/raid/123.456/789`. 
+     *   Example: `https://demo.raido-infra.com/raid/123.456/789`.
      *   The global handle regisrty url (e.g.
-     * `https://hdl.handle.net/123.456/789`) 
+     * `https://hdl.handle.net/123.456/789`)
      *   will redirect to this value.
      */
-    public final TableField<RaidRecord, String> URL = createField(DSL.name("url"), SQLDataType.VARCHAR(512), this, "The value that we set as the `URL` property via ARDC APIDS.\n  Example: `https://demo.raido-infra.com/raid/123.456/789`. \n  The global handle regisrty url (e.g. `https://hdl.handle.net/123.456/789`) \n  will redirect to this value.");
+    public final TableField<RaidRecord, String> URL = createField(DSL.name("url"), SQLDataType.VARCHAR(512), this, "The value that we set as the `URL` property via ARDC APIDS.\n  Example: `https://demo.raido-infra.com/raid/123.456/789`.\n  The global handle regisrty url (e.g. `https://hdl.handle.net/123.456/789`)\n  will redirect to this value.");
 
     /**
      * The column <code>api_svc.raid.url_index</code>. The `index` of the URL
