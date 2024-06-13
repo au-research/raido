@@ -19,6 +19,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Optional;
@@ -37,6 +38,7 @@ public class RaidService {
     private final RaidIngestService raidIngestService;
     private final HandleFactory handleFactory;
 
+    @Transactional
     public RaidDto mint(
             final RaidCreateRequest request,
             final long servicePointId
@@ -70,6 +72,7 @@ public class RaidService {
     }
 
     @SneakyThrows
+    @Transactional
     public RaidDto update(final RaidUpdateRequest raid, final long servicePointId) {
         final var servicePointRecord =
                 servicePointRepository.findById(servicePointId).orElseThrow(() ->
@@ -100,14 +103,8 @@ public class RaidService {
         return raidIngestService.update(raidDto);
     }
 
+    @Transactional(readOnly = true)
     public Optional<RaidDto> findByHandle(String handle) {
         return raidIngestService.findByHandle(handle);
-    }
-
-    public boolean isEditable(final long servicePointId) {
-        final var servicePoint = servicePointRepository.findById(servicePointId)
-                .orElseThrow(() -> new UnknownServicePointException(servicePointId));
-
-        return servicePoint.getAppWritesEnabled();
     }
 }

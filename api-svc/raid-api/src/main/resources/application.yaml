@@ -41,7 +41,7 @@ raid:
     geonames:
       username: geonames
   history:
-    baseline-interval: 5
+    baseline-interval: 50
   iam:
     realm-uri: http://localhost:8001/realms/raid
 spring:
