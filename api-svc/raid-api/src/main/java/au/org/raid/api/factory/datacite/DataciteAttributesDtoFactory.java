@@ -35,7 +35,7 @@ public class DataciteAttributesDtoFactory {
         final var url = identifierProperties.getLandingPrefix() + handle;
 
         final var event = request.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri()) ?
-                "publish" : null;
+                "publish" : "register";
 
         final var contributors = new ArrayList<DataciteContributor>();
 
@@ -160,7 +160,7 @@ public class DataciteAttributesDtoFactory {
         final var url = identifierProperties.getLandingPrefix() + handle;
 
         final var event = request.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri()) ?
-                "publish" : null;
+                "publish" : "register";
         final var contributors = new ArrayList<DataciteContributor>();
 
         contributors.add(contributorFactory.create(

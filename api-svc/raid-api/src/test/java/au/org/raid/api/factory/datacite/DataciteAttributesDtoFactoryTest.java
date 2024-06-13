@@ -15,7 +15,6 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -178,7 +177,7 @@ class DataciteAttributesDtoFactoryTest {
     }
 
     @Test
-    @DisplayName("Set event to null if embargoed")
+    @DisplayName("Set event to 'register' if embargoed")
     void embargoedDoesNotPublish() {
         final var handle = "_handle";
         final var registrationAgencyId = "registration-agency-id";
@@ -305,6 +304,6 @@ class DataciteAttributesDtoFactoryTest {
         assertThat(result.getAlternateIdentifiers(), is(List.of(dataciteRaidAgencyUrl, dataciteAlternateIdentifier)));
         assertThat(result.getTypes(), is(types));
         assertThat(result.getUrl(), is(landingPrefix + handle));
-        assertThat(result.getEvent(), is(nullValue()));
+        assertThat(result.getEvent(), is("register"));
     }
 }
