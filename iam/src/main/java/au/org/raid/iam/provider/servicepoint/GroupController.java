@@ -356,7 +356,7 @@ public class GroupController {
     }
 
     @GET
-    @Path("/")
+    @Path("/user-groups")
     @SneakyThrows
     @Consumes(MediaType.APPLICATION_JSON)
     public Response userGroups() {
