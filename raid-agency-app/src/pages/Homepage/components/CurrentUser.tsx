@@ -46,15 +46,17 @@ export default function CurrentUser() {
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = (groupId: string) => {
+  const handleClose = async (groupId: string) => {
     setAnchorEl(null);
 
-    setKeycloakUserAttribute({
+    await setKeycloakUserAttribute({
       token: keycloak.token,
       groupId: groupId,
     });
 
-    window.location.reload();
+    setTimeout(() => {
+      window.location.reload();
+    }, 250);
   };
 
   const { keycloak } = useCustomKeycloak();
