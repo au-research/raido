@@ -114,7 +114,7 @@ class RaidServiceTest {
         raidRecord.setMetadata(JSONB.valueOf(raidJson));
 
         final var expected = objectMapper.readValue(raidJson(), RaidDto.class);
-        when(raidIngestService.findByHandle(handle)).thenReturn(Optional.of(expected));
+        when(raidHistoryService.findByHandle(handle)).thenReturn(Optional.of(expected));
 
         final var result = raidService.findByHandle(handle);
         assertThat(result.get(), Matchers.is(expected));

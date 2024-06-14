@@ -105,6 +105,6 @@ public class RaidService {
 
     @Transactional(readOnly = true)
     public Optional<RaidDto> findByHandle(String handle) {
-        return raidIngestService.findByHandle(handle);
+        return raidHistoryService.findByHandle(handle);
     }
 }

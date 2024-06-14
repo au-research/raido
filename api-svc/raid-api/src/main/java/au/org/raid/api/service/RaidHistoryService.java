@@ -96,6 +96,20 @@ public class RaidHistoryService {
         return Optional.of(objectMapper.readValue(jsonValueFactory.create(history).toString(), RaidDto.class));
      }
 
+    @SneakyThrows
+    public Optional<RaidDto> findByHandle(final String handle) {
+        final var history = raidHistoryRepository.findAllByHandle(handle).stream()
+                .map(RaidHistoryRecord::getDiff)
+                .map(jsonValueFactory::create)
+                .toList();
+
+        if (history.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(objectMapper.readValue(jsonValueFactory.create(history).toString(), RaidDto.class));
+    }
+
     public List<RaidChange> findAllChangesByHandle(final String handle) {
         return raidHistoryRepository.findAllByHandleAndChangeType(handle, ChangeType.PATCH.toString()).stream()
                 .map(raidChangeFactory::create)

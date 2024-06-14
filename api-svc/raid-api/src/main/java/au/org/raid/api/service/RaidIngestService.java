@@ -98,6 +98,8 @@ public class RaidIngestService {
         return raidRepository.findByHandle(handle)
                 .map(cacheableRaidService::build)
                 .or(Optional::empty);
+
+
     }
 
     public RaidDto update(final RaidDto raid) {
