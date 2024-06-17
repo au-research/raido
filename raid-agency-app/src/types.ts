@@ -32,3 +32,8 @@ export type RaidHistoryElementType = {
   path: string;
   value: unknown;
 };
+
+export type KeycloakGroup = {
+  id: string;
+  name: string;
+};

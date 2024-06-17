@@ -36,8 +36,6 @@ export const fetchRaids = async ({
     } catch (error) {
       console.error("Failed to fetch service points:", error);
     }
-  } else {
-    console.warn("No service point group ID provided");
   }
 
   if (fields && fields.length > 0) {
