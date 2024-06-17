@@ -68,7 +68,8 @@ spring:
       client:
         registration:
           keycloak:
-            client-id: raid-api
+            client-id: raid-api-2
+            client-secret: Nr0HycAztrRSNehq9EZR2wKvqmpC3JfS
             authorization-grant-type: authorization_code
             scope: openid
         provider:

@@ -694,9 +694,9 @@
     "defaultClientScopes" : [ "acr", "roles", "basic", "service_point_group_id" ],
     "optionalClientScopes" : [ ]
   }, {
-    "id" : "074aee5c-6b60-4c03-9210-846120b79815",
+    "id" : "b5ded15a-4576-4fdf-b95b-f1adf9a8de9e",
     "clientId" : "raid-api-2",
-    "name" : "Raid API",
+    "name" : "",
     "description" : "",
     "rootUrl" : "",
     "adminUrl" : "",
@@ -705,7 +705,7 @@
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
-    "secret" : "qnQ1IbcuUSYBMpeNcndV4DzotXMNv4Hg",
+    "secret" : "Nr0HycAztrRSNehq9EZR2wKvqmpC3JfS",
     "redirectUris" : [ "/*" ],
     "webOrigins" : [ "/*" ],
     "notBefore" : 0,
@@ -721,15 +721,15 @@
     "attributes" : {
       "oidc.ciba.grant.enabled" : "false",
       "oauth2.device.authorization.grant.enabled" : "false",
-      "client.secret.creation.time" : "1717978294",
+      "client.secret.creation.time" : "1718596352",
       "backchannel.logout.session.required" : "true",
       "backchannel.logout.revoke.offline.tokens" : "false"
     },
     "authenticationFlowBindingOverrides" : { },
     "fullScopeAllowed" : true,
     "nodeReRegistrationTimeout" : -1,
-    "defaultClientScopes" : [ "acr", "roles", "basic", "service_point_group_id" ],
-    "optionalClientScopes" : [ ]
+    "defaultClientScopes" : [ "acr", "roles", "basic" ],
+    "optionalClientScopes" : [ "offline_access" ]
   }, {
     "id" : "272def0e-6f52-482b-a9e2-dfb7f17036e4",
     "clientId" : "realm-management",
