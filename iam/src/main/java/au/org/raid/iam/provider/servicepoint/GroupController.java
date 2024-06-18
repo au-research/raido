@@ -43,7 +43,13 @@ public class GroupController {
         log.debug("Calling Cors");
         final var cors = session.getProvider(Cors.class);
 
-        cors.allowedOrigins("http://localhost:7080", "https://app.test.raid.org.au", "https://app.demo.raid.org.au", "https://app.prod.raid.org.au");
+        cors.allowedOrigins(
+                "http://localhost:7080",
+                "https://app.test.raid.org.au",
+                "https://app.demo.raid.org.au",
+                "https://app.stage.raid.org.au",
+                "https://app.prod.raid.org.au");
+
         cors.allowedMethods(allowedMethods);
         cors.auth();
 
