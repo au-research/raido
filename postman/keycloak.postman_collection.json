@@ -1,0 +1,621 @@
+{
+	"info": {
+		"_postman_id": "923c92b7-2e3d-4d2e-8a7f-fecd0166713b",
+		"name": "keycloak",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "371799"
+	},
+	"item": [
+		{
+			"name": "groups",
+			"item": [
+				{
+					"name": "🟢 get groups",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{kc-host}}/admin/realms/{{kc-realm}}/groups",
+							"host": [
+								"{{kc-host}}"
+							],
+							"path": [
+								"admin",
+								"realms",
+								"{{kc-realm}}",
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "🟢 get group",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{kc-host}}/admin/realms/{{kc-realm}}/groups/{{kc-example-groupid}}",
+							"host": [
+								"{{kc-host}}"
+							],
+							"path": [
+								"admin",
+								"realms",
+								"{{kc-realm}}",
+								"groups",
+								"{{kc-example-groupid}}"
+							]
+						},
+						"description": "## Description\n\nget all groups (service points)\n\n## Used in\n\nraido/raid-agency-app/src/pages/Homepage/components/GroupSelector.tsx\n\n### Required permissions\n\n- realm-management | view-users\n- realm-management | query-groups"
+					},
+					"response": []
+				},
+				{
+					"name": "🟢 get group members",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{kc-host}}/admin/realms/{{kc-realm}}/groups/{{kc-example-groupid}}/members",
+							"host": [
+								"{{kc-host}}"
+							],
+							"path": [
+								"admin",
+								"realms",
+								"{{kc-realm}}",
+								"groups",
+								"{{kc-example-groupid}}",
+								"members"
+							]
+						},
+						"description": "## Description\n\nget all groups (service points)\n\n## Used in\n\nraido/raid-agency-app/src/pages/Homepage/components/GroupSelector.tsx\n\n### Required permissions\n\n- realm-management | view-users\n- realm-management | query-groups"
+					},
+					"response": []
+				},
+				{
+					"name": "🟢 [c] get group members",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{kc-host}}/realms/{{kc-realm}}/group",
+							"host": [
+								"{{kc-host}}"
+							],
+							"path": [
+								"realms",
+								"{{kc-realm}}",
+								"group"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "🟢 [c] get groups",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{kc-host}}/realms/{{kc-realm}}/group/all",
+							"host": [
+								"{{kc-host}}"
+							],
+							"path": [
+								"realms",
+								"{{kc-realm}}",
+								"group",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "🟢 [c] get user groups",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"groupId\": {{kc-example-groupid}},\n    \"userId\": {{kc-example-userid}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{kc-host}}/realms/{{kc-realm}}/group/user-groups",
+							"host": [
+								"{{kc-host}}"
+							],
+							"path": [
+								"realms",
+								"{{kc-realm}}",
+								"group",
+								"user-groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "🟢 [c] grant user role `service-point-user`",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"groupId\": {{kc-example-groupid}},\n    \"userId\": {{kc-example-userid/}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{kc-host}}/realms/{{kc-realm}}/group/grant",
+							"host": [
+								"{{kc-host}}"
+							],
+							"path": [
+								"realms",
+								"{{kc-realm}}",
+								"group",
+								"grant"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "🟢 [c] revoke user role `service-point-user`",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"groupId\": {{kc-example-groupid}},\n    \"userId\": {{kc-example-userid/}}\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{kc-host}}/realms/{{kc-realm}}/group/revoke",
+							"host": [
+								"{{kc-host}}"
+							],
+							"path": [
+								"realms",
+								"{{kc-realm}}",
+								"group",
+								"revoke"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "🟢 get users",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{kc-host}}/admin/realms/{{kc-realm}}/users",
+							"host": [
+								"{{kc-host}}"
+							],
+							"path": [
+								"admin",
+								"realms",
+								"{{kc-realm}}",
+								"users"
+							]
+						},
+						"description": "## Description\n\nget all groups (service points)\n\n## Used in\n\nraido/raid-agency-app/src/pages/Homepage/components/GroupSelector.tsx\n\n### Required permissions\n\n- realm-management | view-users\n    \n- realm-management | query-groups"
+					},
+					"response": []
+				},
+				{
+					"name": "🟢 get user roles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{kc-host}}/admin/realms/{{kc-realm}}/users/{{kc-example-userid}}/role-mappings/realm",
+							"host": [
+								"{{kc-host}}"
+							],
+							"path": [
+								"admin",
+								"realms",
+								"{{kc-realm}}",
+								"users",
+								"{{kc-example-userid}}",
+								"role-mappings",
+								"realm"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "🟢 get user groups",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{kc-host}}/admin/realms/{{kc-realm}}/users/{{kc-example-userid}}/groups",
+							"host": [
+								"{{kc-host}}"
+							],
+							"path": [
+								"admin",
+								"realms",
+								"{{kc-realm}}",
+								"users",
+								"{{kc-example-userid}}",
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "🟢 leave group",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{kc-host}}/admin/realms/{{kc-realm}}/users/{{kc-example-userid}}/groups/{{kc-example-groupid}}",
+							"host": [
+								"{{kc-host}}"
+							],
+							"path": [
+								"admin",
+								"realms",
+								"{{kc-realm}}",
+								"users",
+								"{{kc-example-userid}}",
+								"groups",
+								"{{kc-example-groupid}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "🟢 join group",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{kc-host}}/admin/realms/{{kc-realm}}/users/{{kc-example-userid}}/groups/{{kc-example-groupid}}",
+							"host": [
+								"{{kc-host}}"
+							],
+							"path": [
+								"admin",
+								"realms",
+								"{{kc-realm}}",
+								"users",
+								"{{kc-example-userid}}",
+								"groups",
+								"{{kc-example-groupid}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "roles",
+			"item": [
+				{
+					"name": "🟢 get roles",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{kc-host}}/admin/realms/{{kc-realm}}/roles",
+							"host": [
+								"{{kc-host}}"
+							],
+							"path": [
+								"admin",
+								"realms",
+								"{{kc-realm}}",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "realms",
+			"item": [
+				{
+					"name": "🟢 get realms",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{kc-host}}/admin/realms",
+							"host": [
+								"{{kc-host}}"
+							],
+							"path": [
+								"admin",
+								"realms"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "openid",
+			"item": [
+				{
+					"name": "🟢 get user access token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "{{raido-username}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{raido-password}}",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "{{kc-client}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{kc-host}}/realms/{{kc-realm}}/protocol/openid-connect/token",
+							"host": [
+								"{{kc-host}}"
+							],
+							"path": [
+								"realms",
+								"{{kc-realm}}",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "account",
+			"item": [
+				{
+					"name": "🟢 update user profile",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Steffen\",\n    \"lastName\": \"Weidenhaus\",\n    \"email\": \"weidenhaus@gmail.com\",\n    \"attributes\": {\n        \"activeGroupId\": [\n            \"{{kc-example-groupid}}\"\n        ]\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{kc-host}}/realms/{{kc-realm}}/account",
+							"host": [
+								"{{kc-host}}"
+							],
+							"path": [
+								"realms",
+								"{{kc-realm}}",
+								"account"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{bearer-token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"const postRequest = {",
+					"  url: pm.environment.get(\"kc-token-url\"),",
+					"  method: \"POST\",",
+					"  header: {",
+					"    \"Content-Type\": \"application/x-www-form-urlencoded\",",
+					"  },",
+					"  body: {",
+					"    mode: \"urlencoded\",",
+					"    urlencoded: [",
+					"      { key: \"grant_type\", value: \"password\" },",
+					"      { key: \"client_id\", value: pm.environment.get(\"kc-client\") },",
+					"      { key: \"username\", value: pm.environment.get(\"kc-username\") },",
+					"      { key: \"password\", value: pm.environment.get(\"kc-password\") },",
+					"    ],",
+					"  },",
+					"};",
+					"",
+					"pm.sendRequest(postRequest, (error, response) => {",
+					"  if (error) {",
+					"    console.log(error);",
+					"  }",
+					"",
+					"  pm.collectionVariables.set(\"bearer-token\", null);",
+					"",
+					"  pm.test(\"response should be okay to process\", () => {",
+					"    pm.expect(error).to.equal(null);",
+					"    pm.expect(response).to.have.property(\"code\", 200);",
+					"    pm.expect(response).to.have.property(\"status\", \"OK\");",
+					"    pm.environment.set(\"bearer-token\", response.json().access_token);",
+					"  });",
+					"});",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "bearer-token",
+			"value": ""
+		}
+	]
+}
