@@ -1,0 +1,69 @@
+[
+  {
+    "key": "bearer-token",
+    "value": "",
+    "enabled": true,
+    "type": "any",
+    "sessionValue": "",
+    "sessionIndex": 0
+  },
+  {
+    "key": "kc-username",
+    "value": "",
+    "enabled": true,
+    "sessionValue": "",
+    "sessionIndex": 1
+  },
+  {
+    "key": "kc-password",
+    "value": "",
+    "enabled": true,
+    "type": "secret",
+    "sessionValue": "",
+    "sessionIndex": 2
+  },
+  {
+    "key": "kc-host",
+    "value": "http://localhost:8001",
+    "enabled": true,
+    "sessionValue": "http://localhost:8001",
+    "sessionIndex": 3
+  },
+  {
+    "key": "kc-client",
+    "value": "raid-api",
+    "enabled": true,
+    "sessionValue": "raid-api",
+    "sessionIndex": 4
+  },
+  {
+    "key": "kc-token-url",
+    "value": "http://localhost:8001/realms/raid/protocol/openid-connect/token",
+    "enabled": true,
+    "sessionValue": "http://localhost:8001/realms/raid/protocol/openid-connect/token",
+    "sessionIndex": 5
+  },
+  {
+    "key": "kc-realm",
+    "value": "raid",
+    "enabled": true,
+    "sessionValue": "raid",
+    "sessionIndex": 6
+  },
+  {
+    "key": "kc-example-groupid",
+    "value": "",
+    "enabled": true,
+    "type": "default",
+    "sessionValue": "",
+    "sessionIndex": 7
+  },
+  {
+    "key": "kc-example-userid",
+    "value": "",
+    "enabled": true,
+    "type": "default",
+    "sessionValue": "",
+    "sessionIndex": 8
+  }
+]
