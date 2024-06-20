@@ -46,6 +46,7 @@ export default function ServicePointCreateForm() {
       prefix: z.string(),
       repositoryId: z.string(),
       appWritesEnabled: z.boolean(),
+      groupId: z.string()
     }),
   });
 

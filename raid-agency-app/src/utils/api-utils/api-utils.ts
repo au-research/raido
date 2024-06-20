@@ -7,6 +7,8 @@ export function getApiEndpoint() {
     ? "demo"
     : hostname.includes("prod")
     ? "prod"
+    : hostname.includes("stage")
+    ? "stage"
     : "dev";
 
   return `${environment === "dev" ? "http" : "https"}://${
