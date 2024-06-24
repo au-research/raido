@@ -1,10 +1,13 @@
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import {
-  fetchKeycloakGroups,
+  fetchCurrentUserKeycloakGroups,
   setKeycloakUserAttribute,
 } from "@/services/keycloak";
 import { KeycloakGroup } from "@/types";
-import { Circle as CircleIcon } from "@mui/icons-material";
+import {
+  Circle as CircleIcon,
+  SwapHoriz as SwapHorizIcon,
+} from "@mui/icons-material";
 import {
   Box,
   Card,
@@ -20,7 +23,6 @@ import { useQuery } from "@tanstack/react-query";
 import { KeycloakTokenParsed } from "keycloak-js";
 import React from "react";
 
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -63,10 +65,10 @@ export default function CurrentUser() {
   const roles = getRolesFromToken({ tokenParsed: keycloak.tokenParsed });
   const clientId = keycloak.tokenParsed?.azp;
 
-  const keycloakGroupsQuery = useQuery<{ groups: KeycloakGroup[] }>({
+  const keycloakGroupsQuery = useQuery<KeycloakGroup[]>({
     queryKey: ["keycloak-groups"],
     queryFn: async () => {
-      const servicePoints = await fetchKeycloakGroups({
+      const servicePoints = await fetchCurrentUserKeycloakGroups({
         token: keycloak.token!,
       });
       return servicePoints;
@@ -81,7 +83,7 @@ export default function CurrentUser() {
     return <div>Error...</div>;
   }
 
-  const activeGroup = keycloakGroupsQuery.data?.groups.find(
+  const activeGroup = keycloakGroupsQuery.data?.find(
     (el) => el.id === keycloak.tokenParsed?.service_point_group_id
   );
 
@@ -123,7 +125,7 @@ export default function CurrentUser() {
                     aria-haspopup="true"
                     onClick={handleClick}
                   >
-                    <MoreVertIcon />
+                    <SwapHorizIcon />
                   </IconButton>
                 </Tooltip>
                 <Menu
@@ -133,11 +135,10 @@ export default function CurrentUser() {
                   }}
                   anchorEl={anchorEl}
                   open={open}
-                  onClose={handleClose}
                   sx={{ minWidth: "300px" }}
                 >
-                  {keycloakGroupsQuery.data?.groups
-                    .sort((a, b) => a.name.localeCompare(b.name))
+                  {keycloakGroupsQuery.data
+                    ?.sort((a, b) => a.name.localeCompare(b.name))
                     .filter(
                       (el) =>
                         el.id !== keycloak.tokenParsed?.service_point_group_id
