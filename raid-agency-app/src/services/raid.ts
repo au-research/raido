@@ -1,8 +1,9 @@
 import { RaidDto } from "@/generated/raid";
-import { getApiEndpoint } from "@/utils/api-utils/api-utils";
-import type Keycloak from "keycloak-js";
 import { fetchServicePoints } from "@/services/service-points";
 import { RaidHistoryType } from "@/types";
+import { getApiEndpoint } from "@/utils/api-utils/api-utils";
+import type Keycloak from "keycloak-js";
+import axios from "axios";
 
 const endpoint = getApiEndpoint();
 
@@ -86,6 +87,7 @@ export const fetchRaidHistory = async ({
   return await response.json();
 };
 
+const API_ENDPOINT = `${endpoint}/raid/`;
 export const createRaid = async ({
   data,
   token,
@@ -93,19 +95,24 @@ export const createRaid = async ({
   data: RaidDto;
   token: string;
 }): Promise<RaidDto> => {
-  const response = await fetch(`${endpoint}/raid/`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(data),
-  });
-  if (!response.ok) {
-    const errorResponse = await response.text();
-    throw new Error(errorResponse);
+  try {
+    const response = await axios.post<RaidDto>(API_ENDPOINT, data, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    let errorMessage = "Failed to create raid";
+    if (axios.isAxiosError(error) && error.response) {
+      errorMessage = JSON.stringify(error.response.data) || error.message;
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    throw new Error(errorMessage);
   }
-  return await response.json();
 };
 
 export const updateRaid = async ({

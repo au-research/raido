@@ -1,12 +1,13 @@
-import ApiValidationErrorMessage from "@/components/ApiValidationErrorMessage";
 import BreadcrumbsBar from "@/components/BreadcrumbsBar";
 import ErrorAlertComponent from "@/components/ErrorAlertComponent";
+import useErrorDialog from "@/components/ErrorDialog/useErrorDialog";
+import RaidFormErrorMessage from "@/components/RaidFormErrorMessage";
 import RaidForm from "@/forms/RaidForm";
 import { RaidDto } from "@/generated/raid";
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import LoadingPage from "@/pages/LoadingPage";
 import { fetchRaid, updateRaid } from "@/services/raid";
-import type { Breadcrumb, Failure } from "@/types";
+import type { Breadcrumb } from "@/types";
 import { raidRequest } from "@/utils";
 import {
   DocumentScanner as DocumentScannerIcon,
@@ -16,7 +17,7 @@ import {
 } from "@mui/icons-material";
 import { Container, Stack } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 function createEditRaidPageBreadcrumbs({
@@ -51,6 +52,8 @@ function createEditRaidPageBreadcrumbs({
 }
 
 export default function EditRaidPage() {
+  const { openErrorDialog } = useErrorDialog();
+
   const { keycloak, initialized } = useCustomKeycloak();
   const navigate = useNavigate();
 
@@ -58,16 +61,6 @@ export default function EditRaidPage() {
   if (!prefix || !suffix) {
     throw new Error("prefix and suffix are required");
   }
-
-  const [apiValidationErrors, setApiValidationErrors] = useState([]);
-
-  const handleError = (errorResponse: any) => {
-    const error = JSON.parse(errorResponse);
-    return error.failures.map((failure: Failure) => ({
-      fieldId: failure.fieldId,
-      message: failure.message,
-    }));
-  };
 
   const query = useQuery<RaidDto>({
     queryKey: useMemo(() => ["raids", prefix, suffix], [prefix, suffix]),
@@ -84,8 +77,8 @@ export default function EditRaidPage() {
     onSuccess: () => {
       navigate(`/raids/${prefix}/${suffix}`);
     },
-    onError: (error) => {
-      setApiValidationErrors(handleError(error.message));
+    onError: (error: Error) => {
+      RaidFormErrorMessage(error, openErrorDialog);
     },
   });
 
@@ -113,11 +106,6 @@ export default function EditRaidPage() {
       }}
     >
       <Stack gap={2}>
-        {apiValidationErrors.length > 0 && (
-          <ApiValidationErrorMessage
-            apiValidationErrors={apiValidationErrors}
-          />
-        )}
         <BreadcrumbsBar
           breadcrumbs={createEditRaidPageBreadcrumbs({
             prefix,

@@ -16,6 +16,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import getKeycloakInstance from "./KeycloakSingleton";
 import { KeycloakProvider } from "./providers/KeycloakProvider";
+import { ErrorDialogProvider } from "./components/ErrorDialog/ErrorDialogProvider";
 
 export function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -51,25 +52,27 @@ export function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <SnackbarProvider>
-        <ReactKeycloakProvider
-          authClient={getKeycloakInstance()}
-          initOptions={{
-            pkceMethod: "S256",
-          }}
-        >
-          <KeycloakProvider>
-            <QueryClientProvider client={queryClient}>
-              <ReactErrorBoundary>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <Box sx={{ pt: 3 }}></Box>
-                  <Outlet />
-                </LocalizationProvider>
-              </ReactErrorBoundary>
-            </QueryClientProvider>
-          </KeycloakProvider>
-        </ReactKeycloakProvider>
-      </SnackbarProvider>
+      <ErrorDialogProvider>
+        <SnackbarProvider>
+          <ReactKeycloakProvider
+            authClient={getKeycloakInstance()}
+            initOptions={{
+              pkceMethod: "S256",
+            }}
+          >
+            <KeycloakProvider>
+              <QueryClientProvider client={queryClient}>
+                <ReactErrorBoundary>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <Box sx={{ pt: 3 }}></Box>
+                    <Outlet />
+                  </LocalizationProvider>
+                </ReactErrorBoundary>
+              </QueryClientProvider>
+            </KeycloakProvider>
+          </ReactKeycloakProvider>
+        </SnackbarProvider>
+      </ErrorDialogProvider>
     </ThemeProvider>
   );
 }
