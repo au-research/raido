@@ -24,7 +24,7 @@ export default function HomePage() {
             <AddIcon />
           </Fab>
         </Tooltip>
-        <CurrentUser />
+        {hasServicePointGroup && <CurrentUser />}
         {hasServicePointGroup && !isServicePointUser && (
           <Alert severity="error">
             You successfully logged in, but the admin of the service point group

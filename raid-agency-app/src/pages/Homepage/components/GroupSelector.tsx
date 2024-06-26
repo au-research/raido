@@ -78,9 +78,11 @@ export default function GroupSelector() {
         <CardContent>
           <Stack gap={2}>
             <Alert severity="error">
-              You have not yet been authorised to use the application.
+              To use RAiD you must belong to a 'Service Point'; please request
+              access to the appropriate Service Point in the list below.
               <br />
-              Please request permission from your institution, select below.
+              If you are an Australian user and haven't been assigned a Service
+              Point, please use 'RAiD AU'
             </Alert>
 
             <>
