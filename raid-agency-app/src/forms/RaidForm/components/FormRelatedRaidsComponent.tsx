@@ -5,6 +5,8 @@ import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import LoadingPage from "@/pages/LoadingPage";
 import relatedRaidType from "@/references/related_raid_type.json";
 import { fetchRaids } from "@/services/raid";
+import { MappingElement } from "@/types";
+import mapping from "@/mapping.json";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
@@ -152,7 +154,12 @@ export default function FormRelatedRaidsComponent({
                                     key={relatedRaidType.uri}
                                     value={relatedRaidType.uri}
                                   >
-                                    {relatedRaidType.uri}
+                                    {
+                                      mapping.find(
+                                        (el: MappingElement) =>
+                                          el.id === relatedRaidType.uri
+                                      )?.value
+                                    }
                                   </MenuItem>
                                 ))}
                               </TextField>

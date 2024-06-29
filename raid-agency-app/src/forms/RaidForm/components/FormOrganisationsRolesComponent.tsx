@@ -26,9 +26,10 @@ import {
 
 import organisationRoleSchema from "@/references/organisation_role_schema.json";
 
+import mapping from "@/mapping.json";
+import { MappingElement } from "@/types";
 import { dateHelperTextRequired } from "@/utils/date-utils/date-utils";
 import { useCallback } from "react";
-import { organisationRoles } from "@/entities/organisation/organisation-mapping";
 
 export default function FormOrganisationsRolesComponent({
   control,
@@ -143,9 +144,10 @@ export default function FormOrganisationsRolesComponent({
                                   {organisationRole.map((role) => (
                                     <MenuItem key={role.uri} value={role.uri}>
                                       {
-                                        organisationRoles[
-                                          role.uri as keyof typeof organisationRoles
-                                        ]
+                                        mapping.find(
+                                          (el: MappingElement) =>
+                                            el.id === role.uri
+                                        )?.value
                                       }
                                     </MenuItem>
                                   ))}

@@ -1,4 +1,5 @@
 import { Access } from "@/generated/raid";
+import mapping from "@/mapping.json";
 import { dateDisplayFormatter } from "@/utils/date-utils/date-utils";
 import {
   Box,
@@ -11,7 +12,7 @@ import {
 } from "@mui/material";
 import dayjs from "dayjs";
 
-import { accessMapping } from "@/entities/access/access-mapping";
+import { MappingElement } from "@/types";
 export default function ShowAccessComponent({ access }: { access: Access }) {
   return (
     <Card sx={{ borderLeft: "solid", borderLeftColor: "primary.main" }}>
@@ -41,13 +42,14 @@ export default function ShowAccessComponent({ access }: { access: Access }) {
                   <Typography variant="body2">Access Type</Typography>
                   <Typography color="text.secondary" variant="body1">
                     {
-                      accessMapping.accessType[
-                        access.type.id as keyof typeof accessMapping.accessType
-                      ]
+                      mapping.find(
+                        (el: MappingElement) => el.id === access.type.id
+                      )?.value
                     }
                   </Typography>
                 </Box>
               </Grid>
+
               {access?.type?.id.includes("c_f1cf") && (
                 <Grid item xs={12} sm={12} md={2}>
                   <Box>

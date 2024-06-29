@@ -1,6 +1,7 @@
-import { titleMapping } from "@/entities/title/title-mapping";
 import { type Title } from "@/generated/raid";
+import mapping from "@/mapping.json";
 import language from "@/references/language.json";
+import { MappingElement } from "@/types";
 import { dateDisplayFormatter } from "@/utils/date-utils/date-utils";
 import {
   Box,
@@ -56,10 +57,9 @@ export default function ShowTitleComponent({
                         <Typography variant="body2">Type</Typography>
                         <Typography color="text.secondary" variant="body1">
                           {
-                            titleMapping.titleType[
-                              title.type
-                                .id as keyof typeof titleMapping.titleType
-                            ]
+                            mapping.find(
+                              (el: MappingElement) => el.id === title.type.id
+                            )?.value
                           }
                         </Typography>
                       </Box>

@@ -1,9 +1,10 @@
-import { contributorMapping } from "@/entities/contributor/contributor-mapping";
 import type {
   Contributor,
   ContributorPosition,
   ContributorRole,
 } from "@/generated/raid";
+import mapping from "@/mapping.json";
+import { MappingElement } from "@/types";
 import { dateDisplayFormatter } from "@/utils/date-utils/date-utils";
 import {
   Box,
@@ -72,13 +73,16 @@ function ContributorPositionsComponent({
                     <TableCell component="th" scope="row">
                       <Chip
                         label={
-                          contributorMapping.contributorPosition[
-                            row.id as keyof typeof contributorMapping.contributorPosition
-                          ]
+                          mapping.find(
+                            (el: MappingElement) =>
+                              el.id === (row.id as unknown as string)
+                          )?.value
                         }
                         size="small"
                         color="primary"
                       />
+
+                      {}
                     </TableCell>
                     <TableCell>{dateDisplayFormatter(row.startDate)}</TableCell>
                     <TableCell>{dateDisplayFormatter(row.endDate)}</TableCell>

@@ -1,7 +1,13 @@
-import { dateHelperText, dateHelperTextRequired } from "@/utils/date-utils/date-utils";
 import { titleGenerator } from "@/entities/title/title-generator";
+import LanguageSelector from "@/forms/RaidForm/components/reusable-inputs/LanguageSelector";
 import { RaidDto } from "@/generated/raid";
+import mapping from "@/mapping.json";
 import titleType from "@/references/title_type.json";
+import { MappingElement } from "@/types";
+import {
+  dateHelperText,
+  dateHelperTextRequired,
+} from "@/utils/date-utils/date-utils";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
@@ -27,8 +33,6 @@ import {
   UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
-import LanguageSelector from "@/forms/RaidForm/components/reusable-inputs/LanguageSelector";
-import { titleMapping } from "@/entities/title/title-mapping";
 
 export default function FormTitlesComponent({
   control,
@@ -162,9 +166,10 @@ export default function FormTitlesComponent({
                                     value={titleType.uri}
                                   >
                                     {
-                                      titleMapping.titleType[
-                                        titleType.uri as keyof typeof titleMapping.titleType
-                                      ]
+                                      mapping.find(
+                                        (el: MappingElement) =>
+                                          el.id === titleType.uri
+                                      )?.value
                                     }
                                   </MenuItem>
                                 ))}
