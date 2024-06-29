@@ -37,3 +37,11 @@ export type KeycloakGroup = {
   id: string;
   name: string;
 };
+
+export type MappingElement = {
+  id: string;
+  value: string;
+  field: string;
+  definition: string;
+  source: string;
+};
