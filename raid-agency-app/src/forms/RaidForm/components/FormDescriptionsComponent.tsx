@@ -1,4 +1,5 @@
 import { RaidDto } from "@/generated/raid";
+import mapping from "@/mapping.json";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
@@ -29,8 +30,8 @@ import descriptionType from "@/references/description_type.json";
 
 import { useCallback } from "react";
 
-import { descriptionMapping } from "@/entities/description/description-mapping";
 import LanguageSelector from "@/forms/RaidForm/components/reusable-inputs/LanguageSelector";
+import { MappingElement } from "@/types";
 
 export default function FormDescriptionsComponent({
   control,
@@ -174,9 +175,10 @@ export default function FormDescriptionsComponent({
                                       value={descriptionType.uri}
                                     >
                                       {
-                                        descriptionMapping.descriptionType[
-                                          descriptionType.uri as keyof typeof descriptionMapping.descriptionType
-                                        ]
+                                        mapping.find(
+                                          (el: MappingElement) =>
+                                            el.id === descriptionType.uri
+                                        )?.value
                                       }
                                     </MenuItem>
                                   ))}

@@ -1,5 +1,6 @@
-import { organisationRoles } from "@/entities/organisation/organisation-mapping";
 import { Organisation } from "@/generated/raid";
+import mapping from "@/mapping.json";
+import { MappingElement } from "@/types";
 import { dateDisplayFormatter } from "@/utils/date-utils/date-utils";
 import {
   Box,
@@ -18,7 +19,6 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-
 export default function ShowOrganisationComponent({
   organisation,
 }: {
@@ -99,9 +99,10 @@ export default function ShowOrganisationComponent({
                                     <TableCell component="th" scope="row">
                                       <Chip
                                         label={
-                                          organisationRoles[
-                                            row.id as keyof typeof organisationRoles
-                                          ]
+                                          mapping.find(
+                                            (el: MappingElement) =>
+                                              el.id === row.id
+                                          )?.value
                                         }
                                         size="small"
                                         color="primary"

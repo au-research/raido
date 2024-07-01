@@ -1,14 +1,13 @@
 import BreadcrumbsBar from "@/components/BreadcrumbsBar";
 import ErrorAlertComponent from "@/components/ErrorAlertComponent";
-import type { ServicePoint } from "@/generated/raid";
 
+import ServicePointUsers from "@/components/ServicePointUsers";
 import { useAuthHelper } from "@/components/useAuthHelper";
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import LoadingPage from "@/pages/LoadingPage";
 import ServicePointUpdateForm from "@/pages/ServicePoint/components/ServicePointUpdateForm";
-import ServicePointUsers from "@/pages/ServicePoint/components/ServicePointUsers";
-import { fetchServicePoint } from "@/services/service-points";
-import { Breadcrumb } from "@/types";
+import { fetchServicePointWithMembers } from "@/services/service-points";
+import { Breadcrumb, ServicePointWithMembers } from "@/types";
 import { Home as HomeIcon, Hub as HubIcon } from "@mui/icons-material";
 import { Alert, Card, CardContent, CardHeader, Container } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
@@ -22,13 +21,13 @@ export default function ServicePoint() {
   const { servicePointId } = useParams() as { servicePointId: string };
 
   const getServicePoint = async () => {
-    return await fetchServicePoint({
+    return await fetchServicePointWithMembers({
       id: +servicePointId,
       token: keycloak.token || "",
     });
   };
 
-  const servicePointQuery = useQuery<ServicePoint>({
+  const servicePointQuery = useQuery<ServicePointWithMembers>({
     queryKey: ["servicePoints", servicePointId.toString()],
     queryFn: getServicePoint,
     enabled: initialized && keycloak.authenticated,
@@ -84,7 +83,9 @@ export default function ServicePoint() {
             (isOperator ||
               keycloak?.tokenParsed?.service_point_group_id ===
                 servicePointQuery.data.groupId) && (
-              <ServicePointUsers servicePoint={servicePointQuery.data} />
+              <ServicePointUsers
+                servicePointWithMembers={servicePointQuery.data}
+              />
             )) || (
             <Alert severity="warning">
               No group id set or access not allowed

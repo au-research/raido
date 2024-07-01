@@ -1,5 +1,9 @@
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import {
+  fetchCurrentUserKeycloakGroups,
+  setKeycloakUserAttribute,
+} from "@/services/keycloak";
+import {
   Alert,
   Button,
   Card,
@@ -22,61 +26,6 @@ type KeycloakGroupSPI = {
   id: string;
 };
 
-const kcUrl = import.meta.env.VITE_KEYCLOAK_URL as string;
-const kcRealm = import.meta.env.VITE_KEYCLOAK_REALM as string;
-
-async function fetchKeycloakGroups({ token }: { token: string | undefined }) {
-  const requestUrl = `${kcUrl}/realms/${kcRealm}/group/all`;
-
-  try {
-    if (token === undefined) {
-      throw new Error("Error: Keycloak token not set");
-    }
-    const response = await fetch(requestUrl, {
-      method: "GET",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return await response.json();
-  } catch (error) {
-    const errorMessage = "Error: Keycloak groups could not be fetched";
-    console.error(errorMessage);
-    throw new Error(errorMessage);
-  }
-}
-
-async function joinKeycloakGroup({
-  groupId,
-  token,
-}: {
-  groupId: string;
-  token: string | undefined;
-}) {
-  const requestUrl = `${kcUrl}/realms/${kcRealm}/group/join`;
-  try {
-    if (token === undefined) {
-      throw new Error("Error: Keycloak token not set");
-    }
-
-    await fetch(requestUrl, {
-      method: "PUT",
-      body: JSON.stringify({ groupId }),
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  } catch (error) {
-    const errorMessage = "Error: Keycloak group could not be joined";
-    console.error(errorMessage);
-    throw new Error(errorMessage);
-  }
-}
-
 export default function GroupSelector() {
   const { keycloak, initialized } = useCustomKeycloak();
 
@@ -84,7 +33,7 @@ export default function GroupSelector() {
     useState<string>("");
 
   const fetchKeycloakGroupsQuery = useQuery({
-    queryFn: () => fetchKeycloakGroups({ token: keycloak.token }),
+    queryFn: () => fetchCurrentUserKeycloakGroups({ token: keycloak.token }),
     queryKey: ["keycloakGroups"],
     enabled: initialized,
   });
@@ -102,14 +51,14 @@ export default function GroupSelector() {
     console.error(error);
   };
 
-  const joinGroupMutation = useMutation({
-    mutationFn: joinKeycloakGroup,
+  const setKeycloakUserAttributeMutation = useMutation({
+    mutationFn: setKeycloakUserAttribute,
     onSuccess: joinGroupMutationSuccess,
     onError: joinGroupMutationError,
   });
 
   const handleKeycloakGroupJoinRequest = () => {
-    joinGroupMutation.mutate({
+    setKeycloakUserAttributeMutation.mutate({
       groupId: selectedServicePointId,
       token: keycloak.token,
     });
@@ -129,9 +78,11 @@ export default function GroupSelector() {
         <CardContent>
           <Stack gap={2}>
             <Alert severity="error">
-              You have not yet been authorised to use the application.
+              To use RAiD you must belong to a 'Service Point'; please request
+              access to the appropriate Service Point in the list below.
               <br />
-              Please request permission from your institution, select below.
+              If you are an Australian user and haven't been assigned a Service
+              Point, please use 'RAiD AU'
             </Alert>
 
             <>
@@ -141,10 +92,10 @@ export default function GroupSelector() {
                   labelId="group-selector-label"
                   id="group-selector"
                   value={selectedServicePointId}
-                  label="Institution (Service point)"
+                  label="Institution"
                   onChange={handleGroupSelectorChange}
                 >
-                  {fetchKeycloakGroupsQuery.data.groups.map(
+                  {fetchKeycloakGroupsQuery.data.map(
                     (group: KeycloakGroupSPI) => (
                       <MenuItem key={group.id} value={group.id.toString()}>
                         {group.name}

@@ -25,9 +25,10 @@ import {
   useFieldArray,
 } from "react-hook-form";
 
+import mapping from "@/mapping.json";
+import { MappingElement } from "@/types";
 import { dateHelperTextRequired } from "@/utils/date-utils/date-utils";
 import { useCallback } from "react";
-import { contributorMapping } from "@/entities/contributor/contributor-mapping";
 
 export default function FormContributorsPositionsComponent({
   control,
@@ -143,9 +144,11 @@ export default function FormContributorsPositionsComponent({
                                       value={position.uri}
                                     >
                                       {
-                                        contributorMapping.contributorPosition[
-                                          position.uri as keyof typeof contributorMapping.contributorPosition
-                                        ]
+                                        mapping.find(
+                                          (el: MappingElement) =>
+                                            el.id ===
+                                            (position.uri as unknown as string)
+                                        )?.value
                                       }
                                     </MenuItem>
                                   ))}

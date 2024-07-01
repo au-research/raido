@@ -100,7 +100,6 @@ function OrganisationRootField({
                       />
                     </Grid>
                   </Grid>
-
                   <FormOrganisationsRolesComponent
                     control={control}
                     organisationsArrayIndex={organisationsArrayIndex}

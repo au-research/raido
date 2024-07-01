@@ -1,10 +1,11 @@
 import ErrorAlertComponent from "@/components/ErrorAlertComponent";
+import ServicePointUsers from "@/components/ServicePointUsers";
 import ServicePointsTable from "@/components/ServicePointsTable";
-import { ServicePoint } from "@/generated/raid";
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import LoadingPage from "@/pages/LoadingPage";
 import ServicePointCreateForm from "@/pages/ServicePoint/components/ServicePointCreateForm";
-import { fetchServicePoints } from "@/services/service-points";
+import { fetchServicePointsWithMembers } from "@/services/service-points";
+import { ServicePointWithMembers } from "@/types";
 import { Card, CardContent, CardHeader, Stack } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 
@@ -12,12 +13,12 @@ export default function ServicePointsOperatorView() {
   const { keycloak, initialized } = useCustomKeycloak();
 
   const getServicePoints = async () => {
-    return await fetchServicePoints({
+    return await fetchServicePointsWithMembers({
       token: keycloak.token || "",
     });
   };
 
-  const query = useQuery<ServicePoint[]>({
+  const query = useQuery<ServicePointWithMembers[]>({
     queryFn: getServicePoints,
     queryKey: ["servicePoints"],
     enabled: initialized && keycloak.authenticated,
@@ -40,9 +41,24 @@ export default function ServicePointsOperatorView() {
         </CardContent>
       </Card>
       <Card variant="outlined">
-        <CardHeader title="Service points - Operator view" />
+        <CardHeader title="All service points" />
         <CardContent>
           <ServicePointsTable servicePoints={query.data} />
+        </CardContent>
+      </Card>
+      <Card variant="outlined">
+        <CardHeader title="Service points members" />
+        <CardContent>
+          <Stack direction="column" gap={2}>
+            {query.data
+              .filter((sp) => sp.members.length > 0)
+              .map((servicePoint) => (
+                <ServicePointUsers
+                  key={servicePoint.id}
+                  servicePointWithMembers={servicePoint}
+                />
+              ))}
+          </Stack>
         </CardContent>
       </Card>
     </Stack>

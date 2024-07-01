@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-
+import type { ServicePoint } from "@/generated/raid";
 export type Breadcrumb = {
   icon: ReactElement;
   label: string;
@@ -36,4 +36,30 @@ export type RaidHistoryElementType = {
 export type KeycloakGroup = {
   id: string;
   name: string;
+};
+
+export type MappingElement = {
+  id: string;
+  value: string;
+  field: string;
+  definition: string;
+  source: string;
+};
+
+type ServicePointMemberAttributes = {
+  firstName: (string | null)[];
+  lastName: (string | null)[];
+  activeGroupId: string[];
+  email: (string | null)[];
+  username: string[];
+};
+
+export type ServicePointMember = {
+  roles: string[];
+  attributes: ServicePointMemberAttributes;
+  id: string;
+};
+
+export type ServicePointWithMembers = ServicePoint & {
+  members: ServicePointMember[];
 };

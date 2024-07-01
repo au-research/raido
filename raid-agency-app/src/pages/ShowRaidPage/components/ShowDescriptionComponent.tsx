@@ -1,6 +1,7 @@
-import { descriptionMapping } from "@/entities/description/description-mapping";
 import { Description } from "@/generated/raid";
+import mapping from "@/mapping.json";
 import language from "@/references/language.json";
+import { MappingElement } from "@/types";
 import {
   Box,
   Card,
@@ -10,7 +11,6 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-
 export default function ShowDescriptionComponent({
   description,
 }: {
@@ -59,10 +59,10 @@ export default function ShowDescriptionComponent({
                         </Typography>
                         <Typography color="text.secondary" variant="body1">
                           {
-                            descriptionMapping.descriptionType[
-                              description.type
-                                .id as keyof typeof descriptionMapping.descriptionType
-                            ]
+                            mapping.find(
+                              (el: MappingElement) =>
+                                el.id === description.type.id
+                            )?.value
                           }
                         </Typography>
                       </Box>

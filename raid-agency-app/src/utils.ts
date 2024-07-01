@@ -43,28 +43,6 @@ export const raidRequest = (data: RaidDto): RaidDto => {
   };
 };
 
-export const extractKeyFromIdUri = (inputUri: string = ""): string => {
-  let result = "";
-  const regex = /\/([^/]+)\.json$/;
-  const match = inputUri.match(regex);
-  if (match && match[1]) {
-    result = match[1];
-  }
-  return result;
-};
-
-export const extractLastUrlSegment = (inputUri: string = ""): string => {
-  let result = "";
-  // Look for a sequence of characters that don't include a slash,
-  // located just before a trailing slash (or the end of the string).
-  const regex = /\/([^/]+)\/?$/;
-  const match = inputUri.match(regex);
-  if (match && match[1]) {
-    result = match[1];
-  }
-  return result;
-};
-
 export const newRaid: RaidCreateRequest = {
   title: [titleGenerator()],
   // description: [descriptionGenerator()],

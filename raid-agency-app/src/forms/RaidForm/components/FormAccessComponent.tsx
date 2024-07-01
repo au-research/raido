@@ -1,5 +1,7 @@
 import { RaidDto } from "@/generated/raid";
+import mapping from "@/mapping.json";
 import accessType from "@/references/access_type.json";
+import { MappingElement } from "@/types";
 import {
   Box,
   Card,
@@ -14,7 +16,6 @@ import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { Control, Controller, FieldErrors } from "react-hook-form";
 import LanguageSelector from "./reusable-inputs/LanguageSelector";
-import { accessMapping } from "@/entities/access/access-mapping";
 
 export default function FormAccessComponent({
   control,
@@ -99,9 +100,9 @@ export default function FormAccessComponent({
                       {accessType.map((accessType) => (
                         <MenuItem key={accessType.uri} value={accessType.uri}>
                           {
-                            accessMapping.accessType[
-                              accessType.uri as keyof typeof accessMapping.accessType
-                            ]
+                            mapping.find(
+                              (el: MappingElement) => el.id === accessType.uri
+                            )?.value
                           }
                         </MenuItem>
                       ))}

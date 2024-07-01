@@ -1,5 +1,6 @@
-import { relatedObjectCategoryMapping, relatedObjectTypeMapping } from "@/entities/related-object/related-object-mapping";
 import { RelatedObject } from "@/generated/raid";
+import mapping from "@/mapping.json";
+import { MappingElement } from "@/types";
 import {
   Box,
   Button,
@@ -11,13 +12,12 @@ import {
   Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-
 export default function ShowRelatedObjectComponent({
   relatedObject,
 }: {
   relatedObject: RelatedObject[] | undefined;
 }) {
-  return (
+  return relatedObject?.length ? (
     <Card sx={{ borderLeft: "solid", borderLeftColor: "primary.main" }}>
       <CardHeader title="Related Objects" />
       <CardContent>
@@ -59,10 +59,10 @@ export default function ShowRelatedObjectComponent({
                         <Typography variant="body2">Type</Typography>
                         <Typography color="text.secondary" variant="body1">
                           {
-                            relatedObjectTypeMapping[
-                              relatedObject.type
-                                ?.id as keyof typeof relatedObjectTypeMapping
-                            ]
+                            mapping.find(
+                              (el: MappingElement) =>
+                                el.id === relatedObject.type?.id
+                            )?.value
                           }
                         </Typography>
                       </Box>
@@ -71,11 +71,14 @@ export default function ShowRelatedObjectComponent({
                       <Box>
                         <Typography variant="body2">Category</Typography>
                         <Typography color="text.secondary" variant="body1">
-                          {relatedObject?.category &&
-                            relatedObjectCategoryMapping[
-                              relatedObject?.category[0]
-                                .id as keyof typeof relatedObjectCategoryMapping
-                            ]}
+                          {
+                            mapping.find(
+                              (el: MappingElement) =>
+                                relatedObject?.category &&
+                                relatedObject?.category.length &&
+                                el.id === relatedObject.category[0].id
+                            )?.value
+                          }
                         </Typography>
                       </Box>
                     </Grid>
@@ -87,5 +90,7 @@ export default function ShowRelatedObjectComponent({
         </Stack>
       </CardContent>
     </Card>
+  ) : (
+    <></>
   );
 }

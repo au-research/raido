@@ -352,7 +352,7 @@ public class GroupController {
     }
 
     @OPTIONS
-    @Path("/")
+    @Path("/user-groups")
     public Response userGroupsPreflight() {
         return Response.fromResponse(addCorsHeaders("GET")
                         .preflight()

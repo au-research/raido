@@ -1,11 +1,9 @@
 import { relatedObjectGenerator } from "@/entities/related-object/related-object-generator";
-import {
-  relatedObjectCategoryMapping,
-  relatedObjectTypeMapping,
-} from "@/entities/related-object/related-object-mapping";
 import { RaidDto } from "@/generated/raid";
+import mapping from "@/mapping.json";
 import relatedObjectCategories from "@/references/related_object_category.json";
 import relatedObjectTypes from "@/references/related_object_type.json";
+import { MappingElement } from "@/types";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
@@ -30,7 +28,6 @@ import {
   FieldErrors,
   useFieldArray,
 } from "react-hook-form";
-
 export default function FormRelatedObjectsComponent({
   control,
   errors,
@@ -140,9 +137,10 @@ export default function FormRelatedObjectsComponent({
                                     value={relatedObjectType.uri}
                                   >
                                     {
-                                      relatedObjectTypeMapping[
-                                        relatedObjectType.uri as keyof typeof relatedObjectTypeMapping
-                                      ]
+                                      mapping.find(
+                                        (el: MappingElement) =>
+                                          el.id === relatedObjectType.uri
+                                      )?.value
                                     }
                                   </MenuItem>
                                 ))}
@@ -195,9 +193,10 @@ export default function FormRelatedObjectsComponent({
                                       value={relatedObjectCategory.uri}
                                     >
                                       {
-                                        relatedObjectCategoryMapping[
-                                          relatedObjectCategory.uri as keyof typeof relatedObjectCategoryMapping
-                                        ]
+                                        mapping.find(
+                                          (el: MappingElement) =>
+                                            el.id === relatedObjectCategory.uri
+                                        )?.value
                                       }
                                     </MenuItem>
                                   )

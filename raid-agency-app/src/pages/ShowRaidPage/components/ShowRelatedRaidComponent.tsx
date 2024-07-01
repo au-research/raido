@@ -1,5 +1,6 @@
 import { RelatedRaid } from "@/generated/raid";
-import { extractKeyFromIdUri } from "@/utils";
+import mapping from "@/mapping.json";
+import { MappingElement } from "@/types";
 import {
   Box,
   Card,
@@ -54,7 +55,12 @@ export default function ShowRelatedRaidComponent({
                       <Box>
                         <Typography variant="body2">Type</Typography>
                         <Typography color="text.secondary" variant="body1">
-                          {extractKeyFromIdUri(relatedRaid.type?.id)}
+                          {
+                            mapping.find(
+                              (el: MappingElement) =>
+                                el.id === relatedRaid.type?.id
+                            )?.value
+                          }
                         </Typography>
                       </Box>
                     </Grid>
