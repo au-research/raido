@@ -1,6 +1,6 @@
 # Base image
 FROM public.ecr.aws/docker/library/node:20.14.0-bookworm-slim
-RUN apt update && apt upgrade && apt install -y wget
+RUN apt update && apt upgrade -y && apt install -y wget
 # Create app directory
 WORKDIR /usr/local/bff
 
