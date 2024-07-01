@@ -27,7 +27,7 @@ export default function ServicePoints() {
       <Stack direction="column" gap={2}>
         <BreadcrumbsBar breadcrumbs={breadcrumbs} />
         {isOperator && <ServicePointsOperatorView />}
-        {isGroupAdmin && !isOperator && <ServicePointsGroupAdminView  />}
+        {isGroupAdmin && !isOperator && <ServicePointsGroupAdminView />}
       </Stack>
     </Container>
   );
