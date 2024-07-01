@@ -10,6 +10,7 @@ import { useAuthHelper } from "@/components/useAuthHelper";
 import { Check as CheckIcon, Circle as CircleIcon } from "@mui/icons-material";
 import { Card, CardContent, Chip, Stack } from "@mui/material";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { updateUserServicePointUserRole } from "@/services/service-points";
 
 const VITE_KEYCLOAK_URL = import.meta.env.VITE_KEYCLOAK_URL as string;
 const VITE_KEYCLOAK_REALM = import.meta.env.VITE_KEYCLOAK_REALM as string;
@@ -28,29 +29,7 @@ export default function ServicePointUsers({
   const snackbar = useSnackbar();
 
   const modifyUserAccessMutation = useMutation({
-    mutationFn: async ({
-      userId,
-      userGroupId,
-      operation,
-    }: {
-      userId: string;
-      userGroupId: string;
-      operation: "grant" | "revoke";
-    }) => {
-      const response = await fetch(`${url}/${operation}`, {
-        method: "PUT",
-        credentials: "include",
-        headers: {
-          Authorization: `Bearer ${keycloak.token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId, groupId: userGroupId }),
-      });
-      if (!response.ok) {
-        throw new Error(`Failed to ${operation}`);
-      }
-      return response.json();
-    },
+    mutationFn: updateUserServicePointUserRole,
     onError: (error) => {
       console.error(error);
     },
@@ -138,6 +117,7 @@ export default function ServicePointUsers({
                 userId: row.id,
                 userGroupId: servicePoint?.groupId as string,
                 operation: "grant",
+                token: keycloak.token as string,
               });
             }}
           >
@@ -164,6 +144,7 @@ export default function ServicePointUsers({
                 userId: row.id,
                 userGroupId: servicePoint?.groupId as string,
                 operation: "revoke",
+                token: keycloak.token as string,
               });
             }}
           >

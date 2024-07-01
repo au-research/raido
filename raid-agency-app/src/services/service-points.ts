@@ -190,3 +190,31 @@ export const updateServicePoint = async ({
   });
   return await response.json();
 };
+
+export const updateUserServicePointUserRole = async ({
+  userId,
+  userGroupId,
+  operation,
+  token,
+}: {
+  userId: string;
+  userGroupId: string;
+  operation: "grant" | "revoke";
+  token: string;
+}): Promise<ServicePoint> => {
+  const url = `${kcUrl}/realms/${kcRealm}/group`;
+
+  const response = await fetch(`${url}/${operation}`, {
+    method: "PUT",
+    credentials: "include",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ userId, groupId: userGroupId }),
+  });
+  if (!response.ok) {
+    throw new Error(`Failed to ${operation}`);
+  }
+  return response.json();
+};

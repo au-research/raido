@@ -3,7 +3,6 @@ import { fetchServicePoints } from "@/services/service-points";
 import { RaidHistoryType } from "@/types";
 import { getApiEndpoint } from "@/utils/api-utils/api-utils";
 import type Keycloak from "keycloak-js";
-import axios from "axios";
 
 const endpoint = getApiEndpoint();
 
@@ -96,19 +95,25 @@ export const createRaid = async ({
   token: string;
 }): Promise<RaidDto> => {
   try {
-    const response = await axios.post<RaidDto>(API_ENDPOINT, data, {
+    const response = await fetch(API_ENDPOINT, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
+      body: JSON.stringify(data),
     });
 
-    return response.data;
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(JSON.stringify(errorData) || "Failed to create raid");
+    }
+
+    const responseData = await response.json();
+    return responseData;
   } catch (error) {
     let errorMessage = "Failed to create raid";
-    if (axios.isAxiosError(error) && error.response) {
-      errorMessage = JSON.stringify(error.response.data) || error.message;
-    } else if (error instanceof Error) {
+    if (error instanceof Error) {
       errorMessage = error.message;
     }
     throw new Error(errorMessage);
@@ -124,18 +129,28 @@ export const updateRaid = async ({
   data: RaidDto;
   token: string;
 }): Promise<RaidDto> => {
-  const response = await fetch(`${endpoint}/raid/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(data),
-  });
-  if (!response.ok) {
-    const errorResponse = await response.text();
-    throw new Error(errorResponse);
-  }
+  try {
+    const response = await fetch(`${endpoint}/raid/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(data),
+    });
 
-  return await response.json();
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(JSON.stringify(errorData) || "Failed to create raid");
+    }
+
+    const responseData = await response.json();
+    return responseData;
+  } catch (error) {
+    let errorMessage = "Failed to create raid";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    throw new Error(errorMessage);
+  }
 };
