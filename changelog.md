@@ -1,5 +1,23 @@
 See the [Changelog audience](#changelog-audience) section for info about 
  the expected audience and content of the changelog.
+# 2.1.1
+## App-client UI
+
+
+
+## API
+* Fixed bug that set embargoed Raids to 'draft' in Datacite. Embargoed now use the 'register' event.
+* Fixed bug with missing Raid history.
+
+## IAM
+* Added endpoint to allow users to switch between active service points.
+* Added endpoint to expose all groups a user belongs to.
+
+## BFF
+* Added BFF (Backend for Frontend) to store additional data for UI that we don't want in the API.
+
+## Infrastructure
+* Added `stage` environment
 
 # 2.1.0
 ## App-client UI
