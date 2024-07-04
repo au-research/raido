@@ -2,8 +2,10 @@ See the [Changelog audience](#changelog-audience) section for info about
  the expected audience and content of the changelog.
 # 2.1.1
 ## App-client UI
-
-
+* Updated UI components and logic, including new mappings and service point UI logic.
+* Removed unused code, such as mappings, helper functions, and Keycloak functions.
+* Added new features like async/await, Postman request collection, SP switcher, CORS to user-groups endpoint, and a restore button.
+* Created and refined error handling, history pages, and mapping files.
 
 ## API
 * Fixed bug that set embargoed Raids to 'draft' in Datacite. Embargoed now use the 'register' event.
