@@ -167,6 +167,7 @@ export default function ShowContributorComponent({
                       sx={{ width: "100%" }}
                     >
                       <Stack direction="row" alignItems="center" gap={2}>
+                        <Typography>{contributor.id}</Typography>
                         <Chip
                           size="small"
                           color="primary"
@@ -179,7 +180,6 @@ export default function ShowContributorComponent({
                             )?.value
                           }
                         />
-                        <Typography>{contributor.id}</Typography>
                       </Stack>
                       <Box>
                         <FormControlLabel
