@@ -14,8 +14,10 @@ import { useNavigate } from "react-router-dom";
 
 export default function ErrorAlertComponent({
   error,
+  showButtons,
 }: {
   error?: Error | string;
+  showButtons?: boolean;
 }) {
   const navigate = useNavigate();
   return (
@@ -29,33 +31,35 @@ export default function ErrorAlertComponent({
       <CardHeader title="Error" subheader="An error occured" />
       <CardContent>
         <Alert severity="error">
-          {(error && JSON.stringify(error)) || "Something went wrong."}
+          {(error && JSON.stringify(error, null, 2)) || "Something went wrong."}
         </Alert>
       </CardContent>
-      <CardActions>
-        <Button
-          color="error"
-          size="small"
-          variant="outlined"
-          onClick={() => navigate("/home")}
-          startIcon={<HomeIcon />}
-        >
-          Back to home
-        </Button>
-        <Button
-          color="error"
-          size="small"
-          variant="outlined"
-          onClick={() =>
-            (location.href = `mailto:${
-              import.meta.env.VITE_SUPPORT_EMAIL || "contact@raid.org"
-            }`)
-          }
-          startIcon={<ContactSupportIcon />}
-        >
-          Contact Support
-        </Button>
-      </CardActions>
+      {showButtons && (
+        <CardActions>
+          <Button
+            color="error"
+            size="small"
+            variant="outlined"
+            onClick={() => navigate("/home")}
+            startIcon={<HomeIcon />}
+          >
+            Back to home
+          </Button>
+          <Button
+            color="error"
+            size="small"
+            variant="outlined"
+            onClick={() =>
+              (location.href = `mailto:${
+                import.meta.env.VITE_SUPPORT_EMAIL || "contact@raid.org"
+              }`)
+            }
+            startIcon={<ContactSupportIcon />}
+          >
+            Contact Support
+          </Button>
+        </CardActions>
+      )}
     </Card>
   );
 }

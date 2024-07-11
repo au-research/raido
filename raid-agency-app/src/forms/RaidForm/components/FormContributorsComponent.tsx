@@ -72,6 +72,9 @@ function ContributorRootField({
         return (
           <>
             <Accordion
+              defaultExpanded={
+                contributorsArrayIndex + 1 === contributorsArray.fields.length
+              }
               sx={{
                 border: "solid",
                 borderWidth: 2,
@@ -221,7 +224,8 @@ export default function FormContributorsComponent({
 
   const handleAddContributor = useCallback(() => {
     contributorsArray.append(contributorGenerator());
-  }, [contributorsArray]);
+    trigger(`contributor`);
+  }, [contributorsArray, trigger]);
 
   return (
     <Card
@@ -242,6 +246,7 @@ export default function FormContributorsComponent({
             <IconButton
               aria-label="Add Contributor"
               onClick={handleAddContributor}
+              disabled={errors.contributor && errors.contributor.length! > 0}
             >
               <AddCircleOutlineIcon />
             </IconButton>

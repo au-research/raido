@@ -152,7 +152,7 @@ export default function ShowContributorComponent({
           </Box>
           {contributor?.map((contributor, index) => {
             return (
-              <>
+              <div key={index}>
                 <Accordion variant="outlined">
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
@@ -223,7 +223,7 @@ export default function ShowContributorComponent({
                     </Stack>
                   </AccordionDetails>
                 </Accordion>
-              </>
+              </div>
             );
           })}
         </Stack>
