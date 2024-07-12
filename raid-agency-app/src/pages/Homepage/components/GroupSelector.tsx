@@ -14,8 +14,15 @@ import {
   Select,
   SelectChangeEvent,
   Stack,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Link,
 } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import React from "react";
 import { useState } from "react";
 
 type KeycloakGroupSPI = {
@@ -28,6 +35,15 @@ type KeycloakGroupSPI = {
 
 export default function GroupSelector() {
   const { keycloak, initialized } = useCustomKeycloak();
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const [selectedServicePointId, setSelectedServicePointId] =
     useState<string>("");
@@ -43,8 +59,7 @@ export default function GroupSelector() {
   };
 
   const joinGroupMutationSuccess = () => {
-    alert("Request submitted successfully. Refreshing page.");
-    window.location.reload();
+    handleClickOpen();
   };
 
   const joinGroupMutationError = (error: Error) => {
@@ -82,18 +97,21 @@ export default function GroupSelector() {
               access to the appropriate Service Point in the list below.
               <br />
               If you are an Australian user and haven't been assigned a Service
-              Point, please use 'RAiD AU'
+              Point, please use 'raid-au'
             </Alert>
 
             <>
               <FormControl>
-                <InputLabel id="group-selector-label">Institution</InputLabel>
+                <InputLabel id="group-selector-label" size="small">
+                  Institution
+                </InputLabel>
                 <Select
                   labelId="group-selector-label"
                   id="group-selector"
                   value={selectedServicePointId}
                   label="Institution"
                   onChange={handleGroupSelectorChange}
+                  size="small"
                 >
                   {fetchKeycloakGroupsQuery.data.map(
                     (group: KeycloakGroupSPI) => (
@@ -117,6 +135,39 @@ export default function GroupSelector() {
           </Stack>
         </CardContent>
       </Card>
+      <React.Fragment>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Your authorisation request has been submitted."}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Our notification system is not yet implemented. Please send an
+              email to{" "}
+              <Link href="mailto:contact@raid.org?subject=Please approve my RAiD request">
+                contact@raid.org
+              </Link>{" "}
+              so we can approve your request.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                handleClose();
+                window.location.reload();
+              }}
+              autoFocus
+            >
+              Ok
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </React.Fragment>
     </>
   );
 }
