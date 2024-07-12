@@ -140,6 +140,7 @@ function ContributorRootField({
                                 id: event.target.value,
                               });
                             }}
+                            data-testid="contributor-id-input"
                           />
                         </Grid>
 
@@ -247,6 +248,7 @@ export default function FormContributorsComponent({
               aria-label="Add Contributor"
               onClick={handleAddContributor}
               disabled={errors.contributor && errors.contributor.length! > 0}
+              data-testid="add-contributor-button"
             >
               <AddCircleOutlineIcon />
             </IconButton>

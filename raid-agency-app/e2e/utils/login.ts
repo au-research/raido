@@ -1,4 +1,4 @@
-import {Page} from "@playwright/test";
+import { Page } from "@playwright/test";
 import "dotenv/config";
 
 const SELECTORS = {
@@ -9,7 +9,8 @@ const SELECTORS = {
 };
 
 export default async function login(page: Page) {
-  const {BASE_URL,  VITE_KEYCLOAK_E2E_USER, VITE_KEYCLOAK_E2E_PASSWORD } = process.env;
+  const { BASE_URL, VITE_KEYCLOAK_E2E_USER, VITE_KEYCLOAK_E2E_PASSWORD } =
+    process.env;
 
   if (!VITE_KEYCLOAK_E2E_USER || !VITE_KEYCLOAK_E2E_PASSWORD || !BASE_URL) {
     throw new Error("All environment variables must be set.");

@@ -69,7 +69,7 @@ const renderErrors = (errors: any) => {
                   });
                 }}
               >
-                Hello World...
+                Go to error
               </Button>
             </Alert>
           </Box>
