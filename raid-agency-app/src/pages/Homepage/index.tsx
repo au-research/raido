@@ -12,18 +12,20 @@ export default function HomePage() {
   return (
     <Container>
       <Stack gap={2}>
-        <Tooltip title="Mint new RAiD" placement="left">
-          <Fab
-            component={Link}
-            color="primary"
-            sx={{ position: "fixed", bottom: "16px", right: "16px" }}
-            type="button"
-            to="/raids/new"
-            data-testid="mint-raid-button"
-          >
-            <AddIcon />
-          </Fab>
-        </Tooltip>
+        {hasServicePointGroup && isServicePointUser && (
+          <Tooltip title="Mint new RAiD" placement="left">
+            <Fab
+              component={Link}
+              color="primary"
+              sx={{ position: "fixed", bottom: "16px", right: "16px" }}
+              type="button"
+              to="/raids/new"
+              data-testid="mint-raid-button"
+            >
+              <AddIcon />
+            </Fab>
+          </Tooltip>
+        )}
         {hasServicePointGroup && <CurrentUser />}
         {hasServicePointGroup && !isServicePointUser && (
           <Alert severity="error">

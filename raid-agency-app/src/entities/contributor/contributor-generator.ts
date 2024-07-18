@@ -14,7 +14,9 @@ import {
 const contributorPositionGenerator = (): ContributorPosition => {
   return {
     schemaUri: contributorPositionSchema[0].uri,
-    id: contributorPosition[Math.floor(Math.random() * contributorPosition.length)].uri,
+    id: contributorPosition[
+      Math.floor(Math.random() * contributorPosition.length)
+    ].uri,
     startDate: dayjs().format("YYYY-MM-DD"),
   };
 };
@@ -28,7 +30,7 @@ const contributorRoleGenerator = (): ContributorRole => {
 
 export const contributorGenerator = (): Contributor => {
   return {
-    id: "https://orcid.org/0009-0000-9306-3120",
+    id: "",
     leader: true,
     contact: true,
     schemaUri: "https://orcid.org/",

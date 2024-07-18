@@ -1,3 +1,7 @@
+import { accessGenerator } from "@/entities/access/access-generator";
+import { dateCleaner } from "@/entities/date/date-cleaner";
+import { dateGenerator } from "@/entities/date/date-generator";
+import { titleGenerator } from "@/entities/title/title-generator";
 import {
   Access,
   AlternateIdentifier,
@@ -16,11 +20,6 @@ import {
   Title,
   TraditionalKnowledgeLabel,
 } from "@/generated/raid";
-import { accessGenerator } from "@/entities/access/access-generator";
-import { contributorGenerator } from "@/entities/contributor/contributor-generator";
-import { dateGenerator } from "@/entities/date/date-generator";
-import { titleGenerator } from "@/entities/title/title-generator";
-import { dateCleaner } from "@/entities/date/date-cleaner";
 
 export const raidRequest = (data: RaidDto): RaidDto => {
   return {
@@ -49,7 +48,7 @@ export const newRaid: RaidCreateRequest = {
   date: dateGenerator(),
   access: accessGenerator(),
   // organisation: [organisationGenerator()],
-  contributor: [contributorGenerator()],
+  contributor: [],
   // subject: [subjectGenerator()],
   // relatedRaid: [],
   alternateUrl: [],

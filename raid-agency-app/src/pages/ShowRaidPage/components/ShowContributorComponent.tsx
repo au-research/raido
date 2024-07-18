@@ -7,6 +7,9 @@ import mapping from "@/mapping.json";
 import { MappingElement } from "@/types";
 import { dateDisplayFormatter } from "@/utils/date-utils/date-utils";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   Card,
   CardContent,
@@ -25,6 +28,8 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+
+import { ExpandMore as ExpandMoreIcon } from "@mui/icons-material";
 
 function ContributorPositionsComponent({
   contributorPositions,
@@ -147,71 +152,78 @@ export default function ShowContributorComponent({
           </Box>
           {contributor?.map((contributor, index) => {
             return (
-              <Card variant="outlined" key={index}>
-                <CardContent>
-                  <Stack spacing={2} key={index}>
-                    <Box className="raid-card-well">
-                      <Grid container spacing={2}>
-                        <Grid item xs={12} sm={12} md={6}>
-                          <Box>
-                            <Typography variant="body2">ID</Typography>
-                            <Typography color="text.secondary" variant="body1">
-                              {contributor.id}
-                            </Typography>
-                          </Box>
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={3}>
-                          <Box>
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  disabled
-                                  checked={contributor.leader}
-                                />
-                              }
-                              label="Leader"
-                            />
-                          </Box>
-                        </Grid>
-                        <Grid item xs={12} sm={12} md={3}>
-                          <Box>
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  disabled
-                                  checked={contributor.contact}
-                                />
-                              }
-                              label="Contact"
-                            />
-                          </Box>
-                        </Grid>
-                      </Grid>
-                    </Box>
-                    <Box className="raid-card-well">
-                      <Grid item xs={12} sm={12} md={12}>
-                        <Typography variant="body2" gutterBottom>
-                          Positions
-                        </Typography>
+              <div key={index}>
+                <Accordion variant="outlined">
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls={`panel${index}-content`}
+                    id={`panel${index}-header`}
+                  >
+                    <Stack
+                      direction="row"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      spacing={2}
+                      sx={{ width: "100%" }}
+                    >
+                      <Stack direction="row" alignItems="center" gap={2}>
+                        <Typography>{contributor.id}</Typography>
+                        <Chip
+                          size="small"
+                          color="primary"
+                          label={
+                            mapping.find(
+                              (el: MappingElement) =>
+                                el.id ===
+                                (contributor.position[0]
+                                  .id as unknown as string)
+                            )?.value
+                          }
+                        />
+                      </Stack>
+                      <Box>
+                        <FormControlLabel
+                          control={
+                            <Checkbox disabled checked={contributor.leader} />
+                          }
+                          label="Leader"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox disabled checked={contributor.contact} />
+                          }
+                          label="Contact"
+                        />
+                      </Box>
+                    </Stack>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Stack gap={2}>
+                      <Box className="raid-card-well">
+                        <Grid item xs={12} sm={12} md={12}>
+                          <Typography variant="body2" gutterBottom>
+                            Positions
+                          </Typography>
 
-                        <ContributorPositionsComponent
-                          contributorPositions={contributor.position}
-                        />
-                      </Grid>
-                    </Box>
-                    <Box className="raid-card-well">
-                      <Grid item xs={12} sm={12} md={12}>
-                        <Typography variant="body2" gutterBottom>
-                          Roles
-                        </Typography>
-                        <ContributorRolesComponent
-                          contributorRoles={contributor.role}
-                        />
-                      </Grid>
-                    </Box>
-                  </Stack>
-                </CardContent>
-              </Card>
+                          <ContributorPositionsComponent
+                            contributorPositions={contributor.position}
+                          />
+                        </Grid>
+                      </Box>
+                      <Box className="raid-card-well">
+                        <Grid item xs={12} sm={12} md={12}>
+                          <Typography variant="body2" gutterBottom>
+                            Roles
+                          </Typography>
+                          <ContributorRolesComponent
+                            contributorRoles={contributor.role}
+                          />
+                        </Grid>
+                      </Box>
+                    </Stack>
+                  </AccordionDetails>
+                </Accordion>
+              </div>
             );
           })}
         </Stack>

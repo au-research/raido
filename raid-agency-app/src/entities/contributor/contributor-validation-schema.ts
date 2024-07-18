@@ -15,7 +15,6 @@ const contributorPositionValidationSchema = z
     })
   )
   .max(1);
-  
 
 const contributorRoleValidationSchema = z.array(
   z.object({
@@ -27,7 +26,13 @@ const contributorRoleValidationSchema = z.array(
 export const singleContributorValidationSchema = z.object({
   id: z
     .string()
-    .regex(new RegExp("^https://orcid.org/\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]$")),
+    .regex(
+      new RegExp("^https://orcid.org/\\d{4}-\\d{4}-\\d{4}-\\d{3}[0-9X]$"),
+      {
+        message:
+          "Invalid ORCID ID, must be full url, e.g. https://orcid.org/0000-0000-0000-0000",
+      }
+    ),
   leader: z.boolean(),
   contact: z.boolean(),
   schemaUri: z.literal("https://orcid.org/"),

@@ -2,8 +2,12 @@ import { RaidDto } from "@/generated/raid";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
+  ExpandMore as ExpandMoreIcon,
 } from "@mui/icons-material";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Alert,
   Box,
   Card,
@@ -63,103 +67,140 @@ function ContributorRootField({
       render={({ field: { onChange, ...controllerField } }) => {
         const contributorTitle =
           controllerField?.value?.id ||
-          `Contributor ${contributorsArrayIndex + 1}`;
+          `New contributor ${contributorsArrayIndex}`;
 
         return (
           <>
-            <Card variant="outlined" sx={{ bgcolor: "transparent" }}>
-              {errors?.contributor?.message && (
-                <Alert severity="error">{errors?.contributor?.message}</Alert>
-              )}
-              <CardHeader
-                title={<Typography variant="h6">{contributorTitle}</Typography>}
-                action={
-                  <Tooltip title="Remove contributor" placement="right">
-                    <IconButton
-                      aria-label="Remove contributor"
-                      onClick={() =>
-                        handleRemoveContributor(contributorsArrayIndex)
-                      }
-                    >
-                      <RemoveCircleOutlineIcon />
-                    </IconButton>
-                  </Tooltip>
-                }
-              />
-              <CardContent>
-                <Stack direction="column" gap={3}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} sm={12} md={6}>
-                      <TextField
-                        {...controllerField}
-                        value={controllerField?.value?.id}
-                        size="small"
-                        fullWidth
-                        label="Contributor ID"
-                        onChange={(event) => {
-                          onChange({
-                            ...controllerField?.value,
-                            id: event.target.value,
-                          });
-                        }}
+            <Accordion
+              defaultExpanded={
+                contributorsArrayIndex + 1 === contributorsArray.fields.length
+              }
+              sx={{
+                border: "solid",
+                borderWidth: 2,
+                borderColor:
+                  errors.contributor &&
+                  errors.contributor[contributorsArrayIndex]
+                    ? "error.main"
+                    : "transparent",
+              }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls={`panel${contributorsArrayIndex}-content`}
+                id={`panel${contributorsArrayIndex}-header`}
+              >
+                {contributorTitle}
+              </AccordionSummary>
+              <AccordionDetails>
+                <Card variant="outlined" sx={{ bgcolor: "transparent" }}>
+                  {errors?.contributor?.message && (
+                    <Alert severity="error">
+                      {errors?.contributor?.message}
+                    </Alert>
+                  )}
+                  <CardHeader
+                    title={""}
+                    action={
+                      <Tooltip title="Remove contributor" placement="right">
+                        <IconButton
+                          aria-label="Remove contributor"
+                          onClick={() =>
+                            handleRemoveContributor(contributorsArrayIndex)
+                          }
+                        >
+                          <RemoveCircleOutlineIcon />
+                        </IconButton>
+                      </Tooltip>
+                    }
+                  />
+                  <CardContent>
+                    <Stack direction="column" gap={3}>
+                      <Grid container spacing={2}>
+                        <Grid item xs={12} sm={12} md={6}>
+                          <TextField
+                            {...controllerField}
+                            value={controllerField?.value?.id}
+                            helperText={
+                              (errors.contributor &&
+                                errors.contributor[contributorsArrayIndex]?.id
+                                  ?.message) ||
+                              "Full url, e.g. https://orcid.org/0000-0000-0000-0000"
+                            }
+                            error={
+                              !!errors?.contributor?.[contributorsArrayIndex]
+                                ?.id
+                            }
+                            size="small"
+                            fullWidth
+                            label="Contributor ID"
+                            onChange={(event) => {
+                              onChange({
+                                ...controllerField?.value,
+                                id: event.target.value,
+                              });
+                            }}
+                            data-testid="contributor-id-input"
+                          />
+                        </Grid>
+
+                        <Grid item xs={12} sm={12} md={3}>
+                          <FormGroup>
+                            <FormControlLabel
+                              {...controllerField}
+                              checked={controllerField?.value?.leader}
+                              control={<Checkbox />}
+                              label="Project Leader"
+                              onChange={(event) => {
+                                onChange({
+                                  ...controllerField?.value,
+                                  leader: (event.target as HTMLInputElement)
+                                    .checked,
+                                });
+                                trigger(`contributor`);
+                              }}
+                            />
+                          </FormGroup>
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={3}>
+                          <FormGroup>
+                            <FormControlLabel
+                              {...controllerField}
+                              checked={controllerField?.value?.contact}
+                              control={<Checkbox />}
+                              label="Project Contact"
+                              onChange={(event) => {
+                                onChange({
+                                  ...controllerField?.value,
+                                  contact: (event.target as HTMLInputElement)
+                                    .checked,
+                                });
+                                trigger(`contributor`);
+                              }}
+                            />
+                          </FormGroup>
+                        </Grid>
+
+                        <Grid item xs={12} sm={12} md={12}>
+                          {errors?.contributor?.root?.message}
+                        </Grid>
+                      </Grid>
+
+                      <FormContributorsPositionsComponent
+                        control={control}
+                        contributorsArrayIndex={contributorsArrayIndex}
+                        errors={errors}
                       />
-                    </Grid>
 
-                    <Grid item xs={12} sm={12} md={3}>
-                      <FormGroup>
-                        <FormControlLabel
-                          {...controllerField}
-                          checked={controllerField?.value?.leader}
-                          control={<Checkbox />}
-                          label="Project Leader"
-                          onChange={(event) => {
-                            onChange({
-                              ...controllerField?.value,
-                              leader: (event.target as HTMLInputElement)
-                                .checked,
-                            });
-                            trigger(`contributor`);
-                          }}
-                        />
-                      </FormGroup>
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={3}>
-                      <FormGroup>
-                        <FormControlLabel
-                          {...controllerField}
-                          checked={controllerField?.value?.contact}
-                          control={<Checkbox />}
-                          label="Project Contact"
-                          onChange={(event) => {
-                            onChange({
-                              ...controllerField?.value,
-                              contact: (event.target as HTMLInputElement)
-                                .checked,
-                            });
-                            trigger(`contributor`);
-                          }}
-                        />
-                      </FormGroup>
-                    </Grid>
-
-                    <Grid item xs={12} sm={12} md={12}>
-                      {errors?.contributor?.root?.message}
-                    </Grid>
-                  </Grid>
-
-                  <FormContributorsPositionsComponent
-                    control={control}
-                    contributorsArrayIndex={contributorsArrayIndex}
-                    errors={errors}
-                  />
-
-                  <FormContributorsRolesComponent
-                    control={control}
-                    contributorsArrayIndex={contributorsArrayIndex}
-                  />
-                </Stack>
-              </CardContent>
-            </Card>
+                      <FormContributorsRolesComponent
+                        control={control}
+                        contributorsArrayIndex={contributorsArrayIndex}
+                      />
+                    </Stack>
+                  </CardContent>
+                </Card>
+              </AccordionDetails>
+            </Accordion>
           </>
         );
       }}
@@ -184,7 +225,8 @@ export default function FormContributorsComponent({
 
   const handleAddContributor = useCallback(() => {
     contributorsArray.append(contributorGenerator());
-  }, [contributorsArray]);
+    trigger(`contributor`);
+  }, [contributorsArray, trigger]);
 
   return (
     <Card
@@ -205,6 +247,8 @@ export default function FormContributorsComponent({
             <IconButton
               aria-label="Add Contributor"
               onClick={handleAddContributor}
+              disabled={errors.contributor && errors.contributor.length! > 0}
+              data-testid="add-contributor-button"
             >
               <AddCircleOutlineIcon />
             </IconButton>

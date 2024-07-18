@@ -1,12 +1,16 @@
 import AnchorButtons from "@/components/AnchorButtons";
+import FrontEndValidationErrorAlertComponent from "@/components/FrontEndValidationErrorAlertComponent";
 import { ValidationFormSchema } from "@/entities/validation-schema";
 import { RaidCreateRequest, RaidDto } from "@/generated/raid";
+import { Failure } from "@/types";
+import { removeNumberInBrackets } from "@/utils/string-utils/string-utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Close as CloseIcon, Save as SaveIcon } from "@mui/icons-material";
 import { Box, Fab, Stack, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import FormAccessComponent from "./components/FormAccessComponent";
 import FormAlternateIdentifiersComponent from "./components/FormAlternateIdentifiersComponent";
 import FormAlternateUrlsComponent from "./components/FormAlternateUrlsComponent";
 import FormContributorsComponent from "./components/FormContributorsComponent";
@@ -17,9 +21,6 @@ import FormRelatedObjectsComponent from "./components/FormRelatedObjectsComponen
 import FormRelatedRaidsComponent from "./components/FormRelatedRaidsComponent";
 import FormSubjectsComponent from "./components/FormSubjectsComponent";
 import FormTitlesComponent from "./components/FormTitlesComponent";
-import FormAccessComponent from "./components/FormAccessComponent";
-import { Failure } from "@/types";
-import { removeNumberInBrackets } from "@/utils/string-utils/string-utils";
 // import FormSpatialCoveragesComponent from "./components/FormSpatialCoveragesComponent";
 
 const formFields = [
@@ -166,6 +167,11 @@ export default function RaidForm({
           <Stack spacing={2} data-testid="raid-form">
             <AnchorButtons errors={formMethods.formState.errors} />
             <Stack spacing={2}>
+              {Object.keys(formMethods.formState.errors).length > 0 && (
+                <FrontEndValidationErrorAlertComponent
+                  error={formMethods.formState.errors}
+                />
+              )}
               {formFields.map((field) => {
                 const Component = field.component;
                 return (
