@@ -87,6 +87,7 @@ export default function GroupSelector() {
     return <>Error: {JSON.stringify(fetchKeycloakGroupsQuery.error)}</>;
   }
 
+  const isDemo = window.location.origin.includes("app.demo.raid.org.au");
   return (
     <>
       <Card>
@@ -96,8 +97,8 @@ export default function GroupSelector() {
               To use RAiD you must belong to a 'Service Point'; please request
               access to the appropriate Service Point in the list below.
               <br />
-              If you are an Australian user and haven't been assigned a Service
-              Point, please use 'raid-au'
+              If you haven't been assigned a Service Point yet, please use
+              'raid-au.'
             </Alert>
 
             <>
@@ -113,13 +114,21 @@ export default function GroupSelector() {
                   onChange={handleGroupSelectorChange}
                   size="small"
                 >
-                  {fetchKeycloakGroupsQuery.data.map(
-                    (group: KeycloakGroupSPI) => (
+                  {isDemo && (
+                    <MenuItem value="f4faea76-66d0-4d5b-826d-ccb9cefc60ba">
+                      raid-au...
+                    </MenuItem>
+                  )}
+                  {fetchKeycloakGroupsQuery.data
+                    .filter(
+                      (group: KeycloakGroupSPI) =>
+                        !(group.id === "f4faea76-66d0-4d5b-826d-ccb9cefc60ba")
+                    )
+                    .map((group: KeycloakGroupSPI) => (
                       <MenuItem key={group.id} value={group.id.toString()}>
                         {group.name}
                       </MenuItem>
-                    )
-                  )}
+                    ))}
                 </Select>
               </FormControl>
               <FormControl>
