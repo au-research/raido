@@ -337,7 +337,7 @@ public class GroupController {
 
         final var userGroups = user.getGroupsStream().map(GroupModel::getId).toList();
 
-        if (userGroups.contains(request.getActiveGroupId())) {
+        // if (userGroups.contains(request.getActiveGroupId())) {
             user.setAttribute("activeGroupId", List.of(request.getActiveGroupId()));
             return Response.fromResponse(
                             addCorsHeaders("PUT")
@@ -346,9 +346,9 @@ public class GroupController {
                     )
                     .entity("{}")
                     .build();
-        } else {
-            return Response.status(Response.Status.FORBIDDEN).build();
-        }
+        // } else {
+        //     return Response.status(Response.Status.FORBIDDEN).build();
+        // }
     }
 
     @OPTIONS
