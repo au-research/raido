@@ -1,6 +1,6 @@
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import {
-  fetchCurrentUserKeycloakGroups,
+  fetchAllKeycloakGroups,
   setKeycloakUserAttribute,
 } from "@/services/keycloak";
 import {
@@ -8,22 +8,21 @@ import {
   Button,
   Card,
   CardContent,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Stack,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormControl,
+  InputLabel,
   Link,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Stack,
 } from "@mui/material";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 type KeycloakGroupSPI = {
   name: string;
@@ -49,7 +48,7 @@ export default function GroupSelector() {
     useState<string>("");
 
   const fetchKeycloakGroupsQuery = useQuery({
-    queryFn: () => fetchCurrentUserKeycloakGroups({ token: keycloak.token }),
+    queryFn: () => fetchAllKeycloakGroups({ token: keycloak.token }),
     queryKey: ["keycloakGroups"],
     enabled: initialized,
   });
@@ -87,16 +86,6 @@ export default function GroupSelector() {
     return <>Error: {JSON.stringify(fetchKeycloakGroupsQuery.error)}</>;
   }
 
-  const raidAuGroupIds = {
-    demo: "f4faea76-66d0-4d5b-826d-ccb9cefc60ba",
-    local: "169bd3f3-dd42-4ac0-b89a-fb49648e5eff",
-  };
-
-  const isDemo = window.location.origin.includes("app.demo.raid.org.au");
-  const isLocal = window.location.origin.includes("localhost");
-
-  const localOrDemoGroup = isLocal ? "local" : isDemo ? "demo" : null;
-
   return (
     <>
       <Card>
@@ -123,21 +112,13 @@ export default function GroupSelector() {
                   onChange={handleGroupSelectorChange}
                   size="small"
                 >
-                  {localOrDemoGroup && (
-                    <MenuItem value={raidAuGroupIds[localOrDemoGroup]}>
-                      raid-au
-                    </MenuItem>
-                  )}
-                  {fetchKeycloakGroupsQuery.data
-                    .filter(
-                      (group: KeycloakGroupSPI) =>
-                        !Object.values(raidAuGroupIds).includes(group.id)
-                    )
-                    .map((group: KeycloakGroupSPI) => (
+                  {fetchKeycloakGroupsQuery.data.groups.map(
+                    (group: KeycloakGroupSPI) => (
                       <MenuItem key={group.id} value={group.id.toString()}>
                         {group.name}
                       </MenuItem>
-                    ))}
+                    )
+                  )}
                 </Select>
               </FormControl>
               <FormControl>
