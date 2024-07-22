@@ -22,6 +22,7 @@ import org.keycloak.services.managers.AuthenticationManager;
 import javax.management.relation.RoleNotFoundException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Provider
@@ -29,6 +30,8 @@ public class GroupController {
     private static final String OPERATOR_ROLE_NAME = "operator";
     private static final String GROUP_ADMIN_ROLE_NAME = "group-admin";
     private static final String SERVICE_POINT_USER_ROLE = "service-point-user";
+    private static final String LOCAL_RAID_AU_GROUP_ID = "169bd3f3-dd42-4ac0-b89a-fb49648e5eff";
+    private static final String DEMO_RAID_AU_GROUP_ID = "f4faea76-66d0-4d5b-826d-ccb9cefc60ba";
     private final AuthenticationManager.AuthResult auth;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -337,7 +340,12 @@ public class GroupController {
 
         final var userGroups = user.getGroupsStream().map(GroupModel::getId).toList();
 
-        if (userGroups.contains(request.getActiveGroupId())) {
+        Set<String> validGroupIds = Set.of(
+                LOCAL_RAID_AU_GROUP_ID,
+                DEMO_RAID_AU_GROUP_ID
+        );
+
+        if (userGroups.contains(request.getActiveGroupId()) || validGroupIds.contains(request.getActiveGroupId())) {
             user.setAttribute("activeGroupId", List.of(request.getActiveGroupId()));
             return Response.fromResponse(
                             addCorsHeaders("PUT")
