@@ -44,6 +44,9 @@ raid:
     baseline-interval: 50
   iam:
     realm-uri: http://localhost:8001/realms/raid
+  orcid-integration:
+    raid-listener:
+      uri: https://orcid.test.raid.org.au/raid-update
 spring:
   jackson:
     default-property-inclusion: non_null

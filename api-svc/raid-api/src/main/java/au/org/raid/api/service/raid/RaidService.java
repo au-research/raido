@@ -9,6 +9,7 @@ import au.org.raid.api.repository.ServicePointRepository;
 import au.org.raid.api.service.Handle;
 import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.RaidIngestService;
+import au.org.raid.api.service.RaidListenerService;
 import au.org.raid.api.service.datacite.DataciteService;
 import au.org.raid.db.jooq.tables.records.ServicePointRecord;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
@@ -37,6 +38,7 @@ public class RaidService {
     private final RaidHistoryService raidHistoryService;
     private final RaidIngestService raidIngestService;
     private final HandleFactory handleFactory;
+    private final RaidListenerService raidListenerService;
 
     @Transactional
     public RaidDto mint(
@@ -48,6 +50,9 @@ public class RaidService {
                         new UnknownServicePointException(servicePointId));
 
         mintHandle(request, servicePointRecord, 0);
+
+        request.getContributor()
+                .forEach(contributor -> raidListenerService.post(contributor.getEmail()));
 
         final var raidDto = raidHistoryService.save(request);
         raidIngestService.create(raidDto);
