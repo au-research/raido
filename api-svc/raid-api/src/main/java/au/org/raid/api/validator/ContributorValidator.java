@@ -20,14 +20,11 @@ public class ContributorValidator {
     private static final String ORCID_ORG = "https://orcid.org/";
     private static final String LEADER_POSITION =
             "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json";
-    private final OrcidValidator orcidValidationService;
     private final ContributorPositionValidator positionValidationService;
     private final ContributorRoleValidator roleValidationService;
 
-    public ContributorValidator(final OrcidValidator orcidValidationService,
-                                final ContributorPositionValidator positionValidationService,
+    public ContributorValidator(final ContributorPositionValidator positionValidationService,
                                 final ContributorRoleValidator roleValidationService) {
-        this.orcidValidationService = orcidValidationService;
         this.positionValidationService = positionValidationService;
         this.roleValidationService = roleValidationService;
     }
@@ -68,7 +65,6 @@ public class ContributorValidator {
                         );
                     }
 
-                    failures.addAll(orcidValidationService.validate(contributor.getId(), index));
 
                     IntStream.range(0, contributor.getRole().size())
                             .forEach(roleIndex -> {

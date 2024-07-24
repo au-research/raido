@@ -19,6 +19,7 @@ public class RaidContributorRepository {
                 .set(RAID_CONTRIBUTOR.CONTRIBUTOR_ID, raidContributor.getContributorId())
                 .set(RAID_CONTRIBUTOR.LEADER, raidContributor.getLeader())
                 .set(RAID_CONTRIBUTOR.CONTACT, raidContributor.getContact())
+                .set(RAID_CONTRIBUTOR.STATUS, raidContributor.getStatus())
                 .returning()
                 .fetchOne();
     }

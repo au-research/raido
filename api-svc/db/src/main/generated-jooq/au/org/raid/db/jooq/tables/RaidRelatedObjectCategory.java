@@ -7,28 +7,15 @@ package au.org.raid.db.jooq.tables;
 import au.org.raid.db.jooq.ApiSvc;
 import au.org.raid.db.jooq.Keys;
 import au.org.raid.db.jooq.tables.records.RaidRelatedObjectCategoryRecord;
+import org.jooq.Record;
+import org.jooq.*;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Function3;
-import org.jooq.Identity;
-import org.jooq.Name;
-import org.jooq.Record;
-import org.jooq.Records;
-import org.jooq.Row3;
-import org.jooq.Schema;
-import org.jooq.SelectField;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 
 /**
@@ -119,11 +106,6 @@ public class RaidRelatedObjectCategory extends TableImpl<RaidRelatedObjectCatego
     @Override
     public UniqueKey<RaidRelatedObjectCategoryRecord> getPrimaryKey() {
         return Keys.RAID_RELATED_OBJECT_CATEGORY_PKEY;
-    }
-
-    @Override
-    public List<UniqueKey<RaidRelatedObjectCategoryRecord>> getUniqueKeys() {
-        return Arrays.asList(Keys.RAID_RELATED_OBJECT_CATEGORY_RAID_RELATED_OBJECT_ID_RELATED_KEY);
     }
 
     @Override

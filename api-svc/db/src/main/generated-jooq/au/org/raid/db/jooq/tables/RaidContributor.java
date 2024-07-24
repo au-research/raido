@@ -7,28 +7,15 @@ package au.org.raid.db.jooq.tables;
 import au.org.raid.db.jooq.ApiSvc;
 import au.org.raid.db.jooq.Keys;
 import au.org.raid.db.jooq.tables.records.RaidContributorRecord;
+import org.jooq.Record;
+import org.jooq.*;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Function5;
-import org.jooq.Identity;
-import org.jooq.Name;
-import org.jooq.Record;
-import org.jooq.Records;
-import org.jooq.Row5;
-import org.jooq.Schema;
-import org.jooq.SelectField;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 
 /**
@@ -77,6 +64,11 @@ public class RaidContributor extends TableImpl<RaidContributorRecord> {
      */
     public final TableField<RaidContributorRecord, Boolean> CONTACT = createField(DSL.name("contact"), SQLDataType.BOOLEAN, this, "");
 
+    /**
+     * The column <code>api_svc.raid_contributor.status</code>.
+     */
+    public final TableField<RaidContributorRecord, String> STATUS = createField(DSL.name("status"), SQLDataType.VARCHAR, this, "");
+
     private RaidContributor(Name alias, Table<RaidContributorRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -123,11 +115,6 @@ public class RaidContributor extends TableImpl<RaidContributorRecord> {
     @Override
     public UniqueKey<RaidContributorRecord> getPrimaryKey() {
         return Keys.RAID_CONTRIBUTOR_PKEY;
-    }
-
-    @Override
-    public List<UniqueKey<RaidContributorRecord>> getUniqueKeys() {
-        return Arrays.asList(Keys.RAID_CONTRIBUTOR_HANDLE_CONTRIBUTOR_ID_KEY);
     }
 
     @Override
@@ -198,18 +185,18 @@ public class RaidContributor extends TableImpl<RaidContributorRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row5 type methods
+    // Row6 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row5<Integer, String, Integer, Boolean, Boolean> fieldsRow() {
-        return (Row5) super.fieldsRow();
+    public Row6<Integer, String, Integer, Boolean, Boolean, String> fieldsRow() {
+        return (Row6) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function5<? super Integer, ? super String, ? super Integer, ? super Boolean, ? super Boolean, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function6<? super Integer, ? super String, ? super Integer, ? super Boolean, ? super Boolean, ? super String, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -217,7 +204,7 @@ public class RaidContributor extends TableImpl<RaidContributorRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function5<? super Integer, ? super String, ? super Integer, ? super Boolean, ? super Boolean, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function6<? super Integer, ? super String, ? super Integer, ? super Boolean, ? super Boolean, ? super String, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

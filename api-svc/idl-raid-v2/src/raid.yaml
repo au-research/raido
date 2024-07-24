@@ -431,6 +431,10 @@ components:
           type: string,
           example: https://orcid.org/
         }
+        status:
+          type: string
+        email:
+            type: string
         position:
           type: array
           items:

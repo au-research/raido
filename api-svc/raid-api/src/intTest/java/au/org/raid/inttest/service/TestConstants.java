@@ -91,4 +91,6 @@ public class TestConstants {
     public static final String GEONAMES_MELBOURNE = "https://www.geonames.org/2158177/melbourne.html";
 
     public static final String GEONAMES_SCHEMA_URI = "https://www.geonames.org/";
+
+    public static final String CONTRIBUTOR_EMAIL = "somebody@example.org";
 }

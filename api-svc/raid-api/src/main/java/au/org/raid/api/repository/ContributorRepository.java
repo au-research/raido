@@ -17,6 +17,8 @@ public class ContributorRepository {
         return dslContext.insertInto(CONTRIBUTOR)
                 .set(CONTRIBUTOR.PID, contributor.getPid())
                 .set(CONTRIBUTOR.SCHEMA_ID, contributor.getSchemaId())
+                .set(CONTRIBUTOR.EMAIL, contributor.getEmail())
+                .set(CONTRIBUTOR.TOKEN, contributor.getToken())
                 .returning()
                 .fetchOne();
     }

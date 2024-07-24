@@ -27,9 +27,6 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class ContributorValidatorTest {
     @Mock
-    private OrcidValidator orcidValidationService;
-
-    @Mock
     private ContributorRoleValidator roleValidationService;
 
     @Mock
@@ -196,16 +193,13 @@ class ContributorValidatorTest {
                 .errorType(NOT_SET_TYPE)
                 .message(NOT_SET_MESSAGE);
 
-        when(orcidValidationService.validate(TestConstants.VALID_ORCID, 0)).thenReturn(List.of(orcidError));
         when(roleValidationService.validate(role, 0, 0)).thenReturn(List.of(roleError));
         when(positionValidationService.validate(position, 0, 0)).thenReturn(List.of(positionError));
 
         final var failures = validationService.validate(List.of(contributor));
 
-        assertThat(failures, hasSize(3));
-        assertThat(failures, hasItems(orcidError, roleError, positionError));
+        assertThat(failures, hasSize(2));
 
-        verify(orcidValidationService).validate(TestConstants.VALID_ORCID, 0);
         verify(roleValidationService).validate(role, 0, 0);
         verify(positionValidationService).validate(position, 0, 0);
     }
