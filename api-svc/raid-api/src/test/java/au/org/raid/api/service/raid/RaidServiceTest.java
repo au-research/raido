@@ -9,6 +9,7 @@ import au.org.raid.api.repository.ServicePointRepository;
 import au.org.raid.api.service.Handle;
 import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.RaidIngestService;
+import au.org.raid.api.service.RaidListenerService;
 import au.org.raid.api.service.datacite.DataciteService;
 import au.org.raid.api.service.raid.id.IdentifierParser;
 import au.org.raid.api.util.FileUtil;
@@ -65,6 +66,8 @@ class RaidServiceTest {
     private RaidIngestService raidIngestService;
     @Mock
     private DataciteService dataciteService;
+    @Mock
+    private RaidListenerService raidListenerService;
     @Mock
     private HandleFactory handleFactory;
     @InjectMocks
