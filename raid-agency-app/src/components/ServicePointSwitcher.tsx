@@ -64,16 +64,23 @@ function ServicePointSwitcherMenu(props: ServicePointSwitcherProps) {
     return <div>Error...</div>;
   }
 
+  const servicePointGroups = keycloakGroupsQuery.data
+    ?.sort((a, b) => a.name.localeCompare(b.name))
+    .filter((el) => el.id !== keycloak.tokenParsed?.service_point_group_id);
+
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Set service point</DialogTitle>
-      <List sx={{ pt: 0 }}>
-        {keycloakGroupsQuery.data
-          ?.sort((a, b) => a.name.localeCompare(b.name))
-          .filter(
-            (el) => el.id !== keycloak.tokenParsed?.service_point_group_id
-          )
-          .map((option) => (
+      {servicePointGroups?.length === 0 && (
+        <List sx={{ pt: 0 }}>
+          <ListItem>
+            <ListItemText primary="No other service points available" />
+          </ListItem>
+        </List>
+      )}
+      {servicePointGroups?.length && servicePointGroups?.length > 0 && (
+        <List sx={{ pt: 0 }}>
+          {servicePointGroups?.map((option) => (
             <ListItem disableGutters key={option.id}>
               <ListItemButton onClick={() => handleListItemClick(option)}>
                 <ListItemAvatar>
@@ -85,7 +92,8 @@ function ServicePointSwitcherMenu(props: ServicePointSwitcherProps) {
               </ListItemButton>
             </ListItem>
           ))}
-      </List>
+        </List>
+      )}
     </Dialog>
   );
 }
