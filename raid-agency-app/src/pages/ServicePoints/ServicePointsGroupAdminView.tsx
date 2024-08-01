@@ -42,7 +42,7 @@ export default function ServicePointsGroupAdminView() {
   }
 
   return (
-    <Card variant="outlined">
+    <Card>
       <CardHeader title="Service points - Group admin view" />
       <CardContent>
         <ServicePointsTable servicePoints={[fetchServicePointByIdQuery.data]} />

@@ -15,7 +15,7 @@ import {
   Stack,
   TextField,
   Tooltip,
-  Typography
+  Typography,
 } from "@mui/material";
 import { useCallback } from "react";
 import {
@@ -50,13 +50,7 @@ export default function FormSpatialCoveragesComponent({
   );
 
   return (
-    <Card
-      variant="outlined"
-      sx={{
-        borderLeft: "solid",
-        borderLeftColor: errors.spatialCoverage ? "error.main" : "primary.main",
-      }}
-    >
+    <Card>
       <CardHeader
         title={
           <Typography variant="h6" component="div">

@@ -62,10 +62,10 @@ export default function FormDescriptionsComponent({
   return (
     <Grid item xs={12} sm={12} md={12}>
       <Card
-        variant="outlined"
         sx={{
           borderLeft: "solid",
-          borderLeftColor: errors.description ? "error.main" : "primary.main",
+          borderLeftWidth: errors.description ? 3 : 0,
+          borderLeftColor: "error.main",
         }}
       >
         <CardHeader

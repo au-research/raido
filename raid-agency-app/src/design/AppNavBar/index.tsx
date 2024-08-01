@@ -1,57 +1,55 @@
 import UserDropdown from "@/design/AppNavBar/components/UserDropdown";
 import { Home as HomeIcon } from "@mui/icons-material";
-import { AppBar, Avatar, Chip, IconButton, Toolbar } from "@mui/material";
+import {
+  AppBar,
+  Chip,
+  IconButton,
+  Stack,
+  SvgIcon,
+  Toolbar,
+  useTheme,
+} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { grey } from "@mui/material/colors";
-import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import NavigationDrawer from "./components/NavigationDrawer";
 
 export default function AppNavBar() {
-  const navigate = useNavigate();
+  const theme = useTheme();
 
   return (
     <AppBar
       position="fixed"
-      elevation={0}
+      elevation={1}
       sx={{
-        backgroundColor: "grey.800",
+        backgroundColor: theme.palette.mode === "dark" ? "black" : "white",
         borderTop: "solid",
-        borderTopColor: "secondary.main",
+        borderTopColor: "primary.main",
         zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
     >
       <Toolbar variant={"dense"}>
-        <IconButton
-          size="small"
-          edge="start"
-          color="secondary"
-          aria-label="go home"
-          onClick={() => navigate("/")}
-          sx={{ mt: -1 }}
-        >
-          <Avatar
-            sx={{
-              bgcolor: grey[800],
-              fontSize: 32,
-              color: grey[50],
-            }}
-          >
-            ᚱ
-          </Avatar>
-        </IconButton>
+        <Stack direction="row" alignItems="center">
+          <img
+            src={
+              theme.palette.mode === "dark"
+                ? "/raid-logo-dark.svg"
+                : "/raid-logo-light.svg"
+            }
+            alt="logo"
+            height="30"
+          />
 
-        <IconButton
-          component={Link}
-          size="large"
-          edge="start"
-          color="inherit"
-          aria-label="go home"
-          sx={{ mx: 1 }}
-          to="/"
-        >
-          <HomeIcon />
-        </IconButton>
+          <IconButton
+            component={Link}
+            size="large"
+            edge="start"
+            aria-label="go home"
+            sx={{ mx: 1 }}
+            to="/"
+          >
+            <HomeIcon />
+          </IconButton>
+        </Stack>
 
         <Typography variant="h6" color="inherit" style={{ flexGrow: 1 }} />
 

@@ -62,18 +62,14 @@ export default function FormTitlesComponent({
 
   return (
     <Card
-      variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: errors.title ? "error.main" : "primary.main",
+        borderLeftWidth: errors.title ? 3 : 0,
+        borderLeftColor: "error.main",
       }}
     >
       <CardHeader
-        title={
-          <Typography variant="h6" component="div">
-            Titles
-          </Typography>
-        }
+        title="Titles"
         action={
           <Tooltip title="Add Title" placement="right">
             <IconButton aria-label="Add Title" onClick={handleAddTitle}>

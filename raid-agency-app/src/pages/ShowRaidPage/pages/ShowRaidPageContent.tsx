@@ -29,6 +29,7 @@ import {
   Stack,
 } from "@mui/material";
 import ShowRaidPageSpeedDialMenu from "./ShowRaidPageSpeedDialMenu";
+import ShowRawData from "../components/ShowRawData";
 
 export default function ShowRaidPageContent({
   raidData,
@@ -129,12 +130,7 @@ export default function ShowRaidPageContent({
           <Box id="external-links" className="scroll">
             <ShowExternalLinksComponent prefix={prefix} suffix={suffix} />
           </Box>
-          <Card sx={{ borderLeft: "solid", borderLeftColor: "primary.main" }}>
-            <CardHeader title="Raw Data" />
-            <CardContent>
-              <pre>{JSON.stringify(raidData, null, 2)}</pre>
-            </CardContent>
-          </Card>
+          <ShowRawData raidData={raidData} />
         </Stack>
       </Container>
     </>

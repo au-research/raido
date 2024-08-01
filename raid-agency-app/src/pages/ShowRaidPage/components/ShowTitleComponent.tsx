@@ -19,7 +19,7 @@ export default function ShowTitleComponent({
   titles: Title[] | undefined;
 }) {
   return (
-    <Card sx={{ borderLeft: "solid", borderLeftColor: "primary.main" }}>
+    <Card>
       <CardHeader title="Titles" />
       <CardContent>
         <Stack gap={3}>

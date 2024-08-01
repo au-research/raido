@@ -24,10 +24,17 @@ export function App() {
   const theme = React.useMemo(
     () =>
       createTheme({
+        typography: {
+          fontFamily: `Figtree, sans-serif`,
+          fontSize: 14,
+          fontWeightLight: 300,
+          fontWeightRegular: 400,
+          fontWeightMedium: 500,
+        },
         palette: {
           mode: prefersDarkMode ? "dark" : "light",
           primary: {
-            main: blue[500],
+            main: "#008ccf",
           },
           secondary: {
             main: amber[600],

@@ -7,6 +7,7 @@ import {
 import { App } from "./App";
 import "./index.css";
 import { otherRoutes, raidPageRoutes, servicePointRoutes } from "./routes";
+import "@fontsource/figtree";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

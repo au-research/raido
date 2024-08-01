@@ -26,20 +26,13 @@ export default function FormDatesComponent({
 }) {
   return (
     <Card
-      variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor:
-          errors.date || apiValidationErrors ? "error.main" : "primary.main",
+        borderLeftWidth: errors.date || apiValidationErrors ? 3 : 0,
+        borderLeftColor: "error.main",
       }}
     >
-      <CardHeader
-        title={
-          <Typography variant="h6" component="div">
-            Dates
-          </Typography>
-        }
-      />
+      <CardHeader title="Dates" />
       <CardContent>
         <Box
           sx={{

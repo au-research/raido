@@ -16,7 +16,7 @@ export default function ShowDateComponent({
   date: ModelDate | undefined;
 }) {
   return (
-    <Card sx={{ borderLeft: "solid", borderLeftColor: "primary.main" }}>
+    <Card>
       <CardHeader title="Dates" />
       <CardContent>
         <Stack gap={3}>

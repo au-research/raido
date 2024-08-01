@@ -82,10 +82,7 @@ export default function RaidHistoryPage() {
             .sort((a, b) => (a.version > b.version ? -1 : 1))
             .map((el, i: number) => {
               return (
-                <Card
-                  sx={{ borderLeft: "solid", borderLeftColor: "primary.main" }}
-                  key={i}
-                >
+                <Card key={i}>
                   <CardHeader
                     title={`Version ${el.version}`}
                     subheader={`${new Date(el.timestamp).toLocaleString()} UTC`}

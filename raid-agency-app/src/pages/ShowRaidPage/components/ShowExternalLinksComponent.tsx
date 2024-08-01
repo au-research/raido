@@ -19,7 +19,7 @@ export default function ShowExternalLinksComponent({
   suffix: string;
 }) {
   return (
-    <Card sx={{ borderLeft: "solid", borderLeftColor: "primary.main" }}>
+    <Card>
       <CardHeader title="Links" />
       <CardContent>
         <List>
