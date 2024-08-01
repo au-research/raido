@@ -1,11 +1,7 @@
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
-import {
-  fetchCurrentUserKeycloakGroups,
-  setKeycloakUserAttribute,
-} from "@/services/keycloak";
+import { fetchCurrentUserKeycloakGroups } from "@/services/keycloak";
 import { KeycloakGroup } from "@/types";
 import {
-  Circle as CircleIcon,
   AccountCircle as AccountCircleIcon,
   ExitToApp as ExitToAppIcon,
 } from "@mui/icons-material";
@@ -17,14 +13,11 @@ import {
   Menu,
   MenuItem,
   MenuList,
-  Stack,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 
-import ServicePointSwitcher from "@/components/ServicePointSwitcher";
 import { KeycloakTokenParsed } from "keycloak-js";
-import { l } from "node_modules/vite/dist/node/types.d-aGj9QkWt";
 
 const keycloakInternalRoles = [
   "default-roles-raid",
@@ -58,21 +51,6 @@ export default function UserDropdown() {
 
   const roles = getRolesFromToken({ tokenParsed: keycloak.tokenParsed });
 
-  const switchToNewServicePoint = async (groupId: string) => {
-    await setKeycloakUserAttribute({
-      token: keycloak.token,
-      groupId: groupId,
-    });
-
-    setTimeout(() => {
-      window.location.reload();
-    }, 250);
-  };
-
-  const handleClose = async (groupId: string) => {
-    switchToNewServicePoint(groupId);
-  };
-
   const keycloakGroupsQuery = useQuery<KeycloakGroup[]>({
     queryKey: ["keycloak-groups"],
     queryFn: async () => {
@@ -90,10 +68,6 @@ export default function UserDropdown() {
   if (keycloakGroupsQuery.isError) {
     return <div>Error...</div>;
   }
-
-  const activeGroup = keycloakGroupsQuery.data?.find(
-    (el) => el.id === keycloak.tokenParsed?.service_point_group_id
-  );
 
   return (
     <>
@@ -166,44 +140,7 @@ export default function UserDropdown() {
               <MenuItem>
                 <ListItemText
                   primary="Roles"
-                  secondary={
-                    <ul
-                      style={{
-                        listStyleType: "none",
-                        paddingLeft: 0,
-                      }}
-                    >
-                      {roles?.sort().map((el: string) => (
-                        <li key={el}>
-                          <CircleIcon
-                            sx={{ color: "success.main", fontSize: 8, mr: 2 }}
-                          />
-                          {el}
-                        </li>
-                      ))}
-                    </ul>
-                  }
-                />
-              </MenuItem>
-              <Divider />
-              <MenuItem>
-                <ListItemText
-                  primary="Current Servicepoint"
-                  secondary={
-                    <Stack
-                      direction="row"
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <div>
-                        {activeGroup && (
-                          <ServicePointSwitcher
-                            currentServicePoint={activeGroup}
-                          />
-                        )}
-                      </div>
-                    </Stack>
-                  }
+                  secondary={roles?.sort().join(" | ")}
                 />
               </MenuItem>
               <Divider />

@@ -1,11 +1,10 @@
 import { useAuthHelper } from "@/components/useAuthHelper";
+import WelcomeBox from "@/components/WelcomeBox";
 import RaidTablePage from "@/pages/RaidTablePage";
 import { Add as AddIcon } from "@mui/icons-material";
-import { Alert, Container, Fab, Stack, Tooltip } from "@mui/material";
+import { Alert, Container, Fab, Stack } from "@mui/material";
 import { Link } from "react-router-dom";
-import CurrentUser from "./components/CurrentUser";
 import GroupSelector from "./components/GroupSelector";
-import WelcomeBox from "@/components/WelcomeBox";
 
 export default function HomePage() {
   const { hasServicePointGroup, isServicePointUser } = useAuthHelper();

@@ -5,7 +5,6 @@ import {
   Chip,
   IconButton,
   Stack,
-  SvgIcon,
   Toolbar,
   useTheme,
 } from "@mui/material";
@@ -29,15 +28,17 @@ export default function AppNavBar() {
     >
       <Toolbar variant={"dense"}>
         <Stack direction="row" alignItems="center">
-          <img
-            src={
-              theme.palette.mode === "dark"
-                ? "/raid-logo-dark.svg"
-                : "/raid-logo-light.svg"
-            }
-            alt="logo"
-            height="30"
-          />
+          <Link to="/">
+            <img
+              src={
+                theme.palette.mode === "dark"
+                  ? "/raid-logo-dark.svg"
+                  : "/raid-logo-light.svg"
+              }
+              alt="logo"
+              height="30"
+            />
+          </Link>
 
           <IconButton
             component={Link}
