@@ -132,24 +132,12 @@ export default function LoginPage() {
                 variant="contained"
                 onClick={() =>
                   keycloak.login({
-                    idpHint: "aaf",
-                    scope: "openid",
-                  })
-                }
-              >
-                AAF
-              </Button>
-              <Button
-                startIcon={<AustraliaIcon />}
-                variant="contained"
-                onClick={() =>
-                  keycloak.login({
                     idpHint: "aaf-saml",
                     scope: "openid",
                   })
                 }
               >
-                eduGAIN
+                AAF
               </Button>
               <Button
                 startIcon={<OrcidIcon />}
