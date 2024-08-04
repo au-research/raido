@@ -1,5 +1,4 @@
 import AnchorButtons from "@/components/AnchorButtons";
-import FrontEndValidationErrorAlertComponent from "@/components/FrontEndValidationErrorAlertComponent";
 import { ValidationFormSchema } from "@/entities/validation-schema";
 import { RaidCreateRequest, RaidDto } from "@/generated/raid";
 import { Failure } from "@/types";
@@ -7,82 +6,46 @@ import { removeNumberInBrackets } from "@/utils/string-utils/string-utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Close as CloseIcon, Save as SaveIcon } from "@mui/icons-material";
 import { Box, Fab, Stack, Tooltip } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
-import FormAccessComponent from "./components/FormAccessComponent";
-import FormAlternateIdentifiersComponent from "./components/FormAlternateIdentifiersComponent";
-import FormAlternateUrlsComponent from "./components/FormAlternateUrlsComponent";
-import FormContributorsComponent from "./components/FormContributorsComponent";
-import FormDatesComponent from "./components/FormDatesComponent";
-import FormDescriptionsComponent from "./components/FormDescriptionsComponent";
-import FormOrganisationsComponent from "./components/FormOrganisationsComponent";
-import FormRelatedObjectsComponent from "./components/FormRelatedObjectsComponent";
-import FormRelatedRaidsComponent from "./components/FormRelatedRaidsComponent";
-import FormSubjectsComponent from "./components/FormSubjectsComponent";
-import FormTitlesComponent from "./components/FormTitlesComponent";
-// import FormSpatialCoveragesComponent from "./components/FormSpatialCoveragesComponent";
+
+// Import form components
+import TitlesForm from "@/entities/title/TitlesForm";
+import DatesForm from "@/forms/RaidForm/components/DatesForm";
+import FormAccessComponent from "@/forms/RaidForm/components/FormAccessComponent";
+import FormAlternateIdentifiersComponent from "@/forms/RaidForm/components/FormAlternateIdentifiersComponent";
+import FormAlternateUrlsComponent from "@/forms/RaidForm/components/FormAlternateUrlsComponent";
+import FormContributorsComponent from "@/forms/RaidForm/components/FormContributorsComponent";
+import FormDescriptionsComponent from "@/forms/RaidForm/components/FormDescriptionsComponent";
+import FormOrganisationsComponent from "@/forms/RaidForm/components/FormOrganisationsComponent";
+import FormRelatedObjectsComponent from "@/forms/RaidForm/components/FormRelatedObjectsComponent";
+import FormRelatedRaidsComponent from "@/forms/RaidForm/components/FormRelatedRaidsComponent";
+import FormSubjectsComponent from "@/forms/RaidForm/components/FormSubjectsComponent";
 
 const formFields = [
-  {
-    id: "date",
-    component: FormDatesComponent,
-  },
-  {
-    id: "title",
-    component: FormTitlesComponent,
-  },
-  {
-    id: "description",
-    component: FormDescriptionsComponent,
-  },
-  {
-    id: "contributor",
-    component: FormContributorsComponent,
-  },
-  {
-    id: "organisation",
-    component: FormOrganisationsComponent,
-  },
-  {
-    id: "relatedBbject",
-    component: FormRelatedObjectsComponent,
-  },
-  {
-    id: "alternateIdentifier",
-    component: FormAlternateIdentifiersComponent,
-  },
-  {
-    id: "alternateUrl",
-    component: FormAlternateUrlsComponent,
-  },
-  {
-    id: "relatedRaid",
-    component: FormRelatedRaidsComponent,
-  },
-  {
-    id: "access",
-    component: FormAccessComponent,
-  },
-  {
-    id: "subject",
-    component: FormSubjectsComponent,
-  },
-  // {
-  //   id: "spatial-coverage",
-  //   component: FormSpatialCoveragesComponent,
-  // },
+  { id: "date", component: DatesForm },
+  { id: "title", component: TitlesForm },
+  { id: "description", component: FormDescriptionsComponent },
+  { id: "contributor", component: FormContributorsComponent },
+  { id: "organisation", component: FormOrganisationsComponent },
+  { id: "relatedObject", component: FormRelatedObjectsComponent },
+  { id: "alternateIdentifier", component: FormAlternateIdentifiersComponent },
+  { id: "alternateUrl", component: FormAlternateUrlsComponent },
+  { id: "relatedRaid", component: FormRelatedRaidsComponent },
+  { id: "access", component: FormAccessComponent },
+  { id: "subject", component: FormSubjectsComponent },
 ];
 
-type FormProps = {
+interface FormProps {
   raidData: RaidCreateRequest;
-  onSubmit(data: RaidDto): void;
+  onSubmit: (data: RaidDto) => void;
   isSubmitting: boolean;
   onDirty?: (isDirty: boolean) => void;
   prefix?: string;
   suffix?: string;
   apiValidationErrors?: Failure[];
-};
+}
 
 export default function RaidForm({
   raidData,
@@ -101,94 +64,85 @@ export default function RaidForm({
     reValidateMode: "onChange",
   });
 
+  const {
+    control,
+    trigger,
+    formState: { errors },
+  } = formMethods;
+
   useEffect(() => {
-    // Skip the first render (initial load)
     if (isInitialLoad) {
       setIsInitialLoad(false);
-      return;
     }
   }, [isInitialLoad]);
 
-  const { control, trigger } = formMethods;
-  const { errors } = formMethods.formState;
+  const apiValidationErrorsMap = useMemo(() => {
+    const errorMap = new Map<string, Failure[]>();
+    if (apiValidationErrors) {
+      apiValidationErrors.forEach((error) => {
+        const id = removeNumberInBrackets(error.fieldId.split(".")[0]);
+        if (errorMap.has(id)) {
+          errorMap.get(id)?.push(error);
+        } else {
+          errorMap.set(id, [error]);
+        }
+      });
+    }
+    return errorMap;
+  }, [apiValidationErrors]);
 
-  const apiValidationErrorsMap = new Map<string, Failure[]>();
-
-  if (apiValidationErrors) {
-    apiValidationErrors.forEach((error) => {
-      const id = removeNumberInBrackets(error.fieldId.split(".")[0]);
-      if (apiValidationErrorsMap.has(id)) {
-        apiValidationErrorsMap.get(id)?.push(error);
-      } else {
-        apiValidationErrorsMap.set(id, [error]);
-      }
-    });
-  }
+  const isFormValid = Object.keys(errors).length === 0;
 
   return (
-    <>
-      <FormProvider {...formMethods}>
-        <form
-          onSubmit={formMethods.handleSubmit(onSubmit)}
-          autoComplete="off"
-          noValidate
-        >
-          <Tooltip title="Cancel" placement="left">
+    <FormProvider {...formMethods}>
+      <form
+        onSubmit={formMethods.handleSubmit(onSubmit)}
+        autoComplete="off"
+        noValidate
+      >
+        <Tooltip title="Cancel" placement="left">
+          <Fab
+            component={Link}
+            color="primary"
+            size="small"
+            sx={{ position: "fixed", bottom: "72px", right: "16px" }}
+            to={raidData?.identifier?.id ? `/raids/${prefix}/${suffix}` : "/"}
+          >
+            <CloseIcon />
+          </Fab>
+        </Tooltip>
+        <Tooltip title="Save changes" placement="left">
+          <Box sx={{ position: "fixed", bottom: "16px", right: "16px" }}>
             <Fab
-              component={Link}
+              variant="extended"
               color="primary"
-              size="small"
-              sx={{ position: "fixed", bottom: "72px", right: "16px" }}
-              to={raidData?.identifier?.id ? `/raids/${prefix}/${suffix}` : "/"}
+              component="button"
+              type="submit"
+              disabled={isSubmitting || !isFormValid}
+              data-testid="save-raid-button"
             >
-              <CloseIcon />
+              <SaveIcon sx={{ mr: 1 }} />
+              {isSubmitting ? "Saving..." : "Save"}
             </Fab>
-          </Tooltip>
-          <Tooltip title="Save changes" placement="left">
-            <div>
-              <Fab
-                variant="extended"
-                color="primary"
-                sx={{ position: "fixed", bottom: "16px", right: "16px" }}
-                component="button"
-                type="submit"
-                disabled={
-                  isSubmitting ||
-                  Object.keys(formMethods.formState.errors).length > 0
-                }
-                data-testid="save-raid-button"
-              >
-                <SaveIcon sx={{ mr: 1 }} />
-                {isSubmitting ? "Saving..." : "Save"}
-              </Fab>
-            </div>
-          </Tooltip>
+          </Box>
+        </Tooltip>
 
-          <Stack spacing={2} data-testid="raid-form">
-            <AnchorButtons errors={formMethods.formState.errors} />
-            <Stack spacing={2}>
-              {Object.keys(formMethods.formState.errors).length > 0 && (
-                <FrontEndValidationErrorAlertComponent
-                  error={formMethods.formState.errors}
+        <Stack spacing={2} data-testid="raid-form">
+          <AnchorButtons errors={errors} />
+          <Stack spacing={2}>
+            {formFields.map(({ id, component: Component }) => (
+              <Box id={id} key={id} className="scroll">
+                <Component
+                  control={control}
+                  errors={errors}
+                  trigger={trigger}
+                  apiValidationErrors={apiValidationErrorsMap.get(id)}
                 />
-              )}
-              {formFields.map((field) => {
-                const Component = field.component;
-                return (
-                  <Box id={field.id} key={field.id} className="scroll">
-                    <Component
-                      control={control}
-                      errors={errors}
-                      trigger={trigger}
-                      apiValidationErrors={apiValidationErrorsMap.get(field.id)}
-                    />
-                  </Box>
-                );
-              })}
-            </Stack>
+              </Box>
+            ))}
           </Stack>
-        </form>
-      </FormProvider>
-    </>
+        </Stack>
+      </form>
+    </FormProvider>
   );
 }

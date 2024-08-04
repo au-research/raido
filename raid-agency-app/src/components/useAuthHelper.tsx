@@ -12,9 +12,6 @@ export function useAuthHelper() {
   const isOperator = keycloak.hasRealmRole("operator");
   const groupId = keycloak.tokenParsed?.service_point_group_id;
 
-  console.log("hasServicePointGroup", hasServicePointGroup);
-  console.log("keycloak.tokenParsed?.service_point_group_id", keycloak.tokenParsed?.service_point_group_id);
-
   return {
     hasServicePointGroup,
     isServicePointUser,

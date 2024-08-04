@@ -13,23 +13,16 @@ import ShowRelatedObjectComponent from "@/pages/ShowRaidPage/components/ShowRela
 import ShowRelatedRaidComponent from "@/pages/ShowRaidPage/components/ShowRelatedRaidComponent";
 // import ShowSpatialCoverageComponent from "@/pages/ShowRaidPage/components/ShowSpatialCoverageComponent";
 import ShowSubjectComponent from "@/pages/ShowRaidPage/components/ShowSubjectComponent";
-import ShowTitleComponent from "@/pages/ShowRaidPage/components/ShowTitleComponent";
+import TitleDisplayComponent from "@/entities/title/TitleDisplayComponent";
 import type { Breadcrumb } from "@/types";
 import {
   DocumentScanner as DocumentScannerIcon,
   HistoryEdu as HistoryEduIcon,
   Home as HomeIcon,
 } from "@mui/icons-material";
-import {
-  Box,
-  Card,
-  CardContent,
-  CardHeader,
-  Container,
-  Stack,
-} from "@mui/material";
-import ShowRaidPageSpeedDialMenu from "./ShowRaidPageSpeedDialMenu";
+import { Box, Container, Stack } from "@mui/material";
 import ShowRawData from "../components/ShowRawData";
+import ShowRaidPageSpeedDialMenu from "./ShowRaidPageSpeedDialMenu";
 
 export default function ShowRaidPageContent({
   raidData,
@@ -74,7 +67,7 @@ export default function ShowRaidPageContent({
           </Box>
 
           <Box id="titles" className="scroll">
-            <ShowTitleComponent titles={raidData.title} />
+            <TitleDisplayComponent titles={raidData.title} />
           </Box>
 
           <Box id="descriptions" className="scroll">
