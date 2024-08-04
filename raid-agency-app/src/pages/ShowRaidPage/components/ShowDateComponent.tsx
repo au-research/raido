@@ -1,3 +1,4 @@
+import { DisplayItem } from "@/components/DisplayItem";
 import { ModelDate } from "@/generated/raid";
 import { dateDisplayFormatter } from "@/utils/date-utils/date-utils";
 import {
@@ -5,9 +6,9 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Divider,
   Grid,
   Stack,
-  Typography,
 } from "@mui/material";
 
 export default function ShowDateComponent({
@@ -19,29 +20,19 @@ export default function ShowDateComponent({
     <Card>
       <CardHeader title="Dates" />
       <CardContent>
-        <Stack gap={3}>
-          <Box className="raid-card-well">
+        <Stack gap={3} divider={<Divider />}>
+          <Box>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6} md={4}>
-                <Box>
-                  <Typography variant="body2">Start Date</Typography>
-                  <Typography
-                    color="text.secondary"
-                    variant="body1"
-                    data-testid="start-date-value"
-                  >
-                    {dateDisplayFormatter(date?.startDate)}
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <Box>
-                  <Typography variant="body2">End Date</Typography>
-                  <Typography color="text.secondary" variant="body1">
-                    {dateDisplayFormatter(date?.endDate)}
-                  </Typography>
-                </Box>
-              </Grid>
+              <DisplayItem
+                label="Start Date"
+                value={dateDisplayFormatter(date?.startDate)}
+                width={6}
+              />
+              <DisplayItem
+                label="End Date"
+                value={dateDisplayFormatter(date?.endDate) || "---"}
+                width={6}
+              />
             </Grid>
           </Box>
         </Stack>
