@@ -27,7 +27,6 @@
     "@tanstack/react-query-devtools": "^5.20.1",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.24",
-    "@vitejs/plugin-react-swc": "^3.6.0",
     "clipboard-copy": "^4.0.1",
     "dayjs": "^1.11.10",
     "dotenv": "^16.4.5",
@@ -41,21 +40,23 @@
     "react-router-dom": "^6.22.0",
     "typescript": "^5.3.3",
     "vite": "^5.1.4",
-    "vitest": "^1.2.2",
     "zod": "^3.22.4"
   },
   "devDependencies": {
     "@playwright/test": "^1.43.0",
-    "@testing-library/jest-dom": "^6.4.5",
+    "@testing-library/jest-dom": "^6.4.8",
     "@testing-library/react": "^15.0.7",
     "@types/node": "^20.14.10",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
-    "@vitejs/plugin-react": "^4.2.1",
+    "@vitejs/plugin-react": "^4.3.1",
+    "@vitejs/plugin-react-swc": "^3.7.0",
+    "@vitest/coverage-v8": "^2.0.5",
     "eslint": "^8.56.0",
     "eslint-plugin-etc": "^2.0.3",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
-    "jsdom": "^24.0.0"
+    "jsdom": "^24.0.0",
+    "vitest": "^2.0.5"
   }
 }
