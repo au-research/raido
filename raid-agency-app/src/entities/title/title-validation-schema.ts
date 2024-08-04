@@ -21,7 +21,7 @@ export const titleValidationSchema = z
       type: titleTypeValidationSchema,
       language: titleLanguageValidationSchema,
       startDate: z.string().regex(combinedPattern).min(1),
-      endDate: z.string().regex(combinedPattern).min(1).optional(),
+      endDate: z.string().regex(combinedPattern).optional(),
     })
   )
   .min(1);

@@ -1,14 +1,19 @@
 import { Language, Title, TitleType } from "@/generated/raid";
 import dayjs from "dayjs";
-import titleTypeSchema from "@/references/title_type_schema.json";
+import titleTypeSchemaReference from "@/references/title_type_schema.json";
+import titleTypeReference from "@/references/title_type.json";
 import languageSchema from "@/references/language_schema.json";
 
-const primaryTitle = "https://vocabulary.raid.org/title.type.schema/5";
+const PRIMARY_TITLE_URI = "https://vocabulary.raid.org/title.type.schema/5";
+
+const primaryTitleReferenceUri = titleTypeReference.find(
+  (el) => el.uri === PRIMARY_TITLE_URI
+)?.uri;
 
 const titleTypeGenerator = (): TitleType => {
   return {
-    id: primaryTitle,
-    schemaUri: titleTypeSchema[0].uri,
+    id: primaryTitleReferenceUri,
+    schemaUri: titleTypeSchemaReference[0].uri,
   };
 };
 
