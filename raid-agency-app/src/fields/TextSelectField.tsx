@@ -1,24 +1,27 @@
 import { RaidDto } from "@/generated/raid";
+import mapping from "@/mapping.json";
 import { FormFieldProps } from "@/types";
 import { getErrorMessageForField } from "@/utils";
-import { Grid, TextField } from "@mui/material";
+import { Grid, MenuItem, TextField } from "@mui/material";
 import { Control, Controller, FieldErrors } from "react-hook-form";
 
-interface TextInputFieldProps {
+interface TextSelectFieldProps {
   formFieldProps: FormFieldProps;
   control: Control<RaidDto>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  options: any[];
   errors: FieldErrors<RaidDto>;
   width?: number;
 }
 
-export function TextInputField({
-  formFieldProps,
+export function TextSelectField({
   control,
   errors,
+  formFieldProps,
+  options,
   width = 12,
-}: TextInputFieldProps) {
-  const { name, label, placeholder, required, helperText, errorText } =
-    formFieldProps;
+}: TextSelectFieldProps) {
+  const { errorText, helperText, label, name, placeholder } = formFieldProps;
 
   return (
     <Grid item xs={width}>
@@ -31,8 +34,6 @@ export function TextInputField({
             ? errorText
               ? errorText
               : errorMessage.message
-            : required
-            ? `${helperText} *`
             : helperText;
 
           return (
@@ -43,10 +44,17 @@ export function TextInputField({
               helperText={displayHelperText}
               label={label}
               placeholder={placeholder}
-              required={!!required}
+              required
+              select
               size="small"
               variant="filled"
-            />
+            >
+              {options.map((opt) => (
+                <MenuItem key={opt.uri} value={opt.uri}>
+                  {mapping.find((el) => el.id === opt.uri)?.value}
+                </MenuItem>
+              ))}
+            </TextField>
           );
         }}
       />

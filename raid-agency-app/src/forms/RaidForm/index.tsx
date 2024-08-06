@@ -11,7 +11,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
 // Import form components
-import TitlesForm from "@/entities/title/TitlesForm";
+import TitlesFormComponent from "@/entities/title/form-components/TitlesFormComponent";
 import DatesForm from "@/forms/RaidForm/components/DatesForm";
 import FormAccessComponent from "@/forms/RaidForm/components/FormAccessComponent";
 import FormAlternateIdentifiersComponent from "@/forms/RaidForm/components/FormAlternateIdentifiersComponent";
@@ -25,7 +25,7 @@ import FormSubjectsComponent from "@/forms/RaidForm/components/FormSubjectsCompo
 
 const formFields = [
   { id: "date", component: DatesForm },
-  { id: "title", component: TitlesForm },
+  { id: "title", component: TitlesFormComponent },
   { id: "description", component: FormDescriptionsComponent },
   { id: "contributor", component: FormContributorsComponent },
   { id: "organisation", component: FormOrganisationsComponent },

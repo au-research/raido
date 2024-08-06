@@ -11,7 +11,7 @@ import { relatedObjectValidationSchema } from "./related-object/related-object-v
 import { relatedRaidValidationSchema } from "./related-raid/related-raid-validation-schema";
 import { spatialCoverageValidationSchema } from "./spatial-coverage/spatial-coverage-validation-schema";
 import { subjectValidationSchema } from "./subject/subject-validation-schema";
-import { titleValidationSchema } from "./title/title-validation-schema";
+import { titleValidationSchema } from "./title/data-components/title-validation-schema";
 import { traditionalKnowledgeIdentifiersValidationSchema } from "./traditional-knowledge-identifier/traditional-knowledge-identifier-validation-schema";
 
 export const ValidationFormSchema = z.object({

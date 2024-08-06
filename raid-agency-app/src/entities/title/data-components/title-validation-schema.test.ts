@@ -1,4 +1,4 @@
-import { titleValidationSchema } from "@/entities/title/title-validation-schema";
+import { titleValidationSchema } from "@/entities/title/data-components/title-validation-schema";
 import languageSchema from "@/references/language_schema.json";
 import titleType from "@/references/title_type.json";
 import titleTypeSchema from "@/references/title_type_schema.json";

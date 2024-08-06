@@ -13,7 +13,7 @@ import ShowRelatedObjectComponent from "@/pages/ShowRaidPage/components/ShowRela
 import ShowRelatedRaidComponent from "@/pages/ShowRaidPage/components/ShowRelatedRaidComponent";
 // import ShowSpatialCoverageComponent from "@/pages/ShowRaidPage/components/ShowSpatialCoverageComponent";
 import ShowSubjectComponent from "@/pages/ShowRaidPage/components/ShowSubjectComponent";
-import TitleDisplayComponent from "@/entities/title/TitleDisplayComponent";
+import TitleDisplayComponent from "@/entities/title/display-components/TitleDisplayComponent";
 import type { Breadcrumb } from "@/types";
 import {
   DocumentScanner as DocumentScannerIcon,

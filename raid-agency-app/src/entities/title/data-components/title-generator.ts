@@ -1,8 +1,8 @@
 import { Language, Title, TitleType } from "@/generated/raid";
-import dayjs from "dayjs";
-import titleTypeSchemaReference from "@/references/title_type_schema.json";
-import titleTypeReference from "@/references/title_type.json";
 import languageSchema from "@/references/language_schema.json";
+import titleTypeReference from "@/references/title_type.json";
+import titleTypeSchemaReference from "@/references/title_type_schema.json";
+import dayjs from "dayjs";
 
 const PRIMARY_TITLE_URI = "https://vocabulary.raid.org/title.type.schema/5";
 

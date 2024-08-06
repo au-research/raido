@@ -1,5 +1,5 @@
 import { RaidDto } from "@/generated/raid";
-import { MenuItem, TextField } from "@mui/material";
+import { Grid, MenuItem, TextField } from "@mui/material";
 import { Control, Controller } from "react-hook-form";
 
 const languages = [
@@ -13,33 +13,37 @@ const languages = [
 const LanguageSelector = ({
   name,
   control,
+  width = 12,
 }: {
   name: string;
   control: Control<RaidDto>;
+  width?: number;
 }) => {
   return (
-    <Controller
-      name={name as keyof RaidDto}
-      control={control}
-      render={({ field, fieldState: { error } }) => (
-        <TextField
-          {...field}
-          select
-          fullWidth
-          variant="filled"
-          size="small"
-          label="Language"
-          error={!!error}
-          helperText={error?.message}
-        >
-          {languages.map((language) => (
-            <MenuItem key={language.id} value={language.id}>
-              {language.name}
-            </MenuItem>
-          ))}
-        </TextField>
-      )}
-    />
+    <Grid item xs={width}>
+      <Controller
+        name={name as keyof RaidDto}
+        control={control}
+        render={({ field, fieldState: { error } }) => (
+          <TextField
+            {...field}
+            select
+            fullWidth
+            variant="filled"
+            size="small"
+            label="Language"
+            error={!!error}
+            helperText={error?.message}
+          >
+            {languages.map((language) => (
+              <MenuItem key={language.id} value={language.id}>
+                {language.name}
+              </MenuItem>
+            ))}
+          </TextField>
+        )}
+      />
+    </Grid>
   );
 };
 
