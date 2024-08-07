@@ -17,8 +17,15 @@ export function TextInputField({
   errors,
   width = 12,
 }: TextInputFieldProps) {
-  const { name, label, placeholder, required, helperText, errorText } =
-    formFieldProps;
+  const {
+    name,
+    label,
+    placeholder,
+    required,
+    helperText,
+    errorText,
+    multiline = false,
+  } = formFieldProps;
 
   return (
     <Grid item xs={width}>
@@ -46,6 +53,8 @@ export function TextInputField({
               required={!!required}
               size="small"
               variant="filled"
+              multiline={multiline}
+              rows={multiline ? 5 : 1}
             />
           );
         }}

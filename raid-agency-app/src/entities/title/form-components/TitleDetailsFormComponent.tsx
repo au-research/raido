@@ -1,4 +1,3 @@
-import React from 'react';
 import LanguageSelector from "@/components/LanguageSelector";
 import { TextInputField } from "@/fields/TextInputField";
 import { TextSelectField } from "@/fields/TextSelectField";
@@ -6,7 +5,7 @@ import { RaidDto } from "@/generated/raid";
 import titleType from "@/references/title_type.json";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { Grid, IconButton, Stack, Tooltip } from "@mui/material";
-import { Control, useController, FieldErrors } from "react-hook-form";
+import { Control, FieldErrors } from "react-hook-form";
 
 interface TitleDetailsFormComponentProps {
   control: Control<RaidDto>;
@@ -15,22 +14,16 @@ interface TitleDetailsFormComponentProps {
   handleRemoveTitle: (index: number) => void;
 }
 
-export const TitleDetailsFormComponent: React.FC<TitleDetailsFormComponentProps> = ({
+export default function TitleDetailsFormComponent({
   control,
   index,
   errors,
   handleRemoveTitle,
-}) => {
-  const { field } = useController({
-    control,
-    name: `title.${index}`,
-  });
-
+}: TitleDetailsFormComponentProps) {
   return (
     <Stack direction="row" alignItems="flex-start" gap={1}>
       <Grid container spacing={2}>
         <TextInputField
-          {...field}
           control={control}
           errors={errors}
           width={12}
@@ -100,4 +93,4 @@ export const TitleDetailsFormComponent: React.FC<TitleDetailsFormComponentProps>
       </Tooltip>
     </Stack>
   );
-};
+}

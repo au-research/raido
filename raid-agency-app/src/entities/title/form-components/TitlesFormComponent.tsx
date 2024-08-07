@@ -1,5 +1,5 @@
 import { titleGenerator } from "@/entities/title/data-components/title-generator";
-import { TitleDetailsFormComponent } from "@/entities/title/form-components/TitleDetailsFormComponent";
+import TitleDetailsFormComponent from "@/entities/title/form-components/TitleDetailsFormComponent";
 import { RaidDto } from "@/generated/raid";
 import { AddCircleOutline as AddCircleOutlineIcon } from "@mui/icons-material";
 import {
@@ -13,7 +13,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from "react";
 import {
   Control,
   FieldErrors,
@@ -42,9 +42,12 @@ export default function TitlesFormComponent({
     trigger("title");
   }, [append, trigger]);
 
-  const handleRemoveTitle = useCallback((index: number) => {
-    remove(index);
-  }, [remove]);
+  const handleRemoveTitle = useCallback(
+    (index: number) => {
+      remove(index);
+    },
+    [remove]
+  );
 
   const errorMessage = useMemo(() => errors.title?.message, [errors.title]);
 
@@ -69,11 +72,7 @@ export default function TitlesFormComponent({
         <Stack gap={2}>
           <Box>
             {errorMessage && (
-              <Typography
-                variant="body2"
-                color="error"
-                textAlign="center"
-              >
+              <Typography variant="body2" color="error" textAlign="center">
                 {errorMessage}
               </Typography>
             )}
