@@ -135,6 +135,16 @@ public class AbstractIntegrationTest {
                                         .id(LANGUAGE_ID)
                                         .schemaUri(LANGUAGE_SCHEMA_URI))))
                         .schemaUri(GEONAMES_SCHEMA_URI)))
+                .subject(List.of(
+                        new Subject()
+                                .id("https://linked.data.gov.au/def/anzsrc-for/2020/3702")
+                                .schemaUri("https://vocabs.ardc.edu.au/viewById/316")
+                                .keyword(List.of(new SubjectKeyword()
+                                        .language(new Language()
+                                                .id("eng")
+                                                .schemaUri("https://www.iso.org/standard/74575.html"))
+                                                .text("ENES")
+                                ))))
                 .traditionalKnowledgeLabel(List.of(
                         new TraditionalKnowledgeLabel()
                                 .id("https://localcontexts.org/label/tk-attribution/")
