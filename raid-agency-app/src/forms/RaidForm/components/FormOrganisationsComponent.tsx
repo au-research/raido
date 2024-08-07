@@ -158,7 +158,7 @@ export default function FormOrganisationsComponent({
         alternativeId: userServicePoint?.identifierOwner || "",
       })
     );
-  }, [organisationsArray]);
+  }, [organisationsArray, keycloak.tokenParsed?.service_point_group_id, servicePoints]);
 
   if (servicePointsQuery.isPending) {
     return "Loading...";

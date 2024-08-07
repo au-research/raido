@@ -63,7 +63,6 @@ export default function CurrentUser() {
 
   const { keycloak } = useCustomKeycloak();
   const roles = getRolesFromToken({ tokenParsed: keycloak.tokenParsed });
-  const clientId = keycloak.tokenParsed?.azp;
 
   const keycloakGroupsQuery = useQuery<KeycloakGroup[]>({
     queryKey: ["keycloak-groups"],
@@ -158,16 +157,18 @@ export default function CurrentUser() {
             <Box>
               <Typography variant="body2">Roles</Typography>
               <Stack direction="row" gap={1} sx={{ pt: 2 }}>
-                {roles?.sort().map((el: string) => (
-                  <Chip
-                    key={el}
-                    variant="outlined"
-                    color="primary"
-                    size="small"
-                    icon={<CircleIcon color="success" sx={{ height: 8 }} />}
-                    label={el}
-                  />
-                ))}
+                {roles
+                  ?.sort()
+                  .map((el: string) => (
+                    <Chip
+                      key={el}
+                      variant="outlined"
+                      color="primary"
+                      size="small"
+                      icon={<CircleIcon color="success" sx={{ height: 8 }} />}
+                      label={el}
+                    />
+                  ))}
               </Stack>
             </Box>
           </Grid>

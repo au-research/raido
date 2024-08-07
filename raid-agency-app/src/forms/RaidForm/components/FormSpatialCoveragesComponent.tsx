@@ -21,17 +21,14 @@ import { useCallback } from "react";
 import {
   Control,
   Controller,
-  FieldErrors,
-  useFieldArray,
+  useFieldArray
 } from "react-hook-form";
 import LanguageSelector from "./reusable-inputs/LanguageSelector";
 
 export default function FormSpatialCoveragesComponent({
   control,
-  errors,
 }: {
   control: Control<RaidDto>;
-  errors: FieldErrors<RaidDto>;
 }) {
   const spatialCoveragesFieldArray = useFieldArray({
     control,

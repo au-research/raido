@@ -1,5 +1,4 @@
-import { AppBar, Avatar, IconButton, Toolbar, useTheme } from "@mui/material";
-import { grey } from "@mui/material/colors";
+import { AppBar, Toolbar, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
 
 export default function AppNavBarUnauthenticated() {

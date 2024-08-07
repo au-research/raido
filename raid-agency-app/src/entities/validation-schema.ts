@@ -4,7 +4,7 @@ import { alternateIdentifierValidationSchema } from "./alternate-identifier/alte
 import { alternateUrlValidationSchema } from "./alternate-url/alternate-url-validation-schema";
 import { contributorValidationSchema } from "./contributor/contributor-validation-schema";
 import { dateValidationSchema } from "./date/date-validation-schema";
-import { descriptionValidationSchema } from "./description/description-validation-schema";
+import { descriptionValidationSchema } from "@/entities/description/data-components/description-validation-schema";
 import { identifierValidationSchema } from "./identifier/identifier-validation-schema";
 import { organisationValidationSchema } from "./organisation/organisation-validation-schema";
 import { relatedObjectValidationSchema } from "./related-object/related-object-validation-schema";

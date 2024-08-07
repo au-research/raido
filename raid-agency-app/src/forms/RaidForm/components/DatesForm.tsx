@@ -1,6 +1,6 @@
 import { RaidDto } from "@/generated/raid";
 import { Failure } from "@/types";
-import { Box, Card, CardContent, CardHeader } from "@mui/material";
+import { Card, CardContent, CardHeader } from "@mui/material";
 import { Control, FieldErrors } from "react-hook-form";
 import DateDetailsForm from "./DateDetailsForm";
 

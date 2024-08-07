@@ -6,7 +6,7 @@ import ShowAlternateIdentifierComponent from "@/pages/ShowRaidPage/components/Sh
 import ShowAlternateUrlComponent from "@/pages/ShowRaidPage/components/ShowAlternateUrlComponent";
 import ShowContributorComponent from "@/pages/ShowRaidPage/components/ShowContributorComponent";
 import ShowDateComponent from "@/pages/ShowRaidPage/components/ShowDateComponent";
-import ShowDescriptionComponent from "@/pages/ShowRaidPage/components/ShowDescriptionComponent";
+import ShowDescriptionComponent from "@/entities/description/display-components/DescriptionDisplayComponent";
 import ShowExternalLinksComponent from "@/pages/ShowRaidPage/components/ShowExternalLinksComponent";
 import ShowOrganisationComponent from "@/pages/ShowRaidPage/components/ShowOrganisationComponent";
 import ShowRelatedObjectComponent from "@/pages/ShowRaidPage/components/ShowRelatedObjectComponent";
@@ -71,7 +71,7 @@ export default function ShowRaidPageContent({
           </Box>
 
           <Box id="descriptions" className="scroll">
-            <ShowDescriptionComponent description={raidData.description} />
+            <ShowDescriptionComponent descriptions={raidData.description} />
           </Box>
 
           <Box id="contributors" className="scroll">

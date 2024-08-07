@@ -11,13 +11,13 @@ import { FormProvider, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
 // Import form components
+import DescriptionsFormComponent from "@/entities/description/form-components/DescriptionsFormComponent";
 import TitlesFormComponent from "@/entities/title/form-components/TitlesFormComponent";
 import DatesForm from "@/forms/RaidForm/components/DatesForm";
 import FormAccessComponent from "@/forms/RaidForm/components/FormAccessComponent";
 import FormAlternateIdentifiersComponent from "@/forms/RaidForm/components/FormAlternateIdentifiersComponent";
 import FormAlternateUrlsComponent from "@/forms/RaidForm/components/FormAlternateUrlsComponent";
 import FormContributorsComponent from "@/forms/RaidForm/components/FormContributorsComponent";
-import FormDescriptionsComponent from "@/forms/RaidForm/components/FormDescriptionsComponent";
 import FormOrganisationsComponent from "@/forms/RaidForm/components/FormOrganisationsComponent";
 import FormRelatedObjectsComponent from "@/forms/RaidForm/components/FormRelatedObjectsComponent";
 import FormRelatedRaidsComponent from "@/forms/RaidForm/components/FormRelatedRaidsComponent";
@@ -26,7 +26,7 @@ import FormSubjectsComponent from "@/forms/RaidForm/components/FormSubjectsCompo
 const formFields = [
   { id: "date", component: DatesForm },
   { id: "title", component: TitlesFormComponent },
-  { id: "description", component: FormDescriptionsComponent },
+  { id: "description", component: DescriptionsFormComponent },
   { id: "contributor", component: FormContributorsComponent },
   { id: "organisation", component: FormOrganisationsComponent },
   { id: "relatedObject", component: FormRelatedObjectsComponent },
@@ -112,7 +112,14 @@ export default function RaidForm({
           </Fab>
         </Tooltip>
         <Tooltip title="Save changes" placement="left">
-          <Box sx={{ position: "fixed", bottom: "16px", right: "16px" }}>
+          <Box
+            sx={{
+              position: "fixed",
+              bottom: "16px",
+              right: "16px",
+              zIndex: 9,
+            }}
+          >
             <Fab
               variant="extended"
               color="primary"
