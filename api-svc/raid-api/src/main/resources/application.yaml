@@ -64,7 +64,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${raid.iam.realm-uri}
+            issuer-uri: ${raid.iam.realm-uri}
       client:
         registration:
           keycloak:
