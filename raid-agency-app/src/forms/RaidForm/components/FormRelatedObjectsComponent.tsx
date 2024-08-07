@@ -53,18 +53,14 @@ export default function FormRelatedObjectsComponent({
 
   return (
     <Card
-      variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: errors.relatedObject ? "error.main" : "primary.main",
+        borderLeftWidth: errors.organisation ? 3 : 0,
+        borderLeftColor: "error.main",
       }}
     >
       <CardHeader
-        title={
-          <Typography variant="h6" component="div">
-            Related Objects
-          </Typography>
-        }
+        title="Related Objects"
         action={
           <Tooltip title="Add Related Object" placement="right">
             <IconButton

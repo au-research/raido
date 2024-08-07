@@ -9,8 +9,7 @@ import {
   CardHeader,
   Grid,
   MenuItem,
-  TextField,
-  Typography,
+  TextField
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
@@ -27,25 +26,13 @@ export default function FormAccessComponent({
   return (
     <>
       <Card
-        variant="outlined"
         sx={{
           borderLeft: "solid",
-          borderLeftColor: errors.access ? "error.main" : "primary.main",
+          borderLeftWidth: errors.access ? 3 : 0,
+          borderLeftColor: "error.main",
         }}
       >
-        <CardHeader
-          title={
-            <Typography
-              variant="h6"
-              component="div"
-              sx={{
-                color: errors.access ? "error.main" : "inherit",
-              }}
-            >
-              Access
-            </Typography>
-          }
-        />
+        <CardHeader title="Access" />
         <CardContent>
           <Box
             sx={{

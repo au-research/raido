@@ -17,7 +17,7 @@ export default function ShowRelatedRaidComponent({
   relatedRaid: RelatedRaid[] | undefined;
 }) {
   return (
-    <Card sx={{ borderLeft: "solid", borderLeftColor: "primary.main" }}>
+    <Card>
       <CardHeader title="Related RAiDs" />
       <CardContent>
         <Stack gap={3}>

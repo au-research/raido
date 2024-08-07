@@ -76,7 +76,7 @@ export default function ServicePoint() {
           <ServicePointUpdateForm servicePoint={servicePointQuery.data!} />
         </CardContent>
       </Card>
-      <Card variant="outlined" sx={{ mt: 2 }}>
+      <Card>
         <CardHeader title="Service point users" />
         <CardContent>
           {(servicePointQuery.data.groupId &&

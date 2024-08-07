@@ -17,8 +17,8 @@ export default function ShowRelatedObjectComponent({
 }: {
   relatedObject: RelatedObject[] | undefined;
 }) {
-  return relatedObject?.length ? (
-    <Card sx={{ borderLeft: "solid", borderLeftColor: "primary.main" }}>
+  return (
+    <Card>
       <CardHeader title="Related Objects" />
       <CardContent>
         <Stack gap={3}>
@@ -90,7 +90,5 @@ export default function ShowRelatedObjectComponent({
         </Stack>
       </CardContent>
     </Card>
-  ) : (
-    <></>
   );
 }

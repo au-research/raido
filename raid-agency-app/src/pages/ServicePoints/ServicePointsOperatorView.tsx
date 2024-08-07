@@ -34,19 +34,19 @@ export default function ServicePointsOperatorView() {
 
   return (
     <Stack direction="column" gap={2}>
-      <Card variant="outlined">
+      <Card>
         <CardHeader title="Create new service point" />
         <CardContent>
           <ServicePointCreateForm />
         </CardContent>
       </Card>
-      <Card variant="outlined">
+      <Card>
         <CardHeader title="All service points" />
         <CardContent>
           <ServicePointsTable servicePoints={query.data} />
         </CardContent>
       </Card>
-      <Card variant="outlined">
+      <Card>
         <CardHeader title="Service points members" />
         <CardContent>
           <Stack direction="column" gap={2}>
