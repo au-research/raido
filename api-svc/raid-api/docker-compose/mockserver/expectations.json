@@ -1,0 +1,36 @@
+[
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/dois",
+      "headers": {
+        "Authorization": ["Basic ZGF0YWNpdGUtdXNlcm5hbWU6ZGF0YWNpdGUtcGFzc3dvcmQ="],
+        "Content-Type": ["application/json"]
+      }
+    },
+    "httpResponse": {
+      "statusCode": 201,
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": "{\"data\":{\"id\":\"10.1234/example.doi\",\"type\":\"dois\",\"attributes\":{\"doi\":\"10.1234/example.doi\"}}}"
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "PUT",
+      "path": "/dois/[0-9]+.[0-9]+/[a-z0-9]+",
+      "headers": {
+        "Authorization": ["Basic ZGF0YWNpdGUtdXNlcm5hbWU6ZGF0YWNpdGUtcGFzc3dvcmQ="],
+        "Content-Type": ["application/json"]
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": "{\"data\":{\"id\":\"10.1234/example.doi\",\"type\":\"dois\",\"attributes\":{\"doi\":\"10.1234/example.doi\"}}}"
+    }
+  }
+]

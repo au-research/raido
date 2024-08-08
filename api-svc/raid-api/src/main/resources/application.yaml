@@ -82,4 +82,4 @@ springdoc:
   api-docs:
     path: /docs
 datacite:
-  endpoint: https://api.test.datacite.org/dois
+  endpoint: http://mockserver:1080/dois

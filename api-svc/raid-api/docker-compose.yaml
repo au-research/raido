@@ -1,9 +1,14 @@
-version: '3.4'
+version: '3.8'
 include:
   - '../../iam/docker-compose.yaml'
 services:
   raid-api-db:
     image: postgres:16.2
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U', 'postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
     ports:
       - 7432:5432
     environment:
@@ -11,56 +16,14 @@ services:
       POSTGRES_DB: raido
     volumes:
       - '../db/src/main/resources/db/env/api_user:/docker-entrypoint-initdb.d'
-#  raid-iam-db:
-#    image: postgres:16.2
-#    ports:
-#      - 5432:5432
-#    environment:
-#      POSTGRES_USER: keycloak
-#      POSTGRES_PASSWORD: keycloak
-#      POSTGRES_DB: keycloak
-#  raid-iam:
-#    depends_on:
-#      - raid-iam-db
-#    image: 576003565477.dkr.ecr.ap-southeast-2.amazonaws.com/raid-iam:01c3803773b5d0b98ab76e87de37eec7071b060e
-#    ports:
-#      - 9080:8080
-#      - 9443:8443
-#    healthcheck:
-#      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-#      interval: 5s
-#      timeout: 5s
-#      retries: 50
-#    command: [ 'start-dev', '--import-realm', '--debug' ]
-#    volumes:
-#      - './docker-compose/realms:/opt/keycloak/data/import'
-#    environment:
-#      KEYCLOAK_ADMIN: admin
-#      KEYCLOAK_ADMIN_PASSWORD: admin
-#      KC_HEALTH_ENABLED: true
-##      KC_HOSTNAME: raid-iam
-##      KC_HOSTNAME_ADMIN: localhost
-#      KC_DB: postgres
-#      KC_DB_USERNAME: keycloak
-#      KC_DB_PASSWORD: keycloak
-#      KC_DB_URL_DATABASE: keycloak
-#      KC_DB_URL_HOST: raid-iam-db
-#      KC_DB_URL_PORT: 5432
-#      KC_DB_SCHEMA: public
-#      KC_HOSTNAME_STRICT: false
-#      KC_HTTP_ENABLED: true
-#      KC_PROXY_HEADERS: xforwarded
-#      #      DEBUG: true
-#      #      DEBUG_PORT: '*:9000'
-#      KC_LOG_LEVEL: info,au.org.raid.iam:debug,org.keycloak.services.cors:debug
   raid-api:
     depends_on:
       raid-iam:
         condition: service_healthy
       raid-api-db:
         condition: service_started
-#    image: 576003565477.dkr.ecr.ap-southeast-2.amazonaws.com/raid-api:01c3803773b5d0b98ab76e87de37eec7071b060e
-#    image: raid-api:latest
+    healthcheck:
+      test: ['CMD', '/layers/paketo-buildpacks_bellsoft-liberica/jre/bin/java', '-classpath', '/opt', 'Status', 'http://localhost:8080/actuator/health']
     build:
       dockerfile: ./Dockerfile
     ports:
@@ -87,12 +50,19 @@ services:
       raid.db.host: raid-api-db
       raid.db.port: 5432
       raid.iam.realm-uri: http://raid-iam:8080/realms/raid
-#  nginx:
-#    depends_on:
-#      raid-iam:
-#        condition: service_healthy
-#    image: nginx:1.27.0-alpine
-#    volumes:
-#      - ./docker-compose/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-#    ports:
-#      - 8001:8001
+  mockserver:
+    image: mockserver/mockserver:5.15.0
+    ports:
+      - 1080:1080
+    environment:
+      MOCKSERVER_LOG_LEVEL: DEBUG
+      MOCKSERVER_INITIALIZATION_JSON_PATH: /config/init/expectations.json
+    volumes:
+      - ./docker-compose/mockserver/expectations.json:/config/init/expectations.json
+
+  taskrunner:
+    build:
+      context: ./docker-compose/taskrunner
+    depends_on:
+      raid-api:
+        condition: service_healthy

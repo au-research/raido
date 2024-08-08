@@ -28,6 +28,7 @@ public class DataciteService {
 
         final DataciteRequest dataciteRequest = dataciteRequestFactory.create(request, handle);
         final HttpEntity<DataciteRequest> entity = httpEntityFactory.create(dataciteRequest, repositoryId, password);
+        log.debug("Making POST request to Datacite: {}", properties.getEndpoint());
 
         restTemplate.exchange(properties.getEndpoint(), HttpMethod.POST, entity, JsonNode.class);
     }
