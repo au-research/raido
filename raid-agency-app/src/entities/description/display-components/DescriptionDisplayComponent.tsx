@@ -31,7 +31,7 @@ const DescriptionItem = ({ description }: { description: Description }) => {
 
   return (
     <Grid container spacing={2}>
-      <DisplayItem label="Title" value={description.text} width={6} />
+      <DisplayItem label="Title" value={description.text} width={12} />
       <DisplayItem label="Type" value={descriptionType} width={3} />
       <DisplayItem label="Language" value={lang?.name} width={3} />
     </Grid>

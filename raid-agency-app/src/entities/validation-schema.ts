@@ -3,7 +3,7 @@ import { accessValidationSchema } from "./access/access-validation-schema";
 import { alternateIdentifierValidationSchema } from "./alternate-identifier/alternate-identifier-validation-schema";
 import { alternateUrlValidationSchema } from "./alternate-url/alternate-url-validation-schema";
 import { contributorValidationSchema } from "./contributor/contributor-validation-schema";
-import { dateValidationSchema } from "./date/date-validation-schema";
+import { dateValidationSchema } from "./date/data-components/date-validation-schema";
 import { descriptionValidationSchema } from "@/entities/description/data-components/description-validation-schema";
 import { identifierValidationSchema } from "./identifier/identifier-validation-schema";
 import { organisationValidationSchema } from "./organisation/organisation-validation-schema";
