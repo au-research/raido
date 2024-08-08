@@ -9,7 +9,14 @@ const SELECTORS = {
 test.describe("login", () => {
   test("user should be able to login", async ({ page }) => {
     await login(page);
-    await page.waitForSelector(SELECTORS.signedInUser);
-    expect(await page.locator(SELECTORS.signedInUser).isVisible()).toBe(true);
+    // Wait for the specific element that indicates a successful login
+    await page.waitForSelector("text=Welcome to RAiD");
+
+    // Alternatively, you can use page.waitForEvent("load") if the page is reloaded upon login
+    // await page.waitForEvent('load');
+
+    // Validate the presence of the welcome text
+    const textContent = await page.evaluate(() => document.body.innerText);
+    expect(textContent).toContain("Welcome to RAiD");
   });
 });

@@ -1,9 +1,9 @@
 import { useAuthHelper } from "@/components/useAuthHelper";
+import WelcomeBox from "@/components/WelcomeBox";
 import RaidTablePage from "@/pages/RaidTablePage";
 import { Add as AddIcon } from "@mui/icons-material";
-import { Alert, Container, Fab, Stack, Tooltip } from "@mui/material";
+import { Alert, Container, Fab, Stack } from "@mui/material";
 import { Link } from "react-router-dom";
-import CurrentUser from "./components/CurrentUser";
 import GroupSelector from "./components/GroupSelector";
 
 export default function HomePage() {
@@ -13,20 +13,20 @@ export default function HomePage() {
     <Container>
       <Stack gap={2}>
         {hasServicePointGroup && isServicePointUser && (
-          <Tooltip title="Mint new RAiD" placement="left">
-            <Fab
-              component={Link}
-              color="primary"
-              sx={{ position: "fixed", bottom: "16px", right: "16px" }}
-              type="button"
-              to="/raids/new"
-              data-testid="mint-raid-button"
-            >
-              <AddIcon />
-            </Fab>
-          </Tooltip>
+          <Fab
+            variant="extended"
+            component={Link}
+            color="primary"
+            sx={{ position: "fixed", bottom: "32px", right: "32px" }}
+            type="button"
+            to="/raids/new"
+            data-testid="mint-raid-button"
+          >
+            <AddIcon sx={{ mr: 1 }} />
+            Mint new RAiD
+          </Fab>
         )}
-        {hasServicePointGroup && <CurrentUser />}
+        {/* {hasServicePointGroup && <CurrentUser />} */}
         {hasServicePointGroup && !isServicePointUser && (
           <Alert severity="error">
             You successfully logged in, but the admin of the service point group
@@ -34,7 +34,12 @@ export default function HomePage() {
           </Alert>
         )}
         {!hasServicePointGroup && <GroupSelector />}
-        {hasServicePointGroup && isServicePointUser && <RaidTablePage />}
+        {hasServicePointGroup && isServicePointUser && (
+          <Stack gap={2}>
+            <WelcomeBox />
+            <RaidTablePage />
+          </Stack>
+        )}
       </Stack>
     </Container>
   );

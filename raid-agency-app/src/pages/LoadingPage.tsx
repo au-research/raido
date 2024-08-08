@@ -18,7 +18,7 @@ export default function LoadingPage({
     <>
       <AppNavBarUnauthenticated />
       <Container sx={{ mt: 6 }}>
-        <Card sx={{ borderLeft: "solid", borderLeftColor: "primary.main" }}>
+        <Card>
           <CardHeader
             title={cardTitle || "Loading..."}
             subheader={cardSubheader || "Please wait..."}

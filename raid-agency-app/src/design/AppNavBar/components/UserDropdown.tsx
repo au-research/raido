@@ -1,4 +1,6 @@
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
+import { fetchCurrentUserKeycloakGroups } from "@/services/keycloak";
+import { KeycloakGroup } from "@/types";
 import {
   AccountCircle as AccountCircleIcon,
   ExitToApp as ExitToAppIcon,
@@ -12,7 +14,26 @@ import {
   MenuItem,
   MenuList,
 } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
 import React from "react";
+
+import { KeycloakTokenParsed } from "keycloak-js";
+
+const keycloakInternalRoles = [
+  "default-roles-raid",
+  "offline_access",
+  "uma_authorization",
+];
+
+function getRolesFromToken({
+  tokenParsed,
+}: {
+  tokenParsed: KeycloakTokenParsed | undefined;
+}): string[] | undefined {
+  return tokenParsed?.realm_access?.roles.filter(
+    (el) => !keycloakInternalRoles.includes(el)
+  );
+}
 
 export default function UserDropdown() {
   const { keycloak, initialized } = useCustomKeycloak();
@@ -28,6 +49,26 @@ export default function UserDropdown() {
     setAccountMenuAnchor(null);
   };
 
+  const roles = getRolesFromToken({ tokenParsed: keycloak.tokenParsed });
+
+  const keycloakGroupsQuery = useQuery<KeycloakGroup[]>({
+    queryKey: ["keycloak-groups"],
+    queryFn: async () => {
+      const servicePoints = await fetchCurrentUserKeycloakGroups({
+        token: keycloak.token!,
+      });
+      return servicePoints;
+    },
+  });
+
+  if (keycloakGroupsQuery.isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (keycloakGroupsQuery.isError) {
+    return <div>Error...</div>;
+  }
+
   return (
     <>
       {keycloak.authenticated && initialized && (
@@ -38,7 +79,6 @@ export default function UserDropdown() {
             aria-controls="menu-appbar"
             aria-haspopup="true"
             onClick={handleAccountMenuOpen}
-            color="inherit"
           >
             <AccountCircleIcon />
           </IconButton>
@@ -94,6 +134,13 @@ export default function UserDropdown() {
                       hour12: false,
                     }).format(keycloak.tokenParsed?.exp * 1000)
                   }
+                />
+              </MenuItem>
+              <Divider />
+              <MenuItem>
+                <ListItemText
+                  primary="Roles"
+                  secondary={roles?.sort().join(" | ")}
                 />
               </MenuItem>
               <Divider />

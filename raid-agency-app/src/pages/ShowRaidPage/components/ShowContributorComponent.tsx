@@ -135,7 +135,7 @@ export default function ShowContributorComponent({
   contributor: Contributor[] | undefined;
 }) {
   return (
-    <Card sx={{ borderLeft: "solid", borderLeftColor: "primary.main" }}>
+    <Card>
       <CardHeader title="Contributors" />
       <CardContent>
         <Stack gap={3}>

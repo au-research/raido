@@ -15,7 +15,7 @@ export default function ShowAlternateUrlComponent({
   alternateUrl: AlternateUrl[] | undefined;
 }) {
   return (
-    <Card sx={{ borderLeft: "solid", borderLeftColor: "primary.main" }}>
+    <Card>
       <CardHeader title="Alternate URLs" />
       <CardContent>
         <Stack gap={3}>

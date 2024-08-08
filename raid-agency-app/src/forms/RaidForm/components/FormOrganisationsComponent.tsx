@@ -63,7 +63,7 @@ function OrganisationRootField({
 
         return (
           <>
-            <Card variant="outlined" sx={{ bgcolor: "transparent" }}>
+            <Card>
               <CardHeader
                 title={
                   <Typography variant="h6">{organisationTitle}</Typography>
@@ -170,18 +170,14 @@ export default function FormOrganisationsComponent({
 
   return (
     <Card
-      variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: errors.organisation ? "error.main" : "primary.main",
+        borderLeftWidth: errors.organisation ? 3 : 0,
+        borderLeftColor: "error.main",
       }}
     >
       <CardHeader
-        title={
-          <Typography variant="h6" component="div">
-            Organisations
-          </Typography>
-        }
+        title="Organisations"
         action={
           <Tooltip title="Add Organisation" placement="right">
             <IconButton

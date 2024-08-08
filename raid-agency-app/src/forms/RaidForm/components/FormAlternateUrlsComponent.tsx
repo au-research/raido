@@ -41,18 +41,14 @@ export default function FormAlternateUrlsComponent({
 
   return (
     <Card
-      variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: errors.alternateUrl ? "error.main" : "primary.main",
+        borderLeftWidth: errors.alternateUrl ? 3 : 0,
+        borderLeftColor: "error.main",
       }}
     >
       <CardHeader
-        title={
-          <Typography variant="h6" component="div">
-            Alternate URLs
-          </Typography>
-        }
+        title="Alternate URLs"
         action={
           <Tooltip title="Add Alternate URL" placement="right">
             <IconButton

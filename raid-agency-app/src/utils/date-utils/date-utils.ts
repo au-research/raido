@@ -37,7 +37,7 @@ const isYearMonthDayFormattedString = (input: string): boolean => {
 
 export const dateDisplayFormatter = (input?: string) => {
   if (!input || input === "" || input === undefined) {
-    return "";
+    return "---";
   }
 
   if (isYearFormattedString(input)) {
@@ -54,7 +54,7 @@ export const dateDisplayFormatter = (input?: string) => {
     return dayjs(`${year}-${month}-${day}`).format("DD-MMM-YYYY");
   }
 
-  return "";
+  return "---";
 };
 
 export const dateHelperTextRequired = "YYYY or YYYY-MM or YYYY-MM-DD";

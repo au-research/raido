@@ -15,7 +15,7 @@ import dayjs from "dayjs";
 import { MappingElement } from "@/types";
 export default function ShowAccessComponent({ access }: { access: Access }) {
   return (
-    <Card sx={{ borderLeft: "solid", borderLeftColor: "primary.main" }}>
+    <Card>
       <CardHeader title="Access" />
       <CardContent>
         <Stack gap={3}>

@@ -15,7 +15,7 @@ export default function ShowSpatialCoverageComponent({
   spatialCoverage: SpatialCoverage[] | undefined;
 }) {
   return (
-    <Card sx={{ borderLeft: "solid", borderLeftColor: "primary.main" }}>
+    <Card>
       <CardHeader title="Spatial Coverage" />
       <CardContent>
         <Stack gap={3}>

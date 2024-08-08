@@ -25,7 +25,7 @@ export default function ShowOrganisationComponent({
   organisation: Organisation[] | undefined;
 }) {
   return (
-    <Card sx={{ borderLeft: "solid", borderLeftColor: "primary.main" }}>
+    <Card>
       <CardHeader title="Organisations" />
       <CardContent>
         <Stack gap={3}>

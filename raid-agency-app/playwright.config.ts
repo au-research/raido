@@ -1,4 +1,12 @@
+import "dotenv/config"
 import { defineConfig, devices } from "@playwright/test";
+
+const { BASE_URL } = process.env;
+
+if (!BASE_URL || BASE_URL === "undefined") {
+  console.error("All environment variables must be set.");
+  process.exit(1);
+}
 
 /**
  * Read environment variables from file.
@@ -71,7 +79,7 @@ export default defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: {
     command: "npm run dev",
-    url: "http://localhost:7080",
+    url: BASE_URL,
     reuseExistingServer: !process.env.CI,
   },
 });

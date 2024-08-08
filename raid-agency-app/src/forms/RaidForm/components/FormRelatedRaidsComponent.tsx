@@ -78,19 +78,9 @@ export default function FormRelatedRaidsComponent({
   }
 
   return (
-    <Card
-      variant="outlined"
-      sx={{
-        borderLeft: "solid",
-        borderLeftColor: errors.relatedRaid ? "error.main" : "primary.main",
-      }}
-    >
+    <Card>
       <CardHeader
-        title={
-          <Typography variant="h6" component="div">
-            Related RAiDs
-          </Typography>
-        }
+        title="Related RAiDs"
         action={
           <Tooltip title="Related Raid" placement="right">
             <IconButton
