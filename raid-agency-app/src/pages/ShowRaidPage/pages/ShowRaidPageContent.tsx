@@ -5,8 +5,8 @@ import ShowAccessComponent from "@/pages/ShowRaidPage/components/ShowAccessCompo
 import ShowAlternateIdentifierComponent from "@/pages/ShowRaidPage/components/ShowAlternateIdentifierComponent";
 import ShowAlternateUrlComponent from "@/pages/ShowRaidPage/components/ShowAlternateUrlComponent";
 import ShowContributorComponent from "@/pages/ShowRaidPage/components/ShowContributorComponent";
-import ShowDateComponent from "@/pages/ShowRaidPage/components/ShowDateComponent";
-import ShowDescriptionComponent from "@/pages/ShowRaidPage/components/ShowDescriptionComponent";
+import DateDisplayComponent from "@/entities/date/display-components/DateDisplayComponent";
+import ShowDescriptionComponent from "@/entities/description/display-components/DescriptionDisplayComponent";
 import ShowExternalLinksComponent from "@/pages/ShowRaidPage/components/ShowExternalLinksComponent";
 import ShowOrganisationComponent from "@/pages/ShowRaidPage/components/ShowOrganisationComponent";
 import ShowRelatedObjectComponent from "@/pages/ShowRaidPage/components/ShowRelatedObjectComponent";
@@ -63,7 +63,7 @@ export default function ShowRaidPageContent({
           <AnchorButtons raidData={raidData} />
 
           <Box id="date" className="scroll">
-            <ShowDateComponent date={raidData.date} />
+            <DateDisplayComponent dates={raidData.date} />
           </Box>
 
           <Box id="titles" className="scroll">
@@ -71,7 +71,7 @@ export default function ShowRaidPageContent({
           </Box>
 
           <Box id="descriptions" className="scroll">
-            <ShowDescriptionComponent description={raidData.description} />
+            <ShowDescriptionComponent descriptions={raidData.description} />
           </Box>
 
           <Box id="contributors" className="scroll">

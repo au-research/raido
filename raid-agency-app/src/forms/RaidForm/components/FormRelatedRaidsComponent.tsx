@@ -2,11 +2,11 @@ import ErrorAlertComponent from "@/components/ErrorAlertComponent";
 import { relatedRaidGenerator } from "@/entities/related-raid/related-raid-generator";
 import { RaidDto } from "@/generated/raid";
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
+import mapping from "@/mapping.json";
 import LoadingPage from "@/pages/LoadingPage";
 import relatedRaidType from "@/references/related_raid_type.json";
 import { fetchRaids } from "@/services/raid";
 import { MappingElement } from "@/types";
-import mapping from "@/mapping.json";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
@@ -30,16 +30,13 @@ import { useCallback } from "react";
 import {
   Control,
   Controller,
-  FieldErrors,
-  useFieldArray,
+  useFieldArray
 } from "react-hook-form";
 
 export default function FormRelatedRaidsComponent({
   control,
-  errors,
 }: {
   control: Control<RaidDto>;
-  errors: FieldErrors<RaidDto>;
 }) {
   const { keycloak, initialized } = useCustomKeycloak();
   const servicePointId = keycloak.tokenParsed?.service_point;

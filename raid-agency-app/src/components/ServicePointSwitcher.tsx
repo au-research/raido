@@ -28,7 +28,7 @@ export interface ServicePointSwitcherProps {
 }
 
 function ServicePointSwitcherMenu(props: ServicePointSwitcherProps) {
-  const { keycloak, initialized } = useCustomKeycloak();
+  const { keycloak } = useCustomKeycloak();
   const { onClose, open } = props;
 
   const switchToNewServicePoint = async (groupId: string) => {
@@ -111,7 +111,7 @@ export default function ServicePointSwitcher({
     setOpen(true);
   };
 
-  const handleClose = (value: string) => {
+  const handleClose = () => {
     setOpen(false);
   };
 

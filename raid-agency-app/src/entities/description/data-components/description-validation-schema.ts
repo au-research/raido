@@ -1,9 +1,7 @@
 import descriptionType from "@/references/description_type.json";
-import { z } from "zod";
-
 import descriptionTypeSchema from "@/references/description_type_schema.json";
-
 import languageSchema from "@/references/language_schema.json";
+import { z } from "zod";
 
 const descriptionTypeValidationSchema = z.object({
   id: z.enum(descriptionType.map((type) => type.uri) as [string, ...string[]]),

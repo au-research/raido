@@ -75,4 +75,5 @@ export interface FormFieldProps {
   errorText: string;
   required?: boolean;
   width?: number;
+  multiline?: boolean;
 }

@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import ServicePointSwitcher from "./ServicePointSwitcher";
 
 export default function WelcomeBox() {
-  const { keycloak, initialized } = useCustomKeycloak();
+  const { keycloak } = useCustomKeycloak();
 
   const keycloakGroupsQuery = useQuery<KeycloakGroup[]>({
     queryKey: ["keycloak-groups"],

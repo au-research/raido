@@ -1,5 +1,5 @@
-import { titleGenerator } from "@/entities/title/data-components/title-generator";
-import TitleDetailsFormComponent from "@/entities/title/form-components/TitleDetailsFormComponent";
+import { descriptionGenerator } from "@/entities/description/data-components/description-generator";
+import DescriptionDetailsFormComponent from "@/entities/description/form-components/DescriptionDetailsFormComponent";
 import { RaidDto } from "@/generated/raid";
 import { AddCircleOutline as AddCircleOutlineIcon } from "@mui/icons-material";
 import {
@@ -21,48 +21,54 @@ import {
   useFieldArray,
 } from "react-hook-form";
 
-interface TitlesFormComponentProps {
+interface DescriptionsFormComponentProps {
   control: Control<RaidDto>;
   errors: FieldErrors<RaidDto>;
   trigger: UseFormTrigger<RaidDto>;
 }
 
-export default function TitlesFormComponent({
+export default function DescriptionsFormComponent({
   control,
   errors,
   trigger,
-}: TitlesFormComponentProps) {
+}: DescriptionsFormComponentProps) {
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "title",
+    name: "description",
   });
 
-  const handleAddTitle = useCallback(() => {
-    append(titleGenerator());
-    trigger("title");
+  const handleAddDescription = useCallback(() => {
+    append(descriptionGenerator());
+    trigger("description");
   }, [append, trigger]);
 
-  const handleRemoveTitle = useCallback(
+  const handleRemoveDescription = useCallback(
     (index: number) => {
       remove(index);
     },
     [remove]
   );
 
-  const errorMessage = useMemo(() => errors.title?.message, [errors.title]);
+  const errorMessage = useMemo(
+    () => errors.description?.message,
+    [errors.description]
+  );
 
   return (
     <Card
       sx={{
-        borderLeft: errors.title ? "3px solid" : "none",
+        borderLeft: errors.description ? "3px solid" : "none",
         borderLeftColor: "error.main",
       }}
     >
       <CardHeader
-        title="Titles"
+        title="Descriptions"
         action={
-          <Tooltip title="Add Title" placement="right">
-            <IconButton aria-label="Add Title" onClick={handleAddTitle}>
+          <Tooltip title="Add Description" placement="right">
+            <IconButton
+              aria-label="Add Description"
+              onClick={handleAddDescription}
+            >
               <AddCircleOutlineIcon />
             </IconButton>
           </Tooltip>
@@ -82,17 +88,17 @@ export default function TitlesFormComponent({
                 color="text.secondary"
                 textAlign="center"
               >
-                No titles defined
+                No descriptions defined
               </Typography>
             )}
           </Box>
-          <Stack divider={<Divider />} gap={5} data-testid="titles-form">
+          <Stack divider={<Divider />} gap={5} data-testid="descriptions-form">
             {fields.map((field, index) => (
-              <TitleDetailsFormComponent
+              <DescriptionDetailsFormComponent
                 key={field.id}
                 control={control}
                 errors={errors}
-                handleRemoveTitle={handleRemoveTitle}
+                handleRemoveDescription={handleRemoveDescription}
                 index={index}
               />
             ))}

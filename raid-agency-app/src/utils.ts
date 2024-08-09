@@ -1,6 +1,6 @@
 import { accessGenerator } from "@/entities/access/access-generator";
-import { dateCleaner } from "@/entities/date/date-cleaner";
-import { dateGenerator } from "@/entities/date/date-generator";
+import { dateCleaner } from "@/entities/date/data-components/date-cleaner";
+import { dateGenerator } from "@/entities/date/data-components/date-generator";
 import { titleGenerator } from "@/entities/title/data-components/title-generator";
 import {
   Access,
