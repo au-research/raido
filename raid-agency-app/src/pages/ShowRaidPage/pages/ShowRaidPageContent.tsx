@@ -2,14 +2,14 @@ import AnchorButtons from "@/components/AnchorButtons";
 import BreadcrumbsBar from "@/components/BreadcrumbsBar";
 import { RaidDto } from "@/generated/raid";
 import ShowAccessComponent from "@/pages/ShowRaidPage/components/ShowAccessComponent";
-import ShowAlternateIdentifierComponent from "@/pages/ShowRaidPage/components/ShowAlternateIdentifierComponent";
+import AlternateIdentifiersDisplayComponent from "@/entities/alternate-identifier/display-components/AlternateIdentifiersDisplayComponent";
 import ShowAlternateUrlComponent from "@/pages/ShowRaidPage/components/ShowAlternateUrlComponent";
-import ShowContributorComponent from "@/pages/ShowRaidPage/components/ShowContributorComponent";
+import ShowContributorComponent from "@/entities/contributor/display-components/ContributorDisplayComponent";
 import DateDisplayComponent from "@/entities/date/display-components/DateDisplayComponent";
 import ShowDescriptionComponent from "@/entities/description/display-components/DescriptionDisplayComponent";
 import ShowExternalLinksComponent from "@/pages/ShowRaidPage/components/ShowExternalLinksComponent";
 import ShowOrganisationComponent from "@/pages/ShowRaidPage/components/ShowOrganisationComponent";
-import ShowRelatedObjectComponent from "@/pages/ShowRaidPage/components/ShowRelatedObjectComponent";
+import RelatedObjectsDisplayComponent from "@/entities/related-object/display-components/RelatedObjectsDisplayComponent";
 import ShowRelatedRaidComponent from "@/pages/ShowRaidPage/components/ShowRelatedRaidComponent";
 // import ShowSpatialCoverageComponent from "@/pages/ShowRaidPage/components/ShowSpatialCoverageComponent";
 import ShowSubjectComponent from "@/pages/ShowRaidPage/components/ShowSubjectComponent";
@@ -75,7 +75,7 @@ export default function ShowRaidPageContent({
           </Box>
 
           <Box id="contributors" className="scroll">
-            <ShowContributorComponent contributor={raidData.contributor} />
+            <ShowContributorComponent contributors={raidData.contributor} />
           </Box>
 
           <Box id="organisations" className="scroll">
@@ -83,14 +83,14 @@ export default function ShowRaidPageContent({
           </Box>
 
           <Box id="related-objects" className="scroll">
-            <ShowRelatedObjectComponent
-              relatedObject={raidData.relatedObject}
+            <RelatedObjectsDisplayComponent
+              relatedObjects={raidData.relatedObject}
             />
           </Box>
 
           <Box id="alternate-identifiers" className="scroll">
-            <ShowAlternateIdentifierComponent
-              alternateIdentifier={raidData.alternateIdentifier}
+            <AlternateIdentifiersDisplayComponent
+              alternateIdentifiers={raidData.alternateIdentifier}
             />
           </Box>
 

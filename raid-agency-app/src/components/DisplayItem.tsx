@@ -1,16 +1,19 @@
 import React from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { lighten, darken } from "@mui/material/styles";
+import { Link } from "react-router-dom";
 
 export const DisplayItem = React.memo(
   ({
     label,
     value,
     width,
+    link,
   }: {
     label: string;
     value: string | undefined;
     width: number;
+    link?: string;
   }) => (
     <Grid item xs={12} sm={width}>
       <Box
@@ -28,9 +31,17 @@ export const DisplayItem = React.memo(
         }}
       >
         <Typography variant="body2">{label}</Typography>
-        <Typography color="text.secondary" variant="body1">
-          {value}
-        </Typography>
+        {link && link.length > 0 ? (
+          <Link to={link} target="__blank">
+            <Typography color="text.secondary" variant="body1">
+              {value}
+            </Typography>
+          </Link>
+        ) : (
+          <Typography color="text.secondary" variant="body1">
+            {value}
+          </Typography>
+        )}
       </Box>
     </Grid>
   )

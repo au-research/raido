@@ -8,16 +8,15 @@ import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
-// Import form components
 import DateFormComponent from "@/entities/date/form-components/DateFormComponent";
 import DescriptionsFormComponent from "@/entities/description/form-components/DescriptionsFormComponent";
+import RelatedObjectsFormComponent from "@/entities/related-object/form-components/RelatedObjectsFormComponent";
 import TitlesFormComponent from "@/entities/title/form-components/TitlesFormComponent";
 import FormAccessComponent from "@/forms/RaidForm/components/FormAccessComponent";
-import FormAlternateIdentifiersComponent from "@/forms/RaidForm/components/FormAlternateIdentifiersComponent";
+import AlternateIdentifiersFormComponent from "@/entities/alternate-identifier/form-components/AlternateIdentifiersFormComponent";
 import FormAlternateUrlsComponent from "@/forms/RaidForm/components/FormAlternateUrlsComponent";
 import FormContributorsComponent from "@/forms/RaidForm/components/FormContributorsComponent";
 import FormOrganisationsComponent from "@/forms/RaidForm/components/FormOrganisationsComponent";
-import FormRelatedObjectsComponent from "@/forms/RaidForm/components/FormRelatedObjectsComponent";
 import FormRelatedRaidsComponent from "@/forms/RaidForm/components/FormRelatedRaidsComponent";
 import FormSubjectsComponent from "@/forms/RaidForm/components/FormSubjectsComponent";
 
@@ -27,8 +26,11 @@ const formFields = [
   { id: "description", component: DescriptionsFormComponent },
   { id: "contributor", component: FormContributorsComponent },
   { id: "organisation", component: FormOrganisationsComponent },
-  { id: "relatedObject", component: FormRelatedObjectsComponent },
-  { id: "alternateIdentifier", component: FormAlternateIdentifiersComponent },
+  { id: "relatedObject", component: RelatedObjectsFormComponent },
+  {
+    id: "alternateIdentifier",
+    component: AlternateIdentifiersFormComponent,
+  },
   { id: "alternateUrl", component: FormAlternateUrlsComponent },
   { id: "relatedRaid", component: FormRelatedRaidsComponent },
   { id: "access", component: FormAccessComponent },
