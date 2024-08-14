@@ -28,6 +28,7 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - 8080:8080
+#      - 5005:5005
     environment:
       EnvironmentConfig.envName: DEV
       ENVIRONMENT_NAME: dev
@@ -50,6 +51,7 @@ services:
       raid.db.host: raid-api-db
       raid.db.port: 5432
       raid.iam.realm-uri: http://raid-iam:8080/realms/raid
+#      _JAVA_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005
   mockserver:
     image: mockserver/mockserver:5.15.0
     ports:

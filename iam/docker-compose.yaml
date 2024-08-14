@@ -17,6 +17,7 @@ services:
     ports:
       - 9080:8080
       - 9443:8443
+      - 5005:5005
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 5s
@@ -29,8 +30,7 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       KC_HEALTH_ENABLED: true
-      #      KC_HOSTNAME: raid-iam
-      #      KC_HOSTNAME_ADMIN: localhost
+      KC_HOSTNAME: localhost
       KC_DB: postgres
       KC_DB_USERNAME: keycloak
       KC_DB_PASSWORD: keycloak
@@ -41,9 +41,9 @@ services:
       KC_HOSTNAME_STRICT: false
       KC_HTTP_ENABLED: true
       KC_PROXY_HEADERS: xforwarded
-      #      DEBUG: true
-      #      DEBUG_PORT: '*:9000'
-      KC_LOG_LEVEL: info,au.org.raid.iam:debug,org.keycloak.services.cors:debug
+      DEBUG: true
+      DEBUG_PORT: '*:5005'
+      KC_LOG_LEVEL: info,au.org.raid.iam:debug,org.keycloak.services:debug,org.keycloak.adapters:debug
   nginx:
     depends_on:
       raid-iam:
