@@ -11,17 +11,16 @@ import au.org.raid.api.service.raid.RaidService;
 import au.org.raid.api.util.SchemaValues;
 import au.org.raid.api.validator.ValidationService;
 import au.org.raid.idl.raidv2.api.RaidApi;
-import au.org.raid.idl.raidv2.model.RaidChange;
-import au.org.raid.idl.raidv2.model.RaidCreateRequest;
-import au.org.raid.idl.raidv2.model.RaidDto;
-import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
+import au.org.raid.idl.raidv2.model.*;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,6 +30,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+@Slf4j
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor
@@ -137,6 +138,13 @@ public class RaidController implements RaidApi {
         }
 
         return ResponseEntity.ok(raidHistoryService.findAllChangesByHandle(handle));
+    }
+
+    @Override
+    @PreAuthorize("hasRole('contributor-writer')")
+    public ResponseEntity<RaidDto> patchContributors(final String prefix, final String suffix, final ContributorPatchRequest contributorPatchRequest) {
+        log.debug("Authorized as contributor-writer");
+        return null;
     }
 
     private long getServicePointId() {
