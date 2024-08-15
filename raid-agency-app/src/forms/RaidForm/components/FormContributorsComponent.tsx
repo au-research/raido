@@ -93,7 +93,7 @@ function ContributorRootField({
                 {contributorTitle}
               </AccordionSummary>
               <AccordionDetails>
-                <Card variant="outlined" sx={{ bgcolor: "transparent" }}>
+                <Card>
                   {errors?.contributor?.message && (
                     <Alert severity="error">
                       {errors?.contributor?.message}
@@ -230,18 +230,14 @@ export default function FormContributorsComponent({
 
   return (
     <Card
-      variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: errors.contributor ? "error.main" : "primary.main",
+        borderLeftWidth: errors.contributor ? 3 : 0,
+        borderLeftColor: "error.main",
       }}
     >
       <CardHeader
-        title={
-          <Typography variant="h6" component="div">
-            Contributors
-          </Typography>
-        }
+        title="Contributors"
         action={
           <Tooltip title="Add Contributor" placement="right">
             <IconButton

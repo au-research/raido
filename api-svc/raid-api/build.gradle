@@ -1,12 +1,24 @@
 import org.gradle.api.plugins.jvm.JvmTestSuite
 
-plugins{
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.avast.gradle:gradle-docker-compose-plugin:0.17.7'
+  }
+}
+
+plugins {
   id 'java'
   id 'org.springframework.boot' version '3.1.4'
   id 'io.spring.dependency-management' version '1.1.3'
+  id 'com.avast.gradle.docker-compose' version '0.17.6'
 }
 
-ext{
+apply plugin: 'docker-compose'
+
+ext {
   defaultSysProps = [
     /* prod machines will always be set to UTC, but developer machines are set 
     to whatever they want - so this forces it for gradle stuff. */
@@ -130,20 +142,20 @@ tasks.intTest.description = "don't run this, it's just a Gradle default"
 // compile intTest classes - but don't run by default (needs DDB migration)
 tasks.build.dependsOn intTestClasses
 
-test{
+test {
   useJUnitPlatform()
   systemProperties defaultSysProps
   testLogging.showStandardStreams =
     System.getenv("RAIDO_UNIT_TEST_OUTPUT")?.toBoolean()
 }
 
-intTest{
+intTest {
   useJUnitPlatform()
   systemProperties defaultSysProps
   testLogging.showStandardStreams = true
 }
 
-task buildInfo(type: WriteProperties){
+task buildInfo(type: WriteProperties) {
   description = "Write build-info.properties file"
   outputFile = file("${sourceSets.main.output.resourcesDir}/META-INF/build-info.properties")
   encoding = "UTF-8"
@@ -166,6 +178,16 @@ bootBuildImage {
 
 tasks.register('buildDocker', Exec) {
   dependsOn bootBuildImage
-  def imageName = project.hasProperty('imageName') ? project.imageName : 'raid-api:' + new Date().getTime()
+  def imageName = project.hasProperty('imageName') ? project.imageName : 'raid-api:latest'
   commandLine 'docker', 'build', '-t', imageName, '.'
+}
+
+tasks.register('dockerComposeUp', Exec) {
+  dependsOn ':iam:build'
+  commandLine 'docker', 'compose', 'up', '--wait', '--detach'
+}
+
+tasks.register('dockerComposeDown', Exec) {
+  dependsOn ':iam:build'
+  commandLine 'docker', 'compose', 'down', '-v'
 }

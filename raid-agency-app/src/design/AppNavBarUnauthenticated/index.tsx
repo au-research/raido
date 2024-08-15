@@ -1,35 +1,32 @@
-import { AppBar, Avatar, IconButton, Toolbar } from "@mui/material";
-import { grey } from "@mui/material/colors";
+import { AppBar, Toolbar, useTheme } from "@mui/material";
+import { Link } from "react-router-dom";
 
 export default function AppNavBarUnauthenticated() {
+  const theme = useTheme();
+
   return (
     <AppBar
       position="fixed"
-      elevation={0}
+      elevation={1}
       sx={{
-        backgroundColor: "grey.800",
+        backgroundColor: theme.palette.mode === "dark" ? "black" : "white",
         borderTop: "solid",
-        borderTopColor: "secondary.main",
+        borderTopColor: "primary.main",
+        zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
     >
       <Toolbar variant={"dense"}>
-        <IconButton
-          size="small"
-          edge="start"
-          color="inherit"
-          aria-label="go home"
-          sx={{ mt: -1 }}
-        >
-          <Avatar
-            sx={{
-              bgcolor: grey[800],
-              fontSize: 32,
-              color: grey[50],
-            }}
-          >
-            ᚱ
-          </Avatar>
-        </IconButton>
+        <Link to="/">
+          <img
+            src={
+              theme.palette.mode === "dark"
+                ? "/raid-logo-dark.svg"
+                : "/raid-logo-light.svg"
+            }
+            alt="logo"
+            height="30"
+          />
+        </Link>
       </Toolbar>
     </AppBar>
   );

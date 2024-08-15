@@ -1,6 +1,7 @@
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import {
   fetchAllKeycloakGroups,
+  joinKeycloakGroup,
   setKeycloakUserAttribute,
 } from "@/services/keycloak";
 import {
@@ -36,9 +37,9 @@ export default function GroupSelector() {
   const { keycloak, initialized } = useCustomKeycloak();
   const [open, setOpen] = useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  // const handleClickOpen = () => {
+  //   setOpen(true);
+  // };
 
   const handleClose = () => {
     setOpen(false);
@@ -57,25 +58,61 @@ export default function GroupSelector() {
     setSelectedServicePointId(event.target.value);
   };
 
-  const joinGroupMutationSuccess = () => {
-    handleClickOpen();
-  };
-
-  const joinGroupMutationError = (error: Error) => {
-    console.error(error);
-  };
+  const joinKeycloakGroupMutation = useMutation({
+    mutationFn: joinKeycloakGroup,
+    onSuccess: () => {
+      console.log("success");
+    },
+    onError: () => {
+      console.log("error");
+    },
+  });
 
   const setKeycloakUserAttributeMutation = useMutation({
     mutationFn: setKeycloakUserAttribute,
-    onSuccess: joinGroupMutationSuccess,
-    onError: joinGroupMutationError,
+    onSuccess: () => {
+      console.log("success");
+    },
+    onError: () => {
+      console.log("error");
+    },
   });
 
-  const handleKeycloakGroupJoinRequest = () => {
-    setKeycloakUserAttributeMutation.mutate({
-      groupId: selectedServicePointId,
-      token: keycloak.token,
-    });
+  const handleKeycloakGroupJoinRequest = async () => {
+    try {
+      await Promise.all([
+        new Promise((resolve, reject) => {
+          setKeycloakUserAttributeMutation.mutate(
+            {
+              groupId: selectedServicePointId,
+              token: keycloak.token,
+            },
+            {
+              onSuccess: resolve,
+              onError: reject,
+            }
+          );
+        }),
+        new Promise((resolve, reject) => {
+          joinKeycloakGroupMutation.mutate(
+            {
+              groupId: selectedServicePointId,
+              token: keycloak.token,
+            },
+            {
+              onSuccess: resolve,
+              onError: reject,
+            }
+          );
+        }),
+      ]);
+
+      alert("Service point joined. Click to reload the page.");
+      window.location.reload();
+    } catch (error) {
+      console.error("Error joining service point:", error);
+      alert("Failed to join service point. Please try again.");
+    }
   };
 
   if (fetchKeycloakGroupsQuery.isPending) {

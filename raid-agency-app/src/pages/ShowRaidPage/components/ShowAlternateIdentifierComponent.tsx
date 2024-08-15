@@ -15,7 +15,7 @@ export default function ShowAlternateIdentifierComponent({
   alternateIdentifier: AlternateIdentifier[] | undefined;
 }) {
   return (
-    <Card sx={{ borderLeft: "solid", borderLeftColor: "primary.main" }}>
+    <Card>
       <CardHeader title="Alternate Identifiers" />
       <CardContent>
         <Stack gap={3}>

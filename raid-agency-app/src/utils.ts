@@ -1,7 +1,7 @@
 import { accessGenerator } from "@/entities/access/access-generator";
-import { dateCleaner } from "@/entities/date/date-cleaner";
-import { dateGenerator } from "@/entities/date/date-generator";
-import { titleGenerator } from "@/entities/title/title-generator";
+import { dateCleaner } from "@/entities/date/data-components/date-cleaner";
+import { dateGenerator } from "@/entities/date/data-components/date-generator";
+import { titleGenerator } from "@/entities/title/data-components/title-generator";
 import {
   Access,
   AlternateIdentifier,
@@ -64,3 +64,19 @@ export const newRaid: RaidCreateRequest = {
   //   alternateIdentifierGenerator(),
   // ],
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getErrorMessageForField(obj: any, keyString: string): any {
+  const keys = keyString.split("."); // Split the keyString into an array of keys
+  let value = obj;
+
+  for (const key of keys) {
+    if (value && key in value) {
+      value = value[key]; // Traverse the object
+    } else {
+      return undefined; // Return undefined if any key is not found
+    }
+  }
+
+  return value;
+}

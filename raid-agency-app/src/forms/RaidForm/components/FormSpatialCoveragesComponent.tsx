@@ -15,23 +15,20 @@ import {
   Stack,
   TextField,
   Tooltip,
-  Typography
+  Typography,
 } from "@mui/material";
 import { useCallback } from "react";
 import {
   Control,
   Controller,
-  FieldErrors,
-  useFieldArray,
+  useFieldArray
 } from "react-hook-form";
-import LanguageSelector from "./reusable-inputs/LanguageSelector";
+import LanguageSelector from "../../../fields/LanguageSelector";
 
 export default function FormSpatialCoveragesComponent({
   control,
-  errors,
 }: {
   control: Control<RaidDto>;
-  errors: FieldErrors<RaidDto>;
 }) {
   const spatialCoveragesFieldArray = useFieldArray({
     control,
@@ -50,13 +47,7 @@ export default function FormSpatialCoveragesComponent({
   );
 
   return (
-    <Card
-      variant="outlined"
-      sx={{
-        borderLeft: "solid",
-        borderLeftColor: errors.spatialCoverage ? "error.main" : "primary.main",
-      }}
-    >
+    <Card>
       <CardHeader
         title={
           <Typography variant="h6" component="div">
