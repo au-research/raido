@@ -184,16 +184,10 @@ tasks.register('buildDocker', Exec) {
 
 tasks.register('dockerComposeUp', Exec) {
   dependsOn ':iam:build'
-  commandLine 'docker', 'compose', 'up', '--detach'
+  commandLine 'docker', 'compose', 'up', '--wait', '--detach'
 }
 
-//dockerCompose {
-//  nestedName = 'raid-api'
-//  dockerComposeWorkingDirectory = project.file('./docker-compose/')
-//  useComposeFiles = ['./docker-compose.yaml']
-//  buildBeforeUp = false
-////  dockerExecutable = '/Applications/Docker.app/Contents/Resources/bin/docker'
-////  useDockerComposeV2 = false
-//}
-//
-//composeUp.dependsOn buildDocker
+tasks.register('dockerComposeDown', Exec) {
+  dependsOn ':iam:build'
+  commandLine 'docker', 'compose', 'down', '-v'
+}
