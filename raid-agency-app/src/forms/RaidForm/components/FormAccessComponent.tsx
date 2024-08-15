@@ -14,7 +14,7 @@ import {
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { Control, Controller, FieldErrors } from "react-hook-form";
-import LanguageSelector from "./reusable-inputs/LanguageSelector";
+import LanguageSelector from "../../../fields/LanguageSelector";
 
 export default function FormAccessComponent({
   control,
