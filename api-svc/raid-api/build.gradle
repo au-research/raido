@@ -183,7 +183,6 @@ tasks.register('buildDocker', Exec) {
 }
 
 tasks.register('dockerComposeUp', Exec) {
-  dependsOn bootBuildImage
   dependsOn ':iam:build'
   commandLine 'docker', 'compose', 'up'
 }
