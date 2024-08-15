@@ -184,7 +184,7 @@ tasks.register('buildDocker', Exec) {
 
 tasks.register('dockerComposeUp', Exec) {
   dependsOn ':iam:build'
-  commandLine 'docker', 'compose', 'up'
+  commandLine 'docker', 'compose', 'up', '--detach'
 }
 
 //dockerCompose {
