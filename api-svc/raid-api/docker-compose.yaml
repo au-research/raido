@@ -1,4 +1,3 @@
-version: '3.8'
 include:
   - '../../iam/docker-compose.yaml'
 services:
@@ -16,42 +15,6 @@ services:
       POSTGRES_DB: raido
     volumes:
       - '../db/src/main/resources/db/env/api_user:/docker-entrypoint-initdb.d'
-#  raid-api:
-#    depends_on:
-#      raid-iam:
-#        condition: service_healthy
-#      raid-api-db:
-#        condition: service_started
-#    healthcheck:
-#      test: ['CMD', '/layers/paketo-buildpacks_bellsoft-liberica/jre/bin/java', '-classpath', '/opt', 'Status', 'http://localhost:8080/actuator/health']
-#    build:
-#      dockerfile: ./Dockerfile
-#    ports:
-#      - 8080:8080
-##      - 5005:5005
-#    environment:
-#      EnvironmentConfig.envName: DEV
-#      ENVIRONMENT_NAME: dev
-#      EnvironmentConfig.isProd: false
-#      orcid.in-memory-stub: true
-#      ror.in-memory-stub: true
-#      doi.in-memory-stub: true
-#      geonames.in-memory-stub: true
-#      openstreetmap.in-memory-stub: false
-#      spring.flyway.locations: classpath:db/env/api_user,classpath:db/migration,classpath:db/env/local
-#      logging.level.au.org.raid: debug
-#      logging.level.org.springframework.security: debug
-#      raid.identifier.landing-prefix: https://raid.org/
-#      raid.identifier.handle-url-prefix: https://test.static.raid.org.au/
-#      spring.security.oauth2.client.registration.keycloak.client-id: raid-api-2
-##      raid.validation.geonames.username: EcsSecret.fromSecretsManager(secrets.geoNamesUsername)
-#      spring.flyway.user: postgres
-#      spring.flyway.password: supersecret
-#      raid.db.encryption-key: pB7MB3iuYmmjWMTOCK6HS0JetzWhCtBtKoNl39pBr3Q=
-#      raid.db.host: raid-api-db
-#      raid.db.port: 5432
-#      raid.iam.realm-uri: http://raid-iam:8080/realms/raid
-##      _JAVA_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005
   mockserver:
     image: mockserver/mockserver:5.15.0
     ports:
@@ -61,9 +24,3 @@ services:
       MOCKSERVER_INITIALIZATION_JSON_PATH: /config/init/expectations.json
     volumes:
       - ./docker-compose/mockserver/expectations.json:/config/init/expectations.json
-#  taskrunner:
-#    build:
-#      context: ./docker-compose/taskrunner
-#    depends_on:
-#      raid-api-db:
-#        condition: service_healthy

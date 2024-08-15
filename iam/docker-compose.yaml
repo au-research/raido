@@ -11,9 +11,7 @@ services:
   raid-iam:
     depends_on:
       - raid-iam-db
-#    image: 576003565477.dkr.ecr.ap-southeast-2.amazonaws.com/raid-iam:01c3803773b5d0b98ab76e87de37eec7071b060e
     build: .
-#      dockerfile: ./Dockerfile
     ports:
       - 8001:8080
       - 9443:8443
@@ -43,12 +41,3 @@ services:
       DEBUG: true
       DEBUG_PORT: '*:5005'
       KC_LOG_LEVEL: info,au.org.raid.iam:debug,org.keycloak.services:debug,org.keycloak.adapters:debug
-#  nginx:
-#    depends_on:
-#      raid-iam:
-#        condition: service_healthy
-#    image: nginx:1.27.0-alpine
-#    volumes:
-#      - ./docker-compose/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-#    ports:
-#      - 8001:8001
