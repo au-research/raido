@@ -9,6 +9,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
@@ -32,12 +33,12 @@ import java.util.stream.Collectors;
 public class SecurityConfig {
     private static final String SERVICE_POINT_USER_ROLE = "service-point-user";
     private static final String OPERATOR_ROLE = "operator";
+    private static final String CONTRIBUTOR_WRITER_ROLE = "contributor-writer";
     private static final String GROUPS = "groups";
     private static final String REALM_ACCESS_CLAIM = "realm_access";
     private static final String ROLES_CLAIM = "roles";
 
     private final KeycloakLogoutHandler keycloakLogoutHandler;
-    public static final String RAID_V2_API = "/v2";
     public static final String RAID_API = "/raid";
     public static final String SERVICE_POINT_API = "/service-point";
     public static final String TEAM_API = "/team";
@@ -56,8 +57,14 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui*/**").permitAll()
                         .requestMatchers("/docs/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**"))
+                        .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**", "GET"))
                         .hasRole(SERVICE_POINT_USER_ROLE)
+                        .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**", "POST"))
+                        .hasRole(SERVICE_POINT_USER_ROLE)
+                        .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**", "PUT"))
+                        .hasRole(SERVICE_POINT_USER_ROLE)
+                        .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**", "PATCH"))
+                        .hasRole(CONTRIBUTOR_WRITER_ROLE)
                         .requestMatchers(new AntPathRequestMatcher(SERVICE_POINT_API + "/**", "PUT"))
                         .hasRole(OPERATOR_ROLE)
                         .requestMatchers(new AntPathRequestMatcher(SERVICE_POINT_API + "/**", "POST"))
@@ -71,9 +78,7 @@ public class SecurityConfig {
         http.oauth2Login(Customizer.withDefaults())
                 .logout(logout -> logout.addLogoutHandler(keycloakLogoutHandler).logoutSuccessUrl("/"));
 
-
-
-
+        http.csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
     }

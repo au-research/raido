@@ -129,6 +129,35 @@ paths:
             application/json:
               schema:
                 $ref: 'shared.yaml#/components/schemas/ValidationFailureResponse'
+
+    patch:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - raid
+      operationId: patchRaid
+      summary: Patch a raid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RaidPatchRequest'
+      responses:
+        200:
+          description: The Raid was successfully updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RaidDto'
+        400:
+          description: Bad request. There was a problem with the message sent to the server.
+          content:
+            application/json:
+              schema:
+                $ref: 'shared.yaml#/components/schemas/ValidationFailureResponse'
+
+
   /raid/{prefix}/{suffix}/history:
     parameters:
       - name: prefix
@@ -259,6 +288,12 @@ components:
         traditionalKnowledgeLabel:
           type: array
           items: { $ref: '#/components/schemas/TraditionalKnowledgeLabel' }
+    RaidPatchRequest:
+      type: object
+      properties:
+        contributor:
+          type: array
+          items: { $ref: '#/components/schemas/Contributor'}
     RaidDto:
       allOf:
         - $ref: '#/components/schemas/RaidUpdateRequest'

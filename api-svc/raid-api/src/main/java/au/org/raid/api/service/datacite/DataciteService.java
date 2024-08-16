@@ -5,6 +5,7 @@ import au.org.raid.api.factory.HttpEntityFactory;
 import au.org.raid.api.factory.datacite.DataciteRequestFactory;
 import au.org.raid.api.model.datacite.DataciteRequest;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
+import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,17 @@ public class DataciteService {
     }
 
     public void update(RaidUpdateRequest request, String handle,
+                       final String repositoryId, final String password) {
+
+        final var endpoint = "%s/%s".formatted(properties.getEndpoint(), handle);
+
+        final DataciteRequest dataciteRequest = dataciteRequestFactory.create(request, handle);
+        final HttpEntity<DataciteRequest> entity = httpEntityFactory.create(dataciteRequest, repositoryId, password);
+
+        restTemplate.exchange(endpoint, HttpMethod.PUT, entity, JsonNode.class);
+    }
+
+    public void update(RaidDto request, String handle,
                        final String repositoryId, final String password) {
 
         final var endpoint = "%s/%s".formatted(properties.getEndpoint(), handle);

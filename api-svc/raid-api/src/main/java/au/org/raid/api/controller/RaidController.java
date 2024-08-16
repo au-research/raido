@@ -142,9 +142,10 @@ public class RaidController implements RaidApi {
 
     @Override
     @PreAuthorize("hasRole('contributor-writer')")
-    public ResponseEntity<RaidDto> patchContributors(final String prefix, final String suffix, final ContributorPatchRequest contributorPatchRequest) {
-        log.debug("Authorized as contributor-writer");
-        return null;
+    public ResponseEntity<RaidDto> patchRaid(final String prefix, final String suffix, final RaidPatchRequest raidPatchRequest) {
+
+        return ResponseEntity.ok(
+                raidService.patchContributors(prefix, suffix, raidPatchRequest.getContributor()));
     }
 
     private long getServicePointId() {

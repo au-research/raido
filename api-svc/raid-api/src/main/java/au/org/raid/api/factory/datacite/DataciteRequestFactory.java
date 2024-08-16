@@ -3,6 +3,7 @@ package au.org.raid.api.factory.datacite;
 import au.org.raid.api.model.datacite.DataciteDto;
 import au.org.raid.api.model.datacite.DataciteRequest;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
+import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,13 @@ public class DataciteRequestFactory {
     }
 
     public DataciteRequest create(RaidUpdateRequest updateRequest, String handle) {
+        DataciteDto dataciteDto = dataciteDtoFactory.create(updateRequest, handle);
+
+        return new DataciteRequest()
+                .setData(dataciteDto);
+    }
+
+    public DataciteRequest create(RaidDto updateRequest, String handle) {
         DataciteDto dataciteDto = dataciteDtoFactory.create(updateRequest, handle);
 
         return new DataciteRequest()

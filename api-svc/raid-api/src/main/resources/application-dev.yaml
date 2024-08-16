@@ -1,6 +1,6 @@
 raid:
   identifier:
-    name-prefix: http://raid.local/
+    name-prefix: http://localhost:8080/
   db:
     user: postgres
     password: supersecret
