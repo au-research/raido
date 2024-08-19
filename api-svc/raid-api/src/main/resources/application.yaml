@@ -72,3 +72,5 @@ springdoc:
     enabled: true
   api-docs:
     path: /docs
+datacite:
+  endpoint: https://api.test.datacite.org/dois
