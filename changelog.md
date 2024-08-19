@@ -3,6 +3,10 @@ See the [Changelog audience](#changelog-audience) section for info about
 
 # 2.1.2
 ## App-client UI
+* Component updates and refactoring
+* Test framework and dependency management (Playwright for e2e, Vitest for unit tests)
+* UI/UX enhancements (especially nested components)
+* General maintenance and cleanup
 
 ## IAM
 
