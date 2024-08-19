@@ -58,7 +58,7 @@ export interface Id {
      */
     owner: Owner;
     /**
-     * The URL for the raid via the minting raid agency system, e.g  https://raid.org.au/10378.1/1695863
+     * The URL for the raid via the minting raid agency system
      * 
      * @type {string}
      * @memberof Id

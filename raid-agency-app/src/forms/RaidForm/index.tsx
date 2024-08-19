@@ -1,5 +1,16 @@
 import AnchorButtons from "@/components/AnchorButtons";
+import AlternateIdentifiersFormComponent from "@/entities/alternate-identifier/form-components/AlternateIdentifiersFormComponent";
+import ContributorsFormComponent from "@/entities/contributor/form-components/ContributorsFormComponent";
+import DateFormComponent from "@/entities/date/form-components/DateFormComponent";
+import DescriptionsFormComponent from "@/entities/description/form-components/DescriptionsFormComponent";
+import RelatedObjectsFormComponent from "@/entities/related-object/form-components/RelatedObjectsFormComponent";
+import TitlesFormComponent from "@/entities/title/form-components/TitlesFormComponent";
 import { ValidationFormSchema } from "@/entities/validation-schema";
+import FormAccessComponent from "@/forms/RaidForm/components/FormAccessComponent";
+import FormAlternateUrlsComponent from "@/forms/RaidForm/components/FormAlternateUrlsComponent";
+import FormOrganisationsComponent from "@/forms/RaidForm/components/FormOrganisationsComponent";
+import FormRelatedRaidsComponent from "@/forms/RaidForm/components/FormRelatedRaidsComponent";
+import FormSubjectsComponent from "@/forms/RaidForm/components/FormSubjectsComponent";
 import { RaidCreateRequest, RaidDto } from "@/generated/raid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Close as CloseIcon, Save as SaveIcon } from "@mui/icons-material";
@@ -8,23 +19,11 @@ import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 
-import DateFormComponent from "@/entities/date/form-components/DateFormComponent";
-import DescriptionsFormComponent from "@/entities/description/form-components/DescriptionsFormComponent";
-import RelatedObjectsFormComponent from "@/entities/related-object/form-components/RelatedObjectsFormComponent";
-import TitlesFormComponent from "@/entities/title/form-components/TitlesFormComponent";
-import FormAccessComponent from "@/forms/RaidForm/components/FormAccessComponent";
-import AlternateIdentifiersFormComponent from "@/entities/alternate-identifier/form-components/AlternateIdentifiersFormComponent";
-import FormAlternateUrlsComponent from "@/forms/RaidForm/components/FormAlternateUrlsComponent";
-import FormContributorsComponent from "@/forms/RaidForm/components/FormContributorsComponent";
-import FormOrganisationsComponent from "@/forms/RaidForm/components/FormOrganisationsComponent";
-import FormRelatedRaidsComponent from "@/forms/RaidForm/components/FormRelatedRaidsComponent";
-import FormSubjectsComponent from "@/forms/RaidForm/components/FormSubjectsComponent";
-
 const formFields = [
   { id: "date", component: DateFormComponent },
   { id: "title", component: TitlesFormComponent },
   { id: "description", component: DescriptionsFormComponent },
-  { id: "contributor", component: FormContributorsComponent },
+  { id: "contributor", component: ContributorsFormComponent },
   { id: "organisation", component: FormOrganisationsComponent },
   { id: "relatedObject", component: RelatedObjectsFormComponent },
   {

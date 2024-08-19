@@ -20,7 +20,7 @@ import { exists, mapValues } from '../runtime';
  */
 export interface RelatedObjectCategory {
     /**
-     * 
+     * Input
      * @type {string}
      * @memberof RelatedObjectCategory
      */

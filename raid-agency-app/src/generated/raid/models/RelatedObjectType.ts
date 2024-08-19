@@ -20,7 +20,7 @@ import { exists, mapValues } from '../runtime';
  */
 export interface RelatedObjectType {
     /**
-     * 
+     * Book
      * @type {string}
      * @memberof RelatedObjectType
      */

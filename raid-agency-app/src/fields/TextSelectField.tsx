@@ -23,6 +23,8 @@ export function TextSelectField({
 }: TextSelectFieldProps) {
   const { errorText, helperText, label, name, placeholder } = formFieldProps;
 
+  const keyField = formFieldProps.keyField ? formFieldProps.keyField : "uri";
+
   return (
     <Grid item xs={width}>
       <Controller
@@ -49,11 +51,16 @@ export function TextSelectField({
               size="small"
               variant="filled"
             >
-              {options.map((opt) => (
-                <MenuItem key={opt.uri} value={opt.uri}>
-                  {mapping.find((el) => el.id === opt.uri)?.value}
-                </MenuItem>
-              ))}
+              {options.map((opt) => {
+                const mappedValue = mapping.find(
+                  (el) => el.id === opt[keyField]
+                )?.value;
+                return (
+                  <MenuItem key={opt[keyField]} value={opt[keyField]}>
+                    {mappedValue ? mappedValue : opt[keyField]}
+                  </MenuItem>
+                );
+              })}
             </TextField>
           );
         }}
