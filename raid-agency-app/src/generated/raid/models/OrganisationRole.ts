@@ -26,7 +26,7 @@ export interface OrganisationRole {
      */
     schemaUri: string;
     /**
-     * 
+     * Lead Research Organisation
      * @type {string}
      * @memberof OrganisationRole
      */
