@@ -1,5 +1,3 @@
-import { titleGenerator } from "@/entities/title/data-components/title-generator";
-import TitleDetailsFormComponent from "@/entities/title/form-components/TitleDetailsFormComponent";
 import { RaidDto } from "@/generated/raid";
 import { AddCircleOutline as AddCircleOutlineIcon } from "@mui/icons-material";
 import {
@@ -20,29 +18,31 @@ import {
   UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
+import { contributorGenerator } from "@/entities/contributor/data-components/contributor-generator";
+import ContributorDetailsFormComponent from "@/entities/contributor/form-components/ContributorDetailsFormComponent";
 
-interface TitlesFormComponentProps {
+interface ContributorsFormComponentProps {
   control: Control<RaidDto>;
   errors: FieldErrors<RaidDto>;
   trigger: UseFormTrigger<RaidDto>;
 }
 
-export default function TitlesFormComponent({
+export default function ContributorsFormComponent({
   control,
   errors,
   trigger,
-}: TitlesFormComponentProps) {
+}: ContributorsFormComponentProps) {
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "title",
+    name: "contributor",
   });
 
-  const handleAddTitle = useCallback(() => {
-    append(titleGenerator());
-    trigger("title");
+  const handleAddContributor = useCallback(() => {
+    append(contributorGenerator());
+    trigger("contributor");
   }, [append, trigger]);
 
-  const handleRemoveTitle = useCallback(
+  const handleRemoveContributor = useCallback(
     (index: number) => {
       remove(index);
     },
@@ -54,15 +54,18 @@ export default function TitlesFormComponent({
   return (
     <Card
       sx={{
-        borderLeft: errors.title ? "3px solid" : "none",
+        borderLeft: errors.contributor ? "3px solid" : "none",
         borderLeftColor: "error.main",
       }}
     >
       <CardHeader
-        title="Titles"
+        title="Contributors"
         action={
-          <Tooltip title="Add Title" placement="right">
-            <IconButton aria-label="Add Title" onClick={handleAddTitle}>
+          <Tooltip title="Add Contributor" placement="right">
+            <IconButton
+              aria-label="Add Contributor"
+              onClick={handleAddContributor}
+            >
               <AddCircleOutlineIcon />
             </IconButton>
           </Tooltip>
@@ -82,18 +85,19 @@ export default function TitlesFormComponent({
                 color="text.secondary"
                 textAlign="center"
               >
-                No titles defined
+                No contributors defined
               </Typography>
             )}
           </Box>
           <Stack divider={<Divider />} gap={5} data-testid="titles-form">
             {fields.map((field, index) => (
-              <TitleDetailsFormComponent
+              <ContributorDetailsFormComponent
                 key={field.id}
                 control={control}
                 errors={errors}
-                handleRemoveTitle={handleRemoveTitle}
+                handleRemoveContributor={handleRemoveContributor}
                 index={index}
+                trigger={trigger}
               />
             ))}
           </Stack>
