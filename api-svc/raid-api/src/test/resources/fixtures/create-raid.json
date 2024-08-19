@@ -36,7 +36,7 @@
   },
   "contributor": [
     {
-      "id": "0000-0002-4368-8058",
+      "email": "someone@example.org",
       "schemaUri": "https://orcid.org/",
       "position": [
         {

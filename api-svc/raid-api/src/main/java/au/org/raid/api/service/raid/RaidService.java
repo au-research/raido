@@ -6,6 +6,7 @@ import au.org.raid.api.exception.ServicePointNotFoundException;
 import au.org.raid.api.exception.UnknownServicePointException;
 import au.org.raid.api.factory.HandleFactory;
 import au.org.raid.api.factory.IdFactory;
+import au.org.raid.api.factory.RaidListenerMessageFactory;
 import au.org.raid.api.repository.ServicePointRepository;
 import au.org.raid.api.service.Handle;
 import au.org.raid.api.service.RaidHistoryService;
@@ -25,8 +26,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -42,6 +45,7 @@ public class RaidService {
     private final RaidIngestService raidIngestService;
     private final HandleFactory handleFactory;
     private final RaidListenerService raidListenerService;
+    private final RaidListenerMessageFactory raidListenerMessageFactory;
 
     @Transactional
     public RaidDto mint(
@@ -54,8 +58,20 @@ public class RaidService {
 
         mintHandle(request, servicePointRecord, 0);
 
-//        request.getContributor()
-//                .forEach(contributor -> raidListenerService.post(contributor.getEmail()));
+        request.getContributor().stream()
+                .map(Contributor::getEmail)
+                .distinct()
+                .forEach(email -> {
+                    final var message = raidListenerMessageFactory.create(
+                            request.getIdentifier().getId(),
+                            email,
+                            request.getContributor().stream()
+                                    .filter(contributor -> contributor.getEmail().equals(email)).collect(Collectors.toList())
+                    );
+                    raidListenerService.post(message);
+                });
+
+        request.setContributor(Collections.emptyList());
 
         final var raidDto = raidHistoryService.save(request);
         raidIngestService.create(raidDto);
@@ -93,6 +109,22 @@ public class RaidService {
         }
 
         final var handle = new Handle(raid.getIdentifier().getId()).toString();
+
+        //TODO: Updates will not include an email?
+        // Check if any contributors have been removed and mark them for delete
+
+        // get existing contributors for raid
+        // check for diffs
+        // send new/updated to RaidListener
+
+
+        // for each contributor check status in contributor table
+        // c
+
+
+
+
+
 
         final var existing = raidHistoryService.findByHandleAndVersion(handle, version)
                 .orElseThrow(() -> new ResourceNotFoundException(handle));

@@ -20,7 +20,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -141,7 +140,6 @@ public class RaidController implements RaidApi {
     }
 
     @Override
-    @PreAuthorize("hasRole('contributor-writer')")
     public ResponseEntity<RaidDto> patchRaid(final String prefix, final String suffix, final RaidPatchRequest raidPatchRequest) {
 
         return ResponseEntity.ok(

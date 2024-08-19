@@ -1,8 +1,10 @@
 package au.org.raid.api.service.raid;
 
+import au.org.raid.api.dto.RaidListenerMessage;
 import au.org.raid.api.exception.ValidationFailureException;
 import au.org.raid.api.factory.HandleFactory;
 import au.org.raid.api.factory.IdFactory;
+import au.org.raid.api.factory.RaidListenerMessageFactory;
 import au.org.raid.api.factory.RaidRecordFactory;
 import au.org.raid.api.repository.RaidRepository;
 import au.org.raid.api.repository.ServicePointRepository;
@@ -69,6 +71,8 @@ class RaidServiceTest {
     @Mock
     private RaidListenerService raidListenerService;
     @Mock
+    private RaidListenerMessageFactory raidListenerMessageFactory;
+    @Mock
     private HandleFactory handleFactory;
     @InjectMocks
     private RaidService raidService;
@@ -83,6 +87,7 @@ class RaidServiceTest {
         final var createRaidRequest = createRaidRequest();
         final var repositoryId = "repository-id";
         final var password = "_password";
+        final var raidListenerMessage = new RaidListenerMessage();
 
         final var servicePointRecord = new ServicePointRecord()
                 .setPrefix(prefix)
@@ -91,7 +96,10 @@ class RaidServiceTest {
 
         final var raidDto = new RaidDto();
 
-        final var id = new Id();
+        final var id = new Id().id(handle.toString());
+
+        when(raidListenerMessageFactory.create(handle.toString(), "someone@example.org", createRaidRequest.getContributor()))
+                .thenReturn(raidListenerMessage);
 
         when(servicePointRepository.findById(servicePointId)).thenReturn(Optional.of(servicePointRecord));
         when(handleFactory.createWithPrefix(prefix)).thenReturn(handle);
@@ -102,6 +110,8 @@ class RaidServiceTest {
         raidService.mint(createRaidRequest, servicePointId);
         verify(raidIngestService).create(raidDto);
         verify(dataciteService).mint(createRaidRequest, handle.toString(), repositoryId, password);
+        verify(raidListenerService).post(raidListenerMessage);
+
     }
 
     @Test
@@ -127,7 +137,6 @@ class RaidServiceTest {
     @Test
     @DisplayName("Updating a raid saves changes and returns updated raid")
     void update() throws JsonProcessingException {
-
         final var handle = "10378.1/1696639";
         final var raidJson = raidJson();
         final var servicePointId = 123L;

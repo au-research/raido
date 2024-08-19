@@ -32,5 +32,17 @@
       },
       "body": "{\"data\":{\"id\":\"10.1234/example.doi\",\"type\":\"dois\",\"attributes\":{\"doi\":\"10.1234/example.doi\"}}}"
     }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/raid-listener"
+    },
+    "httpResponse": {
+      "statusCode": 204,
+      "headers": {
+        "Content-Type": ["application/json"]
+      }
+    }
   }
 ]
