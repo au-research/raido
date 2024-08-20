@@ -63,7 +63,6 @@ export default function CurrentUser() {
 
   const { keycloak } = useCustomKeycloak();
   const roles = getRolesFromToken({ tokenParsed: keycloak.tokenParsed });
-  const clientId = keycloak.tokenParsed?.azp;
 
   const keycloakGroupsQuery = useQuery<KeycloakGroup[]>({
     queryKey: ["keycloak-groups"],
@@ -88,30 +87,29 @@ export default function CurrentUser() {
   );
 
   return (
-    <Card
-      data-testid="signed-in-user"
-      sx={{ borderLeft: "solid", borderLeftColor: "primary.main" }}
-    >
-      <CardHeader title="Signed-in user" />
+    <Card data-testid="signed-in-user">
+      <CardHeader
+        title={<Typography variant="h6">Signed-in user</Typography>}
+      />
       <CardContent>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={4} md={4}>
+        <Grid container>
+          {/* <Grid item xs={12} sm={4} md={4}>
             <Box>
               <Typography variant="body2">Identity</Typography>
               <Typography color="text.secondary" variant="body1">
                 {keycloak.tokenParsed?.sub}
               </Typography>
             </Box>
-          </Grid>
-          <Grid item xs={12} sm={2} md={2}>
+          </Grid> */}
+          {/* <Grid item xs={12} sm={2} md={2}>
             <Box>
               <Typography variant="body2">Client</Typography>
               <Typography color="text.secondary" variant="body1">
                 {clientId}
               </Typography>
             </Box>
-          </Grid>
-          <Grid item xs={12} sm={4} md={4}>
+          </Grid> */}
+          <Grid item xs={12} sm={6} md={6}>
             <Box>
               <Typography variant="body2">Active service point</Typography>
               <Typography color="text.secondary" variant="body1">
@@ -155,20 +153,22 @@ export default function CurrentUser() {
               </Typography>
             </Box>
           </Grid>
-          <Grid item xs={12} sm={12} md={12}>
+          <Grid item xs={12} sm={6} md={6}>
             <Box>
               <Typography variant="body2">Roles</Typography>
-              <Stack direction="row" gap={1}>
-                {roles?.sort().map((el: string) => (
-                  <Chip
-                    key={el}
-                    variant="outlined"
-                    color="primary"
-                    size="small"
-                    icon={<CircleIcon color="success" sx={{ height: 8 }} />}
-                    label={el}
-                  />
-                ))}
+              <Stack direction="row" gap={1} sx={{ pt: 2 }}>
+                {roles
+                  ?.sort()
+                  .map((el: string) => (
+                    <Chip
+                      key={el}
+                      variant="outlined"
+                      color="primary"
+                      size="small"
+                      icon={<CircleIcon color="success" sx={{ height: 8 }} />}
+                      label={el}
+                    />
+                  ))}
               </Stack>
             </Box>
           </Grid>

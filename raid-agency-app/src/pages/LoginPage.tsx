@@ -50,12 +50,7 @@ export default function LoginPage() {
   return (
     <Stack gap={2}>
       <Container maxWidth="md">
-        <Card
-          sx={{
-            borderLeft: "solid",
-            borderLeftColor: "primary.main",
-          }}
-        >
+        <Card>
           <CardHeader
             title="ARDC Research Activity Identifier (RAiD)"
             action={
@@ -87,12 +82,7 @@ export default function LoginPage() {
       </Container>
       {localStorage.getItem("client_id") && (
         <Container maxWidth="md">
-          <Card
-            sx={{
-              borderLeft: "solid",
-              borderLeftColor: "primary.main",
-            }}
-          >
+          <Card>
             <CardHeader
               title="Previous client"
               subheader="Manage your previously selected client"
@@ -111,12 +101,7 @@ export default function LoginPage() {
       )}
 
       <Container maxWidth="md">
-        <Card
-          sx={{
-            borderLeft: "solid",
-            borderLeftColor: "primary.main",
-          }}
-        >
+        <Card>
           <CardHeader
             title="RAiD Sign-in"
             subheader="Please select your preferred sign-in method"
@@ -147,24 +132,12 @@ export default function LoginPage() {
                 variant="contained"
                 onClick={() =>
                   keycloak.login({
-                    idpHint: "aaf",
-                    scope: "openid",
-                  })
-                }
-              >
-                AAF
-              </Button>
-              <Button
-                startIcon={<AustraliaIcon />}
-                variant="contained"
-                onClick={() =>
-                  keycloak.login({
                     idpHint: "aaf-saml",
                     scope: "openid",
                   })
                 }
               >
-                eduGAIN
+                AAF
               </Button>
               <Button
                 startIcon={<OrcidIcon />}

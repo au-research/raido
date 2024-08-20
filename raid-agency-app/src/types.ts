@@ -63,3 +63,18 @@ export type ServicePointMember = {
 export type ServicePointWithMembers = ServicePoint & {
   members: ServicePointMember[];
 };
+
+type FormFieldType = "text";
+
+export interface FormFieldProps {
+  name: string;
+  label: string;
+  placeholder?: string;
+  type?: FormFieldType;
+  helperText?: string;
+  errorText?: string;
+  required?: boolean;
+  width?: number;
+  multiline?: boolean;
+  keyField?: string;
+}

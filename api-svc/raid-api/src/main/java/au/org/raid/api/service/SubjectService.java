@@ -9,7 +9,6 @@ import au.org.raid.api.repository.RaidSubjectKeywordRepository;
 import au.org.raid.api.repository.RaidSubjectRepository;
 import au.org.raid.api.repository.SubjectTypeRepository;
 import au.org.raid.api.repository.SubjectTypeSchemaRepository;
-import au.org.raid.db.jooq.tables.records.RaidSubjectKeywordRecord;
 import au.org.raid.idl.raidv2.model.Subject;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -83,6 +82,10 @@ public class SubjectService {
     }
 
     public void update(final List<Subject> subjects, final String handle) {
+        final var raidSubjects = raidSubjectRepository.findAllByHandle(handle);
+
+        raidSubjects.forEach(s -> raidSubjectKeywordRepository.deleteByRaidSubjectId(s.getId()));
+
         raidSubjectRepository.deleteAllByHandle(handle);
         create(subjects, handle);
     }

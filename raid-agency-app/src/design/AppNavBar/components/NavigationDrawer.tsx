@@ -90,8 +90,7 @@ export default function NavigationDrawer() {
       <IconButton
         size="large"
         edge="start"
-        color="inherit"
-        aria-label="go home"
+        aria-label="toggle drawer"
         onClick={toggleDrawer(true)}
       >
         <MenuIcon />

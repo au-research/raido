@@ -19,20 +19,12 @@ raid:
       enabled: true
       delay: 150
   identifier:
-    name-prefix: http://raid.local/
     schema-uri: https://raid.org/
     license: Creative Commons CC-0
     landing-prefix: https://raid.org/
     global-url-prefix: https://hdl.handle.net
     registration-agency-identifier: https://ror.org/038sjwq14
     handle-url-prefix: http://test.static.raid.org.au/
-  db:
-    user: postgres
-    password: supersecret
-    host: localhost
-    port: 7432
-    name: raido
-    encryption-key: not-set
   spatial-coverage:
     schema-uri:
       geonames: https://www.geonames.org/
@@ -42,11 +34,6 @@ raid:
       username: geonames
   history:
     baseline-interval: 50
-  iam:
-    realm-uri: http://localhost:8001/realms/raid
-  orcid-integration:
-    raid-listener:
-      uri: https://orcid.test.raid.org.au/raid-update
 spring:
   jackson:
     default-property-inclusion: non_null
@@ -67,18 +54,19 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: ${raid.iam.realm-uri}
+            issuer-uri: ${raid.iam.realm-uri}
       client:
         registration:
           keycloak:
             client-id: raid-api-2
-            client-secret: Nr0HycAztrRSNehq9EZR2wKvqmpC3JfS
             authorization-grant-type: authorization_code
             scope: openid
         provider:
           keycloak:
             issuer-uri: ${raid.iam.realm-uri}
             user-name-attribute: preferred_username
+  profiles:
+    active: dev
 springdoc:
   swagger-ui:
     enabled: true

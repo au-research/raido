@@ -20,7 +20,7 @@ export default function ShowSubjectComponent({
   subject: Subject[] | undefined;
 }) {
   return (
-    <Card sx={{ borderLeft: "solid", borderLeftColor: "primary.main" }}>
+    <Card>
       <CardHeader title="Subjects" />
       <CardContent>
         <Stack gap={3}>

@@ -39,33 +39,41 @@ export default function ServicePointUsers({
       field: "firstName",
       headerName: "First name",
       width: 125,
-      renderCell: ({ row }) => {
-        return row.attributes.firstName;
-      },
+      renderCell: ({ row }) => (
+        <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+          {row.attributes.firstName}
+        </span>
+      ),
     },
     {
       field: "lastName",
       headerName: "Last name",
       width: 125,
-      renderCell: ({ row }) => {
-        return row.attributes.lastName;
-      },
+      renderCell: ({ row }) => (
+        <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+          {row.attributes.lastName}
+        </span>
+      ),
     },
     {
       field: "userName",
       headerName: "User name",
       width: 175,
-      renderCell: ({ row }) => {
-        return row.attributes.username;
-      },
+      renderCell: ({ row }) => (
+        <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+          {row.attributes.username}
+        </span>
+      ),
     },
     {
       field: "email",
       headerName: "Email",
       width: 175,
-      renderCell: ({ row }) => {
-        return row.attributes.email;
-      },
+      renderCell: ({ row }) => (
+        <span style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+          {row.attributes.email}
+        </span>
+      ),
     },
     {
       field: "roles",
@@ -136,11 +144,6 @@ export default function ServicePointUsers({
             startIcon={<CheckIcon />}
             disabled={!row?.roles?.includes("service-point-user")}
             onClick={() => {
-              console.log({
-                userId: row.id,
-                userGroupId: servicePointWithMembers?.groupId as string,
-                operation: "grant",
-              });
               modifyUserAccessMutation.mutate({
                 userId: row.id,
                 userGroupId: servicePointWithMembers?.groupId as string,

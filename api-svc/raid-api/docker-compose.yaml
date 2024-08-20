@@ -1,0 +1,26 @@
+include:
+  - '../../iam/docker-compose.yaml'
+services:
+  raid-api-db:
+    image: postgres:16.2
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U', 'postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - 7432:5432
+    environment:
+      POSTGRES_PASSWORD: supersecret
+      POSTGRES_DB: raido
+    volumes:
+      - '../db/src/main/resources/db/env/api_user:/docker-entrypoint-initdb.d'
+  mockserver:
+    image: mockserver/mockserver:5.15.0
+    ports:
+      - 1080:1080
+    environment:
+      MOCKSERVER_LOG_LEVEL: DEBUG
+      MOCKSERVER_INITIALIZATION_JSON_PATH: /config/init/expectations.json
+    volumes:
+      - ./docker-compose/mockserver/expectations.json:/config/init/expectations.json

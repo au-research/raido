@@ -1,5 +1,5 @@
 import { RaidDto } from "@/generated/raid";
-import { alternateIdentifierGenerator } from "@/entities/alternate-identifier/alternate-identifier-generator";
+import { alternateIdentifierGenerator } from "@/entities/alternate-identifier/data-components/alternate-identifier-generator";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
@@ -41,21 +41,14 @@ export default function FormAlternateIdentifiersComponent({
 
   return (
     <Card
-      variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: errors.alternateIdentifier
-          ? "error.main"
-          : "primary.main",
-        borderLeftWidth: errors.alternateIdentifier ? 5 : 3,
+        borderLeftWidth: errors.alternateIdentifier ? 3 : 0,
+        borderLeftColor: "error.main",
       }}
     >
       <CardHeader
-        title={
-          <Typography variant="h6" component="div">
-            Alternate Identifiers
-          </Typography>
-        }
+        title="Alternate Identifiers"
         action={
           <Tooltip title="Add Alternate Identifier" placement="right">
             <IconButton

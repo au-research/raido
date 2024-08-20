@@ -22,7 +22,7 @@ import {
   FieldErrors,
   useFieldArray,
 } from "react-hook-form";
-import LanguageSelector from "./reusable-inputs/LanguageSelector";
+import LanguageSelector from "../../../fields/LanguageSelector";
 
 export default function FormSubjectsKeywordsComponent({
   control,

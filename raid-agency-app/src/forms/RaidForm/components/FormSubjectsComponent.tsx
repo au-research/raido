@@ -70,7 +70,7 @@ function SubjectRootField({
 
         return (
           <>
-            <Card variant="outlined" sx={{ bgcolor: "transparent" }}>
+            <Card>
               <CardHeader
                 title={<Typography variant="h6">{subjectTitle}</Typography>}
                 action={
@@ -164,18 +164,14 @@ export default function FormSubjectsComponent({
 
   return (
     <Card
-      variant="outlined"
       sx={{
         borderLeft: "solid",
-        borderLeftColor: errors.subject ? "error.main" : "primary.main",
+        borderLeftWidth: errors.subject ? 3 : 0,
+        borderLeftColor: "error.main",
       }}
     >
       <CardHeader
-        title={
-          <Typography variant="h6" component="div">
-            Subjects
-          </Typography>
-        }
+        title="Subjects"
         action={
           <Tooltip title="Add Subject" placement="right">
             <IconButton aria-label="Add Subject" onClick={handleAddSubject}>

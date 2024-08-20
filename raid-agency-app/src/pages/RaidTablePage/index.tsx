@@ -73,7 +73,7 @@ export default function RaidTablePage({ title }: { title?: string }) {
         <></>
       )}
 
-      <Card sx={{ borderLeft: "solid", borderLeftColor: "primary.main" }}>
+      <Card>
         {title && <CardHeader title={title} />}
         <CardContent>
           <TableContainer>

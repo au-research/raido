@@ -17,7 +17,7 @@ export default function ShowDescriptionComponent({
   description: Description[] | undefined;
 }) {
   return (
-    <Card sx={{ borderLeft: "solid", borderLeftColor: "primary.main" }}>
+    <Card>
       <CardHeader title="Descriptions" />
       <CardContent>
         <Stack gap={3}>

@@ -91,7 +91,7 @@ export default function AnchorButtons({
   ];
   return (
     <Box>
-      <Card sx={{ borderLeft: "solid", borderLeftColor: "primary.main" }}>
+      <Card>
         <CardContent>
           <Grid container spacing={2}>
             {anchorButtonsDefinition.map((anchorButton, index) => {
@@ -118,7 +118,6 @@ export default function AnchorButtons({
                       fullWidth
                       sx={{
                         width: "100%",
-                        // color: theme.palette.text.primary,
                         borderLeftStyle: "solid",
                         borderLeftColor: anchorButton.errors
                           ? "error.main"

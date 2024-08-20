@@ -28,4 +28,10 @@ public class RaidSubjectKeywordRepository {
                 .where(RAID_SUBJECT_KEYWORD.RAID_SUBJECT_ID.eq(raidSubjectId))
                 .fetch();
     }
+
+    public void deleteByRaidSubjectId(final Integer raidSubjectId) {
+        dslContext.deleteFrom(RAID_SUBJECT_KEYWORD)
+                .where(RAID_SUBJECT_KEYWORD.RAID_SUBJECT_ID.eq(raidSubjectId))
+                .execute();
+    }
 }

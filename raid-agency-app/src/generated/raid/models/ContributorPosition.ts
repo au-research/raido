@@ -26,7 +26,7 @@ export interface ContributorPosition {
      */
     schemaUri: string;
     /**
-     * 
+     * Principal or Lead Investigator
      * @type {string}
      * @memberof ContributorPosition
      */
