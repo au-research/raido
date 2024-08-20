@@ -4,7 +4,7 @@ import {AppService} from './app.service';
 import {HealthModule} from './health/health.module';
 import {AuthGuard, KeycloakConnectModule} from "nest-keycloak-connect";
 import {APP_GUARD} from "@nestjs/core";
-import {keycloakConfig} from "../auth/KeycloakConfig";
+import {keycloakConfig} from "auth/KeycloakConfig";
 import {ConfigModule} from "@nestjs/config";
 import * as dotenv from 'dotenv';
 
