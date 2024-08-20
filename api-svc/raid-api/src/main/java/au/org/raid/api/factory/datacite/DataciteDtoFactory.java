@@ -2,6 +2,7 @@ package au.org.raid.api.factory.datacite;
 
 import au.org.raid.api.model.datacite.DataciteDto;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
+import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -31,6 +32,18 @@ public class DataciteDtoFactory {
 
     @SneakyThrows
     public DataciteDto create(RaidUpdateRequest request, String handle) {
+        final var dto =  new DataciteDto()
+                .setSchemaVersion(SCHEMA_VERSION)
+                .setType(TYPE)
+                .setAttributes(dataciteAttributesDtoFactory.create(request, handle));
+
+        dto.getDataciteIdentifiers().add(dataciteIdentifierFactory.create(handle, IDENTIFIER_TYPE));
+
+        return dto;
+    }
+
+    @SneakyThrows
+    public DataciteDto create(RaidDto request, String handle) {
         final var dto =  new DataciteDto()
                 .setSchemaVersion(SCHEMA_VERSION)
                 .setType(TYPE)
