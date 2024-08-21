@@ -140,6 +140,27 @@
     "schema_id": 1
   },
   {
+    "id": "3901",
+    "name": "Curriculum and pedagogy",
+    "description": "This group covers curriculum and pedagogy.",
+    "note": "a) Teacher education and the professional development of educators is included in Group 3904 Specialist studies in education.                                                                                                                                                                                                                                                                                                                                                                                              +\n b) Educational linguistics is included in Group 4704 Linguistics.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          +\n c) Engineering education is included in Group 4010 Engineering practice and education.",
+    "schema_id": 1
+  },
+  {
+    "id": "3904",
+    "name": "Specialist studies in education",
+    "description": "This group covers specialist studies in education.",
+    "note": "a) Education systems, including Māori primary and early childhood education, are included in Group 3903 Education systems.                                                                                                                                                                                                                                                                                                                                                                                 +\n b) Curriculum and pedagogy relating to specific subject areas is included in Group 3901 Curriculum and pedagogy.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           +\n c) Economics of education are included in Group 3801 Applied economics.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n d) Education policy is included in Group 3903 Education systems.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           +\n e) Educational psychology is included in Group 5201 Applied and developmental psychology.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  +\n f) Educational linguistics is included in Group 4704 Linguistics.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          +\n g) History and philosophy of education is included in Group 5002 History and philosophy of specific fields.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                +\n h) Teacher education and professional development of educators is included in Group 3903 Education systems.",
+    "schema_id": 1
+  },
+  {
+    "id": "320204",
+    "name": "Clinimetrics",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
     "id": "4502",
     "name": "Aboriginal and Torres Strait Islander education",
     "description": "This group covers all aspects of education related to Aboriginal and Torres Strait Islander.",
@@ -205,13 +226,6 @@
   {
     "id": "510601",
     "name": "Nuclear physics",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "420601",
-    "name": "Community child health",
     "description": "",
     "note": "",
     "schema_id": 1
@@ -672,6 +686,13 @@
     "schema_id": 1
   },
   {
+    "id": "420601",
+    "name": "Community child health",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
     "id": "4999",
     "name": "Other mathematical sciences",
     "description": "This group covers any mathematical sciences not elsewhere classified.",
@@ -942,20 +963,6 @@
     "name": "Cardiovascular medicine and haematology",
     "description": "This group covers cardiovascular medicine and haematology.",
     "note": "a) Pathology is included in Group 3202 Clinical sciences.",
-    "schema_id": 1
-  },
-  {
-    "id": "370607",
-    "name": "Magnetism and palaeomagnetism",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "370601",
-    "name": "Applied geophysics",
-    "description": "",
-    "note": "",
     "schema_id": 1
   },
   {
@@ -1269,6 +1276,20 @@
   {
     "id": "370606",
     "name": "Gravimetrics",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "370607",
+    "name": "Magnetism and palaeomagnetism",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "370601",
+    "name": "Applied geophysics",
     "description": "",
     "note": "",
     "schema_id": 1
@@ -1771,160 +1792,6 @@
     "schema_id": 1
   },
   {
-    "id": "480303",
-    "name": "Conflict of laws (incl. private international law)",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "450904",
-    "name": "Ngā mātauranga taiao o te Māori (Māori environmental knowledges)",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "450907",
-    "name": "Te pūtaiao taiao moana o te Māori (Māori marine environment science)",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "450906",
-    "name": "Te whakahaere whenua me te wai o te Māori (Māori land and water management)",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "450901",
-    "name": "Te ahuwhenua me ngā mahi ngahere o te Māori (Māori agriculture and forestry)",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "450903",
-    "name": "Te whāomoomo taiao o te Māori (Māori environmental conservation)",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "450902",
-    "name": "Ngā pūtaiao-ā-nuku o te Māori (Māori earth sciences)",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "460704",
-    "name": "Interactive narrative",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "460703",
-    "name": "Entertainment and gaming",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "460702",
-    "name": "Computer graphics",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "460701",
-    "name": "Computer aided design",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "460708",
-    "name": "Virtual and mixed reality",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "460707",
-    "name": "Sound and music computing",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "460706",
-    "name": "Serious games",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "460705",
-    "name": "Procedural content generation",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "401501",
-    "name": "Marine engineering",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "469999",
-    "name": "Other information and computing sciences not elsewhere classified",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "401505",
-    "name": "Special vehicles",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "401504",
-    "name": "Ship and platform structures (incl. maritime hydrodynamics)",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "401503",
-    "name": "Ocean engineering",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "401502",
-    "name": "Naval architecture",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "511001",
-    "name": "Accelerators",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
     "id": "3604",
     "name": "Performing arts",
     "description": "This group covers performing arts.",
@@ -2123,6 +1990,160 @@
   {
     "id": "440612",
     "name": "Urban geography",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "480303",
+    "name": "Conflict of laws (incl. private international law)",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "450904",
+    "name": "Ngā mātauranga taiao o te Māori (Māori environmental knowledges)",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "450907",
+    "name": "Te pūtaiao taiao moana o te Māori (Māori marine environment science)",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "450906",
+    "name": "Te whakahaere whenua me te wai o te Māori (Māori land and water management)",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "450901",
+    "name": "Te ahuwhenua me ngā mahi ngahere o te Māori (Māori agriculture and forestry)",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "450903",
+    "name": "Te whāomoomo taiao o te Māori (Māori environmental conservation)",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "450902",
+    "name": "Ngā pūtaiao-ā-nuku o te Māori (Māori earth sciences)",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "460704",
+    "name": "Interactive narrative",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "460703",
+    "name": "Entertainment and gaming",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "460702",
+    "name": "Computer graphics",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "460701",
+    "name": "Computer aided design",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "460708",
+    "name": "Virtual and mixed reality",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "460707",
+    "name": "Sound and music computing",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "460706",
+    "name": "Serious games",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "460705",
+    "name": "Procedural content generation",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "401501",
+    "name": "Marine engineering",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "469999",
+    "name": "Other information and computing sciences not elsewhere classified",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "401505",
+    "name": "Special vehicles",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "401504",
+    "name": "Ship and platform structures (incl. maritime hydrodynamics)",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "401503",
+    "name": "Ocean engineering",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "401502",
+    "name": "Naval architecture",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "511001",
+    "name": "Accelerators",
     "description": "",
     "note": "",
     "schema_id": 1
@@ -3255,6 +3276,13 @@
     "schema_id": 1
   },
   {
+    "id": "310603",
+    "name": "Fermentation",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
     "id": "3109",
     "name": "Zoology",
     "description": "This group covers zoology.",
@@ -3668,13 +3696,6 @@
     "schema_id": 1
   },
   {
-    "id": "451603",
-    "name": "Pacific Peoples cultural determinants of health",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
     "id": "4013",
     "name": "Geomatic engineering",
     "description": "This group covers geomatic engineering.",
@@ -3864,69 +3885,6 @@
     "schema_id": 1
   },
   {
-    "id": "450307",
-    "name": "Aboriginal and Torres Strait Islander marine environment science",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "450306",
-    "name": "Aboriginal and Torres Strait Islander land and water management",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "450303",
-    "name": "Aboriginal and Torres Strait Islander environmental conservation",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "450302",
-    "name": "Aboriginal and Torres Strait Islander earth sciences",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "450304",
-    "name": "Aboriginal and Torres Strait Islander environmental knowledges",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "450301",
-    "name": "Aboriginal and Torres Strait Islander agriculture and forestry",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "460102",
-    "name": "Applications in health",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "460101",
-    "name": "Applications in arts and humanities",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "460106",
-    "name": "Spatial data and applications",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
     "id": "3301",
     "name": "Architecture",
     "description": "This group covers architecture.",
@@ -4020,83 +3978,6 @@
   {
     "id": "509999",
     "name": "Other philosophy and religious studies not elsewhere classified",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "460105",
-    "name": "Applications in social sciences and education",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "460104",
-    "name": "Applications in physical sciences",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "460103",
-    "name": "Applications in life sciences",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "451609",
-    "name": "Pacific Peoples medicine and treatments",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "451608",
-    "name": "Pacific Peoples life course",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "451605",
-    "name": "Pacific Peoples epidemiology",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "451604",
-    "name": "Pacific Peoples diet and nutrition",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "451607",
-    "name": "Pacific Peoples health promotion",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "451606",
-    "name": "Pacific Peoples health policy",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "451601",
-    "name": "Pacific Peoples and disability",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "510502",
-    "name": "Medical physics",
     "description": "",
     "note": "",
     "schema_id": 1
@@ -4928,8 +4809,8 @@
     "schema_id": 1
   },
   {
-    "id": "510501",
-    "name": "Biological physics",
+    "id": "450801",
+    "name": "Ngā kōhanga reo (Māori curriculum and pedagogy)",
     "description": "",
     "note": "",
     "schema_id": 1
@@ -5355,6 +5236,160 @@
     "schema_id": 1
   },
   {
+    "id": "450307",
+    "name": "Aboriginal and Torres Strait Islander marine environment science",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "450306",
+    "name": "Aboriginal and Torres Strait Islander land and water management",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "450303",
+    "name": "Aboriginal and Torres Strait Islander environmental conservation",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "450302",
+    "name": "Aboriginal and Torres Strait Islander earth sciences",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "450304",
+    "name": "Aboriginal and Torres Strait Islander environmental knowledges",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "450301",
+    "name": "Aboriginal and Torres Strait Islander agriculture and forestry",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "460102",
+    "name": "Applications in health",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "460101",
+    "name": "Applications in arts and humanities",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "460106",
+    "name": "Spatial data and applications",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "460105",
+    "name": "Applications in social sciences and education",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "460104",
+    "name": "Applications in physical sciences",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "460103",
+    "name": "Applications in life sciences",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "451609",
+    "name": "Pacific Peoples medicine and treatments",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "451608",
+    "name": "Pacific Peoples life course",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "451605",
+    "name": "Pacific Peoples epidemiology",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "451604",
+    "name": "Pacific Peoples diet and nutrition",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "451607",
+    "name": "Pacific Peoples health promotion",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "451606",
+    "name": "Pacific Peoples health policy",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "451601",
+    "name": "Pacific Peoples and disability",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "510502",
+    "name": "Medical physics",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "510501",
+    "name": "Biological physics",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "451603",
+    "name": "Pacific Peoples cultural determinants of health",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
     "id": "451602",
     "name": "Pacific Peoples biomedical and clinical science",
     "description": "",
@@ -5693,6 +5728,13 @@
   {
     "id": "450802",
     "name": "Te Whāriki - te mātauranga kōhungahunga Māori (Māori early childhood education)",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "461099",
+    "name": "Library and information studies not elsewhere classified",
     "description": "",
     "note": "",
     "schema_id": 1
@@ -6328,20 +6370,6 @@
     "schema_id": 1
   },
   {
-    "id": "310603",
-    "name": "Fermentation",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "450801",
-    "name": "Ngā kōhanga reo (Māori curriculum and pedagogy)",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
     "id": "450804",
     "name": "Te mātauranga kura tuatoru Māori (Māori higher education)",
     "description": "",
@@ -6881,6 +6909,27 @@
     "schema_id": 1
   },
   {
+    "id": "420109",
+    "name": "Rehabilitation",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "420107",
+    "name": "Podiatry",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "420108",
+    "name": "Prosthetics and orthotics",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
     "id": "4101",
     "name": "Climate change impacts and adaptation",
     "description": "This group covers climate change impacts and adaptation.",
@@ -7030,13 +7079,6 @@
   {
     "id": "401807",
     "name": "Nanomaterials",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "410302",
-    "name": "Biological control",
     "description": "",
     "note": "",
     "schema_id": 1
@@ -7224,34 +7266,6 @@
     "schema_id": 1
   },
   {
-    "id": "461099",
-    "name": "Library and information studies not elsewhere classified",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "420109",
-    "name": "Rehabilitation",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "420107",
-    "name": "Podiatry",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "420108",
-    "name": "Prosthetics and orthotics",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
     "id": "410301",
     "name": "Biodiscovery",
     "description": "",
@@ -7401,6 +7415,13 @@
   {
     "id": "410306",
     "name": "Environmental nanotechnology and nanometrology",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "410302",
+    "name": "Biological control",
     "description": "",
     "note": "",
     "schema_id": 1
@@ -8365,27 +8386,6 @@
     "schema_id": 1
   },
   {
-    "id": "4705",
-    "name": "Literary studies",
-    "description": "This group covers literature and literary studies.",
-    "note": "a) Writing is included in Division 36 Creative arts and writing.                                                                                                                                                                                                                                                                                                                                                                                                                                                          +\n b) Language studies are included in Group 4703 Language studies.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           +\n c) Biography is included in Group 4303 Historical studies.",
-    "schema_id": 1
-  },
-  {
-    "id": "451507",
-    "name": "Pacific Peoples marine environment science",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "451502",
-    "name": "Pacific Peoples earth sciences",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
     "id": "3801",
     "name": "Applied economics",
     "description": "This group covers applied economics.",
@@ -8745,6 +8745,83 @@
   {
     "id": "330307",
     "name": "Ergonomics design",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "410204",
+    "name": "Ecosystem services (incl. pollination)",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "330309",
+    "name": "Industrial and product design",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "410205",
+    "name": "Fire ecology",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "300911",
+    "name": "Veterinary pharmacology",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "410206",
+    "name": "Landscape ecology",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "300912",
+    "name": "Veterinary surgery",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "330303",
+    "name": "Design for disaster relief",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "400411",
+    "name": "Water treatment processes",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "4705",
+    "name": "Literary studies",
+    "description": "This group covers literature and literary studies.",
+    "note": "a) Writing is included in Division 36 Creative arts and writing.                                                                                                                                                                                                                                                                                                                                                                                                                                                          +\n b) Language studies are included in Group 4703 Language studies.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           +\n c) Biography is included in Group 4303 Historical studies.",
+    "schema_id": 1
+  },
+  {
+    "id": "451507",
+    "name": "Pacific Peoples marine environment science",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "451502",
+    "name": "Pacific Peoples earth sciences",
     "description": "",
     "note": "",
     "schema_id": 1
@@ -9347,62 +9424,6 @@
   {
     "id": "320503",
     "name": "Medical biochemistry - inorganic elements and compounds",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "410204",
-    "name": "Ecosystem services (incl. pollination)",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "330309",
-    "name": "Industrial and product design",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "410205",
-    "name": "Fire ecology",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "300911",
-    "name": "Veterinary pharmacology",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "410206",
-    "name": "Landscape ecology",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "300912",
-    "name": "Veterinary surgery",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "330303",
-    "name": "Design for disaster relief",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "400411",
-    "name": "Water treatment processes",
     "description": "",
     "note": "",
     "schema_id": 1
@@ -10073,6 +10094,13 @@
     "schema_id": 1
   },
   {
+    "id": "370101",
+    "name": "Adverse weather events",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
     "id": "400805",
     "name": "Electrical energy transmission, networks and systems",
     "description": "",
@@ -10208,20 +10236,6 @@
   {
     "id": "410602",
     "name": "Pedology and pedometrics",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "440302",
-    "name": "Fertility",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "461206",
-    "name": "Software architecture",
     "description": "",
     "note": "",
     "schema_id": 1
@@ -10586,6 +10600,13 @@
   {
     "id": "401703",
     "name": "Energy generation, conversion and storage (excl. chemical and electrical)",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "380302",
+    "name": "Macroeconomic theory",
     "description": "",
     "note": "",
     "schema_id": 1
@@ -11214,6 +11235,20 @@
     "schema_id": 1
   },
   {
+    "id": "440302",
+    "name": "Fertility",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "461206",
+    "name": "Software architecture",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
     "id": "401199",
     "name": "Environmental engineering not elsewhere classified",
     "description": "",
@@ -11368,13 +11403,6 @@
     "schema_id": 1
   },
   {
-    "id": "370101",
-    "name": "Adverse weather events",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
     "id": "300699",
     "name": "Food sciences not elsewhere classified",
     "description": "",
@@ -11463,13 +11491,6 @@
     "name": "Bioinformatics and computational biology",
     "description": "This group covers bioinformatics and computational biology.",
     "note": "a) Metabolomic chemistry is included in Group 3401 Analytical chemistry.                                                                                                                                                                                                                                                                                                                                                                                                                 +\n b) Gene mapping is included in Group 3105 Genetics.",
-    "schema_id": 1
-  },
-  {
-    "id": "480412",
-    "name": "Medical and health law",
-    "description": "",
-    "note": "",
     "schema_id": 1
   },
   {
@@ -11734,13 +11755,6 @@
   {
     "id": "451823",
     "name": "Pacific Peoples sociological studies",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "380302",
-    "name": "Macroeconomic theory",
     "description": "",
     "note": "",
     "schema_id": 1
@@ -13272,6 +13286,13 @@
     "schema_id": 1
   },
   {
+    "id": "480412",
+    "name": "Medical and health law",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
     "id": "480411",
     "name": "Media and communication law",
     "description": "",
@@ -14266,6 +14287,20 @@
     "schema_id": 1
   },
   {
+    "id": "350402",
+    "name": "Hospitality management",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "350403",
+    "name": "Real estate and valuation services",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
     "id": "3004",
     "name": "Crop and pasture production",
     "description": "This group covers the sciences and technologies supporting the production of crops, pastures and grains.                                                                                                                                                                                                                                                                                                                                                                                                                                                            +\n It includes:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               +\n • agronomy;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                +\n • genetics and field protection procedures for crop and pasture production;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                +\n • post harvest treatment transportation of crops and grains; and                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           +\n • weed science",
@@ -14303,20 +14338,6 @@
   {
     "id": "389901",
     "name": "Comparative economic systems",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "450199",
-    "name": "Aboriginal and Torres Strait Islander culture, language and history not elsewhere classified",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "380299",
-    "name": "Econometrics not elsewhere classified",
     "description": "",
     "note": "",
     "schema_id": 1
@@ -14630,20 +14651,6 @@
     "schema_id": 1
   },
   {
-    "id": "350402",
-    "name": "Hospitality management",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "350403",
-    "name": "Real estate and valuation services",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
     "id": "360203",
     "name": "Professional writing and journalism practice",
     "description": "",
@@ -14770,6 +14777,20 @@
     "schema_id": 1
   },
   {
+    "id": "450199",
+    "name": "Aboriginal and Torres Strait Islander culture, language and history not elsewhere classified",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "380299",
+    "name": "Econometrics not elsewhere classified",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
     "id": "3202",
     "name": "Clinical sciences",
     "description": "This group covers specific clinical aspects of medicine, including causes, diagnosis, treatment and management of specific diseases and conditions.",
@@ -14889,6 +14910,20 @@
     "schema_id": 1
   },
   {
+    "id": "3009",
+    "name": "Veterinary sciences",
+    "description": "This group covers veterinary sciences practised on livestock for primary production, domestic, sporting and other uses.",
+    "note": "a) Field procedures to protect animals against pests and pathogens are included in Group 3003 Animal production.                                                                                                                                                                                                                                                                                                                                  +\n b) Biological or life sciences associated with human health and medicine are included in Division 31 Biological sciences.",
+    "schema_id": 1
+  },
+  {
+    "id": "3007",
+    "name": "Forestry sciences",
+    "description": "This group covers forestry sciences and silviculture.",
+    "note": "a) Management of forests in natural environments other than for forestry production is included in Group 4104 Environmental management.",
+    "schema_id": 1
+  },
+  {
     "id": "3104",
     "name": "Evolutionary biology",
     "description": "This group covers evolutionary biology, including biogeography and adaptation.",
@@ -14900,20 +14935,6 @@
     "name": "Genetics",
     "description": "This group covers genetics and heredity.",
     "note": "a) Microbial genetics is included in Group 3107 Microbiology.                                                                                                                                                                                                                                                                                                                                                                                                                                                                               +\n b) Animal genetics associated with animal reproduction is included in Group 3003 Animal production.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        +\n c) Genetics of agricultural crops (excl. genetic engineering) is included in Groups 3004 Crop and pasture production and 3008 Horticultural production.                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n d) Genetic engineering of agricultural crops is included in Group 3001 Agricultural biotechnology.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         +\n e) Genetics associated with human health and medicine is included in Groups 3202 Clinical sciences and 3211 Oncology and carcinogenesis.                                                                                                                                                                                                                                                                                                                                                                                                                                                                   +\n f) Phylogenetic networks, ontologies and statistical and quantitative genetics are included in Group 3102 Bioinformatics and computational biology.                                                                                                                                                                                                                                                                                                                                                                                                                                                        +\n g) Phylogeny is included in Group 3104 Evolutionary biology.",
-    "schema_id": 1
-  },
-  {
-    "id": "480499",
-    "name": "Law in context not elsewhere classified",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "450608",
-    "name": "Aboriginal and Torres Strait Islander knowledge management methods",
-    "description": "",
-    "note": "",
     "schema_id": 1
   },
   {
@@ -15064,20 +15085,6 @@
     "schema_id": 1
   },
   {
-    "id": "3009",
-    "name": "Veterinary sciences",
-    "description": "This group covers veterinary sciences practised on livestock for primary production, domestic, sporting and other uses.",
-    "note": "a) Field procedures to protect animals against pests and pathogens are included in Group 3003 Animal production.                                                                                                                                                                                                                                                                                                                                  +\n b) Biological or life sciences associated with human health and medicine are included in Division 31 Biological sciences.",
-    "schema_id": 1
-  },
-  {
-    "id": "3007",
-    "name": "Forestry sciences",
-    "description": "This group covers forestry sciences and silviculture.",
-    "note": "a) Management of forests in natural environments other than for forestry production is included in Group 4104 Environmental management.",
-    "schema_id": 1
-  },
-  {
     "id": "3705",
     "name": "Geology",
     "description": "This group covers geology.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              +\n It includes palaeontology, including palaeozoology, palaeobotany and palynology, other than that associated with palaeoecological studies.",
@@ -15127,6 +15134,13 @@
     "schema_id": 1
   },
   {
+    "id": "5203",
+    "name": "Clinical and health psychology",
+    "description": "This group covers clinical and health psychology. It includes the detection, aetiology, treatment and prevention of mental health problems and psychological and behavioural processes in health and illness.",
+    "note": "a) Psychiatry where chemical interventions are employed to modify behaviour is included in 3202 Clinical sciences.                                                                                                                                                                                                                               +\n b) Research investigating mental health services is included in the Group 4203 Health services and systems.",
+    "schema_id": 1
+  },
+  {
     "id": "3403",
     "name": "Macromolecular and materials chemistry",
     "description": "This group covers macromolecular and materials chemistry.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                +\n It includes nanochemistry.",
@@ -15152,6 +15166,20 @@
     "name": "Heritage, archive and museum studies",
     "description": "This group covers heritage, archive and museum studies. It includes heritage and cultural conservation.",
     "note": "a) Librarianship is included in Group 4610 Library and information studies.                                                                                                                                                                                                                                                                                                                                                                      +\n b) Cultural studies are included in Group 4702 Cultural studies.",
+    "schema_id": 1
+  },
+  {
+    "id": "480499",
+    "name": "Law in context not elsewhere classified",
+    "description": "",
+    "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "450608",
+    "name": "Aboriginal and Torres Strait Islander knowledge management methods",
+    "description": "",
+    "note": "",
     "schema_id": 1
   },
   {
@@ -15225,20 +15253,6 @@
     "schema_id": 1
   },
   {
-    "id": "5203",
-    "name": "Clinical and health psychology",
-    "description": "This group covers clinical and health psychology. It includes the detection, aetiology, treatment and prevention of mental health problems and psychological and behavioural processes in health and illness.",
-    "note": "a) Psychiatry where chemical interventions are employed to modify behaviour is included in 3202 Clinical sciences.                                                                                                                                                                                                                               +\n b) Research investigating mental health services is included in the Group 4203 Health services and systems.",
-    "schema_id": 1
-  },
-  {
-    "id": "3003",
-    "name": "Animal production",
-    "description": "This group covers the sciences and technologies supporting the primary production of livestock, including birds and poultry.                                                                                                                                                                                                                                                                                                                                                                                                                                                  +\n It includes:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               +\n • bees and apiary culture;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 +\n • egg production; and                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      +\n • animal production for domestic or sporting uses.",
-    "note": "a) The culture and production of marine and freshwater animals, including fish, crustaceans and shellfish, is included in Group 3005 Fisheries sciences.                                                                                                                                                                                                                                                                                                                                                                                              +\n b) Veterinary sciences is included in Group 3009 Veterinary sciences.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      +\n c) Food sciences, including food processing and packaging, is included in Group 3006 Food sciences.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        +\n d) Genetic engineering and cloning of livestock is included in Group 3001 Agricultural biotechnology.",
-    "schema_id": 1
-  },
-  {
     "id": "3506",
     "name": "Marketing",
     "description": "This group covers marketing.",
@@ -15304,27 +15318,6 @@
   {
     "id": "370999",
     "name": "Physical geography and environmental geoscience not elsewhere classified",
-    "description": "",
-    "note": "",
-    "schema_id": 1
-  },
-  {
-    "id": "3901",
-    "name": "Curriculum and pedagogy",
-    "description": "This group covers curriculum and pedagogy.",
-    "note": "a) Teacher education and the professional development of educators is included in Group 3904 Specialist studies in education.                                                                                                                                                                                                                                                                                                                                                                                              +\n b) Educational linguistics is included in Group 4704 Linguistics.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          +\n c) Engineering education is included in Group 4010 Engineering practice and education.",
-    "schema_id": 1
-  },
-  {
-    "id": "3904",
-    "name": "Specialist studies in education",
-    "description": "This group covers specialist studies in education.",
-    "note": "a) Education systems, including Māori primary and early childhood education, are included in Group 3903 Education systems.                                                                                                                                                                                                                                                                                                                                                                                 +\n b) Curriculum and pedagogy relating to specific subject areas is included in Group 3901 Curriculum and pedagogy.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           +\n c) Economics of education are included in Group 3801 Applied economics.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    +\n d) Education policy is included in Group 3903 Education systems.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           +\n e) Educational psychology is included in Group 5201 Applied and developmental psychology.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  +\n f) Educational linguistics is included in Group 4704 Linguistics.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          +\n g) History and philosophy of education is included in Group 5002 History and philosophy of specific fields.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                +\n h) Teacher education and professional development of educators is included in Group 3903 Education systems.",
-    "schema_id": 1
-  },
-  {
-    "id": "320204",
-    "name": "Clinimetrics",
     "description": "",
     "note": "",
     "schema_id": 1
@@ -15404,6 +15397,13 @@
     "name": "Computational methods in fluid flow, heat and mass transfer (incl. computational fluid dynamics)",
     "description": "",
     "note": "",
+    "schema_id": 1
+  },
+  {
+    "id": "3003",
+    "name": "Animal production",
+    "description": "This group covers the sciences and technologies supporting the primary production of livestock, including birds and poultry.                                                                                                                                                                                                                                                                                                                                                                                                                                                  +\n It includes:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               +\n • bees and apiary culture;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 +\n • egg production; and                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      +\n • animal production for domestic or sporting uses.",
+    "note": "a) The culture and production of marine and freshwater animals, including fish, crustaceans and shellfish, is included in Group 3005 Fisheries sciences.                                                                                                                                                                                                                                                                                                                                                                                              +\n b) Veterinary sciences is included in Group 3009 Veterinary sciences.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      +\n c) Food sciences, including food processing and packaging, is included in Group 3006 Food sciences.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        +\n d) Genetic engineering and cloning of livestock is included in Group 3001 Agricultural biotechnology.",
     "schema_id": 1
   },
   {

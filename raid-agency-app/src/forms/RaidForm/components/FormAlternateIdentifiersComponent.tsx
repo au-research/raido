@@ -1,5 +1,5 @@
 import { RaidDto } from "@/generated/raid";
-import { alternateIdentifierGenerator } from "@/entities/alternate-identifier/alternate-identifier-generator";
+import { alternateIdentifierGenerator } from "@/entities/alternate-identifier/data-components/alternate-identifier-generator";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,

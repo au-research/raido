@@ -144,11 +144,6 @@ export default function ServicePointUsers({
             startIcon={<CheckIcon />}
             disabled={!row?.roles?.includes("service-point-user")}
             onClick={() => {
-              console.log({
-                userId: row.id,
-                userGroupId: servicePointWithMembers?.groupId as string,
-                operation: "grant",
-              });
               modifyUserAccessMutation.mutate({
                 userId: row.id,
                 userGroupId: servicePointWithMembers?.groupId as string,

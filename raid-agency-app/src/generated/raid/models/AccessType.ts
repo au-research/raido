@@ -20,7 +20,7 @@ import { exists, mapValues } from '../runtime';
  */
 export interface AccessType {
     /**
-     * 
+     * Open access
      * @type {string}
      * @memberof AccessType
      */
