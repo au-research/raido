@@ -11,7 +11,7 @@ import au.org.raid.api.repository.ServicePointRepository;
 import au.org.raid.api.service.Handle;
 import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.RaidIngestService;
-import au.org.raid.api.service.RaidListenerService;
+import au.org.raid.api.service.RaidListenerClient;
 import au.org.raid.api.service.datacite.DataciteService;
 import au.org.raid.api.service.raid.id.IdentifierParser;
 import au.org.raid.api.util.FileUtil;
@@ -69,7 +69,7 @@ class RaidServiceTest {
     @Mock
     private DataciteService dataciteService;
     @Mock
-    private RaidListenerService raidListenerService;
+    private RaidListenerClient raidListenerClient;
     @Mock
     private RaidListenerMessageFactory raidListenerMessageFactory;
     @Mock
@@ -110,7 +110,7 @@ class RaidServiceTest {
         raidService.mint(createRaidRequest, servicePointId);
         verify(raidIngestService).create(raidDto);
         verify(dataciteService).mint(createRaidRequest, handle.toString(), repositoryId, password);
-        verify(raidListenerService).post(raidListenerMessage);
+        verify(raidListenerClient).post(raidListenerMessage);
 
     }
 

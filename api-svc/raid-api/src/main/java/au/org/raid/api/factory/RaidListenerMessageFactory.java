@@ -8,11 +8,13 @@ import java.util.List;
 
 @Component
 public class RaidListenerMessageFactory {
-    public RaidListenerMessage create(final String raidName, final String email, final List<Contributor> contributors) {
+    public RaidListenerMessage create(final String raidName, final String email, final String id, final List<Contributor> contributors, final boolean delete) {
         return RaidListenerMessage.builder()
                 .raidName(raidName)
                 .email(email)
+                .id(id)
                 .contributors(contributors)
+                .delete(delete)
                 .build();
     }
 }

@@ -15,6 +15,8 @@ import java.util.List;
 public class RaidListenerMessage {
     private String raidName;
     private String email;
+    private String id;
+    private boolean delete;
     private List<Contributor> contributors;
 }
 
