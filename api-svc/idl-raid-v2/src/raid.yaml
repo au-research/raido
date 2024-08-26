@@ -469,7 +469,9 @@ components:
         status:
           type: string
         email:
-            type: string
+          type: string
+        uuid:
+          type: string
         position:
           type: array
           items:

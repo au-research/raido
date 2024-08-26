@@ -25,7 +25,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,8 +55,6 @@ public class RaidService {
         mintHandle(raid, servicePointRecord, 0);
 
         raidListenerService.create(raid.getIdentifier().getId(), raid.getContributor());
-
-        raid.setContributor(Collections.emptyList());
 
         final var raidDto = raidHistoryService.save(raid);
         raidIngestService.create(raidDto);
@@ -107,7 +104,6 @@ public class RaidService {
         }
 
         raidListenerService.update(raid.getIdentifier().getId(), raid.getContributor(), existing.getContributor());
-        raid.setContributor(Collections.emptyList());
 
         final var raidDto = raidHistoryService.save(raid);
 

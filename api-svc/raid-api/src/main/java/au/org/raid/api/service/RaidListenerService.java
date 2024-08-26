@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -19,19 +19,18 @@ public class RaidListenerService {
     private final RaidChecksumService checksumService;
 
     public void create(final String handle, final List<Contributor> contributors) {
-        contributors.stream()
-                .map(Contributor::getEmail)
-                .distinct()
-                .forEach(email -> {
+        contributors
+                .forEach(contributor -> {
+                    contributor.uuid(UUID.randomUUID().toString());
+                    contributor.setStatus("PENDING");
                     final var message = raidListenerMessageFactory.create(
                             handle,
-                            email,
-                            null,
-                            contributors.stream()
-                                    .filter(contributor -> contributor.getEmail().equals(email)).collect(Collectors.toList()),
+                            contributor,
                             false
                     );
                     raidListenerClient.post(message);
+
+                    contributor.email(null);
                 });
     }
 
@@ -41,22 +40,24 @@ public class RaidListenerService {
                 .toList();
 
         final var requestOrcids = contributors.stream()
+                //TODO: check orcid exists in contributor table
                 .map(Contributor::getId)
                 .filter(Objects::nonNull)
                 .toList();
 
         final var contributorsToDelete = existingContributors.stream()
+                .filter(contributor -> contributor.getId() != null)
                 .filter(contributor -> !requestOrcids.contains(contributor.getId()))
                 .toList();
 
         final var contributorsToUpdate = new ArrayList<Contributor>();
 
         for (final var contributor : contributors) {
-            final var extant = existingContributors.stream().filter(c -> c.getId().equals(contributor.getId())).findFirst();
+            final var extant = existingContributors.stream().filter(c -> c.getUuid().equals(contributor.getUuid())).findFirst();
 
             if (extant.isPresent()) {
                 final var contributorChecksum = checksumService.create(contributor);
-                final var extantChecksum = checksumService.create(extant);
+                final var extantChecksum = checksumService.create(extant.get());
 
                 if (!contributorChecksum.equals(extantChecksum)) {
                     contributorsToUpdate.add(contributor);
@@ -64,50 +65,34 @@ public class RaidListenerService {
             }
         }
 
-        contributorsToCreate.stream()
-                .map(Contributor::getEmail)
-                .distinct()
-                .forEach(email -> {
+        contributorsToCreate
+                .forEach(contributor -> {
                     final var message = raidListenerMessageFactory.create(
                             handle,
-                            email,
-                            null,
-                            contributors.stream()
-                                    .filter(contributor -> contributor.getEmail().equals(email)).collect(Collectors.toList()),
+                            contributor,
                             false
                     );
                     raidListenerClient.post(message);
                 });
 
-        contributorsToDelete.stream()
-                .map(Contributor::getId)
-                .distinct()
-                .forEach(id -> {
+        contributorsToDelete
+                .forEach(contributor -> {
                     final var message = raidListenerMessageFactory.create(
                             handle,
-                            null,
-                            id,
-                            contributors.stream()
-                                    .filter(contributor -> contributor.getId().equals(id)).collect(Collectors.toList()),
+                            contributor,
                             true
                     );
                     raidListenerClient.post(message);
                 });
 
-        contributorsToUpdate.stream()
-                .map(Contributor::getId)
-                .distinct()
-                .forEach(id -> {
+        contributorsToUpdate
+                .forEach(contributor -> {
                     final var message = raidListenerMessageFactory.create(
                             handle,
-                            null,
-                            id,
-                            contributors.stream()
-                                    .filter(contributor -> contributor.getId().equals(id)).collect(Collectors.toList()),
+                            contributor,
                             false
                     );
                     raidListenerClient.post(message);
                 });
-
     }
 }

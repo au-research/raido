@@ -47,7 +47,7 @@ public class Contributor extends TableImpl<ContributorRecord> {
     /**
      * The column <code>api_svc.contributor.pid</code>.
      */
-    public final TableField<ContributorRecord, String> PID = createField(DSL.name("pid"), SQLDataType.VARCHAR.nullable(false), this, "");
+    public final TableField<ContributorRecord, String> PID = createField(DSL.name("pid"), SQLDataType.VARCHAR, this, "");
 
     /**
      * The column <code>api_svc.contributor.schema_id</code>.
@@ -55,14 +55,14 @@ public class Contributor extends TableImpl<ContributorRecord> {
     public final TableField<ContributorRecord, Integer> SCHEMA_ID = createField(DSL.name("schema_id"), SQLDataType.INTEGER.nullable(false), this, "");
 
     /**
-     * The column <code>api_svc.contributor.email</code>.
+     * The column <code>api_svc.contributor.uuid</code>.
      */
-    public final TableField<ContributorRecord, String> EMAIL = createField(DSL.name("email"), SQLDataType.VARCHAR, this, "");
+    public final TableField<ContributorRecord, String> UUID = createField(DSL.name("uuid"), SQLDataType.VARCHAR, this, "");
 
     /**
-     * The column <code>api_svc.contributor.token</code>.
+     * The column <code>api_svc.contributor.status</code>.
      */
-    public final TableField<ContributorRecord, String> TOKEN = createField(DSL.name("token"), SQLDataType.VARCHAR, this, "");
+    public final TableField<ContributorRecord, String> STATUS = createField(DSL.name("status"), SQLDataType.VARCHAR, this, "");
 
     private Contributor(Name alias, Table<ContributorRecord> aliased) {
         this(alias, aliased, null);

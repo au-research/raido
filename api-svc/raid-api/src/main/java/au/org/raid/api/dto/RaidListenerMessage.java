@@ -6,17 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class RaidListenerMessage {
     private String raidName;
-    private String email;
-    private String id;
+    private Contributor contributor;
     private boolean delete;
-    private List<Contributor> contributors;
 }
 

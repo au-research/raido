@@ -66,32 +66,32 @@ public class ContributorRecord extends UpdatableRecordImpl<ContributorRecord> im
     }
 
     /**
-     * Setter for <code>api_svc.contributor.email</code>.
+     * Setter for <code>api_svc.contributor.uuid</code>.
      */
-    public ContributorRecord setEmail(String value) {
+    public ContributorRecord setUuid(String value) {
         set(3, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.contributor.email</code>.
+     * Getter for <code>api_svc.contributor.uuid</code>.
      */
-    public String getEmail() {
+    public String getUuid() {
         return (String) get(3);
     }
 
     /**
-     * Setter for <code>api_svc.contributor.token</code>.
+     * Setter for <code>api_svc.contributor.status</code>.
      */
-    public ContributorRecord setToken(String value) {
+    public ContributorRecord setStatus(String value) {
         set(4, value);
         return this;
     }
 
     /**
-     * Getter for <code>api_svc.contributor.token</code>.
+     * Getter for <code>api_svc.contributor.status</code>.
      */
-    public String getToken() {
+    public String getStatus() {
         return (String) get(4);
     }
 
@@ -135,12 +135,12 @@ public class ContributorRecord extends UpdatableRecordImpl<ContributorRecord> im
 
     @Override
     public Field<String> field4() {
-        return Contributor.CONTRIBUTOR.EMAIL;
+        return Contributor.CONTRIBUTOR.UUID;
     }
 
     @Override
     public Field<String> field5() {
-        return Contributor.CONTRIBUTOR.TOKEN;
+        return Contributor.CONTRIBUTOR.STATUS;
     }
 
     @Override
@@ -160,12 +160,12 @@ public class ContributorRecord extends UpdatableRecordImpl<ContributorRecord> im
 
     @Override
     public String component4() {
-        return getEmail();
+        return getUuid();
     }
 
     @Override
     public String component5() {
-        return getToken();
+        return getStatus();
     }
 
     @Override
@@ -185,12 +185,12 @@ public class ContributorRecord extends UpdatableRecordImpl<ContributorRecord> im
 
     @Override
     public String value4() {
-        return getEmail();
+        return getUuid();
     }
 
     @Override
     public String value5() {
-        return getToken();
+        return getStatus();
     }
 
     @Override
@@ -213,13 +213,13 @@ public class ContributorRecord extends UpdatableRecordImpl<ContributorRecord> im
 
     @Override
     public ContributorRecord value4(String value) {
-        setEmail(value);
+        setUuid(value);
         return this;
     }
 
     @Override
     public ContributorRecord value5(String value) {
-        setToken(value);
+        setStatus(value);
         return this;
     }
 
@@ -247,13 +247,13 @@ public class ContributorRecord extends UpdatableRecordImpl<ContributorRecord> im
     /**
      * Create a detached, initialised ContributorRecord
      */
-    public ContributorRecord(Integer id, String pid, Integer schemaId, String email, String token) {
+    public ContributorRecord(Integer id, String pid, Integer schemaId, String uuid, String status) {
         super(Contributor.CONTRIBUTOR);
 
         setId(id);
         setPid(pid);
         setSchemaId(schemaId);
-        setEmail(email);
-        setToken(token);
+        setUuid(uuid);
+        setStatus(status);
     }
 }

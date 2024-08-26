@@ -1,10 +1,8 @@
 begin transaction;
 
 alter table api_svc.contributor
-    add column email varchar,
-    add column token varchar;
-
-alter table api_svc.raid_contributor
-    add column status varchar;
+    add column uuid varchar,
+    add column status varchar,
+    alter column pid drop not null;
 
 end transaction;

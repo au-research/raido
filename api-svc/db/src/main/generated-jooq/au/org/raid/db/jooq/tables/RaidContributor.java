@@ -64,11 +64,6 @@ public class RaidContributor extends TableImpl<RaidContributorRecord> {
      */
     public final TableField<RaidContributorRecord, Boolean> CONTACT = createField(DSL.name("contact"), SQLDataType.BOOLEAN, this, "");
 
-    /**
-     * The column <code>api_svc.raid_contributor.status</code>.
-     */
-    public final TableField<RaidContributorRecord, String> STATUS = createField(DSL.name("status"), SQLDataType.VARCHAR, this, "");
-
     private RaidContributor(Name alias, Table<RaidContributorRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -185,18 +180,18 @@ public class RaidContributor extends TableImpl<RaidContributorRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row6 type methods
+    // Row5 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row6<Integer, String, Integer, Boolean, Boolean, String> fieldsRow() {
-        return (Row6) super.fieldsRow();
+    public Row5<Integer, String, Integer, Boolean, Boolean> fieldsRow() {
+        return (Row5) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function6<? super Integer, ? super String, ? super Integer, ? super Boolean, ? super Boolean, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function5<? super Integer, ? super String, ? super Integer, ? super Boolean, ? super Boolean, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -204,7 +199,7 @@ public class RaidContributor extends TableImpl<RaidContributorRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function6<? super Integer, ? super String, ? super Integer, ? super Boolean, ? super Boolean, ? super String, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function5<? super Integer, ? super String, ? super Integer, ? super Boolean, ? super Boolean, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }

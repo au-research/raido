@@ -1,17 +1,15 @@
 package au.org.raid.api.service.raid;
 
-import au.org.raid.api.dto.RaidListenerMessage;
 import au.org.raid.api.exception.ValidationFailureException;
 import au.org.raid.api.factory.HandleFactory;
 import au.org.raid.api.factory.IdFactory;
-import au.org.raid.api.factory.RaidListenerMessageFactory;
 import au.org.raid.api.factory.RaidRecordFactory;
 import au.org.raid.api.repository.RaidRepository;
 import au.org.raid.api.repository.ServicePointRepository;
 import au.org.raid.api.service.Handle;
 import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.RaidIngestService;
-import au.org.raid.api.service.RaidListenerClient;
+import au.org.raid.api.service.RaidListenerService;
 import au.org.raid.api.service.datacite.DataciteService;
 import au.org.raid.api.service.raid.id.IdentifierParser;
 import au.org.raid.api.util.FileUtil;
@@ -69,9 +67,7 @@ class RaidServiceTest {
     @Mock
     private DataciteService dataciteService;
     @Mock
-    private RaidListenerClient raidListenerClient;
-    @Mock
-    private RaidListenerMessageFactory raidListenerMessageFactory;
+    private RaidListenerService raidListenerService;
     @Mock
     private HandleFactory handleFactory;
     @InjectMocks
@@ -79,7 +75,7 @@ class RaidServiceTest {
 
     @Test
     @DisplayName("Mint a raid")
-    void mintRaidV1() throws IOException {
+    void mintRaid() throws IOException {
         final long servicePointId = 123;
         final var prefix = "_prefix";
         final var suffix = "_suffix";
@@ -87,7 +83,6 @@ class RaidServiceTest {
         final var createRaidRequest = createRaidRequest();
         final var repositoryId = "repository-id";
         final var password = "_password";
-        final var raidListenerMessage = new RaidListenerMessage();
 
         final var servicePointRecord = new ServicePointRecord()
                 .setPrefix(prefix)
@@ -98,8 +93,6 @@ class RaidServiceTest {
 
         final var id = new Id().id(handle.toString());
 
-        when(raidListenerMessageFactory.create(handle.toString(), "someone@example.org", createRaidRequest.getContributor()))
-                .thenReturn(raidListenerMessage);
 
         when(servicePointRepository.findById(servicePointId)).thenReturn(Optional.of(servicePointRecord));
         when(handleFactory.createWithPrefix(prefix)).thenReturn(handle);
@@ -110,13 +103,13 @@ class RaidServiceTest {
         raidService.mint(createRaidRequest, servicePointId);
         verify(raidIngestService).create(raidDto);
         verify(dataciteService).mint(createRaidRequest, handle.toString(), repositoryId, password);
-        verify(raidListenerClient).post(raidListenerMessage);
+        verify(raidListenerService).create(handle.toString(), createRaidRequest.getContributor());
 
     }
 
     @Test
     @DisplayName("Read a raid")
-    void readRaidV1() throws IOException {
+    void readRaid() throws IOException {
         final var raidJson = raidJson();
         final String handle = "test-handle";
         final Long servicePointId = 999L;
@@ -164,6 +157,7 @@ class RaidServiceTest {
         assertThat(result, Matchers.is(expected));
 
         verify(dataciteService).update(updateRequest, handle, repositoryId, password);
+        verify(raidListenerService).update("https://raid.org.au/"  + handle, updateRequest.getContributor(), expected.getContributor());
     }
 
     @Test
