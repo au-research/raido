@@ -1,9 +1,11 @@
 package au.org.raid.api.validator;
 
+import au.org.raid.api.repository.ContributorRepository;
 import au.org.raid.api.util.DateUtil;
 import au.org.raid.idl.raidv2.model.Contributor;
 import au.org.raid.idl.raidv2.model.ContributorPosition;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -16,18 +18,12 @@ import static au.org.raid.api.endpoint.message.ValidationMessage.*;
 import static au.org.raid.api.util.StringUtil.isBlank;
 
 @Component
+@RequiredArgsConstructor
 public class ContributorValidator {
     private static final String ORCID_ORG = "https://orcid.org/";
-    private static final String LEADER_POSITION =
-            "https://github.com/au-research/raid-metadata/blob/main/scheme/contributor/position/v1/leader.json";
     private final ContributorPositionValidator positionValidationService;
     private final ContributorRoleValidator roleValidationService;
-
-    public ContributorValidator(final ContributorPositionValidator positionValidationService,
-                                final ContributorRoleValidator roleValidationService) {
-        this.positionValidationService = positionValidationService;
-        this.roleValidationService = roleValidationService;
-    }
+    private final ContributorRepository contributorRepository;
 
     public List<ValidationFailure> validate(
             List<Contributor> contributors
@@ -41,6 +37,53 @@ public class ContributorValidator {
         IntStream.range(0, contributors.size())
                 .forEach(index -> {
                     final var contributor = contributors.get(index);
+
+                    if (isBlank(contributor.getEmail())) {
+                        // uuid must be present
+                        if (isBlank(contributor.getUuid())) {
+                            failures.add(
+                                    new ValidationFailure()
+                                            .fieldId("contributor[%d].uuid".formatted(index))
+                                            .errorType(NOT_SET_TYPE)
+                                            .message(NOT_SET_MESSAGE));
+                        }
+
+                        if (!isBlank(contributor.getId())) {
+                            final var contributorOptional = contributorRepository.findByPidAndUuid(
+                                    contributor.getId(), contributor.getUuid()
+                            );
+
+                            if (contributorOptional.isEmpty()) {
+                                failures.add(
+                                        new ValidationFailure()
+                                                .fieldId("contributor[%d]".formatted(index))
+                                                .errorType(NOT_FOUND_TYPE)
+                                                .message("Contributor not found with PID (%s) and UUID (%s)"
+                                                        .formatted(contributor.getId(), contributor.getUuid())));
+
+                            }
+                        } else if (!isBlank(contributor.getUuid())) {
+                            final var contributorOptional = contributorRepository.findByUuid(
+                                    contributor.getUuid()
+                            );
+
+                            if (contributorOptional.isEmpty()) {
+                                failures.add(
+                                        new ValidationFailure()
+                                                .fieldId("contributor[%d].uuid".formatted(index))
+                                                .errorType(NOT_FOUND_TYPE)
+                                                .message("Contributor not found with UUID (%s)"
+                                                        .formatted(contributor.getUuid())));
+
+                            }
+                        } else {
+                            failures.add(
+                                    new ValidationFailure()
+                                            .fieldId("contributor[%d]".formatted(index))
+                                            .errorType(NOT_SET_TYPE)
+                                            .message("email or uuid is required"));
+                        }
+                    }
 
                     if (isBlank(contributor.getSchemaUri())) {
                         failures.add(
@@ -121,60 +164,6 @@ public class ContributorValidator {
                     fieldId("contributor").
                     errorType(NOT_SET_TYPE).
                     message("At least one contributor must be flagged as a project contact"));
-        }
-
-        return failures;
-    }
-
-    private List<ValidationFailure> validateLeadContributors(final List<Contributor> contributors) {
-        final var failures = new ArrayList<ValidationFailure>();
-
-        final List<Map<String, Object>> positions = new ArrayList<>();
-
-        for (int contributorIndex = 0; contributorIndex < contributors.size(); contributorIndex++) {
-            final var contributor = contributors.get(contributorIndex);
-
-            for (int positionIndex = 0; positionIndex < contributors.get(contributorIndex).getPosition().size(); positionIndex++) {
-                final var position = contributor.getPosition().get(positionIndex);
-
-                positions.add(Map.of(
-                        "contributorIndex", contributorIndex,
-                        "positionIndex", positionIndex,
-                        "leader", position.getId().equals(LEADER_POSITION),
-                        "startDate", DateUtil.parseDate(position.getStartDate()),
-                        "endDate", position.getEndDate() == null ? LocalDate.now() : DateUtil.parseDate(position.getEndDate())
-                ));
-            }
-        }
-
-        List<Map<String, Object>> leaders = positions.stream()
-                .filter(map -> (boolean) map.get("leader"))
-                .sorted((o1, o2) -> {
-                    if (o1.get("startDate").equals(o2.get("startDate"))) {
-                        return ((LocalDate) o1.get("endDate")).compareTo((LocalDate) o2.get("endDate"));
-                    }
-                    return ((LocalDate) o1.get("startDate")).compareTo((LocalDate) o2.get("startDate"));
-                })
-                .toList();
-
-        for (int i = 1; i < leaders.size(); i++) {
-            var previousEntry = leaders.get(i - 1);
-            var entry = leaders.get(i);
-
-            final var start = (LocalDate) entry.get("startDate");
-            final var previousEnd = (LocalDate) previousEntry.get("endDate");
-
-            if (start.isBefore(previousEnd)) {
-                failures.add(new ValidationFailure()
-                        .fieldId("contributor[%d].position[%d]".formatted(
-                                (int) entry.get("contributorIndex"), (int) entry.get("positionIndex")
-                        ))
-                        .errorType(INVALID_VALUE_TYPE)
-                        .message(String.format("There can only be one leader in any given period. The position at contributor[%d].position[%d] conflicts with this position."
-                                .formatted((int) previousEntry.get("contributorIndex"), (int) previousEntry.get("positionIndex")))
-                        )
-                );
-            }
         }
 
         return failures;

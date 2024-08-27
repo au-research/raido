@@ -37,4 +37,17 @@ public class ContributorRepository {
                 .where(CONTRIBUTOR.ID.eq(id))
                 .fetchOptional();
     }
+
+    public Optional<ContributorRecord> findByPidAndUuid(final String pid, final String uuid) {
+        return dslContext.selectFrom(CONTRIBUTOR)
+                .where(CONTRIBUTOR.PID.eq(pid))
+                .and(CONTRIBUTOR.UUID.eq(uuid))
+                .fetchOptional();
+    }
+
+    public Optional<ContributorRecord> findByUuid(final String uuid) {
+        return dslContext.selectFrom(CONTRIBUTOR)
+                .where(CONTRIBUTOR.UUID.eq(uuid))
+                .fetchOptional();
+    }
 }
