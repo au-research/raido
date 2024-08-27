@@ -8,8 +8,6 @@ See the [Changelog audience](#changelog-audience) section for info about
 * UI/UX enhancements (especially nested components)
 * General maintenance and cleanup
 
-## IAM
-
 # 2.1.1
 ## App-client UI
 * Updated UI components and logic, including new mappings and service point UI logic.
