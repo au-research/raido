@@ -2,6 +2,7 @@ package au.org.raid.inttest;
 
 import au.org.raid.idl.raidv2.model.ClosedRaid;
 import au.org.raid.idl.raidv2.model.RaidDto;
+import au.org.raid.idl.raidv2.model.RaidPatchRequest;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
 import au.org.raid.inttest.service.Handle;
 import au.org.raid.inttest.service.RaidApiValidationException;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 
+import static au.org.raid.inttest.service.TestConstants.REAL_TEST_ORCID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
@@ -70,6 +72,38 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
         assert result != null;
         assertThat(result.getTitle().get(0).getText()).isEqualTo(title);
         assertThat(result.getIdentifier().getVersion()).isEqualTo(2);
+    }
+
+
+
+    @Test
+    @DisplayName("Patch a raid")
+    void patchRaid() {
+        final var mintedRaid = raidApi.mintRaid(createRequest).getBody();
+
+        assert mintedRaid != null;
+        final var handle = new Handle(mintedRaid.getIdentifier().getId());
+        final var readResult = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
+
+
+        final var contributor = readResult.getContributor().get(0);
+        contributor.setId(REAL_TEST_ORCID);
+
+        final var patchRequest = new RaidPatchRequest().addContributorItem(contributor);
+        try {
+            final var responseEntity = raidApi.patchRaid(handle.getPrefix(), handle.getSuffix(), patchRequest);
+            assert responseEntity != null;
+            final var raid = responseEntity.getBody();
+            assert raid != null;
+            assertThat(raid.getContributor().get(0).getId()).isEqualTo(REAL_TEST_ORCID);
+        } catch (final Exception e) {
+            fail("Update failed");
+            throw new RuntimeException(e);
+        }
+
+        final var result = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
+        assert result != null;
+        assertThat(result.getContributor().get(0).getId()).isEqualTo(REAL_TEST_ORCID);
     }
 
     @Test
