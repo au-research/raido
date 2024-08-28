@@ -27,18 +27,18 @@ import static java.util.List.of;
 public class ValidationService {
     private static final Log log = to(ValidationService.class);
 
-    private final TitleValidator titleSvc;
-    private final DescriptionValidator descSvc;
-    private final ContributorValidator contribSvc;
-    private final OrganisationValidator orgSvc;
-    private final AccessValidator accessValidationService;
-    private final SubjectValidator subjectSvc;
+    private final TitleValidator titleValidator;
+    private final DescriptionValidator descriptionValidator;
+    private final ContributorValidator contributorValidator;
+    private final OrganisationValidator organisationValidator;
+    private final AccessValidator accessValidator;
+    private final SubjectValidator subjectValidator;
     private final IdentifierParser idParser;
-    private final RelatedObjectValidator relatedObjectSvc;
-    private final AlternateIdentifierValidator alternateIdentifierSvc;
-    private final RelatedRaidValidator relatedRaidSvc;
-    private final SpatialCoverageValidator spatialCoverageSvc;
-    private final TraditionalKnowledgeLabelValidator traditionalKnowledgeLabelSvc;
+    private final RelatedObjectValidator relatedObjectValidator;
+    private final AlternateIdentifierValidator alternateIdentifierValidator;
+    private final RelatedRaidValidator relatedRaidValidator;
+    private final SpatialCoverageValidator spatialCoverageValidator;
+    private final TraditionalKnowledgeLabelValidator traditionalKnowledgeLabelValidator;
     private final DateValidator dateValidator;
 
     private List<ValidationFailure> validateUpdateHandle(final String decodedHandleFromPath, final Id id) {
@@ -102,18 +102,18 @@ public class ValidationService {
         var failures = new ArrayList<ValidationFailure>();
 
         failures.addAll(dateValidator.validate(request.getDate()));
-        failures.addAll(accessValidationService.validate(request.getAccess()));
-        failures.addAll(titleSvc.validate(request.getTitle()));
-        failures.addAll(descSvc.validate(request.getDescription()));
+        failures.addAll(accessValidator.validate(request.getAccess()));
+        failures.addAll(titleValidator.validate(request.getTitle()));
+        failures.addAll(descriptionValidator.validate(request.getDescription()));
         failures.addAll(validateAlternateUrls(request.getAlternateUrl()));
-        failures.addAll(contribSvc.validate(request.getContributor()));
-        failures.addAll(orgSvc.validate(request.getOrganisation()));
-        failures.addAll(subjectSvc.validate(request.getSubject()));
-        failures.addAll(relatedRaidSvc.validate(request.getRelatedRaid()));
-        failures.addAll(relatedObjectSvc.validateRelatedObjects(request.getRelatedObject()));
-        failures.addAll(alternateIdentifierSvc.validateAlternateIdentifier(request.getAlternateIdentifier()));
-        failures.addAll(spatialCoverageSvc.validate(request.getSpatialCoverage()));
-        failures.addAll(traditionalKnowledgeLabelSvc.validate(
+        failures.addAll(contributorValidator.validate(request.getContributor()));
+        failures.addAll(organisationValidator.validate(request.getOrganisation()));
+        failures.addAll(subjectValidator.validate(request.getSubject()));
+        failures.addAll(relatedRaidValidator.validate(request.getRelatedRaid()));
+        failures.addAll(relatedObjectValidator.validateRelatedObjects(request.getRelatedObject()));
+        failures.addAll(alternateIdentifierValidator.validateAlternateIdentifier(request.getAlternateIdentifier()));
+        failures.addAll(spatialCoverageValidator.validate(request.getSpatialCoverage()));
+        failures.addAll(traditionalKnowledgeLabelValidator.validate(
                 request.getTraditionalKnowledgeLabel()));
 
         return failures;
@@ -129,18 +129,18 @@ public class ValidationService {
         final var failures = new ArrayList<>(validateUpdateHandle(decodedHandle, request.getIdentifier()));
 
         failures.addAll(dateValidator.validate(request.getDate()));
-        failures.addAll(accessValidationService.validate(request.getAccess()));
-        failures.addAll(titleSvc.validate(request.getTitle()));
-        failures.addAll(descSvc.validate(request.getDescription()));
+        failures.addAll(accessValidator.validate(request.getAccess()));
+        failures.addAll(titleValidator.validate(request.getTitle()));
+        failures.addAll(descriptionValidator.validate(request.getDescription()));
         failures.addAll(validateAlternateUrls(request.getAlternateUrl()));
-        failures.addAll(contribSvc.validate(request.getContributor()));
-        failures.addAll(orgSvc.validate(request.getOrganisation()));
-        failures.addAll(subjectSvc.validate(request.getSubject()));
-        failures.addAll(relatedRaidSvc.validate(request.getRelatedRaid()));
-        failures.addAll(relatedObjectSvc.validateRelatedObjects(request.getRelatedObject()));
-        failures.addAll(alternateIdentifierSvc.validateAlternateIdentifier(request.getAlternateIdentifier()));
-        failures.addAll(spatialCoverageSvc.validate(request.getSpatialCoverage()));
-        failures.addAll(traditionalKnowledgeLabelSvc.validate(
+        failures.addAll(contributorValidator.validate(request.getContributor()));
+        failures.addAll(organisationValidator.validate(request.getOrganisation()));
+        failures.addAll(subjectValidator.validate(request.getSubject()));
+        failures.addAll(relatedRaidValidator.validate(request.getRelatedRaid()));
+        failures.addAll(relatedObjectValidator.validateRelatedObjects(request.getRelatedObject()));
+        failures.addAll(alternateIdentifierValidator.validateAlternateIdentifier(request.getAlternateIdentifier()));
+        failures.addAll(spatialCoverageValidator.validate(request.getSpatialCoverage()));
+        failures.addAll(traditionalKnowledgeLabelValidator.validate(
                 request.getTraditionalKnowledgeLabel()));
 
         return failures;

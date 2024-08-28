@@ -4,6 +4,7 @@ import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.Title;
 import au.org.raid.inttest.service.Handle;
 import feign.FeignException;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -14,6 +15,7 @@ import static au.org.raid.inttest.service.TestConstants.PRIMARY_TITLE_TYPE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
+@Slf4j
 public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Changes are saved to history table")
@@ -27,6 +29,7 @@ public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
         var raid = createResponse.getBody();
 
         IntStream.range(1,7).forEach(oldVersion -> {
+            log.info("Update version {}", oldVersion);
             final var newVersion = oldVersion + 1;
             final var text = "Version %d".formatted(newVersion);
 

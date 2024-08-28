@@ -25,8 +25,7 @@ public class ContributorRepository {
 
     public ContributorRecord findOrCreate(final ContributorRecord contributor) {
         final var result = dslContext.selectFrom(CONTRIBUTOR)
-                .where(CONTRIBUTOR.PID.eq(contributor.getPid())
-                        .and(CONTRIBUTOR.SCHEMA_ID.eq(contributor.getSchemaId())))
+                .where(CONTRIBUTOR.UUID.eq(contributor.getUuid()))
                 .fetchOptional();
 
         return result.orElseGet(() -> create(contributor));

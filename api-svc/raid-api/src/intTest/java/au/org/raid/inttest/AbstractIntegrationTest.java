@@ -162,7 +162,7 @@ public class AbstractIntegrationTest {
             final String email
     ) {
         return new Contributor()
-                .id(orcid)
+//                .id(orcid)
                 .contact(true)
                 .leader(true)
                 .email(email)

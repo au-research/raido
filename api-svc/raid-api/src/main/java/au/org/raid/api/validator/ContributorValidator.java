@@ -40,15 +40,7 @@ public class ContributorValidator {
 
                     if (isBlank(contributor.getEmail())) {
                         // uuid must be present
-                        if (isBlank(contributor.getUuid())) {
-                            failures.add(
-                                    new ValidationFailure()
-                                            .fieldId("contributor[%d].uuid".formatted(index))
-                                            .errorType(NOT_SET_TYPE)
-                                            .message(NOT_SET_MESSAGE));
-                        }
-
-                        if (!isBlank(contributor.getId())) {
+                        if (!isBlank(contributor.getId()) && !isBlank(contributor.getUuid())) {
                             final var contributorOptional = contributorRepository.findByPidAndUuid(
                                     contributor.getId(), contributor.getUuid()
                             );
@@ -83,6 +75,25 @@ public class ContributorValidator {
                                             .errorType(NOT_SET_TYPE)
                                             .message("email or uuid is required"));
                         }
+                    } else {
+                        //TODO: if uuid or pid exists add failure
+
+                        if (contributor.getUuid() != null) {
+                            failures.add(
+                                    new ValidationFailure()
+                                            .fieldId("contributor[%d]".formatted(index))
+                                            .errorType(INVALID_VALUE_TYPE)
+                                            .message("email and uuid cannot be present at the same time"));
+                        }
+
+                        if (contributor.getId() != null) {
+                            failures.add(
+                                    new ValidationFailure()
+                                            .fieldId("contributor[%d]".formatted(index))
+                                            .errorType(INVALID_VALUE_TYPE)
+                                            .message("email and id cannot be present at the same time"));
+                        }
+
                     }
 
                     if (isBlank(contributor.getSchemaUri())) {

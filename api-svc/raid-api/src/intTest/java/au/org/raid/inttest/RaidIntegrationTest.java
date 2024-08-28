@@ -7,6 +7,7 @@ import au.org.raid.inttest.service.Handle;
 import au.org.raid.inttest.service.RaidApiValidationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
+@Slf4j
 public class RaidIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
