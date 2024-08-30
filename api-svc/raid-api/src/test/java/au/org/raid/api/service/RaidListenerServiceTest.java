@@ -2,7 +2,6 @@ package au.org.raid.api.service;
 
 import au.org.raid.api.dto.RaidListenerMessage;
 import au.org.raid.api.factory.RaidListenerMessageFactory;
-import au.org.raid.api.service.raid.RaidChecksumService;
 import au.org.raid.idl.raidv2.model.Contributor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,8 +21,6 @@ class RaidListenerServiceTest {
     private RaidListenerClient raidListenerClient;
     @Mock
     private RaidListenerMessageFactory raidListenerMessageFactory;
-    @Mock
-    private RaidChecksumService checksumService;
 
     @InjectMocks
     private RaidListenerService raidListenerService;
@@ -36,12 +33,12 @@ class RaidListenerServiceTest {
         final var message = new RaidListenerMessage();
         final var contributor = new Contributor().email(email);
 
-        when(raidListenerMessageFactory.create(handle, contributor, false))
+        when(raidListenerMessageFactory.create(handle, contributor))
                 .thenReturn(message);
 
         raidListenerService.create(handle, List.of(contributor));
 
-        verify(raidListenerMessageFactory).create(handle, contributor, false);
+        verify(raidListenerMessageFactory).create(handle, contributor);
         verify(raidListenerClient).post(message);
     }
 
@@ -53,28 +50,10 @@ class RaidListenerServiceTest {
         final var contributor = new Contributor().email(email);
         final var message = new RaidListenerMessage();
 
-        when(raidListenerMessageFactory.create(handle, contributor, false))
+        when(raidListenerMessageFactory.create(handle, contributor))
                 .thenReturn(message);
 
         raidListenerService.update(handle, List.of(contributor), Collections.emptyList());
-
-        verifyNoMoreInteractions(raidListenerMessageFactory);
-        verify(raidListenerClient).post(message);
-        verifyNoMoreInteractions(raidListenerClient);
-    }
-
-    @Test
-    @DisplayName("Deletes contributors on update")
-    void deletesContributorsOnUpdate() {
-        final var handle = "_handle";
-        final var id = "_id";
-        final var contributor = new Contributor().id(id);
-        final var message = new RaidListenerMessage();
-
-        when(raidListenerMessageFactory.create(handle, contributor, true))
-                .thenReturn(message);
-
-        raidListenerService.update(handle, Collections.emptyList(), List.of(contributor));
 
         verifyNoMoreInteractions(raidListenerMessageFactory);
         verify(raidListenerClient).post(message);
@@ -90,11 +69,8 @@ class RaidListenerServiceTest {
         final var existingContributor = new Contributor().uuid(uuid).contact(false);
         final var message = new RaidListenerMessage();
 
-        when(raidListenerMessageFactory.create(handle, contributor, false))
+        when(raidListenerMessageFactory.create(handle, contributor))
                 .thenReturn(message);
-
-        when(checksumService.create(contributor)).thenReturn("1");
-        when(checksumService.create(existingContributor)).thenReturn("2");
 
         raidListenerService.update(handle, List.of(contributor), List.of(existingContributor));
 
@@ -104,15 +80,23 @@ class RaidListenerServiceTest {
     }
 
     @Test
-    @DisplayName("Ignores unchanged contributors")
+    @DisplayName("Ignores confirmed contributors")
     void ignoresUnchangedContributors() {
         final var handle = "_handle";
         final var uuid = "_uuid";
-        final var contributor = new Contributor().uuid(uuid).contact(true);
-        final var existingContributor = new Contributor().uuid(uuid).contact(false);
+        final var id = "_id";
+        final var status = "confirmed";
+        final var contributor = new Contributor()
+                .id(id)
+                .status(status)
+                .uuid(uuid)
+                .contact(true);
 
-        when(checksumService.create(contributor)).thenReturn("1");
-        when(checksumService.create(existingContributor)).thenReturn("1");
+        final var existingContributor = new Contributor()
+                .id(id)
+                .status(status)
+                .uuid(uuid)
+                .contact(false);
 
         raidListenerService.update(handle, List.of(contributor), List.of(existingContributor));
 

@@ -6,11 +6,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RaidListenerMessageFactory {
-    public RaidListenerMessage create(final String raidName, final Contributor contributor, final boolean delete) {
+    public RaidListenerMessage create(final String raidName, final Contributor contributor) {
         return RaidListenerMessage.builder()
                 .raidName(raidName)
                 .contributor(contributor)
-                .delete(delete)
                 .build();
     }
 }

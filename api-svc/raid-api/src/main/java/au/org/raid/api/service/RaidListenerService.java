@@ -1,14 +1,11 @@
 package au.org.raid.api.service;
 
 import au.org.raid.api.factory.RaidListenerMessageFactory;
-import au.org.raid.api.service.raid.RaidChecksumService;
 import au.org.raid.idl.raidv2.model.Contributor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Component
@@ -16,7 +13,6 @@ import java.util.UUID;
 public class RaidListenerService {
     private final RaidListenerClient raidListenerClient;
     private final RaidListenerMessageFactory raidListenerMessageFactory;
-    private final RaidChecksumService checksumService;
 
     public void create(final String handle, final List<Contributor> contributors) {
         contributors
@@ -25,8 +21,7 @@ public class RaidListenerService {
                     contributor.setStatus("PENDING");
                     final var message = raidListenerMessageFactory.create(
                             handle,
-                            contributor,
-                            false
+                            contributor
                     );
                     raidListenerClient.post(message);
 
@@ -39,48 +34,26 @@ public class RaidListenerService {
                 .filter(contributor -> contributor.getEmail() != null)
                 .toList();
 
-        final var requestOrcids = contributors.stream()
-                //TODO: check orcid exists in contributor table
-                .map(Contributor::getId)
-                .filter(Objects::nonNull)
+        final var contributorsToUpdate = contributors.stream()
+                .filter(contributor -> contributor.getUuid() != null)
+                .filter(contributor -> {
+                    final var existingContributorOptional = existingContributors.stream().filter(c -> c.getUuid().equals(contributor.getUuid())).findFirst();
+
+                    // ignore if existing contributor has an orcid and it's status us 'confirmed'
+
+                    if (existingContributorOptional.isPresent()) {
+                        final var existingContributor = existingContributorOptional.get();
+                        return (existingContributor.getId() == null || !existingContributor.getStatus().equalsIgnoreCase("confirmed"));
+                    }
+                    return false;
+                })
                 .toList();
-
-        final var contributorsToDelete = existingContributors.stream()
-                .filter(contributor -> contributor.getId() != null)
-                .filter(contributor -> !requestOrcids.contains(contributor.getId()))
-                .toList();
-
-        final var contributorsToUpdate = new ArrayList<Contributor>();
-
-        for (final var contributor : contributors) {
-            final var extant = existingContributors.stream().filter(c -> c.getUuid().equals(contributor.getUuid())).findFirst();
-
-            if (extant.isPresent()) {
-                final var contributorChecksum = checksumService.create(contributor);
-                final var extantChecksum = checksumService.create(extant.get());
-
-                if (!contributorChecksum.equals(extantChecksum)) {
-                    contributorsToUpdate.add(contributor);
-                }
-            }
-        }
 
         contributorsToCreate
                 .forEach(contributor -> {
                     final var message = raidListenerMessageFactory.create(
                             handle,
-                            contributor,
-                            false
-                    );
-                    raidListenerClient.post(message);
-                });
-
-        contributorsToDelete
-                .forEach(contributor -> {
-                    final var message = raidListenerMessageFactory.create(
-                            handle,
-                            contributor,
-                            true
+                            contributor
                     );
                     raidListenerClient.post(message);
                 });
@@ -89,8 +62,7 @@ public class RaidListenerService {
                 .forEach(contributor -> {
                     final var message = raidListenerMessageFactory.create(
                             handle,
-                            contributor,
-                            false
+                            contributor
                     );
                     raidListenerClient.post(message);
                 });

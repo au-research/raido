@@ -13,6 +13,5 @@ import lombok.NoArgsConstructor;
 public class RaidListenerMessage {
     private String raidName;
     private Contributor contributor;
-    private boolean delete;
 }
 
