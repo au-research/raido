@@ -78,3 +78,17 @@ export interface FormFieldProps {
   multiline?: boolean;
   keyField?: string;
 }
+
+export interface OrcidContributor {
+  email: string;
+  orcid: string;
+  access_token: string;
+  expires_on: number;
+  handle: string;
+  name: string;
+  refresh_token: string;
+  scope: string;
+  status: string;
+  token_type: string;
+  uuid: string;
+}

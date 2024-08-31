@@ -1,20 +1,20 @@
 import AnchorButtons from "@/components/AnchorButtons";
 import BreadcrumbsBar from "@/components/BreadcrumbsBar";
-import { RaidDto } from "@/generated/raid";
-import ShowAccessComponent from "@/pages/ShowRaidPage/components/ShowAccessComponent";
 import AlternateIdentifiersDisplayComponent from "@/entities/alternate-identifier/display-components/AlternateIdentifiersDisplayComponent";
-import ShowAlternateUrlComponent from "@/pages/ShowRaidPage/components/ShowAlternateUrlComponent";
 import ShowContributorComponent from "@/entities/contributor/display-components/ContributorDisplayComponent";
 import DateDisplayComponent from "@/entities/date/display-components/DateDisplayComponent";
 import ShowDescriptionComponent from "@/entities/description/display-components/DescriptionDisplayComponent";
+import RelatedObjectsDisplayComponent from "@/entities/related-object/display-components/RelatedObjectsDisplayComponent";
+import { RaidDto } from "@/generated/raid";
+import ShowAccessComponent from "@/pages/ShowRaidPage/components/ShowAccessComponent";
+import ShowAlternateUrlComponent from "@/pages/ShowRaidPage/components/ShowAlternateUrlComponent";
 import ShowExternalLinksComponent from "@/pages/ShowRaidPage/components/ShowExternalLinksComponent";
 import ShowOrganisationComponent from "@/pages/ShowRaidPage/components/ShowOrganisationComponent";
-import RelatedObjectsDisplayComponent from "@/entities/related-object/display-components/RelatedObjectsDisplayComponent";
 import ShowRelatedRaidComponent from "@/pages/ShowRaidPage/components/ShowRelatedRaidComponent";
 // import ShowSpatialCoverageComponent from "@/pages/ShowRaidPage/components/ShowSpatialCoverageComponent";
-import ShowSubjectComponent from "@/pages/ShowRaidPage/components/ShowSubjectComponent";
 import TitleDisplayComponent from "@/entities/title/display-components/TitleDisplayComponent";
-import type { Breadcrumb } from "@/types";
+import ShowSubjectComponent from "@/pages/ShowRaidPage/components/ShowSubjectComponent";
+import type { Breadcrumb, OrcidContributor } from "@/types";
 import {
   DocumentScanner as DocumentScannerIcon,
   HistoryEdu as HistoryEduIcon,
@@ -28,10 +28,12 @@ export default function ShowRaidPageContent({
   raidData,
   handle,
   versionLabel,
+  raidOrcidContributorsData,
 }: {
   raidData: RaidDto;
   handle: string;
   versionLabel: string;
+  raidOrcidContributorsData?: OrcidContributor[];
 }) {
   const [prefix, suffix] = handle.split("/");
 
@@ -75,7 +77,7 @@ export default function ShowRaidPageContent({
           </Box>
 
           <Box id="contributors" className="scroll">
-            <ShowContributorComponent contributors={raidData.contributor} />
+            <ShowContributorComponent contributors={raidData.contributor} raidOrcidContributorsData={raidOrcidContributorsData} />
           </Box>
 
           <Box id="organisations" className="scroll">

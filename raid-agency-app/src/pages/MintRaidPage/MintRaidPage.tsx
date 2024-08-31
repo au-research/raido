@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function MintRaidPage() {
   const { openErrorDialog } = useErrorDialog();
+  
   const { keycloak } = useCustomKeycloak();
   const navigate = useNavigate();
 

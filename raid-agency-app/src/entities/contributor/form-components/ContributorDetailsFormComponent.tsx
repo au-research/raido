@@ -3,9 +3,20 @@ import ContributorPositionDetailsFormComponent from "@/entities/contributor-posi
 import ContributorRoleDetailsFormComponent from "@/entities/contributor-role/form-components/ContributorRoleDetailsFormComponent";
 import { CheckboxField } from "@/fields/CheckboxField";
 import { TextInputField } from "@/fields/TextInputField";
-import { RaidDto } from "@/generated/raid";
+import {
+  RaidCreateRequest,
+  RaidDto,
+  RaidUpdateRequest,
+} from "@/generated/raid";
 
-import { Grid, IconButton, Stack, Tooltip, Typography } from "@mui/material";
+import {
+  Button,
+  Grid,
+  IconButton,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
@@ -17,6 +28,10 @@ import {
   useFieldArray,
   UseFormTrigger,
 } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import { OrcidContributor } from "@/types";
+import { useParams } from "react-router-dom";
+import { DisplayItem } from "@/components/DisplayItem";
 
 interface ContributorDetailsFormComponentProps {
   control: Control<RaidDto>;
@@ -24,6 +39,8 @@ interface ContributorDetailsFormComponentProps {
   errors: FieldErrors<RaidDto>;
   handleRemoveContributor: (index: number) => void;
   trigger: UseFormTrigger<RaidDto>;
+  orcidContributorData?: OrcidContributor;
+  raidData: RaidCreateRequest | RaidUpdateRequest;
 }
 
 export default function ContributorDetailsFormComponent({
@@ -31,7 +48,67 @@ export default function ContributorDetailsFormComponent({
   index,
   errors,
   handleRemoveContributor,
+  orcidContributorData,
+  raidData,
 }: ContributorDetailsFormComponentProps) {
+  const { prefix, suffix } = useParams() as { prefix: string; suffix: string };
+  const orcidPayload = {
+    title: {
+      title: {
+        value: raidData.title?.map((title) => title.text).join(", "),
+      },
+    },
+    "short-description": raidData.description
+      ?.map((description) => description.text)
+      .join(", "),
+    type: "online-resource",
+    "external-ids": {
+      "external-id": [
+        {
+          "external-id-type": "raid",
+          "external-id-value": `https://app.test.raid.org.au/raids/${prefix}/${suffix} ${Date.now().toString()}`,
+          "external-id-url": {
+            value: `${prefix}/${suffix}`,
+          },
+          "external-id-relationship": "self",
+        },
+      ],
+    },
+    url: {
+      value: `https://app.test.raid.org.au/raids/${prefix}/${suffix}`,
+    },
+  };
+
+  const writeToOrcidMutation = useMutation({
+    mutationKey: ["write-to-orcid"],
+    mutationFn: async ({
+      accessToken,
+      email,
+    }: {
+      accessToken: string;
+      email: string;
+    }) => {
+      const response = await fetch(
+        `https://orcid.test.raid.org.au/orcid-update`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({
+            email,
+            data: orcidPayload,
+          }),
+        }
+      );
+      const data = await response.json();
+      alert(JSON.stringify(data));
+      return data;
+    },
+  });
+
   const positionFieldArray = useFieldArray({
     control,
     name: `contributor.${index}.position`,
@@ -83,6 +160,18 @@ export default function ContributorDetailsFormComponent({
               label: "Contact?",
             }}
           />
+          <DisplayItem
+            label="Name (for reference)"
+            value={orcidContributorData?.name}
+            width={4}
+            small={true}
+          />
+          <DisplayItem
+            label="ORCID ID (for reference)"
+            value={orcidContributorData?.orcid}
+            width={4}
+            small={true}
+          />
         </Grid>
 
         <Tooltip title="Remove contributor" placement="right">
@@ -94,6 +183,21 @@ export default function ContributorDetailsFormComponent({
           </IconButton>
         </Tooltip>
       </Stack>
+      {orcidContributorData &&
+        orcidContributorData.status === "invitation accepted" && (
+          <Button
+            variant="outlined"
+            sx={{ width: "200px" }}
+            onClick={() => {
+              writeToOrcidMutation.mutate({
+                accessToken: orcidContributorData.access_token,
+                email: orcidContributorData.email,
+              });
+            }}
+          >
+            Write to ORCID
+          </Button>
+        )}
 
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Typography variant="body2">Position</Typography>
@@ -106,7 +210,7 @@ export default function ContributorDetailsFormComponent({
       </Stack>
 
       {positionFieldArray.fields.map((field, i) => (
-        <Stack direction="row" justifyContent="space-between">
+        <Stack direction="row" justifyContent="space-between" key={i}>
           <ContributorPositionDetailsFormComponent
             control={control}
             errors={errors}

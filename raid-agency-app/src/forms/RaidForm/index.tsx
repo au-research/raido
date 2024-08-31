@@ -119,15 +119,30 @@ export default function RaidForm({
         <Stack spacing={2} data-testid="raid-form">
           <AnchorButtons errors={errors} />
           <Stack spacing={2}>
-            {formFields.map(({ id, component: Component }) => (
-              <Box id={id} key={id} className="scroll">
-                <Component
-                  control={control}
-                  errors={errors}
-                  trigger={trigger}
-                />
-              </Box>
-            ))}
+            {formFields.map(({ id, component: Component }) => {
+              if (id === "contributor") {
+                return (
+                  <Box id={id} key={id} className="scroll">
+                    <ContributorsFormComponent
+                      control={control}
+                      errors={errors}
+                      trigger={trigger}
+                      raidData={raidData}
+                    />
+                  </Box>
+                );
+              } else {
+                return (
+                  <Box id={id} key={id} className="scroll">
+                    <Component
+                      control={control}
+                      errors={errors}
+                      trigger={trigger}
+                    />
+                  </Box>
+                );
+              }
+            })}
           </Stack>
         </Stack>
       </form>

@@ -80,3 +80,8 @@ export function getErrorMessageForField(obj: any, keyString: string): any {
 
   return value;
 }
+
+export function isValidEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}

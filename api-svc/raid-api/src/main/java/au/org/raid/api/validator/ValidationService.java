@@ -106,7 +106,7 @@ public class ValidationService {
         failures.addAll(titleSvc.validate(request.getTitle()));
         failures.addAll(descSvc.validate(request.getDescription()));
         failures.addAll(validateAlternateUrls(request.getAlternateUrl()));
-        failures.addAll(contribSvc.validate(request.getContributor()));
+//        failures.addAll(contribSvc.validate(request.getContributor()));
         failures.addAll(orgSvc.validate(request.getOrganisation()));
         failures.addAll(subjectSvc.validate(request.getSubject()));
         failures.addAll(relatedRaidSvc.validate(request.getRelatedRaid()));
@@ -133,7 +133,7 @@ public class ValidationService {
         failures.addAll(titleSvc.validate(request.getTitle()));
         failures.addAll(descSvc.validate(request.getDescription()));
         failures.addAll(validateAlternateUrls(request.getAlternateUrl()));
-        failures.addAll(contribSvc.validate(request.getContributor()));
+//        failures.addAll(contribSvc.validate(request.getContributor()));
         failures.addAll(orgSvc.validate(request.getOrganisation()));
         failures.addAll(subjectSvc.validate(request.getSubject()));
         failures.addAll(relatedRaidSvc.validate(request.getRelatedRaid()));

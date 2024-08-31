@@ -6,9 +6,10 @@ import RaidForm from "@/forms/RaidForm";
 import { RaidDto } from "@/generated/raid";
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import LoadingPage from "@/pages/LoadingPage";
+import { fetchRaidOrcidContributors } from "@/services/contributors";
 import { fetchRaid, updateRaid } from "@/services/raid";
-import type { Breadcrumb } from "@/types";
-import { raidRequest } from "@/utils";
+import type { Breadcrumb, OrcidContributor } from "@/types";
+import { isValidEmail, raidRequest } from "@/utils";
 import {
   DocumentScanner as DocumentScannerIcon,
   Edit as EditIcon,
@@ -62,12 +63,21 @@ export default function EditRaidPage() {
     throw new Error("prefix and suffix are required");
   }
 
-  const query = useQuery<RaidDto>({
+  const raidQuery = useQuery<RaidDto>({
     queryKey: useMemo(() => ["raids", prefix, suffix], [prefix, suffix]),
     queryFn: () =>
       fetchRaid({
         id: `${prefix}/${suffix}`,
         token: keycloak.token || "",
+      }),
+    enabled: initialized && keycloak.authenticated,
+  });
+
+  const raidOrcidContributorsQuery = useQuery<OrcidContributor[]>({
+    queryKey: ["orcid-contributors", prefix, suffix],
+    queryFn: () =>
+      fetchRaidOrcidContributors({
+        handle: `${prefix}/${suffix}`,
       }),
     enabled: initialized && keycloak.authenticated,
   });
@@ -83,6 +93,39 @@ export default function EditRaidPage() {
   });
 
   const handleSubmit = async (data: RaidDto) => {
+    const existingOrcidContributorEmails = raidOrcidContributorsQuery.data?.map(
+      (contributor) => contributor.email
+    );
+    for (const contributor of data.contributor || []) {
+      if (!existingOrcidContributorEmails?.includes(contributor.id)) {
+        if (isValidEmail(contributor.id)) {
+          const raidListenerPayload = {
+            email: contributor.id,
+            handle: `${prefix}/${suffix}`,
+            contributor,
+          };
+
+          const response = await fetch(
+            "https://orcid.test.raid.org.au/raid-update",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                ...raidListenerPayload,
+                email: contributor.id,
+              }),
+              redirect: "follow",
+            }
+          );
+
+          const responseJson = await response.json();
+          alert(responseJson.message);
+        }
+      }
+    }
+
     updateMutation.mutate({
       id: `${prefix}/${suffix}`,
       data: raidRequest(data),
@@ -90,12 +133,16 @@ export default function EditRaidPage() {
     });
   };
 
-  if (query.isPending) {
+  if (raidQuery.isPending || raidOrcidContributorsQuery.isPending) {
     return <LoadingPage />;
   }
 
-  if (query.isError) {
-    return <ErrorAlertComponent error={query.error} />;
+  if (raidQuery.isError) {
+    return <ErrorAlertComponent error={raidQuery.error} />;
+  }
+
+  if (raidOrcidContributorsQuery.isError) {
+    return <ErrorAlertComponent error={raidOrcidContributorsQuery.error} />;
   }
 
   return (
@@ -115,7 +162,7 @@ export default function EditRaidPage() {
         <RaidForm
           prefix={prefix}
           suffix={suffix}
-          raidData={query.data}
+          raidData={raidQuery.data}
           onSubmit={handleSubmit}
           isSubmitting={updateMutation.isPending}
         />

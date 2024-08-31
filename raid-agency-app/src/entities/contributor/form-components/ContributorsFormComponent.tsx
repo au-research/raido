@@ -1,4 +1,14 @@
-import { RaidDto } from "@/generated/raid";
+import ErrorAlertComponent from "@/components/ErrorAlertComponent";
+import { contributorGenerator } from "@/entities/contributor/data-components/contributor-generator";
+import ContributorDetailsFormComponent from "@/entities/contributor/form-components/ContributorDetailsFormComponent";
+import {
+  RaidCreateRequest,
+  RaidDto,
+  RaidUpdateRequest,
+} from "@/generated/raid";
+import LoadingPage from "@/pages/LoadingPage";
+import { fetchRaidOrcidContributors } from "@/services/contributors";
+import { OrcidContributor } from "@/types";
 import { AddCircleOutline as AddCircleOutlineIcon } from "@mui/icons-material";
 import {
   Box,
@@ -11,6 +21,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
 import { useCallback, useMemo } from "react";
 import {
   Control,
@@ -18,21 +29,24 @@ import {
   UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
-import { contributorGenerator } from "@/entities/contributor/data-components/contributor-generator";
-import ContributorDetailsFormComponent from "@/entities/contributor/form-components/ContributorDetailsFormComponent";
+import { useParams } from "react-router-dom";
 
 interface ContributorsFormComponentProps {
   control: Control<RaidDto>;
   errors: FieldErrors<RaidDto>;
   trigger: UseFormTrigger<RaidDto>;
+  raidData?: RaidCreateRequest | RaidUpdateRequest;
 }
 
 export default function ContributorsFormComponent({
   control,
   errors,
   trigger,
+  raidData,
 }: ContributorsFormComponentProps) {
+  const { prefix, suffix } = useParams() as { prefix: string; suffix: string };
   const { fields, append, remove } = useFieldArray({
+    keyName: "fieldArrayId",
     control,
     name: "contributor",
   });
@@ -50,6 +64,22 @@ export default function ContributorsFormComponent({
   );
 
   const errorMessage = useMemo(() => errors.title?.message, [errors.title]);
+
+  const raidOrcidContributorsQuery = useQuery<OrcidContributor[]>({
+    queryKey: ["orcid-contributors", prefix, suffix],
+    queryFn: () =>
+      fetchRaidOrcidContributors({
+        handle: `${prefix}/${suffix}`,
+      }),
+  });
+
+  if (raidOrcidContributorsQuery.isPending) {
+    return <LoadingPage />;
+  }
+
+  if (raidOrcidContributorsQuery.isError) {
+    return <ErrorAlertComponent error={raidOrcidContributorsQuery.error} />;
+  }
 
   return (
     <Card
@@ -90,16 +120,24 @@ export default function ContributorsFormComponent({
             )}
           </Box>
           <Stack divider={<Divider />} gap={5} data-testid="titles-form">
-            {fields.map((field, index) => (
-              <ContributorDetailsFormComponent
-                key={field.id}
-                control={control}
-                errors={errors}
-                handleRemoveContributor={handleRemoveContributor}
-                index={index}
-                trigger={trigger}
-              />
-            ))}
+            {fields.map((field, index) => {
+              const orcidContributorData =
+                raidOrcidContributorsQuery.data?.find(
+                  (contributor) => contributor.email === field.id
+                );
+              return (
+                <ContributorDetailsFormComponent
+                  key={field.fieldArrayId}
+                  control={control}
+                  errors={errors}
+                  handleRemoveContributor={handleRemoveContributor}
+                  index={index}
+                  trigger={trigger}
+                  orcidContributorData={orcidContributorData}
+                  raidData={raidData!}
+                />
+              );
+            })}
           </Stack>
         </Stack>
       </CardContent>
