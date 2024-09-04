@@ -70,10 +70,26 @@ export default function RaidTableRowContextMenu({ row }: { row: RaidDto }) {
             <ContentCopy fontSize="small" />
           </ListItemIcon>
           <ListItemText
-            primary="Copy Handle"
+            primary="Copy Identifier"
             secondary={`${prefix}/${suffix}`}
           />
         </MenuItem>
+        <MenuItem
+          onClick={async () => {
+            await copy(`https://raid.org/${prefix}/${suffix}`);
+            handleClose();
+          }}
+        >
+          <ListItemIcon>
+            <ContentCopy fontSize="small" />
+          </ListItemIcon>
+          <ListItemText
+            primary="Copy URL"
+            secondary={`https://raid.org/${prefix}/${suffix}`}
+          />
+        </MenuItem>
+
+        
         <Divider />
         <MenuItem component={Link} to={`/raids/${prefix}/${suffix}`}>
           <ListItemIcon>

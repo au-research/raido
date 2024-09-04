@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 
 export const handleColumn: GridColDef = {
   field: "identifier",
-  headerName: "Handle",
+  headerName: "Identifier",
   width: 160,
   valueGetter: ({ value }) => {
     const url = Array.isArray(value) ? value[0].id : value.id;
