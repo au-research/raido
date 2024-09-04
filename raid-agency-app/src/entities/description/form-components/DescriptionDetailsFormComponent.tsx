@@ -30,8 +30,8 @@ export default function DescriptionDetailsFormComponent({
           formFieldProps={{
             name: `description.${index}.text`,
             type: "text",
-            label: "Description Text",
-            placeholder: "Description Text",
+            label: "Text",
+            placeholder: "Text",
             helperText: "",
             errorText: "",
             multiline: false,
@@ -45,8 +45,8 @@ export default function DescriptionDetailsFormComponent({
           formFieldProps={{
             name: `description.${index}.type.id`,
             type: "text",
-            label: "Description Type",
-            placeholder: "Description Type",
+            label: "Type",
+            placeholder: "Type",
             helperText: "",
             errorText: "",
           }}
