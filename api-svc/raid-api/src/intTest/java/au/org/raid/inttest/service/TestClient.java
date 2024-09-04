@@ -37,6 +37,7 @@ public class TestClient {
                 .errorDecoder(new RaidApiExceptionDecoder(objectMapper))
                 .contract(contract)
                 .requestInterceptor(request -> request.header(AUTHORIZATION, "Bearer " + token))
+                .requestInterceptor(request -> request.header("X-Raid-Api-Version", "3"))
                 .logger(new Slf4jLogger(RaidApi.class))
                 .logLevel(Logger.Level.FULL)
                 .target(RaidApi.class, apiUrl);
