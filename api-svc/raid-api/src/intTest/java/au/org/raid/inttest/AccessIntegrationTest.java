@@ -4,6 +4,7 @@ import au.org.raid.idl.raidv2.model.AccessStatement;
 import au.org.raid.idl.raidv2.model.AccessType;
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 import au.org.raid.inttest.service.RaidApiValidationException;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +14,7 @@ import static au.org.raid.inttest.service.TestConstants.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 
+@Slf4j
 public class AccessIntegrationTest extends AbstractIntegrationTest {
 
     @Test
@@ -171,6 +173,8 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
         try {
             raidApi.mintRaid(createRequest);
         } catch (Exception e) {
+            log.error("Error: ", e);
+
             fail("Mint should be successful");
         }
     }
