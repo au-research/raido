@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import static org.mockito.Mockito.*;
@@ -32,9 +33,11 @@ class RaidListenerClientTest {
         final var message = new RaidListenerMessage();
         final var httpEntity = mock(HttpEntity.class);
         final var uri = "_uri";
+        final var response = mock(ResponseEntity.class);
 
         when(properties.getUri()).thenReturn(uri);
         when(httpEntityFactory.create(message)).thenReturn(httpEntity);
+        when(restTemplate.exchange(uri, HttpMethod.POST, httpEntity, Void.class)).thenReturn(response);
 
         raidListenerClient.post(message);
 
