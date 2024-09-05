@@ -22,11 +22,17 @@ public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
     void changesSaved() {
         createRequest.getTitle().get(0).setText("Version 1");
 
-        final var createResponse = raidApi.mintRaid(createRequest);
+        RaidDto raid;
+        Handle handle;
 
-        Handle handle = new Handle(Objects.requireNonNull(createResponse.getBody()).getIdentifier().getId());
-
-        var raid = createResponse.getBody();
+        try {
+            final var createResponse = raidApi.mintRaid(createRequest);
+            handle = new Handle(Objects.requireNonNull(createResponse.getBody()).getIdentifier().getId());
+            raid = createResponse.getBody();
+        } catch (Exception e) {
+            log.error("Error: ", e);
+            throw new RuntimeException(e);
+        }
 
         IntStream.range(1,7).forEach(oldVersion -> {
             log.info("Update version {}", oldVersion);
@@ -38,10 +44,11 @@ public class RaidHistoryIntegrationTest extends AbstractIntegrationTest {
             primaryTitle.setText(text);
             raid.getIdentifier().setVersion(oldVersion);
 
-            raidApi.updateRaid(handle.getPrefix(), handle.getSuffix(), raidUpdateRequestFactory.create(raid));
             try {
+                raidApi.updateRaid(handle.getPrefix(), handle.getSuffix(), raidUpdateRequestFactory.create(raid));
                 Thread.sleep(1000);
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
+                log.error("Error: ", e);
                 throw new RuntimeException(e);
             }
 
