@@ -1,6 +1,117 @@
 [
   {
     "identifier": {
+      "id": "http://raid.local/10.26259/7fd9c002",
+      "schemaUri": "https://raid.org/",
+      "registrationAgency": {
+        "id": "https://ror.org/038sjwq14",
+        "schemaUri": "https://ror.org/"
+      },
+      "owner": {
+        "id": "https://ror.org/02stey378",
+        "schemaUri": "https://ror.org/",
+        "servicePoint": 20000003
+      },
+      "raidAgencyUrl": "https://prod.static.raid.org.au/10.26259/7fd9c002",
+      "license": "Creative Commons CC-0",
+      "version": 1
+    },
+    "title": [
+      {
+        "text": "An Increase of Prazosin Association with Deliberate Self Harm Australia: a Retrospective Case Series",
+        "type": {
+          "id": "https://vocabulary.raid.org/title.type.schema/5",
+          "schemaUri": "https://vocabulary.raid.org/title.type.schema/376"
+        },
+        "startDate": "2023-01-01",
+        "endDate": "2025-03-01",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://www.iso.org/standard/74575.html"
+        }
+      }
+    ],
+    "date": { "startDate": "2023-01-01", "endDate": "2025-03-01" },
+    "description": [
+      {
+        "text": "To conduct a retrospective observational study to assess the relationship between increased prescribing for off-label use of prazosin in mental health disorders (i.e. Post-Traumatic Stress Disorder [PTSD]) and medication related harm (i.e. medication therapeutic error, deliberate self-poisoning [DSP]). The population will include any person in Australia who have had the Poisons Information Centre NSW involved in their clinical management. The intervention group will be those who have been prescribed prazosin with an outcome of deliberately self-poisoning (DSP) and the changes in rates of this over time which will be held in comparison to overall rates of DSP cases in the Poisons Information Centre Database",
+        "type": {
+          "id": "https://vocabulary.raid.org/description.type.schema/318",
+          "schemaUri": "https://vocabulary.raid.org/description.type.schema/320"
+        },
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://www.iso.org/standard/74575.html"
+        }
+      }
+    ],
+    "access": {
+      "type": {
+        "id": "https://vocabularies.coar-repositories.org/access_rights/c_abf2/",
+        "schemaUri": "https://vocabularies.coar-repositories.org/access_rights/"
+      },
+      "statement": {
+        "text": "Access statement example text...",
+        "language": {
+          "id": "eng",
+          "schemaUri": "https://www.iso.org/standard/74575.html"
+        }
+      },
+      "embargoExpiry": "2025-09-05"
+    },
+    "alternateUrl": [],
+    "contributor": [
+      {
+        "id": "https://orcid.org/0009-0006-7597-4813",
+        "schemaUri": "https://orcid.org/",
+        "position": [
+          {
+            "schemaUri": "https://vocabulary.raid.org/contributor.position.schema/305",
+            "id": "https://vocabulary.raid.org/contributor.position.schema/308",
+            "startDate": "2023-01-01",
+            "endDate": "2025-03-01"
+          }
+        ],
+        "role": [
+          {
+            "schemaUri": "https://credit.niso.org/",
+            "id": "https://credit.niso.org/contributor-roles/supervision/"
+          }
+        ],
+        "leader": true,
+        "contact": true
+      }
+    ],
+    "organisation": [
+      {
+        "id": "https://ror.org/02stey378",
+        "schemaUri": "https://ror.org/",
+        "role": [
+          {
+            "schemaUri": "https://vocabulary.raid.org/organisation.role.schema/359",
+            "id": "https://vocabulary.raid.org/organisation.role.schema/182",
+            "startDate": "2023-01-01",
+            "endDate": "2025-03-01"
+          }
+        ]
+      }
+    ],
+    "subject": [
+      {
+        "id": "https://linked.data.gov.au/def/anzsrc-for/2020/4206",
+        "schemaUri": "https://vocabs.ardc.edu.au/viewById/316",
+        "keyword": []
+      }
+    ],
+    "relatedRaid": [],
+    "relatedObject": [],
+    "alternateIdentifier": [],
+    "spatialCoverage": [],
+    "traditionalKnowledgeLabel": []
+  },
+
+  {
+    "identifier": {
       "id": "http://raid.local/10.26261/43d5c5fc",
       "schemaUri": "https://raid.org/",
       "registrationAgency": {
