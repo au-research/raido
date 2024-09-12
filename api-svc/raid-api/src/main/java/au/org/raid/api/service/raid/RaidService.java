@@ -48,6 +48,8 @@ public class RaidService {
             final RaidCreateRequest raid,
             final long servicePointId
     ) {
+        log.debug("THIS IS RAID V3");
+
         final var servicePointRecord =
                 servicePointRepository.findById(servicePointId).orElseThrow(() ->
                         new UnknownServicePointException(servicePointId));
