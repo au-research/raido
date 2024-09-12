@@ -1,4 +1,3 @@
-version: '3.4'
 services:
   raid-iam-db:
     image: postgres:16.2
@@ -40,4 +39,4 @@ services:
       KC_HTTP_ENABLED: true
       DEBUG: true
       DEBUG_PORT: '*:5005'
-      KC_LOG_LEVEL: info,au.org.raid.iam:debug,org.keycloak.services:debug,org.keycloak.adapters:debug
+      KC_LOG_LEVEL: info,au.org.raid.iam:debug,org.keycloak.services:debug,org.keycloak.adapters:debug,jakarta.ws.rs:trace

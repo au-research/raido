@@ -12,12 +12,10 @@ import au.org.raid.api.service.RaidIngestService;
 import au.org.raid.api.service.datacite.DataciteService;
 import au.org.raid.api.service.raid.id.IdentifierParser;
 import au.org.raid.api.util.FileUtil;
+import au.org.raid.api.util.SchemaValues;
 import au.org.raid.db.jooq.tables.records.RaidRecord;
 import au.org.raid.db.jooq.tables.records.ServicePointRecord;
-import au.org.raid.idl.raidv2.model.Id;
-import au.org.raid.idl.raidv2.model.RaidCreateRequest;
-import au.org.raid.idl.raidv2.model.RaidDto;
-import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
+import au.org.raid.idl.raidv2.model.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,16 +27,26 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -227,6 +235,345 @@ class RaidServiceTest {
         verify(dataciteService, times(3)).mint(createRaidRequest, handle.toString(), repositoryId, password);
     }
 
+    @Test
+    @DisplayName("Empty optional is returned if raid not found")
+    void raidNotFound() {
+        final var prefix = "_prefix";
+        final var suffix = "_suffix";
+        final var handle = "%s/%s".formatted(prefix, suffix);
+
+        when(raidHistoryService.findByHandle(handle)).thenReturn(Optional.empty());
+
+        assertThat(raidService.getPermissions(prefix, suffix), is(Optional.empty()));
+        verifyNoInteractions(servicePointRepository);
+    }
+
+    @Test
+    @DisplayName("Can read and write when service point user")
+    void servicePointUser() {
+        final var prefix = "_prefix";
+        final var suffix = "_suffix";
+        final var handle = "%s/%s".formatted(prefix, suffix);
+        final var servicePointId = 1L;
+        final var servicePointGroupId = "service-point-group-id";
+        final var servicePointRecord = new ServicePointRecord().setId(servicePointId);
+
+        final var raid = new RaidDto()
+            .identifier(new Id()
+                    .owner(new Owner()
+                        .servicePoint(servicePointId)))
+                .access(new Access()
+                    .type(new AccessType()
+                        .id(SchemaValues.ACCESS_TYPE_OPEN.getUri())));
+
+        when(raidHistoryService.findByHandle(handle)).thenReturn(Optional.of(raid));
+
+        try (MockedStatic<SecurityContextHolder> securityContextHolder = mockStatic(SecurityContextHolder.class)) {
+            final var securityContext = mock(SecurityContext.class);
+            final var authentication = mock(JwtAuthenticationToken.class);
+            final var token = mock(Jwt.class);
+            final var claims = Map.<String, Object>of("service_point_group_id", servicePointGroupId);
+            final var authorities = List.of((GrantedAuthority) () -> "ROLE_service-point-user");
+
+            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getToken()).thenReturn(token);
+            when(token.getClaims()).thenReturn(claims);
+            when(authentication.getAuthorities()).thenReturn(authorities);
+
+            when(servicePointRepository.findByGroupId(servicePointGroupId)).thenReturn(Optional.of(servicePointRecord));
+
+            final var permissions = raidService.getPermissions(prefix, suffix)
+                    .orElseThrow();
+
+            assertTrue(permissions.isRead());
+            assertTrue(permissions.isWrite());
+        }
+    }
+
+    @Test
+    @DisplayName("Can read and write when raid user assigned to raid")
+    void raidUser() {
+        final var prefix = "_prefix";
+        final var suffix = "_suffix";
+        final var handle = "%s/%s".formatted(prefix, suffix);
+        final var servicePointId = 1L;
+        final var servicePointGroupId = "service-point-group-id";
+        final var servicePointRecord = new ServicePointRecord().setId(servicePointId);
+
+        final var raid = new RaidDto()
+                .identifier(new Id()
+                        .owner(new Owner()
+                                .servicePoint(servicePointId)))
+                .access(new Access()
+                        .type(new AccessType()
+                                .id(SchemaValues.ACCESS_TYPE_OPEN.getUri())));
+
+        when(raidHistoryService.findByHandle(handle)).thenReturn(Optional.of(raid));
+
+        try (MockedStatic<SecurityContextHolder> securityContextHolder = mockStatic(SecurityContextHolder.class)) {
+            final var securityContext = mock(SecurityContext.class);
+            final var authentication = mock(JwtAuthenticationToken.class);
+            final var token = mock(Jwt.class);
+            final var claims = Map.of(
+                    "service_point_group_id", servicePointGroupId,
+                    "user_raids", List.of(handle)
+            );
+
+
+            final var authorities = List.of((GrantedAuthority) () -> "ROLE_raid-user");
+
+            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getToken()).thenReturn(token);
+            when(token.getClaims()).thenReturn(claims);
+            when(authentication.getAuthorities()).thenReturn(authorities);
+
+            when(servicePointRepository.findByGroupId(servicePointGroupId)).thenReturn(Optional.of(servicePointRecord));
+
+            final var permissions = raidService.getPermissions(prefix, suffix)
+                    .orElseThrow();
+
+            assertTrue(permissions.isRead());
+            assertTrue(permissions.isWrite());
+        }
+    }
+
+    @Test
+    @DisplayName("Can only read when raid user not assigned to raid")
+    void raidUserNotAssigned() {
+        final var prefix = "_prefix";
+        final var suffix = "_suffix";
+        final var handle = "%s/%s".formatted(prefix, suffix);
+        final var servicePointId = 1L;
+        final var servicePointGroupId = "service-point-group-id";
+        final var servicePointRecord = new ServicePointRecord().setId(servicePointId);
+
+        final var raid = new RaidDto()
+                .identifier(new Id()
+                        .owner(new Owner()
+                                .servicePoint(servicePointId)))
+                .access(new Access()
+                        .type(new AccessType()
+                                .id(SchemaValues.ACCESS_TYPE_OPEN.getUri())));
+
+        when(raidHistoryService.findByHandle(handle)).thenReturn(Optional.of(raid));
+
+        try (MockedStatic<SecurityContextHolder> securityContextHolder = mockStatic(SecurityContextHolder.class)) {
+            final var securityContext = mock(SecurityContext.class);
+            final var authentication = mock(JwtAuthenticationToken.class);
+            final var token = mock(Jwt.class);
+            final var claims = Map.of(
+                    "service_point_group_id", servicePointGroupId,
+                    "user_raids", Collections.emptyList()
+            );
+
+            final var authorities = List.of((GrantedAuthority) () -> "ROLE_raid-user");
+
+            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getToken()).thenReturn(token);
+            when(token.getClaims()).thenReturn(claims);
+            when(authentication.getAuthorities()).thenReturn(authorities);
+
+            when(servicePointRepository.findByGroupId(servicePointGroupId)).thenReturn(Optional.of(servicePointRecord));
+
+            final var permissions = raidService.getPermissions(prefix, suffix)
+                    .orElseThrow();
+
+            assertTrue(permissions.isRead());
+            assertFalse(permissions.isWrite());
+        }
+    }
+
+    @Test
+    @DisplayName("Can only read when raid admin not assigned to raid")
+    void raidAdminNotAssigned() {
+        final var prefix = "_prefix";
+        final var suffix = "_suffix";
+        final var handle = "%s/%s".formatted(prefix, suffix);
+        final var servicePointId = 1L;
+        final var servicePointGroupId = "service-point-group-id";
+        final var servicePointRecord = new ServicePointRecord().setId(servicePointId);
+
+        final var raid = new RaidDto()
+                .identifier(new Id()
+                        .owner(new Owner()
+                                .servicePoint(servicePointId)))
+                .access(new Access()
+                        .type(new AccessType()
+                                .id(SchemaValues.ACCESS_TYPE_OPEN.getUri())));
+
+        when(raidHistoryService.findByHandle(handle)).thenReturn(Optional.of(raid));
+
+        try (MockedStatic<SecurityContextHolder> securityContextHolder = mockStatic(SecurityContextHolder.class)) {
+            final var securityContext = mock(SecurityContext.class);
+            final var authentication = mock(JwtAuthenticationToken.class);
+            final var token = mock(Jwt.class);
+            final var claims = Map.of(
+                    "service_point_group_id", servicePointGroupId,
+                    "user_raids", Collections.emptyList()
+            );
+
+            final var authorities = List.of((GrantedAuthority) () -> "ROLE_raid-admin");
+
+            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getToken()).thenReturn(token);
+            when(token.getClaims()).thenReturn(claims);
+            when(authentication.getAuthorities()).thenReturn(authorities);
+
+            when(servicePointRepository.findByGroupId(servicePointGroupId)).thenReturn(Optional.of(servicePointRecord));
+
+            final var permissions = raidService.getPermissions(prefix, suffix)
+                    .orElseThrow();
+
+            assertTrue(permissions.isRead());
+            assertFalse(permissions.isWrite());
+        }
+    }
+
+    @Test
+    @DisplayName("Cannot read or write when raid user not assigned to raid and raid is embargoed")
+    void raidUserNotAssignedToEmbargoedRaid() {
+        final var prefix = "_prefix";
+        final var suffix = "_suffix";
+        final var handle = "%s/%s".formatted(prefix, suffix);
+        final var servicePointId = 1L;
+        final var servicePointGroupId = "service-point-group-id";
+        final var servicePointRecord = new ServicePointRecord().setId(servicePointId);
+
+        final var raid = new RaidDto()
+                .identifier(new Id()
+                        .owner(new Owner()
+                                .servicePoint(servicePointId)))
+                .access(new Access()
+                        .type(new AccessType()
+                                .id(SchemaValues.ACCESS_TYPE_EMBARGOED.getUri())));
+
+        when(raidHistoryService.findByHandle(handle)).thenReturn(Optional.of(raid));
+
+        try (MockedStatic<SecurityContextHolder> securityContextHolder = mockStatic(SecurityContextHolder.class)) {
+            final var securityContext = mock(SecurityContext.class);
+            final var authentication = mock(JwtAuthenticationToken.class);
+            final var token = mock(Jwt.class);
+            final var claims = Map.of(
+                    "service_point_group_id", servicePointGroupId,
+                    "user_raids", Collections.emptyList()
+            );
+
+            final var authorities = List.of((GrantedAuthority) () -> "ROLE_raid-user");
+
+            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getToken()).thenReturn(token);
+            when(token.getClaims()).thenReturn(claims);
+            when(authentication.getAuthorities()).thenReturn(authorities);
+
+            when(servicePointRepository.findByGroupId(servicePointGroupId)).thenReturn(Optional.of(servicePointRecord));
+
+            final var permissions = raidService.getPermissions(prefix, suffix)
+                    .orElseThrow();
+
+            assertFalse(permissions.isRead());
+            assertFalse(permissions.isWrite());
+        }
+    }
+
+    @Test
+    @DisplayName("Cannot read or write when raid admin not assigned to raid and raid is embargoed")
+    void raidAdminNotAssignedToEmbargoedRaid() {
+        final var prefix = "_prefix";
+        final var suffix = "_suffix";
+        final var handle = "%s/%s".formatted(prefix, suffix);
+        final var servicePointId = 1L;
+        final var servicePointGroupId = "service-point-group-id";
+        final var servicePointRecord = new ServicePointRecord().setId(servicePointId);
+
+        final var raid = new RaidDto()
+                .identifier(new Id()
+                        .owner(new Owner()
+                                .servicePoint(servicePointId)))
+                .access(new Access()
+                        .type(new AccessType()
+                                .id(SchemaValues.ACCESS_TYPE_EMBARGOED.getUri())));
+
+        when(raidHistoryService.findByHandle(handle)).thenReturn(Optional.of(raid));
+
+        try (MockedStatic<SecurityContextHolder> securityContextHolder = mockStatic(SecurityContextHolder.class)) {
+            final var securityContext = mock(SecurityContext.class);
+            final var authentication = mock(JwtAuthenticationToken.class);
+            final var token = mock(Jwt.class);
+            final var claims = Map.of(
+                    "service_point_group_id", servicePointGroupId,
+                    "user_raids", Collections.emptyList()
+            );
+
+            final var authorities = List.of((GrantedAuthority) () -> "ROLE_raid-admin");
+
+            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getToken()).thenReturn(token);
+            when(token.getClaims()).thenReturn(claims);
+            when(authentication.getAuthorities()).thenReturn(authorities);
+
+            when(servicePointRepository.findByGroupId(servicePointGroupId)).thenReturn(Optional.of(servicePointRecord));
+
+            final var permissions = raidService.getPermissions(prefix, suffix)
+                    .orElseThrow();
+
+            assertFalse(permissions.isRead());
+            assertFalse(permissions.isWrite());
+        }
+    }
+
+    @Test
+    @DisplayName("Can read and write when raid admin assigned to raid")
+    void raidAdmin() {
+        final var prefix = "_prefix";
+        final var suffix = "_suffix";
+        final var handle = "%s/%s".formatted(prefix, suffix);
+        final var servicePointId = 1L;
+        final var servicePointGroupId = "service-point-group-id";
+        final var servicePointRecord = new ServicePointRecord().setId(servicePointId);
+
+        final var raid = new RaidDto()
+                .identifier(new Id()
+                        .owner(new Owner()
+                                .servicePoint(servicePointId)))
+                .access(new Access()
+                        .type(new AccessType()
+                                .id(SchemaValues.ACCESS_TYPE_OPEN.getUri())));
+
+        when(raidHistoryService.findByHandle(handle)).thenReturn(Optional.of(raid));
+
+        try (MockedStatic<SecurityContextHolder> securityContextHolder = mockStatic(SecurityContextHolder.class)) {
+            final var securityContext = mock(SecurityContext.class);
+            final var authentication = mock(JwtAuthenticationToken.class);
+            final var token = mock(Jwt.class);
+            final var claims = Map.of(
+                    "service_point_group_id", servicePointGroupId,
+                    "admin_raids", List.of(handle)
+            );
+
+
+            final var authorities = List.of((GrantedAuthority) () -> "ROLE_raid-admin");
+
+            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+            when(securityContext.getAuthentication()).thenReturn(authentication);
+            when(authentication.getToken()).thenReturn(token);
+            when(token.getClaims()).thenReturn(claims);
+            when(authentication.getAuthorities()).thenReturn(authorities);
+
+            when(servicePointRepository.findByGroupId(servicePointGroupId)).thenReturn(Optional.of(servicePointRecord));
+
+            final var permissions = raidService.getPermissions(prefix, suffix)
+                    .orElseThrow();
+
+            assertTrue(permissions.isRead());
+            assertTrue(permissions.isWrite());
+        }
+    }
 
 
     private String raidJson() {

@@ -1,5 +1,6 @@
 package au.org.raid.api.controller;
 
+import au.org.raid.api.dto.RaidPermissionsDto;
 import au.org.raid.api.exception.ClosedRaidException;
 import au.org.raid.api.exception.CrossAccountAccessException;
 import au.org.raid.api.exception.ServicePointNotFoundException;
@@ -25,6 +26,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
@@ -137,6 +140,20 @@ public class RaidController implements RaidApi {
         }
 
         return ResponseEntity.ok(raidHistoryService.findAllChangesByHandle(handle));
+    }
+
+    @GetMapping("/raid/{prefix}/{suffix}/permissions")
+    public ResponseEntity<RaidPermissionsDto> permissions(@PathVariable final String prefix,
+                                                          @PathVariable final String suffix) {
+
+
+        return ResponseEntity.of(raidService.getPermissions(prefix, suffix));
+
+        // TODO: Check raid exists
+        // TODO: user roles contains 'raid-user' check 'user-raids' claim
+        // TODO: user roles contains 'raid-admin' check 'admin-raids' claim
+        // TODO: user roles contains 'service-point-user' check raid belongs to same service point as user
+
     }
 
     private long getServicePointId() {

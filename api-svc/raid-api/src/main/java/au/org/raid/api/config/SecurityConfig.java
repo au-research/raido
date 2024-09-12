@@ -30,6 +30,8 @@ import java.util.stream.Collectors;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+    private static final String RAID_USER_ROLE = "raid-user";
+    private static final String RAID_ADMIN_ROLE = "raid-admin";
     private static final String SERVICE_POINT_USER_ROLE = "service-point-user";
     private static final String OPERATOR_ROLE = "operator";
     private static final String GROUPS = "groups";
@@ -57,7 +59,7 @@ public class SecurityConfig {
                         .requestMatchers("/docs/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**"))
-                        .hasRole(SERVICE_POINT_USER_ROLE)
+                        .hasAnyRole(SERVICE_POINT_USER_ROLE, RAID_USER_ROLE, RAID_ADMIN_ROLE)
                         .requestMatchers(new AntPathRequestMatcher(SERVICE_POINT_API + "/**", "PUT"))
                         .hasRole(OPERATOR_ROLE)
                         .requestMatchers(new AntPathRequestMatcher(SERVICE_POINT_API + "/**", "POST"))

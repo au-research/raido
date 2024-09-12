@@ -92,6 +92,22 @@
       "containerId" : "aacef42c-ba11-42f6-89de-89f3c8126f00",
       "attributes" : { }
     }, {
+      "id" : "4a2f20ec-1a4b-44f2-b959-c2f98b8fa9e5",
+      "name" : "raid-admin",
+      "description" : "",
+      "composite" : false,
+      "clientRole" : false,
+      "containerId" : "aacef42c-ba11-42f6-89de-89f3c8126f00",
+      "attributes" : { }
+    }, {
+      "id" : "0f7a7482-f99c-437f-a731-c34c9a0b6365",
+      "name" : "raid-user",
+      "description" : "",
+      "composite" : false,
+      "clientRole" : false,
+      "containerId" : "aacef42c-ba11-42f6-89de-89f3c8126f00",
+      "attributes" : { }
+    }, {
       "id" : "59a3771f-39ea-4f74-a7ca-035a6b37fca9",
       "name" : "offline_access",
       "description" : "${role_offline-access}",
@@ -711,7 +727,7 @@
     "authenticationFlowBindingOverrides" : { },
     "fullScopeAllowed" : true,
     "nodeReRegistrationTimeout" : -1,
-    "defaultClientScopes" : [ "acr", "roles", "basic", "service_point_group_id" ],
+    "defaultClientScopes" : [ "acr", "roles", "user_raids", "basic", "admin_raids", "service_point_group_id" ],
     "optionalClientScopes" : [ ]
   }, {
     "id" : "b5ded15a-4576-4fdf-b95b-f1adf9a8de9e",
@@ -880,6 +896,35 @@
       }
     } ]
   }, {
+    "id" : "9048eb6d-da83-4dc8-a378-92af021acfa1",
+    "name" : "user_raids",
+    "description" : "",
+    "protocol" : "openid-connect",
+    "attributes" : {
+      "include.in.token.scope" : "false",
+      "display.on.consent.screen" : "true",
+      "gui.order" : "",
+      "consent.screen.text" : ""
+    },
+    "protocolMappers" : [ {
+      "id" : "1a4ee665-a98c-427a-8aca-116f39ffb0ef",
+      "name" : "user_raids",
+      "protocol" : "openid-connect",
+      "protocolMapper" : "oidc-usermodel-attribute-mapper",
+      "consentRequired" : false,
+      "config" : {
+        "introspection.token.claim" : "true",
+        "userinfo.token.claim" : "true",
+        "multivalued" : "true",
+        "user.attribute" : "userRaids",
+        "id.token.claim" : "true",
+        "lightweight.claim" : "false",
+        "access.token.claim" : "true",
+        "claim.name" : "user_raids",
+        "jsonType.label" : "String"
+      }
+    } ]
+  }, {
     "id" : "cffef04d-7422-488e-a262-c355f22afdc6",
     "name" : "service_point_group_id",
     "description" : "The ID of the group",
@@ -945,6 +990,35 @@
       }
     } ]
   }, {
+    "id" : "a04b95a6-57ad-4029-be4f-9efc71082a1a",
+    "name" : "admin_raids",
+    "description" : "",
+    "protocol" : "openid-connect",
+    "attributes" : {
+      "include.in.token.scope" : "false",
+      "display.on.consent.screen" : "true",
+      "gui.order" : "",
+      "consent.screen.text" : ""
+    },
+    "protocolMappers" : [ {
+      "id" : "98ce5f2d-f18f-4f54-adfb-c0d446ff00a0",
+      "name" : "admin_raids",
+      "protocol" : "openid-connect",
+      "protocolMapper" : "oidc-usermodel-attribute-mapper",
+      "consentRequired" : false,
+      "config" : {
+        "introspection.token.claim" : "true",
+        "userinfo.token.claim" : "true",
+        "multivalued" : "true",
+        "user.attribute" : "adminRaids",
+        "id.token.claim" : "true",
+        "lightweight.claim" : "false",
+        "access.token.claim" : "true",
+        "claim.name" : "admin_raids",
+        "jsonType.label" : "String"
+      }
+    } ]
+  }, {
     "id" : "dfd64253-2c36-4454-ae93-2f5f4ce57074",
     "name" : "roles",
     "description" : "OpenID Connect scope for add user roles to the access token",
@@ -994,7 +1068,7 @@
       }
     } ]
   } ],
-  "defaultDefaultClientScopes" : [ "role_list", "roles", "acr", "basic" ],
+  "defaultDefaultClientScopes" : [ "role_list", "roles", "acr", "basic", "admin_raids", "user_raids" ],
   "defaultOptionalClientScopes" : [ "offline_access" ],
   "browserSecurityHeaders" : {
     "contentSecurityPolicyReportOnly" : "",
@@ -1031,7 +1105,7 @@
       "subType" : "authenticated",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "oidc-sha256-pairwise-sub-mapper", "saml-role-list-mapper", "oidc-full-name-mapper", "saml-user-property-mapper", "oidc-address-mapper", "oidc-usermodel-property-mapper", "oidc-usermodel-attribute-mapper", "saml-user-attribute-mapper" ]
+        "allowed-protocol-mapper-types" : [ "saml-user-property-mapper", "saml-role-list-mapper", "oidc-usermodel-attribute-mapper", "oidc-full-name-mapper", "oidc-address-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-usermodel-property-mapper", "saml-user-attribute-mapper" ]
       }
     }, {
       "id" : "1ce6f027-c6ef-4d20-a151-2cdb10cbffbc",
@@ -1082,7 +1156,7 @@
       "subType" : "anonymous",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "saml-role-list-mapper", "oidc-full-name-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-address-mapper", "saml-user-property-mapper", "oidc-usermodel-property-mapper", "oidc-usermodel-attribute-mapper", "saml-user-attribute-mapper" ]
+        "allowed-protocol-mapper-types" : [ "saml-role-list-mapper", "saml-user-property-mapper", "oidc-full-name-mapper", "oidc-sha256-pairwise-sub-mapper", "saml-user-attribute-mapper", "oidc-address-mapper", "oidc-usermodel-property-mapper", "oidc-usermodel-attribute-mapper" ]
       }
     } ],
     "org.keycloak.userprofile.UserProfileProvider" : [ {
