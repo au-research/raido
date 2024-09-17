@@ -128,6 +128,7 @@ public class RaidService {
             return Optional.empty();
         }
 
+        var servicePointMatch = false;
         var canWrite = false;
         var canRead = raidOptional.get().getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri());
 
@@ -142,9 +143,17 @@ public class RaidService {
                 .map(GrantedAuthority::getAuthority)
                 .toList();
 
+        if (raidOptional.get().getIdentifier().getOwner().getServicePoint().equals(servicePoint.getId())) {
+            servicePointMatch = true;
+        }
+
         if (authorities.contains(SERVICE_POINT_USER_ROLE)) {
-            if (raidOptional.get().getIdentifier().getOwner().getServicePoint().equals(servicePoint.getId())) {
-                return Optional.of(RaidPermissionsDto.builder().read(true).write(true).build());
+            if (servicePointMatch) {
+                return Optional.of(RaidPermissionsDto.builder()
+                        .servicePointMatch(servicePointMatch)
+                        .read(true)
+                        .write(true)
+                        .build());
             }
         }
 
@@ -166,6 +175,7 @@ public class RaidService {
         }
 
         return Optional.of(RaidPermissionsDto.builder()
+                .servicePointMatch(servicePointMatch)
                 .read(canRead)
                 .write(canWrite)
                 .build());

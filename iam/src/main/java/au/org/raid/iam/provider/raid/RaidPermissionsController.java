@@ -2,26 +2,34 @@ package au.org.raid.iam.provider.raid;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
+import jakarta.ws.rs.OPTIONS;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.keycloak.crypto.KeyUse;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.services.cors.Cors;
 import org.keycloak.services.managers.AppAuthManager;
 import org.keycloak.services.managers.AuthenticationManager;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Provider
 public class RaidPermissionsController {
+    private static final String OPERATOR_ROLE_NAME = "operator";
+    private static final String GROUP_ADMIN_ROLE_NAME = "group-admin";
+    private static final String SERVICE_POINT_USER_ROLE = "service-point-user";
     private final AuthenticationManager.AuthResult auth;
-    private final KeycloakSession session;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    private final KeycloakSession session;
     public RaidPermissionsController(final KeycloakSession session) {
         this.session = session;
         this.auth = new AppAuthManager.BearerTokenAuthenticator(session).authenticate();
@@ -45,63 +53,97 @@ public class RaidPermissionsController {
         return cors;
     }
 
-    @POST
-    @Path("/grant-user")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response grantUser(RaidPermissionsDto raidPermissions) {
-        if (this.auth == null) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
-        }
-        final var user = auth.getSession().getUser();
-        //TODO: Check user permissions
-
-        final var raidUser = session.users().getUserById(auth.getSession().getRealm(), raidPermissions.getUserId());
-
-        final var existingPermissions = raidUser.getAttributeStream("userRaids").collect(Collectors.toSet());
-
-        existingPermissions.add(raidPermissions.getHandle());
-
-
-
-
-//        raidUser.setAttribute("adminRaids", new ArrayList<>(raidPermissions.getAdminRaids()));
-//        raidUser.setAttribute("userRaids", new ArrayList<>(raidPermissions.getUserRaids()));
-
-        return Response.fromResponse(
-                        addCorsHeaders("POST")
-                                .builder(Response.ok())
-                                .build()
-                )
-                .entity(raidPermissions)
+    @OPTIONS
+    @Path("/raid-user")
+    public Response joinPreflight() {
+        return Response.fromResponse(addCorsHeaders("PUT")
+                        .preflight()
+                        .builder(Response.ok())
+                        .build())
                 .build();
     }
 
-//    @GET
-//    @Path("/{userId}")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response findByUserId(@PathParam("userId") final String userId) {
-//        if (this.auth == null) {
-//            return Response.status(Response.Status.UNAUTHORIZED).build();
-//        }
-//        final var user = auth.getSession().getUser();
-//
-//        final var raidUser = session.users().getUserById(auth.getSession().getRealm(), userId);
-//
-//        final var userRaids = raidUser.getAttributeStream("userRaids").collect(Collectors.toSet());
-//        final var adminRaids = raidUser.getAttributeStream("adminRaids").collect(Collectors.toSet());
-//
-//        return Response.fromResponse(
-//                        addCorsHeaders("GET")
-//                                .builder(Response.ok())
-//                                .build()
-//                )
-//                .entity(RaidPermissionsDto.builder()
-//                        .userId(userId)
-//                        .userRaids(userRaids)
-//                        .adminRaids(adminRaids)
-//                        .build()
-//                )
-//                .build();
-//    }
+    @PUT
+    @Path("/raid-user")
+    @SneakyThrows
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addRaidUser(RaidUserPermissionsRequest request) {
+        if (this.auth == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
+        final var currentUser = auth.getSession().getUser();
+
+        if (currentUser.getRoleMappingsStream().anyMatch(role -> role.getName().equals("raid-admin"))) {
+            if (currentUser.getAttributeStream("adminRaids").anyMatch(name -> name.equals(request.getHandle()))) {
+                addUserToRaid(request.getUserId(), request.getHandle(), "userRaids", "raid-user");
+            }
+        } else if (currentUser.getRoleMappingsStream().anyMatch(role -> role.getName().equals("service-point-user"))) {
+            final var raidClient = new RaidClient(objectMapper);
+            final var key = session.keys().getActiveKey(session.getContext().getRealm(), KeyUse.SIG, "RS256");
+
+            final var permissions = raidClient.getPermissions(request.getHandle(), auth.getToken(), key);
+            if (permissions.isServicePointMatch()) {
+                addUserToRaid(request.getUserId(), request.getHandle(), "userRaids", "raid-user");
+            }
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
+        return Response.fromResponse(
+                        addCorsHeaders("PUT")
+                                .builder(Response.ok())
+                                .build()
+                )
+                .entity("{}")
+                .build();
+    }
+
+    @PUT
+    @Path("/raid-admin")
+    @SneakyThrows
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addRaidAdmin(RaidUserPermissionsRequest request) {
+        if (this.auth == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
+        final var currentUser = auth.getSession().getUser();
+
+        if (currentUser.getRoleMappingsStream().anyMatch(role -> role.getName().equals("service-point-user"))) {
+            final var role = auth.getSession().getRealm().getRole("raid-admin");
+            if (role == null) {
+                throw new IllegalStateException("'raid-admin' role not found");
+            }
+            final var user = session.users().getUserById(auth.getSession().getRealm(), request.getUserId());
+
+            user.grantRole(role);
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
+        return Response.fromResponse(
+                        addCorsHeaders("PUT")
+                                .builder(Response.ok())
+                                .build()
+                )
+                .entity("{}")
+                .build();
+    }
+
+    private void addUserToRaid(final String userId, final String handle, final String attributeName, final String roleName) {
+        final var user = session.users().getUserById(auth.getSession().getRealm(), userId);
+        final var userRaids = user.getAttributeStream(attributeName).collect(Collectors.toCollection(HashSet::new));
+        userRaids.add(handle);
+        user.setAttribute(attributeName, new ArrayList<>(userRaids));
+
+        final var role = auth.getSession().getRealm().getRole(roleName);
+        if (role == null) {
+            throw new IllegalStateException("'%s' role not found".formatted(roleName));
+        }
+
+        user.grantRole(role);
+    }
+
 
 }

@@ -188,6 +188,5 @@ tasks.register('dockerComposeUp', Exec) {
 }
 
 tasks.register('dockerComposeDown', Exec) {
-  dependsOn ':iam:build'
   commandLine 'docker', 'compose', 'down', '-v'
 }
