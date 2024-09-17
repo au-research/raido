@@ -10,15 +10,27 @@ import org.keycloak.crypto.KeyWrapper;
 import org.keycloak.jose.jws.JWSBuilder;
 import org.keycloak.representations.AccessToken;
 
+import java.util.Map;
+
 @RequiredArgsConstructor
 public class RaidClient {
-    private static final String URL_FORMAT = "http://host.docker.internal:8080/raid/%s/permissions";
+    private static final String URL_FORMAT = "http://%s/raid/%s/permissions";
     private final ObjectMapper objectMapper;
+    private static final Map<String, String> HOSTNAME_MAP = Map.of(
+            "localhost", "host.docker.internal:8080",
+            "iam.test.raid.org.au", "api.test.raid.org.au",
+            "iam.demo.raid.org.au", "api.demo.raid.org.au",
+            "iam.stage.raid.org.au", "api.stage.raid.org.au",
+            "iam.prod.raid.org.au", "api.prod.raid.org.au"
+    );
 
     @SneakyThrows
     public RaidPermissionsDto getPermissions(final String handle, final AccessToken token, final KeyWrapper key) {
         try (final var httpClient = HttpClients.createDefault()) {
-            final var http = SimpleHttp.doGet(URL_FORMAT.formatted(handle), httpClient);
+            var hostname = System.getenv("KC_HOSTNAME");
+            var url = URL_FORMAT.formatted(HOSTNAME_MAP.get(hostname), handle);
+
+            final var http = SimpleHttp.doGet(url, httpClient);
 
             String jwt = new JWSBuilder()
                     .type("JWT")

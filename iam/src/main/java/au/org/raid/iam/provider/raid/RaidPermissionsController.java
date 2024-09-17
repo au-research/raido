@@ -3,7 +3,7 @@ package au.org.raid.iam.provider.raid;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.OPTIONS;
-import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -55,15 +55,15 @@ public class RaidPermissionsController {
 
     @OPTIONS
     @Path("/raid-user")
-    public Response joinPreflight() {
-        return Response.fromResponse(addCorsHeaders("PUT")
+    public Response addRaidUserPreflight() {
+        return Response.fromResponse(addCorsHeaders("POST")
                         .preflight()
                         .builder(Response.ok())
                         .build())
                 .build();
     }
 
-    @PUT
+    @POST
     @Path("/raid-user")
     @SneakyThrows
     @Consumes(MediaType.APPLICATION_JSON)
@@ -91,7 +91,7 @@ public class RaidPermissionsController {
         }
 
         return Response.fromResponse(
-                        addCorsHeaders("PUT")
+                        addCorsHeaders("POST")
                                 .builder(Response.ok())
                                 .build()
                 )
@@ -99,7 +99,18 @@ public class RaidPermissionsController {
                 .build();
     }
 
-    @PUT
+    @OPTIONS
+    @Path("/raid-admin")
+    public Response addRaidAdminPreflight() {
+        return Response.fromResponse(addCorsHeaders("POST")
+                        .preflight()
+                        .builder(Response.ok())
+                        .build())
+                .build();
+    }
+
+
+    @POST
     @Path("/raid-admin")
     @SneakyThrows
     @Consumes(MediaType.APPLICATION_JSON)
@@ -123,7 +134,7 @@ public class RaidPermissionsController {
         }
 
         return Response.fromResponse(
-                        addCorsHeaders("PUT")
+                        addCorsHeaders("POST")
                                 .builder(Response.ok())
                                 .build()
                 )
