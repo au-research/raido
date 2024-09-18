@@ -27,7 +27,6 @@ import java.util.TimeZone;
  * the encoding process instead of appending full characters would save a
  * few characters.
  *
- * @see AlphaEncoder
  */
 public class IdFactory {
     public static final String SEPARATOR = "u";

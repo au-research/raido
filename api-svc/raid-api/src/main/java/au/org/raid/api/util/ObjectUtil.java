@@ -1,35 +1,13 @@
 package au.org.raid.api.util;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.toList;
 
 
 public final class ObjectUtil {
-
-    /**
-     * Thread safe - but consider: https://stackoverflow.com/a/36162525/924597
-     * <p>
-     * Mitigated by the fact that if we're calling toString() on an object, we're
-     * already likely on a slow path (exception handling or some debug loggging).
-     * Generally, we only use this for debugging and occasional logging (where
-     * we want to avoid logging too much in general - and the "structured logging"
-     * logic could also get fancy with this too, as long as we use `with()`).
-     * This is just for usage in the context of `toString()` - wire serialisation
-     * for these objects is handled by Spring,
-     */
-    private static final ObjectMapper jsonToStringMapper = new ObjectMapper().
-            // so it can do LocalDateTime, etc.
-                    findAndRegisterModules();
 
     /**
      * @return returns empty string if null is passed, otherwise returns value
@@ -88,91 +66,6 @@ public final class ObjectUtil {
             // hack to adapt our "no return value" wrapper to the real method
             return null;
         });
-    }
-
-    public static <T> List<T> filterType(
-            List<?> raw, Class<T> type
-    ) {
-        return raw.stream().
-                filter(type::isInstance).
-                map(type::cast).
-                collect(toList());
-    }
-
-    /**
-     * Will not return null, always returns a new list leaving inputs
-     * unchanged.
-     */
-    public static <T> List<T> concat(
-            @Nullable List<T> left,
-            @Nullable List<T> right
-    ) {
-        if (left == null && right == null) {
-            return Collections.emptyList();
-        } else if (left == right) {
-            return new ArrayList<>(left);
-        } else if (left == null) {
-            return new ArrayList<>(right);
-        } else if (right == null) {
-            return new ArrayList<>(left);
-        }
-
-        return Stream.concat(left.stream(), right.stream()).collect(toList());
-    }
-
-    public static <T> String mapJoin(
-            Function<T, String> map,
-            String separator,
-            Collection<T> list
-    ) {
-        return list.stream().map(map).collect(Collectors.joining(separator));
-    }
-
-    public static <T, R> List<R> listMap(
-            Collection<T> list,
-            Function<T, R> map
-    ) {
-        return list.stream().map(map).collect(Collectors.toList());
-    }
-
-    public static <T> List<T> concat(List<T> list, T element) {
-        List<T> result = new ArrayList<>(list);
-        result.add(element);
-        return result;
-    }
-
-    public static boolean hasValue(Collection<?> c) {
-        if (c == null) {
-            return false;
-        }
-        return !c.isEmpty();
-    }
-
-    public static String jsonToString(Object value) {
-        try {
-            return jsonToStringMapper.writeValueAsString(value);
-        } catch (JsonProcessingException e) {
-            throw ExceptionUtil.wrapException(e, "could not generate toString()");
-        }
-    }
-
-    public static boolean isTrue(@Nullable Optional<Boolean> value) {
-        if (value == null) {
-            return false;
-        }
-        if (value.isEmpty()) {
-            return false;
-        }
-
-        return value.get();
-    }
-
-    public static boolean isTrue(@Nullable Boolean value) {
-        if (value == null) {
-            return false;
-        }
-
-        return value;
     }
 
     public static boolean isEmpty(@Nullable Collection<?> c) {

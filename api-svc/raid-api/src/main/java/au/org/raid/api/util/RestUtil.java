@@ -101,15 +101,6 @@ public class RestUtil {
         return response.getBody();
     }
 
-    public static <T> T get(
-            RestTemplate rest, String authnToken,
-            String url, Class<T> resultType
-    ) {
-        var entity = createEntityWithBearer(authnToken);
-        var epResponse = rest.exchange(url, GET, entity, resultType);
-        return epResponse.getBody();
-    }
-
     public static <TRequest, TResult> TResult post(
             RestTemplate rest, String authnToken,
             String url, TRequest request, Class<TResult> resultType

@@ -1,22 +1,11 @@
 package au.org.raid.api.factory;
 
-import au.org.raid.api.exception.InvalidJsonException;
-import au.org.raid.api.exception.InvalidTitleException;
-import au.org.raid.api.service.Handle;
-import au.org.raid.api.service.apids.model.ApidsMintResponse;
-import au.org.raid.api.util.DateUtil;
 import au.org.raid.db.jooq.enums.Metaschema;
 import au.org.raid.db.jooq.tables.records.RaidRecord;
-import au.org.raid.db.jooq.tables.records.ServicePointRecord;
-import au.org.raid.idl.raidv2.model.RaidCreateRequest;
 import au.org.raid.idl.raidv2.model.RaidDto;
-import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
-import au.org.raid.idl.raidv2.model.Title;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.jooq.JSONB;
 import org.springframework.stereotype.Component;
 
 import java.time.Clock;

@@ -1,6 +1,5 @@
 package au.org.raid.api.config;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -39,16 +38,8 @@ public class SecurityConfig {
     private static final String ROLES_CLAIM = "roles";
 
     private final KeycloakLogoutHandler keycloakLogoutHandler;
-    public static final String RAID_V2_API = "/v2";
     public static final String RAID_API = "/raid";
     public static final String SERVICE_POINT_API = "/service-point";
-    public static final String TEAM_API = "/team";
-
-    public static boolean isStableApi(HttpServletRequest request) {
-        return request.getServletPath().startsWith(RAID_API) ||
-                request.getServletPath().startsWith(SERVICE_POINT_API) ||
-                request.getServletPath().startsWith(TEAM_API);
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -60,6 +51,7 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**"))
                         .hasAnyRole(SERVICE_POINT_USER_ROLE, RAID_USER_ROLE, RAID_ADMIN_ROLE)
+
                         .requestMatchers(new AntPathRequestMatcher(SERVICE_POINT_API + "/**", "PUT"))
                         .hasRole(OPERATOR_ROLE)
                         .requestMatchers(new AntPathRequestMatcher(SERVICE_POINT_API + "/**", "POST"))
