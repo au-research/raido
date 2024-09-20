@@ -77,6 +77,8 @@ public class RaidPermissionsController {
         if (currentUser.getRoleMappingsStream().anyMatch(role -> role.getName().equals("raid-admin"))) {
             if (currentUser.getAttributeStream("adminRaids").anyMatch(name -> name.equals(request.getHandle()))) {
                 addUserToRaid(request.getUserId(), request.getHandle(), "userRaids", "raid-user");
+            } else {
+                return Response.status(Response.Status.UNAUTHORIZED).build();
             }
         } else if (currentUser.getRoleMappingsStream().anyMatch(role -> role.getName().equals("service-point-user"))) {
             final var raidClient = new RaidClient(objectMapper);
