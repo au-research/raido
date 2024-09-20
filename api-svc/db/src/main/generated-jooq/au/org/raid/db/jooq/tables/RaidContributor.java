@@ -7,28 +7,15 @@ package au.org.raid.db.jooq.tables;
 import au.org.raid.db.jooq.ApiSvc;
 import au.org.raid.db.jooq.Keys;
 import au.org.raid.db.jooq.tables.records.RaidContributorRecord;
+import org.jooq.Record;
+import org.jooq.*;
+import org.jooq.impl.DSL;
+import org.jooq.impl.SQLDataType;
+import org.jooq.impl.TableImpl;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-
-import org.jooq.Field;
-import org.jooq.ForeignKey;
-import org.jooq.Function5;
-import org.jooq.Identity;
-import org.jooq.Name;
-import org.jooq.Record;
-import org.jooq.Records;
-import org.jooq.Row5;
-import org.jooq.Schema;
-import org.jooq.SelectField;
-import org.jooq.Table;
-import org.jooq.TableField;
-import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
-import org.jooq.impl.DSL;
-import org.jooq.impl.SQLDataType;
-import org.jooq.impl.TableImpl;
 
 
 /**
@@ -123,11 +110,6 @@ public class RaidContributor extends TableImpl<RaidContributorRecord> {
     @Override
     public UniqueKey<RaidContributorRecord> getPrimaryKey() {
         return Keys.RAID_CONTRIBUTOR_PKEY;
-    }
-
-    @Override
-    public List<UniqueKey<RaidContributorRecord>> getUniqueKeys() {
-        return Arrays.asList(Keys.RAID_CONTRIBUTOR_HANDLE_CONTRIBUTOR_ID_KEY);
     }
 
     @Override

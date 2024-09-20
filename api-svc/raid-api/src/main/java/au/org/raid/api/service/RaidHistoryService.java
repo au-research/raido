@@ -83,6 +83,42 @@ public class RaidHistoryService {
     }
 
     @SneakyThrows
+    public RaidDto save(final RaidDto raid) {
+        final var version = raid.getIdentifier().getVersion();
+        final var newVersion = version + 1;
+        raid.getIdentifier().setVersion(newVersion);
+
+        final var raidString = objectMapper.writeValueAsString(raid);
+
+        final var handle = handleFactory.create(raid.getIdentifier().getId());
+
+        final var history = raidHistoryRepository.findAllByHandle(handle.toString()).stream()
+                .map(RaidHistoryRecord::getDiff)
+                .map(jsonValueFactory::create)
+                .toList();
+
+        final var diff = jsonPatchFactory.create(jsonValueFactory.create(history).toString(), raidString);
+
+        final var recordsUpdated = raidHistoryRepository.insert(
+                raidHistoryRecordFactory.create(handle, newVersion, ChangeType.PATCH, diff)
+        );
+
+        if (recordsUpdated < 1) {
+            throw new InvalidVersionException(version);
+        }
+
+        if (newVersion % properties.getBaselineInterval() == 0) {
+            final var baselineDiff = jsonPatchFactory.create(EMPTY_JSON, raidString);
+
+            raidHistoryRepository.insert(
+                    raidHistoryRecordFactory.create(handle, newVersion, ChangeType.BASELINE, baselineDiff)
+            );
+        }
+
+        return objectMapper.readValue(jsonValueFactory.create(history, diff).toString(), RaidDto.class);
+    }
+
+    @SneakyThrows
     public Optional<RaidDto> findByHandleAndVersion(final String handle, final Integer version) {
         final var history = raidHistoryRepository.findAllByHandleAndVersion(handle, version).stream()
                 .map(RaidHistoryRecord::getDiff)

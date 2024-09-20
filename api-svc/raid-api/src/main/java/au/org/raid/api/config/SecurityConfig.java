@@ -8,6 +8,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
@@ -33,6 +34,7 @@ public class SecurityConfig {
     private static final String RAID_ADMIN_ROLE = "raid-admin";
     private static final String SERVICE_POINT_USER_ROLE = "service-point-user";
     private static final String OPERATOR_ROLE = "operator";
+    private static final String CONTRIBUTOR_WRITER_ROLE = "contributor-writer";
     private static final String GROUPS = "groups";
     private static final String REALM_ACCESS_CLAIM = "realm_access";
     private static final String ROLES_CLAIM = "roles";
@@ -49,9 +51,14 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui*/**").permitAll()
                         .requestMatchers("/docs/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**"))
-                        .hasAnyRole(SERVICE_POINT_USER_ROLE, RAID_USER_ROLE, RAID_ADMIN_ROLE)
-
+                        .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**", "GET"))
+                        .hasRole(SERVICE_POINT_USER_ROLE)
+                        .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**", "POST"))
+                        .hasRole(SERVICE_POINT_USER_ROLE)
+                        .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**", "PUT"))
+                        .hasRole(SERVICE_POINT_USER_ROLE)
+                        .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**", "PATCH"))
+                        .hasRole(CONTRIBUTOR_WRITER_ROLE)
                         .requestMatchers(new AntPathRequestMatcher(SERVICE_POINT_API + "/**", "PUT"))
                         .hasRole(OPERATOR_ROLE)
                         .requestMatchers(new AntPathRequestMatcher(SERVICE_POINT_API + "/**", "POST"))
@@ -65,9 +72,7 @@ public class SecurityConfig {
         http.oauth2Login(Customizer.withDefaults())
                 .logout(logout -> logout.addLogoutHandler(keycloakLogoutHandler).logoutSuccessUrl("/"));
 
-
-
-
+        http.csrf(AbstractHttpConfigurer::disable);
 
         return http.build();
     }
@@ -130,77 +135,4 @@ public class SecurityConfig {
 
         return jwtAuthenticationConverter;
     }
-
-//    @Bean
-//    public AuthenticationManagerResolver<HttpServletRequest>
-//    tokenAuthenticationManagerResolver(
-//            RaidV2AuthenticationProvider raidV2AuthProvider
-//    ) {
-//        return (request) -> {
-//            if (isRaidV2Api(request)) {
-//                return raidV2AuthProvider::authenticate;
-//            } else if (isStableApi(request)) {
-//                return raidV2AuthProvider::authenticate;
-//            } else {
-//        /* client has done a request (probably a POST), with a bearer token,
-//        but not on a recognised "API path".
-//        IMPROVE: dig out the token and decode it, so we can log details? */
-//                log.info("ignored bearer token authenticated request %s:%s:%s",
-//                        request.getHeader(HOST), request.getMethod(), request.getRequestURI());
-//                throw ExceptionUtil.authFailed();
-//            }
-//        };
-//    }
-
-    // maybe AuthnProvider can just be @Components now instead of explicit beans?
-//    @Bean
-//    public RaidV2AuthenticationProvider raidV2AuthProvider(
-//            RaidV2AppUserApiTokenService appUserApiTokenSvc,
-//            RaidV2ApiKeyApiTokenService apiKeyApiTokenSvc
-//    ) {
-//        return new RaidV2AuthenticationProvider(
-//                appUserApiTokenSvc, apiKeyApiTokenSvc);
-//    }
-
-//    @Bean
-//    public RequestRejectedHandler requestRejectedHandler() {
-//    /* sends an error response with a configurable status code (default is 400
-//     BAD_REQUEST) we can pass a different value in the constructor. */
-//        return new HttpStatusRequestRejectedHandler() {
-//            @Override
-//            public void handle(
-//                    HttpServletRequest request,
-//                    HttpServletResponse response,
-//                    RequestRejectedException ex
-//            ) throws IOException {
-//        /* i don't think we want a stack trace here?
-//        user/principal stuff will not be populated because this tends to happen
-//        very early in request processing. */
-//                log.with("method", request.getMethod()).
-//                        with("uri", request.getRequestURI()).
-//                        with("params", request.getParameterMap()).
-//                        with("message", ex.getMessage()).
-//                        info("Request rejected");
-//                response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-//            }
-//        };
-//    }
-
-    /**
-     * If encoded slashes aren't allowed, then calls of the form:
-     * `http://localhost:8080/v1/handle/102.100.100%2F75517`
-     * would get rejected by HttpStrictFirewall.  Which is unfortunate because
-     * handles contain slashes as defined in the ISO standard.
-     * Most client-technologies (Feign, RestTemplate, openapi-fetch, etc.) will, by
-     * default, percent-encode data that is passed to them as a "parameter value".
-     * 😢
-     */
-//    @Bean
-//    public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
-//        log.info("allowUrlEncodedSlashHttpFirewall()");
-//        StrictHttpFirewall firewall = new StrictHttpFirewall();
-//        firewall.setAllowUrlEncodedSlash(true);
-//        return firewall;
-//    }
-
 }

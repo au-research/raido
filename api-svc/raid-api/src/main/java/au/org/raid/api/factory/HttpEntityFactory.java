@@ -14,4 +14,12 @@ public class HttpEntityFactory {
         final HttpHeaders headers = httpHeadersFactory.createBasicAuthHeaders(repositoryId, password);
         return new HttpEntity<>(body, headers);
     }
+
+
+    public <T> HttpEntity<T> create(final T body) {
+        final var headers = new HttpHeaders();
+        headers.set("Content-type", "application/json");
+
+        return new HttpEntity<>(body, headers);
+    }
 }

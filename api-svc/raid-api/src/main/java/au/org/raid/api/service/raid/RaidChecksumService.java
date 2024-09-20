@@ -2,7 +2,6 @@ package au.org.raid.api.service.raid;
 
 import au.org.raid.db.jooq.tables.records.RaidRecord;
 import au.org.raid.idl.raidv2.model.RaidDto;
-import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -27,13 +26,7 @@ public class RaidChecksumService {
     }
 
     @SneakyThrows
-    public String create(final RaidUpdateRequest raid) {
-        return DigestUtils.md5DigestAsHex(objectMapper.writeValueAsString(raid).getBytes());
+    public <T>String create(final T object) {
+        return DigestUtils.md5DigestAsHex(objectMapper.writeValueAsString(object).getBytes());
     }
-
-    @SneakyThrows
-    public String create(final RaidDto raid) {
-        return DigestUtils.md5DigestAsHex(objectMapper.writeValueAsString(raid).getBytes());
-    }
-
 }

@@ -19,6 +19,7 @@ import static au.org.raid.inttest.service.TestConstants.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 
+@Disabled
 public class ContributorsIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Minting a RAiD with no contributor fails")

@@ -114,7 +114,7 @@ public class AbstractIntegrationTest {
                 .description(descriptions)
 
                 .contributor(List.of(contributor(
-                        REAL_TEST_ORCID, PRINCIPAL_INVESTIGATOR_POSITION, SOFTWARE_CONTRIBUTOR_ROLE, today)))
+                        REAL_TEST_ORCID, PRINCIPAL_INVESTIGATOR_POSITION, SOFTWARE_CONTRIBUTOR_ROLE, today, CONTRIBUTOR_EMAIL)))
                 .organisation(List.of(organisation(
                         REAL_TEST_ROR, LEAD_RESEARCH_ORGANISATION, today)))
                 .access(new Access()
@@ -157,13 +157,15 @@ public class AbstractIntegrationTest {
     public Contributor contributor(
             final String orcid,
             final String position,
-            String role,
-            LocalDate startDate
+            final String role,
+            final LocalDate startDate,
+            final String email
     ) {
         return new Contributor()
-                .id(orcid)
+//                .id(orcid)
                 .contact(true)
                 .leader(true)
+                .email(email)
                 .schemaUri(CONTRIBUTOR_IDENTIFIER_SCHEMA_URI)
                 .position(List.of(new ContributorPosition()
                         .schemaUri(CONTRIBUTOR_POSITION_SCHEMA_URI)

@@ -70,6 +70,7 @@
   "contributor": [
     {
       "id": "https://orcid.org/0000-0002-4368-8058",
+      "uuid": "c215b67b-0690-40fe-87d9-b2acb96cb63c",
       "schemaUri": "https://orcid.org/",
       "position": [
         {
@@ -97,6 +98,7 @@
     },
     {
       "id": "https://orcid.org/0000-0002-6492-9025",
+      "uuid": "f416c2a5-5737-416f-9ad8-0a9722aa28c5",
       "schemaUri": "https://orcid.org/",
       "position": [
         {

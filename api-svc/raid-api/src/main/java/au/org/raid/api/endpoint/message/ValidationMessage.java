@@ -2,14 +2,13 @@ package au.org.raid.api.endpoint.message;
 
 import au.org.raid.idl.raidv2.model.ValidationFailure;
 
-import static au.org.raid.db.jooq.tables.Raid.RAID;
-
 public class ValidationMessage {
 
     public static final String URI_DOES_NOT_EXIST = "uri not found";
     public static final String SERVER_ERROR = "uri could not be validated - server error";
 
     public static final String NOT_SET_TYPE = "notSet";
+    public static final String NOT_FOUND_TYPE = "notFound";
     public static final String TOO_LONG_TYPE = "tooLong";
     public static final String INVALID_VALUE_TYPE = "invalidValue";
     public static final String END_DATE_BEFORE_START_DATE = "end date is before start date";

@@ -11,9 +11,11 @@ import au.org.raid.api.repository.ServicePointRepository;
 import au.org.raid.api.service.Handle;
 import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.RaidIngestService;
+import au.org.raid.api.service.RaidListenerService;
 import au.org.raid.api.service.datacite.DataciteService;
 import au.org.raid.api.util.SchemaValues;
 import au.org.raid.db.jooq.tables.records.ServicePointRecord;
+import au.org.raid.idl.raidv2.model.Contributor;
 import au.org.raid.idl.raidv2.model.RaidCreateRequest;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
@@ -48,19 +50,24 @@ public class RaidService {
     private final RaidHistoryService raidHistoryService;
     private final RaidIngestService raidIngestService;
     private final HandleFactory handleFactory;
+    private final RaidListenerService raidListenerService;
 
     @Transactional
     public RaidDto mint(
-            final RaidCreateRequest request,
+            final RaidCreateRequest raid,
             final long servicePointId
     ) {
+        log.debug("THIS IS RAID V3");
+
         final var servicePointRecord =
                 servicePointRepository.findById(servicePointId).orElseThrow(() ->
                         new UnknownServicePointException(servicePointId));
 
-        mintHandle(request, servicePointRecord, 0);
+        mintHandle(raid, servicePointRecord, 0);
 
-        final var raidDto = raidHistoryService.save(request);
+        raidListenerService.create(raid.getIdentifier().getId(), raid.getContributor());
+
+        final var raidDto = raidHistoryService.save(raid);
         raidIngestService.create(raidDto);
 
         return raidDto;
@@ -107,11 +114,35 @@ public class RaidService {
             return existing;
         }
 
+        raidListenerService.update(raid.getIdentifier().getId(), raid.getContributor(), existing.getContributor());
+
         final var raidDto = raidHistoryService.save(raid);
 
         dataciteSvc.update(raid, handle, servicePointRecord.getRepositoryId(), servicePointRecord.getPassword());
 
         return raidIngestService.update(raidDto);
+    }
+
+    @Transactional
+    public RaidDto patchContributors(final String prefix, final String suffix, List<Contributor> contributors) {
+        final var handle = "%s/%s".formatted(prefix, suffix);
+        final var raid = raidHistoryService.findByHandle(handle)
+                .orElseThrow(() -> new ResourceNotFoundException(handle));
+
+        final var servicePointId = raid.getIdentifier().getOwner().getServicePoint();
+
+        final var servicePointRecord = servicePointRepository.findById(servicePointId)
+                .orElseThrow(() -> new ServicePointNotFoundException(servicePointId));
+
+        //TODO; validate contributors?
+
+        raid.setContributor(contributors);
+
+        raidHistoryService.save(raid);
+        dataciteSvc.update(raid, handle, servicePointRecord.getRepositoryId(), servicePointRecord.getPassword());
+
+        return raidIngestService.update(raid);
+
     }
 
     @Transactional(readOnly = true)
