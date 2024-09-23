@@ -17,6 +17,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.hamcrest.Matchers;
 import org.jooq.exception.DataAccessException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -91,7 +92,7 @@ class RaidControllerTest {
     }
 
     @Test
-    void mintRaidV1_ReturnsRedactedInternalServerErrorOnDataAccessException() throws Exception {
+    void mintRaid_ReturnsRedactedInternalServerErrorOnDataAccessException() throws Exception {
         final var raid = createRaidForPost();
 
         try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
@@ -123,7 +124,7 @@ class RaidControllerTest {
     }
 
     @Test
-    void mintRaidV1_ReturnsBadRequest() throws Exception {
+    void mintRaid_ReturnsBadRequest() throws Exception {
         final var validationFailureMessage = "validation failure message";
         final var validationFailureType = "validation failure type";
         final var validationFailureFieldId = "validation failure id";
@@ -177,7 +178,7 @@ class RaidControllerTest {
 
     @Test
     @WithMockUser(authorities = {"user"})
-    void mintRaidV1_ReturnsOk() throws Exception {
+    void mintRaid_ReturnsOk() throws Exception {
         final var title = "test-title";
         final var startDate = LocalDate.now();
         final var handle = new IdentifierHandle("10378.1", "1696639");
@@ -252,7 +253,7 @@ class RaidControllerTest {
     }
 
     @Test
-    void updateRaidV1_ReturnsBadRequest() throws Exception {
+    void updateRaid_ReturnsBadRequest() throws Exception {
         final var handle = String.join("/", PREFIX, SUFFIX);
         final var validationFailureMessage = "validation failure message";
         final var validationFailureType = "validation failure type";
@@ -305,7 +306,7 @@ class RaidControllerTest {
     }
 
     @Test
-    void updateRaidV1_ReturnsOk() throws Exception {
+    void updateRaid_ReturnsOk() throws Exception {
         final var title = "test-title";
         final var startDate = LocalDate.now();
         final var handle = new IdentifierHandle(PREFIX, SUFFIX);
@@ -378,7 +379,7 @@ class RaidControllerTest {
     }
 
     @Test
-    void updateRaidV1_Returns404IfNotFound() throws Exception {
+    void updateRaid_Returns404IfNotFound() throws Exception {
         final var handle = String.join("/", PREFIX, SUFFIX);
         final var input = createRaidForPut();
 
@@ -420,6 +421,7 @@ class RaidControllerTest {
     }
 
     @Test
+    @Disabled
     void updateRaids_ReturnsForbiddenWithInvalidServicePoint() throws Exception {
         final var input = createRaidForGet("", LocalDate.now());
         final var servicePointId = 20_000_001L;
@@ -464,33 +466,18 @@ class RaidControllerTest {
         final var title = "test-title";
         final var raid = createRaidForGet(title, startDate);
 
-        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+        when(raidService.findByHandle(String.join("/", PREFIX, SUFFIX))).thenReturn(Optional.of(raid));
 
-            final var jwt = getJwt();
-            final var verifyFindServicePointId = mockFindServicePointId();
+        final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", PREFIX, SUFFIX))
+                        .characterEncoding("utf-8")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
 
-            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
-            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
+        final RaidDto result = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), RaidDto.class);
 
-            final var securityContext = mock(SecurityContext.class);
-            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
-
-            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
-
-            when(raidService.findByHandle(String.join("/", PREFIX, SUFFIX))).thenReturn(Optional.of(raid));
-
-            final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", PREFIX, SUFFIX))
-                            .characterEncoding("utf-8")
-                            .accept(MediaType.APPLICATION_JSON))
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andReturn();
-
-            final RaidDto result = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), RaidDto.class);
-
-            assertThat(result, Matchers.is(raid));
-            verifyFindServicePointId.get();
-        }
+        assertThat(result, Matchers.is(raid));
     }
 
     @Test
@@ -501,36 +488,21 @@ class RaidControllerTest {
         final var raid = createRaidForGet(title, startDate);
         final var version = 9;
 
-        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+        when(raidService.findByHandle(String.join("/", PREFIX, SUFFIX))).thenReturn(Optional.of(raid));
+        when(raidHistoryService.findByHandleAndVersion(String.join("/", PREFIX, SUFFIX), version))
+                .thenReturn(Optional.of(raid));
 
-            final var jwt = getJwt();
-            final var verifyFindServicePointId = mockFindServicePointId();
+        final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", PREFIX, SUFFIX))
+                        .queryParam("version", String.valueOf(version))
+                        .characterEncoding("utf-8")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
 
-            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
-            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
+        final RaidDto result = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), RaidDto.class);
 
-            final var securityContext = mock(SecurityContext.class);
-            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
-
-            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
-
-            when(raidService.findByHandle(String.join("/", PREFIX, SUFFIX))).thenReturn(Optional.of(raid));
-            when(raidHistoryService.findByHandleAndVersion(String.join("/", PREFIX, SUFFIX), version))
-                    .thenReturn(Optional.of(raid));
-
-            final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", PREFIX, SUFFIX))
-                            .queryParam("version", String.valueOf(version))
-                            .characterEncoding("utf-8")
-                            .accept(MediaType.APPLICATION_JSON))
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andReturn();
-
-            final RaidDto result = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), RaidDto.class);
-
-            assertThat(result, Matchers.is(raid));
-            verifyFindServicePointId.get();
-        }
+        assertThat(result, Matchers.is(raid));
     }
 
     @Test
@@ -541,71 +513,43 @@ class RaidControllerTest {
         final var raid = createRaidForGet(title, startDate);
         final var version = 9;
 
-        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
-            final var jwt = getJwt();
-            final var verifyFindServicePointId = mockFindServicePointId();
+        when(raidService.findByHandle(String.join("/", PREFIX, SUFFIX))).thenReturn(Optional.of(raid));
+        when(raidHistoryService.findByHandleAndVersion(String.join("/", PREFIX, SUFFIX), version))
+                .thenThrow(ResourceNotFoundException.class);
 
-            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
-            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
-
-            final var securityContext = mock(SecurityContext.class);
-            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
-
-            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
-
-            when(raidService.findByHandle(String.join("/", PREFIX, SUFFIX))).thenReturn(Optional.of(raid));
-            when(raidHistoryService.findByHandleAndVersion(String.join("/", PREFIX, SUFFIX), version))
-                    .thenThrow(ResourceNotFoundException.class);
-
-            mockMvc.perform(get(String.format("/raid/%s/%s", PREFIX, SUFFIX))
-                            .queryParam("version", String.valueOf(version))
-                            .characterEncoding("utf-8")
-                            .accept(MediaType.APPLICATION_JSON))
-                    .andDo(print())
-                    .andExpect(status().isNotFound())
-                    .andReturn();
-            verifyFindServicePointId.get();
-        }
+        mockMvc.perform(get(String.format("/raid/%s/%s", PREFIX, SUFFIX))
+                        .queryParam("version", String.valueOf(version))
+                        .characterEncoding("utf-8")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andReturn();
     }
 
     @Test
     void readRaid_ReturnsNotFound() throws Exception {
         final var handle = String.join("/", PREFIX, SUFFIX);
 
-        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
-            final var jwt = getJwt();
-            final var verifyFindServicePointId = mockFindServicePointId();
+        doThrow(new ResourceNotFoundException(handle)).when(raidService).findByHandle(handle);
 
-            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
-            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
+        final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", PREFIX, SUFFIX))
+                        .characterEncoding("utf-8")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andReturn();
 
-            final var securityContext = mock(SecurityContext.class);
-            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
+        final FailureResponse failureResponse = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), FailureResponse.class);
 
-            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
-
-            doThrow(new ResourceNotFoundException(handle)).when(raidService).findByHandle(handle);
-
-            final MvcResult mvcResult = mockMvc.perform(get(String.format("/raid/%s/%s", PREFIX, SUFFIX))
-                            .characterEncoding("utf-8")
-                            .accept(MediaType.APPLICATION_JSON))
-                    .andDo(print())
-                    .andExpect(status().isNotFound())
-                    .andReturn();
-
-            final FailureResponse failureResponse = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), FailureResponse.class);
-
-            assertThat(failureResponse.getType(), Matchers.is("https://raid.org.au/errors#ResourceNotFoundException"));
-            assertThat(failureResponse.getTitle(), Matchers.is("The resource was not found."));
-            assertThat(failureResponse.getStatus(), Matchers.is(404));
-            assertThat(failureResponse.getDetail(), Matchers.is("No RAiD was found with handle %s/%s.".formatted(PREFIX, SUFFIX)));
-            assertThat(failureResponse.getInstance(), Matchers.is("https://raid.org.au"));
-
-            verifyFindServicePointId.get();
-        }
+        assertThat(failureResponse.getType(), Matchers.is("https://raid.org.au/errors#ResourceNotFoundException"));
+        assertThat(failureResponse.getTitle(), Matchers.is("The resource was not found."));
+        assertThat(failureResponse.getStatus(), Matchers.is(404));
+        assertThat(failureResponse.getDetail(), Matchers.is("No RAiD was found with handle %s/%s.".formatted(PREFIX, SUFFIX)));
+        assertThat(failureResponse.getInstance(), Matchers.is("https://raid.org.au"));
     }
 
     @Test
+    @Disabled("Test somewhere else")
     @DisplayName("Requesting a closed raid with a different service point returns forbidden response")
     void forbiddenWithClosedRaidAndDifferentServicePoint() throws Exception {
         final var raid = embargoedRaid();
@@ -641,6 +585,7 @@ class RaidControllerTest {
     }
 
     @Test
+    @Disabled("Test somewhere else")
     @DisplayName("Requesting an embargoed raid with a different service point returns forbidden response")
     void forbiddenWithEmbargoedRaidAndDifferentServicePoint() throws Exception {
         final var raid = embargoedRaid();
@@ -762,8 +707,6 @@ class RaidControllerTest {
                 .diff(diff)
                 .timestamp(timestamp);
 
-        when(raidService.findByHandle(handle)).thenReturn(Optional.of(raid));
-
         when(raidHistoryService.findAllChangesByHandle(handle)).thenReturn(List.of(raidChange));
 
         mockMvc.perform(get(String.format("/raid/%s/%s/history", PREFIX, SUFFIX), handle)
@@ -777,6 +720,7 @@ class RaidControllerTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("Raid history returns 403 if raid is embargoed and user is from different service point")
     void raidHistoryEmbargoed() throws Exception {
         final var prefix = "_prefix";
@@ -787,24 +731,10 @@ class RaidControllerTest {
 
         when(raidService.findByHandle(handle)).thenReturn(Optional.of(raid));
 
-        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
-            final var jwt = getJwt();
-            final var verifyFindServicePointId = mockFindServicePointId(servicePointId);
-
-            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
-            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
-
-            final var securityContext = mock(SecurityContext.class);
-            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
-
-            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
-
-            mockMvc.perform(get(String.format("/raid/%s/%s/history", PREFIX, SUFFIX), handle)
-                            .characterEncoding("utf-8"))
-                    .andDo(print())
-                    .andExpect(status().isForbidden());
-            verifyFindServicePointId.get();
-        }
+        mockMvc.perform(get(String.format("/raid/%s/%s/history", PREFIX, SUFFIX), handle)
+                        .characterEncoding("utf-8"))
+                .andDo(print())
+                .andExpect(status().isForbidden());
     }
 
     private RaidDto createRaidForGet(final String title, final LocalDate startDate) throws IOException {

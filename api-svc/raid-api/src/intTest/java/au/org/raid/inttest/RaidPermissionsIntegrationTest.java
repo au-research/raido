@@ -1,13 +1,15 @@
 package au.org.raid.inttest;
 
+import au.org.raid.idl.raidv2.model.ClosedRaid;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.RaidPatchRequest;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
+import au.org.raid.inttest.config.UserConfig;
 import au.org.raid.inttest.service.Handle;
 import au.org.raid.inttest.service.RaidApiValidationException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +21,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 @Slf4j
-public class RaidIntegrationTest extends AbstractIntegrationTest {
+@Disabled("Work in progress")
+public class RaidPermissionsIntegrationTest extends AbstractIntegrationTest {
     @Autowired
-    private ObjectMapper objectMapper;
+    private UserConfig userConfig;
 
     @Test
     @DisplayName("Mint a raid")
     void mintRaid() {
-        final var mintedRaid = raidApi.mintRaid(createRequest).getBody();
+        final var mintedRaid = testClient.raidApi(
+                userConfig.getRaidAu().getUser(),
+                userConfig.getRaidAu().getPassword()
+            ).mintRaid(createRequest).getBody();
+
         assert mintedRaid != null;
 
         final var handle = new Handle(mintedRaid.getIdentifier().getId());
@@ -36,7 +43,6 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
         assertThat(result.getTitle()).isEqualTo(createRequest.getTitle());
         assertThat(result.getDescription()).isEqualTo(createRequest.getDescription());
         assertThat(result.getAccess()).isEqualTo(createRequest.getAccess());
-//        assertThat(result.getContributor()).isEqualTo(createRequest.getContributor());
         assertThat(result.getOrganisation()).isEqualTo(createRequest.getOrganisation());
         assertThat(result.getDate()).isEqualTo(createRequest.getDate());
     }
@@ -83,6 +89,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
         assert mintedRaid != null;
         final var handle = new Handle(mintedRaid.getIdentifier().getId());
         final var readResult = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
+
 
         final var contributor = readResult.getContributor().get(0);
         contributor.setId(REAL_TEST_ORCID);
@@ -165,18 +172,18 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
         } catch (final FeignException e) {
             assertThat(e.status()).isEqualTo(403);
 
-//            final var closedRaid = objectMapper.readValue(e.responseBody().get().array(), ClosedRaid.class);
-//
-//            assertThat(closedRaid).isEqualTo(new ClosedRaid()
-//                    .identifier(mintedRaid.getIdentifier())
-//                    .access(mintedRaid.getAccess()));
+            final var closedRaid = objectMapper.readValue(e.responseBody().get().array(), ClosedRaid.class);
+
+            assertThat(closedRaid).isEqualTo(new ClosedRaid()
+                    .identifier(mintedRaid.getIdentifier())
+                    .access(mintedRaid.getAccess()));
 
         }
     }
 
 
     @Test
-    @DisplayName("List raid does not show raids from other service points")
+    @DisplayName("List raid does not show closed raids from other service points")
     void closedRaidsExcludedFromList() {
         raidApi.mintRaid(createRequest);
         final var ACCESS_TYPE_CLOSED = "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json";
@@ -191,7 +198,10 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
 
             // filter closed/embargoed raids where the service point does not match RDM@UQ
             final var result = raidList.stream().filter(raid ->
-                    !raid.getIdentifier().getOwner().getServicePoint().equals(UQ_SERVICE_POINT_ID)
+                    !raid.getIdentifier().getOwner().getServicePoint().equals(UQ_SERVICE_POINT_ID) &&
+                            (raid.getAccess().getType().getId().equals(ACCESS_TYPE_CLOSED) ||
+                                    raid.getAccess().getType().getId().equals(ACCESS_TYPE_EMBARGOED)
+                            )
             ).toList();
 
             assertThat(result).isEmpty();

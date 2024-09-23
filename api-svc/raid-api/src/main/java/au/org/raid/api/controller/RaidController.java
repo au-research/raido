@@ -1,15 +1,12 @@
 package au.org.raid.api.controller;
 
 import au.org.raid.api.dto.RaidPermissionsDto;
-import au.org.raid.api.exception.ClosedRaidException;
-import au.org.raid.api.exception.CrossAccountAccessException;
 import au.org.raid.api.exception.ServicePointNotFoundException;
 import au.org.raid.api.exception.ValidationException;
 import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.RaidIngestService;
 import au.org.raid.api.service.ServicePointService;
 import au.org.raid.api.service.raid.RaidService;
-import au.org.raid.api.util.SchemaValues;
 import au.org.raid.api.validator.ValidationService;
 import au.org.raid.idl.raidv2.api.RaidApi;
 import au.org.raid.idl.raidv2.model.*;
@@ -48,20 +45,9 @@ public class RaidController implements RaidApi {
 
     @Override
     public ResponseEntity<RaidDto> findRaidByName(final String prefix, final String suffix, final Integer version) {
-        final var servicePointId = getServicePointId();
-
         final var handle = String.join("/", prefix, suffix);
         var raidOptional = raidService.findByHandle(handle)
                 .or(Optional::empty);
-
-        if (raidOptional.isPresent()) {
-            final var raid = raidOptional.get();
-
-            if (!raid.getIdentifier().getOwner().getServicePoint().equals(servicePointId)
-                    && !raid.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri())) {
-                throw new ClosedRaidException(raid);
-            }
-        }
 
         if (version != null) {
             raidOptional = raidHistoryService.findByHandleAndVersion(handle, version);
@@ -87,12 +73,10 @@ public class RaidController implements RaidApi {
     }
 
     @Override
-    public ResponseEntity<List<RaidDto>> findAllRaids(final Long servicePoint, final List<String> includeFields) {
+    public ResponseEntity<List<RaidDto>> findAllRaids(final List<String> includeFields) {
         final var servicePointId = getServicePointId();
 
-        final var raids = Optional.ofNullable(servicePoint)
-                .map(raidIngestService::findAllByServicePointId)
-                .orElse(raidIngestService.findAllByServicePointIdOrNotConfidential(servicePointId));
+        final var raids = raidIngestService.findAllByServicePointId(servicePointId);
 
         if (includeFields != null && !includeFields.isEmpty()) {
             return ResponseEntity.ok(filterFields(raids, includeFields));
@@ -104,10 +88,6 @@ public class RaidController implements RaidApi {
     @Override
     public ResponseEntity<RaidDto> updateRaid(final String prefix, final String suffix, RaidUpdateRequest request) {
         final var servicePointId = getServicePointId();
-
-        if (!request.getIdentifier().getOwner().getServicePoint().equals(servicePointId)) {
-            throw new CrossAccountAccessException(servicePointId);
-        }
 
         final var handle = String.join("/", prefix, suffix);
 
@@ -125,20 +105,6 @@ public class RaidController implements RaidApi {
 
         final var handle = prefix + "/" + suffix;
 
-        final var raidOptional = raidService.findByHandle(handle);
-
-        if (raidOptional.isPresent()) {
-            final var raid = raidOptional.get();
-
-            if (!raid.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri())) {
-                final var servicePointId = getServicePointId();
-
-                if (!raid.getIdentifier().getOwner().getServicePoint().equals(servicePointId)) {
-                    throw new CrossAccountAccessException(servicePointId);
-                }
-            }
-        }
-
         return ResponseEntity.ok(raidHistoryService.findAllChangesByHandle(handle));
     }
 
@@ -146,13 +112,7 @@ public class RaidController implements RaidApi {
     public ResponseEntity<RaidPermissionsDto> permissions(@PathVariable final String prefix,
                                                           @PathVariable final String suffix) {
 
-
         return ResponseEntity.of(raidService.getPermissions(prefix, suffix));
-
-        // TODO: Check raid exists
-        // TODO: user roles contains 'raid-user' check 'user-raids' claim
-        // TODO: user roles contains 'raid-admin' check 'admin-raids' claim
-        // TODO: user roles contains 'service-point-user' check raid belongs to same service point as user
     }
 
     @Override

@@ -11,17 +11,22 @@ import feign.jackson.JacksonEncoder;
 import feign.okhttp.OkHttpClient;
 import feign.slf4j.Slf4jLogger;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.openfeign.support.ResponseEntityDecoder;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
+@Component
 @RequiredArgsConstructor
 public class TestClient {
     private final ObjectMapper objectMapper;
     private final Contract contract;
-    private final String apiUrl;
+    @Value("${raid.test.api.url}")
+    private String apiUrl;
+    private final TokenService tokenService;
 
     public RaidApi raidApi(
             final String token
@@ -42,4 +47,10 @@ public class TestClient {
                 .logLevel(Logger.Level.FULL)
                 .target(RaidApi.class, apiUrl);
     }
+
+    public RaidApi raidApi(final String username, final String password) {
+        final var token = tokenService.getToken(username, password);
+        return raidApi(token);
+    }
+
 }

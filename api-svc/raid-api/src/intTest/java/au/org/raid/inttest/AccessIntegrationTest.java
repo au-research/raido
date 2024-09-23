@@ -34,7 +34,7 @@ public class AccessIntegrationTest extends AbstractIntegrationTest {
                             .message("id does not exist within the given schema")
             );
         } catch (Exception e) {
-            fail("Mint should be successful");
+            throw new RuntimeException(e);
         }
     }
 
