@@ -7,6 +7,7 @@ export type Breadcrumb = {
 };
 
 import type Keycloak from "keycloak-js";
+import { Contributor } from "./generated/raid";
 
 // Define the shape of the context value
 export interface KeycloakContextValue {
@@ -77,4 +78,27 @@ export interface FormFieldProps {
   width?: number;
   multiline?: boolean;
   keyField?: string;
+}
+
+export interface OrcidContributorResponse {
+  token_type: string;
+  expires_in: number;
+  handle: string;
+  contributorUuid: string;
+  createdOn: number;
+  refresh_token: string;
+  scope: string;
+  email: string;
+  orcid: string;
+  name: string;
+  access_token: string;
+  stateUuid: string;
+}
+
+export interface OrcidLookupResponse {
+  stateUuid: string;
+  contributorUuid: string;
+  createdOn: number;
+  email: string;
+  handle: string;
 }

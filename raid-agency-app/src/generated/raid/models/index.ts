@@ -21,6 +21,7 @@ export * from './Owner';
 export * from './RaidChange';
 export * from './RaidCreateRequest';
 export * from './RaidDto';
+export * from './RaidPatchRequest';
 export * from './RaidUpdateRequest';
 export * from './RegistrationAgency';
 export * from './RelatedObject';

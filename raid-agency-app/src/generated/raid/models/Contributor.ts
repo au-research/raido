@@ -46,6 +46,24 @@ export interface Contributor {
     schemaUri: string;
     /**
      * 
+     * @type {string}
+     * @memberof Contributor
+     */
+    status?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Contributor
+     */
+    email?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Contributor
+     */
+    uuid?: string;
+    /**
+     * 
      * @type {Array<ContributorPosition>}
      * @memberof Contributor
      */
@@ -95,6 +113,9 @@ export function ContributorFromJSONTyped(json: any, ignoreDiscriminator: boolean
         
         'id': json['id'],
         'schemaUri': json['schemaUri'],
+        'status': !exists(json, 'status') ? undefined : json['status'],
+        'email': !exists(json, 'email') ? undefined : json['email'],
+        'uuid': !exists(json, 'uuid') ? undefined : json['uuid'],
         'position': ((json['position'] as Array<any>).map(ContributorPositionFromJSON)),
         'role': ((json['role'] as Array<any>).map(ContributorRoleFromJSON)),
         'leader': !exists(json, 'leader') ? undefined : json['leader'],
@@ -113,6 +134,9 @@ export function ContributorToJSON(value?: Contributor | null): any {
         
         'id': value.id,
         'schemaUri': value.schemaUri,
+        'status': value.status,
+        'email': value.email,
+        'uuid': value.uuid,
         'position': ((value.position as Array<any>).map(ContributorPositionToJSON)),
         'role': ((value.role as Array<any>).map(ContributorRoleToJSON)),
         'leader': value.leader,

@@ -4,12 +4,11 @@ import ContributorRoleDetailsFormComponent from "@/entities/contributor-role/for
 import { CheckboxField } from "@/fields/CheckboxField";
 import { TextInputField } from "@/fields/TextInputField";
 import { RaidDto } from "@/generated/raid";
-
-import { Grid, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import {
   AddCircleOutline as AddCircleOutlineIcon,
   RemoveCircleOutline as RemoveCircleOutlineIcon,
 } from "@mui/icons-material";
+import { Grid, IconButton, Stack, Tooltip, Typography } from "@mui/material";
 import { useCallback } from "react";
 import {
   Control,
@@ -57,10 +56,10 @@ export default function ContributorDetailsFormComponent({
             errors={errors}
             width={8}
             formFieldProps={{
-              name: `contributor.${index}.id`,
+              name: `contributor.${index}.email`,
               type: "text",
-              label: "ORCID ID",
-              placeholder: "ORCID ID",
+              label: "Email",
+              placeholder: "Email",
               helperText: "",
               errorText: "",
             }}
@@ -106,7 +105,7 @@ export default function ContributorDetailsFormComponent({
       </Stack>
 
       {positionFieldArray.fields.map((field, i) => (
-        <Stack direction="row" justifyContent="space-between">
+        <Stack direction="row" justifyContent="space-between" key={i}>
           <ContributorPositionDetailsFormComponent
             control={control}
             errors={errors}

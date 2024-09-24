@@ -9,11 +9,13 @@ export const DisplayItem = React.memo(
     value,
     width,
     link,
+    borderLeft,
   }: {
     label: string;
     value: string | undefined;
     width: number;
     link?: string;
+    borderLeft?: any;
   }) => (
     <Grid item xs={12} sm={width}>
       <Box
@@ -28,17 +30,18 @@ export const DisplayItem = React.memo(
           color: "text.primary",
           display: "flex",
           flexDirection: "column",
+          borderLeft: borderLeft ? borderLeft : "",
         }}
       >
         <Typography variant="body2">{label}</Typography>
         {link && link.length > 0 ? (
           <Link to={link} target="__blank">
-            <Typography color="text.secondary" variant="body1">
+            <Typography color="text.secondary" variant="body1" noWrap>
               {value}
             </Typography>
           </Link>
         ) : (
-          <Typography color="text.secondary" variant="body1">
+          <Typography color="text.secondary" variant="body1" noWrap>
             {value}
           </Typography>
         )}

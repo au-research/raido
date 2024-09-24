@@ -5,6 +5,7 @@ import { getApiEndpoint } from "@/utils/api-utils/api-utils";
 import type Keycloak from "keycloak-js";
 
 const endpoint = getApiEndpoint();
+const API_ENDPOINT = `${endpoint}/raid/`;
 
 export const fetchRaids = async ({
   fields,
@@ -52,7 +53,6 @@ export const fetchRaids = async ({
   });
   return await response.json();
 };
-
 export const fetchRaid = async ({
   id,
   token,
@@ -85,8 +85,6 @@ export const fetchRaidHistory = async ({
   });
   return await response.json();
 };
-
-const API_ENDPOINT = `${endpoint}/raid/`;
 export const createRaid = async ({
   data,
   token,
@@ -95,6 +93,11 @@ export const createRaid = async ({
   token: string;
 }): Promise<RaidDto> => {
   try {
+    for (const contributor of data?.contributor || []) {
+      if (contributor.id === "") {
+        contributor.id = null!;
+      }
+    }
     const response = await fetch(API_ENDPOINT, {
       method: "POST",
       headers: {
@@ -119,7 +122,6 @@ export const createRaid = async ({
     throw new Error(errorMessage);
   }
 };
-
 export const updateRaid = async ({
   id,
   data,
@@ -130,6 +132,12 @@ export const updateRaid = async ({
   token: string;
 }): Promise<RaidDto> => {
   try {
+    for (const contributor of data?.contributor || []) {
+      if (contributor.id === "") {
+        contributor.id = null!;
+      }
+    }
+
     const response = await fetch(`${endpoint}/raid/${id}`, {
       method: "PUT",
       headers: {

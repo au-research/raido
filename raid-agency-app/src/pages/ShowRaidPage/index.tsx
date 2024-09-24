@@ -1,11 +1,13 @@
 import ErrorAlertComponent from "@/components/ErrorAlertComponent";
-import { RaidDto } from "@/generated/raid";
+import { Contributor, RaidDto } from "@/generated/raid";
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import LoadingPage from "@/pages/LoadingPage";
 import { fetchRaid } from "@/services/raid";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import ShowRaidPageContent from "./pages/ShowRaidPageContent";
+import { fetchOrcidContributors } from "@/services/contributors";
+import { OrcidContributorResponse } from "@/types";
 
 export default function ShowRaidPage() {
   const { keycloak, initialized } = useCustomKeycloak();
@@ -23,12 +25,22 @@ export default function ShowRaidPage() {
     enabled: initialized && keycloak.authenticated,
   });
 
-  if (readQuery.isPending) {
+  const fetchOrcidContributorsQuery = useQuery<OrcidContributorResponse[]>({
+    queryKey: ["contributors", `${prefix}/${suffix}`],
+    queryFn: () => fetchOrcidContributors({ handle }),
+    enabled: initialized && keycloak.authenticated,
+  });
+
+  if (readQuery.isPending || fetchOrcidContributorsQuery.isPending) {
     return <LoadingPage />;
   }
 
   if (readQuery.isError) {
     return <ErrorAlertComponent error={readQuery.error} />;
+  }
+
+  if (fetchOrcidContributorsQuery.isError) {
+    return <ErrorAlertComponent error={fetchOrcidContributorsQuery.error} />;
   }
 
   const raidData = readQuery.data;
