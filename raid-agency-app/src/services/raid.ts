@@ -49,6 +49,7 @@ export const fetchRaids = async ({
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${keycloak.token}`,
+      "X-Raid-Api-Version": "3",
     },
   });
   return await response.json();
@@ -65,6 +66,7 @@ export const fetchRaid = async ({
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
+      "X-Raid-Api-Version": "3",
     },
   });
   return await response.json();
@@ -81,6 +83,7 @@ export const fetchRaidHistory = async ({
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
+      "X-Raid-Api-Version": "3",
     },
   });
   return await response.json();
@@ -103,6 +106,7 @@ export const createRaid = async ({
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+        "X-Raid-Api-Version": "3",
       },
       body: JSON.stringify(data),
     });
@@ -143,6 +147,7 @@ export const updateRaid = async ({
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+        "X-Raid-Api-Version": "3",
       },
       body: JSON.stringify(data),
     });

@@ -55,6 +55,7 @@ export default function AppNavBar() {
         <Typography variant="h6" color="inherit" style={{ flexGrow: 1 }} />
 
         <Chip
+          title="RAiD main-v3"
           label={import.meta.env.VITE_RAIDO_ENV.toUpperCase()}
           color="error"
           size="small"

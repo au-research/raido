@@ -1,6 +1,9 @@
 import { Contributor } from "@/generated/raid";
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
-import { fetchOrcidContributors, fetchOrcidLookup } from "@/services/contributors";
+import {
+  fetchOrcidContributors,
+  fetchOrcidLookup,
+} from "@/services/contributors";
 import { OrcidContributorResponse, OrcidLookupResponse } from "@/types";
 import {
   Card,
@@ -42,7 +45,10 @@ export default function ContributorDisplayComponent({
     enabled: initialized && keycloak.authenticated,
   });
 
-  if (fetchOrcidContributorsQuery.isPending || fetchOrcidLookupQuery.isPending) {
+  if (
+    fetchOrcidContributorsQuery.isPending ||
+    fetchOrcidLookupQuery.isPending
+  ) {
     return <>Loading...</>;
   }
 

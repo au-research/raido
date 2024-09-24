@@ -36,11 +36,6 @@ export default function ContributorItem({
       <Grid container spacing={2}>
         {orcidlookupEntry && (
           <>
-            <DisplayItem
-              label="Email"
-              value={`${orcidlookupEntry.email} (verification pending)`}
-              width={12}
-            />
             <Grid item xs={12} sm={12}>
               <Box
                 sx={{
@@ -56,9 +51,9 @@ export default function ContributorItem({
                   flexDirection: "column",
                 }}
               >
-                <Typography variant="body2">AAA</Typography>
+                <Typography variant="body2">Email</Typography>
                 <Typography color="text.secondary" variant="body1" noWrap>
-                  XXX
+                  {orcidlookupEntry.email} (verification pending)
                 </Typography>
               </Box>
             </Grid>
@@ -67,11 +62,6 @@ export default function ContributorItem({
 
         {orcidContributor && (
           <>
-            <DisplayItem
-              label="Email"
-              value={`${orcidContributor.email} (verified)`}
-              width={12}
-            />
             <Grid item xs={12} sm={12}>
               <Box
                 sx={{
@@ -87,9 +77,9 @@ export default function ContributorItem({
                   flexDirection: "column",
                 }}
               >
-                <Typography variant="body2">AAA</Typography>
+                <Typography variant="body2">Email</Typography>
                 <Typography color="text.secondary" variant="body1" noWrap>
-                  XXX
+                  {orcidContributor.email} (verified)
                 </Typography>
               </Box>
             </Grid>
