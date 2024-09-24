@@ -19,6 +19,7 @@ import type {
   RaidChange,
   RaidCreateRequest,
   RaidDto,
+  RaidPatchRequest,
   RaidUpdateRequest,
   ValidationFailureResponse,
 } from '../models/index';
@@ -31,6 +32,8 @@ import {
     RaidCreateRequestToJSON,
     RaidDtoFromJSON,
     RaidDtoToJSON,
+    RaidPatchRequestFromJSON,
+    RaidPatchRequestToJSON,
     RaidUpdateRequestFromJSON,
     RaidUpdateRequestToJSON,
     ValidationFailureResponseFromJSON,
@@ -50,6 +53,12 @@ export interface FindRaidByNameRequest {
 
 export interface MintRaidRequest {
     raidCreateRequest: RaidCreateRequest;
+}
+
+export interface PatchRaidRequest {
+    prefix: string;
+    suffix: string;
+    raidPatchRequest: RaidPatchRequest;
 }
 
 export interface RaidHistoryRequest {
@@ -194,6 +203,55 @@ export class RaidApi extends runtime.BaseAPI {
      */
     async mintRaid(requestParameters: MintRaidRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RaidDto> {
         const response = await this.mintRaidRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Patch a raid
+     */
+    async patchRaidRaw(requestParameters: PatchRaidRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RaidDto>> {
+        if (requestParameters.prefix === null || requestParameters.prefix === undefined) {
+            throw new runtime.RequiredError('prefix','Required parameter requestParameters.prefix was null or undefined when calling patchRaid.');
+        }
+
+        if (requestParameters.suffix === null || requestParameters.suffix === undefined) {
+            throw new runtime.RequiredError('suffix','Required parameter requestParameters.suffix was null or undefined when calling patchRaid.');
+        }
+
+        if (requestParameters.raidPatchRequest === null || requestParameters.raidPatchRequest === undefined) {
+            throw new runtime.RequiredError('raidPatchRequest','Required parameter requestParameters.raidPatchRequest was null or undefined when calling patchRaid.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("bearerAuth", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+        const response = await this.request({
+            path: `/raid/{prefix}/{suffix}`.replace(`{${"prefix"}}`, encodeURIComponent(String(requestParameters.prefix))).replace(`{${"suffix"}}`, encodeURIComponent(String(requestParameters.suffix))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: RaidPatchRequestToJSON(requestParameters.raidPatchRequest),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => RaidDtoFromJSON(jsonValue));
+    }
+
+    /**
+     * Patch a raid
+     */
+    async patchRaid(requestParameters: PatchRaidRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RaidDto> {
+        const response = await this.patchRaidRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

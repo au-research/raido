@@ -1,5 +1,9 @@
 #!/bin/bash
 
+get_current_branch() {
+    git -C "$1" rev-parse --abbrev-ref HEAD
+}
+
 # Define repo URL
 repoUrl="https://github.com/au-research/raido.git"
 
@@ -8,7 +12,7 @@ uuid=$(uuidgen)
 key=${uuid%%-*}
 
 # Define paths
-tempDir="${TMPDIR}raid-${key}"
+tempDir="/tmp/raid-${key}"
 
 localPath="$tempDir"
 repoPath="${tempDir}/repo"
@@ -25,8 +29,7 @@ mkdir -p "${openapiPath}"
 mkdir -p "${outputPath}"
 
 # Clone the repo
-git clone "${repoUrl}" "${repoPath}" && echo "Repo cloned successfully" || { echo "Error cloning repo"; exit 1; }
-# cp -r "${TMPDIR}repo/" "${repoPath}/" && echo "Repo cloned successfully" || { echo "Error cloning repo"; exit 1; }
+git clone -b $(get_current_branch) "${repoUrl}" "${repoPath}" && echo "Repo cloned successfully ${repoUrl} $(get_current_branch)" || { echo "Error cloning repo"; exit 1; }
 
 # Move all openapi definitions to openapiPath
 cp -r "${repoPath}/api-svc/idl-raid-v2/src/"* "${openapiPath}/" && echo "Copied src to openapiPath successfully" || { echo "Error copying files"; exit 1; }
