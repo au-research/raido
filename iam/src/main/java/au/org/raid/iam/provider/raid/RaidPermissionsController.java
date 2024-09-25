@@ -41,10 +41,15 @@ public class RaidPermissionsController {
 
         cors.allowedOrigins(
                 "http://localhost:7080",
+                
                 "https://app.test.raid.org.au",
                 "https://app3.test.raid.org.au",
+                
                 "https://app.demo.raid.org.au",
+                "https://app3.demo.raid.org.au",
+                
                 "https://app.stage.raid.org.au",
+                
                 "https://app.prod.raid.org.au");
 
         cors.allowedMethods(allowedMethods);
