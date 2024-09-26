@@ -23,7 +23,6 @@ export default function MintRaidPage() {
       const requestContributors = variables.data.contributor || [];
       const responseContributors = mintResult.contributor || [];
 
-
       const raidListenerPayloads = [];
 
       for (let index = 0; index < requestContributors?.length; index++) {
@@ -44,6 +43,10 @@ export default function MintRaidPage() {
             email: payload.email,
             uuid: payload.uuid,
           },
+          raidTitle:
+            mintResult.title && mintResult.title[0]
+              ? mintResult.title[0].text
+              : "",
           delete: false,
         });
 
@@ -53,13 +56,13 @@ export default function MintRaidPage() {
           body: raw,
         };
 
-        fetch("https://orcid.test.raid.org.au/raid-update", requestOptions)
-          .then((response) => response.text())
-          .then((result) => console.log(result))
-          .catch((error) => console.error(error));
+        await fetch(
+          "https://orcid.test.raid.org.au/raid-update",
+          requestOptions
+        );
       }
 
-      navigate(`/show-raid/${prefix}/${suffix}`);
+      navigate(`/raids/${prefix}/${suffix}`);
     },
     onError: (error: Error) => {
       RaidFormErrorMessage(error, openErrorDialog);
