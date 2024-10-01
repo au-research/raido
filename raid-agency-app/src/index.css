@@ -16,13 +16,13 @@ body {
   min-height: 100%;
 }
 body {
-  background-image: linear-gradient(180deg, #cee5fd, #fff);
+  background-image: linear-gradient(180deg, #c6d9f0, #fff);
 }
 @media (prefers-color-scheme: dark) {
   .raid-card-well {
     background: rgba(255, 255, 255, 0.05);
   }
   body {
-    background-image: linear-gradient(rgb(2, 41, 79), rgba(9, 14, 16, 0));
+    background-image: linear-gradient(#1b3e60, #373b3c);
   }
 }
