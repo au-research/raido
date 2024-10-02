@@ -1,7 +1,7 @@
 import { alternateIdentifierValidationSchema } from "@/entities/alternate-identifier/data-components/alternate-identifier-validation-schema";
 import { descriptionValidationSchema } from "@/entities/description/data-components/description-validation-schema";
 import { z } from "zod";
-import { accessValidationSchema } from "./access/access-validation-schema";
+import { accessValidationSchema } from "@/entities/access/data-components/access-validation-schema";
 import { alternateUrlValidationSchema } from "./alternate-url/alternate-url-validation-schema";
 import { contributorValidationSchema } from "@/entities/contributor/data-components/contributor-validation-schema";
 import { dateValidationSchema } from "./date/data-components/date-validation-schema";

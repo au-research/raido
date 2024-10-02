@@ -1,4 +1,4 @@
-import { accessGenerator } from "@/entities/access/access-generator";
+import { accessGenerator } from "@/entities/access/data-components/access-generator";
 import { dateCleaner } from "@/entities/date/data-components/date-cleaner";
 import { dateGenerator } from "@/entities/date/data-components/date-generator";
 import { titleGenerator } from "@/entities/title/data-components/title-generator";

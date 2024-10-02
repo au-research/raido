@@ -1,7 +1,7 @@
 import AnchorButtons from "@/components/AnchorButtons";
 import BreadcrumbsBar from "@/components/BreadcrumbsBar";
 import { RaidDto } from "@/generated/raid";
-import ShowAccessComponent from "@/pages/ShowRaidPage/components/ShowAccessComponent";
+import AccessDisplayComponent from "@/entities/access/display-components/AccessDisplayComponent";
 import AlternateIdentifiersDisplayComponent from "@/entities/alternate-identifier/display-components/AlternateIdentifiersDisplayComponent";
 import ShowAlternateUrlComponent from "@/pages/ShowRaidPage/components/ShowAlternateUrlComponent";
 import ShowContributorComponent from "@/entities/contributor/display-components/ContributorDisplayComponent";
@@ -104,7 +104,7 @@ export default function ShowRaidPageContent({
 
           <Box id="access" className="scroll">
             {raidData.access && (
-              <ShowAccessComponent access={raidData.access} />
+              <AccessDisplayComponent access={raidData.access} />
             )}
           </Box>
 

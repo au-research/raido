@@ -6,7 +6,7 @@ import DescriptionsFormComponent from "@/entities/description/form-components/De
 import RelatedObjectsFormComponent from "@/entities/related-object/form-components/RelatedObjectsFormComponent";
 import TitlesFormComponent from "@/entities/title/form-components/TitlesFormComponent";
 import { ValidationFormSchema } from "@/entities/validation-schema";
-import FormAccessComponent from "@/forms/RaidForm/components/FormAccessComponent";
+import FormAccessComponent from "@/entities/access/form-components/FormAccessComponent";
 import FormAlternateUrlsComponent from "@/forms/RaidForm/components/FormAlternateUrlsComponent";
 import FormOrganisationsComponent from "@/forms/RaidForm/components/FormOrganisationsComponent";
 import FormRelatedRaidsComponent from "@/forms/RaidForm/components/FormRelatedRaidsComponent";
