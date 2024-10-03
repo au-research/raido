@@ -106,7 +106,7 @@ export default function ContributorDetailsFormComponent({
       </Stack>
 
       {positionFieldArray.fields.map((field, i) => (
-        <Stack direction="row" justifyContent="space-between">
+        <Stack direction="row" justifyContent="space-between" key={field.id}>
           <ContributorPositionDetailsFormComponent
             control={control}
             errors={errors}

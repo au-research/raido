@@ -1,15 +1,15 @@
 import AnchorButtons from "@/components/AnchorButtons";
+import FormAccessComponent from "@/entities/access/form-components/FormAccessComponent";
 import AlternateIdentifiersFormComponent from "@/entities/alternate-identifier/form-components/AlternateIdentifiersFormComponent";
+import AlternateUrlsFormComponent from "@/entities/alternate-url/form-components/AlternateUrlsFormComponent";
 import ContributorsFormComponent from "@/entities/contributor/form-components/ContributorsFormComponent";
 import DateFormComponent from "@/entities/date/form-components/DateFormComponent";
 import DescriptionsFormComponent from "@/entities/description/form-components/DescriptionsFormComponent";
 import RelatedObjectsFormComponent from "@/entities/related-object/form-components/RelatedObjectsFormComponent";
 import TitlesFormComponent from "@/entities/title/form-components/TitlesFormComponent";
 import { ValidationFormSchema } from "@/entities/validation-schema";
-import FormAccessComponent from "@/entities/access/form-components/FormAccessComponent";
-import AlternateUrlsFormComponent from "@/entities/alternate-url/form-components/AlternateUrlsFormComponent";
 import FormOrganisationsComponent from "@/forms/RaidForm/components/FormOrganisationsComponent";
-import FormRelatedRaidsComponent from "@/forms/RaidForm/components/FormRelatedRaidsComponent";
+import RelatedRaidsFormComponent from "@/entities/related-raid/form-components/RelatedRaidsFormComponent";
 import FormSubjectsComponent from "@/forms/RaidForm/components/FormSubjectsComponent";
 import { RaidCreateRequest, RaidDto } from "@/generated/raid";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,7 +31,7 @@ const formFields = [
     component: AlternateIdentifiersFormComponent,
   },
   { id: "alternateUrl", component: AlternateUrlsFormComponent },
-  { id: "relatedRaid", component: FormRelatedRaidsComponent },
+  { id: "relatedRaid", component: RelatedRaidsFormComponent },
   { id: "access", component: FormAccessComponent },
   { id: "subject", component: FormSubjectsComponent },
 ];

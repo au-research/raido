@@ -8,7 +8,7 @@ import { dateValidationSchema } from "./date/data-components/date-validation-sch
 import { identifierValidationSchema } from "./identifier/identifier-validation-schema";
 import { organisationValidationSchema } from "./organisation/organisation-validation-schema";
 import { relatedObjectValidationSchema } from "./related-object/data-components/related-object-validation-schema";
-import { relatedRaidValidationSchema } from "./related-raid/related-raid-validation-schema";
+import { relatedRaidValidationSchema } from "./related-raid/data-components/related-raid-validation-schema";
 import { spatialCoverageValidationSchema } from "./spatial-coverage/spatial-coverage-validation-schema";
 import { subjectValidationSchema } from "./subject/subject-validation-schema";
 import { titleValidationSchema } from "./title/data-components/title-validation-schema";

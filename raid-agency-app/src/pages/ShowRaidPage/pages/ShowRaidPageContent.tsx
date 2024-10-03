@@ -10,7 +10,7 @@ import ShowDescriptionComponent from "@/entities/description/display-components/
 import ShowExternalLinksComponent from "@/pages/ShowRaidPage/components/ShowExternalLinksComponent";
 import ShowOrganisationComponent from "@/pages/ShowRaidPage/components/ShowOrganisationComponent";
 import RelatedObjectsDisplayComponent from "@/entities/related-object/display-components/RelatedObjectsDisplayComponent";
-import ShowRelatedRaidComponent from "@/pages/ShowRaidPage/components/ShowRelatedRaidComponent";
+import RelatedRaidDisplayComponent from "@/entities/related-raid/display-components/RelatedRaidDisplayComponent";
 // import ShowSpatialCoverageComponent from "@/pages/ShowRaidPage/components/ShowSpatialCoverageComponent";
 import ShowSubjectComponent from "@/pages/ShowRaidPage/components/ShowSubjectComponent";
 import TitleDisplayComponent from "@/entities/title/display-components/TitleDisplayComponent";
@@ -95,11 +95,13 @@ export default function ShowRaidPageContent({
           </Box>
 
           <Box id="alternate-urls" className="scroll">
-            <AlternateUrlDisplayComponent alternateUrl={raidData.alternateUrl} />
+            <AlternateUrlDisplayComponent
+              alternateUrl={raidData.alternateUrl}
+            />
           </Box>
 
           <Box id="related-raids" className="scroll">
-            <ShowRelatedRaidComponent relatedRaid={raidData.relatedRaid} />
+            <RelatedRaidDisplayComponent items={raidData.relatedRaid} />
           </Box>
 
           <Box id="access" className="scroll">

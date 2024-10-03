@@ -13,7 +13,7 @@ export const DisplayItem = React.memo(
     label: string;
     value: string | undefined;
     width: number;
-    link?: string;
+    link?: string | null;
   }) => (
     <Grid item xs={12} sm={width}>
       <Box
