@@ -2,7 +2,7 @@ import { alternateIdentifierValidationSchema } from "@/entities/alternate-identi
 import { descriptionValidationSchema } from "@/entities/description/data-components/description-validation-schema";
 import { z } from "zod";
 import { accessValidationSchema } from "@/entities/access/data-components/access-validation-schema";
-import { alternateUrlValidationSchema } from "./alternate-url/alternate-url-validation-schema";
+import { alternateUrlValidationSchema } from "./alternate-url/data-components/alternate-url-validation-schema";
 import { contributorValidationSchema } from "@/entities/contributor/data-components/contributor-validation-schema";
 import { dateValidationSchema } from "./date/data-components/date-validation-schema";
 import { identifierValidationSchema } from "./identifier/identifier-validation-schema";

@@ -7,7 +7,7 @@ import RelatedObjectsFormComponent from "@/entities/related-object/form-componen
 import TitlesFormComponent from "@/entities/title/form-components/TitlesFormComponent";
 import { ValidationFormSchema } from "@/entities/validation-schema";
 import FormAccessComponent from "@/entities/access/form-components/FormAccessComponent";
-import FormAlternateUrlsComponent from "@/forms/RaidForm/components/FormAlternateUrlsComponent";
+import AlternateUrlsFormComponent from "@/entities/alternate-url/form-components/AlternateUrlsFormComponent";
 import FormOrganisationsComponent from "@/forms/RaidForm/components/FormOrganisationsComponent";
 import FormRelatedRaidsComponent from "@/forms/RaidForm/components/FormRelatedRaidsComponent";
 import FormSubjectsComponent from "@/forms/RaidForm/components/FormSubjectsComponent";
@@ -30,7 +30,7 @@ const formFields = [
     id: "alternateIdentifier",
     component: AlternateIdentifiersFormComponent,
   },
-  { id: "alternateUrl", component: FormAlternateUrlsComponent },
+  { id: "alternateUrl", component: AlternateUrlsFormComponent },
   { id: "relatedRaid", component: FormRelatedRaidsComponent },
   { id: "access", component: FormAccessComponent },
   { id: "subject", component: FormSubjectsComponent },

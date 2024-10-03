@@ -3,7 +3,7 @@ import BreadcrumbsBar from "@/components/BreadcrumbsBar";
 import { RaidDto } from "@/generated/raid";
 import AccessDisplayComponent from "@/entities/access/display-components/AccessDisplayComponent";
 import AlternateIdentifiersDisplayComponent from "@/entities/alternate-identifier/display-components/AlternateIdentifiersDisplayComponent";
-import ShowAlternateUrlComponent from "@/pages/ShowRaidPage/components/ShowAlternateUrlComponent";
+import AlternateUrlDisplayComponent from "@/entities/alternate-url/display-components/AlternateUrlDisplayComponent";
 import ShowContributorComponent from "@/entities/contributor/display-components/ContributorDisplayComponent";
 import DateDisplayComponent from "@/entities/date/display-components/DateDisplayComponent";
 import ShowDescriptionComponent from "@/entities/description/display-components/DescriptionDisplayComponent";
@@ -95,7 +95,7 @@ export default function ShowRaidPageContent({
           </Box>
 
           <Box id="alternate-urls" className="scroll">
-            <ShowAlternateUrlComponent alternateUrl={raidData.alternateUrl} />
+            <AlternateUrlDisplayComponent alternateUrl={raidData.alternateUrl} />
           </Box>
 
           <Box id="related-raids" className="scroll">
