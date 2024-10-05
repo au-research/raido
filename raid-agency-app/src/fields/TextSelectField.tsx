@@ -7,7 +7,7 @@ import { Control, FieldErrors, useController } from "react-hook-form";
 
 interface TextSelectFieldProps {
   formFieldProps: FormFieldProps;
-  control: Control<RaidDto>;
+  control?: Control<RaidDto>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   options: any[];
   errors: FieldErrors<RaidDto>;

@@ -72,13 +72,9 @@ export default function FormOrganisationsRolesComponent({
             <Card variant={"outlined"} sx={{ bgcolor: "transparent" }}>
               <CardHeader
                 action={
-                  <Tooltip title="Add role (max. 1)" placement="right">
+                  <Tooltip title="Add role" placement="right">
                     <div>
-                      <IconButton
-                        aria-label="Add Role"
-                        onClick={handleAddRole}
-                        disabled={organisationRolesArray.fields.length > 0}
-                      >
+                      <IconButton aria-label="Add Role" onClick={handleAddRole}>
                         <AddCircleOutlineIcon />
                       </IconButton>
                     </div>

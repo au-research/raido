@@ -23,7 +23,7 @@ import {
   useFieldArray,
 } from "react-hook-form";
 
-import { organisationGenerator } from "@/entities/organisation/organisation-generator";
+import { organisationGenerator } from "@/entities/organisation/data-components/organisation-generator";
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import { fetchServicePoints } from "@/services/service-points";
 import { useQuery } from "@tanstack/react-query";

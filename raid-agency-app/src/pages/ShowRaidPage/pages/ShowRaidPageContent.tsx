@@ -8,7 +8,7 @@ import ShowContributorComponent from "@/entities/contributor/display-components/
 import DateDisplayComponent from "@/entities/date/display-components/DateDisplayComponent";
 import ShowDescriptionComponent from "@/entities/description/display-components/DescriptionDisplayComponent";
 import ShowExternalLinksComponent from "@/pages/ShowRaidPage/components/ShowExternalLinksComponent";
-import ShowOrganisationComponent from "@/pages/ShowRaidPage/components/ShowOrganisationComponent";
+import OrganisationDisplayComponent from "@/entities/organisation/display-components/OrganisationDisplayComponent";
 import RelatedObjectsDisplayComponent from "@/entities/related-object/display-components/RelatedObjectsDisplayComponent";
 import RelatedRaidDisplayComponent from "@/entities/related-raid/display-components/RelatedRaidDisplayComponent";
 // import ShowSpatialCoverageComponent from "@/pages/ShowRaidPage/components/ShowSpatialCoverageComponent";
@@ -79,7 +79,9 @@ export default function ShowRaidPageContent({
           </Box>
 
           <Box id="organisations" className="scroll">
-            <ShowOrganisationComponent organisation={raidData.organisation} />
+            <OrganisationDisplayComponent
+              items={raidData.organisation}
+            />
           </Box>
 
           <Box id="related-objects" className="scroll">

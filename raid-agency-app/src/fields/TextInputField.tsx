@@ -6,17 +6,17 @@ import { Control, FieldErrors, useController } from "react-hook-form";
 
 interface TextInputFieldProps {
   formFieldProps: FormFieldProps;
-  control: Control<RaidDto>;
+  control?: Control<RaidDto>;
   errors: FieldErrors<RaidDto>;
   width?: number;
 }
 
 export function TextInputField({
   formFieldProps,
-  errors,
   width = 12,
 }: TextInputFieldProps) {
-  const { field } = useController(formFieldProps);
+  const { field, formState } = useController(formFieldProps);
+  const errorsNew = formState.errors;
   const {
     label,
     placeholder,
@@ -26,7 +26,7 @@ export function TextInputField({
     multiline = false,
   } = formFieldProps;
 
-  const errorMessage = getErrorMessageForField(errors, field.name);
+  const errorMessage = getErrorMessageForField(errorsNew, field.name);
   const displayHelperText = errorMessage
     ? errorText
       ? errorText

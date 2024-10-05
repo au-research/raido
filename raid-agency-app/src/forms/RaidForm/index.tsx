@@ -8,8 +8,8 @@ import DescriptionsFormComponent from "@/entities/description/form-components/De
 import RelatedObjectsFormComponent from "@/entities/related-object/form-components/RelatedObjectsFormComponent";
 import TitlesFormComponent from "@/entities/title/form-components/TitlesFormComponent";
 import { ValidationFormSchema } from "@/entities/validation-schema";
-import FormOrganisationsComponent from "@/forms/RaidForm/components/FormOrganisationsComponent";
-import RelatedRaidsFormComponent from "@/entities/related-raid/form-components/RelatedRaidsFormComponent";
+import OrganisationsFormComponent from "@/entities/organisation/form-components/MainFormComponent";
+import FormRelatedRaidsComponent from "@/entities/related-raid/form-components/RelatedRaidsFormComponent";
 import FormSubjectsComponent from "@/forms/RaidForm/components/FormSubjectsComponent";
 import { RaidCreateRequest, RaidDto } from "@/generated/raid";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,14 +24,14 @@ const formFields = [
   { id: "title", component: TitlesFormComponent },
   { id: "description", component: DescriptionsFormComponent },
   { id: "contributor", component: ContributorsFormComponent },
-  { id: "organisation", component: FormOrganisationsComponent },
+  { id: "organisation", component: OrganisationsFormComponent },
   { id: "relatedObject", component: RelatedObjectsFormComponent },
   {
     id: "alternateIdentifier",
     component: AlternateIdentifiersFormComponent,
   },
   { id: "alternateUrl", component: AlternateUrlsFormComponent },
-  { id: "relatedRaid", component: RelatedRaidsFormComponent },
+  { id: "relatedRaid", component: FormRelatedRaidsComponent },
   { id: "access", component: FormAccessComponent },
   { id: "subject", component: FormSubjectsComponent },
 ];
