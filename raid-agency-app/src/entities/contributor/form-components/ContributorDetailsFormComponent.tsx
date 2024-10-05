@@ -22,7 +22,7 @@ interface ContributorDetailsFormComponentProps {
   control: Control<RaidDto>;
   index: number;
   errors: FieldErrors<RaidDto>;
-  handleRemoveContributor: (index: number) => void;
+  handleRemoveItem: (index: number) => void;
   trigger: UseFormTrigger<RaidDto>;
 }
 
@@ -30,7 +30,7 @@ export default function ContributorDetailsFormComponent({
   control,
   index,
   errors,
-  handleRemoveContributor,
+  handleRemoveItem,
 }: ContributorDetailsFormComponentProps) {
   const positionFieldArray = useFieldArray({
     control,
@@ -41,7 +41,7 @@ export default function ContributorDetailsFormComponent({
     positionFieldArray.append(contributorPositionGenerator());
   }, [positionFieldArray]);
 
-  const handleRemoveContributorPosition = useCallback(
+  const handleRemoveItemPosition = useCallback(
     (index: number) => {
       positionFieldArray.remove(index);
     },
@@ -88,7 +88,7 @@ export default function ContributorDetailsFormComponent({
         <Tooltip title="Remove contributor" placement="right">
           <IconButton
             aria-label="Remove contributor"
-            onClick={() => handleRemoveContributor(index)}
+            onClick={() => handleRemoveItem(index)}
           >
             <RemoveCircleOutlineIcon />
           </IconButton>
@@ -117,10 +117,10 @@ export default function ContributorDetailsFormComponent({
             <IconButton
               aria-label="Add contributor position"
               onClick={() => {
-                handleRemoveContributorPosition(i);
+                handleRemoveItemPosition(i);
               }}
             >
-              <AddCircleOutlineIcon />
+              <RemoveCircleOutlineIcon />
             </IconButton>
           </Tooltip>
         </Stack>

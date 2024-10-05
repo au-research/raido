@@ -95,7 +95,7 @@ export default function ContributorsFormComponent({
                 key={field.id}
                 control={control}
                 errors={errors}
-                handleRemoveContributor={handleRemoveContributor}
+                handleRemoveItem={handleRemoveContributor}
                 index={index}
                 trigger={trigger}
               />
