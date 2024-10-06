@@ -28,7 +28,7 @@ const todaysDateStringGenerator = (): string => {
   return dayjs(new Date()).format("YYYY-MM-DD");
 };
 
-export const titleGenerator = (): Title => {
+export const generator = (): Title => {
   return {
     text: `Example title... ${new Date().toLocaleTimeString()}`,
     type: titleTypeGenerator(),

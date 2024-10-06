@@ -3,7 +3,7 @@ import FormAccessComponent from "@/entities/access/form-components/FormAccessCom
 import AlternateIdentifiersFormComponent from "@/entities/alternate-identifier/form-components/AlternateIdentifiersFormComponent";
 import AlternateUrlsFormComponent from "@/entities/alternate-url/form-components/AlternateUrlsFormComponent";
 import ContributorsFormComponent from "@/entities/contributor/form-components/ContributorsFormComponent";
-import DateFormComponent from "@/entities/date/form-components/DateFormComponent";
+import DateFormComponent from "@/entities/date/form-components/FormComponent";
 import DescriptionsFormComponent from "@/entities/description/form-components/DescriptionsFormComponent";
 import RelatedObjectsFormComponent from "@/entities/related-object/form-components/RelatedObjectsFormComponent";
 import TitlesFormComponent from "@/entities/title/form-components/TitlesFormComponent";

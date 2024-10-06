@@ -1,4 +1,4 @@
-import { titleGenerator } from "@/entities/title/data-components/title-generator";
+import { generator as titleGenerator } from "@/entities/title/data-components/generator";
 import TitleDetailsFormComponent from "@/entities/title/form-components/TitleDetailsFormComponent";
 import { RaidDto } from "@/generated/raid";
 import { AddCircleOutline as AddCircleOutlineIcon } from "@mui/icons-material";

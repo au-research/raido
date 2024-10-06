@@ -4,7 +4,7 @@ import { z } from "zod";
 import { accessValidationSchema } from "@/entities/access/data-components/access-validation-schema";
 import { alternateUrlValidationSchema } from "./alternate-url/data-components/alternate-url-validation-schema";
 import { contributorValidationSchema } from "@/entities/contributor/data-components/contributor-validation-schema";
-import { dateValidationSchema } from "./date/data-components/date-validation-schema";
+import dateValidationSchema from "./date/data-components/validator";
 import { identifierValidationSchema } from "./identifier/identifier-validation-schema";
 import { organisationValidationSchema } from "./organisation/data-components/organisation-validation-schema";
 import { relatedObjectValidationSchema } from "./related-object/data-components/related-object-validation-schema";

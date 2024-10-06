@@ -1,8 +1,6 @@
 import { ModelDate } from "@/generated/raid";
 
-export const dateCleaner = (
-  date: ModelDate | undefined
-): ModelDate | undefined => {
+const cleaner = (date: ModelDate | undefined): ModelDate | undefined => {
   if (date) {
     return {
       startDate: date.startDate,
@@ -10,3 +8,4 @@ export const dateCleaner = (
     };
   }
 };
+export default cleaner;

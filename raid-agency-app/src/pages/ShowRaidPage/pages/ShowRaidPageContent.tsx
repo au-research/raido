@@ -1,19 +1,19 @@
 import AnchorButtons from "@/components/AnchorButtons";
 import BreadcrumbsBar from "@/components/BreadcrumbsBar";
-import { RaidDto } from "@/generated/raid";
 import AccessDisplayComponent from "@/entities/access/display-components/AccessDisplayComponent";
 import AlternateIdentifiersDisplayComponent from "@/entities/alternate-identifier/display-components/AlternateIdentifiersDisplayComponent";
 import AlternateUrlDisplayComponent from "@/entities/alternate-url/display-components/AlternateUrlDisplayComponent";
 import ShowContributorComponent from "@/entities/contributor/display-components/ContributorDisplayComponent";
-import DateDisplayComponent from "@/entities/date/display-components/DateDisplayComponent";
+import DateDisplayComponent from "@/entities/date/display-components/DisplayComponent";
 import ShowDescriptionComponent from "@/entities/description/display-components/DescriptionDisplayComponent";
-import ShowExternalLinksComponent from "@/pages/ShowRaidPage/components/ShowExternalLinksComponent";
 import OrganisationDisplayComponent from "@/entities/organisation/display-components/OrganisationDisplayComponent";
 import RelatedObjectsDisplayComponent from "@/entities/related-object/display-components/RelatedObjectsDisplayComponent";
 import RelatedRaidDisplayComponent from "@/entities/related-raid/display-components/RelatedRaidDisplayComponent";
+import { RaidDto } from "@/generated/raid";
+import ShowExternalLinksComponent from "@/pages/ShowRaidPage/components/ShowExternalLinksComponent";
 // import ShowSpatialCoverageComponent from "@/pages/ShowRaidPage/components/ShowSpatialCoverageComponent";
-import ShowSubjectComponent from "@/pages/ShowRaidPage/components/ShowSubjectComponent";
 import TitleDisplayComponent from "@/entities/title/display-components/TitleDisplayComponent";
+import ShowSubjectComponent from "@/pages/ShowRaidPage/components/ShowSubjectComponent";
 import type { Breadcrumb } from "@/types";
 import {
   DocumentScanner as DocumentScannerIcon,
@@ -63,7 +63,7 @@ export default function ShowRaidPageContent({
           <AnchorButtons raidData={raidData} />
 
           <Box id="date" className="scroll">
-            <DateDisplayComponent dates={raidData.date} />
+            {raidData.date && <DateDisplayComponent data={raidData.date} />}
           </Box>
 
           <Box id="titles" className="scroll">
@@ -79,9 +79,7 @@ export default function ShowRaidPageContent({
           </Box>
 
           <Box id="organisations" className="scroll">
-            <OrganisationDisplayComponent
-              items={raidData.organisation}
-            />
+            <OrganisationDisplayComponent items={raidData.organisation} />
           </Box>
 
           <Box id="related-objects" className="scroll">

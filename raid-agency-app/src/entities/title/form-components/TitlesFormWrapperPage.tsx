@@ -3,7 +3,7 @@ import { RaidDto } from "@/generated/raid";
 import { Button, Container, Typography } from "@mui/material";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { titleGenerator } from "../data-components/title-generator";
+import { generator as titleGenerator } from "../data-components/generator";
 import { titleValidationSchema } from "../data-components/title-validation-schema";
 
 type SubmissionStatus = "idle" | "success" | "error";

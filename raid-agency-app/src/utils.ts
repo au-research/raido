@@ -1,7 +1,7 @@
 import { accessGenerator } from "@/entities/access/data-components/access-generator";
-import { dateCleaner } from "@/entities/date/data-components/date-cleaner";
-import { dateGenerator } from "@/entities/date/data-components/date-generator";
-import { titleGenerator } from "@/entities/title/data-components/title-generator";
+import dateCleaner from "@/entities/date/data-components/cleaner";
+import dateGenerator from "@/entities/date/data-components/generator";
+import { generator as titleGenerator } from "@/entities/title/data-components/generator";
 import {
   Access,
   AlternateIdentifier,

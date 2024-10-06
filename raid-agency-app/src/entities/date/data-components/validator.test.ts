@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
-import { dateValidationSchema } from "@/entities/date/data-components/date-validation-schema";
+import { describe, expect, it } from "vitest";
+import validator from "./validator";
 
-describe("dateValidationSchema", () => {
+describe("validator", () => {
   it("should validate correct date formats", () => {
     const validInputs = [
       { startDate: "2023" },
@@ -13,7 +13,7 @@ describe("dateValidationSchema", () => {
     ];
 
     validInputs.forEach((input) => {
-      expect(() => dateValidationSchema.parse(input)).not.toThrow();
+      expect(() => validator.parse(input)).not.toThrow();
     });
   });
 
@@ -27,7 +27,7 @@ describe("dateValidationSchema", () => {
     ];
 
     invalidInputs.forEach((input) => {
-      expect(() => dateValidationSchema.parse(input)).toThrow();
+      expect(() => validator.parse(input)).toThrow();
     });
   });
 
@@ -39,7 +39,7 @@ describe("dateValidationSchema", () => {
     ];
 
     invalidRanges.forEach((input) => {
-      expect(() => dateValidationSchema.parse(input)).toThrow();
+      expect(() => validator.parse(input)).toThrow();
     });
   });
 
@@ -51,12 +51,12 @@ describe("dateValidationSchema", () => {
     ];
 
     equalDates.forEach((input) => {
-      expect(() => dateValidationSchema.parse(input)).not.toThrow();
+      expect(() => validator.parse(input)).not.toThrow();
     });
   });
 
   it("should allow missing end date", () => {
     const input = { startDate: "2023-01-01" };
-    expect(() => dateValidationSchema.parse(input)).not.toThrow();
+    expect(() => validator.parse(input)).not.toThrow();
   });
 });
