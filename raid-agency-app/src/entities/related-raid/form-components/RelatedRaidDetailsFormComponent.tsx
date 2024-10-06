@@ -24,8 +24,6 @@ export default function RelatedRaidDetailsFormComponent({
     <Stack direction="row" alignItems="flex-start" gap={1}>
       <Grid container spacing={2}>
         <TextInputField
-          control={control}
-          errors={errors}
           width={6}
           formFieldProps={{
             name: `${entityKey}.${index}.id`,
@@ -37,8 +35,6 @@ export default function RelatedRaidDetailsFormComponent({
           }}
         />
         <TextInputField
-          control={control}
-          errors={errors}
           width={6}
           formFieldProps={{
             name: `${entityKey}.${index}.type`,

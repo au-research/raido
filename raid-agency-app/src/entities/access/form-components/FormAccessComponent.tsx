@@ -1,4 +1,4 @@
-import LanguageSelector from "@/components/LanguageSelector";
+import LanguageSelector from "@/fields/LanguageSelector";
 import { TextInputField } from "@/fields/TextInputField";
 import { TextSelectField } from "@/fields/TextSelectField";
 import { RaidDto } from "@/generated/raid";
@@ -28,8 +28,6 @@ export default function FormAccessComponent({
         <CardContent>
           <Grid container spacing={2}>
             <TextInputField
-              control={control}
-              errors={errors}
               width={12}
               formFieldProps={{
                 name: `access.statement.text`,
@@ -41,13 +39,17 @@ export default function FormAccessComponent({
               }}
             />
             <LanguageSelector
-              name="access.statement.language.id"
-              control={control}
+              formFieldProps={{
+                name: `access.statement.language.id`,
+                type: "text",
+                label: "Language",
+                placeholder: "Language",
+                helperText: "",
+                errorText: "",
+              }}
               width={3}
             />
             <TextSelectField
-              control={control}
-              errors={errors}
               width={3}
               options={accessType}
               formFieldProps={{

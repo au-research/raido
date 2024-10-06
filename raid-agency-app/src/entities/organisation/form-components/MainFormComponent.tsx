@@ -105,7 +105,7 @@ const MainFormComponent: React.FC<FormComponentProps> = ({
             data-testid={`${ENTITY_KEY}-form`}
           >
             {fields.map((field, index) => (
-              <>
+              <div key={field.id}>
                 {errors[ENTITY_KEY] && errors[ENTITY_KEY][index] && (
                   <Alert color="error">
                     {errors[ENTITY_KEY] &&
@@ -113,14 +113,13 @@ const MainFormComponent: React.FC<FormComponentProps> = ({
                   </Alert>
                 )}
                 <DetailsFormComponent
-                  key={field.id}
                   control={control}
                   errors={errors}
                   handleRemoveItem={handleRemoveItem}
                   index={index}
                   trigger={trigger}
                 />
-              </>
+              </div>
             ))}
           </Stack>
         </Stack>

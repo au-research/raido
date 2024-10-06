@@ -53,8 +53,6 @@ export default function ContributorDetailsFormComponent({
       <Stack direction="row" alignItems="flex-start" gap={1}>
         <Grid container spacing={2}>
           <TextInputField
-            control={control}
-            errors={errors}
             width={8}
             formFieldProps={{
               name: `contributor.${index}.id`,
@@ -66,8 +64,6 @@ export default function ContributorDetailsFormComponent({
             }}
           />
           <CheckboxField
-            control={control}
-            errors={errors}
             width={2}
             formFieldProps={{
               name: `contributor.${index}.leader`,
@@ -75,8 +71,6 @@ export default function ContributorDetailsFormComponent({
             }}
           />
           <CheckboxField
-            control={control}
-            errors={errors}
             width={2}
             formFieldProps={{
               name: `contributor.${index}.contact`,

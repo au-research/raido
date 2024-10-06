@@ -19,7 +19,6 @@ const Fields = ({
   return (
     <>
       <TextSelectField
-        errors={errors}
         width={6}
         options={organisationRole}
         formFieldProps={{
@@ -30,7 +29,6 @@ const Fields = ({
         }}
       />
       <TextInputField
-        errors={errors}
         width={3}
         formFieldProps={{
           name: `${keyPath}.startDate`,
@@ -40,7 +38,6 @@ const Fields = ({
         }}
       />
       <TextInputField
-        errors={errors}
         width={3}
         formFieldProps={{
           name: `${keyPath}.endDate`,

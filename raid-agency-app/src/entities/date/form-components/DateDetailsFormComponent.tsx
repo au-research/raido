@@ -14,8 +14,6 @@ export default function DateDetailsFormComponent({
   return (
     <Grid container spacing={2}>
       <TextInputField
-        control={control}
-        errors={errors}
         width={3}
         formFieldProps={{
           name: `date.startDate`,
@@ -27,8 +25,6 @@ export default function DateDetailsFormComponent({
         }}
       />
       <TextInputField
-        control={control}
-        errors={errors}
         width={3}
         formFieldProps={{
           name: `date.endDate`,

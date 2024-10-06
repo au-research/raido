@@ -1,18 +1,10 @@
 import { TextInputField } from "@/fields/TextInputField";
-import { RaidDto } from "@/generated/raid";
-import { FieldErrors } from "react-hook-form";
 import { ENTITY_KEY, ENTITY_LABEL } from "../keys";
 
-const getDetailsFormFields = ({
-  errors,
-  index,
-}: {
-  errors: FieldErrors<RaidDto>;
-  index: number;
-}) => {
+const getDetailsFormFields = ({ index }: { index: number }) => {
   return [
     <TextInputField
-      errors={errors}
+      key={`${ENTITY_KEY}.${index}.id`}
       width={8}
       formFieldProps={{
         name: `${ENTITY_KEY}.${index}.id`,

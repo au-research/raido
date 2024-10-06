@@ -24,8 +24,6 @@ export default function AlternateUrlsDetailsFormComponent({
     <Stack direction="row" alignItems="flex-start" gap={1}>
       <Grid container spacing={2}>
         <TextInputField
-          control={control}
-          errors={errors}
           width={12}
           formFieldProps={{
             name: `${entityKey}.${index}.url`,

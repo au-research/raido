@@ -13,7 +13,7 @@ import {
   Stack,
   TextField,
   Tooltip,
-  Typography
+  Typography,
 } from "@mui/material";
 import { useCallback } from "react";
 import {
@@ -22,7 +22,7 @@ import {
   FieldErrors,
   useFieldArray,
 } from "react-hook-form";
-import LanguageSelector from "../../../fields/LanguageSelector";
+import LanguageSelector from "@/fields/LanguageSelector";
 
 export default function FormSubjectsKeywordsComponent({
   control,
@@ -151,8 +151,15 @@ export default function FormSubjectsKeywordsComponent({
                               </Grid>
                               <Grid item xs={12} sm={6} md={3}>
                                 <LanguageSelector
-                                  name={`subject.${subjectsArrayIndex}.keyword.${subjectKeywordIndex}.language.id`}
-                                  control={control}
+                                  formFieldProps={{
+                                    name: `subject.${subjectsArrayIndex}.keyword.${subjectKeywordIndex}.language.id`,
+                                    type: "text",
+                                    label: "Language",
+                                    placeholder: "Language",
+                                    helperText: "",
+                                    errorText: "",
+                                  }}
+                                  width={3}
                                 />
                               </Grid>
                             </Grid>

@@ -50,23 +50,25 @@ const DetailsFormComponent: React.FC<FormComponentProps> = ({
 
   const renderChildItems = useMemo(
     () =>
-      fields.map((field, i) => (
-        <Stack direction="row" justifyContent="space-between" key={field.id}>
-          <ChildDetailsFormComponent
-            parentIndex={index}
-            index={i}
-            errors={errors}
-          />
-          <Tooltip title={`Remove ${CHILD_ENTITY_LABEL}`}>
-            <IconButton
-              aria-label={`Remove ${CHILD_ENTITY_LABEL}`}
-              onClick={() => handleRemoveChildItem(i)}
-            >
-              <RemoveCircleOutline />
-            </IconButton>
-          </Tooltip>
-        </Stack>
-      )),
+      fields.map((field, i) => {
+        return (
+          <Stack direction="row" justifyContent="space-between" key={field.id}>
+            <ChildDetailsFormComponent
+              parentIndex={index}
+              index={i}
+              errors={errors}
+            />
+            <Tooltip title={`Remove ${CHILD_ENTITY_LABEL}`}>
+              <IconButton
+                aria-label={`Remove ${CHILD_ENTITY_LABEL}`}
+                onClick={() => handleRemoveChildItem(i)}
+              >
+                <RemoveCircleOutline />
+              </IconButton>
+            </Tooltip>
+          </Stack>
+        );
+      }),
     [fields, control, errors, index, handleRemoveChildItem]
   );
 
@@ -74,7 +76,7 @@ const DetailsFormComponent: React.FC<FormComponentProps> = ({
     <Stack gap={2}>
       <Stack direction="row" alignItems="flex-start" gap={1}>
         <Grid container spacing={2}>
-          {getDetailsFormFields({ errors, index })}
+          {getDetailsFormFields({ index })}
         </Grid>
         <Tooltip title={`Remove ${ENTITY_LABEL}`} placement="right">
           <IconButton

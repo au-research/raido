@@ -1,52 +1,60 @@
-import { RaidDto } from "@/generated/raid";
 import language from "@/references/language.json";
-import { Autocomplete, TextField } from "@mui/material";
-import {
-    Control,
-    Controller
-} from "react-hook-form";
+import { FormFieldProps } from "@/types";
+import { getErrorMessageForField } from "@/utils";
+import { Autocomplete, Grid, TextField } from "@mui/material";
+import { useController } from "react-hook-form";
 
 export default function LanguageSelector({
-  name,
-  control,
+  formFieldProps,
+  width = 12,
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  name: any;
-  control: Control<RaidDto>;
+  formFieldProps: FormFieldProps;
+  width: number;
 }) {
+  const { errorText, helperText } = formFieldProps;
+
+  const { field, formState } = useController(formFieldProps);
+  const { errors } = formState;
+
+  const errorMessage = getErrorMessageForField(errors, field.name);
+  const displayHelperText = errorMessage
+    ? errorText
+      ? errorText
+      : errorMessage.message
+    : helperText;
+
+  const { onChange, ...restField } = field;
   return (
-    <Controller
-      name={name}
-      control={control}
-      defaultValue=""
-      rules={{ required: true }}
-      render={({ field: { onChange, value }, fieldState: { error } }) => (
-        <Autocomplete
-          options={language}
-          getOptionLabel={(option) => `${option.code}: ${option.name}`}
-          value={
-            language.find(
-              (lang) => lang.code.toString() === value?.toString()
-            ) || null
-          }
-          onChange={(_, newValue) => {
-            onChange(newValue ? newValue.code : "");
-          }}
-          isOptionEqualToValue={(option, value) => {
-            return option.code === value.code;
-          }}
-          renderInput={(params) => (
+    <Grid item xs={width}>
+      <Autocomplete
+        {...restField}
+        options={language}
+        getOptionLabel={(option) => `${option.code}: ${option.name}`}
+        value={
+          language.find(
+            (lang) => lang.code.toString() === restField.value?.toString()
+          ) || null
+        }
+        onChange={(_, newValue) => {
+          onChange(newValue ? newValue.code : "");
+        }}
+        isOptionEqualToValue={(option, value) => {
+          return option.code === value.code;
+        }}
+        renderInput={(params) => {
+          // TODO: Display error on language selector
+          return (
             <TextField
               {...params}
+              variant="filled"
               size="small"
               label="Language"
               required
-              error={!!error}
-              helperText={error?.message}
+              helperText={displayHelperText}
             />
-          )}
-        />
-      )}
-    />
+          );
+        }}
+      />
+    </Grid>
   );
 }

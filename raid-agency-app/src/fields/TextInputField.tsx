@@ -1,22 +1,17 @@
-import { RaidDto } from "@/generated/raid";
 import { FormFieldProps } from "@/types";
 import { getErrorMessageForField } from "@/utils";
 import { Grid, TextField } from "@mui/material";
-import { Control, FieldErrors, useController } from "react-hook-form";
-
-interface TextInputFieldProps {
-  formFieldProps: FormFieldProps;
-  control?: Control<RaidDto>;
-  errors: FieldErrors<RaidDto>;
-  width?: number;
-}
+import { useController } from "react-hook-form";
 
 export function TextInputField({
   formFieldProps,
   width = 12,
-}: TextInputFieldProps) {
+}: {
+  formFieldProps: FormFieldProps;
+  width?: number;
+}) {
   const { field, formState } = useController(formFieldProps);
-  const errorsNew = formState.errors;
+  const errors = formState.errors;
   const {
     label,
     placeholder,
@@ -26,7 +21,7 @@ export function TextInputField({
     multiline = false,
   } = formFieldProps;
 
-  const errorMessage = getErrorMessageForField(errorsNew, field.name);
+  const errorMessage = getErrorMessageForField(errors, field.name);
   const displayHelperText = errorMessage
     ? errorText
       ? errorText

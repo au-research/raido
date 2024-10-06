@@ -1,31 +1,21 @@
-import LanguageSelector from "@/components/LanguageSelector";
+import LanguageSelector from "@/fields/LanguageSelector";
 import { TextInputField } from "@/fields/TextInputField";
 import { TextSelectField } from "@/fields/TextSelectField";
-import { RaidDto } from "@/generated/raid";
 import descriptionType from "@/references/description_type.json";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import { Grid, IconButton, Stack, Tooltip } from "@mui/material";
-import { Control, FieldErrors } from "react-hook-form";
-
-interface DescriptionDetailsFormComponentProps {
-  control: Control<RaidDto>;
-  index: number;
-  errors: FieldErrors<RaidDto>;
-  handleRemoveDescription: (index: number) => void;
-}
 
 export default function DescriptionDetailsFormComponent({
-  control,
   index,
-  errors,
   handleRemoveDescription,
-}: DescriptionDetailsFormComponentProps) {
+}: {
+  index: number;
+  handleRemoveDescription: (index: number) => void;
+}) {
   return (
     <Stack direction="row" alignItems="flex-start" gap={1}>
       <Grid container spacing={2}>
         <TextInputField
-          control={control}
-          errors={errors}
           width={12}
           formFieldProps={{
             name: `description.${index}.text`,
@@ -38,8 +28,6 @@ export default function DescriptionDetailsFormComponent({
           }}
         />
         <TextSelectField
-          control={control}
-          errors={errors}
           width={3}
           options={descriptionType}
           formFieldProps={{
@@ -51,9 +39,16 @@ export default function DescriptionDetailsFormComponent({
             errorText: "",
           }}
         />
+
         <LanguageSelector
-          name={`description.${index}.language.id`}
-          control={control}
+          formFieldProps={{
+            name: `description.${index}.language.id`,
+            type: "text",
+            label: "Language",
+            placeholder: "Language",
+            helperText: "",
+            errorText: "",
+          }}
           width={3}
         />
       </Grid>
