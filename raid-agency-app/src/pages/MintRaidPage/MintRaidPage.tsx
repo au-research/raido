@@ -16,10 +16,53 @@ export default function MintRaidPage() {
 
   const mintMutation = useMutation({
     mutationFn: createRaid,
-    onSuccess: (mintResult: RaidDto) => {
+    onSuccess: async (mintResult: RaidDto, variables) => {
       const resultHandle = new URL(mintResult.identifier?.id ?? "");
       const [prefix, suffix] = resultHandle.pathname.split("/").filter(Boolean);
-      navigate(`/show-raid/${prefix}/${suffix}`);
+
+      const requestContributors = variables.data.contributor || [];
+      const responseContributors = mintResult.contributor || [];
+
+      const raidListenerPayloads = [];
+
+      for (let index = 0; index < requestContributors?.length; index++) {
+        raidListenerPayloads.push({
+          ...requestContributors[index],
+          ...responseContributors[index],
+        });
+      }
+
+      for (const payload of raidListenerPayloads) {
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        const raw = JSON.stringify({
+          raidName: `${prefix}/${suffix}`,
+          raidUuid: payload.uuid,
+          contributor: {
+            email: payload.email,
+            uuid: payload.uuid,
+          },
+          raidTitle:
+            mintResult.title && mintResult.title[0]
+              ? mintResult.title[0].text
+              : "",
+          delete: false,
+        });
+
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: raw,
+        };
+
+        await fetch(
+          "https://orcid.test.raid.org.au/raid-update",
+          requestOptions
+        );
+      }
+
+      navigate(`/raids/${prefix}/${suffix}`);
     },
     onError: (error: Error) => {
       RaidFormErrorMessage(error, openErrorDialog);

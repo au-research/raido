@@ -23,6 +23,7 @@ export const fetchServicePoints = async ({
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
+      "X-Raid-Api-Version": "3",
     },
   });
   return await response.json();
@@ -43,6 +44,7 @@ export const fetchServicePointsWithMembers = async ({
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
+      "X-Raid-Api-Version": "3",
     },
   });
   const servicePoints = await servicePointResponse.json();
@@ -56,6 +58,7 @@ export const fetchServicePointsWithMembers = async ({
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
+            "X-Raid-Api-Version": "3",
           },
         }
       );
@@ -98,6 +101,7 @@ export const fetchServicePointWithMembers = async ({
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
+      "X-Raid-Api-Version": "3",
     },
   });
   const servicePoint = await servicePointResponse.json();
@@ -110,6 +114,7 @@ export const fetchServicePointWithMembers = async ({
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
+          "X-Raid-Api-Version": "3",
         },
       }
     );
@@ -144,6 +149,7 @@ export const fetchServicePoint = async ({
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
+      "X-Raid-Api-Version": "3",
     },
   });
   return await response.json();
@@ -163,6 +169,7 @@ export const createServicePoint = async ({
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
+      "X-Raid-Api-Version": "3",
     },
     body: JSON.stringify(data.servicePointCreateRequest),
   });
@@ -185,6 +192,7 @@ export const updateServicePoint = async ({
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
+      "X-Raid-Api-Version": "3",
     },
     body: JSON.stringify(data.servicePointUpdateRequest),
   });
@@ -210,6 +218,7 @@ export const updateUserServicePointUserRole = async ({
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
+      "X-Raid-Api-Version": "3",
     },
     body: JSON.stringify({ userId, groupId: userGroupId }),
   });
