@@ -2,7 +2,9 @@ package au.org.raid.inttest;
 
 import au.org.raid.idl.raidv2.api.RaidApi;
 import au.org.raid.idl.raidv2.model.*;
+import au.org.raid.inttest.config.AuthConfig;
 import au.org.raid.inttest.config.IntegrationTestConfig;
+import au.org.raid.inttest.service.KeycloakClient;
 import au.org.raid.inttest.service.RaidUpdateRequestFactory;
 import au.org.raid.inttest.service.TestClient;
 import au.org.raid.inttest.service.TokenService;
@@ -29,6 +31,12 @@ public class AbstractIntegrationTest {
     protected RaidCreateRequest createRequest;
 
     protected RaidApi raidApi;
+
+    @Autowired
+    protected KeycloakClient keycloakClient;
+
+    @Autowired
+    protected AuthConfig authConfig;
 
     @Value("${raid.test.auth.admin.user}")
     protected String adminUser;
@@ -67,9 +75,9 @@ public class AbstractIntegrationTest {
 
     @BeforeEach
     public void setupTestToken() {
-        adminToken = tokenService.getToken(adminUser, adminPassword);
-        raidAuToken = tokenService.getToken(raidAuUser, raidAuPassword);
-        uqToken = tokenService.getToken(uqUser, uqPassword);
+        adminToken = tokenService.getUserToken(adminUser, adminPassword);
+        raidAuToken = tokenService.getUserToken(raidAuUser, raidAuPassword);
+        uqToken = tokenService.getUserToken(uqUser, uqPassword);
         createRequest = newCreateRequest();
         raidApi = testClient.raidApi(raidAuToken);
     }

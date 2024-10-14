@@ -4,6 +4,7 @@ import au.org.raid.api.exception.ResourceNotFoundException;
 import au.org.raid.api.factory.HandleFactory;
 import au.org.raid.api.factory.RaidRecordFactory;
 import au.org.raid.api.repository.RaidRepository;
+import au.org.raid.api.util.TokenUtil;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -144,5 +145,19 @@ public class RaidIngestService {
         spatialCoverageService.update(raid.getSpatialCoverage(), handle);
 
         return raid;
+    }
+
+    public List<RaidDto> findAllByServicePointIdOrHandleIn(final Long servicePointId) {
+        final var handles = new ArrayList<>(TokenUtil.getAdminRaids());
+        handles.addAll(TokenUtil.getUserRaids());
+
+        final var raids = new ArrayList<RaidDto>();
+        final var records = raidRepository.findAllByServicePointIdOrHandleIn(servicePointId, handles);
+
+        for (final var record : records) {
+            raids.add(cacheableRaidService.build(record));
+        }
+
+        return raids;
     }
 }

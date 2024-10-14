@@ -11,7 +11,7 @@ ext {
 }
 
 dependencies{
-  implementation libs.bundles.springboot3
+  implementation libs.bundles.springboot
   implementation libs.springdoc.openapi
 
   // pkg: jakarta.servlet - used to be javax.servlet  

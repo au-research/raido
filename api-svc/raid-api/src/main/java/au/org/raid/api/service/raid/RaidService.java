@@ -13,6 +13,7 @@ import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.RaidIngestService;
 import au.org.raid.api.service.RaidListenerService;
 import au.org.raid.api.service.datacite.DataciteService;
+import au.org.raid.api.service.keycloak.KeycloakService;
 import au.org.raid.api.util.SchemaValues;
 import au.org.raid.db.jooq.tables.records.ServicePointRecord;
 import au.org.raid.idl.raidv2.model.Contributor;
@@ -51,14 +52,13 @@ public class RaidService {
     private final RaidIngestService raidIngestService;
     private final HandleFactory handleFactory;
     private final RaidListenerService raidListenerService;
+    private final KeycloakService keycloakService;
 
     @Transactional
     public RaidDto mint(
             final RaidCreateRequest raid,
             final long servicePointId
     ) {
-        log.debug("THIS IS RAID V3");
-
         final var servicePointRecord =
                 servicePointRepository.findById(servicePointId).orElseThrow(() ->
                         new UnknownServicePointException(servicePointId));
@@ -69,6 +69,8 @@ public class RaidService {
 
         final var raidDto = raidHistoryService.save(raid);
         raidIngestService.create(raidDto);
+
+        keycloakService.addHandleToAdminRaids(new Handle(raidDto.getIdentifier().getId()).toString());
 
         return raidDto;
     }
@@ -91,10 +93,10 @@ public class RaidService {
 
     @SneakyThrows
     @Transactional
-    public RaidDto update(final RaidUpdateRequest raid, final long servicePointId) {
+    public RaidDto update(final RaidUpdateRequest raid) {
         final var servicePointRecord =
-                servicePointRepository.findById(servicePointId).orElseThrow(() ->
-                        new UnknownServicePointException(servicePointId));
+                servicePointRepository.findById(raid.getIdentifier().getOwner().getServicePoint()).orElseThrow(() ->
+                        new UnknownServicePointException(raid.getIdentifier().getOwner().getServicePoint()));
 
         final Integer version = raid.getIdentifier().getVersion();
 

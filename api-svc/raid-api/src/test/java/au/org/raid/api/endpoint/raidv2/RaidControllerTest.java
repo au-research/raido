@@ -266,43 +266,28 @@ class RaidControllerTest {
         validationFailure.setMessage(validationFailureMessage);
         validationFailure.setErrorType(validationFailureType);
 
-        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
-            final var jwt = getJwt();
-            final var verifyFindServicePointId = mockFindServicePointId();
+        when(validationService.validateForUpdate(eq(handle), any(RaidUpdateRequest.class))).thenReturn(List.of(validationFailure));
 
-            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
-            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
+        final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/%s/%s", PREFIX, SUFFIX))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input))
+                        .characterEncoding("utf-8"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andReturn();
 
-            final var securityContext = mock(SecurityContext.class);
-            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
+        final ValidationFailureResponse validationFailureResponse = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ValidationFailureResponse.class);
 
-            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
+        assertThat(validationFailureResponse.getType(), Matchers.is("https://raid.org.au/errors#ValidationException"));
+        assertThat(validationFailureResponse.getTitle(), Matchers.is("There were validation failures."));
+        assertThat(validationFailureResponse.getStatus(), Matchers.is(400));
+        assertThat(validationFailureResponse.getDetail(), Matchers.is("Request had 1 validation failure(s). See failures for more details..."));
+        assertThat(validationFailureResponse.getInstance(), Matchers.is("https://raid.org.au"));
+        assertThat(validationFailureResponse.getFailures().get(0).getFieldId(), Matchers.is(validationFailureFieldId));
+        assertThat(validationFailureResponse.getFailures().get(0).getErrorType(), Matchers.is(validationFailureType));
+        assertThat(validationFailureResponse.getFailures().get(0).getMessage(), Matchers.is(validationFailureMessage));
 
-            when(validationService.validateForUpdate(eq(handle), any(RaidUpdateRequest.class))).thenReturn(List.of(validationFailure));
-
-            final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/%s/%s", PREFIX, SUFFIX))
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(input))
-                            .characterEncoding("utf-8"))
-                    .andDo(print())
-                    .andExpect(status().isBadRequest())
-                    .andReturn();
-
-            final ValidationFailureResponse validationFailureResponse = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), ValidationFailureResponse.class);
-
-            assertThat(validationFailureResponse.getType(), Matchers.is("https://raid.org.au/errors#ValidationException"));
-            assertThat(validationFailureResponse.getTitle(), Matchers.is("There were validation failures."));
-            assertThat(validationFailureResponse.getStatus(), Matchers.is(400));
-            assertThat(validationFailureResponse.getDetail(), Matchers.is("Request had 1 validation failure(s). See failures for more details..."));
-            assertThat(validationFailureResponse.getInstance(), Matchers.is("https://raid.org.au"));
-            assertThat(validationFailureResponse.getFailures().get(0).getFieldId(), Matchers.is(validationFailureFieldId));
-            assertThat(validationFailureResponse.getFailures().get(0).getErrorType(), Matchers.is(validationFailureType));
-            assertThat(validationFailureResponse.getFailures().get(0).getMessage(), Matchers.is(validationFailureMessage));
-
-            verifyFindServicePointId.get();
-
-            verifyNoMoreInteractions(raidService);
-        }
+        verifyNoMoreInteractions(raidService);
     }
 
     @Test
@@ -316,66 +301,51 @@ class RaidControllerTest {
         final var input = createRaidForPut();
         final var output = createRaidForGet(title, startDate);
 
-        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+        when(validationService.validateForUpdate(String.join("/", PREFIX, SUFFIX), input))
+                .thenReturn(Collections.emptyList());
 
-            final var jwt = getJwt();
-            final var verifyFindServicePointId = mockFindServicePointId();
+        when(raidService.update(input)).thenReturn(output);
 
-            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
-            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
-
-            final var securityContext = mock(SecurityContext.class);
-            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
-
-            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
-
-            when(validationService.validateForUpdate(String.join("/", PREFIX, SUFFIX), input))
-                    .thenReturn(Collections.emptyList());
-
-            when(raidService.update(input, SERVICE_POINT_ID)).thenReturn(output);
-
-            mockMvc.perform(put(String.format("/raid/%s/%s", PREFIX, SUFFIX))
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(input))
-                            .characterEncoding("utf-8"))
-                    .andDo(print())
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.identifier.id", Matchers.is(id.formatUrl())))
-                    .andExpect(jsonPath("$.identifier.schemaUri", Matchers.is(SchemaValues.RAID_SCHEMA_URI.getUri())))
-                    .andExpect(jsonPath("$.identifier.registrationAgency.id", Matchers.is(REGISTRATION_AGENCY_ID)))
-                    .andExpect(jsonPath("$.identifier.registrationAgency.schemaUri", Matchers.is(SchemaValues.ROR_SCHEMA_URI.getUri())))
-                    .andExpect(jsonPath("$.identifier.owner.id", Matchers.is(IDENTIFIER_OWNER_ID)))
-                    .andExpect(jsonPath("$.identifier.owner.schemaUri", Matchers.is(SchemaValues.ROR_SCHEMA_URI.getUri())))
-                    .andExpect(jsonPath("$.identifier.owner.servicePoint", Matchers.is(SERVICE_POINT_ID.intValue())))
-                    .andExpect(jsonPath("$.title[0].text", Matchers.is(title)))
-                    .andExpect(jsonPath("$.title[0].type.id", Matchers.is(SchemaValues.PRIMARY_TITLE_TYPE.getUri())))
-                    .andExpect(jsonPath("$.title[0].type.schemaUri", Matchers.is(SchemaValues.TITLE_TYPE_SCHEMA.getUri())))
-                    .andExpect(jsonPath("$.title[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
-                    .andExpect(jsonPath("$.title[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
-                    .andExpect(jsonPath("$.date.startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
-                    .andExpect(jsonPath("$.date.endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
-                    .andExpect(jsonPath("$.description[0].text", Matchers.is("Genome sequencing and assembly project at WUR of the C. Japonicum. ")))
-                    .andExpect(jsonPath("$.description[0].type.id", Matchers.is(SchemaValues.PRIMARY_DESCRIPTION_TYPE.getUri())))
-                    .andExpect(jsonPath("$.description[0].type.schemaUri", Matchers.is(SchemaValues.DESCRIPTION_TYPE_SCHEMA.getUri())))
-                    .andExpect(jsonPath("$.access.type.id", Matchers.is(SchemaValues.ACCESS_TYPE_OPEN.getUri())))
-                    .andExpect(jsonPath("$.access.type.schemaUri", Matchers.is(SchemaValues.ACCESS_TYPE_SCHEMA.getUri())))
-                    .andExpect(jsonPath("$.access.statement.text", Matchers.is("This RAiD is closed")))
-                    .andExpect(jsonPath("$.contributor[0].id", Matchers.is("https://orcid.org/0000-0002-4368-8058")))
-                    .andExpect(jsonPath("$.contributor[0].schemaUri", Matchers.is("https://orcid.org/")))
-                    .andExpect(jsonPath("$.contributor[0].position[0].schemaUri", Matchers.is(SchemaValues.CONTRIBUTOR_POSITION_SCHEMA_URI.getUri())))
-                    .andExpect(jsonPath("$.contributor[0].position[0].id", Matchers.is(SchemaValues.PRINCIPAL_INVESTIGATOR_CONTRIBUTOR_POSITION_ROLE.getUri())))
-                    .andExpect(jsonPath("$.contributor[0].position[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
-                    .andExpect(jsonPath("$.contributor[0].position[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
-                    .andExpect(jsonPath("$.contributor[0].role[0].schemaUri", Matchers.is(SchemaValues.CONTRIBUTOR_ROLE_SCHEMA_URI.getUri())))
-                    .andExpect(jsonPath("$.contributor[0].role[0].id", Matchers.is("https://credit.niso.org/contributor-roles/formal-analysis/")))
-                    .andExpect(jsonPath("$.organisation[0].role[0].id", Matchers.is(SchemaValues.LEAD_RESEARCH_ORGANISATION_ROLE.getUri())))
-                    .andExpect(jsonPath("$.organisation[0].role[0].schemaUri", Matchers.is(SchemaValues.ORGANISATION_ROLE_SCHEMA_URI.getUri())))
-                    .andExpect(jsonPath("$.organisation[0].role[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
-                    .andExpect(jsonPath("$.organisation[0].role[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
-                    .andExpect(jsonPath("$.organisation[0].id", Matchers.is("https://ror.org/04qw24q55")))
-                    .andExpect(jsonPath("$.organisation[0].schemaUri", Matchers.is(SchemaValues.ROR_SCHEMA_URI.getUri())));
-            verifyFindServicePointId.get();
-        }
+        mockMvc.perform(put(String.format("/raid/%s/%s", PREFIX, SUFFIX))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input))
+                        .characterEncoding("utf-8"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.identifier.id", Matchers.is(id.formatUrl())))
+                .andExpect(jsonPath("$.identifier.schemaUri", Matchers.is(SchemaValues.RAID_SCHEMA_URI.getUri())))
+                .andExpect(jsonPath("$.identifier.registrationAgency.id", Matchers.is(REGISTRATION_AGENCY_ID)))
+                .andExpect(jsonPath("$.identifier.registrationAgency.schemaUri", Matchers.is(SchemaValues.ROR_SCHEMA_URI.getUri())))
+                .andExpect(jsonPath("$.identifier.owner.id", Matchers.is(IDENTIFIER_OWNER_ID)))
+                .andExpect(jsonPath("$.identifier.owner.schemaUri", Matchers.is(SchemaValues.ROR_SCHEMA_URI.getUri())))
+                .andExpect(jsonPath("$.identifier.owner.servicePoint", Matchers.is(SERVICE_POINT_ID.intValue())))
+                .andExpect(jsonPath("$.title[0].text", Matchers.is(title)))
+                .andExpect(jsonPath("$.title[0].type.id", Matchers.is(SchemaValues.PRIMARY_TITLE_TYPE.getUri())))
+                .andExpect(jsonPath("$.title[0].type.schemaUri", Matchers.is(SchemaValues.TITLE_TYPE_SCHEMA.getUri())))
+                .andExpect(jsonPath("$.title[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
+                .andExpect(jsonPath("$.title[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
+                .andExpect(jsonPath("$.date.startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
+                .andExpect(jsonPath("$.date.endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
+                .andExpect(jsonPath("$.description[0].text", Matchers.is("Genome sequencing and assembly project at WUR of the C. Japonicum. ")))
+                .andExpect(jsonPath("$.description[0].type.id", Matchers.is(SchemaValues.PRIMARY_DESCRIPTION_TYPE.getUri())))
+                .andExpect(jsonPath("$.description[0].type.schemaUri", Matchers.is(SchemaValues.DESCRIPTION_TYPE_SCHEMA.getUri())))
+                .andExpect(jsonPath("$.access.type.id", Matchers.is(SchemaValues.ACCESS_TYPE_OPEN.getUri())))
+                .andExpect(jsonPath("$.access.type.schemaUri", Matchers.is(SchemaValues.ACCESS_TYPE_SCHEMA.getUri())))
+                .andExpect(jsonPath("$.access.statement.text", Matchers.is("This RAiD is closed")))
+                .andExpect(jsonPath("$.contributor[0].id", Matchers.is("https://orcid.org/0000-0002-4368-8058")))
+                .andExpect(jsonPath("$.contributor[0].schemaUri", Matchers.is("https://orcid.org/")))
+                .andExpect(jsonPath("$.contributor[0].position[0].schemaUri", Matchers.is(SchemaValues.CONTRIBUTOR_POSITION_SCHEMA_URI.getUri())))
+                .andExpect(jsonPath("$.contributor[0].position[0].id", Matchers.is(SchemaValues.PRINCIPAL_INVESTIGATOR_CONTRIBUTOR_POSITION_ROLE.getUri())))
+                .andExpect(jsonPath("$.contributor[0].position[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
+                .andExpect(jsonPath("$.contributor[0].position[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
+                .andExpect(jsonPath("$.contributor[0].role[0].schemaUri", Matchers.is(SchemaValues.CONTRIBUTOR_ROLE_SCHEMA_URI.getUri())))
+                .andExpect(jsonPath("$.contributor[0].role[0].id", Matchers.is("https://credit.niso.org/contributor-roles/formal-analysis/")))
+                .andExpect(jsonPath("$.organisation[0].role[0].id", Matchers.is(SchemaValues.LEAD_RESEARCH_ORGANISATION_ROLE.getUri())))
+                .andExpect(jsonPath("$.organisation[0].role[0].schemaUri", Matchers.is(SchemaValues.ORGANISATION_ROLE_SCHEMA_URI.getUri())))
+                .andExpect(jsonPath("$.organisation[0].role[0].startDate", Matchers.is(startDate.format(DateTimeFormatter.ISO_DATE))))
+                .andExpect(jsonPath("$.organisation[0].role[0].endDate", Matchers.is(endDate.format(DateTimeFormatter.ISO_DATE))))
+                .andExpect(jsonPath("$.organisation[0].id", Matchers.is("https://ror.org/04qw24q55")))
+                .andExpect(jsonPath("$.organisation[0].schemaUri", Matchers.is(SchemaValues.ROR_SCHEMA_URI.getUri())));
     }
 
     @Test
@@ -383,41 +353,26 @@ class RaidControllerTest {
         final var handle = String.join("/", PREFIX, SUFFIX);
         final var input = createRaidForPut();
 
-        try (MockedStatic<SecurityContextHolder> securityContextHolder = Mockito.mockStatic(SecurityContextHolder.class)) {
+        when(validationService.validateForUpdate(eq(handle), any(RaidUpdateRequest.class))).thenReturn(Collections.emptyList());
 
-            final var jwt = getJwt();
-            final var verifyFindServicePointId = mockFindServicePointId();
+        doThrow(new ResourceNotFoundException(handle))
+                .when(raidService).update(input);
 
-            final var jwtAuthenticationToken = mock(JwtAuthenticationToken.class);
-            when(jwtAuthenticationToken.getToken()).thenReturn(jwt);
+        final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/%s/%s", PREFIX, SUFFIX))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input))
+                        .characterEncoding("utf-8"))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andReturn();
 
-            final var securityContext = mock(SecurityContext.class);
-            when(securityContext.getAuthentication()).thenReturn(jwtAuthenticationToken);
+        final FailureResponse failureResponse = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), FailureResponse.class);
 
-            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
-
-            when(validationService.validateForUpdate(eq(handle), any(RaidUpdateRequest.class))).thenReturn(Collections.emptyList());
-
-            doThrow(new ResourceNotFoundException(handle))
-                    .when(raidService).update(input, SERVICE_POINT_ID);
-
-            final MvcResult mvcResult = mockMvc.perform(put(String.format("/raid/%s/%s", PREFIX, SUFFIX))
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(input))
-                            .characterEncoding("utf-8"))
-                    .andDo(print())
-                    .andExpect(status().isNotFound())
-                    .andReturn();
-
-            final FailureResponse failureResponse = objectMapper.readValue(mvcResult.getResponse().getContentAsString(), FailureResponse.class);
-
-            assertThat(failureResponse.getType(), Matchers.is("https://raid.org.au/errors#ResourceNotFoundException"));
-            assertThat(failureResponse.getTitle(), Matchers.is("The resource was not found."));
-            assertThat(failureResponse.getStatus(), Matchers.is(404));
-            assertThat(failureResponse.getDetail(), Matchers.is("No RAiD was found with handle 10378.1/1696639."));
-            assertThat(failureResponse.getInstance(), Matchers.is("https://raid.org.au"));
-            verifyFindServicePointId.get();
-        }
+        assertThat(failureResponse.getType(), Matchers.is("https://raid.org.au/errors#ResourceNotFoundException"));
+        assertThat(failureResponse.getTitle(), Matchers.is("The resource was not found."));
+        assertThat(failureResponse.getStatus(), Matchers.is(404));
+        assertThat(failureResponse.getDetail(), Matchers.is("No RAiD was found with handle 10378.1/1696639."));
+        assertThat(failureResponse.getInstance(), Matchers.is("https://raid.org.au"));
     }
 
     @Test
@@ -645,7 +600,7 @@ class RaidControllerTest {
 
             securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
             
-            when(raidIngestService.findAllByServicePointId(SERVICE_POINT_ID)).thenReturn(Collections.singletonList(output));
+            when(raidIngestService.findAllByServicePointIdOrHandleIn(SERVICE_POINT_ID)).thenReturn(Collections.singletonList(output));
 
             mockMvc.perform(get("/raid/", handle)
                             .queryParam("servicePointId", SERVICE_POINT_ID.toString())
