@@ -53,8 +53,8 @@ public class SecurityConfig {
     private static final String ROLES_CLAIM = "roles";
     private static final String RAID_API = "/raid";
     private static final String SERVICE_POINT_API = "/service-point";
-    public static final String ADMIN_RAIDS_CLAIM = "admin_raids";
-    public static final String USER_RAIDS_CLAIM = "user_raids";
+    private static final String ADMIN_RAIDS_CLAIM = "admin_raids";
+    private static final String USER_RAIDS_CLAIM = "user_raids";
 
     private final KeycloakLogoutHandler keycloakLogoutHandler;
     private final ServicePointService servicePointService;
@@ -82,14 +82,7 @@ public class SecurityConfig {
                                 hasRaidPermissions(RAID_ADMIN_ROLE, ADMIN_RAIDS_CLAIM),
                                 hasRaidPermissions(RAID_USER_ROLE, USER_RAIDS_CLAIM)
                         ))
-                        .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**", "GET"))
-                        .access(AuthorizationManagers.anyOf(
-                                anyServicePointUserUnlessEmbargoed(),
-                                servicePointOwner(),
-                                hasRaidPermissions(RAID_ADMIN_ROLE, ADMIN_RAIDS_CLAIM),
-                                hasRaidPermissions(RAID_USER_ROLE, USER_RAIDS_CLAIM)
-                        ))
-                        .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**", "POST"))
+                         .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**", "POST"))
                         .hasAnyRole(SERVICE_POINT_USER_ROLE, RAID_ADMIN_ROLE)
                         .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**", "PUT"))
                         .access(AuthorizationManagers.anyOf(

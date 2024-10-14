@@ -1,230 +1,146 @@
 package au.org.raid.inttest;
 
-import au.org.raid.idl.raidv2.model.ClosedRaid;
-import au.org.raid.idl.raidv2.model.RaidDto;
-import au.org.raid.idl.raidv2.model.RaidPatchRequest;
-import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
-import au.org.raid.inttest.config.UserConfig;
+import au.org.raid.inttest.config.AuthConfig;
+import au.org.raid.inttest.dto.keycloak.RaidUserPermissionsRequest;
 import au.org.raid.inttest.service.Handle;
-import au.org.raid.inttest.service.RaidApiValidationException;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.IOException;
-
-import static au.org.raid.inttest.service.TestConstants.REAL_TEST_ORCID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 @Slf4j
-@Disabled("Work in progress")
 public class RaidPermissionsIntegrationTest extends AbstractIntegrationTest {
     @Autowired
-    private UserConfig userConfig;
+    private AuthConfig authConfig;
+
+    // TODO: Raid admin has access to write to a raid in admin_raids
+    // TODO: Raid admin has access to embargoed raid in admin_raids
+    // TODO: Raid admin does not have access to write to a raid not in admin_raids
+    // TODO: Raid admin has access to embargoed raid in admin_raids
+    // TODO: service point user has read/write access to all raids for service point
+    // TODO: service point user has no access to any raids outside service point
+
 
     @Test
-    @DisplayName("Mint a raid")
-    void mintRaid() {
-        final var mintedRaid = testClient.raidApi(
-                userConfig.getRaidAu().getUser(),
-                userConfig.getRaidAu().getPassword()
-            ).mintRaid(createRequest).getBody();
+    @DisplayName("Raid user cannot read raid without permissions")
+    void raidUserReadWithoutPermissions() {
+        final var mintedRaid = testClient.raidApi(authConfig.getRaidAdmin())
+                .mintRaid(createRequest).getBody();
 
         assert mintedRaid != null;
 
         final var handle = new Handle(mintedRaid.getIdentifier().getId());
-        
-        final var result = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
-
-        assertThat(result.getTitle()).isEqualTo(createRequest.getTitle());
-        assertThat(result.getDescription()).isEqualTo(createRequest.getDescription());
-        assertThat(result.getAccess()).isEqualTo(createRequest.getAccess());
-        assertThat(result.getOrganisation()).isEqualTo(createRequest.getOrganisation());
-        assertThat(result.getDate()).isEqualTo(createRequest.getDate());
-    }
-
-    @Test
-    @DisplayName("Update a raid")
-    void updateRaid() {
-        final var mintedRaid = raidApi.mintRaid(createRequest).getBody();
-
-        assert mintedRaid != null;
-        final var handle = new Handle(mintedRaid.getIdentifier().getId());
-        final var readResult = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
-
-        assert readResult != null;
-        final var updateRequest = mapReadToUpdate(readResult);
-
-        final var title = updateRequest.getTitle().get(0).getText() + " updated";
-
-        updateRequest.getTitle().get(0).setText(title);
 
         try {
-            final var updateResult = raidApi.updateRaid(handle.getPrefix(), handle.getSuffix(), updateRequest).getBody();
-            assert updateResult != null;
-            assertThat(updateResult.getTitle().get(0).getText()).isEqualTo(title);
-            assertThat(updateResult.getIdentifier().getVersion()).isEqualTo(2);
-        } catch (final Exception e) {
-            fail("Update failed");
-            throw new RuntimeException(e);
-        }
-
-        final var result = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
-        assert result != null;
-        assertThat(result.getTitle().get(0).getText()).isEqualTo(title);
-        assertThat(result.getIdentifier().getVersion()).isEqualTo(2);
-    }
-
-
-
-    @Test
-    @DisplayName("Patch a raid")
-    void patchRaid() {
-        final var mintedRaid = raidApi.mintRaid(createRequest).getBody();
-
-        assert mintedRaid != null;
-        final var handle = new Handle(mintedRaid.getIdentifier().getId());
-        final var readResult = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
-
-
-        final var contributor = readResult.getContributor().get(0);
-        contributor.setId(REAL_TEST_ORCID);
-
-        final var patchRequest = new RaidPatchRequest().addContributorItem(contributor);
-        try {
-            final var responseEntity = raidApi.patchRaid(handle.getPrefix(), handle.getSuffix(), patchRequest);
-            assert responseEntity != null;
-            final var raid = responseEntity.getBody();
-            assert raid != null;
-            assertThat(raid.getContributor().get(0).getId()).isEqualTo(REAL_TEST_ORCID);
-        } catch (final Exception e) {
-            fail("Update failed");
-            throw new RuntimeException(e);
-        }
-
-        final var result = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
-        assert result != null;
-        assertThat(result.getContributor().get(0).getId()).isEqualTo(REAL_TEST_ORCID);
-    }
-
-    @Test
-    @DisplayName("Raid does not update if there are no changes")
-    void updateRaidNoOp() {
-        final var mintedRaid = raidApi.mintRaid(createRequest).getBody();
-
-        assert mintedRaid != null;
-        final var handle = new Handle(mintedRaid.getIdentifier().getId());
-        final var readResult = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
-
-        final var updateRequest = mapReadToUpdate(readResult);
-
-        try {
-            final var updateResult = raidApi.updateRaid(handle.getPrefix(), handle.getSuffix(), updateRequest).getBody();
-            assertThat(updateResult.getIdentifier().getVersion()).isEqualTo(1);
-        } catch (final Exception e) {
-            fail("Update failed");
-        }
-
-        final var result = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
-        assertThat(result.getIdentifier().getVersion()).isEqualTo(1);
-    }
-
-
-    @Test
-    @DisplayName("Resource not found error returned when raid not found on update")
-    void notFound() {
-        final var mintedRaid = raidApi.mintRaid(createRequest).getBody();
-
-        assert mintedRaid != null;
-        final var handle = new Handle(mintedRaid.getIdentifier().getId());
-        final var readResult = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
-
-        final var updateRequest = mapReadToUpdate(readResult);
-
-        try {
-            final var updateResult = raidApi.updateRaid(handle.getPrefix(), handle.getSuffix(), updateRequest).getBody();
-            assertThat(updateResult.getIdentifier().getVersion()).isEqualTo(1);
-        } catch (final Exception e) {
-            fail("Update failed");
-        }
-
-        final var result = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
-        assertThat(result.getIdentifier().getVersion()).isEqualTo(1);
-    }
-
-
-    @Test
-    @DisplayName("Forbidden response if embargoed raid from other service point is requested")
-    void closedRaidOtherServicePoint() throws IOException {
-        final var mintedRaid = raidApi.mintRaid(createRequest).getBody();
-        assert mintedRaid != null;
-        final var handle = new Handle(mintedRaid.getIdentifier().getId());
-
-        final var api = testClient.raidApi(uqToken);
-
-        try {
-            final var readResult = api.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
-            fail("Access to embargoed raid should be forbidden from different service point");
+            testClient.raidApi(authConfig.getRaidUser())
+                    .findRaidByName(handle.getPrefix(), handle.getSuffix(), null);
         } catch (final FeignException e) {
             assertThat(e.status()).isEqualTo(403);
-
-            final var closedRaid = objectMapper.readValue(e.responseBody().get().array(), ClosedRaid.class);
-
-            assertThat(closedRaid).isEqualTo(new ClosedRaid()
-                    .identifier(mintedRaid.getIdentifier())
-                    .access(mintedRaid.getAccess()));
-
-        }
-    }
-
-
-    @Test
-    @DisplayName("List raid does not show closed raids from other service points")
-    void closedRaidsExcludedFromList() {
-        raidApi.mintRaid(createRequest);
-        final var ACCESS_TYPE_CLOSED = "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json";
-        final var ACCESS_TYPE_EMBARGOED = "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json";
-
-        final var api = testClient.raidApi(uqToken);
-
-        try {
-            final var raidList = api.findAllRaids(null).getBody();
-
-            assert raidList != null;
-
-            // filter closed/embargoed raids where the service point does not match RDM@UQ
-            final var result = raidList.stream().filter(raid ->
-                    !raid.getIdentifier().getOwner().getServicePoint().equals(UQ_SERVICE_POINT_ID) &&
-                            (raid.getAccess().getType().getId().equals(ACCESS_TYPE_CLOSED) ||
-                                    raid.getAccess().getType().getId().equals(ACCESS_TYPE_EMBARGOED)
-                            )
-            ).toList();
-
-            assertThat(result).isEmpty();
-        } catch (RaidApiValidationException e) {
+            // pass
+        } catch (final Exception e) {
+            log.error("Failed", e);
             fail(e.getMessage());
         }
     }
 
-    private RaidUpdateRequest mapReadToUpdate(RaidDto read) {
-        return new RaidUpdateRequest()
-                .identifier(read.getIdentifier())
-                .title(read.getTitle())
-                .date(read.getDate())
-                .description(read.getDescription())
-                .access(read.getAccess())
-                .alternateUrl(read.getAlternateUrl())
-                .contributor(read.getContributor())
-                .organisation(read.getOrganisation())
-                .subject(read.getSubject())
-                .relatedRaid(read.getRelatedRaid())
-                .relatedObject(read.getRelatedObject())
-                .alternateIdentifier(read.getAlternateIdentifier())
-                .spatialCoverage(read.getSpatialCoverage())
-                .traditionalKnowledgeLabel(read.getTraditionalKnowledgeLabel());
+    @Test
+    @DisplayName("Raid user cannot update raid without permissions")
+    void raidUserUpdateWithoutPermissions() {
+        final var mintedRaid = testClient.raidApi(authConfig.getRaidAdmin()).mintRaid(createRequest).getBody();
+
+        assert mintedRaid != null;
+
+        final var handle = new Handle(mintedRaid.getIdentifier().getId());
+
+        try {
+            testClient.raidApi(authConfig.getRaidUser())
+                    .updateRaid(handle.getPrefix(), handle.getSuffix(), raidUpdateRequestFactory.create(mintedRaid));
+        } catch (final FeignException e) {
+            assertThat(e.status()).isEqualTo(403);
+            // pass
+        } catch (final Exception e) {
+            log.error("Failed", e);
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    @DisplayName("Raid user can read raid with permissions")
+    void raidUserReadWithPermissions() {
+        final var mintedRaid = testClient.raidApi(authConfig.getRaidAdmin()).mintRaid(createRequest).getBody();
+
+        assert mintedRaid != null;
+
+        final var handle = new Handle(mintedRaid.getIdentifier().getId());
+
+        final var raidUserPermissionsRequest = RaidUserPermissionsRequest.builder()
+                .userId("da3f40a0-7e61-4c4c-b4f3-fdcaee7efa09")
+                .handle(handle.toString())
+                .build();
+
+        keycloakClient.keycloakApi(authConfig.getRaidPermissionsAdmin())
+                .addRaidUser(raidUserPermissionsRequest);
+
+        try {
+            testClient.raidApi(authConfig.getRaidUser())
+                    .findRaidByName(handle.getPrefix(), handle.getSuffix(), null);
+        } catch (final Exception e) {
+            fail("Raid user should be able to read raid");
+        } finally {
+            keycloakClient.keycloakApi(authConfig.getRaidPermissionsAdmin()).removeRaidUser(raidUserPermissionsRequest);
+        }
+    }
+
+    @Test
+    @DisplayName("Raid user can update raid with permissions")
+    void raidUserUpdateWithPermissions() {
+        final var mintedRaid = testClient.raidApi(authConfig.getRaidAdmin()).mintRaid(createRequest).getBody();
+
+        assert mintedRaid != null;
+
+        final var handle = new Handle(mintedRaid.getIdentifier().getId());
+
+        final var raidUserPermissionsRequest = RaidUserPermissionsRequest.builder()
+                .userId("da3f40a0-7e61-4c4c-b4f3-fdcaee7efa09")
+                .handle(handle.toString())
+                .build();
+
+        keycloakClient.keycloakApi(authConfig.getRaidPermissionsAdmin())
+                .addRaidUser(raidUserPermissionsRequest);
+
+        try {
+            testClient.raidApi(authConfig.getRaidUser())
+                    .updateRaid(handle.getPrefix(), handle.getSuffix(), raidUpdateRequestFactory.create(mintedRaid));
+        } catch (final Exception e) {
+            fail("Raid user should be able to update raid");
+        } finally {
+            keycloakClient.keycloakApi(authConfig.getRaidPermissionsAdmin()).removeRaidUser(raidUserPermissionsRequest);
+        }
+    }
+
+    @Test
+    @DisplayName("Raid admin can't read embargoed raids from same service point if no permissions")
+    void raidAdminUnableToReadEmbargoedRaids() {
+        final var raid1 = testClient.raidApi(authConfig.getRaidAu()).mintRaid(createRequest).getBody();
+        assert raid1 != null;
+        final var raid2 = testClient.raidApi(authConfig.getRaidAdmin()).mintRaid(createRequest).getBody();
+        assert raid2 != null;
+
+        try {
+            final var response = testClient.raidApi(authConfig.getRaidAdmin()).findAllRaids(null);
+
+            assert response.getBody() != null;
+
+            final var raids = response.getBody().stream().map(raidDto -> raidDto.getIdentifier().getId()).toList();
+            assertThat(raids).contains(raid2.getIdentifier().getId());
+            assertThat(raids).doesNotContain(raid1.getIdentifier().getId());
+        } catch (final Exception e) {
+            log.error("Failed", e);
+            fail(e.getMessage());
+        }
     }
 }

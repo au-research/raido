@@ -9,15 +9,24 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "raid.test.auth", ignoreInvalidFields = true)
-public class UserConfig {
+public class AuthConfig {
     private User admin;
     private User raidAu;
     private User uq;
+    private User raidAdmin;
+    private User raidUser;
+    private Client raidPermissionsAdmin;
 
     @Data
     public static class User {
         private String user;
         private String password;
+    }
+
+    @Data
+    public static class Client {
+        private String clientId;
+        private String clientSecret;
     }
 
 }

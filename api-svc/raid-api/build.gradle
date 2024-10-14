@@ -5,18 +5,18 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'com.avast.gradle:gradle-docker-compose-plugin:0.17.7'
+//    classpath 'com.avast.gradle:gradle-docker-compose-plugin:0.17.7'
   }
 }
 
 plugins {
   id 'java'
-  id 'org.springframework.boot' version '3.1.4'
-  id 'io.spring.dependency-management' version '1.1.3'
-  id 'com.avast.gradle.docker-compose' version '0.17.6'
+  id 'org.springframework.boot' version '3.2.6'
+  id 'io.spring.dependency-management' version '1.1.6'
+//  id 'com.avast.gradle.docker-compose' version '0.17.6'
 }
 
-apply plugin: 'docker-compose'
+//apply plugin: 'docker-compose'
 
 ext {
   defaultSysProps = [
@@ -54,7 +54,7 @@ dependencies{
   implementation project(':api-svc:idl-raid-v2')
   implementation 'org.flywaydb:flyway-core:9.22.3'
   // look in settings.gradle for version catalog specs 
-  implementation libs.bundles.springboot3
+  implementation libs.bundles.springboot
   implementation libs.springdoc.openapi
 
   implementation 'jakarta.annotation:jakarta.annotation-api'
@@ -75,7 +75,7 @@ dependencies{
   implementation 'jakarta.json:jakarta.json-api:2.1.3'
   implementation 'org.eclipse.parsson:jakarta.json:1.1.5'
 
-  testImplementation libs.bundles.springboot3.test
+  testImplementation libs.bundles.springboot.test
 
   testImplementation 'org.mockito:mockito-inline:4.11.0'
   testImplementation 'org.mockito:mockito-junit-jupiter'
@@ -111,14 +111,10 @@ testing{
     intTest(JvmTestSuite){
       testType = TestSuiteType.INTEGRATION_TEST
       dependencies{
-        // this brings the actual prod code
-//        implementation project()
-        
-//        implementation project(':api-svc:db')
         implementation project(':api-svc:idl-raid-v2')
 
-        implementation.bundle libs.bundles.springboot3
-        implementation.bundle libs.bundles.springboot3.test
+        implementation.bundle libs.bundles.springboot
+        implementation.bundle libs.bundles.springboot.test
 
         implementation.bundle libs.bundles.feign
 
@@ -127,7 +123,6 @@ testing{
         // for PostConstruct/PreDestroy - pkg: jakarta.annotation (used to be javax)
         implementation 'jakarta.annotation:jakarta.annotation-api:2.1.1'
         
-        implementation( 'org.springframework.cloud:spring-cloud-starter-openfeign:4.0.4')
         implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3"
 
         compileOnly 'org.projectlombok:lombok:1.18.28'

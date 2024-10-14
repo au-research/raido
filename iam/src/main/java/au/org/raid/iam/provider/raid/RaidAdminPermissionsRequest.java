@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class RaidAdminPermissionsRequest {
-    private String userId;
+    private String username;
 }

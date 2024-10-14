@@ -22,14 +22,14 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
 @RequiredArgsConstructor
-public class TestClient {
+public class KeycloakClient {
     private final ObjectMapper objectMapper;
     private final Contract contract;
-    @Value("${raid.test.api.url}")
+    @Value("${raid.test.auth.base-url}")
     private String apiUrl;
     private final TokenService tokenService;
 
-    public RaidApi raidApi(
+    public KeycloakApi keycloakApi(
             final String token
     ) {
         return Feign.builder()
@@ -40,17 +40,21 @@ public class TestClient {
                 .client(new OkHttpClient())
                 .encoder(new JacksonEncoder(objectMapper))
                 .decoder(new ResponseEntityDecoder(new JacksonDecoder(objectMapper)))
-                .errorDecoder(new RaidApiExceptionDecoder(objectMapper))
+//                .errorDecoder(new RaidApiExceptionDecoder(objectMapper))
                 .contract(contract)
                 .requestInterceptor(request -> request.header(AUTHORIZATION, "Bearer " + token))
-                .requestInterceptor(request -> request.header("X-Raid-Api-Version", "3"))
                 .logger(new Slf4jLogger(RaidApi.class))
                 .logLevel(Logger.Level.FULL)
-                .target(RaidApi.class, apiUrl);
+                .target(KeycloakApi.class, apiUrl);
     }
 
-    public RaidApi raidApi(final AuthConfig.User user) {
+    public KeycloakApi keycloakApi(AuthConfig.User user) {
         final var token = tokenService.getUserToken(user.getUser(), user.getPassword());
-        return raidApi(token);
+        return keycloakApi(token);
+    }
+
+    public KeycloakApi keycloakApi(AuthConfig.Client client) {
+        final var token = tokenService.getClientToken(client.getClientId(), client.getClientSecret());
+        return keycloakApi(token);
     }
 }

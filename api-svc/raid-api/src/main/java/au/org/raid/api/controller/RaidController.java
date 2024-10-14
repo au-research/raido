@@ -7,6 +7,8 @@ import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.RaidIngestService;
 import au.org.raid.api.service.ServicePointService;
 import au.org.raid.api.service.raid.RaidService;
+import au.org.raid.api.util.SchemaValues;
+import au.org.raid.api.util.TokenUtil;
 import au.org.raid.api.validator.ValidationService;
 import au.org.raid.idl.raidv2.api.RaidApi;
 import au.org.raid.idl.raidv2.model.*;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -37,6 +40,10 @@ import java.util.Optional;
 @SecurityScheme(name = "bearerAuth", scheme = "bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
 public class RaidController implements RaidApi {
     public static final String SERVICE_POINT_GROUP_ID_CLAIM = "service_point_group_id";
+    private static final String REALM_ACCESS_CLAIM = "realm_access";
+    private static final String ROLES_CLAIM = "roles";
+    private static final String SERVICE_POINT_USER_ROLE = "service-point-user";
+
     private final ValidationService validationService;
     private final RaidService raidService;
     private final RaidIngestService raidIngestService;
@@ -74,9 +81,12 @@ public class RaidController implements RaidApi {
 
     @Override
     public ResponseEntity<List<RaidDto>> findAllRaids(final List<String> includeFields) {
+        //TODO: filter for service point owner/raid admin/raid user if embargoed
         final var servicePointId = getServicePointId();
 
-        final var raids = raidIngestService.findAllByServicePointId(servicePointId);
+        final var raids = raidIngestService.findAllByServicePointIdOrHandleIn(servicePointId)
+                .stream().filter(this::isViewable)
+                .toList();
 
         if (includeFields != null && !includeFields.isEmpty()) {
             return ResponseEntity.ok(filterFields(raids, includeFields));
@@ -87,8 +97,6 @@ public class RaidController implements RaidApi {
 
     @Override
     public ResponseEntity<RaidDto> updateRaid(final String prefix, final String suffix, RaidUpdateRequest request) {
-        final var servicePointId = getServicePointId();
-
         final var handle = String.join("/", prefix, suffix);
 
         final var failures = new ArrayList<>(validationService.validateForUpdate(handle, request));
@@ -97,7 +105,7 @@ public class RaidController implements RaidApi {
             throw new ValidationException(failures);
         }
 
-        return ResponseEntity.ok(raidService.update(request, servicePointId));
+        return ResponseEntity.ok(raidService.update(request));
     }
 
     @Override
@@ -158,6 +166,48 @@ public class RaidController implements RaidApi {
         }
 
         return filtered;
+    }
+
+    private boolean isRaidAdmin(final RaidDto raidDto) {
+        final var raidName = raidDto.getIdentifier().getId();
+
+        final var handle = raidName.substring(raidName.lastIndexOf("/", raidName.lastIndexOf("/") - 1) + 1);
+
+        return TokenUtil.getAdminRaids().contains(handle);
+    }
+
+    private boolean isRaidUser(final RaidDto raidDto) {
+        final var raidName = raidDto.getIdentifier().getId();
+
+        final var handle = raidName.substring(raidName.lastIndexOf("/", raidName.lastIndexOf("/") - 1) + 1);
+
+        return TokenUtil.getUserRaids().contains(handle);
+    }
+
+    private boolean isServicePointUser(final RaidDto raidDto) {
+        final var token = ((JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getToken();
+
+        if (!((List<?>) ((Map<?,?>) token.getClaim(REALM_ACCESS_CLAIM)).get(ROLES_CLAIM)).contains(SERVICE_POINT_USER_ROLE)) {
+            return false;
+        }
+        final var userServicePoint = getServicePointId();
+        return raidDto.getIdentifier().getOwner().getServicePoint().equals(userServicePoint);
+    }
+
+    private boolean isViewable(final RaidDto raidDto) {
+        if (raidDto.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri())) {
+            return true;
+        }
+
+        if (isRaidAdmin(raidDto)) {
+            return true;
+        }
+
+        if (isRaidUser(raidDto)) {
+            return true;
+        }
+
+        return isServicePointUser(raidDto);
     }
 }
 

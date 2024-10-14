@@ -1,4 +1,4 @@
-package au.org.raid.iam.provider.servicepoint.dto;
+package au.org.raid.inttest.dto.keycloak;
 
 import lombok.Data;
 

@@ -1,8 +1,8 @@
-package au.org.raid.iam.provider.servicepoint;
+package au.org.raid.iam.provider.group;
 
-import au.org.raid.iam.provider.servicepoint.dto.Grant;
-import au.org.raid.iam.provider.servicepoint.dto.GroupJoinRequest;
-import au.org.raid.iam.provider.servicepoint.dto.SetActiveGroupRequest;
+import au.org.raid.iam.provider.group.dto.Grant;
+import au.org.raid.iam.provider.group.dto.GroupJoinRequest;
+import au.org.raid.iam.provider.group.dto.SetActiveGroupRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.*;

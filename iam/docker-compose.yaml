@@ -37,6 +37,6 @@ services:
       KC_DB_SCHEMA: public
       KC_HOSTNAME_STRICT: false
       KC_HTTP_ENABLED: true
-#      DEBUG: true
-#      DEBUG_PORT: '*:9000'
+      DEBUG: true
+      DEBUG_PORT: '*:9000'
       KC_LOG_LEVEL: info,au.org.raid.iam:debug,org.keycloak.services:debug,org.keycloak.adapters:debug

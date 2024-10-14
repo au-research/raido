@@ -1,7 +1,8 @@
 package au.org.raid.inttest.service;
 
-import au.org.raid.inttest.dto.KeycloakGroup;
+import au.org.raid.inttest.dto.keycloak.Group;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -10,12 +11,12 @@ import okhttp3.RequestBody;
 import java.util.Map;
 import java.util.Optional;
 
-
+@RequiredArgsConstructor
 public class AuthClient {
-
+    private final String baseUrl;
 
     @SneakyThrows
-    public Optional<KeycloakGroup> getGroup(final String token) {
+    public Optional<Group> getGroup(final String token) {
         final var url = "http://localhost:8001/realms/raid/service-point";
 
         final var client = new OkHttpClient();
@@ -30,7 +31,7 @@ public class AuthClient {
         try (var response = call.execute()) {
             if (response.isSuccessful()) {
                 assert response.body() != null;
-                final var group = new ObjectMapper().readValue(response.body().string(), KeycloakGroup.class);
+                final var group = new ObjectMapper().readValue(response.body().string(), Group.class);
 
                 return Optional.of(group);
             }

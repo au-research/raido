@@ -79,6 +79,15 @@ public class RaidRepository {
                 .fetch();
     }
 
+    public List<RaidRecord> findAllByServicePointIdOrHandleIn(final Long servicePointId, List<String> handles) {
+        return dslContext.selectFrom(RAID)
+                .where(RAID.SERVICE_POINT_ID.eq(servicePointId))
+                .or(RAID.HANDLE.in(handles))
+                .orderBy(RAID.DATE_CREATED.desc())
+                .limit(Constant.MAX_EXPERIMENTAL_RECORDS)
+                .fetch();
+    }
+
     public List<RaidRecord> findAllByServicePointIdOrNotConfidential(Long servicePointId) {
         return dslContext.selectFrom(RAID)
                 .where(

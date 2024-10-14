@@ -28,7 +28,7 @@ public class TokenService {
 
     private final RestTemplate restTemplate;
 
-    public String getToken(final String username, final String password) {
+    public String getUserToken(final String username, final String password) {
         final var headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -40,6 +40,22 @@ public class TokenService {
 
         final var tokenResponse = restTemplate.postForEntity(tokenUri, httpEntity, TokenResponse.class);
         log.debug("Token request returned {} for user {}", tokenResponse.getStatusCode(), username);
+
+        return Objects.requireNonNull(tokenResponse.getBody()).getAccessToken();
+    }
+
+    public String getClientToken(final String clientId, final String clientSecret) {
+        final var headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        final var body = "client_id=%s&client_secret=%s&grant_type=client_credentials".formatted(clientId, clientSecret);
+
+        log.debug("Requesting token with body {}", body);
+
+        final var httpEntity = new HttpEntity<>(body, headers);
+
+        final var tokenResponse = restTemplate.postForEntity(tokenUri, httpEntity, TokenResponse.class);
+        log.debug("Token request returned {} for user {}", tokenResponse.getStatusCode(), clientId);
 
         return Objects.requireNonNull(tokenResponse.getBody()).getAccessToken();
     }
