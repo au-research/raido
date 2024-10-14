@@ -23,8 +23,6 @@ export default function ContributorPositionDetailsFormComponent({
     <Stack direction="row" gap={1} width="100%">
       <Grid container columnSpacing={2}>
         <TextSelectField
-          control={control}
-          errors={errors}
           width={6}
           options={contributorPosition}
           formFieldProps={{
@@ -37,8 +35,6 @@ export default function ContributorPositionDetailsFormComponent({
           }}
         />
         <TextInputField
-          control={control}
-          errors={errors}
           width={3}
           formFieldProps={{
             name: `contributor.${contributorIndex}.position.${positionIndex}.startDate`,
@@ -50,8 +46,6 @@ export default function ContributorPositionDetailsFormComponent({
           }}
         />
         <TextInputField
-          control={control}
-          errors={errors}
           width={3}
           formFieldProps={{
             name: `contributor.${contributorIndex}.position.${positionIndex}.endDate`,

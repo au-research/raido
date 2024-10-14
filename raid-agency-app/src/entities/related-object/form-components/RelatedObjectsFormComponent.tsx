@@ -100,8 +100,6 @@ export default function RelatedObjectsFormComponent({
             {fields.map((field, index) => (
               <RelatedObjectDetailsFormComponent
                 key={field.id}
-                control={control}
-                errors={errors}
                 handleRemoveRelatedObject={handleRemoveRelatedObject}
                 index={index}
               />

@@ -21,8 +21,6 @@ export default function AlternateIdentifiersDetailsFormComponent({
     <Stack direction="row" alignItems="flex-start" gap={1}>
       <Grid container spacing={2}>
         <TextInputField
-          control={control}
-          errors={errors}
           width={6}
           formFieldProps={{
             name: `alternateIdentifier.${index}.id`,
@@ -35,8 +33,6 @@ export default function AlternateIdentifiersDetailsFormComponent({
           }}
         />
         <TextInputField
-          control={control}
-          errors={errors}
           width={6}
           formFieldProps={{
             name: `alternateIdentifier.${index}.type`,

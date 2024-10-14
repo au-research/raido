@@ -18,12 +18,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useCallback } from "react";
-import {
-  Control,
-  Controller,
-  useFieldArray
-} from "react-hook-form";
-import LanguageSelector from "../../../fields/LanguageSelector";
+import { Control, Controller, useFieldArray } from "react-hook-form";
+import LanguageSelector from "@/fields/LanguageSelector";
 
 export default function FormSpatialCoveragesComponent({
   control,
@@ -156,8 +152,15 @@ export default function FormSpatialCoveragesComponent({
 
                             <Grid item xs={12} sm={6} md={4}>
                               <LanguageSelector
-                                name={`description.${index}.language.id`}
-                                control={control}
+                                formFieldProps={{
+                                  name: `spatialCoverage.${index}.language.id`,
+                                  type: "text",
+                                  label: "Language",
+                                  placeholder: "Language",
+                                  helperText: "",
+                                  errorText: "",
+                                }}
+                                width={3}
                               />
                             </Grid>
                           </Grid>

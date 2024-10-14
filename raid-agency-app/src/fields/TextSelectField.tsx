@@ -1,27 +1,20 @@
-import { RaidDto } from "@/generated/raid";
 import mapping from "@/mapping.json";
 import { FormFieldProps } from "@/types";
 import { getErrorMessageForField } from "@/utils";
 import { Grid, MenuItem, TextField } from "@mui/material";
-import { Control, FieldErrors, useController } from "react-hook-form";
-
-interface TextSelectFieldProps {
-  formFieldProps: FormFieldProps;
-  control: Control<RaidDto>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  options: any[];
-  errors: FieldErrors<RaidDto>;
-  width?: number;
-}
-
+import { useController } from "react-hook-form";
 export function TextSelectField({
-  errors,
-  formFieldProps,
   options,
+  formFieldProps,
   width = 12,
-}: TextSelectFieldProps) {
+}: {
+  options: any[];
+  formFieldProps: FormFieldProps;
+  width?: number;
+}) {
   const { errorText, helperText, label, placeholder } = formFieldProps;
-  const { field } = useController(formFieldProps);
+  const { field, formState } = useController(formFieldProps);
+  const { errors } = formState;
 
   const keyField = formFieldProps.keyField ? formFieldProps.keyField : "uri";
   const errorMessage = getErrorMessageForField(errors, field.name);

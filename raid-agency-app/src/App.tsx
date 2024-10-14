@@ -7,7 +7,7 @@ import {
   ThemeProvider,
   useMediaQuery,
 } from "@mui/material";
-import { amber, grey } from "@mui/material/colors";
+import { grey } from "@mui/material/colors";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ReactKeycloakProvider } from "@react-keycloak/web";
@@ -34,10 +34,10 @@ export function App() {
         palette: {
           mode: prefersDarkMode ? "dark" : "light",
           primary: {
-            main: "#008ccf",
+            main: "#4183CE",
           },
           secondary: {
-            main: amber[600],
+            main: "#DC8333",
           },
           background: {
             default: prefersDarkMode ? "#000" : grey[50],

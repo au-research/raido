@@ -1,4 +1,4 @@
-import LanguageSelector from "@/components/LanguageSelector";
+import LanguageSelector from "@/fields/LanguageSelector";
 import { TextInputField } from "@/fields/TextInputField";
 import { TextSelectField } from "@/fields/TextSelectField";
 import { RaidDto } from "@/generated/raid";
@@ -24,8 +24,6 @@ export default function TitleDetailsFormComponent({
     <Stack direction="row" alignItems="flex-start" gap={1}>
       <Grid container spacing={2}>
         <TextInputField
-          control={control}
-          errors={errors}
           width={12}
           formFieldProps={{
             name: `title.${index}.text`,
@@ -37,8 +35,6 @@ export default function TitleDetailsFormComponent({
           }}
         />
         <TextSelectField
-          control={control}
-          errors={errors}
           width={3}
           options={titleType}
           formFieldProps={{
@@ -51,13 +47,17 @@ export default function TitleDetailsFormComponent({
           }}
         />
         <LanguageSelector
-          name={`title.${index}.language.id`}
-          control={control}
+          formFieldProps={{
+            name: `title.${index}.language.id`,
+            type: "text",
+            label: "Title Type",
+            placeholder: "Title Type",
+            helperText: "",
+            errorText: "",
+          }}
           width={3}
         />
         <TextInputField
-          control={control}
-          errors={errors}
           width={3}
           formFieldProps={{
             name: `title.${index}.startDate`,
@@ -69,8 +69,6 @@ export default function TitleDetailsFormComponent({
           }}
         />
         <TextInputField
-          control={control}
-          errors={errors}
           width={3}
           formFieldProps={{
             name: `title.${index}.endDate`,

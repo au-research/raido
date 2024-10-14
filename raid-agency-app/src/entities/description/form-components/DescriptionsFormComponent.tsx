@@ -96,8 +96,6 @@ export default function DescriptionsFormComponent({
             {fields.map((field, index) => (
               <DescriptionDetailsFormComponent
                 key={field.id}
-                control={control}
-                errors={errors}
                 handleRemoveDescription={handleRemoveDescription}
                 index={index}
               />

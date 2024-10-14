@@ -1,19 +1,19 @@
 import AnchorButtons from "@/components/AnchorButtons";
 import BreadcrumbsBar from "@/components/BreadcrumbsBar";
-import { RaidDto } from "@/generated/raid";
-import ShowAccessComponent from "@/pages/ShowRaidPage/components/ShowAccessComponent";
+import AccessDisplayComponent from "@/entities/access/display-components/AccessDisplayComponent";
 import AlternateIdentifiersDisplayComponent from "@/entities/alternate-identifier/display-components/AlternateIdentifiersDisplayComponent";
-import ShowAlternateUrlComponent from "@/pages/ShowRaidPage/components/ShowAlternateUrlComponent";
+import AlternateUrlDisplayComponent from "@/entities/alternate-url/display-components/AlternateUrlDisplayComponent";
 import ShowContributorComponent from "@/entities/contributor/display-components/ContributorDisplayComponent";
-import DateDisplayComponent from "@/entities/date/display-components/DateDisplayComponent";
+import DateDisplayComponent from "@/entities/date/display-components/DisplayComponent";
 import ShowDescriptionComponent from "@/entities/description/display-components/DescriptionDisplayComponent";
-import ShowExternalLinksComponent from "@/pages/ShowRaidPage/components/ShowExternalLinksComponent";
-import ShowOrganisationComponent from "@/pages/ShowRaidPage/components/ShowOrganisationComponent";
+import OrganisationDisplayComponent from "@/entities/organisation/display-components/OrganisationDisplayComponent";
 import RelatedObjectsDisplayComponent from "@/entities/related-object/display-components/RelatedObjectsDisplayComponent";
-import ShowRelatedRaidComponent from "@/pages/ShowRaidPage/components/ShowRelatedRaidComponent";
+import RelatedRaidDisplayComponent from "@/entities/related-raid/display-components/RelatedRaidDisplayComponent";
+import { RaidDto } from "@/generated/raid";
+import ShowExternalLinksComponent from "@/pages/ShowRaidPage/components/ShowExternalLinksComponent";
 // import ShowSpatialCoverageComponent from "@/pages/ShowRaidPage/components/ShowSpatialCoverageComponent";
-import ShowSubjectComponent from "@/pages/ShowRaidPage/components/ShowSubjectComponent";
 import TitleDisplayComponent from "@/entities/title/display-components/TitleDisplayComponent";
+import ShowSubjectComponent from "@/pages/ShowRaidPage/components/ShowSubjectComponent";
 import type { Breadcrumb } from "@/types";
 import {
   DocumentScanner as DocumentScannerIcon,
@@ -63,7 +63,7 @@ export default function ShowRaidPageContent({
           <AnchorButtons raidData={raidData} />
 
           <Box id="date" className="scroll">
-            <DateDisplayComponent dates={raidData.date} />
+            {raidData.date && <DateDisplayComponent data={raidData.date} />}
           </Box>
 
           <Box id="titles" className="scroll">
@@ -79,7 +79,7 @@ export default function ShowRaidPageContent({
           </Box>
 
           <Box id="organisations" className="scroll">
-            <ShowOrganisationComponent organisation={raidData.organisation} />
+            <OrganisationDisplayComponent items={raidData.organisation} />
           </Box>
 
           <Box id="related-objects" className="scroll">
@@ -95,16 +95,18 @@ export default function ShowRaidPageContent({
           </Box>
 
           <Box id="alternate-urls" className="scroll">
-            <ShowAlternateUrlComponent alternateUrl={raidData.alternateUrl} />
+            <AlternateUrlDisplayComponent
+              alternateUrl={raidData.alternateUrl}
+            />
           </Box>
 
           <Box id="related-raids" className="scroll">
-            <ShowRelatedRaidComponent relatedRaid={raidData.relatedRaid} />
+            <RelatedRaidDisplayComponent items={raidData.relatedRaid} />
           </Box>
 
           <Box id="access" className="scroll">
             {raidData.access && (
-              <ShowAccessComponent access={raidData.access} />
+              <AccessDisplayComponent access={raidData.access} />
             )}
           </Box>
 

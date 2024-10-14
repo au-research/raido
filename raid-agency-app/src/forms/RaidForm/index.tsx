@@ -1,15 +1,15 @@
 import AnchorButtons from "@/components/AnchorButtons";
+import FormAccessComponent from "@/entities/access/form-components/FormAccessComponent";
 import AlternateIdentifiersFormComponent from "@/entities/alternate-identifier/form-components/AlternateIdentifiersFormComponent";
+import AlternateUrlsFormComponent from "@/entities/alternate-url/form-components/AlternateUrlsFormComponent";
 import ContributorsFormComponent from "@/entities/contributor/form-components/ContributorsFormComponent";
-import DateFormComponent from "@/entities/date/form-components/DateFormComponent";
+import DateFormComponent from "@/entities/date/form-components/FormComponent";
 import DescriptionsFormComponent from "@/entities/description/form-components/DescriptionsFormComponent";
 import RelatedObjectsFormComponent from "@/entities/related-object/form-components/RelatedObjectsFormComponent";
 import TitlesFormComponent from "@/entities/title/form-components/TitlesFormComponent";
 import { ValidationFormSchema } from "@/entities/validation-schema";
-import FormAccessComponent from "@/forms/RaidForm/components/FormAccessComponent";
-import FormAlternateUrlsComponent from "@/forms/RaidForm/components/FormAlternateUrlsComponent";
-import FormOrganisationsComponent from "@/forms/RaidForm/components/FormOrganisationsComponent";
-import FormRelatedRaidsComponent from "@/forms/RaidForm/components/FormRelatedRaidsComponent";
+import OrganisationsFormComponent from "@/entities/organisation/form-components/MainFormComponent";
+import FormRelatedRaidsComponent from "@/entities/related-raid/form-components/RelatedRaidsFormComponent";
 import FormSubjectsComponent from "@/forms/RaidForm/components/FormSubjectsComponent";
 import { RaidCreateRequest, RaidDto } from "@/generated/raid";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,13 +24,13 @@ const formFields = [
   { id: "title", component: TitlesFormComponent },
   { id: "description", component: DescriptionsFormComponent },
   { id: "contributor", component: ContributorsFormComponent },
-  { id: "organisation", component: FormOrganisationsComponent },
+  { id: "organisation", component: OrganisationsFormComponent },
   { id: "relatedObject", component: RelatedObjectsFormComponent },
   {
     id: "alternateIdentifier",
     component: AlternateIdentifiersFormComponent,
   },
-  { id: "alternateUrl", component: FormAlternateUrlsComponent },
+  { id: "alternateUrl", component: AlternateUrlsFormComponent },
   { id: "relatedRaid", component: FormRelatedRaidsComponent },
   { id: "access", component: FormAccessComponent },
   { id: "subject", component: FormSubjectsComponent },
