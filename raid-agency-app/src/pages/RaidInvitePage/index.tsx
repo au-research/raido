@@ -19,7 +19,7 @@ async function acceptRaidInvite({
   handle: string;
 }) {
   const response = await fetch(
-    "https://iam.test.raid.org.au/realms/raid/raid/raid-user",
+    "https://iam.test.raid.org.au/realms/raid/raid-user",
     {
       method: "POST",
       headers: {
