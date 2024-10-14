@@ -1,5 +1,6 @@
 import { AustraliaIcon, OrcidIcon } from "@/components/Icon";
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
+import { useLocation } from "react-router-dom";
 import {
   Code as CodeIcon,
   Google as GoogleIcon,
@@ -22,6 +23,10 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 export default function LoginPage() {
   const { keycloak, initialized } = useCustomKeycloak();
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const fromValue = queryParams.get("from");
 
   if (initialized && keycloak.authenticated) {
     setTimeout(() => navigate("/"), 0);
@@ -122,6 +127,9 @@ export default function LoginPage() {
                   keycloak.login({
                     idpHint: "google",
                     scope: "openid",
+                    redirectUri: `http://localhost:7080/${atob(
+                      fromValue || ""
+                    )}`,
                   })
                 }
               >

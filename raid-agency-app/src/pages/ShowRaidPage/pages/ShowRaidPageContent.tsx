@@ -23,6 +23,9 @@ import {
 import { Box, Container, Stack } from "@mui/material";
 import ShowRawData from "../components/ShowRawData";
 import ShowRaidPageSpeedDialMenu from "./ShowRaidPageSpeedDialMenu";
+import InviteButton from "@/components/InviteButton";
+import InviteDialog from "@/components/InviteDialog";
+import { useState } from "react";
 
 export default function ShowRaidPageContent({
   raidData,
@@ -53,8 +56,12 @@ export default function ShowRaidPageContent({
     },
   ];
 
+  const [open, setOpen] = useState(false);
+
   return (
     <>
+      <InviteButton handle={handle} setOpen={setOpen} />
+      <InviteDialog handle={handle} open={open} setOpen={setOpen} />
       <ShowRaidPageSpeedDialMenu handle={handle} />
 
       <Container id="start" className="scroll-start">

@@ -2,6 +2,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import EditRaidPage from "@/pages/EditRaidPage/EditRaidPage";
 import MintRaidPage from "@/pages/MintRaidPage/MintRaidPage";
 import RaidHistoryPage from "@/pages/RaidHistoryPage";
+import RaidInvitePage from "@/pages/RaidInvitePage";
 import RaidsPage from "@/pages/RaidsPage";
 import ShowRaidPage from "@/pages/ShowRaidPage";
 import { RouteObject } from "react-router-dom";
@@ -54,6 +55,16 @@ export const raidPageRoutes: RouteObject[] = [
       {
         path: "",
         element: <RaidHistoryPage />,
+      },
+    ],
+  },
+  {
+    path: "/raids/:prefix/:suffix/invite",
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: "",
+        element: <RaidInvitePage />,
       },
     ],
   },

@@ -1,3 +1,4 @@
+import "@fontsource/figtree";
 import ReactDOM from "react-dom/client";
 import {
   createBrowserRouter,
@@ -12,7 +13,6 @@ import {
   servicePointRoutes,
   testRoutes,
 } from "./routes";
-import "@fontsource/figtree";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

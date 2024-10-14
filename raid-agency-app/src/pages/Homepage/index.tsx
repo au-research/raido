@@ -5,6 +5,7 @@ import { Add as AddIcon } from "@mui/icons-material";
 import { Alert, Container, Fab, Stack } from "@mui/material";
 import { Link } from "react-router-dom";
 import GroupSelector from "./components/GroupSelector";
+import MintRaidButton from "@/components/MintRaidButton";
 
 export default function HomePage() {
   const { hasServicePointGroup, isServicePointUser } = useAuthHelper();
@@ -12,20 +13,7 @@ export default function HomePage() {
   return (
     <Container>
       <Stack gap={2}>
-        {hasServicePointGroup && isServicePointUser && (
-          <Fab
-            variant="extended"
-            component={Link}
-            color="primary"
-            sx={{ position: "fixed", bottom: "32px", right: "32px" }}
-            type="button"
-            to="/raids/new"
-            data-testid="mint-raid-button"
-          >
-            <AddIcon sx={{ mr: 1 }} />
-            Mint new RAiD
-          </Fab>
-        )}
+        <MintRaidButton />
         {/* {hasServicePointGroup && <CurrentUser />} */}
         {hasServicePointGroup && !isServicePointUser && (
           <Alert severity="error">

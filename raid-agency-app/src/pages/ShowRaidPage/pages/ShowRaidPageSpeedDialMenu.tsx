@@ -16,7 +16,7 @@ export default function ShowRaidPageSpeedDialMenu({
         <Fab
           color="primary"
           size="small"
-          sx={{ position: "fixed", bottom: "72px", right: "16px" }}
+          sx={{ position: "fixed", bottom: "128px", right: "16px" }}
           onClick={() => {
             document.getElementById("start")?.scrollIntoView({
               behavior: "smooth",
@@ -32,7 +32,11 @@ export default function ShowRaidPageSpeedDialMenu({
         <Fab
           variant="extended"
           color="primary"
-          sx={{ position: "fixed", bottom: "16px", right: "16px" }}
+          sx={{
+            position: "fixed",
+            bottom: "72px",
+            right: "16px",
+          }}
           component={Link}
           to={`/raids/${handle}/edit`}
           data-testid="edit-raid-button"
