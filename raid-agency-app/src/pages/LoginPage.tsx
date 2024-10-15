@@ -127,9 +127,7 @@ export default function LoginPage() {
                   keycloak.login({
                     idpHint: "google",
                     scope: "openid",
-                    redirectUri: `http://localhost:7080/${atob(
-                      fromValue || ""
-                    )}`,
+                    redirectUri: `/${atob(fromValue || "")}`,
                   })
                 }
               >
@@ -167,6 +165,7 @@ export default function LoginPage() {
                 onClick={() =>
                   keycloak.login({
                     scope: "openid",
+                    redirectUri: `/${atob(fromValue || "")}`,
                   })
                 }
               >
