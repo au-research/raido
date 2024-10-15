@@ -12,24 +12,28 @@ import { useMutation } from "@tanstack/react-query";
 import { useParams, useSearchParams } from "react-router-dom";
 
 async function acceptRaidInvite({
-  userId,
   handle,
+  userId,
+  token,
+  code,
 }: {
-  userId: string;
   handle: string;
+  userId: string;
+  token: string;
+  code: string;
 }) {
-  const { keycloak } = useCustomKeycloak();
+  console.log("+++ acceptRaidInvite", acceptRaidInvite);
   const response = await fetch(
-    "https://iam.test.raid.org.au/realms/raid/raid/raid-user",
+    `https://orcid.test.raid.org.au/invite-accept?code=${code}`,
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${keycloak.token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId,
         handle,
+        userId,
+        token,
       }),
     }
   );
@@ -40,7 +44,8 @@ export default function RaidInvitePage() {
   let [searchParams, setSearchParams] = useSearchParams();
   const { keycloak } = useCustomKeycloak();
   const { prefix, suffix } = useParams();
-  // const { code } = useSearchParams();
+
+  const code = searchParams.get("code") || "";
 
   const acceptInviteMutation = useMutation({
     mutationFn: acceptRaidInvite,
@@ -53,6 +58,8 @@ export default function RaidInvitePage() {
     acceptInviteMutation.mutate({
       handle: `${prefix}/${suffix}`,
       userId: `${keycloak.tokenParsed?.sub}`,
+      token: `${keycloak.token}`,
+      code: `${code}`,
     });
   }
   return (
