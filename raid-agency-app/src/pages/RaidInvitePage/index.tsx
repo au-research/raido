@@ -19,18 +19,19 @@ async function acceptRaidInvite({
   handle: string;
 }) {
   const response = await fetch(
-    "https://iam.test.raid.org.au/realms/raid/raid-user",
+    "https://iam.test.raid.org.au/realms/raid/raid/raid-user",
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: "d182f7e6-5570-4713-9e19-f1a367549ded",
+        userId,
         handle,
       }),
     }
   );
+  return await response.json();
 }
 
 export default function RaidInvitePage() {
