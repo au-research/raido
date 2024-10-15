@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   Button,
   Dialog,
@@ -37,47 +37,50 @@ async function sendInvite({
 }
 
 export default function InviteDialog({
-  handle,
   open,
   setOpen,
 }: {
-  handle: string;
   open: boolean;
   setOpen: (open: boolean) => void;
 }) {
   const { prefix, suffix } = useParams();
-  const [email, setEmail] = useState("@ardc-raid.testinator.com ");
+  const [email, setEmail] = useState("@ardc-raid.testinator.com");
   const [role, setRole] = useState("raid-user");
 
   const sendInviteMutation = useMutation({
     mutationFn: sendInvite,
     onSuccess: (data) => {
-      console.log("success", data);
-      alert(`Success, invitation sent: ID ${data.stateUuid}`)
+      alert(`Success, invitation sent: ID ${data.stateUuid}`);
     },
     onError: (error) => {
       console.log(error);
     },
   });
 
+  const resetForm = useCallback(() => {
+    setEmail("@ardc-raid.testinator.com");
+    setRole("raid-user");
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setOpen(false);
+    resetForm();
+  }, [setOpen, resetForm]);
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Form submitted with values:", { email, role });
     sendInviteMutation.mutate({
       email,
       handle: `${prefix}/${suffix}`,
     });
-    // Here you can add your logic to handle the form submission
-    // For example, sending the data to an API
-    // https://orcid.test.raid.org.au/invite
-    setOpen(false);
+    handleClose();
   };
 
   return (
     <React.Fragment>
       <Dialog
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
@@ -117,7 +120,7 @@ export default function InviteDialog({
               </FormControl>
             </Stack>
             <DialogActions>
-              <Button onClick={() => setOpen(false)}>Cancel</Button>
+              <Button onClick={handleClose}>Cancel</Button>
               <Button type="submit" autoFocus>
                 Invite now
               </Button>

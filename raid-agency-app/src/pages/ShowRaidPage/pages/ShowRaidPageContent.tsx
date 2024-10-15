@@ -61,7 +61,7 @@ export default function ShowRaidPageContent({
   return (
     <>
       <InviteButton handle={handle} setOpen={setOpen} />
-      <InviteDialog handle={handle} open={open} setOpen={setOpen} />
+      <InviteDialog open={open} setOpen={setOpen} />
       <ShowRaidPageSpeedDialMenu handle={handle} />
 
       <Container id="start" className="scroll-start">
