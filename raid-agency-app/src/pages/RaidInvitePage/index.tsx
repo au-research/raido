@@ -18,11 +18,13 @@ async function acceptRaidInvite({
   userId: string;
   handle: string;
 }) {
+  const { keycloak } = useCustomKeycloak();
   const response = await fetch(
     "https://iam.test.raid.org.au/realms/raid/raid/raid-user",
     {
       method: "POST",
       headers: {
+        Authorization: `Bearer ${keycloak.token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
