@@ -1,3 +1,4 @@
+import useSnackbar from "@/components/Snackbar/useSnackbar";
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import { HowToRegOutlined as HowToRegOutlinedIcon } from "@mui/icons-material";
 import {
@@ -41,22 +42,23 @@ async function acceptRaidInvite({
 }
 
 export default function RaidInvitePage() {
-  let [searchParams, setSearchParams] = useSearchParams();
+  let [searchParams] = useSearchParams();
   const { keycloak } = useCustomKeycloak();
   const { prefix, suffix } = useParams();
   const [isPending, setIsPending] = useState<boolean>(false);
+  const snackbar = useSnackbar();
 
   const code = searchParams.get("code") || "";
 
   const acceptInviteMutation = useMutation({
     mutationFn: acceptRaidInvite,
     onSuccess: (data) => {
-      alert("Thank you, the invitation has been accepted.");
+      snackbar.openSnackbar(`✅ Thank you for accepting the invitation.`);
       setIsPending(false);
     },
   });
 
-  function acceptInvite() {
+  const acceptInvite = () => {
     setIsPending(true);
     acceptInviteMutation.mutate({
       handle: `${prefix}/${suffix}`,
@@ -64,7 +66,7 @@ export default function RaidInvitePage() {
       token: `${keycloak.token}`,
       code: `${code}`,
     });
-  }
+  };
   return (
     <>
       <Container>
