@@ -11,13 +11,16 @@ import { useMutation } from "@tanstack/react-query";
 import React, { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
 import useSnackbar from "./Snackbar/useSnackbar";
+import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 
 async function sendInvite({
   email,
   handle,
+  inviterUserId,
 }: {
   email: string;
   handle: string;
+  inviterUserId: string;
 }) {
   const response = await fetch("https://orcid.test.raid.org.au/invite", {
     method: "POST",
@@ -27,6 +30,7 @@ async function sendInvite({
     body: JSON.stringify({
       email,
       handle,
+      inviterUserId,
     }),
   });
   return await response.json();
@@ -41,8 +45,8 @@ export default function InviteDialog({
 }) {
   const { prefix, suffix } = useParams();
   const [email, setEmail] = useState("@ardc-raid.testinator.com");
-  const [role, setRole] = useState("raid-user");
   const snackbar = useSnackbar();
+  const { keycloak } = useCustomKeycloak();
 
   const sendInviteMutation = useMutation({
     mutationFn: sendInvite,
@@ -56,7 +60,6 @@ export default function InviteDialog({
 
   const resetForm = useCallback(() => {
     setEmail("@ardc-raid.testinator.com");
-    setRole("raid-user");
   }, []);
 
   const handleClose = useCallback(() => {
@@ -69,6 +72,7 @@ export default function InviteDialog({
     sendInviteMutation.mutate({
       email,
       handle: `${prefix}/${suffix}`,
+      inviterUserId: keycloak?.tokenParsed?.sub || "",
     });
     handleClose();
   };
