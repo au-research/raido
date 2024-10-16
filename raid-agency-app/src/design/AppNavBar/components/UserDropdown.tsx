@@ -18,6 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 
 import { KeycloakTokenParsed } from "keycloak-js";
+import { useNavigate } from "react-router-dom";
 
 const keycloakInternalRoles = [
   "default-roles-raid",
@@ -36,6 +37,7 @@ function getRolesFromToken({
 }
 
 export default function UserDropdown() {
+  const navigate = useNavigate();
   const { keycloak, initialized } = useCustomKeycloak();
 
   const [accountMenuAnchor, setAccountMenuAnchor] =
@@ -143,6 +145,18 @@ export default function UserDropdown() {
                   secondary={roles?.sort().join(" | ")}
                 />
               </MenuItem>
+              <Divider />
+              <MenuItem
+                onClick={() => {
+                  navigate("/profile");
+                }}
+              >
+                <ListItemIcon>
+                  <AccountCircleIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText>My User Profile</ListItemText>
+              </MenuItem>
+
               <Divider />
               <MenuItem
                 onClick={() => {
