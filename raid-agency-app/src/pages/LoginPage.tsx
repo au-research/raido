@@ -127,7 +127,9 @@ export default function LoginPage() {
                   keycloak.login({
                     idpHint: "google",
                     scope: "openid",
-                    redirectUri: `/${atob(fromValue || "")}`,
+                    redirectUri: `${window.location.origin}/${atob(
+                      fromValue || ""
+                    )}`,
                   })
                 }
               >
@@ -140,6 +142,9 @@ export default function LoginPage() {
                   keycloak.login({
                     idpHint: "aaf-saml",
                     scope: "openid",
+                    redirectUri: `${window.location.origin}/${atob(
+                      fromValue || ""
+                    )}`,
                   })
                 }
               >
@@ -152,6 +157,9 @@ export default function LoginPage() {
                   keycloak.login({
                     idpHint: "orcid",
                     scope: "openid",
+                    redirectUri: `${window.location.origin}/${atob(
+                      fromValue || ""
+                    )}`,
                   })
                 }
               >
@@ -165,7 +173,9 @@ export default function LoginPage() {
                 onClick={() =>
                   keycloak.login({
                     scope: "openid",
-                    redirectUri: `/${atob(fromValue || "")}`,
+                    redirectUri: `${window.location.origin}/${atob(
+                      fromValue || ""
+                    )}`,
                   })
                 }
               >
