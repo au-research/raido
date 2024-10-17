@@ -18,6 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
+import LoadingPage from "./LoadingPage";
 
 async function getInvites({ userId }: { userId: string }) {
   const response = await fetch(
@@ -38,7 +39,7 @@ export default function UserProfilePage() {
   });
 
   if (invitesQuery.isPending) {
-    return <>Loading...</>;
+    return <LoadingPage />;
   }
 
   if (invitesQuery.isError) {
@@ -60,6 +61,15 @@ export default function UserProfilePage() {
                   <ListItemText
                     primary={keycloak.tokenParsed?.sub}
                     secondary="User ID"
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary={
+                      keycloak.tokenParsed?.preferred_username ||
+                      keycloak.tokenParsed?.sub
+                    }
+                    secondary="Identity"
                   />
                 </ListItem>
               </List>
@@ -95,6 +105,7 @@ export default function UserProfilePage() {
                           <TableCell>{row.inviteeEmail}</TableCell>
                           <TableCell align="right">
                             <Chip
+                              size="small"
                               color={
                                 row.status === "accepted"
                                   ? "success"
@@ -138,7 +149,15 @@ export default function UserProfilePage() {
                             {row.handle}
                           </TableCell>
                           <TableCell align="right">
-                            <Chip label={row.status || "n/a"} />
+                            <Chip
+                              size="small"
+                              color={
+                                row.status === "accepted"
+                                  ? "success"
+                                  : "warning"
+                              }
+                              label={row.status || "n/a"}
+                            />{" "}
                           </TableCell>
                         </TableRow>
                       ))}

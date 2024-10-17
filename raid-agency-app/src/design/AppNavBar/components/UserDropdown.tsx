@@ -103,6 +103,15 @@ export default function UserDropdown() {
               <MenuItem disabled>
                 <ListItemText
                   primary="Identity"
+                  secondary={
+                    keycloak.tokenParsed?.preferred_username ||
+                    keycloak.tokenParsed?.sub
+                  }
+                />
+              </MenuItem>
+              <MenuItem disabled>
+                <ListItemText
+                  primary="User ID"
                   secondary={keycloak.tokenParsed?.sub}
                 />
               </MenuItem>
