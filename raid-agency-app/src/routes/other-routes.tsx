@@ -6,6 +6,7 @@ import LoginPage from "@/pages/LoginPage";
 import { AboutRaidPage } from "@/pages/Unauth/AboutRaidPage";
 import { PrivacyPage } from "@/pages/Unauth/PrivacyPage";
 import { UsageTermsPage } from "@/pages/Unauth/UsageTermsPage";
+import UserProfilePage from "@/pages/UserProfilePage";
 import { Box } from "@mui/material";
 import { RouteObject } from "react-router-dom";
 
@@ -67,4 +68,15 @@ export const otherRoutes: RouteObject[] = [
       },
     ],
   },
+  {
+    path: "profile",
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: "",
+        element: <UserProfilePage />,
+      },
+    ],
+  },
+  // https://orcid.test.raid.org.au/invite?userId=466a8eab-6325-49aa-ab34-ff7b62213c53
 ];

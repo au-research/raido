@@ -1,27 +1,26 @@
-import React, { useState, useCallback } from "react";
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
   Stack,
   TextField,
 } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
+import React, { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
+import useSnackbar from "./Snackbar/useSnackbar";
+import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 
 async function sendInvite({
   email,
   handle,
+  inviterUserId,
 }: {
   email: string;
   handle: string;
+  inviterUserId: string;
 }) {
   const response = await fetch("https://orcid.test.raid.org.au/invite", {
     method: "POST",
@@ -31,6 +30,7 @@ async function sendInvite({
     body: JSON.stringify({
       email,
       handle,
+      inviterUserId,
     }),
   });
   return await response.json();
@@ -45,12 +45,13 @@ export default function InviteDialog({
 }) {
   const { prefix, suffix } = useParams();
   const [email, setEmail] = useState("@ardc-raid.testinator.com");
-  const [role, setRole] = useState("raid-user");
+  const snackbar = useSnackbar();
+  const { keycloak } = useCustomKeycloak();
 
   const sendInviteMutation = useMutation({
     mutationFn: sendInvite,
     onSuccess: (data) => {
-      alert(`Success, invitation sent: ID ${data.stateUuid}`);
+      snackbar.openSnackbar(`✅ Thank you, invite has been sent.`);
     },
     onError: (error) => {
       console.log(error);
@@ -59,7 +60,6 @@ export default function InviteDialog({
 
   const resetForm = useCallback(() => {
     setEmail("@ardc-raid.testinator.com");
-    setRole("raid-user");
   }, []);
 
   const handleClose = useCallback(() => {
@@ -72,6 +72,7 @@ export default function InviteDialog({
     sendInviteMutation.mutate({
       email,
       handle: `${prefix}/${suffix}`,
+      inviterUserId: keycloak?.tokenParsed?.sub || "",
     });
     handleClose();
   };
@@ -92,32 +93,12 @@ export default function InviteDialog({
                 label="Invitee's Email"
                 size="small"
                 variant="filled"
+                type="email"
+                required
                 fullWidth
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <FormControl>
-                <FormLabel id="demo-radio-buttons-group-label">
-                  Invitee's role
-                </FormLabel>
-                <RadioGroup
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  name="radio-buttons-group"
-                >
-                  <FormControlLabel
-                    value="raid-user"
-                    control={<Radio />}
-                    label="RAiD User"
-                  />
-                  <FormControlLabel
-                    value="raid-admin"
-                    control={<Radio />}
-                    label="RAiD Admin"
-                  />
-                </RadioGroup>
-              </FormControl>
             </Stack>
             <DialogActions>
               <Button onClick={handleClose}>Cancel</Button>

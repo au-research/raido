@@ -36,6 +36,10 @@ export default function ShowRaidPage() {
   }
 
   if (readQuery.isError) {
+    console.log("readQuery.error.cause", readQuery.error.cause);
+    console.log("readQuery.error.message", readQuery.error.message);
+    console.log("readQuery.error.name", readQuery.error.name);
+    console.log("readQuery.error.stack", readQuery.error.stack);
     return <ErrorAlertComponent error={readQuery.error} />;
   }
 

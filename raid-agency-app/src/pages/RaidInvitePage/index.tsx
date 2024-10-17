@@ -1,3 +1,4 @@
+import useSnackbar from "@/components/Snackbar/useSnackbar";
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import { HowToRegOutlined as HowToRegOutlinedIcon } from "@mui/icons-material";
 import {
@@ -9,7 +10,7 @@ import {
   Stack,
 } from "@mui/material";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 
 async function acceptRaidInvite({
@@ -40,23 +41,61 @@ async function acceptRaidInvite({
   return await response.json();
 }
 
+function getAcceptedInvites(): string[] {
+  const storedInvites = localStorage.getItem("acceptedInvites");
+
+  if (storedInvites) {
+    try {
+      const parsedInvites = JSON.parse(storedInvites);
+      if (Array.isArray(parsedInvites)) {
+        return parsedInvites;
+      }
+    } catch (error) {
+      console.error("Error parsing acceptedInvites:", error);
+    }
+  }
+
+  return [];
+}
+
+function addAcceptedInvite(newInvite: string): void {
+  const currentInvites = getAcceptedInvites();
+
+  if (!currentInvites.includes(newInvite)) {
+    currentInvites.push(newInvite);
+    localStorage.setItem("acceptedInvites", JSON.stringify(currentInvites));
+  }
+}
+
 export default function RaidInvitePage() {
-  let [searchParams, setSearchParams] = useSearchParams();
+  let [searchParams] = useSearchParams();
   const { keycloak } = useCustomKeycloak();
   const { prefix, suffix } = useParams();
   const [isPending, setIsPending] = useState<boolean>(false);
+  const snackbar = useSnackbar();
+  const [acceptedInvites, setAcceptedInvites] = useState<string[]>([]);
 
+  const refreshInvites = () => {
+    const invites = getAcceptedInvites();
+    setAcceptedInvites(invites);
+  };
+
+  useEffect(() => {
+    refreshInvites();
+  }, []);
   const code = searchParams.get("code") || "";
 
   const acceptInviteMutation = useMutation({
     mutationFn: acceptRaidInvite,
     onSuccess: (data) => {
-      alert("Thank you, the invitation has been accepted.");
+      snackbar.openSnackbar(`✅ Invite accepted.`);
       setIsPending(false);
+      addAcceptedInvite(`${prefix}/${suffix}`);
+      refreshInvites();
     },
   });
 
-  function acceptInvite() {
+  const acceptInvite = () => {
     setIsPending(true);
     acceptInviteMutation.mutate({
       handle: `${prefix}/${suffix}`,
@@ -64,15 +103,15 @@ export default function RaidInvitePage() {
       token: `${keycloak.token}`,
       code: `${code}`,
     });
-  }
+  };
   return (
     <>
       <Container>
         <Stack gap={2}>
           <Card>
             <CardHeader
-              title="Accept Invite"
-              subheader="Please click the button below to accept the invite"
+              title="Accept Invite to RAiD"
+              subheader={`You've been invited to RAiD ${prefix}/${suffix}`}
             />
             <CardContent>
               <Stack direction="column" alignItems="flex-start" gap={2}>
@@ -82,9 +121,13 @@ export default function RaidInvitePage() {
                   color="success"
                   onClick={acceptInvite}
                   startIcon={<HowToRegOutlinedIcon />}
-                  disabled={isPending}
+                  disabled={
+                    isPending || acceptedInvites.includes(`${prefix}/${suffix}`)
+                  }
                 >
-                  Accept invite
+                  {acceptedInvites.includes(`${prefix}/${suffix}`)
+                    ? "Invite Accepted"
+                    : "Accept invite Now"}
                 </Button>
               </Stack>
             </CardContent>
