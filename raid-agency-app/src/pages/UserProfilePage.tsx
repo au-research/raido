@@ -1,12 +1,14 @@
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import {
-  Container,
-  Stack,
   Card,
-  CardHeader,
   CardContent,
-  Button,
-  Paper,
+  CardHeader,
+  Chip,
+  Container,
+  List,
+  ListItem,
+  ListItemText,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -14,10 +16,6 @@ import {
   TableHead,
   TableRow,
   Typography,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 
@@ -70,61 +68,84 @@ export default function UserProfilePage() {
           <Card>
             <CardHeader title="Sent Invites" subheader="Sent Invites" />
             <CardContent>
-              <TableContainer>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Handle</TableCell>
-                      <TableCell align="right">Status</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {invitesQuery.data.asInviter.map((row: any) => (
-                      <TableRow
-                        key={row.handle}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        <TableCell component="th" scope="row">
-                          {row.handle}
-                        </TableCell>
-                        <TableCell align="right">{row.status}</TableCell>
+              {invitesQuery.data.asInviter.length === 0 && (
+                <Typography sx={{ textAlign: "center" }}>No entries</Typography>
+              )}
+              {invitesQuery.data.asInviter.length > 0 && (
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Handle</TableCell>
+                        <TableCell>Email</TableCell>
+                        <TableCell align="right">Status</TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                    </TableHead>
+                    <TableBody>
+                      {invitesQuery.data.asInviter.map((row: any) => (
+                        <TableRow
+                          key={row.handle}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          <TableCell component="th" scope="row">
+                            {row.handle}
+                          </TableCell>
+                          <TableCell>{row.inviteeEmail}</TableCell>
+                          <TableCell align="right">
+                            <Chip
+                              color={
+                                row.status === "accepted"
+                                  ? "success"
+                                  : "warning"
+                              }
+                              label={row.status || "n/a"}
+                            />
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              )}
             </CardContent>
           </Card>
           <Card>
             <CardHeader title="Received Invites" subheader="Received Invites" />
             <CardContent>
-              <TableContainer>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Handle</TableCell>
-                      <TableCell align="right">Status</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {invitesQuery.data.asInvitee.map((row: any) => (
-                      <TableRow
-                        key={row.handle}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
-                      >
-                        <TableCell component="th" scope="row">
-                          {row.handle}
-                        </TableCell>
-                        <TableCell align="right">{row.status}</TableCell>
+              {invitesQuery.data.asInvitee.length === 0 && (
+                <Typography sx={{ textAlign: "center" }}>No entries</Typography>
+              )}
+              {invitesQuery.data.asInvitee.length > 0 && (
+                <TableContainer>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Handle</TableCell>
+                        <TableCell align="right">Status</TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                    </TableHead>
+                    <TableBody>
+                      {invitesQuery.data.asInvitee.map((row: any) => (
+                        <TableRow
+                          key={row.handle}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          <TableCell component="th" scope="row">
+                            {row.handle}
+                          </TableCell>
+                          <TableCell align="right">
+                            <Chip label={row.status || "n/a"} />
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              )}
             </CardContent>
           </Card>
         </Stack>
