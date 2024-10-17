@@ -6,8 +6,8 @@ import {
   ExitToApp as ExitToAppIcon,
 } from "@mui/icons-material";
 import {
+  Button,
   Divider,
-  IconButton,
   ListItemIcon,
   ListItemText,
   Menu,
@@ -75,15 +75,20 @@ export default function UserDropdown() {
     <>
       {keycloak.authenticated && initialized && (
         <div>
-          <IconButton
-            size="large"
+          <Button
+            variant="text"
+            color="inherit"
+            startIcon={<AccountCircleIcon />}
             aria-label="account of current user"
             aria-controls="menu-appbar"
             aria-haspopup="true"
             onClick={handleAccountMenuOpen}
+            sx={{
+              textTransform: "none",
+            }}
           >
-            <AccountCircleIcon />
-          </IconButton>
+            {keycloak.tokenParsed?.preferred_username || "User"}
+          </Button>
           <Menu
             id="menu-appbar"
             anchorEl={accountMenuAnchor}

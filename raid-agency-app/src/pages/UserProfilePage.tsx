@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import LoadingPage from "./LoadingPage";
+import { Link } from "react-router-dom";
 
 async function getInvites({ userId }: { userId: string }) {
   const response = await fetch(
@@ -100,7 +101,9 @@ export default function UserProfilePage() {
                           }}
                         >
                           <TableCell component="th" scope="row">
-                            {row.handle}
+                            <Link to={`/raids/${row.handle}`}>
+                              {row.handle}
+                            </Link>
                           </TableCell>
                           <TableCell>{row.inviteeEmail}</TableCell>
                           <TableCell align="right">
@@ -146,7 +149,9 @@ export default function UserProfilePage() {
                           }}
                         >
                           <TableCell component="th" scope="row">
-                            {row.handle}
+                            <Link to={`/raids/${row.handle}`}>
+                              {row.handle}
+                            </Link>{" "}
                           </TableCell>
                           <TableCell align="right">
                             <Chip
