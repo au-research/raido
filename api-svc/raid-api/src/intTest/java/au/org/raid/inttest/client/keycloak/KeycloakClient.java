@@ -1,7 +1,8 @@
-package au.org.raid.inttest.service;
+package au.org.raid.inttest.client.keycloak;
 
 import au.org.raid.idl.raidv2.api.RaidApi;
 import au.org.raid.inttest.config.AuthConfig;
+import au.org.raid.inttest.service.TokenService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Contract;
 import feign.Feign;
@@ -25,7 +26,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 public class KeycloakClient {
     private final ObjectMapper objectMapper;
     private final Contract contract;
-    @Value("${raid.test.auth.base-url}")
+    @Value("${raid.iam.base-url}")
     private String apiUrl;
     private final TokenService tokenService;
 

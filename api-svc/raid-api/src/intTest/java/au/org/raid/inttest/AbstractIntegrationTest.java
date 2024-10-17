@@ -2,9 +2,9 @@ package au.org.raid.inttest;
 
 import au.org.raid.idl.raidv2.api.RaidApi;
 import au.org.raid.idl.raidv2.model.*;
+import au.org.raid.inttest.client.keycloak.KeycloakClient;
 import au.org.raid.inttest.config.AuthConfig;
 import au.org.raid.inttest.config.IntegrationTestConfig;
-import au.org.raid.inttest.service.KeycloakClient;
 import au.org.raid.inttest.service.RaidUpdateRequestFactory;
 import au.org.raid.inttest.service.TestClient;
 import au.org.raid.inttest.service.TokenService;
