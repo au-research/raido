@@ -16,7 +16,7 @@ public class AuthConfig {
     private User uq;
     private User raidAdmin;
     private User raidUser;
-    private Client raidPermissionsAdmin;
+    private Client integrationTestClient;
 
 
     @PostConstruct
@@ -36,7 +36,7 @@ public class AuthConfig {
         if (raidUser.user == null || raidUser.password == null) {
             throw new IllegalStateException("raidUser username/password not set");
         }
-        if (raidPermissionsAdmin.clientId == null || raidPermissionsAdmin.clientSecret == null) {
+        if (integrationTestClient.clientId == null || integrationTestClient.clientSecret == null) {
             throw new IllegalStateException("raidPermissionsAdmin clientId/clientSecret not set");
         }
     }

@@ -77,12 +77,20 @@ public class RaidPermissionsIntegrationTest extends AbstractIntegrationTest {
 
         final var handle = new Handle(mintedRaid.getIdentifier().getId());
 
+        final var users = keycloakClient.keycloakApi(authConfig.getIntegrationTestClient())
+                .findUserByUsername("raid-user").getBody();
+
+        assert users != null;
+        if (users.isEmpty()) {
+            fail("raid-user not found");
+        }
+
         final var raidUserPermissionsRequest = RaidUserPermissionsRequest.builder()
-                .userId("da3f40a0-7e61-4c4c-b4f3-fdcaee7efa09")
+                .userId(users.get(0).getId())
                 .handle(handle.toString())
                 .build();
 
-        keycloakClient.keycloakApi(authConfig.getRaidPermissionsAdmin())
+        keycloakClient.keycloakApi(authConfig.getIntegrationTestClient())
                 .addRaidUser(raidUserPermissionsRequest);
 
         try {
@@ -91,7 +99,7 @@ public class RaidPermissionsIntegrationTest extends AbstractIntegrationTest {
         } catch (final Exception e) {
             fail("Raid user should be able to read raid");
         } finally {
-            keycloakClient.keycloakApi(authConfig.getRaidPermissionsAdmin()).removeRaidUser(raidUserPermissionsRequest);
+            keycloakClient.keycloakApi(authConfig.getIntegrationTestClient()).removeRaidUser(raidUserPermissionsRequest);
         }
     }
 
@@ -104,12 +112,20 @@ public class RaidPermissionsIntegrationTest extends AbstractIntegrationTest {
 
         final var handle = new Handle(mintedRaid.getIdentifier().getId());
 
+        final var users = keycloakClient.keycloakApi(authConfig.getIntegrationTestClient())
+                .findUserByUsername("raid-user").getBody();
+
+        assert users != null;
+        if (users.isEmpty()) {
+            fail("raid-user not found");
+        }
+
         final var raidUserPermissionsRequest = RaidUserPermissionsRequest.builder()
-                .userId("da3f40a0-7e61-4c4c-b4f3-fdcaee7efa09")
+                .userId(users.get(0).getId())
                 .handle(handle.toString())
                 .build();
 
-        keycloakClient.keycloakApi(authConfig.getRaidPermissionsAdmin())
+        keycloakClient.keycloakApi(authConfig.getIntegrationTestClient())
                 .addRaidUser(raidUserPermissionsRequest);
 
         try {
@@ -118,7 +134,7 @@ public class RaidPermissionsIntegrationTest extends AbstractIntegrationTest {
         } catch (final Exception e) {
             fail("Raid user should be able to update raid");
         } finally {
-            keycloakClient.keycloakApi(authConfig.getRaidPermissionsAdmin()).removeRaidUser(raidUserPermissionsRequest);
+            keycloakClient.keycloakApi(authConfig.getIntegrationTestClient()).removeRaidUser(raidUserPermissionsRequest);
         }
     }
 

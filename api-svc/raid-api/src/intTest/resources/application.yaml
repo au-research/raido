@@ -1,4 +1,6 @@
 raid:
+  iam:
+    base-url: http://localhost:8001
   stub:
     geo-names:
       enabled: true
@@ -32,7 +34,7 @@ raid:
       raid-au-user-token: not-set
       uq-admin-token: not-set
     auth:
-      base-url: http://localhost:8001/realms/raid
+      base-url: ${raid.iam.base-url}/realms/raid
       client-id: raid-api
       grant-type: password
       token-uri: ${raid.test.auth.base-url}/protocol/openid-connect/token
@@ -51,9 +53,9 @@ raid:
       raid-user:
         user: raid-user
         password: password
-      raid-permissions-admin:
-        client-id: raid-permissions-admin
-        client-secret: tXfTBSNVuT3M1ovKow0J5oezkHvBRO79
+      integration-test-client:
+        client-id: integration-test-client
+        client-secret: ee3qpd47IurMdOlmdPTEdCG6Ib2zPjUN
   db:
     user: postgres
     password: supersecret
