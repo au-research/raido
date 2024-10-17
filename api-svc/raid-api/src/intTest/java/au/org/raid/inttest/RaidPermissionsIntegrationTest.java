@@ -146,17 +146,12 @@ public class RaidPermissionsIntegrationTest extends AbstractIntegrationTest {
         final var raid2 = testClient.raidApi(authConfig.getRaidAdmin()).mintRaid(createRequest).getBody();
         assert raid2 != null;
 
-        try {
-            final var response = testClient.raidApi(authConfig.getRaidAdmin()).findAllRaids(null);
+        final var response = testClient.raidApi(authConfig.getRaidAdmin()).findAllRaids(null);
 
-            assert response.getBody() != null;
+        assert response.getBody() != null;
 
-            final var raids = response.getBody().stream().map(raidDto -> raidDto.getIdentifier().getId()).toList();
-            assertThat(raids).contains(raid2.getIdentifier().getId());
-            assertThat(raids).doesNotContain(raid1.getIdentifier().getId());
-        } catch (final Exception e) {
-            log.error("Failed", e);
-            fail(e.getMessage());
-        }
+        final var raids = response.getBody().stream().map(raidDto -> raidDto.getIdentifier().getId()).toList();
+        assertThat(raids).contains(raid2.getIdentifier().getId());
+        assertThat(raids).doesNotContain(raid1.getIdentifier().getId());
     }
 }
