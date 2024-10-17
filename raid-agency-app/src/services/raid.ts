@@ -1,6 +1,7 @@
 import { RaidDto } from "@/generated/raid";
 import { fetchServicePoints } from "@/services/service-points";
 import { RaidHistoryType } from "@/types";
+import { httpStatusCodes } from "@/utils";
 import { getApiEndpoint } from "@/utils/api-utils/api-utils";
 import type Keycloak from "keycloak-js";
 
@@ -61,15 +62,38 @@ export const fetchRaid = async ({
   id: string;
   token: string;
 }): Promise<RaidDto> => {
-  const response = await fetch(`${endpoint}/raid/${id}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-      "X-Raid-Api-Version": "3",
-    },
-  });
-  return await response.json();
+  try {
+    const response = await fetch(`${endpoint}/raid/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+        "X-Raid-Api-Version": "3",
+      },
+    });
+
+    if (!response.ok) {
+      if (response.status && httpStatusCodes.has(response.status)) {
+        throw new Error(`HTTP error: ${httpStatusCodes.get(response.status)} (${response.status})`);
+      }
+      throw new Error(`HTTP error. Status code: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (!data) {
+      throw new Error("No data received from the server");
+    }
+
+    return data as RaidDto;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("Error fetching raid:", error.message);
+    } else {
+      console.error("An unknown error occurred while fetching raid");
+    }
+    throw error; // Re-throw the error for the caller to handle
+  }
 };
 export const fetchRaidHistory = async ({
   id,
