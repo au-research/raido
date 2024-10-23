@@ -39,12 +39,14 @@ cd raid-agency-app
 npm run dev
 ```
 ## Project Structure
-`api-svc/db` The database migrations (handled by flyway) and generated database classes (handled by JOOQ)
-`api-svc/idl-raid-v2` OpenApi specs and code generation for API controllers
-`api-svc/raid-api` API Spring Boot application 
-`iam/realms` Keycloak configuration used in local environment/integration tests. Loaded at startup
-`iam/src` Keycloak SPIs to handle group/raid permissions.
-`sso/` Docker config for Satosa. This allows SAML authentication between AAF and Keycloak for eduGAIN
+|                      |                                                                                                |
+| -------------------- | ---------------------------------------------------------------------------------------------- |
+| `api-svc/db`         | The database migrations (handled by flyway) and generated database classes (handled by JOOQ)   |
+| `api-svc/idl-raid-v2`| OpenApi specs and code generation for API controllers                                          |
+| `api-svc/raid-api`   | API Spring Boot application                                                                    | 
+| `iam/realms`         | Keycloak configuration used in local environment/integration tests. Loaded at startup          |
+| `iam/src`            | Keycloak SPIs to handle group/raid permissions.                                                |
+| `sso/`               | Docker config for Satosa. This allows SAML authentication between AAF and Keycloak for eduGAIN |
 
 ## API Documentation
 * [Swagger](https://api.demo.raid.org.au/swagger-ui/index.html#/raid/findRaidByName)
