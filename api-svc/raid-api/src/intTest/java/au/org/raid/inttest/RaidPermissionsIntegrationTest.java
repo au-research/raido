@@ -9,21 +9,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @Slf4j
 public class RaidPermissionsIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     private AuthConfig authConfig;
-
-    // TODO: Raid admin has access to write to a raid in admin_raids
-    // TODO: Raid admin has access to embargoed raid in admin_raids
-    // TODO: Raid admin does not have access to write to a raid not in admin_raids
-    // TODO: Raid admin has access to embargoed raid in admin_raids
-    // TODO: service point user has read/write access to all raids for service point
-    // TODO: service point user has no access to any raids outside service point
-
 
     @Test
     @DisplayName("Raid user cannot read raid without permissions")
@@ -39,7 +32,7 @@ public class RaidPermissionsIntegrationTest extends AbstractIntegrationTest {
             testClient.raidApi(authConfig.getRaidUser())
                     .findRaidByName(handle.getPrefix(), handle.getSuffix(), null);
         } catch (final FeignException e) {
-            assertThat(e.status()).isEqualTo(403);
+            assertThat(e.status(), is(403));
             // pass
         } catch (final Exception e) {
             log.error("Failed", e);
@@ -60,7 +53,7 @@ public class RaidPermissionsIntegrationTest extends AbstractIntegrationTest {
             testClient.raidApi(authConfig.getRaidUser())
                     .updateRaid(handle.getPrefix(), handle.getSuffix(), raidUpdateRequestFactory.create(mintedRaid));
         } catch (final FeignException e) {
-            assertThat(e.status()).isEqualTo(403);
+            assertThat(e.status(), is(403));
             // pass
         } catch (final Exception e) {
             log.error("Failed", e);
@@ -146,17 +139,12 @@ public class RaidPermissionsIntegrationTest extends AbstractIntegrationTest {
         final var raid2 = testClient.raidApi(authConfig.getRaidAdmin()).mintRaid(createRequest).getBody();
         assert raid2 != null;
 
-        try {
-            final var response = testClient.raidApi(authConfig.getRaidAdmin()).findAllRaids(null);
+        final var response = testClient.raidApi(authConfig.getRaidAdmin()).findAllRaids(null);
 
-            assert response.getBody() != null;
+        assert response.getBody() != null;
 
-            final var raids = response.getBody().stream().map(raidDto -> raidDto.getIdentifier().getId()).toList();
-            assertThat(raids).contains(raid2.getIdentifier().getId());
-            assertThat(raids).doesNotContain(raid1.getIdentifier().getId());
-        } catch (final Exception e) {
-            log.error("Failed", e);
-            fail(e.getMessage());
-        }
+        final var raids = response.getBody().stream().map(raidDto -> raidDto.getIdentifier().getId()).toList();
+        assertThat(raids, hasItem(raid2.getIdentifier().getId()));
+        assertThat(raids, not(hasItem(raid1.getIdentifier().getId())));
     }
 }
