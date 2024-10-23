@@ -70,7 +70,7 @@ public class TraditionalKnowledgeLabelIntegrationTest extends AbstractIntegratio
                     .message("schema is unknown/unsupported")
             );
         } catch (Exception e) {
-            fail("Expected RaidApiValidationException");
+            fail(e.getMessage());
         }
     }
 

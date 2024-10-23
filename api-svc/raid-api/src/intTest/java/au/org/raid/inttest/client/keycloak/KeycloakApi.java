@@ -39,8 +39,27 @@ public interface KeycloakApi {
     @RequestMapping(method = RequestMethod.GET, value = "/realms/raid/group/user-groups")
     ResponseEntity<List<Group>> getUserGroups();
 
+    @GetMapping(path = "/admin/realms/raid/groups")
+    ResponseEntity<List<Group>> listGroups();
+
     @GetMapping(path = "/admin/realms/raid/users")
     ResponseEntity<List<KeycloakUser>> findUserByUsername(@RequestParam("username") final String username);
+
+    @PostMapping(path = "/admin/realms/raid/users")
+    ResponseEntity<Void> createUser(@RequestBody final KeycloakUser user);
+
+    @DeleteMapping(path = "/admin/realms/raid/users/{userId}")
+    ResponseEntity<Void> deleteUser(@PathVariable final String userId);
+
+    @PostMapping(path = "/admin/realms/raid/users/{userId}/reset-password")
+    ResponseEntity<List<KeycloakUser>> resetPassword(@PathVariable final String userId,
+                                                     @RequestBody final KeycloakCredentials credentials);
+
+    @GetMapping(path = "/admin/realms/raid/roles/{roleName}")
+    ResponseEntity<KeycloakRole> findRoleByName(@PathVariable final String roleName);
+
+    @PostMapping(path = "/admin/realms/raid/users/{userId}/role-mappings/realm")
+    ResponseEntity<Void> addUserToRole(@PathVariable final String userId, @RequestBody final KeycloakRole role);
 
 
 }

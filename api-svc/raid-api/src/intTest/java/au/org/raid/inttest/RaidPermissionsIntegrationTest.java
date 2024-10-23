@@ -18,14 +18,6 @@ public class RaidPermissionsIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     private AuthConfig authConfig;
 
-    // TODO: Raid admin has access to write to a raid in admin_raids
-    // TODO: Raid admin has access to embargoed raid in admin_raids
-    // TODO: Raid admin does not have access to write to a raid not in admin_raids
-    // TODO: Raid admin has access to embargoed raid in admin_raids
-    // TODO: service point user has read/write access to all raids for service point
-    // TODO: service point user has no access to any raids outside service point
-
-
     @Test
     @DisplayName("Raid user cannot read raid without permissions")
     void raidUserReadWithoutPermissions() {
