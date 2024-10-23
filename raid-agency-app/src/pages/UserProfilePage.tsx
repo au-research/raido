@@ -21,10 +21,12 @@ import { useQuery } from "@tanstack/react-query";
 import LoadingPage from "./LoadingPage";
 import { Link } from "react-router-dom";
 
-async function getInvites({ userId }: { userId: string }) {
-  const response = await fetch(
-    `https://orcid.test.raid.org.au/invite?userId=${userId}`
-  );
+async function getInvites({ token }: { token: string }) {
+  const response = await fetch(`https://orcid.test.raid.org.au/invite`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
   return await response.json();
 }
 
@@ -34,7 +36,7 @@ export default function UserProfilePage() {
     queryKey: ["profile"],
     queryFn: () =>
       getInvites({
-        userId: keycloak.tokenParsed?.sub || "",
+        token: keycloak.token || "",
       }),
     enabled: initialized,
   });
@@ -101,9 +103,13 @@ export default function UserProfilePage() {
                           }}
                         >
                           <TableCell component="th" scope="row">
-                            <Link to={`/raids/${row.handle}`}>
+                            <Typography
+                              component={Link}
+                              to={`/raids/${row.handle}`}
+                              color="primary"
+                            >
                               {row.handle}
-                            </Link>
+                            </Typography>
                           </TableCell>
                           <TableCell>{row.inviteeEmail}</TableCell>
                           <TableCell align="right">
@@ -149,9 +155,13 @@ export default function UserProfilePage() {
                           }}
                         >
                           <TableCell component="th" scope="row">
-                            <Link to={`/raids/${row.handle}`}>
+                            <Typography
+                              component={Link}
+                              to={`/raids/${row.handle}`}
+                              color="primary"
+                            >
                               {row.handle}
-                            </Link>{" "}
+                            </Typography>
                           </TableCell>
                           <TableCell align="right">
                             <Chip

@@ -15,12 +15,10 @@ import { useParams, useSearchParams } from "react-router-dom";
 
 async function acceptRaidInvite({
   handle,
-  userId,
   token,
   code,
 }: {
   handle: string;
-  userId: string;
   token: string;
   code: string;
 }) {
@@ -30,11 +28,10 @@ async function acceptRaidInvite({
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
       },
       body: JSON.stringify({
         handle,
-        userId,
-        token,
       }),
     }
   );
@@ -99,7 +96,6 @@ export default function RaidInvitePage() {
     setIsPending(true);
     acceptInviteMutation.mutate({
       handle: `${prefix}/${suffix}`,
-      userId: `${keycloak.tokenParsed?.sub}`,
       token: `${keycloak.token}`,
       code: `${code}`,
     });
