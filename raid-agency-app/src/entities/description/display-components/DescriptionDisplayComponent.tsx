@@ -15,7 +15,7 @@ import {
 
 const NoDescriptionsMessage = () => (
   <Typography variant="body2" color="text.secondary" textAlign="center">
-    No desciptions defined
+    No descriptions defined
   </Typography>
 );
 
