@@ -16,21 +16,21 @@ import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 async function sendInvite({
   email,
   handle,
-  inviterUserId,
+  token,
 }: {
   email: string;
   handle: string;
-  inviterUserId: string;
+  token: string;
 }) {
   const response = await fetch("https://orcid.test.raid.org.au/invite", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorisation: `Bearer ${token}`,
     },
     body: JSON.stringify({
-      email,
+      inviteeEmail: email,
       handle,
-      inviterUserId,
     }),
   });
   return await response.json();
@@ -72,7 +72,7 @@ export default function InviteDialog({
     sendInviteMutation.mutate({
       email,
       handle: `${prefix}/${suffix}`,
-      inviterUserId: keycloak?.tokenParsed?.sub || "",
+      token: keycloak?.token,
     });
     handleClose();
   };
