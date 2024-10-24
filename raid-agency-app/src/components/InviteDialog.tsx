@@ -72,7 +72,7 @@ export default function InviteDialog({
     sendInviteMutation.mutate({
       email,
       handle: `${prefix}/${suffix}`,
-      token: keycloak?.token,
+      token: keycloak?.token || "",
     });
     handleClose();
   };
