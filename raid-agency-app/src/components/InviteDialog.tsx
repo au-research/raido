@@ -26,7 +26,7 @@ async function sendInvite({
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorisation: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       inviteeEmail: email,
