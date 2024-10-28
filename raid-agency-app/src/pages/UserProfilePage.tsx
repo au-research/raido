@@ -22,7 +22,7 @@ import LoadingPage from "./LoadingPage";
 import { Link } from "react-router-dom";
 
 async function getInvites({ token }: { token: string }) {
-  const response = await fetch(`https://orcid.test.raid.org.au/invite`, {
+  const response = await fetch(`https://orcid.test.raid.org.au/invites`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
