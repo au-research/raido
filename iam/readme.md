@@ -10,6 +10,10 @@
         * [Join Group](#join-group)
         * [Set Active Group](#set-active-group)
         * [List User Groups](#list-user-groups)
+        * [User Roles](#user-roles)
+        * [Client Roles](#client-roles)
+        * [Groups](#groups)
+        * [Set-up](#set-up)
 
 ## Keycloak Service Provider Interfaces (SPIs)
 
@@ -373,6 +377,32 @@ Response:
     }
     
 ```
+
+## User Roles
+| Role               | Create Raids | Edit Raids | Read Embargoed Raids  | Create Service Points  | Add Users  |
+|:-------------------|:------------:|:----------:|:---------------------:|:----------------------:|:----------:| 
+| Operator           |       ❌     |     ❌     |           ❌|           ✅            |     ✅      |
+| Group Admin        |         ❌     |❌            |❌                       |❌                        |✅            |
+| Service Point User |      ✅       |     ✅      |           ✅           |           ❌            |     ❌      |
+| Raid Admin *       | ✅| ✅ | ✅ | ❌ | ❌ |
+| Raid User *       | ❌             |✅            |✅                       |❌                        |❌            |
+ * Raid Admins can only edit Raids they have created. Can only read embargoed Raids if they created them.
+ * Raid Users can only read and edit raids they have been invited to.
+
+
+## Client Roles
+| Role | Description                                          | 
+|---|------------------------------------------------------|
+| raid-permissions-admin | Creates Raid Users once invitation has been accepted |
+
+
+## Groups
+
+A group is a collection for users that can create Raids on a given service point. A group has a 1 to 1 relationships with a service point. Likewise a service point in Raid has a 1 to 1 relationship with a Repository in Datacite. 
+
+![Groups](./images/keycloak-group.drawio.png)
+
+## Set-up
 
 
 When running locally with Docker Compose, the `raid` realm should be added automatically when the container starts.
