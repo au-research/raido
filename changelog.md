@@ -1,6 +1,10 @@
 See the [Changelog audience](#changelog-audience) section for info about 
  the expected audience and content of the changelog.
 
+# 2.1.3
+## API
+* Set resource type to 'Project' in Datacite
+
 # 2.1.2
 ## App-client UI
 * Component updates and refactoring
