@@ -1,5 +1,9 @@
 See the [Changelog audience](#changelog-audience) section for info about 
  the expected audience and content of the changelog.
+ 
+# 2.1.3
+## API
+* Fix to Datacite mapping to give RAiDs a resource type of 'project'
 
 # 2.1.2
 ## App-client UI
