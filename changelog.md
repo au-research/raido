@@ -3,7 +3,7 @@ See the [Changelog audience](#changelog-audience) section for info about
 
 # 2.1.3
 ## API
-* Set resource type to 'Project' in Datacite
+• Update Datacite mapping to set resource type of RAiDs to 'project'
 
 # 2.1.2
 ## App-client UI
