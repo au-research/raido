@@ -94,6 +94,19 @@ public class RaidIngestService {
         return raids;
     }
 
+    public List<RaidDto> findAllByOrcid(final String orcid) {
+        final String fullOrcid = "https://orcid.org/%s".formatted(orcid);
+
+        final var raids = new ArrayList<RaidDto>();
+        final var records = raidRepository.findAllByContributorOrcid(fullOrcid);
+
+        for (final var record : records) {
+            raids.add(cacheableRaidService.build(record));
+        }
+
+        return raids;
+    }
+
     public Optional<RaidDto> findByHandle(final String handle) {
         return raidRepository.findByHandle(handle)
                 .map(cacheableRaidService::build)

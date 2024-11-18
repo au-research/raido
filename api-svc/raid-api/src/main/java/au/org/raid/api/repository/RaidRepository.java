@@ -10,7 +10,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static au.org.raid.db.jooq.tables.Contributor.CONTRIBUTOR;
 import static au.org.raid.db.jooq.tables.Raid.RAID;
+import static au.org.raid.db.jooq.tables.RaidContributor.RAID_CONTRIBUTOR;
 
 @Repository
 @RequiredArgsConstructor
@@ -88,4 +90,19 @@ public class RaidRepository {
                 .limit(Constant.MAX_EXPERIMENTAL_RECORDS)
                 .fetch();
     }
+
+    public List<RaidRecord> findAllByContributorOrcid(final String orcid) {
+        return dslContext.select()
+                .from(RAID)
+                .join(RAID_CONTRIBUTOR)
+                .on(RAID.HANDLE.eq(RAID_CONTRIBUTOR.HANDLE))
+                .join(CONTRIBUTOR)
+                .on(RAID_CONTRIBUTOR.CONTRIBUTOR_ID.eq(CONTRIBUTOR.ID))
+                .where(
+                        CONTRIBUTOR.PID.eq(orcid)
+                )
+                .fetchInto(RaidRecord.class);
+    }
+
+
 }

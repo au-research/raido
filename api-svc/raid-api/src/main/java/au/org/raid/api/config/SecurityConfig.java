@@ -56,6 +56,7 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui*/**").permitAll()
                         .requestMatchers("/docs/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers("/orcid/**").permitAll()
                         .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**"))
                         .hasRole(SERVICE_POINT_USER_ROLE)
                         .requestMatchers(new AntPathRequestMatcher(SERVICE_POINT_API + "/**", "PUT"))
