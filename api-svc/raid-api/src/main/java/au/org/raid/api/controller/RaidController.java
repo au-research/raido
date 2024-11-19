@@ -12,6 +12,7 @@ import au.org.raid.api.util.TokenUtil;
 import au.org.raid.api.validator.ValidationService;
 import au.org.raid.idl.raidv2.api.RaidApi;
 import au.org.raid.idl.raidv2.model.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
@@ -49,20 +50,31 @@ public class RaidController implements RaidApi {
     private final RaidIngestService raidIngestService;
     private final RaidHistoryService raidHistoryService;
     private final ServicePointService servicePointService;
+    private final ObjectMapper objectMapper;
 
     @Override
-    public ResponseEntity<RaidDto> findRaidByName(final String prefix, final String suffix, final Integer version) {
+    @SneakyThrows
+    public ResponseEntity<RaidDto> findRaidByName(final String prefix, final String suffix) {
         final var handle = String.join("/", prefix, suffix);
         var raidOptional = raidService.findByHandle(handle)
                 .or(Optional::empty);
 
-        if (version != null) {
-            raidOptional = raidHistoryService.findByHandleAndVersion(handle, version);
-        }
-
         return ResponseEntity.of(raidOptional);
     }
 
+
+    @Override
+    @SneakyThrows
+    public ResponseEntity<Object> findRaidByNameAndVersion(final String prefix, final String suffix, final Integer version) {
+        final var handle = String.join("/", prefix, suffix);
+        var raidOptional = raidHistoryService.findByHandleAndVersion(handle, version);
+
+        if (raidOptional.isPresent()) {
+            return ResponseEntity.ok(objectMapper.writeValueAsString(raidOptional.get()));
+        }
+
+        return ResponseEntity.notFound().build();
+    }
 
     @Override
     public ResponseEntity<RaidDto> mintRaid(final RaidCreateRequest request) {

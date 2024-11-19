@@ -72,13 +72,6 @@ paths:
         schema:
           type: string
     get:
-      parameters:
-        - name: version
-          in: query
-          required: false
-          description: The version of the raid
-          schema:
-            type: integer
       security:
         - bearerAuth: [ ]
       tags:
@@ -124,7 +117,6 @@ paths:
             application/json:
               schema:
                 $ref: 'shared.yaml#/components/schemas/ValidationFailureResponse'
-
     patch:
       security:
         - bearerAuth: [ ]
@@ -151,8 +143,46 @@ paths:
             application/json:
               schema:
                 $ref: 'shared.yaml#/components/schemas/ValidationFailureResponse'
-
-
+  /raid/{prefix}/{suffix}/{version}:
+    parameters:
+      - name: prefix
+        in: path
+        required: true
+        description: Prefix of the raid handle
+        schema:
+          type: string
+      - name: suffix
+        in: path
+        required: true
+        description: Suffix of the raid handle
+        schema:
+          type: string
+      - name: version
+        in: path
+        required: true
+        description: The version of the raid
+        schema:
+          type: integer
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - raid
+      operationId: findRaidByNameAndVersion
+      summary: Read a raid with a specified version
+      responses:
+        200:
+          description: data
+          content:
+            application/json:
+              schema:
+                type: object
+        403:
+          description: Closed or Embargoed raids return a 403 response with an access statement
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClosedRaid'
   /raid/{prefix}/{suffix}/history:
     parameters:
       - name: prefix
