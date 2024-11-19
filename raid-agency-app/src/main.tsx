@@ -6,12 +6,7 @@ import {
 } from "react-router-dom";
 import { App } from "./App";
 import "./index.css";
-import {
-  otherRoutes,
-  raidPageRoutes,
-  servicePointRoutes,
-  testRoutes,
-} from "./routes";
+import { otherRoutes, raidPageRoutes, servicePointRoutes } from "./routes";
 import "@fontsource/figtree";
 
 const root = ReactDOM.createRoot(
@@ -27,7 +22,6 @@ const router = createBrowserRouter([
       ...servicePointRoutes,
       ...raidPageRoutes,
       ...otherRoutes,
-      ...testRoutes,
       {
         path: "*",
         element: <Navigate to="/" />,

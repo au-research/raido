@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-interface SnackbarContextInterface {
+export interface SnackbarContextInterface {
   openSnackbar: (content: string, duration?: number) => void;
   closeSnackbar: () => void;
 }

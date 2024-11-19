@@ -30,7 +30,7 @@ const accessStatementGenerator = (): AccessStatement => {
   };
 };
 
-export const accessGenerator = (): Access => {
+const accessGenerator = (): Access => {
   const threeYearsFromNow = dayjs().add(1, "year").toDate();
   return {
     type: accessTypeGenerator(),
@@ -38,3 +38,5 @@ export const accessGenerator = (): Access => {
     embargoExpiry: threeYearsFromNow,
   };
 };
+
+export default accessGenerator;

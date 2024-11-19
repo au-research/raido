@@ -1,5 +1,5 @@
-import { contributorPositionValidationSchema } from "@/entities/contributor-position/data-components/contributor-position-validation-schema";
-import { contributorRoleValidationSchema } from "@/entities/contributor-role/data-components/contributor-role-validation-schema";
+import { contributorPositionValidationSchema } from "@/entities/contributor/position/data-components/contributor-position-validation-schema";
+import { contributorRoleValidationSchema } from "@/entities/contributor/role/data-components/contributor-role-validation-schema";
 import { z } from "zod";
 
 export const singleContributorValidationSchema = z.object({

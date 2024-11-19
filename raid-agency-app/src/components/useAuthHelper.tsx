@@ -1,22 +1,20 @@
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 
+const REALM_ROLES = {
+  SERVICE_POINT_USER: "service-point-user",
+  GROUP_ADMIN: "group-admin",
+  OPERATOR: "operator",
+} as const;
+
 export function useAuthHelper() {
   const { keycloak } = useCustomKeycloak();
-
-  const hasServicePointGroup =
-    keycloak.tokenParsed?.service_point_group_id !== undefined;
-
-  const isServicePointUser = keycloak.hasRealmRole("service-point-user");
-
-  const isGroupAdmin = keycloak.hasRealmRole("group-admin");
-  const isOperator = keycloak.hasRealmRole("operator");
-  const groupId = keycloak.tokenParsed?.service_point_group_id;
+  const { tokenParsed } = keycloak;
 
   return {
-    hasServicePointGroup,
-    isServicePointUser,
-    isGroupAdmin,
-    isOperator,
-    groupId,
+    hasServicePointGroup: tokenParsed?.service_point_group_id != null,
+    isServicePointUser: keycloak.hasRealmRole(REALM_ROLES.SERVICE_POINT_USER),
+    isGroupAdmin: keycloak.hasRealmRole(REALM_ROLES.GROUP_ADMIN),
+    isOperator: keycloak.hasRealmRole(REALM_ROLES.OPERATOR),
+    groupId: tokenParsed?.service_point_group_id,
   };
 }

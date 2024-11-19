@@ -18,6 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 
 import { KeycloakTokenParsed } from "keycloak-js";
+import ServicePointSwitcher from "@/components/ServicePointSwitcher";
 
 const keycloakInternalRoles = [
   "default-roles-raid",
@@ -68,6 +69,10 @@ export default function UserDropdown() {
   if (keycloakGroupsQuery.isError) {
     return <div>Error...</div>;
   }
+
+  const activeGroup = keycloakGroupsQuery.data?.find(
+    (el) => el.id === keycloak.tokenParsed?.service_point_group_id
+  );
 
   return (
     <>
@@ -143,6 +148,8 @@ export default function UserDropdown() {
                   secondary={roles?.sort().join(" | ")}
                 />
               </MenuItem>
+              {activeGroup && <ServicePointSwitcher />}
+
               <Divider />
               <MenuItem
                 onClick={() => {

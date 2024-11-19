@@ -1,20 +1,20 @@
-import { alternateIdentifierValidationSchema } from "@/entities/alternate-identifier/data-components/alternate-identifier-validation-schema";
-import { descriptionValidationSchema } from "@/entities/description/data-components/description-validation-schema";
-import { z } from "zod";
 import { accessValidationSchema } from "@/entities/access/data-components/access-validation-schema";
-import { alternateUrlValidationSchema } from "./alternate-url/data-components/alternate-url-validation-schema";
+import { alternateIdentifierValidationSchema } from "@/entities/alternateIdentifier/data-components/alternate-identifier-validation-schema";
+import { alternateUrlValidationSchema } from "@/entities/alternateUrl/data-components/alternate-url-validation-schema";
 import { contributorValidationSchema } from "@/entities/contributor/data-components/contributor-validation-schema";
-import dateValidationSchema from "./date/data-components/validator";
-import { identifierValidationSchema } from "./identifier/identifier-validation-schema";
-import { organisationValidationSchema } from "./organisation/data-components/organisation-validation-schema";
-import { relatedObjectValidationSchema } from "./related-object/data-components/related-object-validation-schema";
-import { relatedRaidValidationSchema } from "./related-raid/data-components/related-raid-validation-schema";
-import { spatialCoverageValidationSchema } from "./spatial-coverage/spatial-coverage-validation-schema";
-import { subjectValidationSchema } from "./subject/subject-validation-schema";
-import { titleValidationSchema } from "./title/data-components/title-validation-schema";
-import { traditionalKnowledgeIdentifiersValidationSchema } from "./traditional-knowledge-identifier/traditional-knowledge-identifier-validation-schema";
+import { dateValidationSchema } from "@/entities/date/data-components/date-validation-schema";
+import { descriptionValidationSchema } from "@/entities/description/data-components/description-validation-schema";
+import { identifierValidationSchema } from "@/entities/identifier/data-components/identifier-validation-schema";
+import { organisationValidationSchema } from "@/entities/organisation/data-components/organisation-validation-schema";
+import { relatedObjectValidationSchema } from "@/entities/relatedObject/data-components/related-object-validation-schema";
+import { relatedRaidValidationSchema } from "@/entities/relatedRaid/data-components/related-raid-validation-schema";
+import { spatialCoverageValidationSchema } from "@/entities/spatialCoverage/spatial-coverage-validation-schema";
+import { subjectValidationSchema } from "@/entities/subject/data-components/subject-validation-schema";
+import { titleValidationSchema } from "@/entities/title/data-components/title-validation-schema";
+import { traditionalKnowledgeLabelValidationSchema } from "@/entities/traditionalKnowledgeLabel/traditional-knowledge-label-validation-schema";
+import { z } from "zod";
 
-export const ValidationFormSchema = z.object({
+const ValidationFormSchema = z.object({
   identifier: identifierValidationSchema,
   title: titleValidationSchema,
   date: dateValidationSchema,
@@ -28,6 +28,7 @@ export const ValidationFormSchema = z.object({
   relatedObject: relatedObjectValidationSchema,
   alternateIdentifier: alternateIdentifierValidationSchema,
   spatialCoverage: spatialCoverageValidationSchema,
-  traditionalKnowledgeIdentifier:
-    traditionalKnowledgeIdentifiersValidationSchema,
+  traditionalKnowledgeLabel: traditionalKnowledgeLabelValidationSchema,
 });
+
+export default ValidationFormSchema;
