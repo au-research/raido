@@ -1,4 +1,4 @@
-import { AppBar, Toolbar, useTheme } from "@mui/material";
+import { AppBar, Box, Toolbar, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
 
 export default function AppNavBarUnauthenticated() {
@@ -16,16 +16,18 @@ export default function AppNavBarUnauthenticated() {
       }}
     >
       <Toolbar variant={"dense"}>
-        <Link to="/">
-          <img
-            src={
-              theme.palette.mode === "dark"
-                ? "/raid-logo-dark.svg"
-                : "/raid-logo-light.svg"
-            }
-            alt="logo"
-            height="30"
-          />
+        <Link to="/" style={{ lineHeight: 0 }}>
+          <Box>
+            <img
+              src={
+                theme.palette.mode === "dark"
+                  ? "/raid-logo-dark.svg"
+                  : "/raid-logo-light.svg"
+              }
+              alt="logo"
+              height="37"
+            />
+          </Box>
         </Link>
       </Toolbar>
     </AppBar>

@@ -1,23 +1,25 @@
-import { FormFieldProps } from "@/types";
 import { Checkbox, FormControlLabel, FormGroup, Grid } from "@mui/material";
 import { useController } from "react-hook-form";
 
 export function CheckboxField({
-  formFieldProps,
+  name,
+  label,
+  required,
   width = 12,
 }: {
-  formFieldProps: FormFieldProps;
+  name: string;
+  label: string;
+  required?: boolean;
   width?: number;
 }) {
-  const { label, required } = formFieldProps;
-  const { field } = useController(formFieldProps);
+  const { field } = useController({ name });
   return (
     <Grid item xs={width}>
       <FormGroup>
         <FormControlLabel
-          control={<Checkbox {...field} checked={!!field.value} />}
+          control={<Checkbox {...field} checked={Boolean(field.value)} />}
           label={label}
-          required={!!required}
+          required={Boolean(required)}
         />
       </FormGroup>
     </Grid>

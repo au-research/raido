@@ -1,9 +1,9 @@
 import ProtectedRoute from "@/components/ProtectedRoute";
-import EditRaidPage from "@/pages/EditRaidPage/EditRaidPage";
-import MintRaidPage from "@/pages/MintRaidPage/MintRaidPage";
+import RaidEdit from "@/pages/RaidEdit";
+import MintRaidPage from "@/pages/MintRaidPage";
 import RaidHistoryPage from "@/pages/RaidHistoryPage";
 import RaidsPage from "@/pages/RaidsPage";
-import ShowRaidPage from "@/pages/ShowRaidPage";
+import ShowRaidPage from "@/pages/RaidDisplay";
 import { RouteObject } from "react-router-dom";
 
 export const raidPageRoutes: RouteObject[] = [
@@ -43,7 +43,7 @@ export const raidPageRoutes: RouteObject[] = [
     children: [
       {
         path: "",
-        element: <EditRaidPage />,
+        element: <RaidEdit />,
       },
     ],
   },

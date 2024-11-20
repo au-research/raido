@@ -1,50 +1,67 @@
-import { FormFieldProps } from "@/types";
 import { getErrorMessageForField } from "@/utils";
 import { Grid, TextField } from "@mui/material";
+import { memo } from "react";
 import { useController } from "react-hook-form";
 
-export function TextInputField({
-  formFieldProps,
-  width = 12,
-}: {
-  formFieldProps: FormFieldProps;
+interface TextInputFieldProps {
+  name: string;
+  label: string;
+  placeholder?: string;
+  helperText?: string;
+  errorText?: string;
+  required: boolean;
+  multiline?: boolean;
   width?: number;
-}) {
-  const { field, formState } = useController(formFieldProps);
-  const errors = formState.errors;
+}
+
+const TextInputField = memo(function TextInputField({
+  name,
+  label,
+  helperText,
+  errorText,
+  required,
+  multiline,
+  width = 12,
+}: TextInputFieldProps) {
   const {
-    label,
-    placeholder,
-    required,
-    helperText,
-    errorText,
-    multiline = false,
-  } = formFieldProps;
+    field,
+    formState: { errors },
+  } = useController({ name });
 
   const errorMessage = getErrorMessageForField(errors, field.name);
-  const displayHelperText = errorMessage
-    ? errorText
-      ? errorText
-      : errorMessage.message
-    : required
-    ? `${helperText} *`
-    : helperText;
+
+  const getDisplayHelperText = () => {
+    if (errorMessage) {
+      return errorText || errorMessage.message;
+    }
+
+    if (required && helperText && helperText?.length > 0) {
+      return `${helperText} *`;
+    }
+
+    return helperText || "";
+  };
 
   return (
     <Grid item xs={width}>
       <TextField
         {...field}
-        error={!!errorMessage}
+        error={Boolean(errorMessage)}
         fullWidth
-        helperText={displayHelperText}
+        helperText={getDisplayHelperText()}
         label={label}
-        placeholder={placeholder}
-        required={!!required}
+        placeholder={label}
+        required={Boolean(required)}
         size="small"
         variant="filled"
         multiline={multiline}
         rows={multiline ? 5 : 1}
+        sx={{ boxShadow: 0 }}
       />
     </Grid>
   );
-}
+});
+
+TextInputField.displayName = "TextInputField";
+
+export { TextInputField };

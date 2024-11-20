@@ -4,32 +4,45 @@ import {
   setKeycloakUserAttribute,
 } from "@/services/keycloak";
 import { KeycloakGroup } from "@/types";
-import {
-  AccountBalance as AccountBalanceIcon,
-  Circle as CircleIcon,
-  SwapHoriz as SwapHorizIcon,
-} from "@mui/icons-material";
-import { IconButton, Tooltip } from "@mui/material";
-import Avatar from "@mui/material/Avatar";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
+import { Circle as CircleIcon } from "@mui/icons-material";
+import { Box } from "@mui/material";
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import { blue } from "@mui/material/colors";
 import { useQuery } from "@tanstack/react-query";
 import * as React from "react";
+
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 export interface ServicePointSwitcherProps {
   open: boolean;
   onClose: (value: string) => void;
 }
 
-function ServicePointSwitcherMenu(props: ServicePointSwitcherProps) {
+export default function ServicePointSwitcher02() {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const open = Boolean(anchorEl);
+  const handleClickListItem = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuItemClick = (
+    event: React.MouseEvent<HTMLElement>,
+    index: number
+  ) => {
+    setSelectedIndex(index);
+    setAnchorEl(null);
+    // switchToNewServicePoint(keycloakGroup.id);
+    switchToNewServicePoint(event.currentTarget.id);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   const { keycloak } = useCustomKeycloak();
-  const { onClose, open } = props;
 
   const switchToNewServicePoint = async (groupId: string) => {
     await setKeycloakUserAttribute({
@@ -64,80 +77,76 @@ function ServicePointSwitcherMenu(props: ServicePointSwitcherProps) {
     return <div>Error...</div>;
   }
 
-  const servicePointGroups = keycloakGroupsQuery.data
-    ?.sort((a, b) => a.name.localeCompare(b.name))
-    .filter((el) => el.id !== keycloak.tokenParsed?.service_point_group_id);
-
-  return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Set service point</DialogTitle>
-      {servicePointGroups?.length === 0 && (
-        <List sx={{ pt: 0 }}>
-          <ListItem>
-            <ListItemText primary="No other service points available" />
-          </ListItem>
-        </List>
-      )}
-      {servicePointGroups?.length && servicePointGroups?.length > 0 && (
-        <List sx={{ pt: 0 }}>
-          {servicePointGroups?.map((option) => (
-            <ListItem disableGutters key={option.id}>
-              <ListItemButton onClick={() => handleListItemClick(option)}>
-                <ListItemAvatar>
-                  <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
-                    <AccountBalanceIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={option.name} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      )}
-    </Dialog>
+  const servicePointGroups = keycloakGroupsQuery.data?.sort((a, b) =>
+    a.name.localeCompare(b.name)
   );
-}
-
-export default function ServicePointSwitcher({
-  currentServicePoint,
-  showLabel = false,
-}: {
-  currentServicePoint: KeycloakGroup;
-  showLabel?: boolean;
-}) {
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   return (
-    <div>
-      <CircleIcon
-        sx={{
-          color: "success.main",
-          fontSize: 8,
-          mr: 2,
-        }}
-      />
-      {`${showLabel ? "Service Point: " : ""}${currentServicePoint?.name}`}
-      <Tooltip title="Switch service point">
-        <IconButton
-          aria-label="more"
-          id="long-button"
-          aria-controls={open ? "long-menu" : undefined}
+    <Box>
+      <List
+        component="nav"
+        aria-label="Device settings"
+        sx={{ bgcolor: "background.paper" }}
+      >
+        <ListItemButton
+          id="lock-button"
+          aria-haspopup="listbox"
+          aria-controls="lock-menu"
+          aria-label="when device is locked"
           aria-expanded={open ? "true" : undefined}
-          aria-haspopup="true"
-          onClick={handleClickOpen}
+          onClick={handleClickListItem}
         >
-          <SwapHorizIcon />
-        </IconButton>
-      </Tooltip>
-      <ServicePointSwitcherMenu open={open} onClose={handleClose} />
-    </div>
+          <ListItemText
+            primary="Service Point"
+            secondary={
+              <>
+                <CircleIcon
+                  sx={{
+                    color: "success.main",
+                    fontSize: 8,
+                    mr: 1,
+                  }}
+                />
+                {
+                  servicePointGroups?.find(
+                    (el) =>
+                      el.id === keycloak.tokenParsed?.service_point_group_id
+                  )?.name
+                }
+              </>
+            }
+          />
+        </ListItemButton>
+      </List>
+      <Menu
+        id="lock-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "lock-button",
+          role: "listbox",
+        }}
+      >
+        {servicePointGroups?.map((el, i) => (
+          <MenuItem
+            key={el.id}
+            id={el.id}
+            // disabled={index === 0}
+            selected={el.id === keycloak.tokenParsed?.service_point_group_id}
+            onClick={(event) => handleMenuItemClick(event, i)}
+          >
+            <CircleIcon
+              sx={{
+                color: "success.main",
+                fontSize: 8,
+                mr: 1,
+              }}
+            />
+            {el.name}
+          </MenuItem>
+        ))}
+      </Menu>
+    </Box>
   );
 }

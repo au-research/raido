@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import type { ServicePoint } from "@/generated/raid";
+import type { RaidDto, ServicePoint } from "@/generated/raid";
 export type Breadcrumb = {
   icon: ReactElement;
   label: string;
@@ -7,8 +7,9 @@ export type Breadcrumb = {
 };
 
 import type Keycloak from "keycloak-js";
+import DynamicForm from "./components/DynamicForm";
+import { FieldErrors } from "react-hook-form";
 
-// Define the shape of the context value
 export interface KeycloakContextValue {
   keycloak: Keycloak;
   initialized: boolean;
@@ -38,14 +39,6 @@ export type KeycloakGroup = {
   name: string;
 };
 
-export type MappingElement = {
-  id: string;
-  value: string;
-  field: string;
-  definition: string;
-  source: string;
-};
-
 type ServicePointMemberAttributes = {
   firstName: (string | null)[];
   lastName: (string | null)[];
@@ -64,17 +57,47 @@ export type ServicePointWithMembers = ServicePoint & {
   members: ServicePointMember[];
 };
 
-type FormFieldType = "text";
+export interface Option {
+  id: string;
+  [key: string]: any;
+}
 
-export interface FormFieldProps {
-  name: string;
+export type ApiTokenRequest = {
+  refreshToken: string;
+};
+
+export type RequestTokenResponse = {
+  access_token: string;
+  expires_in: number;
+  id_token: string;
+  "not-before-policy": number;
+  refresh_expires_in: number;
+  refresh_token: string;
+  scope: string;
+  session_state: string;
+  token_type: string;
+};
+
+export type FormConfiguration = {
+  id: string;
   label: string;
-  placeholder?: string;
-  type?: FormFieldType;
-  helperText?: string;
-  errorText?: string;
-  required?: boolean;
-  width?: number;
-  multiline?: boolean;
-  keyField?: string;
+  labelPlural: string;
+  entityKey: keyof RaidDto;
+  component: typeof DynamicForm;
+  DetailsFormComponent: React.ComponentType<{ index: number }>;
+  generator: () => any;
+  ChildFormComponent?: React.ComponentType<{ index: number }>;
+  childConfigs?: ChildConfig[];
+};
+
+export interface ChildConfig {
+  fieldKey: string;
+  label: string;
+  labelPlural: string;
+  DetailsComponent: React.ComponentType<{
+    parentIndex: number;
+    index: number;
+    errors?: FieldErrors<RaidDto>;
+  }>;
+  generator: () => any;
 }

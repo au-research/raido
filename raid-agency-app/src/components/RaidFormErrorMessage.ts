@@ -1,10 +1,10 @@
 import { Failure } from "@/types";
 
-export default function RaidFormErrorMessage(
+const RaidFormErrorMessage = (
   error: Error,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   openErrorDialog: any
-): void {
+): void => {
   const message: string[] = [];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let messageParsed: any;
@@ -31,4 +31,7 @@ export default function RaidFormErrorMessage(
   }
   openErrorDialog(message);
   throw new Error(message.join(", "));
-}
+};
+
+RaidFormErrorMessage.displayName = "RaidFormErrorMessage";
+export default RaidFormErrorMessage;
