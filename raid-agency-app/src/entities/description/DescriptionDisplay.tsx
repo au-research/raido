@@ -37,7 +37,12 @@ const DescriptionItem = memo(
       <>
         <Typography variant="body1">Description #{i + 1}</Typography>
         <Grid container spacing={2}>
-          <DisplayItem label="Text" value={description.text} width={12} />
+          <DisplayItem
+            multiline
+            label="Text"
+            value={description.text}
+            width={12}
+          />
           <DisplayItem
             label="Type"
             value={descriptionTypeMappedValue}

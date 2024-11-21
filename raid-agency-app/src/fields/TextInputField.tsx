@@ -55,7 +55,7 @@ const TextInputField = memo(function TextInputField({
         size="small"
         variant="filled"
         multiline={multiline}
-        rows={multiline ? 5 : 1}
+        rows={multiline ? 7 : 1}
         sx={{ boxShadow: 0 }}
       />
     </Grid>

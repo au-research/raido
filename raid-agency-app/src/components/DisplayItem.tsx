@@ -21,6 +21,7 @@ interface DisplayItemProps {
   width?: number;
   link?: string | null;
   tooltip?: string;
+  multiline?: boolean;
 }
 
 // Move the background color function outside
@@ -48,7 +49,14 @@ const typographyStyles = {
 } as const;
 
 const DisplayItem = memo(
-  ({ label, value, width = 3, link, tooltip }: DisplayItemProps) => {
+  ({
+    label,
+    value,
+    width = 3,
+    link,
+    tooltip,
+    multiline = false,
+  }: DisplayItemProps) => {
     const Component = link ? Link : "p";
 
     const linkProps = link
@@ -86,14 +94,22 @@ const DisplayItem = memo(
               </Tooltip>
             )}
           </Stack>
-          <Typography
-            variant="body1"
-            sx={typographyStyles}
-            component={Component}
-            {...linkProps}
-          >
-            {value ?? ""}
-          </Typography>
+          {!multiline && (
+            <Typography
+              variant="body1"
+              sx={typographyStyles}
+              component={Component}
+              {...linkProps}
+            >
+              {value ?? ""}
+            </Typography>
+          )}
+
+          {multiline && (
+            <Typography variant="body2" component={Component} {...linkProps}>
+              {value ?? ""}
+            </Typography>
+          )}
         </Box>
       </Grid>
     );

@@ -24,6 +24,7 @@ const DescriptionForm = memo(({ index }: { index: number }) => {
         label="Text"
         placeholder="Text"
         required={true}
+        multiline={true}
         width={12}
       />
       <TextSelectField
