@@ -1,0 +1,43 @@
+---
+import type { Title } from "@/generated/raid/models/Title";
+import InfoField from "../info-field.astro";
+import mapping from "@/mapping.json";
+import language from "@/language.json";
+import { dateDisplayFormatter } from "@/utils/date-utils";
+interface Props {
+  titles: Title[];
+}
+
+const { titles } = Astro.props as Props;
+---
+
+<section class="bg-gray-50 py-5">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <h3 class="text-lg font-semibold text-gray-900">Titles</h3>
+    {titles.length === 0 && <h5 class="text-gray-500 text-sm">No Entries</h5>}
+
+    <div class="divide-y divide-gray-200">
+      {
+        titles?.map((el) => {
+          const mappedTitle =
+            mapping.find((mapEl) => mapEl.key === el.type.id);
+            const languageTitle = language.find(langEl=>langEl.code === el.language?.id)?.name || el.language?.id
+          return (
+            <div class="ml-5 space-y-2 py-4">
+              <div class="grid grid-cols-1 gap-5 text-sm">
+                <InfoField label="Title" value={el.text} />
+              </div>
+
+              <div class="grid grid-cols-4 gap-5 text-sm">
+                <InfoField label="Title Type" value={mappedTitle?.value} tooltip={mappedTitle?.definition} />
+                <InfoField label="Start Date" value={dateDisplayFormatter(el.startDate)} />
+                <InfoField label="End Date" value={dateDisplayFormatter(el.endDate)} />
+                <InfoField label="Language" value={languageTitle} />
+              </div>
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>
