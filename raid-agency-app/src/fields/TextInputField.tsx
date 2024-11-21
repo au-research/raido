@@ -49,14 +49,16 @@ const TextInputField = memo(function TextInputField({
         error={Boolean(errorMessage)}
         fullWidth
         helperText={getDisplayHelperText()}
-        label={label}
-        placeholder={label}
+        label={`${label} ${multiline ? "(supports markdown syntax)" : ""}`}
+        placeholder={`${label} ${
+          multiline ? "(supports markdown syntax)" : ""
+        }`}
         required={Boolean(required)}
-        size="small"
         variant="filled"
         multiline={multiline}
-        rows={multiline ? 7 : 1}
-        sx={{ boxShadow: 0 }}
+        sx={{
+          boxShadow: 0,
+        }}
       />
     </Grid>
   );

@@ -1,19 +1,9 @@
+import { InfoOutlined as InfoOutlinedIcon } from "@mui/icons-material";
+import { Box, Grid, Stack, Theme, Tooltip, Typography } from "@mui/material";
+import { darken, lighten } from "@mui/material/styles";
 import React, { memo } from "react";
-import {
-  Box,
-  Grid,
-  Typography,
-  Theme,
-  IconButton,
-  Stack,
-  Tooltip,
-} from "@mui/material";
-import { lighten, darken } from "@mui/material/styles";
+import Markdown from "react-markdown";
 import { Link } from "react-router-dom";
-import {
-  Delete as DeleteIcon,
-  InfoOutlined as InfoOutlinedIcon,
-} from "@mui/icons-material";
 
 interface DisplayItemProps {
   label: string;
@@ -107,7 +97,7 @@ const DisplayItem = memo(
 
           {multiline && (
             <Typography variant="body2" component={Component} {...linkProps}>
-              {value ?? ""}
+              <Markdown>{value?.toString() ?? ""}</Markdown>
             </Typography>
           )}
         </Box>
