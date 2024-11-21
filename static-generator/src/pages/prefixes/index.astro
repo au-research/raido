@@ -1,0 +1,32 @@
+---
+import Breadcrumbs from "../../components/breadcrumbs.astro";
+import PrefixesTable from "../../components/prefixes-table.astro";
+import Layout from "../../layouts/main.astro";
+import { fetchRaids } from "../../services/raids";
+
+const raids = await fetchRaids();
+
+const prefixRaidCount = new Map<string, number>();
+for (const el of raids) {
+  const [_, prefix] = new URL(el.identifier.id).pathname.split("/");
+  const counter = prefixRaidCount.get(prefix) || 0;
+  prefixRaidCount.set(prefix, counter + 1);
+}
+---
+
+<Layout title="main">
+  <div class="overflow-hidden rounded-md bg-white border border-gray-300">
+    <Breadcrumbs elements={[{ to: "/prefixes", label: "Prefixes" }]} />
+    <div class="p-4 sm:p-6 lg:p-8">
+      <div class="sm:flex sm:items-center">
+        <div class="sm:flex-auto">
+          <h1 class="text-base font-semibold leading-6 text-gray-900">
+            Prefixes
+          </h1>
+          <p class="mt-2 text-sm text-gray-700">A list of all the prefixes</p>
+        </div>
+      </div>
+      <PrefixesTable prefixes={prefixRaidCount} />
+    </div>
+  </div>
+</Layout>

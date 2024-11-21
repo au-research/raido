@@ -1,0 +1,47 @@
+---
+import type { RelatedRaid } from "../../generated/raid/models/RelatedRaid";
+import InfoField from "../info-field.astro";
+import mapping from "../../mapping.json";
+
+interface Props {
+  relatedRaids: RelatedRaid[];
+}
+
+const { relatedRaids } = Astro.props as Props;
+---
+
+<section class="py-5">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <h3 class="text-lg font-semibold text-gray-900">Related RAiDs</h3>
+    {
+      relatedRaids.length === 0 && (
+        <h5 class="text-gray-500 text-sm">No Entries</h5>
+      )
+    }
+    <div class="divide-y divide-gray-200">
+      {
+        relatedRaids?.map((el) => {
+          const relatedRaidType = mapping.find(
+            (mapEl) => mapEl.key === el.type?.id
+          );
+
+          return (
+            <div class="ml-5 space-y-2 py-4">
+              <div class="grid grid-cols-1 gap-5 text-sm">
+                <InfoField label="Title" value={el.id || ""} />
+              </div>
+
+              <div class="grid grid-cols-4 gap-5 text-sm">
+                <InfoField
+                  label="Related RAiD type"
+                  value={relatedRaidType?.value}
+                  tooltip={relatedRaidType?.definition}
+                />
+              </div>
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>

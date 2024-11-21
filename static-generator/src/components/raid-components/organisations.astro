@@ -1,0 +1,40 @@
+---
+import type { Organisation } from "../../generated/raid/models/Organisation";
+import InfoField from "../info-field.astro";
+import OrganisationRoles from "./organisation-roles.astro";
+
+interface Props {
+  organisations: Organisation[];
+}
+
+const { organisations } = Astro.props as Props;
+---
+
+<section class="py-5">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <h3 class="text-lg font-semibold text-gray-900">Organisations</h3>
+    {
+      organisations.length === 0 && (
+        <h5 class="text-gray-500 text-sm">No Entries</h5>
+      )
+    }
+    <div class="divide-y divide-gray-200">
+      {
+        organisations?.map((el) => (
+          <div class="ml-5 space-y-2 py-4">
+            <div class="grid grid-cols-1 gap-5 text-sm">
+              <InfoField label="Organisation ID" value={el.id} />
+            </div>
+
+            <div class="grid grid-cols-1 gap-5 text-sm">
+              <div>
+                <span class="block font-medium text-gray-900">Roles</span>
+                <OrganisationRoles organisationRoles={el.role} />
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

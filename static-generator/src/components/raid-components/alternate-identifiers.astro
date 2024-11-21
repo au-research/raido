@@ -1,0 +1,33 @@
+---
+import type { AlternateIdentifier } from "../../generated/raid/models/AlternateIdentifier";
+import InfoField from "../info-field.astro";
+
+interface Props {
+  alternateIdentifiers: AlternateIdentifier[];
+}
+
+const { alternateIdentifiers } = Astro.props as Props;
+---
+
+<section class="py-5">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <h3 class="text-lg font-semibold text-gray-900">Alternate Identifier</h3>
+    {
+      alternateIdentifiers.length === 0 && (
+        <h5 class="text-gray-500 text-sm">No Entries</h5>
+      )
+    }
+    <div class="divide-y divide-gray-200">
+      {
+        alternateIdentifiers?.map((el) => (
+          <div class="ml-5 space-y-2 py-4">
+            <div class="grid grid-cols-2 gap-5 text-sm">
+              <InfoField label="Alternate Identifier" value={el.id} />
+              <InfoField label="Type" value={el.type} />
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

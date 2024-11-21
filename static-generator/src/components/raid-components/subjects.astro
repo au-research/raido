@@ -1,0 +1,55 @@
+---
+import type { Subject } from "../../generated/raid/models/Subject";
+import InfoField from "../info-field.astro";
+import subjectMapping from "../../subject-mapping.json";
+
+interface Props {
+  subjects: Subject[];
+}
+
+const { subjects } = Astro.props as Props;
+---
+
+<section class="py-5">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <h3 class="text-lg font-semibold text-gray-900">Subjects</h3>
+    {subjects.length === 0 && <h5 class="text-gray-500 text-sm">No Entries</h5>}
+    <div class="divide-y divide-gray-200">
+      {
+        subjects?.map((el) => {
+          const mappedSubject = subjectMapping.find(
+            (mapEl) => mapEl.definition === el.id
+          );
+
+          return (
+            <div class="ml-5 space-y-2 py-4">
+              <div class="grid grid-cols-1 gap-5 text-sm">
+                <InfoField
+                  label="Subject"
+                  value={`${mappedSubject?.value} (${mappedSubject?.key})`}
+                />
+              </div>
+
+              <div class="grid grid-cols-1 gap-5 text-sm">
+                <div>
+                  <span class="block font-medium text-gray-900">Keywords</span>
+                  {el.keyword?.map((el) => (
+                    <div class="ml-5 space-y-2 py-4">
+                      <div class="grid grid-cols-4 gap-5 text-sm">
+                        <InfoField label="Text" value={el.text} />
+                        <InfoField
+                          label="Language"
+                          value={el.language?.id || ""}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>
