@@ -1,11 +1,10 @@
 ---
-import Breadcrumbs from "@/components/breadcrumbs.astro";
-import RaidsTable from "@/components/raids-table.astro";
-import Layout from "@/layouts/main.astro";
-import { fetchRaids } from "@/services/raids";
+import Breadcrumbs from "../../components/breadcrumbs.astro";
+import RaidsTable from "../../components/raids-table.astro";
+import Layout from "../../layouts/main.astro";
+import { fetchRaids } from "../../services/raids";
 
 const raids = await fetchRaids();
-
 ---
 
 <Layout title="main">

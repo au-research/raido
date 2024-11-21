@@ -1,4 +1,4 @@
-import type { RaidDto } from "@/generated/raid/models/RaidDto";
+import type { RaidDto } from "../../generated/raid/models/RaidDto";
 
 const apiEndpoint = import.meta.env.API_ENDPOINT;
 const iamEndpoint = import.meta.env.IAM_ENDPOINT;

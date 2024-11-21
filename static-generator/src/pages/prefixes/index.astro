@@ -1,8 +1,8 @@
 ---
-import Breadcrumbs from "@/components/breadcrumbs.astro";
-import PrefixesTable from "@/components/prefixes-table.astro";
-import Layout from "@/layouts/main.astro";
-import { fetchRaids } from "@/services/raids";
+import Breadcrumbs from "../../components/breadcrumbs.astro";
+import PrefixesTable from "../../components/prefixes-table.astro";
+import Layout from "../../layouts/main.astro";
+import { fetchRaids } from "../../services/raids";
 
 const raids = await fetchRaids();
 
@@ -12,7 +12,6 @@ for (const el of raids) {
   const counter = prefixRaidCount.get(prefix) || 0;
   prefixRaidCount.set(prefix, counter + 1);
 }
-
 ---
 
 <Layout title="main">

@@ -1,9 +1,9 @@
 ---
-import type { Title } from "@/generated/raid/models/Title";
+import type { Title } from "../../generated/raid/models/Title";
 import InfoField from "../info-field.astro";
-import mapping from "@/mapping.json";
-import language from "@/language.json";
-import { dateDisplayFormatter } from "@/utils/date-utils";
+import mapping from "../../mapping.json";
+import language from "../../language.json";
+import { dateDisplayFormatter } from "../../utils/date-utils";
 interface Props {
   titles: Title[];
 }
@@ -19,9 +19,10 @@ const { titles } = Astro.props as Props;
     <div class="divide-y divide-gray-200">
       {
         titles?.map((el) => {
-          const mappedTitle =
-            mapping.find((mapEl) => mapEl.key === el.type.id);
-            const languageTitle = language.find(langEl=>langEl.code === el.language?.id)?.name || el.language?.id
+          const mappedTitle = mapping.find((mapEl) => mapEl.key === el.type.id);
+          const languageTitle =
+            language.find((langEl) => langEl.code === el.language?.id)?.name ||
+            el.language?.id;
           return (
             <div class="ml-5 space-y-2 py-4">
               <div class="grid grid-cols-1 gap-5 text-sm">
@@ -29,9 +30,19 @@ const { titles } = Astro.props as Props;
               </div>
 
               <div class="grid grid-cols-4 gap-5 text-sm">
-                <InfoField label="Title Type" value={mappedTitle?.value} tooltip={mappedTitle?.definition} />
-                <InfoField label="Start Date" value={dateDisplayFormatter(el.startDate)} />
-                <InfoField label="End Date" value={dateDisplayFormatter(el.endDate)} />
+                <InfoField
+                  label="Title Type"
+                  value={mappedTitle?.value}
+                  tooltip={mappedTitle?.definition}
+                />
+                <InfoField
+                  label="Start Date"
+                  value={dateDisplayFormatter(el.startDate)}
+                />
+                <InfoField
+                  label="End Date"
+                  value={dateDisplayFormatter(el.endDate)}
+                />
                 <InfoField label="Language" value={languageTitle} />
               </div>
             </div>
