@@ -1,0 +1,32 @@
+---
+import Breadcrumbs from "@/components/breadcrumbs.astro";
+import RaidsTable from "@/components/raids-table.astro";
+import Layout from "@/layouts/main.astro";
+import { fetchRaids } from "@/services/raids";
+
+const raids = await fetchRaids();
+
+---
+
+<Layout title="main">
+  <div class="overflow-hidden rounded-md bg-white border border-gray-300">
+    <Breadcrumbs elements={[{ to: "/raids", label: "RAiDs" }]} />
+    <div class="p-4 sm:p-6 lg:p-8">
+      <div class="sm:flex sm:items-center">
+        <div class="sm:flex-auto">
+          <h1 class="text-base font-semibold leading-6 text-gray-900">RAiDs</h1>
+          <p class="mt-2 text-sm text-gray-700">A list of all the raids</p>
+        </div>
+        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+          <a
+            href="https://app.test.raid.org.au/raids/new"
+            target="_blank"
+            class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+            >Add raid</a
+          >
+        </div>
+      </div>
+      <RaidsTable raids={raids} />
+    </div>
+  </div>
+</Layout>

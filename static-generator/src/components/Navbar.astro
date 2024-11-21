@@ -1,22 +1,23 @@
 ---
+const pathname = new URL(Astro.request.url).pathname;
+const currentPath = pathname.slice(1); // remove the first "/"
 
 ---
 
-<nav
-  class="sticky top-0 z-10 border-b border-blue-300 border-opacity-25 bg-zinc-800 lg:border-none"
->
-  <div class="px-2 mx-auto max-w-7xl sm:px-4 lg:px-8">
-    <div
-      class="flex relative justify-between items-center h-16 lg:border-b lg:border-blue-400 lg:border-opacity-25"
-    >
-      <div class="flex items-center px-2 lg:px-0">
-        <div class="flex-shrink-0">
-          <div class="inline-flex gap-4">
-            <p class="-mt-3 w-6 h-6 text-4xl text-white">ᚱ</p>
-            <p class="font-semibold text-white">RAiD Static</p>
-          </div>
-        </div>
+<header class="inset-x-0 top-0 z-50 flex h-16 border-b border-gray-300">
+  <div
+    class="mx-auto flex w-full max-w-7xl items-center px-4 sm:px-6 lg:px-8 gap-6"
+  >
+    <a href="/">
+      <div class="flex flex-1 items-center gap-x-6">
+        <img src="/raid-logo-light.svg" class="h-8 w-auto" alt="" />
       </div>
-    </div>
+    </a>
+
+    <nav class="flex gap-x-11 text-sm font-semibold leading-">
+      <a class={currentPath === "" ? "text-black border-b-2 border-b-gray-400" : ""} href="/" class="text-gray-400 hover:text-gray-700">Home</a>
+      <a class={currentPath.includes("prefixes") ? "text-black border-b-2 border-b-gray-400" : ""} href="/prefixes" class="text-gray-400 hover:text-gray-700">Prefixes</a>
+      <a class={currentPath.includes("raids") ? "text-black border-b-2 border-b-gray-400" : ""} href="/raids" class="text-gray-400 hover:text-gray-700">RAiDs</a>
+    </nav>
   </div>
-</nav>
+</header>

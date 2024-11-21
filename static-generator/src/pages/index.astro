@@ -1,37 +1,46 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
+import Layout from "@/layouts/main.astro";
+import { fetchRaids } from "@/services/raids";
+
+const raids = await fetchRaids();
+
+const prefixRaidCount = new Map<string, number>();
+for (const el of raids) {
+  const [_, prefix] = new URL(el.identifier.id).pathname.split("/");
+  const counter = prefixRaidCount.get(prefix) || 0;
+  prefixRaidCount.set(prefix, counter + 1);
+}
 ---
 
-<BaseLayout title="Home Page">
-  <div class="grid sm:grid-cols-3 grid-cols-1 gap-4">
-    <div class="overflow-hidden rounded-lg bg-white shadow">
-      <div class="px-4 py-5 sm:px-6">
-        <p class="text-xl font-semibold">Prefixes</p>
-      </div>
-      <div class="bg-gray-50 px-4 py-5 sm:p-6">
-        <a
-          href="/prefix"
-          type="a"
-          class="rounded-md bg-sky-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-sky-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"
+<Layout title="main">
+  <dl
+    class="mx-auto grid max-w-7xl grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:px-2 xl:px-0 gap-3"
+  >
+    <a href="/prefixes">
+      <div
+        class="bg-white hover:bg-gray-50 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 px-4 py-10 sm:px-6 xl:px-8 rounded-md border border-gray-300"
+      >
+        <dt class="text-sm font-medium leading-6 text-gray-500">
+          Total Prefixes
+        </dt>
+        <dd
+          class="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900"
         >
-          Show prefixes
-        </a>
+          {[...prefixRaidCount.entries()].length}
+        </dd>
       </div>
-    </div>
-
-    <div class="overflow-hidden rounded-lg bg-white shadow">
-      <div class="px-4 py-5 sm:px-6">
-        <p class="text-xl font-semibold">RAiDs</p>
-      </div>
-      <div class="bg-gray-50 px-4 py-5 sm:p-6">
-        <a
-          href="/raid"
-          type="a"
-          class="rounded-md bg-sky-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-sky-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"
+    </a>
+    <a href="/raids">
+      <div
+        class="bg-white hover:bg-gray-50 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 px-4 py-10 sm:px-6 xl:px-8 rounded-md border border-gray-300"
+      >
+        <dt class="text-sm font-medium leading-6 text-gray-500">Total RAiDs</dt>
+        <dd
+          class="w-full flex-none text-3xl font-medium leading-10 tracking-tight text-gray-900"
         >
-          Show RAiDs
-        </a>
+          {raids.length}
+        </dd>
       </div>
-    </div>
-  </div>
-</BaseLayout>
+    </a>
+  </dl>
+</Layout>
