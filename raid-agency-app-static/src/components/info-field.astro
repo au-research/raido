@@ -1,0 +1,95 @@
+---
+interface Props {
+  label: string;
+  value: Date | string | undefined;
+  tooltip?: string | undefined;
+  isLink?: boolean;
+}
+const { label, value, tooltip, isLink } = Astro.props as Props;
+---
+
+<style>
+  .tooltip-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .info-icon {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    color: #6b7280;
+  }
+
+  .tooltip {
+    position: absolute;
+    width: 300px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    top: -50px;
+    box-shadow:
+      0 4px 6px -1px rgb(0 0 0 / 0.1),
+      0 2px 4px -2px rgb(0 0 0 / 0.1);
+    border-radius: 3px;
+    border: 1px solid #d1d5db;
+    text-align: left;
+    left: 20px;
+    z-index: 1;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #4b5563;
+  }
+
+  .info-icon:hover + .tooltip {
+    transform: translate(0);
+    opacity: 1;
+  }
+</style>
+
+<div>
+  <span class="block font-medium text-gray-900">{label}</span>
+  <div class="tooltip-container">
+    <span class="text-gray-500">
+      {
+        isLink ? (
+          <a href={`${value}`} class="flex items-center gap-1">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="15px"
+              viewBox="0 -960 960 960"
+              width="15px"
+              fill="currentColor"
+            >
+              <path d="M216-144q-29.7 0-50.85-21.15Q144-186.3 144-216v-528q0-29.7 21.15-50.85Q186.3-816 216-816h264v72H216v528h528v-264h72v264q0 29.7-21.15 50.85Q773.7-144 744-144H216Zm171-192-51-51 357-357H576v-72h240v240h-72v-117L387-336Z" />
+            </svg>
+            {value}
+          </a>
+        ) : (
+          value || "---"
+        )
+      }
+    </span>
+    {
+      tooltip && (
+        <>
+          <svg
+            class="info-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            height="20px"
+            viewBox="0 -960 960 960"
+            width="20px"
+            fill="currentColor"
+          >
+            <path d="M480-240q20 0 34-14t14-34q0-20-14-34t-34-14q-20 0-34 14t-14 34q0 20 14 34t34 14Zm-36-153h73q0-37 6.5-52.5T555-485q35-34 48.5-58t13.5-53q0-55-37.5-89.5T484-720q-51 0-88.5 27T343-620l65 27q9-28 28.5-43.5T482-652q28 0 46 16t18 42q0 23-15.5 41T496-518q-35 32-43.5 52.5T444-393Zm36 297q-79 0-149-30t-122.5-82.5Q156-261 126-331T96-480q0-80 30-149.5t82.5-122Q261-804 331-834t149-30q80 0 149.5 30t122 82.5Q804-699 834-629.5T864-480q0 79-30 149t-82.5 122.5Q699-156 629.5-126T480-96Zm0-72q130 0 221-91t91-221q0-130-91-221t-221-91q-130 0-221 91t-91 221q0 130 91 221t221 91Zm0-312Z" />
+          </svg>
+          <div class="tooltip">
+            <span class="font-semibold block">{label}: {value}</span> {tooltip}</div>
+        </>
+      )
+    }
+  </div>
+</div>

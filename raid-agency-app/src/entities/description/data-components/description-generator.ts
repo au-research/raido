@@ -21,10 +21,12 @@ const descriptionLanguageGenerator = (): Language => {
   };
 };
 
-export const descriptionGenerator = (): Description => {
+const descriptionGenerator = (): Description => {
   return {
-    text: `Description text`,
+    text: `Description text...`,
     type: descriptionTypeGenerator(),
     language: descriptionLanguageGenerator(),
   };
 };
+
+export default descriptionGenerator;

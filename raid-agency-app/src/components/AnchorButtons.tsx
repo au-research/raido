@@ -1,148 +1,106 @@
-import { RaidDto } from "@/generated/raid";
+import { RaidCreateRequest, RaidDto } from "@/generated/raid";
+import { displayItems } from "@/utils/data-utils/data-utils";
 import {
-  Badge,
   Box,
   Button,
   Card,
   CardContent,
+  Chip,
   Grid,
   Typography,
 } from "@mui/material";
+import { memo, useCallback } from "react";
 import type { FieldErrors } from "react-hook-form";
 
-export default function AnchorButtons({
-  raidData,
-  errors,
-}: {
-  raidData?: RaidDto;
-  errors?: FieldErrors<RaidDto>;
-}) {
-  const anchorButtonsDefinition = [
-    {
-      label: "Dates",
-      anchor: "date",
-      errors: errors?.date,
-    },
-    {
-      label: "Titles",
-      anchor: "title",
-      count: raidData?.title?.length,
-      errors: errors?.title,
-    },
-    {
-      label: "Descriptions",
-      anchor: "description",
-      count: raidData?.description?.length,
-      errors: errors?.description,
-    },
-    {
-      label: `Contributors`,
-      anchor: "contributor",
-      count: raidData?.contributor?.length,
-      errors: errors?.contributor,
-    },
-    {
-      label: "Organisations",
-      anchor: "organisation",
-      count: raidData?.organisation?.length,
-      errors: errors?.organisation,
-    },
-    {
-      label: "Related Objects",
-      anchor: "relatedObject",
-      count: raidData?.relatedObject?.length,
-      errors: errors?.relatedObject,
-    },
-    {
-      label: "Alternate Identifiers",
-      anchor: "alternateIdentifier",
-      count: raidData?.alternateIdentifier?.length,
-      errors: errors?.alternateIdentifier,
-    },
-    {
-      label: "Alternate URLs",
-      anchor: "alternateUrl",
-      count: raidData?.alternateUrl?.length,
-      errors: errors?.alternateUrl,
-    },
-    {
-      label: "Related RAiDs",
-      anchor: "relatedRaid",
-      count: raidData?.relatedRaid?.length,
-      errors: errors?.relatedRaid,
-    },
-    {
-      label: "Access",
-      anchor: "access",
-      errors: errors?.access,
-    },
-    {
-      label: "Subjects",
-      anchor: "subject",
-      count: raidData?.subject?.length,
-      errors: errors?.subject,
-    },
-    {
-      label: "Spatial Coverage",
-      anchor: "spatialCoverage",
-      count: raidData?.spatialCoverage?.length,
-      errors: errors?.spatialCoverage,
-    },
-  ];
-  return (
-    <Box>
-      <Card>
-        <CardContent>
-          <Grid container spacing={2}>
-            {anchorButtonsDefinition.map((anchorButton, index) => {
-              return (
-                <Grid item xs={6} sm={6} md={3} key={index}>
-                  <Badge
-                    badgeContent={anchorButton.count}
-                    color="primary"
-                    sx={{ display: "flex" }}
-                  >
-                    <Button
-                      key={index}
-                      onClick={() => {
-                        document
-                          .getElementById(anchorButton.anchor)
-                          ?.scrollIntoView({
-                            behavior: "smooth",
-                            block: "start",
-                            inline: "nearest",
-                          });
-                      }}
-                      size="small"
-                      variant="outlined"
-                      fullWidth
-                      sx={{
-                        width: "100%",
-                        borderLeftStyle: "solid",
-                        borderLeftColor: anchorButton.errors
-                          ? "error.main"
-                          : "secondary.main",
-                        borderLeftWidth: 3,
-                        overflow: "hidden",
-                        textTransform: "none",
-                        alignItems: "start",
-                        justifyContent: "flex-start",
-                        "&:hover": {
-                          borderLeftWidth: 3,
-                        },
-                      }}
-                    >
-                      <Typography variant="body2" noWrap>
-                        {anchorButton.label}
-                      </Typography>
-                    </Button>
-                  </Badge>
-                </Grid>
-              );
-            })}
-          </Grid>
-        </CardContent>
-      </Card>
-    </Box>
-  );
+interface AnchorButtonProps {
+  itemKey: string;
+  label: string;
+  count?: number;
+  hasError?: boolean;
 }
+
+const AnchorButton = memo(
+  ({ itemKey, label, count, hasError }: AnchorButtonProps) => {
+    const handleClick = useCallback(() => {
+      document.getElementById(itemKey)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      });
+    }, [itemKey]);
+
+    return (
+      <Grid item xs={4} sm={6} md={3}>
+        <Button
+          onClick={handleClick}
+          size="small"
+          variant="outlined"
+          fullWidth
+          sx={{
+            width: "100%",
+            borderLeftStyle: "solid",
+            borderLeftColor: hasError ? "error.main" : "secondary.main",
+            borderLeftWidth: 3,
+            overflow: "hidden",
+            textTransform: "none",
+            alignItems: "center",
+            justifyContent: "space-between",
+            "&:hover": {
+              borderLeftWidth: 3,
+            },
+          }}
+        >
+          <Typography variant="body2" noWrap sx={{ fontSize: 12 }}>
+            {label}
+          </Typography>
+          <Box sx={{ display: { xs: "none", sm: "block" } }}>
+            {count !== undefined && (
+              <Chip
+                label={count}
+                size="small"
+                color="primary"
+                variant="outlined"
+                sx={{ fontSize: 10, height: 20, minWidth: 20 }}
+              />
+            )}
+          </Box>
+        </Button>
+      </Grid>
+    );
+  }
+);
+
+AnchorButton.displayName = "AnchorButton";
+
+interface AnchorButtonsProps {
+  raidData: RaidDto | RaidCreateRequest;
+  errors?: FieldErrors<RaidDto>;
+}
+
+const AnchorButtons = memo(({ raidData, errors }: AnchorButtonsProps) => (
+  <Card>
+    <CardContent>
+      <Grid container spacing={2}>
+        {displayItems.map((el) => {
+          const value =
+            (raidData && raidData[el.itemKey as keyof RaidDto]) || [];
+          const itemCount = (Array.isArray(value) ? value.length : 0) || 0;
+
+          return (
+            <AnchorButton
+              key={el.itemKey}
+              itemKey={el.itemKey}
+              label={el.label}
+              count={itemCount}
+              hasError={!!errors?.[el.itemKey as keyof RaidDto]}
+            />
+          );
+        })}
+      </Grid>
+    </CardContent>
+  </Card>
+));
+
+AnchorButtons.displayName = "AnchorButtons";
+
+export default AnchorButtons;

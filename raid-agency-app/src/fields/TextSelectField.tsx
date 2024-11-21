@@ -1,52 +1,72 @@
-import mapping from "@/mapping.json";
-import { FormFieldProps } from "@/types";
 import { getErrorMessageForField } from "@/utils";
 import { Grid, MenuItem, TextField } from "@mui/material";
 import { useController } from "react-hook-form";
+
+type Option = {
+  value: string;
+  label: string;
+};
+
+interface TextSelectFieldProps {
+  options: Option[];
+  name: string;
+  label: string;
+  placeholder?: string;
+  helperText?: string;
+  errorText?: string;
+  required: boolean;
+  multiline?: boolean;
+  width?: number;
+}
+
 export function TextSelectField({
   options,
-  formFieldProps,
+  name,
+  label,
+  placeholder,
+  helperText,
+  errorText,
+  required,
   width = 12,
-}: {
-  options: any[];
-  formFieldProps: FormFieldProps;
-  width?: number;
-}) {
-  const { errorText, helperText, label, placeholder } = formFieldProps;
-  const { field, formState } = useController(formFieldProps);
-  const { errors } = formState;
+}: TextSelectFieldProps) {
+  const {
+    field,
+    formState: { errors },
+  } = useController({ name });
 
-  const keyField = formFieldProps.keyField ? formFieldProps.keyField : "uri";
   const errorMessage = getErrorMessageForField(errors, field.name);
-  const displayHelperText = errorMessage
-    ? errorText
-      ? errorText
-      : errorMessage.message
-    : helperText;
+
+  const getDisplayHelperText = () => {
+    if (errorMessage) {
+      return errorText || errorMessage.message;
+    }
+
+    if (required && helperText && helperText?.length > 0) {
+      return `${helperText} *`;
+    }
+
+    return helperText || "";
+  };
+
   return (
     <Grid item xs={width}>
       <TextField
         {...field}
-        error={!!errorMessage}
+        error={Boolean(errorMessage)}
         fullWidth
-        helperText={displayHelperText}
+        helperText={getDisplayHelperText()}
         label={label}
-        placeholder={placeholder}
-        required
+        placeholder={label}
+        required={required}
         select
         size="small"
         variant="filled"
       >
-        {options.map((opt) => {
-          const mappedValue = mapping.find(
-            (el) => el.id === opt[keyField]
-          )?.value;
-          return (
-            <MenuItem key={opt[keyField]} value={opt[keyField]}>
-              {mappedValue ? mappedValue : opt[keyField]}
-            </MenuItem>
-          );
-        })}
+        {options.map(({ value, label }) => (
+          <MenuItem key={value} value={value}>
+            {label}
+          </MenuItem>
+        ))}
       </TextField>
     </Grid>
   );

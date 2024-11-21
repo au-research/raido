@@ -1,0 +1,32 @@
+---
+import type { OrganisationRole } from "../../generated/raid/models/OrganisationRole";
+import InfoField from "../info-field.astro";
+import mapping from "../../mapping.json";
+
+interface Props {
+  organisationRoles: OrganisationRole[];
+}
+
+const { organisationRoles } = Astro.props as Props;
+---
+
+<section>
+  {
+    organisationRoles?.map((el) => {
+      const organisationRole = mapping.find((mapEl) => mapEl.key === el.id);
+      return (
+        <div class="ml-5 space-y-2 py-4">
+          <div class="grid grid-cols-4 gap-5 text-sm">
+            <InfoField
+              label="Role"
+              value={organisationRole?.value}
+              tooltip={organisationRole?.definition}
+            />
+            <InfoField label="Start Date" value={el.startDate || "---"} />
+            <InfoField label="End Date" value={el.endDate || "---"} />
+          </div>
+        </div>
+      );
+    })
+  }
+</section>

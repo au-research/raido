@@ -1,8 +1,8 @@
-import { contributorPositionGenerator } from "@/entities/contributor-position/data-components/contributor-position-generator";
-import { contributorRoleGenerator } from "@/entities/contributor-role/data-components/contributor-role-generator";
+import contributorPositionGenerator from "@/entities/contributor/position/data-components/contributor-position-generator";
+import contributorRoleGenerator from "@/entities/contributor/role/data-components/contributor-role-generator";
 import { Contributor } from "@/generated/raid";
 
-export const contributorGenerator = (): Contributor => {
+const contributorGenerator = (): Contributor => {
   return {
     id: "https://orcid.org/0000-0000-0000-0001",
     leader: true,
@@ -12,3 +12,5 @@ export const contributorGenerator = (): Contributor => {
     role: [contributorRoleGenerator(), contributorRoleGenerator()],
   };
 };
+
+export default contributorGenerator;

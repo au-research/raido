@@ -2,6 +2,7 @@ import UserDropdown from "@/design/AppNavBar/components/UserDropdown";
 import { Home as HomeIcon } from "@mui/icons-material";
 import {
   AppBar,
+  Box,
   Chip,
   IconButton,
   Stack,
@@ -28,7 +29,20 @@ export default function AppNavBar() {
     >
       <Toolbar variant={"dense"}>
         <Stack direction="row" alignItems="center">
-          <Link to="/">
+          <Link to="/" style={{ lineHeight: 0 }}>
+            <Box>
+              <img
+                src={
+                  theme.palette.mode === "dark"
+                    ? "/raid-logo-dark.svg"
+                    : "/raid-logo-light.svg"
+                }
+                alt="logo"
+                height="37"
+              />
+            </Box>
+          </Link>
+          {/* <Link to="/">
             <img
               src={
                 theme.palette.mode === "dark"
@@ -36,9 +50,10 @@ export default function AppNavBar() {
                   : "/raid-logo-light.svg"
               }
               alt="logo"
-              height="30"
+              // height="30"
+              style={{ background: "red", p: 0 }}
             />
-          </Link>
+          </Link> */}
 
           <IconButton
             component={Link}

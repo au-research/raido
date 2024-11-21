@@ -23,11 +23,10 @@ export const otherRoutes: RouteObject[] = [
   {
     path: "/login",
     element: (
-      <>
+      <Box sx={{ pt: 5 }}>
         <AppNavBarUnauthenticated />
-        <Box sx={{ height: "3rem" }} />
         <LoginPage />
-      </>
+      </Box>
     ),
   },
   {

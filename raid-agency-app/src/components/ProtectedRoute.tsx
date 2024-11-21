@@ -2,9 +2,10 @@ import AppNavBar from "@/design/AppNavBar";
 import { useCustomKeycloak } from "@/hooks/useCustomKeycloak";
 import LoadingPage from "@/pages/LoadingPage";
 import { Box } from "@mui/material";
+import { memo } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
-export default function ProtectedRoute() {
+const ProtectedRoute = memo(() => {
   const { keycloak, initialized } = useCustomKeycloak();
 
   if (!initialized) {
@@ -20,4 +21,7 @@ export default function ProtectedRoute() {
   ) : (
     <Navigate to="/login" replace />
   );
-}
+});
+
+ProtectedRoute.displayName = "ProtectedRoute";
+export default ProtectedRoute;

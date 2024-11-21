@@ -1,14 +1,11 @@
 import type { Breadcrumb } from "@/types";
 import { NavigateNext as NavigateNextIcon } from "@mui/icons-material";
 import { Breadcrumbs, Button, Card, Paper } from "@mui/material";
+import { memo } from "react";
 import { Link } from "react-router-dom";
 
-export default function BreadcrumbsBar({
-  breadcrumbs,
-}: {
-  breadcrumbs: Breadcrumb[];
-}) {
-  return (
+const BreadcrumbsBar = memo(
+  ({ breadcrumbs }: { breadcrumbs: Breadcrumb[] }) => (
     <Card>
       <Breadcrumbs
         component={Paper}
@@ -34,5 +31,9 @@ export default function BreadcrumbsBar({
         ))}
       </Breadcrumbs>
     </Card>
-  );
-}
+  )
+);
+
+BreadcrumbsBar.displayName = "BreadcrumbsBar";
+
+export default BreadcrumbsBar;

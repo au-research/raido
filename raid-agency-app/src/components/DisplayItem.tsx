@@ -1,48 +1,121 @@
-import React from "react";
-import { Box, Grid, Typography } from "@mui/material";
+import React, { memo } from "react";
+import {
+  Box,
+  Grid,
+  Typography,
+  Theme,
+  IconButton,
+  Stack,
+  Tooltip,
+} from "@mui/material";
 import { lighten, darken } from "@mui/material/styles";
 import { Link } from "react-router-dom";
+import {
+  Delete as DeleteIcon,
+  InfoOutlined as InfoOutlinedIcon,
+} from "@mui/icons-material";
 
-export const DisplayItem = React.memo(
+interface DisplayItemProps {
+  label: string;
+  value: React.ReactNode;
+  width?: number;
+  link?: string | null;
+  tooltip?: string;
+  multiline?: boolean;
+}
+
+// Move the background color function outside
+const getBackgroundColor = (theme: Theme) =>
+  theme.palette.mode === "dark"
+    ? darken(theme.palette.action.selected, 0.4)
+    : lighten(theme.palette.action.selected, 0.25);
+
+// Static styles
+const boxStyles = {
+  boxShadow: 1,
+  borderRadius: "2px",
+  padding: "5px 12px",
+  color: "text.primary",
+  display: "flex",
+  flexDirection: "column",
+  width: "100%",
+  overflow: "hidden",
+} as const;
+
+const typographyStyles = {
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+} as const;
+
+const DisplayItem = memo(
   ({
     label,
     value,
-    width,
+    width = 3,
     link,
-  }: {
-    label: string;
-    value: string | undefined;
-    width: number;
-    link?: string | null;
-  }) => (
-    <Grid item xs={12} sm={width}>
-      <Box
-        sx={{
-          backgroundColor: (theme) => {
-            return theme.palette.mode === "dark"
-              ? darken(theme.palette.action.selected, 0.4)
-              : lighten(theme.palette.action.selected, 0.25);
-          },
-          borderRadius: "4px",
-          padding: "10px 12px",
-          color: "text.primary",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <Typography variant="body2">{label}</Typography>
-        {link && link.length > 0 ? (
-          <Link to={link} target="__blank">
-            <Typography color="text.secondary" variant="body1">
-              {value}
+    tooltip,
+    multiline = false,
+  }: DisplayItemProps) => {
+    const Component = link ? Link : "p";
+
+    const linkProps = link
+      ? {
+          to: link,
+          target: "_blank",
+          rel: "noopener noreferrer",
+        }
+      : {};
+
+    return (
+      <Grid item xs={12} sm={width}>
+        <Box
+          sx={{
+            ...boxStyles,
+            backgroundColor: getBackgroundColor,
+          }}
+        >
+          <Stack direction="row" alignItems="start" gap={0.5}>
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{ fontSize: 12 }}
+            >
+              {label}
             </Typography>
-          </Link>
-        ) : (
-          <Typography color="text.secondary" variant="body1">
-            {value}
-          </Typography>
-        )}
-      </Box>
-    </Grid>
-  )
+            {tooltip && (
+              <Tooltip title={tooltip || ""} placement="top">
+                <InfoOutlinedIcon
+                  fontSize="small"
+                  sx={{
+                    fontSize: 12,
+                  }}
+                />
+              </Tooltip>
+            )}
+          </Stack>
+          {!multiline && (
+            <Typography
+              variant="body1"
+              sx={typographyStyles}
+              component={Component}
+              {...linkProps}
+            >
+              {value ?? ""}
+            </Typography>
+          )}
+
+          {multiline && (
+            <Typography variant="body2" component={Component} {...linkProps}>
+              {value ?? ""}
+            </Typography>
+          )}
+        </Box>
+      </Grid>
+    );
+  }
 );
+
+DisplayItem.displayName = "DisplayItem";
+
+export default DisplayItem;

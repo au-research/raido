@@ -1,27 +1,40 @@
 import language from "@/references/language.json";
-import { FormFieldProps } from "@/types";
 import { getErrorMessageForField } from "@/utils";
 import { Autocomplete, Grid, TextField } from "@mui/material";
 import { useController } from "react-hook-form";
 
+interface FormFieldProps {
+  name: string;
+  helperText?: string;
+  errorText?: string;
+  required?: boolean;
+  width?: number;
+}
 export default function LanguageSelector({
-  formFieldProps,
+  name,
+  helperText,
+  errorText,
+  required,
   width = 12,
-}: {
-  formFieldProps: FormFieldProps;
-  width: number;
-}) {
-  const { errorText, helperText } = formFieldProps;
-
-  const { field, formState } = useController(formFieldProps);
-  const { errors } = formState;
+}: FormFieldProps) {
+  const {
+    field,
+    formState: { errors },
+  } = useController({ name });
 
   const errorMessage = getErrorMessageForField(errors, field.name);
-  const displayHelperText = errorMessage
-    ? errorText
-      ? errorText
-      : errorMessage.message
-    : helperText;
+
+  const getDisplayHelperText = () => {
+    if (errorMessage) {
+      return errorText || errorMessage.message;
+    }
+
+    if (required && helperText && helperText?.length > 0) {
+      return `${helperText} *`;
+    }
+
+    return helperText || "";
+  };
 
   const { onChange, ...restField } = field;
   return (
@@ -42,15 +55,15 @@ export default function LanguageSelector({
           return option.code === value.code;
         }}
         renderInput={(params) => {
-          // TODO: Display error on language selector
           return (
             <TextField
+              error={Boolean(errorMessage)}
+              helperText={getDisplayHelperText()}
               {...params}
               variant="filled"
               size="small"
               label="Language"
               required
-              helperText={displayHelperText}
             />
           );
         }}
