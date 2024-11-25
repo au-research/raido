@@ -94,11 +94,24 @@ public class RaidIngestService {
         return raids;
     }
 
-    public List<RaidDto> findAllByOrcid(final String orcid) {
-        final String fullOrcid = "https://orcid.org/%s".formatted(orcid);
+    public List<RaidDto> findAllByContributor(final String id) {
+        final String orcid = "https://orcid.org/%s".formatted(id);
 
         final var raids = new ArrayList<RaidDto>();
-        final var records = raidRepository.findAllByContributorOrcid(fullOrcid);
+        final var records = raidRepository.findAllByContributorOrcid(orcid);
+
+        for (final var record : records) {
+            raids.add(cacheableRaidService.build(record));
+        }
+
+        return raids;
+    }
+
+    public List<RaidDto> findAllByOrganisation(final String id) {
+        final String ror = "https://ror.org/%s".formatted(id);
+
+        final var raids = new ArrayList<RaidDto>();
+        final var records = raidRepository.findAllByOrganisationId(ror);
 
         for (final var record : records) {
             raids.add(cacheableRaidService.build(record));
@@ -111,8 +124,6 @@ public class RaidIngestService {
         return raidRepository.findByHandle(handle)
                 .map(cacheableRaidService::build)
                 .or(Optional::empty);
-
-
     }
 
     public RaidDto update(final RaidDto raid) {

@@ -1,7 +1,7 @@
 package au.org.raid.api.config;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -25,11 +25,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+    private static final String RAID_SEARCH_ROLE = "raid-search";
     private static final String SERVICE_POINT_USER_ROLE = "service-point-user";
     private static final String OPERATOR_ROLE = "operator";
     private static final String GROUPS = "groups";
@@ -37,16 +38,9 @@ public class SecurityConfig {
     private static final String ROLES_CLAIM = "roles";
 
     private final KeycloakLogoutHandler keycloakLogoutHandler;
-    public static final String RAID_V2_API = "/v2";
+
     public static final String RAID_API = "/raid";
     public static final String SERVICE_POINT_API = "/service-point";
-    public static final String TEAM_API = "/team";
-
-    public static boolean isStableApi(HttpServletRequest request) {
-        return request.getServletPath().startsWith(RAID_API) ||
-                request.getServletPath().startsWith(SERVICE_POINT_API) ||
-                request.getServletPath().startsWith(TEAM_API);
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -56,7 +50,8 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui*/**").permitAll()
                         .requestMatchers("/docs/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers("/orcid/**").permitAll()
+                        .requestMatchers("/contributor/**").hasRole(RAID_SEARCH_ROLE)
+                        .requestMatchers("/organisation/**").hasRole(RAID_SEARCH_ROLE)
                         .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**"))
                         .hasRole(SERVICE_POINT_USER_ROLE)
                         .requestMatchers(new AntPathRequestMatcher(SERVICE_POINT_API + "/**", "PUT"))
@@ -71,10 +66,6 @@ public class SecurityConfig {
                 .jwt(Customizer.withDefaults()));
         http.oauth2Login(Customizer.withDefaults())
                 .logout(logout -> logout.addLogoutHandler(keycloakLogoutHandler).logoutSuccessUrl("/"));
-
-
-
-
 
         return http.build();
     }
@@ -95,6 +86,8 @@ public class SecurityConfig {
                 if (userInfo.hasClaim(REALM_ACCESS_CLAIM)) {
                     var realmAccess = userInfo.getClaimAsMap(REALM_ACCESS_CLAIM);
                     var roles = (Collection) realmAccess.get(ROLES_CLAIM);
+                    roles.forEach(role -> log.debug((String) role));
+
                     mappedAuthorities.addAll(generateAuthoritiesFromClaim(roles));
                 } else if (userInfo.hasClaim(GROUPS)) {
                     Collection roles = userInfo.getClaim(

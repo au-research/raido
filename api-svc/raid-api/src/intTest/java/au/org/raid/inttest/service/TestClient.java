@@ -1,6 +1,7 @@
 package au.org.raid.inttest.service;
 
-import au.org.raid.idl.raidv2.api.OrcidApi;
+import au.org.raid.idl.raidv2.api.ContributorApi;
+import au.org.raid.idl.raidv2.api.OrganisationApi;
 import au.org.raid.idl.raidv2.api.RaidApi;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Contract;
@@ -43,7 +44,7 @@ public class TestClient {
                 .target(RaidApi.class, apiUrl);
     }
 
-    public OrcidApi orcidApi(
+    public ContributorApi contributorApi(
             final String token
     ) {
         return Feign.builder()
@@ -59,6 +60,25 @@ public class TestClient {
                 .requestInterceptor(request -> request.header(AUTHORIZATION, "Bearer " + token))
                 .logger(new Slf4jLogger(RaidApi.class))
                 .logLevel(Logger.Level.FULL)
-                .target(OrcidApi.class, apiUrl);
+                .target(ContributorApi.class, apiUrl);
+    }
+
+    public OrganisationApi organisationApi(
+            final String token
+    ) {
+        return Feign.builder()
+                .options(
+                        new Request.Options(10, TimeUnit.SECONDS, 10, TimeUnit.SECONDS, false)
+                )
+
+                .client(new OkHttpClient())
+                .encoder(new JacksonEncoder(objectMapper))
+                .decoder(new ResponseEntityDecoder(new JacksonDecoder(objectMapper)))
+                .errorDecoder(new RaidApiExceptionDecoder(objectMapper))
+                .contract(contract)
+                .requestInterceptor(request -> request.header(AUTHORIZATION, "Bearer " + token))
+                .logger(new Slf4jLogger(RaidApi.class))
+                .logLevel(Logger.Level.FULL)
+                .target(OrganisationApi.class, apiUrl);
     }
 }

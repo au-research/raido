@@ -59,8 +59,11 @@ paths:
   /raid/{prefix}/{suffix}/history:
     $ref: "raid.yaml#/paths/~1raid~1{prefix}~1{suffix}~1history"
 
-  /orcid/{id}:
-    $ref: "raid.yaml#/paths/~1orcid~1{id}"
+  /contributor/{id}:
+    $ref: "raid.yaml#/paths/~1contributor~1{id}"
+
+  /organisation/{id}:
+    $ref: "raid.yaml#/paths/~1organisation~1{id}"
 
   # endregion
 

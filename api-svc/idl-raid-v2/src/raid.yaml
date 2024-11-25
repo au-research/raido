@@ -165,21 +165,45 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ClosedRaid'
-  /orcid/{id}:
+  /contributor/{id}:
     parameters:
       - name: id
         in: path
         required: true
-        description: An ORCID that appears as an id of a contributor in a RAiD
+        description: The id of the contributor. Currently only ORCID is supported
         schema:
           type: string
     get:
       security:
         - bearerAuth: [ ]
       tags:
-        - orcid
-      operationId: find-all-by-orcid
-      summary: Find all RAiDs with a contributor with the given ORCID
+        - contributor
+      operationId: find-all-by-id
+      summary: Find all RAiDs with a given contributor
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RaidDto'
+  /organisation/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: The id of the organisation. Currently only ROR is supported
+        schema:
+          type: string
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - organisation
+      operationId: find-all-by-id
+      summary: Find all RAiDs with a given contributor
       responses:
         200:
           description: success

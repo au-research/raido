@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-class OrcidControllerTest {
+class ContributorControllerTest {
     public static final String REGISTRATION_AGENCY_ID = "https://ror.org/038sjwq14";
     public static final String IDENTIFIER_OWNER_ID = "https://ror.org/02stey378";
 
@@ -54,7 +54,7 @@ class OrcidControllerTest {
     private RaidIngestService raidIngestService;
 
     @InjectMocks
-    private OrcidController controller;
+    private ContributorController controller;
 
     @BeforeEach
     void setup() {
@@ -87,7 +87,7 @@ class OrcidControllerTest {
 //
 //            securityContextHolder.when(SecurityContextHolder::getContext).thenReturn(securityContext);
 
-            when(raidIngestService.findAllByOrcid(orcid)).thenReturn(Collections.singletonList(output));
+            when(raidIngestService.findAllByContributor(orcid)).thenReturn(Collections.singletonList(output));
 
             mockMvc.perform(get("/orcid/%s".formatted(orcid)))
                     .andDo(print())

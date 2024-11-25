@@ -1,7 +1,7 @@
 package au.org.raid.api.controller;
 
 import au.org.raid.api.service.RaidIngestService;
-import au.org.raid.idl.raidv2.api.OrcidApi;
+import au.org.raid.idl.raidv2.api.OrganisationApi;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -17,12 +17,12 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @SecurityScheme(name = "bearerAuth", scheme = "bearer", type = SecuritySchemeType.HTTP, in = SecuritySchemeIn.HEADER)
-public class OrcidController implements OrcidApi {
+public class OrganisationController implements OrganisationApi {
     private final RaidIngestService raidIngestService;
 
     @Override
-    public ResponseEntity<List<RaidDto>> findAllByOrcid(final String id) {
-        final var raids = raidIngestService.findAllByOrcid(id);
+    public ResponseEntity<List<RaidDto>> findAllById(final String id) {
+        final var raids = raidIngestService.findAllByOrganisation(id);
 
         return ResponseEntity.ok(raids);
     }

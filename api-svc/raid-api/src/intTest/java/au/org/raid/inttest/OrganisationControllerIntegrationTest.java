@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
-public class OrcidControllerIntegrationTest extends AbstractIntegrationTest {
+public class OrganisationControllerIntegrationTest extends AbstractIntegrationTest {
     private static final String ORCID = "https://orcid.org/0009-0006-4129-5257";
     @Autowired
     private ObjectMapper objectMapper;
@@ -24,12 +24,12 @@ public class OrcidControllerIntegrationTest extends AbstractIntegrationTest {
 
         raidApi.mintRaid(createRequest);
 
-        final var api = testClient.orcidApi(raidAuToken);
+        final var api = testClient.contributorApi(raidAuToken);
 
         final var id = ORCID.substring(ORCID.lastIndexOf("/") + 1);
 
         try {
-            final var raidList = api.findAllByOrcid(id).getBody();
+            final var raidList = api.findAllById(id).getBody();
             assert raidList != null;
 
             // find all raids in resultset that don't contain a contributor with the specified ORCID
