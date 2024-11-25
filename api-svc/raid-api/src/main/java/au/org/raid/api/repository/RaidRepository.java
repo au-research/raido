@@ -10,7 +10,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static au.org.raid.db.jooq.tables.Contributor.CONTRIBUTOR;
+import static au.org.raid.db.jooq.tables.Organisation.ORGANISATION;
 import static au.org.raid.db.jooq.tables.Raid.RAID;
+import static au.org.raid.db.jooq.tables.RaidContributor.RAID_CONTRIBUTOR;
+import static au.org.raid.db.jooq.tables.RaidOrganisation.RAID_ORGANISATION;
 
 @Repository
 @RequiredArgsConstructor
@@ -96,5 +100,32 @@ public class RaidRepository {
                 .orderBy(RAID.DATE_CREATED.desc())
                 .limit(Constant.MAX_EXPERIMENTAL_RECORDS)
                 .fetch();
+    }
+
+    public List<RaidRecord> findAllByContributorOrcid(final String orcid) {
+        return dslContext.select()
+                .from(RAID)
+                .join(RAID_CONTRIBUTOR)
+                .on(RAID.HANDLE.eq(RAID_CONTRIBUTOR.HANDLE))
+                .join(CONTRIBUTOR)
+                .on(RAID_CONTRIBUTOR.CONTRIBUTOR_ID.eq(CONTRIBUTOR.ID))
+                .where(
+                        CONTRIBUTOR.PID.eq(orcid)
+                )
+                .fetchInto(RaidRecord.class);
+    }
+
+
+    public List<RaidRecord> findAllByOrganisationId(final String ror) {
+        return dslContext.select()
+                .from(RAID)
+                .join(RAID_ORGANISATION)
+                .on(RAID.HANDLE.eq(RAID_ORGANISATION.HANDLE))
+                .join(ORGANISATION)
+                .on(RAID_ORGANISATION.ORGANISATION_ID.eq(ORGANISATION.ID))
+                .where(
+                        ORGANISATION.PID.eq(ror)
+                )
+                .fetchInto(RaidRecord.class);
     }
 }

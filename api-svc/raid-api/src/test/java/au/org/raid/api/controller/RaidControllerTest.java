@@ -1,6 +1,6 @@
-package au.org.raid.api.endpoint.raidv2;
+package au.org.raid.api.controller;
 
-import au.org.raid.api.controller.RaidController;
+import au.org.raid.api.endpoint.raidv2.RaidExceptionHandler;
 import au.org.raid.api.exception.ResourceNotFoundException;
 import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.RaidIngestService;

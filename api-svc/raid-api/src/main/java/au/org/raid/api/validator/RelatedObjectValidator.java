@@ -16,7 +16,7 @@ import static au.org.raid.api.util.StringUtil.isBlank;
 
 @Service
 public class RelatedObjectValidator {
-    private static final String RELATED_OBJECT_SCHEMA_URI = "https://doi.org/";
+    private static final List<String> RELATED_OBJECT_SCHEMA_URI = List.of("https://doi.org/", "https://web.archive.org");
     private static final String RELATED_OBJECT_TYPE_SCHEMA_URI =
             "https://github.com/au-research/raid-metadata/tree/main/scheme/related-object/related-object-type/";
 
@@ -47,6 +47,10 @@ public class RelatedObjectValidator {
                 .forEach(index -> {
                     final var relatedObject = relatedObjects.get(index);
 
+                    
+                    System.out.println("relatedObject" + relatedObject);
+
+
                     if (isBlank(relatedObject.getId())) {
                         failures.add(new ValidationFailure()
                                 .fieldId(String.format("relatedObject[%d].id", index))
@@ -58,12 +62,14 @@ public class RelatedObjectValidator {
                         );
                     }
 
+                    System.out.println("relatedObject.getSchemaUri()" + relatedObject.getSchemaUri());
+
                     if (isBlank(relatedObject.getSchemaUri())) {
                         failures.add(new ValidationFailure()
                                 .fieldId(String.format("relatedObject[%d].schemaUri", index))
                                 .errorType(NOT_SET_TYPE)
                                 .message(NOT_SET_MESSAGE));
-                    } else if (!relatedObject.getSchemaUri().equals(RELATED_OBJECT_SCHEMA_URI)) {
+                    } else if (!RELATED_OBJECT_SCHEMA_URI.contains(relatedObject.getSchemaUri())) {
                         failures.add(new ValidationFailure()
                                 .fieldId(String.format("relatedObject[%d].schemaUri", index))
                                 .errorType("invalid")

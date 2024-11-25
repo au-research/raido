@@ -1,5 +1,7 @@
 package au.org.raid.inttest.service;
 
+import au.org.raid.idl.raidv2.api.ContributorApi;
+import au.org.raid.idl.raidv2.api.OrganisationApi;
 import au.org.raid.idl.raidv2.api.RaidApi;
 import au.org.raid.inttest.config.AuthConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,5 +54,43 @@ public class TestClient {
     public RaidApi raidApi(final AuthConfig.User user) {
         final var token = tokenService.getUserToken(user.getUser(), user.getPassword());
         return raidApi(token);
+    }
+
+    public ContributorApi contributorApi(
+            final String token
+    ) {
+        return Feign.builder()
+                .options(
+                        new Request.Options(10, TimeUnit.SECONDS, 10, TimeUnit.SECONDS, false)
+                )
+
+                .client(new OkHttpClient())
+                .encoder(new JacksonEncoder(objectMapper))
+                .decoder(new ResponseEntityDecoder(new JacksonDecoder(objectMapper)))
+                .errorDecoder(new RaidApiExceptionDecoder(objectMapper))
+                .contract(contract)
+                .requestInterceptor(request -> request.header(AUTHORIZATION, "Bearer " + token))
+                .logger(new Slf4jLogger(RaidApi.class))
+                .logLevel(Logger.Level.FULL)
+                .target(ContributorApi.class, apiUrl);
+    }
+
+    public OrganisationApi organisationApi(
+            final String token
+    ) {
+        return Feign.builder()
+                .options(
+                        new Request.Options(10, TimeUnit.SECONDS, 10, TimeUnit.SECONDS, false)
+                )
+
+                .client(new OkHttpClient())
+                .encoder(new JacksonEncoder(objectMapper))
+                .decoder(new ResponseEntityDecoder(new JacksonDecoder(objectMapper)))
+                .errorDecoder(new RaidApiExceptionDecoder(objectMapper))
+                .contract(contract)
+                .requestInterceptor(request -> request.header(AUTHORIZATION, "Bearer " + token))
+                .logger(new Slf4jLogger(RaidApi.class))
+                .logLevel(Logger.Level.FULL)
+                .target(OrganisationApi.class, apiUrl);
     }
 }
