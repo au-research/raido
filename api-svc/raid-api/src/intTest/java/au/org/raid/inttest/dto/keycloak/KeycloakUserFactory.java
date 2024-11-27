@@ -17,6 +17,7 @@ public class KeycloakUserFactory {
         return KeycloakUser.builder()
                 .attributes(attributes)
                 .username(username)
+                .enabled(true)
                 .build();
     }
 }

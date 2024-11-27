@@ -31,7 +31,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
 
         final var handle = new Handle(mintedRaid.getIdentifier().getId());
         
-        final var result = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
+        final var result = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
 
         assertThat(result.getTitle()).isEqualTo(createRequest.getTitle());
         assertThat(result.getDescription()).isEqualTo(createRequest.getDescription());
@@ -48,7 +48,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
 
         assert mintedRaid != null;
         final var handle = new Handle(mintedRaid.getIdentifier().getId());
-        final var readResult = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
+        final var readResult = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
 
         assert readResult != null;
         final var updateRequest = mapReadToUpdate(readResult);
@@ -67,7 +67,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
             throw new RuntimeException(e);
         }
 
-        final var result = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
+        final var result = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
         assert result != null;
         assertThat(result.getTitle().get(0).getText()).isEqualTo(title);
         assertThat(result.getIdentifier().getVersion()).isEqualTo(2);
@@ -82,7 +82,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
 
         assert mintedRaid != null;
         final var handle = new Handle(mintedRaid.getIdentifier().getId());
-        final var readResult = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
+        final var readResult = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
 
         final var contributor = readResult.getContributor().get(0);
         contributor.setId(REAL_TEST_ORCID);
@@ -99,7 +99,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
             throw new RuntimeException(e);
         }
 
-        final var result = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
+        final var result = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
         assert result != null;
         assertThat(result.getContributor().get(0).getId()).isEqualTo(REAL_TEST_ORCID);
     }
@@ -111,7 +111,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
 
         assert mintedRaid != null;
         final var handle = new Handle(mintedRaid.getIdentifier().getId());
-        final var readResult = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
+        final var readResult = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
 
         final var updateRequest = mapReadToUpdate(readResult);
 
@@ -122,7 +122,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
             fail("Update failed");
         }
 
-        final var result = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
+        final var result = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
         assertThat(result.getIdentifier().getVersion()).isEqualTo(1);
     }
 
@@ -134,7 +134,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
 
         assert mintedRaid != null;
         final var handle = new Handle(mintedRaid.getIdentifier().getId());
-        final var readResult = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
+        final var readResult = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
 
         final var updateRequest = mapReadToUpdate(readResult);
 
@@ -145,7 +145,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
             fail("Update failed");
         }
 
-        final var result = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
+        final var result = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
         assertThat(result.getIdentifier().getVersion()).isEqualTo(1);
     }
 
@@ -160,7 +160,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
         final var api = testClient.raidApi(uqToken);
 
         try {
-            final var readResult = api.findRaidByName(handle.getPrefix(), handle.getSuffix(), null).getBody();
+            final var readResult = api.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
             fail("Access to embargoed raid should be forbidden from different service point");
         } catch (final FeignException e) {
             assertThat(e.status()).isEqualTo(403);

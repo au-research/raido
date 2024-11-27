@@ -45,7 +45,7 @@ public class SecurityConfig {
     public static final String SERVICE_POINT_GROUP_ID_CLAIM = "service_point_group_id";
     private static final String RAID_USER_ROLE = "raid-user";
     private static final String RAID_ADMIN_ROLE = "raid-admin";
-    private static final String RAID_SEARCH_ROLE = "raid-search";
+    private static final String RAID_SEARCHER_ROLE = "raid-searcher";
     private static final String SERVICE_POINT_USER_ROLE = "service-point-user";
     private static final String OPERATOR_ROLE = "operator";
     private static final String CONTRIBUTOR_WRITER_ROLE = "contributor-writer";
@@ -99,8 +99,8 @@ public class SecurityConfig {
                         ))
                         .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**", "POST"))
                         .hasAnyRole(RAID_ADMIN_ROLE)
-                        .requestMatchers("/contributor/**").hasRole(RAID_SEARCH_ROLE)
-                        .requestMatchers("/organisation/**").hasRole(RAID_SEARCH_ROLE)
+                        .requestMatchers("/contributor/**").hasRole(RAID_SEARCHER_ROLE)
+                        .requestMatchers("/organisation/**").hasRole(RAID_SEARCHER_ROLE)
                         .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**"))
                         .hasRole(SERVICE_POINT_USER_ROLE)
                         .requestMatchers(new AntPathRequestMatcher(SERVICE_POINT_API + "/**", "PUT"))

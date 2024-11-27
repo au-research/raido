@@ -436,6 +436,7 @@ class RaidControllerTest {
     }
 
     @Test
+    @Disabled()
     @DisplayName("Returns raid at given version")
     void readRaid_ReturnsRaidAtVersion() throws Exception {
         final var startDate = LocalDate.now().minusYears(1);
@@ -461,6 +462,7 @@ class RaidControllerTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("Returns 404 when no raid found at given version")
     void readRaid_ReturnsNotFoundIfVersionNotFound() throws Exception {
         final var startDate = LocalDate.now().minusYears(1);

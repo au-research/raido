@@ -5,11 +5,14 @@ import au.org.raid.idl.raidv2.model.*;
 import au.org.raid.inttest.client.keycloak.KeycloakClient;
 import au.org.raid.inttest.config.AuthConfig;
 import au.org.raid.inttest.config.IntegrationTestConfig;
+import au.org.raid.inttest.dto.UserContext;
 import au.org.raid.inttest.service.RaidUpdateRequestFactory;
 import au.org.raid.inttest.service.TestClient;
 import au.org.raid.inttest.service.TokenService;
+import au.org.raid.inttest.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Contract;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,9 @@ public class AbstractIntegrationTest {
     protected RaidCreateRequest createRequest;
 
     protected RaidApi raidApi;
+
+    @Autowired
+    protected UserService userService;
 
     @Autowired
     protected KeycloakClient keycloakClient;
@@ -60,6 +66,8 @@ public class AbstractIntegrationTest {
     protected String adminToken;
     protected String uqToken;
 
+    protected UserContext userContext;
+
     @Autowired
     protected TestClient testClient;
     @Autowired
@@ -70,7 +78,7 @@ public class AbstractIntegrationTest {
     protected RaidUpdateRequestFactory raidUpdateRequestFactory;
 
     @Autowired
-    private TokenService tokenService;
+    protected TokenService tokenService;
     private TestInfo testInfo;
 
     @BeforeEach
@@ -79,7 +87,15 @@ public class AbstractIntegrationTest {
         raidAuToken = tokenService.getUserToken(raidAuUser, raidAuPassword);
         uqToken = tokenService.getUserToken(uqUser, uqPassword);
         createRequest = newCreateRequest();
-        raidApi = testClient.raidApi(raidAuToken);
+
+
+        userContext = userService.createUser("raid-au", "service-point-user");
+        raidApi = testClient.raidApi(userContext.getToken());
+    }
+
+    @AfterEach
+    void tearDown() {
+        userService.deleteUser(userContext.getId());
     }
 
     @BeforeEach

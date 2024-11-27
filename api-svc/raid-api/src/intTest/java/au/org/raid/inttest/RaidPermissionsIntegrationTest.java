@@ -18,39 +18,46 @@ public class RaidPermissionsIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     private AuthConfig authConfig;
 
+
     @Test
     @DisplayName("Raid user cannot read raid without permissions")
     void raidUserReadWithoutPermissions() {
-        final var mintedRaid = testClient.raidApi(authConfig.getRaidAdmin())
-                .mintRaid(createRequest).getBody();
+        final var raidUserContext = userService.createUser("raid-au", "raid-user");
+        final var raidAdminuserContext = userService.createUser("raid-au", "raid-admin");
+        final var mintedRaid = testClient.raidApi(raidAdminuserContext.getToken()).mintRaid(createRequest).getBody();
 
         assert mintedRaid != null;
 
         final var handle = new Handle(mintedRaid.getIdentifier().getId());
 
         try {
-            testClient.raidApi(authConfig.getRaidUser())
-                    .findRaidByName(handle.getPrefix(), handle.getSuffix(), null);
+            testClient.raidApi(raidUserContext.getToken()).findRaidByName(handle.getPrefix(), handle.getSuffix());
         } catch (final FeignException e) {
             assertThat(e.status(), is(403));
             // pass
         } catch (final Exception e) {
             log.error("Failed", e);
             fail(e.getMessage());
+        } finally {
+            userService.deleteUser(raidAdminuserContext.getId());
+            userService.deleteUser(raidUserContext.getId());
         }
     }
 
     @Test
     @DisplayName("Raid user cannot update raid without permissions")
     void raidUserUpdateWithoutPermissions() {
-        final var mintedRaid = testClient.raidApi(authConfig.getRaidAdmin()).mintRaid(createRequest).getBody();
+
+        final var raidUserContext = userService.createUser("raid-au", "raid-user");
+        final var raidAdminUserContext = userService.createUser("raid-au", "raid-admin");
+        final var mintedRaid = testClient.raidApi(raidAdminUserContext.getToken()).mintRaid(createRequest).getBody();
 
         assert mintedRaid != null;
 
         final var handle = new Handle(mintedRaid.getIdentifier().getId());
 
         try {
-            testClient.raidApi(authConfig.getRaidUser())
+            testClient.raidApi(raidUserContext.getToken())
                     .updateRaid(handle.getPrefix(), handle.getSuffix(), raidUpdateRequestFactory.create(mintedRaid));
         } catch (final FeignException e) {
             assertThat(e.status(), is(403));
@@ -58,63 +65,56 @@ public class RaidPermissionsIntegrationTest extends AbstractIntegrationTest {
         } catch (final Exception e) {
             log.error("Failed", e);
             fail(e.getMessage());
+        } finally {
+            userService.deleteUser(raidAdminUserContext.getId());
+            userService.deleteUser(raidUserContext.getId());
         }
     }
 
     @Test
     @DisplayName("Raid user can read raid with permissions")
     void raidUserReadWithPermissions() {
-        final var mintedRaid = testClient.raidApi(authConfig.getRaidAdmin()).mintRaid(createRequest).getBody();
+        final var raidUserContext = userService.createUser("raid-au", "raid-user");
+        final var raidAdminUserContext = userService.createUser("raid-au", "raid-admin");
+
+        final var mintedRaid = testClient.raidApi(raidAdminUserContext.getToken()).mintRaid(createRequest).getBody();
 
         assert mintedRaid != null;
 
         final var handle = new Handle(mintedRaid.getIdentifier().getId());
 
-        final var users = keycloakClient.keycloakApi(authConfig.getIntegrationTestClient())
-                .findUserByUsername("raid-user").getBody();
-
-        assert users != null;
-        if (users.isEmpty()) {
-            fail("raid-user not found");
-        }
-
         final var raidUserPermissionsRequest = RaidUserPermissionsRequest.builder()
-                .userId(users.get(0).getId())
+                .userId(raidUserContext.getId())
                 .handle(handle.toString())
                 .build();
 
-        keycloakClient.keycloakApi(authConfig.getIntegrationTestClient())
-                .addRaidUser(raidUserPermissionsRequest);
+        keycloakClient.keycloakApi(authConfig.getIntegrationTestClient()).addRaidUser(raidUserPermissionsRequest);
 
         try {
-            testClient.raidApi(authConfig.getRaidUser())
-                    .findRaidByName(handle.getPrefix(), handle.getSuffix(), null);
+            final var token = tokenService.getUserToken(raidUserContext.getUsername(), raidUserContext.getPassword());
+            testClient.raidApi(token).findRaidByName(handle.getPrefix(), handle.getSuffix());
         } catch (final Exception e) {
             fail("Raid user should be able to read raid");
         } finally {
-            keycloakClient.keycloakApi(authConfig.getIntegrationTestClient()).removeRaidUser(raidUserPermissionsRequest);
+            userService.deleteUser(raidUserContext.getId());
+            userService.deleteUser(raidAdminUserContext.getId());
         }
     }
 
     @Test
     @DisplayName("Raid user can update raid with permissions")
     void raidUserUpdateWithPermissions() {
-        final var mintedRaid = testClient.raidApi(authConfig.getRaidAdmin()).mintRaid(createRequest).getBody();
+        final var raidUserContext = userService.createUser("raid-au", "raid-user");
+        final var raidAdminUserContext = userService.createUser("raid-au", "raid-admin");
+
+        final var mintedRaid = testClient.raidApi(raidAdminUserContext.getToken()).mintRaid(createRequest).getBody();
 
         assert mintedRaid != null;
 
         final var handle = new Handle(mintedRaid.getIdentifier().getId());
 
-        final var users = keycloakClient.keycloakApi(authConfig.getIntegrationTestClient())
-                .findUserByUsername("raid-user").getBody();
-
-        assert users != null;
-        if (users.isEmpty()) {
-            fail("raid-user not found");
-        }
-
         final var raidUserPermissionsRequest = RaidUserPermissionsRequest.builder()
-                .userId(users.get(0).getId())
+                .userId(raidUserContext.getId())
                 .handle(handle.toString())
                 .build();
 
@@ -122,29 +122,38 @@ public class RaidPermissionsIntegrationTest extends AbstractIntegrationTest {
                 .addRaidUser(raidUserPermissionsRequest);
 
         try {
-            testClient.raidApi(authConfig.getRaidUser())
+            final var token = tokenService.getUserToken(raidUserContext.getUsername(), raidUserContext.getPassword());
+            testClient.raidApi(token)
                     .updateRaid(handle.getPrefix(), handle.getSuffix(), raidUpdateRequestFactory.create(mintedRaid));
         } catch (final Exception e) {
             fail("Raid user should be able to update raid");
         } finally {
-            keycloakClient.keycloakApi(authConfig.getIntegrationTestClient()).removeRaidUser(raidUserPermissionsRequest);
+            userService.deleteUser(raidUserContext.getId());
+            userService.deleteUser(raidAdminUserContext.getId());
         }
     }
 
     @Test
     @DisplayName("Raid admin can't read embargoed raids from same service point if no permissions")
     void raidAdminUnableToReadEmbargoedRaids() {
-        final var raid1 = testClient.raidApi(authConfig.getRaidAu()).mintRaid(createRequest).getBody();
-        assert raid1 != null;
-        final var raid2 = testClient.raidApi(authConfig.getRaidAdmin()).mintRaid(createRequest).getBody();
-        assert raid2 != null;
+        final var raidAdminUserContext = userService.createUser("raid-au", "raid-admin");
 
-        final var response = testClient.raidApi(authConfig.getRaidAdmin()).findAllRaids(null);
+        try {
+            final var raid1 = testClient.raidApi(userContext.getToken()).mintRaid(createRequest).getBody();
+            assert raid1 != null;
+            final var raid2 = testClient.raidApi(raidAdminUserContext.getToken()).mintRaid(createRequest).getBody();
+            assert raid2 != null;
 
-        assert response.getBody() != null;
+            final var token = tokenService.getUserToken(raidAdminUserContext.getUsername(), raidAdminUserContext.getPassword());
+            final var response = testClient.raidApi(token).findAllRaids(null);
 
-        final var raids = response.getBody().stream().map(raidDto -> raidDto.getIdentifier().getId()).toList();
-        assertThat(raids, hasItem(raid2.getIdentifier().getId()));
-        assertThat(raids, not(hasItem(raid1.getIdentifier().getId())));
+            assert response.getBody() != null;
+
+            final var raids = response.getBody().stream().map(raidDto -> raidDto.getIdentifier().getId()).toList();
+            assertThat(raids, hasItem(raid2.getIdentifier().getId()));
+            assertThat(raids, not(hasItem(raid1.getIdentifier().getId())));
+        } finally {
+            userService.deleteUser(raidAdminUserContext.getId());
+        }
     }
 }

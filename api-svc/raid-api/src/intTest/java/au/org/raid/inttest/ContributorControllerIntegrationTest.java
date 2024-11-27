@@ -4,7 +4,7 @@ import au.org.raid.idl.raidv2.model.Organisation;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
 import au.org.raid.inttest.service.RaidApiValidationException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import au.org.raid.inttest.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,20 +15,21 @@ import static org.assertj.core.api.Assertions.fail;
 public class ContributorControllerIntegrationTest extends AbstractIntegrationTest {
     private static final String ROR = "https://ror.org/038sjwq14";
     @Autowired
-    private ObjectMapper objectMapper;
+    private UserService userService;
 
     @Test
     @DisplayName("List all raids for an orcid ")
     void listRaidsWithAGivenOrcid() {
-        createRequest.getOrganisation().forEach(organisation -> organisation.id(ROR));
-
-        raidApi.mintRaid(createRequest);
-
-        final var api = testClient.organisationApi(raidAuToken);
-
-        final var id = ROR.substring(ROR.lastIndexOf("/") + 1);
+        final var user = userService.createUser(
+                "raid-au",
+                "raid-searcher", "service-point-user"
+        );
 
         try {
+            createRequest.getOrganisation().forEach(organisation -> organisation.id(ROR));
+            raidApi.mintRaid(createRequest);
+            final var api = testClient.organisationApi(user.getToken());
+            final var id = ROR.substring(ROR.lastIndexOf("/") + 1);
             final var raidList = api.findAllById(id).getBody();
             assert raidList != null;
 
@@ -45,6 +46,8 @@ public class ContributorControllerIntegrationTest extends AbstractIntegrationTes
             assertThat(erroneousRaids).isEmpty();
         } catch (RaidApiValidationException e) {
             fail(e.getMessage());
+        } finally {
+            userService.deleteUser(user.getId());
         }
     }
 

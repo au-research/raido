@@ -51,7 +51,7 @@ public interface KeycloakApi {
     @DeleteMapping(path = "/admin/realms/raid/users/{userId}")
     ResponseEntity<Void> deleteUser(@PathVariable final String userId);
 
-    @PostMapping(path = "/admin/realms/raid/users/{userId}/reset-password")
+    @PutMapping(path = "/admin/realms/raid/users/{userId}/reset-password")
     ResponseEntity<List<KeycloakUser>> resetPassword(@PathVariable final String userId,
                                                      @RequestBody final KeycloakCredentials credentials);
 
@@ -59,7 +59,7 @@ public interface KeycloakApi {
     ResponseEntity<KeycloakRole> findRoleByName(@PathVariable final String roleName);
 
     @PostMapping(path = "/admin/realms/raid/users/{userId}/role-mappings/realm")
-    ResponseEntity<Void> addUserToRole(@PathVariable final String userId, @RequestBody final KeycloakRole role);
+    ResponseEntity<Void> addUserToRole(@PathVariable final String userId, @RequestBody final List<KeycloakRole> roles);
 
 
 }

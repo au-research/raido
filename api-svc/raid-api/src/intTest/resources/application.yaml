@@ -55,7 +55,7 @@ raid:
         password: password
       integration-test-client:
         client-id: integration-test-client
-        client-secret: ee3qpd47IurMdOlmdPTEdCG6Ib2zPjUN
+        client-secret: U7DILnimtrnoyt0kyumLdNISRihfD38L
   db:
     user: postgres
     password: supersecret
