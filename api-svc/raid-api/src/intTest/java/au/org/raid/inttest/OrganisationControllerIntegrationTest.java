@@ -23,8 +23,8 @@ public class OrganisationControllerIntegrationTest extends AbstractIntegrationTe
     private TokenService tokenService;
 
     @Test
-    @DisplayName("List all raids for a contributor id")
-    void listRaidsWithAGivenContributorId() {
+    @DisplayName("List all raids with a given organisation id")
+    void listRaidsWithAGivenOrganisationId() {
         final var user = userService.createUser(
                 "raid-au",
                 "raid-searcher", "service-point-user"

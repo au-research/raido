@@ -3,7 +3,6 @@ package au.org.raid.inttest.service;
 import au.org.raid.idl.raidv2.api.ContributorApi;
 import au.org.raid.idl.raidv2.api.OrganisationApi;
 import au.org.raid.idl.raidv2.api.RaidApi;
-import au.org.raid.inttest.config.AuthConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Contract;
 import feign.Feign;
@@ -51,10 +50,10 @@ public class TestClient {
                 .target(RaidApi.class, apiUrl);
     }
 
-    public RaidApi raidApi(final AuthConfig.User user) {
-        final var token = tokenService.getUserToken(user.getUser(), user.getPassword());
-        return raidApi(token);
-    }
+//    public RaidApi raidApi(final AuthConfig.User user) {
+//        final var token = tokenService.getUserToken(user.getUser(), user.getPassword());
+//        return raidApi(token);
+//    }
 
     public ContributorApi contributorApi(
             final String token
