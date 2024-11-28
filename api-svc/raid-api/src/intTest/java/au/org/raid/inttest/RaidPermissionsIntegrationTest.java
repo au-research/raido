@@ -18,7 +18,6 @@ public class RaidPermissionsIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     private AuthConfig authConfig;
 
-
     @Test
     @DisplayName("Raid user cannot read raid without permissions")
     void raidUserReadWithoutPermissions() {

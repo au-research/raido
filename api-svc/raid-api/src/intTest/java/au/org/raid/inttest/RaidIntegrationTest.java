@@ -157,20 +157,16 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
         assert mintedRaid != null;
         final var handle = new Handle(mintedRaid.getIdentifier().getId());
 
-        final var api = testClient.raidApi(uqToken);
+        final var uqUserContext = userService.createUser("University of Queensland", "service-point-user");
+        final var api = testClient.raidApi(uqUserContext.getToken());
 
         try {
             final var readResult = api.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
             fail("Access to embargoed raid should be forbidden from different service point");
         } catch (final FeignException e) {
             assertThat(e.status()).isEqualTo(403);
-
-//            final var closedRaid = objectMapper.readValue(e.responseBody().get().array(), ClosedRaid.class);
-//
-//            assertThat(closedRaid).isEqualTo(new ClosedRaid()
-//                    .identifier(mintedRaid.getIdentifier())
-//                    .access(mintedRaid.getAccess()));
-
+        } finally {
+            userService.deleteUser(uqUserContext.getId());
         }
     }
 
@@ -179,10 +175,10 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
     @DisplayName("List raid does not show raids from other service points")
     void closedRaidsExcludedFromList() {
         raidApi.mintRaid(createRequest);
-        final var ACCESS_TYPE_CLOSED = "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/closed.json";
-        final var ACCESS_TYPE_EMBARGOED = "https://github.com/au-research/raid-metadata/blob/main/scheme/access/type/v1/embargoed.json";
 
-        final var api = testClient.raidApi(uqToken);
+        final var uqUserContext = userService.createUser("University of Queensland", "service-point-user");
+
+        final var api = testClient.raidApi(uqUserContext.getToken());
 
         try {
             final var raidList = api.findAllRaids(null).getBody();
@@ -197,6 +193,8 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
             assertThat(result).isEmpty();
         } catch (RaidApiValidationException e) {
             fail(e.getMessage());
+        } finally {
+            userService.deleteUser(uqUserContext.getId());
         }
     }
 

@@ -49,11 +49,6 @@ public class KeycloakClient {
                 .target(KeycloakApi.class, apiUrl);
     }
 
-    public KeycloakApi keycloakApi(AuthConfig.User user) {
-        final var token = tokenService.getUserToken(user.getUser(), user.getPassword());
-        return keycloakApi(token);
-    }
-
     public KeycloakApi keycloakApi(AuthConfig.Client client) {
         final var token = tokenService.getClientToken(client.getClientId(), client.getClientSecret());
         return keycloakApi(token);

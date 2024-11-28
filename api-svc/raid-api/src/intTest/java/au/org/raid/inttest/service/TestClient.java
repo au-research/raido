@@ -28,7 +28,6 @@ public class TestClient {
     private final Contract contract;
     @Value("${raid.test.api.url}")
     private String apiUrl;
-    private final TokenService tokenService;
 
     public RaidApi raidApi(
             final String token
@@ -49,11 +48,6 @@ public class TestClient {
                 .logLevel(Logger.Level.FULL)
                 .target(RaidApi.class, apiUrl);
     }
-
-//    public RaidApi raidApi(final AuthConfig.User user) {
-//        final var token = tokenService.getUserToken(user.getUser(), user.getPassword());
-//        return raidApi(token);
-//    }
 
     public ContributorApi contributorApi(
             final String token

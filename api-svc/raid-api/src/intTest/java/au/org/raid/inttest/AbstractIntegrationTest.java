@@ -3,7 +3,6 @@ package au.org.raid.inttest;
 import au.org.raid.idl.raidv2.api.RaidApi;
 import au.org.raid.idl.raidv2.model.*;
 import au.org.raid.inttest.client.keycloak.KeycloakClient;
-import au.org.raid.inttest.config.AuthConfig;
 import au.org.raid.inttest.config.IntegrationTestConfig;
 import au.org.raid.inttest.dto.UserContext;
 import au.org.raid.inttest.service.RaidUpdateRequestFactory;
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
@@ -41,31 +39,6 @@ public class AbstractIntegrationTest {
     @Autowired
     protected KeycloakClient keycloakClient;
 
-    @Autowired
-    protected AuthConfig authConfig;
-
-    @Value("${raid.test.auth.admin.user}")
-    protected String adminUser;
-
-    @Value("${raid.test.auth.admin.password}")
-    protected String adminPassword;
-
-    @Value("${raid.test.auth.raid-au.user}")
-    protected String raidAuUser;
-
-    @Value("${raid.test.auth.raid-au.password}")
-    protected String raidAuPassword;
-
-    @Value("${raid.test.auth.uq.user}")
-    private String uqUser;
-
-    @Value("${raid.test.auth.uq.password}")
-    private String uqPassword;
-    protected String raidAuToken;
-
-    protected String adminToken;
-    protected String uqToken;
-
     protected UserContext userContext;
 
     @Autowired
@@ -83,11 +56,7 @@ public class AbstractIntegrationTest {
 
     @BeforeEach
     public void setupTestToken() {
-        adminToken = tokenService.getUserToken(adminUser, adminPassword);
-        raidAuToken = tokenService.getUserToken(raidAuUser, raidAuPassword);
-        uqToken = tokenService.getUserToken(uqUser, uqPassword);
         createRequest = newCreateRequest();
-
 
         userContext = userService.createUser("raid-au", "service-point-user");
         raidApi = testClient.raidApi(userContext.getToken());

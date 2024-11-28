@@ -38,21 +38,6 @@ raid:
       client-id: raid-api
       grant-type: password
       token-uri: ${raid.test.auth.base-url}/protocol/openid-connect/token
-      admin:
-        user: raid-au-group-admin
-        password: password
-      raid-au:
-        user: raid-test-user
-        password: password
-      uq:
-        user: uq-test-user
-        password: password
-      raid-admin:
-        user: raid-admin
-        password: password
-      raid-user:
-        user: raid-user
-        password: password
       integration-test-client:
         client-id: integration-test-client
         client-secret: U7DILnimtrnoyt0kyumLdNISRihfD38L
