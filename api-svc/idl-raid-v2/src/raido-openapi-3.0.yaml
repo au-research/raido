@@ -61,16 +61,6 @@ paths:
   /raid/{prefix}/{suffix}/history:
     $ref: "raid.yaml#/paths/~1raid~1{prefix}~1{suffix}~1history"
 
-  /contributor/{id}:
-    $ref: "raid.yaml#/paths/~1contributor~1{id}"
-
-  /organisation/{id}:
-    $ref: "raid.yaml#/paths/~1organisation~1{id}"
-
-  # endregion
-
-  # region service point endpoints
-
   /service-point/:
     $ref: "service-point.yaml#/paths/~1service-point"
   /service-point/{id}:

@@ -92,13 +92,23 @@ public class RaidController implements RaidApi {
     }
 
     @Override
-    public ResponseEntity<List<RaidDto>> findAllRaids(final List<String> includeFields) {
+    public ResponseEntity<List<RaidDto>> findAllRaids(final List<String> includeFields, final String contributorId, final String organisationId) {
         //TODO: filter for service point owner/raid admin/raid user if embargoed
-        final var servicePointId = getServicePointId();
+        List<RaidDto> raids;
 
-        final var raids = raidIngestService.findAllByServicePointIdOrHandleIn(servicePointId)
-                .stream().filter(this::isViewable)
-                .toList();
+        if (contributorId != null) {
+            raids = raidIngestService.findAllByContributor(contributorId);
+
+        } else if (organisationId != null) {
+            raids = raidIngestService.findAllByOrganisation(organisationId);
+
+        } else {
+            final var servicePointId = getServicePointId();
+
+            raids = raidIngestService.findAllByServicePointIdOrHandleIn(servicePointId)
+                    .stream().filter(this::isViewable)
+                    .toList();
+        }
 
         if (includeFields != null && !includeFields.isEmpty()) {
             return ResponseEntity.ok(filterFields(raids, includeFields));

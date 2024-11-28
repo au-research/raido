@@ -95,11 +95,9 @@ public class RaidIngestService {
         return raids;
     }
 
-    public List<RaidDto> findAllByContributor(final String id) {
-        final String orcid = "https://orcid.org/%s".formatted(id);
-
+    public List<RaidDto> findAllByContributor(final String contributorId) {
         final var raids = new ArrayList<RaidDto>();
-        final var records = raidRepository.findAllByContributorOrcid(orcid);
+        final var records = raidRepository.findAllByContributorOrcid(contributorId);
 
         for (final var record : records) {
             raids.add(cacheableRaidService.build(record));
@@ -108,11 +106,9 @@ public class RaidIngestService {
         return raids;
     }
 
-    public List<RaidDto> findAllByOrganisation(final String id) {
-        final String ror = "https://ror.org/%s".formatted(id);
-
+    public List<RaidDto> findAllByOrganisation(final String organisationId) {
         final var raids = new ArrayList<RaidDto>();
-        final var records = raidRepository.findAllByOrganisationId(ror);
+        final var records = raidRepository.findAllByOrganisationId(organisationId);
 
         for (final var record : records) {
             raids.add(cacheableRaidService.build(record));

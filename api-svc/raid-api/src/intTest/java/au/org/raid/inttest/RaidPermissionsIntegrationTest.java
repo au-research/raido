@@ -144,7 +144,7 @@ public class RaidPermissionsIntegrationTest extends AbstractIntegrationTest {
             assert raid2 != null;
 
             final var token = tokenService.getUserToken(raidAdminUserContext.getUsername(), raidAdminUserContext.getPassword());
-            final var response = testClient.raidApi(token).findAllRaids(null);
+            final var response = testClient.raidApi(token).findAllRaids(null, null, null);
 
             assert response.getBody() != null;
 

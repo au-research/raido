@@ -48,6 +48,18 @@ paths:
             type: array
             items:
               type: string
+        - name: contributor.id
+          description: Only show RAiDs that include a contributor with the given id
+          example: https://orcid.org/0009-0006-4129-5257
+          in: query
+          schema:
+            type: string
+        - name: organisation.id
+          description: Only show RAiDs that include an organisation with the given id
+          example: https://ror.org/038sjwq14
+          in: query
+          schema:
+            type: string
       responses:
         200:
           description: success
@@ -219,54 +231,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ClosedRaid'
-  /contributor/{id}:
-    parameters:
-      - name: id
-        in: path
-        required: true
-        description: The id of the contributor. Currently only ORCID is supported
-        schema:
-          type: string
-    get:
-      security:
-        - bearerAuth: [ ]
-      tags:
-        - contributor
-      operationId: find-all-by-id
-      summary: Find all RAiDs with a given contributor
-      responses:
-        200:
-          description: success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/RaidDto'
-  /organisation/{id}:
-    parameters:
-      - name: id
-        in: path
-        required: true
-        description: The id of the organisation. Currently only ROR is supported
-        schema:
-          type: string
-    get:
-      security:
-        - bearerAuth: [ ]
-      tags:
-        - organisation
-      operationId: find-all-by-id
-      summary: Find all RAiDs with a given contributor
-      responses:
-        200:
-          description: success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/RaidDto'
 components:
   schemas:
     RaidCreateRequest:

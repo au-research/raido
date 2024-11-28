@@ -1,18 +1,19 @@
 package au.org.raid.inttest;
 
-import au.org.raid.idl.raidv2.model.RaidDto;
-import au.org.raid.idl.raidv2.model.RaidPatchRequest;
-import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
+import au.org.raid.idl.raidv2.model.*;
 import au.org.raid.inttest.service.Handle;
 import au.org.raid.inttest.service.RaidApiValidationException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.UUID;
 
 import static au.org.raid.inttest.service.TestConstants.REAL_TEST_ORCID;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -181,7 +182,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
         final var api = testClient.raidApi(uqUserContext.getToken());
 
         try {
-            final var raidList = api.findAllRaids(null).getBody();
+            final var raidList = api.findAllRaids(null, null, null).getBody();
 
             assert raidList != null;
 
@@ -195,6 +196,84 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
             fail(e.getMessage());
         } finally {
             userService.deleteUser(uqUserContext.getId());
+        }
+    }
+
+    @Disabled("Need a way to create contributors in tests")
+    @Test
+    @DisplayName("List all raids with a given contributor id")
+    void listRaidsWithAGivenContributorId() {
+        final String orcid = "https://orcid.org/0009-0006-4129-5257";
+
+        final var user = userService.createUser(
+                "raid-au",
+                "raid-searcher", "service-point-user"
+        );
+
+        try {
+            createRequest.getContributor().forEach(contributor -> {
+                contributor.id(orcid);
+                contributor.email(null);
+                contributor.uuid(UUID.randomUUID().toString());
+            });
+
+            raidApi.mintRaid(createRequest);
+            final var raidList = testClient
+                    .raidApi(user.getToken()).findAllRaids(Collections.emptyList(), orcid, null).getBody();
+            assert raidList != null;
+
+            // find all raids in resultset that don't contain a contributor with the specified ORCID
+            // there shouldn't be any
+            final var erroneousRaids = raidList.stream()
+                    .filter(raid -> !raid.getContributor().stream()
+                            .map(Contributor::getId)
+                            .toList()
+                            .contains(orcid))
+                    .toList();
+
+            assertThat(raidList).isNotEmpty();
+            assertThat(erroneousRaids).isEmpty();
+        } catch (RaidApiValidationException e) {
+            fail(e.getMessage());
+        } finally {
+            userService.deleteUser(user.getId());
+        }
+    }
+
+    @Test
+    @DisplayName("List all raids with a given organisation id")
+    void listRaidsWithAGivenOrganisationId() {
+        final String ror = "https://ror.org/038sjwq14";
+
+        final var user = userService.createUser(
+                "raid-au",
+                "raid-searcher", "service-point-user"
+        );
+
+        try {
+            createRequest.getOrganisation().forEach(organisation -> organisation.id(ror));
+
+            raidApi.mintRaid(createRequest);
+
+            final var raidList = testClient
+                    .raidApi(user.getToken()).findAllRaids(Collections.emptyList(), null, ror).getBody();
+            assert raidList != null;
+
+            // find all raids in resultset that don't contain a contributor with the specified ORCID
+            // there shouldn't be any
+            final var erroneousRaids = raidList.stream()
+                    .filter(raid -> !raid.getOrganisation().stream()
+                            .map(Organisation::getId)
+                            .toList()
+                            .contains(ror))
+                    .toList();
+
+            assertThat(raidList).isNotEmpty();
+            assertThat(erroneousRaids).isEmpty();
+        } catch (RaidApiValidationException e) {
+            fail(e.getMessage());
+        } finally {
+            userService.deleteUser(user.getId());
         }
     }
 
