@@ -34,7 +34,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.springframework.security.authorization.AuthorityAuthorizationManager.hasAnyRole;
 import static org.springframework.security.authorization.AuthorityAuthorizationManager.hasRole;
 
 @Slf4j
@@ -45,7 +44,7 @@ public class SecurityConfig {
     public static final String SERVICE_POINT_GROUP_ID_CLAIM = "service_point_group_id";
     private static final String RAID_USER_ROLE = "raid-user";
     private static final String RAID_ADMIN_ROLE = "raid-admin";
-    private static final String RAID_SEARCHER_ROLE = "raid-searcher";
+    private static final String PID_SEARCHER_ROLE = "pid-searcher";
     private static final String SERVICE_POINT_USER_ROLE = "service-point-user";
     private static final String OPERATOR_ROLE = "operator";
     private static final String CONTRIBUTOR_WRITER_ROLE = "contributor-writer";
@@ -70,20 +69,21 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui*/**").permitAll()
                         .requestMatchers("/docs/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers(new AntPathRequestMatcher(RAID_API + "/", "GET"))
-                        //TODO: Any service point user but embargoed raids should only be visible to service point
-                        // owners or raid users/admins with permissions for the raid
-                        .access(AuthorizationManagers.anyOf(
-                                hasAnyRole(SERVICE_POINT_USER_ROLE, RAID_ADMIN_ROLE)
-                        ))
+//                        .requestMatchers(new AntPathRequestMatcher(RAID_API + "/", "GET"))
+//                        //TODO: Any service point user but embargoed raids should only be visible to service point
+//                        // owners or raid users/admins with permissions for the raid
+//                        .access(AuthorizationManagers.anyOf(
+//                                hasAnyRole(SERVICE_POINT_USER_ROLE, RAID_ADMIN_ROLE)
+//                        ))
                         //TODO: Available to any user on same service point unless embargoed then on service-point-owner
                         .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**", "GET"))
                         .access(AuthorizationManagers.anyOf(
                                 anyServicePointUserUnlessEmbargoed(),
                                 servicePointOwner(),
                                 hasRaidPermissions(RAID_ADMIN_ROLE, ADMIN_RAIDS_CLAIM),
-                                hasRaidPermissions(RAID_USER_ROLE, USER_RAIDS_CLAIM)
-                        ))
+                                hasRaidPermissions(RAID_USER_ROLE, USER_RAIDS_CLAIM),
+                                hasPidSearcherRoleIfPidSearch()
+                                ))
                          .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**", "POST"))
                         .hasAnyRole(SERVICE_POINT_USER_ROLE, RAID_ADMIN_ROLE)
                         .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**", "PUT"))
@@ -99,10 +99,8 @@ public class SecurityConfig {
                         ))
                         .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**", "POST"))
                         .hasAnyRole(RAID_ADMIN_ROLE)
-                        .requestMatchers("/contributor/**").hasRole(RAID_SEARCHER_ROLE)
-                        .requestMatchers("/organisation/**").hasRole(RAID_SEARCHER_ROLE)
-                        .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**"))
-                        .hasRole(SERVICE_POINT_USER_ROLE)
+//                        .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**"))
+//                        .hasRole(SERVICE_POINT_USER_ROLE)
                         .requestMatchers(new AntPathRequestMatcher(SERVICE_POINT_API + "/**", "PUT"))
                         .hasRole(OPERATOR_ROLE)
                         .requestMatchers(new AntPathRequestMatcher(SERVICE_POINT_API + "/**", "POST"))
@@ -183,6 +181,9 @@ public class SecurityConfig {
 
     private AuthorizationManager<RequestAuthorizationContext> servicePointOwner() {
         return (authentication, context) -> {
+            if (isPidSearch(context)) {
+                return new AuthorizationDecision(false);
+            }
             final var token = ((JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getToken();
 
             if (token == null) {
@@ -223,16 +224,44 @@ public class SecurityConfig {
         };
     }
 
+    private AuthorizationManager<RequestAuthorizationContext> hasPidSearcherRoleIfPidSearch() {
+        return (authentication, context) -> {
+            if (isPidSearch(context)) {
+                final var token = getToken();
+
+                if (token == null) {
+                    return new AuthorizationDecision(false);
+                }
+
+                if (tokenContainsRole(token, PID_SEARCHER_ROLE)) {
+                    return new AuthorizationDecision(true);
+                }
+            }
+            return new AuthorizationDecision(false);
+        };
+    }
 
     private AuthorizationManager<RequestAuthorizationContext> anyServicePointUserUnlessEmbargoed() {
         return (authentication, context) -> {
-            final var token = ((JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getToken();
+            if (isPidSearch(context)) {
+                return new AuthorizationDecision(false);
+            }
+
+            final var token = getToken();
 
             if (token == null) {
                 return new AuthorizationDecision(false);
             }
 
+            if (!tokenContainsRole(token, SERVICE_POINT_USER_ROLE) && !tokenContainsRole(token, RAID_ADMIN_ROLE)) {
+                return new AuthorizationDecision(false);
+            }
+
             final var pathParts = context.getRequest().getRequestURI().split("/");
+
+            if (pathParts.length <= 2) {
+                return new AuthorizationDecision(true);
+            }
 
             final var handle = "%s/%s".formatted(pathParts[2], pathParts[3]);
 
@@ -263,13 +292,18 @@ public class SecurityConfig {
 
     private AuthorizationManager<RequestAuthorizationContext> hasRaidPermissions(final String roleName, final String claimName) {
         return (authentication, context) -> {
-            final var token = ((JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getToken();
+
+            if (isPidSearch(context)) {
+                return new AuthorizationDecision(false);
+            }
+
+            final var token = getToken();
 
             if (token == null) {
                 return new AuthorizationDecision(false);
             }
 
-            if (!((List<?>) ((Map<?,?>) token.getClaim(REALM_ACCESS_CLAIM)).get(ROLES_CLAIM)).contains(roleName)) {
+            if (!tokenContainsRole(token, roleName)) {
                 return new AuthorizationDecision(false);
             }
 
@@ -282,8 +316,6 @@ public class SecurityConfig {
 
             final var handle = "%s/%s".formatted(pathParts[2], pathParts[3]);
 
-
-
             final var validRaids = (List<?>) token.getClaims().get(claimName);
 
             if (validRaids != null && validRaids.contains(handle)) {
@@ -294,4 +326,16 @@ public class SecurityConfig {
         };
     }
 
+    private Jwt getToken() {
+        return ((JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getToken();
+    }
+
+    private boolean tokenContainsRole(final Jwt token, final String roleName) {
+        return ((List<?>) ((Map<?, ?>) token.getClaim(REALM_ACCESS_CLAIM)).get(ROLES_CLAIM)).contains(roleName);
+    }
+
+    private boolean isPidSearch(final RequestAuthorizationContext context) {
+        return context.getRequest().getParameter("contributor.id") != null ||
+                context.getRequest().getParameter("organisation.id") != null;
+    }
 }

@@ -207,7 +207,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
 
         final var user = userService.createUser(
                 "raid-au",
-                "raid-searcher", "service-point-user"
+                "pid-searcher", "service-point-user"
         );
 
         try {
@@ -247,7 +247,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
 
         final var user = userService.createUser(
                 "raid-au",
-                "raid-searcher", "service-point-user"
+                "pid-searcher", "service-point-user"
         );
 
         try {

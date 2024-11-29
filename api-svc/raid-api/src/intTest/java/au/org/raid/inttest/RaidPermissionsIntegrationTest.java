@@ -9,6 +9,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Collections;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -153,6 +155,34 @@ public class RaidPermissionsIntegrationTest extends AbstractIntegrationTest {
             assertThat(raids, not(hasItem(raid1.getIdentifier().getId())));
         } finally {
             userService.deleteUser(raidAdminUserContext.getId());
+        }
+    }
+
+    @Test
+    @DisplayName("Should return 403 response when searching by contributor id without 'pid-searcher' role")
+    void searchByContributorIdFails() {
+        try {
+            final var contributorId = "https://orcid.org/0009-0006-4129-5257";
+            raidApi.findAllRaids(Collections.emptyList(), contributorId, null);
+            fail("Expecting 403 response but got 200");
+        } catch (FeignException e) {
+            assertThat(e.status(), is(403));
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    @Test
+    @DisplayName("Should return 403 response when searching by organisation id without 'pid-searcher' role")
+    void searchByOrganisationIdFails() {
+        try {
+            final var organisationId = "https://ror.org/038sjwq14";
+            raidApi.findAllRaids(Collections.emptyList(), null, organisationId);
+            fail("Expecting 403 response but got 200");
+        } catch (FeignException e) {
+            assertThat(e.status(), is(403));
+        } catch (Exception e) {
+            fail();
         }
     }
 }
