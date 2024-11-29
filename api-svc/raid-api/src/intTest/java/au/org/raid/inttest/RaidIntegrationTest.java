@@ -243,7 +243,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("List all raids with a given organisation id")
     void listRaidsWithAGivenOrganisationId() {
-        final String ror = "https://ror.org/038sjwq14";
+        final String ror = "https://ror.org/039se3q37";
 
         final var user = userService.createUser(
                 "raid-au",
