@@ -35,6 +35,10 @@ public class RaidIngestService {
     private final LanguageService languageService;
     private final HandleFactory handleFactory;
     private final CacheableRaidService cacheableRaidService;
+
+    private final RaidHistoryService raidHistoryService;
+
+
     public void create(final RaidDto raid) {
         final var handle = handleFactory.create(raid.getIdentifier().getId()).toString();
 
@@ -78,7 +82,10 @@ public class RaidIngestService {
         final var records = raidRepository.findAllByServicePointIdOrNotConfidential(servicePointId);
 
         for (final var record : records) {
-            raids.add(cacheableRaidService.build(record));
+            final var raid = raidHistoryService.findByHandle(record.getHandle())
+                    .orElseThrow(() -> new ResourceNotFoundException(record.getHandle()));
+
+            raids.add(raid);
         }
 
         return raids;
@@ -89,7 +96,10 @@ public class RaidIngestService {
         final var records = raidRepository.findAllByServicePointId(servicePointId);
 
         for (final var record : records) {
-            raids.add(cacheableRaidService.build(record));
+            final var raid = raidHistoryService.findByHandle(record.getHandle())
+                    .orElseThrow(() -> new ResourceNotFoundException(record.getHandle()));
+
+            raids.add(raid);
         }
 
         return raids;
@@ -100,7 +110,10 @@ public class RaidIngestService {
         final var records = raidRepository.findAllByContributorOrcid(contributorId);
 
         for (final var record : records) {
-            raids.add(cacheableRaidService.build(record));
+            final var raid = raidHistoryService.findByHandle(record.getHandle())
+                    .orElseThrow(() -> new ResourceNotFoundException(record.getHandle()));
+
+            raids.add(raid);
         }
 
         return raids;
@@ -111,15 +124,17 @@ public class RaidIngestService {
         final var records = raidRepository.findAllByOrganisationId(organisationId);
 
         for (final var record : records) {
-            raids.add(cacheableRaidService.build(record));
+            final var raid = raidHistoryService.findByHandle(record.getHandle())
+                    .orElseThrow(() -> new ResourceNotFoundException(record.getHandle()));
+
+            raids.add(raid);
         }
 
         return raids;
     }
 
     public Optional<RaidDto> findByHandle(final String handle) {
-        return raidRepository.findByHandle(handle)
-                .map(cacheableRaidService::build)
+        return raidHistoryService.findByHandle(handle)
                 .or(Optional::empty);
     }
 
@@ -175,7 +190,10 @@ public class RaidIngestService {
         final var records = raidRepository.findAllByServicePointIdOrHandleIn(servicePointId, handles);
 
         for (final var record : records) {
-            raids.add(cacheableRaidService.build(record));
+            final var raid = raidHistoryService.findByHandle(record.getHandle())
+                    .orElseThrow(() -> new ResourceNotFoundException(record.getHandle()));
+
+            raids.add(raid);
         }
 
         return raids;

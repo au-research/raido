@@ -61,6 +61,8 @@ class RaidIngestServiceTest {
     private DateFactory dateFactory;
     @Mock
     private CacheableRaidService cacheableRaidService;
+    @Mock
+    private RaidHistoryService raidHistoryService;
     @InjectMocks
     private RaidIngestService raidIngestService;
 
@@ -135,7 +137,7 @@ class RaidIngestServiceTest {
                 .setEndDate(END_DATE);
 
         when(raidRepository.findAllByServicePointId(servicePointId)).thenReturn(List.of(raidRecord));
-        when(cacheableRaidService.build(raidRecord)).thenReturn(RAID_DTO);
+        when(raidHistoryService.findByHandle(HANDLE)).thenReturn(Optional.of(RAID_DTO));
 
         final var result = raidIngestService.findAllByServicePointId(servicePointId);
 
@@ -145,13 +147,7 @@ class RaidIngestServiceTest {
     @Test
     @DisplayName("findByHandle() returns raid from handle")
     void findByHandle() {
-        final var raidRecord = new RaidRecord()
-                .setHandle(HANDLE)
-                .setStartDateString(START_DATE)
-                .setEndDate(END_DATE);
-
-        when(raidRepository.findByHandle(HANDLE)).thenReturn(Optional.of(raidRecord));
-        when(cacheableRaidService.build(raidRecord)).thenReturn(RAID_DTO);
+        when(raidHistoryService.findByHandle(HANDLE)).thenReturn(Optional.of(RAID_DTO));
 
         assertThat(raidIngestService.findByHandle(HANDLE), is(Optional.of(RAID_DTO)));
     }
@@ -159,7 +155,7 @@ class RaidIngestServiceTest {
     @Test
     @DisplayName("findByHandle() returns empty Optional if none found")
     void findByHandleReturnsEmptyOptional() {
-        when(raidRepository.findByHandle(HANDLE)).thenReturn(Optional.empty());
+        when(raidHistoryService.findByHandle(HANDLE)).thenReturn(Optional.empty());
         assertThat(raidIngestService.findByHandle(HANDLE), is(Optional.empty()));
     }
 
