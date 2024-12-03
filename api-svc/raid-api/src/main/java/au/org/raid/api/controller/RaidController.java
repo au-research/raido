@@ -152,7 +152,16 @@ public class RaidController implements RaidApi {
                 raidService.patchContributors(prefix, suffix, raidPatchRequest.getContributor()));
     }
 
+
+    @GetMapping(path = "/all-public")
+    public ResponseEntity<List<RaidDto>> allPublicRaids() {
+        return ResponseEntity.ok(raidService.findAllPublic());
+
+
+    }
+
     private long getServicePointId() {
+
         final var token = ((JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getToken();
         final var groupId = (String) token.getClaims().get(SERVICE_POINT_GROUP_ID_CLAIM);
 

@@ -43,6 +43,7 @@ import static org.springframework.security.authorization.AuthorityAuthorizationM
 public class SecurityConfig {
     public static final String SERVICE_POINT_GROUP_ID_CLAIM = "service_point_group_id";
     private static final String RAID_USER_ROLE = "raid-user";
+    private static final String RAID_DUMPER_ROLE = "raid-dumper";
     private static final String RAID_ADMIN_ROLE = "raid-admin";
     private static final String PID_SEARCHER_ROLE = "pid-searcher";
     private static final String SERVICE_POINT_USER_ROLE = "service-point-user";
@@ -76,6 +77,8 @@ public class SecurityConfig {
 //                                hasAnyRole(SERVICE_POINT_USER_ROLE, RAID_ADMIN_ROLE)
 //                        ))
                         //TODO: Available to any user on same service point unless embargoed then on service-point-owner
+                        .requestMatchers(new AntPathRequestMatcher(RAID_API + "/all-public", "GET"))
+                        .hasRole(RAID_DUMPER_ROLE)
                         .requestMatchers(new AntPathRequestMatcher(RAID_API + "/**", "GET"))
                         .access(AuthorizationManagers.anyOf(
                                 anyServicePointUserUnlessEmbargoed(),

@@ -7,6 +7,7 @@ import au.org.raid.api.exception.ServicePointNotFoundException;
 import au.org.raid.api.exception.UnknownServicePointException;
 import au.org.raid.api.factory.HandleFactory;
 import au.org.raid.api.factory.IdFactory;
+import au.org.raid.api.repository.RaidRepository;
 import au.org.raid.api.repository.ServicePointRepository;
 import au.org.raid.api.service.Handle;
 import au.org.raid.api.service.RaidHistoryService;
@@ -31,6 +32,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,6 +55,8 @@ public class RaidService {
     private final HandleFactory handleFactory;
     private final RaidListenerService raidListenerService;
     private final KeycloakService keycloakService;
+
+    private final RaidRepository raidRepository;
 
     @Transactional
     public RaidDto mint(
@@ -213,5 +217,18 @@ public class RaidService {
                 .read(canRead)
                 .write(canWrite)
                 .build());
+    }
+
+    public List<RaidDto> findAllPublic() {
+        final var raidRecords = raidRepository.findAllPublic();
+        final var raids = new ArrayList<RaidDto>();
+
+        for (final var record : raidRecords) {
+            final var raidDto = raidHistoryService.findByHandle(record.getHandle())
+                    .orElseThrow(() -> new ResourceNotFoundException(record.getHandle()));
+            raids.add(raidDto);
+        }
+
+        return raids;
     }
 }

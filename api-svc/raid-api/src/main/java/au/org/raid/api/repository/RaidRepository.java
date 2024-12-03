@@ -128,4 +128,10 @@ public class RaidRepository {
                 )
                 .fetchInto(RaidRecord.class);
     }
+
+    public List<RaidRecord> findAllPublic() {
+        return dslContext.selectFrom(RAID)
+                .where(RAID.CONFIDENTIAL.eq(false))
+                .fetch();
+    }
 }
