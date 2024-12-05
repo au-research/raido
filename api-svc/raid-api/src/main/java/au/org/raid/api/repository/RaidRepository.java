@@ -131,7 +131,7 @@ public class RaidRepository {
 
     public List<RaidRecord> findAllPublic() {
         return dslContext.selectFrom(RAID)
-                .where(RAID.CONFIDENTIAL.eq(false))
+                .where(RAID.ACCESS_TYPE_ID.in(1, 4))
                 .fetch();
     }
 }

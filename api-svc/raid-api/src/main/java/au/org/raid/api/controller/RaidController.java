@@ -153,7 +153,7 @@ public class RaidController implements RaidApi {
     }
 
 
-    @GetMapping(path = "/all-public")
+    @GetMapping(path = "/raid/all-public")
     public ResponseEntity<List<RaidDto>> allPublicRaids() {
         return ResponseEntity.ok(raidService.findAllPublic());
 
