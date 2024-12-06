@@ -231,6 +231,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ClosedRaid'
+
+  /raid/all-public:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - raid
+      operationId: findAllPublicRaids
+      summary: List raids
+      responses:
+        200:
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RaidDto'
+
 components:
   schemas:
     RaidCreateRequest:

@@ -3,6 +3,7 @@ package au.org.raid.inttest;
 import au.org.raid.idl.raidv2.model.*;
 import au.org.raid.inttest.service.Handle;
 import au.org.raid.inttest.service.RaidApiValidationException;
+import au.org.raid.inttest.service.TestConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
@@ -272,6 +273,70 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
             assertThat(erroneousRaids).isEmpty();
         } catch (RaidApiValidationException e) {
             fail(e.getMessage());
+        } finally {
+            userService.deleteUser(user.getId());
+        }
+    }
+
+
+    @Test
+    @DisplayName("Endpoint to show all public raids shouldn't show any embargoed raids")
+    void findAllPublicShouldNotDisplayEmbargoedRaids() {
+        final var user = userService.createUser(
+                "raid-au",
+                "raid-dumper"
+        );
+
+        try {
+            raidApi.mintRaid(createRequest);
+
+            createRequest.getAccess().getType().id(TestConstants.OPEN_ACCESS_TYPE);
+            createRequest.getAccess().getStatement().text("Open");
+            createRequest.getAccess().embargoExpiry(null);
+
+            raidApi.mintRaid(createRequest);
+
+            final var raidList = testClient.raidApi(user.getToken()).findAllPublicRaids().getBody();
+            assert raidList != null;
+
+            // find all raids in resultset that don't have an embargoed access type
+            // there shouldn't be any
+            final var erroneousRaids = raidList.stream()
+                    .filter(raid -> raid.getAccess().getType().getId().equals(TestConstants.EMBARGOED_ACCESS_TYPE))
+                    .toList();
+
+            assertThat(raidList).isNotEmpty();
+            assertThat(erroneousRaids).isEmpty();
+        } catch (RaidApiValidationException e) {
+            fail(e.getMessage());
+        } finally {
+            userService.deleteUser(user.getId());
+        }
+    }
+
+    @Test
+    @DisplayName("Find all public raids should only be available to raid-dumper")
+    void findAllPublicPermissions() {
+        final var user = userService.createUser(
+                "raid-au",
+                "service-point-user", "raid-user", "raid-admin"
+        );
+
+        try {
+            raidApi.mintRaid(createRequest);
+
+            createRequest.getAccess().getType().id(TestConstants.OPEN_ACCESS_TYPE);
+            createRequest.getAccess().getStatement().text("Open");
+            createRequest.getAccess().embargoExpiry(null);
+
+            raidApi.mintRaid(createRequest);
+
+
+            testClient.raidApi(user.getToken()).findAllPublicRaids().getBody();
+        } catch (RaidApiValidationException e) {
+            fail(e.getMessage());
+        } catch (FeignException e) {
+            assertThat(e.status()).isEqualTo(403);
         } finally {
             userService.deleteUser(user.getId());
         }

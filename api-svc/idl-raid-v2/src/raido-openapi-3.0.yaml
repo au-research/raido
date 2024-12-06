@@ -54,6 +54,8 @@ paths:
   # region raid endpoints
   /raid/:
     $ref: "raid.yaml#/paths/~1raid"
+  /raid/all-public:
+    $ref: "raid.yaml#/paths/~1raid~1all-public"
   /raid/{prefix}/{suffix}:
     $ref: "raid.yaml#/paths/~1raid~1{prefix}~1{suffix}"
   /raid/{prefix}/{suffix}/{version}:
