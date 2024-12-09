@@ -40,14 +40,15 @@ const ContributorItem = memo(
           </Typography>
         </Stack>
         <Grid container spacing={1}>
-          {contributor.role
-            .sort((a, b) => a.id.localeCompare(b.id)) // sort alphabetically
-            .map((role) => (
-              <ContributorRoleItem
-                key={crypto.randomUUID()}
-                contributorRole={role}
-              />
-            ))}
+          {contributor?.role &&
+            contributor.role
+              .sort((a, b) => a.id.localeCompare(b.id))
+              .map((role) => (
+                <ContributorRoleItem
+                  key={crypto.randomUUID()}
+                  contributorRole={role}
+                />
+              ))}
         </Grid>
 
         <Stack direction="row" alignItems="baseline">
@@ -59,12 +60,13 @@ const ContributorItem = memo(
           </Typography>
         </Stack>
         <Stack gap={2} divider={<Divider />}>
-          {contributor.position.map((position) => (
-            <ContributorPositionItem
-              key={crypto.randomUUID()}
-              contributorPosition={position}
-            />
-          ))}
+          {contributor?.position &&
+            contributor.position.map((position) => (
+              <ContributorPositionItem
+                key={crypto.randomUUID()}
+                contributorPosition={position}
+              />
+            ))}
         </Stack>
       </Stack>
     </Stack>
@@ -79,7 +81,7 @@ const ContributorDisplay = memo(({ data }: { data: Contributor[] }) => (
       <>
         {data.length === 0 && <NoItemsMessage />}
         <Stack gap={2} divider={<Divider />}>
-          {data.map((contributor, i) => (
+          {data?.map((contributor, i) => (
             <ContributorItem
               contributor={contributor}
               key={crypto.randomUUID()}

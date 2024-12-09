@@ -63,7 +63,7 @@ const DescriptionDisplay = memo(({ data }: { data: Description[] }) => (
       <>
         {data.length === 0 && <NoItemsMessage />}
         <Stack gap={2} divider={<Divider />}>
-          {data.map((description, i) => (
+          {data?.map((description, i) => (
             <DescriptionItem
               description={description}
               key={crypto.randomUUID()}

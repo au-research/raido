@@ -44,7 +44,7 @@ const TraditionalKnowledgeLabelDisplay = memo(
         <>
           {data.length === 0 && <NoItemsMessage />}
           <Stack gap={2} divider={<Divider />}>
-            {data.map((traditionalKnowledgeLabel, i) => (
+            {data?.map((traditionalKnowledgeLabel, i) => (
               <TraditionalKnowledgeLabelItem
                 traditionalKnowledgeLabel={traditionalKnowledgeLabel}
                 key={crypto.randomUUID()}

@@ -45,7 +45,7 @@ const AlternateIdentifiersDisplay = memo(
         <>
           {data.length === 0 && <NoItemsMessage />}
           <Stack gap={2} divider={<Divider />}>
-            {data.map((alternateIdentifier, i) => (
+            {data?.map((alternateIdentifier, i) => (
               <AlternateIdentifierItem
                 alternateIdentifier={alternateIdentifier}
                 key={crypto.randomUUID()}

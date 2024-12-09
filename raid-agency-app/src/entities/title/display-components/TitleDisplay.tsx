@@ -53,7 +53,7 @@ const TitleDisplay = memo(({ data }: { data: Title[] }) => (
       <>
         {data.length === 0 && <NoItemsMessage />}
         <Stack gap={2} divider={<Divider />}>
-          {data.map((title, i) => (
+          {data?.map((title, i) => (
             <TitleItem title={title} key={crypto.randomUUID()} i={i} />
           ))}
         </Stack>

@@ -42,7 +42,7 @@ const AlternateUrlDisplay = memo(({ data }: { data: AlternateUrl[] }) => (
       <>
         {data.length === 0 && <NoItemsMessage />}
         <Stack gap={2} divider={<Divider />}>
-          {data.map((alternateUrl, i) => (
+          {data?.map((alternateUrl, i) => (
             <AlternateUrlItem
               alternateUrl={alternateUrl}
               key={crypto.randomUUID()}

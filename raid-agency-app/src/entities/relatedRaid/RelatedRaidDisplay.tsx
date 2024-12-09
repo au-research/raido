@@ -57,7 +57,7 @@ const RelatedRaidDisplay = memo(({ data }: { data: RelatedRaid[] }) => (
       <>
         {data.length === 0 && <NoItemsMessage />}
         <Stack gap={2} divider={<Divider />}>
-          {data.map((relatedRaid, i) => (
+          {data?.map((relatedRaid, i) => (
             <RelatedRaidItem
               relatedRaid={relatedRaid}
               key={crypto.randomUUID()}
