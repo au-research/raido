@@ -10,6 +10,16 @@ const iamClientSecret = import.meta.env.IAM_CLIENT_SECRET;
 
 let cachedData: RaidDto[] | null = null;
 
+interface ServicePoint {
+  id: number;
+  name: string;
+  identifierOwner: string;
+  techEmail: string;
+  adminEmail: string;
+  enabled: boolean;
+  appWritesEnabled: boolean;
+}
+
 async function getAuthToken(): Promise<string> {
   const TOKEN_PARAMS = {
     grant_type: "client_credentials",
@@ -55,7 +65,44 @@ export async function fetchRaids(): Promise<RaidDto[]> {
   try {
     const token = await getAuthToken();
 
-    const response = await fetch(`${apiEndpoint}/raid/`, {
+    const servicePoints = await fetchServicePoints({ token });
+    const ids = servicePoints.map((sp) => sp.id);
+
+    const raidsFromAllSps: RaidDto[] = [];
+
+    for (const id of ids) {
+      const response = await fetch(
+        `${apiEndpoint}/raid/?servicePointId=${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = (await response.json()) as RaidDto[];
+      console.log(`SP ${id}: ${data.length} raids`);
+      raidsFromAllSps.push(...data);
+    }
+    return raidsFromAllSps;
+  } catch (error) {
+    console.error("There was a problem fetching the raids:", error);
+    throw error;
+  }
+}
+
+export async function fetchServicePoints({
+  token,
+}: {
+  token: string;
+}): Promise<ServicePoint[]> {
+  try {
+    const response = await fetch(`${apiEndpoint}/service-point/`, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -66,8 +113,7 @@ export async function fetchRaids(): Promise<RaidDto[]> {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    cachedData = (await response.json()) as RaidDto[];
-    return cachedData;
+    return (await response.json()) as ServicePoint[];
   } catch (error) {
     console.error("There was a problem fetching the raids:", error);
     throw error;
