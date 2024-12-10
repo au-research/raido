@@ -161,8 +161,8 @@ class RaidServiceTest {
 
         when(raidHistoryService.findByHandleAndVersion(handle, 1)).thenReturn(Optional.of(expected));
 
-        when(checksumService.create(updateRequest)).thenReturn("a");
-        when(checksumService.create(expected)).thenReturn("b");
+        when(checksumService.fromRaidUpdateRequest(updateRequest)).thenReturn("a");
+        when(checksumService.fromRaidDto(expected)).thenReturn("b");
 
         when(raidHistoryService.save(updateRequest)).thenReturn(expected);
         when(raidIngestService.update(expected)).thenReturn(expected);
@@ -199,8 +199,8 @@ class RaidServiceTest {
 
         when(servicePointRepository.findById(servicePointId)).thenReturn(Optional.of(servicePointRecord));
 
-        when(checksumService.create(expected)).thenReturn("1");
-        when(checksumService.create(updateRequest)).thenReturn("1");
+        when(checksumService.fromRaidDto(expected)).thenReturn("1");
+        when(checksumService.fromRaidUpdateRequest(updateRequest)).thenReturn("1");
 
         when(raidHistoryService.findByHandleAndVersion(handle, 1)).thenReturn(Optional.of(expected));
 

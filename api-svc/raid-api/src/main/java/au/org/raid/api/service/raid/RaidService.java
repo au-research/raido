@@ -63,7 +63,6 @@ public class RaidService {
             final RaidCreateRequest raid,
             final long servicePointId
     ) {
-        log.debug("THIS IS RAID V2");
         final var servicePointRecord =
                 servicePointRepository.findById(servicePointId).orElseThrow(() ->
                         new UnknownServicePointException(servicePointId));
@@ -114,8 +113,8 @@ public class RaidService {
         final var existing = raidHistoryService.findByHandleAndVersion(handle, version)
                 .orElseThrow(() -> new ResourceNotFoundException(handle));
 
-        final var existingChecksum = checksumService.create(existing);
-        final var updateChecksum = checksumService.create(raid);
+        final var existingChecksum = checksumService.fromRaidDto(existing);
+        final var updateChecksum = checksumService.fromRaidUpdateRequest(raid);
 
         if (updateChecksum.equals(existingChecksum)) {
             return existing;

@@ -6,16 +6,16 @@ import au.org.raid.api.exception.InvalidVersionException;
 import au.org.raid.api.factory.*;
 import au.org.raid.api.repository.RaidHistoryRepository;
 import au.org.raid.db.jooq.tables.records.RaidHistoryRecord;
-import au.org.raid.idl.raidv2.model.RaidChange;
-import au.org.raid.idl.raidv2.model.RaidCreateRequest;
-import au.org.raid.idl.raidv2.model.RaidDto;
-import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
+import au.org.raid.idl.raidv2.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +35,10 @@ public class RaidHistoryService {
 
     @SneakyThrows
     public RaidDto save(final RaidCreateRequest request) {
+        final var now = new BigDecimal(LocalDateTime.now().atOffset(ZoneOffset.UTC).toEpochSecond());
+
+        request.metadata(new Metadata().created(now).updated(now));
+
         final var raidString = objectMapper.writeValueAsString(request);
         final var handle = handleFactory.create(request.getIdentifier().getId());
         final var diff = jsonPatchFactory.create(EMPTY_JSON, raidString);
@@ -48,6 +52,16 @@ public class RaidHistoryService {
 
     @SneakyThrows
     public RaidDto save(final RaidUpdateRequest raid) {
+
+        final var now = new BigDecimal(LocalDateTime.now().atOffset(ZoneOffset.UTC).toEpochSecond());
+
+        Metadata metadata =  raid.getMetadata();
+
+        if (metadata == null) {
+            metadata = new Metadata();
+        }
+        raid.metadata(metadata.updated(now));
+
         final var version = raid.getIdentifier().getVersion();
         final var newVersion = version + 1;
         raid.getIdentifier().setVersion(newVersion);
