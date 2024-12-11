@@ -65,17 +65,26 @@ public class GroupController {
 
     @SneakyThrows
     private Response buildOptionsResponse(String... methods) {
+        String origin = session.getContext().getRequestHeaders().getHeaderString("Origin");
         Response.ResponseBuilder builder = Response.ok();
 
-        // Add CORS headers for preflight directly
-        builder.header("Access-Control-Allow-Origin",
-                "http://localhost:7080, " +
-                        "https://app.test.raid.org.au, " +
-                        "https://app3.test.raid.org.au, " +
-                        "https://app.demo.raid.org.au, " +
-                        "https://app3.demo.raid.org.au, " +
-                        "https://app.stage.raid.org.au, " +
-                        "https://app.prod.raid.org.au");
+        // List of allowed origins
+        List<String> allowedOrigins = List.of(
+                "http://localhost:7080",
+                "https://app.test.raid.org.au",
+                "https://app3.test.raid.org.au",
+                "https://app.demo.raid.org.au",
+                "https://app3.demo.raid.org.au",
+                "https://app.stage.raid.org.au",
+                "https://app.prod.raid.org.au"
+        );
+
+        // Only set the Origin header if it's in our allowed list
+        if (origin != null && allowedOrigins.contains(origin)) {
+            builder.header("Access-Control-Allow-Origin", origin);
+            builder.header("Access-Control-Allow-Credentials", "true");
+        }
+
         builder.header("Access-Control-Allow-Methods", String.join(", ", methods));
         builder.header("Access-Control-Allow-Headers", "Authorization,Content-Type");
         builder.header("Access-Control-Max-Age", "3600");
