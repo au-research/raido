@@ -1,4 +1,4 @@
-package au.org.raid.iam.provider.servicepoint;
+package au.org.raid.iam.provider.group;
 
 import org.keycloak.Config;
 import org.keycloak.models.KeycloakSession;

@@ -1,3 +1,3 @@
 au.org.raid.iam.provider.cors.CorsResponseFilterResourceProviderFactory
-au.org.raid.iam.provider.servicepoint.GroupControllerResourceProviderFactory
+au.org.raid.iam.provider.group.GroupControllerResourceProviderFactory
 au.org.raid.iam.provider.raid.RaidPermissionsControllerResourceProviderFactory
