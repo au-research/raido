@@ -1,5 +1,5 @@
 import { TextSelectField } from "@/fields/TextSelectField";
-import generalMapping from "@/mapping/general-mapping.json";
+import generalMapping from "@/mapping/data/general-mapping.json";
 import relatedObjectCategory from "@/references/related_object_category.json";
 import { Grid } from "@mui/material";
 import { memo, useMemo } from "react";
