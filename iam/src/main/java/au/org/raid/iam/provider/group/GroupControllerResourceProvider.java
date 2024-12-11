@@ -1,4 +1,4 @@
-package au.org.raid.iam.provider.servicepoint;
+package au.org.raid.iam.provider.group;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.ext.Provider;
