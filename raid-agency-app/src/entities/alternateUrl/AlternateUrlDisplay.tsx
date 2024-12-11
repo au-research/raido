@@ -1,15 +1,7 @@
-import DisplayCard from "@/components/DisplayCard";
-import DisplayItem from "@/components/DisplayItem";
+import { DisplayCard } from "@/components/display-card";
+import { DisplayItem } from "@/components/display-item";
 import { AlternateUrl } from "@/generated/raid";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  Divider,
-  Grid,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Divider, Grid, Stack, Typography } from "@mui/material";
 import { memo } from "react";
 
 const NoItemsMessage = memo(() => (

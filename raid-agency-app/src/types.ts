@@ -1,5 +1,5 @@
-import { ReactElement } from "react";
 import type { RaidDto, ServicePoint } from "@/generated/raid";
+import { ReactElement } from "react";
 export type Breadcrumb = {
   icon: ReactElement;
   label: string;
@@ -7,7 +7,6 @@ export type Breadcrumb = {
 };
 
 import type Keycloak from "keycloak-js";
-import DynamicForm from "./components/DynamicForm";
 import { FieldErrors } from "react-hook-form";
 
 export interface KeycloakContextValue {
@@ -57,11 +56,6 @@ export type ServicePointWithMembers = ServicePoint & {
   members: ServicePointMember[];
 };
 
-export interface Option {
-  id: string;
-  [key: string]: any;
-}
-
 export type ApiTokenRequest = {
   refreshToken: string;
 };
@@ -76,18 +70,6 @@ export type RequestTokenResponse = {
   scope: string;
   session_state: string;
   token_type: string;
-};
-
-export type FormConfiguration = {
-  id: string;
-  label: string;
-  labelPlural: string;
-  entityKey: keyof RaidDto;
-  component: typeof DynamicForm;
-  DetailsFormComponent: React.ComponentType<{ index: number }>;
-  generator: () => any;
-  ChildFormComponent?: React.ComponentType<{ index: number }>;
-  childConfigs?: ChildConfig[];
 };
 
 export interface ChildConfig {

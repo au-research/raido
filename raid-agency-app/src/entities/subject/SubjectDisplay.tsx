@@ -1,6 +1,6 @@
-import DisplayCard from "@/components/DisplayCard";
-import DisplayItem from "@/components/DisplayItem";
-import { useMapping } from "@/contexts/mapping/useMapping";
+import { DisplayCard } from "@/components/display-card";
+import { DisplayItem } from "@/components/display-item";
+import { useMapping } from "@/mapping";
 import SubjectKeywordItem from "@/entities/subject/keyword/SubjectKeywordItem";
 import { Subject } from "@/generated/raid";
 import { Divider, Grid, Stack, Typography } from "@mui/material";

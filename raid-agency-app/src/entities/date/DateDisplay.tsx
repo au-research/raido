@@ -1,5 +1,5 @@
-import DisplayCard from "@/components/DisplayCard";
-import DisplayItem from "@/components/DisplayItem";
+import { DisplayCard } from "@/components/display-card";
+import { DisplayItem } from "@/components/display-item";
 import { ModelDate } from "@/generated/raid";
 import { dateDisplayFormatter } from "@/utils/date-utils/date-utils";
 import { Grid } from "@mui/material";

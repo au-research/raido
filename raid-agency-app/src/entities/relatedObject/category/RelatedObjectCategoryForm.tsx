@@ -1,8 +1,8 @@
 import { TextSelectField } from "@/fields/TextSelectField";
+import generalMapping from "@/mapping/data/general-mapping.json";
 import relatedObjectCategory from "@/references/related_object_category.json";
 import { Grid } from "@mui/material";
 import { memo, useMemo } from "react";
-import generalMapping from "@/general-mapping.json";
 
 const RelatedObjectCategoryForm = memo(
   ({ parentIndex, index }: { parentIndex: number; index: number }) => {

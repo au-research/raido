@@ -1,5 +1,6 @@
-import { SnackbarProvider } from "@/components/Snackbar/SnackbarProvider";
+import { SnackbarProvider } from "@/components/snackbar";
 import { ReactErrorBoundary } from "@/error/ReactErrorBoundary";
+import { keycloak, KeycloakProvider } from "@/keycloak";
 import {
   Box,
   createTheme,
@@ -12,17 +13,16 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ReactKeycloakProvider } from "@react-keycloak/web";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import React from "react";
+import { useMemo } from "react";
 import { Outlet } from "react-router-dom";
-import { ErrorDialogProvider } from "./components/ErrorDialog/ErrorDialogProvider";
-import getKeycloakInstance from "./KeycloakSingleton";
-import { KeycloakProvider } from "./providers/KeycloakProvider";
-import { MappingProvider } from "./contexts/mapping/mappingProvider";
+
+import { ErrorDialogProvider } from "./components/error-dialog";
+import { MappingProvider } from "@/mapping";
 
 export function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
-  const theme = React.useMemo(
+  const theme = useMemo(
     () =>
       createTheme({
         typography: {
@@ -64,7 +64,7 @@ export function App() {
         <MappingProvider>
           <SnackbarProvider>
             <ReactKeycloakProvider
-              authClient={getKeycloakInstance()}
+              authClient={keycloak}
               initOptions={{
                 pkceMethod: "S256",
               }}

@@ -1,6 +1,6 @@
 import { TextInputField } from "@/fields/TextInputField";
 import { TextSelectField } from "@/fields/TextSelectField";
-import generalMapping from "@/general-mapping.json";
+import generalMapping from "@/mapping/data/general-mapping.json";
 import { Grid } from "@mui/material";
 import { memo } from "react";
 

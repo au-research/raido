@@ -1,6 +1,6 @@
-import DisplayCard from "@/components/DisplayCard";
-import DisplayItem from "@/components/DisplayItem";
-import { useMapping } from "@/contexts/mapping/useMapping";
+import { DisplayCard } from "@/components/display-card";
+import { DisplayItem } from "@/components/display-item";
+import { useMapping } from "@/mapping";
 import type { Title } from "@/generated/raid";
 import { dateDisplayFormatter } from "@/utils/date-utils/date-utils";
 import { Divider, Grid, Stack, Typography } from "@mui/material";

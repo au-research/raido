@@ -1,11 +1,11 @@
-import ProtectedRoute from "@/components/ProtectedRoute";
-import AppNavBarUnauthenticated from "@/design/AppNavBarUnauthenticated";
-import ApiKeyPage from "@/pages/ApiKeyPage";
-import HomePage from "@/pages/Homepage";
-import LoginPage from "@/pages/LoginPage";
-import { AboutRaidPage } from "@/pages/Unauth/AboutRaidPage";
-import { PrivacyPage } from "@/pages/Unauth/PrivacyPage";
-import { UsageTermsPage } from "@/pages/Unauth/UsageTermsPage";
+import { AppNavBarUnauthenticated } from "@/components/app-nav-bar-unauthenticated";
+import { ProtectedRoute } from "@/components/protected-route";
+import { AboutRaid } from "@/pages/about-raid/AboutRaid";
+import { ApiKey } from "@/pages/api-key";
+import Home from "@/pages/home/Home";
+import Login from "@/pages/login/Login";
+import { Privacy } from "@/pages/privacy/Privacy";
+import { UsageTerms } from "@/pages/usage-terms/UsageTerms";
 import { Box } from "@mui/material";
 import { RouteObject } from "react-router-dom";
 
@@ -16,7 +16,7 @@ export const otherRoutes: RouteObject[] = [
     children: [
       {
         path: "",
-        element: <HomePage />,
+        element: <Home />,
       },
     ],
   },
@@ -25,7 +25,7 @@ export const otherRoutes: RouteObject[] = [
     element: (
       <Box sx={{ pt: 5 }}>
         <AppNavBarUnauthenticated />
-        <LoginPage />
+        <Login />
       </Box>
     ),
   },
@@ -34,7 +34,7 @@ export const otherRoutes: RouteObject[] = [
     element: (
       <>
         <AppNavBarUnauthenticated />
-        <PrivacyPage />
+        <Privacy />
       </>
     ),
   },
@@ -43,7 +43,7 @@ export const otherRoutes: RouteObject[] = [
     element: (
       <>
         <AppNavBarUnauthenticated />
-        <UsageTermsPage />
+        <UsageTerms />
       </>
     ),
   },
@@ -52,7 +52,7 @@ export const otherRoutes: RouteObject[] = [
     element: (
       <>
         <AppNavBarUnauthenticated />
-        <AboutRaidPage />
+        <AboutRaid />
       </>
     ),
   },
@@ -62,7 +62,7 @@ export const otherRoutes: RouteObject[] = [
     children: [
       {
         path: "",
-        element: <ApiKeyPage />,
+        element: <ApiKey />,
       },
     ],
   },

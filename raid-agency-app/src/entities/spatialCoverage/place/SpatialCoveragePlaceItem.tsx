@@ -1,5 +1,5 @@
-import DisplayItem from "@/components/DisplayItem";
-import { useMapping } from "@/contexts/mapping/useMapping";
+import { DisplayItem } from "@/components/display-item";
+import { useMapping } from "@/mapping";
 import { SpatialCoveragePlace } from "@/generated/raid";
 import { Grid } from "@mui/material";
 import { memo, useMemo } from "react";

@@ -1,5 +1,5 @@
 import language from "@/references/language.json";
-import { getErrorMessageForField } from "@/utils";
+import { getErrorMessageForField } from "@/utils/data-utils";
 import { Autocomplete, Grid, TextField } from "@mui/material";
 import { useController } from "react-hook-form";
 
