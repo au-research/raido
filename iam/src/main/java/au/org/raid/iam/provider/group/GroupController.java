@@ -11,7 +11,6 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.Provider;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.keycloak.models.GroupModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RoleModel;
 import org.keycloak.models.UserModel;
@@ -32,28 +31,24 @@ public class GroupController {
     private final AuthenticationManager.AuthResult auth;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-
     private final KeycloakSession session;
+
     public GroupController(final KeycloakSession session) {
         this.session = session;
         this.auth = new AppAuthManager.BearerTokenAuthenticator(session).authenticate();
     }
 
-    private Cors addCorsHeaders(final String... allowedMethods) {
-        log.debug("Calling Cors");
+    private Cors configureCors(final String... allowedMethods) {
+        log.debug("Configuring CORS");
         final var cors = session.getProvider(Cors.class);
 
         cors.allowedOrigins(
                 "http://localhost:7080",
-                
                 "https://app.test.raid.org.au",
                 "https://app3.test.raid.org.au",
-                
                 "https://app.demo.raid.org.au",
                 "https://app3.demo.raid.org.au",
-                
                 "https://app.stage.raid.org.au",
-                
                 "https://app.prod.raid.org.au");
 
         cors.allowedMethods(allowedMethods);
@@ -62,14 +57,38 @@ public class GroupController {
         return cors;
     }
 
+    private Response buildCorsResponse(String method, Response.ResponseBuilder responseBuilder) {
+        return configureCors(method)
+                .builder(responseBuilder)
+                .build();
+    }
+
+    @SneakyThrows
+    private Response buildOptionsResponse(String... methods) {
+        Response.ResponseBuilder builder = Response.ok();
+
+        // Add CORS headers for preflight directly
+        builder.header("Access-Control-Allow-Origin",
+                "http://localhost:7080, " +
+                        "https://app.test.raid.org.au, " +
+                        "https://app3.test.raid.org.au, " +
+                        "https://app.demo.raid.org.au, " +
+                        "https://app3.demo.raid.org.au, " +
+                        "https://app.stage.raid.org.au, " +
+                        "https://app.prod.raid.org.au");
+        builder.header("Access-Control-Allow-Methods", String.join(", ", methods));
+        builder.header("Access-Control-Allow-Headers", "Authorization,Content-Type");
+        builder.header("Access-Control-Max-Age", "3600");
+
+        final var response = builder.build();
+        log.debug("Returning response {}", objectMapper.writeValueAsString(response));
+        return response;
+    }
+
     @OPTIONS
     @Path("/all")
     public Response getGroupsPreflight() {
-        return Response.fromResponse(addCorsHeaders( "GET", "PUT", "OPTIONS")
-                        .preflight()
-                        .builder(Response.ok())
-                        .build())
-                .build();
+        return buildOptionsResponse("GET", "PUT", "OPTIONS");
     }
 
     @GET
@@ -83,6 +102,10 @@ public class GroupController {
         }
 
         final var user = auth.getSession().getUser();
+        if (user == null) {
+            throw new NotAuthorizedException("Bearer");
+        }
+
         final var realm = session.getContext().getRealm();
         final var groups = session.groups().getGroupsStream(realm)
                 .map(g -> {
@@ -94,34 +117,17 @@ public class GroupController {
                 })
                 .toList();
 
-        if (user == null) {
-            throw new NotAuthorizedException("Bearer");
-        }
-
-
         final var responseBody = new HashMap<String, Object>();
-
         responseBody.put("groups", groups);
 
-        return Response.fromResponse(addCorsHeaders("GET")
-                        .builder(
-                                Response.ok()
-                                        .entity(objectMapper.writeValueAsString(responseBody))
-                        )
-                        .build())
-                .build();
+        return buildCorsResponse("GET",
+                Response.ok().entity(objectMapper.writeValueAsString(responseBody)));
     }
-
-
 
     @OPTIONS
     @Path("")
     public Response preflight() {
-        return Response.fromResponse(addCorsHeaders( "GET", "PUT", "OPTIONS")
-                        .preflight()
-                        .builder(Response.ok())
-                        .build())
-                .build();
+        return buildOptionsResponse("GET", "PUT", "OPTIONS");
     }
 
     @GET
@@ -130,33 +136,25 @@ public class GroupController {
     public Response get(@QueryParam("groupId") String groupId) throws JsonProcessingException {
         log.debug("Getting members of group");
 
-        final var objectMapper = new ObjectMapper();
-
         if (this.auth == null) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
         final var user = auth.getSession().getUser();
-        final var realm = session.getContext().getRealm();
-
         if (user == null) {
             throw new NotAuthorizedException("Bearer");
         }
 
-        // Check if the user is neither a group admin nor an operator.
-        if (!isGroupAdmin(user) && !isOperator(user)){
+        if (!isGroupAdmin(user) && !isOperator(user)) {
             throw new NotAuthorizedException("Permission denied");
         }
 
-        /* If the 'groupId' parameter is set and the user is an operator,
-            set the group to the one specified by 'groupId'.
-            Otherwise, set it to the group ID from the user's profile. */
+        final var realm = session.getContext().getRealm();
         var group = (groupId != null && isOperator(user))
                 ? session.groups().getGroupById(realm, groupId)
                 : user.getGroupsStream().toList().get(0);
 
         final var responseBody = new HashMap<String, Object>();
-
         responseBody.put("id", group.getId());
         responseBody.put("name", group.getName());
         responseBody.put("attributes", group.getAttributes());
@@ -174,24 +172,14 @@ public class GroupController {
 
         responseBody.put("members", members);
 
-        return Response.fromResponse(addCorsHeaders("GET")
-                        .builder(
-                                Response.ok()
-                                        .entity(objectMapper.writeValueAsString(responseBody))
-                        )
-                        .build())
-                .build();
+        return buildCorsResponse("GET",
+                Response.ok().entity(objectMapper.writeValueAsString(responseBody)));
     }
 
     @OPTIONS
     @Path("/grant")
     public Response grantPreflight() {
-        log.debug("Calling grant with OPTIONS method");
-        return Response.fromResponse(addCorsHeaders("PUT")
-                        .preflight()
-                        .builder(Response.ok())
-                        .build())
-                .build();
+        return buildOptionsResponse("PUT");
     }
 
     @PUT
@@ -199,30 +187,25 @@ public class GroupController {
     @SneakyThrows
     @Consumes(MediaType.APPLICATION_JSON)
     public Response grant(final Grant grant) {
-        // check permissions of admin user
-
         if (this.auth == null) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
         final var user = auth.getSession().getUser();
-
         if (user == null) {
             throw new NotAuthorizedException("Bearer");
         }
 
-        if (!isGroupAdmin(user) && !isOperator(user)){
+        if (!isGroupAdmin(user) && !isOperator(user)) {
             throw new NotAuthorizedException("Permission denied - not a group admin");
         }
 
-        if (!isGroupMember(user, grant.getGroupId()) && !isOperator(user)){
+        if (!isGroupMember(user, grant.getGroupId()) && !isOperator(user)) {
             throw new NotAuthorizedException("Permission denied - not a group member");
         }
 
         final var realm = session.getContext().getRealm();
-
         final var groupUser = session.users().getUserById(realm, grant.getUserId());
-
         final var servicePointUserRole = session.roles()
                 .getRealmRolesStream(realm, null, null)
                 .filter(r -> r.getName().equals(SERVICE_POINT_USER_ROLE))
@@ -231,23 +214,14 @@ public class GroupController {
 
         groupUser.grantRole(servicePointUserRole);
 
-        return Response.fromResponse(
-                        addCorsHeaders("PUT")
-                                .builder(Response.ok())
-                                .build()
-                )
-                .entity("{}")
-                .build();
+        return buildCorsResponse("PUT",
+                Response.ok().entity("{}"));
     }
 
     @OPTIONS
     @Path("/revoke")
     public Response revokePreflight() {
-        return Response.fromResponse(addCorsHeaders("PUT")
-                        .preflight()
-                        .builder(Response.ok())
-                        .build())
-                .build();
+        return buildOptionsResponse("PUT");
     }
 
     @PUT
@@ -258,24 +232,22 @@ public class GroupController {
         if (this.auth == null) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
-        final var user = auth.getSession().getUser();
 
+        final var user = auth.getSession().getUser();
         if (user == null) {
             throw new NotAuthorizedException("Bearer");
         }
 
-        if (!isGroupAdmin(user) && !isOperator(user)){
+        if (!isGroupAdmin(user) && !isOperator(user)) {
             throw new NotAuthorizedException("Permission denied - not a group admin");
         }
 
-        if (!isGroupMember(user, grant.getGroupId()) && !isOperator(user)){
+        if (!isGroupMember(user, grant.getGroupId()) && !isOperator(user)) {
             throw new NotAuthorizedException("Permission denied - not a group member");
         }
 
         final var realm = session.getContext().getRealm();
-
         final var groupUser = session.users().getUserById(realm, grant.getUserId());
-
         final var servicePointUserRole = session.roles()
                 .getRealmRolesStream(realm, null, null)
                 .filter(r -> r.getName().equals(SERVICE_POINT_USER_ROLE))
@@ -284,23 +256,14 @@ public class GroupController {
 
         groupUser.deleteRoleMapping(servicePointUserRole);
 
-        return Response.fromResponse(
-                addCorsHeaders("PUT")
-                        .builder(Response.ok())
-                        .build()
-                )
-                .entity("{}")
-                .build();
+        return buildCorsResponse("PUT",
+                Response.ok().entity("{}"));
     }
 
     @OPTIONS
     @Path("/join")
     public Response joinPreflight() {
-        return Response.fromResponse(addCorsHeaders("PUT")
-                        .preflight()
-                        .builder(Response.ok())
-                        .build())
-                .build();
+        return buildOptionsResponse("PUT");
     }
 
     @PUT
@@ -311,25 +274,18 @@ public class GroupController {
         if (this.auth == null) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
+
         final var user = auth.getSession().getUser();
         user.joinGroup(session.groups().getGroupById(session.getContext().getRealm(), request.getGroupId()));
-        return Response.fromResponse(
-                addCorsHeaders("PUT")
-                        .builder(Response.ok())
-                        .build()
-                )
-                .entity("{}")
-                .build();
+
+        return buildCorsResponse("PUT",
+                Response.ok().entity("{}"));
     }
 
     @OPTIONS
     @Path("/active-group")
     public Response setActiveGroupPreflight() {
-        return Response.fromResponse(addCorsHeaders("PUT")
-                        .preflight()
-                        .builder(Response.ok())
-                        .build())
-                .build();
+        return buildOptionsResponse("PUT");
     }
 
     @PUT
@@ -339,32 +295,18 @@ public class GroupController {
         if (this.auth == null) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
+
         final var user = auth.getSession().getUser();
+        user.setAttribute("activeGroupId", List.of(request.getActiveGroupId()));
 
-        final var userGroups = user.getGroupsStream().map(GroupModel::getId).toList();
-
-        // if (userGroups.contains(request.getActiveGroupId())) {
-            user.setAttribute("activeGroupId", List.of(request.getActiveGroupId()));
-            return Response.fromResponse(
-                            addCorsHeaders("PUT")
-                                    .builder(Response.ok())
-                                    .build()
-                    )
-                    .entity("{}")
-                    .build();
-        // } else {
-        //     return Response.status(Response.Status.FORBIDDEN).build();
-        // }
+        return buildCorsResponse("PUT",
+                Response.ok().entity("{}"));
     }
 
     @OPTIONS
     @Path("/user-groups")
     public Response userGroupsPreflight() {
-        return Response.fromResponse(addCorsHeaders("GET")
-                        .preflight()
-                        .builder(Response.ok())
-                        .build())
-                .build();
+        return buildOptionsResponse("GET");
     }
 
     @GET
@@ -375,20 +317,18 @@ public class GroupController {
         if (this.auth == null) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
+
         final var user = auth.getSession().getUser();
+        final var userGroups = user.getGroupsStream()
+                .map(g -> new GroupDetails(g.getId(), g.getName()))
+                .toList();
 
-        final var userGroups = user.getGroupsStream().map(g -> new GroupDetails(g.getId(),g.getName())).toList();
-
-        return Response.fromResponse(
-                        addCorsHeaders("GET")
-                                .builder(Response.ok())
-                                .build()
-                )
-                .entity(objectMapper.writeValueAsString(userGroups))
-                .build();
+        return buildCorsResponse("GET",
+                Response.ok().entity(objectMapper.writeValueAsString(userGroups)));
     }
 
     private record GroupDetails(String id, String name) {}
+
     private boolean isGroupAdmin(final UserModel user) {
         return !user.getRoleMappingsStream()
                 .filter(r -> r.getName().equals(GROUP_ADMIN_ROLE_NAME))
