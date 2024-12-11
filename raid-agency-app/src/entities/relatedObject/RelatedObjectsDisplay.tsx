@@ -56,12 +56,13 @@ const RelatedObjectItem = memo(
             </Typography>
           </Stack>
           <Stack gap={2} divider={<Divider />}>
-            {relatedObject.category?.map((category) => (
-              <RelatedObjectCategoryItem
-                key={crypto.randomUUID()}
-                relatedObjectCategory={category}
-              />
-            ))}
+            {relatedObject?.category &&
+              relatedObject.category?.map((category) => (
+                <RelatedObjectCategoryItem
+                  key={crypto.randomUUID()}
+                  relatedObjectCategory={category}
+                />
+              ))}
           </Stack>
         </Stack>
       </Stack>
@@ -77,7 +78,7 @@ const RelatedObjectsDisplay = memo(({ data }: { data: RelatedObject[] }) => (
       <>
         {data.length === 0 && <NoItemsMessage />}
         <Stack gap={2} divider={<Divider />}>
-          {data.map((relatedObject, i) => (
+          {data?.map((relatedObject, i) => (
             <RelatedObjectItem
               relatedObject={relatedObject}
               key={crypto.randomUUID()}

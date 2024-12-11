@@ -1,50 +1,20 @@
 [
   {
-    "id": 9229,
+    "id": 8261,
     "code": "ara",
     "name": "Arabic",
     "schema_id": 2
   },
   {
-    "id": 9230,
+    "id": 8536,
     "code": "ben",
     "name": "Bengali",
     "schema_id": 2
   },
   {
-    "id": 9249,
-    "code": "bho",
-    "name": "Bhojpuri",
-    "schema_id": 2
-  },
-  {
-    "id": 9253,
+    "id": 8923,
     "code": "bul",
     "name": "Bulgarian",
-    "schema_id": 2
-  },
-  {
-    "id": 9242,
-    "code": "yue",
-    "name": "Cantonese",
-    "schema_id": 2
-  },
-  {
-    "id": 9246,
-    "code": "egy",
-    "name": "Egyptian Arabic",
-    "schema_id": 2
-  },
-  {
-    "id": 9748,
-    "code": "eng",
-    "name": "English",
-    "schema_id": 2
-  },
-  {
-    "id": 9869,
-    "code": "fra",
-    "name": "French",
     "schema_id": 2
   },
   {
@@ -54,91 +24,97 @@
     "schema_id": 2
   },
   {
-    "id": 9247,
+    "id": 9748,
+    "code": "eng",
+    "name": "English",
+    "schema_id": 2
+  },
+  {
+    "id": 9825,
+    "code": "fas",
+    "name": "Persian",
+    "schema_id": 2
+  },
+  {
+    "id": 9869,
+    "code": "fra",
+    "name": "French",
+    "schema_id": 2
+  },
+  {
+    "id": 10181,
     "code": "guj",
     "name": "Gujarati",
     "schema_id": 2
   },
   {
-    "id": 9251,
-    "code": "hak",
-    "name": "Hakka",
-    "schema_id": 2
-  },
-  {
-    "id": 9228,
+    "id": 10303,
     "code": "hin",
     "name": "Hindi",
     "schema_id": 2
   },
   {
-    "id": 9248,
-    "code": "ira",
-    "name": "Iranian Persian",
+    "id": 10535,
+    "code": "ind",
+    "name": "Indonesian",
     "schema_id": 2
   },
   {
-    "id": 9245,
+    "id": 10579,
     "code": "ita",
     "name": "Italian",
     "schema_id": 2
   },
   {
-    "id": 9244,
-    "code": "jaw",
-    "name": "Javanese",
-    "schema_id": 2
-  },
-  {
-    "id": 9233,
+    "id": 10717,
     "code": "jpn",
     "name": "Japanese",
     "schema_id": 2
   },
   {
-    "id": 9239,
+    "id": 10763,
+    "code": "kan",
+    "name": "Kannada",
+    "schema_id": 2
+  },
+  {
+    "id": 11114,
     "code": "kor",
     "name": "Korean",
     "schema_id": 2
   },
   {
-    "id": 9227,
-    "code": "cmn",
-    "name": "Mandarin Chinese",
+    "id": 11751,
+    "code": "mal",
+    "name": "Malayalam",
     "schema_id": 2
   },
   {
-    "id": 9235,
+    "id": 11755,
     "code": "mar",
     "name": "Marathi",
     "schema_id": 2
   },
   {
-    "id": 9250,
-    "code": "min",
-    "name": "Min Nan",
+    "id": 12612,
+    "code": "nld",
+    "name": "Dutch",
     "schema_id": 2
   },
   {
-    "id": 9252,
+    "id": 13265,
     "code": "pol",
     "name": "Polish",
     "schema_id": 2
   },
   {
-    "id": 9231,
+    "id": 13271,
     "code": "por",
     "name": "Portuguese",
     "schema_id": 2
   },
   {
-    "id": 9234,
-    "code": "pan",
-    "name": "Punjabi",
-    "schema_id": 2
-  },
-  {
-    "id": 9232,
+    "id": 13589,
     "code": "rus",
     "name": "Russian",
     "schema_id": 2
@@ -150,39 +126,57 @@
     "schema_id": 2
   },
   {
-    "id": 9241,
+    "id": 14057,
+    "code": "swa",
+    "name": "Swahili (macrolanguage)",
+    "schema_id": 2
+  },
+  {
+    "id": 14131,
     "code": "tam",
     "name": "Tamil",
     "schema_id": 2
   },
   {
-    "id": 9236,
+    "id": 14224,
     "code": "tel",
     "name": "Telugu",
     "schema_id": 2
   },
   {
-    "id": 9238,
+    "id": 14268,
+    "code": "tha",
+    "name": "Thai",
+    "schema_id": 2
+  },
+  {
+    "id": 14556,
     "code": "tur",
     "name": "Turkish",
     "schema_id": 2
   },
   {
-    "id": 9243,
+    "id": 14681,
+    "code": "ukr",
+    "name": "Ukrainian",
+    "schema_id": 2
+  },
+  {
+    "id": 14731,
     "code": "urd",
     "name": "Urdu",
     "schema_id": 2
   },
   {
-    "id": 9240,
+    "id": 14806,
     "code": "vie",
     "name": "Vietnamese",
     "schema_id": 2
   },
   {
-    "id": 9237,
-    "code": "wuu",
-    "name": "Wu Chinese",
+    "id": 15701,
+    "code": "zho",
+    "name": "Chinese",
     "schema_id": 2
   }
 ]

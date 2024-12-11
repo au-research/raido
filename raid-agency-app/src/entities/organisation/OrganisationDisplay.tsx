@@ -58,7 +58,7 @@ const OrganisationDisplay = memo(({ data }: { data: Organisation[] }) => (
       <>
         {data.length === 0 && <NoItemsMessage />}
         <Stack gap={2} divider={<Divider />}>
-          {data.map((organisation, i) => (
+          {data?.map((organisation, i) => (
             <OrganisationItem
               organisation={organisation}
               key={crypto.randomUUID()}

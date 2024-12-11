@@ -68,7 +68,7 @@ const SubjectDisplay = memo(({ data }: { data: Subject[] }) => {
         <>
           {data.length === 0 && <NoItemsMessage />}
           <Stack gap={2} divider={<Divider />}>
-            {data.map((subject, i) => (
+            {data?.map((subject, i) => (
               <SubjectItem subject={subject} key={crypto.randomUUID()} i={i} />
             ))}
           </Stack>

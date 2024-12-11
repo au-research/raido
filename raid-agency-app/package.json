@@ -42,6 +42,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.50.1",
+    "react-markdown": "^9.0.1",
     "react-router-dom": "^6.22.0",
     "typescript": "^5.3.3",
     "vite": "^5.1.4",
@@ -50,6 +51,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.14.10",
+    "@types/trusted-types": "^2.0.7",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.56.0",

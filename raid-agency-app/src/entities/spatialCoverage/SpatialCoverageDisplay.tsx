@@ -55,7 +55,7 @@ const SpatialCoverageDisplay = memo(({ data }: { data: SpatialCoverage[] }) => (
       <>
         {data.length === 0 && <NoItemsMessage />}
         <Stack gap={2} divider={<Divider />}>
-          {data.map((spatialCoverage, i) => (
+          {data?.map((spatialCoverage, i) => (
             <SpatialCoverageItem
               spatialCoverage={spatialCoverage}
               key={crypto.randomUUID()}
