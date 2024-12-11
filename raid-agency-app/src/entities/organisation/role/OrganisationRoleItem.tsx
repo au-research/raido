@@ -1,5 +1,5 @@
-import DisplayItem from "@/components/DisplayItem";
-import { useMapping } from "@/contexts/mapping/useMapping";
+import { DisplayItem } from "@/components/display-item";
+import { useMapping } from "@/mapping";
 import { OrganisationRole } from "@/generated/raid";
 import { dateDisplayFormatter } from "@/utils/date-utils/date-utils";
 import { Grid } from "@mui/material";

@@ -2,7 +2,7 @@ import DateInputField from "@/fields/DateInputField";
 import LanguageSelector from "@/fields/LanguageSelector";
 import { TextInputField } from "@/fields/TextInputField";
 import { TextSelectField } from "@/fields/TextSelectField";
-import generalMapping from "@/general-mapping.json";
+import generalMapping from "@/mapping/general-mapping.json";
 import { RaidDto } from "@/generated/raid";
 import { Grid } from "@mui/material";
 import { memo } from "react";

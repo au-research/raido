@@ -1,5 +1,5 @@
 import { TextSelectField } from "@/fields/TextSelectField";
-import subjectMapping from "@/subject-mapping.json";
+import subjectMapping from "@/mapping/subject-mapping.json";
 import { Grid } from "@mui/material";
 import { memo } from "react";
 

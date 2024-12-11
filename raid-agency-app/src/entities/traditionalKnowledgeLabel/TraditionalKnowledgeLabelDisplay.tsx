@@ -1,5 +1,5 @@
-import DisplayCard from "@/components/DisplayCard";
-import DisplayItem from "@/components/DisplayItem";
+import { DisplayCard } from "@/components/display-card";
+import { DisplayItem } from "@/components/display-item";
 import type { TraditionalKnowledgeLabel } from "@/generated/raid";
 import { Divider, Grid, Stack, Typography } from "@mui/material";
 import { memo } from "react";

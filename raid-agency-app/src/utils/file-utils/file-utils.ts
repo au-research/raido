@@ -1,4 +1,4 @@
-import { SnackbarContextInterface } from "@/components/Snackbar/SnackbarContext";
+import { SnackbarContextInterface } from "@/components/snackbar";
 
 export const downloadJson = ({
   data,

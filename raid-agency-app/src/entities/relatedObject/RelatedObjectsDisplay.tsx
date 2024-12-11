@@ -1,16 +1,8 @@
-import DisplayCard from "@/components/DisplayCard";
-import DisplayItem from "@/components/DisplayItem";
-import { useMapping } from "@/contexts/mapping/useMapping";
+import { DisplayCard } from "@/components/display-card";
+import { DisplayItem } from "@/components/display-item";
+import { useMapping } from "@/mapping";
 import { RelatedObject } from "@/generated/raid";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  Divider,
-  Grid,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Divider, Grid, Stack, Typography } from "@mui/material";
 import { memo, useMemo } from "react";
 import RelatedObjectCategoryItem from "./category/RelatedObjectCategoryItem";
 

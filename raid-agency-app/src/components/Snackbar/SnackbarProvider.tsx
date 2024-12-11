@@ -1,4 +1,4 @@
-import { SnackbarContext } from "@/components/Snackbar/SnackbarContext";
+import { SnackbarContext } from "@/components/snackbar";
 import { Snackbar } from "@mui/material";
 import React, { PropsWithChildren, useState } from "react";
 

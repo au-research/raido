@@ -1,5 +1,5 @@
-import DisplayCard from "@/components/DisplayCard";
-import DisplayItem from "@/components/DisplayItem";
+import { DisplayCard } from "@/components/display-card";
+import { DisplayItem } from "@/components/display-item";
 import ContributorPositionItem from "@/entities/contributor/position/ContributorPositionItem";
 import ContributorRoleItem from "@/entities/contributor/role/ContributorRoleItem";
 import { Contributor } from "@/generated/raid";
