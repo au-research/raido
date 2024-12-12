@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RoleModel;
 import org.keycloak.models.UserModel;
-import org.keycloak.services.cors.Cors;
 import org.keycloak.services.managers.AppAuthManager;
 import org.keycloak.services.managers.AuthenticationManager;
 
@@ -25,6 +24,16 @@ import java.util.List;
 @Slf4j
 @Provider
 public class GroupController {
+    private static final List<String> ALLOWED_ORIGINS = List.of(
+            "http://localhost:7080",
+            "https://app.test.raid.org.au",
+            "https://app3.test.raid.org.au",
+            "https://app.demo.raid.org.au",
+            "https://app3.demo.raid.org.au",
+            "https://app.stage.raid.org.au",
+            "https://app.prod.raid.org.au"
+    );
+
     private static final String OPERATOR_ROLE_NAME = "operator";
     private static final String GROUP_ADMIN_ROLE_NAME = "group-admin";
     private static final String SERVICE_POINT_USER_ROLE = "service-point-user";
@@ -38,29 +47,24 @@ public class GroupController {
         this.auth = new AppAuthManager.BearerTokenAuthenticator(session).authenticate();
     }
 
-    private Cors configureCors(final String... allowedMethods) {
-        log.debug("Configuring CORS");
-        final var cors = session.getProvider(Cors.class);
 
-        cors.allowedOrigins(
-                "http://localhost:7080",
-                "https://app.test.raid.org.au",
-                "https://app3.test.raid.org.au",
-                "https://app.demo.raid.org.au",
-                "https://app3.demo.raid.org.au",
-                "https://app.stage.raid.org.au",
-                "https://app.prod.raid.org.au");
-
-        cors.allowedMethods(allowedMethods);
-        cors.auth();
-
-        return cors;
-    }
-
+    @SneakyThrows
     private Response buildCorsResponse(String method, Response.ResponseBuilder responseBuilder) {
-        return configureCors(method)
-                .builder(responseBuilder)
-                .build();
+        String origin = session.getContext().getRequestHeaders().getHeaderString("Origin");
+
+        // Only set the Origin header if it's in our allowed list
+        if (origin != null && ALLOWED_ORIGINS.contains(origin)) {
+            responseBuilder.header("Access-Control-Allow-Origin", origin);
+            responseBuilder.header("Access-Control-Allow-Credentials", "true");
+        }
+
+        responseBuilder.header("Access-Control-Allow-Methods", String.join(", ", method));
+        responseBuilder.header("Access-Control-Allow-Headers", "Authorization,Content-Type");
+        responseBuilder.header("Access-Control-Max-Age", "3600");
+
+        final var response = responseBuilder.build();
+        log.debug("Returning response {}", objectMapper.writeValueAsString(response));
+        return response;
     }
 
     @SneakyThrows
@@ -68,19 +72,8 @@ public class GroupController {
         String origin = session.getContext().getRequestHeaders().getHeaderString("Origin");
         Response.ResponseBuilder builder = Response.ok();
 
-        // List of allowed origins
-        List<String> allowedOrigins = List.of(
-                "http://localhost:7080",
-                "https://app.test.raid.org.au",
-                "https://app3.test.raid.org.au",
-                "https://app.demo.raid.org.au",
-                "https://app3.demo.raid.org.au",
-                "https://app.stage.raid.org.au",
-                "https://app.prod.raid.org.au"
-        );
-
         // Only set the Origin header if it's in our allowed list
-        if (origin != null && allowedOrigins.contains(origin)) {
+        if (origin != null && ALLOWED_ORIGINS.contains(origin)) {
             builder.header("Access-Control-Allow-Origin", origin);
             builder.header("Access-Control-Allow-Credentials", "true");
         }
