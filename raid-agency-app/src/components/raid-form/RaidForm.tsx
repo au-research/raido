@@ -57,9 +57,9 @@ import TraditionalKnowledgeLabelForm from "@/entities/traditionalKnowledgeLabel/
 
 import { ChildConfig } from "@/types";
 
-import AnchorButtons from "@/components/anchor-buttons/AnchorButtons";
+import { AnchorButtons } from "@/components/anchor-buttons";
 import { DynamicForm } from "@/components/dynamic-form";
-import ValidationFormSchema from "@/entities/validation-schema";
+import { RaidValidationSchema } from "@/components/validation";
 import { RaidCreateRequest, RaidDto } from "@/generated/raid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Close as CloseIcon, Save as SaveIcon } from "@mui/icons-material";
@@ -310,7 +310,7 @@ export const RaidForm = memo(
 
     const formMethods = useForm<RaidDto>({
       defaultValues: raidData,
-      resolver: zodResolver(ValidationFormSchema),
+      resolver: zodResolver(RaidValidationSchema),
       mode: "onChange",
       reValidateMode: "onChange",
     });

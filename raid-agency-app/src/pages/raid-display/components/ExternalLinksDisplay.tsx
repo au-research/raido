@@ -11,13 +11,13 @@ import {
 import List from "@mui/material/List";
 import { Link } from "react-router-dom";
 
-export default function ExternalLinksDisplay({
+export const ExternalLinksDisplay = ({
   prefix,
   suffix,
 }: {
   prefix: string;
   suffix: string;
-}) {
+}) => {
   return (
     <Card>
       <CardHeader title="Links" />
@@ -41,4 +41,4 @@ export default function ExternalLinksDisplay({
       </CardContent>
     </Card>
   );
-}
+};

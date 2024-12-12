@@ -1,10 +1,4 @@
 import type { RaidDto, ServicePoint } from "@/generated/raid";
-import { ReactElement } from "react";
-export type Breadcrumb = {
-  icon: ReactElement;
-  label: string;
-  to: string;
-};
 
 import type Keycloak from "keycloak-js";
 import { FieldErrors } from "react-hook-form";

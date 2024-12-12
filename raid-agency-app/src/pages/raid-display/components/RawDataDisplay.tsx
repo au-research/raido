@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 
-export default function RawDataDisplay({ raidData }: { raidData: RaidDto }) {
+export const RawDataDisplay = ({ raidData }: { raidData: RaidDto }) => {
   const snackbar = useSnackbar();
 
   const { prefix, suffix } = useParams();
@@ -61,4 +61,4 @@ export default function RawDataDisplay({ raidData }: { raidData: RaidDto }) {
       </CardContent>
     </Card>
   );
-}
+};

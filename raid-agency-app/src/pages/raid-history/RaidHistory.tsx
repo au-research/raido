@@ -1,9 +1,10 @@
+import type { Breadcrumb } from "@/components/breadcrumbs-bar";
 import { BreadcrumbsBar } from "@/components/breadcrumbs-bar";
 import { ErrorAlertComponent } from "@/components/error-alert-component";
 import { useKeycloakContext } from "@/keycloak";
 import { Loading } from "@/pages/loading";
 import { fetchRaidHistory } from "@/services/raid";
-import { Breadcrumb, RaidHistoryElementType, RaidHistoryType } from "@/types";
+import { RaidHistoryElementType, RaidHistoryType } from "@/types";
 import {
   DocumentScanner as DocumentScannerIcon,
   HistoryEdu as HistoryEduIcon,

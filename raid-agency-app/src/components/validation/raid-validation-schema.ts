@@ -14,7 +14,7 @@ import { titleValidationSchema } from "@/entities/title/data-components/title-va
 import { traditionalKnowledgeLabelValidationSchema } from "@/entities/traditionalKnowledgeLabel/traditional-knowledge-label-validation-schema";
 import { z } from "zod";
 
-const ValidationFormSchema = z.object({
+export const RaidValidationSchema = z.object({
   identifier: identifierValidationSchema,
   title: titleValidationSchema,
   date: dateValidationSchema,
@@ -30,5 +30,3 @@ const ValidationFormSchema = z.object({
   spatialCoverage: spatialCoverageValidationSchema,
   traditionalKnowledgeLabel: traditionalKnowledgeLabelValidationSchema,
 });
-
-export default ValidationFormSchema;

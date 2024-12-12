@@ -7,7 +7,7 @@ import { RaidDto } from "@/generated/raid";
 import { useKeycloakContext } from "@/keycloak";
 import { Loading } from "@/pages/loading";
 import { fetchRaid, updateRaid } from "@/services/raid";
-import type { Breadcrumb } from "@/types";
+import type { Breadcrumb } from "@/components/breadcrumbs-bar";
 import { raidRequest } from "@/utils/data-utils";
 import {
   DocumentScanner as DocumentScannerIcon,

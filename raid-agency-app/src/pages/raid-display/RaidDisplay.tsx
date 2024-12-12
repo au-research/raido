@@ -1,14 +1,16 @@
-import AnchorButtons from "@/components/anchor-buttons/AnchorButtons";
+import { AnchorButtons } from "@/components/anchor-buttons";
+import type { Breadcrumb } from "@/components/breadcrumbs-bar";
 import { BreadcrumbsBar } from "@/components/breadcrumbs-bar";
 import { ErrorAlertComponent } from "@/components/error-alert-component";
 import { RaidDto } from "@/generated/raid";
 import { useKeycloakContext } from "@/keycloak";
 import { Loading } from "@/pages/loading";
-import ExternalLinksDisplay from "@/pages/raid-display/ExternalLinksDisplay";
-import RaidDisplayMenu from "@/pages/raid-display/RaidDisplayMenu";
-import RawDataDisplay from "@/pages/raid-display/RawDataDisplay";
+import {
+  ExternalLinksDisplay,
+  RaidDisplayMenu,
+  RawDataDisplay,
+} from "@/pages/raid-display/components";
 import { fetchRaid } from "@/services/raid";
-import { Breadcrumb } from "@/types";
 import { displayItems } from "@/utils/data-utils/data-utils";
 import {
   DocumentScanner as DocumentScannerIcon,

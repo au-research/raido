@@ -10,31 +10,31 @@ interface AnchorButtonsProps {
   errors?: FieldErrors<RaidDto>;
 }
 
-const AnchorButtons = memo(({ raidData, errors }: AnchorButtonsProps) => (
-  <Card>
-    <CardContent>
-      <Grid container spacing={2}>
-        {displayItems.map((el) => {
-          const value =
-            (raidData && raidData[el.itemKey as keyof RaidDto]) || [];
+export const AnchorButtons = memo(
+  ({ raidData, errors }: AnchorButtonsProps) => (
+    <Card>
+      <CardContent>
+        <Grid container spacing={2}>
+          {displayItems.map((el) => {
+            const value =
+              (raidData && raidData[el.itemKey as keyof RaidDto]) || [];
 
-          const itemCount = Array.isArray(value) ? value.length : null;
+            const itemCount = Array.isArray(value) ? value.length : null;
 
-          return (
-            <AnchorButton
-              key={el.itemKey}
-              itemKey={el.itemKey}
-              label={el.label}
-              count={itemCount}
-              hasError={!!errors?.[el.itemKey as keyof RaidDto]}
-            />
-          );
-        })}
-      </Grid>
-    </CardContent>
-  </Card>
-));
+            return (
+              <AnchorButton
+                key={el.itemKey}
+                itemKey={el.itemKey}
+                label={el.label}
+                count={itemCount}
+                hasError={!!errors?.[el.itemKey as keyof RaidDto]}
+              />
+            );
+          })}
+        </Grid>
+      </CardContent>
+    </Card>
+  )
+);
 
 AnchorButtons.displayName = "AnchorButtons";
-
-export default AnchorButtons;

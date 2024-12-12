@@ -1,6 +1,6 @@
+import type { Breadcrumb } from "@/components/breadcrumbs-bar";
 import { BreadcrumbsBar } from "@/components/breadcrumbs-bar";
 import { RaidTable } from "@/pages/raid-table";
-import type { Breadcrumb } from "@/types";
 import {
   HistoryEdu as HistoryEduIcon,
   Home as HomeIcon,

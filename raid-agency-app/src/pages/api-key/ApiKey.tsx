@@ -1,8 +1,8 @@
+import type { Breadcrumb } from "@/components/breadcrumbs-bar";
 import { BreadcrumbsBar } from "@/components/breadcrumbs-bar";
 import { useSnackbar } from "@/components/snackbar";
 import { useKeycloakContext } from "@/keycloak";
 import { fetchApiTokenFromKeycloak } from "@/services/keycloak";
-import { Breadcrumb } from "@/types";
 import {
   ContentCopy as ContentCopyIcon,
   Home as HomeIcon,

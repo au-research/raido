@@ -9,13 +9,13 @@ import { Fab, Stack, Tooltip } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-export default function RaidDisplayMenu({
+export const RaidDisplayMenu = ({
   prefix,
   suffix,
 }: {
   prefix: string;
   suffix: string;
-}) {
+}) => {
   const { version } = raidConfig;
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
   return (
@@ -63,4 +63,4 @@ export default function RaidDisplayMenu({
       </Stack>
     </>
   );
-}
+};
