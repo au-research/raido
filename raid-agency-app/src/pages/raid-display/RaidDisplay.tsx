@@ -19,7 +19,7 @@ import { Box, Container, Stack } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 
-export default function ShowRaidPage() {
+export const RaidDisplay = () => {
   const { keycloak, initialized } = useKeycloakContext();
 
   const { prefix, suffix } = useParams() as { prefix: string; suffix: string };
@@ -95,4 +95,4 @@ export default function ShowRaidPage() {
       </Container>
     </>
   );
-}
+};

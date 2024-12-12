@@ -3,8 +3,9 @@ import { MintRaid } from "@/pages/mint-raid";
 import { RaidEdit } from "@/pages/raid-edit";
 import { RaidHistory } from "@/pages/raid-history";
 import { Raids } from "@/pages/raids";
-import ShowRaidPage from "@/pages/raid-display/RaidDisplay";
+import { RaidDisplay } from "@/pages/raid-display/RaidDisplay";
 import { RouteObject } from "react-router-dom";
+import { RaidInvite } from "@/pages/raid-invite";
 
 export const raidPageRoutes: RouteObject[] = [
   {
@@ -33,7 +34,7 @@ export const raidPageRoutes: RouteObject[] = [
     children: [
       {
         path: "",
-        element: <ShowRaidPage />,
+        element: <RaidDisplay />,
       },
     ],
   },
@@ -54,6 +55,16 @@ export const raidPageRoutes: RouteObject[] = [
       {
         path: "",
         element: <RaidHistory />,
+      },
+    ],
+  },
+  {
+    path: "/raids/:prefix/:suffix/invite",
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: "",
+        element: <RaidInvite />,
       },
     ],
   },
