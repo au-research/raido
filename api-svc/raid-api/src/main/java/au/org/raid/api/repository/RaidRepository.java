@@ -110,7 +110,7 @@ public class RaidRepository {
                 .join(CONTRIBUTOR)
                 .on(RAID_CONTRIBUTOR.CONTRIBUTOR_ID.eq(CONTRIBUTOR.ID))
                 .where(
-                        CONTRIBUTOR.PID.eq(orcid)
+                        CONTRIBUTOR.PID.eq(orcid).and(RAID.ACCESS_TYPE_ID.in(1, 4))
                 )
                 .fetchInto(RaidRecord.class);
     }

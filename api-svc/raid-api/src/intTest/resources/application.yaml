@@ -40,7 +40,7 @@ raid:
       token-uri: ${raid.test.auth.base-url}/protocol/openid-connect/token
       integration-test-client:
         client-id: integration-test-client
-        client-secret: U7DILnimtrnoyt0kyumLdNISRihfD38L
+        client-secret: e8zf9ycycSYM22eGwaZ5fJ4I7TrZ7VuL
   db:
     user: postgres
     password: supersecret

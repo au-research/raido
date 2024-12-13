@@ -15,7 +15,7 @@ raid:
       uri: http://localhost:1080/raid-listener
   raid-permissions:
     client-id: raid-permissions-admin
-    client-secret: xTM4ELMl3pxvbkFgUryxP5ThdNuS7SZK
+    client-secret: 07ATOSG9hYs8oATcz5wcQAdRuoEsLzEY
 spring:
   flyway:
     locations: classpath:db/env/api_user,classpath:db/migration,classpath:db/env/dev

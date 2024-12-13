@@ -280,6 +280,53 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
 
 
     @Test
+    @DisplayName("List all raids with a given organisation id should not return embargoed raids")
+    void listRaidsWithAGivenOrganisationIdNoEmbargoedRaids() {
+        final String ror = "https://ror.org/039se3q37";
+
+        final var user = userService.createUser(
+                "raid-au",
+                "pid-searcher", "service-point-user"
+        );
+
+        try {
+            createRequest.getOrganisation().forEach(organisation -> organisation.id(ror));
+            createRequest.getAccess().getType().id(TestConstants.EMBARGOED_ACCESS_TYPE);
+            createRequest.getAccess().getStatement().text("Embargoed");
+
+            raidApi.mintRaid(createRequest);
+
+            createRequest.getAccess().getType().id(TestConstants.OPEN_ACCESS_TYPE);
+            createRequest.getAccess().getStatement().text("Open");
+            createRequest.getAccess().embargoExpiry(null);
+
+            raidApi.mintRaid(createRequest);
+
+            final var raidList = testClient
+                    .raidApi(user.getToken()).findAllRaids(Collections.emptyList(), null, ror).getBody();
+            assert raidList != null;
+
+            // find all raids in resultset that don't contain a contributor with the specified ORCID
+            // there shouldn't be any
+            final var erroneousRaids = raidList.stream()
+                    .filter(raid -> !raid.getOrganisation().stream()
+                            .map(Organisation::getId)
+                            .toList()
+                            .contains(ror))
+                    .filter(raid -> !raid.getAccess().getType().getId().equals(TestConstants.EMBARGOED_ACCESS_TYPE))
+                    .toList();
+
+            assertThat(raidList).isNotEmpty();
+            assertThat(erroneousRaids).isEmpty();
+        } catch (RaidApiValidationException e) {
+            fail(e.getMessage());
+        } finally {
+            userService.deleteUser(user.getId());
+        }
+    }
+
+
+    @Test
     @DisplayName("Endpoint to show all public raids shouldn't show any embargoed raids")
     void findAllPublicShouldNotDisplayEmbargoedRaids() {
         final var user = userService.createUser(
