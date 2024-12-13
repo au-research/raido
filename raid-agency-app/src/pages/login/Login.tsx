@@ -20,7 +20,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Australia } from "./icons/Australia";
 import { Orcid } from "./icons/Orcid";
 
-export default function Login() {
+export const Login = () => {
   const { keycloak, initialized } = useKeycloakContext();
   const navigate = useNavigate();
 
@@ -171,4 +171,4 @@ export default function Login() {
       </Container>
     </Stack>
   );
-}
+};

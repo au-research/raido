@@ -9,7 +9,7 @@ import { Alert, Container, Fab, Paper, Stack } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 
-export default function Home() {
+export const Home = () => {
   const { hasServicePointGroup, isServicePointUser } = useAuthHelper();
   const { keycloak } = useKeycloakContext();
   const keycloakGroupsQuery = useQuery<KeycloakGroup[]>({
@@ -68,4 +68,4 @@ export default function Home() {
       </Stack>
     </Container>
   );
-}
+};

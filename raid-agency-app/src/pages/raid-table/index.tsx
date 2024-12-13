@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { useQuery } from "@tanstack/react-query";
-import RaidTableRowContextMenu from "./RaidTableRowContextMenu";
+import { RaidTableRowContextMenu } from "./components";
 import { endDateColumn } from "./columns/endDateColumn";
 import { handleColumn } from "./columns/handleColumn";
 import { startDateColumn } from "./columns/startDateColumn";

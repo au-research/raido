@@ -1,4 +1,4 @@
-import { Failure } from "@/types";
+import { Failure } from "./";
 
 export const RaidFormErrorMessage = (
   error: Error,

@@ -19,7 +19,7 @@ import {
 import Divider from "@mui/material/Divider";
 import { Link } from "react-router-dom";
 
-export default function RaidTableRowContextMenu({ row }: { row: RaidDto }) {
+export const RaidTableRowContextMenu = ({ row }: { row: RaidDto }) => {
   const [prefix, setPrefix] = React.useState<string>("");
   const [suffix, setSuffix] = React.useState<string>("");
 
@@ -137,4 +137,4 @@ export default function RaidTableRowContextMenu({ row }: { row: RaidDto }) {
       </IconButton>
     </>
   );
-}
+};

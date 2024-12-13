@@ -1,10 +1,11 @@
 import { RaidDto } from "@/generated/raid";
+import { RaidHistoryType } from "@/pages/raid-history";
 import { fetchServicePoints } from "@/services/service-points";
-import { RaidHistoryType } from "@/types";
 import { getApiEndpoint } from "@/utils/api-utils/api-utils";
 import type Keycloak from "keycloak-js";
 
 const endpoint = getApiEndpoint();
+const API_ENDPOINT = `${endpoint}/raid/`;
 
 export const fetchRaids = async ({
   fields,
@@ -69,6 +70,7 @@ export const fetchRaid = async ({
   });
   return await response.json();
 };
+
 export const fetchRaidHistory = async ({
   id,
   token,
@@ -86,7 +88,6 @@ export const fetchRaidHistory = async ({
   return await response.json();
 };
 
-const API_ENDPOINT = `${endpoint}/raid/`;
 export const createRaid = async ({
   data,
   token,

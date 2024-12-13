@@ -1,6 +1,6 @@
 import { ProtectedRoute } from "@/components/protected-route";
-import ServicePoint from "@/pages/service-point/ServicePoint";
-import ServicePoints from "@/pages/service-points/ServicePoints";
+import { ServicePoint } from "@/pages/service-point";
+import { ServicePoints } from "@/pages/service-points";
 import { RouteObject } from "react-router-dom";
 
 export const servicePointRoutes: RouteObject[] = [

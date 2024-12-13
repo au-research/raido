@@ -8,25 +8,6 @@ export interface KeycloakContextValue {
   initialized: boolean;
 }
 
-export type Failure = {
-  fieldId: string;
-  errorType: string;
-  message: string;
-};
-
-export type RaidHistoryType = {
-  handle: string;
-  version: number;
-  diff: string;
-  timestamp: string;
-};
-
-export type RaidHistoryElementType = {
-  op: string;
-  path: string;
-  value: unknown;
-};
-
 export type KeycloakGroup = {
   id: string;
   name: string;

@@ -3,8 +3,11 @@ import { BreadcrumbsBar } from "@/components/breadcrumbs-bar";
 import { ErrorAlertComponent } from "@/components/error-alert-component";
 import { useKeycloakContext } from "@/keycloak";
 import { Loading } from "@/pages/loading";
+import type {
+  RaidHistoryElementType,
+  RaidHistoryType,
+} from "@/pages/raid-history";
 import { fetchRaidHistory } from "@/services/raid";
-import { RaidHistoryElementType, RaidHistoryType } from "@/types";
 import {
   DocumentScanner as DocumentScannerIcon,
   HistoryEdu as HistoryEduIcon,

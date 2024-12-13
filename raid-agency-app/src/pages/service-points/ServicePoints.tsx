@@ -3,10 +3,9 @@ import { BreadcrumbsBar } from "@/components/breadcrumbs-bar";
 import { useAuthHelper } from "@/keycloak";
 import { Home as HomeIcon, Hub as HubIcon } from "@mui/icons-material";
 import { Container, Stack } from "@mui/material";
-import ServicePointsGroupAdminView from "./ServicePointsGroupAdminView";
-import ServicePointsOperatorView from "./ServicePointsOperatorView";
+import { ServicePointsGroupAdminView, ServicePointsOperatorView } from "./";
 
-export default function ServicePoints() {
+export const ServicePoints = () => {
   const { isOperator, isGroupAdmin } = useAuthHelper();
 
   const breadcrumbs: Breadcrumb[] = [
@@ -31,4 +30,4 @@ export default function ServicePoints() {
       </Stack>
     </Container>
   );
-}
+};

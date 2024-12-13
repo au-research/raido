@@ -1,11 +1,11 @@
 import { AppNavBarUnauthenticated } from "@/components/app-nav-bar-unauthenticated";
 import { ProtectedRoute } from "@/components/protected-route";
-import { AboutRaid } from "@/pages/about-raid/AboutRaid";
+import { AboutRaid } from "@/pages/about-raid";
 import { ApiKey } from "@/pages/api-key";
-import Home from "@/pages/home/Home";
-import Login from "@/pages/login/Login";
-import { Privacy } from "@/pages/privacy/Privacy";
-import { UsageTerms } from "@/pages/usage-terms/UsageTerms";
+import { Home } from "@/pages/home";
+import { Login } from "@/pages/login";
+import { Privacy } from "@/pages/privacy";
+import { UsageTerms } from "@/pages/usage-terms";
 import { Box } from "@mui/material";
 import { RouteObject } from "react-router-dom";
 

@@ -9,7 +9,7 @@ import {
 import { Card, CardContent, CardHeader } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 
-export default function ServicePointsGroupAdminView() {
+export const ServicePointsGroupAdminView = () => {
   const { keycloak } = useKeycloakContext();
   const servicePointGroupId = keycloak?.tokenParsed?.service_point_group_id;
 
@@ -49,4 +49,4 @@ export default function ServicePointsGroupAdminView() {
       </CardContent>
     </Card>
   );
-}
+};

@@ -1,11 +1,11 @@
 import { ProtectedRoute } from "@/components/protected-route";
 import { MintRaid } from "@/pages/mint-raid";
+import { RaidDisplay } from "@/pages/raid-display";
 import { RaidEdit } from "@/pages/raid-edit";
 import { RaidHistory } from "@/pages/raid-history";
-import { Raids } from "@/pages/raids";
-import { RaidDisplay } from "@/pages/raid-display/RaidDisplay";
-import { RouteObject } from "react-router-dom";
 import { RaidInvite } from "@/pages/raid-invite";
+import { Raids } from "@/pages/raids";
+import { RouteObject } from "react-router-dom";
 
 export const raidPageRoutes: RouteObject[] = [
   {

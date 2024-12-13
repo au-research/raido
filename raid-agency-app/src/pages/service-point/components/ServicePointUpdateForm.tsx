@@ -16,11 +16,11 @@ import React from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
-export default function ServicePointUpdateForm({
+export const ServicePointUpdateForm = ({
   servicePoint,
 }: {
   servicePoint: ServicePoint;
-}) {
+}) => {
   const queryClient = useQueryClient();
   const { keycloak } = useKeycloakContext();
 
@@ -335,4 +335,4 @@ export default function ServicePointUpdateForm({
       />
     </>
   );
-}
+};
