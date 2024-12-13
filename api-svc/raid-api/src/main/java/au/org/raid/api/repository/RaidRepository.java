@@ -1,6 +1,7 @@
 package au.org.raid.api.repository;
 
 import au.org.raid.api.endpoint.Constant;
+import au.org.raid.db.jooq.enums.Metaschema;
 import au.org.raid.db.jooq.tables.records.RaidRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -131,7 +132,9 @@ public class RaidRepository {
 
     public List<RaidRecord> findAllPublic() {
         return dslContext.selectFrom(RAID)
-                .where(RAID.ACCESS_TYPE_ID.in(1, 4))
+                .where(RAID.ACCESS_TYPE_ID.in(1, 4)
+                        .and(RAID.METADATA_SCHEMA.notIn(Metaschema.legacy_metadata_schema_v1, Metaschema.raido_metadata_schema_v1))
+                )
                 .fetch();
     }
 }
