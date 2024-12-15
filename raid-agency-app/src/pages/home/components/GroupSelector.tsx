@@ -1,4 +1,3 @@
-import { useKeycloakContext } from "@/keycloak";
 import {
   fetchAllKeycloakGroups,
   joinKeycloakGroup,
@@ -22,6 +21,7 @@ import {
   SelectChangeEvent,
   Stack,
 } from "@mui/material";
+import { useKeycloak } from "@react-keycloak/web";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { memo, useState } from "react";
 
@@ -34,7 +34,7 @@ type KeycloakGroupSPI = {
 };
 
 export const GroupSelector = memo(() => {
-  const { keycloak, initialized } = useKeycloakContext();
+  const { keycloak, initialized } = useKeycloak();
   const [open, setOpen] = useState(false);
 
   // const handleClickOpen = () => {

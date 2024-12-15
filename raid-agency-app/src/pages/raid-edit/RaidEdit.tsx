@@ -1,13 +1,12 @@
+import type { Breadcrumb } from "@/components/breadcrumbs-bar";
 import { BreadcrumbsBar } from "@/components/breadcrumbs-bar";
 import { ErrorAlertComponent } from "@/components/error-alert-component";
 import { useErrorDialog } from "@/components/error-dialog";
 import { RaidForm } from "@/components/raid-form";
 import { RaidFormErrorMessage } from "@/components/raid-form-error-message";
 import { RaidDto } from "@/generated/raid";
-import { useKeycloakContext } from "@/keycloak";
 import { Loading } from "@/pages/loading";
 import { fetchRaid, updateRaid } from "@/services/raid";
-import type { Breadcrumb } from "@/components/breadcrumbs-bar";
 import { raidRequest } from "@/utils/data-utils";
 import {
   DocumentScanner as DocumentScannerIcon,
@@ -16,6 +15,7 @@ import {
   Home as HomeIcon,
 } from "@mui/icons-material";
 import { Container, Stack } from "@mui/material";
+import { useKeycloak } from "@react-keycloak/web";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -53,7 +53,7 @@ function createEditRaidPageBreadcrumbs({
 
 export const RaidEdit = () => {
   const { openErrorDialog } = useErrorDialog();
-  const { keycloak, initialized } = useKeycloakContext();
+  const { keycloak, initialized } = useKeycloak();
   const navigate = useNavigate();
 
   const { prefix, suffix } = useParams() as { prefix: string; suffix: string };

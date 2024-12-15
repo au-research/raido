@@ -11,9 +11,9 @@ import ListItemText from "@mui/material/ListItemText";
 import { useQuery } from "@tanstack/react-query";
 import * as React from "react";
 
-import { useKeycloakContext } from "@/keycloak";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { useKeycloak } from "@react-keycloak/web";
 
 export function ServicePointSwitcher() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -37,7 +37,7 @@ export function ServicePointSwitcher() {
     setAnchorEl(null);
   };
 
-  const { keycloak, initialized } = useKeycloakContext();
+  const { keycloak } = useKeycloak();
 
   const switchToNewServicePoint = async (groupId: string) => {
     await setKeycloakUserAttribute({

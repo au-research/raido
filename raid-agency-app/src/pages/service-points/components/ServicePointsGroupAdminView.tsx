@@ -1,16 +1,16 @@
 import { ErrorAlertComponent } from "@/components/error-alert-component";
 import { ServicePointsTable } from "@/components/service-points-table";
-import { useKeycloakContext } from "@/keycloak";
 import { Loading } from "@/pages/loading";
 import {
   fetchServicePoint,
   fetchServicePoints,
 } from "@/services/service-points";
 import { Card, CardContent, CardHeader } from "@mui/material";
+import { useKeycloak } from "@react-keycloak/web";
 import { useQuery } from "@tanstack/react-query";
 
 export const ServicePointsGroupAdminView = () => {
-  const { keycloak } = useKeycloakContext();
+  const { keycloak } = useKeycloak();
   const servicePointGroupId = keycloak?.tokenParsed?.service_point_group_id;
 
   const fetchServicePointById = async () => {

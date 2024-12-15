@@ -1,7 +1,6 @@
 import type { Breadcrumb } from "@/components/breadcrumbs-bar";
 import { BreadcrumbsBar } from "@/components/breadcrumbs-bar";
 import { useSnackbar } from "@/components/snackbar";
-import { useKeycloakContext } from "@/keycloak";
 import { fetchApiTokenFromKeycloak } from "@/services/keycloak";
 import {
   ContentCopy as ContentCopyIcon,
@@ -18,10 +17,11 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
+import { useKeycloak } from "@react-keycloak/web";
 import { useEffect, useState } from "react";
 
 export const ApiKey = () => {
-  const { keycloak } = useKeycloakContext();
+  const { keycloak } = useKeycloak();
   const { openSnackbar } = useSnackbar();
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
 

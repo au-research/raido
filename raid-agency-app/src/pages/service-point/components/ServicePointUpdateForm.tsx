@@ -1,5 +1,4 @@
 import type { ServicePoint, UpdateServicePointRequest } from "@/generated/raid";
-import { useKeycloakContext } from "@/keycloak";
 import { updateServicePoint } from "@/services/service-points";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -11,6 +10,7 @@ import {
   Switch,
   TextField,
 } from "@mui/material";
+import { useKeycloak } from "@react-keycloak/web";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
@@ -22,7 +22,7 @@ export const ServicePointUpdateForm = ({
   servicePoint: ServicePoint;
 }) => {
   const queryClient = useQueryClient();
-  const { keycloak } = useKeycloakContext();
+  const { keycloak } = useKeycloak();
 
   const initalServicePointValues: UpdateServicePointRequest = {
     id: servicePoint.id,

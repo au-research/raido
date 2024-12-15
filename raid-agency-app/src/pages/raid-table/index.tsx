@@ -1,5 +1,4 @@
 import { RaidDto } from "@/generated/raid";
-import { useKeycloakContext } from "@/keycloak";
 import { Loading } from "@/pages/loading";
 import { fetchRaids } from "@/services/raid";
 import {
@@ -13,15 +12,16 @@ import {
   Typography,
 } from "@mui/material";
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
+import { useKeycloak } from "@react-keycloak/web";
 import { useQuery } from "@tanstack/react-query";
-import { RaidTableRowContextMenu } from "./components";
 import { endDateColumn } from "./columns/endDateColumn";
 import { handleColumn } from "./columns/handleColumn";
 import { startDateColumn } from "./columns/startDateColumn";
 import { titleColumn } from "./columns/titleColumn";
+import { RaidTableRowContextMenu } from "./components";
 
 export const RaidTable = ({ title }: { title?: string }) => {
-  const { keycloak, initialized } = useKeycloakContext();
+  const { keycloak, initialized } = useKeycloak();
 
   const raidQuery = useQuery<RaidDto[]>({
     queryKey: ["listRaids"],

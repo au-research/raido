@@ -1,5 +1,4 @@
 import { useSnackbar } from "@/components/snackbar";
-import { useKeycloakContext } from "@/keycloak";
 import { HowToRegOutlined as HowToRegOutlinedIcon } from "@mui/icons-material";
 import {
   Button,
@@ -9,6 +8,7 @@ import {
   Container,
   Stack,
 } from "@mui/material";
+import { useKeycloak } from "@react-keycloak/web";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
@@ -66,7 +66,7 @@ function addAcceptedInvite(newInvite: string): void {
 
 export const RaidInvite = () => {
   let [searchParams] = useSearchParams();
-  const { keycloak } = useKeycloakContext();
+  const { keycloak } = useKeycloak();
   const { prefix, suffix } = useParams();
   const [isPending, setIsPending] = useState<boolean>(false);
   const snackbar = useSnackbar();

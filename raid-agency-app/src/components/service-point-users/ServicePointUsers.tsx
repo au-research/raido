@@ -1,12 +1,11 @@
 import { useSnackbar } from "@/components/snackbar";
 import { Button, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-
-import { useKeycloakContext } from "@/keycloak";
 import { updateUserServicePointUserRole } from "@/services/service-points";
 import { ServicePointWithMembers } from "@/types";
 import { Check as CheckIcon, Circle as CircleIcon } from "@mui/icons-material";
 import { Chip, Stack } from "@mui/material";
+import { useKeycloak } from "@react-keycloak/web";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const ServicePointUsers = ({
@@ -14,7 +13,7 @@ export const ServicePointUsers = ({
 }: {
   servicePointWithMembers?: ServicePointWithMembers;
 }) => {
-  const { keycloak, initialized } = useKeycloakContext();
+  const { keycloak } = useKeycloak();
 
   const queryClient = useQueryClient();
   const snackbar = useSnackbar();

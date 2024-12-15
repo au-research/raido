@@ -1,4 +1,4 @@
-import { useKeycloakContext } from "@/keycloak";
+import { useKeycloak } from "@react-keycloak/web";
 import { useCallback, useMemo } from "react";
 
 // Define roles as readonly const to ensure type safety
@@ -18,7 +18,7 @@ interface TokenPayload {
 }
 
 export function useAuthHelper() {
-  const { keycloak } = useKeycloakContext();
+  const { keycloak } = useKeycloak();
   const { tokenParsed } = keycloak as { tokenParsed?: TokenPayload };
 
   // Memoize the role checking function

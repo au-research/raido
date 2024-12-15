@@ -1,6 +1,5 @@
 import { SnackbarProvider } from "@/components/snackbar";
 import { ReactErrorBoundary } from "@/error/ReactErrorBoundary";
-import { keycloak, KeycloakProvider } from "@/keycloak";
 import {
   Box,
   createTheme,
@@ -16,11 +15,18 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { Outlet } from "react-router-dom";
 
-import { ErrorDialogProvider } from "./components/error-dialog";
 import { MappingProvider } from "@/mapping";
+import { ErrorDialogProvider } from "./components/error-dialog";
+import Keycloak from "keycloak-js";
 
 export function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
+  const keycloak = new Keycloak({
+    url: import.meta.env.VITE_KEYCLOAK_URL,
+    realm: import.meta.env.VITE_KEYCLOAK_REALM,
+    clientId: import.meta.env.VITE_KEYCLOAK_CLIENT_ID,
+  });
 
   const theme = useMemo(
     () =>
@@ -69,16 +75,14 @@ export function App() {
                 pkceMethod: "S256",
               }}
             >
-              <KeycloakProvider>
-                <QueryClientProvider client={queryClient}>
-                  <ReactErrorBoundary>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <Box sx={{ pt: 3 }}></Box>
-                      <Outlet />
-                    </LocalizationProvider>
-                  </ReactErrorBoundary>
-                </QueryClientProvider>
-              </KeycloakProvider>
+              <QueryClientProvider client={queryClient}>
+                <ReactErrorBoundary>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <Box sx={{ pt: 3 }}></Box>
+                    <Outlet />
+                  </LocalizationProvider>
+                </ReactErrorBoundary>
+              </QueryClientProvider>
             </ReactKeycloakProvider>
           </SnackbarProvider>
         </MappingProvider>

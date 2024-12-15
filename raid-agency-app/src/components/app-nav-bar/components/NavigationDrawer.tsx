@@ -1,4 +1,4 @@
-import { useAuthHelper, useKeycloakContext } from "@/keycloak";
+import { useAuthHelper } from "@/keycloak";
 import {
   Add as AddIcon,
   ExitToApp as ExitToAppIcon,
@@ -20,6 +20,7 @@ import {
   Toolbar,
   Tooltip,
 } from "@mui/material";
+import { useKeycloak } from "@react-keycloak/web";
 import React from "react";
 import { NavLink } from "react-router-dom";
 
@@ -134,7 +135,7 @@ function ApiKeySidebarMenu() {
   );
 }
 function ActionsSidebarMenu() {
-  const { keycloak } = useKeycloakContext();
+  const { keycloak } = useKeycloak();
   return (
     <List
       subheader={<ListSubheader component="div">More actions</ListSubheader>}

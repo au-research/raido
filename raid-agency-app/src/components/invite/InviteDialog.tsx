@@ -1,5 +1,4 @@
 import { useSnackbar } from "@/components/snackbar";
-import { useKeycloakContext } from "@/keycloak";
 import {
   Button,
   Dialog,
@@ -14,6 +13,7 @@ import React, { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { sendInvite } from "@/services/invite";
+import { useKeycloak } from "@react-keycloak/web";
 
 export default function InviteDialog({
   open,
@@ -25,7 +25,7 @@ export default function InviteDialog({
   const { prefix, suffix } = useParams();
   const [email, setEmail] = useState("@ardc-raid.testinator.com");
   const snackbar = useSnackbar();
-  const { keycloak } = useKeycloakContext();
+  const { keycloak } = useKeycloak();
 
   const sendInviteMutation = useMutation({
     mutationFn: sendInvite,

@@ -3,7 +3,6 @@ import type { Breadcrumb } from "@/components/breadcrumbs-bar";
 import { BreadcrumbsBar } from "@/components/breadcrumbs-bar";
 import { ErrorAlertComponent } from "@/components/error-alert-component";
 import { RaidDto } from "@/generated/raid";
-import { useKeycloakContext } from "@/keycloak";
 import { Loading } from "@/pages/loading";
 import {
   ExternalLinksDisplay,
@@ -18,11 +17,12 @@ import {
   Home as HomeIcon,
 } from "@mui/icons-material";
 import { Box, Container, Stack } from "@mui/material";
+import { useKeycloak } from "@react-keycloak/web";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 
 export const RaidDisplay = () => {
-  const { keycloak, initialized } = useKeycloakContext();
+  const { keycloak, initialized } = useKeycloak();
 
   const { prefix, suffix } = useParams() as { prefix: string; suffix: string };
   const handle = `${prefix}/${suffix}`;

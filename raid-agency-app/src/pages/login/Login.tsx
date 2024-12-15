@@ -1,4 +1,3 @@
-import { useKeycloakContext } from "@/keycloak";
 import {
   Code as CodeIcon,
   Google as GoogleIcon,
@@ -16,12 +15,13 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
+import { useKeycloak } from "@react-keycloak/web";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Australia } from "./icons/Australia";
 import { Orcid } from "./icons/Orcid";
 
 export const Login = () => {
-  const { keycloak, initialized } = useKeycloakContext();
+  const { keycloak, initialized } = useKeycloak();
   const navigate = useNavigate();
 
   if (initialized && keycloak.authenticated) {

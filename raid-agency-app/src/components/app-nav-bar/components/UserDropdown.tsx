@@ -1,5 +1,4 @@
 import { ServicePointSwitcher } from "@/components/service-point-switcher";
-import { useKeycloakContext } from "@/keycloak";
 import { fetchCurrentUserKeycloakGroups } from "@/services/keycloak";
 import { KeycloakGroup } from "@/types";
 import {
@@ -15,6 +14,7 @@ import {
   MenuItem,
   MenuList,
 } from "@mui/material";
+import { useKeycloak } from "@react-keycloak/web";
 import { useQuery } from "@tanstack/react-query";
 import { KeycloakTokenParsed } from "keycloak-js";
 import React from "react";
@@ -36,7 +36,7 @@ function getRolesFromToken({
 }
 
 export default function UserDropdown() {
-  const { keycloak, initialized } = useKeycloakContext();
+  const { keycloak, initialized } = useKeycloak();
 
   const [accountMenuAnchor, setAccountMenuAnchor] =
     React.useState<null | HTMLElement>(null);
