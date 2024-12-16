@@ -15,6 +15,7 @@ import static au.org.raid.db.jooq.tables.Contributor.CONTRIBUTOR;
 import static au.org.raid.db.jooq.tables.Organisation.ORGANISATION;
 import static au.org.raid.db.jooq.tables.Raid.RAID;
 import static au.org.raid.db.jooq.tables.RaidContributor.RAID_CONTRIBUTOR;
+import static au.org.raid.db.jooq.tables.RaidHistory.RAID_HISTORY;
 import static au.org.raid.db.jooq.tables.RaidOrganisation.RAID_ORGANISATION;
 
 @Repository
@@ -131,10 +132,13 @@ public class RaidRepository {
     }
 
     public List<RaidRecord> findAllPublic() {
-        return dslContext.selectFrom(RAID)
+        return dslContext.select()
+                .distinctOn(RAID.HANDLE)
+                .from(RAID)
+                .join(RAID_HISTORY).on(RAID_HISTORY.HANDLE.eq(RAID.HANDLE))
                 .where(RAID.ACCESS_TYPE_ID.in(1, 4)
                         .and(RAID.METADATA_SCHEMA.notIn(Metaschema.legacy_metadata_schema_v1, Metaschema.raido_metadata_schema_v1))
                 )
-                .fetch();
+                .fetchInto(RaidRecord.class);
     }
 }
