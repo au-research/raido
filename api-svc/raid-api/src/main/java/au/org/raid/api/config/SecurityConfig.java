@@ -70,6 +70,7 @@ public class SecurityConfig {
                         .requestMatchers("/swagger-ui*/**").permitAll()
                         .requestMatchers("/docs/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers("/error").permitAll()
 //                        .requestMatchers(new AntPathRequestMatcher(RAID_API + "/", "GET"))
 //                        //TODO: Any service point user but embargoed raids should only be visible to service point
 //                        // owners or raid users/admins with permissions for the raid
