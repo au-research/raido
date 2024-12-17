@@ -20,3 +20,5 @@ build/
 .run/
 .DS_Store
 .env
+.DS_Store
+.idea
