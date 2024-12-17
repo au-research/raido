@@ -34,6 +34,7 @@ import SpatialCoverageDisplay from "@/entities/spatialCoverage/SpatialCoverageDi
 import SubjectDisplay from "@/entities/subject/SubjectDisplay";
 import TitleDisplay from "@/entities/title/display-components/TitleDisplay";
 import TraditionalKnowledgeLabelDisplay from "@/entities/traditionalKnowledgeLabel/TraditionalKnowledgeLabelDisplay";
+import organisationGenerator from "@/entities/organisation/data-components/organisation-generator";
 
 export const displayItems = [
   {
@@ -129,7 +130,7 @@ export const newRaid: RaidCreateRequest = {
   // description: [descriptionGenerator()],
   date: dateGenerator(),
   access: accessGenerator(),
-  // organisation: [organisationGenerator()],
+  organisation: [organisationGenerator()],
   contributor: [],
   // subject: [subjectGenerator()],
   // relatedRaid: [],

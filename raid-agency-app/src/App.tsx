@@ -1,5 +1,6 @@
 import { SnackbarProvider } from "@/components/snackbar";
 import { ReactErrorBoundary } from "@/error/ReactErrorBoundary";
+import { MappingProvider } from "@/mapping";
 import {
   Box,
   createTheme,
@@ -12,21 +13,19 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ReactKeycloakProvider } from "@react-keycloak/web";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useMemo } from "react";
-import { Outlet } from "react-router-dom";
-
-import { MappingProvider } from "@/mapping";
-import { ErrorDialogProvider } from "./components/error-dialog";
 import Keycloak from "keycloak-js";
+import { StrictMode, useMemo } from "react";
+import { Outlet } from "react-router-dom";
+import { ErrorDialogProvider } from "./components/error-dialog";
+
+const keycloak = new Keycloak({
+  url: import.meta.env.VITE_KEYCLOAK_URL,
+  realm: import.meta.env.VITE_KEYCLOAK_REALM,
+  clientId: import.meta.env.VITE_KEYCLOAK_CLIENT_ID,
+});
 
 export function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
-
-  const keycloak = new Keycloak({
-    url: import.meta.env.VITE_KEYCLOAK_URL,
-    realm: import.meta.env.VITE_KEYCLOAK_REALM,
-    clientId: import.meta.env.VITE_KEYCLOAK_CLIENT_ID,
-  });
 
   const theme = useMemo(
     () =>
@@ -64,29 +63,31 @@ export function App() {
   });
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <ErrorDialogProvider>
-        <MappingProvider>
-          <SnackbarProvider>
-            <ReactKeycloakProvider
-              authClient={keycloak}
-              initOptions={{
-                pkceMethod: "S256",
-              }}
-            >
-              <QueryClientProvider client={queryClient}>
-                <ReactErrorBoundary>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <Box sx={{ pt: 3 }}></Box>
-                    <Outlet />
-                  </LocalizationProvider>
-                </ReactErrorBoundary>
-              </QueryClientProvider>
-            </ReactKeycloakProvider>
-          </SnackbarProvider>
-        </MappingProvider>
-      </ErrorDialogProvider>
-    </ThemeProvider>
+    <ReactKeycloakProvider
+      authClient={keycloak}
+      initOptions={{
+        pkceMethod: "S256",
+      }}
+    >
+      <StrictMode>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <ErrorDialogProvider>
+            <MappingProvider>
+              <SnackbarProvider>
+                <QueryClientProvider client={queryClient}>
+                  <ReactErrorBoundary>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <Box sx={{ pt: 3 }}></Box>
+                      <Outlet />
+                    </LocalizationProvider>
+                  </ReactErrorBoundary>
+                </QueryClientProvider>
+              </SnackbarProvider>
+            </MappingProvider>
+          </ErrorDialogProvider>
+        </ThemeProvider>
+      </StrictMode>
+    </ReactKeycloakProvider>
   );
 }
