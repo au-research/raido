@@ -1,0 +1,71 @@
+---
+import Breadcrumbs from "@/components/breadcrumbs.astro";
+import Header from "@/components/header.astro";
+import Layout from "@/layouts/main.astro";
+import { fetchRaids } from "@/services/raids";
+import type { RaidDto } from "@/generated/raid/models/RaidDto";
+import type { ModelDate } from "@/generated/raid/models/ModelDate";
+import Titles from "@/components/raid-components/titles.astro";
+import Dates from "@/components/raid-components/dates.astro";
+import Organisations from "@/components/raid-components/organisations.astro";
+import Descriptions from "@/components/raid-components/descriptions.astro";
+import Contributors from "@/components/raid-components/contributors.astro";
+import RelatedObjects from "@/components/raid-components/related-objects.astro";
+import AlternateIdentifiers from "@/components/raid-components/alternate-identifiers.astro";
+import AlternateUrls from "@/components/raid-components/alternate-urls.astro";
+import RelatedRaids from "@/components/raid-components/related-raids.astro";
+import Access from "@/components/raid-components/access.astro";
+import Subjects from "@/components/raid-components/subjects.astro";
+
+export async function getStaticPaths() {
+  const raids = await fetchRaids();
+  return raids.map((el: RaidDto) => {
+    const [_, prefix, suffix] = new URL(el.identifier.id).pathname.split("/");
+    return {
+      params: {
+        prefix,
+        suffix,
+      },
+      props: {
+        raid: el,
+      },
+    };
+  });
+}
+
+const { prefix, suffix }: { prefix: string; suffix: string } = Astro.params;
+const { raid }: { raid: RaidDto } = Astro.props;
+---
+
+<Layout title="main">
+  <div class="overflow-hidden rounded-md border border-gray-300">
+    <Breadcrumbs
+      elements={[
+        { to: "/raids", label: "RAiDs" },
+        { to: `/raids/${prefix}`, label: `${prefix}` },
+        { to: `/raids/${prefix}/${suffix}`, label: `${suffix}` },
+      ]}
+    />
+    <Header
+      id={`${prefix}/${suffix}`}
+      label={raid.title?.map((el) => el.text).join(" | ")}
+    />
+
+    <!-- <div class="-mx-4 px-4 py-8 sm:mx-0 sm:px-8 sm:pb-14 lg:col-span-2 lg:row-span-2 lg:row-end-2 xl:px-16 xl:pb-20 xl:pt-16 bg-white"> -->
+    <div class="divide-y">
+      <Dates dates={raid?.date || ({} as ModelDate)} />
+      <Titles titles={raid?.title || []} />
+      <Descriptions descriptions={raid?.description || []} />
+      <Contributors contributors={raid?.contributor || []} />
+      <Organisations organisations={raid?.organisation || []} />
+      <RelatedObjects relatedObjects={raid?.relatedObject || []} />
+      <AlternateIdentifiers
+        alternateIdentifiers={raid?.alternateIdentifier || []}
+      />
+      <AlternateUrls alternateUrls={raid?.alternateUrl || []} />
+      <RelatedRaids relatedRaids={raid?.relatedRaid || []} />
+      <Access access={raid?.access} />
+      <Subjects subjects={raid?.subject || []} />
+    </div>
+  </div>
+</Layout>

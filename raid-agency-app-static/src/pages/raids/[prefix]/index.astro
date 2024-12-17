@@ -1,0 +1,59 @@
+---
+import Breadcrumbs from "@/components/breadcrumbs.astro";
+import RaidsTable from "@/components/raids-table.astro";
+import Layout from "@/layouts/main.astro";
+import { fetchRaids } from "@/services/raids";
+
+const raids = await fetchRaids();
+
+export async function getStaticPaths() {
+  const raids = await fetchRaids();
+
+  const prefixRaidCount = new Map<string, number>();
+  for (const el of raids) {
+    const [_, prefix] = new URL(el.identifier.id).pathname.split("/");
+    const counter = prefixRaidCount.get(prefix) || 0;
+    prefixRaidCount.set(prefix, counter + 1);
+  }
+
+  return Array.from(prefixRaidCount.entries()).map(([key]) => {
+    return {
+      params: { prefix: key },
+      props: { prefix: key },
+    };
+  });
+}
+
+const { prefix } = Astro.params;
+---
+
+<Layout title="main">
+  <div class="overflow-hidden rounded-md bg-white border border-gray-300">
+    <Breadcrumbs
+      elements={[
+        { to: "/prefixes", label: `Prefixes` },
+        { to: "/raids", label: `Prefix ${prefix}` },
+      ]}
+    />
+    <div class="p-4 sm:p-6 lg:p-8">
+      <div class="sm:flex sm:items-center">
+        <div class="sm:flex-auto">
+          <h1 class="text-base font-semibold leading-6 text-gray-900">
+            RAiDs for prefix {prefix}
+          </h1>
+          <p class="mt-2 text-sm text-gray-700">
+            A list of all the raids for prefix {prefix}
+          </p>
+        </div>
+        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+          <button
+            type="button"
+            class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+            >Add raids</button
+          >
+        </div>
+      </div>
+      <RaidsTable raids={raids} />
+    </div>
+  </div>
+</Layout>
