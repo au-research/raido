@@ -1,4 +1,4 @@
-import ErrorAlertComponent from "@/components/ErrorAlertComponent";
+import { ErrorAlertComponent } from "@/components/error-alert-component";
 import { Container, Divider, Typography } from "@mui/material";
 import * as React from "react";
 

@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -36,10 +36,8 @@ export interface TitleType {
 /**
  * Check if a given object implements the TitleType interface.
  */
-export function instanceOfTitleType(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
+export function instanceOfTitleType(value: object): value is TitleType {
+    return true;
 }
 
 export function TitleTypeFromJSON(json: any): TitleType {
@@ -47,27 +45,29 @@ export function TitleTypeFromJSON(json: any): TitleType {
 }
 
 export function TitleTypeFromJSONTyped(json: any, ignoreDiscriminator: boolean): TitleType {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'schemaUri': !exists(json, 'schemaUri') ? undefined : json['schemaUri'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'schemaUri': json['schemaUri'] == null ? undefined : json['schemaUri'],
     };
 }
 
-export function TitleTypeToJSON(value?: TitleType | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function TitleTypeToJSON(json: any): TitleType {
+      return TitleTypeToJSONTyped(json, false);
+  }
+
+  export function TitleTypeToJSONTyped(value?: TitleType | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'id': value.id,
-        'schemaUri': value.schemaUri,
+        'id': value['id'],
+        'schemaUri': value['schemaUri'],
     };
 }
 

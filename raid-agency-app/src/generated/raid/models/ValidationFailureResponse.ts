@@ -12,12 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { ValidationFailure } from './ValidationFailure';
 import {
     ValidationFailureFromJSON,
     ValidationFailureFromJSONTyped,
     ValidationFailureToJSON,
+    ValidationFailureToJSONTyped,
 } from './ValidationFailure';
 
 /**
@@ -67,16 +68,14 @@ export interface ValidationFailureResponse {
 /**
  * Check if a given object implements the ValidationFailureResponse interface.
  */
-export function instanceOfValidationFailureResponse(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "failures" in value;
-    isInstance = isInstance && "type" in value;
-    isInstance = isInstance && "title" in value;
-    isInstance = isInstance && "status" in value;
-    isInstance = isInstance && "detail" in value;
-    isInstance = isInstance && "instance" in value;
-
-    return isInstance;
+export function instanceOfValidationFailureResponse(value: object): value is ValidationFailureResponse {
+    if (!('failures' in value) || value['failures'] === undefined) return false;
+    if (!('type' in value) || value['type'] === undefined) return false;
+    if (!('title' in value) || value['title'] === undefined) return false;
+    if (!('status' in value) || value['status'] === undefined) return false;
+    if (!('detail' in value) || value['detail'] === undefined) return false;
+    if (!('instance' in value) || value['instance'] === undefined) return false;
+    return true;
 }
 
 export function ValidationFailureResponseFromJSON(json: any): ValidationFailureResponse {
@@ -84,7 +83,7 @@ export function ValidationFailureResponseFromJSON(json: any): ValidationFailureR
 }
 
 export function ValidationFailureResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): ValidationFailureResponse {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -98,21 +97,23 @@ export function ValidationFailureResponseFromJSONTyped(json: any, ignoreDiscrimi
     };
 }
 
-export function ValidationFailureResponseToJSON(value?: ValidationFailureResponse | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function ValidationFailureResponseToJSON(json: any): ValidationFailureResponse {
+      return ValidationFailureResponseToJSONTyped(json, false);
+  }
+
+  export function ValidationFailureResponseToJSONTyped(value?: ValidationFailureResponse | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'failures': ((value.failures as Array<any>).map(ValidationFailureToJSON)),
-        'type': value.type,
-        'title': value.title,
-        'status': value.status,
-        'detail': value.detail,
-        'instance': value.instance,
+        'failures': ((value['failures'] as Array<any>).map(ValidationFailureToJSON)),
+        'type': value['type'],
+        'title': value['title'],
+        'status': value['status'],
+        'detail': value['detail'],
+        'instance': value['instance'],
     };
 }
 

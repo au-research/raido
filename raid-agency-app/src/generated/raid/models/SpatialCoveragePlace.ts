@@ -12,12 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { Language } from './Language';
 import {
     LanguageFromJSON,
     LanguageFromJSONTyped,
     LanguageToJSON,
+    LanguageToJSONTyped,
 } from './Language';
 
 /**
@@ -43,10 +44,8 @@ export interface SpatialCoveragePlace {
 /**
  * Check if a given object implements the SpatialCoveragePlace interface.
  */
-export function instanceOfSpatialCoveragePlace(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
+export function instanceOfSpatialCoveragePlace(value: object): value is SpatialCoveragePlace {
+    return true;
 }
 
 export function SpatialCoveragePlaceFromJSON(json: any): SpatialCoveragePlace {
@@ -54,27 +53,29 @@ export function SpatialCoveragePlaceFromJSON(json: any): SpatialCoveragePlace {
 }
 
 export function SpatialCoveragePlaceFromJSONTyped(json: any, ignoreDiscriminator: boolean): SpatialCoveragePlace {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'text': !exists(json, 'text') ? undefined : json['text'],
-        'language': !exists(json, 'language') ? undefined : LanguageFromJSON(json['language']),
+        'text': json['text'] == null ? undefined : json['text'],
+        'language': json['language'] == null ? undefined : LanguageFromJSON(json['language']),
     };
 }
 
-export function SpatialCoveragePlaceToJSON(value?: SpatialCoveragePlace | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function SpatialCoveragePlaceToJSON(json: any): SpatialCoveragePlace {
+      return SpatialCoveragePlaceToJSONTyped(json, false);
+  }
+
+  export function SpatialCoveragePlaceToJSONTyped(value?: SpatialCoveragePlace | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'text': value.text,
-        'language': LanguageToJSON(value.language),
+        'text': value['text'],
+        'language': LanguageToJSON(value['language']),
     };
 }
 

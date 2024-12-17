@@ -1,3 +1,5 @@
+import { ApiTokenRequest, RequestTokenResponse } from "@/types";
+
 const kcUrl = import.meta.env.VITE_KEYCLOAK_URL as string;
 const kcRealm = import.meta.env.VITE_KEYCLOAK_REALM as string;
 
@@ -112,3 +114,23 @@ export async function setKeycloakUserAttribute({
     throw new Error(errorMessage);
   }
 }
+
+export const fetchApiTokenFromKeycloak = async (
+  apiTokenRequest: ApiTokenRequest
+): Promise<RequestTokenResponse> => {
+  const url = `${
+    import.meta.env.VITE_KEYCLOAK_URL
+  }/realms/${kcRealm}/protocol/openid-connect/token`;
+  const data = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams({
+      grant_type: "refresh_token",
+      client_id: "raid-api",
+      refresh_token: apiTokenRequest.refreshToken,
+    }),
+  });
+  return await data.json();
+};

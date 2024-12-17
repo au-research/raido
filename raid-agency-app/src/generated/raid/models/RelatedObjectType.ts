@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -36,10 +36,8 @@ export interface RelatedObjectType {
 /**
  * Check if a given object implements the RelatedObjectType interface.
  */
-export function instanceOfRelatedObjectType(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
+export function instanceOfRelatedObjectType(value: object): value is RelatedObjectType {
+    return true;
 }
 
 export function RelatedObjectTypeFromJSON(json: any): RelatedObjectType {
@@ -47,27 +45,29 @@ export function RelatedObjectTypeFromJSON(json: any): RelatedObjectType {
 }
 
 export function RelatedObjectTypeFromJSONTyped(json: any, ignoreDiscriminator: boolean): RelatedObjectType {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'schemaUri': !exists(json, 'schemaUri') ? undefined : json['schemaUri'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'schemaUri': json['schemaUri'] == null ? undefined : json['schemaUri'],
     };
 }
 
-export function RelatedObjectTypeToJSON(value?: RelatedObjectType | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function RelatedObjectTypeToJSON(json: any): RelatedObjectType {
+      return RelatedObjectTypeToJSONTyped(json, false);
+  }
+
+  export function RelatedObjectTypeToJSONTyped(value?: RelatedObjectType | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'id': value.id,
-        'schemaUri': value.schemaUri,
+        'id': value['id'],
+        'schemaUri': value['schemaUri'],
     };
 }
 

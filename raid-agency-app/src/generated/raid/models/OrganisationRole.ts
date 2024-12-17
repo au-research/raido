@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -48,13 +48,11 @@ export interface OrganisationRole {
 /**
  * Check if a given object implements the OrganisationRole interface.
  */
-export function instanceOfOrganisationRole(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "schemaUri" in value;
-    isInstance = isInstance && "id" in value;
-    isInstance = isInstance && "startDate" in value;
-
-    return isInstance;
+export function instanceOfOrganisationRole(value: object): value is OrganisationRole {
+    if (!('schemaUri' in value) || value['schemaUri'] === undefined) return false;
+    if (!('id' in value) || value['id'] === undefined) return false;
+    if (!('startDate' in value) || value['startDate'] === undefined) return false;
+    return true;
 }
 
 export function OrganisationRoleFromJSON(json: any): OrganisationRole {
@@ -62,7 +60,7 @@ export function OrganisationRoleFromJSON(json: any): OrganisationRole {
 }
 
 export function OrganisationRoleFromJSONTyped(json: any, ignoreDiscriminator: boolean): OrganisationRole {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -70,23 +68,25 @@ export function OrganisationRoleFromJSONTyped(json: any, ignoreDiscriminator: bo
         'schemaUri': json['schemaUri'],
         'id': json['id'],
         'startDate': json['startDate'],
-        'endDate': !exists(json, 'endDate') ? undefined : json['endDate'],
+        'endDate': json['endDate'] == null ? undefined : json['endDate'],
     };
 }
 
-export function OrganisationRoleToJSON(value?: OrganisationRole | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function OrganisationRoleToJSON(json: any): OrganisationRole {
+      return OrganisationRoleToJSONTyped(json, false);
+  }
+
+  export function OrganisationRoleToJSONTyped(value?: OrganisationRole | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'schemaUri': value.schemaUri,
-        'id': value.id,
-        'startDate': value.startDate,
-        'endDate': value.endDate,
+        'schemaUri': value['schemaUri'],
+        'id': value['id'],
+        'startDate': value['startDate'],
+        'endDate': value['endDate'],
     };
 }
 

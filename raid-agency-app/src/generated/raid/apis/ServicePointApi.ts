@@ -52,8 +52,11 @@ export class ServicePointApi extends runtime.BaseAPI {
     /**
      */
     async createServicePointRaw(requestParameters: CreateServicePointRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ServicePoint>> {
-        if (requestParameters.servicePointCreateRequest === null || requestParameters.servicePointCreateRequest === undefined) {
-            throw new runtime.RequiredError('servicePointCreateRequest','Required parameter requestParameters.servicePointCreateRequest was null or undefined when calling createServicePoint.');
+        if (requestParameters['servicePointCreateRequest'] == null) {
+            throw new runtime.RequiredError(
+                'servicePointCreateRequest',
+                'Required parameter "servicePointCreateRequest" was null or undefined when calling createServicePoint().'
+            );
         }
 
         const queryParameters: any = {};
@@ -75,7 +78,7 @@ export class ServicePointApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: ServicePointCreateRequestToJSON(requestParameters.servicePointCreateRequest),
+            body: ServicePointCreateRequestToJSON(requestParameters['servicePointCreateRequest']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ServicePointFromJSON(jsonValue));
@@ -123,8 +126,11 @@ export class ServicePointApi extends runtime.BaseAPI {
     /**
      */
     async findServicePointByIdRaw(requestParameters: FindServicePointByIdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ServicePoint>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling findServicePointById.');
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling findServicePointById().'
+            );
         }
 
         const queryParameters: any = {};
@@ -140,7 +146,7 @@ export class ServicePointApi extends runtime.BaseAPI {
             }
         }
         const response = await this.request({
-            path: `/service-point/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            path: `/service-point/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -159,12 +165,18 @@ export class ServicePointApi extends runtime.BaseAPI {
     /**
      */
     async updateServicePointRaw(requestParameters: UpdateServicePointRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ServicePoint>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling updateServicePoint.');
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling updateServicePoint().'
+            );
         }
 
-        if (requestParameters.servicePointUpdateRequest === null || requestParameters.servicePointUpdateRequest === undefined) {
-            throw new runtime.RequiredError('servicePointUpdateRequest','Required parameter requestParameters.servicePointUpdateRequest was null or undefined when calling updateServicePoint.');
+        if (requestParameters['servicePointUpdateRequest'] == null) {
+            throw new runtime.RequiredError(
+                'servicePointUpdateRequest',
+                'Required parameter "servicePointUpdateRequest" was null or undefined when calling updateServicePoint().'
+            );
         }
 
         const queryParameters: any = {};
@@ -182,11 +194,11 @@ export class ServicePointApi extends runtime.BaseAPI {
             }
         }
         const response = await this.request({
-            path: `/service-point/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            path: `/service-point/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: ServicePointUpdateRequestToJSON(requestParameters.servicePointUpdateRequest),
+            body: ServicePointUpdateRequestToJSON(requestParameters['servicePointUpdateRequest']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => ServicePointFromJSON(jsonValue));

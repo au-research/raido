@@ -1,64 +1,69 @@
-import { RaidDto } from "@/generated/raid";
-import { FormFieldProps } from "@/types";
-import { getErrorMessageForField } from "@/utils";
+import { getErrorMessageForField } from "@/utils/data-utils";
 import { Grid, TextField } from "@mui/material";
-import { Control, Controller, FieldErrors } from "react-hook-form";
+import { memo } from "react";
+import { useController } from "react-hook-form";
 
 interface TextInputFieldProps {
-  formFieldProps: FormFieldProps;
-  control: Control<RaidDto>;
-  errors: FieldErrors<RaidDto>;
+  name: string;
+  label: string;
+  placeholder?: string;
+  helperText?: string;
+  errorText?: string;
+  required: boolean;
+  multiline?: boolean;
   width?: number;
 }
 
-export function TextInputField({
-  formFieldProps,
-  control,
-  errors,
+const TextInputField = memo(function TextInputField({
+  name,
+  label,
+  helperText,
+  errorText,
+  required,
+  multiline,
   width = 12,
 }: TextInputFieldProps) {
   const {
-    name,
-    label,
-    placeholder,
-    required,
-    helperText,
-    errorText,
-    multiline = false,
-  } = formFieldProps;
+    field,
+    formState: { errors },
+  } = useController({ name });
+
+  const errorMessage = getErrorMessageForField(errors, field.name);
+
+  const getDisplayHelperText = () => {
+    if (errorMessage) {
+      return errorText || errorMessage.message;
+    }
+
+    if (required && helperText && helperText?.length > 0) {
+      return `${helperText} *`;
+    }
+
+    return helperText || "";
+  };
 
   return (
     <Grid item xs={width}>
-      <Controller
-        name={name as keyof RaidDto}
-        control={control}
-        render={({ field }) => {
-          const errorMessage = getErrorMessageForField(errors, field.name);
-          const displayHelperText = errorMessage
-            ? errorText
-              ? errorText
-              : errorMessage.message
-            : required
-            ? `${helperText} *`
-            : helperText;
-
-          return (
-            <TextField
-              {...field}
-              error={!!errorMessage}
-              fullWidth
-              helperText={displayHelperText}
-              label={label}
-              placeholder={placeholder}
-              required={!!required}
-              size="small"
-              variant="filled"
-              multiline={multiline}
-              rows={multiline ? 5 : 1}
-            />
-          );
+      <TextField
+        {...field}
+        error={Boolean(errorMessage)}
+        fullWidth
+        helperText={getDisplayHelperText()}
+        label={`${label} ${multiline ? "(supports markdown syntax)" : ""}`}
+        placeholder={`${label} ${
+          multiline ? "(supports markdown syntax)" : ""
+        }`}
+        required={Boolean(required)}
+        variant="filled"
+        multiline={multiline}
+        sx={{
+          boxShadow: 0,
         }}
       />
     </Grid>
   );
-}
+});
+
+TextInputField.displayName = "TextInputField";
+
+export { TextInputField };

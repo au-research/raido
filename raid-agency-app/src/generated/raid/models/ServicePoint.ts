@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * The response for all service point requests
  * @export
@@ -90,16 +90,14 @@ export interface ServicePoint {
 /**
  * Check if a given object implements the ServicePoint interface.
  */
-export function instanceOfServicePoint(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "id" in value;
-    isInstance = isInstance && "name" in value;
-    isInstance = isInstance && "identifierOwner" in value;
-    isInstance = isInstance && "techEmail" in value;
-    isInstance = isInstance && "adminEmail" in value;
-    isInstance = isInstance && "enabled" in value;
-
-    return isInstance;
+export function instanceOfServicePoint(value: object): value is ServicePoint {
+    if (!('id' in value) || value['id'] === undefined) return false;
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('identifierOwner' in value) || value['identifierOwner'] === undefined) return false;
+    if (!('techEmail' in value) || value['techEmail'] === undefined) return false;
+    if (!('adminEmail' in value) || value['adminEmail'] === undefined) return false;
+    if (!('enabled' in value) || value['enabled'] === undefined) return false;
+    return true;
 }
 
 export function ServicePointFromJSON(json: any): ServicePoint {
@@ -107,7 +105,7 @@ export function ServicePointFromJSON(json: any): ServicePoint {
 }
 
 export function ServicePointFromJSONTyped(json: any, ignoreDiscriminator: boolean): ServicePoint {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -115,37 +113,39 @@ export function ServicePointFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'id': json['id'],
         'name': json['name'],
         'identifierOwner': json['identifierOwner'],
-        'repositoryId': !exists(json, 'repositoryId') ? undefined : json['repositoryId'],
-        'prefix': !exists(json, 'prefix') ? undefined : json['prefix'],
-        'groupId': !exists(json, 'groupId') ? undefined : json['groupId'],
-        'searchContent': !exists(json, 'searchContent') ? undefined : json['searchContent'],
+        'repositoryId': json['repositoryId'] == null ? undefined : json['repositoryId'],
+        'prefix': json['prefix'] == null ? undefined : json['prefix'],
+        'groupId': json['groupId'] == null ? undefined : json['groupId'],
+        'searchContent': json['searchContent'] == null ? undefined : json['searchContent'],
         'techEmail': json['techEmail'],
         'adminEmail': json['adminEmail'],
         'enabled': json['enabled'],
-        'appWritesEnabled': !exists(json, 'appWritesEnabled') ? undefined : json['appWritesEnabled'],
+        'appWritesEnabled': json['appWritesEnabled'] == null ? undefined : json['appWritesEnabled'],
     };
 }
 
-export function ServicePointToJSON(value?: ServicePoint | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function ServicePointToJSON(json: any): ServicePoint {
+      return ServicePointToJSONTyped(json, false);
+  }
+
+  export function ServicePointToJSONTyped(value?: ServicePoint | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'id': value.id,
-        'name': value.name,
-        'identifierOwner': value.identifierOwner,
-        'repositoryId': value.repositoryId,
-        'prefix': value.prefix,
-        'groupId': value.groupId,
-        'searchContent': value.searchContent,
-        'techEmail': value.techEmail,
-        'adminEmail': value.adminEmail,
-        'enabled': value.enabled,
-        'appWritesEnabled': value.appWritesEnabled,
+        'id': value['id'],
+        'name': value['name'],
+        'identifierOwner': value['identifierOwner'],
+        'repositoryId': value['repositoryId'],
+        'prefix': value['prefix'],
+        'groupId': value['groupId'],
+        'searchContent': value['searchContent'],
+        'techEmail': value['techEmail'],
+        'adminEmail': value['adminEmail'],
+        'enabled': value['enabled'],
+        'appWritesEnabled': value['appWritesEnabled'],
     };
 }
 

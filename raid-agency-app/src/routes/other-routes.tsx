@@ -1,12 +1,11 @@
-import ProtectedRoute from "@/components/ProtectedRoute";
-import AppNavBarUnauthenticated from "@/design/AppNavBarUnauthenticated";
-import ApiKeyPage from "@/pages/ApiKeyPage";
-import HomePage from "@/pages/Homepage";
-import LoginPage from "@/pages/LoginPage";
-import { AboutRaidPage } from "@/pages/Unauth/AboutRaidPage";
-import { PrivacyPage } from "@/pages/Unauth/PrivacyPage";
-import { UsageTermsPage } from "@/pages/Unauth/UsageTermsPage";
-import UserProfilePage from "@/pages/UserProfilePage";
+import { AppNavBarUnauthenticated } from "@/components/app-nav-bar-unauthenticated";
+import { ProtectedRoute } from "@/components/protected-route";
+import { AboutRaid } from "@/pages/about-raid";
+import { ApiKey } from "@/pages/api-key";
+import { Home } from "@/pages/home";
+import { Login } from "@/pages/login";
+import { Privacy } from "@/pages/privacy";
+import { UsageTerms } from "@/pages/usage-terms";
 import { Box } from "@mui/material";
 import { RouteObject } from "react-router-dom";
 
@@ -17,18 +16,17 @@ export const otherRoutes: RouteObject[] = [
     children: [
       {
         path: "",
-        element: <HomePage />,
+        element: <Home />,
       },
     ],
   },
   {
     path: "/login",
     element: (
-      <>
+      <Box sx={{ pt: 5 }}>
         <AppNavBarUnauthenticated />
-        <Box sx={{ height: "3rem" }} />
-        <LoginPage />
-      </>
+        <Login />
+      </Box>
     ),
   },
   {
@@ -36,7 +34,7 @@ export const otherRoutes: RouteObject[] = [
     element: (
       <>
         <AppNavBarUnauthenticated />
-        <PrivacyPage />
+        <Privacy />
       </>
     ),
   },
@@ -45,7 +43,7 @@ export const otherRoutes: RouteObject[] = [
     element: (
       <>
         <AppNavBarUnauthenticated />
-        <UsageTermsPage />
+        <UsageTerms />
       </>
     ),
   },
@@ -54,7 +52,7 @@ export const otherRoutes: RouteObject[] = [
     element: (
       <>
         <AppNavBarUnauthenticated />
-        <AboutRaidPage />
+        <AboutRaid />
       </>
     ),
   },
@@ -64,19 +62,8 @@ export const otherRoutes: RouteObject[] = [
     children: [
       {
         path: "",
-        element: <ApiKeyPage />,
+        element: <ApiKey />,
       },
     ],
   },
-  {
-    path: "profile",
-    element: <ProtectedRoute />,
-    children: [
-      {
-        path: "",
-        element: <UserProfilePage />,
-      },
-    ],
-  },
-  // https://orcid.test.raid.org.au/invite?userId=466a8eab-6325-49aa-ab34-ff7b62213c53
 ];

@@ -1,3 +1,4 @@
+import "@/index.css";
 import "@fontsource/figtree";
 import ReactDOM from "react-dom/client";
 import {
@@ -6,13 +7,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { App } from "./App";
-import "./index.css";
-import {
-  otherRoutes,
-  raidPageRoutes,
-  servicePointRoutes,
-  testRoutes,
-} from "./routes";
+import { otherRoutes, raidPageRoutes, servicePointRoutes } from "./routes";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -27,7 +22,6 @@ const router = createBrowserRouter([
       ...servicePointRoutes,
       ...raidPageRoutes,
       ...otherRoutes,
-      ...testRoutes,
       {
         path: "*",
         element: <Navigate to="/" />,

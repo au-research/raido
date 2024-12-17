@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -36,10 +36,8 @@ export interface AlternateIdentifier {
 /**
  * Check if a given object implements the AlternateIdentifier interface.
  */
-export function instanceOfAlternateIdentifier(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
+export function instanceOfAlternateIdentifier(value: object): value is AlternateIdentifier {
+    return true;
 }
 
 export function AlternateIdentifierFromJSON(json: any): AlternateIdentifier {
@@ -47,27 +45,29 @@ export function AlternateIdentifierFromJSON(json: any): AlternateIdentifier {
 }
 
 export function AlternateIdentifierFromJSONTyped(json: any, ignoreDiscriminator: boolean): AlternateIdentifier {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'type': !exists(json, 'type') ? undefined : json['type'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'type': json['type'] == null ? undefined : json['type'],
     };
 }
 
-export function AlternateIdentifierToJSON(value?: AlternateIdentifier | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function AlternateIdentifierToJSON(json: any): AlternateIdentifier {
+      return AlternateIdentifierToJSONTyped(json, false);
+  }
+
+  export function AlternateIdentifierToJSONTyped(value?: AlternateIdentifier | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'id': value.id,
-        'type': value.type,
+        'id': value['id'],
+        'type': value['type'],
     };
 }
 

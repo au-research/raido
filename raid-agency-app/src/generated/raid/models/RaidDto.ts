@@ -12,91 +12,105 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
-import type { Access } from './Access';
-import {
-    AccessFromJSON,
-    AccessFromJSONTyped,
-    AccessToJSON,
-} from './Access';
-import type { AlternateIdentifier } from './AlternateIdentifier';
-import {
-    AlternateIdentifierFromJSON,
-    AlternateIdentifierFromJSONTyped,
-    AlternateIdentifierToJSON,
-} from './AlternateIdentifier';
-import type { AlternateUrl } from './AlternateUrl';
-import {
-    AlternateUrlFromJSON,
-    AlternateUrlFromJSONTyped,
-    AlternateUrlToJSON,
-} from './AlternateUrl';
-import type { Contributor } from './Contributor';
-import {
-    ContributorFromJSON,
-    ContributorFromJSONTyped,
-    ContributorToJSON,
-} from './Contributor';
-import type { Description } from './Description';
-import {
-    DescriptionFromJSON,
-    DescriptionFromJSONTyped,
-    DescriptionToJSON,
-} from './Description';
-import type { Id } from './Id';
-import {
-    IdFromJSON,
-    IdFromJSONTyped,
-    IdToJSON,
-} from './Id';
-import type { ModelDate } from './ModelDate';
-import {
-    ModelDateFromJSON,
-    ModelDateFromJSONTyped,
-    ModelDateToJSON,
-} from './ModelDate';
-import type { Organisation } from './Organisation';
-import {
-    OrganisationFromJSON,
-    OrganisationFromJSONTyped,
-    OrganisationToJSON,
-} from './Organisation';
+import { mapValues } from '../runtime';
 import type { RelatedObject } from './RelatedObject';
 import {
     RelatedObjectFromJSON,
     RelatedObjectFromJSONTyped,
     RelatedObjectToJSON,
+    RelatedObjectToJSONTyped,
 } from './RelatedObject';
-import type { RelatedRaid } from './RelatedRaid';
+import type { Description } from './Description';
 import {
-    RelatedRaidFromJSON,
-    RelatedRaidFromJSONTyped,
-    RelatedRaidToJSON,
-} from './RelatedRaid';
-import type { SpatialCoverage } from './SpatialCoverage';
+    DescriptionFromJSON,
+    DescriptionFromJSONTyped,
+    DescriptionToJSON,
+    DescriptionToJSONTyped,
+} from './Description';
+import type { Organisation } from './Organisation';
 import {
-    SpatialCoverageFromJSON,
-    SpatialCoverageFromJSONTyped,
-    SpatialCoverageToJSON,
-} from './SpatialCoverage';
-import type { Subject } from './Subject';
+    OrganisationFromJSON,
+    OrganisationFromJSONTyped,
+    OrganisationToJSON,
+    OrganisationToJSONTyped,
+} from './Organisation';
+import type { ModelDate } from './ModelDate';
 import {
-    SubjectFromJSON,
-    SubjectFromJSONTyped,
-    SubjectToJSON,
-} from './Subject';
+    ModelDateFromJSON,
+    ModelDateFromJSONTyped,
+    ModelDateToJSON,
+    ModelDateToJSONTyped,
+} from './ModelDate';
+import type { Access } from './Access';
+import {
+    AccessFromJSON,
+    AccessFromJSONTyped,
+    AccessToJSON,
+    AccessToJSONTyped,
+} from './Access';
+import type { Contributor } from './Contributor';
+import {
+    ContributorFromJSON,
+    ContributorFromJSONTyped,
+    ContributorToJSON,
+    ContributorToJSONTyped,
+} from './Contributor';
 import type { Title } from './Title';
 import {
     TitleFromJSON,
     TitleFromJSONTyped,
     TitleToJSON,
+    TitleToJSONTyped,
 } from './Title';
+import type { RelatedRaid } from './RelatedRaid';
+import {
+    RelatedRaidFromJSON,
+    RelatedRaidFromJSONTyped,
+    RelatedRaidToJSON,
+    RelatedRaidToJSONTyped,
+} from './RelatedRaid';
+import type { AlternateIdentifier } from './AlternateIdentifier';
+import {
+    AlternateIdentifierFromJSON,
+    AlternateIdentifierFromJSONTyped,
+    AlternateIdentifierToJSON,
+    AlternateIdentifierToJSONTyped,
+} from './AlternateIdentifier';
+import type { Subject } from './Subject';
+import {
+    SubjectFromJSON,
+    SubjectFromJSONTyped,
+    SubjectToJSON,
+    SubjectToJSONTyped,
+} from './Subject';
+import type { Id } from './Id';
+import {
+    IdFromJSON,
+    IdFromJSONTyped,
+    IdToJSON,
+    IdToJSONTyped,
+} from './Id';
+import type { AlternateUrl } from './AlternateUrl';
+import {
+    AlternateUrlFromJSON,
+    AlternateUrlFromJSONTyped,
+    AlternateUrlToJSON,
+    AlternateUrlToJSONTyped,
+} from './AlternateUrl';
 import type { TraditionalKnowledgeLabel } from './TraditionalKnowledgeLabel';
 import {
     TraditionalKnowledgeLabelFromJSON,
     TraditionalKnowledgeLabelFromJSONTyped,
     TraditionalKnowledgeLabelToJSON,
+    TraditionalKnowledgeLabelToJSONTyped,
 } from './TraditionalKnowledgeLabel';
+import type { SpatialCoverage } from './SpatialCoverage';
+import {
+    SpatialCoverageFromJSON,
+    SpatialCoverageFromJSONTyped,
+    SpatialCoverageToJSON,
+    SpatialCoverageToJSONTyped,
+} from './SpatialCoverage';
 
 /**
  * 
@@ -193,12 +207,10 @@ export interface RaidDto {
 /**
  * Check if a given object implements the RaidDto interface.
  */
-export function instanceOfRaidDto(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "identifier" in value;
-    isInstance = isInstance && "access" in value;
-
-    return isInstance;
+export function instanceOfRaidDto(value: object): value is RaidDto {
+    if (!('identifier' in value) || value['identifier'] === undefined) return false;
+    if (!('access' in value) || value['access'] === undefined) return false;
+    return true;
 }
 
 export function RaidDtoFromJSON(json: any): RaidDto {
@@ -206,51 +218,53 @@ export function RaidDtoFromJSON(json: any): RaidDto {
 }
 
 export function RaidDtoFromJSONTyped(json: any, ignoreDiscriminator: boolean): RaidDto {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'identifier': IdFromJSON(json['identifier']),
-        'title': !exists(json, 'title') ? undefined : ((json['title'] as Array<any>).map(TitleFromJSON)),
-        'date': !exists(json, 'date') ? undefined : ModelDateFromJSON(json['date']),
-        'description': !exists(json, 'description') ? undefined : ((json['description'] as Array<any>).map(DescriptionFromJSON)),
+        'title': json['title'] == null ? undefined : ((json['title'] as Array<any>).map(TitleFromJSON)),
+        'date': json['date'] == null ? undefined : ModelDateFromJSON(json['date']),
+        'description': json['description'] == null ? undefined : ((json['description'] as Array<any>).map(DescriptionFromJSON)),
         'access': AccessFromJSON(json['access']),
-        'alternateUrl': !exists(json, 'alternateUrl') ? undefined : ((json['alternateUrl'] as Array<any>).map(AlternateUrlFromJSON)),
-        'contributor': !exists(json, 'contributor') ? undefined : ((json['contributor'] as Array<any>).map(ContributorFromJSON)),
-        'organisation': !exists(json, 'organisation') ? undefined : ((json['organisation'] as Array<any>).map(OrganisationFromJSON)),
-        'subject': !exists(json, 'subject') ? undefined : ((json['subject'] as Array<any>).map(SubjectFromJSON)),
-        'relatedRaid': !exists(json, 'relatedRaid') ? undefined : ((json['relatedRaid'] as Array<any>).map(RelatedRaidFromJSON)),
-        'relatedObject': !exists(json, 'relatedObject') ? undefined : ((json['relatedObject'] as Array<any>).map(RelatedObjectFromJSON)),
-        'alternateIdentifier': !exists(json, 'alternateIdentifier') ? undefined : ((json['alternateIdentifier'] as Array<any>).map(AlternateIdentifierFromJSON)),
-        'spatialCoverage': !exists(json, 'spatialCoverage') ? undefined : ((json['spatialCoverage'] as Array<any>).map(SpatialCoverageFromJSON)),
-        'traditionalKnowledgeLabel': !exists(json, 'traditionalKnowledgeLabel') ? undefined : ((json['traditionalKnowledgeLabel'] as Array<any>).map(TraditionalKnowledgeLabelFromJSON)),
+        'alternateUrl': json['alternateUrl'] == null ? undefined : ((json['alternateUrl'] as Array<any>).map(AlternateUrlFromJSON)),
+        'contributor': json['contributor'] == null ? undefined : ((json['contributor'] as Array<any>).map(ContributorFromJSON)),
+        'organisation': json['organisation'] == null ? undefined : ((json['organisation'] as Array<any>).map(OrganisationFromJSON)),
+        'subject': json['subject'] == null ? undefined : ((json['subject'] as Array<any>).map(SubjectFromJSON)),
+        'relatedRaid': json['relatedRaid'] == null ? undefined : ((json['relatedRaid'] as Array<any>).map(RelatedRaidFromJSON)),
+        'relatedObject': json['relatedObject'] == null ? undefined : ((json['relatedObject'] as Array<any>).map(RelatedObjectFromJSON)),
+        'alternateIdentifier': json['alternateIdentifier'] == null ? undefined : ((json['alternateIdentifier'] as Array<any>).map(AlternateIdentifierFromJSON)),
+        'spatialCoverage': json['spatialCoverage'] == null ? undefined : ((json['spatialCoverage'] as Array<any>).map(SpatialCoverageFromJSON)),
+        'traditionalKnowledgeLabel': json['traditionalKnowledgeLabel'] == null ? undefined : ((json['traditionalKnowledgeLabel'] as Array<any>).map(TraditionalKnowledgeLabelFromJSON)),
     };
 }
 
-export function RaidDtoToJSON(value?: RaidDto | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function RaidDtoToJSON(json: any): RaidDto {
+      return RaidDtoToJSONTyped(json, false);
+  }
+
+  export function RaidDtoToJSONTyped(value?: RaidDto | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'identifier': IdToJSON(value.identifier),
-        'title': value.title === undefined ? undefined : ((value.title as Array<any>).map(TitleToJSON)),
-        'date': ModelDateToJSON(value.date),
-        'description': value.description === undefined ? undefined : ((value.description as Array<any>).map(DescriptionToJSON)),
-        'access': AccessToJSON(value.access),
-        'alternateUrl': value.alternateUrl === undefined ? undefined : ((value.alternateUrl as Array<any>).map(AlternateUrlToJSON)),
-        'contributor': value.contributor === undefined ? undefined : ((value.contributor as Array<any>).map(ContributorToJSON)),
-        'organisation': value.organisation === undefined ? undefined : ((value.organisation as Array<any>).map(OrganisationToJSON)),
-        'subject': value.subject === undefined ? undefined : ((value.subject as Array<any>).map(SubjectToJSON)),
-        'relatedRaid': value.relatedRaid === undefined ? undefined : ((value.relatedRaid as Array<any>).map(RelatedRaidToJSON)),
-        'relatedObject': value.relatedObject === undefined ? undefined : ((value.relatedObject as Array<any>).map(RelatedObjectToJSON)),
-        'alternateIdentifier': value.alternateIdentifier === undefined ? undefined : ((value.alternateIdentifier as Array<any>).map(AlternateIdentifierToJSON)),
-        'spatialCoverage': value.spatialCoverage === undefined ? undefined : ((value.spatialCoverage as Array<any>).map(SpatialCoverageToJSON)),
-        'traditionalKnowledgeLabel': value.traditionalKnowledgeLabel === undefined ? undefined : ((value.traditionalKnowledgeLabel as Array<any>).map(TraditionalKnowledgeLabelToJSON)),
+        'identifier': IdToJSON(value['identifier']),
+        'title': value['title'] == null ? undefined : ((value['title'] as Array<any>).map(TitleToJSON)),
+        'date': ModelDateToJSON(value['date']),
+        'description': value['description'] == null ? undefined : ((value['description'] as Array<any>).map(DescriptionToJSON)),
+        'access': AccessToJSON(value['access']),
+        'alternateUrl': value['alternateUrl'] == null ? undefined : ((value['alternateUrl'] as Array<any>).map(AlternateUrlToJSON)),
+        'contributor': value['contributor'] == null ? undefined : ((value['contributor'] as Array<any>).map(ContributorToJSON)),
+        'organisation': value['organisation'] == null ? undefined : ((value['organisation'] as Array<any>).map(OrganisationToJSON)),
+        'subject': value['subject'] == null ? undefined : ((value['subject'] as Array<any>).map(SubjectToJSON)),
+        'relatedRaid': value['relatedRaid'] == null ? undefined : ((value['relatedRaid'] as Array<any>).map(RelatedRaidToJSON)),
+        'relatedObject': value['relatedObject'] == null ? undefined : ((value['relatedObject'] as Array<any>).map(RelatedObjectToJSON)),
+        'alternateIdentifier': value['alternateIdentifier'] == null ? undefined : ((value['alternateIdentifier'] as Array<any>).map(AlternateIdentifierToJSON)),
+        'spatialCoverage': value['spatialCoverage'] == null ? undefined : ((value['spatialCoverage'] as Array<any>).map(SpatialCoverageToJSON)),
+        'traditionalKnowledgeLabel': value['traditionalKnowledgeLabel'] == null ? undefined : ((value['traditionalKnowledgeLabel'] as Array<any>).map(TraditionalKnowledgeLabelToJSON)),
     };
 }
 

@@ -12,12 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { OrganisationRole } from './OrganisationRole';
 import {
     OrganisationRoleFromJSON,
     OrganisationRoleFromJSONTyped,
     OrganisationRoleToJSON,
+    OrganisationRoleToJSONTyped,
 } from './OrganisationRole';
 
 /**
@@ -49,13 +50,11 @@ export interface Organisation {
 /**
  * Check if a given object implements the Organisation interface.
  */
-export function instanceOfOrganisation(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "id" in value;
-    isInstance = isInstance && "schemaUri" in value;
-    isInstance = isInstance && "role" in value;
-
-    return isInstance;
+export function instanceOfOrganisation(value: object): value is Organisation {
+    if (!('id' in value) || value['id'] === undefined) return false;
+    if (!('schemaUri' in value) || value['schemaUri'] === undefined) return false;
+    if (!('role' in value) || value['role'] === undefined) return false;
+    return true;
 }
 
 export function OrganisationFromJSON(json: any): Organisation {
@@ -63,7 +62,7 @@ export function OrganisationFromJSON(json: any): Organisation {
 }
 
 export function OrganisationFromJSONTyped(json: any, ignoreDiscriminator: boolean): Organisation {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -74,18 +73,20 @@ export function OrganisationFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function OrganisationToJSON(value?: Organisation | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function OrganisationToJSON(json: any): Organisation {
+      return OrganisationToJSONTyped(json, false);
+  }
+
+  export function OrganisationToJSONTyped(value?: Organisation | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'id': value.id,
-        'schemaUri': value.schemaUri,
-        'role': ((value.role as Array<any>).map(OrganisationRoleToJSON)),
+        'id': value['id'],
+        'schemaUri': value['schemaUri'],
+        'role': ((value['role'] as Array<any>).map(OrganisationRoleToJSON)),
     };
 }
 

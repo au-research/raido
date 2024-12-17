@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * The legal entity responsible for the RAiD; the ‘Owner’ of a RAiD. Analogous to a DataCite ‘Member’, has a  legal agreement with the Registration Agency.
  * 
@@ -44,12 +44,10 @@ export interface Owner {
 /**
  * Check if a given object implements the Owner interface.
  */
-export function instanceOfOwner(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "id" in value;
-    isInstance = isInstance && "schemaUri" in value;
-
-    return isInstance;
+export function instanceOfOwner(value: object): value is Owner {
+    if (!('id' in value) || value['id'] === undefined) return false;
+    if (!('schemaUri' in value) || value['schemaUri'] === undefined) return false;
+    return true;
 }
 
 export function OwnerFromJSON(json: any): Owner {
@@ -57,29 +55,31 @@ export function OwnerFromJSON(json: any): Owner {
 }
 
 export function OwnerFromJSONTyped(json: any, ignoreDiscriminator: boolean): Owner {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'id': json['id'],
         'schemaUri': json['schemaUri'],
-        'servicePoint': !exists(json, 'servicePoint') ? undefined : json['servicePoint'],
+        'servicePoint': json['servicePoint'] == null ? undefined : json['servicePoint'],
     };
 }
 
-export function OwnerToJSON(value?: Owner | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function OwnerToJSON(json: any): Owner {
+      return OwnerToJSONTyped(json, false);
+  }
+
+  export function OwnerToJSONTyped(value?: Owner | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'id': value.id,
-        'schemaUri': value.schemaUri,
-        'servicePoint': value.servicePoint,
+        'id': value['id'],
+        'schemaUri': value['schemaUri'],
+        'servicePoint': value['servicePoint'],
     };
 }
 

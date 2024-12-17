@@ -1,50 +1,16 @@
-import { ReactElement } from "react";
-import type { ServicePoint } from "@/generated/raid";
-export type Breadcrumb = {
-  icon: ReactElement;
-  label: string;
-  to: string;
-};
+import type { RaidDto, ServicePoint } from "@/generated/raid";
 
 import type Keycloak from "keycloak-js";
-import { Contributor } from "./generated/raid";
+import { FieldErrors } from "react-hook-form";
 
-// Define the shape of the context value
 export interface KeycloakContextValue {
   keycloak: Keycloak;
   initialized: boolean;
 }
 
-export type Failure = {
-  fieldId: string;
-  errorType: string;
-  message: string;
-};
-
-export type RaidHistoryType = {
-  handle: string;
-  version: number;
-  diff: string;
-  timestamp: string;
-};
-
-export type RaidHistoryElementType = {
-  op: string;
-  path: string;
-  value: unknown;
-};
-
 export type KeycloakGroup = {
   id: string;
   name: string;
-};
-
-export type MappingElement = {
-  id: string;
-  value: string;
-  field: string;
-  definition: string;
-  source: string;
 };
 
 type ServicePointMemberAttributes = {
@@ -65,40 +31,30 @@ export type ServicePointWithMembers = ServicePoint & {
   members: ServicePointMember[];
 };
 
-type FormFieldType = "text";
+export type ApiTokenRequest = {
+  refreshToken: string;
+};
 
-export interface FormFieldProps {
-  name: string;
-  label: string;
-  placeholder?: string;
-  type?: FormFieldType;
-  helperText?: string;
-  errorText?: string;
-  required?: boolean;
-  width?: number;
-  multiline?: boolean;
-  keyField?: string;
-}
-
-export interface OrcidContributorResponse {
-  token_type: string;
+export type RequestTokenResponse = {
+  access_token: string;
   expires_in: number;
-  handle: string;
-  contributorUuid: string;
-  createdOn: number;
+  id_token: string;
+  "not-before-policy": number;
+  refresh_expires_in: number;
   refresh_token: string;
   scope: string;
-  email: string;
-  orcid: string;
-  name: string;
-  access_token: string;
-  stateUuid: string;
-}
+  session_state: string;
+  token_type: string;
+};
 
-export interface OrcidLookupResponse {
-  stateUuid: string;
-  contributorUuid: string;
-  createdOn: number;
-  email: string;
-  handle: string;
+export interface ChildConfig {
+  fieldKey: string;
+  label: string;
+  labelPlural: string;
+  DetailsComponent: React.ComponentType<{
+    parentIndex: number;
+    index: number;
+    errors?: FieldErrors<RaidDto>;
+  }>;
+  generator: () => any;
 }

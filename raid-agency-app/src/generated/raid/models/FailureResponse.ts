@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -54,15 +54,13 @@ export interface FailureResponse {
 /**
  * Check if a given object implements the FailureResponse interface.
  */
-export function instanceOfFailureResponse(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "type" in value;
-    isInstance = isInstance && "title" in value;
-    isInstance = isInstance && "status" in value;
-    isInstance = isInstance && "detail" in value;
-    isInstance = isInstance && "instance" in value;
-
-    return isInstance;
+export function instanceOfFailureResponse(value: object): value is FailureResponse {
+    if (!('type' in value) || value['type'] === undefined) return false;
+    if (!('title' in value) || value['title'] === undefined) return false;
+    if (!('status' in value) || value['status'] === undefined) return false;
+    if (!('detail' in value) || value['detail'] === undefined) return false;
+    if (!('instance' in value) || value['instance'] === undefined) return false;
+    return true;
 }
 
 export function FailureResponseFromJSON(json: any): FailureResponse {
@@ -70,7 +68,7 @@ export function FailureResponseFromJSON(json: any): FailureResponse {
 }
 
 export function FailureResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): FailureResponse {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -83,20 +81,22 @@ export function FailureResponseFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function FailureResponseToJSON(value?: FailureResponse | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function FailureResponseToJSON(json: any): FailureResponse {
+      return FailureResponseToJSONTyped(json, false);
+  }
+
+  export function FailureResponseToJSONTyped(value?: FailureResponse | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'type': value.type,
-        'title': value.title,
-        'status': value.status,
-        'detail': value.detail,
-        'instance': value.instance,
+        'type': value['type'],
+        'title': value['title'],
+        'status': value['status'],
+        'detail': value['detail'],
+        'instance': value['instance'],
     };
 }
 

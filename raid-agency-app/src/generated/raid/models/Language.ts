@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -36,11 +36,9 @@ export interface Language {
 /**
  * Check if a given object implements the Language interface.
  */
-export function instanceOfLanguage(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "schemaUri" in value;
-
-    return isInstance;
+export function instanceOfLanguage(value: object): value is Language {
+    if (!('schemaUri' in value) || value['schemaUri'] === undefined) return false;
+    return true;
 }
 
 export function LanguageFromJSON(json: any): Language {
@@ -48,27 +46,29 @@ export function LanguageFromJSON(json: any): Language {
 }
 
 export function LanguageFromJSONTyped(json: any, ignoreDiscriminator: boolean): Language {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
+        'id': json['id'] == null ? undefined : json['id'],
         'schemaUri': json['schemaUri'],
     };
 }
 
-export function LanguageToJSON(value?: Language | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function LanguageToJSON(json: any): Language {
+      return LanguageToJSONTyped(json, false);
+  }
+
+  export function LanguageToJSONTyped(value?: Language | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'id': value.id,
-        'schemaUri': value.schemaUri,
+        'id': value['id'],
+        'schemaUri': value['schemaUri'],
     };
 }
 

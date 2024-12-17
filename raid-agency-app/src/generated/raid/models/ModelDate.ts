@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * Metadata schema block containing the start and end date of the RAiD.
  * @export
@@ -36,11 +36,9 @@ export interface ModelDate {
 /**
  * Check if a given object implements the ModelDate interface.
  */
-export function instanceOfModelDate(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "startDate" in value;
-
-    return isInstance;
+export function instanceOfModelDate(value: object): value is ModelDate {
+    if (!('startDate' in value) || value['startDate'] === undefined) return false;
+    return true;
 }
 
 export function ModelDateFromJSON(json: any): ModelDate {
@@ -48,27 +46,29 @@ export function ModelDateFromJSON(json: any): ModelDate {
 }
 
 export function ModelDateFromJSONTyped(json: any, ignoreDiscriminator: boolean): ModelDate {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'startDate': json['startDate'],
-        'endDate': !exists(json, 'endDate') ? undefined : json['endDate'],
+        'endDate': json['endDate'] == null ? undefined : json['endDate'],
     };
 }
 
-export function ModelDateToJSON(value?: ModelDate | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function ModelDateToJSON(json: any): ModelDate {
+      return ModelDateToJSONTyped(json, false);
+  }
+
+  export function ModelDateToJSONTyped(value?: ModelDate | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'startDate': value.startDate,
-        'endDate': value.endDate,
+        'startDate': value['startDate'],
+        'endDate': value['endDate'],
     };
 }
 

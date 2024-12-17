@@ -19,7 +19,6 @@ import type {
   RaidChange,
   RaidCreateRequest,
   RaidDto,
-  RaidPatchRequest,
   RaidUpdateRequest,
   ValidationFailureResponse,
 } from '../models/index';
@@ -32,8 +31,6 @@ import {
     RaidCreateRequestToJSON,
     RaidDtoFromJSON,
     RaidDtoToJSON,
-    RaidPatchRequestFromJSON,
-    RaidPatchRequestToJSON,
     RaidUpdateRequestFromJSON,
     RaidUpdateRequestToJSON,
     ValidationFailureResponseFromJSON,
@@ -53,12 +50,6 @@ export interface FindRaidByNameRequest {
 
 export interface MintRaidRequest {
     raidCreateRequest: RaidCreateRequest;
-}
-
-export interface PatchRaidRequest {
-    prefix: string;
-    suffix: string;
-    raidPatchRequest: RaidPatchRequest;
 }
 
 export interface RaidHistoryRequest {
@@ -83,12 +74,12 @@ export class RaidApi extends runtime.BaseAPI {
     async findAllRaidsRaw(requestParameters: FindAllRaidsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<RaidDto>>> {
         const queryParameters: any = {};
 
-        if (requestParameters.servicePointId !== undefined) {
-            queryParameters['servicePointId'] = requestParameters.servicePointId;
+        if (requestParameters['servicePointId'] != null) {
+            queryParameters['servicePointId'] = requestParameters['servicePointId'];
         }
 
-        if (requestParameters.includeFields) {
-            queryParameters['includeFields'] = requestParameters.includeFields.join(runtime.COLLECTION_FORMATS["csv"]);
+        if (requestParameters['includeFields'] != null) {
+            queryParameters['includeFields'] = requestParameters['includeFields']!.join(runtime.COLLECTION_FORMATS["csv"]);
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -123,18 +114,24 @@ export class RaidApi extends runtime.BaseAPI {
      * Read a raid
      */
     async findRaidByNameRaw(requestParameters: FindRaidByNameRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RaidDto>> {
-        if (requestParameters.prefix === null || requestParameters.prefix === undefined) {
-            throw new runtime.RequiredError('prefix','Required parameter requestParameters.prefix was null or undefined when calling findRaidByName.');
+        if (requestParameters['prefix'] == null) {
+            throw new runtime.RequiredError(
+                'prefix',
+                'Required parameter "prefix" was null or undefined when calling findRaidByName().'
+            );
         }
 
-        if (requestParameters.suffix === null || requestParameters.suffix === undefined) {
-            throw new runtime.RequiredError('suffix','Required parameter requestParameters.suffix was null or undefined when calling findRaidByName.');
+        if (requestParameters['suffix'] == null) {
+            throw new runtime.RequiredError(
+                'suffix',
+                'Required parameter "suffix" was null or undefined when calling findRaidByName().'
+            );
         }
 
         const queryParameters: any = {};
 
-        if (requestParameters.version !== undefined) {
-            queryParameters['version'] = requestParameters.version;
+        if (requestParameters['version'] != null) {
+            queryParameters['version'] = requestParameters['version'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -148,7 +145,7 @@ export class RaidApi extends runtime.BaseAPI {
             }
         }
         const response = await this.request({
-            path: `/raid/{prefix}/{suffix}`.replace(`{${"prefix"}}`, encodeURIComponent(String(requestParameters.prefix))).replace(`{${"suffix"}}`, encodeURIComponent(String(requestParameters.suffix))),
+            path: `/raid/{prefix}/{suffix}`.replace(`{${"prefix"}}`, encodeURIComponent(String(requestParameters['prefix']))).replace(`{${"suffix"}}`, encodeURIComponent(String(requestParameters['suffix']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -169,8 +166,11 @@ export class RaidApi extends runtime.BaseAPI {
      * Mint a raid
      */
     async mintRaidRaw(requestParameters: MintRaidRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RaidDto>> {
-        if (requestParameters.raidCreateRequest === null || requestParameters.raidCreateRequest === undefined) {
-            throw new runtime.RequiredError('raidCreateRequest','Required parameter requestParameters.raidCreateRequest was null or undefined when calling mintRaid.');
+        if (requestParameters['raidCreateRequest'] == null) {
+            throw new runtime.RequiredError(
+                'raidCreateRequest',
+                'Required parameter "raidCreateRequest" was null or undefined when calling mintRaid().'
+            );
         }
 
         const queryParameters: any = {};
@@ -192,7 +192,7 @@ export class RaidApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: RaidCreateRequestToJSON(requestParameters.raidCreateRequest),
+            body: RaidCreateRequestToJSON(requestParameters['raidCreateRequest']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => RaidDtoFromJSON(jsonValue));
@@ -207,64 +207,21 @@ export class RaidApi extends runtime.BaseAPI {
     }
 
     /**
-     * Patch a raid
-     */
-    async patchRaidRaw(requestParameters: PatchRaidRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RaidDto>> {
-        if (requestParameters.prefix === null || requestParameters.prefix === undefined) {
-            throw new runtime.RequiredError('prefix','Required parameter requestParameters.prefix was null or undefined when calling patchRaid.');
-        }
-
-        if (requestParameters.suffix === null || requestParameters.suffix === undefined) {
-            throw new runtime.RequiredError('suffix','Required parameter requestParameters.suffix was null or undefined when calling patchRaid.');
-        }
-
-        if (requestParameters.raidPatchRequest === null || requestParameters.raidPatchRequest === undefined) {
-            throw new runtime.RequiredError('raidPatchRequest','Required parameter requestParameters.raidPatchRequest was null or undefined when calling patchRaid.');
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("bearerAuth", []);
-
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-        const response = await this.request({
-            path: `/raid/{prefix}/{suffix}`.replace(`{${"prefix"}}`, encodeURIComponent(String(requestParameters.prefix))).replace(`{${"suffix"}}`, encodeURIComponent(String(requestParameters.suffix))),
-            method: 'PATCH',
-            headers: headerParameters,
-            query: queryParameters,
-            body: RaidPatchRequestToJSON(requestParameters.raidPatchRequest),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => RaidDtoFromJSON(jsonValue));
-    }
-
-    /**
-     * Patch a raid
-     */
-    async patchRaid(requestParameters: PatchRaidRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RaidDto> {
-        const response = await this.patchRaidRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
      * A list of base64 encoded changes to the raid in JSON Patch (RFC 6902) format.
      */
     async raidHistoryRaw(requestParameters: RaidHistoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<RaidChange>>> {
-        if (requestParameters.prefix === null || requestParameters.prefix === undefined) {
-            throw new runtime.RequiredError('prefix','Required parameter requestParameters.prefix was null or undefined when calling raidHistory.');
+        if (requestParameters['prefix'] == null) {
+            throw new runtime.RequiredError(
+                'prefix',
+                'Required parameter "prefix" was null or undefined when calling raidHistory().'
+            );
         }
 
-        if (requestParameters.suffix === null || requestParameters.suffix === undefined) {
-            throw new runtime.RequiredError('suffix','Required parameter requestParameters.suffix was null or undefined when calling raidHistory.');
+        if (requestParameters['suffix'] == null) {
+            throw new runtime.RequiredError(
+                'suffix',
+                'Required parameter "suffix" was null or undefined when calling raidHistory().'
+            );
         }
 
         const queryParameters: any = {};
@@ -280,7 +237,7 @@ export class RaidApi extends runtime.BaseAPI {
             }
         }
         const response = await this.request({
-            path: `/raid/{prefix}/{suffix}/history`.replace(`{${"prefix"}}`, encodeURIComponent(String(requestParameters.prefix))).replace(`{${"suffix"}}`, encodeURIComponent(String(requestParameters.suffix))),
+            path: `/raid/{prefix}/{suffix}/history`.replace(`{${"prefix"}}`, encodeURIComponent(String(requestParameters['prefix']))).replace(`{${"suffix"}}`, encodeURIComponent(String(requestParameters['suffix']))),
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -301,16 +258,25 @@ export class RaidApi extends runtime.BaseAPI {
      * Update a raid
      */
     async updateRaidRaw(requestParameters: UpdateRaidRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RaidDto>> {
-        if (requestParameters.prefix === null || requestParameters.prefix === undefined) {
-            throw new runtime.RequiredError('prefix','Required parameter requestParameters.prefix was null or undefined when calling updateRaid.');
+        if (requestParameters['prefix'] == null) {
+            throw new runtime.RequiredError(
+                'prefix',
+                'Required parameter "prefix" was null or undefined when calling updateRaid().'
+            );
         }
 
-        if (requestParameters.suffix === null || requestParameters.suffix === undefined) {
-            throw new runtime.RequiredError('suffix','Required parameter requestParameters.suffix was null or undefined when calling updateRaid.');
+        if (requestParameters['suffix'] == null) {
+            throw new runtime.RequiredError(
+                'suffix',
+                'Required parameter "suffix" was null or undefined when calling updateRaid().'
+            );
         }
 
-        if (requestParameters.raidUpdateRequest === null || requestParameters.raidUpdateRequest === undefined) {
-            throw new runtime.RequiredError('raidUpdateRequest','Required parameter requestParameters.raidUpdateRequest was null or undefined when calling updateRaid.');
+        if (requestParameters['raidUpdateRequest'] == null) {
+            throw new runtime.RequiredError(
+                'raidUpdateRequest',
+                'Required parameter "raidUpdateRequest" was null or undefined when calling updateRaid().'
+            );
         }
 
         const queryParameters: any = {};
@@ -328,11 +294,11 @@ export class RaidApi extends runtime.BaseAPI {
             }
         }
         const response = await this.request({
-            path: `/raid/{prefix}/{suffix}`.replace(`{${"prefix"}}`, encodeURIComponent(String(requestParameters.prefix))).replace(`{${"suffix"}}`, encodeURIComponent(String(requestParameters.suffix))),
+            path: `/raid/{prefix}/{suffix}`.replace(`{${"prefix"}}`, encodeURIComponent(String(requestParameters['prefix']))).replace(`{${"suffix"}}`, encodeURIComponent(String(requestParameters['suffix']))),
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
-            body: RaidUpdateRequestToJSON(requestParameters.raidUpdateRequest),
+            body: RaidUpdateRequestToJSON(requestParameters['raidUpdateRequest']),
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response, (jsonValue) => RaidDtoFromJSON(jsonValue));

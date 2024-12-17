@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -48,10 +48,8 @@ export interface RaidChange {
 /**
  * Check if a given object implements the RaidChange interface.
  */
-export function instanceOfRaidChange(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
+export function instanceOfRaidChange(value: object): value is RaidChange {
+    return true;
 }
 
 export function RaidChangeFromJSON(json: any): RaidChange {
@@ -59,31 +57,33 @@ export function RaidChangeFromJSON(json: any): RaidChange {
 }
 
 export function RaidChangeFromJSONTyped(json: any, ignoreDiscriminator: boolean): RaidChange {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'handle': !exists(json, 'handle') ? undefined : json['handle'],
-        'version': !exists(json, 'version') ? undefined : json['version'],
-        'diff': !exists(json, 'diff') ? undefined : json['diff'],
-        'timestamp': !exists(json, 'timestamp') ? undefined : (new Date(json['timestamp'])),
+        'handle': json['handle'] == null ? undefined : json['handle'],
+        'version': json['version'] == null ? undefined : json['version'],
+        'diff': json['diff'] == null ? undefined : json['diff'],
+        'timestamp': json['timestamp'] == null ? undefined : (new Date(json['timestamp'])),
     };
 }
 
-export function RaidChangeToJSON(value?: RaidChange | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function RaidChangeToJSON(json: any): RaidChange {
+      return RaidChangeToJSONTyped(json, false);
+  }
+
+  export function RaidChangeToJSONTyped(value?: RaidChange | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'handle': value.handle,
-        'version': value.version,
-        'diff': value.diff,
-        'timestamp': value.timestamp === undefined ? undefined : (value.timestamp.toISOString()),
+        'handle': value['handle'],
+        'version': value['version'],
+        'diff': value['diff'],
+        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
     };
 }
 

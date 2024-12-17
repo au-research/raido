@@ -12,18 +12,20 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { DescriptionType } from './DescriptionType';
 import {
     DescriptionTypeFromJSON,
     DescriptionTypeFromJSONTyped,
     DescriptionTypeToJSON,
+    DescriptionTypeToJSONTyped,
 } from './DescriptionType';
 import type { Language } from './Language';
 import {
     LanguageFromJSON,
     LanguageFromJSONTyped,
     LanguageToJSON,
+    LanguageToJSONTyped,
 } from './Language';
 
 /**
@@ -55,12 +57,10 @@ export interface Description {
 /**
  * Check if a given object implements the Description interface.
  */
-export function instanceOfDescription(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "text" in value;
-    isInstance = isInstance && "type" in value;
-
-    return isInstance;
+export function instanceOfDescription(value: object): value is Description {
+    if (!('text' in value) || value['text'] === undefined) return false;
+    if (!('type' in value) || value['type'] === undefined) return false;
+    return true;
 }
 
 export function DescriptionFromJSON(json: any): Description {
@@ -68,29 +68,31 @@ export function DescriptionFromJSON(json: any): Description {
 }
 
 export function DescriptionFromJSONTyped(json: any, ignoreDiscriminator: boolean): Description {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'text': json['text'],
         'type': DescriptionTypeFromJSON(json['type']),
-        'language': !exists(json, 'language') ? undefined : LanguageFromJSON(json['language']),
+        'language': json['language'] == null ? undefined : LanguageFromJSON(json['language']),
     };
 }
 
-export function DescriptionToJSON(value?: Description | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function DescriptionToJSON(json: any): Description {
+      return DescriptionToJSONTyped(json, false);
+  }
+
+  export function DescriptionToJSONTyped(value?: Description | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'text': value.text,
-        'type': DescriptionTypeToJSON(value.type),
-        'language': LanguageToJSON(value.language),
+        'text': value['text'],
+        'type': DescriptionTypeToJSON(value['type']),
+        'language': LanguageToJSON(value['language']),
     };
 }
 

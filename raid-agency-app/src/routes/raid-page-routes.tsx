@@ -1,10 +1,10 @@
-import ProtectedRoute from "@/components/ProtectedRoute";
-import EditRaidPage from "@/pages/EditRaidPage/EditRaidPage";
-import MintRaidPage from "@/pages/MintRaidPage/MintRaidPage";
-import RaidHistoryPage from "@/pages/RaidHistoryPage";
-import RaidInvitePage from "@/pages/RaidInvitePage";
-import RaidsPage from "@/pages/RaidsPage";
-import ShowRaidPage from "@/pages/ShowRaidPage";
+import { ProtectedRoute } from "@/components/protected-route";
+import { MintRaid } from "@/pages/mint-raid";
+import { RaidDisplay } from "@/pages/raid-display";
+import { RaidEdit } from "@/pages/raid-edit";
+import { RaidHistory } from "@/pages/raid-history";
+import { RaidInvite } from "@/pages/raid-invite";
+import { Raids } from "@/pages/raids";
 import { RouteObject } from "react-router-dom";
 
 export const raidPageRoutes: RouteObject[] = [
@@ -14,7 +14,7 @@ export const raidPageRoutes: RouteObject[] = [
     children: [
       {
         path: "",
-        element: <RaidsPage />,
+        element: <Raids />,
       },
     ],
   },
@@ -24,7 +24,7 @@ export const raidPageRoutes: RouteObject[] = [
     children: [
       {
         path: "",
-        element: <MintRaidPage />,
+        element: <MintRaid />,
       },
     ],
   },
@@ -34,7 +34,7 @@ export const raidPageRoutes: RouteObject[] = [
     children: [
       {
         path: "",
-        element: <ShowRaidPage />,
+        element: <RaidDisplay />,
       },
     ],
   },
@@ -44,7 +44,7 @@ export const raidPageRoutes: RouteObject[] = [
     children: [
       {
         path: "",
-        element: <EditRaidPage />,
+        element: <RaidEdit />,
       },
     ],
   },
@@ -54,7 +54,7 @@ export const raidPageRoutes: RouteObject[] = [
     children: [
       {
         path: "",
-        element: <RaidHistoryPage />,
+        element: <RaidHistory />,
       },
     ],
   },
@@ -64,7 +64,7 @@ export const raidPageRoutes: RouteObject[] = [
     children: [
       {
         path: "",
-        element: <RaidInvitePage />,
+        element: <RaidInvite />,
       },
     ],
   },

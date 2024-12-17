@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * ROR that identifies the organisation that operates the raid registration agency software that minted this raid.
  * 
@@ -37,12 +37,10 @@ export interface RegistrationAgency {
 /**
  * Check if a given object implements the RegistrationAgency interface.
  */
-export function instanceOfRegistrationAgency(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "id" in value;
-    isInstance = isInstance && "schemaUri" in value;
-
-    return isInstance;
+export function instanceOfRegistrationAgency(value: object): value is RegistrationAgency {
+    if (!('id' in value) || value['id'] === undefined) return false;
+    if (!('schemaUri' in value) || value['schemaUri'] === undefined) return false;
+    return true;
 }
 
 export function RegistrationAgencyFromJSON(json: any): RegistrationAgency {
@@ -50,7 +48,7 @@ export function RegistrationAgencyFromJSON(json: any): RegistrationAgency {
 }
 
 export function RegistrationAgencyFromJSONTyped(json: any, ignoreDiscriminator: boolean): RegistrationAgency {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -60,17 +58,19 @@ export function RegistrationAgencyFromJSONTyped(json: any, ignoreDiscriminator: 
     };
 }
 
-export function RegistrationAgencyToJSON(value?: RegistrationAgency | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function RegistrationAgencyToJSON(json: any): RegistrationAgency {
+      return RegistrationAgencyToJSONTyped(json, false);
+  }
+
+  export function RegistrationAgencyToJSONTyped(value?: RegistrationAgency | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'id': value.id,
-        'schemaUri': value.schemaUri,
+        'id': value['id'],
+        'schemaUri': value['schemaUri'],
     };
 }
 
