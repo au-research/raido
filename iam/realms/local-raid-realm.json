@@ -46,6 +46,14 @@
   "failureFactor" : 30,
   "roles" : {
     "realm" : [ {
+      "id" : "1735aa2e-ab5e-4422-a1b3-e0ede603c843",
+      "name" : "pid-searcher",
+      "description" : "",
+      "composite" : false,
+      "clientRole" : false,
+      "containerId" : "aacef42c-ba11-42f6-89de-89f3c8126f00",
+      "attributes" : { }
+    }, {
       "id" : "d73db80e-af4b-4cef-8861-03ba6ab28133",
       "name" : "group-admin",
       "description" : "",
@@ -76,6 +84,14 @@
       "containerId" : "aacef42c-ba11-42f6-89de-89f3c8126f00",
       "attributes" : { }
     }, {
+      "id" : "a2547551-2ca0-459c-8ece-6ff0744ee728",
+      "name" : "raid-user",
+      "description" : "",
+      "composite" : false,
+      "clientRole" : false,
+      "containerId" : "aacef42c-ba11-42f6-89de-89f3c8126f00",
+      "attributes" : { }
+    }, {
       "id" : "6758e9fd-d295-42d4-af88-7a3acc279b34",
       "name" : "uma_authorization",
       "description" : "${role_uma_authorization}",
@@ -92,6 +108,22 @@
       "containerId" : "aacef42c-ba11-42f6-89de-89f3c8126f00",
       "attributes" : { }
     }, {
+      "id" : "320d2db5-7078-45cd-b7ad-b77be225a11d",
+      "name" : "raid-admin",
+      "description" : "",
+      "composite" : false,
+      "clientRole" : false,
+      "containerId" : "aacef42c-ba11-42f6-89de-89f3c8126f00",
+      "attributes" : { }
+    }, {
+      "id" : "f488fb6b-5666-4e3b-bada-cff2199b1dba",
+      "name" : "raid-dumper",
+      "description" : "",
+      "composite" : false,
+      "clientRole" : false,
+      "containerId" : "aacef42c-ba11-42f6-89de-89f3c8126f00",
+      "attributes" : { }
+    }, {
       "id" : "59a3771f-39ea-4f74-a7ca-035a6b37fca9",
       "name" : "offline_access",
       "description" : "${role_offline-access}",
@@ -101,7 +133,24 @@
       "attributes" : { }
     } ],
     "client" : {
-      "raid-api" : [ ],
+      "integration-test-client" : [ {
+        "id" : "1e7c84a7-089d-4cd1-ba48-99e8aae57605",
+        "name" : "raid-permissions-admin",
+        "description" : "",
+        "composite" : false,
+        "clientRole" : true,
+        "containerId" : "4317498b-e32f-4805-80c7-b1d81a0f50d0",
+        "attributes" : { }
+      } ],
+      "raid-api" : [ {
+        "id" : "083d0f6b-c69c-47f3-9a8b-7fd6c6e933c1",
+        "name" : "raid-search",
+        "description" : "Allows a client to search raids regardless of service point or access type",
+        "composite" : false,
+        "clientRole" : true,
+        "containerId" : "77b8f80f-0a2e-4ab6-9957-bd732bbb0537",
+        "attributes" : { }
+      } ],
       "realm-management" : [ {
         "id" : "13874f89-8680-4636-a514-9d0451894a33",
         "name" : "view-events",
@@ -271,6 +320,7 @@
         "attributes" : { }
       } ],
       "security-admin-console" : [ ],
+      "raid-dumper" : [ ],
       "admin-cli" : [ {
         "id" : "4ce06340-c943-493b-986a-053f9328720e",
         "name" : "test-role",
@@ -283,6 +333,15 @@
         }
       } ],
       "account-console" : [ ],
+      "raid-permissions-admin" : [ {
+        "id" : "ca220eec-6b52-4c38-a38f-f3071e52b43b",
+        "name" : "raid-permissions-admin",
+        "description" : "",
+        "composite" : false,
+        "clientRole" : true,
+        "containerId" : "e3759a4c-9760-4bc9-be70-91a9d35e438b",
+        "attributes" : { }
+      } ],
       "broker" : [ {
         "id" : "a2a3cfdc-7c9d-490a-b99a-3c145362d646",
         "name" : "read-token",
@@ -432,6 +491,74 @@
   "webAuthnPolicyPasswordlessAcceptableAaguids" : [ ],
   "webAuthnPolicyPasswordlessExtraOrigins" : [ ],
   "users" : [ {
+    "id" : "c6d64e82-62df-4616-950c-1c117ce8fa67",
+    "username" : "1b8395ae-621c-4ed6-9158-dffa67077486",
+    "emailVerified" : false,
+    "attributes" : {
+      "activeGroupId" : [ "169bd3f3-dd42-4ac0-b89a-fb49648e5eff" ],
+      "adminRaids" : [ "10.82841/73b80a82" ]
+    },
+    "createdTimestamp" : 0,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "18874c59-d70c-4ec2-a8c7-78cb7491fe72",
+      "type" : "password",
+      "createdDate" : 1734061166005,
+      "secretData" : "{\"value\":\"eq5UKoZtYCSnPJil4S8uu/jqmAfLsqjgYuFoUe7FrX5suTbtGwpEs7lSO0xEwmZckrtBarcwUmHZEMdFQ8zvFg==\",\"salt\":\"Btma8260FV3/f4jKkQx7cQ==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-raid", "raid-admin" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "ae10f858-507f-4249-8f1d-9eb47e8b3f16",
+    "username" : "570e394f-7de1-4c7a-8618-043939239fb5",
+    "emailVerified" : false,
+    "attributes" : {
+      "activeGroupId" : [ "169bd3f3-dd42-4ac0-b89a-fb49648e5eff" ]
+    },
+    "createdTimestamp" : 0,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "3c08335b-b451-4186-adf5-f1a59429f28b",
+      "type" : "password",
+      "createdDate" : 1734061164147,
+      "secretData" : "{\"value\":\"u41b9aNFjUPrOfCeYiN8gSJXeR2VuMM1rMxKPVEW/8nViujvlMU9T8ngxPAGKUEmAmSrDbCgVj5kFZD8+fd5RQ==\",\"salt\":\"4gSZHb8FrL9m+i9spgxbpg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "service-point-user", "default-roles-raid" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "51722377-7333-4aa9-b329-dc9432a21416",
+    "username" : "72f1ab68-0f4c-43da-a46c-bd809d2e4c23",
+    "emailVerified" : false,
+    "attributes" : {
+      "activeGroupId" : [ "169bd3f3-dd42-4ac0-b89a-fb49648e5eff" ],
+      "userRaids" : [ "10.82841/73b80a82" ]
+    },
+    "createdTimestamp" : 0,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "3b9e263e-836b-45cd-8084-2e4a85f62097",
+      "type" : "password",
+      "createdDate" : 1734061165084,
+      "secretData" : "{\"value\":\"iwmf8zTbLisrPWoFrgxhuE0R+bC5Cacwq3XjVQ4Ykkt/N1oG6aAhP0gMgPrA092o/YuNG0ctGfwxFwNOd0M/Yw==\",\"salt\":\"0zdeHHZjaUR4cHrhCTf7Yw==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-raid", "raid-user" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
     "id" : "6868f0b9-6301-47b0-9cc5-20ef74396d8b",
     "username" : "raid-au-group-admin",
     "emailVerified" : true,
@@ -494,7 +621,7 @@
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
-    "realmRoles" : [ "service-point-user", "default-roles-raid" ],
+    "realmRoles" : [ "pid-searcher", "service-point-user", "default-roles-raid" ],
     "notBefore" : 0,
     "groups" : [ "/raid-au" ]
   }, {
@@ -523,6 +650,65 @@
     "realmRoles" : [ "group-admin", "service-point-user", "default-roles-raid", "operator" ],
     "notBefore" : 0,
     "groups" : [ "/University of Queensland", "/raid-au" ]
+  }, {
+    "id" : "53b5d46a-4d63-4506-9e7f-4b65f7b58e1e",
+    "username" : "service-account-integration-test-client",
+    "emailVerified" : false,
+    "createdTimestamp" : 1731989094475,
+    "enabled" : true,
+    "totp" : false,
+    "serviceAccountClientId" : "integration-test-client",
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-raid" ],
+    "clientRoles" : {
+      "realm-management" : [ "manage-users", "view-realm" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "93088a33-a561-4efe-9937-751fd5b0130a",
+    "username" : "service-account-raid-api-2",
+    "emailVerified" : false,
+    "createdTimestamp" : 1731988965078,
+    "enabled" : true,
+    "totp" : false,
+    "serviceAccountClientId" : "raid-api-2",
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-raid" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "f35ad87d-adf7-4209-ba2d-4c43606f5ae0",
+    "username" : "service-account-raid-dumper",
+    "emailVerified" : false,
+    "createdTimestamp" : 1733365830354,
+    "enabled" : true,
+    "totp" : false,
+    "serviceAccountClientId" : "raid-dumper",
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-raid", "raid-dumper" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "a59a59dd-f980-4c1e-b237-10d25e488128",
+    "username" : "service-account-raid-permissions-admin",
+    "emailVerified" : false,
+    "createdTimestamp" : 1732579227151,
+    "enabled" : true,
+    "totp" : false,
+    "serviceAccountClientId" : "raid-permissions-admin",
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-raid" ],
+    "notBefore" : 0,
+    "groups" : [ ]
   }, {
     "id" : "cd4ea22d-5ee1-4649-b456-9f23287e9bc2",
     "username" : "uq-test-user",
@@ -677,6 +863,89 @@
     "defaultClientScopes" : [ "acr", "roles" ],
     "optionalClientScopes" : [ ]
   }, {
+    "id" : "4317498b-e32f-4805-80c7-b1d81a0f50d0",
+    "clientId" : "integration-test-client",
+    "name" : "",
+    "description" : "",
+    "rootUrl" : "",
+    "adminUrl" : "",
+    "baseUrl" : "",
+    "surrogateAuthRequired" : false,
+    "enabled" : true,
+    "alwaysDisplayInConsole" : false,
+    "clientAuthenticatorType" : "client-secret",
+    "secret" : "e8zf9ycycSYM22eGwaZ5fJ4I7TrZ7VuL",
+    "redirectUris" : [ "/*" ],
+    "webOrigins" : [ "/*" ],
+    "notBefore" : 0,
+    "bearerOnly" : false,
+    "consentRequired" : false,
+    "standardFlowEnabled" : true,
+    "implicitFlowEnabled" : false,
+    "directAccessGrantsEnabled" : true,
+    "serviceAccountsEnabled" : true,
+    "publicClient" : false,
+    "frontchannelLogout" : true,
+    "protocol" : "openid-connect",
+    "attributes" : {
+      "oidc.ciba.grant.enabled" : "false",
+      "oauth2.device.authorization.grant.enabled" : "false",
+      "client.secret.creation.time" : "1734057468",
+      "backchannel.logout.session.required" : "true",
+      "backchannel.logout.revoke.offline.tokens" : "false"
+    },
+    "authenticationFlowBindingOverrides" : { },
+    "fullScopeAllowed" : true,
+    "nodeReRegistrationTimeout" : -1,
+    "protocolMappers" : [ {
+      "id" : "0c699d3c-e975-4026-b28d-52f5c85fa5d5",
+      "name" : "Client Host",
+      "protocol" : "openid-connect",
+      "protocolMapper" : "oidc-usersessionmodel-note-mapper",
+      "consentRequired" : false,
+      "config" : {
+        "user.session.note" : "clientHost",
+        "introspection.token.claim" : "true",
+        "userinfo.token.claim" : "true",
+        "id.token.claim" : "true",
+        "access.token.claim" : "true",
+        "claim.name" : "clientHost",
+        "jsonType.label" : "String"
+      }
+    }, {
+      "id" : "c5300efd-b34c-463d-b5b1-62c4ad46573e",
+      "name" : "Client ID",
+      "protocol" : "openid-connect",
+      "protocolMapper" : "oidc-usersessionmodel-note-mapper",
+      "consentRequired" : false,
+      "config" : {
+        "user.session.note" : "client_id",
+        "introspection.token.claim" : "true",
+        "userinfo.token.claim" : "true",
+        "id.token.claim" : "true",
+        "access.token.claim" : "true",
+        "claim.name" : "client_id",
+        "jsonType.label" : "String"
+      }
+    }, {
+      "id" : "b7834fb3-ced5-45b1-b1c1-791cfb4d04e1",
+      "name" : "Client IP Address",
+      "protocol" : "openid-connect",
+      "protocolMapper" : "oidc-usersessionmodel-note-mapper",
+      "consentRequired" : false,
+      "config" : {
+        "user.session.note" : "clientAddress",
+        "introspection.token.claim" : "true",
+        "userinfo.token.claim" : "true",
+        "id.token.claim" : "true",
+        "access.token.claim" : "true",
+        "claim.name" : "clientAddress",
+        "jsonType.label" : "String"
+      }
+    } ],
+    "defaultClientScopes" : [ "acr", "roles", "basic" ],
+    "optionalClientScopes" : [ "offline_access" ]
+  }, {
     "id" : "77b8f80f-0a2e-4ab6-9957-bd732bbb0537",
     "clientId" : "raid-api",
     "name" : "",
@@ -711,7 +980,7 @@
     "authenticationFlowBindingOverrides" : { },
     "fullScopeAllowed" : true,
     "nodeReRegistrationTimeout" : -1,
-    "defaultClientScopes" : [ "acr", "roles", "basic", "service_point_group_id" ],
+    "defaultClientScopes" : [ "acr", "roles", "user_raids", "basic", "admin_raids", "service_point_group_id" ],
     "optionalClientScopes" : [ ]
   }, {
     "id" : "b5ded15a-4576-4fdf-b95b-f1adf9a8de9e",
@@ -749,6 +1018,172 @@
     "authenticationFlowBindingOverrides" : { },
     "fullScopeAllowed" : true,
     "nodeReRegistrationTimeout" : -1,
+    "defaultClientScopes" : [ "acr", "roles", "basic" ],
+    "optionalClientScopes" : [ "offline_access" ]
+  }, {
+    "id" : "ca9b5b9b-63c3-4ff5-80f6-aa4747d22d05",
+    "clientId" : "raid-dumper",
+    "name" : "",
+    "description" : "",
+    "rootUrl" : "",
+    "adminUrl" : "",
+    "baseUrl" : "",
+    "surrogateAuthRequired" : false,
+    "enabled" : true,
+    "alwaysDisplayInConsole" : false,
+    "clientAuthenticatorType" : "client-secret",
+    "secret" : "**********",
+    "redirectUris" : [ "/*" ],
+    "webOrigins" : [ "/*" ],
+    "notBefore" : 0,
+    "bearerOnly" : false,
+    "consentRequired" : false,
+    "standardFlowEnabled" : true,
+    "implicitFlowEnabled" : false,
+    "directAccessGrantsEnabled" : true,
+    "serviceAccountsEnabled" : true,
+    "publicClient" : false,
+    "frontchannelLogout" : true,
+    "protocol" : "openid-connect",
+    "attributes" : {
+      "oidc.ciba.grant.enabled" : "false",
+      "oauth2.device.authorization.grant.enabled" : "false",
+      "client.secret.creation.time" : "1733365830",
+      "backchannel.logout.session.required" : "true",
+      "backchannel.logout.revoke.offline.tokens" : "false"
+    },
+    "authenticationFlowBindingOverrides" : { },
+    "fullScopeAllowed" : true,
+    "nodeReRegistrationTimeout" : -1,
+    "protocolMappers" : [ {
+      "id" : "f12f5472-1770-4805-87b1-1fa8df6c09d6",
+      "name" : "Client ID",
+      "protocol" : "openid-connect",
+      "protocolMapper" : "oidc-usersessionmodel-note-mapper",
+      "consentRequired" : false,
+      "config" : {
+        "user.session.note" : "client_id",
+        "introspection.token.claim" : "true",
+        "userinfo.token.claim" : "true",
+        "id.token.claim" : "true",
+        "access.token.claim" : "true",
+        "claim.name" : "client_id",
+        "jsonType.label" : "String"
+      }
+    }, {
+      "id" : "4aab3a3d-cdd4-4261-a88e-42eee1c3bd9a",
+      "name" : "Client Host",
+      "protocol" : "openid-connect",
+      "protocolMapper" : "oidc-usersessionmodel-note-mapper",
+      "consentRequired" : false,
+      "config" : {
+        "user.session.note" : "clientHost",
+        "introspection.token.claim" : "true",
+        "userinfo.token.claim" : "true",
+        "id.token.claim" : "true",
+        "access.token.claim" : "true",
+        "claim.name" : "clientHost",
+        "jsonType.label" : "String"
+      }
+    }, {
+      "id" : "aca5f3c5-d60e-4970-9fac-cda0e617fdf2",
+      "name" : "Client IP Address",
+      "protocol" : "openid-connect",
+      "protocolMapper" : "oidc-usersessionmodel-note-mapper",
+      "consentRequired" : false,
+      "config" : {
+        "user.session.note" : "clientAddress",
+        "introspection.token.claim" : "true",
+        "userinfo.token.claim" : "true",
+        "id.token.claim" : "true",
+        "access.token.claim" : "true",
+        "claim.name" : "clientAddress",
+        "jsonType.label" : "String"
+      }
+    } ],
+    "defaultClientScopes" : [ "acr", "roles", "basic" ],
+    "optionalClientScopes" : [ "offline_access" ]
+  }, {
+    "id" : "e3759a4c-9760-4bc9-be70-91a9d35e438b",
+    "clientId" : "raid-permissions-admin",
+    "name" : "",
+    "description" : "",
+    "rootUrl" : "",
+    "adminUrl" : "",
+    "baseUrl" : "",
+    "surrogateAuthRequired" : false,
+    "enabled" : true,
+    "alwaysDisplayInConsole" : false,
+    "clientAuthenticatorType" : "client-secret",
+    "secret" : "07ATOSG9hYs8oATcz5wcQAdRuoEsLzEY",
+    "redirectUris" : [ "/*" ],
+    "webOrigins" : [ "/*" ],
+    "notBefore" : 0,
+    "bearerOnly" : false,
+    "consentRequired" : false,
+    "standardFlowEnabled" : true,
+    "implicitFlowEnabled" : false,
+    "directAccessGrantsEnabled" : true,
+    "serviceAccountsEnabled" : true,
+    "publicClient" : false,
+    "frontchannelLogout" : true,
+    "protocol" : "openid-connect",
+    "attributes" : {
+      "oidc.ciba.grant.enabled" : "false",
+      "oauth2.device.authorization.grant.enabled" : "false",
+      "client.secret.creation.time" : "1734057611",
+      "backchannel.logout.session.required" : "true",
+      "backchannel.logout.revoke.offline.tokens" : "false"
+    },
+    "authenticationFlowBindingOverrides" : { },
+    "fullScopeAllowed" : true,
+    "nodeReRegistrationTimeout" : -1,
+    "protocolMappers" : [ {
+      "id" : "7456decf-43cf-4d15-ba83-5ab5a45de491",
+      "name" : "Client ID",
+      "protocol" : "openid-connect",
+      "protocolMapper" : "oidc-usersessionmodel-note-mapper",
+      "consentRequired" : false,
+      "config" : {
+        "user.session.note" : "client_id",
+        "introspection.token.claim" : "true",
+        "userinfo.token.claim" : "true",
+        "id.token.claim" : "true",
+        "access.token.claim" : "true",
+        "claim.name" : "client_id",
+        "jsonType.label" : "String"
+      }
+    }, {
+      "id" : "ea8281ff-6071-457e-9d54-4d92f18c4f28",
+      "name" : "Client IP Address",
+      "protocol" : "openid-connect",
+      "protocolMapper" : "oidc-usersessionmodel-note-mapper",
+      "consentRequired" : false,
+      "config" : {
+        "user.session.note" : "clientAddress",
+        "introspection.token.claim" : "true",
+        "userinfo.token.claim" : "true",
+        "id.token.claim" : "true",
+        "access.token.claim" : "true",
+        "claim.name" : "clientAddress",
+        "jsonType.label" : "String"
+      }
+    }, {
+      "id" : "b8bb767c-7f87-4a18-bd3b-73946fab10ff",
+      "name" : "Client Host",
+      "protocol" : "openid-connect",
+      "protocolMapper" : "oidc-usersessionmodel-note-mapper",
+      "consentRequired" : false,
+      "config" : {
+        "user.session.note" : "clientHost",
+        "introspection.token.claim" : "true",
+        "userinfo.token.claim" : "true",
+        "id.token.claim" : "true",
+        "access.token.claim" : "true",
+        "claim.name" : "clientHost",
+        "jsonType.label" : "String"
+      }
+    } ],
     "defaultClientScopes" : [ "acr", "roles", "basic" ],
     "optionalClientScopes" : [ "offline_access" ]
   }, {
@@ -858,6 +1293,35 @@
       "display.on.consent.screen" : "true"
     }
   }, {
+    "id" : "8c822622-53e6-4374-9091-53ea05b611d3",
+    "name" : "user_raids",
+    "description" : "",
+    "protocol" : "openid-connect",
+    "attributes" : {
+      "include.in.token.scope" : "false",
+      "display.on.consent.screen" : "true",
+      "gui.order" : "",
+      "consent.screen.text" : ""
+    },
+    "protocolMappers" : [ {
+      "id" : "8e5799f2-c755-4006-a3e1-4f4c755e3ed0",
+      "name" : "user_raids",
+      "protocol" : "openid-connect",
+      "protocolMapper" : "oidc-usermodel-attribute-mapper",
+      "consentRequired" : false,
+      "config" : {
+        "introspection.token.claim" : "true",
+        "userinfo.token.claim" : "true",
+        "multivalued" : "true",
+        "user.attribute" : "userRaids",
+        "id.token.claim" : "true",
+        "lightweight.claim" : "false",
+        "access.token.claim" : "true",
+        "claim.name" : "user_raids",
+        "jsonType.label" : "String"
+      }
+    } ]
+  }, {
     "id" : "7065ed5a-9643-4b52-a394-4c38371b7b66",
     "name" : "acr",
     "description" : "OpenID Connect scope for add acr (authentication context class reference) to the token",
@@ -942,6 +1406,35 @@
         "access.token.claim" : "true",
         "claim.name" : "auth_time",
         "jsonType.label" : "long"
+      }
+    } ]
+  }, {
+    "id" : "29b46320-465a-44ab-8218-61796e9a6a63",
+    "name" : "admin_raids",
+    "description" : "",
+    "protocol" : "openid-connect",
+    "attributes" : {
+      "include.in.token.scope" : "false",
+      "display.on.consent.screen" : "true",
+      "gui.order" : "",
+      "consent.screen.text" : ""
+    },
+    "protocolMappers" : [ {
+      "id" : "56116218-7754-4d65-9ffd-f2713b658f0f",
+      "name" : "admin_raids",
+      "protocol" : "openid-connect",
+      "protocolMapper" : "oidc-usermodel-attribute-mapper",
+      "consentRequired" : false,
+      "config" : {
+        "introspection.token.claim" : "true",
+        "userinfo.token.claim" : "true",
+        "multivalued" : "true",
+        "user.attribute" : "adminRaids",
+        "id.token.claim" : "true",
+        "lightweight.claim" : "false",
+        "access.token.claim" : "true",
+        "claim.name" : "admin_raids",
+        "jsonType.label" : "String"
       }
     } ]
   }, {
@@ -1031,7 +1524,7 @@
       "subType" : "authenticated",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "oidc-sha256-pairwise-sub-mapper", "saml-role-list-mapper", "oidc-full-name-mapper", "saml-user-property-mapper", "oidc-address-mapper", "oidc-usermodel-property-mapper", "oidc-usermodel-attribute-mapper", "saml-user-attribute-mapper" ]
+        "allowed-protocol-mapper-types" : [ "oidc-full-name-mapper", "saml-user-attribute-mapper", "saml-role-list-mapper", "saml-user-property-mapper", "oidc-address-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-usermodel-property-mapper", "oidc-usermodel-attribute-mapper" ]
       }
     }, {
       "id" : "1ce6f027-c6ef-4d20-a151-2cdb10cbffbc",
@@ -1082,7 +1575,7 @@
       "subType" : "anonymous",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "saml-role-list-mapper", "oidc-full-name-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-address-mapper", "saml-user-property-mapper", "oidc-usermodel-property-mapper", "oidc-usermodel-attribute-mapper", "saml-user-attribute-mapper" ]
+        "allowed-protocol-mapper-types" : [ "saml-user-property-mapper", "saml-user-attribute-mapper", "oidc-usermodel-property-mapper", "oidc-full-name-mapper", "saml-role-list-mapper", "oidc-address-mapper", "oidc-usermodel-attribute-mapper", "oidc-sha256-pairwise-sub-mapper" ]
       }
     } ],
     "org.keycloak.userprofile.UserProfileProvider" : [ {
