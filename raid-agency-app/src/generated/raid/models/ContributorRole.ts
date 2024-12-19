@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -36,12 +36,10 @@ export interface ContributorRole {
 /**
  * Check if a given object implements the ContributorRole interface.
  */
-export function instanceOfContributorRole(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "schemaUri" in value;
-    isInstance = isInstance && "id" in value;
-
-    return isInstance;
+export function instanceOfContributorRole(value: object): value is ContributorRole {
+    if (!('schemaUri' in value) || value['schemaUri'] === undefined) return false;
+    if (!('id' in value) || value['id'] === undefined) return false;
+    return true;
 }
 
 export function ContributorRoleFromJSON(json: any): ContributorRole {
@@ -49,7 +47,7 @@ export function ContributorRoleFromJSON(json: any): ContributorRole {
 }
 
 export function ContributorRoleFromJSONTyped(json: any, ignoreDiscriminator: boolean): ContributorRole {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -59,17 +57,19 @@ export function ContributorRoleFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function ContributorRoleToJSON(value?: ContributorRole | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function ContributorRoleToJSON(json: any): ContributorRole {
+      return ContributorRoleToJSONTyped(json, false);
+  }
+
+  export function ContributorRoleToJSONTyped(value?: ContributorRole | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'schemaUri': value.schemaUri,
-        'id': value.id,
+        'schemaUri': value['schemaUri'],
+        'id': value['id'],
     };
 }
 

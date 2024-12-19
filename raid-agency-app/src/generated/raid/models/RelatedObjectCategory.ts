@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -36,10 +36,8 @@ export interface RelatedObjectCategory {
 /**
  * Check if a given object implements the RelatedObjectCategory interface.
  */
-export function instanceOfRelatedObjectCategory(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
+export function instanceOfRelatedObjectCategory(value: object): value is RelatedObjectCategory {
+    return true;
 }
 
 export function RelatedObjectCategoryFromJSON(json: any): RelatedObjectCategory {
@@ -47,27 +45,29 @@ export function RelatedObjectCategoryFromJSON(json: any): RelatedObjectCategory 
 }
 
 export function RelatedObjectCategoryFromJSONTyped(json: any, ignoreDiscriminator: boolean): RelatedObjectCategory {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'schemaUri': !exists(json, 'schemaUri') ? undefined : json['schemaUri'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'schemaUri': json['schemaUri'] == null ? undefined : json['schemaUri'],
     };
 }
 
-export function RelatedObjectCategoryToJSON(value?: RelatedObjectCategory | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function RelatedObjectCategoryToJSON(json: any): RelatedObjectCategory {
+      return RelatedObjectCategoryToJSONTyped(json, false);
+  }
+
+  export function RelatedObjectCategoryToJSONTyped(value?: RelatedObjectCategory | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'id': value.id,
-        'schemaUri': value.schemaUri,
+        'id': value['id'],
+        'schemaUri': value['schemaUri'],
     };
 }
 

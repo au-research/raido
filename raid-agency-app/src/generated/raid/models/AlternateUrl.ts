@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -30,11 +30,9 @@ export interface AlternateUrl {
 /**
  * Check if a given object implements the AlternateUrl interface.
  */
-export function instanceOfAlternateUrl(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "url" in value;
-
-    return isInstance;
+export function instanceOfAlternateUrl(value: object): value is AlternateUrl {
+    if (!('url' in value) || value['url'] === undefined) return false;
+    return true;
 }
 
 export function AlternateUrlFromJSON(json: any): AlternateUrl {
@@ -42,7 +40,7 @@ export function AlternateUrlFromJSON(json: any): AlternateUrl {
 }
 
 export function AlternateUrlFromJSONTyped(json: any, ignoreDiscriminator: boolean): AlternateUrl {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -51,16 +49,18 @@ export function AlternateUrlFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function AlternateUrlToJSON(value?: AlternateUrl | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function AlternateUrlToJSON(json: any): AlternateUrl {
+      return AlternateUrlToJSONTyped(json, false);
+  }
+
+  export function AlternateUrlToJSONTyped(value?: AlternateUrl | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'url': value.url,
+        'url': value['url'],
     };
 }
 

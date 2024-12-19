@@ -9,10 +9,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-
-dist/*
-node_modules/*
-.astro
+node_modules
 dist
 dist-ssr
 *.local

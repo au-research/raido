@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -84,13 +84,11 @@ export interface ServicePointCreateRequest {
 /**
  * Check if a given object implements the ServicePointCreateRequest interface.
  */
-export function instanceOfServicePointCreateRequest(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "name" in value;
-    isInstance = isInstance && "identifierOwner" in value;
-    isInstance = isInstance && "groupId" in value;
-
-    return isInstance;
+export function instanceOfServicePointCreateRequest(value: object): value is ServicePointCreateRequest {
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('identifierOwner' in value) || value['identifierOwner'] === undefined) return false;
+    if (!('groupId' in value) || value['groupId'] === undefined) return false;
+    return true;
 }
 
 export function ServicePointCreateRequestFromJSON(json: any): ServicePointCreateRequest {
@@ -98,43 +96,45 @@ export function ServicePointCreateRequestFromJSON(json: any): ServicePointCreate
 }
 
 export function ServicePointCreateRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): ServicePointCreateRequest {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'name': json['name'],
-        'adminEmail': !exists(json, 'adminEmail') ? undefined : json['adminEmail'],
-        'techEmail': !exists(json, 'techEmail') ? undefined : json['techEmail'],
+        'adminEmail': json['adminEmail'] == null ? undefined : json['adminEmail'],
+        'techEmail': json['techEmail'] == null ? undefined : json['techEmail'],
         'identifierOwner': json['identifierOwner'],
-        'repositoryId': !exists(json, 'repositoryId') ? undefined : json['repositoryId'],
+        'repositoryId': json['repositoryId'] == null ? undefined : json['repositoryId'],
         'groupId': json['groupId'],
-        'prefix': !exists(json, 'prefix') ? undefined : json['prefix'],
-        'password': !exists(json, 'password') ? undefined : json['password'],
-        'appWritesEnabled': !exists(json, 'appWritesEnabled') ? undefined : json['appWritesEnabled'],
-        'enabled': !exists(json, 'enabled') ? undefined : json['enabled'],
+        'prefix': json['prefix'] == null ? undefined : json['prefix'],
+        'password': json['password'] == null ? undefined : json['password'],
+        'appWritesEnabled': json['appWritesEnabled'] == null ? undefined : json['appWritesEnabled'],
+        'enabled': json['enabled'] == null ? undefined : json['enabled'],
     };
 }
 
-export function ServicePointCreateRequestToJSON(value?: ServicePointCreateRequest | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function ServicePointCreateRequestToJSON(json: any): ServicePointCreateRequest {
+      return ServicePointCreateRequestToJSONTyped(json, false);
+  }
+
+  export function ServicePointCreateRequestToJSONTyped(value?: ServicePointCreateRequest | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'name': value.name,
-        'adminEmail': value.adminEmail,
-        'techEmail': value.techEmail,
-        'identifierOwner': value.identifierOwner,
-        'repositoryId': value.repositoryId,
-        'groupId': value.groupId,
-        'prefix': value.prefix,
-        'password': value.password,
-        'appWritesEnabled': value.appWritesEnabled,
-        'enabled': value.enabled,
+        'name': value['name'],
+        'adminEmail': value['adminEmail'],
+        'techEmail': value['techEmail'],
+        'identifierOwner': value['identifierOwner'],
+        'repositoryId': value['repositoryId'],
+        'groupId': value['groupId'],
+        'prefix': value['prefix'],
+        'password': value['password'],
+        'appWritesEnabled': value['appWritesEnabled'],
+        'enabled': value['enabled'],
     };
 }
 

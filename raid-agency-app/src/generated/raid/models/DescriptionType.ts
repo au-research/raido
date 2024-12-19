@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -36,12 +36,10 @@ export interface DescriptionType {
 /**
  * Check if a given object implements the DescriptionType interface.
  */
-export function instanceOfDescriptionType(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "id" in value;
-    isInstance = isInstance && "schemaUri" in value;
-
-    return isInstance;
+export function instanceOfDescriptionType(value: object): value is DescriptionType {
+    if (!('id' in value) || value['id'] === undefined) return false;
+    if (!('schemaUri' in value) || value['schemaUri'] === undefined) return false;
+    return true;
 }
 
 export function DescriptionTypeFromJSON(json: any): DescriptionType {
@@ -49,7 +47,7 @@ export function DescriptionTypeFromJSON(json: any): DescriptionType {
 }
 
 export function DescriptionTypeFromJSONTyped(json: any, ignoreDiscriminator: boolean): DescriptionType {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -59,17 +57,19 @@ export function DescriptionTypeFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function DescriptionTypeToJSON(value?: DescriptionType | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function DescriptionTypeToJSON(json: any): DescriptionType {
+      return DescriptionTypeToJSONTyped(json, false);
+  }
+
+  export function DescriptionTypeToJSONTyped(value?: DescriptionType | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'id': value.id,
-        'schemaUri': value.schemaUri,
+        'id': value['id'],
+        'schemaUri': value['schemaUri'],
     };
 }
 

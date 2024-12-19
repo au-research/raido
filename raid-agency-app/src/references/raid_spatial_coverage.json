@@ -1,1 +1,26 @@
-[]
+[
+  {
+    "id": 47,
+    "handle": "10.82841/f6e3a35f",
+    "uri": "https://www.openstreetmap.org/relation/2456176#map=14/-38.14814/144.36288",
+    "schema_id": 1
+  },
+  {
+    "id": 64,
+    "handle": "10.82841/a9d42484",
+    "uri": "https://www.openstreetmap.org/relation/2456176#map=14/-38.14814/144.36288",
+    "schema_id": 1
+  },
+  {
+    "id": 65,
+    "handle": "10.82841/a9d42484",
+    "uri": "https://www.openstreetmap.org/relation/2456176#map=14/-38.14814/144.36288",
+    "schema_id": 1
+  },
+  {
+    "id": 70,
+    "handle": "10.82841/3a56dcd1",
+    "uri": "https://www.openstreetmap.org/relation/2456176#map=14/-38.14814/144.36288",
+    "schema_id": 1
+  }
+]

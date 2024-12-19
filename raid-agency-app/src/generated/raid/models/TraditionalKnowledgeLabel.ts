@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -36,10 +36,8 @@ export interface TraditionalKnowledgeLabel {
 /**
  * Check if a given object implements the TraditionalKnowledgeLabel interface.
  */
-export function instanceOfTraditionalKnowledgeLabel(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
+export function instanceOfTraditionalKnowledgeLabel(value: object): value is TraditionalKnowledgeLabel {
+    return true;
 }
 
 export function TraditionalKnowledgeLabelFromJSON(json: any): TraditionalKnowledgeLabel {
@@ -47,27 +45,29 @@ export function TraditionalKnowledgeLabelFromJSON(json: any): TraditionalKnowled
 }
 
 export function TraditionalKnowledgeLabelFromJSONTyped(json: any, ignoreDiscriminator: boolean): TraditionalKnowledgeLabel {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'schemaUri': !exists(json, 'schemaUri') ? undefined : json['schemaUri'],
+        'id': json['id'] == null ? undefined : json['id'],
+        'schemaUri': json['schemaUri'] == null ? undefined : json['schemaUri'],
     };
 }
 
-export function TraditionalKnowledgeLabelToJSON(value?: TraditionalKnowledgeLabel | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function TraditionalKnowledgeLabelToJSON(json: any): TraditionalKnowledgeLabel {
+      return TraditionalKnowledgeLabelToJSONTyped(json, false);
+  }
+
+  export function TraditionalKnowledgeLabelToJSONTyped(value?: TraditionalKnowledgeLabel | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'id': value.id,
-        'schemaUri': value.schemaUri,
+        'id': value['id'],
+        'schemaUri': value['schemaUri'],
     };
 }
 

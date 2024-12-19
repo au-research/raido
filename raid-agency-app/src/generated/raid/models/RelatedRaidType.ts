@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -36,12 +36,10 @@ export interface RelatedRaidType {
 /**
  * Check if a given object implements the RelatedRaidType interface.
  */
-export function instanceOfRelatedRaidType(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "id" in value;
-    isInstance = isInstance && "schemaUri" in value;
-
-    return isInstance;
+export function instanceOfRelatedRaidType(value: object): value is RelatedRaidType {
+    if (!('id' in value) || value['id'] === undefined) return false;
+    if (!('schemaUri' in value) || value['schemaUri'] === undefined) return false;
+    return true;
 }
 
 export function RelatedRaidTypeFromJSON(json: any): RelatedRaidType {
@@ -49,7 +47,7 @@ export function RelatedRaidTypeFromJSON(json: any): RelatedRaidType {
 }
 
 export function RelatedRaidTypeFromJSONTyped(json: any, ignoreDiscriminator: boolean): RelatedRaidType {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -59,17 +57,19 @@ export function RelatedRaidTypeFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function RelatedRaidTypeToJSON(value?: RelatedRaidType | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function RelatedRaidTypeToJSON(json: any): RelatedRaidType {
+      return RelatedRaidTypeToJSONTyped(json, false);
+  }
+
+  export function RelatedRaidTypeToJSONTyped(value?: RelatedRaidType | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'id': value.id,
-        'schemaUri': value.schemaUri,
+        'id': value['id'],
+        'schemaUri': value['schemaUri'],
     };
 }
 

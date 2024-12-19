@@ -12,18 +12,20 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { AccessStatement } from './AccessStatement';
 import {
     AccessStatementFromJSON,
     AccessStatementFromJSONTyped,
     AccessStatementToJSON,
+    AccessStatementToJSONTyped,
 } from './AccessStatement';
 import type { AccessType } from './AccessType';
 import {
     AccessTypeFromJSON,
     AccessTypeFromJSONTyped,
     AccessTypeToJSON,
+    AccessTypeToJSONTyped,
 } from './AccessType';
 
 /**
@@ -55,11 +57,9 @@ export interface Access {
 /**
  * Check if a given object implements the Access interface.
  */
-export function instanceOfAccess(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "type" in value;
-
-    return isInstance;
+export function instanceOfAccess(value: object): value is Access {
+    if (!('type' in value) || value['type'] === undefined) return false;
+    return true;
 }
 
 export function AccessFromJSON(json: any): Access {
@@ -67,29 +67,31 @@ export function AccessFromJSON(json: any): Access {
 }
 
 export function AccessFromJSONTyped(json: any, ignoreDiscriminator: boolean): Access {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'type': AccessTypeFromJSON(json['type']),
-        'statement': !exists(json, 'statement') ? undefined : AccessStatementFromJSON(json['statement']),
-        'embargoExpiry': !exists(json, 'embargoExpiry') ? undefined : (new Date(json['embargoExpiry'])),
+        'statement': json['statement'] == null ? undefined : AccessStatementFromJSON(json['statement']),
+        'embargoExpiry': json['embargoExpiry'] == null ? undefined : (new Date(json['embargoExpiry'])),
     };
 }
 
-export function AccessToJSON(value?: Access | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function AccessToJSON(json: any): Access {
+      return AccessToJSONTyped(json, false);
+  }
+
+  export function AccessToJSONTyped(value?: Access | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'type': AccessTypeToJSON(value.type),
-        'statement': AccessStatementToJSON(value.statement),
-        'embargoExpiry': value.embargoExpiry === undefined ? undefined : (value.embargoExpiry.toISOString().substring(0,10)),
+        'type': AccessTypeToJSON(value['type']),
+        'statement': AccessStatementToJSON(value['statement']),
+        'embargoExpiry': value['embargoExpiry'] == null ? undefined : ((value['embargoExpiry']).toISOString().substring(0,10)),
     };
 }
 

@@ -12,12 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { Language } from './Language';
 import {
     LanguageFromJSON,
     LanguageFromJSONTyped,
     LanguageToJSON,
+    LanguageToJSONTyped,
 } from './Language';
 
 /**
@@ -43,10 +44,8 @@ export interface AccessStatement {
 /**
  * Check if a given object implements the AccessStatement interface.
  */
-export function instanceOfAccessStatement(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
+export function instanceOfAccessStatement(value: object): value is AccessStatement {
+    return true;
 }
 
 export function AccessStatementFromJSON(json: any): AccessStatement {
@@ -54,27 +53,29 @@ export function AccessStatementFromJSON(json: any): AccessStatement {
 }
 
 export function AccessStatementFromJSONTyped(json: any, ignoreDiscriminator: boolean): AccessStatement {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'text': !exists(json, 'text') ? undefined : json['text'],
-        'language': !exists(json, 'language') ? undefined : LanguageFromJSON(json['language']),
+        'text': json['text'] == null ? undefined : json['text'],
+        'language': json['language'] == null ? undefined : LanguageFromJSON(json['language']),
     };
 }
 
-export function AccessStatementToJSON(value?: AccessStatement | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function AccessStatementToJSON(json: any): AccessStatement {
+      return AccessStatementToJSONTyped(json, false);
+  }
+
+  export function AccessStatementToJSONTyped(value?: AccessStatement | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'text': value.text,
-        'language': LanguageToJSON(value.language),
+        'text': value['text'],
+        'language': LanguageToJSON(value['language']),
     };
 }
 

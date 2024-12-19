@@ -12,18 +12,20 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { Language } from './Language';
 import {
     LanguageFromJSON,
     LanguageFromJSONTyped,
     LanguageToJSON,
+    LanguageToJSONTyped,
 } from './Language';
 import type { TitleType } from './TitleType';
 import {
     TitleTypeFromJSON,
     TitleTypeFromJSONTyped,
     TitleTypeToJSON,
+    TitleTypeToJSONTyped,
 } from './TitleType';
 
 /**
@@ -67,13 +69,11 @@ export interface Title {
 /**
  * Check if a given object implements the Title interface.
  */
-export function instanceOfTitle(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "text" in value;
-    isInstance = isInstance && "type" in value;
-    isInstance = isInstance && "startDate" in value;
-
-    return isInstance;
+export function instanceOfTitle(value: object): value is Title {
+    if (!('text' in value) || value['text'] === undefined) return false;
+    if (!('type' in value) || value['type'] === undefined) return false;
+    if (!('startDate' in value) || value['startDate'] === undefined) return false;
+    return true;
 }
 
 export function TitleFromJSON(json: any): Title {
@@ -81,7 +81,7 @@ export function TitleFromJSON(json: any): Title {
 }
 
 export function TitleFromJSONTyped(json: any, ignoreDiscriminator: boolean): Title {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -89,25 +89,27 @@ export function TitleFromJSONTyped(json: any, ignoreDiscriminator: boolean): Tit
         'text': json['text'],
         'type': TitleTypeFromJSON(json['type']),
         'startDate': json['startDate'],
-        'endDate': !exists(json, 'endDate') ? undefined : json['endDate'],
-        'language': !exists(json, 'language') ? undefined : LanguageFromJSON(json['language']),
+        'endDate': json['endDate'] == null ? undefined : json['endDate'],
+        'language': json['language'] == null ? undefined : LanguageFromJSON(json['language']),
     };
 }
 
-export function TitleToJSON(value?: Title | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function TitleToJSON(json: any): Title {
+      return TitleToJSONTyped(json, false);
+  }
+
+  export function TitleToJSONTyped(value?: Title | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'text': value.text,
-        'type': TitleTypeToJSON(value.type),
-        'startDate': value.startDate,
-        'endDate': value.endDate,
-        'language': LanguageToJSON(value.language),
+        'text': value['text'],
+        'type': TitleTypeToJSON(value['type']),
+        'startDate': value['startDate'],
+        'endDate': value['endDate'],
+        'language': LanguageToJSON(value['language']),
     };
 }
 

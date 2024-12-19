@@ -24,16 +24,14 @@ const titleLanguageGenerator = (): Language => {
   };
 };
 
-const todaysDateStringGenerator = (): string => {
-  return dayjs(new Date()).format("YYYY-MM-DD");
-};
-
-export const titleGenerator = (): Title => {
+const titleGenerator = (): Title => {
   return {
     text: `Example title... ${new Date().toLocaleTimeString()}`,
     type: titleTypeGenerator(),
     language: titleLanguageGenerator(),
-    startDate: todaysDateStringGenerator(),
-    endDate: undefined,
+    startDate: dayjs(new Date()).format("YYYY-MM-DD"),
+    endDate: dayjs(new Date()).add(1, "year").format("YYYY-MM-DD"),
   };
 };
+
+export default titleGenerator;

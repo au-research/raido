@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -42,13 +42,11 @@ export interface ValidationFailure {
 /**
  * Check if a given object implements the ValidationFailure interface.
  */
-export function instanceOfValidationFailure(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "fieldId" in value;
-    isInstance = isInstance && "errorType" in value;
-    isInstance = isInstance && "message" in value;
-
-    return isInstance;
+export function instanceOfValidationFailure(value: object): value is ValidationFailure {
+    if (!('fieldId' in value) || value['fieldId'] === undefined) return false;
+    if (!('errorType' in value) || value['errorType'] === undefined) return false;
+    if (!('message' in value) || value['message'] === undefined) return false;
+    return true;
 }
 
 export function ValidationFailureFromJSON(json: any): ValidationFailure {
@@ -56,7 +54,7 @@ export function ValidationFailureFromJSON(json: any): ValidationFailure {
 }
 
 export function ValidationFailureFromJSONTyped(json: any, ignoreDiscriminator: boolean): ValidationFailure {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -67,18 +65,20 @@ export function ValidationFailureFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function ValidationFailureToJSON(value?: ValidationFailure | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function ValidationFailureToJSON(json: any): ValidationFailure {
+      return ValidationFailureToJSONTyped(json, false);
+  }
+
+  export function ValidationFailureToJSONTyped(value?: ValidationFailure | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'fieldId': value.fieldId,
-        'errorType': value.errorType,
-        'message': value.message,
+        'fieldId': value['fieldId'],
+        'errorType': value['errorType'],
+        'message': value['message'],
     };
 }
 

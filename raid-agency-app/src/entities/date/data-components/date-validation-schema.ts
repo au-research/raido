@@ -2,7 +2,7 @@ import { combinedPattern } from "@/utils/date-utils/date-utils";
 import { z } from "zod";
 
 const dateStringSchema = z.string().regex(combinedPattern, {
-  message: "Format must be YYYY or YYYY-MM or YYYY-MM-DD",
+  message: "YYYY or YYYY-MM or YYYY-MM-DD",
 });
 
 export const dateValidationSchema = z

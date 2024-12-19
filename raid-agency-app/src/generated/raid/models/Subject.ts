@@ -12,12 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { SubjectKeyword } from './SubjectKeyword';
 import {
     SubjectKeywordFromJSON,
     SubjectKeywordFromJSONTyped,
     SubjectKeywordToJSON,
+    SubjectKeywordToJSONTyped,
 } from './SubjectKeyword';
 
 /**
@@ -49,12 +50,10 @@ export interface Subject {
 /**
  * Check if a given object implements the Subject interface.
  */
-export function instanceOfSubject(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "id" in value;
-    isInstance = isInstance && "schemaUri" in value;
-
-    return isInstance;
+export function instanceOfSubject(value: object): value is Subject {
+    if (!('id' in value) || value['id'] === undefined) return false;
+    if (!('schemaUri' in value) || value['schemaUri'] === undefined) return false;
+    return true;
 }
 
 export function SubjectFromJSON(json: any): Subject {
@@ -62,29 +61,31 @@ export function SubjectFromJSON(json: any): Subject {
 }
 
 export function SubjectFromJSONTyped(json: any, ignoreDiscriminator: boolean): Subject {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'id': json['id'],
         'schemaUri': json['schemaUri'],
-        'keyword': !exists(json, 'keyword') ? undefined : ((json['keyword'] as Array<any>).map(SubjectKeywordFromJSON)),
+        'keyword': json['keyword'] == null ? undefined : ((json['keyword'] as Array<any>).map(SubjectKeywordFromJSON)),
     };
 }
 
-export function SubjectToJSON(value?: Subject | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function SubjectToJSON(json: any): Subject {
+      return SubjectToJSONTyped(json, false);
+  }
+
+  export function SubjectToJSONTyped(value?: Subject | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'id': value.id,
-        'schemaUri': value.schemaUri,
-        'keyword': value.keyword === undefined ? undefined : ((value.keyword as Array<any>).map(SubjectKeywordToJSON)),
+        'id': value['id'],
+        'schemaUri': value['schemaUri'],
+        'keyword': value['keyword'] == null ? undefined : ((value['keyword'] as Array<any>).map(SubjectKeywordToJSON)),
     };
 }
 

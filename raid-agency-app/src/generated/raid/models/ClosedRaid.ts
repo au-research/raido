@@ -12,18 +12,20 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { Access } from './Access';
 import {
     AccessFromJSON,
     AccessFromJSONTyped,
     AccessToJSON,
+    AccessToJSONTyped,
 } from './Access';
 import type { Id } from './Id';
 import {
     IdFromJSON,
     IdFromJSONTyped,
     IdToJSON,
+    IdToJSONTyped,
 } from './Id';
 
 /**
@@ -49,10 +51,8 @@ export interface ClosedRaid {
 /**
  * Check if a given object implements the ClosedRaid interface.
  */
-export function instanceOfClosedRaid(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
+export function instanceOfClosedRaid(value: object): value is ClosedRaid {
+    return true;
 }
 
 export function ClosedRaidFromJSON(json: any): ClosedRaid {
@@ -60,27 +60,29 @@ export function ClosedRaidFromJSON(json: any): ClosedRaid {
 }
 
 export function ClosedRaidFromJSONTyped(json: any, ignoreDiscriminator: boolean): ClosedRaid {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'identifier': !exists(json, 'identifier') ? undefined : IdFromJSON(json['identifier']),
-        'access': !exists(json, 'access') ? undefined : AccessFromJSON(json['access']),
+        'identifier': json['identifier'] == null ? undefined : IdFromJSON(json['identifier']),
+        'access': json['access'] == null ? undefined : AccessFromJSON(json['access']),
     };
 }
 
-export function ClosedRaidToJSON(value?: ClosedRaid | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function ClosedRaidToJSON(json: any): ClosedRaid {
+      return ClosedRaidToJSONTyped(json, false);
+  }
+
+  export function ClosedRaidToJSONTyped(value?: ClosedRaid | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'identifier': IdToJSON(value.identifier),
-        'access': AccessToJSON(value.access),
+        'identifier': IdToJSON(value['identifier']),
+        'access': AccessToJSON(value['access']),
     };
 }
 

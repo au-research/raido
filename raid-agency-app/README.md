@@ -1,9 +1,14 @@
 # RAiD client application.
 
-To start developing run
+### First steps
+
+- Create `.env` file from `.env.template`
+- Adapt values in `.env` to match your infrastructure
+
+### Develop
 
 `npm run dev`
 
-To build run
+### Build
 
 `npm run build`

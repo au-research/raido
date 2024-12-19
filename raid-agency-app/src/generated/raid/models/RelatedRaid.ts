@@ -12,12 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { RelatedRaidType } from './RelatedRaidType';
 import {
     RelatedRaidTypeFromJSON,
     RelatedRaidTypeFromJSONTyped,
     RelatedRaidTypeToJSON,
+    RelatedRaidTypeToJSONTyped,
 } from './RelatedRaidType';
 
 /**
@@ -43,10 +44,8 @@ export interface RelatedRaid {
 /**
  * Check if a given object implements the RelatedRaid interface.
  */
-export function instanceOfRelatedRaid(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
+export function instanceOfRelatedRaid(value: object): value is RelatedRaid {
+    return true;
 }
 
 export function RelatedRaidFromJSON(json: any): RelatedRaid {
@@ -54,27 +53,29 @@ export function RelatedRaidFromJSON(json: any): RelatedRaid {
 }
 
 export function RelatedRaidFromJSONTyped(json: any, ignoreDiscriminator: boolean): RelatedRaid {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'type': !exists(json, 'type') ? undefined : RelatedRaidTypeFromJSON(json['type']),
+        'id': json['id'] == null ? undefined : json['id'],
+        'type': json['type'] == null ? undefined : RelatedRaidTypeFromJSON(json['type']),
     };
 }
 
-export function RelatedRaidToJSON(value?: RelatedRaid | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function RelatedRaidToJSON(json: any): RelatedRaid {
+      return RelatedRaidToJSONTyped(json, false);
+  }
+
+  export function RelatedRaidToJSONTyped(value?: RelatedRaid | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'id': value.id,
-        'type': RelatedRaidTypeToJSON(value.type),
+        'id': value['id'],
+        'type': RelatedRaidTypeToJSON(value['type']),
     };
 }
 

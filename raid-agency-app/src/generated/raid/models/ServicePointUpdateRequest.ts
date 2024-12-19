@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -90,14 +90,12 @@ export interface ServicePointUpdateRequest {
 /**
  * Check if a given object implements the ServicePointUpdateRequest interface.
  */
-export function instanceOfServicePointUpdateRequest(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "id" in value;
-    isInstance = isInstance && "name" in value;
-    isInstance = isInstance && "identifierOwner" in value;
-    isInstance = isInstance && "groupId" in value;
-
-    return isInstance;
+export function instanceOfServicePointUpdateRequest(value: object): value is ServicePointUpdateRequest {
+    if (!('id' in value) || value['id'] === undefined) return false;
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('identifierOwner' in value) || value['identifierOwner'] === undefined) return false;
+    if (!('groupId' in value) || value['groupId'] === undefined) return false;
+    return true;
 }
 
 export function ServicePointUpdateRequestFromJSON(json: any): ServicePointUpdateRequest {
@@ -105,45 +103,47 @@ export function ServicePointUpdateRequestFromJSON(json: any): ServicePointUpdate
 }
 
 export function ServicePointUpdateRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): ServicePointUpdateRequest {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'id': json['id'],
         'name': json['name'],
-        'adminEmail': !exists(json, 'adminEmail') ? undefined : json['adminEmail'],
-        'techEmail': !exists(json, 'techEmail') ? undefined : json['techEmail'],
+        'adminEmail': json['adminEmail'] == null ? undefined : json['adminEmail'],
+        'techEmail': json['techEmail'] == null ? undefined : json['techEmail'],
         'identifierOwner': json['identifierOwner'],
-        'repositoryId': !exists(json, 'repositoryId') ? undefined : json['repositoryId'],
+        'repositoryId': json['repositoryId'] == null ? undefined : json['repositoryId'],
         'groupId': json['groupId'],
-        'prefix': !exists(json, 'prefix') ? undefined : json['prefix'],
-        'password': !exists(json, 'password') ? undefined : json['password'],
-        'appWritesEnabled': !exists(json, 'appWritesEnabled') ? undefined : json['appWritesEnabled'],
-        'enabled': !exists(json, 'enabled') ? undefined : json['enabled'],
+        'prefix': json['prefix'] == null ? undefined : json['prefix'],
+        'password': json['password'] == null ? undefined : json['password'],
+        'appWritesEnabled': json['appWritesEnabled'] == null ? undefined : json['appWritesEnabled'],
+        'enabled': json['enabled'] == null ? undefined : json['enabled'],
     };
 }
 
-export function ServicePointUpdateRequestToJSON(value?: ServicePointUpdateRequest | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function ServicePointUpdateRequestToJSON(json: any): ServicePointUpdateRequest {
+      return ServicePointUpdateRequestToJSONTyped(json, false);
+  }
+
+  export function ServicePointUpdateRequestToJSONTyped(value?: ServicePointUpdateRequest | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'id': value.id,
-        'name': value.name,
-        'adminEmail': value.adminEmail,
-        'techEmail': value.techEmail,
-        'identifierOwner': value.identifierOwner,
-        'repositoryId': value.repositoryId,
-        'groupId': value.groupId,
-        'prefix': value.prefix,
-        'password': value.password,
-        'appWritesEnabled': value.appWritesEnabled,
-        'enabled': value.enabled,
+        'id': value['id'],
+        'name': value['name'],
+        'adminEmail': value['adminEmail'],
+        'techEmail': value['techEmail'],
+        'identifierOwner': value['identifierOwner'],
+        'repositoryId': value['repositoryId'],
+        'groupId': value['groupId'],
+        'prefix': value['prefix'],
+        'password': value['password'],
+        'appWritesEnabled': value['appWritesEnabled'],
+        'enabled': value['enabled'],
     };
 }
 

@@ -12,12 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { Language } from './Language';
 import {
     LanguageFromJSON,
     LanguageFromJSONTyped,
     LanguageToJSON,
+    LanguageToJSONTyped,
 } from './Language';
 
 /**
@@ -43,11 +44,9 @@ export interface SubjectKeyword {
 /**
  * Check if a given object implements the SubjectKeyword interface.
  */
-export function instanceOfSubjectKeyword(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "text" in value;
-
-    return isInstance;
+export function instanceOfSubjectKeyword(value: object): value is SubjectKeyword {
+    if (!('text' in value) || value['text'] === undefined) return false;
+    return true;
 }
 
 export function SubjectKeywordFromJSON(json: any): SubjectKeyword {
@@ -55,27 +54,29 @@ export function SubjectKeywordFromJSON(json: any): SubjectKeyword {
 }
 
 export function SubjectKeywordFromJSONTyped(json: any, ignoreDiscriminator: boolean): SubjectKeyword {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'text': json['text'],
-        'language': !exists(json, 'language') ? undefined : LanguageFromJSON(json['language']),
+        'language': json['language'] == null ? undefined : LanguageFromJSON(json['language']),
     };
 }
 
-export function SubjectKeywordToJSON(value?: SubjectKeyword | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function SubjectKeywordToJSON(json: any): SubjectKeyword {
+      return SubjectKeywordToJSONTyped(json, false);
+  }
+
+  export function SubjectKeywordToJSONTyped(value?: SubjectKeyword | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'text': value.text,
-        'language': LanguageToJSON(value.language),
+        'text': value['text'],
+        'language': LanguageToJSON(value['language']),
     };
 }
 

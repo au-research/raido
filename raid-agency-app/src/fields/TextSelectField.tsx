@@ -1,70 +1,73 @@
-import { RaidDto } from "@/generated/raid";
-import mapping from "@/mapping.json";
-import { FormFieldProps } from "@/types";
-import { getErrorMessageForField } from "@/utils";
+import { getErrorMessageForField } from "@/utils/data-utils";
 import { Grid, MenuItem, TextField } from "@mui/material";
-import { Control, Controller, FieldErrors } from "react-hook-form";
+import { useController } from "react-hook-form";
+
+type Option = {
+  value: string;
+  label: string;
+};
 
 interface TextSelectFieldProps {
-  formFieldProps: FormFieldProps;
-  control: Control<RaidDto>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  options: any[];
-  errors: FieldErrors<RaidDto>;
+  options: Option[];
+  name: string;
+  label: string;
+  placeholder?: string;
+  helperText?: string;
+  errorText?: string;
+  required: boolean;
+  multiline?: boolean;
   width?: number;
 }
 
 export function TextSelectField({
-  control,
-  errors,
-  formFieldProps,
   options,
+  name,
+  label,
+  placeholder,
+  helperText,
+  errorText,
+  required,
   width = 12,
 }: TextSelectFieldProps) {
-  const { errorText, helperText, label, name, placeholder } = formFieldProps;
+  const {
+    field,
+    formState: { errors },
+  } = useController({ name });
 
-  const keyField = formFieldProps.keyField ? formFieldProps.keyField : "uri";
+  const errorMessage = getErrorMessageForField(errors, field.name);
+
+  const getDisplayHelperText = () => {
+    if (errorMessage) {
+      return errorText || errorMessage.message;
+    }
+
+    if (required && helperText && helperText?.length > 0) {
+      return `${helperText} *`;
+    }
+
+    return helperText || "";
+  };
 
   return (
     <Grid item xs={width}>
-      <Controller
-        name={name as keyof RaidDto}
-        control={control}
-        render={({ field }) => {
-          const errorMessage = getErrorMessageForField(errors, field.name);
-          const displayHelperText = errorMessage
-            ? errorText
-              ? errorText
-              : errorMessage.message
-            : helperText;
-
-          return (
-            <TextField
-              {...field}
-              error={!!errorMessage}
-              fullWidth
-              helperText={displayHelperText}
-              label={label}
-              placeholder={placeholder}
-              required
-              select
-              size="small"
-              variant="filled"
-            >
-              {options.map((opt) => {
-                const mappedValue = mapping.find(
-                  (el) => el.id === opt[keyField]
-                )?.value;
-                return (
-                  <MenuItem key={opt[keyField]} value={opt[keyField]}>
-                    {mappedValue ? mappedValue : opt[keyField]}
-                  </MenuItem>
-                );
-              })}
-            </TextField>
-          );
-        }}
-      />
+      <TextField
+        {...field}
+        error={Boolean(errorMessage)}
+        fullWidth
+        helperText={getDisplayHelperText()}
+        label={label}
+        placeholder={label}
+        required={required}
+        select
+        size="small"
+        variant="filled"
+      >
+        {options.map(({ value, label }) => (
+          <MenuItem key={value} value={value}>
+            {label}
+          </MenuItem>
+        ))}
+      </TextField>
     </Grid>
   );
 }

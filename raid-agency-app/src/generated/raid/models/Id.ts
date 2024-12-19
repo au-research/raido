@@ -12,18 +12,20 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { Owner } from './Owner';
 import {
     OwnerFromJSON,
     OwnerFromJSONTyped,
     OwnerToJSON,
+    OwnerToJSONTyped,
 } from './Owner';
 import type { RegistrationAgency } from './RegistrationAgency';
 import {
     RegistrationAgencyFromJSON,
     RegistrationAgencyFromJSONTyped,
     RegistrationAgencyToJSON,
+    RegistrationAgencyToJSONTyped,
 } from './RegistrationAgency';
 
 /**
@@ -81,16 +83,14 @@ export interface Id {
 /**
  * Check if a given object implements the Id interface.
  */
-export function instanceOfId(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "id" in value;
-    isInstance = isInstance && "schemaUri" in value;
-    isInstance = isInstance && "registrationAgency" in value;
-    isInstance = isInstance && "owner" in value;
-    isInstance = isInstance && "license" in value;
-    isInstance = isInstance && "version" in value;
-
-    return isInstance;
+export function instanceOfId(value: object): value is Id {
+    if (!('id' in value) || value['id'] === undefined) return false;
+    if (!('schemaUri' in value) || value['schemaUri'] === undefined) return false;
+    if (!('registrationAgency' in value) || value['registrationAgency'] === undefined) return false;
+    if (!('owner' in value) || value['owner'] === undefined) return false;
+    if (!('license' in value) || value['license'] === undefined) return false;
+    if (!('version' in value) || value['version'] === undefined) return false;
+    return true;
 }
 
 export function IdFromJSON(json: any): Id {
@@ -98,7 +98,7 @@ export function IdFromJSON(json: any): Id {
 }
 
 export function IdFromJSONTyped(json: any, ignoreDiscriminator: boolean): Id {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
@@ -107,28 +107,30 @@ export function IdFromJSONTyped(json: any, ignoreDiscriminator: boolean): Id {
         'schemaUri': json['schemaUri'],
         'registrationAgency': RegistrationAgencyFromJSON(json['registrationAgency']),
         'owner': OwnerFromJSON(json['owner']),
-        'raidAgencyUrl': !exists(json, 'raidAgencyUrl') ? undefined : json['raidAgencyUrl'],
+        'raidAgencyUrl': json['raidAgencyUrl'] == null ? undefined : json['raidAgencyUrl'],
         'license': json['license'],
         'version': json['version'],
     };
 }
 
-export function IdToJSON(value?: Id | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function IdToJSON(json: any): Id {
+      return IdToJSONTyped(json, false);
+  }
+
+  export function IdToJSONTyped(value?: Id | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'id': value.id,
-        'schemaUri': value.schemaUri,
-        'registrationAgency': RegistrationAgencyToJSON(value.registrationAgency),
-        'owner': OwnerToJSON(value.owner),
-        'raidAgencyUrl': value.raidAgencyUrl,
-        'license': value.license,
-        'version': value.version,
+        'id': value['id'],
+        'schemaUri': value['schemaUri'],
+        'registrationAgency': RegistrationAgencyToJSON(value['registrationAgency']),
+        'owner': OwnerToJSON(value['owner']),
+        'raidAgencyUrl': value['raidAgencyUrl'],
+        'license': value['license'],
+        'version': value['version'],
     };
 }
 

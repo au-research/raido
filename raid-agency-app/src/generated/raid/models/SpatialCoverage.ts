@@ -12,12 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { SpatialCoveragePlace } from './SpatialCoveragePlace';
 import {
     SpatialCoveragePlaceFromJSON,
     SpatialCoveragePlaceFromJSONTyped,
     SpatialCoveragePlaceToJSON,
+    SpatialCoveragePlaceToJSONTyped,
 } from './SpatialCoveragePlace';
 
 /**
@@ -49,10 +50,8 @@ export interface SpatialCoverage {
 /**
  * Check if a given object implements the SpatialCoverage interface.
  */
-export function instanceOfSpatialCoverage(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
+export function instanceOfSpatialCoverage(value: object): value is SpatialCoverage {
+    return true;
 }
 
 export function SpatialCoverageFromJSON(json: any): SpatialCoverage {
@@ -60,29 +59,31 @@ export function SpatialCoverageFromJSON(json: any): SpatialCoverage {
 }
 
 export function SpatialCoverageFromJSONTyped(json: any, ignoreDiscriminator: boolean): SpatialCoverage {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'schemaUri': !exists(json, 'schemaUri') ? undefined : json['schemaUri'],
-        'place': !exists(json, 'place') ? undefined : ((json['place'] as Array<any>).map(SpatialCoveragePlaceFromJSON)),
+        'id': json['id'] == null ? undefined : json['id'],
+        'schemaUri': json['schemaUri'] == null ? undefined : json['schemaUri'],
+        'place': json['place'] == null ? undefined : ((json['place'] as Array<any>).map(SpatialCoveragePlaceFromJSON)),
     };
 }
 
-export function SpatialCoverageToJSON(value?: SpatialCoverage | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function SpatialCoverageToJSON(json: any): SpatialCoverage {
+      return SpatialCoverageToJSONTyped(json, false);
+  }
+
+  export function SpatialCoverageToJSONTyped(value?: SpatialCoverage | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'id': value.id,
-        'schemaUri': value.schemaUri,
-        'place': value.place === undefined ? undefined : ((value.place as Array<any>).map(SpatialCoveragePlaceToJSON)),
+        'id': value['id'],
+        'schemaUri': value['schemaUri'],
+        'place': value['place'] == null ? undefined : ((value['place'] as Array<any>).map(SpatialCoveragePlaceToJSON)),
     };
 }
 

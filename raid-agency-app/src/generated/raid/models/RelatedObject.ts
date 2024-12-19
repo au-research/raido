@@ -12,19 +12,21 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
-import type { RelatedObjectCategory } from './RelatedObjectCategory';
-import {
-    RelatedObjectCategoryFromJSON,
-    RelatedObjectCategoryFromJSONTyped,
-    RelatedObjectCategoryToJSON,
-} from './RelatedObjectCategory';
+import { mapValues } from '../runtime';
 import type { RelatedObjectType } from './RelatedObjectType';
 import {
     RelatedObjectTypeFromJSON,
     RelatedObjectTypeFromJSONTyped,
     RelatedObjectTypeToJSON,
+    RelatedObjectTypeToJSONTyped,
 } from './RelatedObjectType';
+import type { RelatedObjectCategory } from './RelatedObjectCategory';
+import {
+    RelatedObjectCategoryFromJSON,
+    RelatedObjectCategoryFromJSONTyped,
+    RelatedObjectCategoryToJSON,
+    RelatedObjectCategoryToJSONTyped,
+} from './RelatedObjectCategory';
 
 /**
  * 
@@ -61,10 +63,8 @@ export interface RelatedObject {
 /**
  * Check if a given object implements the RelatedObject interface.
  */
-export function instanceOfRelatedObject(value: object): boolean {
-    let isInstance = true;
-
-    return isInstance;
+export function instanceOfRelatedObject(value: object): value is RelatedObject {
+    return true;
 }
 
 export function RelatedObjectFromJSON(json: any): RelatedObject {
@@ -72,31 +72,33 @@ export function RelatedObjectFromJSON(json: any): RelatedObject {
 }
 
 export function RelatedObjectFromJSONTyped(json: any, ignoreDiscriminator: boolean): RelatedObject {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
-        'id': !exists(json, 'id') ? undefined : json['id'],
-        'schemaUri': !exists(json, 'schemaUri') ? undefined : json['schemaUri'],
-        'type': !exists(json, 'type') ? undefined : RelatedObjectTypeFromJSON(json['type']),
-        'category': !exists(json, 'category') ? undefined : ((json['category'] as Array<any>).map(RelatedObjectCategoryFromJSON)),
+        'id': json['id'] == null ? undefined : json['id'],
+        'schemaUri': json['schemaUri'] == null ? undefined : json['schemaUri'],
+        'type': json['type'] == null ? undefined : RelatedObjectTypeFromJSON(json['type']),
+        'category': json['category'] == null ? undefined : ((json['category'] as Array<any>).map(RelatedObjectCategoryFromJSON)),
     };
 }
 
-export function RelatedObjectToJSON(value?: RelatedObject | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function RelatedObjectToJSON(json: any): RelatedObject {
+      return RelatedObjectToJSONTyped(json, false);
+  }
+
+  export function RelatedObjectToJSONTyped(value?: RelatedObject | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'id': value.id,
-        'schemaUri': value.schemaUri,
-        'type': RelatedObjectTypeToJSON(value.type),
-        'category': value.category === undefined ? undefined : ((value.category as Array<any>).map(RelatedObjectCategoryToJSON)),
+        'id': value['id'],
+        'schemaUri': value['schemaUri'],
+        'type': RelatedObjectTypeToJSON(value['type']),
+        'category': value['category'] == null ? undefined : ((value['category'] as Array<any>).map(RelatedObjectCategoryToJSON)),
     };
 }
 

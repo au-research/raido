@@ -12,18 +12,20 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { ContributorPosition } from './ContributorPosition';
 import {
     ContributorPositionFromJSON,
     ContributorPositionFromJSONTyped,
     ContributorPositionToJSON,
+    ContributorPositionToJSONTyped,
 } from './ContributorPosition';
 import type { ContributorRole } from './ContributorRole';
 import {
     ContributorRoleFromJSON,
     ContributorRoleFromJSONTyped,
     ContributorRoleToJSON,
+    ContributorRoleToJSONTyped,
 } from './ContributorRole';
 
 /**
@@ -44,24 +46,6 @@ export interface Contributor {
      * @memberof Contributor
      */
     schemaUri: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Contributor
-     */
-    status?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Contributor
-     */
-    email?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Contributor
-     */
-    uuid?: string;
     /**
      * 
      * @type {Array<ContributorPosition>}
@@ -91,14 +75,12 @@ export interface Contributor {
 /**
  * Check if a given object implements the Contributor interface.
  */
-export function instanceOfContributor(value: object): boolean {
-    let isInstance = true;
-    isInstance = isInstance && "id" in value;
-    isInstance = isInstance && "schemaUri" in value;
-    isInstance = isInstance && "position" in value;
-    isInstance = isInstance && "role" in value;
-
-    return isInstance;
+export function instanceOfContributor(value: object): value is Contributor {
+    if (!('id' in value) || value['id'] === undefined) return false;
+    if (!('schemaUri' in value) || value['schemaUri'] === undefined) return false;
+    if (!('position' in value) || value['position'] === undefined) return false;
+    if (!('role' in value) || value['role'] === undefined) return false;
+    return true;
 }
 
 export function ContributorFromJSON(json: any): Contributor {
@@ -106,41 +88,37 @@ export function ContributorFromJSON(json: any): Contributor {
 }
 
 export function ContributorFromJSONTyped(json: any, ignoreDiscriminator: boolean): Contributor {
-    if ((json === undefined) || (json === null)) {
+    if (json == null) {
         return json;
     }
     return {
         
         'id': json['id'],
         'schemaUri': json['schemaUri'],
-        'status': !exists(json, 'status') ? undefined : json['status'],
-        'email': !exists(json, 'email') ? undefined : json['email'],
-        'uuid': !exists(json, 'uuid') ? undefined : json['uuid'],
         'position': ((json['position'] as Array<any>).map(ContributorPositionFromJSON)),
         'role': ((json['role'] as Array<any>).map(ContributorRoleFromJSON)),
-        'leader': !exists(json, 'leader') ? undefined : json['leader'],
-        'contact': !exists(json, 'contact') ? undefined : json['contact'],
+        'leader': json['leader'] == null ? undefined : json['leader'],
+        'contact': json['contact'] == null ? undefined : json['contact'],
     };
 }
 
-export function ContributorToJSON(value?: Contributor | null): any {
-    if (value === undefined) {
-        return undefined;
+  export function ContributorToJSON(json: any): Contributor {
+      return ContributorToJSONTyped(json, false);
+  }
+
+  export function ContributorToJSONTyped(value?: Contributor | null, ignoreDiscriminator: boolean = false): any {
+    if (value == null) {
+        return value;
     }
-    if (value === null) {
-        return null;
-    }
+
     return {
         
-        'id': value.id,
-        'schemaUri': value.schemaUri,
-        'status': value.status,
-        'email': value.email,
-        'uuid': value.uuid,
-        'position': ((value.position as Array<any>).map(ContributorPositionToJSON)),
-        'role': ((value.role as Array<any>).map(ContributorRoleToJSON)),
-        'leader': value.leader,
-        'contact': value.contact,
+        'id': value['id'],
+        'schemaUri': value['schemaUri'],
+        'position': ((value['position'] as Array<any>).map(ContributorPositionToJSON)),
+        'role': ((value['role'] as Array<any>).map(ContributorRoleToJSON)),
+        'leader': value['leader'],
+        'contact': value['contact'],
     };
 }
 

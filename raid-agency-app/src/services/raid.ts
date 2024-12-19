@@ -1,7 +1,7 @@
+import raidConfig from "@/../raid.config.json";
 import { RaidDto } from "@/generated/raid";
+import { RaidHistoryType } from "@/pages/raid-history";
 import { fetchServicePoints } from "@/services/service-points";
-import { RaidHistoryType } from "@/types";
-import { httpStatusCodes } from "@/utils";
 import { getApiEndpoint } from "@/utils/api-utils/api-utils";
 import type Keycloak from "keycloak-js";
 
@@ -50,11 +50,12 @@ export const fetchRaids = async ({
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${keycloak.token}`,
-      "X-Raid-Api-Version": "3",
+      "X-Raid-Api-Version": raidConfig.version === "3" ? "3" : "2",
     },
   });
   return await response.json();
 };
+
 export const fetchRaid = async ({
   id,
   token,
@@ -62,39 +63,17 @@ export const fetchRaid = async ({
   id: string;
   token: string;
 }): Promise<RaidDto> => {
-  try {
-    const response = await fetch(`${endpoint}/raid/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-        "X-Raid-Api-Version": "3",
-      },
-    });
-
-    if (!response.ok) {
-      if (response.status && httpStatusCodes.has(response.status)) {
-        throw new Error(`HTTP error: ${httpStatusCodes.get(response.status)} (${response.status})`);
-      }
-      throw new Error(`HTTP error. Status code: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    if (!data) {
-      throw new Error("No data received from the server");
-    }
-
-    return data as RaidDto;
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error("Error fetching raid:", error.message);
-    } else {
-      console.error("An unknown error occurred while fetching raid");
-    }
-    throw error; // Re-throw the error for the caller to handle
-  }
+  const response = await fetch(`${endpoint}/raid/${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+      "X-Raid-Api-Version": raidConfig.version === "3" ? "3" : "2",
+    },
+  });
+  return await response.json();
 };
+
 export const fetchRaidHistory = async ({
   id,
   token,
@@ -107,11 +86,12 @@ export const fetchRaidHistory = async ({
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
-      "X-Raid-Api-Version": "3",
+      "X-Raid-Api-Version": raidConfig.version === "3" ? "3" : "2",
     },
   });
   return await response.json();
 };
+
 export const createRaid = async ({
   data,
   token,
@@ -120,17 +100,12 @@ export const createRaid = async ({
   token: string;
 }): Promise<RaidDto> => {
   try {
-    for (const contributor of data?.contributor || []) {
-      if (contributor.id === "") {
-        contributor.id = null!;
-      }
-    }
     const response = await fetch(API_ENDPOINT, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
-        "X-Raid-Api-Version": "3",
+        "X-Raid-Api-Version": raidConfig.version === "3" ? "3" : "2",
       },
       body: JSON.stringify(data),
     });
@@ -150,6 +125,7 @@ export const createRaid = async ({
     throw new Error(errorMessage);
   }
 };
+
 export const updateRaid = async ({
   id,
   data,
@@ -160,18 +136,12 @@ export const updateRaid = async ({
   token: string;
 }): Promise<RaidDto> => {
   try {
-    for (const contributor of data?.contributor || []) {
-      if (contributor.id === "") {
-        contributor.id = null!;
-      }
-    }
-
     const response = await fetch(`${endpoint}/raid/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
-        "X-Raid-Api-Version": "3",
+        "X-Raid-Api-Version": raidConfig.version === "3" ? "3" : "2",
       },
       body: JSON.stringify(data),
     });
