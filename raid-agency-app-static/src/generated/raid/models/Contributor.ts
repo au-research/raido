@@ -4,6 +4,9 @@ import type { ContributorRole } from './ContributorRole';
 export interface Contributor {
     id: string;
     schemaUri: string;
+    status?: string;
+    email?: string;
+    uuid?: string;
     position: Array<ContributorPosition>;
     role: Array<ContributorRole>;
     leader?: boolean;
