@@ -1,11 +1,13 @@
 package au.org.raid.iam.provider.group;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.ext.Provider;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.services.resource.RealmResourceProvider;
 @Provider
 public class GroupControllerResourceProvider implements RealmResourceProvider {
-    private final  KeycloakSession session;
+    private KeycloakSession session;
+    private ObjectMapper objectMapper;
 
     public GroupControllerResourceProvider(final KeycloakSession session) {
         this.session = session;

@@ -16,7 +16,8 @@ public class CorsResponseFilter implements ContainerResponseFilter {
     private static final String ORIGIN_HEADER = "Origin";
     private static final List<String> VALID_ORIGINS = List.of(
             "http://localhost:7080",
-            "https://(app|app3).(test|demo|prod).raid.org.au"
+            "https://app.(test|demo|stage|prod).raid.org.au",
+            "https://app3.(test|demo|stage|prod).raid.org.au"
     );
     @Override
     public void filter(final ContainerRequestContext requestContext, final ContainerResponseContext responseContext) throws IOException {
