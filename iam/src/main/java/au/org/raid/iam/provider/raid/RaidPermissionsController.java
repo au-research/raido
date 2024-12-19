@@ -47,9 +47,10 @@ public class RaidPermissionsController {
                 
                 "https://app.demo.raid.org.au",
                 "https://app3.demo.raid.org.au",
-                
+
                 "https://app.stage.raid.org.au",
-                
+                "https://app3.stage.raid.org.au",
+
                 "https://app.prod.raid.org.au");
 
         cors.allowedMethods(allowedMethods);
@@ -80,11 +81,7 @@ public class RaidPermissionsController {
         final var client = auth.getClient();
 
         if (client.getRolesStream().anyMatch(role -> role.getName().equals("raid-permissions-admin"))) {
-            try {
                 addUserToRaid(request.getUserId(), request.getHandle());
-            } catch (final UserNotFoundException e) {
-                return Response.status(Response.Status.NOT_FOUND).build();
-            }
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
@@ -250,6 +247,7 @@ public class RaidPermissionsController {
 
         user.grantRole(role);
     }
+
 
     private void removeUserFromRaid(final String userId, final String handle) {
         final var user = session.users().getUserById(session.getContext().getRealm(), userId);

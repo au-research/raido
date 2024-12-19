@@ -1,3 +1,4 @@
+version: '3.4'
 services:
   raid-iam-db:
     image: postgres:16.2
@@ -14,7 +15,7 @@ services:
     ports:
       - 8001:8080
       - 9443:8443
-      - 9000:9000
+      - 5005:5005
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 5s
@@ -37,6 +38,6 @@ services:
       KC_DB_SCHEMA: public
       KC_HOSTNAME_STRICT: false
       KC_HTTP_ENABLED: true
-#      DEBUG: true
-#      DEBUG_PORT: '*:9000'
-      KC_LOG_LEVEL: debug,au.org.raid.iam:debug,org.keycloak.services:debug,org.keycloak.adapters:debug
+      DEBUG: true
+      DEBUG_PORT: '*:5005'
+      KC_LOG_LEVEL: info,au.org.raid.iam:debug,org.keycloak.services:debug,org.keycloak.adapters:debug
