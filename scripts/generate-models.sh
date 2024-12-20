@@ -78,3 +78,15 @@ for dest in "$RAID_APP_PATH" "$STATIC_GEN_PATH"; do
         exit 1
     fi
 done
+
+for path in "${RAID_APP_PATH}" "${STATIC_GEN_PATH}"; do
+    mv "${path}/models/"* "${path}/" && rm -r "${path}/models"
+done
+
+# Create index.ts file for each destination
+for path in "${RAID_APP_PATH}" "${STATIC_GEN_PATH}"; do
+    # Find all .ts files (excluding index.ts itself) and create exports
+    find "${path}" -maxdepth 1 -name "*.ts" ! -name "index.ts" -exec basename {} .ts \; | \
+    awk '{print "export * from \"./" $1 "\""}' > "${path}/index.ts"
+    echo "Created index.ts in ${path##*/*/}"
+done

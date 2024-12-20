@@ -1,4 +1,9 @@
-import type { RaidDto, ServicePoint } from "@/generated/raid";
+import type {
+  RaidDto,
+  ServicePoint,
+  ServicePointCreateRequest,
+  ServicePointUpdateRequest,
+} from "@/generated/raid";
 
 import type Keycloak from "keycloak-js";
 import { FieldErrors } from "react-hook-form";
@@ -57,4 +62,15 @@ export interface ChildConfig {
     errors?: FieldErrors<RaidDto>;
   }>;
   generator: () => any;
+}
+
+/// /// ///
+
+export interface CreateServicePointRequest {
+  servicePointCreateRequest: ServicePointCreateRequest;
+}
+
+export interface UpdateServicePointRequest {
+  id: number;
+  servicePointUpdateRequest: ServicePointUpdateRequest;
 }
