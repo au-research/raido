@@ -1,21 +1,20 @@
 ---
 import Breadcrumbs from "@/components/breadcrumbs.astro";
 import Header from "@/components/header.astro";
-import Layout from "@/layouts/main.astro";
-import { fetchRaids } from "@/services/raids";
-import type { RaidDto } from "@/generated/raid/models/RaidDto";
-import type { ModelDate } from "@/generated/raid/models/ModelDate";
-import Titles from "@/components/raid-components/titles.astro";
-import Dates from "@/components/raid-components/dates.astro";
-import Organisations from "@/components/raid-components/organisations.astro";
-import Descriptions from "@/components/raid-components/descriptions.astro";
-import Contributors from "@/components/raid-components/contributors.astro";
-import RelatedObjects from "@/components/raid-components/related-objects.astro";
+import Access from "@/components/raid-components/access.astro";
 import AlternateIdentifiers from "@/components/raid-components/alternate-identifiers.astro";
 import AlternateUrls from "@/components/raid-components/alternate-urls.astro";
+import Contributors from "@/components/raid-components/contributors.astro";
+import Dates from "@/components/raid-components/dates.astro";
+import Descriptions from "@/components/raid-components/descriptions.astro";
+import Organisations from "@/components/raid-components/organisations.astro";
+import RelatedObjects from "@/components/raid-components/related-objects.astro";
 import RelatedRaids from "@/components/raid-components/related-raids.astro";
-import Access from "@/components/raid-components/access.astro";
 import Subjects from "@/components/raid-components/subjects.astro";
+import Titles from "@/components/raid-components/titles.astro";
+import type { ModelDate, RaidDto } from "@/generated/raid";
+import Layout from "@/layouts/main.astro";
+import { fetchRaids } from "@/services/raids";
 
 export async function getStaticPaths() {
   const raids = await fetchRaids();
