@@ -191,7 +191,11 @@ public class RaidIngestService {
 
         for (final var record : records) {
             final var raid = raidHistoryService.findByHandle(record.getHandle())
-                    .orElseThrow(() -> new ResourceNotFoundException(record.getHandle()));
+                    .orElse(cacheableRaidService.build(record))
+                    ;
+
+
+//                    .orElseThrow(() -> new ResourceNotFoundException(record.getHandle()));
 
             raids.add(raid);
         }
