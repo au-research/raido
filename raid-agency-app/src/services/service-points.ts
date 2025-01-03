@@ -1,9 +1,10 @@
+import { ServicePoint } from "@/generated/raid";
 import {
   CreateServicePointRequest,
-  ServicePoint,
+  ServicePointMember,
+  ServicePointWithMembers,
   UpdateServicePointRequest,
-} from "@/generated/raid";
-import { ServicePointMember, ServicePointWithMembers } from "@/types";
+} from "@/types";
 import { getApiEndpoint } from "@/utils/api-utils/api-utils";
 
 const kcUrl = import.meta.env.VITE_KEYCLOAK_URL as string;

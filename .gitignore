@@ -26,3 +26,4 @@ raid-agency-app/node_modules/*
 raid-agency-app-static/node_modules/*
 raid-agency-app-static/.astro/types.d.ts
 raid-agency-app-static/.env
+scripts/.env
