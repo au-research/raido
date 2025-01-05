@@ -80,6 +80,7 @@ public class RaidRepository {
     public List<RaidRecord> findAllByServicePointId(final Long servicePointId) {
         return dslContext.selectFrom(RAID)
                 .where(RAID.SERVICE_POINT_ID.eq(servicePointId))
+                .and(RAID.METADATA_SCHEMA.ne(Metaschema.legacy_metadata_schema_v1))
                 .orderBy(RAID.DATE_CREATED.desc())
                 .limit(Constant.MAX_EXPERIMENTAL_RECORDS)
                 .fetch();
@@ -89,6 +90,7 @@ public class RaidRepository {
         return dslContext.selectFrom(RAID)
                 .where(RAID.SERVICE_POINT_ID.eq(servicePointId))
                 .or(RAID.HANDLE.in(handles))
+                .and(RAID.METADATA_SCHEMA.ne(Metaschema.legacy_metadata_schema_v1))
                 .orderBy(RAID.DATE_CREATED.desc())
                 .limit(Constant.MAX_EXPERIMENTAL_RECORDS)
                 .fetch();
@@ -99,6 +101,7 @@ public class RaidRepository {
                 .where(
                         RAID.SERVICE_POINT_ID.eq(servicePointId).or(RAID.CONFIDENTIAL.equal(false))
                 )
+                .and(RAID.METADATA_SCHEMA.ne(Metaschema.legacy_metadata_schema_v1))
                 .orderBy(RAID.DATE_CREATED.desc())
                 .limit(Constant.MAX_EXPERIMENTAL_RECORDS)
                 .fetch();
@@ -114,6 +117,7 @@ public class RaidRepository {
                 .where(
                         CONTRIBUTOR.PID.eq(orcid).and(RAID.ACCESS_TYPE_ID.in(1, 4))
                 )
+                .and(RAID.METADATA_SCHEMA.ne(Metaschema.legacy_metadata_schema_v1))
                 .fetchInto(RaidRecord.class);
     }
 
@@ -128,6 +132,7 @@ public class RaidRepository {
                 .where(
                         ORGANISATION.PID.eq(ror)
                 )
+                .and(RAID.METADATA_SCHEMA.ne(Metaschema.legacy_metadata_schema_v1))
                 .fetchInto(RaidRecord.class);
     }
 
