@@ -26,6 +26,7 @@ export const AppNavBar = () => {
         borderTopColor: "primary.main",
         zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
+      data-testid="app-nav-bar"
     >
       <Toolbar variant={"dense"}>
         <Stack direction="row" alignItems="center">
@@ -42,18 +43,6 @@ export const AppNavBar = () => {
               />
             </Box>
           </Link>
-          {/* <Link to="/">
-            <img
-              src={
-                theme.palette.mode === "dark"
-                  ? "/raid-logo-dark.svg"
-                  : "/raid-logo-light.svg"
-              }
-              alt="logo"
-              // height="30"
-              style={{ background: "red", p: 0 }}
-            />
-          </Link> */}
 
           <IconButton
             component={Link}

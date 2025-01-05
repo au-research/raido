@@ -28,7 +28,7 @@ const contributorGenerator = (): ContributorExtended => {
   } else {
     return {
       ...baseData,
-      id: "http://orcid.org/0000-0000-0000-0001",
+      id: "https://orcid.org/0000-0000-0000-0001",
     } as ContributorExtended;
   }
 };

@@ -19,7 +19,7 @@ import {
   UseFormTrigger,
   useFieldArray,
 } from "react-hook-form";
-import { DynamicFormItem } from "@/components/dynamic-item-form";
+import { DynamicFormItem } from "@/components/dynamic-form-item";
 import { ChildConfig } from "@/types";
 
 export const DynamicForm = memo(
@@ -66,6 +66,7 @@ export const DynamicForm = memo(
     return (
       <Card
         sx={getErrorCardStyles(errors && errors[entityKey as keyof RaidDto])}
+        data-testid={`dynamic-form-${entityKey}`}
       >
         <CardHeader title={labelPlural} />
         <CardContent>
@@ -113,6 +114,7 @@ export const DynamicForm = memo(
             onClick={handleAddItem}
             onMouseEnter={() => setIsRowHighlighted(true)}
             onMouseLeave={() => setIsRowHighlighted(false)}
+            data-testid={`add-${entityKey}-button`}
           >
             Add {label}
           </Button>

@@ -76,6 +76,7 @@ export const RaidTable = ({ title }: { title?: string }) => {
       <Card>
         {title && <CardHeader title={title} />}
         <CardContent>
+          <input type="hidden" value={raidQuery.data.length} id="raid-count" />
           <TableContainer>
             {raidQuery.isPending && (
               <>
