@@ -1,6 +1,6 @@
 ---
 import InfoField from "@/components/info-field.astro";
-import type { ModelDate } from "@/generated/raid/models/ModelDate";
+import type { ModelDate } from "@/generated/raid";
 import { dateDisplayFormatter } from "@/utils/date-utils";
 
 interface Props {
@@ -17,8 +17,14 @@ const { dates } = Astro.props as Props;
     <div class="divide-y divide-gray-200">
       <div class="ml-5 space-y-2 py-4">
         <div class="grid grid-cols-4 gap-5 text-sm">
-          <InfoField label="Start Date" value={dateDisplayFormatter(dates.startDate)} />
-          <InfoField label="End Date" value={dateDisplayFormatter(dates.endDate)} />
+          <InfoField
+            label="Start Date"
+            value={dateDisplayFormatter(dates.startDate)}
+          />
+          <InfoField
+            label="End Date"
+            value={dateDisplayFormatter(dates.endDate)}
+          />
         </div>
       </div>
     </div>

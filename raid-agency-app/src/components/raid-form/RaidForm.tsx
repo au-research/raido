@@ -105,7 +105,7 @@ export const FlatFormComponent = memo(
     DetailsFormComponent: React.ComponentType<{}>;
     labelPlural: string;
   }) => (
-    <Card>
+    <Card data-testid={`dynamic-form-${labelPlural.toLowerCase()}`}>
       <CardHeader title={labelPlural} />
       <CardContent>
         <DetailsFormComponent />

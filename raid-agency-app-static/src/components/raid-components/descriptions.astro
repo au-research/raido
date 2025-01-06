@@ -1,7 +1,7 @@
 ---
-import type { Description } from "@/generated/raid/models/Description";
+import type { Description } from "@/generated/raid";
 import InfoField from "../info-field.astro";
-import mapping from "@/mapping.json"
+import mapping from "@/mapping.json";
 import language from "@/language.json";
 
 interface Props {
@@ -22,9 +22,12 @@ const { descriptions } = Astro.props as Props;
     <div class="divide-y divide-gray-200">
       {
         descriptions?.map((el) => {
-          const descriptionType =
-            mapping.find((mapEl) => mapEl.key === el.type.id);
-            const languageTitle = language.find(langEl=>langEl.code === el.language?.id)?.name || el.language?.id
+          const descriptionType = mapping.find(
+            (mapEl) => mapEl.key === el.type.id
+          );
+          const languageTitle =
+            language.find((langEl) => langEl.code === el.language?.id)?.name ||
+            el.language?.id;
 
           return (
             <div class="ml-5 space-y-2 py-4">
@@ -33,7 +36,11 @@ const { descriptions } = Astro.props as Props;
               </div>
 
               <div class="grid grid-cols-4 gap-5 text-sm">
-                <InfoField label="Description Type" value={descriptionType?.value} tooltip={descriptionType?.definition} />
+                <InfoField
+                  label="Description Type"
+                  value={descriptionType?.value}
+                  tooltip={descriptionType?.definition}
+                />
                 <InfoField label="Language" value={languageTitle} />
               </div>
             </div>

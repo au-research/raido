@@ -13,6 +13,7 @@ const DateDisplay = memo(({ data }: { data: ModelDate }) => (
       <Grid container spacing={2}>
         <DisplayItem
           label="Start Date"
+          testid="startDate"
           value={dateDisplayFormatter(data?.startDate)}
         />
         <DisplayItem

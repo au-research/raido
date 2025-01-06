@@ -1,6 +1,6 @@
 /// <reference types="astro/client" />
 
-import type { RaidDto } from "@/generated/raid/models/RaidDto";
+import type { RaidDto, ServicePoint } from "@/generated/raid";
 
 const apiEndpoint = import.meta.env.API_ENDPOINT;
 const iamEndpoint = import.meta.env.IAM_ENDPOINT;
@@ -9,16 +9,6 @@ const iamClientId = import.meta.env.IAM_CLIENT_ID;
 const iamClientSecret = import.meta.env.IAM_CLIENT_SECRET;
 
 let cachedData: RaidDto[] | null = null;
-
-interface ServicePoint {
-  id: number;
-  name: string;
-  identifierOwner: string;
-  techEmail: string;
-  adminEmail: string;
-  enabled: boolean;
-  appWritesEnabled: boolean;
-}
 
 async function getAuthToken(): Promise<string> {
   const TOKEN_PARAMS = {

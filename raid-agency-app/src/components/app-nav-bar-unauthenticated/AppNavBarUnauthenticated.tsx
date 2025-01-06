@@ -14,6 +14,7 @@ export const AppNavBarUnauthenticated = () => {
         borderTopColor: "primary.main",
         zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
+      data-testid="app-nav-bar-unauthenticated"
     >
       <Toolbar variant={"dense"}>
         <Link to="/" style={{ lineHeight: 0 }}>

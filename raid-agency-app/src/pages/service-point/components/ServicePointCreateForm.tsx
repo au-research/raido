@@ -1,5 +1,5 @@
-import type { CreateServicePointRequest } from "@/generated/raid";
 import { createServicePoint } from "@/services/service-points";
+import { CreateServicePointRequest } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,

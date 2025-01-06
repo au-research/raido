@@ -1,7 +1,7 @@
 ---
-import type { Subject } from "@/generated/raid/models/Subject";
+import type { Subject } from "@/generated/raid";
 import InfoField from "../info-field.astro";
-import subjectMapping from "@/subject-mapping.json"
+import subjectMapping from "@/subject-mapping.json";
 
 interface Props {
   subjects: Subject[];
@@ -17,15 +17,17 @@ const { subjects } = Astro.props as Props;
     <div class="divide-y divide-gray-200">
       {
         subjects?.map((el) => {
-
-          
-          const mappedSubject =
-          subjectMapping.find((mapEl) => mapEl.definition === el.id);
+          const mappedSubject = subjectMapping.find(
+            (mapEl) => mapEl.definition === el.id
+          );
 
           return (
             <div class="ml-5 space-y-2 py-4">
               <div class="grid grid-cols-1 gap-5 text-sm">
-                <InfoField label="Subject" value={`${mappedSubject?.value} (${mappedSubject?.key})`} />
+                <InfoField
+                  label="Subject"
+                  value={`${mappedSubject?.value} (${mappedSubject?.key})`}
+                />
               </div>
 
               <div class="grid grid-cols-1 gap-5 text-sm">

@@ -45,6 +45,7 @@ export const RaidDisplayMenu = ({
             color="primary"
             component={Link}
             to={`/raids/${prefix}/${suffix}/edit`}
+            data-testid="edit-raid-button"
           >
             <EditIcon sx={{ mr: 1 }} />
             Edit

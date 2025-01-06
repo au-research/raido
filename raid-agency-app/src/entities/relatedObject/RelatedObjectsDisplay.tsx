@@ -48,13 +48,12 @@ const RelatedObjectItem = memo(
             </Typography>
           </Stack>
           <Stack gap={2} divider={<Divider />}>
-            {relatedObject?.category &&
-              relatedObject.category?.map((category) => (
-                <RelatedObjectCategoryItem
-                  key={crypto.randomUUID()}
-                  relatedObjectCategory={category}
-                />
-              ))}
+            {(relatedObject?.category || []).map((category) => (
+              <RelatedObjectCategoryItem
+                key={crypto.randomUUID()}
+                relatedObjectCategory={category}
+              />
+            ))}
           </Stack>
         </Stack>
       </Stack>
