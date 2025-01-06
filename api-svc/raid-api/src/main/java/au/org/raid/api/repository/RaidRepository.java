@@ -1,6 +1,7 @@
 package au.org.raid.api.repository;
 
 import au.org.raid.api.endpoint.Constant;
+import au.org.raid.db.jooq.enums.Metaschema;
 import au.org.raid.db.jooq.tables.records.RaidRecord;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -74,6 +75,7 @@ public class RaidRepository {
     public List<RaidRecord> findAllByServicePointId(final Long servicePointId) {
         return dslContext.selectFrom(RAID)
                 .where(RAID.SERVICE_POINT_ID.eq(servicePointId))
+                .and(RAID.METADATA_SCHEMA.ne(Metaschema.legacy_metadata_schema_v1))
                 .orderBy(RAID.DATE_CREATED.desc())
                 .limit(Constant.MAX_EXPERIMENTAL_RECORDS)
                 .fetch();
@@ -84,6 +86,7 @@ public class RaidRepository {
                 .where(
                         RAID.SERVICE_POINT_ID.eq(servicePointId).or(RAID.CONFIDENTIAL.equal(false))
                 )
+                .and(RAID.METADATA_SCHEMA.ne(Metaschema.legacy_metadata_schema_v1))
                 .orderBy(RAID.DATE_CREATED.desc())
                 .limit(Constant.MAX_EXPERIMENTAL_RECORDS)
                 .fetch();
