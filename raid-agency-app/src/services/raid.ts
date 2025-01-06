@@ -136,6 +136,7 @@ export const updateRaid = async ({
   token: string;
 }): Promise<RaidDto> => {
   try {
+    const raidToBeUpdated = beforeRaidUpdate(data);
     const response = await fetch(`${endpoint}/raid/${id}`, {
       method: "PUT",
       headers: {
@@ -143,7 +144,7 @@ export const updateRaid = async ({
         Authorization: `Bearer ${token}`,
         "X-Raid-Api-Version": raidConfig.version === "3" ? "3" : "2",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(raidToBeUpdated),
     });
 
     if (!response.ok) {
@@ -160,4 +161,45 @@ export const updateRaid = async ({
     }
     throw new Error(errorMessage);
   }
+};
+
+export const beforeRaidUpdate = (raid: RaidDto): RaidDto => {
+  // set all endDates to `undefined` if they value is an empty string
+  if (raid?.date?.endDate === "") {
+    raid.date.endDate = undefined;
+  }
+
+  if (raid?.title) {
+    raid.title.forEach((title) => {
+      if (title.endDate === "") {
+        title.endDate = undefined;
+      }
+    });
+  }
+
+  if (raid?.contributor) {
+    raid.contributor.forEach((contributor) => {
+      if (contributor.position) {
+        contributor.position.forEach((position) => {
+          if (position.endDate === "") {
+            position.endDate = undefined;
+          }
+        });
+      }
+    });
+  }
+
+  if (raid?.organisation) {
+    raid.organisation.forEach((organisation) => {
+      if (organisation.role) {
+        organisation.role.forEach((role) => {
+          if (role.endDate === "") {
+            role.endDate = undefined;
+          }
+        });
+      }
+    });
+  }
+
+  return raid;
 };

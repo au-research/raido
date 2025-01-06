@@ -46,6 +46,7 @@ const TextInputField = memo(function TextInputField({
     <Grid item xs={width}>
       <TextField
         {...field}
+        size="small"
         error={Boolean(errorMessage)}
         fullWidth
         helperText={getDisplayHelperText()}

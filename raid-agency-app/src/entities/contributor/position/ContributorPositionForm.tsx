@@ -31,8 +31,8 @@ const ContributorPositionForm = memo(
         />
         <TextInputField
           name={`contributor.${parentIndex}.position.${index}.endDate`}
-          label="end Date"
-          placeholder="end Date"
+          label="End Date"
+          placeholder="End Date"
           required={true}
           width={3}
         />
