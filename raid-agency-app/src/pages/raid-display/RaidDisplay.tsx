@@ -78,8 +78,9 @@ export const RaidDisplay = () => {
           <BreadcrumbsBar breadcrumbs={breadcrumbs} />
           <AnchorButtons raidData={raidData} />
 
-          {displayItems.map(({ itemKey, Component }) => {
-            const data = raidData[itemKey as keyof RaidDto] || ({} as any);
+          {displayItems.map(({ itemKey, Component, emptyValue }) => {
+            const data =
+              raidData[itemKey as keyof RaidDto] || (emptyValue as any);
             return (
               <Box id={itemKey} key={itemKey} className="scroll">
                 <Component data={data} />
