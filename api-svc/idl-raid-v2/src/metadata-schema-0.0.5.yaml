@@ -1,0 +1,282 @@
+openapi: 3.0.3
+info:
+  title: shared types
+  version: 1.0.0
+  description: >
+    This file contains types that are broadly shared across the API.
+    It is not expected to contain any endpoints.
+paths:
+
+components:
+  schemas:
+    MetadataSchema_0_0_5:
+      type: object
+      properties:
+        id: { $ref: '#/components/schemas/IdBlock' }
+        metadataSchema: { $ref: '#/components/schemas/RaidoMetaschema' }
+        titles:
+          type: array
+          items: { $ref: '#/components/schemas/TitleBlock' }
+        dates: { $ref: '#/components/schemas/DatesBlock' }
+        descriptions:
+          type: array
+          items: { $ref: '#/components/schemas/DescriptionBlock' }
+        access: { $ref: '#/components/schemas/AccessBlock' }
+        alternateUrls:
+          type: array
+          items: { $ref: '#/components/schemas/AlternateUrlBlock' }
+        contributors:
+          type: array
+          items: { $ref: '#/components/schemas/ContributorBlock' }
+        organisations:
+          type: array
+          items: { $ref: '#/components/schemas/OrganisationBlock' }
+        subjects:
+          type: array
+          items: { $ref: '#/components/schemas/SubjectBlock' }
+        relatedRaids:
+          type: array
+          items: { $ref: '#/components/schemas/RelatedRaidBlock' }
+        relatedObjects:
+          type: array
+          items: { $ref: '#/components/schemas/RelatedObjectBlock' }
+        alternateIdentifiers:
+          type: array
+          items: { $ref: '#/components/schemas/AlternateIdentifierBlock' }
+        spatialCoverages:
+          type: array
+          items: { $ref: '#/components/schemas/SpatialCoverageBlock' }
+        traditionalKnowledgeLabels:
+          type: array
+          items: { $ref: '#/components/schemas/TraditionalKnowledgeLabelBlock' }
+    IdBlock:
+      type: object
+      required: [ identifier, identifierSchemeUri,
+                  identifierRegistrationAgency, identifierOwner, identifierServicePoint ]
+      properties:
+        identifier:
+          type: string
+          description: The identifier of the raid, e.g. https://raid.org.au/102.100.100/zzz
+        identifierSchemeURI:
+          type: string
+          description: >
+            The URI of the Identifier scheme. For example, https://raid.org
+        identifierRegistrationAgency:
+          type: string
+          description: >
+            ROR that identifies of the organisation that operates the 
+            raid registration agency software that minted this raid.
+        identifierOwner:
+          type: string
+          description: >
+            The legal entity responsible for the RAiD; the ‘Owner’ of a RAiD. Analogous to a DataCite ‘Member’, has a 
+            legal agreement with the Registration Agency.
+        identifierServicePoint:
+          type: integer
+          format: int64
+          description: >
+            The Service Point that requested the RAiD. Analogous to a DataCite ‘Repository’. ‘Owners’ can have multiple
+            Service Points, and SPs do not need to be legal entities.
+        globalUrl:
+          type: string
+          description: >
+            The URL for the raid via the CNRI handle system, e.g 
+            https://hdl.handle.net/xxx.yyy/zzz
+        raidAgencyUrl:
+          type: string
+          description: >
+            The URL for the raid via the minting raid agency system, e.g 
+            https://raid.org.au/10378.1/1695863
+      example:
+        identifier: https://raid.org/xxx.yyy/zzz
+        identifierSchemeUri: https://raid.org
+        identifierRegistrationAgency: https://ror.org/038sjwq14
+        identifierOwner: https://ror.org/02stey378
+        identifierServicePoint: 20000003
+        globalUrl: https://hdl.handle.net/xxx.yyy/zzz
+        raidAgencyUrl: https://demo.raido-infra.com/handle/10378.1/1695863
+        raidAgencyIdentifier: demo.raido-infra.com
+    RaidoMetaschema:
+      description: >
+        "Metaschema" is the enumeration of different "Metadata schema" 
+        that Raido supports.
+        The values are currently match the discriminator type names used for
+        returning metadata, but they don't have to.
+      type: string
+      enum: [ 'RaidoMetadataSchemaV1', 'LegacyMetadataSchemaV1' ]
+    TitleBlock:
+      type: object
+      required: [ title, type, startDate ]
+      properties:
+        title: { type: string }
+        type: { $ref: '#/components/schemas/TitleType' }
+        startDate: { type: string, format: date }
+        endDate: { type: string, format: date }
+    TitleType:
+      type: string
+      enum: [ 'Primary Title', 'Alternative Title' ]
+    DatesBlock:
+      type: object
+      required: [ "startDate" ]
+      properties:
+        startDate: { type: string, format: date }
+        endDate: { type: string, format: date }
+    DescriptionBlock:
+      type: object
+      required: [ "description", "type" ]
+      properties:
+        description: { type: string }
+        type: { $ref: '#/components/schemas/DescriptionType' }
+    DescriptionType:
+      type: string
+      enum: [ 'Primary Description', 'Alternative Description' ]
+    AccessBlock:
+      type: object
+      required: [ "type", ]
+      properties:
+        type: { $ref: '#/components/schemas/AccessType' }
+        accessStatement: { type: string }
+    AccessType:
+      type: string
+      enum: [ 'Open', 'Closed' ]
+    AlternateUrlBlock:
+      type: object
+      required: [ "url", ]
+      properties:
+        url: { type: string }
+    ContributorBlock:
+      type: object
+      required: [ id, identifierSchemeUri, positions, roles ]
+      properties:
+        id: { type: string }
+        identifierSchemeUri:
+          { $ref: '#/components/schemas/ContributorIdentifierSchemeType' }
+        positions:
+          type: array
+          items: { $ref: '#/components/schemas/ContributorPosition' }
+        roles:
+          type: array
+          items: { $ref: '#/components/schemas/ContributorRole' }
+    ContributorIdentifierSchemeType:
+      type: string
+      enum: [ 'https://orcid.org/' ] # ISNI, etc.
+    ContributorPosition:
+      type: object
+      required: [ positionSchemaUri, position, startDate ]
+      properties:
+        positionSchemaUri:
+          { $ref: '#/components/schemas/ContributorPositionSchemeType' }
+        position:
+          { $ref: '#/components/schemas/ContributorPositionRaidMetadataSchemaType' }
+        startDate: { type: string, format: date }
+        endDate: { type: string, format: date }
+    ContributorPositionSchemeType:
+      type: string
+      enum: [ 'https://raid.org/' ]
+    ContributorPositionRaidMetadataSchemaType:
+      type: string
+      enum:
+        - Leader
+        - Contact Person
+        - Principal Investigator
+        - Co-Investigator
+        - Other Participant
+    ContributorRole:
+      type: object
+      required: [ role, roleSchemeUri ]
+      properties:
+        roleSchemeUri:
+          { $ref: '#/components/schemas/ContributorRoleSchemeType' }
+        role:
+          { $ref: '#/components/schemas/ContributorRoleCreditNisoOrgType' }
+    ContributorRoleSchemeType:
+      type: string
+      enum: [ 'https://credit.niso.org/' ]
+    ContributorRoleCreditNisoOrgType:
+      type: string
+      enum:
+        - conceptualization
+        - data-curation
+        - formal-analysis
+        - funding-acquisition
+        - investigation
+        - methodology
+        - project-administration
+        - resources
+        - software
+        - supervision
+        - validation
+        - visualization
+        - writing-original-draft
+        - writing-review-editing
+    OrganisationBlock:
+      type: object
+      required: [ id, identifierSchemeUri, roles ]
+      properties:
+        id: { type: string }
+        identifierSchemeUri:
+          { $ref: '#/components/schemas/OrganisationIdentifierSchemeType' }
+        roles:
+          type: array
+          items: { $ref: '#/components/schemas/OrganisationRole' }
+    OrganisationIdentifierSchemeType:
+      type: string
+      enum: [ 'https://ror.org/' ]
+    OrganisationRole:
+      type: object
+      required: [ role, roleSchemeUri, startDate ]
+      properties:
+        roleSchemeUri:
+          { $ref: '#/components/schemas/OrganisationRoleSchemeType' }
+        role:
+          { $ref: '#/components/schemas/OrganisationRoleType' }
+        startDate: { type: string, format: date }
+        endDate: { type: string, format: date }
+    OrganisationRoleSchemeType:
+      type: string
+      enum: [ 'https://raid.org/' ]
+    OrganisationRoleType:
+      type: string
+      enum:
+        - Lead Research Organisation
+        - Other Research Organisation
+        - Partner Organisation
+        - Contractor
+        - Other Organisation
+    SubjectBlock:
+      type: object
+      properties:
+        subject: { type: string }
+        subjectSchemeUri: { type: string }
+        subjectKeyword: { type: string }
+    RelatedRaidBlock:
+      type: object
+      properties:
+        relatedRaid: { type: string }
+        relatedRaidType: { type: string }
+        relatedRaidTypeSchemeUri: { type: string }
+    RelatedObjectBlock:
+      type: object
+      properties:
+        relatedObject: { type: string }
+        relatedObjectSchemeUri: { type: string }
+        relatedObjectType: { type: string }
+        relatedObjectTypeSchemeUri: { type: string }
+        relatedObjectCategory: { type: string }
+    AlternateIdentifierBlock:
+      type: object
+      properties:
+        alternateIdentifier: { type: string }
+        alternateIdentifierType: { type: string }
+    SpatialCoverageBlock:
+      type: object
+      properties:
+        spatialCoverage: { type: string }
+        spatialCoverageSchemeUri: { type: string }
+        spatialCoveragePlace: { type: string }
+    TraditionalKnowledgeLabelBlock:
+      type: object
+      properties:
+        traditionalKnowledgeLabelSchemeUri: { type: string }
+
+

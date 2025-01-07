@@ -21,6 +21,7 @@ build/
 .DS_Store
 dist/
 node_modules/*
+**/node_modules/
 
 raid-agency-app/node_modules/*
 raid-agency-app-static/node_modules/*
