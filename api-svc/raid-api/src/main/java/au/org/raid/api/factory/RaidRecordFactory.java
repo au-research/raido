@@ -41,6 +41,7 @@ public class RaidRecordFactory {
 
         return new RaidRecord()
                 .setHandle(handle.toString())
+                .setSchemaVersion(raid.getSchemaVersion())
                 .setServicePointId(raid.getIdentifier().getOwner().getServicePoint())
                 .setMetadataSchema(Metaschema.raido_metadata_schema_v2)
                 .setDateCreated(LocalDateTime.now(clock))

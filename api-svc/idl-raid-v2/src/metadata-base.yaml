@@ -1,0 +1,388 @@
+openapi: 3.0.3
+info:
+  title: Metadata Schema 1.0.0
+  version: 1.0.0
+  description: >
+    RAiD Metadata Schema 1.0.0
+paths:
+
+components:
+  schemas:
+    MetadataSchema:
+      discriminator:
+        propertyName: schemaVersion
+        mapping:
+          "0.0.5": 'metadata-schema-0.0.5.yaml#/components/schemas/RaidDtoV0_0_5'
+          "1.0.0": 'metadata-schema-1.0.0.yaml#/components/schemas/RaidDtoV1_0_0'
+          "2.0.0": 'metadata-schema-2.0.0.yaml#/components/schemas/RaidDto'
+      properties:
+        schemaVersion:
+          type: string
+          enum: [ "0.0.5", "1.0.0", "2.0.0" ]
+      oneOf:
+        - $ref: 'metadata-schema-0.0.5.yaml#/components/schemas/RaidDtoV0_0_5'
+        - $ref: 'metadata-schema-1.0.0.yaml#/components/schemas/RaidDtoV1_0_0'
+        - $ref: 'metadata-schema-2.0.0.yaml#/components/schemas/RaidDto'
+    Metadata:
+      type: object
+      properties:
+        created:
+          type: number
+          format: datetime
+        updated:
+          type: number
+          format: datetime
+    Id:
+      type: object
+      required: [ id, schemaUri, registrationAgency, owner, servicePoint, license, version ]
+      properties:
+        id:
+          type: string
+          description: The identifier of the raid, e.g. https://raid.org.au/102.100.100/zzz
+          example: https://raid.org/xxx.yyy/zzz
+        schemaUri:
+          type: string
+          description: >
+            The URI of the Identifier scheme. For example, https://raid.org
+          example: https://raid.org
+        registrationAgency:
+          $ref: '#/components/schemas/RegistrationAgency'
+        owner:
+          $ref: '#/components/schemas/Owner'
+        raidAgencyUrl:
+          type: string
+          description: >
+            The URL for the raid via the minting raid agency system
+          example: https://static.raid.org.au/raid/10378.1/1695863
+        license:
+          type: string
+          description: The license under which the RAiD Metadata Record associated with this Identifier has been issued.
+          example: Creative Commons CC-0
+        version:
+          type: integer
+          description: The version of the resource. Read-only. Increments automatically on update.
+    RegistrationAgency:
+      type: object
+      description: >
+        ROR that identifies the organisation that operates the raid registration agency software that minted this raid.
+      required: [ id, schemaUri ]
+      properties:
+        id: {
+          type: string,
+          example: https://ror.org/02stey378
+        }
+        schemaUri: {
+          type: string,
+          example: https://ror.org
+        }
+    Owner:
+      type: object
+      description: >
+        The legal entity responsible for the RAiD; the ‘Owner’ of a RAiD. Analogous to a DataCite ‘Member’, has a 
+        legal agreement with the Registration Agency.
+      required: [ id, schemaUri ]
+      properties:
+        id: {
+          type: string,
+          example: https://ror.org/02stey378
+        }
+        schemaUri: {
+          type: string,
+          example: https://ror.org
+        }
+        servicePoint:
+          type: integer
+          format: int64
+          description: >
+            The Service Point (SP) that requested the RAiD. Analogous to a DataCite ‘Repository’. SPs belong to an owner, RAiD owners can have multiple SPs, and SPs do not need to be legal entities.
+          example: 20000003
+    Date:
+      type: object
+      description: Metadata schema block containing the start and end date of the RAiD.
+      required: [ "startDate" ]
+      properties:
+        startDate: {
+          type: string,
+          example: 2023-08-28; 2023-08; 2023
+        }
+        endDate: {
+          type: string,
+          example: 2023-08-28; 2023-08; 2023
+        }
+    Title:
+      type: object
+      required: [ text, type, startDate ]
+      properties:
+        text: { type: string }
+        type:
+          $ref: '#/components/schemas/TitleType'
+        startDate: {
+          type: string,
+          example: 2023-08-28; 2023-08; 2023
+        }
+        endDate: {
+          type: string,
+          example: 2023-08-28; 2023-08; 2023
+        }
+        language:
+          $ref: '#/components/schemas/Language'
+    TitleType:
+      type: object
+      properties:
+        id: {
+          type: string,
+          example: https://vocabulary.raid.org/title.type.schema/5
+        }
+        schemaUri: {
+          type: string,
+          example: https://vocabulary.raid.org/title.type.schema/376
+        }
+    Language:
+      type: object
+      required: [ code, schemaUri ]
+      properties:
+        id: {
+          type: string,
+          example: eng
+        }
+        schemaUri: {
+          type: string,
+          example: https://iso639-3.sil.org/
+        }
+    Description:
+      type: object
+      required: [ "text", "type" ]
+      properties:
+        text: { type: string }
+        type:
+          $ref: '#/components/schemas/DescriptionType'
+        language:
+          $ref: '#/components/schemas/Language'
+    DescriptionType:
+      type: object
+      required: [ id, schemaUri ]
+      properties:
+        id: {
+          type: string,
+          example: https://vocabulary.raid.org/description.type.schema/318
+        }
+        schemaUri: {
+          type: string,
+          example: https://vocabulary.raid.org/description.type.schema/320
+        }
+    Access:
+      type: object
+      required: [ "type" ]
+      properties:
+        type:
+          $ref: '#/components/schemas/AccessType'
+        statement:
+          $ref: '#/components/schemas/AccessStatement'
+        embargoExpiry: {
+          type: string,
+          format: date,
+          description: 'Date the embargo on access to the RAiD ends. Year, month, and day required; may not be more than 18 months from the date the RAiD was registered.'
+        }
+    AccessStatement:
+      type: object
+      required: [ statement ]
+      properties:
+        text: { type: string }
+        language:
+          $ref: '#/components/schemas/Language'
+    AccessType:
+      type: object
+      required: [ id, schemaUri ]
+      properties:
+        id: {
+          type: string,
+          example: https://vocabularies.coar-repositories.org/access_rights/c_abf2/,
+          description: Open access
+        }
+        schemaUri: {
+          type: string,
+          example: https://vocabularies.coar-repositories.org/access_rights/
+        }
+    ContributorPosition:
+      type: object
+      required: [ schemaUri, id, startDate ]
+      properties:
+        schemaUri: {
+          type: string,
+          example: https://vocabulary.raid.org/contributor.position.schema/305
+        }
+        id: {
+          type: string,
+          example: https://vocabulary.raid.org/contributor.position.schema/307,
+          description: Principal or Lead Investigator
+        }
+        startDate: {
+          type: string,
+          example: 2025-08-28; 2025-08; 2025
+        }
+        endDate: {
+          type: string,
+          example: 2025-08-28; 2025-08; 2025
+        }
+    ContributorRole:
+      type: object
+      required: [ id, schemaUri ]
+      properties:
+        schemaUri: {
+          type: string,
+          example: https://credit.niso.org/
+        }
+        id: {
+          type: string,
+          example: https://credit.niso.org/contributor-roles/writing-review-editing/
+        }
+    Organisation:
+      type: object
+      required: [ id, schemaUri, role ]
+      properties:
+        id: { type: string }
+        schemaUri: {
+          type: string,
+          example: https://ror.org/
+        }
+        role:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganisationRole'
+    OrganisationRole:
+      type: object
+      required: [ id, schemaUri, startDate ]
+      properties:
+        schemaUri: {
+          type: string,
+          example: https://vocabulary.raid.org/organisation.role.schema/359
+        }
+        id: {
+          type: string,
+          example: https://vocabulary.raid.org/organisation.role.schema/182,
+          description: Lead Research Organisation
+        }
+        startDate: {
+          type: string,
+          example: 2025-08-28; 2025-08; 2025
+        }
+        endDate: {
+          type: string,
+          example: 2025-08-28; 2025-08; 2025
+        }
+    AlternateUrl:
+      type: object
+      required: [ url ]
+      properties:
+        url: { type: string }
+    Subject:
+      type: object
+      required: [ id, schemaUri ]
+      properties:
+        id: { type: string }
+        schemaUri: { type: string }
+        keyword:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubjectKeyword'
+    SubjectKeyword:
+      type: object
+      required: [ text ]
+      properties:
+        text: { type: string }
+        language:
+          $ref: '#/components/schemas/Language'
+    RelatedRaid:
+      type: object
+      properties:
+        id: { type: string }
+        type:
+          $ref: '#/components/schemas/RelatedRaidType'
+    RelatedRaidType:
+      type: object
+      required: [ id, schemaUri ]
+      properties:
+        id: {
+          type: string,
+          example: https://vocabulary.raid.org/relatedRaid.type.schema/204,
+          description: Continues
+        }
+        schemaUri: {
+          type: string,
+          example: https://vocabulary.raid.org/relatedRaid.type.schema/367
+        }
+    RelatedObject:
+      type: object
+      properties:
+        id: { type: string }
+        schemaUri: { type: string }
+        type:
+          $ref: '#/components/schemas/RelatedObjectType'
+        category:
+          type: array
+          items:
+            $ref: '#/components/schemas/RelatedObjectCategory'
+    RelatedObjectType:
+      type: object
+      properties:
+        id: {
+          type: string,
+          example: https://vocabulary.raid.org/relatedObject.type.schema/258,
+          description: Book
+        }
+        schemaUri: {
+          type: string,
+          example: https://vocabulary.raid.org/relatedObject.type.schema/329
+        }
+    RelatedObjectCategory:
+      type: object
+      properties:
+        id: {
+          type: string,
+          example: https://vocabulary.raid.org/relatedObject.category.id/191,
+          description: Input
+        }
+        schemaUri: {
+          type: string,
+          example: https://vocabulary.raid.org/relatedObject.category.schemaUri/386
+        }
+    AlternateIdentifier:
+      type: object
+      properties:
+        id: { type: string }
+        type: { type: string }
+    SpatialCoverage:
+      type: object
+      properties:
+        id: { type: string }
+        schemaUri: { type: string }
+        place:
+          type: array
+          items:
+            $ref: '#/components/schemas/SpatialCoveragePlace'
+    SpatialCoveragePlace:
+      type: object
+      properties:
+        text: {
+          type: string
+        }
+        language:
+          $ref: '#/components/schemas/Language'
+    TraditionalKnowledgeLabel:
+      type: object
+      properties:
+        id: {
+          type: string,
+          example: https://localcontexts.org/label/tk-verified/
+        }
+        schemaUri: {
+          type: string,
+          example: https://localcontexts.org/labels/traditional-knowledge-labels/
+        }
+    ClosedRaid:
+      type: object
+      properties:
+        identifier:
+          $ref: '#/components/schemas/Id'
+        access:
+          $ref: '#/components/schemas/Access'

@@ -1,4 +1,5 @@
 raid:
+  metadata-schema-version: 2.0.0
   stub:
     geo-names:
       enabled: true

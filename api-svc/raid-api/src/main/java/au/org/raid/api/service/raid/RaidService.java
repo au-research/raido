@@ -17,10 +17,7 @@ import au.org.raid.api.service.datacite.DataciteService;
 import au.org.raid.api.service.keycloak.KeycloakService;
 import au.org.raid.api.util.SchemaValues;
 import au.org.raid.db.jooq.tables.records.ServicePointRecord;
-import au.org.raid.idl.raidv2.model.Contributor;
-import au.org.raid.idl.raidv2.model.RaidCreateRequest;
-import au.org.raid.idl.raidv2.model.RaidDto;
-import au.org.raid.idl.raidv2.model.RaidUpdateRequest;
+import au.org.raid.idl.raidv2.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -132,7 +129,7 @@ public class RaidService {
     @Transactional
     public RaidDto patchContributors(final String prefix, final String suffix, List<Contributor> contributors) {
         final var handle = "%s/%s".formatted(prefix, suffix);
-        final var raid = raidHistoryService.findByHandle(handle)
+        final var raid = (RaidDto) raidHistoryService.findByHandle(handle)
                 .orElseThrow(() -> new ResourceNotFoundException(handle));
 
         final var servicePointId = raid.getIdentifier().getOwner().getServicePoint();
@@ -152,7 +149,7 @@ public class RaidService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<RaidDto> findByHandle(String handle) {
+    public Optional<MetadataSchema> findByHandle(String handle) {
         return raidHistoryService.findByHandle(handle);
     }
 
@@ -167,7 +164,10 @@ public class RaidService {
 
         var servicePointMatch = false;
         var canWrite = false;
-        var canRead = raidOptional.get().getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri());
+
+        final var raidDto = (RaidDto) raidOptional.get();
+
+        var canRead = raidDto.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri());
 
         final var token = ((JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication()).getToken();
 
@@ -180,7 +180,7 @@ public class RaidService {
                 .map(GrantedAuthority::getAuthority)
                 .toList();
 
-        if (raidOptional.get().getIdentifier().getOwner().getServicePoint().equals(servicePoint.getId())) {
+        if (raidDto.getIdentifier().getOwner().getServicePoint().equals(servicePoint.getId())) {
             servicePointMatch = true;
         }
 
@@ -218,9 +218,9 @@ public class RaidService {
                 .build());
     }
 
-    public List<RaidDto> findAllPublic() {
+    public List<MetadataSchema> findAllPublic() {
         final var raidRecords = raidRepository.findAllPublic();
-        final var raids = new ArrayList<RaidDto>();
+        final var raids = new ArrayList<MetadataSchema>();
 
         for (final var record : raidRecords) {
             final var raidDto = raidHistoryService.findByHandle(record.getHandle())

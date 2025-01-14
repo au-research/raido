@@ -1,6 +1,7 @@
 package au.org.raid.api.controller;
 
 import au.org.raid.api.dto.RaidPermissionsDto;
+import au.org.raid.api.exception.ResourceNotFoundException;
 import au.org.raid.api.exception.ServicePointNotFoundException;
 import au.org.raid.api.exception.ValidationException;
 import au.org.raid.api.service.RaidHistoryService;
@@ -54,26 +55,24 @@ public class RaidController implements RaidApi {
 
     @Override
     @SneakyThrows
-    public ResponseEntity<RaidDto> findRaidByName(final String prefix, final String suffix) {
+    public ResponseEntity<MetadataSchema> findRaidByName(final String prefix, final String suffix) {
         final var handle = String.join("/", prefix, suffix);
         var raidOptional = raidService.findByHandle(handle)
                 .or(Optional::empty);
 
-        return ResponseEntity.of(raidOptional);
+        return raidOptional.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 
     @Override
     @SneakyThrows
-    public ResponseEntity<Object> findRaidByNameAndVersion(final String prefix, final String suffix, final Integer version) {
+    public ResponseEntity<MetadataSchema> findRaidByNameAndVersion(final String prefix, final String suffix, final Integer version) {
         final var handle = String.join("/", prefix, suffix);
-        var raidOptional = raidHistoryService.findByHandleAndVersion(handle, version);
+        var raidDto = raidHistoryService
+                .findByHandleAndVersion(handle, version)
+                .orElseThrow(() -> new ResourceNotFoundException("%s/%s".formatted(prefix, suffix)));
 
-        if (raidOptional.isPresent()) {
-            return ResponseEntity.ok(objectMapper.writeValueAsString(raidOptional.get()));
-        }
-
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(raidDto);
     }
 
     @Override
@@ -92,9 +91,9 @@ public class RaidController implements RaidApi {
     }
 
     @Override
-    public ResponseEntity<List<RaidDto>> findAllRaids(final List<String> includeFields, final String contributorId, final String organisationId) {
+    public ResponseEntity<List<MetadataSchema>> findAllRaids(final List<String> includeFields, final String contributorId, final String organisationId) {
         //TODO: filter for service point owner/raid admin/raid user if embargoed
-        List<RaidDto> raids;
+        List<MetadataSchema> raids;
 
         if (contributorId != null) {
             raids = raidIngestService.findAllByContributor(contributorId);
@@ -154,7 +153,7 @@ public class RaidController implements RaidApi {
 
 
     @Override
-    public ResponseEntity<List<RaidDto>> findAllPublicRaids() {
+    public ResponseEntity<List<MetadataSchema>> findAllPublicRaids() {
         return ResponseEntity.ok(raidService.findAllPublic());
     }
 
@@ -169,11 +168,11 @@ public class RaidController implements RaidApi {
         return servicePoint.getId();
     }
 
-    private List<RaidDto> filterFields(final List<RaidDto> raids, final List<String> includeFields) {
-        final var filteredList = new ArrayList<RaidDto>();
+    private List<MetadataSchema> filterFields(final List<MetadataSchema> raids, final List<String> includeFields) {
+        final var filteredList = new ArrayList<MetadataSchema>();
 
         for (final var raid : raids) {
-            filteredList.add(filterRaid(raid, includeFields));
+            filteredList.add(filterRaid((RaidDto) raid, includeFields));
         }
 
         return filteredList;
@@ -223,7 +222,9 @@ public class RaidController implements RaidApi {
         return raidDto.getIdentifier().getOwner().getServicePoint().equals(userServicePoint);
     }
 
-    private boolean isViewable(final RaidDto raidDto) {
+    private boolean isViewable(final MetadataSchema metadataBase) {
+        final var raidDto = (RaidDto) metadataBase;
+
         if (raidDto.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_OPEN.getUri())) {
             return true;
         }

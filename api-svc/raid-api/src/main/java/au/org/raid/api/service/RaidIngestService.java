@@ -5,8 +5,11 @@ import au.org.raid.api.factory.HandleFactory;
 import au.org.raid.api.factory.RaidRecordFactory;
 import au.org.raid.api.repository.RaidRepository;
 import au.org.raid.api.util.TokenUtil;
+import au.org.raid.idl.raidv2.model.MetadataSchema;
 import au.org.raid.idl.raidv2.model.RaidDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +38,8 @@ public class RaidIngestService {
     private final LanguageService languageService;
     private final HandleFactory handleFactory;
     private final CacheableRaidService cacheableRaidService;
+    private final ObjectMapper objectMapper;
+    private final MetadataSchemaResolver metadataSchemaResolver;
 
     private final RaidHistoryService raidHistoryService;
 
@@ -77,22 +82,8 @@ public class RaidIngestService {
         spatialCoverageService.create(raid.getSpatialCoverage(), handle);
     }
 
-    public List<RaidDto> findAllByServicePointIdOrNotConfidential(final Long servicePointId) {
-        final var raids = new ArrayList<RaidDto>();
-        final var records = raidRepository.findAllByServicePointIdOrNotConfidential(servicePointId);
-
-        for (final var record : records) {
-            final var raid = raidHistoryService.findByHandle(record.getHandle())
-                    .orElseThrow(() -> new ResourceNotFoundException(record.getHandle()));
-
-            raids.add(raid);
-        }
-
-        return raids;
-    }
-
-    public List<RaidDto> findAllByServicePointId(final Long servicePointId) {
-        final var raids = new ArrayList<RaidDto>();
+    public List<MetadataSchema> findAllByServicePointId(final Long servicePointId) {
+        final var raids = new ArrayList<MetadataSchema>();
         final var records = raidRepository.findAllByServicePointId(servicePointId);
 
         for (final var record : records) {
@@ -105,35 +96,29 @@ public class RaidIngestService {
         return raids;
     }
 
-    public List<RaidDto> findAllByContributor(final String contributorId) {
-        final var raids = new ArrayList<RaidDto>();
+    public List<MetadataSchema> findAllByContributor(final String contributorId) {
+        final var raids = new ArrayList<MetadataSchema>();
         final var records = raidRepository.findAllByContributorOrcid(contributorId);
 
         for (final var record : records) {
-            final var raid = raidHistoryService.findByHandle(record.getHandle())
-                    .orElseThrow(() -> new ResourceNotFoundException(record.getHandle()));
-
-            raids.add(raid);
+            raids.add(metadataSchemaResolver.resolve(record));
         }
 
         return raids;
     }
 
-    public List<RaidDto> findAllByOrganisation(final String organisationId) {
-        final var raids = new ArrayList<RaidDto>();
+    public List<MetadataSchema> findAllByOrganisation(final String organisationId) {
+        final var raids = new ArrayList<MetadataSchema>();
         final var records = raidRepository.findAllByOrganisationId(organisationId);
 
         for (final var record : records) {
-            final var raid = raidHistoryService.findByHandle(record.getHandle())
-                    .orElseThrow(() -> new ResourceNotFoundException(record.getHandle()));
-
-            raids.add(raid);
+            raids.add(metadataSchemaResolver.resolve(record));
         }
 
         return raids;
     }
 
-    public Optional<RaidDto> findByHandle(final String handle) {
+    public Optional<MetadataSchema> findByHandle(final String handle) {
         return raidHistoryService.findByHandle(handle)
                 .or(Optional::empty);
     }
@@ -182,22 +167,16 @@ public class RaidIngestService {
         return raid;
     }
 
-    public List<RaidDto> findAllByServicePointIdOrHandleIn(final Long servicePointId) {
+    @SneakyThrows
+    public List<MetadataSchema> findAllByServicePointIdOrHandleIn(final Long servicePointId) {
         final var handles = new ArrayList<>(TokenUtil.getAdminRaids());
         handles.addAll(TokenUtil.getUserRaids());
 
-        final var raids = new ArrayList<RaidDto>();
+        final var raids = new ArrayList<MetadataSchema>();
         final var records = raidRepository.findAllByServicePointIdOrHandleIn(servicePointId, handles);
 
         for (final var record : records) {
-            final var raid = raidHistoryService.findByHandle(record.getHandle())
-                    .orElse(cacheableRaidService.build(record))
-                    ;
-
-
-//                    .orElseThrow(() -> new ResourceNotFoundException(record.getHandle()));
-
-            raids.add(raid);
+            raids.add(metadataSchemaResolver.resolve(record));
         }
 
         return raids;

@@ -150,7 +150,7 @@ public class RaidHistoryService {
      }
 
     @SneakyThrows
-    public Optional<RaidDto> findByHandle(final String handle) {
+    public Optional<MetadataSchema> findByHandle(final String handle) {
         final var history = raidHistoryRepository.findAllByHandle(handle).stream()
                 .map(RaidHistoryRecord::getDiff)
                 .map(jsonValueFactory::create)

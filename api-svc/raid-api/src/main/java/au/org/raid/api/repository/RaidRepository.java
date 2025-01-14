@@ -44,6 +44,7 @@ public class RaidRepository {
                 .set(RAID.SCHEMA_URI, raid.getSchemaUri())
                 .set(RAID.REGISTRATION_AGENCY_ORGANISATION_ID, raid.getRegistrationAgencyOrganisationId())
                 .set(RAID.OWNER_ORGANISATION_ID, raid.getOwnerOrganisationId())
+                .set(RAID.SCHEMA_VERSION, raid.getSchemaVersion())
                 .returning()
                 .fetchOne();
     }

@@ -1,17 +1,19 @@
 openapi: 3.0.3
 info:
-  title: shared types
+  title: Metadata Schema 0.0.5
   version: 1.0.0
   description: >
-    This file contains types that are broadly shared across the API.
-    It is not expected to contain any endpoints.
+    RAiD Metadata Schema 0.0.5
 paths:
 
 components:
   schemas:
-    MetadataSchema_0_0_5:
+    RaidDtoV0_0_5:
       type: object
       properties:
+        schemaVersion:
+          type: string
+          default: "0.0.5"
         id: { $ref: '#/components/schemas/IdBlock' }
         metadataSchema: { $ref: '#/components/schemas/RaidoMetaschema' }
         titles:
@@ -109,10 +111,10 @@ components:
       required: [ title, type, startDate ]
       properties:
         title: { type: string }
-        type: { $ref: '#/components/schemas/TitleType' }
+        type: { $ref: '#/components/schemas/TitleTypeV0_0_5' }
         startDate: { type: string, format: date }
         endDate: { type: string, format: date }
-    TitleType:
+    TitleTypeV0_0_5:
       type: string
       enum: [ 'Primary Title', 'Alternative Title' ]
     DatesBlock:
@@ -126,17 +128,17 @@ components:
       required: [ "description", "type" ]
       properties:
         description: { type: string }
-        type: { $ref: '#/components/schemas/DescriptionType' }
-    DescriptionType:
+        type: { $ref: '#/components/schemas/DescriptionTypeV0_0_5' }
+    DescriptionTypeV0_0_5:
       type: string
       enum: [ 'Primary Description', 'Alternative Description' ]
     AccessBlock:
       type: object
       required: [ "type", ]
       properties:
-        type: { $ref: '#/components/schemas/AccessType' }
+        type: { $ref: '#/components/schemas/AccessTypeV0_0_5' }
         accessStatement: { type: string }
-    AccessType:
+    AccessTypeV0_0_5:
       type: string
       enum: [ 'Open', 'Closed' ]
     AlternateUrlBlock:
@@ -153,14 +155,14 @@ components:
           { $ref: '#/components/schemas/ContributorIdentifierSchemeType' }
         positions:
           type: array
-          items: { $ref: '#/components/schemas/ContributorPosition' }
+          items: { $ref: '#/components/schemas/ContributorPositionV0_0_5' }
         roles:
           type: array
-          items: { $ref: '#/components/schemas/ContributorRole' }
+          items: { $ref: '#/components/schemas/ContributorRoleV0_0_5' }
     ContributorIdentifierSchemeType:
       type: string
       enum: [ 'https://orcid.org/' ] # ISNI, etc.
-    ContributorPosition:
+    ContributorPositionV0_0_5:
       type: object
       required: [ positionSchemaUri, position, startDate ]
       properties:
@@ -181,7 +183,7 @@ components:
         - Principal Investigator
         - Co-Investigator
         - Other Participant
-    ContributorRole:
+    ContributorRoleV0_0_5:
       type: object
       required: [ role, roleSchemeUri ]
       properties:
@@ -218,11 +220,11 @@ components:
           { $ref: '#/components/schemas/OrganisationIdentifierSchemeType' }
         roles:
           type: array
-          items: { $ref: '#/components/schemas/OrganisationRole' }
+          items: { $ref: '#/components/schemas/OrganisationRoleV0_0_5' }
     OrganisationIdentifierSchemeType:
       type: string
       enum: [ 'https://ror.org/' ]
-    OrganisationRole:
+    OrganisationRoleV0_0_5:
       type: object
       required: [ role, roleSchemeUri, startDate ]
       properties:

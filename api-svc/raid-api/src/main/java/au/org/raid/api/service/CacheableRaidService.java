@@ -2,6 +2,7 @@ package au.org.raid.api.service;
 
 import au.org.raid.api.factory.DateFactory;
 import au.org.raid.db.jooq.tables.records.RaidRecord;
+import au.org.raid.idl.raidv2.model.MetadataSchema;
 import au.org.raid.idl.raidv2.model.RaidDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -28,7 +29,7 @@ public class CacheableRaidService {
     private final DateFactory dateFactory;
 
     @Cacheable(value="raid-cache", key="{#record.handle, #record.version}")
-    public RaidDto build(final RaidRecord record) {
+    public MetadataSchema build(final RaidRecord record) {
         final var handle = record.getHandle();
 
         final var titles = titleService.findAllByHandle(handle);

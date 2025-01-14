@@ -5,6 +5,7 @@ import au.org.raid.api.exception.ServicePointNotFoundException;
 import au.org.raid.api.service.RaidHistoryService;
 import au.org.raid.api.service.ServicePointService;
 import au.org.raid.api.util.SchemaValues;
+import au.org.raid.idl.raidv2.model.RaidDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -216,7 +217,7 @@ public class SecurityConfig {
 
             final var handle = "%s/%s".formatted(pathParts[2], pathParts[3]);
 
-            final var raid = raidHistoryService.findByHandle(handle)
+            final var raid = (RaidDto) raidHistoryService.findByHandle(handle)
                     .orElseThrow(() -> new ResourceNotFoundException(handle));
 
             if (raid.getIdentifier().getOwner().getServicePoint().equals(servicePoint.getId())) {
@@ -269,7 +270,7 @@ public class SecurityConfig {
 
             final var handle = "%s/%s".formatted(pathParts[2], pathParts[3]);
 
-            final var raid = raidHistoryService.findByHandle(handle)
+            final var raid = (RaidDto) raidHistoryService.findByHandle(handle)
                     .orElseThrow(() -> new ResourceNotFoundException(handle));
 
             if (raid.getAccess().getType().getId().equals(SchemaValues.ACCESS_TYPE_EMBARGOED.getUri())) {

@@ -33,7 +33,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
 
         final var handle = new Handle(mintedRaid.getIdentifier().getId());
         
-        final var result = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
+        final var result = (RaidDto) raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
 
         assertThat(result.getTitle()).isEqualTo(createRequest.getTitle());
         assertThat(result.getDescription()).isEqualTo(createRequest.getDescription());
@@ -53,7 +53,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
         final var readResult = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
 
         assert readResult != null;
-        final var updateRequest = mapReadToUpdate(readResult);
+        final var updateRequest = mapReadToUpdate((RaidDto) readResult);
 
         final var title = updateRequest.getTitle().get(0).getText() + " updated";
 
@@ -69,7 +69,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
             throw new RuntimeException(e);
         }
 
-        final var result = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
+        final var result = (RaidDto) raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
         assert result != null;
         assertThat(result.getTitle().get(0).getText()).isEqualTo(title);
         assertThat(result.getIdentifier().getVersion()).isEqualTo(2);
@@ -84,7 +84,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
 
         assert mintedRaid != null;
         final var handle = new Handle(mintedRaid.getIdentifier().getId());
-        final var readResult = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
+        final var readResult = (RaidDto) raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
 
         final var contributor = readResult.getContributor().get(0);
         contributor.setId(REAL_TEST_ORCID);
@@ -101,7 +101,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
             throw new RuntimeException(e);
         }
 
-        final var result = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
+        final var result = (RaidDto) raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
         assert result != null;
         assertThat(result.getContributor().get(0).getId()).isEqualTo(REAL_TEST_ORCID);
     }
@@ -113,7 +113,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
 
         assert mintedRaid != null;
         final var handle = new Handle(mintedRaid.getIdentifier().getId());
-        final var readResult = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
+        final var readResult = (RaidDto) raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
 
         final var updateRequest = mapReadToUpdate(readResult);
 
@@ -124,7 +124,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
             fail("Update failed");
         }
 
-        final var result = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
+        final var result = (RaidDto) raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
         assertThat(result.getIdentifier().getVersion()).isEqualTo(1);
     }
 
@@ -136,7 +136,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
 
         assert mintedRaid != null;
         final var handle = new Handle(mintedRaid.getIdentifier().getId());
-        final var readResult = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
+        final var readResult = (RaidDto) raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
 
         final var updateRequest = mapReadToUpdate(readResult);
 
@@ -147,7 +147,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
             fail("Update failed");
         }
 
-        final var result = raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
+        final var result = (RaidDto) raidApi.findRaidByName(handle.getPrefix(), handle.getSuffix()).getBody();
         assertThat(result.getIdentifier().getVersion()).isEqualTo(1);
     }
 
@@ -188,7 +188,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
             assert raidList != null;
 
             // filter closed/embargoed raids where the service point does not match RDM@UQ
-            final var result = raidList.stream().filter(raid ->
+            final var result = raidList.stream().map(raid -> (RaidDto) raid).filter(raid ->
                     !raid.getIdentifier().getOwner().getServicePoint().equals(UQ_SERVICE_POINT_ID)
             ).toList();
 
@@ -226,6 +226,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
             // find all raids in resultset that don't contain a contributor with the specified ORCID
             // there shouldn't be any
             final var erroneousRaids = raidList.stream()
+                    .map(raid -> (RaidDto) raid)
                     .filter(raid -> !raid.getContributor().stream()
                             .map(Contributor::getId)
                             .toList()
@@ -263,6 +264,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
             // find all raids in resultset that don't contain a contributor with the specified ORCID
             // there shouldn't be any
             final var erroneousRaids = raidList.stream()
+                    .map(raid -> (RaidDto) raid)
                     .filter(raid -> !raid.getOrganisation().stream()
                             .map(Organisation::getId)
                             .toList()
@@ -309,6 +311,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
             // find all raids in resultset that don't contain a contributor with the specified ORCID
             // there shouldn't be any
             final var erroneousRaids = raidList.stream()
+                    .map(raid -> (RaidDto) raid)
                     .filter(raid -> !raid.getOrganisation().stream()
                             .map(Organisation::getId)
                             .toList()
@@ -349,6 +352,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
             // find all raids in resultset that don't have an embargoed access type
             // there shouldn't be any
             final var erroneousRaids = raidList.stream()
+                    .map(raid -> (RaidDto) raid)
                     .filter(raid -> raid.getAccess().getType().getId().equals(TestConstants.EMBARGOED_ACCESS_TYPE))
                     .toList();
 
@@ -390,6 +394,7 @@ public class RaidIntegrationTest extends AbstractIntegrationTest {
     }
 
     private RaidUpdateRequest mapReadToUpdate(RaidDto read) {
+
         return new RaidUpdateRequest()
                 .identifier(read.getIdentifier())
                 .title(read.getTitle())

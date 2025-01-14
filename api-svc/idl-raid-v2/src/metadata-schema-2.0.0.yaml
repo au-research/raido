@@ -1,0 +1,106 @@
+openapi: 3.0.3
+info:
+  title: Metadata Schema 1.0.0
+  version: 1.0.0
+  description: >
+    RAiD Metadata Schema 1.0.0
+paths:
+
+components:
+  schemas:
+    RaidCreateRequest:
+      type: object
+      required:
+        - metadataSchema
+        - titles
+        - dates
+        - contributors
+        - access
+      properties:
+        schemaVersion:
+          type: string
+          default: "2.0.0"
+        metadata:
+          $ref: 'metadata-base.yaml#/components/schemas/Metadata'
+        identifier:
+          $ref: 'metadata-base.yaml#/components/schemas/Id'
+        title:
+          type: array
+          items: { $ref: 'metadata-base.yaml#/components/schemas/Title' }
+        date: { $ref: 'metadata-base.yaml#/components/schemas/Date' }
+        description:
+          type: array
+          items: { $ref: 'metadata-base.yaml#/components/schemas/Description' }
+        access: { $ref: 'metadata-base.yaml#/components/schemas/Access' }
+        alternateUrl:
+          type: array
+          items: { $ref: 'metadata-base.yaml#/components/schemas/AlternateUrl' }
+        contributor:
+          type: array
+          items: { $ref: '#/components/schemas/Contributor' }
+        organisation:
+          type: array
+          items: { $ref: 'metadata-base.yaml#/components/schemas/Organisation' }
+        subject:
+          type: array
+          items: { $ref: 'metadata-base.yaml#/components/schemas/Subject' }
+        relatedRaid:
+          type: array
+          items: { $ref: 'metadata-base.yaml#/components/schemas/RelatedRaid' }
+        relatedObject:
+          type: array
+          items: { $ref: 'metadata-base.yaml#/components/schemas/RelatedObject' }
+        alternateIdentifier:
+          type: array
+          items: { $ref: 'metadata-base.yaml#/components/schemas/AlternateIdentifier' }
+        spatialCoverage:
+          type: array
+          items: { $ref: 'metadata-base.yaml#/components/schemas/SpatialCoverage' }
+        traditionalKnowledgeLabel:
+          type: array
+          items: { $ref: 'metadata-base.yaml#/components/schemas/TraditionalKnowledgeLabel' }
+    RaidUpdateRequest:
+      allOf:
+        - $ref: '#/components/schemas/RaidCreateRequest'
+      type: object
+      required:
+        - identifier
+      properties:
+        identifier: { $ref: 'metadata-base.yaml#/components/schemas/Id' }
+    RaidDto:
+      allOf:
+        - $ref: '#/components/schemas/RaidUpdateRequest'
+    Contributor:
+      type: object
+      required: [ id, schemaUri, position, role ]
+      properties:
+        id:
+          type: string
+        schemaUri: {
+          type: string,
+          example: https://orcid.org/
+        }
+        status:
+          type: string
+        email:
+          type: string
+        uuid:
+          type: string
+        position:
+          type: array
+          items:
+            $ref: 'metadata-base.yaml#/components/schemas/ContributorPosition'
+        role:
+          type: array
+          items:
+            $ref: 'metadata-base.yaml#/components/schemas/ContributorRole'
+        leader:
+          type: boolean
+        contact:
+          type: boolean
+    RaidPatchRequest:
+      type: object
+      properties:
+        contributor:
+          type: array
+          items: { $ref: '#/components/schemas/Contributor' }

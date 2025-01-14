@@ -18,7 +18,7 @@ raid:
     client-secret: 07ATOSG9hYs8oATcz5wcQAdRuoEsLzEY
 spring:
   flyway:
-    locations: classpath:db/env/api_user,classpath:db/migration,classpath:db/env/dev
+    locations: classpath:db/env/api_user,classpath:db/migration,classpath:db/env/demo
   security:
     oauth2:
       client:

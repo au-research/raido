@@ -1,5 +1,6 @@
 package au.org.raid.inttest;
 
+import au.org.raid.idl.raidv2.model.RaidDto;
 import au.org.raid.inttest.config.AuthConfig;
 import au.org.raid.inttest.dto.keycloak.RaidUserPermissionsRequest;
 import au.org.raid.inttest.service.Handle;
@@ -150,7 +151,7 @@ public class RaidPermissionsIntegrationTest extends AbstractIntegrationTest {
 
             assert response.getBody() != null;
 
-            final var raids = response.getBody().stream().map(raidDto -> raidDto.getIdentifier().getId()).toList();
+            final var raids = response.getBody().stream().map(raidDto -> ((RaidDto)raidDto).getIdentifier().getId()).toList();
             assertThat(raids, hasItem(raid2.getIdentifier().getId()));
             assertThat(raids, not(hasItem(raid1.getIdentifier().getId())));
         } finally {
