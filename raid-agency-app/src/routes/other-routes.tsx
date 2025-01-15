@@ -1,4 +1,4 @@
-import { AppNavBarUnauthenticated } from "@/components/app-nav-bar-unauthenticated";
+import { AppNavBar } from "@/components/app-nav-bar";
 import { ProtectedRoute } from "@/components/protected-route";
 import { AboutRaid } from "@/pages/about-raid";
 import { ApiKey } from "@/pages/api-key";
@@ -24,7 +24,7 @@ export const otherRoutes: RouteObject[] = [
     path: "/login",
     element: (
       <Box sx={{ pt: 5 }}>
-        <AppNavBarUnauthenticated />
+        <AppNavBar authenticated={false} />
         <Login />
       </Box>
     ),
@@ -33,7 +33,7 @@ export const otherRoutes: RouteObject[] = [
     path: "/privacy",
     element: (
       <>
-        <AppNavBarUnauthenticated />
+        <AppNavBar authenticated={false} />
         <Privacy />
       </>
     ),
@@ -42,7 +42,7 @@ export const otherRoutes: RouteObject[] = [
     path: "/terms",
     element: (
       <>
-        <AppNavBarUnauthenticated />
+        <AppNavBar authenticated={false} />
         <UsageTerms />
       </>
     ),
@@ -51,7 +51,7 @@ export const otherRoutes: RouteObject[] = [
     path: "/about-raid",
     element: (
       <>
-        <AppNavBarUnauthenticated />
+        <AppNavBar authenticated={false} />
         <AboutRaid />
       </>
     ),

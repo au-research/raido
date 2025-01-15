@@ -14,7 +14,7 @@ export const AnchorButtons = memo(
   ({ raidData, errors }: AnchorButtonsProps) => (
     <Card>
       <CardContent>
-        <Grid container spacing={2}>
+        <Grid container spacing={1}>
           {displayItems.map((el) => {
             const value =
               (raidData && raidData[el.itemKey as keyof RaidDto]) || [];

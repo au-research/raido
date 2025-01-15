@@ -18,7 +18,7 @@ export const ProtectedRoute = memo(() => {
 
   return keycloak?.authenticated ? (
     <>
-      <AppNavBar />
+      <AppNavBar authenticated={true} />
       <Box sx={{ height: "3em" }} />
       <Outlet />
     </>

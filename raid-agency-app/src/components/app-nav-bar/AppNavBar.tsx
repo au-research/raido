@@ -1,4 +1,3 @@
-import UserDropdown from "./components/UserDropdown";
 import { Home as HomeIcon } from "@mui/icons-material";
 import {
   AppBar,
@@ -9,11 +8,30 @@ import {
   Toolbar,
   useTheme,
 } from "@mui/material";
-import Typography from "@mui/material/Typography";
+import React from "react";
 import { Link } from "react-router-dom";
+import { ServicePointSwitcher } from "../service-point-switcher";
 import NavigationDrawer from "./components/NavigationDrawer";
+import UserDropdown from "./components/UserDropdown";
 
-export const AppNavBar = () => {
+const AuthenticatedNavbarContent = () => {
+  return (
+    <React.Fragment>
+      <ServicePointSwitcher />
+
+      <UserDropdown />
+      <Chip
+        label={import.meta.env.VITE_RAIDO_ENV.toUpperCase()}
+        color="error"
+        size="small"
+        sx={{ mr: 2 }}
+      />
+      <NavigationDrawer />
+    </React.Fragment>
+  );
+};
+
+export const AppNavBar = ({ authenticated }: { authenticated: boolean }) => {
   const theme = useTheme();
 
   return (
@@ -44,28 +62,22 @@ export const AppNavBar = () => {
             </Box>
           </Link>
 
-          <IconButton
-            component={Link}
-            size="large"
-            edge="start"
-            aria-label="go home"
-            sx={{ mx: 1 }}
-            to="/"
-          >
-            <HomeIcon />
-          </IconButton>
+          {authenticated && (
+            <IconButton
+              component={Link}
+              size="large"
+              edge="start"
+              aria-label="go home"
+              sx={{ mx: 1 }}
+              to="/"
+            >
+              <HomeIcon />
+            </IconButton>
+          )}
         </Stack>
 
-        <Typography variant="h6" color="inherit" style={{ flexGrow: 1 }} />
-
-        <Chip
-          label={import.meta.env.VITE_RAIDO_ENV.toUpperCase()}
-          color="error"
-          size="small"
-        />
-
-        <UserDropdown />
-        <NavigationDrawer />
+        <div style={{ flexGrow: 1 }} />
+        {authenticated && <AuthenticatedNavbarContent />}
       </Toolbar>
     </AppBar>
   );
