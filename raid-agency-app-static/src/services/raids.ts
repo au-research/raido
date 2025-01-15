@@ -61,6 +61,9 @@ export async function fetchRaids(): Promise<RaidDto[]> {
     const raidsFromAllSps: RaidDto[] = [];
 
     for (const id of ids) {
+      console.log(
+        `Fetching data from ${apiEndpoint}/raid/?servicePointId=${id}`
+      );
       const response = await fetch(
         `${apiEndpoint}/raid/?servicePointId=${id}`,
         {
