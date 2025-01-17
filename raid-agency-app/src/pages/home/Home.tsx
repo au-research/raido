@@ -37,15 +37,6 @@ export const Home = () => {
   return (
     <Container>
       <Stack gap={2}>
-        <Typography
-          variant="h4"
-          color="primary"
-          sx={{ textShadow: "1px 1px 1px rgba(0,0,0,.3)" }}
-        >
-          Welcome to RAiD
-        </Typography>
-        <h1 className="hero-text">Welcome to My Website</h1>
-
         {hasServicePointGroup && isServicePointUser && (
           <Fab
             variant="extended"
