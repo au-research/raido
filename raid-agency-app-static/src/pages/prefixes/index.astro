@@ -2,9 +2,7 @@
 import Breadcrumbs from "@/components/breadcrumbs.astro";
 import PrefixesTable from "@/components/prefixes-table.astro";
 import Layout from "@/layouts/main.astro";
-import { fetchRaids } from "@/services/raids";
-
-const raids = await fetchRaids();
+import { raids } from "@/store/raids";
 
 const prefixRaidCount = new Map<string, number>();
 for (const el of raids) {
@@ -12,7 +10,6 @@ for (const el of raids) {
   const counter = prefixRaidCount.get(prefix) || 0;
   prefixRaidCount.set(prefix, counter + 1);
 }
-
 ---
 
 <Layout title="main">

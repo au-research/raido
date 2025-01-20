@@ -2,9 +2,9 @@
 import Breadcrumbs from "@/components/breadcrumbs.astro";
 import RaidsTable from "@/components/raids-table.astro";
 import Layout from "@/layouts/main.astro";
-import { fetchRaids } from "@/services/raids";
+import { getRaidAppUrl } from "@/utils/data-utils";
 
-const raids = await fetchRaids();
+import { raids } from "@/store/raids";
 const { prefix } = Astro.params;
 
 // Filter raids by prefix
@@ -14,7 +14,6 @@ const filteredRaids = raids.filter((raid) => {
 });
 
 export async function getStaticPaths() {
-  const raids = await fetchRaids();
   const prefixRaidCount = new Map<string, number>();
 
   for (const el of raids) {
@@ -30,6 +29,9 @@ export async function getStaticPaths() {
     };
   });
 }
+
+const hostname = Astro.url.hostname;
+const raidAppUrl = getRaidAppUrl(hostname);
 ---
 
 <Layout title="main">
@@ -47,14 +49,15 @@ export async function getStaticPaths() {
             RAiDs for prefix {prefix}
           </h1>
           <p class="mt-2 text-sm text-gray-700">
-            A list of all the raids for prefix {prefix}
+            A list of all the RAiDs for prefix {prefix}
           </p>
         </div>
         <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-          <button
-            type="button"
+          <a
+            href={`${raidAppUrl}/raids/new`}
+            target="_blank"
             class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-            >Add raids</button
+            >Add RAiD</a
           >
         </div>
       </div>

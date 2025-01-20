@@ -1,8 +1,6 @@
 ---
 import Layout from "@/layouts/main.astro";
-import { fetchRaids } from "@/services/raids";
-
-const raids = await fetchRaids();
+import { raids } from "@/store/raids";
 
 const prefixRaidCount = new Map<string, number>();
 for (const el of raids) {

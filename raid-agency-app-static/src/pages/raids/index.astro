@@ -2,10 +2,11 @@
 import Breadcrumbs from "@/components/breadcrumbs.astro";
 import RaidsTable from "@/components/raids-table.astro";
 import Layout from "@/layouts/main.astro";
-import { fetchRaids } from "@/services/raids";
+import { getRaidAppUrl } from "@/utils/data-utils";
+import { raids } from "@/store/raids";
 
-const raids = await fetchRaids();
-
+const hostname = Astro.url.hostname;
+const raidAppUrl = getRaidAppUrl(hostname);
 ---
 
 <Layout title="main">
@@ -19,10 +20,10 @@ const raids = await fetchRaids();
         </div>
         <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           <a
-            href="https://app.test.raid.org.au/raids/new"
+            href={`${raidAppUrl}/raids/new`}
             target="_blank"
             class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-            >Add raid</a
+            >Add RAiD</a
           >
         </div>
       </div>

@@ -8,8 +8,6 @@ const iamEndpoint = import.meta.env.IAM_ENDPOINT;
 const iamClientId = import.meta.env.IAM_CLIENT_ID;
 const iamClientSecret = import.meta.env.IAM_CLIENT_SECRET;
 
-let cachedData: RaidDto[] | null = null;
-
 async function getAuthToken(): Promise<string> {
   const TOKEN_PARAMS = {
     grant_type: "client_credentials",
@@ -51,7 +49,6 @@ async function getAuthToken(): Promise<string> {
 }
 
 export async function fetchRaids(): Promise<RaidDto[]> {
-  if (cachedData) return cachedData;
   try {
     const token = await getAuthToken();
 
